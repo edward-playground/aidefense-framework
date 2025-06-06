@@ -422,7 +422,83 @@
             margin-left: 1rem;
             list-style-type: disc;
         }
+        /* Styling for the AI Helper Button and Response Area */
+.gemini-helper-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem 1rem;
+    margin: 0 0 0.5rem 1rem; /* Adjust margin for inline placement */
+    vertical-align: middle; /* Align better with header text */
+    border: 1px solid var(--technique-item-text);
+    color: var(--technique-item-text);
+    background-color: transparent;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
 
+.gemini-helper-btn:hover:not(:disabled) {
+    background-color: var(--technique-item-highlight-bg);
+    color: var(--technique-item-highlight-text);
+}
+
+.gemini-helper-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.gemini-helper-btn svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    margin-right: 0.5rem;
+}
+
+#gemini-response-container {
+    background-color: var(--search-bg);
+    border: 1px solid var(--column-border);
+    border-radius: 0.5rem;
+    padding: 1rem;
+    margin-top: 1rem;
+    min-height: 50px;
+    display: none; /* Hidden by default */
+}
+
+#gemini-response-container pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-family: monospace;
+    font-size: 0.875rem;
+    line-height: 1.6;
+}
+
+#gemini-response-container code {
+    display: block;
+    background-color: var(--bg-color);
+    padding: 0.75rem;
+    border-radius: 0.25rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.loader {
+    width: 24px;
+    height: 24px;
+    border: 3px solid var(--technique-item-text);
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    margin: 1rem auto;
+}
+
+@keyframes rotation {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
         /* Footer Styling */
         .site-footer {
             background-color: var(--footer-bg);
@@ -810,6 +886,104 @@
 
         // --- State ---
         let currentSearchTerm = "";
+        let isGeminiAvailable = true; // Assume available on load
+// Quota resets daily. We set a specific time to re-check.
+let geminiCooldownEndTime = 0;
+
+// This function will be the single point of entry for all Gemini API calls
+async function callGeminiAPI(prompt) {
+    // 1. Check if we are in a cooldown period
+    if (!isGeminiAvailable && Date.now() < geminiCooldownEndTime) {
+        console.warn("Gemini API is in cooldown. Request blocked.");
+        alert("The AI feature is temporarily unavailable due to high demand. It will become available again after the daily quota resets.");
+        return null;
+    }
+
+    // Replace with your actual API key. For this example, it's empty.
+    const apiKey = ""; 
+    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+
+    const payload = {
+        contents: [{ parts: [{ text: prompt }] }]
+    };
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        // 2. Specifically check for the 429 "Too Many Requests" error
+        if (response.status === 429) {
+            console.error("Gemini API quota exceeded (HTTP 429).");
+            isGeminiAvailable = false;
+            
+            // Set cooldown to the next day at 1 AM PST to be safe.
+            const now = new Date();
+            const tomorrow = new Date(now);
+            tomorrow.setDate(now.getDate() + 1);
+            // Set to 1 AM Pacific Time (UTC-7). Adjust if needed.
+            tomorrow.setHours(1, 0, 0, 0); 
+            geminiCooldownEndTime = tomorrow.getTime();
+
+            disableGeminiFeatures();
+            alert("The AI feature has reached its daily usage limit. It will be available again tomorrow.");
+            return null; // Signal failure
+        }
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error("Gemini API Error:", errorData);
+            throw new Error(`API Error: ${response.statusText}`);
+        }
+
+        // 3. On success, ensure features are available
+        isGeminiAvailable = true;
+        geminiCooldownEndTime = 0;
+        enableGeminiFeatures();
+
+        const result = await response.json();
+        if (result.candidates && result.candidates.length > 0) {
+            return result.candidates[0].content.parts[0].text;
+        }
+        return "No response from AI.";
+
+    } catch (error) {
+        console.error("Failed to call Gemini API:", error);
+        alert("An error occurred while contacting the AI assistant. Please check the console for details.");
+        return null;
+    }
+}
+
+function disableGeminiFeatures() {
+    document.querySelectorAll('.gemini-helper-btn').forEach(btn => {
+        btn.disabled = true;
+        btn.style.cursor = 'not-allowed';
+        btn.style.opacity = '0.5';
+        btn.title = "AI feature unavailable due to daily quota.";
+    });
+}
+
+function enableGeminiFeatures() {
+    document.querySelectorAll('.gemini-helper-btn').forEach(btn => {
+        btn.disabled = false;
+        btn.style.cursor = 'pointer';
+        btn.style.opacity = '1';
+        btn.title = "Get implementation help with AI";
+    });
+}
+
+// Periodically check if the cooldown has expired and re-enable features
+setInterval(() => {
+    if (!isGeminiAvailable && Date.now() > geminiCooldownEndTime) {
+        console.log("Gemini cooldown period has ended. Re-enabling features.");
+        isGeminiAvailable = true;
+        enableGeminiFeatures();
+    }
+}, 5 * 60 * 1000); // Check every 5 minutes
+
+// ---- END: Insert these new variables and functions ----
 
         // --- Theme Handling ---
         function applyTheme(theme) {
@@ -1057,41 +1231,108 @@
         }
 
         function showTechniqueModal(technique, tacticName) {
+    const geminiIcon = `
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 mr-2">
+            <path d="M14.228 2.314a.75.75 0 00-.956.4L9.5 9h5l-3.772 6.686a.75.75 0 00.956-.4L14.5 9h-5l3.772-6.686z"/>
+            <path fill-rule="evenodd" d="M3.75 12a8.25 8.25 0 1116.5 0 8.25 8.25 0 01-16.5 0zM12 2.25a9.75 9.75 0 100 19.5 9.75 9.75 0 000-19.5z" clip-rule="evenodd"/>
+        </svg>`;
+
     modalBodyEl.innerHTML = `
         <p class="text-sm opacity-80 mb-1">Tactic: ${tacticName}</p>
-        <h2>${technique.id}: ${technique.name}</h2>
-        <p class="mb-4 leading-relaxed text-sm">${technique.description || 'No description available.'}</p>
+        <h2 id="technique-modal-title">${technique.id}: ${technique.name}</h2>
+        <p class="mb-4 leading-relaxed text-sm" id="technique-modal-desc">${technique.description || 'No description available.'}</p>
         
-        ${technique.subTechniques && technique.subTechniques.length > 0 ? `
-            <div class="mt-4 pt-4 border-t border-[var(--column-border)]">
-                <h3 class="font-semibold text-lg mb-3">Sub-Techniques:</h3>
-                ${technique.subTechniques.map(sub => `
-                    <div class="mb-4 p-3 rounded-lg bg-[var(--technique-item-highlight-bg)] text-[var(--technique-item-highlight-text)]">
-                        <h4 class="font-bold">${sub.id}: ${sub.name}</h4>
-                        <p class="text-sm mt-1 mb-2 leading-relaxed">${sub.description || 'No description.'}</p>
-                        ${renderDetailSectionListForModal('Implementation Strategies', sub.implementationStrategies)}
-                    </div>
-                `).join('')}
+        <!-- AI Response Area (now at the top) -->
+        <div id="gemini-response-container"></div>
+
+        <!-- Implementation Section -->
+        <div class="mt-4 pt-3 border-t border-[var(--column-border)]">
+            <div class="flex items-center">
+                <h3 class="font-semibold text-lg">Implementation Guidance</h3>
+                <button id="implementationHelperBtn" class="gemini-helper-btn" title="Get implementation help with AI">${geminiIcon}Get Code Example</button>
             </div>
-        ` : ''}
-        
-        ${renderDetailSectionListForModal('Implementation Strategies', technique.implementationStrategies)}
-        ${renderDetailSectionListForModal('Potential Tools - Open Source', technique.toolsOpenSource)}
-        ${renderDetailSectionListForModal('Potential Tools - Commercial', technique.toolsCommercial)}
-        
-        <div class="mt-4">
-            <h4 class="font-semibold text-md mb-2">Defends Against:</h4>
+            ${renderDetailSectionListForModal('Implementation Strategies', technique.implementationStrategies)}
+            ${renderDetailSectionListForModal('Potential Tools - Open Source', technique.toolsOpenSource)}
+            ${renderDetailSectionListForModal('Potential Tools - Commercial', technique.toolsCommercial)}
+        </div>
+
+        <!-- Defends Against Section -->
+        <div class="mt-4 pt-3 border-t border-[var(--column-border)]">
+             <div class="flex items-center">
+                <h3 class="font-semibold text-lg">Defends Against</h3>
+                <button id="defenseHelperBtn" class="gemini-helper-btn" title="Explain how this defends against threats">${geminiIcon}Explain Defenses</button>
+            </div>
             ${technique.defendsAgainst && technique.defendsAgainst.length > 0 ? 
                 technique.defendsAgainst.map(da => `
-                    <div class="mb-2">
+                    <div class="mb-2 mt-2">
                         <p class="defends-against-framework text-sm">${da.framework}:</p>
                         <ul class="list-disc list-inside ml-4 text-xs opacity-90 space-y-0.5">
                             ${da.items.map(item => `<li class="defends-against-item">${item}</li>`).join('')}
                         </ul>
                     </div>
-                `).join('') : '<p class="text-xs opacity-60 italic">No specific defenses listed.</p>'}
+                `).join('') : '<p class="text-xs opacity-60 italic mt-2">No specific defenses listed.</p>'}
         </div>
     `;
+
+    // --- Add Event Listeners for NEW buttons ---
+    const implementationBtn = document.getElementById('implementationHelperBtn');
+    const defenseBtn = document.getElementById('defenseHelperBtn');
+    const responseContainer = document.getElementById('gemini-response-container');
+
+    // Check current availability when modal opens
+    if (!isGeminiAvailable) {
+        disableGeminiFeatures();
+    }
+
+    const handleButtonClick = async (button, promptGenerator) => {
+        // Disable both buttons to prevent simultaneous requests
+        document.querySelectorAll('.gemini-helper-btn').forEach(btn => btn.disabled = true);
+        button.innerHTML = `${geminiIcon} <span>Generating...</span>`;
+        responseContainer.style.display = 'block';
+        responseContainer.innerHTML = '<div class="loader"></div>';
+
+        const prompt = promptGenerator(technique);
+        const responseText = await callGeminiAPI(prompt);
+
+        if (responseText) {
+            let html = responseText
+                .replace(/```(python|yaml|bash|sh|javascript|json|text)\s*\n([\s\S]*?)\n```/g, (match, lang, code) => `<code>${code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code>`)
+                .replace(/`([^`]+)`/g, `<code>$1</code>`)
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*(.*?)\*/g, '<em>$1</em>')
+                .replace(/^### (.*$)/gim, '<h4>$1</h4>')
+                .replace(/^## (.*$)/gim, '<h3>$1</h3>')
+                .replace(/^\* (.*$)/gim, '<ul><li>$1</li></ul>')
+                .replace(/\n/g, '<br>');
+            
+            responseContainer.innerHTML = `<pre>${html}</pre>`;
+        } else {
+            responseContainer.innerHTML = '<p class="text-xs text-center opacity-70">AI helper is currently unavailable. Please try again later.</p>';
+        }
+        
+        // Re-enable buttons if API is available
+        if (isGeminiAvailable) {
+            document.querySelectorAll('.gemini-helper-btn').forEach(btn => btn.disabled = false);
+        }
+        implementationBtn.innerHTML = `${geminiIcon}Get Code Example`;
+        defenseBtn.innerHTML = `${geminiIcon}Explain Defenses`;
+    };
+
+    implementationBtn.addEventListener('click', () => {
+        const prompt = (tech) => `You are an expert AI security implementation assistant. For the AI defense technique "${tech.name}" (${tech.id}), provide a concise, actionable code snippet or configuration file example in Python or YAML. Use one of the open-source tools mentioned if possible: ${(tech.toolsOpenSource || []).join(', ')}. Format the response in simple Markdown with a brief explanation followed by the code block.`;
+        handleButtonClick(implementationBtn, prompt);
+    });
+
+    defenseBtn.addEventListener('click', () => {
+        const prompt = (tech) => `You are an expert AI security analyst. For the AI defense technique "${tech.name}" (${tech.id}), explain **how** it specifically defends against the listed threats. Be concise and clear.
+        
+        Threats to explain:
+        ${(tech.defendsAgainst || []).map(da => `- ${da.framework}: ${da.items.join(', ')}`).join('\n')}
+        
+        Provide your analysis below in simple Markdown:`;
+        handleButtonClick(defenseBtn, prompt);
+    });
+
     modalEl.classList.add('active');
     document.body.classList.add('modal-open');
 }
