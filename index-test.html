@@ -8,616 +8,138 @@
     <style>
         :root {
             /* Light Theme (Softer, Material-inspired) */
-            --bg-color: #f0f2f5; /* Light grey-blue background for comfort */
-            --text-color: #37474f; /* Darker grey for primary text */
-            --text-secondary-color: #607d8b; /* Muted grey-blue for secondary text */
-            --header-bg: #ffffff; /* Clean white surface */
-            --header-border: #e0e0e0; /* Subtle divider */
-            --column-bg: #ffffff; /* Clean white surface for columns */
-            --column-border: #e0e0e0; /* Subtle divider */
-            --column-header-text: #455a64; /* Darker blue-grey for headers */
-            --column-header-hover-text: #1976d2; /* Material Blue 700 */
-            --technique-item-bg: #ffffff; /* White card background */
-            --technique-item-border: #e8eaf6; /* Lighter blue-grey border for cards */
-            --technique-item-text: #2196f3; /* Material Blue 500 */
-            --technique-item-hover-bg: #e3f2fd; /* Material Blue 50 */
-            --technique-item-hover-text: #1565c0; /* Material Blue 800 */
-            --technique-item-highlight-bg: #bbdefb; /* Material Blue 100 */
-            --technique-item-highlight-text: #0d47a1; /* Material Blue 900 */
-            --technique-id-text: #78909c; /* Muted blue-grey for IDs */
-            --modal-content-bg: #ffffff; /* White modal background */
-            --modal-close-btn-text: #757575;
-            --modal-close-btn-hover-text: #212121;
-            --search-bg: #eceff1; /* Very light grey for search input */
-            --search-border: #b0bec5; /* Muted blue-grey border */
-            --search-focus-ring: #2196f3; /* Material Blue 500 */
-            --scrollbar-track: #e0e0e0;
-            --scrollbar-thumb: #90a4ae; /* Muted blue-grey thumb */
-            --scrollbar-thumb-hover: #78909c; /* Darker muted blue-grey */
-            --icon-fill: #607d8b; /* Muted blue-grey icon fill */
-            --icon-hover-fill: #2196f3; /* Material Blue 500 */
-            --link-color: #1976d2; /* Material Blue 700 */
-            --link-hover-color: #0d47a1; /* Material Blue 900 */
-            --shadow-umbra: rgba(0, 0, 0, 0.15); /* Softer shadows */
-            --shadow-penumbra: rgba(0, 0, 0, 0.1);
-            --shadow-ambient: rgba(0, 0, 0, 0.08);
-            --footer-bg: #e0e0e0; /* Light footer background */
-            --footer-text: #757575; /* Secondary text for footer */
-            --footer-border: #c0c0c0;
+            --bg-color: #f0f2f5; --text-color: #37474f; --text-secondary-color: #607d8b; --header-bg: #ffffff; --header-border: #e0e0e0; --column-bg: #ffffff; --column-border: #e0e0e0; --column-header-text: #455a64; --column-header-hover-text: #1976d2; --technique-item-bg: #ffffff; --technique-item-border: #e8eaf6; --technique-item-text: #2196f3; --technique-item-hover-bg: #e3f2fd; --technique-item-hover-text: #1565c0; --technique-item-highlight-bg: #bbdefb; --technique-item-highlight-text: #0d47a1; --technique-id-text: #78909c; --modal-content-bg: #ffffff; --modal-close-btn-text: #757575; --modal-close-btn-hover-text: #212121; --search-bg: #eceff1; --search-border: #b0bec5; --search-focus-ring: #2196f3; --scrollbar-track: #e0e0e0; --scrollbar-thumb: #90a4ae; --scrollbar-thumb-hover: #78909c; --icon-fill: #607d8b; --icon-hover-fill: #2196f3; --link-color: #1976d2; --link-hover-color: #0d47a1; --shadow-umbra: rgba(0, 0, 0, 0.15); --shadow-penumbra: rgba(0, 0, 0, 0.1); --shadow-ambient: rgba(0, 0, 0, 0.08); --footer-bg: #e0e0e0; --footer-text: #757575; --footer-border: #c0c0c0;
         }
-
         html.dark {
             /* Dark Theme (Material Inspired - slightly adjusted for consistency) */
-            --bg-color: #1a1a1a; /* Deeper dark background */
-            --text-color: #e0e0e0; /* Light grey for primary text */
-            --text-secondary-color: #b0b0b0; /* Slightly darker secondary text */
-            --header-bg: #222222; /* Darker surface for header */
-            --header-border: #333333; /* Darker divider */
-            --column-bg: #222222; /* Darker surface for columns */
-            --column-border: #333333; /* Darker divider */
-            --column-header-text: #f0f0f0; /* Very light for headers */
-            --column-header-hover-text: #90caf9; /* Material Blue 200 */
-            --technique-item-bg: #2b2b2b; /* Darker surface for items */
-            --technique-item-border: #3d3d3d; /* Darker border for cards */
-            --technique-item-text: #90caf9; /* Material Blue 200 */
-            --technique-item-hover-bg: #383838; /* Slightly lighter hover */
-            --technique-item-hover-text: #bbdefb; /* Material Blue 100 */
-            --technique-item-highlight-bg: #1e3a5f; /* Darker blue highlight */
-            --technique-item-highlight-text: #e3f2fd; /* Material Blue 50 */
-            --technique-id-text: #c0c0c0; /* Lighter secondary text for IDs */
-            --modal-content-bg: #222222; /* Dark modal background */
-            --modal-close-btn-text: #b0b0b0;
-            --modal-close-btn-hover-text: #f0f0f0;
-            --search-bg: #333333; /* Darker search input */
-            --search-border: #444444; /* Darker border */
-            --search-focus-ring: #90caf9; /* Material Blue 200 */
-            --scrollbar-track: #2b2b2b;
-            --scrollbar-thumb: #555555; /* Darker thumb */
-            --scrollbar-thumb-hover: #777777; /* Lighter hover */
-            --icon-fill: #c0c0c0; /* Lighter icon fill */
-            --icon-hover-fill: #90caf9; /* Material Blue 200 */
-            --link-color: #90caf9; /* Material Blue 200 */
-            --link-hover-color: #e3f2fd; /* Material Blue 50 */
-            --shadow-umbra: rgba(0, 0, 0, 0.5); /* Stronger shadow for dark mode */
-            --shadow-penumbra: rgba(0, 0, 0, 0.35);
-            --shadow-ambient: rgba(0, 0, 0, 0.3);
-            --footer-bg: #2b2b2b; /* Darker footer background */
-            --footer-text: #a0a0a0; /* Lighter secondary text for dark footer */
-            --footer-border: #3d3d3d;
+            --bg-color: #1a1a1a; --text-color: #e0e0e0; --text-secondary-color: #b0b0b0; --header-bg: #222222; --header-border: #333333; --column-bg: #222222; --column-border: #333333; --column-header-text: #f0f0f0; --column-header-hover-text: #90caf9; --technique-item-bg: #2b2b2b; --technique-item-border: #3d3d3d; --technique-item-text: #90caf9; --technique-item-hover-bg: #383838; --technique-item-hover-text: #bbdefb; --technique-item-highlight-bg: #1e3a5f; --technique-item-highlight-text: #e3f2fd; --technique-id-text: #c0c0c0; --modal-content-bg: #222222; --modal-close-btn-text: #b0b0b0; --modal-close-btn-hover-text: #f0f0f0; --search-bg: #333333; --search-border: #444444; --search-focus-ring: #90caf9; --scrollbar-track: #2b2b2b; --scrollbar-thumb: #555555; --scrollbar-thumb-hover: #777777; --icon-fill: #c0c0c0; --icon-hover-fill: #90caf9; --link-color: #90caf9; --link-hover-color: #e3f2fd; --shadow-umbra: rgba(0, 0, 0, 0.5); --shadow-penumbra: rgba(0, 0, 0, 0.35); --shadow-ambient: rgba(0, 0, 0, 0.3); --footer-bg: #2b2b2b; --footer-text: #a0a0a0; --footer-border: #3d3d3d;
         }
-
-        html {
-            height: 100%; /* Ensure html takes full height */
-        }
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: background-color 0.3s ease, color 0.3s ease;
-            min-height: 100%; /* Ensure body takes full height */
-            display: flex;
-            flex-direction: column; /* Allow footer to stick to bottom */
-        }
-        #page-container { /* New wrapper for content + footer */
-            flex: 1 0 auto; /* Allows content to grow and push footer down */
-        }
-        footer {
-            flex-shrink: 0; /* Prevents footer from shrinking */
-        }
-
-        body.modal-open {
-            overflow: hidden;
-        }
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: var(--scrollbar-track);
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: var(--scrollbar-thumb);
-            border-radius: 10px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--scrollbar-thumb-hover);
-        }
-
-        /* Material Design Elevation - dp2 */
-        .elevation-2 {
-            box-shadow: 0px 3px 1px -2px var(--shadow-umbra),
-                        0px 2px 2px 0px var(--shadow-penumbra),
-                        0px 1px 5px 0px var(--shadow-ambient);
-        }
-        /* Material Design Elevation - dp4 */
-        .elevation-4 {
-             box-shadow: 0px 2px 4px -1px var(--shadow-umbra),
-                         0px 4px 5px 0px var(--shadow-penumbra),
-                         0px 1px 10px 0px var(--shadow-ambient);
-        }
-        /* Material Design Elevation - dp8 (for modal) */
-        .elevation-8 {
-            box-shadow: 0px 5px 5px -3px var(--shadow-umbra),
-                        0px 8px 10px 1px var(--shadow-penumbra),
-                        0px 3px 14px 2px var(--shadow-ambient);
-        }
-
-
-        .header-main {
-            background-color: var(--header-bg);
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-        }
-        .header-title {
-            font-size: 2rem; 
-            font-weight: 500; 
-            color: var(--text-color);
-        }
-        .header-subtitle {
-            font-size: 0.875rem; 
-            color: var(--text-secondary-color); 
-        }
-        .search-input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-        .search-container input {
-            background-color: var(--search-bg);
-            border: 1px solid var(--search-border); 
-            color: var(--text-color);
-            border-radius: 0.5rem; 
-            padding-right: 2.5rem; 
-        }
-         .search-container input::placeholder {
-            color: var(--text-secondary-color);
-        }
-        .search-container input:focus {
-            --tw-ring-color: var(--search-focus-ring);
-            border-color: var(--search-focus-ring);
-            box-shadow: 0 0 0 2px var(--search-focus-ring); 
-        }
-        .search-clear-button {
-            position: absolute;
-            right: 0.5rem;
-            padding: 0.25rem;
-            color: var(--text-secondary-color);
-            cursor: pointer;
-            display: none; 
-        }
-        .search-clear-button:hover {
-            color: var(--text-color);
-        }
-        .search-clear-button svg {
-            width: 1.25rem;
-            height: 1.25rem;
-        }
-
-
-        .header-button {
-            background-color: transparent;
-            color: var(--icon-fill);
-            border: none;
-            padding: 0.625rem; 
-            border-radius: 50%; 
-            display: flex;
-            align-items: center;
-            justify-content: center; 
-        }
-        .header-button:hover {
-            background-color: rgba(0,0,0,0.04); 
-            color: var(--icon-hover-fill);
-        }
-        html.dark .header-button:hover {
-            background-color: rgba(255,255,255,0.08); 
-        }
-        .header-button svg {
-            width: 1.5rem; 
-            height: 1.5rem; 
-            fill: currentColor;
-            margin-right: 0; 
-        }
-        .header-button.text-button {
-            padding: 0.5rem 1rem; 
-            border-radius: 0.25rem; 
-            font-weight: 500; 
-        }
-        .header-button.text-button svg { 
-            margin-right: 0.5rem;
-            width: 1.25rem;
-            height: 1.25rem;
-        }
-
-
-        .tactic-column-grid {
-            display: flex;
-            flex-wrap: wrap; 
-            gap: 0.28rem; /* Further reduced gap */
-            padding: 1.5rem 0.5rem; /* Adjusted padding to match gap */
-            align-items: flex-start; 
-            justify-content: center;
-        }
-        .tactic-column {
-            flex-grow: 1;        
-            flex-shrink: 1;       
-            flex-basis: 160px;    /* Ideal starting width */
-            max-width: 210px;     /* Max width when growing */
-            background-color: var(--column-bg);
-            border-radius: 0.75rem; 
-            padding: 0.8rem; /* Adjusted padding (Each technique block's boundary distance to the outside tactics box) for better spacing */
-            min-height: 200px; 
-            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-            display: flex; 
-            flex-direction: column; 
-        }
-        .tactic-column-header { 
-            font-size: 1.25rem; 
-            font-weight: 500; 
-            color: var(--column-header-text); 
-            margin-bottom: 1rem; 
-            padding-bottom: 0.75rem; 
-            border-bottom: 1px solid var(--column-border); 
-            transition: color 0.3s ease, border-color 0.3s ease;
-            cursor: pointer;
-            text-align: center; 
-        }
-        .tactic-column-header:hover {
-            color: var(--column-header-hover-text);
-        }
-
-        .technique-item {
-            display: block;
-            background-color: var(--technique-item-bg);
-            padding: 0.75rem 1rem;
-            font-size: 0.875rem; 
-            color: var(--technique-item-text); 
-            border-radius: 0.5rem; 
-            cursor: pointer;
-            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.2s ease, box-shadow 0.2s ease;
-            line-height: 1.5; 
-            margin-bottom: 0.75rem;
-        }
-        .technique-item:hover {
-            background-color: var(--technique-item-hover-bg); 
-            color: var(--technique-item-hover-text); 
-            transform: translateY(-2px); 
-        }
-        .technique-item.highlight {
-            background-color: var(--technique-item-highlight-bg); 
-            color: var(--technique-item-highlight-text); 
-            font-weight: 600;
-        }
-        .technique-id {
-            font-weight: 500;
-            color: var(--technique-id-text); 
-            font-size: 0.75rem; 
-            margin-right: 0.35rem;
-            display: block; 
-            margin-bottom: 0.125rem;
-        }
-        .technique-name { 
-            font-weight: 500; 
-        }
-
-
-        /* Modal Styling */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5); 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.2s ease, visibility 0.2s ease; 
-        }
-        html.dark .modal-overlay {
-            background-color: rgba(0, 0, 0, 0.7); 
-        }
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        .modal-content {
-            background-color: var(--modal-content-bg);
-            color: var(--text-color);
-            padding: 2rem; 
-            border-radius: 0.5rem; 
-            width: 90%;
-            max-width: 800px; 
-            max-height: 90vh; 
-            overflow-y: auto; 
-            position: relative; 
-            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease; 
-            transform: scale(0.95); 
-        }
-        .modal-overlay.active .modal-content {
-            transform: scale(1); 
-        }
-
-        .modal-content h2.modal-main-title {
-            font-size: 1.75rem; 
-            font-weight: 500; 
-            margin-bottom: 1.5rem; 
-            color: var(--column-header-hover-text); 
-        }
-        .modal-content h2 { 
-            font-size: 1.5rem; 
-            font-weight: 500; 
-            margin-bottom: 1rem;
-            color: var(--column-header-hover-text); 
-        }
-        .modal-content h3 { 
-            font-size: 1.25rem; 
-            font-weight: 500; 
-            margin-top: 1.5rem;
-            margin-bottom: 0.75rem;
-            color: var(--text-color);
-        }
-        .modal-content h4 { 
-            font-size: 1rem; 
-            font-weight: 500; 
-            margin-top: 1rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-color);
-        }
-        .modal-content p {
-            font-size: 0.9375rem; 
-            line-height: 1.7; 
-            margin-bottom: 1rem;
-        }
-        .modal-content ul {
-            list-style-type: disc;
-            margin-left: 1.5rem;
-            font-size: 0.9375rem; 
-            line-height: 1.7;
-            margin-bottom: 1rem;
-        }
-        .modal-content ul ul { 
-            margin-top: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-        .modal-content li {
-            margin-bottom: 0.375rem; 
-        }
-        .modal-content a {
-            color: var(--link-color);
-            text-decoration: none; 
-            font-weight: 500;
-        }
-        .modal-content a:hover {
-            color: var(--link-hover-color);
-            text-decoration: underline;
-        }
-
-
-        .modal-close-button {
-            position: absolute;
-            top: 1rem; 
-            right: 1rem; 
-            background: none;
-            border: none;
-            font-size: 1.75rem; 
-            color: var(--modal-close-btn-text); 
-            cursor: pointer;
-            line-height: 1;
-            transition: color 0.3s ease;
-            padding: 0.25rem; 
-        }
-        .modal-close-button:hover {
-            color: var(--modal-close-btn-hover-text); 
-        }
-
-        .defends-against-framework {
-            font-weight: 500; 
-            color: var(--technique-item-text);
-            opacity: 0.9;
-        }
-        .defends-against-item {
-            margin-left: 1rem;
-            list-style-type: disc;
-        }
-        /* Styling for the AI Helper Button and Response Area */
-.gemini-helper-btn {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0.5rem 1rem;
-    margin: 0 0 0.5rem 1rem; /* Adjust margin for inline placement */
-    vertical-align: middle; /* Align better with header text */
-    border: 1px solid var(--technique-item-text);
-    color: var(--technique-item-text);
-    background-color: transparent;
-    border-radius: 0.5rem;
-    font-weight: 500;
-    font-size: 0.875rem;
-    cursor: pointer;
-    transition: background-color 0.2s ease, color 0.2s ease;
-}
-
-.gemini-helper-btn:hover:not(:disabled) {
-    background-color: var(--technique-item-highlight-bg);
-    color: var(--technique-item-highlight-text);
-}
-
-.gemini-helper-btn:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-}
-
-.gemini-helper-btn svg {
-    width: 1.25rem;
-    height: 1.25rem;
-    margin-right: 0.5rem;
-}
-
-#gemini-response-container {
-    background-color: var(--search-bg);
-    border: 1px solid var(--column-border);
-    border-radius: 0.5rem;
-    padding: 1rem;
-    margin-top: 1rem;
-    min-height: 50px;
-    display: none; /* Hidden by default */
-}
-
-#gemini-response-container pre {
-    white-space: pre-wrap;
-    word-wrap: break-word;
-    font-family: monospace;
-    font-size: 0.875rem;
-    line-height: 1.6;
-}
-
-#gemini-response-container code {
-    display: block;
-    background-color: var(--bg-color);
-    padding: 0.75rem;
-    border-radius: 0.25rem;
-    margin-top: 0.5rem;
-    margin-bottom: 0.5rem;
-}
-
-.loader {
-    width: 24px;
-    height: 24px;
-    border: 3px solid var(--technique-item-text);
-    border-bottom-color: transparent;
-    border-radius: 50%;
-    display: inline-block;
-    box-sizing: border-box;
-    animation: rotation 1s linear infinite;
-    margin: 1rem auto;
-}
-
-@keyframes rotation {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-}
-        /* Footer Styling */
-        .site-footer {
-            background-color: var(--footer-bg);
-            color: var(--footer-text);
-            padding: 1rem 1rem; /* Reduced vertical padding */
-            text-align: center;
-            font-size: 0.875rem; /* text-sm */
-            border-top: 1px solid var(--footer-border);
-            margin-top: auto; /* Pushes footer to bottom if content is short */
-        }
-        .site-footer p {
-            margin-bottom: 0.25rem; /* Reduced margin between paragraphs in footer */
-            line-height: 1.5;
-        }
-
-        /* Specific fix for version text visibility in dark mode */
-        html.dark .header-version-text {
-            opacity: 1; /* Make it fully opaque */
-            color: var(--text-secondary-color); /* Ensure it uses the secondary text color */
-        }
-        .accordion-item {
-    border-bottom: 1px solid var(--header-border);
-}
-
-.accordion-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1.25rem 0.5rem; /* More vertical padding */
-    cursor: pointer;
-    font-size: 1.125rem; /* Slightly larger for better touch target */
-    font-weight: 500;
-    color: var(--text-color);
-    transition: color 0.2s ease;
-}
-
-.accordion-header:hover {
-    color: var(--column-header-hover-text);
-}
-
-.accordion-icon {
-    width: 1.25rem;
-    height: 1.25rem;
-    transition: transform 0.3s ease-in-out;
-    flex-shrink: 0; /* Prevent icon from shrinking */
-    margin-left: 1rem;
-}
-
-.accordion-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
-    font-size: 0.9375rem;
-    line-height: 1.7;
-    color: var(--text-secondary-color);
-}
-
-.accordion-content-inner {
-    padding: 0 0.5rem 1.25rem 0.5rem;
-}
-
+        html { height: 100%; }
+        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s ease, color 0.3s ease; min-height: 100%; display: flex; flex-direction: column; }
+        #page-container { flex: 1 0 auto; }
+        footer { flex-shrink: 0; }
+        body.modal-open { overflow: hidden; }
+        ::-webkit-scrollbar { width: 8px; height: 8px; }
+        ::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
+        .elevation-2 { box-shadow: 0px 3px 1px -2px var(--shadow-umbra), 0px 2px 2px 0px var(--shadow-penumbra), 0px 1px 5px 0px var(--shadow-ambient); }
+        .elevation-4 { box-shadow: 0px 2px 4px -1px var(--shadow-umbra), 0px 4px 5px 0px var(--shadow-penumbra), 0px 1px 10px 0px var(--shadow-ambient); }
+        .elevation-8 { box-shadow: 0px 5px 5px -3px var(--shadow-umbra), 0px 8px 10px 1px var(--shadow-penumbra), 0px 3px 14px 2px var(--shadow-ambient); }
+        .header-main { background-color: var(--header-bg); transition: background-color 0.3s ease, border-color 0.3s ease; }
+        .header-title { font-size: 2rem; font-weight: 500; color: var(--text-color); }
+        .header-subtitle { font-size: 0.875rem; color: var(--text-secondary-color); }
+        .search-input-wrapper { position: relative; display: flex; align-items: center; }
+        .search-container input { background-color: var(--search-bg); border: 1px solid var(--search-border); color: var(--text-color); border-radius: 0.5rem; padding-right: 2.5rem; }
+        .search-container input::placeholder { color: var(--text-secondary-color); }
+        .search-container input:focus { --tw-ring-color: var(--search-focus-ring); border-color: var(--search-focus-ring); box-shadow: 0 0 0 2px var(--search-focus-ring); }
+        .search-clear-button { position: absolute; right: 0.5rem; padding: 0.25rem; color: var(--text-secondary-color); cursor: pointer; display: none; }
+        .search-clear-button:hover { color: var(--text-color); }
+        .search-clear-button svg { width: 1.25rem; height: 1.25rem; }
+        .header-button { background-color: transparent; color: var(--icon-fill); border: none; padding: 0.625rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+        .header-button:hover { background-color: rgba(0,0,0,0.04); color: var(--icon-hover-fill); }
+        html.dark .header-button:hover { background-color: rgba(255,255,255,0.08); }
+        .header-button svg { width: 1.5rem; height: 1.5rem; fill: currentColor; margin-right: 0; }
+        .header-button.text-button { padding: 0.5rem 1rem; border-radius: 0.25rem; font-weight: 500; }
+        .header-button.text-button svg { margin-right: 0.5rem; width: 1.25rem; height: 1.25rem; }
+        .tactic-column-grid { display: flex; flex-wrap: wrap; gap: 0.28rem; padding: 1.5rem 0.5rem; align-items: flex-start; justify-content: center; }
+        .tactic-column { flex-grow: 1; flex-shrink: 1; flex-basis: 160px; max-width: 210px; background-color: var(--column-bg); border-radius: 0.75rem; padding: 0.8rem; min-height: 200px; transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: column; }
+        .tactic-column-header { font-size: 1.25rem; font-weight: 500; color: var(--column-header-text); margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--column-border); transition: color 0.3s ease, border-color 0.3s ease; cursor: pointer; text-align: center; }
+        .tactic-column-header:hover { color: var(--column-header-hover-text); }
+        .technique-item { display: block; background-color: var(--technique-item-bg); padding: 0.75rem 1rem; font-size: 0.875rem; color: var(--technique-item-text); border-radius: 0.5rem; cursor: pointer; transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.2s ease, box-shadow 0.2s ease; line-height: 1.5; margin-bottom: 0.75rem; }
+        .technique-item:hover { background-color: var(--technique-item-hover-bg); color: var(--technique-item-hover-text); transform: translateY(-2px); }
+        .technique-item.highlight { background-color: var(--technique-item-highlight-bg); color: var(--technique-item-highlight-text); font-weight: 600; }
+        .technique-id { font-weight: 500; color: var(--technique-id-text); font-size: 0.75rem; margin-right: 0.35rem; display: block; margin-bottom: 0.125rem; }
+        .technique-name { font-weight: 500; }
+        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.2s ease, visibility 0.2s ease; }
+        html.dark .modal-overlay { background-color: rgba(0, 0, 0, 0.7); }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content { background-color: var(--modal-content-bg); color: var(--text-color); padding: 2rem; border-radius: 0.5rem; width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; position: relative; transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease; transform: scale(0.95); }
+        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-content h2.modal-main-title { font-size: 1.75rem; font-weight: 500; margin-bottom: 1.5rem; color: var(--column-header-hover-text); }
+        .modal-content h2 { font-size: 1.5rem; font-weight: 500; margin-bottom: 1rem; color: var(--column-header-hover-text); }
+        .modal-content h3 { font-size: 1.25rem; font-weight: 500; margin-top: 1.5rem; margin-bottom: 0.75rem; color: var(--text-color); }
+        .modal-content h4 { font-size: 1rem; font-weight: 500; margin-top: 1rem; margin-bottom: 0.5rem; color: var(--text-color); }
+        .modal-content p { font-size: 0.9375rem; line-height: 1.7; margin-bottom: 1rem; }
+        .modal-content ul { list-style-type: disc; margin-left: 1.5rem; font-size: 0.9375rem; line-height: 1.7; margin-bottom: 1rem; }
+        .modal-content ul ul { margin-top: 0.5rem; margin-bottom: 0.5rem; }
+        .modal-content li { margin-bottom: 0.375rem; }
+        .modal-content a { color: var(--link-color); text-decoration: none; font-weight: 500; }
+        .modal-content a:hover { color: var(--link-hover-color); text-decoration: underline; }
+        .modal-close-button { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.75rem; color: var(--modal-close-btn-text); cursor: pointer; line-height: 1; transition: color 0.3s ease; padding: 0.25rem; }
+        .modal-close-button:hover { color: var(--modal-close-btn-hover-text); }
+        .defends-against-framework { font-weight: 500; color: var(--technique-item-text); opacity: 0.9; }
+        .defends-against-item { margin-left: 1rem; list-style-type: disc; }
+        .site-footer { background-color: var(--footer-bg); color: var(--footer-text); padding: 1rem 1rem; text-align: center; font-size: 0.875rem; border-top: 1px solid var(--footer-border); margin-top: auto; }
+        .site-footer p { margin-bottom: 0.25rem; line-height: 1.5; }
+        html.dark .header-version-text { opacity: 1; color: var(--text-secondary-color); }
+        .accordion-item { border-bottom: 1px solid var(--header-border); }
+        .accordion-header { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 0.5rem; cursor: pointer; font-size: 1.125rem; font-weight: 500; color: var(--text-color); transition: color 0.2s ease; }
+        .accordion-header:hover { color: var(--column-header-hover-text); }
+        .accordion-icon { width: 1.25rem; height: 1.25rem; transition: transform 0.3s ease-in-out; flex-shrink: 0; margin-left: 1rem; }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out; font-size: 0.9375rem; line-height: 1.7; color: var(--text-secondary-color); }
+        .accordion-content-inner { padding: 0 0.5rem 1.25rem 0.5rem; }
+        .gemini-helper-btn { display: inline-flex; align-items: center; justify-content: center; padding: 0.5rem 1rem; margin: 0 0 0.5rem 1rem; vertical-align: middle; border: 1px solid var(--technique-item-text); color: var(--technique-item-text); background-color: transparent; border-radius: 0.5rem; font-weight: 500; font-size: 0.875rem; cursor: pointer; transition: background-color 0.2s ease, color 0.2s ease; }
+        .gemini-helper-btn:hover:not(:disabled) { background-color: var(--technique-item-highlight-bg); color: var(--technique-item-highlight-text); }
+        .gemini-helper-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+        .gemini-helper-btn svg { width: 1.25rem; height: 1.25rem; margin-right: 0.5rem; }
+        #gemini-response-container { background-color: var(--search-bg); border: 1px solid var(--column-border); border-radius: 0.5rem; padding: 1rem; margin-top: 1rem; min-height: 50px; display: none; }
+        #gemini-response-container pre { white-space: pre-wrap; word-wrap: break-word; font-family: monospace; font-size: 0.875rem; line-height: 1.6; }
+        #gemini-response-container code { display: block; background-color: var(--bg-color); padding: 0.75rem; border-radius: 0.25rem; margin-top: 0.5rem; margin-bottom: 0.5rem; }
+        .loader { width: 24px; height: 24px; border: 3px solid var(--technique-item-text); border-bottom-color: transparent; border-radius: 50%; display: inline-block; box-sizing: border-box; animation: rotation 1s linear infinite; margin: 1rem auto; }
+        @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .prose { line-height: 1.7; } .prose h3 { margin-top: 1em; margin-bottom: 0.5em; } .prose pre { margin-top: 0; }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="text-gray-800">
-    <div id="page-container"> <!-- Wrapper for sticky footer -->
-        <!-- Header -->
+    <div id="page-container">
         <header class="header-main py-4 px-6 fixed top-0 left-0 right-0 z-50 elevation-4">
-            <div class="container mx-auto">
-                <div class="flex justify-between items-center mb-3">
-                    <div class="text-left">
-                        <h1 class="header-title">AIDEFEND™</h1>
-                        <p class="header-subtitle">An AI-focused defensive countermeasures knowledge base</p>
-                        <p class="text-xs opacity-60 mt-0.5 header-version-text">Version 1.0</p>
-                    </div>
-                    <div class="flex items-center space-x-1"> 
-                        <button id="aboutBtn" class="header-button text-button" title="About AIDEFEND">
-                            <!-- Icon will be injected by JS --> About
-                        </button>
-                        <button id="themeToggleBtn" class="header-button" title="Toggle Theme">
-                            <!-- SVG icon will be injected here by JavaScript -->
-                        </button>
-                    </div>
-                </div>
-                <div class="search-input-wrapper search-container">
-                    <input type="text" id="search-bar" placeholder="Search keywords, AIDEFEND/ATLAS techniques, MAESTRO threats, OWASP Top10s, etc..." class="w-full p-2.5 text-sm">
-                    <button id="searchClearBtn" class="search-clear-button" title="Clear search">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-                            <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16ZM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22Z" clip-rule="evenodd" />
-                        </svg>
-                    </button>
-                </div>
-            </div>
+             <div class="container mx-auto">
+                 <div class="flex justify-between items-center mb-3">
+                     <div class="text-left">
+                         <h1 class="header-title">AIDEFEND™</h1>
+                         <p class="header-subtitle">An AI-focused defensive countermeasures knowledge base</p>
+                         <p class="text-xs opacity-60 mt-0.5 header-version-text">Version 1.0</p>
+                     </div>
+                     <div class="flex items-center space-x-1"> 
+                         <button id="aboutBtn" class="header-button text-button" title="About AIDEFEND">
+                             <!-- Icon will be injected by JS --> About
+                         </button>
+                         <button id="themeToggleBtn" class="header-button" title="Toggle Theme">
+                             <!-- SVG icon will be injected here by JavaScript -->
+                         </button>
+                     </div>
+                 </div>
+                 <div class="search-input-wrapper search-container">
+                     <input type="text" id="search-bar" placeholder="Search keywords, AIDEFEND/ATLAS techniques, MAESTRO threats, OWASP Top10s, etc..." class="w-full p-2.5 text-sm">
+                     <button id="searchClearBtn" class="search-clear-button" title="Clear search">
+                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16ZM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22Z" clip-rule="evenodd" />
+                         </svg>
+                     </button>
+                 </div>
+             </div>
         </header>
 
-        <!-- Main Content Area -->
         <div id="content-wrapper" class="pt-44 px-4 sm:px-6 lg:px-8 pb-8"> 
-            <main id="main-content" class="container mx-auto">
-                    <!-- Content will be populated by JavaScript -->
-            </main>
+            <main id="main-content" class="container mx-auto"></main>
         </div>
-    </div> <!-- End of page-container -->
-
-    <!-- Modal Structure (shared for Tactic and Technique) -->
+    </div> 
+    
     <div id="infoModal" class="modal-overlay">
         <div id="modalBackdrop" class="absolute inset-0"></div> 
         <div class="modal-content elevation-8">
             <button id="modalClose" class="modal-close-button">&times;</button>
-            <div id="modalBody">
-                <!-- Modal content will be injected here -->
-            </div>
+            <div id="modalBody"></div>
         </div>
     </div>
-   
+    
     <footer class="site-footer">
         <p>AIDEFEND, An AI-focused defensive countermeasures knowledge base.</p>
         <p>Information based on the <a href="https://cloudsecurityalliance.org/blog/2025/02/06/agentic-ai-threat-modeling-framework-maestro" target="_blank" rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">MAESTRO framework</a>, <a href="https://d3fend.mitre.org/" target="_blank" rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">MITRE D3FEND</a>, <a href="https://atlas.mitre.org/" target="_blank" rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">ATLAS</a>, <a href="https://attack.mitre.org/" target="_blank" rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">ATT&CK</a>, and <a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/" target="_blank" rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">OWASP Top 10 LLM 2025</a>/<a href="https://owasp.org/www-project-machine-learning-security-top-10/" target="_blank" rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">OWASP Top 10 ML Security 2023</a>.</p>
         <p>2025 Edward's Playground - AIDEFEND framework Initiative. For informational purposes only.</p>
-        <p>All content on this website is licensed under the <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">Creative Commons Attribution 4.0 International License (CC BY 4.0)</p>
+        <p>All content on this website is licensed under the <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">Creative Commons Attribution 4.0 International License (CC BY 4.0)</a></p>
     </footer>
 
 
@@ -849,7 +371,8 @@
     ]
 };
 
-        // --- DOM Elements ---
+        
+// --- DOM Elements ---
         const mainContentEl = document.getElementById('main-content');
         const searchBarEl = document.getElementById('search-bar');
         const searchClearBtnEl = document.getElementById('searchClearBtn');
@@ -862,366 +385,273 @@
         const htmlEl = document.documentElement;
 
         // --- SVG Icons ---
-        const plusIcon = `
-            <svg class="accordion-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-            <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-            </svg>`;
-        const minusIcon = `
-            <svg class="accordion-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-            <path fill-rule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clip-rule="evenodd" />
-            </svg>`;
-        const sunIcon = `
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.166 7.758a.75.75 0 001.06 1.06l1.591-1.59a.75.75 0 00-1.06-1.061L6.166 7.758z" />
-            </svg>`;
-        const moonIcon = `
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
-              <path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-3.51 1.713-6.636 4.362-8.492a.75.75 0 01.819.162z" clip-rule="evenodd" />
-            </svg>`;
-        const infoIcon = `
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                <path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.747 15H11a.75.75 0 0 0 0-1.5h-.253a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.253 9H9Z" clip-rule="evenodd" />
-            </svg>`;
+        const plusIcon = `<svg class="accordion-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" /></svg>`;
+        const minusIcon = `<svg class="accordion-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clip-rule="evenodd" /></svg>`;
+        const sunIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.166 7.758a.75.75 0 001.06 1.06l1.591-1.59a.75.75 0 00-1.06-1.061L6.166 7.758z" /></svg>`;
+        const moonIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-3.51 1.713-6.636 4.362-8.492a.75.75 0 01.819.162z" clip-rule="evenodd" /></svg>`;
+        const infoIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.747 15H11a.75.75 0 0 0 0-1.5h-.253a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.253 9H9Z" clip-rule="evenodd" /></svg>`;
 
+        // --- State & API Logic ---
+        let isGeminiAvailable = true;
+        let geminiCooldownEndTime = 0;
 
-        // --- State ---
-        let currentSearchTerm = "";
-        let isGeminiAvailable = true; // Assume available on load
-// Quota resets daily. We set a specific time to re-check.
-let geminiCooldownEndTime = 0;
+        async function callGeminiAPI(prompt) {
+            if (!isGeminiAvailable && Date.now() < geminiCooldownEndTime) {
+                alert("The AI feature is temporarily unavailable due to high demand. It will become available again after the daily quota resets.");
+                return null;
+            }
 
-// This function will be the single point of entry for all Gemini API calls
-async function callGeminiAPI(prompt) {
-    // 1. Check if we are in a cooldown period
-    if (!isGeminiAvailable && Date.now() < geminiCooldownEndTime) {
-        console.warn("Gemini API is in cooldown. Request blocked.");
-        alert("The AI feature is temporarily unavailable due to high demand. It will become available again after the daily quota resets.");
-        return null;
-    }
+            const cloudFunctionUrl = 'https://gemini-proxy-859350701171.us-west1.run.app';
 
-    // Replace with your actual API key. For this example, it's empty.
-    const apiKey = ""; 
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+            try {
+                const response = await fetch(cloudFunctionUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ prompt: prompt })
+                });
 
-    const payload = {
-        contents: [{ parts: [{ text: prompt }] }]
-    };
+                if (response.status === 429) {
+                    console.error("Gemini API quota exceeded (relayed by proxy).");
+                    isGeminiAvailable = false;
+                    const now = new Date();
+                    const tomorrow = new Date(now);
+                    tomorrow.setDate(now.getDate() + 1);
+                    tomorrow.setUTCHours(8, 0, 0, 0); // Reset at Midnight PST (8 AM UTC)
+                    geminiCooldownEndTime = tomorrow.getTime();
+                    disableGeminiFeatures();
+                    alert("The AI feature has reached its daily usage limit. It will be available again tomorrow.");
+                    return null;
+                }
 
-    try {
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
+                if (!response.ok) {
+                    const errorData = await response.json();
+                    throw new Error(`API Error: ${errorData.error || 'Unknown error'}`);
+                }
 
-        // 2. Specifically check for the 429 "Too Many Requests" error
-        if (response.status === 429) {
-            console.error("Gemini API quota exceeded (HTTP 429).");
-            isGeminiAvailable = false;
-            
-            // Set cooldown to the next day at 1 AM PST to be safe.
-            const now = new Date();
-            const tomorrow = new Date(now);
-            tomorrow.setDate(now.getDate() + 1);
-            // Set to 1 AM Pacific Time (UTC-7). Adjust if needed.
-            tomorrow.setHours(1, 0, 0, 0); 
-            geminiCooldownEndTime = tomorrow.getTime();
-
-            disableGeminiFeatures();
-            alert("The AI feature has reached its daily usage limit. It will be available again tomorrow.");
-            return null; // Signal failure
-        }
-
-        if (!response.ok) {
-            const errorData = await response.json();
-            console.error("Gemini API Error:", errorData);
-            throw new Error(`API Error: ${response.statusText}`);
-        }
-
-        // 3. On success, ensure features are available
-        isGeminiAvailable = true;
-        geminiCooldownEndTime = 0;
-        enableGeminiFeatures();
-
-        const result = await response.json();
-        if (result.candidates && result.candidates.length > 0) {
-            return result.candidates[0].content.parts[0].text;
-        }
-        return "No response from AI.";
-
-    } catch (error) {
-        console.error("Failed to call Gemini API:", error);
-        alert("An error occurred while contacting the AI assistant. Please check the console for details.");
-        return null;
-    }
-}
-
-function disableGeminiFeatures() {
-    document.querySelectorAll('.gemini-helper-btn').forEach(btn => {
-        btn.disabled = true;
-        btn.style.cursor = 'not-allowed';
-        btn.style.opacity = '0.5';
-        btn.title = "AI feature unavailable due to daily quota.";
-    });
-}
-
-function enableGeminiFeatures() {
-    document.querySelectorAll('.gemini-helper-btn').forEach(btn => {
-        btn.disabled = false;
-        btn.style.cursor = 'pointer';
-        btn.style.opacity = '1';
-        btn.title = "Get implementation help with AI";
-    });
-}
-
-// Periodically check if the cooldown has expired and re-enable features
-setInterval(() => {
-    if (!isGeminiAvailable && Date.now() > geminiCooldownEndTime) {
-        console.log("Gemini cooldown period has ended. Re-enabling features.");
-        isGeminiAvailable = true;
-        enableGeminiFeatures();
-    }
-}, 5 * 60 * 1000); // Check every 5 minutes
-
-// ---- END: Insert these new variables and functions ----
-
-        // --- Theme Handling ---
-        function applyTheme(theme) {
-            if (theme === 'dark') {
-                htmlEl.classList.add('dark');
-                themeToggleBtn.innerHTML = sunIcon;
-            } else {
-                htmlEl.classList.remove('dark');
-                themeToggleBtn.innerHTML = moonIcon;
+                isGeminiAvailable = true;
+                enableGeminiFeatures();
+                const result = await response.json();
+                return result.text;
+            } catch (error) {
+                console.error("Failed to call the Cloud Function:", error);
+                alert("An error occurred while contacting the AI assistant. Please check the console for details.");
+                return null;
             }
         }
 
-        function toggleTheme() {
-            const currentTheme = htmlEl.classList.contains('dark') ? 'dark' : 'light';
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            localStorage.setItem('aidefendTheme', newTheme);
-            applyTheme(newTheme);
+        function disableGeminiFeatures() {
+            document.querySelectorAll('.gemini-helper-btn').forEach(btn => {
+                btn.disabled = true;
+                btn.style.cursor = 'not-allowed';
+                btn.style.opacity = '0.5';
+                btn.title = "AI feature unavailable due to daily quota.";
+            });
         }
 
-        const savedTheme = localStorage.getItem('aidefendTheme') || 'dark'; 
-        applyTheme(savedTheme);
-        aboutBtn.innerHTML = infoIcon + "About"; 
+        function enableGeminiFeatures() {
+            document.querySelectorAll('.gemini-helper-btn').forEach(btn => {
+                btn.disabled = false;
+                btn.style.cursor = 'pointer';
+                btn.style.opacity = '1';
+                btn.title = "Get implementation help with AI";
+            });
+        }
 
+        setInterval(() => {
+            if (!isGeminiAvailable && Date.now() > geminiCooldownEndTime) {
+                isGeminiAvailable = true;
+                enableGeminiFeatures();
+            }
+        }, 5 * 60 * 1000);
 
-        // --- Render Functions ---
+        // --- Render and Modal Functions ---
         function renderMainGrid(searchTerm = "") {
-            mainContentEl.innerHTML = ''; 
-            const gridContainer = document.createElement('div');
-            gridContainer.className = 'tactic-column-grid';
+             mainContentEl.innerHTML = ''; 
+             const gridContainer = document.createElement('div');
+             gridContainer.className = 'tactic-column-grid';
 
-            const allTechniquesFlat = searchTerm ? aidefendData.tactics.reduce((acc, tactic) => {
-                if (tactic.techniques && Array.isArray(tactic.techniques)) {
-                    tactic.techniques.forEach(tech => acc.push({...tech, tacticName: tactic.name }));
-                }
-                return acc;
-            }, []) : [];
-           
-            const techniquesMatchingGlobalSearch = searchTerm ? allTechniquesFlat.filter(tech => {
-                const term = searchTerm.toLowerCase();
-                let match = tech.name.toLowerCase().includes(term) ||
-                                tech.id.toLowerCase().includes(term) ||
-                                (tech.description && tech.description.toLowerCase().includes(term));
-                if (!match && tech.defendsAgainst) {
-                    for (const da of tech.defendsAgainst) {
-                        if (da.items && da.items.some(item => item.toLowerCase().includes(term))) {
-                            match = true;
-                            break;
-                        }
-                    }
-                }
-                return match;
-            }) : [];
+             const allTechniquesFlat = searchTerm ? aidefendData.tactics.reduce((acc, tactic) => {
+                 if (tactic.techniques && Array.isArray(tactic.techniques)) {
+                     tactic.techniques.forEach(tech => acc.push({...tech, tacticName: tactic.name }));
+                 }
+                 return acc;
+             }, []) : [];
+            
+             const techniquesMatchingGlobalSearch = searchTerm ? allTechniquesFlat.filter(tech => {
+                 const term = searchTerm.toLowerCase();
+                 let match = tech.name.toLowerCase().includes(term) ||
+                                 tech.id.toLowerCase().includes(term) ||
+                                 (tech.description && tech.description.toLowerCase().includes(term));
+                 if (!match && tech.defendsAgainst) {
+                     for (const da of tech.defendsAgainst) {
+                         if (da.items && da.items.some(item => item.toLowerCase().includes(term))) {
+                             match = true;
+                             break;
+                         }
+                     }
+                 }
+                 return match;
+             }) : [];
 
 
-            if (searchTerm && techniquesMatchingGlobalSearch.length === 0) {
-                mainContentEl.innerHTML = `<p class="text-center opacity-80 py-10">No techniques found matching "${searchTerm}".</p>`;
-                return; 
-            }
+             if (searchTerm && techniquesMatchingGlobalSearch.length === 0) {
+                 mainContentEl.innerHTML = `<p class="text-center opacity-80 py-10">No techniques found matching "${searchTerm}".</p>`;
+                 return; 
+             }
 
-            aidefendData.tactics.forEach(tactic => {
-                let techniquesInThisTacticThatMatchSearch = [];
-                let columnShouldBeRendered = !searchTerm; 
+             aidefendData.tactics.forEach(tactic => {
+                 let techniquesInThisTacticThatMatchSearch = [];
+                 let columnShouldBeRendered = !searchTerm; 
+
+                 if (searchTerm) {
+                     if (tactic.techniques && Array.isArray(tactic.techniques)) {
+                         techniquesInThisTacticThatMatchSearch = tactic.techniques.filter(t => 
+                             techniquesMatchingGlobalSearch.some(matchedTech => matchedTech.id === t.id)
+                         );
+                         if (techniquesInThisTacticThatMatchSearch.length > 0) {
+                             columnShouldBeRendered = true;
+                         }
+                     } else {
+                          columnShouldBeRendered = false; 
+                     }
+                 }
+
+                 if (!columnShouldBeRendered) {
+                     return; 
+                 }
+
+                 const column = document.createElement('div');
+                 column.className = 'tactic-column elevation-2'; 
+                 
+                 const tacticHeader = document.createElement('h3');
+                 tacticHeader.className = 'tactic-column-header';
+                 tacticHeader.textContent = tactic.name;
+                 tacticHeader.onclick = () => showTacticModal(tactic);
+                 column.appendChild(tacticHeader);
+                 
+                 const ul = document.createElement('ul');
+                 let techniquesToRenderInColumn;
 
                 if (searchTerm) {
-                    if (tactic.techniques && Array.isArray(tactic.techniques)) {
-                        techniquesInThisTacticThatMatchSearch = tactic.techniques.filter(t => 
-                            techniquesMatchingGlobalSearch.some(matchedTech => matchedTech.id === t.id)
-                        );
-                        if (techniquesInThisTacticThatMatchSearch.length > 0) {
-                            columnShouldBeRendered = true;
+                     techniquesToRenderInColumn = techniquesInThisTacticThatMatchSearch;
+                } else {
+                     techniquesToRenderInColumn = (tactic.techniques && Array.isArray(tactic.techniques)) ? tactic.techniques : [];
+                }
+
+               if (techniquesToRenderInColumn.length > 0) {
+                    techniquesToRenderInColumn.forEach(tech => {
+                        const li = document.createElement('li');
+                       
+                        const a = document.createElement('a');
+                        a.href = '#';
+                        a.className = 'technique-item elevation-2';
+                        a.innerHTML = `<span class="technique-id">${tech.id}</span> <span class="technique-name">${tech.name}</span>`;
+                       
+                        if (searchTerm && techniquesMatchingGlobalSearch.some(matchedTech => matchedTech.id === tech.id)) {
+                            a.classList.add('highlight');
                         }
-                    } else {
-                         columnShouldBeRendered = false; 
-                    }
-                }
 
-                if (!columnShouldBeRendered) {
-                    return; 
-                }
+                        a.onclick = (e) => {
+                            e.preventDefault();
+                            const originalTactic = aidefendData.tactics.find(originalT => originalT.name === tactic.name);
+                            const originalTechnique = originalTactic?.techniques.find(origTech => origTech.id === tech.id);
+                            showTechniqueModal(originalTechnique || tech, tactic.name);
+                        };
 
-                const column = document.createElement('div');
-                column.className = 'tactic-column elevation-2'; 
+                        li.appendChild(a);
+
+                        if (tech.subTechniques && tech.subTechniques.length > 0) {
+                            const subList = document.createElement('ul');
+                            subList.className = 'pl-3 pr-1 py-1 mt-1 space-y-2'; 
+                            
+                            tech.subTechniques.forEach(subTech => {
+                                const subLi = document.createElement('li');
+                                const subA = document.createElement('a');
+                                subA.href = '#';
+                                subA.className = 'technique-item elevation-2 block !bg-[var(--technique-item-hover-bg)] !text-[var(--technique-item-hover-text)]';
+                                subA.innerHTML = `<span class="technique-id !text-[var(--technique-id-text)]">${subTech.id}</span> <span class="technique-name">${subTech.name}</span>`;
+
+                                if (searchTerm) {
+                                    subA.classList.add('highlight');
+                                }
+                               
+                                subA.onclick = (e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation(); // Prevent parent click
+                                    showTechniqueModal(subTech, tactic.name);
+                                };
+                                subLi.appendChild(subA);
+                                subList.appendChild(subLi);
+                            });
+                           
+                            li.appendChild(subList);
+                        }
+
+                        ul.appendChild(li);
+                    });
+                } else if (!searchTerm && (!tactic.techniques || tactic.techniques.length === 0)) {
+                    const p = document.createElement('p');
+                    p.className = 'text-xs opacity-60 italic px-2';
+                    p.textContent = 'No techniques defined yet for this tactic.';
+                    ul.appendChild(p);
+                }
                
-                const tacticHeader = document.createElement('h3');
-                tacticHeader.className = 'tactic-column-header';
-                tacticHeader.textContent = tactic.name;
-                tacticHeader.onclick = () => showTacticModal(tactic);
-                column.appendChild(tacticHeader);
-               
-                const ul = document.createElement('ul');
-                let techniquesToRenderInColumn;
-
-            if (searchTerm) {
-                // techniquesInThisTacticThatMatchSearch is already filtered for this tactic
-                techniquesToRenderInColumn = techniquesInThisTacticThatMatchSearch;
-            } else {
-                // Not searching, use all techniques of the current tactic
-                techniquesToRenderInColumn = (tactic.techniques && Array.isArray(tactic.techniques)) ? tactic.techniques : [];
-            }
-
-             if (techniquesToRenderInColumn.length > 0) {
-    techniquesToRenderInColumn.forEach(tech => {
-        const li = document.createElement('li');
-        
-        // Create and configure the main technique link
-        const a = document.createElement('a');
-        a.href = '#';
-        a.className = 'technique-item elevation-2';
-        a.innerHTML = `<span class="technique-id">${tech.id}</span> <span class="technique-name">${tech.name}</span>`;
-        
-        if (searchTerm && techniquesMatchingGlobalSearch.some(matchedTech => matchedTech.id === tech.id)) {
-            a.classList.add('highlight');
+                 column.appendChild(ul);
+                 gridContainer.appendChild(column);
+             });
+             mainContentEl.appendChild(gridContainer);
         }
-
-        a.onclick = (e) => {
-            e.preventDefault();
-            const originalTactic = aidefendData.tactics.find(originalT => originalT.name === tactic.name);
-            const originalTechnique = originalTactic?.techniques.find(origTech => origTech.id === tech.id);
-            showTechniqueModal(originalTechnique || tech, tactic.name);
-        };
-
-        // Add the main technique link to the list item
-        li.appendChild(a);
-
-        // If sub-techniques exist, create and append them in a nested list
-        if (tech.subTechniques && tech.subTechniques.length > 0) {
-            const subList = document.createElement('ul');
-            subList.className = 'pl-3 pr-1 py-1 mt-1 space-y-2'; // Indented styling
-            
-            tech.subTechniques.forEach(subTech => {
-                const subLi = document.createElement('li');
-                const subA = document.createElement('a');
-                subA.href = '#';
-                subA.className = 'technique-item elevation-2 block !bg-[var(--technique-item-hover-bg)] !text-[var(--technique-item-hover-text)]';
-                subA.innerHTML = `<span class="technique-id !text-[var(--technique-id-text)]">${subTech.id}</span> <span class="technique-name">${subTech.name}</span>`;
-
-                if (searchTerm) {
-                    subA.classList.add('highlight');
-                }
-                
-                subA.onclick = (e) => {
-                    e.preventDefault();
-                    e.stopPropagation(); // Prevent parent click
-                    showTechniqueModal(subTech, tactic.name);
-                };
-                subLi.appendChild(subA);
-                subList.appendChild(subLi);
-            });
-            
-            li.appendChild(subList); // Append the sub-list to the main technique's list item
-        }
-
-        // Add the fully constructed list item (with or without sub-list) to the main list
-        ul.appendChild(li);
-    });
-} else if (!searchTerm && (!tactic.techniques || tactic.techniques.length === 0)) {
-    const p = document.createElement('p');
-    p.className = 'text-xs opacity-60 italic px-2';
-    p.textContent = 'No techniques defined yet for this tactic.';
-    ul.appendChild(p);
-}
-                
-                column.appendChild(ul);
-                gridContainer.appendChild(column);
-            });
-            mainContentEl.appendChild(gridContainer);
-        }
-
         function showIntroductionModal() {
-    const intro = aidefendData.introduction;
-    
-    // 1. Build the Accordion HTML Structure (Now using plusIcon by default)
-    let contentHtml = `<h2 class="modal-main-title">${intro.mainTitle}</h2>`;
-    contentHtml += '<div class="accordion-container">'; 
-
-    intro.sections.forEach((section, index) => {
-        contentHtml += `
-            <div class="accordion-item">
-                <div class="accordion-header" role="button" aria-expanded="${index === 0 ? 'true' : 'false'}">
-                    <span>${section.title}</span>
-                    <div class="icon-wrapper">${plusIcon}</div>
-                </div>
-                <div class="accordion-content">
-                    <div class="accordion-content-inner">
-                        ${section.paragraphs ? section.paragraphs.map(p => `<p>${p}</p>`).join('') : ''}
-                        ${section.listItems ? `<ul>${section.listItems.map(item => `<li>${item}</li>`).join('')}</ul>` : ''}
-                        ${section.concludingParagraphs ? section.concludingParagraphs.map(p => `<p>${p}</p>`).join('') : ''}
+            const intro = aidefendData.introduction;
+            let contentHtml = `<h2 class="modal-main-title">${intro.mainTitle}</h2>`;
+            contentHtml += '<div class="accordion-container">'; 
+            intro.sections.forEach((section, index) => {
+                contentHtml += `
+                    <div class="accordion-item">
+                        <div class="accordion-header" role="button" aria-expanded="${index === 0 ? 'true' : 'false'}">
+                            <span>${section.title}</span>
+                            <div class="icon-wrapper">${plusIcon}</div>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-content-inner">
+                                ${section.paragraphs ? section.paragraphs.map(p => `<p>${p}</p>`).join('') : ''}
+                                ${section.listItems ? `<ul>${section.listItems.map(item => `<li>${item}</li>`).join('')}</ul>` : ''}
+                                ${section.concludingParagraphs ? section.concludingParagraphs.map(p => `<p>${p}</p>`).join('') : ''}
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
-        `;
-    });
-
-    contentHtml += '</div>';
-    modalBodyEl.innerHTML = contentHtml;
-
-    // 2. Add Click Listeners to Make the Accordion Interactive
-    const accordionHeaders = modalBodyEl.querySelectorAll('.accordion-header');
-    
-    accordionHeaders.forEach((header, index) => {
-        const content = header.nextElementSibling;
-        const iconWrapper = header.querySelector('.icon-wrapper');
-
-        // Open the first item by default and set its icon to minus
-        if (index === 0) {
-            header.classList.add('active');
-            content.style.maxHeight = content.scrollHeight + 'px';
-            iconWrapper.innerHTML = minusIcon; // Set initial icon for open item
-        }
-
-        header.addEventListener('click', () => {
-            const isActive = header.classList.contains('active');
-
-            // Close all other items and set their icons to plus
-            accordionHeaders.forEach(otherHeader => {
-                otherHeader.classList.remove('active');
-                otherHeader.nextElementSibling.style.maxHeight = null;
-                otherHeader.querySelector('.icon-wrapper').innerHTML = plusIcon;
+                `;
             });
-
-            // Toggle the clicked item
-            if (!isActive) {
-                header.classList.add('active');
-                content.style.maxHeight = content.scrollHeight + 'px';
-                iconWrapper.innerHTML = minusIcon; // Change to minus when opening
-            }
-        });
-    });
-
-    // 3. Show the Modal
-    modalEl.classList.add('active');
-    document.body.classList.add('modal-open');
-}
-
-
+            contentHtml += '</div>';
+            modalBodyEl.innerHTML = contentHtml;
+            const accordionHeaders = modalBodyEl.querySelectorAll('.accordion-header');
+            accordionHeaders.forEach((header, index) => {
+                const content = header.nextElementSibling;
+                const iconWrapper = header.querySelector('.icon-wrapper');
+                if (index === 0) {
+                    header.classList.add('active');
+                    content.style.maxHeight = content.scrollHeight + 'px';
+                    iconWrapper.innerHTML = minusIcon; 
+                }
+                header.addEventListener('click', () => {
+                    const isActive = header.classList.contains('active');
+                    accordionHeaders.forEach(otherHeader => {
+                        otherHeader.classList.remove('active');
+                        otherHeader.nextElementSibling.style.maxHeight = null;
+                        otherHeader.querySelector('.icon-wrapper').innerHTML = plusIcon;
+                    });
+                    if (!isActive) {
+                        header.classList.add('active');
+                        content.style.maxHeight = content.scrollHeight + 'px';
+                        iconWrapper.innerHTML = minusIcon; 
+                    }
+                });
+            });
+            modalEl.classList.add('active');
+            document.body.classList.add('modal-open');
+        }
         function showTacticModal(tactic) { 
             const fullTacticData = aidefendData.tactics.find(t => t.name === tactic.name) || tactic;
-
             modalBodyEl.innerHTML = `
                 <h2>${fullTacticData.name}</h2>
                 <p class="mb-4 leading-relaxed text-sm">${fullTacticData.purpose || 'No purpose description available.'}</p>
@@ -1229,120 +659,6 @@ setInterval(() => {
             modalEl.classList.add('active');
             document.body.classList.add('modal-open');
         }
-
-        function showTechniqueModal(technique, tacticName) {
-    const geminiIcon = `
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 mr-2">
-            <path d="M14.228 2.314a.75.75 0 00-.956.4L9.5 9h5l-3.772 6.686a.75.75 0 00.956-.4L14.5 9h-5l3.772-6.686z"/>
-            <path fill-rule="evenodd" d="M3.75 12a8.25 8.25 0 1116.5 0 8.25 8.25 0 01-16.5 0zM12 2.25a9.75 9.75 0 100 19.5 9.75 9.75 0 000-19.5z" clip-rule="evenodd"/>
-        </svg>`;
-
-    modalBodyEl.innerHTML = `
-        <p class="text-sm opacity-80 mb-1">Tactic: ${tacticName}</p>
-        <h2 id="technique-modal-title">${technique.id}: ${technique.name}</h2>
-        <p class="mb-4 leading-relaxed text-sm" id="technique-modal-desc">${technique.description || 'No description available.'}</p>
-        
-        <!-- AI Response Area (now at the top) -->
-        <div id="gemini-response-container"></div>
-
-        <!-- Implementation Section -->
-        <div class="mt-4 pt-3 border-t border-[var(--column-border)]">
-            <div class="flex items-center">
-                <h3 class="font-semibold text-lg">Implementation Guidance</h3>
-                <button id="implementationHelperBtn" class="gemini-helper-btn" title="Get implementation help with AI">${geminiIcon}Get Code Example</button>
-            </div>
-            ${renderDetailSectionListForModal('Implementation Strategies', technique.implementationStrategies)}
-            ${renderDetailSectionListForModal('Potential Tools - Open Source', technique.toolsOpenSource)}
-            ${renderDetailSectionListForModal('Potential Tools - Commercial', technique.toolsCommercial)}
-        </div>
-
-        <!-- Defends Against Section -->
-        <div class="mt-4 pt-3 border-t border-[var(--column-border)]">
-             <div class="flex items-center">
-                <h3 class="font-semibold text-lg">Defends Against</h3>
-                <button id="defenseHelperBtn" class="gemini-helper-btn" title="Explain how this defends against threats">${geminiIcon}Explain Defenses</button>
-            </div>
-            ${technique.defendsAgainst && technique.defendsAgainst.length > 0 ? 
-                technique.defendsAgainst.map(da => `
-                    <div class="mb-2 mt-2">
-                        <p class="defends-against-framework text-sm">${da.framework}:</p>
-                        <ul class="list-disc list-inside ml-4 text-xs opacity-90 space-y-0.5">
-                            ${da.items.map(item => `<li class="defends-against-item">${item}</li>`).join('')}
-                        </ul>
-                    </div>
-                `).join('') : '<p class="text-xs opacity-60 italic mt-2">No specific defenses listed.</p>'}
-        </div>
-    `;
-
-    // --- Add Event Listeners for NEW buttons ---
-    const implementationBtn = document.getElementById('implementationHelperBtn');
-    const defenseBtn = document.getElementById('defenseHelperBtn');
-    const responseContainer = document.getElementById('gemini-response-container');
-
-    // Check current availability when modal opens
-    if (!isGeminiAvailable) {
-        disableGeminiFeatures();
-    }
-
-    const handleButtonClick = async (button, promptGenerator) => {
-        // Disable both buttons to prevent simultaneous requests
-        document.querySelectorAll('.gemini-helper-btn').forEach(btn => btn.disabled = true);
-        button.innerHTML = `${geminiIcon} <span>Generating...</span>`;
-        responseContainer.style.display = 'block';
-        responseContainer.innerHTML = '<div class="loader"></div>';
-
-        const prompt = promptGenerator(technique);
-        const responseText = await callGeminiAPI(prompt);
-
-        if (responseText) {
-            let html = responseText
-                .replace(/```(python|yaml|bash|sh|javascript|json|text)\s*\n([\s\S]*?)\n```/g, (match, lang, code) => `<code>${code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code>`)
-                .replace(/`([^`]+)`/g, `<code>$1</code>`)
-                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-                .replace(/\*(.*?)\*/g, '<em>$1</em>')
-                .replace(/^### (.*$)/gim, '<h4>$1</h4>')
-                .replace(/^## (.*$)/gim, '<h3>$1</h3>')
-                .replace(/^\* (.*$)/gim, '<ul><li>$1</li></ul>')
-                .replace(/\n/g, '<br>');
-            
-            responseContainer.innerHTML = `<pre>${html}</pre>`;
-        } else {
-            responseContainer.innerHTML = '<p class="text-xs text-center opacity-70">AI helper is currently unavailable. Please try again later.</p>';
-        }
-        
-        // Re-enable buttons if API is available
-        if (isGeminiAvailable) {
-            document.querySelectorAll('.gemini-helper-btn').forEach(btn => btn.disabled = false);
-        }
-        implementationBtn.innerHTML = `${geminiIcon}Get Code Example`;
-        defenseBtn.innerHTML = `${geminiIcon}Explain Defenses`;
-    };
-
-    implementationBtn.addEventListener('click', () => {
-        const prompt = (tech) => `You are an expert AI security implementation assistant. For the AI defense technique "${tech.name}" (${tech.id}), provide a concise, actionable code snippet or configuration file example in Python or YAML. Use one of the open-source tools mentioned if possible: ${(tech.toolsOpenSource || []).join(', ')}. Format the response in simple Markdown with a brief explanation followed by the code block.`;
-        handleButtonClick(implementationBtn, prompt);
-    });
-
-    defenseBtn.addEventListener('click', () => {
-        const prompt = (tech) => `You are an expert AI security analyst. For the AI defense technique "${tech.name}" (${tech.id}), explain **how** it specifically defends against the listed threats. Be concise and clear.
-        
-        Threats to explain:
-        ${(tech.defendsAgainst || []).map(da => `- ${da.framework}: ${da.items.join(', ')}`).join('\n')}
-        
-        Provide your analysis below in simple Markdown:`;
-        handleButtonClick(defenseBtn, prompt);
-    });
-
-    modalEl.classList.add('active');
-    document.body.classList.add('modal-open');
-}
-
-        function hideModal() { 
-            modalEl.classList.remove('active');
-            document.body.classList.remove('modal-open');
-            modalBodyEl.innerHTML = ''; 
-        }
-
         function renderDetailSectionListForModal(title, items) {
             if (!items || items.length === 0) return '';
             return `
@@ -1354,42 +670,120 @@ setInterval(() => {
                 </div>
             `;
         }
-       
+        function hideModal() { 
+            modalEl.classList.remove('active');
+            document.body.classList.remove('modal-open');
+            modalBodyEl.innerHTML = ''; 
+        }
+        function applyTheme(theme) {
+            if (theme === 'dark') {
+                htmlEl.classList.add('dark');
+                themeToggleBtn.innerHTML = sunIcon;
+            } else {
+                htmlEl.classList.remove('dark');
+                themeToggleBtn.innerHTML = moonIcon;
+            }
+        }
+        function toggleTheme() {
+            const currentTheme = htmlEl.classList.contains('dark') ? 'dark' : 'light';
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            localStorage.setItem('aidefendTheme', newTheme);
+            applyTheme(newTheme);
+        }
+        function showTechniqueModal(technique, tacticName) {
+            const geminiIcon = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-4 h-4 mr-2"><path d="M14.228 2.314a.75.75 0 00-.956.4L9.5 9h5l-3.772 6.686a.75.75 0 00.956-.4L14.5 9h-5l3.772-6.686z"/><path fill-rule="evenodd" d="M3.75 12a8.25 8.25 0 1116.5 0 8.25 8.25 0 01-16.5 0zM12 2.25a9.75 9.75 0 100 19.5 9.75 9.75 0 000-19.5z" clip-rule="evenodd"/></svg>`;
+            modalBodyEl.innerHTML = `
+                <p class="text-sm opacity-80 mb-1">Tactic: ${tacticName}</p>
+                <h2 id="technique-modal-title">${technique.id}: ${technique.name}</h2>
+                <p class="mb-4 leading-relaxed text-sm" id="technique-modal-desc">${technique.description || 'No description available.'}</p>
+                <div id="gemini-response-container"></div>
+                <div class="mt-4 pt-3 border-t border-[var(--column-border)]">
+                    <div class="flex items-center">
+                        <h3 class="font-semibold text-lg">Implementation Guidance</h3>
+                        <button id="implementationHelperBtn" class="gemini-helper-btn" title="Get implementation help with AI">${geminiIcon}Get Code Example</button>
+                    </div>
+                    ${renderDetailSectionListForModal('Implementation Strategies', technique.implementationStrategies)}
+                    ${renderDetailSectionListForModal('Potential Tools - Open Source', technique.toolsOpenSource)}
+                    ${renderDetailSectionListForModal('Potential Tools - Commercial', technique.toolsCommercial)}
+                </div>
+                <div class="mt-4 pt-3 border-t border-[var(--column-border)]">
+                     <div class="flex items-center">
+                        <h3 class="font-semibold text-lg">Defends Against</h3>
+                        <button id="defenseHelperBtn" class="gemini-helper-btn" title="Explain how this defends against threats">${geminiIcon}Explain Defenses</button>
+                    </div>
+                    ${technique.defendsAgainst && technique.defendsAgainst.length > 0 ? 
+                        technique.defendsAgainst.map(da => `
+                            <div class="mb-2 mt-2">
+                                <p class="defends-against-framework text-sm">${da.framework}:</p>
+                                <ul class="list-disc list-inside ml-4 text-xs opacity-90 space-y-0.5">
+                                    ${da.items.map(item => `<li>${item}</li>`).join('')}
+                                </ul>
+                            </div>
+                        `).join('') : '<p class="text-xs opacity-60 italic mt-2">No specific defenses listed.</p>'}
+                </div>
+            `;
+            const implementationBtn = document.getElementById('implementationHelperBtn');
+            const defenseBtn = document.getElementById('defenseHelperBtn');
+            const responseContainer = document.getElementById('gemini-response-container');
+            if (!isGeminiAvailable) { disableGeminiFeatures(); }
+            const handleButtonClick = async (button, promptGenerator) => {
+                document.querySelectorAll('.gemini-helper-btn').forEach(btn => btn.disabled = true);
+                button.innerHTML = `<div class="loader inline-block mr-2" style="width:16px;height:16px;border-width:2px;"></div><span>Generating...</span>`;
+                responseContainer.style.display = 'block';
+                responseContainer.innerHTML = '<div class="loader"></div>';
+                const prompt = promptGenerator(technique);
+                const responseText = await callGeminiAPI(prompt);
+                if (responseText) {
+                    let html = responseText.replace(/```(python|yaml|bash|sh|javascript|json|text)?\s*\n([\s\S]*?)\n```/g, (match, lang, code) => `<pre><code class="language-${lang || 'text'}">${code.replace(/</g, '&lt;').replace(/>/g, '&gt;')}</code></pre>`).replace(/`([^`]+)`/g, `<code>$1</code>`).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\*(.*?)\*/g, '<em>$1</em>').replace(/^### (.*$)/gim, '<h4>$1</h4>').replace(/^## (.*$)/gim, '<h3>$1</h3>').replace(/^\* (.*$)/gim, '<ul><li>$1</li></ul>').replace(/\n/g, '<br>').replace(/<br><ul>/g, '<ul>').replace(/<\/li><\/ul><br>/g, '</li></ul>');
+                    responseContainer.innerHTML = `<div class="prose dark:prose-invert max-w-none">${html}</div>`;
+                } else {
+                    responseContainer.innerHTML = '<p class="text-xs text-center opacity-70">AI helper is currently unavailable. Please try again later.</p>';
+                }
+                if (isGeminiAvailable) { document.querySelectorAll('.gemini-helper-btn').forEach(btn => btn.disabled = false); }
+                implementationBtn.innerHTML = `${geminiIcon}Get Code Example`;
+                defenseBtn.innerHTML = `${geminiIcon}Explain Defenses`;
+            };
+            implementationBtn.addEventListener('click', () => {
+                const prompt = (tech) => `You are an expert AI security implementation assistant. For the AI defense technique "${tech.name}" (${tech.id}), provide a concise, actionable code snippet or configuration file example in Python or YAML. Use one of the open-source tools mentioned if possible: ${(tech.toolsOpenSource || []).join(', ')}. Format the response in simple Markdown with a brief explanation followed by the code block.`;
+                handleButtonClick(implementationBtn, prompt);
+            });
+            defenseBtn.addEventListener('click', () => {
+                const prompt = (tech) => `You are an expert AI security analyst. For the AI defense technique "${tech.name}" (${tech.id}), explain **how** it specifically defends against the listed threats. Be concise and clear. Threats to explain: ${(tech.defendsAgainst || []).map(da => `- ${da.framework}: ${da.items.join(', ')}`).join('\n')} Provide your analysis below in simple Markdown:`;
+                handleButtonClick(defenseBtn, prompt);
+            });
+            modalEl.classList.add('active');
+            document.body.classList.add('modal-open');
+        }
+
         // --- Event Listeners ---
         themeToggleBtn.addEventListener('click', toggleTheme);
         aboutBtn.addEventListener('click', showIntroductionModal);
-
         searchBarEl.addEventListener('input', (e) => {
             currentSearchTerm = e.target.value.trim();
-            if (currentSearchTerm) {
-                searchClearBtnEl.style.display = 'block';
-            } else {
-                searchClearBtnEl.style.display = 'none';
-            }
+            searchClearBtnEl.style.display = currentSearchTerm ? 'block' : 'none';
             renderMainGrid(currentSearchTerm);
         });
-
         searchClearBtnEl.addEventListener('click', () => {
             searchBarEl.value = '';
             currentSearchTerm = '';
             searchClearBtnEl.style.display = 'none';
             renderMainGrid();
         });
-
-
         modalCloseBtn.addEventListener('click', hideModal);
         modalBackdropEl.addEventListener('click', hideModal); 
-
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape' && modalEl.classList.contains('active')) {
                 hideModal();
             }
         });
 
+
         // --- Initial Load ---
-        renderMainGrid(); 
+        const savedTheme = localStorage.getItem('aidefendTheme') || 'dark'; 
+        applyTheme(savedTheme);
+        aboutBtn.innerHTML = infoIcon + "About"; 
 
+        renderMainGrid();
     </script>
-
 </body>
 </html>
