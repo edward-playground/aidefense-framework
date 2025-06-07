@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="dark"> <!-- Default to dark theme -->
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,161 +9,681 @@
     <style>
         :root {
             /* Light Theme */
-            --bg-color: #f0f2f5; --text-color: #37474f; --text-secondary-color: #607d8b; --header-bg: #ffffff; --header-border: #e0e0e0; --column-bg: #ffffff; --column-border: #e0e0e0; --column-header-text: #455a64; --column-header-hover-text: #1976d2; --technique-item-bg: #ffffff; --technique-item-border: #e8eaf6; --technique-item-text: #2196f3; --technique-item-hover-bg: #e3f2fd; --technique-item-hover-text: #1565c0; --technique-item-highlight-bg: #bbdefb; --technique-item-highlight-text: #0d47a1; --technique-id-text: #78909c; --modal-content-bg: #ffffff; --modal-close-btn-text: #757575; --modal-close-btn-hover-text: #212121; --search-bg: #eceff1; --search-border: #b0bec5; --search-focus-ring: #2196f3; --scrollbar-track: #e0e0e0; --scrollbar-thumb: #90a4ae; --scrollbar-thumb-hover: #78909c; --icon-fill: #607d8b; --icon-hover-fill: #2196f3; --link-color: #1976d2; --link-hover-color: #0d47a1; --shadow-umbra: rgba(0, 0, 0, 0.15); --shadow-penumbra: rgba(0, 0, 0, 0.1); --shadow-ambient: rgba(0, 0, 0, 0.08); --footer-bg: #e0e0e0; --footer-text: #757575; --footer-border: #c0c0c0;
+            --bg-color: #f0f2f5;
+            --text-color: #37474f;
+            --text-secondary-color: #607d8b;
+            --header-bg: #ffffff;
+            --header-border: #e0e0e0;
+            --column-bg: #ffffff;
+            --column-border: #e0e0e0;
+            --column-header-text: #455a64;
+            --column-header-hover-text: #1976d2;
+            --technique-item-bg: #ffffff;
+            --technique-item-border: #e8eaf6;
+            --technique-item-text: #2196f3;
+            --technique-item-hover-bg: #e3f2fd;
+            --technique-item-hover-text: #1565c0;
+            --technique-item-highlight-bg: #bbdefb;
+            --technique-item-highlight-text: #0d47a1;
+            --technique-id-text: #78909c;
+            --modal-content-bg: #ffffff;
+            --modal-close-btn-text: #757575;
+            --modal-close-btn-hover-text: #212121;
+            --search-bg: #eceff1;
+            --search-border: #b0bec5;
+            --search-focus-ring: #2196f3;
+            --scrollbar-track: #e0e0e0;
+            --scrollbar-thumb: #90a4ae;
+            --scrollbar-thumb-hover: #78909c;
+            --icon-fill: #607d8b;
+            --icon-hover-fill: #2196f3;
+            --link-color: #1976d2;
+            --link-hover-color: #0d47a1;
+            --shadow-umbra: rgba(0, 0, 0, 0.15);
+            --shadow-penumbra: rgba(0, 0, 0, 0.1);
+            --shadow-ambient: rgba(0, 0, 0, 0.08);
+            --footer-bg: #e0e0e0;
+            --footer-text: #757575;
+            --footer-border: #c0c0c0;
         }
+
         html.dark {
             /* Dark Theme */
-            --bg-color: #1a1a1a; --text-color: #e0e0e0; --text-secondary-color: #b0b0b0; --header-bg: #222222; --header-border: #333333; --column-bg: #222222; --column-border: #333333; --column-header-text: #f0f0f0; --column-header-hover-text: #90caf9; --technique-item-bg: #2b2b2b; --technique-item-border: #3d3d3d; --technique-item-text: #90caf9; --technique-item-hover-bg: #383838; --technique-item-hover-text: #bbdefb; --technique-item-highlight-bg: #1e3a5f; --technique-item-highlight-text: #e3f2fd; --technique-id-text: #c0c0c0; --modal-content-bg: #222222; --modal-close-btn-text: #b0b0b0; --modal-close-btn-hover-text: #f0f0f0; --search-bg: #333333; --search-border: #444444; --search-focus-ring: #90caf9; --scrollbar-track: #2b2b2b; --scrollbar-thumb: #555555; --scrollbar-thumb-hover: #777777; --icon-fill: #c0c0c0; --icon-hover-fill: #90caf9; --link-color: #90caf9; --link-hover-color: #e3f2fd; --shadow-umbra: rgba(0, 0, 0, 0.5); --shadow-penumbra: rgba(0, 0, 0, 0.35); --shadow-ambient: rgba(0, 0, 0, 0.3); --footer-bg: #2b2b2b; --footer-text: #a0a0a0; --footer-border: #3d3d3d;
+            --bg-color: #1a1a1a;
+            --text-color: #e0e0e0;
+            --text-secondary-color: #b0b0b0;
+            --header-bg: #222222;
+            --header-border: #333333;
+            --column-bg: #222222;
+            --column-border: #333333;
+            --column-header-text: #f0f0f0;
+            --column-header-hover-text: #90caf9;
+            --technique-item-bg: #2b2b2b;
+            --technique-item-border: #3d3d3d;
+            --technique-item-text: #90caf9;
+            --technique-item-hover-bg: #383838;
+            --technique-item-hover-text: #bbdefb;
+            --technique-item-highlight-bg: #1e3a5f;
+            --technique-item-highlight-text: #e3f2fd;
+            --technique-id-text: #c0c0c0;
+            --modal-content-bg: #222222;
+            --modal-close-btn-text: #b0b0b0;
+            --modal-close-btn-hover-text: #f0f0f0;
+            --search-bg: #333333;
+            --search-border: #444444;
+            --search-focus-ring: #90caf9;
+            --scrollbar-track: #2b2b2b;
+            --scrollbar-thumb: #555555;
+            --scrollbar-thumb-hover: #777777;
+            --icon-fill: #c0c0c0;
+            --icon-hover-fill: #90caf9;
+            --link-color: #90caf9;
+            --link-hover-color: #e3f2fd;
+            --shadow-umbra: rgba(0, 0, 0, 0.5);
+            --shadow-penumbra: rgba(0, 0, 0, 0.35);
+            --shadow-ambient: rgba(0, 0, 0, 0.3);
+            --footer-bg: #2b2b2b;
+            --footer-text: #a0a0a0;
+            --footer-border: #3d3d3d;
         }
-        html { height: 100%; }
-        body { font-family: 'Inter', sans-serif; background-color: var(--bg-color); color: var(--text-color); transition: background-color 0.3s ease, color 0.3s ease; min-height: 100%; display: flex; flex-direction: column; }
-        #page-container { flex: 1 0 auto; }
-        footer { flex-shrink: 0; }
-        body.modal-open { overflow: hidden; }
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
-        .elevation-2 { box-shadow: 0px 3px 1px -2px var(--shadow-umbra), 0px 2px 2px 0px var(--shadow-penumbra), 0px 1px 5px 0px var(--shadow-ambient); }
-        .elevation-4 { box-shadow: 0px 2px 4px -1px var(--shadow-umbra), 0px 4px 5px 0px var(--shadow-penumbra), 0px 1px 10px 0px var(--shadow-ambient); }
-        .elevation-8 { box-shadow: 0px 5px 5px -3px var(--shadow-umbra), 0px 8px 10px 1px var(--shadow-penumbra), 0px 3px 14px 2px var(--shadow-ambient); }
-        .header-main { background-color: var(--header-bg); transition: background-color 0.3s ease, border-color 0.3s ease; }
-        .header-title { font-size: 2rem; font-weight: 500; color: var(--text-color); }
-        .header-subtitle { font-size: 0.875rem; color: var(--text-secondary-color); }
-        .search-input-wrapper { position: relative; display: flex; align-items: center; }
-        .search-container input { background-color: var(--search-bg); border: 1px solid var(--search-border); color: var(--text-color); border-radius: 0.5rem; padding-right: 2.5rem; }
-        .search-container input::placeholder { color: var(--text-secondary-color); }
-        .search-container input:focus { --tw-ring-color: var(--search-focus-ring); border-color: var(--search-focus-ring); box-shadow: 0 0 0 2px var(--search-focus-ring); }
-        .search-clear-button { position: absolute; right: 0.5rem; padding: 0.25rem; color: var(--text-secondary-color); cursor: pointer; display: none; }
-        .search-clear-button:hover { color: var(--text-color); }
-        .search-clear-button svg { width: 1.25rem; height: 1.25rem; }
-        .header-button { background-color: transparent; color: var(--icon-fill); border: none; padding: 0.625rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-        .header-button:hover { background-color: rgba(0,0,0,0.04); color: var(--icon-hover-fill); }
-        html.dark .header-button:hover { background-color: rgba(255,255,255,0.08); }
-        .header-button svg { width: 1.5rem; height: 1.5rem; fill: currentColor; margin-right: 0; }
-        .header-button.text-button { padding: 0.5rem 1rem; border-radius: 0.25rem; font-weight: 500; }
-        .header-button.text-button svg { margin-right: 0.5rem; width: 1.25rem; height: 1.25rem; }
-        .tactic-column-grid { display: flex; flex-wrap: wrap; gap: 0.28rem; padding: 1.5rem 0.5rem; align-items: flex-start; justify-content: center; }
-        .tactic-column { flex-grow: 1; flex-shrink: 1; flex-basis: 160px; max-width: 210px; background-color: var(--column-bg); border-radius: 0.75rem; padding: 0.8rem; min-height: 200px; transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; display: flex; flex-direction: column; }
-        .tactic-column-header { font-size: 1.25rem; font-weight: 500; color: var(--column-header-text); margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--column-border); transition: color 0.3s ease, border-color 0.3s ease; cursor: pointer; text-align: center; }
-        .tactic-column-header:hover { color: var(--column-header-hover-text); }
-        .technique-item { display: block; background-color: var(--technique-item-bg); padding: 0.75rem 1rem; font-size: 0.875rem; color: var(--technique-item-text); border-radius: 0.5rem; cursor: pointer; transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.2s ease, box-shadow 0.2s ease; line-height: 1.5; margin-bottom: 0.75rem; }
-        .technique-item:hover { background-color: var(--technique-item-hover-bg); color: var(--technique-item-hover-text); transform: translateY(-2px); }
-        .technique-item.highlight { background-color: var(--technique-item-highlight-bg); color: var(--technique-item-highlight-text); font-weight: 600; }
-        .technique-id { font-weight: 500; color: var(--technique-id-text); font-size: 0.75rem; margin-right: 0.35rem; display: block; margin-bottom: 0.125rem; }
-        .technique-name { font-weight: 500; }
-        .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0, 0, 0, 0.5); display: flex; align-items: center; justify-content: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.2s ease, visibility 0.2s ease; }
-        html.dark .modal-overlay { background-color: rgba(0, 0, 0, 0.7); }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
-        .modal-content { background-color: var(--modal-content-bg); color: var(--text-color); padding: 2rem; border-radius: 0.5rem; width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; position: relative; transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease; transform: scale(0.95); }
-        .modal-overlay.active .modal-content { transform: scale(1); }
-        .modal-content h2.modal-main-title { font-size: 1.75rem; font-weight: 500; margin-bottom: 1.5rem; color: var(--column-header-hover-text); }
-        .modal-content h2 { font-size: 1.5rem; font-weight: 500; margin-bottom: 1rem; color: var(--column-header-hover-text); }
-        .modal-content h3 { font-size: 1.25rem; font-weight: 500; margin-top: 1.5rem; margin-bottom: 0.75rem; color: var(--text-color); }
-        .modal-content h4 { font-size: 1rem; font-weight: 500; margin-top: 1rem; margin-bottom: 0.5rem; color: var(--text-color); }
-        .modal-content p { font-size: 0.9375rem; line-height: 1.7; margin-bottom: 1rem; }
-        .modal-content ul { list-style-type: disc; margin-left: 1.5rem; font-size: 0.9375rem; line-height: 1.7; margin-bottom: 1rem; }
-        .modal-content ul ul { margin-top: 0.5rem; margin-bottom: 0.5rem; }
-        .modal-content li { margin-bottom: 0.375rem; }
-        .modal-content a { color: var(--link-color); text-decoration: none; font-weight: 500; }
-        .modal-content a:hover { color: var(--link-hover-color); text-decoration: underline; }
-        .modal-close-button { position: absolute; top: 1rem; right: 1rem; background: none; border: none; font-size: 1.75rem; color: var(--modal-close-btn-text); cursor: pointer; line-height: 1; transition: color 0.3s ease; padding: 0.25rem; }
-        .modal-close-button:hover { color: var(--modal-close-btn-hover-text); }
-        .defends-against-framework { font-weight: 500; color: var(--technique-item-text); opacity: 0.9; }
-        .defends-against-item { margin-left: 1rem; list-style-type: disc; }
-        .site-footer { background-color: var(--footer-bg); color: var(--footer-text); padding: 1rem 1rem; text-align: center; font-size: 0.875rem; border-top: 1px solid var(--footer-border); margin-top: auto; }
-        .site-footer p { margin-bottom: 0.25rem; line-height: 1.5; }
-        html.dark .header-version-text { opacity: 1; color: var(--text-secondary-color); }
-        .accordion-item { border-bottom: 1px solid var(--header-border); }
-        .accordion-header { display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 0.5rem; cursor: pointer; font-size: 1.125rem; font-weight: 500; color: var(--text-color); transition: color 0.2s ease; }
-        .accordion-header:hover { color: var(--column-header-hover-text); }
-        .accordion-icon { width: 1.25rem; height: 1.25rem; transition: transform 0.3s ease-in-out; flex-shrink: 0; margin-left: 1rem; }
-        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out; font-size: 0.9375rem; line-height: 1.7; color: var(--text-secondary-color); }
-        .accordion-content-inner { padding: 0 0.5rem 1.25rem 0.5rem; }
-        .strategy-accordion-container { margin-top: 0.5rem; }
-        .strategy-accordion-item { border-bottom: 1px solid var(--column-border); }
-        .strategy-accordion-header { display: flex; justify-content: space-between; align-items: center; padding: 0.75rem 0.5rem; cursor: pointer; font-size: 0.9rem; font-weight: 500; }
-        .strategy-accordion-header:hover { color: var(--technique-item-hover-text); }
-        .strategy-accordion-icon { width: 1rem; height: 1rem; transition: transform 0.3s ease-in-out; flex-shrink: 0; margin-left: 0.5rem; }
-        .strategy-accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease-in-out; }
-        .strategy-accordion-content-inner { padding: 0.5rem 0.5rem 1rem 1rem; font-size: 0.85rem; line-height: 1.6; color: var(--text-secondary-color); }
-        .strategy-accordion-content-inner h5 { font-weight: 600; margin-top: 0.75rem; margin-bottom: 0.25rem; color: var(--text-color); }
-        .strategy-accordion-content-inner code { font-family: monospace; background-color: var(--search-bg); padding: 0.1rem 0.3rem; border-radius: 0.25rem; font-size: 0.8rem; }
-        .strategy-accordion-content-inner pre { background-color: var(--search-bg); padding: 0.75rem; border-radius: 0.5rem; margin: 0.5rem 0; overflow-x: auto; }
-        .strategy-accordion-content-inner pre code { padding: 0; background: none; }
-    .perf-impact-note {
-  background-color: #f0f4f8; /* A light blue-gray background */
-  border-left: 4px solid #4a90e2; /* A blue accent border */
-  padding: 12px 18px;
-  margin: 16px 0;
-  border-radius: 4px;
-  font-size: 0.9em;
-  line-height: 1.6;
-}
 
-html.dark .perf-impact-note {
-  background-color: #2c3e50; /* A dark blue-gray for dark mode */
-  border-left-color: #5dade2; /* A lighter blue for dark mode */
-}
+        html {
+            height: 100%;
+        }
 
-.perf-impact-note p {
-  margin: 0;
-  padding: 0;
-}
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
 
-.perf-impact-note strong {
-    color: var(--text-color);
-}
+        #page-container {
+            flex: 1 0 auto;
+        }
+
+        footer {
+            flex-shrink: 0;
+        }
+
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--scrollbar-track);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--scrollbar-thumb-hover);
+        }
+
+        .elevation-2 {
+            box-shadow: 0px 3px 1px -2px var(--shadow-umbra), 0px 2px 2px 0px var(--shadow-penumbra), 0px 1px 5px 0px var(--shadow-ambient);
+        }
+
+        .elevation-4 {
+            box-shadow: 0px 2px 4px -1px var(--shadow-umbra), 0px 4px 5px 0px var(--shadow-penumbra), 0px 1px 10px 0px var(--shadow-ambient);
+        }
+
+        .elevation-8 {
+            box-shadow: 0px 5px 5px -3px var(--shadow-umbra), 0px 8px 10px 1px var(--shadow-penumbra), 0px 3px 14px 2px var(--shadow-ambient);
+        }
+
+        .header-main {
+            background-color: var(--header-bg);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+        }
+
+        .header-title {
+            font-size: 2rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
+
+        .header-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary-color);
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-container input {
+            background-color: var(--search-bg);
+            border: 1px solid var(--search-border);
+            color: var(--text-color);
+            border-radius: 0.5rem;
+            padding-right: 2.5rem;
+        }
+
+        .search-container input::placeholder {
+            color: var(--text-secondary-color);
+        }
+
+        .search-container input:focus {
+            --tw-ring-color: var(--search-focus-ring);
+            border-color: var(--search-focus-ring);
+            box-shadow: 0 0 0 2px var(--search-focus-ring);
+        }
+
+        .search-clear-button {
+            position: absolute;
+            right: 0.5rem;
+            padding: 0.25rem;
+            color: var(--text-secondary-color);
+            cursor: pointer;
+            display: none;
+        }
+
+        .search-clear-button:hover {
+            color: var(--text-color);
+        }
+
+        .search-clear-button svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .header-button {
+            background-color: transparent;
+            color: var(--icon-fill);
+            border: none;
+            padding: 0.625rem;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-button:hover {
+            background-color: rgba(0, 0, 0, 0.04);
+            color: var(--icon-hover-fill);
+        }
+
+        html.dark .header-button:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+        }
+
+        .header-button svg {
+            width: 1.5rem;
+            height: 1.5rem;
+            fill: currentColor;
+            margin-right: 0;
+        }
+
+        .header-button.text-button {
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+            font-weight: 500;
+        }
+
+        .header-button.text-button svg {
+            margin-right: 0.5rem;
+            width: 1.25rem;
+            height: 1.25rem;
+        }
+
+        .tactic-column-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.28rem;
+            padding: 1.5rem 0.5rem;
+            align-items: flex-start;
+            justify-content: center;
+        }
+
+        .tactic-column {
+            flex-grow: 1;
+            flex-shrink: 1;
+            flex-basis: 160px;
+            max-width: 210px;
+            background-color: var(--column-bg);
+            border-radius: 0.75rem;
+            padding: 0.8rem;
+            min-height: 200px;
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tactic-column-header {
+            font-size: 1.25rem;
+            font-weight: 500;
+            color: var(--column-header-text);
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--column-border);
+            transition: color 0.3s ease, border-color 0.3s ease;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .tactic-column-header:hover {
+            color: var(--column-header-hover-text);
+        }
+
+        .technique-item {
+            display: block;
+            background-color: var(--technique-item-bg);
+            padding: 0.75rem 1rem;
+            font-size: 0.875rem;
+            color: var(--technique-item-text);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.2s ease, box-shadow 0.2s ease;
+            line-height: 1.5;
+            margin-bottom: 0.75rem;
+        }
+
+        .technique-item:hover {
+            background-color: var(--technique-item-hover-bg);
+            color: var(--technique-item-hover-text);
+            transform: translateY(-2px);
+        }
+
+        .technique-item.highlight {
+            background-color: var(--technique-item-highlight-bg);
+            color: var(--technique-item-highlight-text);
+            font-weight: 600;
+        }
+
+        .technique-id {
+            font-weight: 500;
+            color: var(--technique-id-text);
+            font-size: 0.75rem;
+            margin-right: 0.35rem;
+            display: block;
+            margin-bottom: 0.125rem;
+        }
+
+        .technique-name {
+            font-weight: 500;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+        }
+
+        html.dark .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: var(--modal-content-bg);
+            color: var(--text-color);
+            padding: 2rem;
+            border-radius: 0.5rem;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
+            transform: scale(0.95);
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-content h2.modal-main-title {
+            font-size: 1.75rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            color: var(--column-header-hover-text);
+        }
+
+        .modal-content h2 {
+            font-size: 1.5rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: var(--column-header-hover-text);
+        }
+
+        .modal-content h3 {
+            font-size: 1.25rem;
+            font-weight: 500;
+            margin-top: 1.5rem;
+            margin-bottom: 0.75rem;
+            color: var(--text-color);
+        }
+
+        .modal-content h4 {
+            font-size: 1rem;
+            font-weight: 500;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-color);
+        }
+
+        .modal-content p {
+            font-size: 0.9375rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .modal-content ul {
+            list-style-type: disc;
+            margin-left: 1.5rem;
+            font-size: 0.9375rem;
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        .modal-content ul ul {
+            margin-top: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .modal-content li {
+            margin-bottom: 0.375rem;
+        }
+
+        .modal-content a {
+            color: var(--link-color);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .modal-content a:hover {
+            color: var(--link-hover-color);
+            text-decoration: underline;
+        }
+
+        .modal-close-button {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            font-size: 1.75rem;
+            color: var(--modal-close-btn-text);
+            cursor: pointer;
+            line-height: 1;
+            transition: color 0.3s ease;
+            padding: 0.25rem;
+        }
+
+        .modal-close-button:hover {
+            color: var(--modal-close-btn-hover-text);
+        }
+
+        .defends-against-framework {
+            font-weight: 500;
+            color: var(--technique-item-text);
+            opacity: 0.9;
+        }
+
+        .defends-against-item {
+            margin-left: 1rem;
+            list-style-type: disc;
+        }
+
+        .site-footer {
+            background-color: var(--footer-bg);
+            color: var(--footer-text);
+            padding: 1rem 1rem;
+            text-align: center;
+            font-size: 0.875rem;
+            border-top: 1px solid var(--footer-border);
+            margin-top: auto;
+        }
+
+        .site-footer p {
+            margin-bottom: 0.25rem;
+            line-height: 1.5;
+        }
+
+        html.dark .header-version-text {
+            opacity: 1;
+            color: var(--text-secondary-color);
+        }
+
+        .accordion-item {
+            border-bottom: 1px solid var(--header-border);
+        }
+
+        .accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.25rem 0.5rem;
+            cursor: pointer;
+            font-size: 1.125rem;
+            font-weight: 500;
+            color: var(--text-color);
+            transition: color 0.2s ease;
+        }
+
+        .accordion-header:hover {
+            color: var(--column-header-hover-text);
+        }
+
+        .accordion-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            transition: transform 0.3s ease-in-out;
+            flex-shrink: 0;
+            margin-left: 1rem;
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
+            font-size: 0.9375rem;
+            line-height: 1.7;
+            color: var(--text-secondary-color);
+        }
+
+        .accordion-content-inner {
+            padding: 0 0.5rem 1.25rem 0.5rem;
+        }
+
+        .strategy-accordion-container {
+            margin-top: 0.5rem;
+        }
+
+        .strategy-accordion-item {
+            border-bottom: 1px solid var(--column-border);
+        }
+
+        .strategy-accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 0.5rem;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .strategy-accordion-header:hover {
+            color: var(--technique-item-hover-text);
+        }
+
+        .strategy-accordion-icon {
+            width: 1rem;
+            height: 1rem;
+            transition: transform 0.3s ease-in-out;
+            flex-shrink: 0;
+            margin-left: 0.5rem;
+        }
+
+        .strategy-accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-in-out;
+        }
+
+        .strategy-accordion-content-inner {
+            padding: 0.5rem 0.5rem 1rem 1rem;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            color: var(--text-secondary-color);
+        }
+
+        .strategy-accordion-content-inner h5 {
+            font-weight: 600;
+            margin-top: 0.75rem;
+            margin-bottom: 0.25rem;
+            color: var(--text-color);
+        }
+
+        .strategy-accordion-content-inner code {
+            font-family: monospace;
+            background-color: var(--search-bg);
+            padding: 0.1rem 0.3rem;
+            border-radius: 0.25rem;
+            font-size: 0.8rem;
+        }
+
+        .strategy-accordion-content-inner pre {
+            background-color: var(--search-bg);
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            margin: 0.5rem 0;
+            overflow-x: auto;
+        }
+
+        .strategy-accordion-content-inner pre code {
+            padding: 0;
+            background: none;
+        }
+
+        .perf-impact-note {
+            background-color: #f0f4f8;
+            /* A light blue-gray background */
+            border-left: 4px solid #4a90e2;
+            /* A blue accent border */
+            padding: 12px 18px;
+            margin: 16px 0;
+            border-radius: 4px;
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+
+        html.dark .perf-impact-note {
+            background-color: #2c3e50;
+            /* A dark blue-gray for dark mode */
+            border-left-color: #5dade2;
+            /* A lighter blue for dark mode */
+        }
+
+        .perf-impact-note p {
+            margin: 0;
+            padding: 0;
+        }
+
+        .perf-impact-note strong {
+            color: var(--text-color);
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body class="text-gray-800">
     <div id="page-container">
         <header class="header-main py-4 px-6 fixed top-0 left-0 right-0 z-50 elevation-4">
-             <div class="container mx-auto">
-                 <div class="flex justify-between items-center mb-3">
-                     <div class="text-left">
-                         <h1 class="header-title">AIDEFEND™</h1>
-                         <p class="header-subtitle">An AI-focused defensive countermeasures knowledge base</p>
-                         <p class="text-xs opacity-60 mt-0.5 header-version-text">Version 1.0</p>
-                     </div>
-                     <div class="flex items-center space-x-1"> 
-                         <button id="aboutBtn" class="header-button text-button" title="About AIDEFEND">
-                             About
-                         </button>
-                         <button id="themeToggleBtn" class="header-button" title="Toggle Theme">
-                         </button>
-                     </div>
-                 </div>
-                 <div class="search-input-wrapper search-container">
-                     <input type="text" id="search-bar" placeholder="Search keywords, AIDEFEND/ATLAS techniques, MAESTRO threats, OWASP Top10s, etc..." class="w-full p-2.5 text-sm">
-                     <button id="searchClearBtn" class="search-clear-button" title="Clear search">
-                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-                             <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16ZM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22Z" clip-rule="evenodd" />
-                         </svg>
-                     </button>
-                 </div>
-             </div>
+            <div class="container mx-auto">
+                <div class="flex justify-between items-center mb-3">
+                    <div class="text-left">
+                        <h1 class="header-title">AIDEFEND™</h1>
+                        <p class="header-subtitle">An AI-focused defensive countermeasures knowledge base</p>
+                        <p class="text-xs opacity-60 mt-0.5 header-version-text">Version 1.0</p>
+                    </div>
+                    <div class="flex items-center space-x-1">
+                        <button id="aboutBtn" class="header-button text-button" title="About AIDEFEND">
+                            About
+                        </button>
+                        <button id="themeToggleBtn" class="header-button" title="Toggle Theme">
+                        </button>
+                    </div>
+                </div>
+                <div class="search-input-wrapper search-container">
+                    <input type="text" id="search-bar"
+                        placeholder="Search keywords, AIDEFEND/ATLAS techniques, MAESTRO threats, OWASP Top10s, etc..."
+                        class="w-full p-2.5 text-sm">
+                    <button id="searchClearBtn" class="search-clear-button" title="Clear search">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                            <path fill-rule="evenodd"
+                                d="M10 18a8 8 0 100-16 8 8 0 000 16ZM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22Z"
+                                clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </div>
+            </div>
         </header>
 
-        <div id="content-wrapper" class="pt-44 px-4 sm:px-6 lg:px-8 pb-8"> 
+        <div id="content-wrapper" class="pt-44 px-4 sm:px-6 lg:px-8 pb-8">
             <main id="main-content" class="container mx-auto"></main>
         </div>
     </div>
-    
+
     <div id="infoModal" class="modal-overlay">
-        <div id="modalBackdrop" class="absolute inset-0"></div> 
+        <div id="modalBackdrop" class="absolute inset-0"></div>
         <div class="modal-content elevation-8">
             <button id="modalClose" class="modal-close-button">&times;</button>
             <div id="modalBody"></div>
         </div>
     </div>
-    
+
     <footer class="site-footer">
         <p>AIDEFEND, An AI-focused defensive countermeasures knowledge base.</p>
-        <p>Information based on the <a href="https://cloudsecurityalliance.org/blog/2025/02/06/agentic-ai-threat-modeling-framework-maestro" target="_blank" rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">MAESTRO framework</a>, <a href="https://d3fend.mitre.org/" target="_blank" rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">MITRE D3FEND</a>, <a href="https://atlas.mitre.org/" target="_blank" rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">ATLAS</a>, <a href="https://attack.mitre.org/" target="_blank" rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">ATT&CK</a>, and <a href="https://owasp.org/www-project-top-10-for-large-language-model-applications/" target="_blank" rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">OWASP Top 10 LLM 2025</a>/<a href="https://owasp.org/www-project-machine-learning-security-top-10/" target="_blank" rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">OWASP Top 10 ML Security 2023</a>.</p>
+        <p>Information based on the <a
+                href="https://cloudsecurityalliance.org/blog/2025/02/06/agentic-ai-threat-modeling-framework-maestro"
+                target="_blank" rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">MAESTRO
+                framework</a>, <a href="https://d3fend.mitre.org/" target="_blank" rel="noopener noreferrer"
+                class="text-sky-600 dark:text-sky-400 hover:underline">MITRE D3FEND</a>, <a
+                href="https://atlas.mitre.org/" target="_blank" rel="noopener noreferrer"
+                class="text-sky-600 dark:text-sky-400 hover:underline">ATLAS</a>, <a href="https://attack.mitre.org/"
+                target="_blank" rel="noopener noreferrer"
+                class="text-sky-600 dark:text-sky-400 hover:underline">ATT&CK</a>, and <a
+                href="https://owasp.org/www-project-top-10-for-large-language-model-applications/" target="_blank"
+                rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">OWASP Top 10 LLM
+                2025</a>/<a href="https://owasp.org/www-project-machine-learning-security-top-10/" target="_blank"
+                rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">OWASP Top 10 ML
+                Security 2023</a>.</p>
         <p>2025 Edward's Playground - AIDEFEND framework Initiative. For informational purposes only.</p>
-        <p>All content on this website is licensed under the <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">Creative Commons Attribution 4.0 International License (CC BY 4.0)</a></p>
+        <p>All content on this website is licensed under the <a href="https://creativecommons.org/licenses/by/4.0/"
+                target="_blank" rel="noopener noreferrer"
+                class="text-sky-600 dark:text-sky-400 hover:underline">Creative Commons Attribution 4.0 International
+                License (CC BY 4.0)</a></p>
     </footer>
     <script src="aidefend-data.js"></script>
     <script>
@@ -405,7 +926,7 @@ html.dark .perf-impact-note {
                     `;
                 }
             }
-            
+
             function showTechniqueModal(technique, tacticName) {
                 modalBodyEl.innerHTML = `
     <p class="text-sm opacity-80 mb-1">Tactic: ${tacticName}</p>
@@ -426,8 +947,8 @@ html.dark .perf-impact-note {
     
     <div class="mt-4">
         <h4 class="font-semibold text-md mb-2">Defends Against:</h4>
-        ${technique.defendsAgainst && technique.defendsAgainst.length > 0 ? 
-            technique.defendsAgainst.map(da => `
+        ${technique.defendsAgainst && technique.defendsAgainst.length > 0 ?
+                        technique.defendsAgainst.map(da => `
                 <div class="mb-2">
                     <p class="defends-against-framework text-sm">${da.framework}:</p>
                     <ul class="list-disc list-inside ml-4 text-xs opacity-90 space-y-0.5">
@@ -452,10 +973,10 @@ html.dark .perf-impact-note {
                 document.body.classList.add('modal-open');
             }
 
-            function hideModal() { 
+            function hideModal() {
                 modalEl.classList.remove('active');
                 document.body.classList.remove('modal-open');
-                modalBodyEl.innerHTML = ''; 
+                modalBodyEl.innerHTML = '';
             }
 
             // Event Listeners
@@ -473,7 +994,7 @@ html.dark .perf-impact-note {
                 renderMainGrid();
             });
             modalCloseBtn.addEventListener('click', hideModal);
-            modalBackdropEl.addEventListener('click', hideModal); 
+            modalBackdropEl.addEventListener('click', hideModal);
             document.addEventListener('keydown', (event) => {
                 if (event.key === 'Escape' && modalEl.classList.contains('active')) {
                     hideModal();
@@ -481,11 +1002,12 @@ html.dark .perf-impact-note {
             });
 
             // Initial Load
-            const savedTheme = localStorage.getItem('aidefendTheme') || 'dark'; 
+            const savedTheme = localStorage.getItem('aidefendTheme') || 'dark';
             applyTheme(savedTheme);
-            aboutBtn.innerHTML = infoIcon.replace('w-5 h-5', 'w-4 h-4') + "About"; 
+            aboutBtn.innerHTML = infoIcon.replace('w-5 h-5', 'w-4 h-4') + "About";
             renderMainGrid();
         });
     </script>
 </body>
+
 </html>
