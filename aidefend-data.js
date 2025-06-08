@@ -551,8 +551,8 @@ const aidefendData = {
                     "name": "Adversarial Training & Robust Model Architectures",
                     "description": "Proactively improve a model's resilience to adversarial inputs by training it with examples specifically crafted to try and fool it (adversarial examples). This process \"vaccinates\" the model, making it more robust against evasion attacks where slight, often imperceptible, perturbations to input data cause misclassification or other erroneous behavior. This can be complemented by selecting or designing model architectures (e.g., ensembles, specific types of neural network layers or activation functions) that are inherently more resistant to such manipulations.",
                     "perfImpact": {
-                        "level": "High",
-                        "description": "Note: Performance Impact: High (on Training Time & Cost). This technique directly increases the number of computations required during model training. Instead of just one forward/backward pass per batch, adversarial training methods like Projected Gradient Descent (PGD) require multiple passes to generate adversarial examples. Training Time: Can increase training duration by 3x to 15x, depending on the number of attack steps (e.g., PGD-10 vs. PGD-100) and the complexity of the attack generation. Inference Latency: Minimal to no impact."
+                        "level": "High on Training Time & Cost",
+                        "description": "<p>This technique directly increases the number of computations required during model training. Instead of just one forward/backward pass per batch, adversarial training methods like Projected Gradient Descent (PGD) require multiple passes to generate adversarial examples. <p><strong>Training Time:</strong> Can increase training duration by <strong>3x to 15x</strong>, depending on the number of attack steps (e.g., PGD-10 vs. PGD-100) and the complexity of the attack generation. <p><strong>Inference Latency:</strong> Minimal to no impact."
                     },
                     "defendsAgainst": [
                         {
@@ -797,8 +797,8 @@ const aidefendData = {
                             "name": "Certified Defenses for Robust Architectures",
                             "description": "Implements models with provable guarantees against certain types of adversarial perturbations. This subTechnique focuses on designing architectures that can provide certified robustness within a defined perturbation radius.",
                             "perfImpact": {
-                                "level": "Very High",
-                                "description": "Note: Performance Impact: Very High (on Training Time & Model Complexity). This technique requires significantly more complex training procedures and simpler model architectures amenable to formal verification. Training Time: Can be >20x slower than standard training due to the overhead of propagating bounds or performing the necessary calculations for certification at each step. Accuracy: Often results in a noticeable drop in model accuracy on clean, non-adversarial data, which is a key performance trade-off."
+                                "level": "Very High on Training Time & Model Complexity",
+                                "description": "<p>This technique requires significantly more complex training procedures and simpler model architectures amenable to formal verification. <p><strong>Training Time:</strong> Can be <strong>>20x slower</strong> than standard training due to the overhead of propagating bounds or performing the necessary calculations for certification at each step. <p><strong>Accuracy:</strong> Often results in a noticeable drop in model accuracy on clean, non-adversarial data, which is a key performance trade-off."
                             },
                             "toolsOpenSource": [
                                 "auto-LiRPA (for IBP and CROWN-IBP certified training)",
@@ -1669,8 +1669,8 @@ const aidefendData = {
                             "name": "Differential Privacy for AI",
                             "description": "Implements differential privacy mechanisms to add calibrated noise to model training, outputs, or data queries, ensuring that individual data points cannot be identified while maintaining overall utility.",
                             "perfImpact": {
-                                "level": "High",
-                                "description": "Note: Performance Impact: High (on Training Time & Model Utility). This technique adds computational overhead to each training step by adding noise and clipping gradients. Training Time: Can slow down the training process by 2x to 5x. Accuracy: May moderately reduce the final accuracy of the model, which is a direct trade-off for the privacy guarantees provided."
+                                "level": "High on Training Time & Model Utility",
+                                "description": "<p>This technique adds computational overhead to each training step by adding noise and clipping gradients. <p><strong>Training Time:</strong> Can slow down the training process by <strong>2x to 5x</strong>. <p><strong>Accuracy:</strong> May moderately reduce the final accuracy of the model, which is a direct trade-off for the privacy guarantees provided."
                             },
                             "toolsOpenSource": [
                                 "PyTorch Opacus",
@@ -1732,8 +1732,8 @@ const aidefendData = {
                             "name": "Homomorphic Encryption for AI",
                             "description": "Enables computation on encrypted data, allowing models to train or perform inference without ever decrypting sensitive information, providing strong cryptographic guarantees.",
                             "perfImpact": {
-                                "level": "Extreme",
-                                "description": "Note: Performance Impact: Extreme (on Inference Latency & Computational Cost). Performing computations on encrypted data is orders of magnitude slower than on plaintext. Inference Latency: Can be 100x to 10,000x higher than a non-encrypted model. A prediction that takes milliseconds on plaintext could take many seconds or even minutes. Training: Training a model with HE is often computationally prohibitive for all but the simplest models."
+                                "level": "Extremely High on Inference Latency & Computational Cost",
+                                "description": "<p>Performing computations on encrypted data is orders of magnitude slower than on plaintext. <p><strong>Inference Latency:</strong> Can be <strong>100x to 10,000x</strong> higher than a non-encrypted model. A prediction that takes milliseconds on plaintext could take many seconds or even minutes. <p><strong>Training:</strong> Training a model with HE is often computationally prohibitive for all but the simplest models."
                             },
                             "toolsOpenSource": [
                                 "Microsoft SEAL",
@@ -2440,6 +2440,244 @@ const aidefendData = {
                             "howTo": "<h5>Concept:</h5><p>A certified defense can provide a mathematical guarantee that no patch attack (under a certain size) can change the model's prediction. One practical method is to split the image into a grid of non-overlapping cells, classify each cell independently, and take a majority vote. An attacker's patch can only corrupt the cells it overlaps with, and it cannot overcome the 'votes' from all the clean, un-patched cells.</p><h5>Step 1: Implement a Grid-and-Vote Inference Function</h5><p>Create a wrapper around your base classifier that performs this robust aggregation logic.</p><pre><code># File: vision_defenses/certified_patch.py\\nimport torch\\nimport torch.nn.functional as F\\n\nclass PatchCertifiedViT:\\n    def __init__(self, base_model, grid_size=(7, 7)):\\n        self.model = base_model.eval()\\n        self.grid_size = grid_size\\n\n    def predict(self, image_tensor, patch_budget=5):\\n        \"\"\"Classifies an image using a robust majority vote over a grid.\"\"\"\\n        # image_tensor shape: [1, 3, H, W]\\n        _, _, H, W = image_tensor.shape\\n        cell_h, cell_w = H // self.grid_size[0], W // self.grid_size[1]\\n        \n        all_cell_predictions = []\n        # Iterate over the grid of cells\\n        for i in range(self.grid_size[0]):\\n            for j in range(self.grid_size[1]):\\n                # Crop out the cell\\n                cell = image_tensor[:, :, i*cell_h:(i+1)*cell_h, j*cell_w:(j+1)*cell_w]\\n                # Make a prediction on this cell alone\\n                with torch.no_grad():\\n                    logits = self.model(cell)\\n                    pred = logits.argmax().item()\\n                    all_cell_predictions.append(pred)\\n\n        # Get the counts for each class\\n        counts = torch.bincount(torch.tensor(all_cell_predictions))\\n        top_class = counts.argmax().item()\\n        top_class_count = counts[top_class].item()\\n        \n        # The certified guarantee: the top class count must be greater than\\n        # the runner-up count by more than the patch budget allows.\\n        # A patch can corrupt at most 'patch_budget' cells.\\n        counts[top_class] = -1 # Temporarily remove top class to find runner-up\\n        second_class_count = counts.max().item()\\n\n        if top_class_count > second_class_count + patch_budget:\\n            print(f\"✅ Certified Prediction: Class {top_class} is robust to a patch corrupting {patch_budget} cells.\")\\n            return top_class, True\\n        else:\\n            print(f\"❌ Cannot Certify: The prediction is not robust enough. Abstaining.\")\\n            return None, False\n        \n# --- Usage ---\n# certified_model = PatchCertifiedViT(base_model=my_trained_vit)\\n# prediction, is_certified = certified_model.predict(untrusted_image, patch_budget=3)</code></pre><p><strong>Action:</strong> For high-assurance applications, implement a certified patch defense. This involves significant changes to the inference logic but provides a provable guarantee against any patch attack up to a pre-specified size, offering the strongest level of robustness.</p>"
                         }
                     ]
+                },
+                {
+                    "id": "AID-H-015",
+                    "name": "AI Output Hardening & Sanitization",
+                    "description": "Implement programmatic transformations, structuring, and sanitization on the raw output generated by an AI model before it is passed to a user or downstream system. This proactive control aims to enforce a safe, expected format, remove potentially exploitable content, and reduce the risk of the output itself becoming an attack vector against end-users or other system components. This is distinct from detective output monitoring; it is a preventative measure to harden the output stream itself.",
+                    "toolsOpenSource": [
+                        "Instructor",
+                        "Pydantic",
+                        "Guardrails AI",
+                        "NVIDIA NeMo Guardrails",
+                        "LangChain (Output Parsers)",
+                        "bleach (for HTML)",
+                        "sqlparse (for SQL)",
+                        "Python `ast` module"
+                    ],
+                    "toolsCommercial": [
+                        "Lakera Guard",
+                        "Protect AI Guardian",
+                        "CalypsoAI Validator",
+                        "Azure Content Safety",
+                        "Google Cloud DLP API",
+                        "Web Application Firewalls (WAFs) with output inspection capabilities (e.g., Cloudflare, Akamai)"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0077 LLM Response Rendering",
+                                "AML.T0053 LLM Plugin Compromise",
+                                "AML.T0050 Command and Scripting Interpreter (via generated code)",
+                                "AML.T0048 External Harms (by cleaning malicious payloads)",
+                                "AML.T0052 Phishing (by sanitizing malicious links)",
+                                "AML.T0057 LLM Data Leakage (by redacting sensitive info)"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Misinformation Generation (L1/L7)",
+                                "Agent Tool Misuse (L7, by structuring/sanitizing tool calls)",
+                                "Data Exfiltration (L2, by redacting sensitive data from outputs)",
+                                "Runtime Code Injection (L4, by sanitizing generated code)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM05:2025 Improper Output Handling",
+                                "LLM09:2025 Misinformation",
+                                "LLM01:2025 Prompt Injection (mitigating the impact of successful injections)",
+                                "LLM02:2025 Sensitive Information Disclosure"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML09:2023 Output Integrity Attack",
+                                "ML03:2023 Model Inversion Attack (by redacting reconstructable sensitive data)"
+                            ]
+                        }
+                    ],
+                    "subTechniques": [
+                        {
+                            "id": "AID-H-015.001",
+                            "name": "Structured Output Enforcement",
+                            "description": "Forces LLMs to generate output that conforms to a strict, pre-defined schema (e.g., JSON, YAML) instead of free-form text. This ensures the output can be safely parsed and validated by downstream systems, preventing the generation of unintended or malicious scripts, formats, or commands.",
+                            "toolsOpenSource": [
+                                "Instructor",
+                                "Pydantic",
+                                "JSONformer",
+                                "Outlines",
+                                "TypeChat",
+                                "LangChain PydanticOutputParser",
+                                "Native tool-use/function-calling capabilities of open-source models (Llama, Mistral, etc.)"
+                            ],
+                            "toolsCommercial": [
+                                "OpenAI API (Function Calling & Tool Use)",
+                                "Google Vertex AI (Function Calling)",
+                                "Anthropic API (Tool Use)",
+                                "Microsoft Semantic Kernel"
+                            ],
+                            "defendsAgainst": [
+                                {
+                                    "framework": "OWASP LLM Top 10 2025",
+                                    "items": [
+                                        "LLM05:2025 Improper Output Handling",
+                                        "LLM06:2025 Excessive Agency"
+                                    ]
+                                },
+                                {
+                                    "framework": "MITRE ATLAS",
+                                    "items": [
+                                        "AML.T0053 LLM Plugin Compromise"
+                                    ]
+                                },
+                                {
+                                    "framework": "MAESTRO",
+                                    "items": [
+                                        "Agent Tool Misuse (L7)",
+                                        "Reprogramming Attacks (L1)"
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP ML Top 10 2023",
+                                    "items": [
+                                        "ML09:2023 Output Integrity Attack"
+                                    ]
+                                }
+                            ],
+                            "implementationStrategies": [
+                                {
+                                    "strategy": "Use libraries like Instructor to force LLM output into a Pydantic model.",
+                                    "howTo": "<h5>Concept:</h5><p>Instead of parsing unpredictable free-form text from an LLM, you can force it to generate a JSON object that strictly conforms to a predefined Pydantic schema. This makes the output reliable, type-safe, and easy to validate, preventing many injection or formatting attacks.</p><h5>Step 1: Define Your Desired Output Structure with Pydantic</h5><pre><code># File: schemas/output_schemas.py\nfrom pydantic import BaseModel, Field\nfrom typing import Literal\n\nclass UserSentiment(BaseModel):\n    sentiment: Literal['positive', 'negative', 'neutral']\n    confidence: float = Field(ge=0.0, le=1.0, description=\"Confidence score from 0.0 to 1.0\")\n    reasoning: str = Field(description=\"A brief justification for the sentiment classification.\")\n</code></pre><h5>Step 2: Use Instructor to Patch your LLM Client</h5><p>The `instructor` library patches your existing LLM client (like OpenAI's) to add a `response_model` parameter. When you provide your Pydantic model here, Instructor handles the complex prompt engineering and validation to ensure the LLM's output is a valid instance of your model.</p><pre><code># File: analysis/sentiment_analyzer.py\nimport instructor\nfrom openai import OpenAI\nfrom schemas.output_schemas import UserSentiment\n\n# Patch the OpenAI client with Instructor's capabilities\nclient = instructor.patch(OpenAI())\n\ndef get_structured_sentiment(text: str) -> UserSentiment:\n    # The 'response_model' parameter forces the LLM to return a valid UserSentiment object.\n    # Instructor will automatically handle validation and retries if the LLM output is malformed.\n    sentiment_result = client.chat.completions.create(\n        model=\"gpt-4-turbo\",\n        response_model=UserSentiment,\n        messages=[\n            {\"role\": \"user\", \"content\": f\"Analyze the sentiment of this user comment: '{text}'\"}\n        ]\n    )\n    return sentiment_result\n\n# --- Example Usage ---\n# user_comment = \"I absolutely love this product, it's the best!\"\n# result = get_structured_sentiment(user_comment)\n\n# 'result' is a Pydantic object, not a string. You can access its fields directly.\n# print(f\"Sentiment: {result.sentiment}, Confidence: {result.confidence}\")\n# if result.confidence < 0.7:\n#     # Handle low-confidence analysis\n</code></pre><p><strong>Action:</strong> For any task that can be represented as structured data, use `instructor` and Pydantic to define the output format. This is far more secure than parsing free-text responses, as it prevents unexpected content and ensures the output is always in a safe, predictable format.</p>"
+                                },
+                                {
+                                    "strategy": "Leverage native tool-use or function-calling APIs provided by LLM vendors.",
+                                    "howTo": "<h5>Concept:</h5><p>Major LLM providers have built-in, highly optimized features for structured output, typically called 'tool use' or 'function calling'. This is the most reliable method for getting structured data when using these providers' models.</p><h5>Step 1: Define the Tool's JSON Schema</h5><p>Define the function you want the LLM to call using a JSON Schema format. This describes the function's name, purpose, and parameters.</p><pre><code># File: tools/schemas.py\ntools = [\n    {\n        \"type\": \"function\",\n        \"function\": {\n            \"name\": \"get_user_sentiment\",\n            \"description\": \"Get the sentiment of a user's comment\",\n            \"parameters\": {\n                \"type\": \"object\",\n                \"properties\": {\n                    \"sentiment\": {\"type\": \"string\", \"enum\": [\"positive\", \"negative\", \"neutral\"]},\n                    \"confidence\": {\"type\": \"number\", \"description\": \"Confidence from 0.0 to 1.0\"}\n                },\n                \"required\": [\"sentiment\", \"confidence\"]\n            }\n        }\n    }\n]\n</code></pre><h5>Step 2: Make the API Call with the Tool Definition</h5><p>When calling the LLM, pass the tool schema and set `tool_choice` to force the model to call your function. The API response will contain a structured JSON object with the arguments, which you can then parse and validate.</p><pre><code># File: analysis/tool_call_sentiment.py\nfrom openai import OpenAI\nimport json\n\nclient = OpenAI()\n\ndef get_sentiment_via_tool_call(text: str):\n    response = client.chat.completions.create(\n        model=\"gpt-4-turbo\",\n        messages=[{\"role\": \"user\", \"content\": f\"What is the sentiment of this text: '{text}'\"}],\n        tools=tools,\n        tool_choice={\"type\": \"function\", \"function\": {\"name\": \"get_user_sentiment\"}}\n    )\n    # Extract the JSON arguments generated by the model\n    tool_call = response.choices[0].message.tool_calls[0]\n    arguments = json.loads(tool_call.function.arguments)\n    return arguments\n\n# --- Example Usage ---\n# sentiment_args = get_sentiment_via_tool_call(\"This is fantastic!\")\n# print(sentiment_args) # Output: {'sentiment': 'positive', 'confidence': 0.98}</code></pre><p><strong>Action:</strong> When using commercial LLM providers, always prefer their native tool-use or function-calling capabilities for structured data generation. This method is more robust and better optimized than trying to force JSON generation through prompting alone.</p>"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "AID-H-015.002",
+                            "name": "Downstream Payload Sanitization & Validation",
+                            "description": "Treats any code or data intended for a downstream interpreter (e.g., SQL queries, Python code, API calls, HTML) generated by an LLM as untrusted. This involves validating and sanitizing the payload before it is executed or rendered to prevent vulnerabilities like SQL injection, cross-site scripting (XSS), or unsafe code execution.",
+                            "toolsOpenSource": [
+                                "sqlparse (for SQL validation)",
+                                "bleach (for server-side HTML sanitization)",
+                                "DOMPurify.js (for client-side HTML sanitization)",
+                                "Python `ast` module (for Python code validation)",
+                                "esprima (for JavaScript code validation)"
+                            ],
+                            "toolsCommercial": [
+                                "Web Application Firewalls (Cloudflare WAF, AWS WAF, Akamai)",
+                                "Static Application Security Testing (SAST) tools (Snyk Code, Veracode, Checkmarx)",
+                                "API Security solutions (Noname Security, Salt Security)"
+                            ],
+                            "defendsAgainst": [
+                                {
+                                    "framework": "MITRE ATLAS",
+                                    "items": [
+                                        "AML.T0050 Command and Scripting Interpreter",
+                                        "AML.T0049 Exploit Public-Facing Application (via XSS)"
+                                    ]
+                                },
+                                {
+                                    "framework": "MAESTRO",
+                                    "items": [
+                                        "Runtime Code Injection (L4)"
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP LLM Top 10 2025",
+                                    "items": [
+                                        "LLM01:2025 Prompt Injection (Indirect Injection)",
+                                        "LLM05:2025 Improper Output Handling"
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP ML Top 10 2023",
+                                    "items": [
+                                        "ML09:2023 Output Integrity Attack"
+                                    ]
+                                }
+                            ],
+                            "implementationStrategies": [
+                                {
+                                    "strategy": "Parse and validate generated SQL queries to ensure they are read-only and contain no malicious statements.",
+                                    "howTo": "<h5>Concept:</h5><p>If an LLM generates SQL to query a database, an attacker could use prompt injection to trick it into generating malicious SQL, like `DROP TABLE users;--`. You must parse the generated SQL and validate its structure before execution.</p><h5>Step 1: Implement a SQL Validator</h5><p>Use a library like `sqlparse` to break the SQL into tokens and check its type. Your policy should, at a minimum, ensure that only a single `SELECT` statement is present.</p><pre><code># File: output_sanitizers/sql_validator.py\nimport sqlparse\n\ndef is_safe_sql_query(sql_query: str) -> bool:\n    # 1. Parse the SQL into statements\n    parsed = sqlparse.parse(sql_query)\n    \n    # 2. Rule: Ensure there is only ONE statement\n    if len(parsed) != 1:\n        print(\"SQL VALIDATION FAILED: Multiple statements detected (potential injection).\")\n        return False\n\n    statement = parsed[0]\n    # 3. Rule: Ensure the statement is a SELECT query\n    if statement.get_type() != 'SELECT':\n        print(f\"SQL VALIDATION FAILED: Query type is '{statement.get_type()}', not 'SELECT'.\")\n        return False\n\n    # 4. (Optional) More advanced: Check for risky keywords\n    if 'UNION' in sql_query.upper() or 'DROP' in sql_query.upper():\n        print(\"SQL VALIDATION FAILED: Potentially dangerous keyword detected.\")\n        return False\n\n    print(\"✅ SQL query passed validation.\")\n    return True\n\n# --- Example Usage ---\n# generated_sql = llm.generate(\"Show me all users from the US\")\n# malicious_sql = \"SELECT * FROM users; DROP TABLE users;--\"\n#\n# if is_safe_sql_query(generated_sql):\n#     # db.execute(generated_sql)\n# if not is_safe_sql_query(malicious_sql):\n#     # Block execution</code></pre><p><strong>Action:</strong> Never execute SQL generated by an LLM directly. Pass it through a validator function that uses `sqlparse` to ensure it is a single, read-only `SELECT` statement.</p>"
+                                },
+                                {
+                                    "strategy": "Sanitize any HTML generated by an LLM to prevent cross-site scripting (XSS) attacks.",
+                                    "howTo": "<h5>Concept:</h5><p>If your application renders HTML generated by an LLM, an attacker could inject malicious `<script>` tags or other dangerous elements to execute code in your users' browsers. You must use a robust HTML sanitization library to strip out all potentially harmful tags and attributes.</p><h5>Step 1: Use a Library like Bleach</h5><p>The `bleach` library is designed for this purpose. You provide it with an allowlist of safe HTML tags and attributes, and it removes everything else.</p><pre><code># File: output_sanitizers/html_sanitizer.py\nimport bleach\n\n# Define the set of HTML tags and attributes that are considered safe for rendering.\n# By default, this list should be very restrictive.\nALLOWED_TAGS = ['p', 'b', 'i', 'em', 'strong', 'a', 'ul', 'ol', 'li']\nALLOWED_ATTRIBUTES = {'a': ['href', 'title']}\n\ndef sanitize_generated_html(html_content: str) -> str:\n    sanitized_html = bleach.clean(\n        html_content, \n        tags=ALLOWED_TAGS, \n        attributes=ALLOWED_ATTRIBUTES,\n        strip=True  # strip=True removes the disallowed tags entirely\n    )\n    return sanitized_html\n\n# --- Example Usage ---\n# malicious_html = 'This is <p>safe</p><script>alert(\\\"XSS\\\")</script> content.'\n# clean_html = sanitize_generated_html(malicious_html)\n# print(clean_html) \n# Output: 'This is <p>safe</p>alert(\"XSS\") content.' (The script tag is removed)\n\n# Now, it is safe to render 'clean_html' to the user.</code></pre><p><strong>Action:</strong> Before rendering any HTML content generated by an LLM, pass it through a sanitization function using `bleach`. Define a strict allowlist of tags and attributes that are necessary for your application's formatting and strip all others.</p>"
+                                },
+                                {
+                                    "strategy": "Validate LLM-generated Python code for unsafe imports and function calls using Abstract Syntax Trees (AST).",
+                                    "howTo": "<h5>Concept:</h5><p>If your application executes Python code generated by an LLM, you must treat that code as fully untrusted. A powerful validation technique is to parse the code into an Abstract Syntax Tree (AST) and inspect the tree for dangerous patterns before execution.</p><h5>Step 1: Implement an AST Scanner</h5><p>Use Python's built-in `ast` module to traverse the code structure and check for imports of dangerous modules (like `os` or `subprocess`) or calls to dangerous functions (like `eval` or `exec`).</p><pre><code># File: output_sanitizers/code_validator.py\nimport ast\n\nDANGEROUS_IMPORTS = {'os', 'subprocess', 'shutil'}\nDANGEROUS_CALLS = {'eval', 'exec', 'open'}\n\nclass CodeScanner(ast.NodeVisitor):\n    def __init__(self):\n        self.is_safe = True\n        self.violations = []\n\n    def visit_Import(self, node):\n        for alias in node.names:\n            if alias.name in DANGEROUS_IMPORTS:\n                self.is_safe = False\n                self.violations.append(f\"Disallowed import '{alias.name}' at line {node.lineno}\")\n        self.generic_visit(node)\n\n    def visit_Call(self, node):\n        if isinstance(node.func, ast.Name) and node.func.id in DANGEROUS_CALLS:\n            self.is_safe = False\n            self.violations.append(f\"Disallowed function call '{node.func.id}' at line {node.lineno}\")\n        self.generic_visit(node)\n\ndef is_safe_python_code(code: str) -> bool:\n    try:\n        tree = ast.parse(code)\n        scanner = CodeScanner()\n        scanner.visit(tree)\n        if not scanner.is_safe:\n            print(f\"CODE VALIDATION FAILED: {scanner.violations}\")\n        return scanner.is_safe\n    except SyntaxError:\n        return False # Code that doesn't even parse is unsafe\n\n# --- Example --- \n# generated_code = \"import pandas as pd; print(pd.DataFrame([1,2]))\" # Safe\n# malicious_code = \"import os; os.system('rm -rf /')\" # Unsafe\n# is_safe_python_code(generated_code) # True\n# is_safe_python_code(malicious_code) # False</code></pre><p><strong>Action:</strong> Before executing any LLM-generated Python code, parse it with the `ast` module and traverse the tree to ensure it does not import or call any functions from a predefined blocklist of dangerous modules.</p>"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "AID-H-015.003",
+                            "name": "Malicious Link & Redirect Validation",
+                            "description": "Proactively inspects all URLs generated by an AI model before they are presented to a user. This involves checking them against known malicious link databases and resolving them to ensure they do not redirect to harmful sites, thereby preventing phishing and other web-based attacks.",
+                            "toolsOpenSource": [
+                                "Python `requests` library",
+                                "Python `urllib.parse` library",
+                                "Clients for open-source threat feeds (e.g., PhishTank, URLHaus from Abuse.ch, AlienVault OTX)"
+                            ],
+                            "toolsCommercial": [
+                                "Google Safe Browse API",
+                                "VirusTotal API",
+                                "Webroot BrightCloud Threat Intelligence",
+                                "Cisco Umbrella Investigate",
+                                "CrowdStrike Falcon Intelligence"
+                            ],
+                            "defendsAgainst": [
+                                {
+                                    "framework": "MITRE ATLAS",
+                                    "items": [
+                                        "AML.T0052 Phishing",
+                                        "AML.T0077 LLM Response Rendering"
+                                    ]
+                                },
+                                {
+                                    "framework": "MAESTRO",
+                                    "items": [
+                                        "Misinformation Generation (L1/L7)",
+                                        "Data Exfiltration (L2, via credential phishing links)"
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP LLM Top 10 2025",
+                                    "items": [
+                                        "LLM05:2025 Improper Output Handling",
+                                        "LLM09:2025 Misinformation"
+                                    ]
+                                }
+                            ],
+                            "implementationStrategies": [
+                                {
+                                    "strategy": "Resolve all URLs generated by the LLM to their final destination to detect malicious redirects.",
+                                    "howTo": "<h5>Concept:</h5><p>Attackers often hide malicious sites behind a series of redirects, starting with a seemingly benign URL. Before checking a URL against a blocklist, you must first resolve it to its final destination.</p><h5>Step 1: Implement a URL Resolver</h5><p>Use the `requests` library with `allow_redirects=True` (the default). The `response.url` attribute will contain the final URL after all redirects have been followed.</p><pre><code># File: output_sanitizers/url_validator.py\nimport requests\n\ndef get_final_destination_url(url: str, timeout=5) -> str | None:\n    try:\n        # Use a HEAD request for efficiency as we don't need the body\n        response = requests.head(url, allow_redirects=True, timeout=timeout)\n        final_url = response.url\n        print(f\"URL '{url}' resolved to '{final_url}'.\")\n        return final_url\n    except requests.RequestException as e:\n        print(f\"Could not resolve URL '{url}': {e}\")\n        return None\n\n# --- Example Usage ---\n# A URL shortener link that redirects to a malicious site\n# initial_url = \"https://bit.ly/example-malicious\"\n# final_destination = get_final_destination_url(initial_url)</code></pre><p><strong>Action:</strong> For every URL present in the LLM's output, use a function to resolve it to its final destination. All subsequent security checks must be performed on this final destination URL, not the initial one.</p>"
+                                },
+                                {
+                                    "strategy": "Check the final URL against a real-time threat intelligence service like Google Safe Browse API.",
+                                    "howTo": "<h5>Concept:</h5><p>Threat intelligence services maintain vast, constantly updated databases of known malicious URLs (phishing, malware, etc.). Checking a URL against one of these services before displaying it to a user is a highly effective way to prevent web-based attacks.</p><h5>Step 1: Implement a Safe Browse Check</h5><p>Create a function that takes a URL and checks it against a service like the Google Safe Browse API. (Note: This requires setting up a project and getting an API key).</p><pre><code># File: output_sanitizers/url_validator.py (continued)\nimport os\n\n# Conceptual client for Google Safe Browse API\nclass SafeBrowseClient:\n    def __init__(self):\n        self.api_key = os.environ.get(\"GOOGLE_API_KEY\")\n        self.endpoint = f\"https://safeBrowse.googleapis.com/v4/threatMatches:find?key={self.api_key}\"\n\n    def is_url_malicious(self, url: str) -> bool:\n        payload = {\n            'client': {'clientId': 'my-ai-app', 'clientVersion': '1.0'},\n            'threatInfo': {\n                'threatTypes': ['MALWARE', 'SOCIAL_ENGINEERING', 'UNWANTED_SOFTWARE', 'THREAT_TYPE_UNSPECIFIED'],\n                'platformTypes': ['ANY_PLATFORM'],\n                'threatEntryTypes': ['URL'],\n                'threatEntries': [{'url': url}]\n            }\n        }\n        try:\n            response = requests.post(self.endpoint, json=payload)\n            response.raise_for_status()\n            # If the 'matches' key exists in the response, the URL is malicious\n            if response.json().get('matches'):\n                print(f\"🚨 URL IS MALICIOUS: {url}\")\n                return True\n            return False\n        except requests.RequestException as e:\n            print(f\"Safe Browse check failed: {e}\")\n            return True # Fail safe: treat as malicious if check fails\n\n# --- Full Validation Workflow ---\n# safe_Browse_client = SafeBrowseClient()\n# final_url = get_final_destination_url(user_provided_url)\n# if final_url and safe_Browse_client.is_url_malicious(final_url):\n#     # Block the URL from being displayed to the user</code></pre><p><strong>Action:</strong> After resolving a generated URL to its final destination, check it against a malicious link database like Google Safe Browse. If the URL is flagged as unsafe, do not render it to the user.</p>"
+                                },
+                                {
+                                    "strategy": "Enforce an allowlist or blocklist of permitted domains.",
+                                    "howTo": "<h5>Concept:</h5><p>For applications where the LLM should only ever link to a small set of known, trusted domains, an allowlist is the most secure approach. It denies all URLs by default and only permits those that match a pre-approved list.</p><h5>Step 1: Define an Allowlist and Blocklist</h5><p>Maintain a configuration file with sets of allowed and blocked domains. The allowlist takes precedence.</p><pre><code># File: config/url_policy.json\n{\n    \"allowed_domains\": [\n        \"mycompany.com\",\n        \"docs.mycompany.com\",\n        \"wikipedia.org\"\n    ],\n    \"blocked_domains\": [\n        \"some-malicious-site.io\",\n        \"another-phishing-domain.net\"\n    ]\n}</code></pre><h5>Step 2: Implement the Policy Check</h5><p>In your validator, check the domain of the resolved URL against your defined policy.</p><pre><code># File: output_sanitizers/url_validator.py (continued)\nfrom urllib.parse import urlparse\n\ndef is_url_policy_compliant(url: str, policy: dict) -> bool:\n    domain = urlparse(url).netloc\n    # Check if domain or any of its subdomains are in the allowlist\n    if any(domain == allowed or domain.endswith('.' + allowed) for allowed in policy['allowed_domains']):\n        return True\n    \n    # If not explicitly allowed, check if it's explicitly blocked\n    if any(domain == blocked or domain.endswith('.' + blocked) for blocked in policy['blocked_domains']):\n        print(f\"URL {url} is on the domain blocklist.\")\n        return False\n\n    # If the allowlist is not empty, then any non-allowed domain is denied\n    if policy['allowed_domains']:\n        print(f\"URL {url} is not on the domain allowlist.\")\n        return False\n        \n    return True # Pass if not on blocklist and allowlist is empty</code></pre><p><strong>Action:</strong> Define a domain allowlist for your application. In your output sanitization logic, only permit links whose final, resolved domain is on the allowlist. For more general applications, maintain a blocklist of known bad domains.</p>"
+                                },
+                                {
+                                    "strategy": "Strip or validate URL query parameters to prevent cross-site scripting (XSS) or data exfiltration attacks hidden in parameters.",
+                                    "howTo": "<h5>Concept:</h5><p>An attacker can construct a URL where the domain is benign, but the query parameters contain a malicious payload (e.g., `<script>` tags for XSS, or private data to be exfiltrated). You must parse the URL and individually validate its parameters.</p><h5>Step 1: Implement a Parameter Sanitizer</h5><p>Use Python's `urllib.parse` to deconstruct a URL, inspect its query parameters against a set of rules, and then reconstruct a clean, safe version of the URL.</p><pre><code># File: output_sanitizers/url_validator.py (continued)\nfrom urllib.parse import urlparse, urlunparse, urlencode, parse_qs\n\n# Define rules for parameters, e.g., allow only alphanumeric 'id' and 'search' params\nALLOWED_PARAMS = {'id', 'search'}\n\ndef sanitize_url_parameters(url: str) -> str:\n    parsed = urlparse(url)\n    query_params = parse_qs(parsed.query)\n    \n    sanitized_params = {}\n    for key, values in query_params.items():\n        if key in ALLOWED_PARAMS:\n            # For simplicity, we take the first value and ensure it's alphanumeric\n            sanitized_value = ''.join(filter(str.isalnum, values[0]))\n            sanitized_params[key] = sanitized_value\n    \n    # Reconstruct the URL with only the sanitized parameters\n    clean_query_string = urlencode(sanitized_params)\n    clean_url = urlunparse((\n        parsed.scheme,\n        parsed.netloc,\n        parsed.path,\n        parsed.params,\n        clean_query_string,\n        parsed.fragment\n    ))\n    return clean_url\n\n# --- Example Usage ---\n# malicious_url = \"https://mycompany.com/search?search=legit&<script>alert(1)</script>=bad\"\n# sanitized = sanitize_url_parameters(malicious_url)\n# print(sanitized) # Output: https://mycompany.com/search?search=legit</code></pre><p><strong>Action:</strong> For every URL generated by your AI, parse it to extract its query parameters. Maintain a strict allowlist of permitted parameter names and validation rules for their values. Reconstruct the final URL using only the validated parameters.</p>"
+                                }
+                            ]
+                        }
+                    ]
                 }
             ]
         },
@@ -2832,149 +3070,149 @@ const aidefendData = {
                     ],
                     "subTechniques": [
                         {
-    "id": "AID-D-003.001",
-    "name": "Harmful Content & Policy Filtering",
-    "description": "Focuses on inspecting AI-generated content for violations of safety and acceptable use policies. This includes detecting hate speech, self-harm content, explicit material, and other categories of harmful or inappropriate output.",
-    "toolsOpenSource": [
-        "Hugging Face Transformers (for custom classifiers)",
-        "spaCy, NLTK (for rule-based filtering)",
-        "Open-source LLM-based guardrails (e.g., Llama Guard, NeMo Guardrails)",
-        "OpenAI/Azure Content Safety CLI tools"
-    ],
-    "toolsCommercial": [
-        "OpenAI Moderation API",
-        "Google Perspective API",
-        "Azure Content Safety",
-        "Clarifai",
-        "Hive AI",
-        "Lakera Guard",
-        "Protect AI Guardian",
-        "Securiti LLM Firewall"
-    ],
-    "defendsAgainst": [
-        {
-            "framework": "MITRE ATLAS",
-            "items": [
-                "AML.T0048.002 External Harms: Societal Harm ",
-                "AML.T0057 LLM Data Leakage "
-            ]
-        },
-        {
-            "framework": "MAESTRO",
-            "items": [
-                "Misinformation Generation (L1/L7)",
-                "Data Exfiltration (L2)",
-                "Agent Tool Misuse (L7)",
-                "Compromised Agent Registry (L7)"
-            ]
-        },
-        {
-            "framework": "OWASP LLM Top 10 2025",
-            "items": [
-                "LLM05:2025 Improper Output Handling ",
-                "LLM06:2025 Excessive Agency ",
-                "LLM09:2025 Misinformation "
-            ]
-        },
-        {
-            "framework": "OWASP ML Top 10 2023",
-            "items": [
-                "ML09:2023 Output Integrity Attack "
-            ]
-        }
-    ],
-    "implementationStrategies": [
-        {
-            "strategy": "Deploy content classification models to scan AI outputs for policy violations.",
-            "howTo": "<h5>Concept:</h5><p>Use a separate, lightweight, and fast text classification model as a 'safety filter'. After your primary AI generates a response, this second model quickly classifies it against your safety policies (e.g., 'toxic', 'spam', 'hate_speech'). If a violation is detected, you can block the response before it reaches the user.</p><h5>Step 1: Use a Pre-trained Safety Classifier</h5><p>Leverage a model from the Hugging Face Hub that has been fine-tuned for content classification tasks like toxicity detection.</p><pre><code># File: output_filters/safety_classifier.py\\nfrom transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassification\\n\\n# Load a pre-trained model for toxicity classification\\nMODEL_NAME = \\\"martin-ha/toxic-comment-model\\\"\\ntokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)\\nmodel = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME)\\n\\nsafety_classifier = pipeline('text-classification', model=model, tokenizer=tokenizer)\\n\\n# Confidence threshold for flagging content\\nCONFIDENCE_THRESHOLD = 0.8\\n\\ndef is_output_harmful(text: str) -> bool:\\n    \\\"\\\"\\\"Uses a local classifier to detect harmful content.\\\"\\\"\\\"\\n    results = safety_classifier(text, top_k=None)\\n    # The model returns scores for different toxicity types\\n    for result in results:\\n        if result['label'] != 'non-toxic' and result['score'] > CONFIDENCE_THRESHOLD:\\n            print(f\\\"🚨 Harmful content detected! Category: {result['label']}, Score: {result['score']:.2f}\\\")\\n            return True\\n    return False\\n\\n# --- Example Usage in API Response Flow ---\\n# generated_response = primary_llm.generate(...)\\n# if is_output_harmful(generated_response):\\n#     return {\\\"response\\\": \\\"I'm sorry, I cannot provide a response to that topic.\\\"}\\n# else:\\n#     return {\\\"response\\\": generated_response}</code></pre><p><strong>Action:</strong> In your application logic, after receiving a response from your primary AI model, pass the text through a local safety classifier. If the response is flagged as harmful with high confidence, replace it with a generic, safe message.</p>"
-        },
-        {
-            "strategy": "Use a secondary 'guardrail' or 'critic' model to review the primary model's output for safety.",
-            "howTo": "<h5>Concept:</h5><p>This approach uses another LLM as a 'critic' to evaluate the primary model's response. You can prompt a smaller, faster LLM with the generated response and ask it to perform a safety evaluation. This can catch more nuanced policy violations than a simple classifier.</p><h5>Step 1: Implement an LLM-based Critic</h5><p>Create a function that takes the primary model's output and formats it into a new prompt for a 'critic' LLM. The critic is instructed to respond with a simple, parsable verdict.</p><pre><code># File: output_filters/llm_critic.py\\n# Assume 'critic_llm_client' is an initialized client for a fast LLM (e.g., GPT-3.5-Turbo)\\n\\nCRITIC_PROMPT_TEMPLATE = \\\"\\\"\\\"\\nYou are a safety evaluation bot. Your only task is to determine if the following AI-generated text violates any safety policies (e.g., harmful, hateful, unethical, illegal advice). Respond with ONLY the word 'SAFE' or 'UNSAFE'.\\n\\n--- AI-Generated Text ---\\n{response_text}\\n--- End of Text ---\\n\\nVerdict:\\\"\\\"\\\"\\n\\ndef get_critic_verdict(response_text: str) -> str:\\n    \\\"\\\"\\\"Gets a safety verdict from a critic LLM.\\\"\\\"\\\"\\n    try:\\n        prompt = CRITIC_PROMPT_TEMPLATE.format(response_text=response_text)\\n        # response = critic_llm_client.completions.create(model=\\\"gpt-3.5-turbo\\\", prompt=prompt, max_tokens=5)\\n        # critic_output = response.choices[0].text.strip().upper()\\n        # For demonstration:\\n        critic_output = \\\"SAFE\\\" if \\\"puppy\\\" in response_text.lower() else \\\"UNSAFE\\\"\\n        \\n        if critic_output in [\\\"SAFE\\\", \\\"UNSAFE\\\"]:\\n            return critic_output\\n        else:\\n            # If the critic gives an unexpected response, fail safe\\n            return \\\"UNSAFE\\\"\\n    except Exception as e:\\n        print(f\\\"Critic LLM failed: {e}\\\")\\n        return \\\"UNSAFE\\\" # Fail safe\\n\n# --- Usage ---\n# generated_response = ...\\n# verdict = get_critic_verdict(generated_response)\\n# if verdict == \\\"UNSAFE\\\":\\n#     # Block the response</code></pre><p><strong>Action:</strong> For nuanced safety policies, use a fast and cheap LLM as a critic. Prompt it with the generated content and a clear set of instructions, asking for a simple, machine-parsable output (`SAFE`/`UNSAFE`) to make a final decision.</p>"
-        },
-        {
-            "strategy": "Implement rule-based filters and keyword lists to block known harmful content.",
-            "howTo": "<h5>Concept:</h5><p>While models are powerful, a simple, deterministic blocklist provides a fast and reliable way to prevent the generation of specific forbidden words or phrases. This is an essential layer of defense that is easy to implement and maintain.</p><h5>Step 1: Create and Maintain a Blocklist</h5><p>Store your blocklist of keywords and regular expressions in a configuration file that can be easily updated without redeploying code.</p><pre><code># File: config/blocklist.json\\n{\\n    \\\"keywords\\\": [\\n        \\\"specific_slur_1\\\",\\n        \\\"another_slur_2\\\"\\n    ],\\n    \\\"regex_patterns\\\": [\\n        \\\"make.*bomb\\\",\\n        \\\"how to.*hotwire.*car\\\"\\n    ]\\n}</code></pre><h5>Step 2: Implement the Filter Function</h5><p>Write a function that loads the blocklist and checks the AI's output text against both the keywords and the regex patterns.</p><pre><code># File: output_filters/keyword_filter.py\\nimport json\\nimport re\\n\\nclass BlocklistFilter:\\n    def __init__(self, config_path=\\\"config/blocklist.json\\\"):\\n        with open(config_path, 'r') as f:\\n            config = json.load(f)\\n        # Use a set for fast keyword lookups\\n        self.keywords = set(config['keywords'])\\n        self.regex = [re.compile(p, re.IGNORECASE) for p in config['regex_patterns']]\\n\\n    def is_blocked(self, text: str) -> bool:\\n        lower_text = text.lower()\\n        # Check for keyword matches\\n        if any(keyword in lower_text for keyword in self.keywords):\\n            return True\\n        # Check for regex matches\\n        if any(rx.search(lower_text) for rx in self.regex):\\n            return True\\n        return False\\n\\n# --- Usage ---\\n# output_filter = BlocklistFilter()\\n# if output_filter.is_blocked(generated_response):\\n#     # Block the response</code></pre><p><strong>Action:</strong> Maintain a version-controlled blocklist of forbidden keywords and regex patterns. In your application, check every AI-generated response against this blocklist before sending it to the user.</p>"
-        },
-        {
-            "strategy": "Check agent-proposed actions against a predefined list of allowed or denied behaviors.",
-            "howTo": "<h5>Concept:</h5><p>When an autonomous agent decides to use a tool (e.g., call an API, run code), the proposed action should be treated as structured output that must be validated against a strict allowlist. This prevents a compromised agent from using its tools for unintended, malicious purposes.</p><h5>Step 1: Define an Action Allowlist</h5><p>For each agent, explicitly define the set of tools it is allowed to call. This should be a configuration, not hardcoded.</p><pre><code># File: config/agent_permissions.json\\n{\\n    \\\"billing_agent\\\": {\\n        \\\"allowed_tools\\\": [\\n            \\\"get_customer_invoice\\\",\\n            \\\"lookup_subscription_status\\\"\\n        ]\\n    },\\n    \\\"support_agent\\\": {\\n        \\\"allowed_tools\\\": [\\n            \\\"lookup_subscription_status\\\",\\n            \\\"create_support_ticket\\\"\\n        ]\\n    }\\n}</code></pre><h5>Step 2: Implement an Action Dispatcher with Validation</h5><p>Before executing any tool, the agent's dispatcher must verify that the proposed tool is on its allowlist.</p><pre><code># File: agents/secure_dispatcher.py\\nimport json\\n\nclass SecureToolDispatcher:\\n    def __init__(self):\\n        with open(\\\"config/agent_permissions.json\\\", 'r') as f:\\n            self.permissions = json.load(f)\\n\n    def execute_tool(self, agent_id: str, proposed_action: dict):\\n        tool_name = proposed_action.get('tool_name')\\n        tool_params = proposed_action.get('parameters')\\n        \n        # 1. Get the agent's specific allowlist\\n        allowed_tools = self.permissions.get(agent_id, {}).get('allowed_tools', [])\\n\n        # 2. Validate the proposed action\\n        if tool_name not in allowed_tools:\\n            error_msg = f\\\"🚨 AGENT POLICY VIOLATION: Agent '{agent_id}' attempted to use disallowed tool '{tool_name}'.\\\"\\n            print(error_msg)\\n            return {\\\"error\\\": error_msg}\\n            \\n        # 3. If allowed, execute the tool\\n        print(f\\\"Executing allowed tool '{tool_name}' for agent '{agent_id}'.\\\")\\n        # tool_function = get_tool_by_name(tool_name)\\n        # result = tool_function(**tool_params)\\n        # return result\\n\n# --- Agent's main loop ---\n# agent_output = llm.generate(...) # e.g., '{\\\"tool_name\\\": \\\"get_customer_invoice\\\", ...}'\\n# proposed_action = json.loads(agent_output)\\n# dispatcher.execute_tool(\\\"billing_agent\\\", proposed_action)</code></pre><p><strong>Action:</strong> Design your agents to output structured action requests (e.g., JSON). Before executing any action, validate the `tool_name` against a strict, agent-specific allowlist. Deny any request to use a tool not on the list.</p>"
+                            "id": "AID-D-003.001",
+                            "name": "Harmful Content & Policy Filtering",
+                            "description": "Focuses on inspecting AI-generated content for violations of safety and acceptable use policies. This includes detecting hate speech, self-harm content, explicit material, and other categories of harmful or inappropriate output.",
+                            "toolsOpenSource": [
+                                "Hugging Face Transformers (for custom classifiers)",
+                                "spaCy, NLTK (for rule-based filtering)",
+                                "Open-source LLM-based guardrails (e.g., Llama Guard, NeMo Guardrails)",
+                                "OpenAI/Azure Content Safety CLI tools"
+                            ],
+                            "toolsCommercial": [
+                                "OpenAI Moderation API",
+                                "Google Perspective API",
+                                "Azure Content Safety",
+                                "Clarifai",
+                                "Hive AI",
+                                "Lakera Guard",
+                                "Protect AI Guardian",
+                                "Securiti LLM Firewall"
+                            ],
+                            "defendsAgainst": [
+                                {
+                                    "framework": "MITRE ATLAS",
+                                    "items": [
+                                        "AML.T0048.002 External Harms: Societal Harm ",
+                                        "AML.T0057 LLM Data Leakage "
+                                    ]
+                                },
+                                {
+                                    "framework": "MAESTRO",
+                                    "items": [
+                                        "Misinformation Generation (L1/L7)",
+                                        "Data Exfiltration (L2)",
+                                        "Agent Tool Misuse (L7)",
+                                        "Compromised Agent Registry (L7)"
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP LLM Top 10 2025",
+                                    "items": [
+                                        "LLM05:2025 Improper Output Handling ",
+                                        "LLM06:2025 Excessive Agency ",
+                                        "LLM09:2025 Misinformation "
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP ML Top 10 2023",
+                                    "items": [
+                                        "ML09:2023 Output Integrity Attack "
+                                    ]
+                                }
+                            ],
+                            "implementationStrategies": [
+                                {
+                                    "strategy": "Deploy content classification models to scan AI outputs for policy violations.",
+                                    "howTo": "<h5>Concept:</h5><p>Use a separate, lightweight, and fast text classification model as a 'safety filter'. After your primary AI generates a response, this second model quickly classifies it against your safety policies (e.g., 'toxic', 'spam', 'hate_speech'). If a violation is detected, you can block the response before it reaches the user.</p><h5>Step 1: Use a Pre-trained Safety Classifier</h5><p>Leverage a model from the Hugging Face Hub that has been fine-tuned for content classification tasks like toxicity detection.</p><pre><code># File: output_filters/safety_classifier.py\\nfrom transformers import pipeline, AutoTokenizer, AutoModelForSequenceClassification\\n\\n# Load a pre-trained model for toxicity classification\\nMODEL_NAME = \\\"martin-ha/toxic-comment-model\\\"\\ntokenizer = AutoTokenizer.from_pretrained(MODEL_NAME)\\nmodel = AutoModelForSequenceClassification.from_pretrained(MODEL_NAME)\\n\\nsafety_classifier = pipeline('text-classification', model=model, tokenizer=tokenizer)\\n\\n# Confidence threshold for flagging content\\nCONFIDENCE_THRESHOLD = 0.8\\n\\ndef is_output_harmful(text: str) -> bool:\\n    \\\"\\\"\\\"Uses a local classifier to detect harmful content.\\\"\\\"\\\"\\n    results = safety_classifier(text, top_k=None)\\n    # The model returns scores for different toxicity types\\n    for result in results:\\n        if result['label'] != 'non-toxic' and result['score'] > CONFIDENCE_THRESHOLD:\\n            print(f\\\"🚨 Harmful content detected! Category: {result['label']}, Score: {result['score']:.2f}\\\")\\n            return True\\n    return False\\n\\n# --- Example Usage in API Response Flow ---\\n# generated_response = primary_llm.generate(...)\\n# if is_output_harmful(generated_response):\\n#     return {\\\"response\\\": \\\"I'm sorry, I cannot provide a response to that topic.\\\"}\\n# else:\\n#     return {\\\"response\\\": generated_response}</code></pre><p><strong>Action:</strong> In your application logic, after receiving a response from your primary AI model, pass the text through a local safety classifier. If the response is flagged as harmful with high confidence, replace it with a generic, safe message.</p>"
+                                },
+                                {
+                                    "strategy": "Use a secondary 'guardrail' or 'critic' model to review the primary model's output for safety.",
+                                    "howTo": "<h5>Concept:</h5><p>This approach uses another LLM as a 'critic' to evaluate the primary model's response. You can prompt a smaller, faster LLM with the generated response and ask it to perform a safety evaluation. This can catch more nuanced policy violations than a simple classifier.</p><h5>Step 1: Implement an LLM-based Critic</h5><p>Create a function that takes the primary model's output and formats it into a new prompt for a 'critic' LLM. The critic is instructed to respond with a simple, parsable verdict.</p><pre><code># File: output_filters/llm_critic.py\\n# Assume 'critic_llm_client' is an initialized client for a fast LLM (e.g., GPT-3.5-Turbo)\\n\\nCRITIC_PROMPT_TEMPLATE = \\\"\\\"\\\"\\nYou are a safety evaluation bot. Your only task is to determine if the following AI-generated text violates any safety policies (e.g., harmful, hateful, unethical, illegal advice). Respond with ONLY the word 'SAFE' or 'UNSAFE'.\\n\\n--- AI-Generated Text ---\\n{response_text}\\n--- End of Text ---\\n\\nVerdict:\\\"\\\"\\\"\\n\\ndef get_critic_verdict(response_text: str) -> str:\\n    \\\"\\\"\\\"Gets a safety verdict from a critic LLM.\\\"\\\"\\\"\\n    try:\\n        prompt = CRITIC_PROMPT_TEMPLATE.format(response_text=response_text)\\n        # response = critic_llm_client.completions.create(model=\\\"gpt-3.5-turbo\\\", prompt=prompt, max_tokens=5)\\n        # critic_output = response.choices[0].text.strip().upper()\\n        # For demonstration:\\n        critic_output = \\\"SAFE\\\" if \\\"puppy\\\" in response_text.lower() else \\\"UNSAFE\\\"\\n        \\n        if critic_output in [\\\"SAFE\\\", \\\"UNSAFE\\\"]:\\n            return critic_output\\n        else:\\n            # If the critic gives an unexpected response, fail safe\\n            return \\\"UNSAFE\\\"\\n    except Exception as e:\\n        print(f\\\"Critic LLM failed: {e}\\\")\\n        return \\\"UNSAFE\\\" # Fail safe\\n\n# --- Usage ---\n# generated_response = ...\\n# verdict = get_critic_verdict(generated_response)\\n# if verdict == \\\"UNSAFE\\\":\\n#     # Block the response</code></pre><p><strong>Action:</strong> For nuanced safety policies, use a fast and cheap LLM as a critic. Prompt it with the generated content and a clear set of instructions, asking for a simple, machine-parsable output (`SAFE`/`UNSAFE`) to make a final decision.</p>"
+                                },
+                                {
+                                    "strategy": "Implement rule-based filters and keyword lists to block known harmful content.",
+                                    "howTo": "<h5>Concept:</h5><p>While models are powerful, a simple, deterministic blocklist provides a fast and reliable way to prevent the generation of specific forbidden words or phrases. This is an essential layer of defense that is easy to implement and maintain.</p><h5>Step 1: Create and Maintain a Blocklist</h5><p>Store your blocklist of keywords and regular expressions in a configuration file that can be easily updated without redeploying code.</p><pre><code># File: config/blocklist.json\\n{\\n    \\\"keywords\\\": [\\n        \\\"specific_slur_1\\\",\\n        \\\"another_slur_2\\\"\\n    ],\\n    \\\"regex_patterns\\\": [\\n        \\\"make.*bomb\\\",\\n        \\\"how to.*hotwire.*car\\\"\\n    ]\\n}</code></pre><h5>Step 2: Implement the Filter Function</h5><p>Write a function that loads the blocklist and checks the AI's output text against both the keywords and the regex patterns.</p><pre><code># File: output_filters/keyword_filter.py\\nimport json\\nimport re\\n\\nclass BlocklistFilter:\\n    def __init__(self, config_path=\\\"config/blocklist.json\\\"):\\n        with open(config_path, 'r') as f:\\n            config = json.load(f)\\n        # Use a set for fast keyword lookups\\n        self.keywords = set(config['keywords'])\\n        self.regex = [re.compile(p, re.IGNORECASE) for p in config['regex_patterns']]\\n\\n    def is_blocked(self, text: str) -> bool:\\n        lower_text = text.lower()\\n        # Check for keyword matches\\n        if any(keyword in lower_text for keyword in self.keywords):\\n            return True\\n        # Check for regex matches\\n        if any(rx.search(lower_text) for rx in self.regex):\\n            return True\\n        return False\\n\\n# --- Usage ---\\n# output_filter = BlocklistFilter()\\n# if output_filter.is_blocked(generated_response):\\n#     # Block the response</code></pre><p><strong>Action:</strong> Maintain a version-controlled blocklist of forbidden keywords and regex patterns. In your application, check every AI-generated response against this blocklist before sending it to the user.</p>"
+                                },
+                                {
+                                    "strategy": "Check agent-proposed actions against a predefined list of allowed or denied behaviors.",
+                                    "howTo": "<h5>Concept:</h5><p>When an autonomous agent decides to use a tool (e.g., call an API, run code), the proposed action should be treated as structured output that must be validated against a strict allowlist. This prevents a compromised agent from using its tools for unintended, malicious purposes.</p><h5>Step 1: Define an Action Allowlist</h5><p>For each agent, explicitly define the set of tools it is allowed to call. This should be a configuration, not hardcoded.</p><pre><code># File: config/agent_permissions.json\\n{\\n    \\\"billing_agent\\\": {\\n        \\\"allowed_tools\\\": [\\n            \\\"get_customer_invoice\\\",\\n            \\\"lookup_subscription_status\\\"\\n        ]\\n    },\\n    \\\"support_agent\\\": {\\n        \\\"allowed_tools\\\": [\\n            \\\"lookup_subscription_status\\\",\\n            \\\"create_support_ticket\\\"\\n        ]\\n    }\\n}</code></pre><h5>Step 2: Implement an Action Dispatcher with Validation</h5><p>Before executing any tool, the agent's dispatcher must verify that the proposed tool is on its allowlist.</p><pre><code># File: agents/secure_dispatcher.py\\nimport json\\n\nclass SecureToolDispatcher:\\n    def __init__(self):\\n        with open(\\\"config/agent_permissions.json\\\", 'r') as f:\\n            self.permissions = json.load(f)\\n\n    def execute_tool(self, agent_id: str, proposed_action: dict):\\n        tool_name = proposed_action.get('tool_name')\\n        tool_params = proposed_action.get('parameters')\\n        \n        # 1. Get the agent's specific allowlist\\n        allowed_tools = self.permissions.get(agent_id, {}).get('allowed_tools', [])\\n\n        # 2. Validate the proposed action\\n        if tool_name not in allowed_tools:\\n            error_msg = f\\\"🚨 AGENT POLICY VIOLATION: Agent '{agent_id}' attempted to use disallowed tool '{tool_name}'.\\\"\\n            print(error_msg)\\n            return {\\\"error\\\": error_msg}\\n            \\n        # 3. If allowed, execute the tool\\n        print(f\\\"Executing allowed tool '{tool_name}' for agent '{agent_id}'.\\\")\\n        # tool_function = get_tool_by_name(tool_name)\\n        # result = tool_function(**tool_params)\\n        # return result\\n\n# --- Agent's main loop ---\n# agent_output = llm.generate(...) # e.g., '{\\\"tool_name\\\": \\\"get_customer_invoice\\\", ...}'\\n# proposed_action = json.loads(agent_output)\\n# dispatcher.execute_tool(\\\"billing_agent\\\", proposed_action)</code></pre><p><strong>Action:</strong> Design your agents to output structured action requests (e.g., JSON). Before executing any action, validate the `tool_name` against a strict, agent-specific allowlist. Deny any request to use a tool not on the list.</p>"
                                 }
                             ]
                         },
                         {
-    "id": "AID-D-003.002",
-    "name": "Sensitive Information & Data Leakage Detection",
-    "description": "Focuses on preventing the AI model from inadvertently disclosing sensitive, confidential, or private information in its outputs. This is critical for protecting user privacy and corporate data.",
-    "toolsOpenSource": [
-        "Microsoft Presidio (for PII detection and anonymization)",
-        "NIST Privacy Enhancing Technologies (PETs) Toolkit",
-        "NLP libraries (NLTK, spaCy, Hugging Face Transformers) for custom NER models",
-        "FlashText (for efficient keyword matching)",
-        "Open-source data loss prevention (DLP) tools (e.g., git-secrets, truffleHog adapted for content)"
-    ],
-    "toolsCommercial": [
-        "Google Cloud DLP API",
-        "AWS Macie",
-        "Azure Purview",
-        "Gretel.ai",
-        "Tonic.ai",
-        "Data Loss Prevention (DLP) solutions (Symantec DLP, Forcepoint DLP)",
-        "AI security platforms with output monitoring capabilities (e.g., HiddenLayer, Protect AI)"
-    ],
-    "defendsAgainst": [
-        {
-            "framework": "MITRE ATLAS",
-            "items": [
-                "AML.T0024.000 Exfiltration via AI Inference API: Infer Training Data Membership",
-                "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model",
-                "AML.T0057 LLM Data Leakage",
-                "AML.T0048.003 External Harms: User Harm",
-                "AML.T0047 AI-Enabled Product or Service",
-                "AML.T0077 LLM Response Rendering"
-            ]
-        },
-        {
-            "framework": "MAESTRO",
-            "items": [
-                "Data Exfiltration (L2)",
-                "Data Leakage through Observability (L5)",
-                "Model Inversion/Extraction (L2)"
-            ]
-        },
-        {
-            "framework": "OWASP LLM Top 10 2025",
-            "items": [
-                "LLM02:2025 Sensitive Information Disclosure"
-            ]
-        },
-        {
-            "framework": "OWASP ML Top 10 2023",
-            "items": [
-                "ML03:2023 Model Inversion Attack",
-                "ML04:2023 Membership Inference Attack"
-            ]
-        }
-    ],
-    "implementationStrategies": [
-        {
-            "strategy": "Use pattern matching (regex) to detect common sensitive data formats.",
-            "howTo": "<h5>Concept:</h5><p>A fast and effective way to prevent leakage of structured data like credit card numbers, Social Security Numbers, or API keys is to scan the AI's output for patterns that match these formats using regular expressions.</p><h5>Step 1: Create a Library of PII Regex Patterns</h5><p>Compile a list of regular expressions for common PII and secret formats. It's important to use patterns that minimize false positives.</p><pre><code># File: output_filters/pii_regex.py\\nimport re\\n\\n# Regex patterns for common PII formats.\\n# These should be tested carefully to avoid false positives.\\nPII_PATTERNS = {\\n    'CREDIT_CARD': re.compile(r'\\b(?:\\d[ -]*?){13,16}\\b'),\\n    'US_SSN': re.compile(r'\\b\\d{3}-\\d{2}-\\d{4}\\b'),\\n    'AWS_ACCESS_KEY': re.compile(r'AKIA[0-9A-Z]{16}')\\n}\\n\\ndef find_pii_by_regex(text: str) -> dict:\\n    \\\"\\\"\\\"Scans text for common PII patterns and returns any findings.\\\"\\\"\\\"\\n    found_pii = {}\\n    for pii_type, pattern in PII_PATTERNS.items():\\n        matches = pattern.findall(text)\\n        if matches:\\n            found_pii[pii_type] = matches\\n    return found_pii\\n\\n# --- Example Usage ---\\n# generated_text = \\\"...my key is AKIAIOSFODNN7EXAMPLE and SSN is 000-00-0000...\\\"\\n# detected = find_pii_by_regex(generated_text)\\n# if detected:\\n#     print(f\\\"🚨 PII Leakage Detected: {detected}\\\")\\n#     # Redact or block the response</code></pre><p><strong>Action:</strong> Before sending any AI-generated text to a user, pass it through a function that scans for a comprehensive set of regular expressions corresponding to PII and other sensitive data formats relevant to your domain.</p>"
-        },
-        {
-            "strategy": "Employ Named Entity Recognition (NER) models to identify and redact PII.",
-            "howTo": "<h5>Concept:</h5><p>While regex is good for structured data, it fails for unstructured PII like names and addresses. A Named Entity Recognition (NER) model can identify these entities in text. Specialized libraries like Microsoft Presidio are pre-trained for PII detection and provide tools for easy redaction.</p><h5>Step 1: Use Presidio to Analyze and Anonymize Text</h5><p>The `AnalyzerEngine` finds PII, and the `AnonymizerEngine` redacts it, replacing the sensitive text with placeholders like `<PERSON>` or `<PHONE_NUMBER>`.</p><pre><code># File: output_filters/presidio_redactor.py\\nfrom presidio_analyzer import AnalyzerEngine\\nfrom presidio_anonymizer import AnonymizerEngine\\nfrom presidio_anonymizer.entities import OperatorConfig\\n\\n# Set up the engines\\nanalyzer = AnalyzerEngine()\\nanonymizer = AnonymizerEngine()\\n\\ndef redact_pii_with_presidio(text: str) -> str:\\n    \\\"\\\"\\\"Detects and redacts PII using Presidio.\\\"\\\"\\\"\\n    # 1. Analyze the text to find PII entities\\n    analyzer_results = analyzer.analyze(text=text, language='en')\\n    \\n    # 2. Anonymize the text, replacing found entities with their type\\n    anonymized_result = anonymizer.anonymize(\\n        text=text,\\n        analyzer_results=analyzer_results,\\n        operators={\\\"DEFAULT\\\": OperatorConfig(\\\"replace\\\", {\\\"new_value\\\": \\\"<\\\\\"entity_type\\\\\">\\\"})}\\n    )\\n    \\n    if analyzer_results: # If any PII was found\\n        print(f\\\"Redacted PII. Original score: {analyzer_results[0].score:.2f}, Type: {analyzer_results[0].entity_type}\\\")\\n        \\n    return anonymized_result.text\\n\\n# --- Example Usage ---\\n# generated_text = \\\"You can contact our support lead, John Smith, at his office in New York.\\\"\\n# sanitized_text = redact_pii_with_presidio(generated_text)\\n# print(sanitized_text) # Output: \\\"You can contact our support lead, <PERSON>, at his office in <LOCATION>.\\\"</code></pre><p><strong>Action:</strong> For any AI output that may contain unstructured PII, use a robust library like Presidio to analyze and redact the content before it is displayed or stored.</p>"
-        },
-        {
-            "strategy": "Implement output reconstruction checks to ensure the model is not simply repeating sensitive training data.",
-            "howTo": "<h5>Concept:</h5><p>A model might 'leak' sensitive information by regurgitating long sequences from its training data verbatim. To detect this, you can check if the model's output contains exact matches to sentences or passages from the training set. This is computationally intensive, so it's best done with an efficient search index.</p><h5>Step 1: Create a Searchable Index of Training Data</h5><p>During data preprocessing, create a searchable index of all long sentences from your training text. A library like `flash-text` is very efficient for this.</p><pre><code># File: monitoring/build_leakage_index.py\\nfrom flashtext import KeywordProcessor\\nimport json\\n\\n# This process is run once, offline, on your training data\\nkeyword_processor = KeywordProcessor()\\n\\n# Assume 'training_sentences' is a list of all sentences from your training data\\n# Filter for longer sentences, which are more likely to be unique and sensitive\\ntraining_sentences = [s for s in get_all_training_sentences() if len(s.split()) > 10]\\n\\n# Add the sentences to the processor. We can use the sentence itself as the 'clean name'.\\nkeyword_processor.add_keywords_from_list(training_sentences)\\n\\n# Save the index to a file\\nwith open('leakage_index.json', 'w') as f:\\n    json.dump(keyword_processor.get_all_keywords(), f)</code></pre><h5>Step 2: Check Model Output Against the Index</h5><p>At inference time, scan the generated text for any exact matches from your training data index.</p><pre><code># File: output_filters/leakage_detector.py\\n\\n# Load the pre-built index\\n# leakage_detector = KeywordProcessor()\\n# with open('leakage_index.json', 'r') as f:\\n#     leakage_detector.add_keywords_from_dict(json.load(f)) \\n\\ndef detect_training_data_leakage(text: str) -> list:\\n    \\\"\\\"\\\"Checks if the text contains verbatim sequences from the training data.\\\"\\\"\\\"\\n    found_leaks = leakage_detector.extract_keywords(text)\\n    if found_leaks:\\n        print(f\"🚨 POTENTIAL DATA LEAKAGE: Found {len(found_leaks)} verbatim matches to training data.\")\\n    return found_leaks</code></pre><p><strong>Action:</strong> Create a searchable index of all unique, long sentences in your training corpus. As a post-processing step on your AI's output, use this index to check for verbatim regurgitation. Flag any output that contains an exact match.</p>"
-        },
-        {
-            "strategy": "Develop custom detectors for proprietary information or specific internal data formats.",
-            "howTo": "<h5>Concept:</h5><p>Your organization has its own unique set of sensitive information, such as project codenames, internal server names, or specific customer ID formats. You need custom rules to detect and block the leakage of this proprietary data.</p><h5>Step 1: Define Custom Sensitive Patterns</h5><p>Create a configuration file that contains lists of sensitive keywords and regex patterns specific to your organization.</p><pre><code># File: config/proprietary_patterns.json\\n{\\n    \\\"keywords\\\": [\\n        \\\"Project Chimera\\\",\\n        \\\"Q3-financial-forecast.xlsx\\\",\\n        \\\"Synergy V2 Architecture\\\"\\n    ],\\n    \\\"regex_patterns\\\": [\\n        \\\"JIRA-[A-Z]+-[0-9]+\\\",       // JIRA Ticket IDs\\n        \\\"[a-z]{3}-[a-z]+-prod-[0-9]{2}\\\"  // Internal Hostname Convention\\n    ]\\n}</code></pre><h5>Step 2: Implement a Custom Detector</h5><p>Load these custom patterns and use them to scan the AI's output, similar to the general keyword filter.</p><pre><code># File: output_filters/proprietary_filter.py\\n# This implementation can reuse the BlocklistFilter class from AID-D-003.001\\n\\n# from .keyword_filter import BlocklistFilter\\n\\n# --- Usage ---\\n# Load the custom patterns\\n# proprietary_filter = BlocklistFilter(config_path=\\\"config/proprietary_patterns.json\\\")\\n\\n# generated_response = \\\"The plan for Project Chimera is stored in ticket JIRA-AISEC-42.\\\"\\n\\n# if proprietary_filter.is_blocked(generated_response):\\n#     print(\\\"🚨 PROPRIETARY INFO LEAKAGE DETECTED! Blocking response.\\\")</code></pre><p><strong>Action:</strong> Work with different teams in your organization to compile a list of sensitive keywords and data formats. Implement a custom filter using these patterns and make it a mandatory step in your output monitoring pipeline.</p>"
-        }
-    ]
-}
+                            "id": "AID-D-003.002",
+                            "name": "Sensitive Information & Data Leakage Detection",
+                            "description": "Focuses on preventing the AI model from inadvertently disclosing sensitive, confidential, or private information in its outputs. This is critical for protecting user privacy and corporate data.",
+                            "toolsOpenSource": [
+                                "Microsoft Presidio (for PII detection and anonymization)",
+                                "NIST Privacy Enhancing Technologies (PETs) Toolkit",
+                                "NLP libraries (NLTK, spaCy, Hugging Face Transformers) for custom NER models",
+                                "FlashText (for efficient keyword matching)",
+                                "Open-source data loss prevention (DLP) tools (e.g., git-secrets, truffleHog adapted for content)"
+                            ],
+                            "toolsCommercial": [
+                                "Google Cloud DLP API",
+                                "AWS Macie",
+                                "Azure Purview",
+                                "Gretel.ai",
+                                "Tonic.ai",
+                                "Data Loss Prevention (DLP) solutions (Symantec DLP, Forcepoint DLP)",
+                                "AI security platforms with output monitoring capabilities (e.g., HiddenLayer, Protect AI)"
+                            ],
+                            "defendsAgainst": [
+                                {
+                                    "framework": "MITRE ATLAS",
+                                    "items": [
+                                        "AML.T0024.000 Exfiltration via AI Inference API: Infer Training Data Membership",
+                                        "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model",
+                                        "AML.T0057 LLM Data Leakage",
+                                        "AML.T0048.003 External Harms: User Harm",
+                                        "AML.T0047 AI-Enabled Product or Service",
+                                        "AML.T0077 LLM Response Rendering"
+                                    ]
+                                },
+                                {
+                                    "framework": "MAESTRO",
+                                    "items": [
+                                        "Data Exfiltration (L2)",
+                                        "Data Leakage through Observability (L5)",
+                                        "Model Inversion/Extraction (L2)"
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP LLM Top 10 2025",
+                                    "items": [
+                                        "LLM02:2025 Sensitive Information Disclosure"
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP ML Top 10 2023",
+                                    "items": [
+                                        "ML03:2023 Model Inversion Attack",
+                                        "ML04:2023 Membership Inference Attack"
+                                    ]
+                                }
+                            ],
+                            "implementationStrategies": [
+                                {
+                                    "strategy": "Use pattern matching (regex) to detect common sensitive data formats.",
+                                    "howTo": "<h5>Concept:</h5><p>A fast and effective way to prevent leakage of structured data like credit card numbers, Social Security Numbers, or API keys is to scan the AI's output for patterns that match these formats using regular expressions.</p><h5>Step 1: Create a Library of PII Regex Patterns</h5><p>Compile a list of regular expressions for common PII and secret formats. It's important to use patterns that minimize false positives.</p><pre><code># File: output_filters/pii_regex.py\\nimport re\\n\\n# Regex patterns for common PII formats.\\n# These should be tested carefully to avoid false positives.\\nPII_PATTERNS = {\\n    'CREDIT_CARD': re.compile(r'\\b(?:\\d[ -]*?){13,16}\\b'),\\n    'US_SSN': re.compile(r'\\b\\d{3}-\\d{2}-\\d{4}\\b'),\\n    'AWS_ACCESS_KEY': re.compile(r'AKIA[0-9A-Z]{16}')\\n}\\n\\ndef find_pii_by_regex(text: str) -> dict:\\n    \\\"\\\"\\\"Scans text for common PII patterns and returns any findings.\\\"\\\"\\\"\\n    found_pii = {}\\n    for pii_type, pattern in PII_PATTERNS.items():\\n        matches = pattern.findall(text)\\n        if matches:\\n            found_pii[pii_type] = matches\\n    return found_pii\\n\\n# --- Example Usage ---\\n# generated_text = \\\"...my key is AKIAIOSFODNN7EXAMPLE and SSN is 000-00-0000...\\\"\\n# detected = find_pii_by_regex(generated_text)\\n# if detected:\\n#     print(f\\\"🚨 PII Leakage Detected: {detected}\\\")\\n#     # Redact or block the response</code></pre><p><strong>Action:</strong> Before sending any AI-generated text to a user, pass it through a function that scans for a comprehensive set of regular expressions corresponding to PII and other sensitive data formats relevant to your domain.</p>"
+                                },
+                                {
+                                    "strategy": "Employ Named Entity Recognition (NER) models to identify and redact PII.",
+                                    "howTo": "<h5>Concept:</h5><p>While regex is good for structured data, it fails for unstructured PII like names and addresses. A Named Entity Recognition (NER) model can identify these entities in text. Specialized libraries like Microsoft Presidio are pre-trained for PII detection and provide tools for easy redaction.</p><h5>Step 1: Use Presidio to Analyze and Anonymize Text</h5><p>The `AnalyzerEngine` finds PII, and the `AnonymizerEngine` redacts it, replacing the sensitive text with placeholders like `<PERSON>` or `<PHONE_NUMBER>`.</p><pre><code># File: output_filters/presidio_redactor.py\\nfrom presidio_analyzer import AnalyzerEngine\\nfrom presidio_anonymizer import AnonymizerEngine\\nfrom presidio_anonymizer.entities import OperatorConfig\\n\\n# Set up the engines\\nanalyzer = AnalyzerEngine()\\nanonymizer = AnonymizerEngine()\\n\\ndef redact_pii_with_presidio(text: str) -> str:\\n    \\\"\\\"\\\"Detects and redacts PII using Presidio.\\\"\\\"\\\"\\n    # 1. Analyze the text to find PII entities\\n    analyzer_results = analyzer.analyze(text=text, language='en')\\n    \\n    # 2. Anonymize the text, replacing found entities with their type\\n    anonymized_result = anonymizer.anonymize(\\n        text=text,\\n        analyzer_results=analyzer_results,\\n        operators={\\\"DEFAULT\\\": OperatorConfig(\\\"replace\\\", {\\\"new_value\\\": \\\"<\\\\\"entity_type\\\\\">\\\"})}\\n    )\\n    \\n    if analyzer_results: # If any PII was found\\n        print(f\\\"Redacted PII. Original score: {analyzer_results[0].score:.2f}, Type: {analyzer_results[0].entity_type}\\\")\\n        \\n    return anonymized_result.text\\n\\n# --- Example Usage ---\\n# generated_text = \\\"You can contact our support lead, John Smith, at his office in New York.\\\"\\n# sanitized_text = redact_pii_with_presidio(generated_text)\\n# print(sanitized_text) # Output: \\\"You can contact our support lead, <PERSON>, at his office in <LOCATION>.\\\"</code></pre><p><strong>Action:</strong> For any AI output that may contain unstructured PII, use a robust library like Presidio to analyze and redact the content before it is displayed or stored.</p>"
+                                },
+                                {
+                                    "strategy": "Implement output reconstruction checks to ensure the model is not simply repeating sensitive training data.",
+                                    "howTo": "<h5>Concept:</h5><p>A model might 'leak' sensitive information by regurgitating long sequences from its training data verbatim. To detect this, you can check if the model's output contains exact matches to sentences or passages from the training set. This is computationally intensive, so it's best done with an efficient search index.</p><h5>Step 1: Create a Searchable Index of Training Data</h5><p>During data preprocessing, create a searchable index of all long sentences from your training text. A library like `flash-text` is very efficient for this.</p><pre><code># File: monitoring/build_leakage_index.py\\nfrom flashtext import KeywordProcessor\\nimport json\\n\\n# This process is run once, offline, on your training data\\nkeyword_processor = KeywordProcessor()\\n\\n# Assume 'training_sentences' is a list of all sentences from your training data\\n# Filter for longer sentences, which are more likely to be unique and sensitive\\ntraining_sentences = [s for s in get_all_training_sentences() if len(s.split()) > 10]\\n\\n# Add the sentences to the processor. We can use the sentence itself as the 'clean name'.\\nkeyword_processor.add_keywords_from_list(training_sentences)\\n\\n# Save the index to a file\\nwith open('leakage_index.json', 'w') as f:\\n    json.dump(keyword_processor.get_all_keywords(), f)</code></pre><h5>Step 2: Check Model Output Against the Index</h5><p>At inference time, scan the generated text for any exact matches from your training data index.</p><pre><code># File: output_filters/leakage_detector.py\\n\\n# Load the pre-built index\\n# leakage_detector = KeywordProcessor()\\n# with open('leakage_index.json', 'r') as f:\\n#     leakage_detector.add_keywords_from_dict(json.load(f)) \\n\\ndef detect_training_data_leakage(text: str) -> list:\\n    \\\"\\\"\\\"Checks if the text contains verbatim sequences from the training data.\\\"\\\"\\\"\\n    found_leaks = leakage_detector.extract_keywords(text)\\n    if found_leaks:\\n        print(f\"🚨 POTENTIAL DATA LEAKAGE: Found {len(found_leaks)} verbatim matches to training data.\")\\n    return found_leaks</code></pre><p><strong>Action:</strong> Create a searchable index of all unique, long sentences in your training corpus. As a post-processing step on your AI's output, use this index to check for verbatim regurgitation. Flag any output that contains an exact match.</p>"
+                                },
+                                {
+                                    "strategy": "Develop custom detectors for proprietary information or specific internal data formats.",
+                                    "howTo": "<h5>Concept:</h5><p>Your organization has its own unique set of sensitive information, such as project codenames, internal server names, or specific customer ID formats. You need custom rules to detect and block the leakage of this proprietary data.</p><h5>Step 1: Define Custom Sensitive Patterns</h5><p>Create a configuration file that contains lists of sensitive keywords and regex patterns specific to your organization.</p><pre><code># File: config/proprietary_patterns.json\\n{\\n    \\\"keywords\\\": [\\n        \\\"Project Chimera\\\",\\n        \\\"Q3-financial-forecast.xlsx\\\",\\n        \\\"Synergy V2 Architecture\\\"\\n    ],\\n    \\\"regex_patterns\\\": [\\n        \\\"JIRA-[A-Z]+-[0-9]+\\\",       // JIRA Ticket IDs\\n        \\\"[a-z]{3}-[a-z]+-prod-[0-9]{2}\\\"  // Internal Hostname Convention\\n    ]\\n}</code></pre><h5>Step 2: Implement a Custom Detector</h5><p>Load these custom patterns and use them to scan the AI's output, similar to the general keyword filter.</p><pre><code># File: output_filters/proprietary_filter.py\\n# This implementation can reuse the BlocklistFilter class from AID-D-003.001\\n\\n# from .keyword_filter import BlocklistFilter\\n\\n# --- Usage ---\\n# Load the custom patterns\\n# proprietary_filter = BlocklistFilter(config_path=\\\"config/proprietary_patterns.json\\\")\\n\\n# generated_response = \\\"The plan for Project Chimera is stored in ticket JIRA-AISEC-42.\\\"\\n\\n# if proprietary_filter.is_blocked(generated_response):\\n#     print(\\\"🚨 PROPRIETARY INFO LEAKAGE DETECTED! Blocking response.\\\")</code></pre><p><strong>Action:</strong> Work with different teams in your organization to compile a list of sensitive keywords and data formats. Implement a custom filter using these patterns and make it a mandatory step in your output monitoring pipeline.</p>"
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
@@ -3020,228 +3258,228 @@ const aidefendData = {
                     ],
                     "subTechniques": [
                         {
-    "id": "AID-D-004.001",
-    "name": "Static Artifact Hash & Signature Verification",
-    "description": "Periodically re-hash stored models, datasets and container layers and compare against the authorised manifest.",
-    "toolsOpenSource": [
-        "MLflow Model Registry",
-        "DVC (Data Version Control)",
-        "Notary",
-        "Sigstore/cosign",
-        "sha256sum (Linux utility)",
-        "Tripwire",
-        "AIDE (Advanced Intrusion Detection Environment)"
-    ],
-    "toolsCommercial": [
-        "Databricks Model Registry",
-        "Amazon SageMaker Model Registry",
-        "Google Vertex AI Model Registry",
-        "Protect AI (ModelScan)",
-        "JFrog Artifactory",
-        "Snyk Container (for image integrity)",
-        "Tenable.io (for FIM)"
-    ],
-    "defendsAgainst": [
-        {
-            "framework": "MITRE ATLAS",
-            "items": [
-                "AML.T0018 Manipulate AI Model",
-                "AML.T0018.002 Manipulate AI Model: Embed Malware",
-                "AML.T0020 Poison Training Data",
-                "AML.T0058 Publish Poisoned Models",
-                "AML.T0076 Corrupt AI Model",
-                "AML.T0010.003 AI Supply Chain Compromise: Model",
-                "AML.T0010.004 AI Supply Chain Compromise: Container Registry"
-            ]
-        },
-        {
-            "framework": "MAESTRO",
-            "items": [
-                "Model Tampering (L1)",
-                "Data Tampering (L2)",
-                "Compromised Container Images (L4)",
-                "Supply Chain Attacks (Cross-Layer)",
-                "Backdoor Attacks (L1)"
-            ]
-        },
-        {
-            "framework": "OWASP LLM Top 10 2025",
-            "items": [
-                "LLM03:2025 Supply Chain",
-                "LLM04:2025 Data and Model Poisoning"
-            ]
-        },
-        {
-            "framework": "OWASP ML Top 10 2023",
-            "items": [
-                "ML06:2023 AI Supply Chain Attacks",
-                "ML10:2023 Model Poisoning",
-                "ML02:2023 Data Poisoning Attack",
-                "ML09:2023 Output Integrity Attack"
-            ]
-        }
-    ],
-    "implementationStrategies": [
-        {
-            "strategy": "Keep authorised hash list in a write-once model registry.",
-            "howTo": "<h5>Concept:</h5><p>A model registry serves as the single source of truth for approved models. When a model is registered, its cryptographic hash is stored as metadata. Deployment workflows must then verify that the hash of the artifact being deployed matches the authorized hash in the registry.</p><h5>Step 1: Log Model with Hash as a Tag in MLflow</h5><p>During your training pipeline, calculate the SHA256 hash of your model artifact and log it as a tag when you register the model.</p><pre><code># File: training/register_model.py\\nimport mlflow\\nimport hashlib\\n\\ndef get_sha256_hash(filepath):\\n    sha256 = hashlib.sha256()\\n    with open(filepath, \\\"rb\\\") as f:\\n        while chunk := f.read(4096):\\n            sha256.update(chunk)\\n    return sha256.hexdigest()\\n\\n# Assume 'model.pkl' is your saved model file\\nmodel_hash = get_sha256_hash('model.pkl')\\n\\nwith mlflow.start_run() as run:\\n    mlflow.sklearn.log_model(sk_model, \\\"model\\\")\\n    # Register the model with its hash as a tag for verification\\n    mlflow.register_model(\\n        f\\\"runs:/{run.info.run_id}/model\\\",\\n        \\\"fraud-detection-model\\\",\\n        tags={\\\"sha256_hash\\\": model_hash}\\n    )\\n</code></pre><h5>Step 2: Verify Hash Before Deployment</h5><p>Your CI/CD deployment pipeline must fetch the model, re-calculate its hash, and verify it against the tag in the registry before proceeding.</p><pre><code># File: deployment/deploy_model.py\\nfrom mlflow.tracking import MlflowClient\\n\\nclient = MlflowClient()\\nmodel_name = \\\"fraud-detection-model\\\"\\nmodel_version = client.get_latest_versions(model_name, stages=[\"Staging\"])[0].version\\n\\n# Get the authorized hash from the registry tag\\nauthorized_hash = model_version_details.tags.get(\\\"sha256_hash\\\")\\n\\n# Download the model files\\nlocal_path = client.download_artifacts(f\\\"models:/{model_name}/{model_version}\\\", \\\".\\\")\\n\\n# Re-calculate the hash of the downloaded artifact\\nactual_hash = get_sha256_hash(f\\\"{local_path}/model.pkl\\\")\\n\\n# Compare hashes\\nif actual_hash != authorized_hash:\\n    print(f\\\"❌ HASH MISMATCH! Model version {model_version} may be tampered with. Halting deployment.\\\")\\n    exit(1)\\nelse:\\n    print(\\\"✅ Model integrity verified. Proceeding with deployment.\\\")</code></pre><p><strong>Action:</strong> Implement a deployment workflow where fetching a model artifact from your registry also involves fetching its authorized hash. The workflow must programmatically verify that the hash of the downloaded artifact matches the authorized hash before deployment continues.</p>"
-        },
-        {
-            "strategy": "Schedule nightly sha256sum scans or Tripwire rules over model volumes.",
-            "howTo": "<h5>Concept:</h5><p>This detects post-deployment tampering. Even if a model is deployed securely, an attacker with access to the server could modify the file on disk. A file integrity monitoring (FIM) tool like Tripwire or AIDE runs on a schedule, comparing current file hashes against a known-good baseline database and alerting on any changes.</p><h5>Step 1: Create a Baseline Manifest</h5><p>First, create a manifest file that contains the official hashes of all critical AI artifacts on the server. This should be done on a known-clean system.</p><pre><code># Run this on the server after a secure deployment\\n# Create a manifest of official hashes\\ncd /srv/models/\\nsha256sum fraud-model-v1.2.pkl tokenizer.json > /etc/aidefend/manifest.sha256</code></pre><h5>Step 2: Create and Schedule the Verification Script</h5><p>Write a simple shell script that uses the manifest to check the integrity of the files. Then, create a cron job to run this script nightly.</p><pre><code># File: /usr/local/bin/check_model_integrity.sh\\n#!/bin/bash\\n\\ncd /srv/models/\\n\\n# Use the manifest to check the current files.\\n# The '--status' flag will make it silent unless there is a mismatch.\\nif ! sha256sum --status -c /etc/aidefend/manifest.sha256; then\\n    # If the check fails, send an alert\\n    HOSTNAME=$(hostname)\\n    MESSAGE=\\\"🚨 CRITICAL: AI model file integrity check FAILED on ${HOSTNAME}! Potential tampering detected.\\\"\\n    # Send alert to Slack/PagerDuty/etc.\\n    curl -X POST -H 'Content-type: application/json' --data '{\\\"text\\\":\\\"'\\\"${MESSAGE}\\\"'\\\"}' YOUR_SLACK_WEBHOOK_URL\\nfi\\n\\n# Make the script executable\\n# > chmod +x /usr/local/bin/check_model_integrity.sh\\n\\n# Add a cron job to run it every night at 2 AM\\n# > crontab -e\\n# 0 2 * * * /usr/local/bin/check_model_integrity.sh</code></pre><p><strong>Action:</strong> On every production inference server, establish a baseline hash manifest of your deployed model artifacts. Schedule a nightly cron job to run an integrity checking script (`sha256sum -c`) and configure it to send a high-priority alert if any hash mismatch is detected.</p>"
-        },
-        {
-            "strategy": "Alert if an artifact hash deviates or goes missing.",
-            "howTo": "<h5>Concept:</h5><p>The output of any integrity scan must be immediately actionable. A silent failure is a security blind spot. The scanning script must be configured to actively send an alert to a system that will be seen by on-call personnel.</p><h5>Step 1: Integrate Alerting into the Check Script</h5><p>The script that performs the hash check should include logic to call an alerting service's API if the check fails. This ensures that a deviation is treated as a real-time security event.</p><pre><code>#!/bin/bash\\n\\nMANIFEST_FILE=\\\"/etc/aidefend/manifest.sha256\\\"\\nMODEL_DIR=\\\"/srv/models/\\\"\\nALERT_WEBHOOK_URL=\\\"YOUR_ALERTING_SERVICE_WEBHOOK_URL\\\"\\nHOSTNAME=$(hostname)\\n\\n# Change to the model directory to ensure paths in manifest are correct\\ncd ${MODEL_DIR}\\n\\n# Perform the check. The output of mismatching files is sent to a variable.\\nCHECK_OUTPUT=$(sha256sum -c ${MANIFEST_FILE} 2>&1)\\n\\n# Check the exit code of the sha256sum command\\nif [ $? -ne 0 ]; then\\n    # Format the message for the alert\\n    JSON_PAYLOAD=$(printf '{\\\"text\\\": \\\"🚨 FIM ALERT on %s\\n```\\n%s\\n```\\\"}' \\\"${HOSTNAME}\\\" \\\"${CHECK_OUTPUT}\\\")\\n\\n    # Send the alert\\n    curl -X POST -H 'Content-type: application/json' --data \\\"${JSON_PAYLOAD}\\\" ${ALERT_WEBHOOK_URL}\\nfi</code></pre><p><strong>Action:</strong> Ensure your scheduled file integrity checks are configured to send a detailed, high-priority alert to your security operations channel (e.g., Slack, PagerDuty, email) immediately upon detecting a mismatch, file deletion, or permission change.</p>"
-        }
-    ]
-},
+                            "id": "AID-D-004.001",
+                            "name": "Static Artifact Hash & Signature Verification",
+                            "description": "Periodically re-hash stored models, datasets and container layers and compare against the authorised manifest.",
+                            "toolsOpenSource": [
+                                "MLflow Model Registry",
+                                "DVC (Data Version Control)",
+                                "Notary",
+                                "Sigstore/cosign",
+                                "sha256sum (Linux utility)",
+                                "Tripwire",
+                                "AIDE (Advanced Intrusion Detection Environment)"
+                            ],
+                            "toolsCommercial": [
+                                "Databricks Model Registry",
+                                "Amazon SageMaker Model Registry",
+                                "Google Vertex AI Model Registry",
+                                "Protect AI (ModelScan)",
+                                "JFrog Artifactory",
+                                "Snyk Container (for image integrity)",
+                                "Tenable.io (for FIM)"
+                            ],
+                            "defendsAgainst": [
+                                {
+                                    "framework": "MITRE ATLAS",
+                                    "items": [
+                                        "AML.T0018 Manipulate AI Model",
+                                        "AML.T0018.002 Manipulate AI Model: Embed Malware",
+                                        "AML.T0020 Poison Training Data",
+                                        "AML.T0058 Publish Poisoned Models",
+                                        "AML.T0076 Corrupt AI Model",
+                                        "AML.T0010.003 AI Supply Chain Compromise: Model",
+                                        "AML.T0010.004 AI Supply Chain Compromise: Container Registry"
+                                    ]
+                                },
+                                {
+                                    "framework": "MAESTRO",
+                                    "items": [
+                                        "Model Tampering (L1)",
+                                        "Data Tampering (L2)",
+                                        "Compromised Container Images (L4)",
+                                        "Supply Chain Attacks (Cross-Layer)",
+                                        "Backdoor Attacks (L1)"
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP LLM Top 10 2025",
+                                    "items": [
+                                        "LLM03:2025 Supply Chain",
+                                        "LLM04:2025 Data and Model Poisoning"
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP ML Top 10 2023",
+                                    "items": [
+                                        "ML06:2023 AI Supply Chain Attacks",
+                                        "ML10:2023 Model Poisoning",
+                                        "ML02:2023 Data Poisoning Attack",
+                                        "ML09:2023 Output Integrity Attack"
+                                    ]
+                                }
+                            ],
+                            "implementationStrategies": [
+                                {
+                                    "strategy": "Keep authorised hash list in a write-once model registry.",
+                                    "howTo": "<h5>Concept:</h5><p>A model registry serves as the single source of truth for approved models. When a model is registered, its cryptographic hash is stored as metadata. Deployment workflows must then verify that the hash of the artifact being deployed matches the authorized hash in the registry.</p><h5>Step 1: Log Model with Hash as a Tag in MLflow</h5><p>During your training pipeline, calculate the SHA256 hash of your model artifact and log it as a tag when you register the model.</p><pre><code># File: training/register_model.py\\nimport mlflow\\nimport hashlib\\n\\ndef get_sha256_hash(filepath):\\n    sha256 = hashlib.sha256()\\n    with open(filepath, \\\"rb\\\") as f:\\n        while chunk := f.read(4096):\\n            sha256.update(chunk)\\n    return sha256.hexdigest()\\n\\n# Assume 'model.pkl' is your saved model file\\nmodel_hash = get_sha256_hash('model.pkl')\\n\\nwith mlflow.start_run() as run:\\n    mlflow.sklearn.log_model(sk_model, \\\"model\\\")\\n    # Register the model with its hash as a tag for verification\\n    mlflow.register_model(\\n        f\\\"runs:/{run.info.run_id}/model\\\",\\n        \\\"fraud-detection-model\\\",\\n        tags={\\\"sha256_hash\\\": model_hash}\\n    )\\n</code></pre><h5>Step 2: Verify Hash Before Deployment</h5><p>Your CI/CD deployment pipeline must fetch the model, re-calculate its hash, and verify it against the tag in the registry before proceeding.</p><pre><code># File: deployment/deploy_model.py\\nfrom mlflow.tracking import MlflowClient\\n\\nclient = MlflowClient()\\nmodel_name = \\\"fraud-detection-model\\\"\\nmodel_version = client.get_latest_versions(model_name, stages=[\"Staging\"])[0].version\\n\\n# Get the authorized hash from the registry tag\\nauthorized_hash = model_version_details.tags.get(\\\"sha256_hash\\\")\\n\\n# Download the model files\\nlocal_path = client.download_artifacts(f\\\"models:/{model_name}/{model_version}\\\", \\\".\\\")\\n\\n# Re-calculate the hash of the downloaded artifact\\nactual_hash = get_sha256_hash(f\\\"{local_path}/model.pkl\\\")\\n\\n# Compare hashes\\nif actual_hash != authorized_hash:\\n    print(f\\\"❌ HASH MISMATCH! Model version {model_version} may be tampered with. Halting deployment.\\\")\\n    exit(1)\\nelse:\\n    print(\\\"✅ Model integrity verified. Proceeding with deployment.\\\")</code></pre><p><strong>Action:</strong> Implement a deployment workflow where fetching a model artifact from your registry also involves fetching its authorized hash. The workflow must programmatically verify that the hash of the downloaded artifact matches the authorized hash before deployment continues.</p>"
+                                },
+                                {
+                                    "strategy": "Schedule nightly sha256sum scans or Tripwire rules over model volumes.",
+                                    "howTo": "<h5>Concept:</h5><p>This detects post-deployment tampering. Even if a model is deployed securely, an attacker with access to the server could modify the file on disk. A file integrity monitoring (FIM) tool like Tripwire or AIDE runs on a schedule, comparing current file hashes against a known-good baseline database and alerting on any changes.</p><h5>Step 1: Create a Baseline Manifest</h5><p>First, create a manifest file that contains the official hashes of all critical AI artifacts on the server. This should be done on a known-clean system.</p><pre><code># Run this on the server after a secure deployment\\n# Create a manifest of official hashes\\ncd /srv/models/\\nsha256sum fraud-model-v1.2.pkl tokenizer.json > /etc/aidefend/manifest.sha256</code></pre><h5>Step 2: Create and Schedule the Verification Script</h5><p>Write a simple shell script that uses the manifest to check the integrity of the files. Then, create a cron job to run this script nightly.</p><pre><code># File: /usr/local/bin/check_model_integrity.sh\\n#!/bin/bash\\n\\ncd /srv/models/\\n\\n# Use the manifest to check the current files.\\n# The '--status' flag will make it silent unless there is a mismatch.\\nif ! sha256sum --status -c /etc/aidefend/manifest.sha256; then\\n    # If the check fails, send an alert\\n    HOSTNAME=$(hostname)\\n    MESSAGE=\\\"🚨 CRITICAL: AI model file integrity check FAILED on ${HOSTNAME}! Potential tampering detected.\\\"\\n    # Send alert to Slack/PagerDuty/etc.\\n    curl -X POST -H 'Content-type: application/json' --data '{\\\"text\\\":\\\"'\\\"${MESSAGE}\\\"'\\\"}' YOUR_SLACK_WEBHOOK_URL\\nfi\\n\\n# Make the script executable\\n# > chmod +x /usr/local/bin/check_model_integrity.sh\\n\\n# Add a cron job to run it every night at 2 AM\\n# > crontab -e\\n# 0 2 * * * /usr/local/bin/check_model_integrity.sh</code></pre><p><strong>Action:</strong> On every production inference server, establish a baseline hash manifest of your deployed model artifacts. Schedule a nightly cron job to run an integrity checking script (`sha256sum -c`) and configure it to send a high-priority alert if any hash mismatch is detected.</p>"
+                                },
+                                {
+                                    "strategy": "Alert if an artifact hash deviates or goes missing.",
+                                    "howTo": "<h5>Concept:</h5><p>The output of any integrity scan must be immediately actionable. A silent failure is a security blind spot. The scanning script must be configured to actively send an alert to a system that will be seen by on-call personnel.</p><h5>Step 1: Integrate Alerting into the Check Script</h5><p>The script that performs the hash check should include logic to call an alerting service's API if the check fails. This ensures that a deviation is treated as a real-time security event.</p><pre><code>#!/bin/bash\\n\\nMANIFEST_FILE=\\\"/etc/aidefend/manifest.sha256\\\"\\nMODEL_DIR=\\\"/srv/models/\\\"\\nALERT_WEBHOOK_URL=\\\"YOUR_ALERTING_SERVICE_WEBHOOK_URL\\\"\\nHOSTNAME=$(hostname)\\n\\n# Change to the model directory to ensure paths in manifest are correct\\ncd ${MODEL_DIR}\\n\\n# Perform the check. The output of mismatching files is sent to a variable.\\nCHECK_OUTPUT=$(sha256sum -c ${MANIFEST_FILE} 2>&1)\\n\\n# Check the exit code of the sha256sum command\\nif [ $? -ne 0 ]; then\\n    # Format the message for the alert\\n    JSON_PAYLOAD=$(printf '{\\\"text\\\": \\\"🚨 FIM ALERT on %s\\n```\\n%s\\n```\\\"}' \\\"${HOSTNAME}\\\" \\\"${CHECK_OUTPUT}\\\")\\n\\n    # Send the alert\\n    curl -X POST -H 'Content-type: application/json' --data \\\"${JSON_PAYLOAD}\\\" ${ALERT_WEBHOOK_URL}\\nfi</code></pre><p><strong>Action:</strong> Ensure your scheduled file integrity checks are configured to send a detailed, high-priority alert to your security operations channel (e.g., Slack, PagerDuty, email) immediately upon detecting a mismatch, file deletion, or permission change.</p>"
+                                }
+                            ]
+                        },
                         {
-    "id": "AID-D-004.002",
-    "name": "Runtime Attestation & Memory Integrity",
-    "description": "Attest the running model process (code, weights, enclave MRENCLAVE) to detect in-memory patching or DLL injection.",
-    "toolsOpenSource": [
-        "Intel SGX SDK",
-        "Open Enclave SDK",
-        "AWS Nitro Enclaves SDK",
-        "Google Asylo SDK",
-        "Verifiable Confidential AI (VCAI) projects",
-        "eBPF tools (e.g., Falco, Cilium Tetragon, bcc)",
-        "Open-source attestation services (e.g., from Confidential Computing Consortium)"
-    ],
-    "toolsCommercial": [
-        "Microsoft Azure Confidential Computing",
-        "Google Cloud Confidential Computing",
-        "AWS Nitro Enclaves",
-        "Intel TDX (Trust Domain Extensions)",
-        "AMD SEV (Secure Encrypted Virtualization)",
-        "Verifiable Computing solutions (e.g., from various startups in confidential computing space)"
-    ],
-    "defendsAgainst": [
-        {
-            "framework": "MITRE ATLAS",
-            "items": [
-                "AML.T0018 Manipulate AI Model",
-                "AML.T0018.002 Manipulate AI Model: Embed Malware",
-                "AML.T0072 Reverse Shell",
-                "AML.T0017 Persistence",
-                "AML.T0025 Exfiltration via Cyber Means"
-            ]
-        },
-        {
-            "framework": "MAESTRO",
-            "items": [
-                "Memory Corruption (L4)",
-                "Runtime Code Injection (L4)",
-                "Compromised Training Environment (L4)",
-                "Data Exfiltration (L2)",
-                "Model Tampering (L1)"
-            ]
-        },
-        {
-            "framework": "OWASP LLM Top 10 2025",
-            "items": [
-                "LLM03:2025 Supply Chain",
-                "LLM06:2025 Excessive Agency",
-                "LLM02:2025 Sensitive Information Disclosure"
-            ]
-        },
-        {
-            "framework": "OWASP ML Top 10 2023",
-            "items": [
-                "ML06:2023 AI Supply Chain Attacks",
-                "ML05:2023 Model Theft",
-                "ML09:2023 Output Integrity Attack"
-            ]
-        }
-    ],
-    "implementationStrategies": [
-        {
-            "strategy": "Start inference in a TEE (SGX, SEV, Nitro Enclave) and verify measurement before releasing traffic.",
-            "howTo": "<h5>Concept:</h5><p>A Trusted Execution Environment (TEE) like Intel SGX or AWS Nitro Enclaves provides hardware-level isolation for a running process. Remote attestation is the process where the TEE proves its identity and the integrity of the code it has loaded to a remote client. The client will only trust the TEE and send it data if the attestation is valid.</p><h5>Step 1: Conceptual Workflow for Attestation</h5><p>The process involves a challenge-response protocol between the client and the TEE.</p><pre><code># This is a conceptual workflow, not executable code.\\n\\n# --- On the Server (TEE Side) ---\\n# 1. The TEE-enabled server starts.\\n# 2. The CPU measures the code and configuration loaded into the enclave, producing a measurement hash (e.g., MRENCLAVE).\\n\\n# --- On the Client (Verifier Side) ---\\n# 1. The client generates a random nonce (a one-time number) to prevent replay attacks.\\nnonce = generate_nonce()\\n\\n# 2. The client sends a challenge containing the nonce to the TEE.\\n\\n# --- Back on the Server ---\\n# 3. The TEE's hardware receives the challenge. It generates an 'attestation report' (or 'quote') containing:\\n#    - The enclave's measurement hash (MRENCLAVE).\\n#    - The nonce provided by the client.\\n#    - Other platform security information.\\n# 4. The TEE's hardware signs this entire report with a private 'attestation key' that is unique to the CPU and fused at the factory.\\n\\n# --- Back on the Client ---\\n# 5. The client receives the signed quote.\\n# 6. The client verifies the quote's signature using the hardware vendor's public key.\\n# 7. The client checks that the nonce in the quote matches the nonce it sent.\\n# 8. The client checks that the measurement hash (MRENCLAVE) in the quote matches the known-good hash of the expected inference code.\\n\\n# 9. IF ALL CHECKS PASS:\\n#    The client now trusts the enclave and can establish a secure channel to send inference requests.\\n# ELSE:\\n#    The client terminates the connection.</code></pre><p><strong>Action:</strong> When using a confidential computing platform, your client application or orchestrator *must* perform remote attestation before provisioning the service with secrets or sending it any sensitive data. Your deployment pipeline must store the known-good measurement hash of your application so the client has something to compare against.</p>"
-        },
-        {
-            "strategy": "Use remote-attestation APIs; deny requests if the quote is stale or unrecognised.",
-            "howTo": "<h5>Concept:</h5><p>The attestation quote must be fresh and specific to the current session to prevent replay attacks, where an attacker records a valid quote from a previous session and replays it to impersonate a secure enclave. The nonce is the primary defense against this.</p><h5>Step 1: Implement Nonce Verification</h5><p>The client must generate a new, unpredictable nonce for every attestation attempt and verify that the exact same nonce is included in the signed report it receives back.</p><pre><code># File: attestation/client_verifier.py\\nimport os\\nimport hashlib\\n\\n# Assume 'attestation_client' is a library for the specific TEE (e.g., aws_nitro_enclaves.client)\\n\\ndef verify_attestation_quote(quote_document):\\n    # 1. Generate a fresh, random nonce for this session.\\n    # In a real system, this would be a cryptographically secure random number.\\n    session_nonce = os.urandom(32)\\n    nonce_hash = hashlib.sha256(session_nonce).digest()\\n\\n    # 2. Challenge the enclave and get the quote.\\n    # The nonce or its hash is sent as part of the challenge data.\\n    # quote = attestation_client.get_attestation_document(user_data=nonce_hash)\\n    \\n    # 3. Verify the quote (this is done by a vendor library or service).\\n    # The verification checks the signature and decrypts the document.\\n    # verified_doc = attestation_client.verify(quote)\\n\\n    # 4. **CRITICAL:** Check that the nonce from the verified document matches.\\n    # received_nonce_hash = verified_doc.user_data\\n    # if received_nonce_hash != nonce_hash:\\n    #     raise SecurityException(\\\"Nonce mismatch! Possible replay attack.\\\")\\n\\n    # 5. Check the measurement hash (PCRs).\\n    # known_good_pcr0 = \\\"...\\\"\\n    # if verified_doc.pcrs[0] != known_good_pcr0:\\n    #     raise SecurityException(\\\"PCR0 mismatch! Unexpected code loaded.\\\")\\n\\n    print(\\\"✅ Attestation successful: Quote is fresh and measurement is correct.\\\")\\n    return True</code></pre><p><strong>Action:</strong> Your attestation verification logic must generate a unique nonce for each connection attempt, pass it to the attestation generation API, and verify its presence in the returned signed quote before trusting the enclave.</p>"
-        },
-        {
-            "strategy": "Monitor loaded shared-object hashes with eBPF kernel probes.",
-            "howTo": "<h5>Concept:</h5><p>eBPF allows you to safely run custom code in the Linux kernel. You can use it to create a lightweight security monitor that observes system calls made by your inference server process. By hooking into the `openat` syscall, you can detect whenever your process loads a shared library (`.so` file) and verify its hash against an allowlist, detecting runtime code injection or library replacement attacks.</p><h5>Step 1: Write an eBPF Program with bcc</h5><p>The Python `bcc` library provides a user-friendly way to write and load eBPF programs.</p><pre><code># File: monitoring/runtime_integrity_monitor.py\\nfrom bcc import BPF\\nimport hashlib\\n\\n# The eBPF program written in C\\n# This program runs in the kernel\\nEBPF_PROGRAM = \\\"\\\"\\\"\\n#include <uapi/linux/ptrace.h>\\n\\nBPF_HASH(allowlist, u64, u8[32]);\\n\\nint trace_openat(struct pt_regs *ctx) {\\n    char path[256];\\n    bpf_read_probe_str(PT_REGS_PARM2(ctx), sizeof(path), path);\\n\\n    // Only trace .so files loaded by our target process\\n    if (strstr(path, \\\".so\\\") != NULL) {\\n        u32 pid = bpf_get_current_pid_tgid() >> 32;\\n        if (pid == TARGET_PID) {\\n            // In a real program, we would send the path to user-space\\n            // for hashing and verification, as hashing in-kernel is complex.\\n            bpf_trace_printk(\\\"OPENED_SO:%s\\\", path);\\n        }\\n    }\\n    return 0;\\n}\\n\\\"\\\"\\\"\\n\\n# --- User-space Python script ---\\n# A pre-computed list of allowed library hashes\\nALLOWED_LIB_HASHES = {\\n    'libc.so.6': '...',\\n    'libstdc++.so.6': '...'.\\n}\\n\\n# Get the PID of the running inference server\\nINFERENCE_PID = 1234\\n\\n# Create and attach the eBPF program\\nbpf = BPF(text=EBPF_PROGRAM.replace('TARGET_PID', str(INFERENCE_PID)))\\nbpf.attach_kprobe(event=\\\"do_sys_openat2\\\", fn_name=\\\"trace_openat\\\")\\n\\nprint(f\\\"Monitoring process {INFERENCE_PID} for shared library loading...\\\")\\n\\n# Process events from the kernel\\nwhile True:\\n    try:\\n        (_, _, _, _, _, msg_bytes) = bpf.trace_fields()\\n        msg = msg_bytes.decode('utf-8')\\n        if msg.startswith(\\\"OPENED_SO:\\\"):\\n            lib_path = msg.split(':')[1]\\n            # In a real system, you would hash the file at lib_path\\n            # and check if the hash is in ALLOWED_LIB_HASHES.\\n            # if hash_file(lib_path) not in ALLOWED_LIB_HASHES.values():\\n            #     print(f\\\"🚨 ALERT: Process {INFERENCE_PID} loaded an unauthorized library: {lib_path}\\\")\\n    except KeyboardInterrupt:\\n        break\\n</code></pre><p><strong>Action:</strong> Deploy an eBPF-based security agent (like Falco, Cilium's Tetragon, or a custom one using bcc) alongside your inference server. Configure it with a profile of allowed shared libraries and create a high-priority alert that fires any time the process loads an unknown or untrusted library.</p>"
-        }
-    ]
-},
+                            "id": "AID-D-004.002",
+                            "name": "Runtime Attestation & Memory Integrity",
+                            "description": "Attest the running model process (code, weights, enclave MRENCLAVE) to detect in-memory patching or DLL injection.",
+                            "toolsOpenSource": [
+                                "Intel SGX SDK",
+                                "Open Enclave SDK",
+                                "AWS Nitro Enclaves SDK",
+                                "Google Asylo SDK",
+                                "Verifiable Confidential AI (VCAI) projects",
+                                "eBPF tools (e.g., Falco, Cilium Tetragon, bcc)",
+                                "Open-source attestation services (e.g., from Confidential Computing Consortium)"
+                            ],
+                            "toolsCommercial": [
+                                "Microsoft Azure Confidential Computing",
+                                "Google Cloud Confidential Computing",
+                                "AWS Nitro Enclaves",
+                                "Intel TDX (Trust Domain Extensions)",
+                                "AMD SEV (Secure Encrypted Virtualization)",
+                                "Verifiable Computing solutions (e.g., from various startups in confidential computing space)"
+                            ],
+                            "defendsAgainst": [
+                                {
+                                    "framework": "MITRE ATLAS",
+                                    "items": [
+                                        "AML.T0018 Manipulate AI Model",
+                                        "AML.T0018.002 Manipulate AI Model: Embed Malware",
+                                        "AML.T0072 Reverse Shell",
+                                        "AML.T0017 Persistence",
+                                        "AML.T0025 Exfiltration via Cyber Means"
+                                    ]
+                                },
+                                {
+                                    "framework": "MAESTRO",
+                                    "items": [
+                                        "Memory Corruption (L4)",
+                                        "Runtime Code Injection (L4)",
+                                        "Compromised Training Environment (L4)",
+                                        "Data Exfiltration (L2)",
+                                        "Model Tampering (L1)"
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP LLM Top 10 2025",
+                                    "items": [
+                                        "LLM03:2025 Supply Chain",
+                                        "LLM06:2025 Excessive Agency",
+                                        "LLM02:2025 Sensitive Information Disclosure"
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP ML Top 10 2023",
+                                    "items": [
+                                        "ML06:2023 AI Supply Chain Attacks",
+                                        "ML05:2023 Model Theft",
+                                        "ML09:2023 Output Integrity Attack"
+                                    ]
+                                }
+                            ],
+                            "implementationStrategies": [
+                                {
+                                    "strategy": "Start inference in a TEE (SGX, SEV, Nitro Enclave) and verify measurement before releasing traffic.",
+                                    "howTo": "<h5>Concept:</h5><p>A Trusted Execution Environment (TEE) like Intel SGX or AWS Nitro Enclaves provides hardware-level isolation for a running process. Remote attestation is the process where the TEE proves its identity and the integrity of the code it has loaded to a remote client. The client will only trust the TEE and send it data if the attestation is valid.</p><h5>Step 1: Conceptual Workflow for Attestation</h5><p>The process involves a challenge-response protocol between the client and the TEE.</p><pre><code># This is a conceptual workflow, not executable code.\\n\\n# --- On the Server (TEE Side) ---\\n# 1. The TEE-enabled server starts.\\n# 2. The CPU measures the code and configuration loaded into the enclave, producing a measurement hash (e.g., MRENCLAVE).\\n\\n# --- On the Client (Verifier Side) ---\\n# 1. The client generates a random nonce (a one-time number) to prevent replay attacks.\\nnonce = generate_nonce()\\n\\n# 2. The client sends a challenge containing the nonce to the TEE.\\n\\n# --- Back on the Server ---\\n# 3. The TEE's hardware receives the challenge. It generates an 'attestation report' (or 'quote') containing:\\n#    - The enclave's measurement hash (MRENCLAVE).\\n#    - The nonce provided by the client.\\n#    - Other platform security information.\\n# 4. The TEE's hardware signs this entire report with a private 'attestation key' that is unique to the CPU and fused at the factory.\\n\\n# --- Back on the Client ---\\n# 5. The client receives the signed quote.\\n# 6. The client verifies the quote's signature using the hardware vendor's public key.\\n# 7. The client checks that the nonce in the quote matches the nonce it sent.\\n# 8. The client checks that the measurement hash (MRENCLAVE) in the quote matches the known-good hash of the expected inference code.\\n\\n# 9. IF ALL CHECKS PASS:\\n#    The client now trusts the enclave and can establish a secure channel to send inference requests.\\n# ELSE:\\n#    The client terminates the connection.</code></pre><p><strong>Action:</strong> When using a confidential computing platform, your client application or orchestrator *must* perform remote attestation before provisioning the service with secrets or sending it any sensitive data. Your deployment pipeline must store the known-good measurement hash of your application so the client has something to compare against.</p>"
+                                },
+                                {
+                                    "strategy": "Use remote-attestation APIs; deny requests if the quote is stale or unrecognised.",
+                                    "howTo": "<h5>Concept:</h5><p>The attestation quote must be fresh and specific to the current session to prevent replay attacks, where an attacker records a valid quote from a previous session and replays it to impersonate a secure enclave. The nonce is the primary defense against this.</p><h5>Step 1: Implement Nonce Verification</h5><p>The client must generate a new, unpredictable nonce for every attestation attempt and verify that the exact same nonce is included in the signed report it receives back.</p><pre><code># File: attestation/client_verifier.py\\nimport os\\nimport hashlib\\n\\n# Assume 'attestation_client' is a library for the specific TEE (e.g., aws_nitro_enclaves.client)\\n\\ndef verify_attestation_quote(quote_document):\\n    # 1. Generate a fresh, random nonce for this session.\\n    # In a real system, this would be a cryptographically secure random number.\\n    session_nonce = os.urandom(32)\\n    nonce_hash = hashlib.sha256(session_nonce).digest()\\n\\n    # 2. Challenge the enclave and get the quote.\\n    # The nonce or its hash is sent as part of the challenge data.\\n    # quote = attestation_client.get_attestation_document(user_data=nonce_hash)\\n    \\n    # 3. Verify the quote (this is done by a vendor library or service).\\n    # The verification checks the signature and decrypts the document.\\n    # verified_doc = attestation_client.verify(quote)\\n\\n    # 4. **CRITICAL:** Check that the nonce from the verified document matches.\\n    # received_nonce_hash = verified_doc.user_data\\n    # if received_nonce_hash != nonce_hash:\\n    #     raise SecurityException(\\\"Nonce mismatch! Possible replay attack.\\\")\\n\\n    # 5. Check the measurement hash (PCRs).\\n    # known_good_pcr0 = \\\"...\\\"\\n    # if verified_doc.pcrs[0] != known_good_pcr0:\\n    #     raise SecurityException(\\\"PCR0 mismatch! Unexpected code loaded.\\\")\\n\\n    print(\\\"✅ Attestation successful: Quote is fresh and measurement is correct.\\\")\\n    return True</code></pre><p><strong>Action:</strong> Your attestation verification logic must generate a unique nonce for each connection attempt, pass it to the attestation generation API, and verify its presence in the returned signed quote before trusting the enclave.</p>"
+                                },
+                                {
+                                    "strategy": "Monitor loaded shared-object hashes with eBPF kernel probes.",
+                                    "howTo": "<h5>Concept:</h5><p>eBPF allows you to safely run custom code in the Linux kernel. You can use it to create a lightweight security monitor that observes system calls made by your inference server process. By hooking into the `openat` syscall, you can detect whenever your process loads a shared library (`.so` file) and verify its hash against an allowlist, detecting runtime code injection or library replacement attacks.</p><h5>Step 1: Write an eBPF Program with bcc</h5><p>The Python `bcc` library provides a user-friendly way to write and load eBPF programs.</p><pre><code># File: monitoring/runtime_integrity_monitor.py\\nfrom bcc import BPF\\nimport hashlib\\n\\n# The eBPF program written in C\\n# This program runs in the kernel\\nEBPF_PROGRAM = \\\"\\\"\\\"\\n#include <uapi/linux/ptrace.h>\\n\\nBPF_HASH(allowlist, u64, u8[32]);\\n\\nint trace_openat(struct pt_regs *ctx) {\\n    char path[256];\\n    bpf_read_probe_str(PT_REGS_PARM2(ctx), sizeof(path), path);\\n\\n    // Only trace .so files loaded by our target process\\n    if (strstr(path, \\\".so\\\") != NULL) {\\n        u32 pid = bpf_get_current_pid_tgid() >> 32;\\n        if (pid == TARGET_PID) {\\n            // In a real program, we would send the path to user-space\\n            // for hashing and verification, as hashing in-kernel is complex.\\n            bpf_trace_printk(\\\"OPENED_SO:%s\\\", path);\\n        }\\n    }\\n    return 0;\\n}\\n\\\"\\\"\\\"\\n\\n# --- User-space Python script ---\\n# A pre-computed list of allowed library hashes\\nALLOWED_LIB_HASHES = {\\n    'libc.so.6': '...',\\n    'libstdc++.so.6': '...'.\\n}\\n\\n# Get the PID of the running inference server\\nINFERENCE_PID = 1234\\n\\n# Create and attach the eBPF program\\nbpf = BPF(text=EBPF_PROGRAM.replace('TARGET_PID', str(INFERENCE_PID)))\\nbpf.attach_kprobe(event=\\\"do_sys_openat2\\\", fn_name=\\\"trace_openat\\\")\\n\\nprint(f\\\"Monitoring process {INFERENCE_PID} for shared library loading...\\\")\\n\\n# Process events from the kernel\\nwhile True:\\n    try:\\n        (_, _, _, _, _, msg_bytes) = bpf.trace_fields()\\n        msg = msg_bytes.decode('utf-8')\\n        if msg.startswith(\\\"OPENED_SO:\\\"):\\n            lib_path = msg.split(':')[1]\\n            # In a real system, you would hash the file at lib_path\\n            # and check if the hash is in ALLOWED_LIB_HASHES.\\n            # if hash_file(lib_path) not in ALLOWED_LIB_HASHES.values():\\n            #     print(f\\\"🚨 ALERT: Process {INFERENCE_PID} loaded an unauthorized library: {lib_path}\\\")\\n    except KeyboardInterrupt:\\n        break\\n</code></pre><p><strong>Action:</strong> Deploy an eBPF-based security agent (like Falco, Cilium's Tetragon, or a custom one using bcc) alongside your inference server. Configure it with a profile of allowed shared libraries and create a high-priority alert that fires any time the process loads an unknown or untrusted library.</p>"
+                                }
+                            ]
+                        },
                         {
-    "id": "AID-D-004.003",
-    "name": "Configuration & Policy Drift Monitoring",
-    "description": "Detect unauthorised edits to model-serving YAMLs, feature-store ACLs, RAG index schemas or inference-time policy files.",
-    "toolsOpenSource": [
-        "Git (for version control and signed commits)",
-        "GitHub/GitLab/Bitbucket webhooks",
-        "Argo CD",
-        "Flux CD",
-        "Open Policy Agent (OPA) / Gatekeeper",
-        "Kyverno",
-        "Terraform, CloudFormation, Ansible (for IaC enforcement)"
-    ],
-    "toolsCommercial": [
-        "Cloud Security Posture Management (CSPM) tools (e.g., Wiz, Prisma Cloud, Microsoft Defender for Cloud)",
-        "Configuration Management Databases (CMDBs)",
-        "Enterprise Git solutions (e.g., GitHub Enterprise, GitLab Ultimate)",
-        "Commercial GitOps platforms"
-    ],
-    "defendsAgainst": [
-        {
-            "framework": "MITRE ATLAS",
-            "items": [
-                "AML.T0011 Initial Access",
-                "AML.T0017 Persistence",
-                "AML.T0018 Manipulate AI Model",
-                "AML.T0069 Discover LLM System Information"
-            ]
-        },
-        {
-            "framework": "MAESTRO",
-            "items": [
-                "Misconfigurations (L4: Deployment & Infrastructure)",
-                "Data Tampering (L2: Data Operations)",
-                "Policy Bypass (L6: Security & Compliance)",
-                "Unauthorized Access (Cross-Layer)",
-                "Compromised Agent Registry (L7: Agent Ecosystem)"
-            ]
-        },
-        {
-            "framework": "OWASP LLM Top 10 2025",
-            "items": [
-                "LLM03:2025 Supply Chain",
-                "LLM07:2025 System Prompt Leakage",
-                "LLM08:2025 Vector and Embedding Weaknesses"
-            ]
-        },
-        {
-            "framework": "OWASP ML Top 10 2023",
-            "items": [
-                "ML06:2023 AI Supply Chain Attacks",
-                "ML09:2023 Output Integrity Attack",
-                "ML10:2023 Model Poisoning",
-                "ML08:2023 Model Skewing"
-            ]
-        }
-    ],
-    "implementationStrategies": [
-        {
-            "strategy": "Store configs in Git with signed commits; enable ‘git watcher’ webhooks.",
-            "howTo": "<h5>Concept:</h5><p>Treat your configurations (YAML, etc.) as code ('Config-as-Code') and require all changes to go through a secure Git workflow. Signed commits use a developer's GPG key to cryptographically prove who authored a change, providing a strong, non-repudiable audit trail.</p><h5>Step 1: Enforce Signed Commits on GitHub</h5><p>In your GitHub repository settings, enable branch protection for your `main` branch and check the box for \"Require signed commits.\" This will prevent any unsigned commits from being merged.</p><h5>Step 2: Set Up a Webhook for Push Events</h5><p>In the repository settings, go to \"Webhooks\" and add a new webhook pointing to a service you control. Subscribe this webhook to `push` events. Now, every time code is pushed to your repository, GitHub will send a detailed JSON payload to your service.</p><pre><code># Conceptual server to receive the webhook\\nfrom flask import Flask, request, abort\\nimport hmac\\nimport hashlib\\n\\napp = Flask(__name__)\\n\\n# The secret is configured in both GitHub and on our server\\nWEBHOOK_SECRET = b'my_super_secret_webhook_key'\\n\\n@app.route('/webhook', methods=['POST'])\\ndef handle_webhook():\\n    # 1. Verify the payload came from GitHub\\n    signature = request.headers.get('X-Hub-Signature-256')\\n    if not signature or not signature.startswith('sha256='): abort(401)\\n    \\n    mac = hmac.new(WEBHOOK_SECRET, msg=request.data, digestmod=hashlib.sha256)\\n    if not hmac.compare_digest('sha256=' + mac.hexdigest(), signature): abort(401)\\n\\n    # 2. Check the commit's verification status\\n    payload = request.get_json()\\n    for commit in payload.get('commits', []):\\n        if commit['verification']['verified'] is not True:\\n            # Send an alert! An unverified commit was pushed.\\n            alert(f\\\"Unverified commit {commit['id']} pushed by {commit['author']['name']}\\\")\\n    \\n    return ('', 204)\\n\\n</code></pre><p><strong>Action:</strong> Store all AI system configurations in Git. Enable mandatory signed commits on your main branch. Set up a webhook receiver to validate the verification status of every commit pushed to your repository and alert on any unverified commits.</p>"
-        },
-        {
-            "strategy": "Continuously diff live Kubernetes ConfigMaps vs declared IaC.",
-            "howTo": "<h5>Concept:</h5><p>Configuration drift occurs when a live resource (like a Kubernetes ConfigMap) is manually edited (`kubectl edit`) and no longer matches the state defined in your version-controlled Infrastructure as Code (IaC) source (like a Helm chart or Kustomize file). This must be detected and reverted.</p><h5>Step 1: Use a GitOps Controller</h5><p>A GitOps tool like Argo CD or Flux continuously monitors your live cluster state and compares it to the desired state defined in a Git repository. If it detects any drift, it can automatically revert the change or alert you.</p><h5>Step 2: Configure Automated Sync and Drift Detection</h5><p>In Argo CD, you define an `Application` resource that points to your Git repo. You can configure it to automatically sync, which means it will overwrite any manual changes in the cluster to re-align it with the state in Git.</p><pre><code># File: argo-cd/my-ai-app.yaml\\napiVersion: argoproj.io/v1alpha1\\nkind: Application\\nmetadata:\\n  name: my-ai-app\\n  namespace: argocd\\nspec:\\n  project: default\\n  source:\\n    repoURL: 'https://github.com/my-org/my-ai-app-configs.git'\\n    targetRevision: HEAD\\n    path: kubernetes/production\\n  destination:\\n    server: 'https://kubernetes.default.svc'\\n    namespace: ai-production\\n  \\n  syncPolicy:\\n    automated:\\n      # This will automatically revert any detected drift\\n      prune: true\\n      selfHeal: true\\n    syncOptions:\\n    - CreateNamespace=true\\n</code></pre><p><strong>Action:</strong> Adopt a GitOps workflow using a tool like Argo CD. Configure your applications with a `syncPolicy` that enables `selfHeal`. This ensures that any manual, out-of-band changes to your live Kubernetes configurations are automatically detected and reverted to the authorized state defined in your Git repository.</p>"
-        },
-        {
-            "strategy": "Block roll-outs that add privileged host-mounts or change model endpoint ACLs.",
-            "howTo": "<h5>Concept:</h5><p>A Kubernetes Admission Controller acts as a gatekeeper, intercepting requests to the Kubernetes API and enforcing policies before any object is created or modified. You can use a policy engine like OPA Gatekeeper to write rules that prevent the deployment of insecure configurations, such as a pod trying to mount a sensitive host directory.</p><h5>Step 1: Define a Gatekeeper ConstraintTemplate</h5><p>First, define a template for your policy. This template contains the Rego logic that will be evaluated against the resource.</p><pre><code># File: k8s/policies/constraint-template.yaml\\napiVersion: templates.gatekeeper.sh/v1\\nkind: ConstraintTemplate\\nmetadata:\\n  name: k8snohostpathmounts\\nspec:\\n  crd:\\n    spec:\\n      names:\\n        kind: K8sNoHostpathMounts\\n  targets:\\n    - target: admission.k8s.gatekeeper.sh\\n      rego: |\\n        package k8snohostpathmounts\\n\\n        violation[{\"msg\": msg}] {\\n          input.review.object.spec.volumes[_].hostPath.path != null\\n          msg := sprintf(\\\"HostPath volume mounts are not allowed: %v\\\", [input.review.object.spec.volumes[_].hostPath.path])\\n        }\\n</code></pre><h5>Step 2: Apply the Constraint</h5><p>Once the template is created, you apply a `Constraint` resource to enforce the policy across the cluster or in specific namespaces.</p><pre><code># File: k8s/policies/constraint.yaml\\napiVersion: constraints.gatekeeper.sh/v1beta1\\nkind: K8sNoHostpathMounts\\nmetadata:\\n  name: no-hostpath-for-ai-pods\\nspec:\\n  match:\\n    # Apply this policy only to pods in the 'ai-production' namespace\\n    kinds:\\n      - apiGroups: [\\\"]\\n        kinds: [\\\"Pod\\\"]\\n    namespaces:\\n      - \\\"ai-production\\\"\\n</code></pre><p><strong>Action:</strong> Deploy OPA Gatekeeper or Kyverno as an admission controller in your Kubernetes cluster. Create and apply policies that codify your security rules, such as disallowing host path mounts, preventing the creation of services with public IPs, and enforcing specific annotations on ingress objects.</p>"
-        }
-    ]
-}
+                            "id": "AID-D-004.003",
+                            "name": "Configuration & Policy Drift Monitoring",
+                            "description": "Detect unauthorised edits to model-serving YAMLs, feature-store ACLs, RAG index schemas or inference-time policy files.",
+                            "toolsOpenSource": [
+                                "Git (for version control and signed commits)",
+                                "GitHub/GitLab/Bitbucket webhooks",
+                                "Argo CD",
+                                "Flux CD",
+                                "Open Policy Agent (OPA) / Gatekeeper",
+                                "Kyverno",
+                                "Terraform, CloudFormation, Ansible (for IaC enforcement)"
+                            ],
+                            "toolsCommercial": [
+                                "Cloud Security Posture Management (CSPM) tools (e.g., Wiz, Prisma Cloud, Microsoft Defender for Cloud)",
+                                "Configuration Management Databases (CMDBs)",
+                                "Enterprise Git solutions (e.g., GitHub Enterprise, GitLab Ultimate)",
+                                "Commercial GitOps platforms"
+                            ],
+                            "defendsAgainst": [
+                                {
+                                    "framework": "MITRE ATLAS",
+                                    "items": [
+                                        "AML.T0011 Initial Access",
+                                        "AML.T0017 Persistence",
+                                        "AML.T0018 Manipulate AI Model",
+                                        "AML.T0069 Discover LLM System Information"
+                                    ]
+                                },
+                                {
+                                    "framework": "MAESTRO",
+                                    "items": [
+                                        "Misconfigurations (L4: Deployment & Infrastructure)",
+                                        "Data Tampering (L2: Data Operations)",
+                                        "Policy Bypass (L6: Security & Compliance)",
+                                        "Unauthorized Access (Cross-Layer)",
+                                        "Compromised Agent Registry (L7: Agent Ecosystem)"
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP LLM Top 10 2025",
+                                    "items": [
+                                        "LLM03:2025 Supply Chain",
+                                        "LLM07:2025 System Prompt Leakage",
+                                        "LLM08:2025 Vector and Embedding Weaknesses"
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP ML Top 10 2023",
+                                    "items": [
+                                        "ML06:2023 AI Supply Chain Attacks",
+                                        "ML09:2023 Output Integrity Attack",
+                                        "ML10:2023 Model Poisoning",
+                                        "ML08:2023 Model Skewing"
+                                    ]
+                                }
+                            ],
+                            "implementationStrategies": [
+                                {
+                                    "strategy": "Store configs in Git with signed commits; enable ‘git watcher’ webhooks.",
+                                    "howTo": "<h5>Concept:</h5><p>Treat your configurations (YAML, etc.) as code ('Config-as-Code') and require all changes to go through a secure Git workflow. Signed commits use a developer's GPG key to cryptographically prove who authored a change, providing a strong, non-repudiable audit trail.</p><h5>Step 1: Enforce Signed Commits on GitHub</h5><p>In your GitHub repository settings, enable branch protection for your `main` branch and check the box for \"Require signed commits.\" This will prevent any unsigned commits from being merged.</p><h5>Step 2: Set Up a Webhook for Push Events</h5><p>In the repository settings, go to \"Webhooks\" and add a new webhook pointing to a service you control. Subscribe this webhook to `push` events. Now, every time code is pushed to your repository, GitHub will send a detailed JSON payload to your service.</p><pre><code># Conceptual server to receive the webhook\\nfrom flask import Flask, request, abort\\nimport hmac\\nimport hashlib\\n\\napp = Flask(__name__)\\n\\n# The secret is configured in both GitHub and on our server\\nWEBHOOK_SECRET = b'my_super_secret_webhook_key'\\n\\n@app.route('/webhook', methods=['POST'])\\ndef handle_webhook():\\n    # 1. Verify the payload came from GitHub\\n    signature = request.headers.get('X-Hub-Signature-256')\\n    if not signature or not signature.startswith('sha256='): abort(401)\\n    \\n    mac = hmac.new(WEBHOOK_SECRET, msg=request.data, digestmod=hashlib.sha256)\\n    if not hmac.compare_digest('sha256=' + mac.hexdigest(), signature): abort(401)\\n\\n    # 2. Check the commit's verification status\\n    payload = request.get_json()\\n    for commit in payload.get('commits', []):\\n        if commit['verification']['verified'] is not True:\\n            # Send an alert! An unverified commit was pushed.\\n            alert(f\\\"Unverified commit {commit['id']} pushed by {commit['author']['name']}\\\")\\n    \\n    return ('', 204)\\n\\n</code></pre><p><strong>Action:</strong> Store all AI system configurations in Git. Enable mandatory signed commits on your main branch. Set up a webhook receiver to validate the verification status of every commit pushed to your repository and alert on any unverified commits.</p>"
+                                },
+                                {
+                                    "strategy": "Continuously diff live Kubernetes ConfigMaps vs declared IaC.",
+                                    "howTo": "<h5>Concept:</h5><p>Configuration drift occurs when a live resource (like a Kubernetes ConfigMap) is manually edited (`kubectl edit`) and no longer matches the state defined in your version-controlled Infrastructure as Code (IaC) source (like a Helm chart or Kustomize file). This must be detected and reverted.</p><h5>Step 1: Use a GitOps Controller</h5><p>A GitOps tool like Argo CD or Flux continuously monitors your live cluster state and compares it to the desired state defined in a Git repository. If it detects any drift, it can automatically revert the change or alert you.</p><h5>Step 2: Configure Automated Sync and Drift Detection</h5><p>In Argo CD, you define an `Application` resource that points to your Git repo. You can configure it to automatically sync, which means it will overwrite any manual changes in the cluster to re-align it with the state in Git.</p><pre><code># File: argo-cd/my-ai-app.yaml\\napiVersion: argoproj.io/v1alpha1\\nkind: Application\\nmetadata:\\n  name: my-ai-app\\n  namespace: argocd\\nspec:\\n  project: default\\n  source:\\n    repoURL: 'https://github.com/my-org/my-ai-app-configs.git'\\n    targetRevision: HEAD\\n    path: kubernetes/production\\n  destination:\\n    server: 'https://kubernetes.default.svc'\\n    namespace: ai-production\\n  \\n  syncPolicy:\\n    automated:\\n      # This will automatically revert any detected drift\\n      prune: true\\n      selfHeal: true\\n    syncOptions:\\n    - CreateNamespace=true\\n</code></pre><p><strong>Action:</strong> Adopt a GitOps workflow using a tool like Argo CD. Configure your applications with a `syncPolicy` that enables `selfHeal`. This ensures that any manual, out-of-band changes to your live Kubernetes configurations are automatically detected and reverted to the authorized state defined in your Git repository.</p>"
+                                },
+                                {
+                                    "strategy": "Block roll-outs that add privileged host-mounts or change model endpoint ACLs.",
+                                    "howTo": "<h5>Concept:</h5><p>A Kubernetes Admission Controller acts as a gatekeeper, intercepting requests to the Kubernetes API and enforcing policies before any object is created or modified. You can use a policy engine like OPA Gatekeeper to write rules that prevent the deployment of insecure configurations, such as a pod trying to mount a sensitive host directory.</p><h5>Step 1: Define a Gatekeeper ConstraintTemplate</h5><p>First, define a template for your policy. This template contains the Rego logic that will be evaluated against the resource.</p><pre><code># File: k8s/policies/constraint-template.yaml\\napiVersion: templates.gatekeeper.sh/v1\\nkind: ConstraintTemplate\\nmetadata:\\n  name: k8snohostpathmounts\\nspec:\\n  crd:\\n    spec:\\n      names:\\n        kind: K8sNoHostpathMounts\\n  targets:\\n    - target: admission.k8s.gatekeeper.sh\\n      rego: |\\n        package k8snohostpathmounts\\n\\n        violation[{\"msg\": msg}] {\\n          input.review.object.spec.volumes[_].hostPath.path != null\\n          msg := sprintf(\\\"HostPath volume mounts are not allowed: %v\\\", [input.review.object.spec.volumes[_].hostPath.path])\\n        }\\n</code></pre><h5>Step 2: Apply the Constraint</h5><p>Once the template is created, you apply a `Constraint` resource to enforce the policy across the cluster or in specific namespaces.</p><pre><code># File: k8s/policies/constraint.yaml\\napiVersion: constraints.gatekeeper.sh/v1beta1\\nkind: K8sNoHostpathMounts\\nmetadata:\\n  name: no-hostpath-for-ai-pods\\nspec:\\n  match:\\n    # Apply this policy only to pods in the 'ai-production' namespace\\n    kinds:\\n      - apiGroups: [\\\"]\\n        kinds: [\\\"Pod\\\"]\\n    namespaces:\\n      - \\\"ai-production\\\"\\n</code></pre><p><strong>Action:</strong> Deploy OPA Gatekeeper or Kyverno as an admission controller in your Kubernetes cluster. Create and apply policies that codify your security rules, such as disallowing host path mounts, preventing the creation of services with public IPs, and enforcing specific annotations on ingress objects.</p>"
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
@@ -3353,8 +3591,8 @@ const aidefendData = {
                     "name": "Explainability (XAI) Manipulation Detection",
                     "description": "Implement mechanisms to monitor and validate the outputs and behavior of eXplainable AI (XAI) methods. The goal is to detect attempts by adversaries to manipulate or mislead these explanations, ensuring that XAI outputs accurately reflect the model's decision-making process and are not crafted to conceal malicious operations, biases, or vulnerabilities. This is crucial if XAI is used for debugging, compliance, security monitoring, or building user trust.",
                     "perfImpact": {
-                        "level": "High",
-                        "description": "Note: Performance Impact: High (on Inference Latency). The multiple-XAI-method approach multiplies latency, and common methods like SHAP or LIME on deep models can take single-digit seconds, not milliseconds, per prediction. This cost must be carefully considered by architects."
+                        "level": "High on Inference Latency",
+                        "description": "<p>The multiple-XAI-method approach multiplies latency, and common methods like SHAP or LIME on deep models <strong>can take single-digit seconds, not milliseconds, per prediction.</strong> This cost must be carefully considered by architects."
                     },
                     "toolsOpenSource": [
                         "XAI libraries (e.g., SHAP, LIME, Captum for PyTorch, Alibi Explain, ELI5, InterpretML).",
@@ -3512,8 +3750,8 @@ const aidefendData = {
                     "name": "AI-Driven Security Analytics for AI Systems",
                     "description": "Employ specialized AI/ML models (secondary AI defenders) to analyze telemetry, logs, and behavioral patterns from primary AI systems to detect sophisticated, subtle, or novel attacks that may evade rule-based or traditional detection methods. This includes identifying anomalous interactions, emergent malicious behaviors, coordinated attacks, or signs of AI-generated attacks targeting the primary AI systems.",
                     "perfImpact": {
-                        "level": "Medium to High",
-                        "description": "Note: Performance Impact: Medium to High (on Monitoring Overhead & Latency). This technique uses a secondary AI model to analyze the primary model's activity. Inference Latency (if inline): Adds the full inference latency of the secondary guardrail model to the total time, potentially a 50-100% increase in overall latency. Cost (if offline): Doubles the computational cost for analysis, as two model inferences are run for each transaction."
+                        "level": "Medium to High on Monitoring Overhead & Latency",
+                        "description": "<p>This technique uses a secondary AI model to analyze the primary model's activity. <p><strong>Inference Latency (if inline):</strong> Adds the full inference latency of the secondary guardrail model to the total time, potentially a <strong>50-100%</strong> increase in overall latency. <p><strong>Cost (if offline):</strong> Doubles the computational cost for analysis, as two model inferences are run for each transaction."
                     },
                     "toolsOpenSource": [
                         "General ML libraries (Scikit-learn, TensorFlow, PyTorch, Keras) for building custom detection models.",
@@ -3877,179 +4115,179 @@ const aidefendData = {
                     ],
                     "subTechniques": [
                         {
-    "id": "AID-I-001.001",
-    "name": "Container-Based Isolation",
-    "description": "Utilizes container technologies like Docker or Kubernetes to package and run AI workloads in isolated user-space environments. This approach provides process and filesystem isolation and allows for resource management and network segmentation.",
-    "toolsOpenSource": [
-        "Docker",
-        "Podman",
-        "Kubernetes",
-        "OpenShift (container platform)",
-        "Falco (container runtime security)",
-        "Trivy (container vulnerability scanner)",
-        "Sysdig (container monitoring & security)",
-        "Calico (for Network Policies)",
-        "Cilium (for Network Policies and eBPF)"
-    ],
-    "toolsCommercial": [
-        "Docker Enterprise",
-        "Red Hat OpenShift Container Platform",
-        "Aqua Security",
-        "Twistlock (Palo Alto Networks)",
-        "Prisma Cloud (Palo Alto Networks)",
-        "Microsoft Azure Kubernetes Service (AKS)",
-        "Google Kubernetes Engine (GKE)",
-        "Amazon Elastic Kubernetes Service (EKS)"
-    ],
-    "defendsAgainst": [
-        {
-            "framework": "MITRE ATLAS",
-            "items": [
-                "AML.T0053 LLM Plugin Compromise",
-                "AML.T0072 Reverse Shell",
-                "AML.T0017 Persistence",
-                "AML.T0009 Execution",
-                "AML.T0029 Denial of ML Service",
-                "AML.T0034 Cost Harvesting"
-            ]
-        },
-        {
-            "framework": "MAESTRO",
-            "items": [
-                "Compromised Container Images (L4)",
-                "Lateral Movement (Cross-Layer)",
-                "Agent Tool Misuse (L7)",
-                "Resource Hijacking (L4)",
-                "Runtime Code Injection (L4)"
-            ]
-        },
-        {
-            "framework": "OWASP LLM Top 10 2025",
-            "items": [
-                "LLM05:2025 Improper Output Handling",
-                "LLM06:2025 Excessive Agency",
-                "LLM10:2025 Unbounded Consumption"
-            ]
-        },
-        {
-            "framework": "OWASP ML Top 10 2023",
-            "items": [
-                "ML06:2023 AI Supply Chain Attacks",
-                "ML05:2023 Model Theft",
-                "ML09:2023 Output Integrity Attack"
-            ]
-        }
-    ],
-    "implementationStrategies": [
-        {
-            "strategy": "Deploy AI models and services in hardened, minimal-footprint container images.",
-            "howTo": "<h5>Concept:</h5><p>The attack surface of a container is directly related to the number of packages and libraries inside it. A multi-stage Docker build creates a small, final production image that contains only the essential application code and dependencies, omitting build tools, development libraries, and shell access, thereby reducing the attack surface.</p><h5>Step 1: Implement a Multi-Stage Dockerfile</h5><p>The first stage (`build-env`) installs all dependencies. The final stage copies *only* the necessary application files from the build stage into a minimal base image like `python:3.10-slim`.</p><pre><code># File: Dockerfile\\n\\n# --- Build Stage ---\\n# Use a full-featured image for building dependencies\\nFROM python:3.10 as build-env\\nWORKDIR /app\\nCOPY requirements.txt .\\n# Install dependencies, including build tools\\nRUN pip install --no-cache-dir -r requirements.txt\\n\\n# --- Final Stage ---\\n# Use a minimal, hardened base image for production\\nFROM python:3.10-slim\\nWORKDIR /app\\n\\n# Create a non-root user for the application to run as\\nRUN useradd --create-home appuser\\nUSER appuser\\n\\n# Copy only the installed packages and application code from the build stage\\nCOPY --from=build-env /usr/local/lib/python3.10/site-packages/ /usr/local/lib/python3.10/site-packages/\\nCOPY --from=build-env /app/requirements.txt .\\nCOPY ./src ./src\\n\\n# Set the entrypoint\\nCMD [\\\"python\\\", \\\"./src/main.py\\\"]</code></pre><p><strong>Action:</strong> Use multi-stage builds for all AI service containers. The final image should be based on a minimal parent image (e.g., `-slim`, `distroless`) and should not contain build tools, compilers, or a shell unless absolutely necessary for the application's function.</p>"
-        },
-        {
-            "strategy": "Apply Kubernetes security contexts to restrict container privileges (e.g., runAsNonRoot).",
-            "howTo": "<h5>Concept:</h5><p>A Kubernetes `securityContext` allows you to define granular privilege and access controls for your pods and containers. This is a critical mechanism for enforcing the principle of least privilege, ensuring that even if an attacker gains code execution within a container, they cannot perform privileged operations.</p><h5>Step 1: Define a Restrictive Security Context</h5><p>In your Kubernetes Deployment or Pod manifest, apply a `securityContext` that drops all Linux capabilities, prevents privilege escalation, runs as a non-root user, and enables a read-only root filesystem.</p><pre><code># File: k8s/deployment.yaml\\napiVersion: apps/v1\\nkind: Deployment\\nmetadata:\\n  name: my-inference-server\\nspec:\\n  template:\\n    spec:\\n      # Pod-level security context\\n      securityContext:\\n        runAsNonRoot: true\\n        runAsUser: 1001\\n        runAsGroup: 1001\\n        fsGroup: 1001\\n      containers:\\n      - name: inference-api\\n        image: my-ml-app:latest\\n        # Container-level security context for fine-grained control\\n        securityContext:\\n          # Prevent the process from gaining more privileges than its parent\\n          allowPrivilegeEscalation: false\\n          # Drop all Linux capabilities, then add back only what is needed (if any)\\n          capabilities:\\n            drop:\\n            - \\\"ALL\\\"\\n          # Make the root filesystem immutable to prevent tampering\\n          readOnlyRootFilesystem: true\\n        volumeMounts:\\n          # Provide a writable temporary directory if the application needs it\\n          - name: tmp-storage\\n            mountPath: /tmp\\n      volumes:\\n        - name: tmp-storage\\n          emptyDir: {}</code></pre><p><strong>Action:</strong> Apply a `securityContext` to all production AI workloads in Kubernetes. At a minimum, set `runAsNonRoot: true`, `allowPrivilegeEscalation: false`, and `readOnlyRootFilesystem: true`.</p>"
-        },
-        {
-            "strategy": "Use network policies to enforce least-privilege communication between AI pods.",
-            "howTo": "<h5>Concept:</h5><p>By default, all pods in a Kubernetes cluster can communicate with each other. A `NetworkPolicy` acts as a firewall for your pods, allowing you to define explicit rules about which pods can connect to which other pods. A 'default-deny' posture is a core principle of Zero Trust networking.</p><h5>Step 1: Implement a Default-Deny Ingress Policy</h5><p>First, apply a policy that selects all pods in a namespace and denies all incoming (ingress) traffic. This creates a secure baseline.</p><pre><code># File: k8s/policies/default-deny.yaml\\napiVersion: networking.k8s.io/v1\\nkind: NetworkPolicy\\nmetadata:\\n  name: default-deny-all-ingress\\n  namespace: ai-production\\nspec:\\n  podSelector: {}\\n  policyTypes:\\n  - Ingress</code></pre><h5>Step 2: Create Explicit Allow Rules</h5><p>Now, create specific policies to allow only the required traffic. This example allows pods with the label `app: api-gateway` to connect to pods with the label `app: inference-server` on port 8080.</p><pre><code># File: k8s/policies/allow-gateway-to-inference.yaml\\napiVersion: networking.k8s.io/v1\\nkind: NetworkPolicy\\nmetadata:\\n  name: allow-gateway-to-inference\\n  namespace: ai-production\\nspec:\\n  podSelector:\\n    matchLabels:\\n      app: inference-server # This is the destination\\n  policyTypes:\\n  - Ingress\\n  ingress:\\n  - from:\\n    - podSelector:\\n        matchLabels:\\n          app: api-gateway # This is the allowed source\\n    ports:\\n    - protocol: TCP\\n      port: 8080</code></pre><p><strong>Action:</strong> In your Kubernetes namespaces, deploy a `default-deny-all-ingress` policy. Then, for each service, add a specific `NetworkPolicy` that only allows ingress from its required upstream sources, blocking all other network paths.</p>"
-        },
-        {
-            "strategy": "Set strict resource quotas (CPU, memory, GPU) to prevent resource exhaustion attacks.",
-            "howTo": "<h5>Concept:</h5><p>A compromised or buggy AI model could enter an infinite loop or process a malicious input that consumes an enormous amount of CPU, memory, or GPU resources. Setting resource `limits` prevents a single misbehaving container from causing a denial-of-service attack that affects the entire node or cluster.</p><h5>Step 1: Define Requests and Limits</h5><p>In your Kubernetes Deployment manifest, specify both `requests` (the amount of resources guaranteed for the pod) and `limits` (the absolute maximum the container can use).</p><pre><code># File: k8s/deployment-with-resources.yaml\\napiVersion: apps/v1\\nkind: Deployment\\n# ... metadata ...\\nspec:\\n  template:\\n    spec:\\n      containers:\\n      - name: gpu-inference-server\\n        image: my-gpu-ml-app:latest\\n        resources:\\n          # Requesting resources helps Kubernetes with scheduling\\n          requests:\\n            memory: \\\"4Gi\\\"\\n            cpu: \\\"1000m\\\" # 1 full CPU core\\n            nvidia.com/gpu: \\\"1\\\"\\n          # Limits prevent resource exhaustion attacks\\n          limits:\\n            memory: \\\"8Gi\\\"\\n            cpu: \\\"2000m\\\" # 2 full CPU cores\\n            nvidia.com/gpu: \\\"1\\\"</code></pre><p><strong>Action:</strong> For all production deployments, define explicit CPU, memory, and GPU resource `requests` and `limits`. The limit acts as a hard cap that will cause the container to be throttled or terminated if exceeded, protecting the rest of the system.</p>"
-        },
-        {
-            "strategy": "Mount filesystems as read-only wherever possible.",
-            "howTo": "<h5>Concept:</h5><p>Making the container's root filesystem read-only is a powerful security control. If an attacker gains code execution, they cannot write malware to disk, modify configuration files, install new packages, or tamper with the AI model files because the filesystem is immutable.</p><h5>Step 1: Set the readOnlyRootFilesystem Flag</h5><p>In the container's `securityContext` within your Kubernetes manifest, set `readOnlyRootFilesystem` to `true`.</p><h5>Step 2: Provide Writable Temporary Storage if Needed</h5><p>If your application legitimately needs to write temporary files, provide a dedicated writable volume using an `emptyDir` and mount it to a specific path (like `/tmp`).</p><pre><code># File: k8s/readonly-fs-deployment.yaml\\napiVersion: apps/v1\\nkind: Deployment\\n# ... metadata ...\\nspec:\\n  template:\\n    spec:\\n      containers:\\n      - name: inference-api\\n        image: my-ml-app:latest\\n        securityContext:\\n          # This is the primary control\\n          readOnlyRootFilesystem: true\\n          allowPrivilegeEscalation: false\\n          capabilities:\\n            drop: [\\\"ALL\\\"]\\n        volumeMounts:\\n          # Mount a dedicated, writable emptyDir volume for temporary files\\n          - name: tmp-writable-storage\\n            mountPath: /tmp\\n      volumes:\\n        # Define the emptyDir volume. Its contents are ephemeral.\\n        - name: tmp-writable-storage\\n          emptyDir: {}</code></pre><p><strong>Action:</strong> Enable `readOnlyRootFilesystem` for all production containers. If temporary write access is required, provide an `emptyDir` volume mounted at a non-root path like `/tmp`.</p>"
-        }
-    ]
-},
+                            "id": "AID-I-001.001",
+                            "name": "Container-Based Isolation",
+                            "description": "Utilizes container technologies like Docker or Kubernetes to package and run AI workloads in isolated user-space environments. This approach provides process and filesystem isolation and allows for resource management and network segmentation.",
+                            "toolsOpenSource": [
+                                "Docker",
+                                "Podman",
+                                "Kubernetes",
+                                "OpenShift (container platform)",
+                                "Falco (container runtime security)",
+                                "Trivy (container vulnerability scanner)",
+                                "Sysdig (container monitoring & security)",
+                                "Calico (for Network Policies)",
+                                "Cilium (for Network Policies and eBPF)"
+                            ],
+                            "toolsCommercial": [
+                                "Docker Enterprise",
+                                "Red Hat OpenShift Container Platform",
+                                "Aqua Security",
+                                "Twistlock (Palo Alto Networks)",
+                                "Prisma Cloud (Palo Alto Networks)",
+                                "Microsoft Azure Kubernetes Service (AKS)",
+                                "Google Kubernetes Engine (GKE)",
+                                "Amazon Elastic Kubernetes Service (EKS)"
+                            ],
+                            "defendsAgainst": [
+                                {
+                                    "framework": "MITRE ATLAS",
+                                    "items": [
+                                        "AML.T0053 LLM Plugin Compromise",
+                                        "AML.T0072 Reverse Shell",
+                                        "AML.T0017 Persistence",
+                                        "AML.T0009 Execution",
+                                        "AML.T0029 Denial of ML Service",
+                                        "AML.T0034 Cost Harvesting"
+                                    ]
+                                },
+                                {
+                                    "framework": "MAESTRO",
+                                    "items": [
+                                        "Compromised Container Images (L4)",
+                                        "Lateral Movement (Cross-Layer)",
+                                        "Agent Tool Misuse (L7)",
+                                        "Resource Hijacking (L4)",
+                                        "Runtime Code Injection (L4)"
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP LLM Top 10 2025",
+                                    "items": [
+                                        "LLM05:2025 Improper Output Handling",
+                                        "LLM06:2025 Excessive Agency",
+                                        "LLM10:2025 Unbounded Consumption"
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP ML Top 10 2023",
+                                    "items": [
+                                        "ML06:2023 AI Supply Chain Attacks",
+                                        "ML05:2023 Model Theft",
+                                        "ML09:2023 Output Integrity Attack"
+                                    ]
+                                }
+                            ],
+                            "implementationStrategies": [
+                                {
+                                    "strategy": "Deploy AI models and services in hardened, minimal-footprint container images.",
+                                    "howTo": "<h5>Concept:</h5><p>The attack surface of a container is directly related to the number of packages and libraries inside it. A multi-stage Docker build creates a small, final production image that contains only the essential application code and dependencies, omitting build tools, development libraries, and shell access, thereby reducing the attack surface.</p><h5>Step 1: Implement a Multi-Stage Dockerfile</h5><p>The first stage (`build-env`) installs all dependencies. The final stage copies *only* the necessary application files from the build stage into a minimal base image like `python:3.10-slim`.</p><pre><code># File: Dockerfile\\n\\n# --- Build Stage ---\\n# Use a full-featured image for building dependencies\\nFROM python:3.10 as build-env\\nWORKDIR /app\\nCOPY requirements.txt .\\n# Install dependencies, including build tools\\nRUN pip install --no-cache-dir -r requirements.txt\\n\\n# --- Final Stage ---\\n# Use a minimal, hardened base image for production\\nFROM python:3.10-slim\\nWORKDIR /app\\n\\n# Create a non-root user for the application to run as\\nRUN useradd --create-home appuser\\nUSER appuser\\n\\n# Copy only the installed packages and application code from the build stage\\nCOPY --from=build-env /usr/local/lib/python3.10/site-packages/ /usr/local/lib/python3.10/site-packages/\\nCOPY --from=build-env /app/requirements.txt .\\nCOPY ./src ./src\\n\\n# Set the entrypoint\\nCMD [\\\"python\\\", \\\"./src/main.py\\\"]</code></pre><p><strong>Action:</strong> Use multi-stage builds for all AI service containers. The final image should be based on a minimal parent image (e.g., `-slim`, `distroless`) and should not contain build tools, compilers, or a shell unless absolutely necessary for the application's function.</p>"
+                                },
+                                {
+                                    "strategy": "Apply Kubernetes security contexts to restrict container privileges (e.g., runAsNonRoot).",
+                                    "howTo": "<h5>Concept:</h5><p>A Kubernetes `securityContext` allows you to define granular privilege and access controls for your pods and containers. This is a critical mechanism for enforcing the principle of least privilege, ensuring that even if an attacker gains code execution within a container, they cannot perform privileged operations.</p><h5>Step 1: Define a Restrictive Security Context</h5><p>In your Kubernetes Deployment or Pod manifest, apply a `securityContext` that drops all Linux capabilities, prevents privilege escalation, runs as a non-root user, and enables a read-only root filesystem.</p><pre><code># File: k8s/deployment.yaml\\napiVersion: apps/v1\\nkind: Deployment\\nmetadata:\\n  name: my-inference-server\\nspec:\\n  template:\\n    spec:\\n      # Pod-level security context\\n      securityContext:\\n        runAsNonRoot: true\\n        runAsUser: 1001\\n        runAsGroup: 1001\\n        fsGroup: 1001\\n      containers:\\n      - name: inference-api\\n        image: my-ml-app:latest\\n        # Container-level security context for fine-grained control\\n        securityContext:\\n          # Prevent the process from gaining more privileges than its parent\\n          allowPrivilegeEscalation: false\\n          # Drop all Linux capabilities, then add back only what is needed (if any)\\n          capabilities:\\n            drop:\\n            - \\\"ALL\\\"\\n          # Make the root filesystem immutable to prevent tampering\\n          readOnlyRootFilesystem: true\\n        volumeMounts:\\n          # Provide a writable temporary directory if the application needs it\\n          - name: tmp-storage\\n            mountPath: /tmp\\n      volumes:\\n        - name: tmp-storage\\n          emptyDir: {}</code></pre><p><strong>Action:</strong> Apply a `securityContext` to all production AI workloads in Kubernetes. At a minimum, set `runAsNonRoot: true`, `allowPrivilegeEscalation: false`, and `readOnlyRootFilesystem: true`.</p>"
+                                },
+                                {
+                                    "strategy": "Use network policies to enforce least-privilege communication between AI pods.",
+                                    "howTo": "<h5>Concept:</h5><p>By default, all pods in a Kubernetes cluster can communicate with each other. A `NetworkPolicy` acts as a firewall for your pods, allowing you to define explicit rules about which pods can connect to which other pods. A 'default-deny' posture is a core principle of Zero Trust networking.</p><h5>Step 1: Implement a Default-Deny Ingress Policy</h5><p>First, apply a policy that selects all pods in a namespace and denies all incoming (ingress) traffic. This creates a secure baseline.</p><pre><code># File: k8s/policies/default-deny.yaml\\napiVersion: networking.k8s.io/v1\\nkind: NetworkPolicy\\nmetadata:\\n  name: default-deny-all-ingress\\n  namespace: ai-production\\nspec:\\n  podSelector: {}\\n  policyTypes:\\n  - Ingress</code></pre><h5>Step 2: Create Explicit Allow Rules</h5><p>Now, create specific policies to allow only the required traffic. This example allows pods with the label `app: api-gateway` to connect to pods with the label `app: inference-server` on port 8080.</p><pre><code># File: k8s/policies/allow-gateway-to-inference.yaml\\napiVersion: networking.k8s.io/v1\\nkind: NetworkPolicy\\nmetadata:\\n  name: allow-gateway-to-inference\\n  namespace: ai-production\\nspec:\\n  podSelector:\\n    matchLabels:\\n      app: inference-server # This is the destination\\n  policyTypes:\\n  - Ingress\\n  ingress:\\n  - from:\\n    - podSelector:\\n        matchLabels:\\n          app: api-gateway # This is the allowed source\\n    ports:\\n    - protocol: TCP\\n      port: 8080</code></pre><p><strong>Action:</strong> In your Kubernetes namespaces, deploy a `default-deny-all-ingress` policy. Then, for each service, add a specific `NetworkPolicy` that only allows ingress from its required upstream sources, blocking all other network paths.</p>"
+                                },
+                                {
+                                    "strategy": "Set strict resource quotas (CPU, memory, GPU) to prevent resource exhaustion attacks.",
+                                    "howTo": "<h5>Concept:</h5><p>A compromised or buggy AI model could enter an infinite loop or process a malicious input that consumes an enormous amount of CPU, memory, or GPU resources. Setting resource `limits` prevents a single misbehaving container from causing a denial-of-service attack that affects the entire node or cluster.</p><h5>Step 1: Define Requests and Limits</h5><p>In your Kubernetes Deployment manifest, specify both `requests` (the amount of resources guaranteed for the pod) and `limits` (the absolute maximum the container can use).</p><pre><code># File: k8s/deployment-with-resources.yaml\\napiVersion: apps/v1\\nkind: Deployment\\n# ... metadata ...\\nspec:\\n  template:\\n    spec:\\n      containers:\\n      - name: gpu-inference-server\\n        image: my-gpu-ml-app:latest\\n        resources:\\n          # Requesting resources helps Kubernetes with scheduling\\n          requests:\\n            memory: \\\"4Gi\\\"\\n            cpu: \\\"1000m\\\" # 1 full CPU core\\n            nvidia.com/gpu: \\\"1\\\"\\n          # Limits prevent resource exhaustion attacks\\n          limits:\\n            memory: \\\"8Gi\\\"\\n            cpu: \\\"2000m\\\" # 2 full CPU cores\\n            nvidia.com/gpu: \\\"1\\\"</code></pre><p><strong>Action:</strong> For all production deployments, define explicit CPU, memory, and GPU resource `requests` and `limits`. The limit acts as a hard cap that will cause the container to be throttled or terminated if exceeded, protecting the rest of the system.</p>"
+                                },
+                                {
+                                    "strategy": "Mount filesystems as read-only wherever possible.",
+                                    "howTo": "<h5>Concept:</h5><p>Making the container's root filesystem read-only is a powerful security control. If an attacker gains code execution, they cannot write malware to disk, modify configuration files, install new packages, or tamper with the AI model files because the filesystem is immutable.</p><h5>Step 1: Set the readOnlyRootFilesystem Flag</h5><p>In the container's `securityContext` within your Kubernetes manifest, set `readOnlyRootFilesystem` to `true`.</p><h5>Step 2: Provide Writable Temporary Storage if Needed</h5><p>If your application legitimately needs to write temporary files, provide a dedicated writable volume using an `emptyDir` and mount it to a specific path (like `/tmp`).</p><pre><code># File: k8s/readonly-fs-deployment.yaml\\napiVersion: apps/v1\\nkind: Deployment\\n# ... metadata ...\\nspec:\\n  template:\\n    spec:\\n      containers:\\n      - name: inference-api\\n        image: my-ml-app:latest\\n        securityContext:\\n          # This is the primary control\\n          readOnlyRootFilesystem: true\\n          allowPrivilegeEscalation: false\\n          capabilities:\\n            drop: [\\\"ALL\\\"]\\n        volumeMounts:\\n          # Mount a dedicated, writable emptyDir volume for temporary files\\n          - name: tmp-writable-storage\\n            mountPath: /tmp\\n      volumes:\\n        # Define the emptyDir volume. Its contents are ephemeral.\\n        - name: tmp-writable-storage\\n          emptyDir: {}</code></pre><p><strong>Action:</strong> Enable `readOnlyRootFilesystem` for all production containers. If temporary write access is required, provide an `emptyDir` volume mounted at a non-root path like `/tmp`.</p>"
+                                }
+                            ]
+                        },
                         {
-    "id": "AID-I-001.002",
-    "name": "MicroVM & Low-Level Sandboxing",
-    "description": "Employs lightweight Virtual Machines (MicroVMs) or kernel-level sandboxing technologies to provide a stronger isolation boundary than traditional containers. This is critical for running untrusted code or highly sensitive AI workloads.",
-    "perfImpact": {
-        "level": "Low to Medium",
-        "description": "Note: Performance Impact: Low to Medium (on Startup Time & CPU/Memory Overhead). Stronger isolation technologies like gVisor or Firecracker impose a greater performance penalty than standard containers. CPU Overhead: Can introduce a 5% to 15% CPU performance overhead compared to running in a standard container. Startup Time: Adds a small but measurable delay, typically 5ms to 50ms of additional startup time per instance."
-    },
-    "toolsOpenSource": [
-        "Kata Containers (using QEMU or Firecracker)",
-        "Firecracker (AWS open-source microVM monitor)",
-        "gVisor (Google open-source user-space kernel)",
-        "seccomp-bpf (Linux kernel feature)",
-        "Wasmtime (WebAssembly runtime)",
-        "Wasmer (WebAssembly runtime)",
-        "eBPF (Extended Berkeley Packet Filter)",
-        "Cloud Hypervisor"
-    ],
-    "toolsCommercial": [
-        "AWS Lambda (built on Firecracker)",
-        "Google Cloud Run (uses gVisor)",
-        "Azure Container Instances (ACI) with confidential computing options",
-        "Red Hat OpenShift Virtualization (for Kata Containers management)",
-        "WebAssembly-as-a-Service platforms"
-    ],
-    "defendsAgainst": [
-        {
-            "framework": "MITRE ATLAS",
-            "items": [
-                "AML.T0053 LLM Plugin Compromise",
-                "AML.T0072 Reverse Shell",
-                "AML.T0017 Persistence",
-                "AML.T0009 Execution",
-                "AML.T0029 Denial of ML Service",
-                "AML.T0034 Cost Harvesting",
-                "AML.T0018.002 Manipulate AI Model: Embed Malware"
-            ]
-        },
-        {
-            "framework": "MAESTRO",
-            "items": [
-                "Compromised Container Images (L4)",
-                "Lateral Movement (Cross-Layer)",
-                "Agent Tool Misuse (L7)",
-                "Resource Hijacking (L4)",
-                "Runtime Code Injection (L4)",
-                "Memory Corruption (L4)",
-                "Privilege Escalation (L6)"
-            ]
-        },
-        {
-            "framework": "OWASP LLM Top 10 2025",
-            "items": [
-                "LLM05:2025 Improper Output Handling",
-                "LLM06:2025 Excessive Agency",
-                "LLM10:2025 Unbounded Consumption",
-                "LLM03:2025 Supply Chain"
-            ]
-        },
-        {
-            "framework": "OWASP ML Top 10 2023",
-            "items": [
-                "ML06:2023 AI Supply Chain Attacks",
-                "ML09:2023 Output Integrity Attack",
-                "ML05:2023 Model Theft"
-            ]
-        }
-    ],
-    "implementationStrategies": [
-        {
-            "strategy": "Use lightweight VMs like Firecracker or Kata Containers for strong hardware-virtualized isolation.",
-            "howTo": "<h5>Concept:</h5><p>When you need to run highly untrusted code, such as a code interpreter tool for an AI agent, standard container isolation may not be sufficient. MicroVMs like Kata Containers provide a full, lightweight hardware-virtualized environment for each pod, giving it its own kernel and isolating it from the host kernel. This provides a much stronger security boundary.</p><h5>Step 1: Define a Kata `RuntimeClass` in Kubernetes</h5><p>First, your cluster administrator must install the Kata Containers runtime. Then, they create a `RuntimeClass` object that makes this runtime available for pods to request.</p><pre><code># File: k8s/runtimeclass-kata.yaml\\napiVersion: node.k8s.io/v1\\nkind: RuntimeClass\\nmetadata:\\n  name: kata-qemu # Name of the runtime class\\n# The handler name must match how it was configured in the CRI-O/containerd node setup\\nhandler: kata-qemu</code></pre><h5>Step 2: Request the Kata Runtime in Your Pod Spec</h5><p>In the Pod specification for your untrusted workload, you specify the `runtimeClassName` to instruct Kubernetes to run this pod inside a Kata MicroVM.</p><pre><code># File: k8s/kata-pod.yaml\\napiVersion: v1\\nkind: Pod\\nmetadata:\\n  name: untrusted-code-interpreter\\nspec:\\n  # This line tells Kubernetes to use the Kata Containers runtime\\n  runtimeClassName: kata-qemu\\n  containers:\\n  - name: code-runner\\n    image: my-secure-code-runner:latest\\n    # This container will now run in its own lightweight VM</code></pre><p><strong>Action:</strong> For workloads that execute arbitrary code from untrusted sources (e.g., an agentic 'code interpreter' tool), deploy them as pods that explicitly request a hardware-virtualized runtime like Kata Containers via a `RuntimeClass`.</p>"
-        },
-        {
-            "strategy": "Apply OS-level sandboxing with tools like gVisor to intercept and filter system calls.",
-            "howTo": "<h5>Concept:</h5><p>gVisor provides a strong isolation boundary without the overhead of a full VM. It acts as an intermediary 'guest kernel' written in a memory-safe language (Go), intercepting system calls from the sandboxed application and handling them safely in user space. This dramatically reduces the attack surface exposed to the application, as it can no longer directly interact with the host's real Linux kernel.</p><h5>Step 1: Define a gVisor `RuntimeClass`</h5><p>Similar to Kata Containers, your cluster administrator must first install gVisor (using the `runsc` runtime) on the cluster nodes and create a `RuntimeClass` to expose it.</p><pre><code># File: k8s/runtimeclass-gvisor.yaml\\napiVersion: node.k8s.io/v1\\nkind: RuntimeClass\\nmetadata:\\n  name: gvisor\\nhandler: runsc # The gVisor runtime handler</code></pre><h5>Step 2: Request the gVisor Runtime in Your Pod Spec</h5><p>In the pod manifest for the workload you want to sandbox, set the `runtimeClassName` to `gvisor`.</p><pre><code># File: k8s/gvisor-pod.yaml\\napiVersion: v1\\nkind: Pod\\nmetadata:\\n  name: sandboxed-data-parser\\nspec:\\n  # This pod will be sandboxed with gVisor\\n  runtimeClassName: gvisor\\n  containers:\\n  - name: parser\\n    image: my-data-parser:latest\\n    # This container's syscalls will be intercepted by gVisor</code></pre><p><strong>Action:</strong> Use gVisor for applications that process complex, potentially malicious file formats or handle untrusted data where the primary risk is exploiting a vulnerability in the host OS kernel's system call interface.</p>"
-        },
-        {
-            "strategy": "Define strict seccomp-bpf profiles to whitelist only necessary system calls for model inference.",
-            "howTo": "<h5>Concept:</h5><p>Seccomp (Secure Computing Mode) is a Linux kernel feature that restricts the system calls a process can make. By creating a `seccomp` profile that explicitly whitelists only the syscalls your application needs to function, you can block an attacker from using dangerous syscalls (like `mount`, `reboot`, `ptrace`) even if they achieve code execution inside the container.</p><h5>Step 1: Generate a Seccomp Profile</h5><p>You can use tools like `strace` or specialized profile generators to trace your application during normal operation and automatically create a list of required syscalls.</p><h5>Step 2: Create the Profile JSON and Apply It</h5><p>The profile is a JSON file that lists the allowed syscalls. The `defaultAction` is set to `SCMP_ACT_ERRNO`, which means any syscall *not* on the list will be blocked.</p><pre><code># File: /var/lib/kubelet/seccomp/profiles/inference-profile.json\\n{\\n    \\\"defaultAction\\\": \\\"SCMP_ACT_ERRNO\\\",\\n    \\\"architectures\\\": [\\\"SCMP_ARCH_X86_64\\\"],\\n    \\\"syscalls\\\": [\\n        {\\\"names\\\": [\\\"accept4\\\", \\\"bind\\\", \\\"brk\\\", \\\"close\\\", \\\"epoll_wait\\\", \\\"futex\\\", \\\"mmap\\\", \\\"mprotect\\\", \\\"munmap\\\", \\\"read\\\", \\\"recvfrom\\\", \\\"sendto\\\", \\\"socket\\\", \\\"write\\\"], \\\"action\\\": \\\"SCMP_ACT_ALLOW\\\"}\\n    ]\\n}\\n</code></pre><p>This profile must be placed on the node. Then, you apply it to a pod via its `securityContext`.</p><pre><code># In your k8s/deployment.yaml\\n      securityContext:\\n        seccompProfile:\\n          # Use a profile saved on the node\\n          type: Localhost\\n          localhostProfile: profiles/inference-profile.json</code></pre><p><strong>Action:</strong> Generate a minimal `seccomp` profile for your AI inference server. Deploy this profile to all cluster nodes and apply it to your production pods via the `securityContext`. This provides a strong, kernel-enforced layer of defense against privilege escalation and container breakout attempts.</p>"
-        },
-        {
-            "strategy": "Utilize WebAssembly (WASM) runtimes to run AI models in a high-performance, secure sandbox.",
-            "howTo": "<h5>Concept:</h5><p>WebAssembly (WASM) provides a high-performance, sandboxed virtual instruction set. Code compiled to WASM cannot interact with the host system (e.g., read files, open network sockets) unless those capabilities are explicitly passed into the sandbox by the host runtime. This makes it an excellent choice for safely executing small, self-contained pieces of untrusted code, like an individual model's inference logic.</p><h5>Step 1: Compile Inference Code to WASM</h5><p>Write your inference logic in a language that can compile to WASM, such as Rust. Use a library like `tract` to run an ONNX model.</p><pre><code>// File: inference-engine/src/lib.rs (Rust)\\nuse tract_onnx::prelude::*;\n\\n#[no_mangle]\\npub extern \\\"C\\\" fn run_inference(input_ptr: *mut u8, input_len: usize) -> i64 {\\n    // ... code to read input from WASM memory ...\\n    let model = tract_onnx::onnx().model_for_path(\\\"model.onnx\\\").unwrap();\\n    // ... run inference ...\\n    // ... write output to WASM memory and return a pointer ...\\n    return prediction;\\n}\\n</code></pre><h5>Step 2: Run the WASM Module in a Secure Runtime</h5><p>Use a WASM runtime like `wasmtime` in a host application (e.g., written in Python) to load and execute the compiled `.wasm` file. Crucially, the host does not grant the WASM module any filesystem or network permissions.</p><pre><code># File: host_app/run_wasm.py\\nfrom wasmtime import Store, Module, Instance, Linker\\n\\n# 1. Create a store and load the compiled .wasm module\\nstore = Store()\\nmodule = Module.from_file(store.engine, \\\"./inference_engine.wasm\\\")\\n\\n# 2. Link imports. By providing an empty linker, we grant NO capabilities to the sandbox.\\nlinker = Linker(store.engine)\\ninstance = linker.instantiate(store, module)\\n\\n# 3. Get the exported inference function\\nrun_inference = instance.exports(store)[\\\"run_inference\\\"]\\n\\n# ... code to allocate memory in the sandbox, write the input data ...\\n\\n# 4. Call the sandboxed WASM function\\nprediction = run_inference(store, ...)\\nprint(f\\\"Inference result from WASM sandbox: {prediction}\\\")</code></pre><p><strong>Action:</strong> For well-defined, self-contained AI tasks, consider compiling the inference logic to WebAssembly. Run the resulting `.wasm` module in a secure runtime like Wasmtime, explicitly denying it access to the filesystem and network to create a high-performance, capabilities-based sandbox.</p>"
-        }
-    ]
-}
+                            "id": "AID-I-001.002",
+                            "name": "MicroVM & Low-Level Sandboxing",
+                            "description": "Employs lightweight Virtual Machines (MicroVMs) or kernel-level sandboxing technologies to provide a stronger isolation boundary than traditional containers. This is critical for running untrusted code or highly sensitive AI workloads.",
+                            "perfImpact": {
+                                "level": "Low to Medium on Startup Time & CPU/Memory Overhead",
+                                "description": "<p>Stronger isolation technologies like gVisor or Firecracker impose a greater performance penalty than standard containers. <p><strong>CPU Overhead:</strong> Can introduce a <strong>5% to 15% CPU performance overhead</strong> compared to running in a standard container. <p><strong>Startup Time:</strong> Adds a small but measurable delay, typically <strong>5ms to 50ms</strong> of additional startup time per instance."
+                            },
+                            "toolsOpenSource": [
+                                "Kata Containers (using QEMU or Firecracker)",
+                                "Firecracker (AWS open-source microVM monitor)",
+                                "gVisor (Google open-source user-space kernel)",
+                                "seccomp-bpf (Linux kernel feature)",
+                                "Wasmtime (WebAssembly runtime)",
+                                "Wasmer (WebAssembly runtime)",
+                                "eBPF (Extended Berkeley Packet Filter)",
+                                "Cloud Hypervisor"
+                            ],
+                            "toolsCommercial": [
+                                "AWS Lambda (built on Firecracker)",
+                                "Google Cloud Run (uses gVisor)",
+                                "Azure Container Instances (ACI) with confidential computing options",
+                                "Red Hat OpenShift Virtualization (for Kata Containers management)",
+                                "WebAssembly-as-a-Service platforms"
+                            ],
+                            "defendsAgainst": [
+                                {
+                                    "framework": "MITRE ATLAS",
+                                    "items": [
+                                        "AML.T0053 LLM Plugin Compromise",
+                                        "AML.T0072 Reverse Shell",
+                                        "AML.T0017 Persistence",
+                                        "AML.T0009 Execution",
+                                        "AML.T0029 Denial of ML Service",
+                                        "AML.T0034 Cost Harvesting",
+                                        "AML.T0018.002 Manipulate AI Model: Embed Malware"
+                                    ]
+                                },
+                                {
+                                    "framework": "MAESTRO",
+                                    "items": [
+                                        "Compromised Container Images (L4)",
+                                        "Lateral Movement (Cross-Layer)",
+                                        "Agent Tool Misuse (L7)",
+                                        "Resource Hijacking (L4)",
+                                        "Runtime Code Injection (L4)",
+                                        "Memory Corruption (L4)",
+                                        "Privilege Escalation (L6)"
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP LLM Top 10 2025",
+                                    "items": [
+                                        "LLM05:2025 Improper Output Handling",
+                                        "LLM06:2025 Excessive Agency",
+                                        "LLM10:2025 Unbounded Consumption",
+                                        "LLM03:2025 Supply Chain"
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP ML Top 10 2023",
+                                    "items": [
+                                        "ML06:2023 AI Supply Chain Attacks",
+                                        "ML09:2023 Output Integrity Attack",
+                                        "ML05:2023 Model Theft"
+                                    ]
+                                }
+                            ],
+                            "implementationStrategies": [
+                                {
+                                    "strategy": "Use lightweight VMs like Firecracker or Kata Containers for strong hardware-virtualized isolation.",
+                                    "howTo": "<h5>Concept:</h5><p>When you need to run highly untrusted code, such as a code interpreter tool for an AI agent, standard container isolation may not be sufficient. MicroVMs like Kata Containers provide a full, lightweight hardware-virtualized environment for each pod, giving it its own kernel and isolating it from the host kernel. This provides a much stronger security boundary.</p><h5>Step 1: Define a Kata `RuntimeClass` in Kubernetes</h5><p>First, your cluster administrator must install the Kata Containers runtime. Then, they create a `RuntimeClass` object that makes this runtime available for pods to request.</p><pre><code># File: k8s/runtimeclass-kata.yaml\\napiVersion: node.k8s.io/v1\\nkind: RuntimeClass\\nmetadata:\\n  name: kata-qemu # Name of the runtime class\\n# The handler name must match how it was configured in the CRI-O/containerd node setup\\nhandler: kata-qemu</code></pre><h5>Step 2: Request the Kata Runtime in Your Pod Spec</h5><p>In the Pod specification for your untrusted workload, you specify the `runtimeClassName` to instruct Kubernetes to run this pod inside a Kata MicroVM.</p><pre><code># File: k8s/kata-pod.yaml\\napiVersion: v1\\nkind: Pod\\nmetadata:\\n  name: untrusted-code-interpreter\\nspec:\\n  # This line tells Kubernetes to use the Kata Containers runtime\\n  runtimeClassName: kata-qemu\\n  containers:\\n  - name: code-runner\\n    image: my-secure-code-runner:latest\\n    # This container will now run in its own lightweight VM</code></pre><p><strong>Action:</strong> For workloads that execute arbitrary code from untrusted sources (e.g., an agentic 'code interpreter' tool), deploy them as pods that explicitly request a hardware-virtualized runtime like Kata Containers via a `RuntimeClass`.</p>"
+                                },
+                                {
+                                    "strategy": "Apply OS-level sandboxing with tools like gVisor to intercept and filter system calls.",
+                                    "howTo": "<h5>Concept:</h5><p>gVisor provides a strong isolation boundary without the overhead of a full VM. It acts as an intermediary 'guest kernel' written in a memory-safe language (Go), intercepting system calls from the sandboxed application and handling them safely in user space. This dramatically reduces the attack surface exposed to the application, as it can no longer directly interact with the host's real Linux kernel.</p><h5>Step 1: Define a gVisor `RuntimeClass`</h5><p>Similar to Kata Containers, your cluster administrator must first install gVisor (using the `runsc` runtime) on the cluster nodes and create a `RuntimeClass` to expose it.</p><pre><code># File: k8s/runtimeclass-gvisor.yaml\\napiVersion: node.k8s.io/v1\\nkind: RuntimeClass\\nmetadata:\\n  name: gvisor\\nhandler: runsc # The gVisor runtime handler</code></pre><h5>Step 2: Request the gVisor Runtime in Your Pod Spec</h5><p>In the pod manifest for the workload you want to sandbox, set the `runtimeClassName` to `gvisor`.</p><pre><code># File: k8s/gvisor-pod.yaml\\napiVersion: v1\\nkind: Pod\\nmetadata:\\n  name: sandboxed-data-parser\\nspec:\\n  # This pod will be sandboxed with gVisor\\n  runtimeClassName: gvisor\\n  containers:\\n  - name: parser\\n    image: my-data-parser:latest\\n    # This container's syscalls will be intercepted by gVisor</code></pre><p><strong>Action:</strong> Use gVisor for applications that process complex, potentially malicious file formats or handle untrusted data where the primary risk is exploiting a vulnerability in the host OS kernel's system call interface.</p>"
+                                },
+                                {
+                                    "strategy": "Define strict seccomp-bpf profiles to whitelist only necessary system calls for model inference.",
+                                    "howTo": "<h5>Concept:</h5><p>Seccomp (Secure Computing Mode) is a Linux kernel feature that restricts the system calls a process can make. By creating a `seccomp` profile that explicitly whitelists only the syscalls your application needs to function, you can block an attacker from using dangerous syscalls (like `mount`, `reboot`, `ptrace`) even if they achieve code execution inside the container.</p><h5>Step 1: Generate a Seccomp Profile</h5><p>You can use tools like `strace` or specialized profile generators to trace your application during normal operation and automatically create a list of required syscalls.</p><h5>Step 2: Create the Profile JSON and Apply It</h5><p>The profile is a JSON file that lists the allowed syscalls. The `defaultAction` is set to `SCMP_ACT_ERRNO`, which means any syscall *not* on the list will be blocked.</p><pre><code># File: /var/lib/kubelet/seccomp/profiles/inference-profile.json\\n{\\n    \\\"defaultAction\\\": \\\"SCMP_ACT_ERRNO\\\",\\n    \\\"architectures\\\": [\\\"SCMP_ARCH_X86_64\\\"],\\n    \\\"syscalls\\\": [\\n        {\\\"names\\\": [\\\"accept4\\\", \\\"bind\\\", \\\"brk\\\", \\\"close\\\", \\\"epoll_wait\\\", \\\"futex\\\", \\\"mmap\\\", \\\"mprotect\\\", \\\"munmap\\\", \\\"read\\\", \\\"recvfrom\\\", \\\"sendto\\\", \\\"socket\\\", \\\"write\\\"], \\\"action\\\": \\\"SCMP_ACT_ALLOW\\\"}\\n    ]\\n}\\n</code></pre><p>This profile must be placed on the node. Then, you apply it to a pod via its `securityContext`.</p><pre><code># In your k8s/deployment.yaml\\n      securityContext:\\n        seccompProfile:\\n          # Use a profile saved on the node\\n          type: Localhost\\n          localhostProfile: profiles/inference-profile.json</code></pre><p><strong>Action:</strong> Generate a minimal `seccomp` profile for your AI inference server. Deploy this profile to all cluster nodes and apply it to your production pods via the `securityContext`. This provides a strong, kernel-enforced layer of defense against privilege escalation and container breakout attempts.</p>"
+                                },
+                                {
+                                    "strategy": "Utilize WebAssembly (WASM) runtimes to run AI models in a high-performance, secure sandbox.",
+                                    "howTo": "<h5>Concept:</h5><p>WebAssembly (WASM) provides a high-performance, sandboxed virtual instruction set. Code compiled to WASM cannot interact with the host system (e.g., read files, open network sockets) unless those capabilities are explicitly passed into the sandbox by the host runtime. This makes it an excellent choice for safely executing small, self-contained pieces of untrusted code, like an individual model's inference logic.</p><h5>Step 1: Compile Inference Code to WASM</h5><p>Write your inference logic in a language that can compile to WASM, such as Rust. Use a library like `tract` to run an ONNX model.</p><pre><code>// File: inference-engine/src/lib.rs (Rust)\\nuse tract_onnx::prelude::*;\n\\n#[no_mangle]\\npub extern \\\"C\\\" fn run_inference(input_ptr: *mut u8, input_len: usize) -> i64 {\\n    // ... code to read input from WASM memory ...\\n    let model = tract_onnx::onnx().model_for_path(\\\"model.onnx\\\").unwrap();\\n    // ... run inference ...\\n    // ... write output to WASM memory and return a pointer ...\\n    return prediction;\\n}\\n</code></pre><h5>Step 2: Run the WASM Module in a Secure Runtime</h5><p>Use a WASM runtime like `wasmtime` in a host application (e.g., written in Python) to load and execute the compiled `.wasm` file. Crucially, the host does not grant the WASM module any filesystem or network permissions.</p><pre><code># File: host_app/run_wasm.py\\nfrom wasmtime import Store, Module, Instance, Linker\\n\\n# 1. Create a store and load the compiled .wasm module\\nstore = Store()\\nmodule = Module.from_file(store.engine, \\\"./inference_engine.wasm\\\")\\n\\n# 2. Link imports. By providing an empty linker, we grant NO capabilities to the sandbox.\\nlinker = Linker(store.engine)\\ninstance = linker.instantiate(store, module)\\n\\n# 3. Get the exported inference function\\nrun_inference = instance.exports(store)[\\\"run_inference\\\"]\\n\\n# ... code to allocate memory in the sandbox, write the input data ...\\n\\n# 4. Call the sandboxed WASM function\\nprediction = run_inference(store, ...)\\nprint(f\\\"Inference result from WASM sandbox: {prediction}\\\")</code></pre><p><strong>Action:</strong> For well-defined, self-contained AI tasks, consider compiling the inference logic to WebAssembly. Run the resulting `.wasm` module in a secure runtime like Wasmtime, explicitly denying it access to the filesystem and network to create a high-performance, capabilities-based sandbox.</p>"
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
@@ -4510,12 +4748,11 @@ const aidefendData = {
                     "name": "Dynamic Response Manipulation for AI Interactions",
                     "description": "Implement mechanisms where the AI system, upon detecting suspicious or confirmed adversarial interaction patterns (e.g., repeated prompt injection attempts, queries indicative of model extraction), deliberately alters its responses to be misleading, unhelpful, or subtly incorrect to the adversary. This aims to frustrate the attacker's efforts, waste their resources, make automated attacks less reliable, and potentially gather more intelligence on their TTPs without revealing the deception. The AI might simultaneously alert defenders to the ongoing deceptive engagement.",
                     "toolsOpenSource": [
-                        "AdvTorch MTD (research tools for noisy outputs/MTD)",
                         "Custom logic in AI frameworks (LangChain, Semantic Kernel) for deceptive response mode",
                         "Research prototypes for responsive deception"
                     ],
                     "toolsCommercial": [
-                        "Advanced LLM firewalls/AI security gateways with deceptive response policies (e.g., SAP Adversarial AI Protector)",
+                        "Advanced LLM firewalls/AI security gateways with deceptive response policies",
                         "Adaptable deception technology platforms"
                     ],
                     "defendsAgainst": [
@@ -4739,7 +4976,7 @@ const aidefendData = {
                             "items": [
                                 "AML.T0007 Discover ML Artifacts",
                                 "AML.T0069 Discover LLM System Information"
-                        
+
                             ]
                         },
                         {
@@ -4750,7 +4987,7 @@ const aidefendData = {
                             ]
                         },
                         {
-"framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2025",
                             "items": [
                                 "LLM07:2025 System Prompt Leakage"
                             ]
@@ -4967,278 +5204,278 @@ const aidefendData = {
                     ],
                     "subTechniques": [
                         {
-    "id": "AID-E-003.001",
-    "name": "Neural Network Backdoor Detection & Removal",
-    "description": "Focuses on identifying and removing backdoors embedded within neural network model parameters, including trigger-based backdoors that cause misclassification on specific inputs.",
-    "toolsOpenSource": [
-        "Adversarial Robustness Toolbox (ART) by IBM (includes Neural Cleanse, Activation Defence)",
-        "Foolbox (for generating triggers for testing)",
-        "PyTorch",
-        "TensorFlow",
-        "NumPy",
-        "Scikit-learn (for clustering/statistical analysis)"
-    ],
-    "toolsCommercial": [
-        "Protect AI (ModelScan)",
-        "HiddenLayer MLSec Platform",
-        "Adversa.AI",
-        "Bosch AIShield",
-        "CognitiveScale (Cortex Certifai)",
-        "IBM Watson OpenScale"
-    ],
-    "defendsAgainst": [
-        {
-            "framework": "MITRE ATLAS",
-            "items": [
-                "AML.T0018 Manipulate AI Model",
-                "AML.T0018.000 Manipulate AI Model: Poison AI Model",
-                "AML.T0018.002 Manipulate AI Model: Embed Malware",
-                "AML.T0020 Poison Training Data",
-                "AML.T0076 Corrupt AI Model",
-                "AML.T0017 Persistence"
-            ]
-        },
-        {
-            "framework": "MAESTRO",
-            "items": [
-                "Backdoor Attacks (L1)",
-                "Model Tampering (L1)",
-                "Data Poisoning (L2)",
-                "Runtime Code Injection (L4)",
-                "Evasion of Auditing/Compliance (L6)"
-            ]
-        },
-        {
-            "framework": "OWASP LLM Top 10 2025",
-            "items": [
-                "LLM03:2025 Supply Chain",
-                "LLM04:2025 Data and Model Poisoning"
-            ]
-        },
-        {
-            "framework": "OWASP ML Top 10 2023",
-            "items": [
-                "ML10:2023 Model Poisoning",
-                "ML02:2023 Data Poisoning Attack",
-                "ML06:2023 AI Supply Chain Attacks",
-                "ML09:2023 Output Integrity Attack"
-            ]
-        }
-    ],
-    "implementationStrategies": [
-        {
-            "strategy": "Apply neural cleanse techniques to identify potential backdoor triggers.",
-            "howTo": "<h5>Concept:</h5><p>Neural Cleanse is an algorithm that works by reverse-engineering a minimal input pattern (a potential 'trigger') for each output class that causes the model to predict that class with high confidence. If it finds a trigger for a specific class that is very small and potent, it's a strong indicator that the class has been backdoored.</p><h5>Step 1: Use an Implementation like ART's Neural Cleanse</h5><p>The Adversarial Robustness Toolbox (ART) provides an implementation that can be used to scan a trained model for backdoors.</p><pre><code># File: backdoor_removal/neural_cleanse.py\\nfrom art.defences.transformer.poisoning import NeuralCleanse\\n\\n# Assume 'classifier' is your model wrapped in an ART classifier object\\n# Assume 'X_test' and 'y_test' are clean test data\\n\\n# 1. Initialize the Neural Cleanse defense\\ncleanse = NeuralCleanse(classifier, steps=20, learning_rate=0.1)\\n\\n# 2. Run the detection method\\n# This will analyze each class to find potential triggers\\nmitigation_results = cleanse.detect_poison()\\n\\n# 3. Analyze the results\\n# The results include a 'is_clean_array' where False indicates a suspected poisoned class\\nis_clean = mitigation_results[0]\\nfor class_idx, result in enumerate(is_clean):\\n    if not result:\\n        print(f\\\"🚨 BACKDOOR DETECTED: Class {class_idx} is suspected of being backdoored.\\\")</code></pre><p><strong>Action:</strong> As part of your model validation or incident response process, run the suspect model through the Neural Cleanse algorithm. Investigate any class that is flagged as potentially poisoned.</p>"
-        },
-        {
-            "strategy": "Use activation clustering to detect neurons responding to backdoor patterns.",
-            "howTo": "<h5>Concept:</h5><p>This method identifies backdoors by analyzing the model's internal neuron activations. When backdoored inputs are fed to the model, they tend to activate a small, specific set of 'trojan' neurons. By clustering the activations from many inputs, the backdoored inputs will form their own small, anomalous cluster, which can be automatically detected.</p><h5>Step 1: Use ART's ActivationDefence</h5><p>The ART library's `ActivationDefence` implements this technique. It processes a dataset, records activations from a specific layer, and uses clustering to find outlier groups.</p><pre><code># File: backdoor_removal/activation_clustering.py\\nfrom art.defences.transformer.poisoning import ActivationDefence\\n\\n# Assume 'classifier' and clean data 'X_train', 'y_train' are defined\\n\\n# 1. Initialize the defense, pointing it to an internal layer of the model\\n# The layer before the final classification layer is a good choice.\\n# In PyTorch, you can get the layer name by inspecting model.named_modules()\\ndefense = ActivationDefence(classifier, X_train, y_train, layer_name='model.fc1')\\n\\n# 2. Run poison detection. 'cluster_analysis=\\\"smaller\\\"' specifically looks for small, anomalous clusters.\\nreport, is_clean_array = defense.detect_poison(cluster_analysis=\\\"smaller\\\")\\n\\n# 3. Analyze the results\\n# is_clean_array is a boolean mask over the input data. False means the sample is part of a suspicious cluster.\\npoison_indices = np.where(is_clean_array == False)[0]\\nif len(poison_indices) > 0:\\n    print(f\\\"🚨 Found {len(poison_indices)} samples belonging to suspicious activation clusters. These may be backdoored.\\\")</code></pre><p><strong>Action:</strong> If a model is behaving suspiciously, use ART's `ActivationDefence` to analyze its activations on a diverse set of inputs. Investigate any small, outlier clusters of inputs identified by the tool, as they may share a backdoor trigger.</p>"
-        },
-        {
-            "strategy": "Implement fine-pruning to remove suspicious neurons.",
-            "howTo": "<h5>Concept:</h5><p>Once you've identified the specific neurons involved in a backdoor (e.g., via activation clustering), you can attempt to 'remove' the backdoor by pruning those neurons. This involves zeroing out all the incoming and outgoing weights of the identified neurons, effectively disabling them.</p><h5>Step 1: Identify and Prune Trojan Neurons</h5><p>After a detection method identifies suspicious neurons, write a script to surgically modify the model's weight matrices.</p><pre><code># File: backdoor_removal/fine_pruning.py\\nimport torch\\n\\n# Assume 'model' is your loaded PyTorch model\\n# Assume 'suspicious_neuron_indices' is a list of integers from your detection method, e.g., [12, 57, 83]\\n# Assume the target layer is named 'fc1'\\n\\ntarget_layer = model.fc1\\n\\nprint(\\\"Pruning suspicious neurons...\\\")\\nwith torch.no_grad():\\n    # Zero out the incoming weights to the suspicious neurons\\n    target_layer.weight[:, suspicious_neuron_indices] = 0\\n    # Zero out the outgoing weights from the suspicious neurons (if it's not the last layer)\\n    # (This would apply to the next layer's weight matrix)\\n\\n# Save the pruned model\\n# torch.save(model.state_dict(), 'pruned_model.pth')\\n\\n# You must now re-evaluate the pruned model's accuracy on clean data and its\\n# backdoor success rate to see if the defense worked and what the performance cost was.</code></pre><p><strong>Action:</strong> After identifying a small set of suspicious neurons, use fine-pruning to surgically disable them. This can be an effective removal strategy if the backdoor is localized to a few neurons and if the model can tolerate the loss of those neurons without a major drop in accuracy.</p>"
-        },
-        {
-            "strategy": "Retrain or fine-tune models on certified clean data to overwrite backdoors.",
-            "howTo": "<h5>Concept:</h5><p>This is the most reliable, brute-force method for backdoor removal. By fine-tuning the compromised model for a few epochs on a small but trusted, clean dataset, you can often adjust the model's weights enough to overwrite or disable the malicious backdoor logic learned from the poisoned data.</p><h5>Step 1: Implement a Fine-Tuning Script</h5><p>The script should load the compromised model, optionally freeze the earlier layers to preserve learned features, and then train the last few layers on the clean data.</p><pre><code># File: backdoor_removal/retrain.py\\n\\n# Assume 'compromised_model' is loaded\\n# Assume 'clean_dataloader' provides a small, trusted dataset\\n\\n# 1. (Optional) Freeze the feature extraction layers\\nfor name, param in compromised_model.named_parameters():\\n    if 'fc' not in name: # Freeze all but the final classification layers\\n        param.requires_grad = False\\n\\n# 2. Set up the optimizer to only update the unfrozen layers\\noptimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, compromised_model.parameters()), lr=0.001)\\ncriterion = torch.nn.CrossEntropyLoss()\\n\\n# 3. Fine-tune for a few epochs on the clean data\\nfor epoch in range(5): # Usually a small number of epochs is sufficient\\n    for data, target in clean_dataloader:\\n        optimizer.zero_grad()\\n        output = compromised_model(data)\\n        loss = criterion(output, target)\\n        loss.backward()\\n        optimizer.step()\\n    print(f\\\"Fine-tuning epoch {epoch+1} complete.\\\")\\n\\n# Save the fine-tuned (remediated) model\\n# torch.save(compromised_model.state_dict(), 'remediated_model.pth')</code></pre><p><strong>Action:</strong> If a model is found to be backdoored, the most robust remediation strategy is to perform fine-tuning on a trusted, clean dataset. This helps the model 'unlearn' the backdoor behavior.</p>"
-        },
-        {
-            "strategy": "Employ differential testing between suspect and clean models.",
-            "howTo": "<h5>Concept:</h5><p>To find the specific inputs that trigger a backdoor, you can compare the predictions of your suspect model against a known-good 'golden' model of the same architecture. Any input where the two models produce a different output is, by definition, anomalous and is a strong candidate for being a backdoored input.</p><h5>Step 1: Implement a Differential Testing Script</h5><p>This script iterates through a large pool of unlabeled data, gets a prediction from both models for each input, and logs any disagreements.</p><pre><code># File: backdoor_removal/differential_test.py\\n\\n# Assume 'suspect_model' and 'golden_model' are loaded\\n# Assume 'unlabeled_dataloader' provides a large amount of diverse input data\\n\\ndisagreements = []\\n\\nfor inputs, _ in unlabeled_dataloader:\\n    suspect_preds = suspect_model(inputs).argmax(dim=1)\\n    golden_preds = golden_model(inputs).argmax(dim=1)\\n    \\n    # Find the indices where the predictions do not match\\n    mismatch_indices = torch.where(suspect_preds != golden_preds)[0]\\n    \\n    if len(mismatch_indices) > 0:\\n        for index in mismatch_indices:\\n            disagreements.append({\\n                'input_data': inputs[index].cpu().numpy(),\\n                'suspect_prediction': suspect_preds[index].item(),\\n                'golden_prediction': golden_preds[index].item()\\n            })\\n\\nif disagreements:\\n    print(f\\\"🚨 Found {len(disagreements)} inputs where models disagree. These are potential backdoor triggers.\\\")\\n    # Save the 'disagreements' list for manual investigation</code></pre><p><strong>Action:</strong> If you have a known-good version of a model, use differential testing to find the specific inputs that cause the suspect version to behave differently. This is a highly effective way to identify the trigger for a backdoor or other integrity attack.</p>"
-        }
-    ]
-},
+                            "id": "AID-E-003.001",
+                            "name": "Neural Network Backdoor Detection & Removal",
+                            "description": "Focuses on identifying and removing backdoors embedded within neural network model parameters, including trigger-based backdoors that cause misclassification on specific inputs.",
+                            "toolsOpenSource": [
+                                "Adversarial Robustness Toolbox (ART) by IBM (includes Neural Cleanse, Activation Defence)",
+                                "Foolbox (for generating triggers for testing)",
+                                "PyTorch",
+                                "TensorFlow",
+                                "NumPy",
+                                "Scikit-learn (for clustering/statistical analysis)"
+                            ],
+                            "toolsCommercial": [
+                                "Protect AI (ModelScan)",
+                                "HiddenLayer MLSec Platform",
+                                "Adversa.AI",
+                                "Bosch AIShield",
+                                "CognitiveScale (Cortex Certifai)",
+                                "IBM Watson OpenScale"
+                            ],
+                            "defendsAgainst": [
+                                {
+                                    "framework": "MITRE ATLAS",
+                                    "items": [
+                                        "AML.T0018 Manipulate AI Model",
+                                        "AML.T0018.000 Manipulate AI Model: Poison AI Model",
+                                        "AML.T0018.002 Manipulate AI Model: Embed Malware",
+                                        "AML.T0020 Poison Training Data",
+                                        "AML.T0076 Corrupt AI Model",
+                                        "AML.T0017 Persistence"
+                                    ]
+                                },
+                                {
+                                    "framework": "MAESTRO",
+                                    "items": [
+                                        "Backdoor Attacks (L1)",
+                                        "Model Tampering (L1)",
+                                        "Data Poisoning (L2)",
+                                        "Runtime Code Injection (L4)",
+                                        "Evasion of Auditing/Compliance (L6)"
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP LLM Top 10 2025",
+                                    "items": [
+                                        "LLM03:2025 Supply Chain",
+                                        "LLM04:2025 Data and Model Poisoning"
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP ML Top 10 2023",
+                                    "items": [
+                                        "ML10:2023 Model Poisoning",
+                                        "ML02:2023 Data Poisoning Attack",
+                                        "ML06:2023 AI Supply Chain Attacks",
+                                        "ML09:2023 Output Integrity Attack"
+                                    ]
+                                }
+                            ],
+                            "implementationStrategies": [
+                                {
+                                    "strategy": "Apply neural cleanse techniques to identify potential backdoor triggers.",
+                                    "howTo": "<h5>Concept:</h5><p>Neural Cleanse is an algorithm that works by reverse-engineering a minimal input pattern (a potential 'trigger') for each output class that causes the model to predict that class with high confidence. If it finds a trigger for a specific class that is very small and potent, it's a strong indicator that the class has been backdoored.</p><h5>Step 1: Use an Implementation like ART's Neural Cleanse</h5><p>The Adversarial Robustness Toolbox (ART) provides an implementation that can be used to scan a trained model for backdoors.</p><pre><code># File: backdoor_removal/neural_cleanse.py\\nfrom art.defences.transformer.poisoning import NeuralCleanse\\n\\n# Assume 'classifier' is your model wrapped in an ART classifier object\\n# Assume 'X_test' and 'y_test' are clean test data\\n\\n# 1. Initialize the Neural Cleanse defense\\ncleanse = NeuralCleanse(classifier, steps=20, learning_rate=0.1)\\n\\n# 2. Run the detection method\\n# This will analyze each class to find potential triggers\\nmitigation_results = cleanse.detect_poison()\\n\\n# 3. Analyze the results\\n# The results include a 'is_clean_array' where False indicates a suspected poisoned class\\nis_clean = mitigation_results[0]\\nfor class_idx, result in enumerate(is_clean):\\n    if not result:\\n        print(f\\\"🚨 BACKDOOR DETECTED: Class {class_idx} is suspected of being backdoored.\\\")</code></pre><p><strong>Action:</strong> As part of your model validation or incident response process, run the suspect model through the Neural Cleanse algorithm. Investigate any class that is flagged as potentially poisoned.</p>"
+                                },
+                                {
+                                    "strategy": "Use activation clustering to detect neurons responding to backdoor patterns.",
+                                    "howTo": "<h5>Concept:</h5><p>This method identifies backdoors by analyzing the model's internal neuron activations. When backdoored inputs are fed to the model, they tend to activate a small, specific set of 'trojan' neurons. By clustering the activations from many inputs, the backdoored inputs will form their own small, anomalous cluster, which can be automatically detected.</p><h5>Step 1: Use ART's ActivationDefence</h5><p>The ART library's `ActivationDefence` implements this technique. It processes a dataset, records activations from a specific layer, and uses clustering to find outlier groups.</p><pre><code># File: backdoor_removal/activation_clustering.py\\nfrom art.defences.transformer.poisoning import ActivationDefence\\n\\n# Assume 'classifier' and clean data 'X_train', 'y_train' are defined\\n\\n# 1. Initialize the defense, pointing it to an internal layer of the model\\n# The layer before the final classification layer is a good choice.\\n# In PyTorch, you can get the layer name by inspecting model.named_modules()\\ndefense = ActivationDefence(classifier, X_train, y_train, layer_name='model.fc1')\\n\\n# 2. Run poison detection. 'cluster_analysis=\\\"smaller\\\"' specifically looks for small, anomalous clusters.\\nreport, is_clean_array = defense.detect_poison(cluster_analysis=\\\"smaller\\\")\\n\\n# 3. Analyze the results\\n# is_clean_array is a boolean mask over the input data. False means the sample is part of a suspicious cluster.\\npoison_indices = np.where(is_clean_array == False)[0]\\nif len(poison_indices) > 0:\\n    print(f\\\"🚨 Found {len(poison_indices)} samples belonging to suspicious activation clusters. These may be backdoored.\\\")</code></pre><p><strong>Action:</strong> If a model is behaving suspiciously, use ART's `ActivationDefence` to analyze its activations on a diverse set of inputs. Investigate any small, outlier clusters of inputs identified by the tool, as they may share a backdoor trigger.</p>"
+                                },
+                                {
+                                    "strategy": "Implement fine-pruning to remove suspicious neurons.",
+                                    "howTo": "<h5>Concept:</h5><p>Once you've identified the specific neurons involved in a backdoor (e.g., via activation clustering), you can attempt to 'remove' the backdoor by pruning those neurons. This involves zeroing out all the incoming and outgoing weights of the identified neurons, effectively disabling them.</p><h5>Step 1: Identify and Prune Trojan Neurons</h5><p>After a detection method identifies suspicious neurons, write a script to surgically modify the model's weight matrices.</p><pre><code># File: backdoor_removal/fine_pruning.py\\nimport torch\\n\\n# Assume 'model' is your loaded PyTorch model\\n# Assume 'suspicious_neuron_indices' is a list of integers from your detection method, e.g., [12, 57, 83]\\n# Assume the target layer is named 'fc1'\\n\\ntarget_layer = model.fc1\\n\\nprint(\\\"Pruning suspicious neurons...\\\")\\nwith torch.no_grad():\\n    # Zero out the incoming weights to the suspicious neurons\\n    target_layer.weight[:, suspicious_neuron_indices] = 0\\n    # Zero out the outgoing weights from the suspicious neurons (if it's not the last layer)\\n    # (This would apply to the next layer's weight matrix)\\n\\n# Save the pruned model\\n# torch.save(model.state_dict(), 'pruned_model.pth')\\n\\n# You must now re-evaluate the pruned model's accuracy on clean data and its\\n# backdoor success rate to see if the defense worked and what the performance cost was.</code></pre><p><strong>Action:</strong> After identifying a small set of suspicious neurons, use fine-pruning to surgically disable them. This can be an effective removal strategy if the backdoor is localized to a few neurons and if the model can tolerate the loss of those neurons without a major drop in accuracy.</p>"
+                                },
+                                {
+                                    "strategy": "Retrain or fine-tune models on certified clean data to overwrite backdoors.",
+                                    "howTo": "<h5>Concept:</h5><p>This is the most reliable, brute-force method for backdoor removal. By fine-tuning the compromised model for a few epochs on a small but trusted, clean dataset, you can often adjust the model's weights enough to overwrite or disable the malicious backdoor logic learned from the poisoned data.</p><h5>Step 1: Implement a Fine-Tuning Script</h5><p>The script should load the compromised model, optionally freeze the earlier layers to preserve learned features, and then train the last few layers on the clean data.</p><pre><code># File: backdoor_removal/retrain.py\\n\\n# Assume 'compromised_model' is loaded\\n# Assume 'clean_dataloader' provides a small, trusted dataset\\n\\n# 1. (Optional) Freeze the feature extraction layers\\nfor name, param in compromised_model.named_parameters():\\n    if 'fc' not in name: # Freeze all but the final classification layers\\n        param.requires_grad = False\\n\\n# 2. Set up the optimizer to only update the unfrozen layers\\noptimizer = torch.optim.Adam(filter(lambda p: p.requires_grad, compromised_model.parameters()), lr=0.001)\\ncriterion = torch.nn.CrossEntropyLoss()\\n\\n# 3. Fine-tune for a few epochs on the clean data\\nfor epoch in range(5): # Usually a small number of epochs is sufficient\\n    for data, target in clean_dataloader:\\n        optimizer.zero_grad()\\n        output = compromised_model(data)\\n        loss = criterion(output, target)\\n        loss.backward()\\n        optimizer.step()\\n    print(f\\\"Fine-tuning epoch {epoch+1} complete.\\\")\\n\\n# Save the fine-tuned (remediated) model\\n# torch.save(compromised_model.state_dict(), 'remediated_model.pth')</code></pre><p><strong>Action:</strong> If a model is found to be backdoored, the most robust remediation strategy is to perform fine-tuning on a trusted, clean dataset. This helps the model 'unlearn' the backdoor behavior.</p>"
+                                },
+                                {
+                                    "strategy": "Employ differential testing between suspect and clean models.",
+                                    "howTo": "<h5>Concept:</h5><p>To find the specific inputs that trigger a backdoor, you can compare the predictions of your suspect model against a known-good 'golden' model of the same architecture. Any input where the two models produce a different output is, by definition, anomalous and is a strong candidate for being a backdoored input.</p><h5>Step 1: Implement a Differential Testing Script</h5><p>This script iterates through a large pool of unlabeled data, gets a prediction from both models for each input, and logs any disagreements.</p><pre><code># File: backdoor_removal/differential_test.py\\n\\n# Assume 'suspect_model' and 'golden_model' are loaded\\n# Assume 'unlabeled_dataloader' provides a large amount of diverse input data\\n\\ndisagreements = []\\n\\nfor inputs, _ in unlabeled_dataloader:\\n    suspect_preds = suspect_model(inputs).argmax(dim=1)\\n    golden_preds = golden_model(inputs).argmax(dim=1)\\n    \\n    # Find the indices where the predictions do not match\\n    mismatch_indices = torch.where(suspect_preds != golden_preds)[0]\\n    \\n    if len(mismatch_indices) > 0:\\n        for index in mismatch_indices:\\n            disagreements.append({\\n                'input_data': inputs[index].cpu().numpy(),\\n                'suspect_prediction': suspect_preds[index].item(),\\n                'golden_prediction': golden_preds[index].item()\\n            })\\n\\nif disagreements:\\n    print(f\\\"🚨 Found {len(disagreements)} inputs where models disagree. These are potential backdoor triggers.\\\")\\n    # Save the 'disagreements' list for manual investigation</code></pre><p><strong>Action:</strong> If you have a known-good version of a model, use differential testing to find the specific inputs that cause the suspect version to behave differently. This is a highly effective way to identify the trigger for a backdoor or other integrity attack.</p>"
+                                }
+                            ]
+                        },
                         {
-    "id": "AID-E-003.002",
-    "name": "Poisoned Data Detection & Cleansing",
-    "description": "Identifies and removes maliciously crafted data points from training sets, vector databases, or other data stores that could influence model behavior or enable attacks.",
-    "toolsOpenSource": [
-        "scikit-learn (for Isolation Forest, DBSCAN)",
-        "Alibi Detect (for outlier and drift detection)",
-        "Great Expectations (for data validation)",
-        "DVC (Data Version Control)",
-        "Apache Spark, Dask (for large-scale data processing)",
-        "OpenMetadata, DataHub (for data provenance)",
-        "FlashText (for efficient keyword matching)",
-        "Sentence-Transformers (for embedding malicious concepts)",
-        "Qdrant, Pinecone, Weaviate (vector databases for scanning)"
-    ],
-    "toolsCommercial": [
-        "Databricks (Delta Lake for data quality, lineage, time travel)",
-        "Alation, Collibra, Informatica (data governance, lineage, quality)",
-        "Gretel.ai (synthetic data, data anonymization)",
-        "Tonic.ai (data anonymization)",
-        "Protect AI (for data-centric security)",
-        "Fiddler AI (for data integrity monitoring)",
-        "Arize AI (for data quality monitoring)"
-    ],
-    "defendsAgainst": [
-        {
-            "framework": "MITRE ATLAS",
-            "items": [
-                "AML.T0020 Poison Training Data",
-                "AML.T0021 Erode ML Model Integrity",
-                "AML.T0059 Erode Dataset Integrity",
-                "AML.T0070 RAG Poisoning",
-                "AML.T0010.002 AI Supply Chain Compromise: Data",
-                "AML.T0018.000 Backdoor ML Model: Poison ML Model"
-            ]
-        },
-        {
-            "framework": "MAESTRO",
-            "items": [
-                "Data Poisoning (L2)",
-                "Data Tampering (L2)",
-                "Compromised RAG Pipelines (L2)",
-                "Model Skewing (L2)",
-                "Supply Chain Attacks (Cross-Layer)"
-            ]
-        },
-        {
-            "framework": "OWASP LLM Top 10 2025",
-            "items": [
-                "LLM04:2025 Data and Model Poisoning",
-                "LLM08:2025 Vector and Embedding Weaknesses",
-                "LLM03:2025 Supply Chain"
-            ]
-        },
-        {
-            "framework": "OWASP ML Top 10 2023",
-            "items": [
-                "ML02:2023 Data Poisoning Attack",
-                "ML10:2023 Model Poisoning",
-                "ML08:2023 Model Skewing",
-                "ML07:2023 Transfer Learning Attack"
-            ]
-        }
-    ],
-    "implementationStrategies": [
-        {
-            "strategy": "Use statistical outlier detection to identify anomalous training samples.",
-            "howTo": "<h5>Concept:</h5><p>Data points created for a poisoning attack often have unusual feature values that make them statistical outliers compared to the clean data. By analyzing the feature distribution of the entire dataset, you can identify and remove these anomalous samples.</p><h5>Step 1: Use Isolation Forest to Find Outliers</h5><p>An Isolation Forest is an efficient algorithm for detecting outliers. It works by building random trees and identifying points that are 'easier' to isolate from the rest of the data.</p><pre><code># File: data_cleansing/outlier_detection.py\\nimport pandas as pd\\nfrom sklearn.ensemble import IsolationForest\\n\\n# Assume 'df' is your full (potentially poisoned) dataset\\ndf = pd.read_csv('dataset.csv')\\n\\n# Initialize the detector. 'contamination' is your estimate of the poison percentage.\\nisolation_forest = IsolationForest(contamination=0.01, random_state=42)\\n\\n# The model returns -1 for outliers and 1 for inliers\\noutlier_predictions = isolation_forest.fit_predict(df[['feature1', 'feature2']])\\n\\n# Identify the outlier rows\\npoison_candidates_df = df[outlier_predictions == -1]\\n\\nprint(f\\\"Identified {len(poison_candidates_df)} potential poison samples.\\\")\\n\\n# Remove the outliers to create a cleansed dataset\\ncleansed_df = df[outlier_predictions == 1]</code></pre><p><strong>Action:</strong> Before training, run your dataset's features through an outlier detection algorithm like Isolation Forest. Remove the top 0.5-1% of samples identified as outliers to cleanse the data of many common poisoning attacks.</p>"
-        },
-        {
-            "strategy": "Implement data provenance tracking to identify suspect data sources.",
-            "howTo": "<h5>Concept:</h5><p>If a poisoning attack is detected, you need to trace the malicious data back to its source. By tagging all data with its origin (e.g., 'user_submission_api', 'internal_db_etl', 'partner_feed_X'), you can quickly identify and block a compromised data source.</p><h5>Step 1: Tag Data with Provenance at Ingestion</h5><p>Modify your data ingestion pipelines to add a `source` column to all data.</p><h5>Step 2: Analyze Provenance of Poisoned Samples</h5><p>After identifying a set of poisoned data points (using another detection method), analyze the `source` column for those specific points to find the culprit.</p><pre><code># Assume 'full_df' has a 'source' column\\n# Assume 'poison_indices' is a list of row indices identified as poison\\n\\n# Get the subset of poisoned data\\npoisoned_data = full_df.iloc[poison_indices]\\n\\n# Find the most common source among the poisoned samples\\nculprit_source = poisoned_data['source'].value_counts().idxmax()\\n\\nprint(f\\\"🚨 Poisoning attack likely originated from source: '{culprit_source}'\\\")\\n\\n# With this information, you can block or re-validate all data from that specific source.</code></pre><p><strong>Action:</strong> Add a `source` metadata field to all data as it is ingested. If a poisoning incident occurs, analyze the source of the poisoned samples to quickly identify and isolate the compromised data pipeline or source.</p>"
-        },
-        {
-            "strategy": "Apply clustering techniques to find groups of potentially poisoned samples.",
-            "howTo": "<h5>Concept:</h5><p>Poisoned data points, especially those for a backdoor attack, often need to be similar to each other to be effective. This means they will form a small, dense cluster in the feature space that is separate from the larger clusters of benign data. A clustering algorithm like DBSCAN is excellent at finding these anomalous clusters.</p><h5>Step 1: Use DBSCAN to Cluster Data Embeddings</h5><p>DBSCAN is a density-based algorithm that groups together points that are closely packed, marking as outliers points that lie alone in low-density regions. It's effective because you don't need to know the number of clusters beforehand.</p><pre><code># File: data_cleansing/dbscan.py\\nfrom sklearn.cluster import DBSCAN\\nimport numpy as np\\n\\n# Assume 'feature_embeddings' is a numpy array of your data's feature vectors\\n\\n# DBSCAN parameters 'eps' and 'min_samples' need to be tuned for your dataset's density.\\ndb = DBSCAN(eps=0.5, min_samples=5).fit(feature_embeddings)\\n\\n# The labels_ array contains the cluster ID for each point. -1 indicates an outlier/noise.\\noutlier_indices = np.where(db.labels_ == -1)[0]\\n\\nprint(f\\\"Found {len(outlier_indices)} outlier points that may be poison.\\\")\\n\\n# You can also analyze the size of the other clusters. Very small clusters are also suspicious.\\ncluster_ids, counts = np.unique(db.labels_[db.labels_!=-1], return_counts=True)\\nsmall_clusters = cluster_ids[counts < 10] # e.g., any cluster with fewer than 10 members is suspicious\\nprint(f\\\"Found {len(small_clusters)} potentially malicious small clusters.\\\")</code></pre><p><strong>Action:</strong> Run your dataset's feature embeddings through the DBSCAN clustering algorithm. Flag all points identified as noise (label -1) and all points belonging to very small clusters as potential poison candidates for removal.</p>"
-        },
-        {
-            "strategy": "Scan vector databases for embeddings from known malicious content.",
-            "howTo": "<h5>Concept:</h5><p>A RAG system's vector database can be poisoned by inserting documents containing harmful or biased information. You can proactively scan your database by taking known malicious phrases, embedding them, and searching for documents in your database that are semantically similar.</p><h5>Step 1: Create Embeddings for Malicious Concepts</h5><p>Maintain a list of known malicious or undesirable phrases. Use the same embedding model as your RAG system to create vector embeddings for these phrases.</p><pre><code># File: data_cleansing/scan_vectordb.py\\n# Assume 'embedding_model' is your sentence-transformer or other embedding model\\n\\nMALICIOUS_PHRASES = [\\n    \\\"Instructions on how to build a bomb\\\",\\n    \\\"Complete guide to credit card fraud\\\",\\n    \\\"Hate speech against a protected group\\\"\\n]\\n\\nmalicious_embeddings = embedding_model.encode(MALICIOUS_PHRASES)</code></pre><h5>Step 2: Search the Vector DB for Similar Content</h5><p>For each malicious embedding, perform a similarity search against your entire vector database. Any document that returns with a very high similarity score is a candidate for removal.</p><pre><code># Assume 'vector_db_client' is your client (e.g., for Qdrant, Pinecone)\\nSIMILARITY_THRESHOLD = 0.9\\n\\ndef find_poisoned_content():\\n    poison_candidates = []\\n    for i, embedding in enumerate(malicious_embeddings):\\n        # Search for vectors in the DB that are highly similar to the malicious one\\n        search_results = vector_db_client.search(\\n            collection_name=\\\"my_rag_docs\\\",\\n            query_vector=embedding,\\n            limit=5 # Get the top 5 most similar docs\\n        )\\n        for result in search_results:\\n            if result.score > SIMILARITY_THRESHOLD:\\n                poison_candidates.append({\\n                    'found_id': result.id,\\n                    'reason': f\\\"High similarity to malicious phrase: '{MALICIOUS_PHRASES[i]}'\\\",\\n                    'score': result.score\\n                })\\n    return poison_candidates</code></pre><p><strong>Action:</strong> Maintain a list of known harmful concepts. Periodically, embed these concepts and perform a similarity search against your RAG vector database. Review and remove any documents that have an unexpectedly high similarity score to a malicious concept.</p>"
-        },
-        {
-            "strategy": "Validate data against known-good checksums.",
-            "howTo": "<h5>Concept:</h5><p>If you have a trusted, versioned dataset, you can calculate and store its cryptographic hash (e.g., SHA-256). Before any training run, you can re-calculate the hash of the dataset being used. If the hashes do not match, the data has been modified or corrupted, and the training job must be halted.</p><h5>Step 1: Create a Manifest of Hashes</h5><p>For a directory of trusted data files, create a manifest file containing the hash of each file.</p><pre><code># In your terminal, on a trusted version of the data\\n> sha256sum data/clean/part_1.csv data/clean/part_2.csv > data_manifest.sha256</code></pre><h5>Step 2: Verify Hashes in Your Training Pipeline</h5><p>As the first step in your CI/CD or training script, use the manifest file to verify the integrity of the data about to be used.</p><pre><code># In your training pipeline script (e.g., shell script)\\n\\nMANIFEST_FILE=\\\"data_manifest.sha256\\\"\\necho \\\"Verifying integrity of training data...\\\"\\n\\n# The '-c' flag tells sha256sum to check files against the manifest.\\n# It will return a non-zero exit code if any file is changed or missing.\\nif ! sha256sum -c ${MANIFEST_FILE}; then\\n    echo \\\"❌ DATA INTEGRITY CHECK FAILED! Halting training job.\\\"\\n    exit 1\\nfi\\n\\necho \\\"✅ Data integrity verified successfully.\\\"</code></pre><p><strong>Action:</strong> After curating a clean, trusted version of a dataset, generate a `sha256sum` manifest for it and commit the manifest to Git. As the first step of any training job, run `sha256sum -c` against this manifest to ensure the data has not been tampered with.</p>"
-        },
-        {
-            "strategy": "Implement gradual data removal and retraining to minimize service disruption.",
-            "howTo": "<h5>Concept:</h5><p>After identifying a large set of potentially poisoned data points, removing them all at once and retraining could cause a significant and unexpected drop in model performance if your detection method had false positives. A safer approach is to remove the suspicious data in small batches, retraining and evaluating the model at each step to monitor the impact.</p><h5>Step 1: Iteratively Remove Data and Evaluate</h5><p>This script shows a loop that removes a percentage of the suspicious data, retrains the model, and checks its performance. It stops if the performance drops below an acceptable threshold.</p><pre><code># File: data_cleansing/gradual_removal.py\\n\\n# Assume 'model' is your baseline model, 'full_dataset' is the data,\\n# and 'suspicious_indices' is the list of rows to remove.\\n\\nACCEPTABLE_ACCURACY_DROP = 0.02 # Allow at most a 2% drop from baseline\\nbaseline_accuracy = evaluate_model(model, validation_data)\\n\\n# Shuffle the suspicious indices to remove them in random order\\nnp.random.shuffle(suspicious_indices)\\n\\n# Remove data in chunks of 10% of the suspicious set\\nbatch_size = len(suspicious_indices) // 10\\nfor i in range(10):\\n    indices_to_remove = suspicious_indices[i*batch_size:(i+1)*batch_size]\\n    current_clean_dataset = full_dataset.drop(index=indices_to_remove)\\n    \\n    # Retrain the model on the slightly cleaner data\\n    retrained_model = train_model(current_clean_dataset)\\n    current_accuracy = evaluate_model(retrained_model, validation_data)\\n    \\n    print(f\\\"Removed {len(indices_to_remove)} points. New accuracy: {current_accuracy:.4f}\\\")\\n\\n    # If accuracy drops too much, stop and investigate\\n    if baseline_accuracy - current_accuracy > ACCEPTABLE_ACCURACY_DROP:\\n        print(f\\\"Stopping gradual removal. Accuracy dropped below threshold.\\\")\\n        # The last known-good model/dataset should be used.\\n        break\\n    \\n    # Update the dataset for the next iteration\\n    full_dataset = current_clean_dataset</code></pre><p><strong>Action:</strong> When cleansing a dataset with many suspicious samples, implement a gradual removal process. Remove a small fraction of the data, retrain, and evaluate. Continue this process iteratively, stopping if model performance on a clean validation set degrades beyond an acceptable threshold.</p>"
-        }
-    ]
-},
+                            "id": "AID-E-003.002",
+                            "name": "Poisoned Data Detection & Cleansing",
+                            "description": "Identifies and removes maliciously crafted data points from training sets, vector databases, or other data stores that could influence model behavior or enable attacks.",
+                            "toolsOpenSource": [
+                                "scikit-learn (for Isolation Forest, DBSCAN)",
+                                "Alibi Detect (for outlier and drift detection)",
+                                "Great Expectations (for data validation)",
+                                "DVC (Data Version Control)",
+                                "Apache Spark, Dask (for large-scale data processing)",
+                                "OpenMetadata, DataHub (for data provenance)",
+                                "FlashText (for efficient keyword matching)",
+                                "Sentence-Transformers (for embedding malicious concepts)",
+                                "Qdrant, Pinecone, Weaviate (vector databases for scanning)"
+                            ],
+                            "toolsCommercial": [
+                                "Databricks (Delta Lake for data quality, lineage, time travel)",
+                                "Alation, Collibra, Informatica (data governance, lineage, quality)",
+                                "Gretel.ai (synthetic data, data anonymization)",
+                                "Tonic.ai (data anonymization)",
+                                "Protect AI (for data-centric security)",
+                                "Fiddler AI (for data integrity monitoring)",
+                                "Arize AI (for data quality monitoring)"
+                            ],
+                            "defendsAgainst": [
+                                {
+                                    "framework": "MITRE ATLAS",
+                                    "items": [
+                                        "AML.T0020 Poison Training Data",
+                                        "AML.T0021 Erode ML Model Integrity",
+                                        "AML.T0059 Erode Dataset Integrity",
+                                        "AML.T0070 RAG Poisoning",
+                                        "AML.T0010.002 AI Supply Chain Compromise: Data",
+                                        "AML.T0018.000 Backdoor ML Model: Poison ML Model"
+                                    ]
+                                },
+                                {
+                                    "framework": "MAESTRO",
+                                    "items": [
+                                        "Data Poisoning (L2)",
+                                        "Data Tampering (L2)",
+                                        "Compromised RAG Pipelines (L2)",
+                                        "Model Skewing (L2)",
+                                        "Supply Chain Attacks (Cross-Layer)"
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP LLM Top 10 2025",
+                                    "items": [
+                                        "LLM04:2025 Data and Model Poisoning",
+                                        "LLM08:2025 Vector and Embedding Weaknesses",
+                                        "LLM03:2025 Supply Chain"
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP ML Top 10 2023",
+                                    "items": [
+                                        "ML02:2023 Data Poisoning Attack",
+                                        "ML10:2023 Model Poisoning",
+                                        "ML08:2023 Model Skewing",
+                                        "ML07:2023 Transfer Learning Attack"
+                                    ]
+                                }
+                            ],
+                            "implementationStrategies": [
+                                {
+                                    "strategy": "Use statistical outlier detection to identify anomalous training samples.",
+                                    "howTo": "<h5>Concept:</h5><p>Data points created for a poisoning attack often have unusual feature values that make them statistical outliers compared to the clean data. By analyzing the feature distribution of the entire dataset, you can identify and remove these anomalous samples.</p><h5>Step 1: Use Isolation Forest to Find Outliers</h5><p>An Isolation Forest is an efficient algorithm for detecting outliers. It works by building random trees and identifying points that are 'easier' to isolate from the rest of the data.</p><pre><code># File: data_cleansing/outlier_detection.py\\nimport pandas as pd\\nfrom sklearn.ensemble import IsolationForest\\n\\n# Assume 'df' is your full (potentially poisoned) dataset\\ndf = pd.read_csv('dataset.csv')\\n\\n# Initialize the detector. 'contamination' is your estimate of the poison percentage.\\nisolation_forest = IsolationForest(contamination=0.01, random_state=42)\\n\\n# The model returns -1 for outliers and 1 for inliers\\noutlier_predictions = isolation_forest.fit_predict(df[['feature1', 'feature2']])\\n\\n# Identify the outlier rows\\npoison_candidates_df = df[outlier_predictions == -1]\\n\\nprint(f\\\"Identified {len(poison_candidates_df)} potential poison samples.\\\")\\n\\n# Remove the outliers to create a cleansed dataset\\ncleansed_df = df[outlier_predictions == 1]</code></pre><p><strong>Action:</strong> Before training, run your dataset's features through an outlier detection algorithm like Isolation Forest. Remove the top 0.5-1% of samples identified as outliers to cleanse the data of many common poisoning attacks.</p>"
+                                },
+                                {
+                                    "strategy": "Implement data provenance tracking to identify suspect data sources.",
+                                    "howTo": "<h5>Concept:</h5><p>If a poisoning attack is detected, you need to trace the malicious data back to its source. By tagging all data with its origin (e.g., 'user_submission_api', 'internal_db_etl', 'partner_feed_X'), you can quickly identify and block a compromised data source.</p><h5>Step 1: Tag Data with Provenance at Ingestion</h5><p>Modify your data ingestion pipelines to add a `source` column to all data.</p><h5>Step 2: Analyze Provenance of Poisoned Samples</h5><p>After identifying a set of poisoned data points (using another detection method), analyze the `source` column for those specific points to find the culprit.</p><pre><code># Assume 'full_df' has a 'source' column\\n# Assume 'poison_indices' is a list of row indices identified as poison\\n\\n# Get the subset of poisoned data\\npoisoned_data = full_df.iloc[poison_indices]\\n\\n# Find the most common source among the poisoned samples\\nculprit_source = poisoned_data['source'].value_counts().idxmax()\\n\\nprint(f\\\"🚨 Poisoning attack likely originated from source: '{culprit_source}'\\\")\\n\\n# With this information, you can block or re-validate all data from that specific source.</code></pre><p><strong>Action:</strong> Add a `source` metadata field to all data as it is ingested. If a poisoning incident occurs, analyze the source of the poisoned samples to quickly identify and isolate the compromised data pipeline or source.</p>"
+                                },
+                                {
+                                    "strategy": "Apply clustering techniques to find groups of potentially poisoned samples.",
+                                    "howTo": "<h5>Concept:</h5><p>Poisoned data points, especially those for a backdoor attack, often need to be similar to each other to be effective. This means they will form a small, dense cluster in the feature space that is separate from the larger clusters of benign data. A clustering algorithm like DBSCAN is excellent at finding these anomalous clusters.</p><h5>Step 1: Use DBSCAN to Cluster Data Embeddings</h5><p>DBSCAN is a density-based algorithm that groups together points that are closely packed, marking as outliers points that lie alone in low-density regions. It's effective because you don't need to know the number of clusters beforehand.</p><pre><code># File: data_cleansing/dbscan.py\\nfrom sklearn.cluster import DBSCAN\\nimport numpy as np\\n\\n# Assume 'feature_embeddings' is a numpy array of your data's feature vectors\\n\\n# DBSCAN parameters 'eps' and 'min_samples' need to be tuned for your dataset's density.\\ndb = DBSCAN(eps=0.5, min_samples=5).fit(feature_embeddings)\\n\\n# The labels_ array contains the cluster ID for each point. -1 indicates an outlier/noise.\\noutlier_indices = np.where(db.labels_ == -1)[0]\\n\\nprint(f\\\"Found {len(outlier_indices)} outlier points that may be poison.\\\")\\n\\n# You can also analyze the size of the other clusters. Very small clusters are also suspicious.\\ncluster_ids, counts = np.unique(db.labels_[db.labels_!=-1], return_counts=True)\\nsmall_clusters = cluster_ids[counts < 10] # e.g., any cluster with fewer than 10 members is suspicious\\nprint(f\\\"Found {len(small_clusters)} potentially malicious small clusters.\\\")</code></pre><p><strong>Action:</strong> Run your dataset's feature embeddings through the DBSCAN clustering algorithm. Flag all points identified as noise (label -1) and all points belonging to very small clusters as potential poison candidates for removal.</p>"
+                                },
+                                {
+                                    "strategy": "Scan vector databases for embeddings from known malicious content.",
+                                    "howTo": "<h5>Concept:</h5><p>A RAG system's vector database can be poisoned by inserting documents containing harmful or biased information. You can proactively scan your database by taking known malicious phrases, embedding them, and searching for documents in your database that are semantically similar.</p><h5>Step 1: Create Embeddings for Malicious Concepts</h5><p>Maintain a list of known malicious or undesirable phrases. Use the same embedding model as your RAG system to create vector embeddings for these phrases.</p><pre><code># File: data_cleansing/scan_vectordb.py\\n# Assume 'embedding_model' is your sentence-transformer or other embedding model\\n\\nMALICIOUS_PHRASES = [\\n    \\\"Instructions on how to build a bomb\\\",\\n    \\\"Complete guide to credit card fraud\\\",\\n    \\\"Hate speech against a protected group\\\"\\n]\\n\\nmalicious_embeddings = embedding_model.encode(MALICIOUS_PHRASES)</code></pre><h5>Step 2: Search the Vector DB for Similar Content</h5><p>For each malicious embedding, perform a similarity search against your entire vector database. Any document that returns with a very high similarity score is a candidate for removal.</p><pre><code># Assume 'vector_db_client' is your client (e.g., for Qdrant, Pinecone)\\nSIMILARITY_THRESHOLD = 0.9\\n\\ndef find_poisoned_content():\\n    poison_candidates = []\\n    for i, embedding in enumerate(malicious_embeddings):\\n        # Search for vectors in the DB that are highly similar to the malicious one\\n        search_results = vector_db_client.search(\\n            collection_name=\\\"my_rag_docs\\\",\\n            query_vector=embedding,\\n            limit=5 # Get the top 5 most similar docs\\n        )\\n        for result in search_results:\\n            if result.score > SIMILARITY_THRESHOLD:\\n                poison_candidates.append({\\n                    'found_id': result.id,\\n                    'reason': f\\\"High similarity to malicious phrase: '{MALICIOUS_PHRASES[i]}'\\\",\\n                    'score': result.score\\n                })\\n    return poison_candidates</code></pre><p><strong>Action:</strong> Maintain a list of known harmful concepts. Periodically, embed these concepts and perform a similarity search against your RAG vector database. Review and remove any documents that have an unexpectedly high similarity score to a malicious concept.</p>"
+                                },
+                                {
+                                    "strategy": "Validate data against known-good checksums.",
+                                    "howTo": "<h5>Concept:</h5><p>If you have a trusted, versioned dataset, you can calculate and store its cryptographic hash (e.g., SHA-256). Before any training run, you can re-calculate the hash of the dataset being used. If the hashes do not match, the data has been modified or corrupted, and the training job must be halted.</p><h5>Step 1: Create a Manifest of Hashes</h5><p>For a directory of trusted data files, create a manifest file containing the hash of each file.</p><pre><code># In your terminal, on a trusted version of the data\\n> sha256sum data/clean/part_1.csv data/clean/part_2.csv > data_manifest.sha256</code></pre><h5>Step 2: Verify Hashes in Your Training Pipeline</h5><p>As the first step in your CI/CD or training script, use the manifest file to verify the integrity of the data about to be used.</p><pre><code># In your training pipeline script (e.g., shell script)\\n\\nMANIFEST_FILE=\\\"data_manifest.sha256\\\"\\necho \\\"Verifying integrity of training data...\\\"\\n\\n# The '-c' flag tells sha256sum to check files against the manifest.\\n# It will return a non-zero exit code if any file is changed or missing.\\nif ! sha256sum -c ${MANIFEST_FILE}; then\\n    echo \\\"❌ DATA INTEGRITY CHECK FAILED! Halting training job.\\\"\\n    exit 1\\nfi\\n\\necho \\\"✅ Data integrity verified successfully.\\\"</code></pre><p><strong>Action:</strong> After curating a clean, trusted version of a dataset, generate a `sha256sum` manifest for it and commit the manifest to Git. As the first step of any training job, run `sha256sum -c` against this manifest to ensure the data has not been tampered with.</p>"
+                                },
+                                {
+                                    "strategy": "Implement gradual data removal and retraining to minimize service disruption.",
+                                    "howTo": "<h5>Concept:</h5><p>After identifying a large set of potentially poisoned data points, removing them all at once and retraining could cause a significant and unexpected drop in model performance if your detection method had false positives. A safer approach is to remove the suspicious data in small batches, retraining and evaluating the model at each step to monitor the impact.</p><h5>Step 1: Iteratively Remove Data and Evaluate</h5><p>This script shows a loop that removes a percentage of the suspicious data, retrains the model, and checks its performance. It stops if the performance drops below an acceptable threshold.</p><pre><code># File: data_cleansing/gradual_removal.py\\n\\n# Assume 'model' is your baseline model, 'full_dataset' is the data,\\n# and 'suspicious_indices' is the list of rows to remove.\\n\\nACCEPTABLE_ACCURACY_DROP = 0.02 # Allow at most a 2% drop from baseline\\nbaseline_accuracy = evaluate_model(model, validation_data)\\n\\n# Shuffle the suspicious indices to remove them in random order\\nnp.random.shuffle(suspicious_indices)\\n\\n# Remove data in chunks of 10% of the suspicious set\\nbatch_size = len(suspicious_indices) // 10\\nfor i in range(10):\\n    indices_to_remove = suspicious_indices[i*batch_size:(i+1)*batch_size]\\n    current_clean_dataset = full_dataset.drop(index=indices_to_remove)\\n    \\n    # Retrain the model on the slightly cleaner data\\n    retrained_model = train_model(current_clean_dataset)\\n    current_accuracy = evaluate_model(retrained_model, validation_data)\\n    \\n    print(f\\\"Removed {len(indices_to_remove)} points. New accuracy: {current_accuracy:.4f}\\\")\\n\\n    # If accuracy drops too much, stop and investigate\\n    if baseline_accuracy - current_accuracy > ACCEPTABLE_ACCURACY_DROP:\\n        print(f\\\"Stopping gradual removal. Accuracy dropped below threshold.\\\")\\n        # The last known-good model/dataset should be used.\\n        break\\n    \\n    # Update the dataset for the next iteration\\n    full_dataset = current_clean_dataset</code></pre><p><strong>Action:</strong> When cleansing a dataset with many suspicious samples, implement a gradual removal process. Remove a small fraction of the data, retrain, and evaluate. Continue this process iteratively, stopping if model performance on a clean validation set degrades beyond an acceptable threshold.</p>"
+                                }
+                            ]
+                        },
                         {
-    "id": "AID-E-003.003",
-    "name": "Malicious Code & Configuration Cleanup",
-    "description": "Removes malicious scripts, modified configuration files, unauthorized tools, or persistence mechanisms that attackers may have introduced into the AI system infrastructure.",
-    "toolsOpenSource": [
-        "AIDE (Advanced Intrusion Detection Environment)",
-        "Tripwire Open Source",
-        "OSSEC (Host-based Intrusion Detection System)",
-        "Wazuh (fork of OSSEC)",
-        "ClamAV (antivirus engine)",
-        "YARA (pattern matching tool for malware)",
-        "grep (Linux utility)",
-        "Ansible, Puppet, Chef (Configuration Management)",
-        "Git (for configuration version control)",
-        "Kubernetes (for self-healing deployments via GitOps)"
-    ],
-    "toolsCommercial": [
-        "CrowdStrike Falcon Insight (EDR)",
-        "SentinelOne Singularity (EDR)",
-        "Carbon Black (VMware Carbon Black Cloud)",
-        "Trellix Endpoint Security (HX)",
-        "Microsoft Defender for Endpoint",
-        "Splunk Enterprise Security (SIEM)",
-        "Palo Alto Networks Cortex XSOAR (SOAR)",
-        "Forensic tools (e.g., Magnet AXIOM, EnCase)",
-        "Configuration Management Database (CMDB) solutions"
-    ],
-    "defendsAgainst": [
-        {
-            "framework": "MITRE ATLAS",
-            "items": [
-                "AML.T0011.001 User Execution: Malicious Package",
-                "AML.T0018 Manipulate AI Model",
-                "AML.T0018.002 Manipulate AI Model: Embed Malware",
-                "AML.T0020 Poison Training Data",
-                "AML.T0070 RAG Poisoning",
-                "AML.T0017 Persistence",
-                "AML.T0072 Reverse Shell",
-                "AML.T0009 Execution"
-            ]
-        },
-        {
-            "framework": "MAESTRO",
-            "items": [
-                "Runtime Code Injection (L4)",
-                "Memory Corruption (L4)",
-                "Misconfigurations (L4)",
-                "Policy Bypass (L6)",
-                "Backdoor Attacks (L1)",
-                "Compromised Framework Components (L3)",
-                "Compromised Container Images (L4)",
-                "Data Tampering (L2)"
-            ]
-        },
-        {
-            "framework": "OWASP LLM Top 10 2025",
-            "items": [
-                "LLM03:2025 Supply Chain",
-                "LLM04:2025 Data and Model Poisoning",
-                "LLM08:2025 Vector and Embedding Weaknesses",
-                "LLM05:2025 Improper Output Handling"
-            ]
-        },
-        {
-            "framework": "OWASP ML Top 10 2023",
-            "items": [
-                "ML02:2023 Data Poisoning Attack",
-                "ML06:2023 AI Supply Chain Attacks",
-                "ML10:2023 Model Poisoning",
-                "ML09:2023 Output Integrity Attack"
-            ]
-        }
-    ],
-    "implementationStrategies": [
-        {
-            "strategy": "Scan for unauthorized modifications to ML framework files or operating systems.",
-            "howTo": "<h5>Concept:</h5><p>An attacker with root access could modify the source code of installed libraries (e.g., `torch`, `sklearn`) or core system files to inject a backdoor. A host-based Intrusion Detection System (HIDS) or File Integrity Monitor (FIM) detects these changes by comparing current file hashes against a trusted baseline.</p><h5>Step 1: Initialize the FIM Baseline</h5><p>On a known-clean, freshly provisioned server, initialize the FIM database. This process scans all critical files and stores their hashes in a secure database.</p><pre><code># Using AIDE (Advanced Intrusion Detection Environment) on a Linux server\\n# This command creates the initial baseline database of file hashes.\\n> sudo aide --init\\n# Move the new database to be the official baseline\\n> sudo mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz</code></pre><h5>Step 2: Schedule and Run Integrity Checks</h5><p>Run a scheduled job to compare the current state of the filesystem against the baseline database. Any changes, additions, or deletions will be reported.</p><pre><code># This command checks the current filesystem against the baseline\\n> sudo aide --check\\n\\n# Example output indicating a compromised library file:\\n# File: /usr/local/lib/python3.10/site-packages/torch/nn/functional.py\\n#   MD5    : OLD_HASH                           , NEW_HASH\\n#   SHA256 : OLD_HASH                           , NEW_HASH\\n#   ... and other changes\\n\\n# A cron job would run 'aide --check' nightly and email the report to admins.</code></pre><p><strong>Action:</strong> Install and initialize a FIM tool like AIDE or Tripwire on all AI servers. Schedule a nightly check and configure it to send any reports of file changes to your security team for immediate investigation.</p>"
-        },
-        {
-            "strategy": "Check for malicious model loading code or custom layers.",
-            "howTo": "<h5>Concept:</h5><p>An attacker might not tamper with the `.pkl` model file itself, but instead modify the Python code that loads it. By injecting a malicious custom class, they can gain code execution during the `pickle.load()` process. This requires static analysis of the loading scripts.</p><h5>Step 1: Analyze the Script's Abstract Syntax Tree (AST)</h5><p>Use Python's built-in `ast` module to parse the model loading script. You can then traverse the tree to look for suspicious patterns, such as the definition of a class that contains a `__reduce__` method (a common vector for pickle exploits).</p><pre><code># File: code_cleanup/ast_scanner.py\\nimport ast\\n\\nclass PickleExploitScanner(ast.NodeVisitor):\\n    def __init__(self):\\n        self.found_suspicious_reduce = False\\n\\n    def visit_FunctionDef(self, node):\\n        # Look for any function or method named '__reduce__''\\n        if node.name == '__reduce__':\\n            self.found_suspicious_reduce = True\\n            print(f\\\"🚨 Suspicious '__reduce__' method found at line {node.lineno}!\\\")\\n        self.generic_visit(node)\\n\\n# Read and parse the Python script to be checked\\nwith open('load_model.py', 'r') as f:\\n    tree = ast.parse(f.read())\\n\\n# Scan the tree for suspicious patterns\\nscanner = PickleExploitScanner()\\nscanner.visit(tree)\\n\\nif scanner.found_suspicious_reduce:\\n    print(\\\"This script should be manually reviewed for a potential pickle exploit.\\\")</code></pre><p><strong>Action:</strong> Before executing any model loading script, especially if it's from an untrusted source, run a static analysis script on it that uses the `ast` module to check for suspicious patterns like the presence of a `__reduce__` method.</p>"
-        },
-        {
-            "strategy": "Verify integrity of agent tools and plugins.",
-            "howTo": "<h5>Concept:</h5><p>If your AI agent uses a set of Python files as 'tools', an attacker could modify the source code of these tools to hijack the agent. At startup, your application should verify the integrity of every tool file it loads by checking its hash against a known-good manifest.</p><h5>Step 1: Create a Manifest of Tool Hashes</h5><p>During your build process, after all tests have passed, create a manifest file containing the SHA256 hash of every tool script.</p><pre><code># In your CI/CD build script\\n> sha256sum agent/tools/*.py > tool_manifest.sha256\\n# This manifest file should be signed and bundled with your application.</code></pre><h5>Step 2: Verify Tool Hashes at Application Startup</h5><p>When your main application starts, before it loads or registers any tools, it must first verify the integrity of the tool files on disk against the manifest.</p><pre><code># File: agent/main_app.py\\nimport hashlib\\nimport os\\n\\ndef verify_tools_integrity(tool_directory, manifest_path):\\n    with open(manifest_path, 'r') as f:\\n        known_hashes = {line.split()[1]: line.split()[0] for line in f}\\n\\n    for filename in os.listdir(tool_directory):\\n        if filename.endswith('.py'):\\n            filepath = os.path.join(tool_directory, filename)\\n            # Calculate hash of the file on disk\\n            current_hash = get_sha256_hash(filepath)\\n            # Check if the hash matches the one in the manifest\\n            if known_hashes.get(filename) != current_hash:\\n                raise SecurityException(f\\\"Tool file '{filename}' has been tampered with!\\\")\\n    print(\\\"✅ All agent tools passed integrity check.\\\")\\n\\n# This check should be run at the very beginning of the application startup.\\n# verify_tools_integrity('agent/tools/', 'tool_manifest.sha256')</code></pre><p><strong>Action:</strong> Create a build-time process that generates a hash manifest of all your agent's tool files. At application startup, implement a verification step that re-calculates the hashes of the tool files on disk and compares them against the manifest, halting immediately if a mismatch is found.</p>"
-        },
-        {
-            "strategy": "Remove unauthorized scheduled tasks or cron jobs.",
-            "howTo": "<h5>Concept:</h5><p>Attackers often use `cron` on Linux or Scheduled Tasks on Windows to establish persistence. Regularly auditing these scheduled tasks is crucial for eviction.</p><h5>Step 1: Audit Cron Jobs for All Users</h5><p>A simple shell script can be used to list the cron jobs for every user on a Linux system. The output can be compared against a known-good baseline to spot unauthorized additions.</p><pre><code>#!/bin/bash\\n# File: incident_response/audit_cron.sh\\n\\nOUTPUT_FILE=\\\"current_crontabs.txt\\\"\\nBASELINE_FILE=\\\"baseline_crontabs.txt\\\"\\n\\necho \\\"Auditing all user crontabs...\\\" > ${OUTPUT_FILE}\\n\\n# Loop through all users in /etc/passwd and list their crontab\\nfor user in $(cut -f1 -d: /etc/passwd); do\\n    echo \\\"### Crontab for ${user} ###\\\" >> ${OUTPUT_FILE}\\n    crontab -u ${user} -l >> ${OUTPUT_FILE} 2>/dev/null\\ndone\\n\\n# Compare the current state to a known-good baseline\\nif ! diff -q ${BASELINE_FILE} ${OUTPUT_FILE}; then\\n    echo \\\"🚨 CRON JOB MODIFICATION DETECTED! Review diff below:\\\"\\n    diff ${BASELINE_FILE} ${OUTPUT_FILE}\\n    # Send alert to SOC\\nfi</code></pre><p><strong>Action:</strong> As part of your server hardening, save a copy of the system's cron job configuration as a baseline. Run a scheduled script that re-collects all cron jobs and runs a `diff` against the baseline, alerting on any changes.</p>"
-        },
-        {
-            "strategy": "Clean up modified configuration files and restore secure defaults.",
-            "howTo": "<h5>Concept:</h5><p>An attacker may modify configuration files to weaken security (e.g., change a log level from `INFO` to `ERROR`, disable an authentication requirement). Using a configuration management tool ensures that all configurations are regularly enforced and any manual 'drift' is automatically reverted.</p><h5>Step 1: Use a Configuration Management Tool</h5><p>Tools like Ansible, Puppet, or Chef can enforce the state of files. This Ansible playbook task ensures that the configuration file for your AI application on the server always matches the trusted, version-controlled template in your Git repository.</p><pre><code># File: ansible/playbook.yml\\n\\n- name: Enforce Secure Configuration for AI App\\n  hosts: ai_servers\\n  become: true\\n  tasks:\\n    - name: Ensure AI app config is correct and has secure permissions\\n      ansible.builtin.template:\\n        # The trusted source file in your Git repo\\n        src: templates/app_config.yaml.j2\\n        # The destination on the target server\\n        dest: /etc/my_ai_app/config.yaml\\n        owner: root\\n        group: root\\n        mode: '0640' # Enforce secure, non-writable permissions\\n      # This task will automatically overwrite any manual changes on the server.</code></pre><p><strong>Action:</strong> Manage all application and system configuration files using a configuration management tool like Ansible. Store the master configuration templates in a version-controlled Git repository. Run the configuration management tool regularly (e.g., every 30 minutes) to automatically detect and revert any unauthorized changes.</p>"
-        },
-        {
-            "strategy": "Scan for and remove web shells or reverse shells.",
-            "howTo": "<h5>Concept:</h5><p>A web shell is a malicious script an attacker uploads to a server that allows them to execute commands via a web browser. They are a common persistence mechanism. You can scan for them by looking for suspicious function calls within your web application's files.</p><h5>Step 1: Use `grep` to Find Suspicious Function Calls</h5><p>A simple `grep` command can recursively search a directory for common, dangerous function names that are frequently used in web shells. This provides a quick way to identify potentially malicious files.</p><pre><code># Run this command from your server's command line.\\n# It searches all .php, .py, and .jsp files in the web root for suspicious function names.\\n\\n> grep --recursive --ignore-case --include=\\\"*.php\\\" --include=\\\"*.py\\\" --include=\\\"*.jsp\\\" \\\\\\n  -E \\\"eval\\(|exec\\(|system\\(|passthru\\(|shell_exec\\(|popen\\(|proc_open\\\" /var/www/html/\\n\\n# Example output indicating a suspicious file:\\n# /var/www/html/uploads/avatar.php: $_POST['x'](stripslashes($_POST['y']));\\n# This line uses a POST variable to execute an arbitrary function, a classic web shell.</code></pre><p><strong>Action:</strong> Run a daily scheduled job on your web servers that uses `grep` to scan for common web shell function calls (`eval`, `exec`, `system`, etc.) within your web root. Pipe any findings to a log file or an alert for manual review by the security team.</p>"
-        }
-    ]
-}
+                            "id": "AID-E-003.003",
+                            "name": "Malicious Code & Configuration Cleanup",
+                            "description": "Removes malicious scripts, modified configuration files, unauthorized tools, or persistence mechanisms that attackers may have introduced into the AI system infrastructure.",
+                            "toolsOpenSource": [
+                                "AIDE (Advanced Intrusion Detection Environment)",
+                                "Tripwire Open Source",
+                                "OSSEC (Host-based Intrusion Detection System)",
+                                "Wazuh (fork of OSSEC)",
+                                "ClamAV (antivirus engine)",
+                                "YARA (pattern matching tool for malware)",
+                                "grep (Linux utility)",
+                                "Ansible, Puppet, Chef (Configuration Management)",
+                                "Git (for configuration version control)",
+                                "Kubernetes (for self-healing deployments via GitOps)"
+                            ],
+                            "toolsCommercial": [
+                                "CrowdStrike Falcon Insight (EDR)",
+                                "SentinelOne Singularity (EDR)",
+                                "Carbon Black (VMware Carbon Black Cloud)",
+                                "Trellix Endpoint Security (HX)",
+                                "Microsoft Defender for Endpoint",
+                                "Splunk Enterprise Security (SIEM)",
+                                "Palo Alto Networks Cortex XSOAR (SOAR)",
+                                "Forensic tools (e.g., Magnet AXIOM, EnCase)",
+                                "Configuration Management Database (CMDB) solutions"
+                            ],
+                            "defendsAgainst": [
+                                {
+                                    "framework": "MITRE ATLAS",
+                                    "items": [
+                                        "AML.T0011.001 User Execution: Malicious Package",
+                                        "AML.T0018 Manipulate AI Model",
+                                        "AML.T0018.002 Manipulate AI Model: Embed Malware",
+                                        "AML.T0020 Poison Training Data",
+                                        "AML.T0070 RAG Poisoning",
+                                        "AML.T0017 Persistence",
+                                        "AML.T0072 Reverse Shell",
+                                        "AML.T0009 Execution"
+                                    ]
+                                },
+                                {
+                                    "framework": "MAESTRO",
+                                    "items": [
+                                        "Runtime Code Injection (L4)",
+                                        "Memory Corruption (L4)",
+                                        "Misconfigurations (L4)",
+                                        "Policy Bypass (L6)",
+                                        "Backdoor Attacks (L1)",
+                                        "Compromised Framework Components (L3)",
+                                        "Compromised Container Images (L4)",
+                                        "Data Tampering (L2)"
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP LLM Top 10 2025",
+                                    "items": [
+                                        "LLM03:2025 Supply Chain",
+                                        "LLM04:2025 Data and Model Poisoning",
+                                        "LLM08:2025 Vector and Embedding Weaknesses",
+                                        "LLM05:2025 Improper Output Handling"
+                                    ]
+                                },
+                                {
+                                    "framework": "OWASP ML Top 10 2023",
+                                    "items": [
+                                        "ML02:2023 Data Poisoning Attack",
+                                        "ML06:2023 AI Supply Chain Attacks",
+                                        "ML10:2023 Model Poisoning",
+                                        "ML09:2023 Output Integrity Attack"
+                                    ]
+                                }
+                            ],
+                            "implementationStrategies": [
+                                {
+                                    "strategy": "Scan for unauthorized modifications to ML framework files or operating systems.",
+                                    "howTo": "<h5>Concept:</h5><p>An attacker with root access could modify the source code of installed libraries (e.g., `torch`, `sklearn`) or core system files to inject a backdoor. A host-based Intrusion Detection System (HIDS) or File Integrity Monitor (FIM) detects these changes by comparing current file hashes against a trusted baseline.</p><h5>Step 1: Initialize the FIM Baseline</h5><p>On a known-clean, freshly provisioned server, initialize the FIM database. This process scans all critical files and stores their hashes in a secure database.</p><pre><code># Using AIDE (Advanced Intrusion Detection Environment) on a Linux server\\n# This command creates the initial baseline database of file hashes.\\n> sudo aide --init\\n# Move the new database to be the official baseline\\n> sudo mv /var/lib/aide/aide.db.new.gz /var/lib/aide/aide.db.gz</code></pre><h5>Step 2: Schedule and Run Integrity Checks</h5><p>Run a scheduled job to compare the current state of the filesystem against the baseline database. Any changes, additions, or deletions will be reported.</p><pre><code># This command checks the current filesystem against the baseline\\n> sudo aide --check\\n\\n# Example output indicating a compromised library file:\\n# File: /usr/local/lib/python3.10/site-packages/torch/nn/functional.py\\n#   MD5    : OLD_HASH                           , NEW_HASH\\n#   SHA256 : OLD_HASH                           , NEW_HASH\\n#   ... and other changes\\n\\n# A cron job would run 'aide --check' nightly and email the report to admins.</code></pre><p><strong>Action:</strong> Install and initialize a FIM tool like AIDE or Tripwire on all AI servers. Schedule a nightly check and configure it to send any reports of file changes to your security team for immediate investigation.</p>"
+                                },
+                                {
+                                    "strategy": "Check for malicious model loading code or custom layers.",
+                                    "howTo": "<h5>Concept:</h5><p>An attacker might not tamper with the `.pkl` model file itself, but instead modify the Python code that loads it. By injecting a malicious custom class, they can gain code execution during the `pickle.load()` process. This requires static analysis of the loading scripts.</p><h5>Step 1: Analyze the Script's Abstract Syntax Tree (AST)</h5><p>Use Python's built-in `ast` module to parse the model loading script. You can then traverse the tree to look for suspicious patterns, such as the definition of a class that contains a `__reduce__` method (a common vector for pickle exploits).</p><pre><code># File: code_cleanup/ast_scanner.py\\nimport ast\\n\\nclass PickleExploitScanner(ast.NodeVisitor):\\n    def __init__(self):\\n        self.found_suspicious_reduce = False\\n\\n    def visit_FunctionDef(self, node):\\n        # Look for any function or method named '__reduce__''\\n        if node.name == '__reduce__':\\n            self.found_suspicious_reduce = True\\n            print(f\\\"🚨 Suspicious '__reduce__' method found at line {node.lineno}!\\\")\\n        self.generic_visit(node)\\n\\n# Read and parse the Python script to be checked\\nwith open('load_model.py', 'r') as f:\\n    tree = ast.parse(f.read())\\n\\n# Scan the tree for suspicious patterns\\nscanner = PickleExploitScanner()\\nscanner.visit(tree)\\n\\nif scanner.found_suspicious_reduce:\\n    print(\\\"This script should be manually reviewed for a potential pickle exploit.\\\")</code></pre><p><strong>Action:</strong> Before executing any model loading script, especially if it's from an untrusted source, run a static analysis script on it that uses the `ast` module to check for suspicious patterns like the presence of a `__reduce__` method.</p>"
+                                },
+                                {
+                                    "strategy": "Verify integrity of agent tools and plugins.",
+                                    "howTo": "<h5>Concept:</h5><p>If your AI agent uses a set of Python files as 'tools', an attacker could modify the source code of these tools to hijack the agent. At startup, your application should verify the integrity of every tool file it loads by checking its hash against a known-good manifest.</p><h5>Step 1: Create a Manifest of Tool Hashes</h5><p>During your build process, after all tests have passed, create a manifest file containing the SHA256 hash of every tool script.</p><pre><code># In your CI/CD build script\\n> sha256sum agent/tools/*.py > tool_manifest.sha256\\n# This manifest file should be signed and bundled with your application.</code></pre><h5>Step 2: Verify Tool Hashes at Application Startup</h5><p>When your main application starts, before it loads or registers any tools, it must first verify the integrity of the tool files on disk against the manifest.</p><pre><code># File: agent/main_app.py\\nimport hashlib\\nimport os\\n\\ndef verify_tools_integrity(tool_directory, manifest_path):\\n    with open(manifest_path, 'r') as f:\\n        known_hashes = {line.split()[1]: line.split()[0] for line in f}\\n\\n    for filename in os.listdir(tool_directory):\\n        if filename.endswith('.py'):\\n            filepath = os.path.join(tool_directory, filename)\\n            # Calculate hash of the file on disk\\n            current_hash = get_sha256_hash(filepath)\\n            # Check if the hash matches the one in the manifest\\n            if known_hashes.get(filename) != current_hash:\\n                raise SecurityException(f\\\"Tool file '{filename}' has been tampered with!\\\")\\n    print(\\\"✅ All agent tools passed integrity check.\\\")\\n\\n# This check should be run at the very beginning of the application startup.\\n# verify_tools_integrity('agent/tools/', 'tool_manifest.sha256')</code></pre><p><strong>Action:</strong> Create a build-time process that generates a hash manifest of all your agent's tool files. At application startup, implement a verification step that re-calculates the hashes of the tool files on disk and compares them against the manifest, halting immediately if a mismatch is found.</p>"
+                                },
+                                {
+                                    "strategy": "Remove unauthorized scheduled tasks or cron jobs.",
+                                    "howTo": "<h5>Concept:</h5><p>Attackers often use `cron` on Linux or Scheduled Tasks on Windows to establish persistence. Regularly auditing these scheduled tasks is crucial for eviction.</p><h5>Step 1: Audit Cron Jobs for All Users</h5><p>A simple shell script can be used to list the cron jobs for every user on a Linux system. The output can be compared against a known-good baseline to spot unauthorized additions.</p><pre><code>#!/bin/bash\\n# File: incident_response/audit_cron.sh\\n\\nOUTPUT_FILE=\\\"current_crontabs.txt\\\"\\nBASELINE_FILE=\\\"baseline_crontabs.txt\\\"\\n\\necho \\\"Auditing all user crontabs...\\\" > ${OUTPUT_FILE}\\n\\n# Loop through all users in /etc/passwd and list their crontab\\nfor user in $(cut -f1 -d: /etc/passwd); do\\n    echo \\\"### Crontab for ${user} ###\\\" >> ${OUTPUT_FILE}\\n    crontab -u ${user} -l >> ${OUTPUT_FILE} 2>/dev/null\\ndone\\n\\n# Compare the current state to a known-good baseline\\nif ! diff -q ${BASELINE_FILE} ${OUTPUT_FILE}; then\\n    echo \\\"🚨 CRON JOB MODIFICATION DETECTED! Review diff below:\\\"\\n    diff ${BASELINE_FILE} ${OUTPUT_FILE}\\n    # Send alert to SOC\\nfi</code></pre><p><strong>Action:</strong> As part of your server hardening, save a copy of the system's cron job configuration as a baseline. Run a scheduled script that re-collects all cron jobs and runs a `diff` against the baseline, alerting on any changes.</p>"
+                                },
+                                {
+                                    "strategy": "Clean up modified configuration files and restore secure defaults.",
+                                    "howTo": "<h5>Concept:</h5><p>An attacker may modify configuration files to weaken security (e.g., change a log level from `INFO` to `ERROR`, disable an authentication requirement). Using a configuration management tool ensures that all configurations are regularly enforced and any manual 'drift' is automatically reverted.</p><h5>Step 1: Use a Configuration Management Tool</h5><p>Tools like Ansible, Puppet, or Chef can enforce the state of files. This Ansible playbook task ensures that the configuration file for your AI application on the server always matches the trusted, version-controlled template in your Git repository.</p><pre><code># File: ansible/playbook.yml\\n\\n- name: Enforce Secure Configuration for AI App\\n  hosts: ai_servers\\n  become: true\\n  tasks:\\n    - name: Ensure AI app config is correct and has secure permissions\\n      ansible.builtin.template:\\n        # The trusted source file in your Git repo\\n        src: templates/app_config.yaml.j2\\n        # The destination on the target server\\n        dest: /etc/my_ai_app/config.yaml\\n        owner: root\\n        group: root\\n        mode: '0640' # Enforce secure, non-writable permissions\\n      # This task will automatically overwrite any manual changes on the server.</code></pre><p><strong>Action:</strong> Manage all application and system configuration files using a configuration management tool like Ansible. Store the master configuration templates in a version-controlled Git repository. Run the configuration management tool regularly (e.g., every 30 minutes) to automatically detect and revert any unauthorized changes.</p>"
+                                },
+                                {
+                                    "strategy": "Scan for and remove web shells or reverse shells.",
+                                    "howTo": "<h5>Concept:</h5><p>A web shell is a malicious script an attacker uploads to a server that allows them to execute commands via a web browser. They are a common persistence mechanism. You can scan for them by looking for suspicious function calls within your web application's files.</p><h5>Step 1: Use `grep` to Find Suspicious Function Calls</h5><p>A simple `grep` command can recursively search a directory for common, dangerous function names that are frequently used in web shells. This provides a quick way to identify potentially malicious files.</p><pre><code># Run this command from your server's command line.\\n# It searches all .php, .py, and .jsp files in the web root for suspicious function names.\\n\\n> grep --recursive --ignore-case --include=\\\"*.php\\\" --include=\\\"*.py\\\" --include=\\\"*.jsp\\\" \\\\\\n  -E \\\"eval\\(|exec\\(|system\\(|passthru\\(|shell_exec\\(|popen\\(|proc_open\\\" /var/www/html/\\n\\n# Example output indicating a suspicious file:\\n# /var/www/html/uploads/avatar.php: $_POST['x'](stripslashes($_POST['y']));\\n# This line uses a POST variable to execute an arbitrary function, a classic web shell.</code></pre><p><strong>Action:</strong> Run a daily scheduled job on your web servers that uses `grep` to scan for common web shell function calls (`eval`, `exec`, `system`, etc.) within your web root. Pipe any findings to a log file or an alert for manual review by the security team.</p>"
+                                }
+                            ]
+                        }
                     ]
                 },
                 {
@@ -5541,7 +5778,6 @@ const aidefendData = {
                     "toolsCommercial": [
                         "AI red teaming services",
                         "Breach and Attack Simulation (BAS) platforms",
-                        "Booz Allen's Atlas Notebook",
                         "Immersive Labs",
                         "Commercial penetration testing services"
                     ],
