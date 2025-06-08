@@ -1184,7 +1184,8 @@
                     const contentInner = createElement('div', { className: 'strategy-accordion-content-inner' });
 
                     if (strategy.howTo) {
-                        renderSafeHTML(strategy.howTo, contentInner);
+                        // Directly render the trusted HTML from your data file.
+                        contentInner.innerHTML = strategy.howTo;
                     } else {
                         contentInner.appendChild(createElement('p', { textContent: 'No detailed steps provided.' }));
                     }
