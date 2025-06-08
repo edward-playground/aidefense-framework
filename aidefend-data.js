@@ -41,7 +41,7 @@ const aidefendIntroduction = {
             "title": "Version & Date",
             "paragraphs": [
                 "Version: 1.0",
-                "Last Updated: June 7, 2025"
+                "Last Updated: June 8, 2025"
             ]
         },
         {

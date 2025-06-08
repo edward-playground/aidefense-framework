@@ -46,6 +46,7 @@
             --footer-text: #757575;
             --footer-border: #c0c0c0;
         }
+
         html.dark {
             /* Dark Theme */
             --bg-color: #1a1a1a;
@@ -86,7 +87,9 @@
             --footer-border: #3d3d3d;
         }
 
-        html { height: 100%; }
+        html {
+            height: 100%;
+        }
 
         body {
             font-family: 'Inter', sans-serif;
@@ -98,28 +101,70 @@
             flex-direction: column;
         }
 
-        #page-container { flex: 1 0 auto; }
-        footer { flex-shrink: 0; }
-        body.modal-open { overflow: hidden; }
+        #page-container {
+            flex: 1 0 auto;
+        }
 
-        ::-webkit-scrollbar { width: 8px; height: 8px; }
-        ::-webkit-scrollbar-track { background: var(--scrollbar-track); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--scrollbar-thumb-hover); }
+        footer {
+            flex-shrink: 0;
+        }
 
-        .elevation-2 { box-shadow: 0px 3px 1px -2px var(--shadow-umbra), 0px 2px 2px 0px var(--shadow-penumbra), 0px 1px 5px 0px var(--shadow-ambient); }
-        .elevation-4 { box-shadow: 0px 2px 4px -1px var(--shadow-umbra), 0px 4px 5px 0px var(--shadow-penumbra), 0px 1px 10px 0px var(--shadow-ambient); }
-        .elevation-8 { box-shadow: 0px 5px 5px -3px var(--shadow-umbra), 0px 8px 10px 1px var(--shadow-penumbra), 0px 3px 14px 2px var(--shadow-ambient); }
+        body.modal-open {
+            overflow: hidden;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--scrollbar-track);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--scrollbar-thumb);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--scrollbar-thumb-hover);
+        }
+
+        .elevation-2 {
+            box-shadow: 0px 3px 1px -2px var(--shadow-umbra), 0px 2px 2px 0px var(--shadow-penumbra), 0px 1px 5px 0px var(--shadow-ambient);
+        }
+
+        .elevation-4 {
+            box-shadow: 0px 2px 4px -1px var(--shadow-umbra), 0px 4px 5px 0px var(--shadow-penumbra), 0px 1px 10px 0px var(--shadow-ambient);
+        }
+
+        .elevation-8 {
+            box-shadow: 0px 5px 5px -3px var(--shadow-umbra), 0px 8px 10px 1px var(--shadow-penumbra), 0px 3px 14px 2px var(--shadow-ambient);
+        }
 
         .header-main {
             background-color: var(--header-bg);
             transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
-        .header-title { font-size: 2rem; font-weight: 500; color: var(--text-color); }
-        .header-subtitle { font-size: 0.875rem; color: var(--text-secondary-color); }
+        .header-title {
+            font-size: 2rem;
+            font-weight: 500;
+            color: var(--text-color);
+        }
 
-        .search-input-wrapper { position: relative; display: flex; align-items: center; }
+        .header-subtitle {
+            font-size: 0.875rem;
+            color: var(--text-secondary-color);
+        }
+
+        .search-input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
 
         .search-container input {
             background-color: var(--search-bg);
@@ -129,7 +174,9 @@
             padding-right: 2.5rem;
         }
 
-        .search-container input::placeholder { color: var(--text-secondary-color); }
+        .search-container input::placeholder {
+            color: var(--text-secondary-color);
+        }
 
         .search-container input:focus {
             --tw-ring-color: var(--search-focus-ring);
@@ -146,8 +193,14 @@
             display: none;
         }
 
-        .search-clear-button:hover { color: var(--text-color); }
-        .search-clear-button svg { width: 1.25rem; height: 1.25rem; }
+        .search-clear-button:hover {
+            color: var(--text-color);
+        }
+
+        .search-clear-button svg {
+            width: 1.25rem;
+            height: 1.25rem;
+        }
 
         .header-button {
             background-color: transparent;
@@ -165,7 +218,9 @@
             color: var(--icon-hover-fill);
         }
 
-        html.dark .header-button:hover { background-color: rgba(255, 255, 255, 0.08); }
+        html.dark .header-button:hover {
+            background-color: rgba(255, 255, 255, 0.08);
+        }
 
         .header-button svg {
             width: 1.5rem;
@@ -221,7 +276,9 @@
             text-align: center;
         }
 
-        .tactic-column-header:hover { color: var(--column-header-hover-text); }
+        .tactic-column-header:hover {
+            color: var(--column-header-hover-text);
+        }
 
         .technique-item {
             display: block;
@@ -257,7 +314,9 @@
             margin-bottom: 0.125rem;
         }
 
-        .technique-name { font-weight: 500; }
+        .technique-name {
+            font-weight: 500;
+        }
 
         .modal-overlay {
             position: fixed;
@@ -275,8 +334,14 @@
             transition: opacity 0.2s ease, visibility 0.2s ease;
         }
 
-        html.dark .modal-overlay { background-color: rgba(0, 0, 0, 0.7); }
-        .modal-overlay.active { opacity: 1; visibility: visible; }
+        html.dark .modal-overlay {
+            background-color: rgba(0, 0, 0, 0.7);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
 
         .modal-content {
             background-color: var(--modal-content-bg);
@@ -292,7 +357,9 @@
             transform: scale(0.95);
         }
 
-        .modal-overlay.active .modal-content { transform: scale(1); }
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
 
         .modal-content h2.modal-main-title {
             font-size: 1.75rem;
@@ -351,7 +418,9 @@
             margin-bottom: 0.5rem;
         }
 
-        .modal-content li { margin-bottom: 0.375rem; }
+        .modal-content li {
+            margin-bottom: 0.375rem;
+        }
 
         .modal-content a {
             color: var(--link-color);
@@ -399,7 +468,9 @@
             padding: 0.25rem;
         }
 
-        .modal-close-button:hover { color: var(--modal-close-btn-hover-text); }
+        .modal-close-button:hover {
+            color: var(--modal-close-btn-hover-text);
+        }
 
         .defends-against-framework {
             font-weight: 500;
@@ -422,7 +493,9 @@
             line-height: 1.5;
         }
 
-        .accordion-item { border-bottom: 1px solid var(--header-border); }
+        .accordion-item {
+            border-bottom: 1px solid var(--header-border);
+        }
 
         .accordion-header {
             display: flex;
@@ -436,7 +509,9 @@
             transition: color 0.2s ease;
         }
 
-        .accordion-header:hover { color: var(--column-header-hover-text); }
+        .accordion-header:hover {
+            color: var(--column-header-hover-text);
+        }
 
         .accordion-icon {
             width: 1.25rem;
@@ -455,10 +530,17 @@
             color: var(--text-secondary-color);
         }
 
-        .accordion-content-inner { padding: 0 0.5rem 1.25rem 0.5rem; }
+        .accordion-content-inner {
+            padding: 0 0.5rem 1.25rem 0.5rem;
+        }
 
-        .strategy-accordion-container { margin-top: 0.5rem; }
-        .strategy-accordion-item { border-bottom: 1px solid var(--column-border); }
+        .strategy-accordion-container {
+            margin-top: 0.5rem;
+        }
+
+        .strategy-accordion-item {
+            border-bottom: 1px solid var(--column-border);
+        }
 
         .strategy-accordion-header {
             display: flex;
@@ -470,7 +552,9 @@
             font-weight: 500;
         }
 
-        .strategy-accordion-header:hover { color: var(--technique-item-hover-text); }
+        .strategy-accordion-header:hover {
+            color: var(--technique-item-hover-text);
+        }
 
         .strategy-accordion-icon {
             width: 1rem;
@@ -508,8 +592,14 @@
             border-left-color: #5dade2;
         }
 
-        .perf-impact-note p { margin: 0; padding: 0; }
-        .perf-impact-note strong { color: var(--text-color); }
+        .perf-impact-note p {
+            margin: 0;
+            padding: 0;
+        }
+
+        .perf-impact-note strong {
+            color: var(--text-color);
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -520,9 +610,14 @@
             <div class="container mx-auto">
                 <div class="flex justify-between items-center mb-3">
                     <div class="text-left">
-                        <h1 class="header-title">AIDEFEND™</h1>
+                        <h1 class="header-title">
+                            <a href="https://edward-playground.github.io/aidefense-framework/"
+                                class="no-underline hover:underline">
+                                AIDEFEND™
+                            </a>
+                        </h1>
                         <p class="header-subtitle">An AI-focused defensive countermeasures knowledge base</p>
-                        <p class="text-xs opacity-60 mt-0.5 header-version-text">Version 1.0</p>
+                        <p class="text-xs text-gray-600 mt-0.5 header-version-text">Version 1.0</p>
                     </div>
                     <div class="flex items-center space-x-1">
                         <button id="aboutBtn" class="header-button text-button" title="About AIDEFEND">
@@ -621,13 +716,13 @@
 
             function createElement(tagName, options = {}) {
                 const element = document.createElement(tagName);
-                
+
                 if (options.className) element.className = options.className;
                 if (options.textContent) element.textContent = options.textContent;
                 if (options.title) element.title = options.title;
                 if (options.href) element.href = options.href;
                 if (options.onclick) element.addEventListener('click', options.onclick);
-                
+
                 return element;
             }
 
@@ -667,15 +762,15 @@
                         parent.appendChild(document.createTextNode(node.textContent));
                     } else if (node.nodeType === Node.ELEMENT_NODE) {
                         const tagName = node.tagName.toLowerCase();
-                        
+
                         if (allowedTags[tagName]) {
                             const newElement = document.createElement(tagName);
-                            
+
                             // Process child nodes
                             Array.from(node.childNodes).forEach(child => {
                                 processNode(child, newElement);
                             });
-                            
+
                             parent.appendChild(newElement);
                         } else {
                             // If tag not allowed, just process its children
@@ -712,7 +807,7 @@
             // Search and Grid Rendering
             function getFilteredTechniques(searchTerm) {
                 if (!searchTerm) return [];
-                
+
                 return aidefendData.tactics.reduce((acc, tactic) => {
                     if (tactic.techniques && Array.isArray(tactic.techniques)) {
                         tactic.techniques.forEach(tech => {
@@ -730,19 +825,19 @@
                 let match = tech.name.toLowerCase().includes(term) ||
                     tech.id.toLowerCase().includes(term) ||
                     (tech.description && tech.description.toLowerCase().includes(term));
-                
+
                 if (!match && tech.defendsAgainst) {
-                    match = tech.defendsAgainst.some(da => 
+                    match = tech.defendsAgainst.some(da =>
                         da.items && da.items.some(item => item.toLowerCase().includes(term))
                     );
                 }
-                
+
                 return match;
             }
 
             function renderMainGrid(searchTerm = "") {
                 clearElement(elements.mainContent);
-                
+
                 const gridContainer = createElement('div', { className: 'tactic-column-grid' });
                 const filteredTechniques = getFilteredTechniques(searchTerm);
 
@@ -757,8 +852,8 @@
 
                 aidefendData.tactics.forEach(tactic => {
                     const shouldRenderColumn = !searchTerm || (
-                        tactic.techniques && 
-                        tactic.techniques.some(tech => 
+                        tactic.techniques &&
+                        tactic.techniques.some(tech =>
                             filteredTechniques.some(filtered => filtered.id === tech.id)
                         )
                     );
@@ -766,13 +861,13 @@
                     if (!shouldRenderColumn) return;
 
                     const column = createElement('div', { className: 'tactic-column elevation-2' });
-                    
+
                     const header = createElement('h3', {
                         className: 'tactic-column-header',
                         textContent: tactic.name,
                         onclick: () => showTacticModal(tactic)
                     });
-                    
+
                     column.appendChild(header);
                     column.appendChild(renderTechniqueList(tactic, searchTerm, filteredTechniques));
                     gridContainer.appendChild(column);
@@ -783,7 +878,7 @@
 
             function renderTechniqueList(tactic, searchTerm, filteredTechniques) {
                 const ul = createElement('ul');
-                const techniques = searchTerm ? 
+                const techniques = searchTerm ?
                     tactic.techniques.filter(t => filteredTechniques.some(f => f.id === t.id)) :
                     (tactic.techniques || []);
 
@@ -849,13 +944,13 @@
                     }
                 });
 
-                const subIdSpan = createElement('span', { 
-                    className: 'technique-id !text-[var(--technique-id-text)]', 
-                    textContent: subTech.id 
+                const subIdSpan = createElement('span', {
+                    className: 'technique-id !text-[var(--technique-id-text)]',
+                    textContent: subTech.id
                 });
-                const subNameSpan = createElement('span', { 
-                    className: 'technique-name', 
-                    textContent: subTech.name 
+                const subNameSpan = createElement('span', {
+                    className: 'technique-name',
+                    textContent: subTech.name
                 });
 
                 subLink.appendChild(subIdSpan);
@@ -884,11 +979,11 @@
 
                 sections.forEach((section, index) => {
                     const item = createElement('div', { className: 'accordion-item' });
-                    const header = createElement('div', { 
+                    const header = createElement('div', {
                         className: 'accordion-header',
                         onclick: () => toggleAccordion(header, content, iconWrapper)
                     });
-                    
+
                     header.setAttribute('role', 'button');
                     header.setAttribute('aria-expanded', index === defaultOpenIndex ? 'true' : 'false');
 
@@ -952,7 +1047,7 @@
             function toggleAccordion(header, content, iconWrapper) {
                 const container = header.closest('.accordion-container');
                 const isActive = header.classList.contains('active');
-                
+
                 // Close all accordion items in this container
                 container.querySelectorAll('.accordion-header').forEach(otherHeader => {
                     otherHeader.classList.remove('active');
@@ -973,9 +1068,9 @@
                 clearElement(elements.modalBody);
 
                 const intro = aidefendData.introduction;
-                const title = createElement('h2', { 
-                    className: 'modal-main-title', 
-                    textContent: intro.mainTitle 
+                const title = createElement('h2', {
+                    className: 'modal-main-title',
+                    textContent: intro.mainTitle
                 });
 
                 elements.modalBody.appendChild(title);
@@ -987,7 +1082,7 @@
                 clearElement(elements.modalBody);
 
                 const fullTactic = aidefendData.tactics.find(t => t.name === tactic.name) || tactic;
-                
+
                 const title = createElement('h2', { textContent: fullTactic.name });
                 const description = createElement('p', {
                     className: 'mb-4 leading-relaxed text-sm',
@@ -1028,14 +1123,14 @@
                     const strong = createElement('strong', {
                         textContent: `💡 Performance Impact (${technique.perfImpact.level}): `
                     });
-                    
+
                     perfP.appendChild(strong);
-                    
+
                     // Create a span for the description and render HTML safely
                     const descSpan = createElement('span');
                     renderSafeHTML(technique.perfImpact.description, descSpan);
                     perfP.appendChild(descSpan);
-                    
+
                     perfDiv.appendChild(perfP);
                     elements.modalBody.appendChild(perfDiv);
                 }
@@ -1075,7 +1170,7 @@
                         className: 'strategy-accordion-header',
                         onclick: () => toggleStrategyAccordion(header, content, iconWrapper)
                     });
-                    
+
                     header.setAttribute('role', 'button');
 
                     const strategyTitle = createElement('span', { textContent: strategy.strategy });
@@ -1176,23 +1271,23 @@
             // Event Listeners
             elements.themeToggleBtn.addEventListener('click', toggleTheme);
             elements.aboutBtn.addEventListener('click', showIntroductionModal);
-            
+
             elements.searchBar.addEventListener('input', (e) => {
                 currentSearchTerm = e.target.value.trim();
                 elements.searchClearBtn.style.display = currentSearchTerm ? 'block' : 'none';
                 renderMainGrid(currentSearchTerm);
             });
-            
+
             elements.searchClearBtn.addEventListener('click', () => {
                 elements.searchBar.value = '';
                 currentSearchTerm = '';
                 elements.searchClearBtn.style.display = 'none';
                 renderMainGrid();
             });
-            
+
             elements.modalClose.addEventListener('click', hideModal);
             elements.modalBackdrop.addEventListener('click', hideModal);
-            
+
             document.addEventListener('keydown', (event) => {
                 if (event.key === 'Escape' && elements.modal.classList.contains('active')) {
                     hideModal();
@@ -1203,7 +1298,7 @@
             function initialize() {
                 const savedTheme = localStorage.getItem('aidefendTheme') || 'dark';
                 applyTheme(savedTheme);
-                
+
                 // Set about button with icon
                 const aboutIcon = createElement('span');
                 setIcon(aboutIcon, 'info');
@@ -1215,7 +1310,7 @@
                 }
                 elements.aboutBtn.textContent = 'About';
                 elements.aboutBtn.insertBefore(aboutIcon, elements.aboutBtn.firstChild);
-                
+
                 renderMainGrid();
             }
 
@@ -1223,4 +1318,5 @@
         });
     </script>
 </body>
+
 </html>
