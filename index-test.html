@@ -1,7 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark"> <!-- Default to dark theme -->
-
-<head>
+<html lang="en" class="dark"> <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIDEFEND Framework Viewer</title>
@@ -748,8 +746,10 @@
                     'strong': [],
                     'em': [],
                     'br': [],
+                    'u': [], // Allow underline tag
                     'code': [],
-                    'pre': []
+                    'pre': [],
+                    'a': ['href', 'target', 'rel'] // Allow anchor tag with specific attributes
                 };
 
                 // Simple HTML parser that only creates allowed elements
@@ -762,18 +762,28 @@
                         parent.appendChild(document.createTextNode(node.textContent));
                     } else if (node.nodeType === Node.ELEMENT_NODE) {
                         const tagName = node.tagName.toLowerCase();
+                        const allowedAttributes = allowedTags[tagName];
 
-                        if (allowedTags[tagName]) {
+                        if (allowedAttributes) { // Check if the tag is in the allowlist
                             const newElement = document.createElement(tagName);
 
-                            // Process child nodes
+                            // Copy allowed attributes from the original node
+                            if (node.attributes) {
+                                Array.from(node.attributes).forEach(attr => {
+                                    if (allowedAttributes.includes(attr.name)) {
+                                        newElement.setAttribute(attr.name, attr.value);
+                                    }
+                                });
+                            }
+
+                            // Process child nodes recursively
                             Array.from(node.childNodes).forEach(child => {
                                 processNode(child, newElement);
                             });
 
                             parent.appendChild(newElement);
                         } else {
-                            // If tag not allowed, just process its children
+                            // If tag not allowed, just process its children to render their text content
                             Array.from(node.childNodes).forEach(child => {
                                 processNode(child, parent);
                             });
@@ -785,6 +795,7 @@
                     processNode(child, container);
                 });
             }
+
 
             // Theme Management
             function applyTheme(theme) {
@@ -1184,8 +1195,8 @@
                     const contentInner = createElement('div', { className: 'strategy-accordion-content-inner' });
 
                     if (strategy.howTo) {
-                        // Directly render the trusted HTML from your data file.
-                        contentInner.innerHTML = strategy.howTo;
+                        // Safely render the HTML content using the sanitizer.
+                        renderSafeHTML(strategy.howTo, contentInner);
                     } else {
                         contentInner.appendChild(createElement('p', { textContent: 'No detailed steps provided.' }));
                     }
