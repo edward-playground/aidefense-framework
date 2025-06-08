@@ -1026,11 +1026,16 @@
                     const perfDiv = createElement('div', { className: 'perf-impact-note' });
                     const perfP = createElement('p');
                     const strong = createElement('strong', {
-                        textContent: `💡 Performance Impact (${technique.perfImpact.level}):`
+                        textContent: `💡 Performance Impact (${technique.perfImpact.level}): `
                     });
                     
                     perfP.appendChild(strong);
-                    perfP.appendChild(document.createTextNode(' ' + technique.perfImpact.description));
+                    
+                    // Create a span for the description and render HTML safely
+                    const descSpan = createElement('span');
+                    renderSafeHTML(technique.perfImpact.description, descSpan);
+                    perfP.appendChild(descSpan);
+                    
                     perfDiv.appendChild(perfP);
                     elements.modalBody.appendChild(perfDiv);
                 }
