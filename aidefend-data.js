@@ -197,7 +197,8 @@ const aidefendData = {
                                 "AML.T0008 ML Supply Chain Compromise",
                                 "AML.T0010.002 AI Supply Chain Compromise: Data",
                                 "AML.T0018.000 Backdoor ML Model: Poison ML Model",
-                                "AML.T0019: Publish Poisoned Datasets"
+                                "AML.T0019: Publish Poisoned Datasets",
+                                "AML.T0059 Erode Dataset Integrity"
                             ]
                         },
                         {
@@ -289,7 +290,8 @@ const aidefendData = {
                             "framework": "MAESTRO",
                             "items": [
                                 "Evasion of Security AI Agents (L6)",
-                                "Unpredictable agent behavior / Performance Degradation (L5)"
+                                "Unpredictable agent behavior / Performance Degradation (L5)",
+                                "Inaccurate Agent Capability Description (L7)"
                             ]
                         },
                         {
@@ -560,7 +562,8 @@ const aidefendData = {
                                 "AML.T0043: Craft Adversarial Data",
                                 "AML.T0006: Defense Evasion",
                                 "AML.T0018: Backdoor ML Model (via robust training)",
-                                "AML.T0020: Poison Training Data (via robust training)"
+                                "AML.T0020: Poison Training Data (via robust training)",
+                                "AML.T0031 Erode AI Model Integrity"
                             ]
                         },
                         {
@@ -871,7 +874,12 @@ const aidefendData = {
                                 "AML.T0051 LLM Prompt Injection",
                                 "AML.T0070 RAG Poisoning",
                                 "AML.T0054 LLM Jailbreak",
-                                "AML.T0059 Erode Dataset Integrity"
+                                "AML.T0059 Erode Dataset Integrity",
+                                "AML.T0049 Exploit Public-Facing Application",
+                                "AML.T0061 LLM Prompt Self-Replication",
+                                "AML.T0068 LLM Prompt Obfuscation",
+                                "AML.T0071 False RAG Entry Injection",
+                                "AML.T0056 Extract LLM System Prompt"
                             ]
                         },
                         {
@@ -1127,7 +1135,10 @@ const aidefendData = {
                                 "AML.T0011.001: User Execution: Malicious Package",
                                 "AML.T0019: Publish Poisoned Datasets",
                                 "AML.T0058: Publish Poisoned Models",
-                                "AML.T0076: Corrupt AI Model"
+                                "AML.T0059 Erode Dataset Integrity",
+                                "AML.T0076: Corrupt AI Model",
+                                "AML.T0073 Impersonation",
+                                "AML.T0074 Masquerading (All artifacts (models, data, software) are signed and verified throughout the DevOps lifecycle, making it extremely difficult for an adversary to introduce a masquerading artifact into the system.)"
                             ]
                         },
                         {
@@ -1424,14 +1435,19 @@ const aidefendData = {
                                 "AML.T0012: Valid Accounts",
                                 "AML.T0040: AI Model Inference API Access",
                                 "AML.T0036 Data from Information Repositories",
-                                "AML.T0037 Data from Local System"
+                                "AML.T0037 Data from Local System",
+                                "AML.T0044 Full AI Model Access",
+                                "AML.T0053 LLM Plugin Compromise",
+                                "AML.T0073 Impersonation",
+                                "AML.T0055 Unsecured Credentials"
                             ]
                         },
                         {
                             "framework": "MAESTRO",
                             "items": [
                                 "Agent Identity Attack (L7)",
-                                "Compromised Agent Registry (L7)"
+                                "Compromised Agent Registry (L7)",
+                                "Compromised Agents (L7)"
                             ]
                         },
                         {
@@ -1628,7 +1644,8 @@ const aidefendData = {
                             "framework": "MAESTRO",
                             "items": [
                                 "Attacks on Decentralized Learning (Cross-Layer)",
-                                "Data Exfiltration (L2)"
+                                "Data Exfiltration (L2)",
+                                "Membership Inference Attacks (L1)"
                             ]
                         },
                         {
@@ -1800,6 +1817,8 @@ const aidefendData = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0050 Command and Scripting Interpreter",
+                                "AML.T0055 Unsecured Credentials",
                                 "Broadly mitigates: AML.T0011 Initial Access, AML.T0010 Privilege Escalation, Lateral Movement principles, AML.T0008 ML Supply Chain Compromise"
                             ]
                         },
@@ -1814,7 +1833,8 @@ const aidefendData = {
                             "items": [
                                 "LLM06:2025 Excessive Agency",
                                 "LLM03:2025 Supply Chain",
-                                "LLM02:2025 Sensitive Information Disclosure"
+                                "LLM02:2025 Sensitive Information Disclosure",
+                                "LLM07:2025 System Prompt Leakage"
                             ]
                         },
                         {
@@ -2712,7 +2732,8 @@ const aidefendData = {
                                 "AML.T0020 Poison Training Data (detecting impact)",
                                 "AML.T0015 Evade ML Model (detecting anomalies)",
                                 "AML.T0021 Erode ML Model Integrity",
-                                "AML.T0019 Poison ML Model (detecting impact)"
+                                "AML.T0019 Poison ML Model (detecting impact)",
+                                "AML.T0031 Erode AI Model Integrity"
                             ]
                         },
                         {
@@ -2775,7 +2796,13 @@ const aidefendData = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0048.002: External Harms: Societal Harm",
-                                "AML.T0057: LLM Data Leakage"
+                                "AML.T0057: LLM Data Leakage",
+                                "AML.T0052 Phishing",
+                                "AML.T0047 AI-Enabled Product or Service",
+                                "AML.T0061 LLM Prompt Self-Replication",
+                                "AML.T0053 LLM Plugin Compromise",
+                                "AML.T0067 LLM Trusted Output Components Manipulation",
+                                "AML.T0077 LLM Response Rendering"
                             ]
                         },
                         {
@@ -2791,7 +2818,8 @@ const aidefendData = {
                             "items": [
                                 "LLM02:2025 Sensitive Information Disclosure",
                                 "LLM05:2025 Improper Output Handling",
-                                "LLM09:2025 Misinformation"
+                                "LLM09:2025 Misinformation",
+                                "LLM07:2025 System Prompt Leakage"
                             ]
                         },
                         {
@@ -2901,7 +2929,9 @@ const aidefendData = {
                 "AML.T0024.000 Exfiltration via AI Inference API: Infer Training Data Membership",
                 "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model",
                 "AML.T0057 LLM Data Leakage",
-                "AML.T0048.003 External Harms: User Harm"
+                "AML.T0048.003 External Harms: User Harm",
+                "AML.T0047 AI-Enabled Product or Service",
+                "AML.T0077 LLM Response Rendering"
             ]
         },
         {
@@ -2958,7 +2988,8 @@ const aidefendData = {
                                 "AML.T0018: Manipulate AI Model",
                                 "AML.T0018.002: Manipulate AI Model: Embed Malware",
                                 "AML.T0058: Publish Poisoned Models",
-                                "AML.T0069: Discover LLM System Information"
+                                "AML.T0069: Discover LLM System Information",
+                                "AML.T0074 Masquerading"
                             ]
                         },
                         {
@@ -3239,7 +3270,8 @@ const aidefendData = {
                                 "AML.T0001 Reconnaissance (unusual queries)",
                                 "AML.T0051 LLM Prompt Injection (repeated attempts)",
                                 "AML.T0057 LLM Data Leakage (output logging)",
-                                "AML.T0012 Valid Accounts (anomalous usage)"
+                                "AML.T0012 Valid Accounts (anomalous usage)",
+                                "AML.T0046 Spamming AI System with Chaff Data"
                             ]
                         },
                         {
@@ -3248,7 +3280,8 @@ const aidefendData = {
                                 "Model Stealing (L1)",
                                 "Agent Tool Misuse (L7)",
                                 "Compromised RAG Pipelines (L2)",
-                                "Data Exfiltration (L2)"
+                                "Data Exfiltration (L2)",
+                                "Repudiation (L7)"
                             ]
                         },
                         {
@@ -3344,7 +3377,8 @@ const aidefendData = {
                             "items": [
                                 "Evasion of Auditing/Compliance (L6: Security & Compliance, if manipulated XAI is used to mislead auditors)",
                                 "Manipulation of Evaluation Metrics (L5: Evaluation & Observability, if explanations are used as part of the evaluation and are unreliable)",
-                                "Obfuscation of Malicious Behavior (Cross-Layer)."
+                                "Obfuscation of Malicious Behavior (Cross-Layer).",
+                                "Lack of Explainability in Security AI Agents (L6)"
                             ]
                         },
                         {
@@ -3586,7 +3620,11 @@ const aidefendData = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0021 Erode ML Model Integrity",
-                                "AML.T0048.002 External Harms: Societal Harm"
+                                "AML.T0048.002 External Harms: Societal Harm",
+                                "AML.T0070 RAG Poisoning",
+                                "AML.T0067 LLM Trusted Output Components Manipulation",
+                                "AML.T0071 False RAG Entry Injection",
+                                "AML.T0062 Discover LLM Hallucinations"
                             ]
                         },
                         {
@@ -3663,7 +3701,9 @@ const aidefendData = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0051 LLM Prompt Injection",
-                                "AML.T0054 LLM Jailbreak"
+                                "AML.T0054 LLM Jailbreak",
+                                "AML.T0078 Drive-by Compromise",
+                                "AML.T0018 Manipulate AI Model"
                             ]
                         },
                         {
@@ -3810,7 +3850,10 @@ const aidefendData = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0053: LLM Plugin Compromise",
-                                "AML.T0072: Reverse Shell"
+                                "AML.T0072: Reverse Shell",
+                                "AML.T0050 Command and Scripting Interpreter",
+                                "AML.T0029 Denial of AI Service",
+                                "AML.T0034 Cost Harvesting (limiting rates)"
                             ]
                         },
                         {
@@ -3819,14 +3862,16 @@ const aidefendData = {
                                 "Compromised Container Images (L4)",
                                 "Lateral Movement (Cross-Layer)",
                                 "Agent Tool Misuse (L7)",
-                                "Resource Hijacking (L4)"
+                                "Resource Hijacking (L4)",
+                                "Framework Evasion (L3)"
                             ]
                         },
                         {
                             "framework": "OWASP LLM Top 10 2025",
                             "items": [
                                 "LLM05:2025 Improper Output Handling",
-                                "LLM06:2025 Excessive Agency"
+                                "LLM06:2025 Excessive Agency",
+                                "LLM10:2025 Unbounded Consumption"
                             ]
                         }
                     ],
@@ -4029,8 +4074,9 @@ const aidefendData = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0025 Exfiltration via Cyber Means",
-                                "General Lateral Movement tactics",
-                                "AML.T0003 Resource Development (blocking unauthorized downloads)"
+                                "AML.T0044 Full AI Model Access",
+                                "AML.T0003 Resource Development (blocking unauthorized downloads)",
+                                "AML.T0072 Reverse Shell"
                             ]
                         },
                         {
@@ -4107,7 +4153,8 @@ const aidefendData = {
                                 "AML.T0024.002 Extract ML Model (rate-limiting)",
                                 "AML.T0029 Denial of ML Service (throttling)",
                                 "AML.T0034 Cost Harvesting (limiting rates)",
-                                "Active exploitation scenarios (quarantine stops)"
+                                "AML.T0040 AI Model Inference API Access",
+                                "AML.T0046 Spamming AI System with Chaff Data"
                             ]
                         },
                         {
@@ -4115,7 +4162,9 @@ const aidefendData = {
                             "items": [
                                 "Model Stealing (L1, throttling)",
                                 "DoS on Framework APIs / Data Infrastructure (L3/L2)",
-                                "Resource Hijacking (L4, containing processes)"
+                                "Resource Hijacking (L4, containing processes)",
+                                "Agent Pricing Model Manipulation (L7, rate limiting)",
+                                "Model Extraction of AI Security Agents (L6)"
                             ]
                         },
                         {
@@ -4174,7 +4223,8 @@ const aidefendData = {
                             "items": [
                                 "AML.T0018.001 Backdoor ML Model: Poison LLM Memory",
                                 "AML.T0017 Persistence (preventing long-term state manipulation)",
-                                "AML.T0051 LLM Prompt Injection (limits impact duration)"
+                                "AML.T0051 LLM Prompt Injection (limits impact duration)",
+                                "AML.T0061 LLM Prompt Self-Replication"
                             ]
                         },
                         {
@@ -4545,7 +4595,8 @@ const aidefendData = {
                             "items": [
                                 "AML.T0024.002 Extract ML Model / AML.T0048.004 External Harms: ML Intellectual Property Theft",
                                 "AML.T0057 LLM Data Leakage (tracing watermarked outputs)",
-                                "AML.T0048.002 External Harms: Societal Harm (attributing deepfakes/misinfo)"
+                                "AML.T0048.002 External Harms: Societal Harm (attributing deepfakes/misinfo)",
+                                "AML.T0052 Phishing"
                             ]
                         },
                         {
@@ -4688,6 +4739,7 @@ const aidefendData = {
                             "items": [
                                 "AML.T0007 Discover ML Artifacts",
                                 "AML.T0069 Discover LLM System Information"
+                        
                             ]
                         },
                         {
@@ -4695,6 +4747,12 @@ const aidefendData = {
                             "items": [
                                 "Malicious Agent Discovery (L7)",
                                 "Evasion of Detection (L5)"
+                            ]
+                        },
+                        {
+"framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM07:2025 System Prompt Leakage"
                             ]
                         },
                         {
@@ -4753,7 +4811,8 @@ const aidefendData = {
                             "items": [
                                 "AML.T0012 Valid Accounts",
                                 "AML.T0011 Initial Access (stolen creds)",
-                                "AML.T0017 Persistence (credential-based)"
+                                "AML.T0017 Persistence (credential-based)",
+                                "AML.T0055 Unsecured Credentials"
                             ]
                         },
                         {
@@ -4884,7 +4943,9 @@ const aidefendData = {
                                 "AML.T0018: Manipulate AI Model",
                                 "AML.T0018.002: Manipulate AI Model: Embed Malware",
                                 "AML.T0020: Poison Training Data",
-                                "AML.T0070: RAG Poisoning"
+                                "AML.T0059 Erode Dataset Integrity",
+                                "AML.T0070: RAG Poisoning",
+                                "AML.T0071 False RAG Entry Injection (Poisoned data detection & cleansing - Scan vector databases for embeddings from known malicious contents)"
                             ]
                         },
                         {
@@ -5419,7 +5480,8 @@ const aidefendData = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0020 Poison Training Data (restoring clean dataset)",
-                                "AML.T0021 Erode ML Model Integrity (restoring corrupted data stores)"
+                                "AML.T0021 Erode ML Model Integrity (restoring corrupted data stores)",
+                                "AML.T0059 Erode Dataset Integrity"
                             ]
                         },
                         {
