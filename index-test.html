@@ -610,7 +610,7 @@
                     <div class="text-left">
                         <h1 class="header-title">
                             <a href="https://edward-playground.github.io/aidefense-framework/"
-                                class="no-underline hover:underline">
+                                class="no-underline">
                                 AIDEFEND™
                             </a>
                         </h1>
@@ -854,7 +854,7 @@
 
                 if (searchTerm && filteredTechniques.length === 0) {
                     const noResults = createElement('p', {
-                        className: 'text-center opacity-80 py-10',
+                        className: 'text-center text-gray-500 dark:text-gray-400 py-10',
                         textContent: `No techniques found matching "${searchTerm}".`
                     });
                     elements.mainContent.appendChild(noResults);
