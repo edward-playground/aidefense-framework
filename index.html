@@ -1,5 +1,7 @@
 <!DOCTYPE html>
-<html lang="en" class="dark"> <head>
+<html lang="en" class="dark">
+
+<head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIDEFEND Framework</title>
@@ -24,6 +26,7 @@
             --technique-item-highlight-bg: #bbdefb;
             --technique-item-highlight-text: #0d47a1;
             --technique-id-text: #78909c;
+            --subtechnique-bg: #fafafa;
             --modal-content-bg: #ffffff;
             --modal-close-btn-text: #757575;
             --modal-close-btn-hover-text: #212121;
@@ -64,6 +67,7 @@
             --technique-item-highlight-bg: #1e3a5f;
             --technique-item-highlight-text: #e3f2fd;
             --technique-id-text: #c0c0c0;
+            --subtechnique-bg: #252525;
             --modal-content-bg: #222222;
             --modal-close-btn-text: #b0b0b0;
             --modal-close-btn-hover-text: #f0f0f0;
@@ -250,12 +254,12 @@
 
         .tactic-column {
             flex-grow: 1;
-            flex-shrink: 1;
-            flex-basis: 160px;
+            flex-shrink: 0;
+            flex-basis: calc(100% / 7 - 1rem);
             max-width: 210px;
             background-color: var(--column-bg);
             border-radius: 0.75rem;
-            padding: 0.8rem;
+            padding: 0.6rem;
             min-height: 200px;
             transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
             display: flex;
@@ -278,8 +282,15 @@
             color: var(--column-header-hover-text);
         }
 
+        /* New styles for expandable techniques */
+        .technique-container {
+            margin-bottom: 0.75rem;
+        }
+
         .technique-item {
-            display: block;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
             background-color: var(--technique-item-bg);
             padding: 0.75rem 1rem;
             font-size: 0.875rem;
@@ -288,7 +299,10 @@
             cursor: pointer;
             transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.2s ease, box-shadow 0.2s ease;
             line-height: 1.5;
-            margin-bottom: 0.75rem;
+        }
+
+        .technique-item-content {
+            flex-grow: 1;
         }
 
         .technique-item:hover {
@@ -303,6 +317,12 @@
             font-weight: 600;
         }
 
+        .subtechnique-item.highlight {
+            background-color: var(--technique-item-highlight-bg) !important;
+            color: var(--technique-item-highlight-text) !important;
+            font-weight: 600;
+        }
+
         .technique-id {
             font-weight: 500;
             color: var(--technique-id-text);
@@ -314,6 +334,56 @@
 
         .technique-name {
             font-weight: 500;
+        }
+
+        .expand-icon {
+            flex-shrink: 0;
+            margin-left: 0.5rem;
+            width: 1.25rem;
+            height: 1.25rem;
+            transition: transform 0.3s ease;
+        }
+
+        .expand-icon.expanded {
+            transform: rotate(45deg);
+        }
+
+        .sub-technique-list {
+            list-style-type: none;
+            padding-left: 0.5rem;
+            margin-top: 0rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .sub-technique-list.expanded {
+            max-height: 1000px;
+            /* A large enough value to show all content */
+        }
+
+        .subtechnique-item {
+            display: block;
+            background-color: var(--subtechnique-bg);
+            padding: 0.6rem 0.8rem;
+            font-size: 0.8rem;
+            color: var(--technique-item-hover-text);
+            border-radius: 0.375rem;
+            border-left: 3px solid var(--technique-item-text);
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            line-height: 1.4;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtechnique-item:hover {
+            background-color: var(--technique-item-hover-bg);
+            color: var(--technique-item-hover-text);
+            transform: translateX(3px);
+        }
+
+        .subtechnique-item .technique-id {
+            font-size: 0.7rem;
         }
 
         .modal-overlay {
@@ -609,8 +679,7 @@
                 <div class="flex justify-between items-center mb-3">
                     <div class="text-left">
                         <h1 class="header-title">
-                            <a href="https://edward-playground.github.io/aidefense-framework/"
-                                class="no-underline">
+                            <a href="https://edward-playground.github.io/aidefense-framework/" class="no-underline">
                                 AIDEFEND
                             </a>
                         </h1>
@@ -700,7 +769,8 @@
                 moon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-3.51 1.713-6.636 4.362-8.492a.75.75 0 01.819.162z" clip-rule="evenodd" /></svg>`,
                 info: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0ZM9 9a.75.75 0 0 0 0 1.5h.253a.25.25 0 0 1 .244.304l-.459 2.066A1.75 1.75 0 0 0 10.747 15H11a.75.75 0 0 0 0-1.5h-.253a.25.25 0 0 1-.244-.304l.459-2.066A1.75 1.75 0 0 0 9.253 9H9Z" clip-rule="evenodd" /></svg>`,
                 strategyPlus: `<svg class="strategy-accordion-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" /></svg>`,
-                strategyMinus: `<svg class="strategy-accordion-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clip-rule="evenodd" /></svg>`
+                strategyMinus: `<svg class="strategy-accordion-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clip-rule="evenodd" /></svg>`,
+                chevron: `<svg class="expand-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>`
             };
 
             let currentSearchTerm = "";
@@ -714,13 +784,17 @@
 
             function createElement(tagName, options = {}) {
                 const element = document.createElement(tagName);
-
-                if (options.className) element.className = options.className;
-                if (options.textContent) element.textContent = options.textContent;
-                if (options.title) element.title = options.title;
-                if (options.href) element.href = options.href;
-                if (options.onclick) element.addEventListener('click', options.onclick);
-
+                for (const key in options) {
+                    if (key === 'className') {
+                        element.className = options[key];
+                    } else if (key === 'textContent') {
+                        element.textContent = options[key];
+                    } else if (key === 'onclick') {
+                        element.addEventListener('click', options[key]);
+                    } else {
+                        element[key] = options[key];
+                    }
+                }
                 return element;
             }
 
@@ -730,245 +804,183 @@
                 }
             }
 
-            // Safe HTML renderer for limited HTML tags
+            // Safe HTML renderer
             function renderSafeHTML(htmlString, container) {
                 if (!htmlString) return;
-
-                // Allowlist of safe HTML tags and their attributes
-                const allowedTags = {
-                    'p': [],
-                    'h3': [],
-                    'h4': [],
-                    'h5': [],
-                    'ul': [],
-                    'ol': [],
-                    'li': [],
-                    'strong': [],
-                    'em': [],
-                    'br': [],
-                    'u': [], // Allow underline tag
-                    'code': [],
-                    'pre': [],
-                    'a': ['href', 'target', 'rel'] // Allow anchor tag with specific attributes
-                };
-
-                // Simple HTML parser that only creates allowed elements
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(`<div>${htmlString}</div>`, 'text/html');
-                const parsed = doc.body.firstChild;
-
+                const allowedTags = { 'p': [], 'h3': [], 'h4': [], 'h5': [], 'ul': [], 'ol': [], 'li': [], 'strong': [], 'em': [], 'br': [], 'u': [], 'code': [], 'pre': [], 'a': ['href', 'target', 'rel'] };
+                const doc = new DOMParser().parseFromString(`<div>${htmlString}</div>`, 'text/html');
                 function processNode(node, parent) {
-                    if (node.nodeType === Node.TEXT_NODE) {
-                        parent.appendChild(document.createTextNode(node.textContent));
-                    } else if (node.nodeType === Node.ELEMENT_NODE) {
+                    if (node.nodeType === Node.TEXT_NODE) { parent.appendChild(document.createTextNode(node.textContent)); }
+                    else if (node.nodeType === Node.ELEMENT_NODE) {
                         const tagName = node.tagName.toLowerCase();
                         const allowedAttributes = allowedTags[tagName];
-
-                        if (allowedAttributes) { // Check if the tag is in the allowlist
+                        if (allowedAttributes) {
                             const newElement = document.createElement(tagName);
-
-                            // Copy allowed attributes from the original node
-                            if (node.attributes) {
-                                Array.from(node.attributes).forEach(attr => {
-                                    if (allowedAttributes.includes(attr.name)) {
-                                        newElement.setAttribute(attr.name, attr.value);
-                                    }
-                                });
-                            }
-
-                            // Process child nodes recursively
-                            Array.from(node.childNodes).forEach(child => {
-                                processNode(child, newElement);
-                            });
-
+                            Array.from(node.attributes).forEach(attr => { if (allowedAttributes.includes(attr.name)) newElement.setAttribute(attr.name, attr.value); });
+                            Array.from(node.childNodes).forEach(child => processNode(child, newElement));
                             parent.appendChild(newElement);
-                        } else {
-                            // If tag not allowed, just process its children to render their text content
-                            Array.from(node.childNodes).forEach(child => {
-                                processNode(child, parent);
-                            });
-                        }
+                        } else { Array.from(node.childNodes).forEach(child => processNode(child, parent)); }
                     }
                 }
-
-                Array.from(parsed.childNodes).forEach(child => {
-                    processNode(child, container);
-                });
+                Array.from(doc.body.firstChild.childNodes).forEach(child => processNode(child, container));
             }
-
 
             // Theme Management
             function applyTheme(theme) {
-                if (theme === 'dark') {
-                    elements.html.classList.add('dark');
-                    setIcon(elements.themeToggleBtn, 'sun');
-                } else {
-                    elements.html.classList.remove('dark');
-                    setIcon(elements.themeToggleBtn, 'moon');
-                }
+                elements.html.classList.toggle('dark', theme === 'dark');
+                setIcon(elements.themeToggleBtn, theme === 'dark' ? 'sun' : 'moon');
             }
 
             function toggleTheme() {
-                const currentTheme = elements.html.classList.contains('dark') ? 'dark' : 'light';
-                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                const newTheme = elements.html.classList.contains('dark') ? 'light' : 'dark';
                 localStorage.setItem('aidefendTheme', newTheme);
                 applyTheme(newTheme);
             }
 
-            // Search and Grid Rendering
-            function getFilteredTechniques(searchTerm) {
-                if (!searchTerm) return [];
+            // Search Logic
+            function matchesText(text, term) {
+                return text && text.toLowerCase().includes(term);
+            }
 
-                return aidefendData.tactics.reduce((acc, tactic) => {
-                    if (tactic.techniques && Array.isArray(tactic.techniques)) {
-                        tactic.techniques.forEach(tech => {
-                            if (matchesTechnique(tech, searchTerm)) {
-                                acc.push({ ...tech, tacticName: tactic.name });
+            function matchesTechnique(tech, term) {
+                return matchesText(tech.name, term) ||
+                    matchesText(tech.id, term) ||
+                    matchesText(tech.description, term) ||
+                    (tech.defendsAgainst && tech.defendsAgainst.some(da => da.items && da.items.some(item => matchesText(item, term)))) ||
+                    (tech.implementationStrategies && tech.implementationStrategies.some(s => matchesText(s.strategy, term))) ||
+                    (tech.toolsOpenSource && tech.toolsOpenSource.some(t => matchesText(t, term))) ||
+                    (tech.toolsCommercial && tech.toolsCommercial.some(t => matchesText(t, term)));
+            }
+
+            function getFilteredTechniques(searchTerm) {
+                if (!searchTerm) return { all: true, matches: new Set() };
+                const term = searchTerm.toLowerCase();
+                const matches = new Set();
+                aidefendData.tactics.forEach(tactic => {
+                    tactic.techniques?.forEach(tech => {
+                        let isParentMatch = matchesTechnique(tech, term);
+                        let subMatchFound = false;
+                        tech.subTechniques?.forEach(sub => {
+                            if (matchesTechnique(sub, term)) {
+                                matches.add(sub.id);
+                                subMatchFound = true;
                             }
                         });
-                    }
-                    return acc;
-                }, []);
+                        if (isParentMatch || subMatchFound) {
+                            matches.add(tech.id);
+                        }
+                    });
+                });
+                return { all: false, matches };
             }
 
-            function matchesTechnique(tech, searchTerm) {
-                const term = searchTerm.toLowerCase();
-                let match = tech.name.toLowerCase().includes(term) ||
-                    tech.id.toLowerCase().includes(term) ||
-                    (tech.description && tech.description.toLowerCase().includes(term));
-
-                if (!match && tech.defendsAgainst) {
-                    match = tech.defendsAgainst.some(da =>
-                        da.items && da.items.some(item => item.toLowerCase().includes(term))
-                    );
-                }
-
-                return match;
-            }
-
+            // Main Grid Rendering
             function renderMainGrid(searchTerm = "") {
                 clearElement(elements.mainContent);
-
                 const gridContainer = createElement('div', { className: 'tactic-column-grid' });
-                const filteredTechniques = getFilteredTechniques(searchTerm);
+                const filter = getFilteredTechniques(searchTerm);
 
-                if (searchTerm && filteredTechniques.length === 0) {
-                    const noResults = createElement('p', {
+                if (!filter.all && filter.matches.size === 0) {
+                    elements.mainContent.appendChild(createElement('p', {
                         className: 'text-center text-gray-500 dark:text-gray-400 py-10',
                         textContent: `No techniques found matching "${searchTerm}".`
-                    });
-                    elements.mainContent.appendChild(noResults);
+                    }));
                     return;
                 }
 
                 aidefendData.tactics.forEach(tactic => {
-                    const shouldRenderColumn = !searchTerm || (
-                        tactic.techniques &&
-                        tactic.techniques.some(tech =>
-                            filteredTechniques.some(filtered => filtered.id === tech.id)
-                        )
-                    );
+                    const techniquesToRender = filter.all
+                        ? (tactic.techniques || [])
+                        : (tactic.techniques || []).filter(tech => filter.matches.has(tech.id));
 
-                    if (!shouldRenderColumn) return;
-
-                    const column = createElement('div', { className: 'tactic-column elevation-2' });
-
-                    const header = createElement('h3', {
-                        className: 'tactic-column-header',
-                        textContent: tactic.name,
-                        onclick: () => showTacticModal(tactic)
-                    });
-
-                    column.appendChild(header);
-                    column.appendChild(renderTechniqueList(tactic, searchTerm, filteredTechniques));
-                    gridContainer.appendChild(column);
+                    if (techniquesToRender.length > 0) {
+                        const column = createElement('div', { className: 'tactic-column elevation-2' });
+                        const header = createElement('h3', { className: 'tactic-column-header', textContent: tactic.name, onclick: () => showTacticModal(tactic) });
+                        const ul = createElement('ul');
+                        techniquesToRender.forEach(tech => {
+                            ul.appendChild(renderTechniqueItem(tech, tactic.name, filter));
+                        });
+                        column.appendChild(header);
+                        column.appendChild(ul);
+                        gridContainer.appendChild(column);
+                    }
                 });
-
                 elements.mainContent.appendChild(gridContainer);
             }
 
-            function renderTechniqueList(tactic, searchTerm, filteredTechniques) {
-                const ul = createElement('ul');
-                const techniques = searchTerm ?
-                    tactic.techniques.filter(t => filteredTechniques.some(f => f.id === t.id)) :
-                    (tactic.techniques || []);
+            function renderTechniqueItem(tech, tacticName, filter) {
+                const li = createElement('li', { className: 'technique-container' });
+                const hasSub = tech.subTechniques && tech.subTechniques.length > 0;
 
-                if (techniques.length > 0) {
-                    techniques.forEach(tech => {
-                        ul.appendChild(renderTechniqueItem(tech, tactic.name, searchTerm, filteredTechniques));
-                    });
-                } else if (!searchTerm && (!tactic.techniques || tactic.techniques.length === 0)) {
-                    const emptyMsg = createElement('p', {
-                        className: 'text-xs opacity-60 italic px-2',
-                        textContent: 'No techniques defined yet for this tactic.'
-                    });
-                    ul.appendChild(emptyMsg);
-                }
-
-                return ul;
-            }
-
-            function renderTechniqueItem(tech, tacticName, searchTerm, filteredTechniques) {
-                const li = createElement('li');
-                const link = createElement('a', {
-                    href: '#',
-                    className: 'technique-item elevation-2',
-                    onclick: (e) => {
-                        e.preventDefault();
-                        showTechniqueModal(tech, tacticName);
+                const itemDiv = createElement('div', { className: 'technique-item elevation-2' });
+                const contentDiv = createElement('div', {
+                    className: 'technique-item-content', onclick: (e) => {
+                        e.stopPropagation(); showTechniqueModal(tech, tacticName);
                     }
                 });
 
-                const idSpan = createElement('span', { className: 'technique-id', textContent: tech.id });
-                const nameSpan = createElement('span', { className: 'technique-name', textContent: tech.name });
+                contentDiv.appendChild(createElement('span', { className: 'technique-id', textContent: tech.id }));
+                contentDiv.appendChild(createElement('span', { className: 'technique-name', textContent: tech.name }));
+                itemDiv.appendChild(contentDiv);
 
-                link.appendChild(idSpan);
-                link.appendChild(document.createTextNode(' '));
-                link.appendChild(nameSpan);
+                if (hasSub) {
+                    const iconWrapper = createElement('div', { className: 'expand-icon' });
+                    setIcon(iconWrapper, 'chevron');
+                    itemDiv.appendChild(iconWrapper);
 
-                if (searchTerm && filteredTechniques.some(f => f.id === tech.id)) {
-                    link.classList.add('highlight');
+                    const subList = createElement('ul', { className: 'sub-technique-list' });
+                    tech.subTechniques.forEach(subTech => {
+                        subList.appendChild(renderSubTechniqueItem(subTech, tacticName, filter));
+                    });
+                    li.appendChild(itemDiv);
+                    li.appendChild(subList);
+
+                    const isSubMatch = tech.subTechniques.some(sub => filter.matches.has(sub.id));
+                    if (!filter.all && isSubMatch) {
+                        itemDiv.classList.add('expanded');
+                        subList.classList.add('expanded');
+                        iconWrapper.style.transform = 'rotate(90deg)';
+                        setTimeout(() => subList.style.maxHeight = subList.scrollHeight + "px", 0);
+                    }
+
+                    itemDiv.onclick = (e) => {
+                        e.stopPropagation();
+                        toggleSubTechniques(itemDiv, subList, iconWrapper);
+                    };
+
+                } else {
+                    itemDiv.onclick = (e) => { e.stopPropagation(); showTechniqueModal(tech, tacticName); };
+                    li.appendChild(itemDiv);
                 }
 
-                li.appendChild(link);
-
-                if (tech.subTechniques && tech.subTechniques.length > 0) {
-                    const subList = createElement('ul', { className: 'pl-3 pr-1 py-1 mt-1 space-y-2' });
-                    tech.subTechniques.forEach(subTech => {
-                        subList.appendChild(renderSubTechniqueItem(subTech, tacticName, searchTerm));
-                    });
-                    li.appendChild(subList);
+                if (filter.matches.has(tech.id)) {
+                    itemDiv.classList.add('highlight');
                 }
 
                 return li;
             }
 
-            function renderSubTechniqueItem(subTech, tacticName, searchTerm) {
+            function toggleSubTechniques(header, content, iconWrapper) {
+                const isExpanded = content.classList.toggle('expanded');
+                header.classList.toggle('expanded', isExpanded);
+                iconWrapper.style.transform = isExpanded ? 'rotate(90deg)' : 'rotate(0deg)';
+                content.style.maxHeight = isExpanded ? content.scrollHeight + 'px' : null;
+            }
+
+            function renderSubTechniqueItem(subTech, tacticName, filter) {
                 const subLi = createElement('li');
-                const subLink = createElement('a', {
-                    href: '#',
-                    className: 'technique-item elevation-2 block !bg-[var(--technique-item-hover-bg)] !text-[var(--technique-item-hover-text)]',
-                    onclick: (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        showTechniqueModal(subTech, tacticName);
-                    }
+                const subLink = createElement('div', {
+                    className: 'subtechnique-item elevation-2',
+                    onclick: (e) => { e.stopPropagation(); showTechniqueModal(subTech, tacticName); }
                 });
 
-                const subIdSpan = createElement('span', {
-                    className: 'technique-id !text-[var(--technique-id-text)]',
-                    textContent: subTech.id
-                });
-                const subNameSpan = createElement('span', {
-                    className: 'technique-name',
-                    textContent: subTech.name
-                });
+                subLink.appendChild(createElement('span', { className: 'technique-id', textContent: subTech.id }));
+                subLink.appendChild(createElement('span', { className: 'technique-name', textContent: subTech.name }));
 
-                subLink.appendChild(subIdSpan);
-                subLink.appendChild(document.createTextNode(' '));
-                subLink.appendChild(subNameSpan);
+                if (filter.matches.has(subTech.id)) {
+                    subLink.classList.add('highlight');
+                }
 
-                if (searchTerm) subLink.classList.add('highlight');
                 subLi.appendChild(subLink);
                 return subLi;
             }
@@ -987,178 +999,88 @@
 
             function createAccordion(sections, defaultOpenIndex = 0) {
                 const container = createElement('div', { className: 'accordion-container' });
-
                 sections.forEach((section, index) => {
                     const item = createElement('div', { className: 'accordion-item' });
-                    const header = createElement('div', {
-                        className: 'accordion-header',
-                        onclick: () => toggleAccordion(header, content, iconWrapper)
-                    });
-
-                    header.setAttribute('role', 'button');
-                    header.setAttribute('aria-expanded', index === defaultOpenIndex ? 'true' : 'false');
-
+                    const header = createElement('div', { className: 'accordion-header', onclick: () => toggleAccordion(content) });
                     const title = createElement('span', { textContent: section.title });
                     const iconWrapper = createElement('div', { className: 'icon-wrapper' });
-
+                    setIcon(iconWrapper, index === defaultOpenIndex ? 'minus' : 'plus');
                     header.appendChild(title);
                     header.appendChild(iconWrapper);
 
                     const content = createElement('div', { className: 'accordion-content' });
                     const contentInner = createElement('div', { className: 'accordion-content-inner' });
-
-                    // Add content to accordion
-                    if (section.paragraphs) {
-                        section.paragraphs.forEach(p => {
-                            const paragraph = createElement('p');
-                            renderSafeHTML(p, paragraph);
-                            contentInner.appendChild(paragraph);
-                        });
-                    }
-
+                    if (section.paragraphs) section.paragraphs.forEach(p => renderSafeHTML(`<p>${p}</p>`, contentInner));
                     if (section.listItems) {
                         const ul = createElement('ul');
-                        section.listItems.forEach(item => {
-                            const li = createElement('li');
-                            renderSafeHTML(item, li);
-                            ul.appendChild(li);
-                        });
+                        section.listItems.forEach(item => renderSafeHTML(`<li>${item}</li>`, ul));
                         contentInner.appendChild(ul);
                     }
-
-                    if (section.concludingParagraphs) {
-                        section.concludingParagraphs.forEach(p => {
-                            const paragraph = createElement('p');
-                            renderSafeHTML(p, paragraph);
-                            contentInner.appendChild(paragraph);
-                        });
-                    }
+                    if (section.concludingParagraphs) section.concludingParagraphs.forEach(p => renderSafeHTML(`<p>${p}</p>`, contentInner));
 
                     content.appendChild(contentInner);
                     item.appendChild(header);
                     item.appendChild(content);
                     container.appendChild(item);
 
-                    // Set initial state - open first section by default
                     if (index === defaultOpenIndex) {
                         header.classList.add('active');
-                        setIcon(iconWrapper, 'minus');
-                        // Set initial expansion after DOM is rendered
-                        setTimeout(() => {
-                            content.style.maxHeight = content.scrollHeight + 'px';
-                        }, 0);
-                    } else {
-                        setIcon(iconWrapper, 'plus');
+                        setTimeout(() => content.style.maxHeight = content.scrollHeight + 'px', 0);
                     }
                 });
-
                 return container;
             }
 
-            function toggleAccordion(header, content, iconWrapper) {
-                const container = header.closest('.accordion-container');
-                const isActive = header.classList.contains('active');
-
-                // Close all accordion items in this container
-                container.querySelectorAll('.accordion-header').forEach(otherHeader => {
-                    otherHeader.classList.remove('active');
-                    otherHeader.nextElementSibling.style.maxHeight = null;
-                    const otherIcon = otherHeader.querySelector('.icon-wrapper');
-                    setIcon(otherIcon, 'plus');
-                });
-
-                // Open this one if it wasn't active
-                if (!isActive) {
-                    header.classList.add('active');
-                    content.style.maxHeight = content.scrollHeight + 'px';
-                    setIcon(iconWrapper, 'minus');
-                }
+            function toggleAccordion(content) {
+                const header = content.previousElementSibling;
+                const iconWrapper = header.querySelector('.icon-wrapper');
+                const isActive = header.classList.toggle('active');
+                content.style.maxHeight = isActive ? content.scrollHeight + 'px' : null;
+                setIcon(iconWrapper, isActive ? 'minus' : 'plus');
             }
 
             function showIntroductionModal() {
                 clearElement(elements.modalBody);
-
                 const intro = aidefendData.introduction;
-                const title = createElement('h2', {
-                    className: 'modal-main-title',
-                    textContent: intro.mainTitle
-                });
-
-                elements.modalBody.appendChild(title);
-                elements.modalBody.appendChild(createAccordion(intro.sections, 0)); // Open first section by default
+                elements.modalBody.appendChild(createElement('h2', { className: 'modal-main-title', textContent: intro.mainTitle }));
+                elements.modalBody.appendChild(createAccordion(intro.sections, 0));
                 showModal();
             }
 
             function showTacticModal(tactic) {
                 clearElement(elements.modalBody);
-
                 const fullTactic = aidefendData.tactics.find(t => t.name === tactic.name) || tactic;
-
-                const title = createElement('h2', { textContent: fullTactic.name });
-                const description = createElement('p', {
-                    className: 'mb-4 leading-relaxed text-sm',
-                    textContent: fullTactic.purpose || 'No purpose description available.'
-                });
-
-                elements.modalBody.appendChild(title);
-                elements.modalBody.appendChild(description);
+                elements.modalBody.appendChild(createElement('h2', { textContent: fullTactic.name }));
+                elements.modalBody.appendChild(createElement('p', { className: 'mb-4 leading-relaxed text-sm', textContent: fullTactic.purpose || 'No purpose description available.' }));
                 showModal();
             }
 
             function showTechniqueModal(technique, tacticName) {
                 clearElement(elements.modalBody);
+                elements.modalBody.appendChild(createElement('p', { className: 'text-sm opacity-80 mb-1', textContent: `Tactic: ${tacticName}` }));
+                elements.modalBody.appendChild(createElement('h2', { textContent: `${technique.id}: ${technique.name}` }));
+                elements.modalBody.appendChild(createElement('p', { className: 'mb-4 leading-relaxed text-sm', textContent: technique.description || 'No description available.' }));
 
-                // Basic info
-                const tacticInfo = createElement('p', {
-                    className: 'text-sm opacity-80 mb-1',
-                    textContent: `Tactic: ${tacticName}`
-                });
-
-                const title = createElement('h2', {
-                    textContent: `${technique.id}: ${technique.name}`
-                });
-
-                const description = createElement('p', {
-                    className: 'mb-4 leading-relaxed text-sm',
-                    textContent: technique.description || 'No description available.'
-                });
-
-                elements.modalBody.appendChild(tacticInfo);
-                elements.modalBody.appendChild(title);
-                elements.modalBody.appendChild(description);
-
-                // Performance impact
                 if (technique.perfImpact) {
                     const perfDiv = createElement('div', { className: 'perf-impact-note' });
                     const perfP = createElement('p');
-                    const strong = createElement('strong', {
-                        textContent: `💡 Performance Impact (${technique.perfImpact.level}): `
-                    });
-
-                    perfP.appendChild(strong);
-
-                    // Create a span for the description and render HTML safely
+                    perfP.appendChild(createElement('strong', { textContent: `💡 Performance Impact (${technique.perfImpact.level}): ` }));
                     const descSpan = createElement('span');
                     renderSafeHTML(technique.perfImpact.description, descSpan);
                     perfP.appendChild(descSpan);
-
                     perfDiv.appendChild(perfP);
                     elements.modalBody.appendChild(perfDiv);
                 }
 
-                // Implementation strategies
                 renderDetailSection('Implementation Strategies', technique.implementationStrategies);
                 renderDetailSection('Potential Tools - Open Source', technique.toolsOpenSource);
                 renderDetailSection('Potential Tools - Commercial', technique.toolsCommercial);
-
-                // Defends against
                 renderDefendsAgainstSection(technique.defendsAgainst);
                 showModal();
             }
 
             function renderDetailSection(title, items) {
                 if (!items || items.length === 0) return;
-
                 if (typeof items[0] === 'object' && items[0]?.strategy) {
                     renderStrategySection(title, items);
                 } else {
@@ -1168,161 +1090,85 @@
 
             function renderStrategySection(title, strategies) {
                 const section = createElement('div', { className: 'mt-4' });
-                const sectionTitle = createElement('h3', {
-                    className: 'font-semibold text-lg mb-2',
-                    textContent: title + ':'
-                });
-
+                section.appendChild(createElement('h3', { className: 'font-semibold text-lg mb-2', textContent: title + ':' }));
                 const container = createElement('div', { className: 'strategy-accordion-container' });
-
                 strategies.forEach(strategy => {
                     const item = createElement('div', { className: 'strategy-accordion-item' });
-                    const header = createElement('div', {
-                        className: 'strategy-accordion-header',
-                        onclick: () => toggleStrategyAccordion(header, content, iconWrapper)
-                    });
-
-                    header.setAttribute('role', 'button');
-
-                    const strategyTitle = createElement('span', { textContent: strategy.strategy });
+                    const header = createElement('div', { className: 'strategy-accordion-header', onclick: () => toggleAccordion(content) });
                     const iconWrapper = createElement('div', { className: 'icon-wrapper' });
                     setIcon(iconWrapper, 'strategyPlus');
-
-                    header.appendChild(strategyTitle);
+                    header.appendChild(createElement('span', { textContent: strategy.strategy }));
                     header.appendChild(iconWrapper);
 
                     const content = createElement('div', { className: 'strategy-accordion-content' });
                     const contentInner = createElement('div', { className: 'strategy-accordion-content-inner' });
-
-                    if (strategy.howTo) {
-                        // Safely render the HTML content using the sanitizer.
-                        renderSafeHTML(strategy.howTo, contentInner);
-                    } else {
-                        contentInner.appendChild(createElement('p', { textContent: 'No detailed steps provided.' }));
-                    }
+                    if (strategy.howTo) { renderSafeHTML(strategy.howTo, contentInner); }
 
                     content.appendChild(contentInner);
                     item.appendChild(header);
                     item.appendChild(content);
                     container.appendChild(item);
                 });
-
-                section.appendChild(sectionTitle);
                 section.appendChild(container);
                 elements.modalBody.appendChild(section);
             }
 
-            function toggleStrategyAccordion(header, content, iconWrapper) {
-                const isActive = header.classList.toggle('active');
-                setIcon(iconWrapper, isActive ? 'strategyMinus' : 'strategyPlus');
-                content.style.maxHeight = isActive ? content.scrollHeight + "px" : null;
-            }
-
             function renderSimpleListSection(title, items) {
                 const section = createElement('div', { className: 'mt-3' });
-                const sectionTitle = createElement('h4', {
-                    className: 'font-semibold text-sm mb-1',
-                    textContent: title + ':'
-                });
-
-                const ul = createElement('ul', {
-                    className: 'list-disc list-inside ml-4 text-xs opacity-90 space-y-1'
-                });
-
-                items.forEach(item => {
-                    const li = createElement('li', { textContent: item });
-                    ul.appendChild(li);
-                });
-
-                section.appendChild(sectionTitle);
+                section.appendChild(createElement('h4', { className: 'font-semibold text-sm mb-1', textContent: title + ':' }));
+                const ul = createElement('ul', { className: 'list-disc list-inside ml-4 text-xs opacity-90 space-y-1' });
+                items.forEach(item => ul.appendChild(createElement('li', { textContent: item })));
                 section.appendChild(ul);
                 elements.modalBody.appendChild(section);
             }
 
             function renderDefendsAgainstSection(defendsAgainst) {
                 const section = createElement('div', { className: 'mt-4' });
-                const title = createElement('h4', {
-                    className: 'font-semibold text-md mb-2',
-                    textContent: 'Defends Against:'
-                });
-
-                section.appendChild(title);
-
+                section.appendChild(createElement('h4', { className: 'font-semibold text-md mb-2', textContent: 'Defends Against:' }));
                 if (defendsAgainst && defendsAgainst.length > 0) {
                     defendsAgainst.forEach(da => {
                         const daDiv = createElement('div', { className: 'mb-2' });
-                        const framework = createElement('p', {
-                            className: 'defends-against-framework text-sm',
-                            textContent: da.framework + ':'
-                        });
-
-                        const itemsList = createElement('ul', {
-                            className: 'list-disc list-inside ml-4 text-xs opacity-90 space-y-0.5'
-                        });
-
-                        da.items.forEach(item => {
-                            const li = createElement('li', { textContent: item });
-                            itemsList.appendChild(li);
-                        });
-
-                        daDiv.appendChild(framework);
+                        daDiv.appendChild(createElement('p', { className: 'defends-against-framework text-sm', textContent: da.framework + ':' }));
+                        const itemsList = createElement('ul', { className: 'list-disc list-inside ml-4 text-xs opacity-90 space-y-0.5' });
+                        da.items.forEach(item => itemsList.appendChild(createElement('li', { textContent: item })));
                         daDiv.appendChild(itemsList);
                         section.appendChild(daDiv);
                     });
                 } else {
-                    const noDefenses = createElement('p', {
-                        className: 'text-xs opacity-60 italic',
-                        textContent: 'No specific defenses listed.'
-                    });
-                    section.appendChild(noDefenses);
+                    section.appendChild(createElement('p', { className: 'text-xs opacity-60 italic', textContent: 'No specific defenses listed.' }));
                 }
-
                 elements.modalBody.appendChild(section);
             }
 
             // Event Listeners
             elements.themeToggleBtn.addEventListener('click', toggleTheme);
             elements.aboutBtn.addEventListener('click', showIntroductionModal);
-
             elements.searchBar.addEventListener('input', (e) => {
                 currentSearchTerm = e.target.value.trim();
                 elements.searchClearBtn.style.display = currentSearchTerm ? 'block' : 'none';
                 renderMainGrid(currentSearchTerm);
             });
-
             elements.searchClearBtn.addEventListener('click', () => {
                 elements.searchBar.value = '';
                 currentSearchTerm = '';
                 elements.searchClearBtn.style.display = 'none';
                 renderMainGrid();
             });
-
             elements.modalClose.addEventListener('click', hideModal);
             elements.modalBackdrop.addEventListener('click', hideModal);
-
             document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape' && elements.modal.classList.contains('active')) {
-                    hideModal();
-                }
+                if (event.key === 'Escape' && elements.modal.classList.contains('active')) hideModal();
             });
 
             // Initialize
             function initialize() {
-                const savedTheme = localStorage.getItem('aidefendTheme') || 'dark';
-                applyTheme(savedTheme);
-
-                // Set about button with icon
+                applyTheme(localStorage.getItem('aidefendTheme') || 'dark');
                 const aboutIcon = createElement('span');
                 setIcon(aboutIcon, 'info');
                 const svg = aboutIcon.querySelector('svg');
-                if (svg) {
-                    svg.style.width = '1rem';
-                    svg.style.height = '1rem';
-                    svg.style.marginRight = '0.5rem';
-                }
+                if (svg) { svg.style.width = '1rem'; svg.style.height = '1rem'; svg.style.marginRight = '0.5rem'; }
                 elements.aboutBtn.textContent = 'About';
                 elements.aboutBtn.insertBefore(aboutIcon, elements.aboutBtn.firstChild);
-
                 renderMainGrid();
             }
 
