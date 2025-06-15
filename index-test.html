@@ -46,6 +46,11 @@
             --footer-bg: #e0e0e0;
             --footer-text: #757575;
             --footer-border: #c0c0c0;
+            --view-switcher-bg: #e8eaf6;
+            --view-switcher-btn-bg: #ffffff;
+            --view-switcher-btn-text: #546e7a;
+            --view-switcher-btn-active-bg: #3f51b5;
+            --view-switcher-btn-active-text: #ffffff;
         }
 
         html.dark {
@@ -87,6 +92,11 @@
             --footer-bg: #2b2b2b;
             --footer-text: #a0a0a0;
             --footer-border: #3d3d3d;
+            --view-switcher-bg: #333333;
+            --view-switcher-btn-bg: #424242;
+            --view-switcher-btn-text: #e0e0e0;
+            --view-switcher-btn-active-bg: #90caf9;
+            --view-switcher-btn-active-text: #121212;
         }
 
         html {
@@ -243,7 +253,7 @@
             height: 1.25rem;
         }
 
-        .tactic-column-grid {
+        .matrix-grid {
             display: flex;
             flex-wrap: wrap;
             gap: 0.28rem;
@@ -252,11 +262,9 @@
             justify-content: center;
         }
 
-        .tactic-column {
+        .matrix-column {
             flex-grow: 1;
             flex-shrink: 0;
-            flex-basis: calc(100% / 7 - 1rem);
-            max-width: 210px;
             background-color: var(--column-bg);
             border-radius: 0.75rem;
             padding: 0.6rem;
@@ -266,7 +274,7 @@
             flex-direction: column;
         }
 
-        .tactic-column-header {
+        .column-header {
             font-size: 1.25rem;
             font-weight: 500;
             color: var(--column-header-text);
@@ -278,7 +286,7 @@
             text-align: center;
         }
 
-        .tactic-column-header:hover {
+        .column-header:hover {
             color: var(--column-header-hover-text);
         }
 
@@ -668,6 +676,37 @@
         .perf-impact-note strong {
             color: var(--text-color);
         }
+        
+        .view-switcher {
+            background-color: var(--view-switcher-bg);
+            border-radius: 0.5rem;
+            padding: 0.25rem;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        .view-switcher-btn {
+            padding: 0.5rem 1rem;
+            border: none;
+            background-color: var(--view-switcher-btn-bg);
+            color: var(--view-switcher-btn-text);
+            border-radius: 0.375rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            margin: 0 0.125rem;
+        }
+
+        .view-switcher-btn.active {
+            background-color: var(--view-switcher-btn-active-bg);
+            color: var(--view-switcher-btn-active-text);
+            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+        }
+
+        html.dark .view-switcher-btn.active {
+             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+        }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -679,7 +718,8 @@
                 <div class="flex justify-between items-center mb-3">
                     <div class="text-left">
                         <h1 class="header-title">
-                            <a href="https://edward-playground.github.io/aidefense-framework/" class="no-underline">
+                            <a href="https://edward-playground.github.io/aidefense-framework/"
+                                class="no-underline">
                                 AIDEFEND
                             </a>
                         </h1>
@@ -694,22 +734,30 @@
                         </button>
                     </div>
                 </div>
-                <div class="search-input-wrapper search-container">
-                    <input type="text" id="search-bar"
-                        placeholder="Search keywords, AIDEFEND/ATLAS techniques, MAESTRO threats, OWASP Top10s, etc..."
-                        class="w-full p-2.5 text-sm">
-                    <button id="searchClearBtn" class="search-clear-button" title="Clear search">
-                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
-                            <path fill-rule="evenodd"
-                                d="M10 18a8 8 0 100-16 8 8 0 000 16ZM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22Z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </button>
+
+                <div class="flex justify-between items-center">
+                    <div class="search-input-wrapper search-container flex-grow">
+                        <input type="text" id="search-bar"
+                            placeholder="Search keywords, AIDEFEND/ATLAS techniques, MAESTRO threats, OWASP Top10s, etc..."
+                            class="w-full p-2.5 text-sm">
+                        <button id="searchClearBtn" class="search-clear-button" title="Clear search">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
+                                <path fill-rule="evenodd"
+                                    d="M10 18a8 8 0 100-16 8 8 0 000 16ZM8.28 7.22a.75.75 0 00-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 101.06 1.06L10 11.06l1.72 1.72a.75.75 0 101.06-1.06L11.06 10l1.72-1.72a.75.75 0 00-1.06-1.06L10 8.94 8.28 7.22Z"
+                                    clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </div>
+                    <div id="view-switcher" class="view-switcher ml-4">
+                        <button class="view-switcher-btn active" data-view="tactic">Tactics</button>
+                        <button class="view-switcher-btn" data-view="pillar">Pillars</button>
+                        <button class="view-switcher-btn" data-view="phase">Phases</button>
+                    </div>
                 </div>
             </div>
         </header>
 
-        <div id="content-wrapper" class="pt-44 px-4 sm:px-6 lg:px-8 pb-8">
+        <div id="content-wrapper" class="pt-56 px-4 sm:px-6 lg:px-8 pb-8">
             <main id="main-content" class="container mx-auto"></main>
         </div>
     </div>
@@ -732,7 +780,9 @@
                 href="https://atlas.mitre.org/" target="_blank" rel="noopener noreferrer"
                 class="text-sky-600 dark:text-sky-400 hover:underline">ATLAS</a>, <a href="https://attack.mitre.org/"
                 target="_blank" rel="noopener noreferrer"
-                class="text-sky-600 dark:text-sky-400 hover:underline">ATT&CK</a>, and <a
+                class="text-sky-600 dark:text-sky-400 hover:underline">ATT&CK</a>, <a href="https://saif.google/"
+                target="_blank" rel="noopener noreferrer"
+                class="text-sky-600 dark:text-sky-400 hover:underline">Google Secure AI Framework</a>, and <a
                 href="https://owasp.org/www-project-top-10-for-large-language-model-applications/" target="_blank"
                 rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">OWASP Top 10 LLM
                 2025</a>/<a href="https://owasp.org/www-project-machine-learning-security-top-10/" target="_blank"
@@ -746,7 +796,7 @@
     </footer>
     <script src="aidefend-data.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        window.onload = function() {
             // DOM Elements
             const elements = {
                 mainContent: document.getElementById('main-content'),
@@ -758,7 +808,8 @@
                 modalClose: document.getElementById('modalClose'),
                 themeToggleBtn: document.getElementById('themeToggleBtn'),
                 aboutBtn: document.getElementById('aboutBtn'),
-                html: document.documentElement
+                html: document.documentElement,
+                viewSwitcher: document.getElementById('view-switcher')
             };
 
             // SVG icons
@@ -772,8 +823,12 @@
                 strategyMinus: `<svg class="strategy-accordion-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clip-rule="evenodd" /></svg>`,
                 chevron: `<svg class="expand-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>`
             };
-
+            
+            let currentView = 'tactic';
             let currentSearchTerm = "";
+            let eligibleTechniques = [];
+            let pillars = {};
+            let phases = {};
 
             // Utility Functions
             function clearElement(element) {
@@ -803,14 +858,14 @@
                     element.innerHTML = icons[iconKey];
                 }
             }
-
+            
             // Safe HTML renderer
             function renderSafeHTML(htmlString, container) {
                 if (!htmlString) return;
-                const allowedTags = { 'p': [], 'h3': [], 'h4': [], 'h5': [], 'ul': [], 'ol': [], 'li': [], 'strong': [], 'em': [], 'br': [], 'u': [], 'code': [], 'pre': [], 'a': ['href', 'target', 'rel'] };
+                const allowedTags = {'p': [], 'h3': [], 'h4': [], 'h5': [], 'ul': [], 'ol': [], 'li': [], 'strong': [], 'em': [], 'br': [], 'u': [], 'code': [], 'pre': [], 'a': ['href', 'target', 'rel']};
                 const doc = new DOMParser().parseFromString(`<div>${htmlString}</div>`, 'text/html');
                 function processNode(node, parent) {
-                    if (node.nodeType === Node.TEXT_NODE) { parent.appendChild(document.createTextNode(node.textContent)); }
+                    if (node.nodeType === Node.TEXT_NODE) { parent.appendChild(document.createTextNode(node.textContent)); } 
                     else if (node.nodeType === Node.ELEMENT_NODE) {
                         const tagName = node.tagName.toLowerCase();
                         const allowedAttributes = allowedTags[tagName];
@@ -843,62 +898,78 @@
             }
 
             function matchesTechnique(tech, term) {
-                return matchesText(tech.name, term) ||
-                    matchesText(tech.id, term) ||
-                    matchesText(tech.description, term) ||
-                    (tech.defendsAgainst && tech.defendsAgainst.some(da => da.items && da.items.some(item => matchesText(item, term)))) ||
-                    (tech.implementationStrategies && tech.implementationStrategies.some(s => matchesText(s.strategy, term))) ||
-                    (tech.toolsOpenSource && tech.toolsOpenSource.some(t => matchesText(t, term))) ||
-                    (tech.toolsCommercial && tech.toolsCommercial.some(t => matchesText(t, term)));
+                return matchesText(tech.name, term) || 
+                       matchesText(tech.id, term) || 
+                       matchesText(tech.description, term) ||
+                       (tech.defendsAgainst && tech.defendsAgainst.some(da => da.items && da.items.some(item => matchesText(item, term)))) ||
+                       (tech.implementationStrategies && tech.implementationStrategies.some(s => matchesText(s.strategy, term))) ||
+                       (tech.toolsOpenSource && tech.toolsOpenSource.some(t => matchesText(t, term))) ||
+                       (tech.toolsCommercial && tech.toolsCommercial.some(t => matchesText(t, term)));
             }
+            
+            function getFilteredTechniqueIds(searchTerm) {
+                if (!searchTerm) return new Set(eligibleTechniques.map(t => t.id));
 
-            function getFilteredTechniques(searchTerm) {
-                if (!searchTerm) return { all: true, matches: new Set() };
                 const term = searchTerm.toLowerCase();
                 const matches = new Set();
-                aidefendData.tactics.forEach(tactic => {
-                    tactic.techniques?.forEach(tech => {
-                        let isParentMatch = matchesTechnique(tech, term);
-                        let subMatchFound = false;
-                        tech.subTechniques?.forEach(sub => {
-                            if (matchesTechnique(sub, term)) {
-                                matches.add(sub.id);
-                                subMatchFound = true;
-                            }
-                        });
-                        if (isParentMatch || subMatchFound) {
-                            matches.add(tech.id);
-                        }
-                    });
+                
+                eligibleTechniques.forEach(tech => {
+                    if (matchesTechnique(tech, term)) {
+                        matches.add(tech.id);
+                    }
                 });
-                return { all: false, matches };
+                return matches;
             }
 
             // Main Grid Rendering
-            function renderMainGrid(searchTerm = "") {
+             function renderMainGrid() {
                 clearElement(elements.mainContent);
-                const gridContainer = createElement('div', { className: 'tactic-column-grid' });
-                const filter = getFilteredTechniques(searchTerm);
+                const searchTerm = elements.searchBar.value.trim();
 
-                if (!filter.all && filter.matches.size === 0) {
-                    elements.mainContent.appendChild(createElement('p', {
+                switch (currentView) {
+                    case 'pillar':
+                        renderPillarGrid(searchTerm);
+                        break;
+                    case 'phase':
+                        renderPhaseGrid(searchTerm);
+                        break;
+                    case 'tactic':
+                    default:
+                        renderTacticGrid(searchTerm);
+                        break;
+                }
+            }
+
+            function renderTacticGrid(searchTerm) {
+                const gridContainer = createElement('div', { className: 'matrix-grid' });
+                const filteredIds = getFilteredTechniqueIds(searchTerm);
+
+                if (searchTerm && filteredIds.size === 0) {
+                     gridContainer.appendChild(createElement('p', {
                         className: 'text-center text-gray-500 dark:text-gray-400 py-10',
                         textContent: `No techniques found matching "${searchTerm}".`
                     }));
+                    elements.mainContent.appendChild(gridContainer);
                     return;
                 }
 
                 aidefendData.tactics.forEach(tactic => {
-                    const techniquesToRender = filter.all
-                        ? (tactic.techniques || [])
-                        : (tactic.techniques || []).filter(tech => filter.matches.has(tech.id));
+                    const techniquesToRender = (tactic.techniques || []).filter(tech => {
+                        if (!searchTerm) return true; // Show all if no search
+                        // Show parent if it has a matching sub-technique
+                        return tech.subTechniques?.some(sub => filteredIds.has(sub.id)) || 
+                               // Or if it's a standalone technique that matches
+                               ((!tech.subTechniques || tech.subTechniques.length === 0) && filteredIds.has(tech.id));
+                    });
+                    
 
                     if (techniquesToRender.length > 0) {
-                        const column = createElement('div', { className: 'tactic-column elevation-2' });
-                        const header = createElement('h3', { className: 'tactic-column-header', textContent: tactic.name, onclick: () => showTacticModal(tactic) });
+                        const column = createElement('div', { className: 'matrix-column' });
+                        column.style.flexBasis = `calc(100% / 7 - 1rem)`;
+                        const header = createElement('h3', { className: 'column-header', textContent: tactic.name, onclick: () => showTacticModal(tactic) });
                         const ul = createElement('ul');
                         techniquesToRender.forEach(tech => {
-                            ul.appendChild(renderTechniqueItem(tech, tactic.name, filter));
+                            ul.appendChild(renderTechniqueItem(tech, tactic.name, filteredIds, searchTerm));
                         });
                         column.appendChild(header);
                         column.appendChild(ul);
@@ -908,80 +979,145 @@
                 elements.mainContent.appendChild(gridContainer);
             }
 
-            function renderTechniqueItem(tech, tacticName, filter) {
-                const li = createElement('li', { className: 'technique-container' });
-                const hasSub = tech.subTechniques && tech.subTechniques.length > 0;
+            function renderPillarGrid(searchTerm) {
+                const gridContainer = createElement('div', { className: 'matrix-grid' });
+                const filteredIds = getFilteredTechniqueIds(searchTerm);
 
-                const itemDiv = createElement('div', { className: 'technique-item elevation-2' });
-                const contentDiv = createElement('div', {
-                    className: 'technique-item-content', onclick: (e) => {
-                        e.stopPropagation(); showTechniqueModal(tech, tacticName);
+                if (searchTerm && filteredIds.size === 0) {
+                     gridContainer.appendChild(createElement('p', {
+                        className: 'text-center text-gray-500 dark:text-gray-400 py-10',
+                        textContent: `No techniques found matching "${searchTerm}".`
+                    }));
+                    elements.mainContent.appendChild(gridContainer);
+                    return;
+                }
+                
+                Object.values(pillars).forEach(pillar => {
+                    const techniquesToRender = pillar.techniques.filter(tech => filteredIds.has(tech.id));
+                    if(techniquesToRender.length > 0) {
+                        const column = createElement('div', { className: 'matrix-column' });
+                        column.style.flexBasis = `calc(100% / 4 - 1rem)`;
+                        const header = createElement('h3', { className: 'column-header', textContent: pillar.name, onclick: () => showPillarOrPhaseModal(pillar)});
+                        const ul = createElement('ul');
+                        techniquesToRender.forEach(tech => {
+                            ul.appendChild(renderTechniqueItem(tech, pillar.name, filteredIds, searchTerm));
+                        });
+                        column.appendChild(header);
+                        column.appendChild(ul);
+                        gridContainer.appendChild(column);
                     }
                 });
+                elements.mainContent.appendChild(gridContainer);
+            }
 
+            function renderPhaseGrid(searchTerm) {
+                 const gridContainer = createElement('div', { className: 'matrix-grid' });
+                const filteredIds = getFilteredTechniqueIds(searchTerm);
+
+                if (searchTerm && filteredIds.size === 0) {
+                     gridContainer.appendChild(createElement('p', {
+                        className: 'text-center text-gray-500 dark:text-gray-400 py-10',
+                        textContent: `No techniques found matching "${searchTerm}".`
+                    }));
+                    elements.mainContent.appendChild(gridContainer);
+                    return;
+                }
+                
+                Object.values(phases).forEach(phase => {
+                    const techniquesToRender = phase.techniques.filter(tech => filteredIds.has(tech.id));
+                     if(techniquesToRender.length > 0) {
+                        const column = createElement('div', { className: 'matrix-column' });
+                        column.style.flexBasis = `calc(100% / 6 - 1rem)`;
+                        const header = createElement('h3', { className: 'column-header', textContent: phase.name, onclick: () => showPillarOrPhaseModal(phase) });
+                        const ul = createElement('ul');
+                        techniquesToRender.forEach(tech => {
+                            ul.appendChild(renderTechniqueItem(tech, phase.name, filteredIds, searchTerm));
+                        });
+                        column.appendChild(header);
+                        column.appendChild(ul);
+                        gridContainer.appendChild(column);
+                    }
+                });
+                elements.mainContent.appendChild(gridContainer);
+            }
+            
+            function renderTechniqueItem(tech, groupName, filteredIds, searchTerm) {
+                const li = createElement('li', { className: 'technique-container' });
+                const hasSub = tech.subTechniques && tech.subTechniques.length > 0;
+                
+                const itemDiv = createElement('div', { className: 'technique-item elevation-2' });
+                const contentDiv = createElement('div', { className: 'technique-item-content', onclick: (e) => {
+                    e.stopPropagation(); showTechniqueModal(tech, groupName); }
+                });
+                
                 contentDiv.appendChild(createElement('span', { className: 'technique-id', textContent: tech.id }));
                 contentDiv.appendChild(createElement('span', { className: 'technique-name', textContent: tech.name }));
                 itemDiv.appendChild(contentDiv);
+                
+                let isParentHighlight = searchTerm && matchesTechnique(tech, searchTerm);
 
                 if (hasSub) {
                     const iconWrapper = createElement('div', { className: 'expand-icon' });
                     setIcon(iconWrapper, 'chevron');
                     itemDiv.appendChild(iconWrapper);
-
+                    
                     const subList = createElement('ul', { className: 'sub-technique-list' });
+                    let isSubMatch = false;
                     tech.subTechniques.forEach(subTech => {
-                        subList.appendChild(renderSubTechniqueItem(subTech, tacticName, filter));
+                        if (!searchTerm || filteredIds.has(subTech.id)) {
+                           const subItem = renderSubTechniqueItem(subTech, groupName, filteredIds, searchTerm);
+                           subList.appendChild(subItem);
+                           if (filteredIds.has(subTech.id)) isSubMatch = true;
+                        }
                     });
                     li.appendChild(itemDiv);
                     li.appendChild(subList);
 
-                    const isSubMatch = tech.subTechniques.some(sub => filter.matches.has(sub.id));
-                    if (!filter.all && isSubMatch) {
+                    if (searchTerm && isSubMatch) {
                         itemDiv.classList.add('expanded');
                         subList.classList.add('expanded');
                         iconWrapper.style.transform = 'rotate(90deg)';
                         setTimeout(() => subList.style.maxHeight = subList.scrollHeight + "px", 0);
                     }
-
+                    
                     itemDiv.onclick = (e) => {
-                        e.stopPropagation();
-                        toggleSubTechniques(itemDiv, subList, iconWrapper);
+                       e.stopPropagation();
+                       toggleSubTechniques(itemDiv, subList, iconWrapper);
                     };
-
                 } else {
-                    itemDiv.onclick = (e) => { e.stopPropagation(); showTechniqueModal(tech, tacticName); };
+                    itemDiv.onclick = (e) => { e.stopPropagation(); showTechniqueModal(tech, groupName); };
                     li.appendChild(itemDiv);
                 }
-
-                if (filter.matches.has(tech.id)) {
+                
+                if (isParentHighlight && !hasSub) {
                     itemDiv.classList.add('highlight');
                 }
 
                 return li;
             }
-
+            
             function toggleSubTechniques(header, content, iconWrapper) {
-                const isExpanded = content.classList.toggle('expanded');
-                header.classList.toggle('expanded', isExpanded);
-                iconWrapper.style.transform = isExpanded ? 'rotate(90deg)' : 'rotate(0deg)';
-                content.style.maxHeight = isExpanded ? content.scrollHeight + 'px' : null;
+                 const isExpanded = content.classList.toggle('expanded');
+                 header.classList.toggle('expanded', isExpanded);
+                 iconWrapper.style.transform = isExpanded ? 'rotate(90deg)' : 'rotate(0deg)';
+                 content.style.maxHeight = isExpanded ? content.scrollHeight + 'px' : null;
             }
 
-            function renderSubTechniqueItem(subTech, tacticName, filter) {
+            function renderSubTechniqueItem(subTech, groupName, filteredIds, searchTerm) {
                 const subLi = createElement('li');
-                const subLink = createElement('div', {
+                const subDiv = createElement('div', {
                     className: 'subtechnique-item elevation-2',
-                    onclick: (e) => { e.stopPropagation(); showTechniqueModal(subTech, tacticName); }
+                    onclick: (e) => { e.stopPropagation(); showTechniqueModal(subTech, groupName); }
                 });
 
-                subLink.appendChild(createElement('span', { className: 'technique-id', textContent: subTech.id }));
-                subLink.appendChild(createElement('span', { className: 'technique-name', textContent: subTech.name }));
+                subDiv.appendChild(createElement('span', { className: 'technique-id', textContent: subTech.id }));
+                subDiv.appendChild(createElement('span', { className: 'technique-name', textContent: subTech.name }));
 
-                if (filter.matches.has(subTech.id)) {
-                    subLink.classList.add('highlight');
+                if (searchTerm && filteredIds.has(subTech.id)) {
+                    subDiv.classList.add('highlight');
                 }
 
-                subLi.appendChild(subLink);
+                subLi.appendChild(subDiv);
                 return subLi;
             }
 
@@ -1007,17 +1143,17 @@
                     setIcon(iconWrapper, index === defaultOpenIndex ? 'minus' : 'plus');
                     header.appendChild(title);
                     header.appendChild(iconWrapper);
-
+                    
                     const content = createElement('div', { className: 'accordion-content' });
                     const contentInner = createElement('div', { className: 'accordion-content-inner' });
-                    if (section.paragraphs) section.paragraphs.forEach(p => renderSafeHTML(`<p>${p}</p>`, contentInner));
-                    if (section.listItems) {
+                    if(section.paragraphs) section.paragraphs.forEach(p => renderSafeHTML(`<p>${p}</p>`, contentInner));
+                    if(section.listItems) {
                         const ul = createElement('ul');
                         section.listItems.forEach(item => renderSafeHTML(`<li>${item}</li>`, ul));
                         contentInner.appendChild(ul);
                     }
-                    if (section.concludingParagraphs) section.concludingParagraphs.forEach(p => renderSafeHTML(`<p>${p}</p>`, contentInner));
-
+                    if(section.concludingParagraphs) section.concludingParagraphs.forEach(p => renderSafeHTML(`<p>${p}</p>`, contentInner));
+                    
                     content.appendChild(contentInner);
                     item.appendChild(header);
                     item.appendChild(content);
@@ -1051,15 +1187,22 @@
                 clearElement(elements.modalBody);
                 const fullTactic = aidefendData.tactics.find(t => t.name === tactic.name) || tactic;
                 elements.modalBody.appendChild(createElement('h2', { textContent: fullTactic.name }));
-                elements.modalBody.appendChild(createElement('p', { className: 'mb-4 leading-relaxed text-sm', textContent: fullTactic.purpose || 'No purpose description available.' }));
+                renderSafeHTML(`<p class="mb-4 leading-relaxed text-sm">${fullTactic.purpose || 'No purpose description available.'}</p>`, elements.modalBody);
+                showModal();
+            }
+             function showPillarOrPhaseModal(item) {
+                clearElement(elements.modalBody);
+                elements.modalBody.appendChild(createElement('h2', { textContent: item.name }));
+                renderSafeHTML(`<p class="mb-4 leading-relaxed text-sm">${item.focus || 'No description available.'}</p>`, elements.modalBody);
                 showModal();
             }
 
-            function showTechniqueModal(technique, tacticName) {
+
+            function showTechniqueModal(technique, groupName) {
                 clearElement(elements.modalBody);
-                elements.modalBody.appendChild(createElement('p', { className: 'text-sm opacity-80 mb-1', textContent: `Tactic: ${tacticName}` }));
+                elements.modalBody.appendChild(createElement('p', { className: 'text-sm opacity-80 mb-1', textContent: `Tactic: ${technique.tactic || groupName}` }));
                 elements.modalBody.appendChild(createElement('h2', { textContent: `${technique.id}: ${technique.name}` }));
-                elements.modalBody.appendChild(createElement('p', { className: 'mb-4 leading-relaxed text-sm', textContent: technique.description || 'No description available.' }));
+                renderSafeHTML(`<p class="mb-4 leading-relaxed text-sm">${technique.description || 'No description available.'}</p>`, elements.modalBody);
 
                 if (technique.perfImpact) {
                     const perfDiv = createElement('div', { className: 'perf-impact-note' });
@@ -1099,11 +1242,11 @@
                     setIcon(iconWrapper, 'strategyPlus');
                     header.appendChild(createElement('span', { textContent: strategy.strategy }));
                     header.appendChild(iconWrapper);
-
+                    
                     const content = createElement('div', { className: 'strategy-accordion-content' });
                     const contentInner = createElement('div', { className: 'strategy-accordion-content-inner' });
                     if (strategy.howTo) { renderSafeHTML(strategy.howTo, contentInner); }
-
+                    
                     content.appendChild(contentInner);
                     item.appendChild(header);
                     item.appendChild(content);
@@ -1143,37 +1286,106 @@
             // Event Listeners
             elements.themeToggleBtn.addEventListener('click', toggleTheme);
             elements.aboutBtn.addEventListener('click', showIntroductionModal);
+            
+            elements.viewSwitcher.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON') {
+                    const newView = e.target.dataset.view;
+                    if (newView !== currentView) {
+                        document.querySelector('.view-switcher-btn.active').classList.remove('active');
+                        e.target.classList.add('active');
+                        currentView = newView;
+                        renderMainGrid();
+                    }
+                }
+            });
+            
             elements.searchBar.addEventListener('input', (e) => {
                 currentSearchTerm = e.target.value.trim();
                 elements.searchClearBtn.style.display = currentSearchTerm ? 'block' : 'none';
-                renderMainGrid(currentSearchTerm);
+                renderMainGrid();
             });
+
             elements.searchClearBtn.addEventListener('click', () => {
                 elements.searchBar.value = '';
                 currentSearchTerm = '';
                 elements.searchClearBtn.style.display = 'none';
                 renderMainGrid();
-            });
+});
+
             elements.modalClose.addEventListener('click', hideModal);
             elements.modalBackdrop.addEventListener('click', hideModal);
+            
             document.addEventListener('keydown', (event) => {
-                if (event.key === 'Escape' && elements.modal.classList.contains('active')) hideModal();
+                if (event.key === 'Escape' && elements.modal.classList.contains('active')) {
+                    hideModal();
+                }
             });
 
             // Initialize
             function initialize() {
-                applyTheme(localStorage.getItem('aidefendTheme') || 'dark');
+                const savedTheme = localStorage.getItem('aidefendTheme') || 'dark';
+                applyTheme(savedTheme);
+
                 const aboutIcon = createElement('span');
                 setIcon(aboutIcon, 'info');
                 const svg = aboutIcon.querySelector('svg');
-                if (svg) { svg.style.width = '1rem'; svg.style.height = '1rem'; svg.style.marginRight = '0.5rem'; }
+                if (svg) {
+                    svg.style.width = '1rem';
+                    svg.style.height = '1rem';
+                    svg.style.marginRight = '0.5rem';
+                }
                 elements.aboutBtn.textContent = 'About';
                 elements.aboutBtn.insertBefore(aboutIcon, elements.aboutBtn.firstChild);
+
+                // Prepare data for new views
+                prepareDataForViews();
                 renderMainGrid();
+            }
+            
+            function prepareDataForViews() {
+                // Flatten techniques
+                 eligibleTechniques = [];
+                 aidefendData.tactics.forEach(tactic => {
+                    tactic.techniques?.forEach(tech => {
+                        if (tech.subTechniques && tech.subTechniques.length > 0) {
+                            eligibleTechniques.push(...tech.subTechniques.map(sub => ({...sub, tactic: tactic.name})));
+                        } else {
+                            eligibleTechniques.push({...tech, tactic: tactic.name});
+                        }
+                    });
+                });
+                
+                // Prepare Pillar Data
+                 pillars = {
+                    'data': { name: 'AI Data & Feature Security', focus: 'Securing the entire lifecycle of data, features, and other input assets (e.g., knowledge bases for RAG). This pillar covers data provenance, integrity verification, sanitization, privacy preservation, and defenses against data-centric attacks like poisoning.', techniques: [] },
+                    'infra': { name: 'Infrastructure & Platform Security', focus: "Securing the foundational infrastructure and operational platforms that AI systems are built and run on. This includes the hardware, networks, cloud services, container orchestration, and MLOps pipelines. It covers applying security best practices for identity management, isolation, and configuration hardening to the entire AI technology stack.", techniques: [] },
+                    'model': { name: 'Model & Algorithm Security', focus: "Protecting the AI model itself as a unique asset. This pillar addresses the intrinsic resilience of the model's architecture and learned parameters against attacks like evasion, model theft, and backdoor insertion. It includes techniques like adversarial training, certified defenses, and robust aggregation algorithms.", techniques: [] },
+                    'app': { name: 'Application, Agent & Interface Security', focus: "Securing the application code, prompts, agentic systems, and interfaces that use the model to interact with users and other systems. This pillar covers the newest and most dynamic attack surface, including hardening against prompt injection, ensuring secure tool use by agents, and validating all model inputs and outputs.", techniques: [] }
+                };
+
+                // Prepare Phase Data
+                 phases = {
+                    'scoping': { name: 'AI System Design & Scoping', focus: "The foundational \"blueprint\" phase. This involves defining the AI's purpose and architecture, threat modeling its unique risks, inventorying its components (data, models, APIs), and establishing the safety and ethical boundaries that will govern its development and operation.", techniques: [] },
+                    'building': { name: 'Model Training, Building & Hardening', focus: "The core construction phase focused on creating a secure and robust AI model. This includes the proactive hardening of data pipelines, the implementation of secure model training, building, or fine-tuning processes, and applying defenses that make the resulting model artifact resilient by design.", techniques: [] },
+                    'validation': { name: 'Pre-Deployment Validation & Assurance', focus: "The critical \"security gate\" before going live. This is an adversarial testing and validation phase where the goal is to find and fix vulnerabilities before an attacker does. It involves AI Red Teaming, formal verification of security controls, and gaining assurance that the model behaves safely.", techniques: [] },
+                    'operation': { name: 'Production Operation & Monitoring', focus: "The active, real-time defense of the AI system in a live production environment. This is about continuous observation to detect attacks, monitor for performance and data drift, and ensure the system is operating within its expected parameters.", techniques: [] },
+                    'response': { name: 'Incident Containment & Eviction', focus: "The immediate, tactical response to a confirmed security incident. The goal is to \"stop the bleeding\" as quickly as possible. This involves actions like isolating a rogue agent, quarantining a user, blocking an attack, and kicking the adversary out of the system.", techniques: [] },
+                    'improvement': { name: 'System Restoration & Improvement', focus: "The methodical, post-containment process of safely returning to normal operation and learning from the incident. This includes restoring models and data from trusted backups, performing a root cause analysis, and hardening defenses to prevent recurrence.", techniques: [] }
+                };
+
+                // Populate pillar and phase data
+                eligibleTechniques.forEach(tech => {
+                    tech.pillar?.split(', ').forEach(p => {
+                        if (pillars[p]) pillars[p].techniques.push(tech);
+                    });
+                    tech.phase?.split(', ').forEach(ph => {
+                        if (phases[ph]) phases[ph].techniques.push(tech);
+                    });
+                });
             }
 
             initialize();
-        });
+        };
     </script>
 </body>
 

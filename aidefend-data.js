@@ -6,7 +6,7 @@ const aidefendIntroduction = {
         {
             "title": "What is AIDEFEND?",
             "paragraphs": [
-                "AIDEFEND (Artificial Intelligence Defense Framework) is a knowledge base of defensive countermeasures designed to protect AI/ML systems. Inspired by cybersecurity frameworks like MITRE D3FEND, MITRE ATT&CK®, and MITRE ATLAS®, AIDEFEND complements MITRE ATLAS® by focusing on AI defense.<br><br><strong>Please note: <u>This work is a personal initiative.</u></strong> It was inspired by resources including frameworks (D3FEND, ATT&CK, ATLAS) by MITRE, the MAESTRO Threat Modeling framework by Ken Huang (Cloud Security Alliance Research Fellow), and the OWASP Top 10 Lists (LLM Applications 2025, ML Security 2023) from OWASP. However, <u><strong>this work is not affiliated with, endorsed by, or otherwise connected to the MITRE Corporation, the creator of the MAESTRO framework (Ken Huang), or OWASP.</u></strong>"
+                "AIDEFEND (Artificial Intelligence Defense Framework) is a knowledge base of defensive countermeasures designed to protect AI/ML systems. Inspired by cybersecurity frameworks like MITRE D3FEND, MITRE ATT&CK®, and MITRE ATLAS®, AIDEFEND complements MITRE ATLAS® by focusing on AI defense.<br><br><strong>Please note: <u>This work is a personal initiative.</u></strong> It was inspired by resources including MITRE's frameworks (D3FEND, ATT&CK, ATLAS), the MAESTRO Threat Modeling framework by Ken Huang (Cloud Security Alliance Research Fellow), Google's Secure AI Framework (SAIF), and the OWASP's Top 10 Lists (LLM Applications 2025, ML Security 2023). However, <u><strong>this work is not affiliated with, endorsed by, or otherwise connected to the MITRE Corporation, the creator of the MAESTRO framework (Ken Huang), Google, or OWASP.</u></strong>"
             ]
         },
         {
@@ -41,18 +41,19 @@ const aidefendIntroduction = {
             "title": "Version & Date",
             "paragraphs": [
                 "Version: 1.0",
-                "Last Updated: June 11, 2025"
+                "Last Updated: June 15, 2025"
             ]
         },
         {
-            "title": "Frameworks & Resources Included",
+            "title": "Frameworks & Resources Referenced",
             "paragraphs": [
                 "MAESTRO Framework: An Agentic AI threat modeling framework created by Ken Huang.",
                 "MITRE D3FEND™ Framework: A knowledge graph of cybersecurity countermeasure techniques developed by MITRE.",
                 "MITRE ATT&CK® Framework: A globally accessible knowledge base of adversary tactics and techniques based on real-world observations developed by MITRE.",
                 "MITRE ATLAS™ Framework: A threat modeling framework for AI systems, cataloging adversary behaviors specific to machine learning developed by MITRE",
                 "OWASP Top 10 for LLM Applications 2025: A curated list of the most critical security risks to large language model applications.",
-                "OWASP Top 10 for Machine Learning Security 2023: A security awareness and risk prioritization guide addressing common vulnerabilities in ML systems."
+                "OWASP Top 10 for Machine Learning Security 2023: A security awareness and risk prioritization guide addressing common vulnerabilities in ML systems.",
+                "Google Secure AI Framework (SAIF): A structured approach to safely design, deploy, and manage AI, ensuring the integrity of data, infrastructure, model and application."
             ]
         }
     ]
@@ -382,7 +383,7 @@ const aidefendData = {
                             ]
                         },
                         {
-                            "id": "AID-M-002.003",
+                            "id": "AID-M-002.003", "pillar": "data", "phase": "scoping",
                             "name": "Third-Party Data Vetting",
                             "description": "Implements a formal, security-focused process for onboarding any external or third-party datasets. This technique involves a combination of procedural checks (source reputation, licensing) and technical scans (PII detection, integrity verification, statistical profiling) to identify and mitigate risks before untrusted data is introduced into the organization's AI ecosystem.",
                             "implementationStrategies": [
@@ -488,7 +489,7 @@ const aidefendData = {
                     "subTechniques": [
                         {
                             "id": "AID-M-003.001",
-                            "name": "Model Card & Datasheet Generation",
+                            "name": "Model Card & Datasheet Generation", "pillar": "model", "phase": "building",
                             "description": "A systematic process of creating and maintaining standardized documentation for AI models (Model Cards) and datasets (Datasheets). This documentation captures crucial metadata, including the model's intended use cases, limitations, performance metrics, fairness evaluations, ethical considerations, and details about the data's provenance and characteristics. This ensures transparency, enables responsible governance, and provides a foundational reference for security audits and risk assessments.",
                             "implementationStrategies": [
                                 {
@@ -556,7 +557,7 @@ const aidefendData = {
                         },
                         {
                             "id": "AID-M-003.002",
-                            "name": "Performance & Operational Metric Baselining",
+                            "name": "Performance & Operational Metric Baselining", "pillar": "model", "phase": "validation, operation",
                             "description": "Establishes a quantitative, empirical baseline of a model's expected behavior under normal conditions. This involves calculating and recording two types of metrics: 1) key performance indicators (e.g., accuracy, precision, F1-score) on a trusted, 'golden' dataset, and 2) operational metrics (e.g., inference latency, confidence scores, output distributions) derived from simulated or live traffic. This documented baseline serves as the ground truth for drift detection, anomaly detection, and ongoing performance monitoring.",
                             "implementationStrategies": [
                                 {
@@ -622,7 +623,7 @@ const aidefendData = {
                             ]
                         },
                         {
-                            "id": "AID-M-003.003",
+                            "id": "AID-M-003.003", "pillar": "model", "phase": "validation, operation",
                             "name": "Explainability (XAI) Output Baselining",
                             "description": "Establishes a baseline of normal or expected outputs from eXplainable AI (XAI) methods for a given AI model. By generating and documenting typical explanations (e.g., feature attributions, decision rules) for a diverse set of known, benign inputs, this technique creates a reference point to detect future anomalies. A significant deviation from this baseline can indicate that an attacker is attempting to manipulate or mislead the explanation method itself to conceal malicious activity, as investigated by AID-D-006.",
                             "implementationStrategies": [
@@ -684,7 +685,7 @@ const aidefendData = {
                             ]
                         },
                         {
-                            "id": "AID-M-003.004",
+                            "id": "AID-M-003.004", "pillar": "app", "phase": "scoping",
                             "name": "Agent Goal & Mission Baselining",
                             "description": "Specifically for autonomous or agentic AI, this technique involves formally defining, documenting, and cryptographically signing the agent's core mission, objectives, operational constraints, and goal hierarchy. This signed 'mission directive' serves as a trusted, immutable baseline. It is a critical prerequisite for runtime monitoring systems (like AID-D-010) to detect goal manipulation, unauthorized deviations, or emergent behaviors that contradict the agent's intended purpose.",
                             "implementationStrategies": [
@@ -746,7 +747,7 @@ const aidefendData = {
                             ]
                         },
                         {
-                            "id": "AID-M-003.005",
+                            "id": "AID-M-003.005", "pillar": "model", "phase": "validation, operation",
                             "name": "Generative Model Inversion for Anomaly Pre-screening",
                             "description": "Utilizes a generative model (e.g., a Generative Adversarial Network - GAN) to establish a baseline of 'normal' data characteristics. An input, such as an image, is projected into the model's latent space to find a vector that best reconstructs the input. A high reconstruction error suggests the input is anomalous, out-of-distribution, or potentially a synthetic deepfake not created by a similar generative process. This technique models the expected data fidelity to pre-screen inputs for potential threats.",
                             "implementationStrategies": [
@@ -813,7 +814,7 @@ const aidefendData = {
                             ]
                         },
                         {
-                            "id": "AID-M-003.006",
+                            "id": "AID-M-003.006", "pillar": "model", "phase": "validation",
                             "name": "Graph Energy Analysis for GNN Robustness",
                             "description": "Utilizes metrics derived from a graph's adjacency matrix, such as graph subspace energy, as a quantifiable indicator of a Graph Neural Network's (GNN) robustness to adversarial topology perturbations. By modeling and baselining these structural properties, this technique can guide the development of more inherently resilient GNNs, for instance, by enhancing adversarial training to generate perturbations that are not only effective but also structurally significant according to the energy metric.",
                             "implementationStrategies": [
@@ -876,7 +877,7 @@ const aidefendData = {
                             ]
                         },
                         {
-                            "id": "AID-M-003.007",
+                            "id": "AID-M-003.007", "pillar": "model", "phase": "validation",
                             "name": "Self-Supervised Discrepancy Analysis for GNN Backdoor Defense",
                             "description": "Employs self-supervised learning to train an auxiliary Graph Neural Network (GNN) model that learns the intrinsic semantic information and attribute importance of nodes without using potentially poisoned labels.  This process creates a trusted baseline model of 'normal' node characteristics. This baseline is then used as a reference to detect discrepancies—such as semantic drift or attribute over-emphasis—in a primary GNN trained on the potentially compromised data, which is a foundational step for identifying and mitigating backdoor attacks. ",
                             "implementationStrategies": [
@@ -943,7 +944,7 @@ const aidefendData = {
                 },
                 {
                     "id": "AID-M-004",
-                    "name": "AI Threat Modeling & Risk Assessment",
+                    "name": "AI Threat Modeling & Risk Assessment", "pillar": "data, infra, model, app", "phase": "scoping",
                     "description": "Systematically identify, analyze, and prioritize potential AI-specific threats and vulnerabilities for each AI component (e.g., data, models, algorithms, pipelines, agentic capabilities, APIs) throughout its lifecycle. This process involves understanding how an adversary might attack the AI system and assessing the potential impact of such attacks. The outcomes guide the design of appropriate defensive measures and inform risk management strategies. This proactive approach is essential for building resilient AI systems.",
                     "implementationStrategies": [
                         {
@@ -1062,7 +1063,7 @@ const aidefendData = {
                     ], "subTechniques": [
                         {
                             "id": "AID-M-005.001",
-                            "name": "Design - Secure Configuration Baseline Development",
+                            "name": "Design - Secure Configuration Baseline Development", "pillar": "infra", "phase": "scoping",
                             "description": "Covers the 'design' phase of creating and documenting secure, hardened templates and configurations for all AI system components, based on industry benchmarks. This proactive technique involves defining 'golden standard' configurations for infrastructure, containers, and AI platforms to ensure that systems are secure by default, systematically reducing the attack surface by eliminating common misconfigurations before deployment.",
                             "implementationStrategies": [
                                 {
@@ -1124,7 +1125,7 @@ const aidefendData = {
                         },
                         {
                             "id": "AID-M-005.002",
-                            "name": "Pre-Deployment - Infrastructure as Code (IaC) Security Scanning",
+                            "name": "Pre-Deployment - Infrastructure as Code (IaC) Security Scanning","pillar": "infra", "phase": "validation",
                             "description": "Covers the 'pre-deployment' phase of automatically scanning Infrastructure as Code (IaC) files (e.g., Terraform, CloudFormation, Bicep, Kubernetes YAML) in the CI/CD pipeline. This 'shift-left' security practice aims to detect and block security misconfigurations, policy violations, and hardcoded secrets before insecure infrastructure is ever provisioned in a live environment.",
                             "implementationStrategies": [
                                 {
@@ -1182,7 +1183,7 @@ const aidefendData = {
                         },
                         {
                             "id": "AID-M-005.003",
-                            "name": "Post-Deployment - Configuration Drift & Posture Monitoring",
+                            "name": "Post-Deployment - Configuration Drift & Posture Monitoring", "pillar": "infra", "phase": "operation",
                             "description": "Covers the 'post-deployment' phase of using Cloud Security Posture Management (CSPM) tools and custom scripts to continuously monitor live cloud environments. This technique aims to detect and alert on 'configuration drift'—unauthorized or accidental changes that cause a system to deviate from its established secure baseline—providing a real-time view of the security posture for all AI system components.",
                             "implementationStrategies": [
                                 {
@@ -1283,7 +1284,7 @@ const aidefendData = {
                     "subTechniques": [
                         {
                             "id": "AID-M-006.001",
-                            "name": "HITL Checkpoint Design & Documentation",
+                            "name": "HITL Checkpoint Design & Documentation", "pillar": "app", "phase": "scoping",
                             "description": "This sub-technique covers the initial development phase of implementing Human-in-the-Loop controls. It involves formally defining the specific triggers that require human intervention in code and configuration, implementing the technical hooks for the AI agent to pause and await a decision, and creating the clear Standard Operating Procedures (SOPs) that operators will follow when an intervention is required.",
                             "implementationStrategies": [
                                 {
@@ -1337,7 +1338,7 @@ const aidefendData = {
                             ]
                         }, {
                             "id": "AID-M-006.002",
-                            "name": "HITL Operator Training & Readiness Testing",
+                            "name": "HITL Operator Training & Readiness Testing", "pillar": "app", "phase": "validation",
                             "description": "Covers the human and procedural readiness aspects of a Human-in-the-Loop (HITL) system. This technique involves developing comprehensive training programs and running simulated emergency scenarios ('fire drills') for human operators. It also includes regularly auditing and testing the technical HITL mechanisms to ensure both operator preparedness and end-to-end functionality, confirming that human control can be asserted effectively and reliably when needed.",
                             "implementationStrategies": [
                                 {
@@ -1446,7 +1447,7 @@ def hitl_checkpoint_drill(checkpoint_id: str = "HITL-CP-001"):
                             ]
                         }, {
                             "id": "AID-M-006.003",
-                            "name": "HITL Escalation & Activity Monitoring",
+                            "name": "HITL Escalation & Activity Monitoring",  "pillar": "app", "phase": "operation",
                             "description": "Covers the live operational and security aspects of a Human-in-the-Loop (HITL) system. This technique involves defining and implementing the technical escalation paths for undecided or unhandled intervention requests and ensuring that all HITL activations, operator decisions, and system responses are securely logged. This provides a comprehensive audit trail for forensic analysis and real-time monitoring to detect anomalous operator behavior or high-frequency intervention events.",
                             "implementationStrategies": [
                                 {
@@ -1501,7 +1502,7 @@ def hitl_checkpoint_drill(checkpoint_id: str = "HITL-CP-001"):
                 },
                 {
                     "id": "AID-M-007",
-                    "name": "AI Use Case & Safety Boundary Modeling",
+                    "name": "AI Use Case & Safety Boundary Modeling", "pillar": "data", "phase": "scoping",
                     "description": "This technique involves the formal, technical documentation and validation of an AI system's intended purpose, operational boundaries, and ethical guardrails. It translates abstract governance policies into concrete, machine-readable artifacts and automated tests that model the system's safety posture. The goal is to proactively define and enforce the AI's scope of acceptable use, assess it for fairness and bias, and analyze its potential for misuse, creating a verifiable record for security, compliance, and responsible AI assurance. This serves as the business and ethical context counterpart to the technical threat model (AID-M-004).",
                     "toolsOpenSource": [
                         "Fairness toolkits (Fairlearn, IBM AI Fairness 360, Themis-ML)",
@@ -1574,7 +1575,7 @@ def hitl_checkpoint_drill(checkpoint_id: str = "HITL-CP-001"):
             "techniques": [
                 {
                     "id": "AID-H-001",
-                    "name": "Adversarial Robustness Training",
+                    "name": "Adversarial Robustness Training", "pillar": "model", "phase": "building",
                     "description": "A set of techniques that proactively improve a model's resilience to adversarial inputs by training it with examples specifically crafted to try and fool it. This process 'vaccinates' the model against various forms of attack—from subtle, full-image perturbations to localized, high-visibility adversarial patches—by directly incorporating adversarial defense into the training loop, forcing the model to learn more robust and generalizable features.",
                     "toolsOpenSource": [
                         "Adversarial Robustness Toolbox (ART), CleverHans, Foolbox, Torchattacks",
@@ -1697,7 +1698,7 @@ def hitl_checkpoint_drill(checkpoint_id: str = "HITL-CP-001"):
                     "subTechniques": [
                         {
                             "id": "AID-H-002.001",
-                            "name": "Training & Fine-Tuning Data Sanitization",
+                            "name": "Training & Fine-Tuning Data Sanitization", "pillar": "data", "phase": "building",
                             "description": "Focuses on detecting and removing poisoned samples, unwanted biases, or sensitive data from datasets before they are used for model training or fine-tuning. This pre-processing step is critical for preventing the model from learning vulnerabilities or undesirable behaviors from the outset.",
                             "toolsOpenSource": [
                                 "Great Expectations (for data validation and quality checks)",
@@ -1772,7 +1773,7 @@ def hitl_checkpoint_drill(checkpoint_id: str = "HITL-CP-001"):
                         },
                         {
                             "id": "AID-H-002.002",
-                            "name": "Inference-Time Prompt & Input Validation",
+                            "name": "Inference-Time Prompt & Input Validation", "pillar": "app", "phase": "building, operation",
                             "description": "Focuses on real-time defense against malicious inputs at the point of inference, such as prompt injection, jailbreaking attempts, or other input-based evasions. This technique acts as a guardrail for the live, operational model.",
                             "toolsOpenSource": [
                                 "NVIDIA NeMo Guardrails",
@@ -1844,7 +1845,7 @@ def hitl_checkpoint_drill(checkpoint_id: str = "HITL-CP-001"):
                         },
                         {
                             "id": "AID-H-002.003",
-                            "name": "Multimodal Input Sanitization",
+                            "name": "Multimodal Input Sanitization", "pillar": "data", "phase": "building, operation",
                             "description": "Focuses on the unique challenges of validating and sanitizing non-textual inputs like images, audio, and video before they are processed by a model. This includes implementing defensive transformations to remove adversarial perturbations, stripping potentially malicious metadata, and ensuring consistency across modalities to prevent cross-modal attacks.",
                             "implementationStrategies": [
                                 {
@@ -2023,7 +2024,7 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                     "subTechniques": [
                         {
                             "id": "AID-H-003.001",
-                            "name": "Software Dependency & Package Security",
+                            "name": "Software Dependency & Package Security", "pillar": "infra", "phase": "building",
                             "description": "Ensure integrity of all third-party code and libraries (Python packages, containers, build tools) used to develop and serve AI workloads.",
                             "toolsOpenSource": [
                                 "Trivy, Syft, Grype (for SCA)",
@@ -2089,7 +2090,7 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                         },
                         {
                             "id": "AID-H-003.002",
-                            "name": "Model Artifact Verification & Secure Distribution",
+                            "name": "Model Artifact Verification & Secure Distribution", "pillar": "infra, model", "phase": "building, validation",
                             "description": "Protect pre-trained or fine-tuned model binaries, weights and checkpoints from tampering in transit or at rest.",
                             "toolsOpenSource": [
                                 "MLflow Model Registry",
@@ -2152,7 +2153,7 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                         },
                         {
                             "id": "AID-H-003.003",
-                            "name": "Dataset Supply Chain Validation",
+                            "name": "Dataset Supply Chain Validation", "pillar": "data", "phase": "building",
                             "description": "Authenticate, checksum and licence-check every external dataset (training, fine-tuning, RAG).",
                             "toolsOpenSource": [
                                 "DVC (Data Version Control)",
@@ -2213,7 +2214,7 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                         },
                         {
                             "id": "AID-H-003.004",
-                            "name": "Hardware & Firmware Integrity Assurance",
+                            "name": "Hardware & Firmware Integrity Assurance", "pillar": "infra", "phase": "building",
                             "description": "Verify accelerator cards, firmware and BIOS/UEFI images are genuine and un-modified before joining an AI cluster.",
                             "toolsOpenSource": [
                                 "Open-source secure boot implementations (e.g., U-Boot)",
@@ -2315,7 +2316,7 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                     "subTechniques": [
                         {
                             "id": "AID-H-004.001",
-                            "name": "User & Privileged Access Management",
+                            "name": "User & Privileged Access Management",  "pillar": "infra", "phase": "building, operation",
                             "description": "Focuses on securing access for human users, such as developers, data scientists, and system administrators, who manage and interact with AI systems. The goal is to enforce strong authentication and granular permissions for human identities.",
                             "toolsOpenSource": [
                                 "Keycloak",
@@ -2370,7 +2371,7 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                         },
                         {
                             "id": "AID-H-004.002",
-                            "name": "Service & API Authentication",
+                            "name": "Service & API Authentication","pillar": "infra", "phase": "building, operation",
                             "description": "Focuses on securing machine-to-machine communication for AI services. This includes authenticating service accounts, applications, and other services that need to interact with AI model APIs, data stores, or MLOps pipelines.",
                             "toolsOpenSource": [
                                 "OAuth2-Proxy",
@@ -2424,7 +2425,7 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                         },
                         {
                             "id": "AID-H-004.003",
-                            "name": "Secure Agent-to-Agent Communication",
+                            "name": "Secure Agent-to-Agent Communication", "pillar": "app", "phase": "building, operation",
                             "description": "Focuses on the unique challenge of securing communications within multi-agent systems. This ensures that autonomous agents can trust each other, and that their messages cannot be spoofed, tampered with, or replayed by an adversary.",
                             "toolsOpenSource": [
                                 "SPIFFE/SPIRE",
@@ -2517,7 +2518,7 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                     "subTechniques": [
                         {
                             "id": "AID-H-005.001",
-                            "name": "Differential Privacy for AI",
+                            "name": "Differential Privacy for AI", "pillar": "data, model", "phase": "building",
                             "description": "Implements differential privacy mechanisms to add calibrated noise to model training, outputs, or data queries, ensuring that individual data points cannot be identified while maintaining overall utility.",
                             "perfImpact": {
                                 "level": "High on Training Time & Model Utility",
@@ -2580,7 +2581,7 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                         },
                         {
                             "id": "AID-H-005.002",
-                            "name": "Homomorphic Encryption for AI",
+                            "name": "Homomorphic Encryption for AI", "pillar": "data, model", "phase": "building",
                             "description": "Enables computation on encrypted data, allowing models to train or perform inference without ever decrypting sensitive information, providing strong cryptographic guarantees.",
                             "perfImpact": {
                                 "level": "Extremely High on Inference Latency & Computational Cost",
@@ -2649,7 +2650,7 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                         },
                         {
                             "id": "AID-H-005.003",
-                            "name": "Adaptive Data Augmentation for Membership Inference Defense",
+                            "name": "Adaptive Data Augmentation for Membership Inference Defense", "pillar": "model", "phase": "building",
                             "description": "Employs adaptive data augmentation techniques, such as 'mixup', during the model training process to harden it against membership inference attacks (MIAs).  Mixup creates new training samples by linearly interpolating between existing samples and their labels.  The 'adaptive' component involves dynamically adjusting the mixup strategy during training, which enhances the model's generalization and makes it more difficult for an attacker to determine if a specific data point was part of the training set. ",
                             "implementationStrategies": [
                                 {
@@ -2710,7 +2711,7 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                         },
                         {
                             "id": "AID-H-005.004",
-                            "name": "LLM Training Data Deduplication",
+                            "name": "LLM Training Data Deduplication", "pillar": "data", "phase": "building",
                             "description": "A data-centric hardening technique that involves systematically removing duplicate or near-duplicate sequences from the training datasets for Large Language Models (LLMs). This pre-processing step directly mitigates the risk of unintended memorization, where LLMs are prone to learn and regenerate specific training examples verbatim, which can lead to the leakage of sensitive or copyrighted information. ",
                             "implementationStrategies": [
                                 {
@@ -2837,7 +2838,7 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                     "subTechniques": [
                         {
                             "id": "AID-H-006.001",
-                            "name": "Structured Output Enforcement",
+                            "name": "Structured Output Enforcement", "pillar": "app", "phase": "building, operation",
                             "description": "Forces LLMs to generate output that conforms to a strict, pre-defined schema (e.g., JSON, YAML) instead of free-form text. This ensures the output can be safely parsed and validated by downstream systems, preventing the generation of unintended or malicious scripts, formats, or commands.",
                             "toolsOpenSource": [
                                 "Instructor",
@@ -2895,7 +2896,7 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                         },
                         {
                             "id": "AID-H-006.002",
-                            "name": "Output Content Sanitization & Validation",
+                            "name": "Output Content Sanitization & Validation", "pillar": "app", "phase": "building, operation",
                             "description": "Applies security checks and sanitization to the content generated by an AI model before it is displayed to a user or passed to a downstream system. This involves escaping output to prevent injection attacks (e.g., Cross-Site Scripting, Shell Injection) and validating specific content types, such as URLs, against blocklists or safety APIs to prevent users from being directed to malicious websites.",
                             "implementationStrategies": [
                                 {
@@ -3081,7 +3082,7 @@ def is_url_safe(url: str):
                     ], "subTechniques": [
                         {
                             "id": "AID-H-007.001",
-                            "name": "Secure Training Environment Provisioning",
+                            "name": "Secure Training Environment Provisioning", "pillar": "infra", "phase": "building",
                             "description": "This sub-technique focuses on the infrastructure layer of AI security. It covers the creation of dedicated, isolated, and hardened environments for training jobs using Infrastructure as Code (IaC), least-privilege IAM roles, and, where necessary, confidential computing. The goal is to build a secure foundation for the training process, protecting it from both internal and external threats, and ensuring the confidentiality and integrity of the data and model being processed.",
                             "implementationStrategies": [
                                 {
@@ -3141,7 +3142,7 @@ def is_url_safe(url: str):
                             ]
                         },
                         {
-                            "id": "AID-H-007.002",
+                            "id": "AID-H-007.002", "pillar": "infra", "phase": "operation",
                             "name": "Runtime Training Job Monitoring & Auditing",
                             "description": "Focuses on instrumenting the training script itself to continuously monitor for behavioral anomalies and to create a detailed, immutable audit log. This involves real-time tracking of key training metrics (e.g., loss, gradient norms) to detect signs of instability or poisoning, and systematically logging all parameters, code versions, and data versions to ensure any training run is fully auditable and reproducible.",
                             "implementationStrategies": [
@@ -3270,7 +3271,7 @@ with mlflow.start_run() as run:
                         },
                         {
                             "id": "AID-H-007.003",
-                            "name": "Training Process Reproducibility",
+                            "name": "Training Process Reproducibility", "pillar": "infra, model", "phase": "building",
                             "description": "This sub-technique focuses on the governance and versioning aspect of securing the training process. It covers the strict version control of all inputs to a training job—including source code, configuration files, dependencies, the dataset, and the container image—to ensure any run can be perfectly and verifiably reproduced. This is critical for auditing, debugging incidents, and ensuring the integrity of the model's entire lifecycle.",
                             "implementationStrategies": [
                                 {
@@ -3435,8 +3436,8 @@ with mlflow.start_run() as run:
                     ],
                     "subTechniques": [
                         {
-                            "id": "AID-H-008.001",
-                            "name": "Secure Aggregation Protocols for Federated Learning",
+                            "id": "AID-H-008.001", 
+                            "name": "Secure Aggregation Protocols for Federated Learning", "pillar": "model", "phase": "building",
                             "description": "Employs cryptographic methods in Federated Learning (FL) to protect the privacy of individual client contributions, such as model updates or gradients.  These protocols are designed so the central server can compute the aggregate (sum or average) of all client updates but cannot inspect or reverse-engineer any individual contribution.  This hardens the FL process against inference attacks by the server and preserves user privacy in collaborative learning environments. ",
                             "implementationStrategies": [
                                 {
@@ -3496,7 +3497,7 @@ with mlflow.start_run() as run:
                         },
                         {
                             "id": "AID-H-008.002",
-                            "name": "Byzantine-Robust Aggregation Rules",
+                            "name": "Byzantine-Robust Aggregation Rules", "pillar": "model", "phase": "building",
                             "description": "A class of statistical, non-cryptographic aggregation methods designed to protect the integrity of the global model in Federated Learning. These rules identify and mitigate the impact of outlier or malicious model updates from compromised clients (Byzantine actors) by using functions like median, trimmed mean, or distance-based scoring (e.g., Krum) to filter out or down-weight anomalous contributions before they can corrupt the final aggregated model.",
                             "implementationStrategies": [
                                 {
@@ -3595,7 +3596,7 @@ with mlflow.start_run() as run:
                     "subTechniques": [
                         {
                             "id": "AID-H-009.001",
-                            "name": "Hardware Root of Trust & Secure Boot",
+                            "name": "Hardware Root of Trust & Secure Boot", "pillar": "infra", "phase": "building",
                             "description": "This sub-technique focuses on ensuring that the hardware and its boot-level software start in a known, trusted state. It covers the implementation and verification of Secure Boot chains for servers equipped with AI accelerators. This process establishes a chain of trust from an immutable hardware root, ensuring that every piece of software loaded during startup—from the UEFI firmware to the bootloader and operating system kernel—is cryptographically signed and verified, preventing boot-level malware.",
                             "implementationStrategies": [
                                 {
@@ -3699,7 +3700,7 @@ PS > Get-AuthenticodeSignature -FilePath "C:\\Program Files\\NVIDIA Corporation\
                         },
                         {
                             "id": "AID-H-009.002",
-                            "name": "Accelerator Firmware & Driver Patch Management",
+                            "name": "Accelerator Firmware & Driver Patch Management", "pillar": "infra", "phase": "building, operation",
                             "description": "This sub-technique covers the operational lifecycle management for the software that runs directly on the AI hardware. It includes processes for monitoring for vulnerabilities in firmware and drivers for GPUs, TPUs, and other accelerators, and applying security patches in a timely, controlled manner to prevent exploitation of known vulnerabilities.",
                             "implementationStrategies": [
                                 {
@@ -3788,7 +3789,7 @@ ScanPolicy:
                         },
                         {
                             "id": "AID-H-009.003",
-                            "name": "Hardware Supply Chain Security",
+                            "name": "Hardware Supply Chain Security", "pillar": "infra", "phase": "scoping",
                             "description": "This sub-technique focuses on the procurement and sourcing of AI hardware. It covers vetting suppliers, verifying the authenticity of components, and contractually requiring features like side-channel attack resistance. The goal is to mitigate the risk of acquiring counterfeit, tampered, or inherently vulnerable hardware components that could be used to compromise AI systems.",
                             "implementationStrategies": [
                                 {
@@ -3866,7 +3867,7 @@ ScanPolicy:
                 },
                 {
                     "id": "AID-H-010",
-                    "name": "Transformer Architecture Defenses",
+                    "name": "Transformer Architecture Defenses", "pillar": "model", "phase": "building",
                     "description": "Implement security measures specifically designed to mitigate vulnerabilities inherent in the Transformer architecture, such as attention mechanism manipulation, position embedding attacks, and risks associated with self-attention complexity. These defenses aim to protect against attacks that exploit how Transformers process and prioritize information.",
                     "toolsOpenSource": [
                         "TextAttack (for generating adversarial examples against Transformers)",
@@ -3922,7 +3923,7 @@ ScanPolicy:
                 },
                 {
                     "id": "AID-H-011",
-                    "name": "Classifier-Free Guidance Hardening",
+                    "name": "Classifier-Free Guidance Hardening", "pillar": "model", "phase": "building",
                     "description": "A set of techniques focused on hardening the Classifier-Free Guidance (CFG) mechanism in diffusion models. CFG is a core component that steers image generation towards a text prompt, but adversaries can exploit high guidance scale values to force the model to generate harmful, unsafe, or out-of-distribution content. These hardening techniques aim to control the CFG scale and its influence, preventing its misuse while preserving the model's creative capabilities.",
                     "implementationStrategies": [
                         {
@@ -4087,7 +4088,7 @@ def analyze_prompt_risk(prompt: str) -> str:
                     ], "subTechniques": [
                         {
                             "id": "AID-H-012.001",
-                            "name": "Graph Data Sanitization & Provenance",
+                            "name": "Graph Data Sanitization & Provenance", "pillar": "data", "phase": "building",
                             "description": "This sub-technique covers the data-centric defenses performed on a graph before training. It focuses on analyzing the graph's structure to identify and remove anomalous nodes or edges, and on incorporating provenance information (e.g., trust scores based on data sources) to down-weight the influence of less trusted parts of the graph during model training.",
                             "implementationStrategies": [
                                 {
@@ -4139,7 +4140,7 @@ def analyze_prompt_risk(prompt: str) -> str:
                         },
                         {
                             "id": "AID-H-012.002",
-                            "name": "Robust GNN Training & Architecture",
+                            "name": "Robust GNN Training & Architecture", "pillar": "model", "phase": "building",
                             "description": "This sub-technique covers the model-centric defenses against GNN poisoning. It focuses on modifying the GNN's architecture (e.g., using robust aggregation functions) and the training process (e.g., applying regularization) to make the model itself inherently more resilient to the effects of malicious data or structural perturbations.",
                             "implementationStrategies": [
                                 {
@@ -4271,7 +4272,7 @@ def regularized_training_step(data):
                         },
                         {
                             "id": "AID-H-012.003",
-                            "name": "Certified GNN Robustness",
+                            "name": "Certified GNN Robustness", "pillar": "model", "phase": "building",
                             "description": "This sub-technique covers the advanced, formal verification approach to defending Graph Neural Networks (GNNs). It provides a mathematical guarantee that a model's prediction for a specific node will remain unchanged even if an attacker adds or removes up to a certain number of edges in the graph. This 'certified radius' of robustness represents a distinct, high-assurance implementation path against structural poisoning attacks.",
                             "implementationStrategies": [
                                 {
@@ -4451,7 +4452,7 @@ class GraphRobustnessVerifier:
                     "subTechniques": [
                         {
                             "id": "AID-H-013.001",
-                            "name": "Adaptive Reward Shaping via Bootstrapped Value Functions",
+                            "name": "Adaptive Reward Shaping via Bootstrapped Value Functions", "pillar": "model", "phase": "building",
                             "description": "An advanced reward shaping technique for Reinforcement Learning that hardens the learning process against reward hacking. It provides the agent with an auxiliary reward signal to guide exploration in environments with sparse or complex rewards. This technique is adaptive because the auxiliary reward is derived directly from the agent's own current estimate of the optimal state-value function (V*(s)). As the agent's understanding of the environment improves, the shaped reward signal automatically evolves, providing denser and more informed guidance.",
                             "implementationStrategies": [
                                 {
@@ -4514,7 +4515,7 @@ class GraphRobustnessVerifier:
                         },
                         {
                             "id": "AID-H-013.002",
-                            "name": "Model-Based Reward Shaping for Adversarial Inverse Reinforcement Learning (AIRL)",
+                            "name": "Model-Based Reward Shaping for Adversarial Inverse Reinforcement Learning (AIRL)", "pillar": "model", "phase": "building",
                             "description": "A technique to harden policies learned via Adversarial Inverse Reinforcement Learning (AIRL) by infusing a learned model of the environment's dynamics directly into the reward shaping process. By training an auxiliary 'world model' that predicts state transitions, the reward function (discriminator) in the AIRL setup can be enhanced with information about the likely consequences of actions. This leads to the derivation of a more robust and accurate reward function, especially in stochastic environments, which in turn hardens the final agent policy against reward hacking and suboptimal behaviors. ",
                             "implementationStrategies": [
                                 {
@@ -4614,7 +4615,7 @@ class GraphRobustnessVerifier:
                     "subTechniques": [
                         {
                             "id": "AID-H-014.001",
-                            "name": "Proactive Identity Watermarking for Deepfake Defense",
+                            "name": "Proactive Identity Watermarking for Deepfake Defense", "pillar": "data", "phase": "building",
                             "description": "A proactive defense that involves embedding imperceptible, robust digital watermarks directly into the identity features of facial images before they are publicly shared or released. The watermark is designed to be fragile or indicative under deepfake generation processes, meaning any attempt to use the image to create a deepfake will either disrupt the process, degrade the output, or transfer the watermark to the synthetic media, making it detectable or traceable. ",
                             "implementationStrategies": [
                                 {
@@ -4676,7 +4677,7 @@ class GraphRobustnessVerifier:
                         },
                         {
                             "id": "AID-H-014.002",
-                            "name": "Proactive Identity Cloaking for Source Image Protection",
+                            "name": "Proactive Identity Cloaking for Source Image Protection", "pillar": "data", "phase": "building",
                             "description": "An identity cloaking algorithm that proactively defends against deepfake face swapping attacks. It operates by inserting imperceptible perturbations into source images (i.e., the images from which identities are to be extracted). These perturbations are specifically crafted to 'cloak' the identity information, effectively nullifying or degrading the quality of attempts to use the image for face swapping, even when the attacker has no knowledge of the defense mechanism. ",
                             "implementationStrategies": [
                                 {
@@ -4742,7 +4743,7 @@ class GraphRobustnessVerifier:
                 },
                 {
                     "id": "AID-H-015",
-                    "name": "Ensemble Methods for Robustness",
+                    "name": "Ensemble Methods for Robustness", "pillar": "model", "phase": "building",
                     "description": "An architectural defense that improves a system's resilience by combining the predictions of multiple, independently trained AI models. An attacker must now successfully deceive a majority of the models in the ensemble to cause a misclassification, significantly increasing the difficulty of a successful evasion attack. This technique is applied at inference time and is distinct from training-time hardening methods.",
                     "implementationStrategies": [
                         {
@@ -4864,7 +4865,7 @@ def predict_with_probability_averaging(input_data, models):
                 },
                 {
                     "id": "AID-H-016",
-                    "name": "Certified Defenses",
+                    "name": "Certified Defenses", "pillar": "model", "phase": "building",
                     "description": "A set of advanced techniques that provide a mathematical, provable guarantee that a model's output will not change for any input within a defined 'robustness radius'. Unlike empirical defenses like standard adversarial training, which improve resilience against known attack types, certified defenses use formal methods to prove that no attack within a certain magnitude (e.g., L-infinity norm) can cause a misclassification. This is a highly specialized task that offers the highest level of assurance against evasion attacks.",
                     "implementationStrategies": [
                         {
@@ -5016,7 +5017,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-H-017",
-                    "name": "System Prompt Hardening",
+                    "name": "System Prompt Hardening", "pillar": "app", "phase": "building",
                     "description": "This technique focuses on the design and implementation of robust system prompts to proactively defend Large Language Models (LLMs) against prompt injection, jailbreaking, and manipulation. It involves crafting the LLM's core instructions to be clear, unambiguous, and resilient to adversarial user inputs. This is a design-time, preventative control that establishes the foundational security posture of an LLM-based application.",
                     "toolsOpenSource": [
                         "Prompt engineering testing tools (e.g., `garak`, `vigil-llm`)",
@@ -5080,7 +5081,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-H-018",
-                    "name": "Secure Agent Architecture",
+                    "name": "Secure Agent Architecture", "pillar": "app", "phase": "scoping",
                     "description": "This technique covers the secure-by-design architectural principles for building autonomous AI agents. It focuses on proactively designing the agent's core components—such as its reasoning loop, tool-use mechanism, state management, and action dispatchers—to be inherently more robust, auditable, and resistant to manipulation. This is distinct from monitoring agent behavior; it is about building the agent securely from the ground up.",
                     "toolsOpenSource": [
                         "Agentic frameworks (LangChain, AutoGen, CrewAI, Semantic Kernel)",
@@ -5192,7 +5193,7 @@ class SmoothedClassifier(torch.nn.Module):
                     "subTechniques": [
                         {
                             "id": "AID-D-001.001",
-                            "name": "Per-Prompt Content & Obfuscation Analysis",
+                            "name": "Per-Prompt Content & Obfuscation Analysis",  "pillar": "app", "phase": "operation",
                             "description": "Performs real-time analysis on individual prompts to detect malicious content, prompt injection, and jailbreaking attempts. This sub-technique combines two key functions: 1) identifying known malicious patterns and harmful intent using heuristics, regex, and specialized guardrail models, and 2) detecting attempts to hide or obscure these attacks through obfuscation techniques like character encoding (e.g., Base64), homoglyphs, or high-entropy strings. It acts as a primary, synchronous guardrail at the input layer.",
                             "implementationStrategies": [
                                 {
@@ -5259,7 +5260,7 @@ class SmoothedClassifier(torch.nn.Module):
                         },
                         {
                             "id": "AID-D-001.002",
-                            "name": "Synthetic Media & Deepfake Forensics",
+                            "name": "Synthetic Media & Deepfake Forensics", "pillar": "data, app", "phase": "validation, operation",
                             "description": "Detects manipulated or synthetically generated media (e.g., deepfakes) by performing a forensic analysis that identifies a combination of specific technical artifacts and inconsistencies. This technique fuses evidence from multiple indicators across different modalities—such as image compression anomalies, unnatural biological signals (blinking, vocal patterns), audio-visual mismatches, and hidden data payloads—to provide a more robust and reliable assessment of the media's authenticity.",
                             "implementationStrategies": [
                                 {
@@ -5328,7 +5329,7 @@ class SmoothedClassifier(torch.nn.Module):
                         },
                         {
                             "id": "AID-D-001.003",
-                            "name": "Vector-Space Anomaly Detection",
+                            "name": "Vector-Space Anomaly Detection", "pillar": "model, app", "phase": "operation",
                             "description": "Detects semantically novel or anomalous inputs by operating on their vector embeddings rather than their raw content. This technique establishes a baseline of 'normal' inputs by clustering the embeddings of known-good data. At inference time, inputs whose embeddings are statistical outliers or fall far from the normal cluster centroids are flagged as suspicious. This is effective against novel attacks that bypass keyword or pattern-based filters by using unusual but semantically malicious phrasing.",
                             "implementationStrategies": [
                                 {
@@ -5390,7 +5391,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-D-002",
-                    "name": "AI Model Anomaly & Performance Drift Detection",
+                    "name": "AI Model Anomaly & Performance Drift Detection", "pillar": "model", "phase": "operation",
                     "description": "Continuously monitor the outputs, performance metrics (e.g., accuracy, confidence scores, precision, recall, F1-score, output distribution), and potentially internal states or feature attributions of AI models during operation. This monitoring aims to detect significant deviations from established baselines or expected behavior. Such anomalies or drift can indicate various issues, including concept drift (changes in the underlying data distribution), data drift (changes in input data characteristics), or malicious activities like ongoing data poisoning attacks, subtle model evasion attempts, or model skewing.",
                     "implementationStrategies": [
                         {
@@ -5502,7 +5503,7 @@ class SmoothedClassifier(torch.nn.Module):
                     "subTechniques": [
                         {
                             "id": "AID-D-003.001",
-                            "name": "Harmful Content & Policy Filtering",
+                            "name": "Harmful Content & Policy Filtering", "pillar": "app", "phase": "operation",
                             "description": "Focuses on inspecting AI-generated content for violations of safety and acceptable use policies. This includes detecting hate speech, self-harm content, explicit material, and other categories of harmful or inappropriate output.",
                             "toolsOpenSource": [
                                 "Hugging Face Transformers (for custom classifiers)",
@@ -5573,7 +5574,7 @@ class SmoothedClassifier(torch.nn.Module):
                         },
                         {
                             "id": "AID-D-003.002",
-                            "name": "Sensitive Information & Data Leakage Detection",
+                            "name": "Sensitive Information & Data Leakage Detection", "pillar": "data, app", "phase": "operation",
                             "description": "Focuses on preventing the AI model from inadvertently disclosing sensitive, confidential, or private information in its outputs. This is critical for protecting user privacy and corporate data.",
                             "toolsOpenSource": [
                                 "Microsoft Presidio (for PII detection and anonymization)",
@@ -5646,7 +5647,7 @@ class SmoothedClassifier(torch.nn.Module):
                         },
                         {
                             "id": "AID-D-003.003",
-                            "name": "Agentic Tool Use & Action Policy Monitoring",
+                            "name": "Agentic Tool Use & Action Policy Monitoring", "pillar": "app", "phase": "operation",
                             "description": "This sub-technique focuses on the unique challenge of monitoring the actions of autonomous agents. It involves defining and enforcing strict, machine-readable policies about which tools an agent can use, with what parameters, and in what sequence. The detection mechanism is a real-time policy engine that validates each proposed action against these rules before it is executed, acting as a critical guardrail against unintended or malicious agent behavior.",
                             "implementationStrategies": [
                                 {
@@ -5756,7 +5757,7 @@ class SmoothedClassifier(torch.nn.Module):
                     "subTechniques": [
                         {
                             "id": "AID-D-004.001",
-                            "name": "Static Artifact Hash & Signature Verification",
+                            "name": "Static Artifact Hash & Signature Verification",  "pillar": "infra, model, app", "phase": "building, validation",
                             "description": "Periodically re-hash stored models, datasets and container layers and compare against the authorised manifest.",
                             "toolsOpenSource": [
                                 "MLflow Model Registry",
@@ -5833,7 +5834,7 @@ class SmoothedClassifier(torch.nn.Module):
                         },
                         {
                             "id": "AID-D-004.002",
-                            "name": "Runtime Attestation & Memory Integrity",
+                            "name": "Runtime Attestation & Memory Integrity", "pillar": "infra", "phase": "operation",
                             "description": "Attest the running model process (code, weights, enclave MRENCLAVE) to detect in-memory patching or DLL injection.",
                             "toolsOpenSource": [
                                 "Intel SGX SDK",
@@ -5907,7 +5908,7 @@ class SmoothedClassifier(torch.nn.Module):
                         },
                         {
                             "id": "AID-D-004.003",
-                            "name": "Configuration & Policy Drift Monitoring",
+                            "name": "Configuration & Policy Drift Monitoring", "pillar": "infra", "phase": "operation",
                             "description": "Detect unauthorised edits to model-serving YAMLs, feature-store ACLs, RAG index schemas or inference-time policy files.",
                             "toolsOpenSource": [
                                 "Git (for version control and signed commits)",
@@ -6024,7 +6025,7 @@ class SmoothedClassifier(torch.nn.Module):
                     ], "subTechniques": [
                         {
                             "id": "AID-D-005.001",
-                            "name": "AI System Log Generation & Collection",
+                            "name": "AI System Log Generation & Collection", "pillar": "infra", "phase": "operation",
                             "description": "This foundational technique covers the instrumentation of AI applications to produce detailed, structured logs for all significant events, and the implementation of a secure pipeline to collect and forward these logs to a central analysis platform. The goal is to create a high-fidelity, auditable record of system activity, which is a prerequisite for all other detection, investigation, and threat hunting capabilities.",
                             "toolsOpenSource": [
                                 "logging (Python library), loguru, structlog",
@@ -6099,7 +6100,7 @@ class SmoothedClassifier(torch.nn.Module):
                         },
                         {
                             "id": "AID-D-005.002",
-                            "name": "Security Monitoring & Alerting for AI",
+                            "name": "Security Monitoring & Alerting for AI", "pillar": "infra, app", "phase": "operation",
                             "description": "This technique covers the real-time monitoring of ingested AI system logs and the creation of specific rules to detect and generate alerts for known suspicious or malicious patterns. It focuses on the operational security task of identifying potential threats as they occur by comparing live activity against predefined attack signatures and behavioral heuristics. This is the core function of a Security Operations Center (SOC) in defending AI systems.",
                             "toolsOpenSource": [
                                 "ELK Stack / OpenSearch (with alerting features)",
@@ -6173,7 +6174,7 @@ class SmoothedClassifier(torch.nn.Module):
                         },
                         {
                             "id": "AID-D-005.003",
-                            "name": "Proactive AI Threat Hunting",
+                            "name": "Proactive AI Threat Hunting", "pillar": "infra, model, app", "phase": "operation",
                             "description": "This technique covers the proactive, hypothesis-driven search through AI system logs and telemetry for subtle, unknown, or 'low-and-slow' attacks that do not trigger predefined alerts. Threat hunting assumes an attacker may already be present and evading standard detections. It focuses on identifying novel attack patterns, reconnaissance activities, and anomalous behaviors by using exploratory data analysis, complex queries, and machine learning on historical data.",
                             "toolsOpenSource": [
                                 "Jupyter Notebooks (with Pandas, Scikit-learn, Matplotlib)",
@@ -6238,7 +6239,7 @@ class SmoothedClassifier(torch.nn.Module):
                         },
                         {
                             "id": "AID-D-005.004",
-                            "name": "Specialized Agent & Session Logging",
+                            "name": "Specialized Agent & Session Logging", "pillar": "app", "phase": "operation",
                             "description": "This technique covers the highly specialized logging required for autonomous and agentic AI systems, which goes beyond standard API request/response logging. It involves instrumenting the agent's internal decision-making loop to capture its goals, plans, intermediate thoughts, tool selections, and interactions with memory or knowledge bases. This detailed audit trail is essential for debugging, ensuring compliance, and detecting complex threats like goal manipulation or emergent, unsafe behaviors.",
                             "toolsOpenSource": [
                                 "Agentic frameworks with callback/handler systems (LangChain, AutoGen, CrewAI, LlamaIndex)",
@@ -6307,7 +6308,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-D-006",
-                    "name": "Explainability (XAI) Manipulation Detection",
+                    "name": "Explainability (XAI) Manipulation Detection", "pillar": "model", "phase": "validation, operation",
                     "description": "Implement mechanisms to monitor and validate the outputs and behavior of eXplainable AI (XAI) methods. The goal is to detect attempts by adversaries to manipulate or mislead these explanations, ensuring that XAI outputs accurately reflect the model's decision-making process and are not crafted to conceal malicious operations, biases, or vulnerabilities. This is crucial if XAI is used for debugging, compliance, security monitoring, or building user trust.",
                     "perfImpact": {
                         "level": "High on Inference Latency",
@@ -6380,7 +6381,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-D-007",
-                    "name": "Multimodal Inconsistency Detection",
+                    "name": "Multimodal Inconsistency Detection", "pillar": "data, model", "phase": "operation",
                     "description": "For AI systems processing multiple input modalities (e.g., text, image, audio, video), implement mechanisms to detect and respond to inconsistencies, contradictions, or malicious instructions hidden via cross-modal interactions. This involves analyzing inputs and outputs across modalities to identify attempts to bypass security controls or manipulate one modality using another, and applying defenses to mitigate such threats.",
                     "toolsOpenSource": [
                         "Computer vision libraries (OpenCV, Pillow) for image analysis (e.g., detecting text in images, QR code scanning, deepfake detection).",
@@ -6466,7 +6467,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-D-008",
-                    "name": "AI-Based Security Analytics for AI systems",
+                    "name": "AI-Based Security Analytics for AI systems", "pillar": "data, model, app", "phase": "operation",
                     "description": "Employ specialized AI/ML models (secondary AI defenders) to analyze telemetry, logs, and behavioral patterns from primary AI systems to detect sophisticated, subtle, or novel attacks that may evade rule-based or traditional detection methods. This includes identifying anomalous interactions, emergent malicious behaviors, coordinated attacks, or signs of AI-generated attacks targeting the primary AI systems.",
                     "perfImpact": {
                         "level": "Medium to High on Monitoring Overhead & Latency",
@@ -6556,7 +6557,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-D-009",
-                    "name": "Cross-Agent Fact Verification & Hallucination Cascade Prevention",
+                    "name": "Cross-Agent Fact Verification & Hallucination Cascade Prevention", "pillar": "app", "phase": "operation",
                     "description": "Implement real-time fact verification and consistency checking mechanisms across multiple AI agents to detect and prevent the propagation of hallucinated or false information through agent networks. This technique employs distributed consensus algorithms, external knowledge base validation, and inter-agent truth verification to break hallucination cascades before they spread through the system.",
                     "toolsOpenSource": [
                         "Apache Kafka with custom fact-verification consumers for distributed fact checking",
@@ -6637,7 +6638,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-D-010",
-                    "name": "AI Goal Integrity Monitoring & Deviation Detection",
+                    "name": "AI Goal Integrity Monitoring & Deviation Detection", "pillar": "app", "phase": "operation",
                     "description": "Continuously monitor and validate AI agent goals, objectives, and decision-making patterns to detect unauthorized goal manipulation or intent deviation. This technique establishes cryptographically signed goal states, implements goal consistency verification, and provides real-time alerting when agents deviate from their intended objectives or exhibit goal manipulation indicators.",
                     "toolsOpenSource": [
                         "HashiCorp Vault for cryptographic goal signing and verification",
@@ -6750,7 +6751,7 @@ class SmoothedClassifier(torch.nn.Module):
                     "subTechniques": [
                         {
                             "id": "AID-D-011.001",
-                            "name": "Agent Behavioral Analytics & Anomaly Detection",
+                            "name": "Agent Behavioral Analytics & Anomaly Detection", "pillar": "app", "phase": "operation",
                             "description": "This data science-driven technique focuses on detecting rogue or compromised agents by analyzing their behavior over time. It involves creating a quantitative 'fingerprint' of an agent's normal operational patterns from logs and telemetry. By continuously comparing an agent's live behavior against its established baseline, this technique can identify significant deviations, drifts, or anomalous patterns that indicate a compromise or hijacking.",
                             "toolsOpenSource": [
                                 "scikit-learn (for clustering and anomaly detection models like Isolation Forest, DBSCAN)",
@@ -6810,7 +6811,7 @@ class SmoothedClassifier(torch.nn.Module):
                         },
                         {
                             "id": "AID-D-011.002",
-                            "name": "Inter-Agent Security & Consensus Monitoring",
+                            "name": "Inter-Agent Security & Consensus Monitoring", "pillar": "app", "phase": "operation",
                             "description": "This sub-technique covers the security of agent-to-agent interactions within a multi-agent system. It focuses on implementing mechanisms that allow agents to monitor and validate each other's behavior, report anomalies, and reach consensus before performing critical, system-wide actions. This creates a distributed, peer-to-peer defense layer within the agent ecosystem.",
                             "toolsOpenSource": [
                                 "Agentic frameworks with inter-agent communication protocols (AutoGen, CrewAI)",
@@ -6864,7 +6865,7 @@ class SmoothedClassifier(torch.nn.Module):
                         },
                         {
                             "id": "AID-D-011.003",
-                            "name": "Agent Infrastructure & Population Control",
+                            "name": "Agent Infrastructure & Population Control", "pillar": "infra, app", "phase": "operation",
                             "description": "This sub-technique covers the infrastructure and orchestration-level controls for managing the agent population and responding to threats. It focuses on a top-down view of the agent ecosystem, ensuring that only authorized agents are running and providing mechanisms to rapidly isolate and contain agents that are confirmed to be rogue or malicious. These are typically automated responses triggered by other detection systems.",
                             "toolsOpenSource": [
                                 "Kubernetes (for pod management and network policies)",
@@ -6958,7 +6959,7 @@ class SmoothedClassifier(torch.nn.Module):
                     "subTechniques": [
                         {
                             "id": "AID-D-012.001",
-                            "name": "Discrepancy-Based GNN Backdoor Detection",
+                            "name": "Discrepancy-Based GNN Backdoor Detection", "pillar": "model", "phase": "validation",
                             "description": "Detects backdoored nodes in a Graph Neural Network (GNN) by identifying significant discrepancies between a potentially compromised model and a clean baseline model (established via AID-M-003.003). The technique specifically looks for semantic drift (changes in a node's meaning) and attribute over-emphasis (unusual feature importance) caused by the backdoor. Clustering algorithms are then often used to isolate the small group of poisoned nodes based on these detected discrepancies.",
                             "implementationStrategies": [
                                 {
@@ -7021,7 +7022,7 @@ class SmoothedClassifier(torch.nn.Module):
                         },
                         {
                             "id": "AID-D-012.002",
-                            "name": "Structure-Feature Relationship Analysis for GNN Defense",
+                            "name": "Structure-Feature Relationship Analysis for GNN Defense", "pillar": "data, model", "phase": "operation",
                             "description": "Detects and mitigates training-time adversarial attacks on Graph Neural Networks (GNNs) that perturb the graph structure. The core principle is to analyze the relationship between the graph's connectivity (structure) and the attributes of its nodes (features). By identifying and then pruning or down-weighting anomalous edges that violate expected structure-feature properties (e.g., connecting highly dissimilar nodes), this technique creates a revised, more robust graph for the GNN's message passing, hardening it against structural poisoning.",
                             "implementationStrategies": [
                                 {
@@ -7084,7 +7085,7 @@ class SmoothedClassifier(torch.nn.Module):
                         },
                         {
                             "id": "AID-D-012.003",
-                            "name": "Structural & Topological Anomaly Detection",
+                            "name": "Structural & Topological Anomaly Detection", "pillar": "data", "phase": "operation",
                             "description": "Detects potential poisoning or backdoor attacks in graphs by analyzing their topological structure, independent of node features. This technique identifies suspicious patterns such as unusually dense subgraphs (cliques), nodes with anomalously high centrality or degree, or other structural irregularities that deviate from the expected properties of the graph and are often characteristic of coordinated attacks.",
                             "implementationStrategies": [
                                 {
@@ -7141,7 +7142,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-D-013",
-                    "name": "RL Reward & Policy Manipulation Detection",
+                    "name": "RL Reward & Policy Manipulation Detection", "pillar": "model", "phase": "operation",
                     "description": "This technique focuses on monitoring and analyzing Reinforcement Learning (RL) systems to detect two primary threats: reward hacking and reward tampering. Reward hacking occurs when an agent discovers an exploit in the environment's reward function to achieve a high score for unintended or harmful behavior. Reward tampering involves an external actor manipulating the reward signal being sent to the agent. This technique uses statistical analysis of the reward stream and behavioral analysis of the agent's learned policy to detect these manipulations.",
                     "toolsOpenSource": [
                         "RL libraries with logging callbacks (Stable-Baselines3, RLlib)",
@@ -7246,7 +7247,7 @@ class SmoothedClassifier(torch.nn.Module):
                     "subTechniques": [
                         {
                             "id": "AID-I-001.001",
-                            "name": "Container-Based Isolation",
+                            "name": "Container-Based Isolation", "pillar": "infra", "phase": "operation",
                             "description": "Utilizes container technologies like Docker or Kubernetes to package and run AI workloads in isolated user-space environments. This approach provides process and filesystem isolation and allows for resource management and network segmentation.",
                             "toolsOpenSource": [
                                 "Docker",
@@ -7333,7 +7334,7 @@ class SmoothedClassifier(torch.nn.Module):
                         },
                         {
                             "id": "AID-I-001.002",
-                            "name": "MicroVM & Low-Level Sandboxing",
+                            "name": "MicroVM & Low-Level Sandboxing", "pillar": "infra", "phase": "operation",
                             "description": "Employs lightweight Virtual Machines (MicroVMs) or kernel-level sandboxing technologies to provide a stronger isolation boundary than traditional containers. This is critical for running untrusted code or highly sensitive AI workloads.",
                             "perfImpact": {
                                 "level": "Low to Medium on Startup Time & CPU/Memory Overhead",
@@ -7422,7 +7423,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-I-002",
-                    "name": "Network Segmentation & Isolation for AI Systems",
+                    "name": "Network Segmentation & Isolation for AI Systems", "pillar": "infra", "phase": "operation",
                     "description": "Implement network segmentation and microsegmentation strategies to isolate AI systems and their components (e.g., training environments, model serving endpoints, data stores, agent control planes) from general corporate networks and other critical IT/OT systems. This involves enforcing strict communication rules through firewalls, proxies, and network policies to limit an attacker's ability to pivot from a compromised AI component to other parts of the network, or to exfiltrate data to unauthorized destinations. This technique reduces the \\\"blast radius\\\" of a security incident involving an AI system.",
                     "toolsOpenSource": [
                         "Linux Netfilter (iptables, nftables), firewalld",
@@ -7500,7 +7501,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-I-003",
-                    "name": "Quarantine & Throttling of AI Interactions",
+                    "name": "Quarantine & Throttling of AI Interactions", "pillar": "infra, app", "phase": "response",
                     "description": "Implement mechanisms to automatically or manually isolate, rate-limit, or place into a restricted \\\"safe mode\\\" specific AI system interactions when suspicious activity is detected. This could apply to individual user sessions, API keys, IP addresses, or even entire AI agent instances. The objective is to prevent potential attacks from fully executing, spreading, or causing significant harm by quickly containing or degrading the capabilities of the suspicious entity. This is an active response measure triggered by detection systems.",
                     "toolsOpenSource": [
                         "Fail2Ban (adapted for AI logs)",
@@ -7574,7 +7575,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-I-004",
-                    "name": "Agent Memory & State Isolation",
+                    "name": "Agent Memory & State Isolation", "pillar": "app", "phase": "operation",
                     "description": "Specifically for agentic AI systems, implement mechanisms to isolate and manage the agent's memory (e.g., conversational context, short-term state, knowledge retrieved from vector databases) and periodically reset or flush it. This defense aims to prevent malicious instructions, poisoned data, or exploited states (e.g., a \\\"jailbroken\\\" state) from persisting across multiple interactions, sessions, or from affecting other unrelated agent tasks or instances. It helps to limit the temporal scope of a successful manipulation.",
                     "toolsOpenSource": [
                         "LangChain Guardrails or custom callback handlers",
@@ -7650,7 +7651,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-I-005",
-                    "name": "Emergency \"Kill-Switch\" / AI System Halt",
+                    "name": "Emergency \"Kill-Switch\" / AI System Halt", "pillar": "infra, app", "phase": "response",
                     "description": "Establish and maintain a reliable, rapidly invokable mechanism to immediately halt, disable, or severely restrict the operation of an AI model or autonomous agent if it exhibits confirmed critical malicious behavior, goes \\\"rogue\\\" (acts far outside its intended parameters in a harmful way), or if a severe, ongoing attack is detected and other containment measures are insufficient. This is a last-resort containment measure designed to prevent catastrophic harm or further compromise.",
                     "toolsOpenSource": [
                         "Custom scripts/automation playbooks (Ansible, cloud CLIs) to stop/delete resources",
@@ -7720,7 +7721,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-I-006",
-                    "name": "Malicious Participant Isolation in Federated Unlearning",
+                    "name": "Malicious Participant Isolation in Federated Unlearning", "pillar": "model", "phase": "response",
                     "description": "Identifies and logically isolates the influence of malicious clients within a Federated Learning (FL) system, particularly during a machine unlearning or model restoration process. Once identified, the malicious participants' data contributions and model updates are excluded from the unlearning or retraining calculations. This technique is critical for preventing attackers from sabotaging the model recovery process and ensuring the final restored model is not corrupted. ",
                     "implementationStrategies": [
                         {
@@ -7785,7 +7786,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-I-007",
-                    "name": "Client-Side AI Execution Isolation",
+                    "name": "Client-Side AI Execution Isolation", "pillar": "app", "phase": "operation",
                     "description": "This technique focuses on containing a compromised or malicious client-side model, preventing it from accessing sensitive data from other browser tabs, the underlying operating system, or other applications on the user's device. It addresses the unique security challenges of AI models that execute in untrusted environments like a user's web browser or mobile application. The goal is to ensure that even if a model is compromised, its impact is strictly confined to its own sandbox.",
                     "toolsOpenSource": [
                         "WebAssembly runtimes (Wasmtime, Wasmer)",
@@ -7855,8 +7856,8 @@ class SmoothedClassifier(torch.nn.Module):
             "purpose": "The \"Deceive\" tactic involves the strategic use of decoys, misinformation, or the manipulation of an adversary's perception of the AI system and its environment. The objectives are to misdirect attackers away from real assets, mislead them about the system's true vulnerabilities or value, study their attack methodologies in a safe environment, waste their resources, or deter them from attacking altogether.",
             "techniques": [
                 {
-                    "id": "AID-DV-001",
-                    "name": "Honeypot AI Services & Decoy Models/APIs",
+                    "id": "AID-DV-001", 
+                    "name": "Honeypot AI Services & Decoy Models/APIs", "pillar": "infra, model, app", "phase": "operation",
                     "description": "Deploy decoy AI systems, such as fake LLM APIs, ML model endpoints serving synthetic or non-sensitive data, or imitation agent services, that are designed to appear valuable, vulnerable, or legitimate to potential attackers. These honeypots are instrumented for intensive monitoring to log all interactions, capture attacker TTPs (Tactics, Techniques, and Procedures), and gather threat intelligence without exposing real production systems or data. They can also be used to slow down attackers or waste their resources.",
                     "toolsOpenSource": [
                         "General honeypot frameworks (Cowrie, Dionaea, Conpot) adapted",
@@ -7928,7 +7929,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-DV-002",
-                    "name": "Honey Data, Decoy Artifacts & Canary Tokens for AI",
+                    "name": "Honey Data, Decoy Artifacts & Canary Tokens for AI", "pillar": "data, infra, model, app", "phase": "building, operation",
                     "description": "Strategically seed the AI ecosystem (training datasets, model repositories, configuration files, API documentation) with enticing but fake data, decoy model artifacts (e.g., a seemingly valuable but non-functional or instrumented model file), or canary tokens (e.g., fake API keys, embedded URLs in documents). These \\\"honey\\\" elements are designed to be attractive to attackers. If an attacker accesses, exfiltrates, or attempts to use these decoys, it triggers an alert, signaling a breach or malicious activity and potentially providing information about the attacker's actions or location.",
                     "toolsOpenSource": [
                         "Canarytokens.org by Thinkst",
@@ -8005,7 +8006,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-DV-003",
-                    "name": "Dynamic Response Manipulation for AI Interactions",
+                    "name": "Dynamic Response Manipulation for AI Interactions", "pillar": "app", "phase": "response",
                     "description": "Implement mechanisms where the AI system, upon detecting suspicious or confirmed adversarial interaction patterns (e.g., repeated prompt injection attempts, queries indicative of model extraction), deliberately alters its responses to be misleading, unhelpful, or subtly incorrect to the adversary. This aims to frustrate the attacker's efforts, waste their resources, make automated attacks less reliable, and potentially gather more intelligence on their TTPs without revealing the deception. The AI might simultaneously alert defenders to the ongoing deceptive engagement.",
                     "toolsOpenSource": [
                         "Custom logic in AI frameworks (LangChain, Semantic Kernel) for deceptive response mode",
@@ -8072,7 +8073,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-DV-004",
-                    "name": "AI Output Watermarking & Telemetry Traps",
+                    "name": "AI Output Watermarking & Telemetry Traps", "pillar": "data, model, app", "phase": "operation",
                     "description": "Embed imperceptible or hard-to-remove watermarks, unique identifiers, or telemetry \\\"beacons\\\" into the outputs generated by AI models (e.g., text, images, code). If these outputs are found externally (e.g., on the internet, in a competitor's product, in leaked documents), the watermark or beacon can help trace the output back to the originating AI system, potentially identifying model theft, misuse, or data leakage. Telemetry traps involve designing the AI to produce specific, unique (but benign) outputs for certain rare or crafted inputs, which, if observed externally, indicate that the model or its specific knowledge has been compromised or replicated.",
                     "toolsOpenSource": [
                         "MarkLLM (watermarking LLM text)",
@@ -8152,7 +8153,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-DV-005",
-                    "name": "Decoy Agent Behaviors & Canary Tasks",
+                    "name": "Decoy Agent Behaviors & Canary Tasks", "pillar": "app", "phase": "operation",
                     "description": "For autonomous AI agents, design and implement decoy or \\\"canary\\\" functionalities, goals, or sub-agents that appear valuable or sensitive but are actually monitored traps. If an attacker successfully manipulates an agent (e.g., via prompt injection or memory poisoning) and directs it towards these decoy tasks or to exhibit certain predefined suspicious behaviors, it triggers an alert, revealing the compromise attempt and potentially the attacker's intentions, without risking real assets.",
                     "toolsOpenSource": [
                         "Agentic Radar (CLI scanner, adaptable for decoy tests)",
@@ -8219,7 +8220,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-DV-006",
-                    "name": "Deceptive System Information",
+                    "name": "Deceptive System Information", "pillar":"infra, model, app", "phase": "operation",
                     "description": "When probed by unauthenticated or suspicious users, the AI system provides misleading information about its architecture, capabilities, or underlying models. For example, an API might return headers suggesting it's built on a different framework, or an LLM might respond to 'What model are you?' with a decoy answer.",
                     "toolsOpenSource": [
                         "API Gateway configurations (Kong, Tyk, Nginx)",
@@ -8284,7 +8285,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-DV-007",
-                    "name": "Training-Phase Obfuscation for Model Inversion Defense",
+                    "name": "Training-Phase Obfuscation for Model Inversion Defense", "pillar": "model", "phase": "building",
                     "description": "A deception technique that defends against model inversion attacks by intentionally adding controlled noise or obfuscation during the model's training phase. By making the relationship between inputs, outputs, and the model's internal parameters less deterministic, the resulting model becomes a 'noisier' and more opaque oracle. This deceives and frustrates an attacker's attempts to reconstruct sensitive training data from the model's outputs. ",
                     "implementationStrategies": [
                         {
@@ -8341,7 +8342,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-DV-008",
-                    "name": "Poisoning Detection Canaries & Decoy Data",
+                    "name": "Poisoning Detection Canaries & Decoy Data", "pillar": "data", "phase": "improvement",
                     "description": "This technique involves proactively embedding synthetic 'canary' or 'sentinel' data points into a training set to deceive and detect data poisoning attacks. These canaries are specifically crafted to be easily learned by the model under normal conditions. During training, the model's behavior on these specific points is monitored. If a data poisoning attack disrupts the overall data distribution or the training process, it will cause an anomalous reaction on these canaries (e.g., a sudden spike in loss, a change in prediction), triggering a high-fidelity alert that reveals the attack without the adversary realizing their method has been detected.",
                     "toolsOpenSource": [
                         "MLOps platforms with real-time metric logging (MLflow, Weights & Biases)",
@@ -8449,7 +8450,7 @@ class SmoothedClassifier(torch.nn.Module):
                     "subTechniques": [
                         {
                             "id": "AID-E-001.001",
-                            "name": "Foundational Credential Management",
+                            "name": "Foundational Credential Management", "pillar": "infra", "phase": "response",
                             "description": "This sub-technique covers the standard, proactive lifecycle management and incident response for credentials associated with human users and traditional services (e.g., database accounts, long-lived service account keys). It includes essential security hygiene practices like regularly rotating secrets, as well as reactive measures such as forcing password resets and cleaning up unauthorized accounts after a compromise has been detected.",
                             "toolsOpenSource": [
                                 "Cloud provider CLIs/SDKs (AWS CLI, gcloud, Azure CLI)",
@@ -8508,7 +8509,7 @@ class SmoothedClassifier(torch.nn.Module):
                         },
                         {
                             "id": "AID-E-001.002",
-                            "name": "Automated & Real-time Invalidation",
+                            "name": "Automated & Real-time Invalidation", "pillar": "infra", "phase": "response",
                             "description": "This sub-technique covers the immediate, automated, and reactive side of credential eviction. It focuses on integrating security alerting with response workflows to automatically disable compromised credentials the moment they are detected. It also addresses the challenge of ensuring that revocations for stateless tokens (like JWTs) are propagated and enforced in real-time to immediately terminate an attacker's session.",
                             "toolsOpenSource": [
                                 "Cloud provider automation (AWS Lambda, Azure Functions, Google Cloud Functions)",
@@ -8563,7 +8564,7 @@ class SmoothedClassifier(torch.nn.Module):
                         },
                         {
                             "id": "AID-E-001.003",
-                            "name": "AI Agent & Workload Identity Revocation",
+                            "name": "AI Agent & Workload Identity Revocation", "pillar": "infra, app", "phase": "response",
                             "description": "This sub-technique covers the specialized task of revoking credentials and identities for non-human, AI-specific entities. It addresses modern, ephemeral identity types like those used by autonomous agents and containerized workloads, such as short-lived mTLS certificates, cloud workload identities (e.g., IAM Roles for Service Accounts), and SPIFFE Verifiable Identity Documents (SVIDs). The goal is to immediately evict a compromised AI workload from the trust domain.",
                             "toolsOpenSource": [
                                 "Workload Identity Systems (SPIFFE/SPIRE)",
@@ -8624,7 +8625,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-E-002",
-                    "name": "AI Process & Session Eviction",
+                    "name": "AI Process & Session Eviction", "pillar": "infra, app", "phase": "response",
                     "description": "Terminate any running AI model instances, agent processes, user sessions, or containerized workloads that are confirmed to be malicious, compromised, or actively involved in an attack. This immediate action halts the adversary's ongoing activities within the AI system and removes their active foothold.",
                     "toolsOpenSource": [
                         "OS process management (kill, pkill, taskkill)",
@@ -8727,7 +8728,7 @@ class SmoothedClassifier(torch.nn.Module):
                     "subTechniques": [
                         {
                             "id": "AID-E-003.001",
-                            "name": "Neural Network Backdoor Detection & Removal",
+                            "name": "Neural Network Backdoor Detection & Removal", "pillar": "model", "phase": "improvement",
                             "description": "Focuses on identifying and removing backdoors embedded within neural network model parameters, including trigger-based backdoors that cause misclassification on specific inputs.",
                             "toolsOpenSource": [
                                 "Adversarial Robustness Toolbox (ART) by IBM (includes Neural Cleanse, Activation Defence)",
@@ -8809,7 +8810,7 @@ class SmoothedClassifier(torch.nn.Module):
                         },
                         {
                             "id": "AID-E-003.002",
-                            "name": "Poisoned Data Detection & Cleansing",
+                            "name": "Poisoned Data Detection & Cleansing", "pillar": "data", "phase": "improvement",
                             "description": "Identifies and removes maliciously crafted data points from training sets, vector databases, or other data stores that could influence model behavior or enable attacks.",
                             "toolsOpenSource": [
                                 "scikit-learn (for Isolation Forest, DBSCAN)",
@@ -8900,7 +8901,7 @@ class SmoothedClassifier(torch.nn.Module):
                         },
                         {
                             "id": "AID-E-003.003",
-                            "name": "Malicious Code & Configuration Cleanup",
+                            "name": "Malicious Code & Configuration Cleanup", "pillar": "infra, app", "phase": "improvement",
                             "description": "Removes malicious scripts, modified configuration files, unauthorized tools, or persistence mechanisms that attackers may have introduced into the AI system infrastructure.",
                             "toolsOpenSource": [
                                 "AIDE (Advanced Intrusion Detection Environment)",
@@ -9000,7 +9001,7 @@ class SmoothedClassifier(torch.nn.Module):
                         },
                         {
                             "id": "AID-E-003.004",
-                            "name": "Malicious Node Eviction in Graph Datasets",
+                            "name": "Malicious Node Eviction in Graph Datasets", "pillar": "data", "phase": "improvement",
                             "description": "After a detection method identifies nodes that are likely poisoned or part of a backdoor trigger, this eviction technique systematically removes those nodes and their associated edges from the graph dataset. This cleansing action is performed before the final, clean Graph Neural Network (GNN) model is trained or retrained, ensuring the malicious artifacts and their influence are fully purged from the training process.",
                             "implementationStrategies": [
                                 {
@@ -9065,7 +9066,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-E-004",
-                    "name": "Post-Incident System Patching & Hardening",
+                    "name": "Post-Incident System Patching & Hardening", "pillar": "infra, app", "phase": "improvement",
                     "description": "After an attack vector has been identified and the adversary evicted, rapidly apply necessary security patches to vulnerable software components (e.g., ML libraries, operating systems, web servers, agent frameworks) and harden system configurations that were exploited or found to be weak. This step aims to close the specific vulnerabilities used by the attacker and strengthen overall security posture to prevent reinfection or similar future attacks.",
                     "toolsOpenSource": [
                         "Package managers (apt, yum, pip, conda)",
@@ -9248,7 +9249,7 @@ class SmoothedClassifier(torch.nn.Module):
                     "subTechniques": [
                         {
                             "id": "AID-R-001.001",
-                            "name": "Versioned Model Rollback & Restoration",
+                            "name": "Versioned Model Rollback & Restoration", "pillar": "model", "phase": "improvement",
                             "description": "Restores a compromised AI model to a known-good state by deploying a trusted, previously saved version from a secure artifact repository or model registry. This technique is the primary recovery method when a deployed model artifact has been tampered with post-deployment or when an incident requires reverting to the last known-secure version. It relies on maintaining immutable, versioned, and verifiable backups of all production models.",
                             "implementationStrategies": [
                                 {
@@ -9312,7 +9313,7 @@ class SmoothedClassifier(torch.nn.Module):
                         },
                         {
                             "id": "AID-R-001.002",
-                            "name": "Model Retraining for Remediation",
+                            "name": "Model Retraining for Remediation", "pillar": "model", "phase": "improvement",
                             "description": "This sub-technique covers the restoration workflow for when a model's integrity has been compromised by its training data (e.g., via data poisoning or backdoor attacks). It involves a multi-stage process: first, identifying and removing the malicious data or client influence; second, retraining a new model from scratch using only the resulting sanitized dataset; and third, validating that the new model is both secure and performant. This approach is more comprehensive than a simple rollback and is necessary when no trusted model backup exists.",
                             "toolsOpenSource": [
                                 "MLOps platforms (MLflow, Kubeflow Pipelines, DVC)",
@@ -9382,7 +9383,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-R-002",
-                    "name": "Data Integrity Recovery for AI Systems",
+                    "name": "Data Integrity Recovery for AI Systems", "pillar": "data", "phase": "improvement",
                     "description": "Restore the integrity of any datasets used by or generated by AI systems that were corrupted, tampered with, or maliciously altered during a security incident. This includes training data, validation data, vector databases for RAG, embeddings stores, configuration data, or logs of AI outputs. Recovery typically involves reverting to known-good backups, using data validation tools to identify and correct inconsistencies, or, in some cases, reconstructing data if backups are insufficient or also compromised.",
                     "toolsOpenSource": [
                         "Database backup/restore utilities (pg_dump, mysqldump)",
@@ -9451,7 +9452,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-R-003",
-                    "name": "Secure Session & Identity Restoration",
+                    "name": "Secure Session & Identity Restoration", "pillar": "infra, app", "phase": "improvement",
                     "description": "Following an incident where communication channels or user/agent sessions may have been compromised, this technique restores the integrity of all system interactions. It involves expiring all potentially tainted active sessions, clearing manipulated conversational states, and forcing all users and AI agents to re-authenticate over verified, secure channels. The goal is to ensure that the system is returned to a clean, trusted state, preventing attackers from leveraging residual compromised sessions.",
                     "toolsOpenSource": [
                         "Application server admin interfaces for session expiration",
@@ -9524,7 +9525,7 @@ class SmoothedClassifier(torch.nn.Module):
 
                 {
                     "id": "AID-R-004",
-                    "name": "Post-Incident Review, Hardening & Communication",
+                    "name": "Post-Incident Review, Hardening & Communication", "pillar": "data, infra, model, app", "phase": "improvement",
                     "description": "Following recovery from a security incident, conduct a thorough, blameless review of the attack to identify the root cause. Based on these lessons learned, reinforce security controls, update threat models, perform targeted testing to validate fixes, and communicate the incident details to relevant internal and external stakeholders. This comprehensive process ensures that vulnerabilities are addressed, system resilience is improved, and knowledge is shared to prevent recurrence and improve collective defense.",
                     "toolsOpenSource": [
                         "MITRE ATLAS Navigator",
