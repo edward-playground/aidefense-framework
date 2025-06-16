@@ -439,7 +439,8 @@
         .modal-content h2.modal-main-title {
             font-size: 1.75rem;
             font-weight: 500;
-            margin-bottom: 1rem; /* Reduced margin */
+            margin-bottom: 1rem;
+            /* Reduced margin */
             color: var(--column-header-hover-text);
         }
 
@@ -721,12 +722,13 @@
         html.dark .view-switcher-btn.active {
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
         }
-        
+
         .view-info-tabs {
             display: flex;
             border-bottom: 1px solid var(--column-border);
             margin-bottom: 1.5rem;
         }
+
         .view-info-tab {
             padding: 0.75rem 1.25rem;
             cursor: pointer;
@@ -739,16 +741,20 @@
             margin-bottom: -1px;
             transition: color 0.2s, border-color 0.2s;
         }
+
         .view-info-tab:hover {
             color: var(--text-color);
         }
+
         .view-info-tab.active {
             color: var(--technique-item-text);
             border-bottom-color: var(--technique-item-text);
         }
+
         .view-info-tab-content {
             display: none;
         }
+
         .view-info-tab-content.active {
             display: block;
         }
@@ -759,27 +765,32 @@
             border-radius: 0.75rem;
             padding: 1.25rem;
         }
+
         .view-info-card h3 {
             color: var(--technique-item-text);
             font-size: 1.25rem;
             margin-top: 0;
             margin-bottom: 0.75rem;
         }
+
         .view-info-card .view-question {
             color: var(--technique-item-text);
             margin-bottom: 1rem;
             display: block;
         }
+
         .view-info-card .view-focus-text {
             margin-bottom: 1.5rem;
             flex-grow: 1;
         }
+
         .view-info-card .view-detail {
             display: flex;
             align-items: flex-start;
             gap: 0.75rem;
             margin-top: 1rem;
         }
+
         .view-info-card .view-detail-icon {
             flex-shrink: 0;
             width: 1.25rem;
@@ -787,14 +798,17 @@
             color: var(--technique-item-text);
             margin-top: 0.125rem;
         }
+
         .view-info-card .view-detail-content {
             font-size: 0.9rem;
             line-height: 1.6;
         }
+
         .view-info-card .view-detail-content strong {
             color: var(--text-color);
             font-weight: 600;
         }
+
         @media (max-width: 768px) {
             .view-cards-container {
                 grid-template-columns: 1fr;
@@ -927,21 +941,21 @@
             let pillars = {};
             let phases = {};
             const viewDescriptions = {
-                tactic: { 
+                tactic: {
                     name: 'Tactics View',
                     question: "<strong>What high-level approach and concept is being used for this defense?</strong>",
                     focus: "This view organizes techniques by their strategic security function (i.e. Model, Harden, Detect, Isolate, Deceive, Evict, Restore), aligned with the seven tactics from the MITRE D3FEND™ framework.",
                     audience: "Security Strategists, CISOs, and Security Architects.",
                     useCase: "A security architect is designing a defense-in-depth strategy for a new generative AI service. They use the <strong>Tactics View</strong> to ensure they have a balanced set of controls across the attack lifecycle.<br><br><ul><li>They start with the <strong>'Harden'</strong> tactic to proactively implement controls like Adversarial Training (AID-H-001) and Secure Agent Architecture (AID-H-018).</li><li>Next, they review the <strong>'Detect'</strong> tactic to plan for real-time monitoring, such as implementing Prompt Injection Detection (AID-D-001).</li><li>Finally, they consult the <strong>'Evict'</strong> and <strong>'Restore'</strong> tactics to build playbooks for incident response, like AI Process Eviction (AID-E-002).</li></ul><br>This view helps them identify and close strategic gaps in their defensive plan."
                 },
-                pillar: { 
+                pillar: {
                     name: 'Pillars View',
                     question: '<strong>What part (component) of the AI system is being protected?</strong>',
                     focus: "This view organizes defenses by the technology stack component they secure: <strong>Data, Model, Infrastructure, or Application</strong>. This component-centric view is aligned with frameworks like Google's Secure AI Framework (SAIF).",
                     audience: "ML Engineers, Data Scientists, and Cloud Security Engineers.",
-                    useCase: "A multi-disciplinary AI team needs to assign security responsibilities for their new RAG application. The <strong>Pillars View</strong> allows them to focus on their specific domains.<br><br><ul><li>The <strong>Data Scientist</strong> uses the <strong>‘AI Data & Feature Security’</strong> pillar to find techniques for protecting the vector database, such as scanning for poisoned data (AID-E-003).</li><li>The <strong>ML Engineer</strong> consults the <strong>‘Model & Algorithm Security’</strong> pillar to harden the embedding model against attacks.</li><li>The <strong>Cloud Engineer</strong> focuses on the <strong>‘Infrastructure & Platform Security’</strong> pillar to implement IAM policies (AID-H-004) and network segmentation (AID-I-002).</li></ul><br>This view helps different technical roles quickly find the controls most relevant to their work." 
+                    useCase: "A multi-disciplinary AI team needs to assign security responsibilities for their new RAG application. The <strong>Pillars View</strong> allows them to focus on their specific domains.<br><br><ul><li>The <strong>Data Scientist</strong> uses the <strong>‘AI Data & Feature Security’</strong> pillar to find techniques for protecting the vector database, such as scanning for poisoned data (AID-E-003).</li><li>The <strong>ML Engineer</strong> consults the <strong>‘Model & Algorithm Security’</strong> pillar to harden the embedding model against attacks.</li><li>The <strong>Cloud Engineer</strong> focuses on the <strong>‘Infrastructure & Platform Security’</strong> pillar to implement IAM policies (AID-H-004) and network segmentation (AID-I-002).</li></ul><br>This view helps different technical roles quickly find the controls most relevant to their work."
                 },
-                phase: { 
+                phase: {
                     name: "Phases View",
                     question: "<strong>When (What stage) in the AI lifecycle should this defense be applied?</strong>",
                     focus: "This view organizes defenses by the development stage where they are most relevant, from initial <strong>Design & Scoping</strong> through <strong>Building, Validation, Operation, and Incident Response</strong>.",
@@ -990,20 +1004,20 @@
 
             function matchesTechnique(tech, term) {
                 return matchesText(tech.name, term) ||
-                       matchesText(tech.id, term) ||
-                       matchesText(tech.description, term) ||
-                       (tech.defendsAgainst && tech.defendsAgainst.some(da => da.items && da.items.some(item => matchesText(item, term)))) ||
-                       (tech.implementationStrategies && tech.implementationStrategies.some(s => matchesText(s.strategy, term))) ||
-                       (tech.toolsOpenSource && tech.toolsOpenSource.some(t => matchesText(t, term))) ||
-                       (tech.toolsCommercial && tech.toolsCommercial.some(t => matchesText(t, term)));
+                    matchesText(tech.id, term) ||
+                    matchesText(tech.description, term) ||
+                    (tech.defendsAgainst && tech.defendsAgainst.some(da => da.items && da.items.some(item => matchesText(item, term)))) ||
+                    (tech.implementationStrategies && tech.implementationStrategies.some(s => matchesText(s.strategy, term))) ||
+                    (tech.toolsOpenSource && tech.toolsOpenSource.some(t => matchesText(t, term))) ||
+                    (tech.toolsCommercial && tech.toolsCommercial.some(t => matchesText(t, term)));
             }
-            
+
             function getFilteredTechniqueIds(searchTerm) {
                 if (!searchTerm) return new Set(eligibleTechniques.map(t => t.id));
 
                 const term = searchTerm.toLowerCase();
                 const matches = new Set();
-                
+
                 eligibleTechniques.forEach(tech => {
                     if (matchesTechnique(tech, term)) {
                         matches.add(tech.id);
@@ -1035,7 +1049,7 @@
                 const filteredIds = getFilteredTechniqueIds(searchTerm);
 
                 if (searchTerm && filteredIds.size === 0) {
-                     gridContainer.appendChild(createElement('p', {
+                    gridContainer.appendChild(createElement('p', {
                         className: 'text-center text-gray-500 dark:text-gray-400 py-10',
                         textContent: `No techniques found matching "${searchTerm}".`
                     }));
@@ -1047,9 +1061,9 @@
                     const techniquesToRender = (tactic.techniques || []).filter(tech => {
                         if (!searchTerm) return true;
                         return tech.subTechniques?.some(sub => filteredIds.has(sub.id)) ||
-                               ((!tech.subTechniques || tech.subTechniques.length === 0) && filteredIds.has(tech.id));
+                            ((!tech.subTechniques || tech.subTechniques.length === 0) && filteredIds.has(tech.id));
                     });
-                    
+
                     if (techniquesToRender.length > 0) {
                         const column = createElement('div', { className: 'matrix-column' });
                         column.style.flexBasis = `13.5%`;
@@ -1071,23 +1085,23 @@
                 const filteredIds = getFilteredTechniqueIds(searchTerm);
 
                 if (searchTerm && filteredIds.size === 0) {
-                     gridContainer.appendChild(createElement('p', {
+                    gridContainer.appendChild(createElement('p', {
                         className: 'text-center text-gray-500 dark:text-gray-400 py-10',
                         textContent: `No techniques found matching "${searchTerm}".`
                     }));
                     elements.mainContent.appendChild(gridContainer);
                     return;
                 }
-                
+
                 Object.values(pillars).forEach(pillar => {
                     const techniquesToRender = pillar.techniques.filter(tech => !searchTerm || filteredIds.has(tech.id));
-                    if(techniquesToRender.length > 0) {
+                    if (techniquesToRender.length > 0) {
                         const column = createElement('div', { className: 'matrix-column' });
                         column.style.flexBasis = `24%`;
-                        const header = createElement('h3', { className: 'column-header', textContent: pillar.name, onclick: () => showPillarOrPhaseModal(pillar)});
+                        const header = createElement('h3', { className: 'column-header', textContent: pillar.name, onclick: () => showPillarOrPhaseModal(pillar) });
                         const ul = createElement('ul');
                         techniquesToRender.forEach(tech => {
-                             ul.appendChild(renderTechniqueItem(tech, pillar.name, filteredIds, searchTerm));
+                            ul.appendChild(renderTechniqueItem(tech, pillar.name, filteredIds, searchTerm));
                         });
                         column.appendChild(header);
                         column.appendChild(ul);
@@ -1110,13 +1124,13 @@
                     const ul = createElement('ul');
 
                     const techniquesToRender = phase.techniques.filter(tech => !searchTerm || filteredIds.has(tech.id));
-                    
+
                     if (techniquesToRender.length > 0) {
                         techniquesToRender.forEach(tech => {
                             ul.appendChild(renderTechniqueItem(tech, phase.name, filteredIds, searchTerm));
                         });
                     }
-                    
+
                     column.appendChild(header);
                     column.appendChild(ul);
                     gridContainer.appendChild(column);
@@ -1134,7 +1148,7 @@
 
                 elements.mainContent.appendChild(gridContainer);
             }
-            
+
             function renderTechniqueItem(tech, groupName, filteredIds, searchTerm) {
                 const li = createElement('li', { className: 'technique-container' });
                 const hasSub = tech.subTechniques && tech.subTechniques.length > 0;
@@ -1161,10 +1175,10 @@
                     let isSubMatch = false;
                     tech.subTechniques.forEach(subTech => {
                         const isVisible = !searchTerm || filteredIds.has(subTech.id);
-                         if (isVisible) {
-                           const subItem = renderSubTechniqueItem(subTech, groupName, filteredIds, searchTerm);
-                           subList.appendChild(subItem);
-                           if (searchTerm && filteredIds.has(subTech.id)) isSubMatch = true;
+                        if (isVisible) {
+                            const subItem = renderSubTechniqueItem(subTech, groupName, filteredIds, searchTerm);
+                            subList.appendChild(subItem);
+                            if (searchTerm && filteredIds.has(subTech.id)) isSubMatch = true;
                         }
                     });
                     li.appendChild(itemDiv);
@@ -1176,28 +1190,28 @@
                         iconWrapper.style.transform = 'rotate(90deg)';
                         setTimeout(() => subList.style.maxHeight = subList.scrollHeight + "px", 0);
                     }
-                    
+
                     itemDiv.onclick = (e) => {
-                       e.stopPropagation();
-                       toggleSubTechniques(itemDiv, subList, iconWrapper);
+                        e.stopPropagation();
+                        toggleSubTechniques(itemDiv, subList, iconWrapper);
                     };
                 } else {
                     itemDiv.onclick = (e) => { e.stopPropagation(); showTechniqueModal(tech, groupName); };
                     li.appendChild(itemDiv);
                 }
-                
+
                 if (isParentHighlight && !hasSub) {
                     itemDiv.classList.add('highlight');
                 }
 
                 return li;
             }
-            
+
             function toggleSubTechniques(header, content, iconWrapper) {
-                 const isExpanded = content.classList.toggle('expanded');
-                 header.classList.toggle('expanded', isExpanded);
-                 iconWrapper.style.transform = isExpanded ? 'rotate(90deg)' : 'rotate(0deg)';
-                 content.style.maxHeight = isExpanded ? content.scrollHeight + 'px' : null;
+                const isExpanded = content.classList.toggle('expanded');
+                header.classList.toggle('expanded', isExpanded);
+                iconWrapper.style.transform = isExpanded ? 'rotate(90deg)' : 'rotate(0deg)';
+                content.style.maxHeight = isExpanded ? content.scrollHeight + 'px' : null;
             }
 
             function renderSubTechniqueItem(subTech, groupName, filteredIds, searchTerm) {
@@ -1288,15 +1302,15 @@
 
                 Object.keys(viewDescriptions).forEach((key, index) => {
                     const view = viewDescriptions[key];
-                    
-                    const tabButton = createElement('button', { 
+
+                    const tabButton = createElement('button', {
                         className: `view-info-tab ${index === 0 ? 'active' : ''}`,
                         textContent: view.name,
                     });
                     tabButton.dataset.tab = key;
                     tabsContainer.appendChild(tabButton);
 
-                    const contentPane = createElement('div', { 
+                    const contentPane = createElement('div', {
                         id: `tab-content-${key}`,
                         className: `view-info-tab-content ${index === 0 ? 'active' : ''}`
                     });
@@ -1325,10 +1339,10 @@
                 tabsContainer.addEventListener('click', (e) => {
                     if (e.target.tagName === 'BUTTON') {
                         const tabId = e.target.dataset.tab;
-                        
+
                         tabsContainer.querySelector('.active')?.classList.remove('active');
                         contentContainer.querySelector('.active')?.classList.remove('active');
-                        
+
                         e.target.classList.add('active');
                         document.getElementById(`tab-content-${tabId}`).classList.add('active');
                     }
@@ -1358,7 +1372,7 @@
                 const p = createElement('p', { className: 'mb-4 leading-relaxed text-sm' });
                 p.innerHTML = technique.description || 'No description available.';
                 elements.modalBody.appendChild(p);
-                
+
                 if (technique.perfImpact) {
                     const perfDiv = createElement('div', { className: 'perf-impact-note' });
                     const perfP = createElement('p');
@@ -1378,7 +1392,7 @@
                 if (!items || items.length === 0) return;
                 const section = createElement('div', { className: 'mt-4' });
                 section.appendChild(createElement('h3', { className: 'font-semibold text-lg mb-2', textContent: title + ':' }));
-                
+
                 if (title === 'Implementation Strategies') {
                     const container = createElement('div', { className: 'strategy-accordion-container' });
                     items.forEach(strategy => {
@@ -1425,8 +1439,26 @@
                 });
                 elements.modalBody.appendChild(section);
             }
+            function updateContentPadding() {
+                const header = document.querySelector('.header-main');
+                const contentWrapper = document.getElementById('content-wrapper');
 
+                if (header && contentWrapper) {
+                    // Check if we are in the mobile view (screen width < 640px)
+                    if (window.innerWidth < 640) {
+                        const headerHeight = header.offsetHeight;
+                        const extraMargin = 24; // A bit of space
+                        contentWrapper.style.paddingTop = `${headerHeight + extraMargin}px`;
+                    } else {
+                        // We are in desktop view, so remove the inline style
+                        // and let the original 'pt-48' class take over.
+                        contentWrapper.style.paddingTop = '';
+                    }
+                }
+            }
             function addEventListeners() {
+                window.addEventListener('resize', updateContentPadding);
+                window.addEventListener('load', updateContentPadding);
                 elements.themeToggleBtn.addEventListener('click', toggleTheme);
                 elements.aboutBtn.addEventListener('click', showIntroductionModal);
                 elements.viewInfoBtn.addEventListener('click', showViewInfoModal);
@@ -1440,6 +1472,7 @@
                             currentView = newView;
                             renderMainGrid();
                         }
+
                     }
                 });
 
@@ -1519,10 +1552,12 @@
                 prepareDataForViews();
                 renderMainGrid();
                 addEventListeners();
+                updateContentPadding();
             }
 
             initialize();
         };
     </script>
 </body>
+
 </html>
