@@ -12,23 +12,7 @@ const aidefendIntroduction = {
         {
             "title": "What has been developed?",
             "paragraphs": [
-                "Developed using the seven defensive tactics from MITRE D3FEND (Model, Harden, Detect, Isolate, Deceive, Evict, Restore), AIDEFEND organizes AI-specific defensive techniques. These techniques are mapped to AI attacks and threats from sources such as MITRE ATLAS®, MAESTRO, and OWASP Top 10 lists (LLM Applications 2025, Machine Learning Security 2023), providing a comprehensive view of how each defense mitigates known vulnerabilities."
-            ]
-        },
-        {
-            "title": "How can this framework be utilized?",
-            "paragraphs": [
-                "AIDEFEND is designed as a practical tool for organizations to systematically enhance their AI security posture. It is presented in a matrix format, aligning defensive techniques with the D3FEND tactical categories. This structure allows security professionals to:"
-            ],
-            "listItems": [
-                "<strong>Assess Current Capabilities:</strong> Evaluate existing AI defenses against the AIDEFEND framework.",
-                "<strong>Identify Gaps:</strong> Pinpoint areas where AI-specific defenses are lacking.",
-                "<strong>Prioritize Defenses:</strong> Use the threat mappings (to ATLAS, MAESTRO, OWASP) to select techniques that address the most relevant risks to their specific AI systems, informed by their own risk assessments.",
-                "<strong>Plan Implementation:</strong> Leverage the provided descriptions, implementation strategies, and tool suggestions to develop actionable plans.",
-                "<strong>Enhance AI Security Posture:</strong> Systematically improve the resilience of AI deployments."
-            ],
-            "concludingParagraphs": [
-                "Each technique in the matrix includes a unique ID, name, a description of the defensive method focused on AI, practical implementation strategies, and examples of open-source and commercial tools. The \"Defends Against\" column explicitly links the technique to threats from MITRE ATLAS®, MAESTRO, and the relevant OWASP Top 10 lists."
+                "Organized across seven defensive tactics (i.e., Model, Harden, Detect, Isolate, Deceive, Evict, Restore), AIDEFEND, the knowledge base of defensive countermeasures for protecting AI/ML systems, provides practical implementation strategies and code examples for each AI-specific defensive technique. To accommodate different roles, the framework can be viewed by strategic Tactic, technology Pillar, or lifecycle Phase, and maps all defenses to known threats from frameworks like MITRE ATLAS, MAESTRO, and OWASP."
             ]
         },
         {
@@ -41,7 +25,7 @@ const aidefendIntroduction = {
             "title": "Version & Date",
             "paragraphs": [
                 "Version: 1.0",
-                "Last Updated: June 15, 2025"
+                "Last Updated: June 16, 2025"
             ]
         },
         {
@@ -102,7 +86,7 @@ const aidefendData = {
                     "subTechniques": [
                         {
                             "id": "AID-M-001.001",
-                            "name": "AI Component & Infrastructure Inventory","pillar": "infra", "phase": "scoping",
+                            "name": "AI Component & Infrastructure Inventory", "pillar": "infra", "phase": "scoping",
                             "description": "Systematically catalogs all AI/ML assets, including models (categorized by type, version, and ownership), datasets, software components, and the specialized hardware they run on (e.g., GPUs, TPUs). This technique focuses on creating a dynamic, up-to-date inventory to provide comprehensive visibility into all components that constitute the AI ecosystem, which is a prerequisite for accurate risk assessment and the application of targeted security controls.",
                             "implementationStrategies": [
                                 {
@@ -164,7 +148,7 @@ const aidefendData = {
                         },
                         {
                             "id": "AID-M-001.002",
-                            "name": "AI System Dependency Mapping","pillar": "infra, app", "phase": "scoping",
+                            "name": "AI System Dependency Mapping", "pillar": "infra, app", "phase": "scoping",
                             "description": "Systematically identifies and documents all components and services that an AI system depends on to function correctly. This includes direct software libraries, transitive dependencies, external data sources, third-party APIs, and other internal AI models or microservices. This dependency map is crucial for understanding the complete supply chain attack surface and for performing comprehensive security assessments.",
                             "implementationStrategies": [
                                 {
@@ -270,7 +254,7 @@ const aidefendData = {
                         }
                     ], "subTechniques": [
                         {
-                            "id": "AID-M-002.001","pillar": "data", "phase": "building",
+                            "id": "AID-M-002.001", "pillar": "data, model", "phase": "building",
                             "name": "Data & Artifact Versioning",
                             "description": "Implements systems and processes to version control datasets and model artifacts, treating them with the same rigor as source code. By tracking every version of a data file and linking it to specific code commits, this technique ensures perfect reproducibility, provides an auditable history of changes, and enables rapid rollbacks to a known-good state, which is critical for recovering from data corruption or poisoning incidents.",
                             "implementationStrategies": [
@@ -383,7 +367,7 @@ const aidefendData = {
                             ]
                         },
                         {
-                            "id": "AID-M-002.003", "pillar": "data", "phase": "scoping",
+                            "id": "AID-M-002.003", "pillar": "data", "phase": "scoping, building",
                             "name": "Third-Party Data Vetting",
                             "description": "Implements a formal, security-focused process for onboarding any external or third-party datasets. This technique involves a combination of procedural checks (source reputation, licensing) and technical scans (PII detection, integrity verification, statistical profiling) to identify and mitigate risks before untrusted data is introduced into the organization's AI ecosystem.",
                             "implementationStrategies": [
@@ -895,7 +879,7 @@ const aidefendData = {
                                 },
                                 {
                                     "strategy": "Compute and log discrepancy metrics between the primary and auxiliary models for each node.",
-                                    "howTo": "<h5>Concept:</h5><p>This is the final step of the modeling phase, where you quantify the difference between the 'clean' baseline and the 'suspect' primary model. A large discrepancy for a particular node is a strong signal that it was either part of a backdoor trigger or was the target of a poisoning attack.</p><h5>Calculate Semantic Drift</h5><p>Get the embeddings for a given node from both models and calculate the cosine distance between them. A high distance indicates the node's learned meaning has 'drifted'.</p><pre><code># File: modeling/compute_discrepancies.py\\nfrom scipy.spatial.distance import cosine\n\n# Assume 'clean_embeddings' and 'primary_embeddings' are ready\n\n# Calculate semantic drift for each node\\nsemantic_drifts = []\\nfor i in range(num_nodes):\\n    distance = cosine(clean_embeddings[i], primary_embeddings[i])\\n    semantic_drifts.append(distance)\n\n# Log these drift scores. Nodes with the highest scores are the most suspicious.\nsuspicious_nodes = np.argsort(semantic_drifts)[-10:] # Get top 10 most drifted nodes</code></pre><p><strong>Action:</strong> For every node, compute the cosine distance between its embedding from the clean auxiliary model and its embedding from the primary model. The resulting 'semantic drift' scores are the primary output of this modeling technique and can be used by a detection technique (`AID-D-014`) to identify poisoned nodes.</p>"
+                                    "howTo": "<h5>Concept:</h5><p>This is the final step of the modeling phase, where you quantify the difference between the 'clean' baseline and the 'suspect' primary model. A large discrepancy for a particular node is a strong signal that it was either part of a backdoor trigger or was the target of a poisoning attack.</p><h5>Calculate Semantic Drift</h5><p>Get the embeddings for a given node from both models and calculate the cosine distance between them. A high distance indicates the node's learned meaning has 'drifted'.</p><pre><code># File: modeling/compute_discrepancies.py\\nfrom scipy.spatial.distance import cosine\n\n# Assume 'clean_embeddings' and 'primary_embeddings' are ready\n\n# Calculate semantic drift for each node\\nsemantic_drifts = []\\nfor i in range(num_nodes):\\n    distance = cosine(clean_embeddings[i], primary_embeddings[i])\\n    semantic_drifts.append(distance)\n\n# Log these drift scores. Nodes with the highest scores are the most suspicious.\nsuspicious_nodes = np.argsort(semantic_drifts)[-10:] # Get top 10 most drifted nodes</code></pre><p><strong>Action:</strong> For every node, compute the cosine distance between its embedding from the clean auxiliary model and its embedding from the primary model. The resulting 'semantic drift' scores are the primary output of this modeling technique and can be used by a detection technique to identify poisoned nodes.</p>"
                                 }
                             ],
                             "toolsOpenSource": [
@@ -1125,7 +1109,7 @@ const aidefendData = {
                         },
                         {
                             "id": "AID-M-005.002",
-                            "name": "Pre-Deployment - Infrastructure as Code (IaC) Security Scanning","pillar": "infra", "phase": "validation",
+                            "name": "Pre-Deployment - Infrastructure as Code (IaC) Security Scanning", "pillar": "infra", "phase": "validation",
                             "description": "Covers the 'pre-deployment' phase of automatically scanning Infrastructure as Code (IaC) files (e.g., Terraform, CloudFormation, Bicep, Kubernetes YAML) in the CI/CD pipeline. This 'shift-left' security practice aims to detect and block security misconfigurations, policy violations, and hardcoded secrets before insecure infrastructure is ever provisioned in a live environment.",
                             "implementationStrategies": [
                                 {
@@ -1447,7 +1431,7 @@ def hitl_checkpoint_drill(checkpoint_id: str = "HITL-CP-001"):
                             ]
                         }, {
                             "id": "AID-M-006.003",
-                            "name": "HITL Escalation & Activity Monitoring",  "pillar": "app", "phase": "operation",
+                            "name": "HITL Escalation & Activity Monitoring", "pillar": "app", "phase": "operation",
                             "description": "Covers the live operational and security aspects of a Human-in-the-Loop (HITL) system. This technique involves defining and implementing the technical escalation paths for undecided or unhandled intervention requests and ensuring that all HITL activations, operator decisions, and system responses are securely logged. This provides a comprehensive audit trail for forensic analysis and real-time monitoring to detect anomalous operator behavior or high-frequency intervention events.",
                             "implementationStrategies": [
                                 {
@@ -2316,7 +2300,7 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                     "subTechniques": [
                         {
                             "id": "AID-H-004.001",
-                            "name": "User & Privileged Access Management",  "pillar": "infra", "phase": "building, operation",
+                            "name": "User & Privileged Access Management", "pillar": "infra", "phase": "building, operation",
                             "description": "Focuses on securing access for human users, such as developers, data scientists, and system administrators, who manage and interact with AI systems. The goal is to enforce strong authentication and granular permissions for human identities.",
                             "toolsOpenSource": [
                                 "Keycloak",
@@ -2371,7 +2355,7 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                         },
                         {
                             "id": "AID-H-004.002",
-                            "name": "Service & API Authentication","pillar": "infra", "phase": "building, operation",
+                            "name": "Service & API Authentication", "pillar": "infra", "phase": "building, operation",
                             "description": "Focuses on securing machine-to-machine communication for AI services. This includes authenticating service accounts, applications, and other services that need to interact with AI model APIs, data stores, or MLOps pipelines.",
                             "toolsOpenSource": [
                                 "OAuth2-Proxy",
@@ -3436,7 +3420,7 @@ with mlflow.start_run() as run:
                     ],
                     "subTechniques": [
                         {
-                            "id": "AID-H-008.001", 
+                            "id": "AID-H-008.001",
                             "name": "Secure Aggregation Protocols for Federated Learning", "pillar": "model", "phase": "building",
                             "description": "Employs cryptographic methods in Federated Learning (FL) to protect the privacy of individual client contributions, such as model updates or gradients.  These protocols are designed so the central server can compute the aggregate (sum or average) of all client updates but cannot inspect or reverse-engineer any individual contribution.  This hardens the FL process against inference attacks by the server and preserves user privacy in collaborative learning environments. ",
                             "implementationStrategies": [
@@ -4452,128 +4436,96 @@ class GraphRobustnessVerifier:
                     "subTechniques": [
                         {
                             "id": "AID-H-013.001",
-                            "name": "Adaptive Reward Shaping via Bootstrapped Value Functions", "pillar": "model", "phase": "building",
-                            "description": "An advanced reward shaping technique for Reinforcement Learning that hardens the learning process against reward hacking. It provides the agent with an auxiliary reward signal to guide exploration in environments with sparse or complex rewards. This technique is adaptive because the auxiliary reward is derived directly from the agent's own current estimate of the optimal state-value function (V*(s)). As the agent's understanding of the environment improves, the shaped reward signal automatically evolves, providing denser and more informed guidance.",
+                            "name": "Robust Reward Function Engineering",
+                            "pillar": "model", "phase": "building",
+                            "description": "This subtechnique covers the direct design and engineering of the reward function itself to be inherently less exploitable. By defining multiple, sometimes competing, objectives and explicitly penalizing undesirable side effects, the reward function provides a more holistic and robust incentive structure that is harder for an agent to 'game' or hack.",
                             "implementationStrategies": [
                                 {
-                                    "strategy": "Implement a potential-based reward shaping wrapper around the RL environment.",
-                                    "howTo": "<h5>Concept:</h5><p>Potential-Based Reward Shaping (PBRS) is a provably safe way to add extra rewards to guide an agent without changing its optimal policy. The shaping reward (F) is calculated based on the difference in 'potential' (Φ) between the new state (s') and the old state (s), using the formula: F = γ * Φ(s') - Φ(s), where γ is the discount factor.</p><h5>Create a Reward Shaping Wrapper</h5><p>This wrapper intercepts the reward from the base environment and adds the calculated shaping term.</p><pre><code># File: hardening/reward_shaping_wrapper.py\\nimport gymnasium as gym\n\nclass RewardShapingWrapper(gym.RewardWrapper):\\n    def __init__(self, env, potential_function, gamma=0.99):\\n        super().__init__(env)\\n        self.potential_function = potential_function\\n        self.gamma = gamma\\n        self.last_potential = 0\\n\n    def step(self, action):\\n        next_state, reward, done, truncated, info = self.env.step(action)\\n        \n        # Calculate potential of the new state\\n        new_potential = self.potential_function(next_state)\\n        # Calculate the shaping term\\n        shaping_reward = (self.gamma * new_potential) - self.last_potential\\n        # Update the potential for the next step\\n        self.last_potential = new_potential\n\n        # The final reward is the sum of the environment reward and the shaping term\\n        return next_state, reward + shaping_reward, done, truncated, info\n\n    def reset(self, **kwargs):\\n        state, info = self.env.reset(**kwargs)\\n        self.last_potential = self.potential_function(state)\\n        return state, info</code></pre><p><strong>Action:</strong> Create a custom environment wrapper that implements the potential-based reward shaping formula. This separates the shaping logic from the core environment logic.</p>"
+                                    "strategy": "Design complex, multi-objective reward functions that balance competing goals.",
+                                    "howTo": "<h5>Concept:</h5><p>A simple, single-objective reward function is easy for an RL agent to exploit. A multi-objective function balances competing goals (e.g., efficiency, safety, completion) to create a more robust incentive structure that better captures the true desired outcome.</p><h5>Define and Weight Multiple Objectives</h5><p>Instead of a single reward, define the total reward as a weighted sum of several desirable behaviors and penalties for undesirable ones.</p><pre><code># File: rl_rewards/multi_objective.py\\n\\ndef calculate_robot_reward(stats):\\n    # --- Positive Objectives (Things to encourage) ---\\n    # Reward for each new item successfully sorted\\n    r_sorting = stats['new_items_sorted'] * 10.0\\n    # Reward for ending the episode at the charging dock\\n    r_docking = 100.0 if stats['is_docked'] else 0.0\\n\\n    # --- Negative Objectives (Penalties for bad behavior) ---\\n    # Penalize for each collision\\n    p_collision = stats['collisions'] * -20.0\\n    # Penalize for energy consumed to encourage efficiency\\n    p_energy = stats['energy_used'] * -1.0\\n\n    # Calculate the final weighted reward\\n    total_reward = r_sorting + r_docking + p_collision + p_energy\\n    return total_reward</code></pre><p><strong>Action:</strong> For any RL system, identify at least 3-5 objectives that define successful behavior, including both positive goals and negative side effects. Combine them into a single weighted reward function. The weights are critical hyperparameters that will need to be tuned to achieve the desired agent behavior.</p>"
                                 },
                                 {
-                                    "strategy": "Use the agent's own value function network as the potential function.",
-                                    "howTo": "<h5>Concept:</h5><p>This is the core of the 'Bootstrapped' technique (BSRS). Instead of defining a static potential function (e.g., distance to goal), we use the agent's own learned value network. This is powerful because as the agent gets better at estimating state values, the guidance it gives itself through the shaping process also gets better and more accurate.</p><h5>Pass the Agent's Value Network to the Wrapper</h5><p>The `potential_function` for the wrapper will be a callable that is, in fact, the agent's critic or value network.</p><pre><code># File: hardening/bsrs_implementation.py\\nimport torch\n\n# Assume 'agent' is your trained RL agent object (e.g., from Stable-Baselines3)\\n# It must have a method to evaluate the value of a state, e.g., agent.critic(state)\\n\n# Define the potential function as a lambda that calls the agent's value network\\n# The .detach() is important to prevent gradients from flowing through the reward signal\\ndef value_function_potential(state):\\n    state_tensor = torch.FloatTensor(state).unsqueeze(0)\\n    with torch.no_grad():\\n        return agent.critic(state_tensor).item()\\n\n# Create the base environment\\n# env = gym.make('CartPole-v1')\n# Wrap it with the reward shaping wrapper, providing the agent's value function\\n# shaped_env = RewardShapingWrapper(env, potential_function=value_function_potential)\n\n# Now, train the agent on the 'shaped_env' instead of the original 'env'.</code></pre><p><strong>Action:</strong> Instantiate the reward shaping wrapper using the agent's own value function network as the potential function. This creates an adaptive reward system where the agent bootstraps its own learning process.</p>"
-                                },
-                                {
-                                    "strategy": "Use a slowly-updating target network for shaping to improve stability.",
-                                    "howTo": "<h5>Concept:</h5><p>Using a value function that is being updated at every step can sometimes lead to unstable shaping rewards. A common technique in deep RL is to use a 'target network'—a periodic, slower-moving copy of the main network. Using the target network for shaping provides a more stable, consistent guidance signal.</p><h5>Modify the Potential Function to Use the Target Network</h5><p>Most deep RL libraries (like Stable-Baselines3) maintain a target network internally for stability (e.g., in DQN, DDPG, SAC). Your potential function should be configured to call this more stable `critic_target` network.</p><pre><code># In many RL agent implementations (e.g., Stable-Baselines3 SAC)\n# agent.critic is the network being trained rapidly\n# agent.critic_target is a copy that is only updated periodically\n\ndef target_value_potential(state):\\n    state_tensor = torch.FloatTensor(state).unsqueeze(0)\\n    with torch.no_grad():\\n        # Call the stable target network, not the main critic network\\n        return agent.critic_target(state_tensor).item()\\n\n# shaped_env = RewardShapingWrapper(env, potential_function=target_value_potential)</code></pre><p><strong>Action:</strong> For deep RL algorithms, configure the reward shaping wrapper to use the agent's `target_critic` or `target_value` network as the potential function. This improves training stability by providing a less noisy reward guidance signal.</p>"
-                                },
-                                {
-                                    "strategy": "Monitor and log the intrinsic vs. shaped reward components separately.",
-                                    "howTo": "<h5>Concept:</h5><p>To ensure the shaping reward is helping and not creating a new exploit, you must monitor it separately from the true environment reward. The goal is to see the agent achieve a high true reward, indicating it is solving the actual task, while also benefiting from the shaping term.</p><h5>Use a Monitoring Callback to Log Both Rewards</h5><p>RL libraries like Stable-Baselines3 provide a callback system that allows you to inspect and log values during training.</p><pre><code># File: hardening/monitor_rewards.py\\nfrom stable_baselines3.common.callbacks import BaseCallback\n\nclass RewardMonitorCallback(BaseCallback):\\n    def _on_step(self) -> bool:\\n        # The 'info' dictionary from the step function can carry extra data\\n        # We modify the wrapper to put the reward components in here\\n        if 'shaping_reward' in self.locals['infos'][0]:\\n            shaping_reward = self.locals['infos'][0]['shaping_reward']\\n            intrinsic_reward = self.locals['rewards'][0] - shaping_reward\n\n            # Log both values to TensorBoard or another logger\\n            self.logger.record('rewards/intrinsic_reward', intrinsic_reward)\\n            self.logger.record('rewards/shaping_reward', shaping_reward)\\n        return True\n\n# --- Training Call ---\n# agent = SAC('MlpPolicy', shaped_env, verbose=1, tensorboard_log=\\\"./logs/\\\")\\n# agent.learn(total_timesteps=10000, callback=RewardMonitorCallback())</code></pre><p><strong>Action:</strong> Implement a custom callback in your RL training library to log the original (intrinsic) environment reward and the auxiliary (shaping) reward as separate time-series metrics. Monitor the logs to ensure the intrinsic reward is trending upwards.</p>"
+                                    "strategy": "Introduce constraints and penalties for undesirable behaviors or states ('guardrails').",
+                                    "howTo": "<h5>Concept:</h5><p>This is the most direct way to discourage specific bad behaviors. By adding a large negative reward for entering an unsafe state or performing a forbidden action, you create a strong disincentive that the agent will learn to avoid at all costs.</p><h5>Define Unsafe States and Add Penalties</h5><p>Identify a set of conditions that represent failure or unsafe behavior and add a check for these conditions into the reward function.</p><pre><code># File: rl_rewards/penalties.py\\n\\nFORBIDDEN_ZONES = [polygon_area_of_airport, polygon_area_of_school]\\nMIN_BATTERY_LEVEL = 15.0\\n\ndef calculate_drone_reward(state, action):\\n    # 1. Check for constraint violations first\\n    if state['battery_level'] < MIN_BATTERY_LEVEL:\\n        print(\\\"Constraint Violated: Battery too low!\\\")\\n        return -500 # Large penalty and end the episode\\n\\n    if is_in_forbidden_zone(state['position'], FORBIDDEN_ZONES):\\n        print(\\\"Constraint Violated: Entered forbidden zone!\\\")\\n        return -500 # Large penalty and end the episode\\n\\n    # 2. If no constraints are violated, calculate normal reward\\n    reward = 0\\n    if action == 'deliver_package': reward += 100\\n    return reward</code></pre><p><strong>Action:</strong> For any RL system with safety implications, explicitly define a set of unsafe states or actions. In your reward function, add a large negative penalty that is triggered immediately upon entering one of these states.</p>"
                                 }
                             ],
                             "toolsOpenSource": [
-                                "Stable-Baselines3, RLlib (Ray), Tianshou (RL algorithm libraries)",
-                                "OpenAI Gymnasium (for creating and wrapping environments)",
-                                "PyTorch, TensorFlow (for defining value function networks)",
-                                "MLflow, TensorBoard, Weights & Biases (for logging and monitoring reward components)"
+                                "RL libraries (Stable Baselines3, RLlib, Tianshou)",
+                                "Simulators and environments for testing RL agents (Gymnasium, MuJoCo)"
                             ],
                             "toolsCommercial": [
-                                "Microsoft Bonsai (Industrial AI platform)",
-                                "AnyLogic (simulation software)",
-                                "MATLAB Reinforcement Learning Toolbox",
-                                "NVIDIA Isaac Sim",
-                                "AI Observability Platforms (Arize AI, Fiddler)"
+                                "Enterprise RL platforms (AnyLogic, Microsoft Bonsai)",
+                                "Simulation platforms for robotics and autonomous systems"
                             ],
                             "defendsAgainst": [
-                                {
-                                    "framework": "MITRE ATLAS",
-                                    "items": [
-                                        "AML.T0048 External Harms"
-                                    ]
-                                },
-                                {
-                                    "framework": "MAESTRO",
-                                    "items": [
-                                        "Agent Goal Manipulation (L7)"
-                                    ]
-                                },
-                                {
-                                    "framework": "OWASP LLM Top 10 2025",
-                                    "items": [
-                                        "LLM06:2025 Excessive Agency",
-                                        "LLM09:2025 Misinformation"
-                                    ]
-                                },
-                                {
-                                    "framework": "OWASP ML Top 10 2023",
-                                    "items": [
-                                        "ML08:2023 Model Skewing"
-                                    ]
-                                }
+                                { "framework": "MITRE ATLAS", "items": ["AML.T0048 External Harms"] },
+                                { "framework": "MAESTRO", "items": ["Agent Goal Manipulation (L7)"] },
+                                { "framework": "OWASP LLM Top 10 2025", "items": ["LLM06:2025 Excessive Agency"] },
+                                { "framework": "OWASP ML Top 10 2023", "items": ["ML08:2023 Model Skewing"] }
                             ]
                         },
                         {
                             "id": "AID-H-013.002",
-                            "name": "Model-Based Reward Shaping for Adversarial Inverse Reinforcement Learning (AIRL)", "pillar": "model", "phase": "building",
-                            "description": "A technique to harden policies learned via Adversarial Inverse Reinforcement Learning (AIRL) by infusing a learned model of the environment's dynamics directly into the reward shaping process. By training an auxiliary 'world model' that predicts state transitions, the reward function (discriminator) in the AIRL setup can be enhanced with information about the likely consequences of actions. This leads to the derivation of a more robust and accurate reward function, especially in stochastic environments, which in turn hardens the final agent policy against reward hacking and suboptimal behaviors. ",
+                            "name": "Human-in-the-Loop Reward Learning",
+                            "pillar": "model", "phase": "building",
+                            "description": "This subtechnique covers methods for deriving robust reward functions from human feedback, rather than hand-crafting them. This includes techniques like preference-based learning and Inverse Reinforcement Learning (IRL) where the model learns the reward function from expert demonstrations. This is particularly useful for complex behaviors that are difficult to specify with a mathematical formula but are intuitive for a human to judge.",
                             "implementationStrategies": [
                                 {
-                                    "strategy": "Implement the core Adversarial Inverse Reinforcement Learning (AIRL) framework.",
-                                    "howTo": "<h5>Concept:</h5><p>AIRL learns a reward function from expert demonstrations by framing the problem as a Generative Adversarial Network (GAN). A 'Generator' (the RL agent's policy) tries to produce trajectories that look like the expert's. A 'Discriminator' tries to distinguish between the expert's trajectories and the agent's. The discriminator's output is used as a learned reward signal to train the agent.</p><h5>Define the Discriminator and Generator</h5><pre><code># File: hardening/airl_framework.py\\nimport torch.nn as nn\n\n# The Discriminator learns to output a reward signal\\nclass Discriminator(nn.Module):\\n    def __init__(self, state_dim, action_dim):\\n        super().__init__()\\n        # ... network layers ...\\n        self.fc_out = nn.Linear(128, 1) # Outputs a single scalar reward\n\n    def forward(self, state, action):\\n        # ... forward pass ...\n        return self.fc_out(x)\n\n# The Generator is a standard RL policy network (e.g., from an Actor-Critic agent)\\nclass Generator(nn.Module):\\n    def __init__(self, state_dim, action_dim):\\n        super().__init__()\\n        # ... policy network layers ...\n\n# Training involves alternating updates to the Discriminator and Generator.</code></pre><p><strong>Action:</strong> Set up the basic AIRL structure with a Generator (your RL agent's policy) and a Discriminator (a neural network that will learn the reward function).</p>"
+                                    "strategy": "Use preference-based learning to train a reward model from human comparisons.",
+                                    "howTo": "<h5>Concept:</h5><p>It can be extremely difficult for humans to write a perfect reward function. Instead, the system can learn the reward function from human feedback. A human is shown two different agent behaviors (trajectories) and simply chooses which one they prefer. A 'reward model' is then trained on this preference data to predict what reward function would explain the human's choices.</p><h5>Train a Reward Model on Preference Data</h5><p>Collect a dataset of trajectory pairs and human preference labels. Use this to train a reward model that learns to assign higher cumulative scores to the preferred trajectories.</p><pre><code># File: rl_rewards/preference_learning.py\\n\n# The reward model is a neural network that predicts a scalar reward\\n# for a given state-action pair.\nclass RewardModel(nn.Module):\\n    # ... network definition ...\n\n# --- Training Loop ---\n# reward_model = RewardModel(...)\n# For each labeled pair of trajectories in the preference dataset:\n#     sum_reward_A = sum(reward_model(s, a) for s, a in trajectory_A)\n#     sum_reward_B = sum(reward_model(s, a) for s, a in trajectory_B)\n#     \n#     # Use a loss function that pushes the reward sum of the preferred trajectory higher.\n#     if human_preferred_A:\n#         loss = -torch.log(torch.sigmoid(sum_reward_A - sum_reward_B))\n#     else:\n#         loss = -torch.log(torch.sigmoid(sum_reward_B - sum_reward_A))\n#     loss.backward()</code></pre><p><strong>Action:</strong> For complex behaviors that are hard to specify numerically, use preference-based learning. Build a simple interface for human labelers to provide preference data, and use this data to train a reward model that guides your RL agent's training.</p>"
                                 },
                                 {
-                                    "strategy": "Train a separate 'world model' to predict the environment's dynamics.",
-                                    "howTo": "<h5>Concept:</h5><p>This is the 'model-based' component. A separate neural network is trained to predict the next state (`s'`) given the current state and an action (`s, a`). This learned model, `T^(s'|s, a)`, acts as the agent's internal simulation of the world, allowing it to 'look ahead' and understand the likely consequences of its actions. </p><h5>Create and Train the Dynamics Model</h5><p>Collect trajectories of `(s, a, s')` tuples by having an agent interact with the environment. Use this data to train a supervised model that minimizes the prediction error for the next state.</p><pre><code># File: hardening/world_model.py\\nimport torch.nn as nn\n\nclass DynamicsModel(nn.Module):\\n    def __init__(self, state_dim, action_dim):\\n        super().__init__()\\n        self.net = nn.Sequential(\\n            nn.Linear(state_dim + action_dim, 256),\\n            nn.ReLU(),\\n            nn.Linear(256, state_dim) # Outputs a predicted next state\\n        )\n\n    def forward(self, state, action):\\n        return self.net(torch.cat([state, action], dim=-1))\n\n# --- Training Loop ---\n# dynamics_model = DynamicsModel(...)\n# optimizer = torch.optim.Adam(dynamics_model.parameters())\n# loss_fn = nn.MSELoss()\n\n# for states, actions, next_states in collected_trajectories:\n#     predicted_next_states = dynamics_model(states, actions)\n#     loss = loss_fn(predicted_next_states, next_states)\n#     optimizer.zero_grad()\\n#     loss.backward()\\n#     optimizer.step()</code></pre><p><strong>Action:</strong> Implement and train a neural network to act as a world model by predicting the next state from the current state and action.</p>"
-                                },
-                                {
-                                    "strategy": "Enhance the discriminator (reward function) with input from the learned dynamics model.",
-                                    "howTo": "<h5>Concept:</h5><p>This is the core of the ME-AIRL technique. The learned reward function is made more robust by giving it more context. Instead of just evaluating a state, it evaluates a state in the context of its likely outcome, as predicted by the world model. This helps it learn a more accurate reward signal that is less susceptible to being fooled in stochastic environments. </p><h5>Modify the Discriminator's Input</h5><p>Change the discriminator's architecture to accept not only the state and action, but also the *predicted* next state from your trained world model.</p><pre><code># In your AIRL's Discriminator class definition\n\n# class ModelEnhancedDiscriminator(nn.Module):\n#     def __init__(self, state_dim, action_dim):\n#         super().__init__()\\n#         # The input layer now accepts state + action + predicted_next_state\n#         self.input_layer = nn.Linear(state_dim * 2 + action_dim, 256)\n#         # ... rest of the network ...\n# \n#     def forward(self, state, action, predicted_next_state):\n#         x = torch.cat([state, action, predicted_next_state], dim=-1)\n#         return self.net(x)</code></pre><p><strong>Action:</strong> Modify your discriminator network to take the output of your dynamics model as an additional input. This 'fuses' the dynamics information into the reward calculation.</p>"
-                                },
-                                {
-                                    "strategy": "Train the generator policy using the reward signal from the model-enhanced discriminator.",
-                                    "howTo": "<h5>Concept:</h5><p>With the enhanced discriminator in place, the final step is to train the RL agent (generator) using its output as the reward. The agent's goal is to learn a policy that can generate trajectories so realistic that the model-enhanced discriminator cannot distinguish them from expert demonstrations.</p><h5>Implement the Full ME-AIRL Training Step</h5><pre><code># Conceptual training step within your main loop\n\n# 1. Sample expert data and agent-generated data\n# expert_states, expert_actions = sample_expert_data()\n# agent_states, agent_actions = sample_agent_data()\n\n# 2. Use the world model to predict next states for both\n# expert_next_states_pred = dynamics_model(expert_states, expert_actions)\n# agent_next_states_pred = dynamics_model(agent_states, agent_actions)\n\n# 3. Train the discriminator to distinguish them\n# loss_d = calculate_discriminator_loss(\n#     (expert_states, expert_actions, expert_next_states_pred), \n#     (agent_states, agent_actions, agent_next_states_pred)\n# )\n\n# 4. Use the discriminator to provide a reward for the agent's actions\n# rewards = model_enhanced_discriminator(agent_states, agent_actions, agent_next_states_pred)\n\n# 5. Update the generator (RL agent) using this learned reward\n# generator_policy.update(agent_states, agent_actions, rewards)</code></pre><p><strong>Action:</strong> Implement the full training loop where the RL agent's policy is updated using the rewards generated by your model-enhanced discriminator. This ensures the agent learns a policy that is robust to the environment's dynamics as captured by your world model.</p>"
+                                    "strategy": "Use Inverse Reinforcement Learning (IRL) to learn a reward function from expert demonstrations.",
+                                    "howTo": "<h5>Concept:</h5><p>IRL infers the reward function that an expert was likely optimizing for, given a set of their demonstrations. Adversarial IRL (like AIRL) frames this as a GAN-like problem where a 'Generator' (the agent) tries to produce expert-like trajectories, and a 'Discriminator' learns to distinguish agent trajectories from expert ones. The discriminator's output becomes the learned reward signal.</p><h5>Implement the AIRL Framework</h5><p>The core of AIRL is the alternating training between the agent's policy (generator) and the reward function (discriminator).</p><pre><code># Conceptual AIRL Training Loop\n\n# for _ in range(training_iterations):\n#     # 1. Collect trajectories from the current agent policy.\n#     agent_trajectories = collect_trajectories(agent_policy)\n#     \n#     # 2. Train the discriminator to distinguish expert vs. agent trajectories.\n#     # The discriminator is updated with a loss function that labels expert data as '1' and agent data as '0'.\n#     update_discriminator(expert_trajectories, agent_trajectories)\n#     \n#     # 3. Use the trained discriminator as the reward function for the agent.\n#     rewards = discriminator.predict_reward(agent_trajectories)\n#     \n#     # 4. Update the agent's policy using the learned rewards.\n#     update_agent_policy(agent_trajectories, rewards)</code></pre><p><strong>Action:</strong> If you have access to a dataset of expert demonstrations, use an IRL framework like AIRL to learn a reward function. This can often produce more robust and generalizable agent behavior than hand-coded rewards.</p>"
                                 }
                             ],
                             "toolsOpenSource": [
                                 "imitation (a library for imitation and inverse RL)",
-                                "Stable-Baselines3, RLlib (Ray), Tianshou (for the generator/policy component)",
-                                "PyTorch, TensorFlow (for defining the discriminator and dynamics models)",
-                                "torch-dreamer (a library for model-based RL)",
-                                "OpenAI Gymnasium (for RL environments)"
+                                "RL libraries (Stable Baselines3, RLlib)",
+                                "PyTorch, TensorFlow",
+                                "Data labeling tools (Label Studio)"
                             ],
                             "toolsCommercial": [
-                                "Microsoft Bonsai",
-                                "AnyLogic",
-                                "NVIDIA Isaac Sim (for robotics simulation)",
+                                "Enterprise RL platforms (Microsoft Bonsai)",
+                                "Data labeling services (Scale AI, Appen)"
+                            ],
+                            "defendsAgainst": [
+                                { "framework": "MITRE ATLAS", "items": ["AML.T0048 External Harms"] },
+                                { "framework": "MAESTRO", "items": ["Agent Goal Manipulation (L7)"] },
+                                { "framework": "OWASP LLM Top 10 2025", "items": ["LLM06:2025 Excessive Agency", "LLM09:2025 Misinformation"] },
+                                { "framework": "OWASP ML Top 10 2023", "items": ["ML08:2023 Model Skewing"] }
+                            ]
+                        },
+                        {
+                            "id": "AID-H-013.003",
+                            "name": "Potential-Based Reward Shaping",
+                            "pillar": "model", "phase": "building",
+                            "description": "This subtechnique covers the provably safe method of adding dense, intermediate rewards to guide an agent towards a goal without changing the optimal policy. It helps speed up learning in environments with sparse rewards and can guide the agent away from unsafe states, effectively hardening the learning process against some forms of reward hacking by making the intended path clearer.",
+                            "implementationStrategies": [
+                                {
+                                    "strategy": "Define a potential function Φ(s) that estimates the 'goodness' of any given state.",
+                                    "howTo": "<h5>Concept:</h5><p>The core of Potential-Based Reward Shaping (PBRS) is the potential function, Φ(s). This function should be defined such that its value increases as the agent gets closer to achieving its goal. A common heuristic is to use the negative distance to the goal state.</p><h5>Implement a Potential Function</h5><p>Write a function that takes a state and returns a scalar potential value. This function encapsulates your domain knowledge about what constitutes a 'good' state.</p><pre><code># For a simple navigation task\nimport numpy as np\n\ndef potential_function(state, goal_state):\n    \"\"\"Calculates the potential of a state. Higher is better.\"\"\"\n    distance = np.linalg.norm(state - goal_state)\n    # The potential is the negative of the distance. As the agent gets closer, potential increases.\n    return -distance</code></pre><p><strong>Action:</strong> Based on your task, define a potential function that smoothly increases as the agent progresses towards its final goal.</p>"
+                                },
+                                {
+                                    "strategy": "Wrap the environment to add the shaped reward to the base reward at each step.",
+                                    "howTo": "<h5>Concept:</h5><p>The shaped reward, F, is calculated based on the change in potential from the previous state (`s`) to the new state (`s'`). The formula is `F = γ * Φ(s') - Φ(s)`, where γ is the RL agent's discount factor. This term is then added to the environment's extrinsic reward.</p><h5>Use a Custom Gym Wrapper</h5><p>A custom wrapper for your RL environment is a clean way to implement this without modifying the core environment code.</p><pre><code># File: rl_rewards/reward_shaping_wrapper.py\nimport gymnasium as gym\n\nclass PBRSWrapper(gym.RewardWrapper):\n    def __init__(self, env, potential_function, gamma=0.99):\n        super().__init__(env)\n        self.potential_function = potential_function\n        self.gamma = gamma\n        self.last_potential = 0\n\n    def step(self, action):\n        next_state, reward, done, truncated, info = self.env.step(action)\n        new_potential = self.potential_function(next_state)\n        shaping_reward = (self.gamma * new_potential) - self.last_potential\n        self.last_potential = new_potential\n        # The final reward is the sum of the original reward and the shaping term.\n        return next_state, reward + shaping_reward, done, truncated, info\n\n    def reset(self, **kwargs):\n        state, info = self.env.reset(**kwargs)\n        self.last_potential = self.potential_function(state)\n        return state, info</code></pre><p><strong>Action:</strong> If your agent is struggling to learn due to sparse rewards, implement potential-based reward shaping using an environment wrapper.</p>"
+                                }
+                            ],
+                            "toolsOpenSource": [
+                                "RL libraries (Stable Baselines3, RLlib, Tianshou)",
+                                "OpenAI Gymnasium",
+                                "PyTorch, TensorFlow",
+                                "NumPy"
+                            ],
+                            "toolsCommercial": [
+                                "Enterprise RL platforms (AnyLogic, Microsoft Bonsai)",
                                 "MATLAB Reinforcement Learning Toolbox"
                             ],
                             "defendsAgainst": [
-                                {
-                                    "framework": "MITRE ATLAS",
-                                    "items": [
-                                        "AML.T0048 External Harms"
-                                    ]
-                                },
-                                {
-                                    "framework": "MAESTRO",
-                                    "items": [
-                                        "Agent Goal Manipulation (L7)"
-                                    ]
-                                },
-                                {
-                                    "framework": "OWASP LLM Top 10 2025",
-                                    "items": [
-                                        "LLM06:2025 Excessive Agency",
-                                        "LLM09:2025 Misinformation"
-                                    ]
-                                },
-                                {
-                                    "framework": "OWASP ML Top 10 2023",
-                                    "items": [
-                                        "ML08:2023 Model Skewing"
-                                    ]
-                                }
+                                { "framework": "MITRE ATLAS", "items": ["AML.T0048 External Harms"] },
+                                { "framework": "MAESTRO", "items": ["Unpredictable agent behavior / Performance Degradation (L5)"] },
+                                { "framework": "OWASP LLM Top 10 2025", "items": ["LLM06:2025 Excessive Agency"] },
+                                { "framework": "OWASP ML Top 10 2023", "items": ["ML08:2023 Model Skewing"] }
                             ]
                         }
                     ]
@@ -4615,127 +4567,67 @@ class GraphRobustnessVerifier:
                     "subTechniques": [
                         {
                             "id": "AID-H-014.001",
-                            "name": "Proactive Identity Watermarking for Deepfake Defense", "pillar": "data", "phase": "building",
-                            "description": "A proactive defense that involves embedding imperceptible, robust digital watermarks directly into the identity features of facial images before they are publicly shared or released. The watermark is designed to be fragile or indicative under deepfake generation processes, meaning any attempt to use the image to create a deepfake will either disrupt the process, degrade the output, or transfer the watermark to the synthetic media, making it detectable or traceable. ",
+                            "name": "Digital Content & Data Watermarking",
+                            "pillar": "data, model", "phase": "building",
+                            "description": "This subtechnique covers the methods for embedding robust, imperceptible signals into various data types (including images, audio, video, text, and code) for the purposes of tracing provenance, detecting misuse, or identifying AI-generated content. The watermark is designed to be resilient to common transformations, allowing an owner to prove that a piece of content originated from their system even after it has been distributed or modified.",
                             "implementationStrategies": [
                                 {
-                                    "strategy": "Embed a watermark into the frequency domain of an image for robustness.",
-                                    "howTo": "<h5>Concept:</h5><p>Instead of altering pixels directly, a more robust watermarking method is to embed the signal in the image's frequency domain (e.g., using a Fourier or Wavelet Transform). Watermarks in this domain are more resilient to common image manipulations like cropping, scaling, and JPEG compression.</p><h5>Perform a Fourier Transform and Embed the Watermark</h5><pre><code># File: hardening/frequency_watermarking.py\\nimport cv2\\nimport numpy as np\n\ndef embed_watermark_frequency(image_path, watermark_pattern):\\n    # Read image in grayscale\\n    img = cv2.imread(image_path, 0)\\n    \n    # Perform 2D Discrete Fourier Transform (DFT)\\n    dft = cv2.dft(np.float32(img), flags=cv2.DFT_COMPLEX_OUTPUT)\\n    dft_shift = np.fft.fftshift(dft) # Shift zero-frequency component to center\n    \n    # Embed the watermark pattern in the magnitude spectrum (e.g., mid-frequencies)\\n    # This is a conceptual step. Real implementations use more complex logic.\\n    rows, cols = img.shape\\n    crow, ccol = rows // 2 , cols // 2\\n    dft_shift[crow-10:crow+10, ccol-10:ccol+10] += watermark_pattern\n\n    # Perform inverse DFT to get the watermarked image\\n    f_ishift = np.fft.ifftshift(dft_shift)\\n    img_back = cv2.idft(f_ishift)\\n    img_back = cv2.magnitude(img_back[:,:,0], img_back[:,:,1])\n    \n    # Normalize and save\\n    cv2.normalize(img_back, img_back, 0, 255, cv2.NORM_MINMAX)\\n    # cv2.imwrite('watermarked_image.png', img_back.astype(np.uint8))\n    return img_back.astype(np.uint8)</code></pre><p><strong>Action:</strong> Use a library like OpenCV to transform images into the frequency domain, embed a predefined watermark pattern into the mid-frequency coefficients, and then apply an inverse transform to create a robustly watermarked image.</p>"
+                                    "strategy": "For image and video data, embed watermarks into the frequency domain.",
+                                    "howTo": "<h5>Concept:</h5><p>Instead of altering pixels directly, a more robust watermarking method is to embed the signal in the image's frequency domain (e.g., using a Fourier or Wavelet Transform). Watermarks in this domain are more resilient to common image manipulations like cropping, scaling, and JPEG compression.</p><h5>Apply a Fourier Transform and Embed Watermark</h5><pre><code># File: watermarking/frequency_watermark.py\\nimport cv2\\nimport numpy as np\n\ndef embed_frequency_watermark(image_path, watermark_pattern):\n    img = cv2.imread(image_path, 0)\n    # Perform 2D Discrete Fourier Transform (DFT)\n    dft = cv2.dft(np.float32(img), flags=cv2.DFT_COMPLEX_OUTPUT)\n    dft_shift = np.fft.fftshift(dft)\n    \n    # Embed the watermark pattern in the magnitude spectrum\n    rows, cols = img.shape\n    crow, ccol = rows // 2, cols // 2\n    dft_shift[crow-10:crow+10, ccol-10:ccol+10] += watermark_pattern\n\n    # Perform inverse DFT to get the watermarked image\n    f_ishift = np.fft.ifftshift(dft_shift)\n    img_back = cv2.idft(f_ishift)\n    img_back = cv2.magnitude(img_back[:,:,0], img_back[:,:,1])\n    return img_back.astype(np.uint8)</code></pre><p><strong>Action:</strong> Use a library like OpenCV to transform images or video frames into the frequency domain, embed a predefined watermark pattern, and then apply an inverse transform to create a robustly watermarked asset.</p>"
                                 },
                                 {
-                                    "strategy": "Generate adversarial watermarks that specifically target facial feature extractors used in deepfake pipelines.",
-                                    "howTo": "<h5>Concept:</h5><p>Instead of a generic watermark, this advanced technique crafts a perturbation that is adversarial to the face recognition models commonly used in deepfake software. The goal is to create a watermarked image that looks normal to a human but yields a corrupted or useless feature embedding when processed by a face extractor, thus disrupting the face-swapping process. </p><h5>Craft the Adversarial Perturbation</h5><p>This involves calculating the gradient of a target face recognition model's output with respect to the input image's pixels and then creating a small perturbation (the watermark) that moves along this gradient.</p><pre><code># Conceptual code using a PyTorch-like framework\n# face_recognition_model = load_face_extractor()\n# source_image.requires_grad = True\n\n# # Get the feature embedding for the source image\n# embedding = face_recognition_model(source_image)\n# \n# # Define a target (e.g., a zero vector) we want the embedding to move towards\n# target = torch.zeros_like(embedding)\n# loss = loss_fn(embedding, target)\n# loss.backward()\n# \n# # The gradient tells us how to change the image to change the embedding\n# gradient = source_image.grad.data\n# # Create a small perturbation along the sign of the gradient\n# adversarial_watermark = epsilon * gradient.sign()\n# \n# # Add the watermark to the original image\n# watermarked_image = torch.clamp(source_image + adversarial_watermark, 0, 1)</code></pre><p><strong>Action:</strong> For proactive defense, generate adversarial watermarks by using the gradients from a target facial recognition model. This 'poisons' the image so that it cannot be correctly processed by automated face-swapping pipelines.</p>"
-                                },
-                                {
-                                    "strategy": "Design watermarks to be robust against common image manipulations like compression and resizing.",
-                                    "howTo": "<h5>Concept:</h5><p>An effective watermark must survive the types of processing that are common on the internet. This is often achieved by embedding the signal in perceptually significant regions of the image that are less likely to be discarded by compression algorithms, such as the mid-frequency coefficients of a Discrete Cosine Transform (DCT), which is the basis for JPEG compression.</p><h5>Conceptual DCT Watermarking Workflow</h5><pre><code># Conceptual workflow for robust watermarking\n\n# 1. Divide the image into 8x8 blocks.\n# 2. For each block, apply the 2D Discrete Cosine Transform (DCT).\n# 3. Identify the mid-frequency coefficients within the DCT matrix of each block.\n#    These are less impacted by compression than high-frequency coefficients.\n# 4. Subtly modify a selection of these mid-frequency coefficients according to a secret watermark key.\n#    For example, slightly increase or decrease their value based on the bits of the watermark.\n# 5. Apply the inverse DCT to each block to reconstruct the image.\n\n# The resulting image will have a watermark that is resilient to JPEG compression.</code></pre><p><strong>Action:</strong> When implementing a watermarking scheme, choose an algorithm that operates in a transform domain like DCT or DWT and embeds the signal in the mid-frequency range to ensure it can survive common processing like JPEG compression.</p>"
-                                },
-                                {
-                                    "strategy": "Implement a corresponding detector to reliably identify the watermark in suspect images.",
-                                    "howTo": "<h5>Concept:</h5><p>A watermark is only useful if it can be detected. The detection process must be able to extract the hidden signal and verify its presence, even from a manipulated or compressed image.</p><h5>Implement the Watermark Extraction and Verification</h5><p>The detector typically reverses the embedding process. For the frequency domain example, it would transform the suspect image and check for the presence of the specific watermark pattern.</p><pre><code># File: hardening/watermark_detector.py\n\n# def detect_watermark_frequency(image_path, known_watermark_pattern):\n#     # Read the suspect image and perform the same DFT as in the embedder\n#     img = cv2.imread(image_path, 0)\n#     dft = cv2.dft(np.float32(img), flags=cv2.DFT_COMPLEX_OUTPUT)\n#     dft_shift = np.fft.fftshift(dft)\n#     \n#     # 1. Extract the region where the watermark was embedded\n#     # ... (code to get the magnitude spectrum of the target region) ...\n#     extracted_region = ...\n#     \n#     # 2. Calculate the correlation between the extracted region and the known pattern\n#     correlation = cv2.matchTemplate(extracted_region, known_watermark_pattern, cv2.TM_CCOEFF_NORMED)\n#     \n#     # 3. If the correlation is above a high threshold, the watermark is present\n#     if correlation[0][0] > 0.9:\n#         return True # Watermark detected\n#     return False</code></pre><p><strong>Action:</strong> Develop a detector function that corresponds to your embedding algorithm. This detector should be used to scan any suspect media to determine if it originated from your watermarked source images.</p>"
+                                    "strategy": "For text data, subtly alter word choices or token frequencies based on a secret key.",
+                                    "howTo": "<h5>Concept:</h5><p>A text watermark embeds a statistically detectable signal into generated text without altering its semantic meaning. A common method is to use a secret key to deterministically bias the model's word choices (e.g., always preferring 'large' over 'big'). This creates a unique statistical fingerprint that can be detected later.</p><h5>Implement a Synonym-Based Watermarker</h5><pre><code># File: watermarking/text_watermark.py\nimport hashlib\n\nSYNONYM_PAIRS = {'large': 'big', 'quick': 'fast'}\n\ndef watermark_text(text: str, secret_key: str) -> str:\n    words = text.split()\n    watermarked_words = []\n    for i, word in enumerate(words):\n        if word.lower() in SYNONYM_PAIRS:\n            # Use a hash of the context to make a deterministic choice\n            context = secret_key + (words[i-1] if i > 0 else '')\n            h = hashlib.sha256(context.encode()).hexdigest()\n            if int(h, 16) % 2 == 0:\n                watermarked_words.append(SYNONYM_PAIRS[word.lower()])\n                continue\n        watermarked_words.append(word)\n    return ' '.join(watermarked_words)</code></pre><p><strong>Action:</strong> After generating text with an LLM, pass it through a watermarking function that applies deterministic, key-based synonym substitutions to embed a traceable signal.</p>"
                                 }
                             ],
                             "toolsOpenSource": [
-                                "OpenCV, Pillow, scikit-image (for image processing and transforms like DFT/DCT)",
-                                "PyTorch, TensorFlow (for crafting adversarial watermarks)",
-                                "GitHub repositories with research code for specific watermarking algorithms"
+                                "OpenCV, Pillow (for images)",
+                                "Librosa, pydub (for audio)",
+                                "MarkLLM, SynthID (for text/images)",
+                                "Steganography libraries"
                             ],
                             "toolsCommercial": [
-                                "Sensity AI, Hive AI (for deepfake detection)",
-                                "Digimarc, Verance, Irdeto (commercial digital watermarking services)",
-                                "Truepic (for content authenticity and provenance)"
+                                "Digimarc, Verance, Irdeto (commercial watermarking services)",
+                                "Sensity AI (deepfake detection/watermarking)",
+                                "Truepic (for content authenticity)"
                             ],
                             "defendsAgainst": [
-                                {
-                                    "framework": "MITRE ATLAS",
-                                    "items": [
-                                        "AML.T0048 External Harms",
-                                        "AML.T0043 Craft Adversarial Data",
-                                        "AML.T0057 LLM Data Leakage"
-                                    ]
-                                },
-                                {
-                                    "framework": "MAESTRO",
-                                    "items": [
-                                        "Data Operations (L2)",
-                                        "Misinformation Generation (L1/L7)"
-                                    ]
-                                },
-                                {
-                                    "framework": "OWASP LLM Top 10 2025",
-                                    "items": [
-                                        "LLM09:2025 Misinformation"
-                                    ]
-                                },
-                                {
-                                    "framework": "OWASP ML Top 10 2023",
-                                    "items": [
-                                        "ML09:2023 Output Integrity Attack"
-                                    ]
-                                }
+                                { "framework": "MITRE ATLAS", "items": ["AML.T0024.002 Extract ML Model", "AML.T0057 LLM Data Leakage"] },
+                                { "framework": "MAESTRO", "items": ["Model Stealing (L1)", "Data Exfiltration (L2)", "Misinformation Generation (L1/L7)"] },
+                                { "framework": "OWASP LLM Top 10 2025", "items": ["LLM02:2025 Sensitive Information Disclosure", "LLM09:2025 Misinformation"] },
+                                { "framework": "OWASP ML Top 10 2023", "items": ["ML05:2023 Model Theft", "ML09:2023 Output Integrity Attack"] }
                             ]
                         },
                         {
                             "id": "AID-H-014.002",
-                            "name": "Proactive Identity Cloaking for Source Image Protection", "pillar": "data", "phase": "building",
-                            "description": "An identity cloaking algorithm that proactively defends against deepfake face swapping attacks. It operates by inserting imperceptible perturbations into source images (i.e., the images from which identities are to be extracted). These perturbations are specifically crafted to 'cloak' the identity information, effectively nullifying or degrading the quality of attempts to use the image for face swapping, even when the attacker has no knowledge of the defense mechanism. ",
+                            "name": "Adversarial Data Cloaking",
+                            "pillar": "data", "phase": "building",
+                            "description": "This subtechnique covers the approach of adding small, targeted, and often imperceptible perturbations to source data. Unlike watermarking, which aims for a signal to be robustly detected, cloaking aims to disrupt or 'cloak' the data from being effectively used by specific downstream AI models. This is a proactive defense to sabotage the utility of stolen data for malicious purposes like deepfake generation or unauthorized model training.",
                             "implementationStrategies": [
                                 {
-                                    "strategy": "Generate perturbations that target the identity embedding space of facial recognition models.",
-                                    "howTo": "<h5>Concept:</h5><p>This technique works by treating the face recognition model used in deepfake pipelines as an adversary. It calculates a small, targeted perturbation that, when added to an image, pushes the image's identity embedding in the model's latent space towards a generic or 'null' identity. This makes it difficult for the deepfake software to extract a unique identity to swap.</p><h5>Calculate the Gradient Towards a Null Identity</h5><pre><code># File: hardening/identity_cloaking.py\\nimport torch\n\n# Assume 'face_recognition_model' is a pre-trained model like ArcFace or FaceNet\\n# Assume 'source_image' is a tensor for the image to be protected\n# source_image.requires_grad = True\n\n# 1. Get the identity embedding of the original image\\n# source_embedding = face_recognition_model(source_image)\n\n# 2. Define a target 'null' embedding (e.g., the average embedding of a large dataset)\\n# null_embedding = get_average_face_embedding()\n\n# 3. Calculate the loss as the distance towards the null embedding\\n# loss = torch.nn.MSELoss()(source_embedding, null_embedding)\n\n# 4. Calculate the gradients of this loss with respect to the input image\\n# loss.backward()\n# image_gradient = source_image.grad.data\n\n# 5. The gradient now points in the direction to make the face more 'average'\\n# cloak_perturbation = epsilon * image_gradient.sign()</code></pre><p><strong>Action:</strong> Use the gradients from a pre-trained face recognition model to compute a perturbation vector that specifically minimizes the uniqueness of the image's identity embedding.</p>"
+                                    "strategy": "Generate perturbations that target the embedding space of common recognition models.",
+                                    "howTo": "<h5>Concept:</h5><p>This technique treats a public feature extractor model (like a face recognition model) as an adversary. It calculates a small perturbation that, when added to an image, pushes the image's identity embedding in the model's latent space towards a generic or 'null' identity. This makes it difficult for downstream applications to extract a unique identity from the cloaked image.</p><h5>Calculate Gradient Towards a Null Identity</h5><pre><code># Conceptual code for generating a cloaking perturbation\n# Assume 'feature_extractor_model' is a pre-trained model (e.g., FaceNet)\n# source_image.requires_grad = True\n\n# 1. Get the embedding of the original image\n# source_embedding = feature_extractor_model(source_image)\n\n# 2. Define a target 'null' embedding (e.g., the average embedding of a large dataset)\n# null_embedding = get_average_face_embedding()\n\n# 3. Calculate the loss as the distance towards the null embedding\n# loss = torch.nn.MSELoss()(source_embedding, null_embedding)\n\n# 4. Get the gradient of the loss w.r.t the input image's pixels\n# loss.backward()\n# cloak_perturbation = epsilon * source_image.grad.data.sign()\n\n# 5. Add the perturbation to the image\n# cloaked_image = torch.clamp(source_image + cloak_perturbation, 0, 1)</code></pre><p><strong>Action:</strong> Use the gradients from a public feature extractor model to compute a perturbation that minimizes the uniqueness of your data's embedding, thus 'cloaking' it from that model.</p>"
                                 },
                                 {
-                                    "strategy": "Constrain the perturbations to be imperceptible to the human eye while remaining effective.",
-                                    "howTo": "<h5>Concept:</h5><p>For a cloaking technique to be practical, the user must not be able to see the changes in the protected image. This is achieved by constraining the magnitude of the added perturbation, typically using an L-infinity norm, which limits the maximum change to any single pixel value.</p><h5>Apply and Clip the Perturbation</h5><p>After generating the perturbation vector, scale it by a small epsilon value and add it to the original image. Then, clip the resulting pixel values to ensure they remain in the valid range (e.g., [0, 1] or [0, 255]).</p><pre><code># (Continuing from previous example)\n\n# Set a small epsilon to ensure the change is imperceptible\\n# An epsilon of 8/255 is a common choice for images with pixel values in [0,1]\\nepsilon = 8 / 255\n\n# Generate the perturbation based on the gradient's sign (FGSM-style)\\ncloak_perturbation = epsilon * image_gradient.sign()\n\n# Add the perturbation to the original image\\ncloaked_image = source_image + cloak_perturbation\n\n# Clip the final image to ensure all pixel values are valid\\ncloaked_image = torch.clamp(cloaked_image, 0, 1)\n\n# The 'cloaked_image' now looks identical to the original but is hardened against face swapping.</code></pre><p><strong>Action:</strong> When adding the cloaking perturbation to an image, use a small L-infinity norm constraint (e.g., ε = 8/255) and clip the final pixel values to ensure the modification is visually imperceptible.</p>"
-                                },
-                                {
-                                    "strategy": "Apply the cloaking algorithm as a pre-processing step before images are shared publicly.",
-                                    "howTo": "<h5>Concept:</h5><p>Identity cloaking is a proactive defense that must be applied by the user or an organization before an image is published online. This can be implemented as a simple script or a user-facing application that processes images before they are uploaded.</p><h5>Create a Batch Processing Script for Cloaking</h5><p>This script would iterate through a directory of images, apply the cloaking function to each one, and save the protected versions in a separate output directory.</p><pre><code># File: hardening/apply_cloaking_tool.py\\nimport os\\nfrom PIL import Image\n\n# Assume 'cloak_image_function' is your full implementation of the cloaking technique\n\ndef cloak_directory(input_dir, output_dir):\\n    if not os.path.exists(output_dir):\\n        os.makedirs(output_dir)\n\n    for filename in os.listdir(input_dir):\\n        if filename.lower().endswith(('.png', '.jpg', '.jpeg')):\\n            img_path = os.path.join(input_dir, filename)\\n            print(f\\\"Processing {img_path}...\\\")\n            original_image = Image.open(img_path)\\n            \n            # Apply the cloaking defense\\n            protected_image = cloak_image_function(original_image)\\n            \n            # Save the protected image\\n            protected_image.save(os.path.join(output_dir, filename))\\n\n# --- Example Usage ---\n# cloak_directory('./my_photos_to_upload', './protected_photos')</code></pre><p><strong>Action:</strong> Provide users with a tool or integrate an automated service that applies the identity cloaking algorithm to their images as a final step before they are uploaded to public websites or social media platforms.</p>"
-                                },
-                                {
-                                    "strategy": "Validate the cloaking's effectiveness by attempting to use cloaked images in open-source deepfake tools.",
-                                    "howTo": "<h5>Concept:</h5><p>To confirm that the cloaking defense works, you must attempt to attack it. The evaluation involves taking a cloaked image and using it as the source identity in a standard face-swapping tool. A successful defense will result in a failed or heavily distorted deepfake.</p><h5>Run an End-to-End Test</h5><p>This is a procedural test, not a single script. The steps are:</p><pre><code># Conceptual Test Plan\n\n# 1. Select a source image ('source.png') and a target video ('target.mp4').\n# 2. **Control Run:** Use an open-source tool like DeepFaceLab to swap the face from 'source.png' onto 'target.mp4'. Save the result as 'control_deepfake.mp4'.\n#    - Expected outcome: A clear, successful face swap.\n# 3. **Cloaking:** Apply your identity cloaking algorithm to the source image.\n#    > python apply_cloaking_tool.py --input source.png --output protected_source.png\n# 4. **Test Run:** Use the same deepfake tool to swap the face from 'protected_source.png' onto 'target.mp4'. Save the result as 'test_deepfake.mp4'.\n# 5. **Compare:** Visually compare 'control_deepfake.mp4' and 'test_deepfake.mp4'.\n#    - A successful defense is indicated if 'test_deepfake.mp4' shows severe visual artifacts, identity bleeding (a mix of source and target faces), or a complete failure to swap the face.</code></pre><p><strong>Action:</strong> As part of your defense validation, use cloaked images as inputs to popular open-source deepfake generation tools. Confirm that the cloaking results in a significant degradation or complete failure of the face-swapping process.</p>"
+                                    "strategy": "Apply cloaking as a pre-processing step before data is shared publicly.",
+                                    "howTo": "<h5>Concept:</h5><p>Identity cloaking is a proactive defense that must be applied by the user or an organization before an image or other data is published online. It should be the final step before data leaves a trusted environment.</p><h5>Create a Batch Processing Script for Cloaking</h5><pre><code># File: cloaking_tool/apply_cloak.py\nimport os\nfrom PIL import Image\n\n# Assume 'cloak_image_function' is your full implementation of the cloaking technique\n\ndef cloak_directory(input_dir, output_dir):\n    if not os.path.exists(output_dir): os.makedirs(output_dir)\n\n    for filename in os.listdir(input_dir):\n        if filename.lower().endswith(('.png', '.jpg', '.jpeg')):\n            img_path = os.path.join(input_dir, filename)\n            original_image = Image.open(img_path)\n            # Apply the cloaking defense\n            protected_image = cloak_image_function(original_image)\n            # Save the protected image\n            protected_image.save(os.path.join(output_dir, filename))\n</code></pre><p><strong>Action:</strong> Provide users with a tool or integrate an automated service that applies the cloaking algorithm to their data as a final step before it is uploaded to public websites or social media platforms.</p>"
                                 }
                             ],
                             "toolsOpenSource": [
                                 "Fawkes (academic project for image cloaking)",
-                                "PyTorch, TensorFlow (for gradient-based perturbation generation)",
-                                "deepface (Python library for accessing facial recognition models like ArcFace, FaceNet)",
-                                "OpenCV, Pillow (for image processing)",
-                                "DeepFaceLab, FaceSwap (open-source deepfake tools for validation testing)"
+                                "Adversarial Robustness Toolbox (ART)",
+                                "PyTorch, TensorFlow",
+                                "deepface (for accessing public feature extractors)"
                             ],
                             "toolsCommercial": [
                                 "Sensity AI (deepfake detection and prevention services)",
-                                "Truepic (content authenticity and provenance)",
-                                "Startups and academic spin-offs focused on proactive data protection."
+                                "Truepic (content authenticity and provenance)"
                             ],
                             "defendsAgainst": [
-                                {
-                                    "framework": "MITRE ATLAS",
-                                    "items": [
-                                        "AML.T0048 External Harms",
-                                        "AML.T0043 Craft Adversarial Data"
-                                    ]
-                                },
-                                {
-                                    "framework": "MAESTRO",
-                                    "items": [
-                                        "Data Operations (L2)",
-                                        "Misinformation Generation (L1/L7)"
-                                    ]
-                                },
-                                {
-                                    "framework": "OWASP LLM Top 10 2025",
-                                    "items": [
-                                        "LLM09:2025 Misinformation"
-                                    ]
-                                },
-                                {
-                                    "framework": "OWASP ML Top 10 2023",
-                                    "items": [
-                                        "ML09:2023 Output Integrity Attack"
-                                    ]
-                                }
+                                { "framework": "MITRE ATLAS", "items": ["AML.T0048 External Harms", "AML.T0043 Craft Adversarial Data"] },
+                                { "framework": "MAESTRO", "items": ["Data Operations (L2)", "Misinformation Generation (L1/L7)"] },
+                                { "framework": "OWASP LLM Top 10 2025", "items": ["LLM09:2025 Misinformation"] },
+                                { "framework": "OWASP ML Top 10 2023", "items": ["ML09:2023 Output Integrity Attack"] }
                             ]
                         }
 
@@ -4865,7 +4757,7 @@ def predict_with_probability_averaging(input_data, models):
                 },
                 {
                     "id": "AID-H-016",
-                    "name": "Certified Defenses", "pillar": "model", "phase": "building",
+                    "name": "Certified Defenses", "pillar": "model", "phase": "building, validation",
                     "description": "A set of advanced techniques that provide a mathematical, provable guarantee that a model's output will not change for any input within a defined 'robustness radius'. Unlike empirical defenses like standard adversarial training, which improve resilience against known attack types, certified defenses use formal methods to prove that no attack within a certain magnitude (e.g., L-infinity norm) can cause a misclassification. This is a highly specialized task that offers the highest level of assurance against evasion attacks.",
                     "implementationStrategies": [
                         {
@@ -5193,7 +5085,7 @@ class SmoothedClassifier(torch.nn.Module):
                     "subTechniques": [
                         {
                             "id": "AID-D-001.001",
-                            "name": "Per-Prompt Content & Obfuscation Analysis",  "pillar": "app", "phase": "operation",
+                            "name": "Per-Prompt Content & Obfuscation Analysis", "pillar": "app", "phase": "operation",
                             "description": "Performs real-time analysis on individual prompts to detect malicious content, prompt injection, and jailbreaking attempts. This sub-technique combines two key functions: 1) identifying known malicious patterns and harmful intent using heuristics, regex, and specialized guardrail models, and 2) detecting attempts to hide or obscure these attacks through obfuscation techniques like character encoding (e.g., Base64), homoglyphs, or high-entropy strings. It acts as a primary, synchronous guardrail at the input layer.",
                             "implementationStrategies": [
                                 {
@@ -5757,7 +5649,7 @@ class SmoothedClassifier(torch.nn.Module):
                     "subTechniques": [
                         {
                             "id": "AID-D-004.001",
-                            "name": "Static Artifact Hash & Signature Verification",  "pillar": "infra, model, app", "phase": "building, validation",
+                            "name": "Static Artifact Hash & Signature Verification", "pillar": "infra, model, app", "phase": "building, validation",
                             "description": "Periodically re-hash stored models, datasets and container layers and compare against the authorised manifest.",
                             "toolsOpenSource": [
                                 "MLflow Model Registry",
@@ -5908,7 +5800,7 @@ class SmoothedClassifier(torch.nn.Module):
                         },
                         {
                             "id": "AID-D-004.003",
-                            "name": "Configuration & Policy Drift Monitoring", "pillar": "infra", "phase": "operation",
+                            "name": "Configuration & Policy Drift Monitoring", "pillar": "infra, app", "phase": "operation",
                             "description": "Detect unauthorised edits to model-serving YAMLs, feature-store ACLs, RAG index schemas or inference-time policy files.",
                             "toolsOpenSource": [
                                 "Git (for version control and signed commits)",
@@ -7202,6 +7094,71 @@ class SmoothedClassifier(torch.nn.Module):
                             "howTo": "<h5>Concept:</h5><p>This defense applies when the reward calculation is complex or happens in a separate microservice. To detect tampering of the reward signal, a trusted, out-of-band 'verifier' service can re-calculate the reward for a random sample of state transitions and compare its result to the reward that was actually received by the agent. A significant discrepancy indicates tampering.</p><h5>Step 1: Create a Verifier Service</h5><p>The verifier service has its own copy of the reward logic and can be called by a monitoring system.</p><h5>Step 2: Implement a Sampling and Comparison Monitor</h5><p>A monitoring script periodically samples `(state, action, next_state, received_reward)` tuples from the agent's logs. It sends the `(state, action, next_state)` to the verifier service and compares the returned trusted reward to the `received_reward`.</p><pre><code># File: rl_monitoring/reward_tampering_detector.py\n\nTOLERANCE = 0.01 # Allow for minor floating point differences\n\ndef check_for_reward_tampering(agent_logs, verifier_service):\n    # Sample a small percentage of transitions from the logs\n    sampled_transitions = sample_from_logs(agent_logs, 0.01)\n\n    for transition in sampled_transitions:\n        state, action, next_state, received_reward = transition\n\n        # Get the trusted reward from the out-of-band verifier\n        trusted_reward = verifier_service.calculate_reward(state, action, next_state)\n\n        # Compare the rewards\n        if abs(received_reward - trusted_reward) > TOLERANCE:\n            print(\"🚨 REWARD TAMPERING DETECTED! Discrepancy found.\")\n            print(f\"  Agent received: {received_reward}, Verifier calculated: {trusted_reward}\")\n            # Trigger a critical security alert\n            return True\n    return False\n</code></pre><p><strong>Action:</strong> If your reward signal is generated by an external service, implement a separate, trusted verifier. Create a monitoring job that continuously samples state transitions, re-calculates the reward with the verifier, and alerts on any discrepancies, which would indicate signal tampering.</p>"
                         }
                     ]
+                },
+                {
+                    "id": "AID-D-014",
+                    "name": "RAG Content & Relevance Monitoring",
+                    "pillar": "app, data",
+                    "phase": "operation",
+                    "description": "This technique involves the real-time monitoring of a Retrieval-Augmented Generation (RAG) system's behavior at inference time. It focuses on two key checks: 1) Content Analysis, where retrieved document chunks are scanned for harmful content or malicious payloads before being passed to the LLM, and 2) Relevance Analysis, which verifies that the retrieved documents are semantically relevant to the user's original query. A significant mismatch in relevance can indicate a vector manipulation or poisoning attack designed to force the model to use unintended context.",
+                    "toolsOpenSource": [
+                        "Vector Databases (Qdrant, Weaviate, Chroma, Milvus)",
+                        "sentence-transformers (for embedding and similarity calculation)",
+                        "LangChain, LlamaIndex (for RAG orchestration and relevance checking)",
+                        "NVIDIA NeMo Guardrails, Llama Guard (for content scanning)",
+                        "Standard logging and monitoring tools (ELK Stack, Prometheus, Grafana)"
+                    ],
+                    "toolsCommercial": [
+                        "AI Observability Platforms (Arize AI, Fiddler, WhyLabs)",
+                        "Managed Vector Databases (Pinecone, Zilliz Cloud)",
+                        "AI Security Firewalls (Lakera Guard, Protect AI Guardian)",
+                        "Content Moderation APIs (OpenAI Moderation, Azure Content Safety)"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0070 RAG Poisoning",
+                                "AML.T0071 False RAG Entry Injection",
+                                "AML.T0051 LLM Prompt Injection (if payload is in RAG source)"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Compromised RAG Pipelines (L2)",
+                                "Data Poisoning (L2)",
+                                "Misinformation Generation (Cross-Layer)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM08:2025 Vector and Embedding Weaknesses",
+                                "LLM04:2025 Data and Model Poisoning"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML02:2023 Data Poisoning Attack"
+                            ]
+                        }
+                    ],
+                    "implementationStrategies": [
+                        {
+                            "strategy": "Scan retrieved document chunks for malicious content before adding to context.",
+                            "howTo": "<h5>Concept:</h5><p>A RAG system can be poisoned by embedding malicious instructions or harmful content into the documents stored in the vector database. Before these retrieved chunks are added to the LLM's final prompt, they must be scanned, just like direct user input. This prevents a benign user query from retrieving a malicious document that hijacks the LLM.</p><h5>Implement a Pre-Context Content Filter</h5><p>In your RAG retrieval logic, after fetching the document chunks from the vector database, iterate through them and pass each one through your existing input validation and sanitization filters (`AID-H-002`).</p><pre><code># File: rag_pipeline/content_scanner.py\\n\\n# Assume 'is_prompt_safe' is your existing input validation function\\n# from llm_guards import is_prompt_safe\\n\ndef scan_retrieved_chunks(retrieved_documents: list) -> list:\\n    \\\"\\\"\\\"Scans a list of retrieved documents and filters out unsafe ones.\\\"\\\"\\\"\\n    safe_chunks = []\\n    for doc in retrieved_documents:\\n        # Each retrieved document's content is treated as untrusted input\\n        if is_prompt_safe(doc.page_content):\\n            safe_chunks.append(doc)\\n        else:\\n            # Log the detection of a malicious document in the vector DB\\n            log_rag_poisoning_alert(document_id=doc.metadata.get('id'))\\n            print(f\\\"🚨 Malicious content found in retrieved document {doc.metadata.get('id')}. Discarding.\\\")\\n    \\n    return safe_chunks\n\n# --- In your main RAG workflow ---\n# raw_retrieved_docs = vector_db.similarity_search(query)\n# # Add the scanning step before building the context\n# safe_docs_for_context = scan_retrieved_chunks(raw_retrieved_docs)\n# final_prompt = build_prompt_with_context(query, safe_docs_for_context)</code></pre><p><strong>Action:</strong> In your RAG pipeline, after retrieving documents from the vector database, treat the content of each document as untrusted input. Pass the content through your existing prompt sanitization and safety filters. Only use the documents that pass these checks to construct the final context for the LLM.</p>"
+                        },
+                        {
+                            "strategy": "Verify semantic relevance of retrieved documents to the user's query.",
+                            "howTo": "<h5>Concept:</h5><p>An attacker could try to poison your vector database in a way that causes irrelevant (and malicious) documents to be returned for common queries. To detect this, you must verify that the documents retrieved are actually semantically similar to the user's original query. A low similarity score is a strong indicator of retrieval manipulation.</p><h5>Calculate Query-Document Similarity</h5><p>Use a sentence-transformer model to generate embeddings for both the user's query and the content of each retrieved document. Calculate the cosine similarity between the query embedding and each document embedding. If the score is below a threshold, the document is considered irrelevant.</p><pre><code># File: rag_pipeline/relevance_checker.py\\nfrom sentence_transformers import SentenceTransformer, util\\n\n# It's crucial to use the same embedding model that the RAG system uses\\nembedding_model = SentenceTransformer('all-MiniLM-L6-v2')\\n# This threshold must be tuned on your data. Lower means more tolerant.\\nRELEVANCE_THRESHOLD = 0.5\\n\ndef filter_by_relevance(query: str, retrieved_documents: list) -> list:\\n    \\\"\\\"\\\"Filters documents based on semantic similarity to the query.\\\"\\\"\\\"\\n    query_embedding = embedding_model.encode(query)\\n    doc_contents = [doc.page_content for doc in retrieved_documents]\\n    doc_embeddings = embedding_model.encode(doc_contents)\\n\n    # Calculate cosine similarity between the query and all retrieved docs\\n    similarities = util.cos_sim(query_embedding, doc_embeddings)[0]\\n    \n    relevant_docs = []\\n    for i, doc in enumerate(retrieved_documents):\\n        if similarities[i] > RELEVANCE_THRESHOLD:\\n            relevant_docs.append(doc)\\n        else:\\n            log_relevance_failure(query, document_id=doc.metadata.get('id'), score=similarities[i])\\n            print(f\\\"Discarding irrelevant document {doc.metadata.get('id')} (Score: {similarities[i]:.2f})\\\")\\n            \n    return relevant_docs</code></pre><p><strong>Action:</strong> After retrieving documents but before passing them to the LLM, calculate the cosine similarity between the user's query embedding and each document's embedding. Discard any document whose similarity score falls below an empirically determined relevance threshold.</p>"
+                        },
+                        {
+                            "strategy": "Log RAG retrieval metrics for threat hunting and performance analysis.",
+                            "howTo": "<h5>Concept:</h5><p>The relevance scores and document IDs from every RAG retrieval are valuable security telemetry. By logging this data, you can perform offline analysis to hunt for attack patterns that may not be obvious in a single query. For example, a user who consistently gets low-relevance results might be probing your system for vulnerabilities.</p><h5>Implement Structured Logging for RAG Retrievals</h5><p>Expand your standard interaction log to include a dedicated section for RAG metrics. This should capture the query, the top K document IDs that were retrieved, and their corresponding relevance scores.</p><pre><code># Conceptual log entry (JSON)\n{\n    \"timestamp\": \"...\",\n    \"event_type\": \"rag_inference\",\n    \"user_id\": \"user_abc\",\n    \"request\": {\n        \"query\": \"What are the new security features?\"\n    },\n    \"rag_retrieval\": {\n        \"top_k_retrieved\": [\n            {\"doc_id\": \"doc-sec-001\", \"relevance_score\": 0.89},\n            {\"doc_id\": \"doc-sec-005\", \"relevance_score\": 0.85},\n            {\"doc_id\": \"doc-mkt-012\", \"relevance_score\": 0.31} // <-- Anomalously low score\n        ],\n        \"final_docs_used_in_context\": [\"doc-sec-001\", \"doc-sec-005\"] // After filtering\n    },\n    \"response\": {\n        \"output_text\": \"The new features include...\"\n    }\n}</code></pre><p><strong>Action:</strong> For every RAG-based request, log the full list of retrieved document IDs and their calculated relevance scores before filtering. Ingest these logs into your SIEM to enable threat hunting for anomalous retrieval patterns.</p>"
+                        }
+                    ]
                 }
 
             ]
@@ -7856,7 +7813,7 @@ class SmoothedClassifier(torch.nn.Module):
             "purpose": "The \"Deceive\" tactic involves the strategic use of decoys, misinformation, or the manipulation of an adversary's perception of the AI system and its environment. The objectives are to misdirect attackers away from real assets, mislead them about the system's true vulnerabilities or value, study their attack methodologies in a safe environment, waste their resources, or deter them from attacking altogether.",
             "techniques": [
                 {
-                    "id": "AID-DV-001", 
+                    "id": "AID-DV-001",
                     "name": "Honeypot AI Services & Decoy Models/APIs", "pillar": "infra, model, app", "phase": "operation",
                     "description": "Deploy decoy AI systems, such as fake LLM APIs, ML model endpoints serving synthetic or non-sensitive data, or imitation agent services, that are designed to appear valuable, vulnerable, or legitimate to potential attackers. These honeypots are instrumented for intensive monitoring to log all interactions, capture attacker TTPs (Tactics, Techniques, and Procedures), and gather threat intelligence without exposing real production systems or data. They can also be used to slow down attackers or waste their resources.",
                     "toolsOpenSource": [
@@ -8220,7 +8177,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-DV-006",
-                    "name": "Deceptive System Information", "pillar":"infra, model, app", "phase": "operation",
+                    "name": "Deceptive System Information", "pillar": "infra, model, app", "phase": "operation",
                     "description": "When probed by unauthenticated or suspicious users, the AI system provides misleading information about its architecture, capabilities, or underlying models. For example, an API might return headers suggesting it's built on a different framework, or an LLM might respond to 'What model are you?' with a decoy answer.",
                     "toolsOpenSource": [
                         "API Gateway configurations (Kong, Tyk, Nginx)",
