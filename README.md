@@ -43,7 +43,7 @@ This view organizes defenses by the technology stack component they secure: **Da
 #### **3. Phases View**
 > **Question:** *When (what stage) in the AI lifecycle should this defense be applied?*
 
-This view organizes defenses by the development stage where they are most relevant, from initial **Design & Scoping** through **Building, Validation, Operation, Incident Responsem, and Restoration**. This process-driven view helps MLOps and DevSecOps teams embed security throughout the entire AI lifecycle.
+This view organizes defenses by the development stage where they are most relevant, from initial **Design & Scoping** through **Building, Validation, Operation, Incident Response, and Restoration**. This process-driven view helps MLOps and DevSecOps teams embed security throughout the entire AI lifecycle.
 
 ---
 
