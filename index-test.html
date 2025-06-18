@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -52,7 +51,6 @@
             --view-switcher-btn-active-bg: #3f51b5;
             --view-switcher-btn-active-text: #ffffff;
         }
-
         html.dark {
             /* Dark Theme */
             --bg-color: #1a1a1a;
@@ -98,11 +96,9 @@
             --view-switcher-btn-active-bg: #90caf9;
             --view-switcher-btn-active-text: #121212;
         }
-
         html {
             height: 100%;
         }
-
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
@@ -112,72 +108,57 @@
             display: flex;
             flex-direction: column;
         }
-
         #page-container {
             flex: 1 0 auto;
         }
-
         footer {
             flex-shrink: 0;
         }
-
         body.modal-open {
             overflow: hidden;
         }
-
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
         }
-
         ::-webkit-scrollbar-track {
             background: var(--scrollbar-track);
             border-radius: 10px;
         }
-
         ::-webkit-scrollbar-thumb {
             background: var(--scrollbar-thumb);
             border-radius: 10px;
         }
-
         ::-webkit-scrollbar-thumb:hover {
             background: var(--scrollbar-thumb-hover);
         }
-
         .elevation-2 {
             box-shadow: 0px 3px 1px -2px var(--shadow-umbra), 0px 2px 2px 0px var(--shadow-penumbra), 0px 1px 5px 0px var(--shadow-ambient);
         }
-
         .elevation-4 {
             box-shadow: 0px 2px 4px -1px var(--shadow-umbra), 0px 4px 5px 0px var(--shadow-penumbra), 0px 1px 10px 0px var(--shadow-ambient);
         }
-
         .elevation-8 {
             box-shadow: 0px 5px 5px -3px var(--shadow-umbra), 0px 8px 10px 1px var(--shadow-penumbra), 0px 3px 14px 2px var(--shadow-ambient);
         }
-
         .header-main {
             background-color: var(--header-bg);
             transition: background-color 0.3s ease, border-color 0.3s ease;
         }
-
         .header-title {
             font-size: 2rem;
             font-weight: 500;
             color: var(--text-color);
         }
-
         .header-subtitle {
             font-size: 0.875rem;
             color: var(--text-secondary-color);
         }
-
         .search-input-wrapper {
             position: relative;
             display: flex;
             align-items: center;
         }
-
         .search-container input {
             background-color: var(--search-bg);
             border: 1px solid var(--search-border);
@@ -185,17 +166,14 @@
             border-radius: 0.5rem;
             padding-right: 2.5rem;
         }
-
         .search-container input::placeholder {
             color: var(--text-secondary-color);
         }
-
         .search-container input:focus {
             --tw-ring-color: var(--search-focus-ring);
             border-color: var(--search-focus-ring);
             box-shadow: 0 0 0 2px var(--search-focus-ring);
         }
-
         .search-clear-button {
             position: absolute;
             right: 0.5rem;
@@ -204,16 +182,13 @@
             cursor: pointer;
             display: none;
         }
-
         .search-clear-button:hover {
             color: var(--text-color);
         }
-
         .search-clear-button svg {
             width: 1.25rem;
             height: 1.25rem;
         }
-
         .header-button {
             background-color: transparent;
             color: var(--icon-fill);
@@ -224,35 +199,29 @@
             align-items: center;
             justify-content: center;
         }
-
         .header-button:hover {
             background-color: rgba(0, 0, 0, 0.04);
             color: var(--icon-hover-fill);
         }
-
         html.dark .header-button:hover {
             background-color: rgba(255, 255, 255, 0.08);
         }
-
         .header-button svg {
             width: 1.5rem;
             height: 1.5rem;
             fill: currentColor;
             margin-right: 0;
         }
-
         .header-button.text-button {
             padding: 0.5rem 1rem;
             border-radius: 0.25rem;
             font-weight: 500;
         }
-
         .header-button.text-button svg {
             margin-right: 0.5rem;
             width: 1.25rem;
             height: 1.25rem;
         }
-
         .matrix-grid {
             display: flex;
             flex-wrap: wrap;
@@ -261,7 +230,6 @@
             align-items: flex-start;
             justify-content: center;
         }
-
         .matrix-column {
             flex-grow: 0;
             flex-shrink: 0;
@@ -274,7 +242,6 @@
             display: flex;
             flex-direction: column;
         }
-
         .column-header {
             font-size: 1.25rem;
             font-weight: 500;
@@ -286,15 +253,12 @@
             cursor: pointer;
             text-align: center;
         }
-
         .column-header:hover {
             color: var(--column-header-hover-text);
         }
-
         .technique-container {
             margin-bottom: 0.75rem;
         }
-
         .technique-item {
             display: flex;
             justify-content: space-between;
@@ -308,29 +272,24 @@
             transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.2s ease, box-shadow 0.2s ease;
             line-height: 1.5;
         }
-
         .technique-item-content {
             flex-grow: 1;
         }
-
         .technique-item:hover {
             background-color: var(--technique-item-hover-bg);
             color: var(--technique-item-hover-text);
             transform: translateY(-2px);
         }
-
         .technique-item.highlight {
             background-color: var(--technique-item-highlight-bg);
             color: var(--technique-item-highlight-text);
             font-weight: 600;
         }
-
         .subtechnique-item.highlight {
             background-color: var(--technique-item-highlight-bg) !important;
             color: var(--technique-item-highlight-text) !important;
             font-weight: 600;
         }
-
         .technique-id {
             font-weight: 500;
             color: var(--technique-id-text);
@@ -339,11 +298,9 @@
             display: block;
             margin-bottom: 0.125rem;
         }
-
         .technique-name {
             font-weight: 500;
         }
-
         .expand-icon {
             flex-shrink: 0;
             margin-left: 0.5rem;
@@ -351,11 +308,9 @@
             height: 1.25rem;
             transition: transform 0.3s ease;
         }
-
         .expand-icon.expanded {
             transform: rotate(45deg);
         }
-
         .sub-technique-list {
             list-style-type: none;
             padding-left: 0.5rem;
@@ -364,11 +319,9 @@
             overflow: hidden;
             transition: max-height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
-
         .sub-technique-list.expanded {
             max-height: 1000px;
         }
-
         .subtechnique-item {
             display: block;
             background-color: var(--subtechnique-bg);
@@ -382,17 +335,14 @@
             line-height: 1.4;
             margin-bottom: 0.5rem;
         }
-
         .subtechnique-item:hover {
             background-color: var(--technique-item-hover-bg);
             color: var(--technique-item-hover-text);
             transform: translateX(3px);
         }
-
         .subtechnique-item .technique-id {
             font-size: 0.7rem;
         }
-
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -408,16 +358,13 @@
             visibility: hidden;
             transition: opacity 0.2s ease, visibility 0.2s ease;
         }
-
         html.dark .modal-overlay {
             background-color: rgba(0, 0, 0, 0.7);
         }
-
         .modal-overlay.active {
             opacity: 1;
             visibility: visible;
         }
-
         .modal-content {
             background-color: var(--modal-content-bg);
             color: var(--text-color);
@@ -431,11 +378,9 @@
             transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
             transform: scale(0.95);
         }
-
         .modal-overlay.active .modal-content {
             transform: scale(1);
         }
-
         .modal-content h2.modal-main-title {
             font-size: 1.75rem;
             font-weight: 500;
@@ -443,14 +388,12 @@
             /* Reduced margin */
             color: var(--column-header-hover-text);
         }
-
         .modal-content h2 {
             font-size: 1.5rem;
             font-weight: 500;
             margin-bottom: 1rem;
             color: var(--column-header-hover-text);
         }
-
         .modal-content h3 {
             font-size: 1.25rem;
             font-weight: 500;
@@ -458,7 +401,6 @@
             margin-bottom: 0.75rem;
             color: var(--text-color);
         }
-
         .modal-content h4 {
             font-size: 1rem;
             font-weight: 500;
@@ -466,7 +408,6 @@
             margin-bottom: 0.5rem;
             color: var(--text-color);
         }
-
         .modal-content h5 {
             font-size: 0.9rem;
             font-weight: 600;
@@ -474,13 +415,11 @@
             margin-bottom: 0.25rem;
             color: var(--text-color);
         }
-
         .modal-content p {
             font-size: 0.9375rem;
             line-height: 1.7;
             margin-bottom: 1rem;
         }
-
         .modal-content ul {
             list-style-type: disc;
             margin-left: 1.5rem;
@@ -488,27 +427,22 @@
             line-height: 1.7;
             margin-bottom: 1rem;
         }
-
         .modal-content ul ul {
             margin-top: 0.5rem;
             margin-bottom: 0.5rem;
         }
-
         .modal-content li {
             margin-bottom: 0.375rem;
         }
-
         .modal-content a {
             color: var(--link-color);
             text-decoration: none;
             font-weight: 500;
         }
-
         .modal-content a:hover {
             color: var(--link-hover-color);
             text-decoration: underline;
         }
-
         .modal-content code {
             font-family: monospace;
             background-color: var(--search-bg);
@@ -516,7 +450,6 @@
             border-radius: 0.25rem;
             font-size: 0.8rem;
         }
-
         .modal-content pre {
             background-color: var(--search-bg);
             padding: 0.75rem;
@@ -524,12 +457,10 @@
             margin: 0.5rem 0;
             overflow-x: auto;
         }
-
         .modal-content pre code {
             padding: 0;
             background: none;
         }
-
         .modal-close-button {
             position: absolute;
             top: 1rem;
@@ -543,17 +474,14 @@
             transition: color 0.3s ease;
             padding: 0.25rem;
         }
-
         .modal-close-button:hover {
             color: var(--modal-close-btn-hover-text);
         }
-
         .defends-against-framework {
             font-weight: 500;
             color: var(--technique-item-text);
             opacity: 0.9;
         }
-
         .site-footer {
             background-color: var(--footer-bg);
             color: var(--footer-text);
@@ -563,16 +491,13 @@
             border-top: 1px solid var(--footer-border);
             margin-top: auto;
         }
-
         .site-footer p {
             margin-bottom: 0.25rem;
             line-height: 1.5;
         }
-
         .accordion-item {
             border-bottom: 1px solid var(--header-border);
         }
-
         .accordion-header {
             display: flex;
             justify-content: space-between;
@@ -584,11 +509,9 @@
             color: var(--text-color);
             transition: color 0.2s ease;
         }
-
         .accordion-header:hover {
             color: var(--column-header-hover-text);
         }
-
         .accordion-icon {
             width: 1.25rem;
             height: 1.25rem;
@@ -596,7 +519,6 @@
             flex-shrink: 0;
             margin-left: 1rem;
         }
-
         .accordion-content {
             max-height: 0;
             overflow: hidden;
@@ -605,19 +527,15 @@
             line-height: 1.7;
             color: var(--text-secondary-color);
         }
-
         .accordion-content-inner {
             padding: 0 0.5rem 1.25rem 0.5rem;
         }
-
         .strategy-accordion-container {
             margin-top: 0.5rem;
         }
-
         .strategy-accordion-item {
             border-bottom: 1px solid var(--column-border);
         }
-
         .strategy-accordion-header {
             display: flex;
             justify-content: space-between;
@@ -627,11 +545,9 @@
             font-size: 0.9rem;
             font-weight: 500;
         }
-
         .strategy-accordion-header:hover {
             color: var(--technique-item-hover-text);
         }
-
         .strategy-accordion-icon {
             width: 1rem;
             height: 1rem;
@@ -639,20 +555,17 @@
             flex-shrink: 0;
             margin-left: 0.5rem;
         }
-
         .strategy-accordion-content {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease-in-out;
         }
-
         .strategy-accordion-content-inner {
             padding: 0.5rem 0.5rem 1rem 1rem;
             font-size: 0.85rem;
             line-height: 1.6;
             color: var(--text-secondary-color);
         }
-
         .perf-impact-note {
             background-color: #f0f4f8;
             border-left: 4px solid #4a90e2;
@@ -662,36 +575,29 @@
             font-size: 0.9em;
             line-height: 1.6;
         }
-
         html.dark .perf-impact-note {
             background-color: #2c3e50;
             border-left-color: #5dade2;
         }
-
         .perf-impact-note p {
             margin: 0;
             padding: 0;
         }
-
         .perf-impact-note strong {
             color: var(--text-color);
         }
-
         .view-switcher-container {
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
-
         .view-by-label {
             color: var(--text-color);
             transition: color 0.2s ease;
         }
-
         .view-by-label:hover {
             color: var(--column-header-hover-text);
         }
-
         .view-switcher {
             background-color: var(--view-switcher-bg);
             border-radius: 0.5rem;
@@ -699,7 +605,6 @@
             display: inline-flex;
             align-items: center;
         }
-
         .view-switcher-btn {
             padding: 0.5rem 1rem;
             border: none;
@@ -712,23 +617,19 @@
             transition: all 0.2s ease-in-out;
             margin: 0 0.125rem;
         }
-
         .view-switcher-btn.active {
             background-color: var(--view-switcher-btn-active-bg);
             color: var(--view-switcher-btn-active-text);
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
         }
-
         html.dark .view-switcher-btn.active {
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
         }
-
         .view-info-tabs {
             display: flex;
             border-bottom: 1px solid var(--column-border);
             margin-bottom: 1.5rem;
         }
-
         .view-info-tab {
             padding: 0.75rem 1.25rem;
             cursor: pointer;
@@ -741,56 +642,46 @@
             margin-bottom: -1px;
             transition: color 0.2s, border-color 0.2s;
         }
-
         .view-info-tab:hover {
             color: var(--text-color);
         }
-
         .view-info-tab.active {
             color: var(--technique-item-text);
             border-bottom-color: var(--technique-item-text);
         }
-
         .view-info-tab-content {
             display: none;
         }
-
         .view-info-tab-content.active {
             display: block;
         }
-
         .view-info-card {
             background-color: var(--technique-item-bg);
             border: 1px solid var(--technique-item-border);
             border-radius: 0.75rem;
             padding: 1.25rem;
         }
-
         .view-info-card h3 {
             color: var(--technique-item-text);
             font-size: 1.25rem;
             margin-top: 0;
             margin-bottom: 0.75rem;
         }
-
         .view-info-card .view-question {
             color: var(--technique-item-text);
             margin-bottom: 1rem;
             display: block;
         }
-
         .view-info-card .view-focus-text {
             margin-bottom: 1.5rem;
             flex-grow: 1;
         }
-
         .view-info-card .view-detail {
             display: flex;
             align-items: flex-start;
             gap: 0.75rem;
             margin-top: 1rem;
         }
-
         .view-info-card .view-detail-icon {
             flex-shrink: 0;
             width: 1.25rem;
@@ -798,17 +689,14 @@
             color: var(--technique-item-text);
             margin-top: 0.125rem;
         }
-
         .view-info-card .view-detail-content {
             font-size: 0.9rem;
             line-height: 1.6;
         }
-
         .view-info-card .view-detail-content strong {
             color: var(--text-color);
             font-weight: 600;
         }
-
         @media (max-width: 768px) {
             .view-cards-container {
                 grid-template-columns: 1fr;
@@ -817,7 +705,6 @@
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
-
 <body class="text-gray-800">
     <div id="page-container">
         <header class="header-main py-4 px-6 fixed top-0 left-0 right-0 z-50 elevation-4">
@@ -840,7 +727,6 @@
                         </button>
                     </div>
                 </div>
-
                 <div class="flex flex-col sm:flex-row justify-between items-center">
                     <div id="view-switcher-container" class="view-switcher-container mb-2 sm:mb-0">
                         <button id="viewInfoBtn"
@@ -867,12 +753,10 @@
                 </div>
             </div>
         </header>
-
         <div id="content-wrapper" class="pt-48 px-4 sm:px-6 lg:px-4 pb-8">
             <main id="main-content" class="mx-auto w-full"></main>
         </div>
     </div>
-
     <div id="infoModal" class="modal-overlay">
         <div id="modalBackdrop" class="absolute inset-0"></div>
         <div class="modal-content elevation-8">
@@ -880,7 +764,6 @@
             <div id="modalBody"></div>
         </div>
     </div>
-
     <footer class="site-footer">
         <p>AIDEFEND, An AI-focused defensive countermeasures knowledge base.</p>
         <p>Information based on the <a
@@ -922,7 +805,6 @@
                 viewSwitcher: document.getElementById('view-switcher'),
                 viewInfoBtn: document.getElementById('viewInfoBtn')
             };
-
             const icons = {
                 plus: `<svg class="accordion-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" /></svg>`,
                 minus: `<svg class="accordion-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clip-rule="evenodd" /></svg>`,
@@ -935,7 +817,6 @@
                 audience: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.095a1.23 1.23 0 00.41-1.412A6.998 6.998 0 0010 11.5a6.998 6.998 0 00-6.535 2.993z" /></svg>`,
                 useCase: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M15.988 3.012A2.25 2.25 0 0118 5.25v6.5A2.25 2.25 0 0115.75 14h-3.04a2.252 2.252 0 01-1.523.672c-.675 0-1.284-.28-1.688-.734l-3.328-3.328a2.25 2.25 0 010-3.182l3.328-3.328a2.25 2.25 0 011.688-.734h3.04zM12 9.75a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-.008z" clip-rule="evenodd" /><path d="M9.122 7.182a.75.75 0 011.06 0l2.5 2.5a.75.75 0 010 1.06l-2.5 2.5a.75.75 0 01-1.06-1.06L10.81 11H2.75a.75.75 0 010-1.5h8.06l-1.7-1.7a.75.75 0 010-1.06z" clip-rule="evenodd" /></svg>`
             };
-
             let currentView = 'tactic';
             let eligibleTechniques = [];
             let pillars = {};
@@ -958,18 +839,16 @@
                 phase: {
                     name: "Phases View",
                     question: "<strong>When (What stage) in the AI lifecycle should this defense be applied?</strong>",
-                    focus: "This view organizes defenses by the development stage where they are most relevant, from initial <strong>Design & Scoping</strong> through <strong>Building, Validation, Operation, and Incident Response</strong>.",
+                    focus: "This view organizes defenses by the development stage where they are most relevant, from initial <strong>Design & Scoping</strong> through <strong>Building, Validation, Operation, Incident Response and System Restoration</strong>.",
                     audience: "MLOps Engineers, Product Managers, and Security/DevSecOps Teams.",
                     useCase: "A company building a new, business-critical AI application from scratch wants to ensure it is <strong>secure by design</strong>. The project lead uses the <strong>Phases View</strong> as their step-by-step security roadmap.<br><br><ul><li>In the project's first week, they use the <strong>‘AI System Design & Scoping’</strong> phase to guide their initial threat modeling (AID-M-004) and establish security requirements before development begins.</li><li>As the MLOps team builds the CI/CD pipeline, they consult the <strong>‘Model Training, Building & Hardening’</strong> phase to integrate proactive controls like dependency scanning (AID-H-003).</li><li>Before launch, the security team uses the <strong>‘Pre-Deployment Validation’</strong> phase to structure their red teaming and assurance activities.</li></ul><br>This process-driven view helps the team apply the right defenses at the right time, ensuring security is embedded throughout the entire AI lifecycle."
                 }
             };
-
             function clearElement(element) {
                 while (element.firstChild) {
                     element.removeChild(element.firstChild);
                 }
             }
-
             function createElement(tagName, options = {}) {
                 const element = document.createElement(tagName);
                 for (const key in options) {
@@ -980,28 +859,23 @@
                 }
                 return element;
             }
-
             function setIcon(element, iconKey) {
                 if (icons[iconKey]) {
                     element.innerHTML = icons[iconKey];
                 }
             }
-
             function applyTheme(theme) {
                 elements.html.classList.toggle('dark', theme === 'dark');
                 setIcon(elements.themeToggleBtn, theme === 'dark' ? 'sun' : 'moon');
             }
-
             function toggleTheme() {
                 const newTheme = elements.html.classList.contains('dark') ? 'light' : 'dark';
                 localStorage.setItem('aidefendTheme', newTheme);
                 applyTheme(newTheme);
             }
-
             function matchesText(text, term) {
                 return text && text.toLowerCase().includes(term);
             }
-
             function matchesTechnique(tech, term) {
                 return matchesText(tech.name, term) ||
                     matchesText(tech.id, term) ||
@@ -1011,13 +885,10 @@
                     (tech.toolsOpenSource && tech.toolsOpenSource.some(t => matchesText(t, term))) ||
                     (tech.toolsCommercial && tech.toolsCommercial.some(t => matchesText(t, term)));
             }
-
             function getFilteredTechniqueIds(searchTerm) {
                 if (!searchTerm) return new Set(eligibleTechniques.map(t => t.id));
-
                 const term = searchTerm.toLowerCase();
                 const matches = new Set();
-
                 eligibleTechniques.forEach(tech => {
                     if (matchesTechnique(tech, term)) {
                         matches.add(tech.id);
@@ -1025,11 +896,9 @@
                 });
                 return matches;
             }
-
             function renderMainGrid() {
                 clearElement(elements.mainContent);
                 const searchTerm = elements.searchBar.value.trim();
-
                 switch (currentView) {
                     case 'pillar':
                         renderPillarGrid(searchTerm);
@@ -1043,11 +912,9 @@
                         break;
                 }
             }
-
             function renderTacticGrid(searchTerm) {
                 const gridContainer = createElement('div', { className: 'matrix-grid' });
                 const filteredIds = getFilteredTechniqueIds(searchTerm);
-
                 if (searchTerm && filteredIds.size === 0) {
                     gridContainer.appendChild(createElement('p', {
                         className: 'text-center text-gray-500 dark:text-gray-400 py-10',
@@ -1056,14 +923,12 @@
                     elements.mainContent.appendChild(gridContainer);
                     return;
                 }
-
                 aidefendData.tactics.forEach(tactic => {
                     const techniquesToRender = (tactic.techniques || []).filter(tech => {
                         if (!searchTerm) return true;
                         return tech.subTechniques?.some(sub => filteredIds.has(sub.id)) ||
                             ((!tech.subTechniques || tech.subTechniques.length === 0) && filteredIds.has(tech.id));
                     });
-
                     if (techniquesToRender.length > 0) {
                         const column = createElement('div', { className: 'matrix-column' });
                         column.style.flexBasis = `13.5%`;
@@ -1079,11 +944,9 @@
                 });
                 elements.mainContent.appendChild(gridContainer);
             }
-
             function renderPillarGrid(searchTerm) {
                 const gridContainer = createElement('div', { className: 'matrix-grid' });
                 const filteredIds = getFilteredTechniqueIds(searchTerm);
-
                 if (searchTerm && filteredIds.size === 0) {
                     gridContainer.appendChild(createElement('p', {
                         className: 'text-center text-gray-500 dark:text-gray-400 py-10',
@@ -1092,7 +955,6 @@
                     elements.mainContent.appendChild(gridContainer);
                     return;
                 }
-
                 Object.values(pillars).forEach(pillar => {
                     const techniquesToRender = pillar.techniques.filter(tech => !searchTerm || filteredIds.has(tech.id));
                     if (techniquesToRender.length > 0) {
@@ -1110,11 +972,9 @@
                 });
                 elements.mainContent.appendChild(gridContainer);
             }
-
             function renderPhaseGrid(searchTerm) {
                 const gridContainer = createElement('div', { className: 'matrix-grid' });
                 const filteredIds = getFilteredTechniqueIds(searchTerm);
-
                 // Bug Fix #2: Always render phase columns, but only populate them if they have content.
                 // The outer check for empty search results handles the case where nothing matches at all.
                 Object.values(phases).forEach(phase => {
@@ -1122,20 +982,16 @@
                     column.style.flexBasis = `15.5%`;
                     const header = createElement('h3', { className: 'column-header', textContent: phase.name, onclick: () => showPillarOrPhaseModal(phase) });
                     const ul = createElement('ul');
-
                     const techniquesToRender = phase.techniques.filter(tech => !searchTerm || filteredIds.has(tech.id));
-
                     if (techniquesToRender.length > 0) {
                         techniquesToRender.forEach(tech => {
                             ul.appendChild(renderTechniqueItem(tech, phase.name, filteredIds, searchTerm));
                         });
                     }
-
                     column.appendChild(header);
                     column.appendChild(ul);
                     gridContainer.appendChild(column);
                 });
-
                 // If the search term is active AND there are no results, show the message.
                 // Otherwise, show the grid (even if some columns are empty).
                 if (searchTerm && filteredIds.size === 0) {
@@ -1145,32 +1001,25 @@
                         textContent: `No techniques found matching "${searchTerm}".`
                     }));
                 }
-
                 elements.mainContent.appendChild(gridContainer);
             }
-
             function renderTechniqueItem(tech, groupName, filteredIds, searchTerm) {
                 const li = createElement('li', { className: 'technique-container' });
                 const hasSub = tech.subTechniques && tech.subTechniques.length > 0;
-
                 const itemDiv = createElement('div', { className: 'technique-item elevation-2' });
                 const contentDiv = createElement('div', {
                     className: 'technique-item-content', onclick: (e) => {
                         e.stopPropagation(); showTechniqueModal(tech, groupName);
                     }
                 });
-
                 contentDiv.appendChild(createElement('span', { className: 'technique-id', textContent: tech.id }));
                 contentDiv.appendChild(createElement('span', { className: 'technique-name', textContent: tech.name }));
                 itemDiv.appendChild(contentDiv);
-
                 let isParentHighlight = searchTerm && matchesTechnique(tech, searchTerm);
-
                 if (hasSub) {
                     const iconWrapper = createElement('div', { className: 'expand-icon' });
                     setIcon(iconWrapper, 'chevron');
                     itemDiv.appendChild(iconWrapper);
-
                     const subList = createElement('ul', { className: 'sub-technique-list' });
                     let isSubMatch = false;
                     tech.subTechniques.forEach(subTech => {
@@ -1183,14 +1032,12 @@
                     });
                     li.appendChild(itemDiv);
                     li.appendChild(subList);
-
                     if (searchTerm && isSubMatch) {
                         itemDiv.classList.add('expanded');
                         subList.classList.add('expanded');
                         iconWrapper.style.transform = 'rotate(90deg)';
                         setTimeout(() => subList.style.maxHeight = subList.scrollHeight + "px", 0);
                     }
-
                     itemDiv.onclick = (e) => {
                         e.stopPropagation();
                         toggleSubTechniques(itemDiv, subList, iconWrapper);
@@ -1199,50 +1046,40 @@
                     itemDiv.onclick = (e) => { e.stopPropagation(); showTechniqueModal(tech, groupName); };
                     li.appendChild(itemDiv);
                 }
-
                 if (isParentHighlight && !hasSub) {
                     itemDiv.classList.add('highlight');
                 }
-
                 return li;
             }
-
             function toggleSubTechniques(header, content, iconWrapper) {
                 const isExpanded = content.classList.toggle('expanded');
                 header.classList.toggle('expanded', isExpanded);
                 iconWrapper.style.transform = isExpanded ? 'rotate(90deg)' : 'rotate(0deg)';
                 content.style.maxHeight = isExpanded ? content.scrollHeight + 'px' : null;
             }
-
             function renderSubTechniqueItem(subTech, groupName, filteredIds, searchTerm) {
                 const subLi = createElement('li');
                 const subDiv = createElement('div', {
                     className: 'subtechnique-item elevation-2',
                     onclick: (e) => { e.stopPropagation(); showTechniqueModal(subTech, groupName); }
                 });
-
                 subDiv.appendChild(createElement('span', { className: 'technique-id', textContent: subTech.id }));
                 subDiv.appendChild(createElement('span', { className: 'technique-name', textContent: subTech.name }));
-
                 if (searchTerm && filteredIds.has(subTech.id)) {
                     subDiv.classList.add('highlight');
                 }
-
                 subLi.appendChild(subDiv);
                 return subLi;
             }
-
             function showModal() {
                 elements.modal.classList.add('active');
                 document.body.classList.add('modal-open');
             }
-
             function hideModal() {
                 elements.modal.classList.remove('active');
                 document.body.classList.remove('modal-open');
                 clearElement(elements.modalBody);
             }
-
             function createAccordion(sections, defaultOpenIndex = 0) {
                 const container = createElement('div', { className: 'accordion-container' });
                 sections.forEach((section, index) => {
@@ -1253,7 +1090,6 @@
                     setIcon(iconWrapper, index === defaultOpenIndex ? 'minus' : 'plus');
                     header.appendChild(title);
                     header.appendChild(iconWrapper);
-
                     const content = createElement('div', { className: 'accordion-content' });
                     const contentInner = createElement('div', { className: 'accordion-content-inner' });
                     if (section.paragraphs) section.paragraphs.forEach(p => contentInner.innerHTML += `<p>${p}</p>`);
@@ -1263,12 +1099,10 @@
                         contentInner.appendChild(ul);
                     }
                     if (section.concludingParagraphs) section.concludingParagraphs.forEach(p => contentInner.innerHTML += `<p>${p}</p>`);
-
                     content.appendChild(contentInner);
                     item.appendChild(header);
                     item.appendChild(content);
                     container.appendChild(item);
-
                     if (index === defaultOpenIndex) {
                         header.classList.add('active');
                         setTimeout(() => content.style.maxHeight = content.scrollHeight + 'px', 0);
@@ -1276,7 +1110,6 @@
                 });
                 return container;
             }
-
             function toggleAccordion(content) {
                 const header = content.previousElementSibling;
                 const iconWrapper = header.querySelector('.icon-wrapper');
@@ -1284,7 +1117,6 @@
                 content.style.maxHeight = isActive ? content.scrollHeight + 'px' : null;
                 setIcon(iconWrapper, isActive ? 'minus' : 'plus');
             }
-
             function showIntroductionModal() {
                 clearElement(elements.modalBody);
                 const intro = aidefendData.introduction;
@@ -1292,29 +1124,23 @@
                 elements.modalBody.appendChild(createAccordion(intro.sections, 0));
                 showModal();
             }
-
             function showViewInfoModal() {
                 clearElement(elements.modalBody);
                 elements.modalBody.appendChild(createElement('h2', { className: 'modal-main-title', textContent: 'About the Framework Views' }));
-
                 const tabsContainer = createElement('div', { className: 'view-info-tabs' });
                 const contentContainer = createElement('div', { className: 'view-info-content-container' });
-
                 Object.keys(viewDescriptions).forEach((key, index) => {
                     const view = viewDescriptions[key];
-
                     const tabButton = createElement('button', {
                         className: `view-info-tab ${index === 0 ? 'active' : ''}`,
                         textContent: view.name,
                     });
                     tabButton.dataset.tab = key;
                     tabsContainer.appendChild(tabButton);
-
                     const contentPane = createElement('div', {
                         id: `tab-content-${key}`,
                         className: `view-info-tab-content ${index === 0 ? 'active' : ''}`
                     });
-
                     const card = createElement('div', { className: 'view-info-card elevation-2' });
                     card.innerHTML = `
                         <h3>${view.name}</h3>
@@ -1332,25 +1158,19 @@
                     contentPane.appendChild(card);
                     contentContainer.appendChild(contentPane);
                 });
-
                 elements.modalBody.appendChild(tabsContainer);
                 elements.modalBody.appendChild(contentContainer);
-
                 tabsContainer.addEventListener('click', (e) => {
                     if (e.target.tagName === 'BUTTON') {
                         const tabId = e.target.dataset.tab;
-
                         tabsContainer.querySelector('.active')?.classList.remove('active');
                         contentContainer.querySelector('.active')?.classList.remove('active');
-
                         e.target.classList.add('active');
                         document.getElementById(`tab-content-${tabId}`).classList.add('active');
                     }
                 });
-
                 showModal();
             }
-
             function showTacticModal(tactic) {
                 clearElement(elements.modalBody);
                 const fullTactic = aidefendData.tactics.find(t => t.name === tactic.name) || tactic;
@@ -1362,8 +1182,6 @@
                 elements.modalBody.innerHTML = `<h2>${item.name}</h2><p class="mb-4 leading-relaxed text-sm">${item.focus || 'No description available.'}</p>`;
                 showModal();
             }
-
-
             function showTechniqueModal(technique, groupName) {
                 clearElement(elements.modalBody);
                 const groupType = currentView.charAt(0).toUpperCase() + currentView.slice(1);
@@ -1372,7 +1190,6 @@
                 const p = createElement('p', { className: 'mb-4 leading-relaxed text-sm' });
                 p.innerHTML = technique.description || 'No description available.';
                 elements.modalBody.appendChild(p);
-
                 if (technique.perfImpact) {
                     const perfDiv = createElement('div', { className: 'perf-impact-note' });
                     const perfP = createElement('p');
@@ -1380,19 +1197,16 @@
                     perfDiv.appendChild(perfP);
                     elements.modalBody.appendChild(perfDiv);
                 }
-
                 renderDetailSection('Implementation Strategies', technique.implementationStrategies);
                 renderDetailSection('Potential Tools - Open Source', technique.toolsOpenSource);
                 renderDetailSection('Potential Tools - Commercial', technique.toolsCommercial);
                 renderDefendsAgainstSection(technique.defendsAgainst);
                 showModal();
             }
-
             function renderDetailSection(title, items) {
                 if (!items || items.length === 0) return;
                 const section = createElement('div', { className: 'mt-4' });
                 section.appendChild(createElement('h3', { className: 'font-semibold text-lg mb-2', textContent: title + ':' }));
-
                 if (title === 'Implementation Strategies') {
                     const container = createElement('div', { className: 'strategy-accordion-container' });
                     items.forEach(strategy => {
@@ -1402,11 +1216,9 @@
                         setIcon(iconWrapper, 'strategyPlus');
                         header.appendChild(createElement('span', { textContent: strategy.strategy }));
                         header.appendChild(iconWrapper);
-
                         const content = createElement('div', { className: 'strategy-accordion-content' });
                         const contentInner = createElement('div', { className: 'strategy-accordion-content-inner' });
                         if (strategy.howTo) { contentInner.innerHTML = strategy.howTo; }
-
                         content.appendChild(contentInner);
                         item.appendChild(header);
                         item.appendChild(content);
@@ -1424,7 +1236,6 @@
                 }
                 elements.modalBody.appendChild(section);
             }
-
             function renderDefendsAgainstSection(defendsAgainst) {
                 if (!defendsAgainst || defendsAgainst.length === 0) return;
                 const section = createElement('div', { className: 'mt-4' });
@@ -1442,7 +1253,6 @@
             function updateContentPadding() {
                 const header = document.querySelector('.header-main');
                 const contentWrapper = document.getElementById('content-wrapper');
-
                 if (header && contentWrapper) {
                     // Check if we are in the mobile view (screen width < 640px)
                     if (window.innerWidth < 640) {
@@ -1462,7 +1272,6 @@
                 elements.themeToggleBtn.addEventListener('click', toggleTheme);
                 elements.aboutBtn.addEventListener('click', showIntroductionModal);
                 elements.viewInfoBtn.addEventListener('click', showViewInfoModal);
-
                 elements.viewSwitcher.addEventListener('click', (e) => {
                     if (e.target.tagName === 'BUTTON') {
                         const newView = e.target.dataset.view;
@@ -1472,23 +1281,19 @@
                             currentView = newView;
                             renderMainGrid();
                         }
-
                     }
                 });
-
                 // Bug Fix #1: Removed debounce timer for instant search response
                 elements.searchBar.addEventListener('input', (e) => {
                     const searchTerm = e.target.value.trim();
                     elements.searchClearBtn.style.display = searchTerm ? 'block' : 'none';
                     renderMainGrid();
                 });
-
                 elements.searchClearBtn.addEventListener('click', () => {
                     elements.searchBar.value = '';
                     elements.searchClearBtn.style.display = 'none';
                     renderMainGrid();
                 });
-
                 elements.modalClose.addEventListener('click', hideModal);
                 elements.modalBackdrop.addEventListener('click', hideModal);
                 document.addEventListener('keydown', (event) => {
@@ -1497,7 +1302,6 @@
                     }
                 });
             }
-
             function prepareDataForViews() {
                 eligibleTechniques = [];
                 pillars = {
@@ -1514,7 +1318,6 @@
                     'response': { name: 'Incident Containment & Eviction', focus: "The immediate, tactical response to a confirmed security incident. The goal is to \"stop the bleeding\" as quickly as possible. This involves actions like isolating a rogue agent, quarantining a user, blocking an attack, and kicking the adversary out of the system.", techniques: [] },
                     'improvement': { name: 'System Restoration & Improvement', focus: "The methodical, post-containment process of safely returning to normal operation and learning from the incident. This includes restoring models and data from trusted backups, performing a root cause analysis, and hardening defenses to prevent recurrence.", techniques: [] }
                 };
-
                 aidefendData.tactics.forEach(tactic => {
                     tactic.techniques?.forEach(tech => {
                         const subTechniques = tech.subTechniques || [];
@@ -1534,11 +1337,9 @@
                     });
                 });
             }
-
             function initialize() {
                 const savedTheme = localStorage.getItem('aidefendTheme') || 'dark';
                 applyTheme(savedTheme);
-
                 const aboutIcon = createElement('span');
                 setIcon(aboutIcon, 'info');
                 const svg = aboutIcon.querySelector('svg');
@@ -1548,16 +1349,13 @@
                     svg.style.marginRight = '0.5rem';
                 }
                 elements.aboutBtn.insertBefore(aboutIcon, elements.aboutBtn.firstChild);
-
                 prepareDataForViews();
                 renderMainGrid();
                 addEventListeners();
                 updateContentPadding();
             }
-
             initialize();
         };
     </script>
 </body>
-
 </html>
