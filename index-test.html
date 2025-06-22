@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -51,6 +52,7 @@
             --view-switcher-btn-active-bg: #3f51b5;
             --view-switcher-btn-active-text: #ffffff;
         }
+
         html.dark {
             /* Dark Theme */
             --bg-color: #1a1a1a;
@@ -96,9 +98,11 @@
             --view-switcher-btn-active-bg: #90caf9;
             --view-switcher-btn-active-text: #121212;
         }
+
         html {
             height: 100%;
         }
+
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--bg-color);
@@ -108,57 +112,72 @@
             display: flex;
             flex-direction: column;
         }
+
         #page-container {
             flex: 1 0 auto;
         }
+
         footer {
             flex-shrink: 0;
         }
+
         body.modal-open {
             overflow: hidden;
         }
+
         ::-webkit-scrollbar {
             width: 8px;
             height: 8px;
         }
+
         ::-webkit-scrollbar-track {
             background: var(--scrollbar-track);
             border-radius: 10px;
         }
+
         ::-webkit-scrollbar-thumb {
             background: var(--scrollbar-thumb);
             border-radius: 10px;
         }
+
         ::-webkit-scrollbar-thumb:hover {
             background: var(--scrollbar-thumb-hover);
         }
+
         .elevation-2 {
             box-shadow: 0px 3px 1px -2px var(--shadow-umbra), 0px 2px 2px 0px var(--shadow-penumbra), 0px 1px 5px 0px var(--shadow-ambient);
         }
+
         .elevation-4 {
             box-shadow: 0px 2px 4px -1px var(--shadow-umbra), 0px 4px 5px 0px var(--shadow-penumbra), 0px 1px 10px 0px var(--shadow-ambient);
         }
+
         .elevation-8 {
             box-shadow: 0px 5px 5px -3px var(--shadow-umbra), 0px 8px 10px 1px var(--shadow-penumbra), 0px 3px 14px 2px var(--shadow-ambient);
         }
+
         .header-main {
             background-color: var(--header-bg);
             transition: background-color 0.3s ease, border-color 0.3s ease;
         }
+
         .header-title {
             font-size: 2rem;
             font-weight: 500;
             color: var(--text-color);
         }
+
         .header-subtitle {
             font-size: 0.875rem;
             color: var(--text-secondary-color);
         }
+
         .search-input-wrapper {
             position: relative;
             display: flex;
             align-items: center;
         }
+
         .search-container input {
             background-color: var(--search-bg);
             border: 1px solid var(--search-border);
@@ -166,14 +185,17 @@
             border-radius: 0.5rem;
             padding-right: 2.5rem;
         }
+
         .search-container input::placeholder {
             color: var(--text-secondary-color);
         }
+
         .search-container input:focus {
             --tw-ring-color: var(--search-focus-ring);
             border-color: var(--search-focus-ring);
             box-shadow: 0 0 0 2px var(--search-focus-ring);
         }
+
         .search-clear-button {
             position: absolute;
             right: 0.5rem;
@@ -182,13 +204,16 @@
             cursor: pointer;
             display: none;
         }
+
         .search-clear-button:hover {
             color: var(--text-color);
         }
+
         .search-clear-button svg {
             width: 1.25rem;
             height: 1.25rem;
         }
+
         .header-button {
             background-color: transparent;
             color: var(--icon-fill);
@@ -199,29 +224,35 @@
             align-items: center;
             justify-content: center;
         }
+
         .header-button:hover {
             background-color: rgba(0, 0, 0, 0.04);
             color: var(--icon-hover-fill);
         }
+
         html.dark .header-button:hover {
             background-color: rgba(255, 255, 255, 0.08);
         }
+
         .header-button svg {
             width: 1.5rem;
             height: 1.5rem;
             fill: currentColor;
             margin-right: 0;
         }
+
         .header-button.text-button {
             padding: 0.5rem 1rem;
             border-radius: 0.25rem;
             font-weight: 500;
         }
+
         .header-button.text-button svg {
             margin-right: 0.5rem;
             width: 1.25rem;
             height: 1.25rem;
         }
+
         .matrix-grid {
             display: flex;
             flex-wrap: wrap;
@@ -230,6 +261,7 @@
             align-items: flex-start;
             justify-content: center;
         }
+
         .matrix-column {
             flex-grow: 0;
             flex-shrink: 0;
@@ -242,6 +274,7 @@
             display: flex;
             flex-direction: column;
         }
+
         .column-header {
             font-size: 1.25rem;
             font-weight: 500;
@@ -253,12 +286,15 @@
             cursor: pointer;
             text-align: center;
         }
+
         .column-header:hover {
             color: var(--column-header-hover-text);
         }
+
         .technique-container {
             margin-bottom: 0.75rem;
         }
+
         .technique-item {
             display: flex;
             justify-content: space-between;
@@ -272,24 +308,29 @@
             transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.2s ease, box-shadow 0.2s ease;
             line-height: 1.5;
         }
+
         .technique-item-content {
             flex-grow: 1;
         }
+
         .technique-item:hover {
             background-color: var(--technique-item-hover-bg);
             color: var(--technique-item-hover-text);
             transform: translateY(-2px);
         }
+
         .technique-item.highlight {
             background-color: var(--technique-item-highlight-bg);
             color: var(--technique-item-highlight-text);
             font-weight: 600;
         }
+
         .subtechnique-item.highlight {
             background-color: var(--technique-item-highlight-bg) !important;
             color: var(--technique-item-highlight-text) !important;
             font-weight: 600;
         }
+
         .technique-id {
             font-weight: 500;
             color: var(--technique-id-text);
@@ -298,9 +339,11 @@
             display: block;
             margin-bottom: 0.125rem;
         }
+
         .technique-name {
             font-weight: 500;
         }
+
         .expand-icon {
             flex-shrink: 0;
             margin-left: 0.5rem;
@@ -308,20 +351,24 @@
             height: 1.25rem;
             transition: transform 0.3s ease;
         }
+
         .expand-icon.expanded {
             transform: rotate(45deg);
         }
+
         .sub-technique-list {
             list-style-type: none;
             padding-left: 0.5rem;
-            margin-top: 0rem;
+            margin-top: 0.5rem;
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
+
         .sub-technique-list.expanded {
             max-height: 1000px;
         }
+
         .subtechnique-item {
             display: block;
             background-color: var(--subtechnique-bg);
@@ -329,20 +376,23 @@
             font-size: 0.8rem;
             color: var(--technique-item-hover-text);
             border-radius: 0.375rem;
-            border-left: 3px solid var(--technique-item-text);
+            border-left: 6px solid var(--technique-item-text);
             cursor: pointer;
             transition: all 0.2s ease-in-out;
             line-height: 1.4;
             margin-bottom: 0.5rem;
         }
+
         .subtechnique-item:hover {
             background-color: var(--technique-item-hover-bg);
             color: var(--technique-item-hover-text);
             transform: translateX(3px);
         }
+
         .subtechnique-item .technique-id {
             font-size: 0.7rem;
         }
+
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -358,13 +408,16 @@
             visibility: hidden;
             transition: opacity 0.2s ease, visibility 0.2s ease;
         }
+
         html.dark .modal-overlay {
             background-color: rgba(0, 0, 0, 0.7);
         }
+
         .modal-overlay.active {
             opacity: 1;
             visibility: visible;
         }
+
         .modal-content {
             background-color: var(--modal-content-bg);
             color: var(--text-color);
@@ -378,9 +431,11 @@
             transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
             transform: scale(0.95);
         }
+
         .modal-overlay.active .modal-content {
             transform: scale(1);
         }
+
         .modal-content h2.modal-main-title {
             font-size: 1.75rem;
             font-weight: 500;
@@ -388,12 +443,14 @@
             /* Reduced margin */
             color: var(--column-header-hover-text);
         }
+
         .modal-content h2 {
             font-size: 1.5rem;
             font-weight: 500;
             margin-bottom: 1rem;
             color: var(--column-header-hover-text);
         }
+
         .modal-content h3 {
             font-size: 1.25rem;
             font-weight: 500;
@@ -401,6 +458,7 @@
             margin-bottom: 0.75rem;
             color: var(--text-color);
         }
+
         .modal-content h4 {
             font-size: 1rem;
             font-weight: 500;
@@ -408,6 +466,7 @@
             margin-bottom: 0.5rem;
             color: var(--text-color);
         }
+
         .modal-content h5 {
             font-size: 0.9rem;
             font-weight: 600;
@@ -415,11 +474,13 @@
             margin-bottom: 0.25rem;
             color: var(--text-color);
         }
+
         .modal-content p {
             font-size: 0.9375rem;
             line-height: 1.7;
             margin-bottom: 1rem;
         }
+
         .modal-content ul {
             list-style-type: disc;
             margin-left: 1.5rem;
@@ -427,22 +488,27 @@
             line-height: 1.7;
             margin-bottom: 1rem;
         }
+
         .modal-content ul ul {
             margin-top: 0.5rem;
             margin-bottom: 0.5rem;
         }
+
         .modal-content li {
             margin-bottom: 0.375rem;
         }
+
         .modal-content a {
             color: var(--link-color);
             text-decoration: none;
             font-weight: 500;
         }
+
         .modal-content a:hover {
             color: var(--link-hover-color);
             text-decoration: underline;
         }
+
         .modal-content code {
             font-family: monospace;
             background-color: var(--search-bg);
@@ -450,6 +516,7 @@
             border-radius: 0.25rem;
             font-size: 0.8rem;
         }
+
         .modal-content pre {
             background-color: var(--search-bg);
             padding: 0.75rem;
@@ -457,10 +524,12 @@
             margin: 0.5rem 0;
             overflow-x: auto;
         }
+
         .modal-content pre code {
             padding: 0;
             background: none;
         }
+
         .modal-close-button {
             position: absolute;
             top: 1rem;
@@ -474,14 +543,17 @@
             transition: color 0.3s ease;
             padding: 0.25rem;
         }
+
         .modal-close-button:hover {
             color: var(--modal-close-btn-hover-text);
         }
+
         .defends-against-framework {
             font-weight: 500;
             color: var(--technique-item-text);
             opacity: 0.9;
         }
+
         .site-footer {
             background-color: var(--footer-bg);
             color: var(--footer-text);
@@ -491,13 +563,16 @@
             border-top: 1px solid var(--footer-border);
             margin-top: auto;
         }
+
         .site-footer p {
             margin-bottom: 0.25rem;
             line-height: 1.5;
         }
+
         .accordion-item {
             border-bottom: 1px solid var(--header-border);
         }
+
         .accordion-header {
             display: flex;
             justify-content: space-between;
@@ -509,9 +584,11 @@
             color: var(--text-color);
             transition: color 0.2s ease;
         }
+
         .accordion-header:hover {
             color: var(--column-header-hover-text);
         }
+
         .accordion-icon {
             width: 1.25rem;
             height: 1.25rem;
@@ -519,6 +596,7 @@
             flex-shrink: 0;
             margin-left: 1rem;
         }
+
         .accordion-content {
             max-height: 0;
             overflow: hidden;
@@ -527,15 +605,19 @@
             line-height: 1.7;
             color: var(--text-secondary-color);
         }
+
         .accordion-content-inner {
             padding: 0 0.5rem 1.25rem 0.5rem;
         }
+
         .strategy-accordion-container {
             margin-top: 0.5rem;
         }
+
         .strategy-accordion-item {
             border-bottom: 1px solid var(--column-border);
         }
+
         .strategy-accordion-header {
             display: flex;
             justify-content: space-between;
@@ -545,9 +627,11 @@
             font-size: 0.9rem;
             font-weight: 500;
         }
+
         .strategy-accordion-header:hover {
             color: var(--technique-item-hover-text);
         }
+
         .strategy-accordion-icon {
             width: 1rem;
             height: 1rem;
@@ -555,17 +639,20 @@
             flex-shrink: 0;
             margin-left: 0.5rem;
         }
+
         .strategy-accordion-content {
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.3s ease-in-out;
         }
+
         .strategy-accordion-content-inner {
             padding: 0.5rem 0.5rem 1rem 1rem;
             font-size: 0.85rem;
             line-height: 1.6;
             color: var(--text-secondary-color);
         }
+
         .perf-impact-note {
             background-color: #f0f4f8;
             border-left: 4px solid #4a90e2;
@@ -575,29 +662,36 @@
             font-size: 0.9em;
             line-height: 1.6;
         }
+
         html.dark .perf-impact-note {
             background-color: #2c3e50;
             border-left-color: #5dade2;
         }
+
         .perf-impact-note p {
             margin: 0;
             padding: 0;
         }
+
         .perf-impact-note strong {
             color: var(--text-color);
         }
+
         .view-switcher-container {
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
+
         .view-by-label {
             color: var(--text-color);
             transition: color 0.2s ease;
         }
+
         .view-by-label:hover {
             color: var(--column-header-hover-text);
         }
+
         .view-switcher {
             background-color: var(--view-switcher-bg);
             border-radius: 0.5rem;
@@ -605,6 +699,7 @@
             display: inline-flex;
             align-items: center;
         }
+
         .view-switcher-btn {
             padding: 0.5rem 1rem;
             border: none;
@@ -617,19 +712,23 @@
             transition: all 0.2s ease-in-out;
             margin: 0 0.125rem;
         }
+
         .view-switcher-btn.active {
             background-color: var(--view-switcher-btn-active-bg);
             color: var(--view-switcher-btn-active-text);
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
         }
+
         html.dark .view-switcher-btn.active {
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
         }
+
         .view-info-tabs {
             display: flex;
             border-bottom: 1px solid var(--column-border);
             margin-bottom: 1.5rem;
         }
+
         .view-info-tab {
             padding: 0.75rem 1.25rem;
             cursor: pointer;
@@ -642,46 +741,56 @@
             margin-bottom: -1px;
             transition: color 0.2s, border-color 0.2s;
         }
+
         .view-info-tab:hover {
             color: var(--text-color);
         }
+
         .view-info-tab.active {
             color: var(--technique-item-text);
             border-bottom-color: var(--technique-item-text);
         }
+
         .view-info-tab-content {
             display: none;
         }
+
         .view-info-tab-content.active {
             display: block;
         }
+
         .view-info-card {
             background-color: var(--technique-item-bg);
             border: 1px solid var(--technique-item-border);
             border-radius: 0.75rem;
             padding: 1.25rem;
         }
+
         .view-info-card h3 {
             color: var(--technique-item-text);
             font-size: 1.25rem;
             margin-top: 0;
             margin-bottom: 0.75rem;
         }
+
         .view-info-card .view-question {
             color: var(--technique-item-text);
             margin-bottom: 1rem;
             display: block;
         }
+
         .view-info-card .view-focus-text {
             margin-bottom: 1.5rem;
             flex-grow: 1;
         }
+
         .view-info-card .view-detail {
             display: flex;
             align-items: flex-start;
             gap: 0.75rem;
             margin-top: 1rem;
         }
+
         .view-info-card .view-detail-icon {
             flex-shrink: 0;
             width: 1.25rem;
@@ -689,14 +798,17 @@
             color: var(--technique-item-text);
             margin-top: 0.125rem;
         }
+
         .view-info-card .view-detail-content {
             font-size: 0.9rem;
             line-height: 1.6;
         }
+
         .view-info-card .view-detail-content strong {
             color: var(--text-color);
             font-weight: 600;
         }
+
         @media (max-width: 768px) {
             .view-cards-container {
                 grid-template-columns: 1fr;
@@ -705,6 +817,7 @@
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body class="text-gray-800">
     <div id="page-container">
         <header class="header-main py-4 px-6 fixed top-0 left-0 right-0 z-50 elevation-4">
@@ -926,8 +1039,7 @@
                 aidefendData.tactics.forEach(tactic => {
                     const techniquesToRender = (tactic.techniques || []).filter(tech => {
                         if (!searchTerm) return true;
-                        return tech.subTechniques?.some(sub => filteredIds.has(sub.id)) ||
-                            ((!tech.subTechniques || tech.subTechniques.length === 0) && filteredIds.has(tech.id));
+                        return filteredIds.has(tech.id) || tech.subTechniques?.some(sub => filteredIds.has(sub.id));
                     });
                     if (techniquesToRender.length > 0) {
                         const column = createElement('div', { className: 'matrix-column' });
@@ -1003,54 +1115,81 @@
                 }
                 elements.mainContent.appendChild(gridContainer);
             }
+
             function renderTechniqueItem(tech, groupName, filteredIds, searchTerm) {
                 const li = createElement('li', { className: 'technique-container' });
                 const hasSub = tech.subTechniques && tech.subTechniques.length > 0;
                 const itemDiv = createElement('div', { className: 'technique-item elevation-2' });
+
                 const contentDiv = createElement('div', {
-                    className: 'technique-item-content', onclick: (e) => {
-                        e.stopPropagation(); showTechniqueModal(tech, groupName);
+                    className: 'technique-item-content',
+                    onclick: (e) => {
+                        e.stopPropagation();
+                        showTechniqueModal(tech, groupName);
                     }
                 });
                 contentDiv.appendChild(createElement('span', { className: 'technique-id', textContent: tech.id }));
                 contentDiv.appendChild(createElement('span', { className: 'technique-name', textContent: tech.name }));
                 itemDiv.appendChild(contentDiv);
-                let isParentHighlight = searchTerm && matchesTechnique(tech, searchTerm);
+
+                const isParentMatch = searchTerm && filteredIds.has(tech.id);
+                const hasSubMatch = hasSub && tech.subTechniques.some(sub => filteredIds.has(sub.id));
+
+
+                if (isParentMatch) {
+                    itemDiv.classList.add('highlight');
+                }
+
                 if (hasSub) {
-                    const iconWrapper = createElement('div', { className: 'expand-icon' });
-                    setIcon(iconWrapper, 'chevron');
-                    itemDiv.appendChild(iconWrapper);
+
+                    const showArrow = !searchTerm || hasSubMatch;
+                    let iconWrapper;
+
+                    if (showArrow) {
+                        iconWrapper = createElement('div', { className: 'expand-icon' });
+                        setIcon(iconWrapper, 'chevron');
+                        itemDiv.appendChild(iconWrapper);
+                    }
+
                     const subList = createElement('ul', { className: 'sub-technique-list' });
-                    let isSubMatch = false;
                     tech.subTechniques.forEach(subTech => {
                         const isVisible = !searchTerm || filteredIds.has(subTech.id);
                         if (isVisible) {
                             const subItem = renderSubTechniqueItem(subTech, groupName, filteredIds, searchTerm);
                             subList.appendChild(subItem);
-                            if (searchTerm && filteredIds.has(subTech.id)) isSubMatch = true;
                         }
                     });
+
                     li.appendChild(itemDiv);
                     li.appendChild(subList);
-                    if (searchTerm && isSubMatch) {
+
+
+                    if (searchTerm && hasSubMatch) {
                         itemDiv.classList.add('expanded');
                         subList.classList.add('expanded');
-                        iconWrapper.style.transform = 'rotate(90deg)';
+                        if (iconWrapper) {
+                            iconWrapper.style.transform = 'rotate(90deg)';
+                        }
                         setTimeout(() => subList.style.maxHeight = subList.scrollHeight + "px", 0);
                     }
+
                     itemDiv.onclick = (e) => {
                         e.stopPropagation();
-                        toggleSubTechniques(itemDiv, subList, iconWrapper);
+                        if (showArrow) { // Only allow toggling if the arrow is visible
+                            toggleSubTechniques(itemDiv, subList, iconWrapper);
+                        }
                     };
                 } else {
-                    itemDiv.onclick = (e) => { e.stopPropagation(); showTechniqueModal(tech, groupName); };
+                    itemDiv.onclick = (e) => {
+                        e.stopPropagation();
+                        showTechniqueModal(tech, groupName);
+                    };
                     li.appendChild(itemDiv);
                 }
-                if (isParentHighlight && !hasSub) {
-                    itemDiv.classList.add('highlight');
-                }
+
                 return li;
             }
+
             function toggleSubTechniques(header, content, iconWrapper) {
                 const isExpanded = content.classList.toggle('expanded');
                 header.classList.toggle('expanded', isExpanded);
@@ -1303,40 +1442,53 @@
                 });
             }
             function prepareDataForViews() {
-                eligibleTechniques = [];
-                pillars = {
-                    'data': { name: 'AI Data & Feature Security', focus: 'Securing the entire lifecycle of data, features, and other input assets (e.g., knowledge bases for RAG). This pillar covers data provenance, integrity verification, sanitization, privacy preservation, and defenses against data-centric attacks like poisoning.', techniques: [] },
-                    'infra': { name: 'Infrastructure & Platform Security', focus: "Securing the foundational infrastructure and operational platforms that AI systems are built and run on. This includes the hardware, networks, cloud services, container orchestration, and MLOps pipelines. It covers applying security best practices for identity management, isolation, and configuration hardening to the entire AI technology stack.", techniques: [] },
-                    'model': { name: 'Model & Algorithm Security', focus: "Protecting the AI model itself as a unique asset. This pillar addresses the intrinsic resilience of the model's architecture and learned parameters against attacks like evasion, model theft, and backdoor insertion. It includes techniques like adversarial training, certified defenses, and robust aggregation algorithms.", techniques: [] },
-                    'app': { name: 'Application, Agent & Interface Security', focus: "Securing the application code, prompts, agentic systems, and interfaces that use the model to interact with users and other systems. This pillar covers the newest and most dynamic attack surface, including hardening against prompt injection, ensuring secure tool use by agents, and validating all model inputs and outputs.", techniques: [] }
-                };
-                phases = {
-                    'scoping': { name: 'AI System Design & Scoping', focus: "The foundational \"blueprint\" phase. This involves defining the AI's purpose and architecture, threat modeling its unique risks, inventorying its components (data, models, APIs), and establishing the safety and ethical boundaries that will govern its development and operation.", techniques: [] },
-                    'building': { name: 'Model Training, Building & Hardening', focus: "The core construction phase focused on creating a secure and robust AI model. This includes the proactive hardening of data pipelines, the implementation of secure model training, building, or fine-tuning processes, and applying defenses that make the resulting model artifact resilient by design.", techniques: [] },
-                    'validation': { name: 'Pre-Deployment Validation & Assurance', focus: "The critical \"security gate\" before going live. This is an adversarial testing and validation phase where the goal is to find and fix vulnerabilities before an attacker does. It involves AI Red Teaming, formal verification of security controls, and gaining assurance that the model behaves safely.", techniques: [] },
-                    'operation': { name: 'Production Operation & Monitoring', focus: "The active, real-time defense of the AI system in a live production environment. This is about continuous observation to detect attacks, monitor for performance and data drift, and ensure the system is operating within its expected parameters.", techniques: [] },
-                    'response': { name: 'Incident Containment & Eviction', focus: "The immediate, tactical response to a confirmed security incident. The goal is to \"stop the bleeding\" as quickly as possible. This involves actions like isolating a rogue agent, quarantining a user, blocking an attack, and kicking the adversary out of the system.", techniques: [] },
-                    'improvement': { name: 'System Restoration & Improvement', focus: "The methodical, post-containment process of safely returning to normal operation and learning from the incident. This includes restoring models and data from trusted backups, performing a root cause analysis, and hardening defenses to prevent recurrence.", techniques: [] }
-                };
-                aidefendData.tactics.forEach(tactic => {
-                    tactic.techniques?.forEach(tech => {
-                        const subTechniques = tech.subTechniques || [];
-                        if (subTechniques.length > 0) {
-                            subTechniques.forEach(sub => {
-                                const fullSub = { ...sub, parent: tech, tactic: tactic.name };
-                                eligibleTechniques.push(fullSub);
-                                fullSub.pillar?.split(', ').forEach(p => pillars[p]?.techniques.push(fullSub));
-                                fullSub.phase?.split(', ').forEach(ph => phases[ph]?.techniques.push(fullSub));
-                            });
-                        } else {
-                            const fullTech = { ...tech, tactic: tactic.name };
-                            eligibleTechniques.push(fullTech);
-                            fullTech.pillar?.split(', ').forEach(p => pillars[p]?.techniques.push(fullTech));
-                            fullTech.phase?.split(', ').forEach(ph => phases[ph]?.techniques.push(fullTech));
-                        }
-                    });
+    // Reset all data structures
+    eligibleTechniques = [];
+    pillars = {
+        'data': { name: 'AI Data & Feature Security', focus: 'Securing the entire lifecycle of data, features, and other input assets (e.g., knowledge bases for RAG). This pillar covers data provenance, integrity verification, sanitization, privacy preservation, and defenses against data-centric attacks like poisoning.', techniques: [] },
+        'infra': { name: 'Infrastructure & Platform Security', focus: "Securing the foundational infrastructure and operational platforms that AI systems are built and run on. This includes the hardware, networks, cloud services, container orchestration, and MLOps pipelines. It covers applying security best practices for identity management, isolation, and configuration hardening to the entire AI technology stack.", techniques: [] },
+        'model': { name: 'Model & Algorithm Security', focus: "Protecting the AI model itself as a unique asset. This pillar addresses the intrinsic resilience of the model's architecture and learned parameters against attacks like evasion, model theft, and backdoor insertion. It includes techniques like adversarial training, certified defenses, and robust aggregation algorithms.", techniques: [] },
+        'app': { name: 'Application, Agent & Interface Security', focus: "Securing the application code, prompts, agentic systems, and interfaces that use the model to interact with users and other systems. This pillar covers the newest and most dynamic attack surface, including hardening against prompt injection, ensuring secure tool use by agents, and validating all model inputs and outputs.", techniques: [] }
+    };
+    phases = {
+        'scoping': { name: 'AI System Design & Scoping', focus: "The foundational \"blueprint\" phase. This involves defining the AI's purpose and architecture, threat modeling its unique risks, inventorying its components (data, models, APIs), and establishing the safety and ethical boundaries that will govern its development and operation.", techniques: [] },
+        'building': { name: 'Model Training, Building & Hardening', focus: "The core construction phase focused on creating a secure and robust AI model. This includes the proactive hardening of data pipelines, the implementation of secure model training, building, or fine-tuning processes, and applying defenses that make the resulting model artifact resilient by design.", techniques: [] },
+        'validation': { name: 'Pre-Deployment Validation & Assurance', focus: "The critical \"security gate\" before going live. This is an adversarial testing and validation phase where the goal is to find and fix vulnerabilities before an attacker does. It involves AI Red Teaming, formal verification of security controls, and gaining assurance that the model behaves safely.", techniques: [] },
+        'operation': { name: 'Production Operation & Monitoring', focus: "The active, real-time defense of the AI system in a live production environment. This is about continuous observation to detect attacks, monitor for performance and data drift, and ensure the system is operating within its expected parameters.", techniques: [] },
+        'response': { name: 'Incident Containment & Eviction', focus: "The immediate, tactical response to a confirmed security incident. The goal is to \"stop the bleeding\" as quickly as possible. This involves actions like isolating a rogue agent, quarantining a user, blocking an attack, and kicking the adversary out of the system.", techniques: [] },
+        'improvement': { name: 'System Restoration & Improvement', focus: "The methodical, post-containment process of safely returning to normal operation and learning from the incident. This includes restoring models and data from trusted backups, performing a root cause analysis, and hardening defenses to prevent recurrence.", techniques: [] }
+    };
+
+    aidefendData.tactics.forEach(tactic => {
+        tactic.techniques?.forEach(tech => {
+            // ALWAYS add the parent technique to the searchable list.
+            eligibleTechniques.push({ ...tech, tactic: tactic.name });
+
+            const subTechniques = tech.subTechniques || [];
+
+            if (subTechniques.length > 0) {
+                // If there are sub-techniques, they are the "leaf nodes" for Pillars/Phases views.
+                subTechniques.forEach(sub => {
+                    const fullSub = { ...sub, parent: tech, tactic: tactic.name };
+                    
+                    // Add the sub-technique to the searchable list.
+                    eligibleTechniques.push(fullSub);
+                    
+                    // Add the sub-technique to the relevant Pillar and Phase buckets.
+                    fullSub.pillar?.split(', ').forEach(p => pillars[p]?.techniques.push(fullSub));
+                    fullSub.phase?.split(', ').forEach(ph => phases[ph]?.techniques.push(fullSub));
                 });
+            } else {
+                // If there are NO sub-techniques, the parent itself is the "leaf node".
+                const fullTech = { ...tech, tactic: tactic.name };
+                
+                // Add the parent technique to the relevant Pillar and Phase buckets.
+                fullTech.pillar?.split(', ').forEach(p => pillars[p]?.techniques.push(fullTech));
+                fullTech.phase?.split(', ').forEach(ph => phases[ph]?.techniques.push(fullTech));
             }
+        });
+    });
+}
             function initialize() {
                 const savedTheme = localStorage.getItem('aidefendTheme') || 'dark';
                 applyTheme(savedTheme);
@@ -1358,4 +1510,5 @@
         };
     </script>
 </body>
+
 </html>
