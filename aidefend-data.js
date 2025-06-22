@@ -2786,6 +2786,7 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0077 LLM Response Rendering",
+                                "AML.T0020 Poison Training Data",
                                 "AML.T0053 LLM Plugin Compromise",
                                 "AML.T0050 Command and Scripting Interpreter (via generated code)",
                                 "AML.T0048 External Harms (by cleaning malicious payloads)",
@@ -7176,6 +7177,7 @@ class SmoothedClassifier(torch.nn.Module):
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0053: LLM Plugin Compromise",
+                                "AML.T0020: Poison Training Data",
                                 "AML.T0072: Reverse Shell",
                                 "AML.T0050 Command and Scripting Interpreter",
                                 "AML.T0029 Denial of AI Service",
