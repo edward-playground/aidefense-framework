@@ -295,19 +295,23 @@
             margin-bottom: 0.75rem;
         }
 
+        /* --- UI/UX IMPROVEMENT START --- */
         .technique-item {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            /*justify-content: space-between;*/
+            align-items: center; /* Vertically center content and icon */
             background-color: var(--technique-item-bg);
-            padding: 0.75rem 1rem;
+            position: relative; /* Add this */
+    padding: 0.75rem 2.5rem 0.75rem 1rem;
             font-size: 0.875rem;
             color: var(--technique-item-text);
             border-radius: 0.5rem;
             cursor: pointer;
             transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.2s ease, box-shadow 0.2s ease;
             line-height: 1.5;
+            min-height: 60px; /* Ensures consistent height */
         }
+        /* --- UI/UX IMPROVEMENT END --- */
 
         .technique-item-content {
             flex-grow: 1;
@@ -342,33 +346,45 @@
 
         .technique-name {
             font-weight: 500;
+            max-width: 140px;
         }
-
+.technique-item.no-sub .technique-name {
+    max-width: 100%; /* Or you could set a larger value like '100%' */
+}
         .expand-icon {
-            flex-shrink: 0;
-            margin-left: 0.5rem;
-            width: 1.25rem;
-            height: 1.25rem;
-            transition: transform 0.3s ease;
-        }
+    position: absolute; /* Add this */
+    right: 0.1rem; /* Add this: Positions it 1rem from the right edge */
+    top: 50%; /* Add this: Centers it vertically */
+    transform: translateY(-50%); /* Add this: Fine-tunes vertical centering */
+    flex-shrink: 0;
+    width: 1.25rem;
+    height: 1.25rem;
+    transition: transform 0.3s ease;
+    /* margin-left: 1rem; */ /* This can be removed */
+}
 
         .expand-icon.expanded {
             transform: rotate(45deg);
         }
 
+        /* --- UI/UX IMPROVEMENT START --- */
         .sub-technique-list {
             list-style-type: none;
-            padding-left: 0.5rem;
+            padding-left: 1rem; /* Indent the list */
             margin-top: 0.5rem;
+            margin-left: 0.75rem; /* Align with parent padding */
+            border-left: 2px solid var(--technique-item-border); /* Connecting line */
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
-
+        /* --- UI/UX IMPROVEMENT END --- */
+        
         .sub-technique-list.expanded {
             max-height: 1000px;
         }
 
+        /* --- UI/UX IMPROVEMENT START --- */
         .subtechnique-item {
             display: block;
             background-color: var(--subtechnique-bg);
@@ -376,12 +392,13 @@
             font-size: 0.8rem;
             color: var(--technique-item-hover-text);
             border-radius: 0.375rem;
-            border-left: 6px solid var(--technique-item-text);
+            /* Removed the thick left border to rely on the list's border */
             cursor: pointer;
             transition: all 0.2s ease-in-out;
             line-height: 1.4;
             margin-bottom: 0.5rem;
         }
+        /* --- UI/UX IMPROVEMENT END --- */
 
         .subtechnique-item:hover {
             background-color: var(--technique-item-hover-bg);
@@ -1119,7 +1136,9 @@
             function renderTechniqueItem(tech, groupName, filteredIds, searchTerm) {
                 const li = createElement('li', { className: 'technique-container' });
                 const hasSub = tech.subTechniques && tech.subTechniques.length > 0;
-                const itemDiv = createElement('div', { className: 'technique-item elevation-2' });
+                const itemDiv = createElement('div', { 
+    className: `technique-item elevation-2 ${hasSub ? '' : 'no-sub'}` 
+});
 
                 const contentDiv = createElement('div', {
                     className: 'technique-item-content',

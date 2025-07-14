@@ -25,7 +25,7 @@ const aidefendIntroduction = {
             "title": "Version & Date",
             "paragraphs": [
                 "Version: 1.0",
-                "Last Updated: June 22, 2025"
+                "Last Updated: July 13, 2025"
             ]
         },
         {
@@ -9163,7 +9163,99 @@ class SmoothedClassifier(torch.nn.Module):
                             "howTo": "<h5>Concept:</h5><p>After a mass logout, attackers may immediately attempt to re-authenticate using stolen credentials. The period immediately following a session flush is a time of heightened risk, and newly created sessions should be monitored with extra scrutiny.</p><h5>Create a High-Risk SIEM Correlation Rule</h5><p>In your SIEM, create a detection rule that looks for a suspicious sequence of events: a password reset followed immediately by a successful login from a different IP address or geographic location. This pattern strongly suggests that an attacker, not the legitimate user, intercepted the password reset email.</p><pre><code># SIEM Correlation Rule (Splunk SPL syntax)\\n\n# Find successful password reset events\nindex=idp sourcetype=okta eventType=user.account.reset_password status=SUCCESS \n| fields user, source_ip AS reset_ip, source_country AS reset_country\n| join user [\\n    # Join with successful login events that happen within 5 minutes of the reset\\n    search index=idp sourcetype=okta eventType=user.session.start status=SUCCESS earliest=-5m latest=now\\n    | fields user, source_ip AS login_ip, source_country AS login_country\\n]\\n# Alert if the IP or country of the login does not match the password reset request\\n| where reset_ip != login_ip OR reset_country != login_country\n| table user, reset_ip, reset_country, login_ip, login_country</code></pre><p><strong>Action:</strong> Implement a high-priority detection rule in your SIEM that specifically looks for successful login events that occur shortly after a password reset but originate from a different IP address or geolocation. This is a strong indicator of an immediate re-compromise.</p>"
                         }
                     ]
+                },
+                {
+                    "id": "AID-E-006",
+                    "name": "End-of-Life (EOL) of Models, Configurations and Data",
+                    "description": "Implements formal, verifiable technical decommissioning procedures to securely and permanently delete or dispose of AI models, configurations, and their associated data at the end of their lifecycle or upon a transfer of ownership. This technique ensures that residual data cannot be recovered and that security issues from a decommissioned system cannot be transferred to another.",
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0025 Exfiltration via Cyber Means",
+                                "AML.T0036 Data from Information Repositories"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Data Exfiltration (L2)",
+                                "Model Stealing (L1, from old artifacts)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM02:2025 Sensitive Information Disclosure"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML03:2023 Model Inversion Attack",
+                                "ML04:2023 Membership Inference Attack",
+                                "ML05:2023 Model Theft"
+                            ]
+                        }
+                    ],
+                    "subTechniques": [
+                        {
+                            "id": "AID-E-006.001",
+                            "name": "Cryptographic Erasure & Media Sanitization",
+                            "pillar": "data, infra",
+                            "phase": "improvement",
+                            "description": "Employs cryptographic and physical methods to render AI data and models on storage media permanently unrecoverable. This is the core technical process for decommissioning AI assets, ensuring compliance with data protection regulations and preventing future data leakage.",
+                            "implementationStrategies": [
+                                {
+                                    "strategy": "Implement crypto-shredding by securely deleting the encryption keys for model and data storage.",
+                                    "howTo": "<h5>Concept:</h5><p>Instead of trying to overwrite every block of a massive dataset, you can make the data permanently unreadable by destroying the encryption key used to protect it. This is a fast and highly effective sanitization method for cloud and virtualized environments.</p><h5>Step 1: Ensure All Data is Encrypted at Rest</h5><p>Your AI assets (models, datasets) must be stored in an encrypted format, using a key managed by a Key Management Service (KMS). This is a foundational prerequisite.</p><h5>Step 2: Schedule Deletion of the KMS Key</h5><p>In your cloud provider's KMS, schedule the deletion of the specific key used to encrypt the decommissioned dataset. Once the key is permanently deleted after the mandatory waiting period, the data is rendered irrecoverable ciphertext.</p><pre><code># Example using AWS CLI to schedule key deletion\n\n# The unique key ID for the dataset being decommissioned\nKEY_ID=\"arn:aws:kms:us-east-1:123456789012:key/your-key-id\"\n# Set a waiting period (e.g., 7 days) to prevent accidental deletion\nDELETION_WINDOW_DAYS=7\n\naws kms schedule-key-deletion --key-id ${KEY_ID} --pending-window-in-days ${DELETION_WINDOW_DAYS}\n\n# This command initiates the irreversible deletion process.</code></pre><p><strong>Action:</strong> For all decommissioned AI assets stored in the cloud, execute a crypto-shredding procedure by scheduling the permanent deletion of the encryption keys associated with their storage volumes or buckets. Log the scheduled deletion event for auditing purposes.</p>"
+                                },
+                                {
+                                    "strategy": "Use standards-compliant data wiping utilities to sanitize physical or virtual storage media.",
+                                    "howTo": "<h5>Concept:</h5><p>For storage media that will be repurposed or physically destroyed, you must perform a full sanitization to overwrite all data. This process should follow established standards to be considered effective.</p><h5>Use a Secure Wiping Utility</h5><p>On Linux systems, utilities like `shred` or `nwipe` can be used to overwrite files or entire block devices according to government and industry standards, preventing recovery even with forensic tools.</p><pre><code># Example using 'shred' to securely delete a model file\n\nMODEL_FILE=\"/mnt/decommissioned_data/old_model.pkl\"\n\n# -v: verbose, show progress\n# -z: add a final overwrite with zeros to hide shredding\n# -u: deallocate and remove file after overwriting\n# -n 3: overwrite 3 times (a common standard)\n\nshred -vzu -n 3 ${MODEL_FILE}\n\n# The file is now securely deleted from the filesystem.</code></pre><p><strong>Action:</strong> When decommissioning physical servers or storage, use a certified data wiping utility to perform a multi-pass overwrite on all relevant disks, following standards like NIST SP 800-88 Rev. 1. Document the successful completion of the wipe for compliance records.</p>"
+                                }
+                            ],
+                            "toolsOpenSource": [
+                                "shred, nwipe (for command-line data wiping)",
+                                "Cryptsetup (for LUKS key management and destruction on Linux systems)"
+                            ],
+                            "toolsCommercial": [
+                                "Cloud Provider KMS (AWS KMS, Azure Key Vault, GCP Secret Manager)",
+                                "Hardware Security Modules (HSMs)",
+                                "Enterprise data destruction software and services (Blancco, KillDisk)"
+                            ]
+                        },
+                        {
+                            "id": "AID-E-006.002",
+                            "name": "Secure Asset Transfer & Ownership Change",
+                            "pillar": "model, data, infra",
+                            "phase": "improvement",
+                            "description": "Defines the technical process for securely transferring ownership of an AI asset to another entity. This involves cryptographic verification of the transferred artifact and a corresponding secure deletion of the original asset to prevent residual security risks.",
+                            "implementationStrategies": [
+                                {
+                                    "strategy": "Package, encrypt, and sign AI assets before transfer.",
+                                    "howTo": "<h5>Concept:</h5><p>When transferring a model or dataset, you must ensure both its confidentiality (encryption) and its integrity (signing). The new owner must be able to verify that the asset they received is the authentic, untampered version from you.</p><h5>Use GPG to Create a Secure Package</h5><p>Use a tool like GnuPG (GPG) to create a signed and encrypted archive of the AI assets. This provides a strong, verifiable chain of custody.</p><pre><code># Assume 'recipient_public_key.asc' is the new owner's public key\n# and 'my_private_key.asc' is your signing key.\n\nASSET_ARCHIVE=\"model_v3_package.tar.gz\"\n\n# Create the asset archive\ntar -czvf ${ASSET_ARCHIVE} ./model.pkl ./config.json ./datasheet.md\n\n# Sign and encrypt the archive\ngpg --encrypt --sign --recipient-file recipient_public_key.asc \\\n    --local-user my_private_key.asc \\\n    --output ${ASSET_ARCHIVE}.gpg ${ASSET_ARCHIVE}\n\n# Securely transfer the resulting .gpg file to the new owner.</code></pre><p><strong>Action:</strong> Before transferring any AI asset, package it into an archive, then use GPG to both sign it with your private key and encrypt it with the recipient's public key. The recipient must then verify your signature upon decryption.</p>"
+                                },
+                                {
+                                    "strategy": "Execute secure deletion of original assets after the new owner confirms receipt and integrity.",
+                                    "howTo": "<h5>Concept:</h5><p>The final step of a secure transfer is to destroy your copy of the asset. This prevents a 'split-brain' scenario where two copies of a sensitive model or dataset exist, increasing the attack surface. This action should only be taken after the recipient has cryptographically confirmed the integrity of the asset they received.</p><h5>Implement a Post-Transfer Deletion Workflow</h5><p>This is a procedural workflow, often managed via a ticketing system, that ends with a technical action.</p><ol><li>You send the encrypted package (the `.gpg` file) to the new owner.</li><li>The new owner decrypts and verifies the package signature.</li><li>The new owner calculates the `sha256sum` of the contents and sends the hash back to you for out-of-band confirmation.</li><li>You confirm the hash matches your original artifact.</li><li>The new owner sends a formal, signed 'Acknowledgement of Receipt and Integrity'.</li><li><strong>UPON RECEIPT</strong> of this acknowledgement, you trigger the secure deletion script from `AID-E-006.001` to destroy your local copy.</li><li>Log the completion of the deletion and close the transfer ticket for auditing purposes.</li></ol><p><strong>Action:</strong> Define a formal transfer protocol that requires cryptographic confirmation of receipt and integrity from the new owner. Once this confirmation is received and logged, trigger the secure sanitization process (`AID-E-006.001`) to destroy all local copies of the transferred assets.</p>"
+                                }
+                            ],
+                            "toolsOpenSource": [
+                                "GnuPG (GPG)",
+                                "OpenSSL",
+                                "sha256sum, md5sum",
+                                "rsync (over SSH for secure transport)"
+                            ],
+                            "toolsCommercial": [
+                                "Secure File Transfer Protocol (SFTP) solutions",
+                                "Managed File Transfer (MFT) platforms",
+                                "Data Loss Prevention (DLP) systems to monitor the transfer"
+                            ]
+                        }
+                    ]
                 }
+
             ]
         },
         {
