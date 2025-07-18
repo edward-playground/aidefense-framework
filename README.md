@@ -72,16 +72,6 @@ The framework synthesizes concepts and knowledge from the following foundational
 
 ---
 
-### GitHub Topics
-
-To improve discoverability of this repository, add the following topics:
-
-```
-aidefend ai-security cybersecurity defensive-security threat-modeling mitigation knowledge-base llm-security ml-security maestro mitre-d3fend atlas owasp
-```
-
----
-
 ### 📬 Contact
 
 This work is led by **Edward Lee**. You can [connect with me on LinkedIn](https://www.linkedin.com/in/go-edwardlee/).
