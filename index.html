@@ -299,18 +299,22 @@
         .technique-item {
             display: flex;
             /*justify-content: space-between;*/
-            align-items: center; /* Vertically center content and icon */
+            align-items: center;
+            /* Vertically center content and icon */
             background-color: var(--technique-item-bg);
-            position: relative; /* Add this */
-    padding: 0.75rem 2.5rem 0.75rem 1rem;
+            position: relative;
+            /* Add this */
+            padding: 0.75rem 2.5rem 0.75rem 1rem;
             font-size: 0.875rem;
             color: var(--technique-item-text);
             border-radius: 0.5rem;
             cursor: pointer;
             transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.2s ease, box-shadow 0.2s ease;
             line-height: 1.5;
-            min-height: 60px; /* Ensures consistent height */
+            min-height: 60px;
+            /* Ensures consistent height */
         }
+
         /* --- UI/UX IMPROVEMENT END --- */
 
         .technique-item-content {
@@ -348,20 +352,28 @@
             font-weight: 500;
             max-width: 140px;
         }
-.technique-item.no-sub .technique-name {
-    max-width: 100%; /* Or you could set a larger value like '100%' */
-}
+
+        .technique-item.no-sub .technique-name {
+            max-width: 100%;
+            /* Or you could set a larger value like '100%' */
+        }
+
         .expand-icon {
-    position: absolute; /* Add this */
-    right: 0.1rem; /* Add this: Positions it 1rem from the right edge */
-    top: 50%; /* Add this: Centers it vertically */
-    transform: translateY(-50%); /* Add this: Fine-tunes vertical centering */
-    flex-shrink: 0;
-    width: 1.25rem;
-    height: 1.25rem;
-    transition: transform 0.3s ease;
-    /* margin-left: 1rem; */ /* This can be removed */
-}
+            position: absolute;
+            /* Add this */
+            right: 0.1rem;
+            /* Add this: Positions it 1rem from the right edge */
+            top: 50%;
+            /* Add this: Centers it vertically */
+            transform: translateY(-50%);
+            /* Add this: Fine-tunes vertical centering */
+            flex-shrink: 0;
+            width: 1.25rem;
+            height: 1.25rem;
+            transition: transform 0.3s ease;
+            /* margin-left: 1rem; */
+            /* This can be removed */
+        }
 
         .expand-icon.expanded {
             transform: rotate(45deg);
@@ -370,16 +382,20 @@
         /* --- UI/UX IMPROVEMENT START --- */
         .sub-technique-list {
             list-style-type: none;
-            padding-left: 1rem; /* Indent the list */
+            padding-left: 1rem;
+            /* Indent the list */
             margin-top: 0.5rem;
-            margin-left: 0.75rem; /* Align with parent padding */
-            border-left: 2px solid var(--technique-item-border); /* Connecting line */
+            margin-left: 0.75rem;
+            /* Align with parent padding */
+            border-left: 2px solid var(--technique-item-border);
+            /* Connecting line */
             max-height: 0;
             overflow: hidden;
             transition: max-height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
+
         /* --- UI/UX IMPROVEMENT END --- */
-        
+
         .sub-technique-list.expanded {
             max-height: 1000px;
         }
@@ -398,6 +414,7 @@
             line-height: 1.4;
             margin-bottom: 0.5rem;
         }
+
         /* --- UI/UX IMPROVEMENT END --- */
 
         .subtechnique-item:hover {
@@ -1136,9 +1153,9 @@
             function renderTechniqueItem(tech, groupName, filteredIds, searchTerm) {
                 const li = createElement('li', { className: 'technique-container' });
                 const hasSub = tech.subTechniques && tech.subTechniques.length > 0;
-                const itemDiv = createElement('div', { 
-    className: `technique-item elevation-2 ${hasSub ? '' : 'no-sub'}` 
-});
+                const itemDiv = createElement('div', {
+                    className: `technique-item elevation-2 ${hasSub ? '' : 'no-sub'}`
+                });
 
                 const contentDiv = createElement('div', {
                     className: 'technique-item-content',
@@ -1461,53 +1478,53 @@
                 });
             }
             function prepareDataForViews() {
-    // Reset all data structures
-    eligibleTechniques = [];
-    pillars = {
-        'data': { name: 'AI Data & Feature Security', focus: 'Securing the entire lifecycle of data, features, and other input assets (e.g., knowledge bases for RAG). This pillar covers data provenance, integrity verification, sanitization, privacy preservation, and defenses against data-centric attacks like poisoning.', techniques: [] },
-        'infra': { name: 'Infrastructure & Platform Security', focus: "Securing the foundational infrastructure and operational platforms that AI systems are built and run on. This includes the hardware, networks, cloud services, container orchestration, and MLOps pipelines. It covers applying security best practices for identity management, isolation, and configuration hardening to the entire AI technology stack.", techniques: [] },
-        'model': { name: 'Model & Algorithm Security', focus: "Protecting the AI model itself as a unique asset. This pillar addresses the intrinsic resilience of the model's architecture and learned parameters against attacks like evasion, model theft, and backdoor insertion. It includes techniques like adversarial training, certified defenses, and robust aggregation algorithms.", techniques: [] },
-        'app': { name: 'Application, Agent & Interface Security', focus: "Securing the application code, prompts, agentic systems, and interfaces that use the model to interact with users and other systems. This pillar covers the newest and most dynamic attack surface, including hardening against prompt injection, ensuring secure tool use by agents, and validating all model inputs and outputs.", techniques: [] }
-    };
-    phases = {
-        'scoping': { name: 'AI System Design & Scoping', focus: "The foundational \"blueprint\" phase. This involves defining the AI's purpose and architecture, threat modeling its unique risks, inventorying its components (data, models, APIs), and establishing the safety and ethical boundaries that will govern its development and operation.", techniques: [] },
-        'building': { name: 'Model Training, Building & Hardening', focus: "The core construction phase focused on creating a secure and robust AI model. This includes the proactive hardening of data pipelines, the implementation of secure model training, building, or fine-tuning processes, and applying defenses that make the resulting model artifact resilient by design.", techniques: [] },
-        'validation': { name: 'Pre-Deployment Validation & Assurance', focus: "The critical \"security gate\" before going live. This is an adversarial testing and validation phase where the goal is to find and fix vulnerabilities before an attacker does. It involves AI Red Teaming, formal verification of security controls, and gaining assurance that the model behaves safely.", techniques: [] },
-        'operation': { name: 'Production Operation & Monitoring', focus: "The active, real-time defense of the AI system in a live production environment. This is about continuous observation to detect attacks, monitor for performance and data drift, and ensure the system is operating within its expected parameters.", techniques: [] },
-        'response': { name: 'Incident Containment & Eviction', focus: "The immediate, tactical response to a confirmed security incident. The goal is to \"stop the bleeding\" as quickly as possible. This involves actions like isolating a rogue agent, quarantining a user, blocking an attack, and kicking the adversary out of the system.", techniques: [] },
-        'improvement': { name: 'System Restoration & Improvement', focus: "The methodical, post-containment process of safely returning to normal operation and learning from the incident. This includes restoring models and data from trusted backups, performing a root cause analysis, and hardening defenses to prevent recurrence.", techniques: [] }
-    };
+                // Reset all data structures
+                eligibleTechniques = [];
+                pillars = {
+                    'data': { name: 'AI Data & Feature Security', focus: 'Securing the entire lifecycle of data, features, and other input assets (e.g., knowledge bases for RAG). This pillar covers data provenance, integrity verification, sanitization, privacy preservation, and defenses against data-centric attacks like poisoning.', techniques: [] },
+                    'infra': { name: 'Infrastructure & Platform Security', focus: "Securing the foundational infrastructure and operational platforms that AI systems are built and run on. This includes the hardware, networks, cloud services, container orchestration, and MLOps pipelines. It covers applying security best practices for identity management, isolation, and configuration hardening to the entire AI technology stack.", techniques: [] },
+                    'model': { name: 'Model & Algorithm Security', focus: "Protecting the AI model itself as a unique asset. This pillar addresses the intrinsic resilience of the model's architecture and learned parameters against attacks like evasion, model theft, and backdoor insertion. It includes techniques like adversarial training, certified defenses, and robust aggregation algorithms.", techniques: [] },
+                    'app': { name: 'Application, Agent & Interface Security', focus: "Securing the application code, prompts, agentic systems, and interfaces that use the model to interact with users and other systems. This pillar covers the newest and most dynamic attack surface, including hardening against prompt injection, ensuring secure tool use by agents, and validating all model inputs and outputs.", techniques: [] }
+                };
+                phases = {
+                    'scoping': { name: 'AI System Design & Scoping', focus: "The foundational \"blueprint\" phase. This involves defining the AI's purpose and architecture, threat modeling its unique risks, inventorying its components (data, models, APIs), and establishing the safety and ethical boundaries that will govern its development and operation.", techniques: [] },
+                    'building': { name: 'Model Training, Building & Hardening', focus: "The core construction phase focused on creating a secure and robust AI model. This includes the proactive hardening of data pipelines, the implementation of secure model training, building, or fine-tuning processes, and applying defenses that make the resulting model artifact resilient by design.", techniques: [] },
+                    'validation': { name: 'Pre-Deployment Validation & Assurance', focus: "The critical \"security gate\" before going live. This is an adversarial testing and validation phase where the goal is to find and fix vulnerabilities before an attacker does. It involves AI Red Teaming, formal verification of security controls, and gaining assurance that the model behaves safely.", techniques: [] },
+                    'operation': { name: 'Production Operation & Monitoring', focus: "The active, real-time defense of the AI system in a live production environment. This is about continuous observation to detect attacks, monitor for performance and data drift, and ensure the system is operating within its expected parameters.", techniques: [] },
+                    'response': { name: 'Incident Containment & Eviction', focus: "The immediate, tactical response to a confirmed security incident. The goal is to \"stop the bleeding\" as quickly as possible. This involves actions like isolating a rogue agent, quarantining a user, blocking an attack, and kicking the adversary out of the system.", techniques: [] },
+                    'improvement': { name: 'System Restoration & Improvement', focus: "The methodical, post-containment process of safely returning to normal operation and learning from the incident. This includes restoring models and data from trusted backups, performing a root cause analysis, and hardening defenses to prevent recurrence.", techniques: [] }
+                };
 
-    aidefendData.tactics.forEach(tactic => {
-        tactic.techniques?.forEach(tech => {
-            // ALWAYS add the parent technique to the searchable list.
-            eligibleTechniques.push({ ...tech, tactic: tactic.name });
+                aidefendData.tactics.forEach(tactic => {
+                    tactic.techniques?.forEach(tech => {
+                        // ALWAYS add the parent technique to the searchable list.
+                        eligibleTechniques.push({ ...tech, tactic: tactic.name });
 
-            const subTechniques = tech.subTechniques || [];
+                        const subTechniques = tech.subTechniques || [];
 
-            if (subTechniques.length > 0) {
-                // If there are sub-techniques, they are the "leaf nodes" for Pillars/Phases views.
-                subTechniques.forEach(sub => {
-                    const fullSub = { ...sub, parent: tech, tactic: tactic.name };
-                    
-                    // Add the sub-technique to the searchable list.
-                    eligibleTechniques.push(fullSub);
-                    
-                    // Add the sub-technique to the relevant Pillar and Phase buckets.
-                    fullSub.pillar?.split(', ').forEach(p => pillars[p]?.techniques.push(fullSub));
-                    fullSub.phase?.split(', ').forEach(ph => phases[ph]?.techniques.push(fullSub));
+                        if (subTechniques.length > 0) {
+                            // If there are sub-techniques, they are the "leaf nodes" for Pillars/Phases views.
+                            subTechniques.forEach(sub => {
+                                const fullSub = { ...sub, parent: tech, tactic: tactic.name };
+
+                                // Add the sub-technique to the searchable list.
+                                eligibleTechniques.push(fullSub);
+
+                                // Add the sub-technique to the relevant Pillar and Phase buckets.
+                                fullSub.pillar?.split(', ').forEach(p => pillars[p]?.techniques.push(fullSub));
+                                fullSub.phase?.split(', ').forEach(ph => phases[ph]?.techniques.push(fullSub));
+                            });
+                        } else {
+                            // If there are NO sub-techniques, the parent itself is the "leaf node".
+                            const fullTech = { ...tech, tactic: tactic.name };
+
+                            // Add the parent technique to the relevant Pillar and Phase buckets.
+                            fullTech.pillar?.split(', ').forEach(p => pillars[p]?.techniques.push(fullTech));
+                            fullTech.phase?.split(', ').forEach(ph => phases[ph]?.techniques.push(fullTech));
+                        }
+                    });
                 });
-            } else {
-                // If there are NO sub-techniques, the parent itself is the "leaf node".
-                const fullTech = { ...tech, tactic: tactic.name };
-                
-                // Add the parent technique to the relevant Pillar and Phase buckets.
-                fullTech.pillar?.split(', ').forEach(p => pillars[p]?.techniques.push(fullTech));
-                fullTech.phase?.split(', ').forEach(ph => phases[ph]?.techniques.push(fullTech));
             }
-        });
-    });
-}
             function initialize() {
                 const savedTheme = localStorage.getItem('aidefendTheme') || 'dark';
                 applyTheme(savedTheme);
