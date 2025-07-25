@@ -864,7 +864,7 @@
                             </a>
                         </h1>
                         <p class="header-subtitle">An AI-focused defensive countermeasures knowledge base</p>
-                        <p class="text-xs text-gray-600 mt-0.5 header-version-text">Version 1.0</p>
+                        <p class="text-xs text-gray-600 mt-0.5 header-version-text" id="framework-version">Version</p>
                     </div>
                     <div class="flex items-center space-x-1">
                         <button id="aboutBtn" class="header-button text-button" title="About AIDEFEND">
@@ -1537,6 +1537,14 @@
                     svg.style.marginRight = '0.5rem';
                 }
                 elements.aboutBtn.insertBefore(aboutIcon, elements.aboutBtn.firstChild);
+                const versionSection = aidefendData.introduction.sections.find(s => s.title === "Version & Date");
+                if (versionSection && versionSection.paragraphs.length > 0) {
+                    const versionString = versionSection.paragraphs[0]; // 取得 "Version: 1.20250725"
+                    const versionElement = document.getElementById('framework-version');
+                    if (versionElement) {
+                        versionElement.textContent = versionString;
+                    }
+                }
                 prepareDataForViews();
                 renderMainGrid();
                 addEventListeners();
