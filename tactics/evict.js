@@ -726,6 +726,8 @@ export const evictTactic = {
         {
             "id": "AID-E-005",
             "name": "Secure Communication & Session Re-establishment for AI",
+            "pillar": "data, infra",
+            "phase": "improvement",
             "description": "After an incident where communication channels or user/agent sessions related to AI systems might have been compromised, hijacked, or exposed to malicious influence, take steps to securely re-establish these communications. This involves expiring all potentially tainted active sessions, forcing re-authentication for users and agents, clearing any manipulated conversational states, and ensuring that interactions resume over verified, secure channels. The goal is to prevent attackers from leveraging residual compromised sessions or states.",
             "toolsOpenSource": [
                 "Application server admin interfaces for session expiration",
