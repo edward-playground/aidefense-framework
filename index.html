@@ -873,7 +873,7 @@
                             </a>
                         </h1>
                         <p class="header-subtitle">An AI-focused defensive countermeasures knowledge base</p>
-                        <p class="text-xs text-gray-600 mt-0.5 header-version-text" id="framework-version">Version</p>
+                        <p class="text-xs text-gray-400 mt-0.5 header-version-text" id="framework-version">Version</p>
                     </div>
                     <div class="flex items-center space-x-1">
                         <button id="aboutBtn" class="header-button text-button" title="About AIDEFEND">
@@ -944,8 +944,11 @@
                 class="text-sky-600 dark:text-sky-400 hover:underline">Creative Commons Attribution 4.0 International
                 License (CC BY 4.0)</a></p>
     </footer>
-    <script src="aidefend-data.js"></script>
-    <script>
+    <script type="module">
+        // 從您的主檔案導入 aidefendData
+        import { aidefendData } from './main.js';
+
+        // 現在這個模組作用域內可以使用 aidefendData 了
         window.onload = function () {
             const elements = {
                 mainContent: document.getElementById('main-content'),
@@ -973,10 +976,12 @@
                 audience: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.095a1.23 1.23 0 00.41-1.412A6.998 6.998 0 0010 11.5a6.998 6.998 0 00-6.535 2.993z" /></svg>`,
                 useCase: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M15.988 3.012A2.25 2.25 0 0118 5.25v6.5A2.25 2.25 0 0115.75 14h-3.04a2.252 2.252 0 01-1.523.672c-.675 0-1.284-.28-1.688-.734l-3.328-3.328a2.25 2.25 0 010-3.182l3.328-3.328a2.25 2.25 0 011.688-.734h3.04zM12 9.75a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-.008z" clip-rule="evenodd" /><path d="M9.122 7.182a.75.75 0 011.06 0l2.5 2.5a.75.75 0 010 1.06l-2.5 2.5a.75.75 0 01-1.06-1.06L10.81 11H2.75a.75.75 0 010-1.5h8.06l-1.7-1.7a.75.75 0 010-1.06z" clip-rule="evenodd" /></svg>`
             };
+
             let currentView = 'tactic';
             let eligibleTechniques = [];
             let pillars = {};
             let phases = {};
+
             const viewDescriptions = {
                 tactic: {
                     name: 'Tactics View',
@@ -1548,7 +1553,7 @@
                 elements.aboutBtn.insertBefore(aboutIcon, elements.aboutBtn.firstChild);
                 const versionSection = aidefendData.introduction.sections.find(s => s.title === "Version & Date");
                 if (versionSection && versionSection.paragraphs.length > 0) {
-                    const versionString = versionSection.paragraphs[0]; // 取得 "Version: 1.20250725"
+                    const versionString = versionSection.paragraphs[0]; // 取得 "Version"
                     const versionElement = document.getElementById('framework-version');
                     if (versionElement) {
                         versionElement.textContent = versionString;
