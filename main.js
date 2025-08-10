@@ -24,5 +24,5 @@ export const aidefendData = {
     ]
 };
 
-// 您也可以將其設為預設導出
+// 預設將 aidefendData 匯出 以供其他模組使用
 export default aidefendData;

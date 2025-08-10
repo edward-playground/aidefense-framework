@@ -948,7 +948,7 @@
         // 從您的主檔案導入 aidefendData
         import { aidefendData } from './main.js';
 
-        // 現在這個模組作用域內可以使用 aidefendData 了
+        // 在這個模組作用域內使用 aidefendData 
         window.onload = function () {
             const elements = {
                 mainContent: document.getElementById('main-content'),
@@ -1492,7 +1492,6 @@
                 });
             }
             function prepareDataForViews() {
-                // Reset all data structures
                 eligibleTechniques = [];
                 pillars = {
                     'data': { name: 'AI Data & Feature Security', focus: 'Securing the entire lifecycle of data, features, and other input assets (e.g., knowledge bases for RAG). This pillar covers data provenance, integrity verification, sanitization, privacy preservation, and defenses against data-centric attacks like poisoning.', techniques: [] },
