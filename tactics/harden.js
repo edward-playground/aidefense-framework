@@ -1472,6 +1472,66 @@ def is_url_safe(url: str):
                             ]
                         }
                     ]
+                },
+                {
+                    "id": "AID-H-006.003",
+                    "name": "Passive AI Output Obfuscation",
+                    "pillar": "model, app",
+                    "phase": "operation",
+                    "description": "A hardening technique that intentionally reduces the precision or fidelity of an AI model's output before it is returned to an end-user or downstream system. This proactive control aims to significantly increase the difficulty of model extraction, inversion, and membership inference attacks, which often rely on precise output values (like confidence scores or logits) to reverse-engineer the model or its training data. By returning less information—such as binned confidence scores, rounded numerical predictions, or only the top predicted class—the utility for legitimate users is maintained while the value of the output for an attacker is drastically reduced.",
+                    "toolsOpenSource": [
+                        "NumPy, SciPy (for numerical manipulation and noise generation)",
+                        "PyTorch, TensorFlow (for adding noise at the logit level)",
+                        "Custom logic within API frameworks (FastAPI, Flask, etc.)"
+                    ],
+                    "toolsCommercial": [
+                        "API Gateways with response transformation capabilities (Kong, Apigee, MuleSoft)",
+                        "AI Security Firewalls (Protect AI Guardian, Lakera Guard, CalypsoAI Validator)"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0024.002 Invert AI Model / AML.T0048.004 External Harms: AI Intellectual Property Theft",
+                                "AML.T0024.000 Exfiltration via AI Inference API: Infer Training Data Membership"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Model Stealing (L1)",
+                                "Membership Inference Attacks (L1)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM02:2025 Sensitive Information Disclosure"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML05:2023 Model Theft",
+                                "ML03:2023 Model Inversion Attack",
+                                "ML04:2023 Membership Inference Attack"
+                            ]
+                        }
+                    ],
+                    "implementationStrategies": [
+                        {
+                            "strategy": "Quantize classifier outputs by binning confidence scores.",
+                            "howTo": "<h5>Concept:</h5><p>Model extraction attacks are far more effective when they have access to the full vector of output probabilities (e.g., `[0.11, 0.23, 0.66]`). This provides a rich signal for a thief to train a substitute model. By only returning the final predicted class and a binned, qualitative confidence score, you provide significantly less information for the attacker to exploit.</p><h5>Implement an Output Quantizer</h5><p>In your API's response logic, process the raw probabilities from the model before constructing the final JSON response for the user.</p><pre><code># File: hardening/output_obfuscator.py\nimport numpy as np\n\ndef quantize_confidence(confidence_score):\n    \"\"\"Quantizes a confidence score into qualitative bins.\"\"\"\\n    if confidence_score >= 0.95:\n        return \"very_high\"\n    elif confidence_score >= 0.8:\\n        return \"high\"\n    elif confidence_score >= 0.6:\\n        return \"medium\"\n    else:\n        return \"low\"\n\ndef get_obfuscated_classifier_output(prediction_probabilities):\n    \"\"\"Takes a full probability vector and returns a reduced-fidelity output.\"\"\"\\n    # Get the index of the highest probability class\n    top_class_index = np.argmax(prediction_probabilities)\n    # Get the confidence score for that class\n    confidence = prediction_probabilities[top_class_index]\n    \n    obfuscated_result = {\n        \"prediction_class\": int(top_class_index),\n        \"confidence_level\": quantize_confidence(confidence)\n    }\n    \n    return obfuscated_result\n\n# --- Example Usage in API ---\n# raw_probabilities = model.predict_proba(input_data)[0] # e.g., [0.1, 0.05, 0.85]\n# final_response = get_obfuscated_classifier_output(raw_probabilities)\n# # final_response is now: {'prediction_class': 2, 'confidence_level': 'high'}\n# This is sent to the user instead of the raw probabilities.</code></pre>"
+                        },
+                        {
+                            "strategy": "Round or bucket numerical outputs from regression models.",
+                            "howTo": "<h5>Concept:</h5><p>The same principle applies to regression models that predict a continuous value. Returning a highly precise floating-point number (e.g., 157.38291) can leak more information about the model's internal state than necessary. For many applications, a rounded value or a categorical range is sufficient for the user and safer for the model.</p><h5>Implement a Regression Output Rounder</h5><pre><code># File: hardening/regression_obfuscator.py\n\ndef get_rounded_regression_output(raw_prediction_value, decimal_places=1):\n    \"\"\"Rounds the regression output to a specified number of decimal places.\"\"\"\\n    return round(raw_prediction_value, decimal_places)\n\ndef get_bucketed_regression_output(raw_prediction_value):\n    \"\"\"Buckets a numerical prediction into a categorical range.\"\"\"\\n    if raw_prediction_value < 100:\n        return \"<100\"\n    elif raw_prediction_value < 500:\n        return \"100-500\"\n    else:\n        return \">500\"\n\n# --- Example Usage in API ---\n# raw_value = model.predict(input_data)[0] # e.g., 345.821\n\n# Option 1: Rounding\n# rounded_response = get_rounded_regression_output(raw_value)\n# # rounded_response is: 345.8\n\n# Option 2: Bucketing\n# bucketed_response = get_bucketed_regression_output(raw_value)\n# # bucketed_response is: \"100-500\"</code></pre>"
+                        },
+                        {
+                            "strategy": "Add calibrated noise to output logits before final prediction.",
+                            "howTo": "<h5>Concept:</h5><p>This is a more advanced technique related to differential privacy. By adding a small amount of random noise to the model's raw output logits (the values before the softmax function), you make the final probabilities slightly non-deterministic. This frustrates attackers who rely on consistent, repeatable queries to map out a model's decision boundary for extraction attacks. The amount of noise should be small enough to rarely change the final top-1 prediction for legitimate users.</p><h5>Inject Noise into the Inference Logic</h5><pre><code># File: hardening/noisy_logits.py\nimport torch\nimport torch.nn.functional as F\n\nNOISE_MAGNITUDE = 0.1 # A hyperparameter to tune\n\ndef get_noisy_prediction(model, input_tensor):\n    \"\"\"Generates a prediction after adding noise to the model's logits.\"\"\"\\n    # Get the raw logit outputs from the model\\n    logits = model(input_tensor)\n\n    # Add Gaussian noise to the logits\\n    noise = torch.randn_like(logits) * NOISE_MAGNITUDE\n    noisy_logits = logits + noise\n\n    # The final probabilities and prediction are based on the perturbed logits\\n    final_probabilities = F.softmax(noisy_logits, dim=1)\n    final_prediction = torch.argmax(final_probabilities, dim=1)\n    \n    return final_prediction, final_probabilities</code></pre>"
+                        }
+                    ]
                 }
             ]
         },
