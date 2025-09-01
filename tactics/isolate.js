@@ -252,6 +252,82 @@ export const isolateTactic = {
                     ],
                     "toolsOpenSource": ["seccomp-bpf", "Kubernetes NetworkPolicy"],
                     "toolsCommercial": ["Calico Enterprise", "Cilium Enterprise"]
+                },
+                {
+                    "id": "AID-I-001.005",
+                    "name": "Pre-Execution Behavioral Analysis in Ephemeral Sandboxes",
+                    "pillar": "infra, app",
+                    "phase": "operation",
+                    "description": "This proactive defense technique subjects any AI-generated executable artifact (e.g., scripts, binaries, container images created by an agent) to mandatory behavioral analysis within a short-lived, strongly isolated sandbox (such as a microVM) *before* it is deployed or executed in a production context. This pre-execution security gate applies to artifacts originating from both automated CI/CD pipelines and interactive developer IDEs, serving as a final vetting step to contain threats from malicious AI-generated code before they can have any impact.",
+                    "toolsOpenSource": [
+                        "Firecracker",
+                        "Kata Containers",
+                        "gVisor",
+                        "QEMU/KVM",
+                        "Falco",
+                        "Cilium Tetragon",
+                        "strace",
+                        "Sysdig",
+                        "Wazuh (in-guest EDR)"
+                    ],
+                    "toolsCommercial": [
+                        "Joe Sandbox",
+                        "ANY.RUN",
+                        "EDR/XDR platforms with sandboxing features",
+                        "Execution Platforms (Note: AWS Lambda/Fargate are execution platforms that use microVMs; they can host a sandboxing service but do not provide behavioral analysis out-of-the-box.)"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0050 Command and Scripting Interpreter",
+                                "AML.T0072 Reverse Shell",
+                                "AML.T0018.002 Manipulate AI Model: Embed Malware",
+                                "AML.T0025 Exfiltration via Cyber Means"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Runtime Code Injection (L4)",
+                                "Agent Tool Misuse (L7)",
+                                "Lateral Movement (Cross-Layer)",
+                                "Resource Hijacking (L4)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM06:2025 Excessive Agency",
+                                "LLM05:2025 Improper Output Handling"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML06:2023 AI Supply Chain Attacks",
+                                "ML09:2023 Output Integrity Attack"
+                            ]
+                        }
+                    ],
+                    "implementationStrategies": [
+                        {
+                            "strategy": "Orchestrate an automated analysis workflow using microVMs for strong isolation.",
+                            "howTo": "<h5>Concept:</h5><p>Create a dedicated, fully automated pipeline for vetting AI-generated code. When an agent produces a script, the orchestrator spins up a new, clean microVM (using a technology like Firecracker), executes the script inside, monitors its behavior, and then destroys the VM. This ensures that each analysis is fresh and completely isolated from all other systems.</p><h5>Implement the Orchestration Logic</h5><pre><code># File: sandboxing_service/orchestrator.py\nimport firecracker_sdk\n\n# This is a conceptual workflow for a sandboxing service\ndef analyze_script_in_sandbox(script_content: str) -> bool:\n    # 1. Provision a new, ephemeral microVM from a clean snapshot\n    vm = firecracker_sdk.microvm.new()\n    # ... (Configure networking, kernel, rootfs for the VM) ...\n    vm.start()\n\n    # 2. Copy the AI-generated script into the running microVM\n    vm.copy_file_to_guest(host_path=script_content_path, guest_path=\"/app/run.py\")\n\n    # 3. Start a runtime security monitor (e.g., Falco) inside the VM or on the host's network interface\n    start_monitoring(vm.id)\n\n    # 4. Execute the script within the microVM\n    exit_code, stdout, stderr = vm.execute_command(\"python /app/run.py\")\n\n    # 5. Stop monitoring and analyze the collected logs\n    behavior_logs = stop_monitoring(vm.id)\n    is_malicious = analyze_behavior_logs(behavior_logs)\n\n    # 6. Destroy the microVM completely\n    vm.stop()\n\n    if is_malicious:\n        print(f\"🚨 Malicious behavior detected in script. Execution blocked.\")\n        return False\n    \n    print(\"✅ Script behavior verified as safe.\")\n    return True\n</code></pre><p><strong>Action:</strong> Build a dedicated, API-driven sandboxing service using a microVM technology like Firecracker. All AI-generated code must be submitted to this service for analysis before it can be used, and the service must destroy and recreate the analysis environment for every request.</p>"
+                        },
+                        {
+                            "strategy": "Define and enforce a strict behavioral security policy within the sandbox.",
+                            "howTo": "<h5>Concept:</h5><p>The effectiveness of the sandbox depends on the rules used to judge behavior. A strict, default-deny policy should be created that defines what the generated code is allowed to do. Any action outside this narrow scope is considered malicious. All network egress should be forced through a monitored proxy.</p><h5>Implement a Falco Rule for a Code Interpreter</h5><p>Falco is a runtime security tool that can monitor kernel syscalls. This Falco rule defines the expected behavior for a sandboxed Python script. It allows file operations within `/tmp` but blocks network connections and file access elsewhere.</p><pre><code># File: sandbox_policies/falco_code_interpreter.yaml\n\n- rule: Disallowed Egress from AI-Sandbox\n  desc: Detects any outbound network connection from the sandboxed Python interpreter.\n  condition: >\n    evt.type = connect and evt.dir = > and proc.name = python3 and not proc.aname contains \"analysis_proxy\"\n  output: \"Disallowed network egress by AI-generated code (proc=%proc.name command=%proc.cmdline connection=%fd.name)\"\n  priority: CRITICAL\n  tags: [network, ai_sandbox]\n\n- rule: Disallowed File Write from AI-Sandbox\n  desc: Detects file writes outside of the /tmp directory by a sandboxed python process.\n  condition: >\n    (evt.type = openat or evt.type = open) and evt.dir = > and (fd.open_write=true) \n    and proc.name = python3 and not fd.name startswith /tmp/\n  output: \"Disallowed file write by AI-generated code (proc=%proc.name file=%fd.name)\"\n  priority: CRITICAL\n  tags: [filesystem, ai_sandbox]\n</code></pre><p><strong>Action:</strong> Define a strict behavioral policy for your pre-execution sandbox using a tool like Falco or Tetragon. The policy must deny all network egress by default (forcing traffic through a monitored proxy) and restrict file system writes to a designated temporary directory.</p>"
+                        },
+                        {
+                            "strategy": "Generate a signed, verifiable analysis report for CI/CD admission control.",
+                            "howTo": "<h5>Concept:</h5><p>The result of the sandbox analysis should be a formal, cryptographically signed report. This report acts as a 'passport' for the AI-generated artifact. A CI/CD pipeline or deployment orchestrator can then use this signed report as a verifiable prerequisite before admitting the artifact into a production environment.</p><h5>Implement a Report Generation and Signing Step</h5><pre><code># File: sandboxing_service/reporter.py\nimport json\nfrom cryptography.hazmat.primitives import hashes\nfrom cryptography.hazmat.primitives.asymmetric import padding\n\ndef generate_signed_report(artifact_hash, verdict, analysis_logs):\n    # 1. Create the report payload\n    report = {\n        'artifact_sha256': artifact_hash,\n        'verdict': verdict, # 'ALLOWED' or 'DENIED'\n        'analysis_timestamp': datetime.utcnow().isoformat(),\n        'policy_version': '1.3',\n        'summary': analysis_logs # Summary of observed behaviors\n    }\n    report_bytes = json.dumps(report, sort_keys=True).encode('utf-8')\n\n    # 2. Sign the report with the sandbox service's private key\n    # private_key = load_sandbox_private_key()\n    signature = private_key.sign(\n        report_bytes,\n        padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH),\n        hashes.SHA256()\n    )\n\n    return {'report': report, 'signature': signature.hex()}\n\n# The CI/CD pipeline would then check this signature before deploying the artifact.\n</code></pre><p><strong>Action:</strong> At the end of a sandbox analysis, generate a structured JSON report containing the artifact's hash and the verdict. Cryptographically sign this report with a key trusted by your CI/CD system. The deployment pipeline must include a step to verify this signature before allowing the artifact to be promoted.</p>"
+                        },
+                        {
+                            "strategy": "Monitor for anti-analysis and sandbox evasion techniques.",
+                            "howTo": "<h5>Concept:</h5><p>Advanced malicious code will actively try to detect if it's running in an analysis environment. The sandbox must be instrumented to detect these evasion attempts, such as detecting unusually long sleep calls, probing for VM-specific hardware IDs, or checking CPU features.</p><h5>Implement an Anti-Evasion Detection Policy</h5><p>This can be done with a combination of syscall monitoring and API hooking inside the sandbox.</p><pre><code># Conceptual Falco rule for detecting long sleep calls\n- rule: Suspicious Long Sleep\n  desc: An AI-generated script called sleep or usleep with a long duration, possibly to evade automated analysis.\n  condition: syscall.type = nanosleep and evt.arg.rqtp.tv_sec > 60 and proc.name = python3\n  output: \"Suspicious long sleep detected (duration=%evt.arg.rqtp.tv_sec) from AI-generated code.\"\n  priority: WARNING\n  tags: [anti-analysis, ai_sandbox]\n</code></pre><p><strong>Action:</strong> Enhance your sandbox's behavioral policy to include rules that detect common anti-analysis techniques. Flag any artifact that attempts to perform environment checks or exhibits unusually delayed execution as suspicious.</p>"
+                        }
+                    ]
                 }
             ]
         },

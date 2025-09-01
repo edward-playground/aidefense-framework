@@ -3755,6 +3755,174 @@ class SmoothedClassifier(torch.nn.Module):
                     "toolsCommercial": ["Cohere Rerank", "Alation", "Collibra"]
                 }
             ]
+        },
+        {
+            "id": "AID-H-022",
+            "name": "AI Agent Configuration Integrity & Hardening",
+            "description": "This technique establishes and enforces the integrity and security of an AI agent's instructional configurations (e.g., system prompts, operational parameters, external configuration files like `CLAUDE.md`). It employs a defense-in-depth strategy, combining client-side controls to prevent the creation of insecure configurations in development environments with cryptographic verification at runtime to ensure the agent only operates based on a trusted, untampered directive. **Crucially, this technique mandates the use of structured, non-executable formats (e.g., schema-validated JSON, YAML) for configurations, prohibiting the use of formats that could be interpreted as executable code.** This directly counters attacks where adversaries manipulate an agent's behavior by injecting malicious instructions through external or modified configuration files.",
+            "defendsAgainst": [
+                {
+                    "framework": "MITRE ATLAS",
+                    "items": [
+                        "AML.T0051 LLM Prompt Injection",
+                        "AML.T0018 Manipulate AI Model",
+                        "AML.T0054 LLM Jailbreak"
+                    ]
+                },
+                {
+                    "framework": "MAESTRO",
+                    "items": [
+                        "Agent Goal Manipulation (L7)",
+                        "Policy Bypass (L6)",
+                        "Reprogramming Attacks (L1)",
+                        "Compromised Framework Components (L3)"
+                    ]
+                },
+                {
+                    "framework": "OWASP LLM Top 10 2025",
+                    "items": [
+                        "LLM01:2025 Prompt Injection",
+                        "LLM06:2025 Excessive Agency",
+                        "LLM07:2025 System Prompt Leakage",
+                        "LLM02:2025 Sensitive Information Disclosure"
+                    ]
+                },
+                {
+                    "framework": "OWASP ML Top 10 2023",
+                    "items": [
+                        "ML01:2023 Input Manipulation Attack",
+                        "ML06:2023 AI Supply Chain Attacks"
+                    ]
+                }
+            ],
+            "subTechniques": [
+                {
+                    "id": "AID-H-022.001",
+                    "name": "Client-Side Configuration Enforcement",
+                    "pillar": "infra, app",
+                    "phase": "building",
+                    "description": "Proactively prevents the creation and use of insecure AI agent configurations on developer endpoints. This is a 'shift-left' defense that uses endpoint security tools, policy-as-code scanners, and local development guardrails to block high-risk settings before they can ever be committed to source control or executed.",
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0051 LLM Prompt Injection",
+                                "AML.T0054 LLM Jailbreak"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Agent Goal Manipulation (L7)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM01:2025 Prompt Injection",
+                                "LLM06:2025 Excessive Agency"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML01:2023 Input Manipulation Attack"
+                            ]
+                        }
+                    ],
+                    "toolsOpenSource": [
+                        "Git (pre-commit hooks)",
+                        "EDR custom rules engines (osquery)",
+                        "VS Code extensions APIs",
+                        "Semgrep",
+                        "Open Policy Agent (OPA)",
+                        "Conftest"
+                    ],
+                    "toolsCommercial": [
+                        "EDR/XDR Platforms (CrowdStrike Falcon, SentinelOne, Microsoft Defender for Endpoint)",
+                        "Mobile Device Management (MDM) solutions (Jamf, Intune)"
+                    ],
+                    "implementationStrategies": [
+                        {
+                            "strategy": "Use EDR/XDR to block dangerous agent configurations at the endpoint.",
+                            "howTo": "<h5>Concept:</h5><p>Use your existing Endpoint Detection and Response (EDR) platform to create custom rules that monitor for file content indicative of a high-risk agent configuration. This provides a centrally managed, difficult-to-bypass control on all developer machines.</p><h5>Implement a Custom EDR Rule</h5><p>This conceptual rule for an EDR system (like SentinelOne or CrowdStrike) inspects the content of files named `CLAUDE.md` or similar upon being written to disk and blocks the write operation if it contains dangerous keywords.</p><pre><code># Conceptual EDR Custom Rule (YARA-L or similar syntax)\nrule AgentConfigHardening:\n  meta:\n    author: \"AI Security Team\"\n    description: \"Detects and blocks high-risk settings in AI agent config files.\"\n  events:\n    FileModification:\n      Target.File.Path REGEX \".*/(CLAUDE|claude|agent_config)\\.md$\"\n      AND\n      # Look for keywords that disable safety checks or enable risky behaviors\n      Target.File.Content CONTAINS ANYCASE (\"disable confirmations\", \"immediate execution\", \"bypass safety measures\", \"auto-privilege-escalation\")\n  outcome:\n    action: BLOCK\n    message: \"High-risk AI agent configuration detected and blocked. Please refer to the secure coding guide for AI agents.\"\n</code></pre><p><strong>Action:</strong> Deploy a custom EDR rule that monitors for and blocks file modifications containing high-risk keywords in known AI agent configuration files across your developer fleet.</p>"
+                        },
+                        {
+                            "strategy": "Implement a Git pre-commit hook to scan for insecure settings before they enter the repository.",
+                            "howTo": "<h5>Concept:</h5><p>A pre-commit hook is a script that runs automatically before a developer can complete a `git commit` command. This provides a client-side gate to prevent insecure configurations from ever entering the central version control system.</p><h5>Create the Pre-commit Hook Script</h5><pre><code>#!/bin/sh\n# File: .git/hooks/pre-commit\n\nDANGEROUS_PATTERNS=(\"disable confirmations\" \"immediate execution\")\nCONFIG_FILES=$(git diff --cached --name-only | grep -E \"(CLAUDE|agent_config)\\.md$\")\n\nif [ -z \"$CONFIG_FILES\" ]; then\n    exit 0\nfi\n\nfor file in $CONFIG_FILES; do\n    for pattern in \"${DANGEROUS_PATTERNS[@]}\"; do\n        if grep -q -i \"$pattern\" \"$file\"; then\n            echo \"\n\\[SECURITY-ERROR\\] Disallowed pattern '$pattern' found in $file.\"\n            echo \"Commit aborted. Please remove high-risk settings from agent configurations.\"\n            exit 1\n        fi\n    done\ndone\n\nexit 0\n</code></pre><p><strong>Action:</strong> Implement a Git pre-commit hook and distribute it to developer environments using a framework like `pre-commit`. The hook should scan staged configuration files for a list of forbidden phrases and block the commit if any are found.</p>"
+                        },
+                        {
+                            "strategy": "Enforce configuration schema validation and prohibit local overrides.",
+                            "howTo": "<h5>Concept:</h5><p>To ensure consistency and prevent runtime manipulation, agent configurations must adhere to a strict, centrally-defined schema. Furthermore, agents must be designed to reject insecure local overrides or sensitive environment variables that could alter their core behavior.</p><h5>Step 1: Validate Configurations with Policy-as-Code</h5><p>Use a tool like Conftest (which uses Open Policy Agent's Rego language) to write policies against your YAML or JSON configuration files. This can be run in a pre-commit hook or CI pipeline.</p><pre><code># File: policy/agent_config.rego\npackage main\n\ndeny[msg] {\n    # Deny if the 'execution_mode' is set to 'immediate_unconfirmed'\n    input.execution_mode == \"immediate_unconfirmed\"\n    msg := \"Insecure execution_mode detected. Agent confirmations cannot be disabled.\"\n}\n\ndeny[msg] {\n    # Deny if a required security module is not enabled\n    not input.security.sandboxing_enabled\n    msg := \"Mandatory security feature 'sandboxing_enabled' must be set to true.\"\n}\n</code></pre><h5>Step 2: Harden the Agent's Startup Logic</h5><p>The agent's code must explicitly reject attempts to override its secure configuration at runtime.</p><pre><code># File: agent/loader.py\nimport os\n\ndef load_configuration(signed_config_path):\n    # ... (verification of the signed config happens first) ...\n    config = load_verified_yaml(signed_config_path)\n\n    # Check for and reject dangerous environment variable overrides\n    if os.environ.get('AGENT_UNSAFE_MODE') == 'true':\n        raise SecurityException(\"Attempt to override security settings with environment variable is forbidden.\")\n\n    # Check for and ignore local, unsigned config files\n    if os.path.exists(\"./local_config.yaml\"):\n        log_warning(\"Ignoring local, unverified configuration file.\")\n\n    return config\n</code></pre><p><strong>Action:</strong> Implement policy-as-code checks using Conftest or OPA to validate all agent configurations against a security policy in your CI pipeline. Additionally, harden the agent's startup code to explicitly ignore local unsigned configuration files and dangerous environment variable overrides.</p>"
+                        }
+                    ]
+                },
+                {
+                    "id": "AID-H-022.002",
+                    "name": "Runtime Integrity Verification",
+                    "pillar": "app, infra",
+                    "phase": "operation",
+                    "description": "Ensures that an AI agent, at the moment of execution, loads and operates on a configuration that is cryptographically verified to be authentic and untampered. This is a critical runtime check that serves as a final guardrail, protecting the agent even if client-side or repository controls fail. It forms a verifiable trust chain from the secure build pipeline to the running agent.",
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0018 Manipulate AI Model",
+                                "AML.T0051 LLM Prompt Injection"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Reprogramming Attacks (L1)",
+                                "Compromised Framework Components (L3)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM07:2025 System Prompt Leakage",
+                                "LLM02:2025 Sensitive Information Disclosure"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML06:2023 AI Supply Chain Attacks"
+                            ]
+                        }
+                    ],
+                    "toolsOpenSource": [
+                        "pyca/cryptography, GnuPG (for signing/verification)",
+                        "SPIFFE/SPIRE (for workload identity to fetch configs)",
+                        "Sigstore/cosign",
+                        "in-toto (for supply chain attestations)"
+                    ],
+                    "toolsCommercial": [
+                        "Cloud Provider Secret Managers (AWS Secrets Manager, Azure Key Vault)",
+                        "HashiCorp Vault, AWS/GCP/Azure KMS (for signing operations)",
+                        "Enterprise PKI Solutions (Venafi, DigiCert)"
+                    ],
+                    "implementationStrategies": [
+                        {
+                            "strategy": "Cryptographically sign approved configuration files in the CI/CD pipeline.",
+                            "howTo": "<h5>Concept:</h5><p>A digital signature provides a mathematical guarantee of a file's integrity and origin. By signing the approved agent configuration file in your secure build pipeline, you create a verifiable artifact that can be trusted at runtime. <strong>This is a fail-closed control: an invalid signature must always result in termination.</strong></p><h5>Use GPG to Sign the Configuration</h5><p>This script, run within a CI/CD job, signs the configuration file using a GPG key securely stored as a pipeline secret.</p><pre><code># In a CI/CD script (e.g., .github/workflows/build.yml)\n\n# 1. Import the private GPG key from a secret\n- name: Import GPG Key\n  run: |\n    echo \"${{ secrets.GPG_PRIVATE_KEY }}\" | gpg --batch --import\n\n# 2. Sign the validated configuration file\n- name: Sign Agent Configuration\n  run: |\n    gpg --batch --yes --detach-sign --armor -u \"ci-build@example.com\" configs/production_agent.yaml\n\n# 3. Upload the config and its signature as build artifacts\n- name: Upload Artifacts\n  uses: actions/upload-artifact@v3\n  with:\n    name: signed-agent-config\n    path: |\n      configs/production_agent.yaml\n      configs/production_agent.yaml.asc\n</code></pre><p><strong>Action:</strong> In your CI/CD pipeline, add a step that uses GPG or another signing tool to create a detached digital signature for your validated agent configuration files. Publish the configuration and its signature together to your artifact repository.</p>"
+                        },
+                        {
+                            "strategy": "Require the agent to verify the configuration signature at startup before executing.",
+                            "howTo": "<h5>Concept:</h5><p>The agent itself is the final and most important line of defense. It must be programmed to be self-protecting. Before initializing its main logic, it must perform a cryptographic check on its own configuration. If the check fails, the agent must refuse to run.</p><h5>Implement Startup Verification Logic in the Agent</h5><p>The agent's main script should load the configuration file, its detached signature, and a trusted public key. It then performs verification and halts if the signature is invalid.</p><pre><code># File: agent/main.py\nimport gnupg\nimport os\n\nCONFIG_PATH = \"/app/configs/production_agent.yaml\"\nSIGNATURE_PATH = \"/app/configs/production_agent.yaml.asc\"\nTRUSTED_PUBLIC_KEY_PATH = \"/app/keys/build_public.asc\"\n\ndef verify_config_integrity():\n    gpg = gnupg.GPG()\n    # Import the trusted public key that the CI pipeline uses\n    with open(TRUSTED_PUBLIC_KEY_PATH, 'r') as f:\n        key_data = f.read()\n        import_result = gpg.import_keys(key_data)\n        if not import_result.fingerprints:\n            raise RuntimeError(\"Failed to import trusted public key.\")\n\n    # Verify the signature of the config file\n    with open(SIGNATURE_PATH, 'rb') as f:\n        verified = gpg.verify_file(f, CONFIG_PATH)\n        if not verified:\n            # CRITICAL: HALT EXECUTION\n            raise SecurityException(\"Configuration signature is INVALID! Tampering detected. Halting.\")\n    \n    print(\"✅ Configuration integrity verified successfully.\")\n\n# --- Main Application Entrypoint ---\nif __name__ == '__main__':\n    try:\n        verify_config_integrity()\n        # ... proceed to load config and run the agent ...\n    except Exception as e:\n        print(f\"AGENT STARTUP FAILED: {e}\")\n        os._exit(1) # Forceful exit\n</code></pre><p><strong>Action:</strong> The first action in your agent's startup sequence must be to perform a cryptographic verification of its own configuration file. The agent must be programmed to fail-closed and terminate immediately if the signature is invalid.</p>"
+                        },
+                        {
+                            "strategy": "Generate verifiable supply chain attestations for agent configurations.",
+                            "howTo": "<h5>Concept:</h5><p>Beyond a simple signature, a supply chain attestation (like SLSA or in-toto) provides a richer, verifiable record of *how* a configuration was produced. It answers questions like: Which CI/CD workflow built this? From which source code commit? What security scans were run? This allows you to build much more granular and secure admission policies.</p><h5>Generate an In-toto Attestation</h5><p>In your CI/CD pipeline, use a tool to generate a signed in-toto attestation that links the configuration artifact to its build context.</p><pre><code># In a CI/CD script, after signing the config\n\n- name: Generate In-toto Attestation\n  run: |\n    in-toto-run \\\n      --step-name \"build-config\" \\\n      --materials \"src/config_template.yaml\" \\\n      --products \"configs/production_agent.yaml\" \\\n      --key \"${{ secrets.IN_TOTO_PRIVATE_KEY }}\" \\\n      -- python scripts/generate_config.py\n\n# This produces a signed metadata file linking the source template to the final product.\n# This attestation is then uploaded alongside the config and its signature.</code></pre><p><strong>Action:</strong> Integrate in-toto attestation generation into your CI/CD pipeline. The agent's deployment orchestrator can then be configured to not only verify the configuration's signature but also to validate its attestation against a policy (e.g., must be built from the main branch, must have passed all security scans).</p>"
+                        },
+                        {
+                            "strategy": "Implement secure key management and rotation for signing keys.",
+                            "howTo": "<h5>Concept:</h5><p>The security of your signing process depends on the security of your signing keys. These keys must be managed in a secure system (like a KMS or HSM), have their access tightly controlled, and be rotated periodically to limit the impact of a potential key compromise.</p><h5>Use a KMS for Signing Operations</h5><p>Instead of handling raw key files in your CI/CD runner, use a Key Management Service (KMS) for all signing operations. The private key never leaves the KMS.</p><pre><code># Conceptual script using AWS KMS for signing\nimport boto3\nimport base64\n\nKMS_KEY_ID = \"alias/agent-config-signing-key\"\n\ndef sign_with_kms(file_path):\n    client = boto3.client('kms')\n    with open(file_path, 'rb') as f:\n        file_bytes = f.read()\n    \n    response = client.sign(\n        KeyId=KMS_KEY_ID,\n        Message=file_bytes,\n        MessageType='RAW',\n        SigningAlgorithm='RSASSA_PSS_SHA_256'\n    )\n    signature = base64.b64encode(response['Signature']).decode('utf-8')\n    return signature\n\n# The CI/CD runner's IAM role would be granted permission to use this specific KMS key.\n# Keys should be configured with an automated rotation schedule (e.g., annually).</code></pre><p><strong>Action:</strong> Store your configuration signing keys in a hardware-backed KMS. Configure automated key rotation and use IAM policies to strictly limit which CI/CD jobs have permission to use the key for signing operations.</p>"
+                        }
+                    ]
+                }
+            ]
         }
     ]
-};
+}
