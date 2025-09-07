@@ -520,18 +520,26 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                 },
                 {
                     "id": "AID-H-003.002",
-                    "name": "Model Artifact Verification & Secure Distribution", "pillar": "infra, model", "phase": "building, validation",
-                    "description": "Protect pre-trained or fine-tuned model binaries, weights and checkpoints from tampering in transit or at rest.",
+                    "name": "Model Artifact Verification & Secure Distribution",
+                    "pillar": "infra, model",
+                    "phase": "building, validation",
+                    "description": "Mandatory, automated acceptance criteria applied to a model artifact before promotion to production. Acts as a final security gate to ensure only trusted, verified, and safely configured models are deployed by validating their origin, integrity, provenance, and operational policies. This control assumes production never trusts public names directly; only immutable, attested bytes from an internal mirror are allowed.",
                     "toolsOpenSource": [
                         "MLflow Model Registry",
-                        "Hugging Face Hub (with security features)",
-                        "Sigstore/cosign (for signing model files)"
+                        "Sigstore/cosign",
+                        "in-toto / SLSA",
+                        "safetensors",
+                        "Kyverno",
+                        "Sigstore Policy Controller",
+                        "Open Policy Agent (OPA)"
                     ],
                     "toolsCommercial": [
                         "Protect AI Platform (ModelScan)",
                         "Databricks Model Registry",
                         "Amazon SageMaker Model Registry",
-                        "Google Vertex AI Model Registry"
+                        "Google Vertex AI Model Registry",
+                        "JFrog Artifactory (OCI/metadata)",
+                        "Snyk Container"
                     ],
                     "defendsAgainst": [
                         {
@@ -540,7 +548,8 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                                 "AML.T0010.003: AI Supply Chain Compromise: Model",
                                 "AML.T0010.004: AI Supply Chain Compromise: Container Registry",
                                 "AML.T0058: Publish Poisoned Models",
-                                "AML.T0076: Corrupt AI Model"
+                                "AML.T0076: Corrupt AI Model",
+                                "AML.T0074: Masquerading"
                             ]
                         },
                         {
@@ -568,16 +577,20 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                     ],
                     "implementationStrategies": [
                         {
-                            "strategy": "Store models in an internal registry; require SHA-256 or Sigstore signatures before promotion to prod.",
-                            "howTo": "<h5>Concept:</h5><p>Treat model artifacts like any other critical software binary. They should be stored in a version-controlled, access-controlled registry. Promoting a model from 'staging' to 'production' should be a gated process that requires cryptographic verification.</p><h5>Step 1: Sign and Log Model to Registry</h5><p>In your training pipeline, after a model is trained, sign the model file itself (e.g., `model.pkl`) using `cosign`, then log it to a model registry like MLflow.</p><pre><code># File: training_pipeline/scripts/train_and_register.py\nimport mlflow\nimport subprocess\n\n# ... training code that produces 'model.pkl' ...\n\n# Sign the model file\nsubprocess.run(['cosign', 'sign-blob', '--yes', 'model.pkl'], check=True)\n# This creates a 'model.pkl.sig' file\n\n# Log the model and its signature to MLflow\nwith mlflow.start_run() as run:\n    mlflow.log_artifact(\"model.pkl\")\n    mlflow.log_artifact(\"model.pkl.sig\", artifact_path=\"signatures\")\n    mlflow.register_model(f\"runs:/{run.info.run_id}/model.pkl\", \"fraud-model\")</code></pre><h5>Step 2: Gated Promotion with Signature Check</h5><p>To transition a model version to the 'Production' stage in the registry, an automated process or authorized user must first verify its signature.</p><pre><code># File: deployment_pipeline/scripts/promote_model.py\nimport mlflow\nimport subprocess\n\nclient = mlflow.tracking.MlflowClient()\nmodel_name = \"fraud-model\"\nmodel_version = 1 # The version we want to promote\n\n# 1. Download the artifacts for the specific model version\nlocal_path = client.download_artifacts(f\"models:/{model_name}/{model_version}\", \".\")\n\n# 2. Verify the blob signature\n# This requires the identity of the signer (e.g., the CI/CD workflow identity)\nsigner_identity = \"...\"\nissuer = \"...\"\ntry:\n    subprocess.run([\n        'cosign', 'verify-blob',\n        '--signature', f'{local_path}/signatures/model.pkl.sig',\n        '--certificate-identity', signer_identity,\n        '--certificate-oidc-issuer', issuer,\n        f'{local_path}/model.pkl'\n    ], check=True)\n    print(\"✅ Signature verified successfully.\")\nexcept subprocess.CalledProcessError:\n    print(\"❌ Signature verification FAILED. Aborting promotion.\")\n    exit(1)\n\n# 3. If verification passes, promote the model\nclient.transition_model_version_stage(\n    name=model_name,\n    version=model_version,\n    stage=\"Production\"\n)\nprint(f\"Model {model_name} version {model_version} promoted to Production.\")</code></pre><p><strong>Action:</strong> Implement a model promotion workflow that includes a mandatory, automated signature verification step. Only models with valid signatures from a trusted source should ever be moved to the 'Production' stage.</p>"
+                            "strategy": "Store in internal registry; require signatures and digest pinning for promotion.",
+                            "howTo": "<h5>Concept</h5><p>Treat model artifacts as critical binaries. Store them in a controlled registry/mirror. Promotion from staging to production requires cryptographic verification and content-address pinning (sha256 digest).</p><h5>Steps</h5><ol><li><b>Build:</b> Export model; compute sha256 digest; log to registry.</li><li><b>Sign:</b> Use Sigstore keyless signing tied to CI OIDC identity; record in Rekor.</li><li><b>Pin:</b> Reference by immutable <code>sha256:</code> digest (no floating tags).</li><li><b>Promote:</b> Automated job verifies signature (issuer+subject), Rekor inclusion, and digest match before changing stage.</li></ol><pre><code># verify (example)\ncosign verify-blob --certificate-identity \"$CI_WORKFLOW\" \\\n  --certificate-oidc-issuer \"$CI_OIDC_ISSUER\" \\\n  --certificate-github-workflow-repository \"$GITHUB_REPOSITORY\" \\\n  --insecure-ignore-tlog=false model.tar</code></pre>"
                         },
                         {
-                            "strategy": "Use reproducible model packaging (e.g., MLflow model version pinning) and verify on deploy.",
-                            "howTo": "<h5>Concept:</h5><p>A deployed model is more than just a weights file; it includes code dependencies, serialization formats, and configurations. Using a standardized packaging format like MLflow's `pyfunc` ensures that the inference environment is reproducible and can be verified.</p><h5>Step 1: Package the Model with MLflow</h5><p>When logging your model, use `mlflow.<framework>.log_model`. This not only saves the model weights but also captures the `conda.yaml` environment and a `python_model` loader script.</p><pre><code># In your training script\nimport mlflow\nimport sklearn\n\n# ... train your sklearn model ...\n\n# Log the model in the pyfunc format\nmlflow.sklearn.log_model(\n    sk_model=your_model,\n    artifact_path=\"model\",\n    # This captures the exact dependencies\n    conda_env={\n        'channels': ['conda-forge'],\n        'dependencies': [\n            f'python={platform.python_version()}',\n            f'scikit-learn=={sklearn.__version__}'\n        ],\n        'name': 'mlflow-env'\n    }\n)</code></pre><h5>Step 2: Verify and Deploy from the Registry</h5><p>Your deployment pipeline should fetch a specific, version-pinned model from the registry. The MLflow deployment tools will then use the captured environment to build the exact same inference server every time.</p><pre><code># Example command to deploy a specific version from the registry\n# This uses the metadata and environment stored in the registry to build the server\n> mlflow models serve -m \"models:/fraud-model/1\" --no-conda\n\n# In your deployment script, you would first verify the hash of the downloaded model \n# artifacts against a known-good hash before running the serve command.</code></pre><p><strong>Action:</strong> Standardize on a reproducible model packaging format like MLflow's `pyfunc`. Pin model dependencies to exact versions in the `conda.yaml` file at training time. Your deployment process must reference an immutable, versioned model URI (e.g., `models:/my-model/5`) rather than a floating tag like `production`.</p>"
+                            "strategy": "Use reproducible, safe packaging and verify on deploy.",
+                            "howTo": "<h5>Concept</h5><p>Standardize packaging (e.g., MLflow pyfunc or OCI) with deterministic export and <code>safetensors</code> for weights. Verify hashes at deploy time before load.</p><pre><code># deterministic pack (example)\ntar --sort=name --mtime='UTC 2024-01-01' --owner=0 --group=0 \\\n    --numeric-owner -cf model.tar -C ./model_export .\nsha256sum model.tar > model.tar.sha256</code></pre>"
                         },
                         {
-                            "strategy": "Serve models over mTLS; enforce content-hash pinning at the inference layer.",
-                            "howTo": "<h5>Concept:</h5><p>Securing the model artifact is not enough; you must also secure its transport and loading process. Mutual TLS (mTLS) ensures that both the inference client and the model server authenticate each other. Content-hash pinning ensures the server only loads a model whose hash matches an expected value.</p><h5>Step 1: Configure mTLS on the Inference Server</h5><p>Use a service mesh like Istio or Linkerd, or configure your web server (like Nginx) to require client certificates for all connections to the model serving port.</p><pre><code># Example Nginx config for mTLS\nserver {\n    listen 8080 ssl;\n\n    ssl_certificate /etc/nginx/certs/server.crt;\n    ssl_certificate_key /etc/nginx/certs/server.key;\n\n    # Trust the CA that signs client certs\n    ssl_client_certificate /etc/nginx/certs/client_ca.crt;\n    # Require a client certificate\n    ssl_verify_client on;\n\n    location / {\n        # Pass requests to the model server\n        proxy_pass http://localhost:5001;\n    }\n}</code></pre><h5>Step 2: Enforce Hash Pinning at Startup</h5><p>Modify your inference server's startup script to require an environment variable containing the expected SHA-256 hash of the model file. The script must verify the hash before loading the model.</p><pre><code># File: inference_server/serve.py\nimport os\nimport hashlib\nimport joblib\n\n# Get the expected hash from an environment variable\nEXPECTED_MODEL_HASH = os.environ.get(\"EXPECTED_MODEL_HASH\")\nMODEL_PATH = \"/app/models/model.pkl\"\n\ndef get_sha256_hash(filepath):\n    sha256 = hashlib.sha256()\n    with open(filepath, \"rb\") as f:\n        while chunk := f.read(4096):\n            sha256.update(chunk)\n    return sha256.hexdigest()\n\nif not EXPECTED_MODEL_HASH:\n    print(\"ERROR: EXPECTED_MODEL_HASH environment variable not set.\")\n    exit(1)\n\n# Verify the hash of the model on disk\nactual_hash = get_sha256_hash(MODEL_PATH)\n\nif actual_hash != EXPECTED_MODEL_HASH:\n    print(f\"❌ MODEL HASH MISMATCH! Tampering detected.\")\n    print(f\"Expected: {EXPECTED_MODEL_HASH}\")\n    print(f\"Actual:   {actual_hash}\")\n    exit(1)\n\nprint(\"✅ Model hash verified. Loading model...\")\nmodel = joblib.load(MODEL_PATH)\n\n# ... start the Flask/FastAPI app with the loaded model ...</code></pre><p><strong>Action:</strong> Deploy a service mesh or reverse proxy to enforce mTLS on your model endpoints. Modify your server's entrypoint to require and verify a model hash provided via an environment variable in your Kubernetes deployment manifest or ECS task definition.</p>"
+                            "strategy": "Serve over mTLS and enforce content-hash pinning at the inference layer.",
+                            "howTo": "<h5>Concept</h5><p>mTLS authenticates client and server; content-hash pinning blocks loading unexpected bytes.</p><pre><code># pseudo-code (startup)\nEXPECTED=$(cat /etc/model/expected.sha256)\nACTUAL=$(sha256sum /models/model.tar | awk '{print $1}')\n[ \"$EXPECTED\" = \"$ACTUAL\" ] || { echo 'hash mismatch'; exit 1; }</code></pre>"
+                        },
+                        {
+                            "strategy": "Enforce a mandatory acceptance criteria checklist for production promotion.",
+                            "howTo": "<h5>Acceptance Criteria (automated)</h5><ol>\n<li><b>Mirrored Only:</b> Artifact must originate from <i>internal</i> mirror/registry; prod pipelines are blocked from public hubs.</li>\n<li><b>Signature & Provenance:</b> Valid <b>cosign</b> signature bound to CI OIDC (<code>--certificate-identity</code>, <code>--certificate-oidc-issuer</code>) and present in <b>Rekor</b> transparency log; SLSA/in-toto provenance required.</li>\n<li><b><u>Model SBOM + Attestation present and verified (per AID-H-003.006)</u>:</b> Admission verifies issuer/subject, digest binding, and policy checks (format allow-list, <code>trust_remote_code</code> flag, license).</li>\n<li><b>Secure Loader Policy:</b> Enforce <code>trust_remote_code=false</code>; if exception is needed, deploy only into a pre-execution sandbox profile (see AID-I-001).</li>\n<li><b>Offline Loading:</b> Enforce offline model loading (e.g., <code>TRANSFORMERS_OFFLINE=1</code>, <code>local_files_only=True</code>).</li>\n<li><b>Content-Addressed:</b> Use immutable <code>sha256:</code> digests, never floating tags (e.g., <i>latest</i>/<i>main</i>).</li>\n<li><b>Curation Re-verification + Tombstones:</b> Mirror refresh re-verifies external namespace owner and redirect status; if deleted/owner-changed, mark source <i>tombstoned</i> and quarantine until re-onboarded.</li>\n</ol><h5>Admission Controllers</h5><p>Use <b>Kyverno</b> (verifyImages/verifyAttestations) or <b>Sigstore Policy Controller</b> to enforce signature and attestation policies cluster-wide.</p>"
                         }
                     ]
                 },
@@ -697,6 +710,138 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                         {
                             "strategy": "Run side-channel/fault-injection self-tests during maintenance windows.",
                             "howTo": "<h5>Concept:</h5><p>This is an advanced, proactive defense for physically accessible edge devices. The device intentionally tries to attack itself with low-level techniques to see if its defenses are working. For example, it might briefly undervolt the CPU (fault injection) during a cryptographic calculation to see if the calculation produces an error or a correctable fault, rather than a silently incorrect (and potentially exploitable) result.</p><h5>Develop Self-Test Routines</h5><p>This requires deep hardware and embedded systems expertise. The code is highly specific to the System-on-a-Chip (SoC) and its capabilities. Conceptually, it involves using privileged kernel modules or direct hardware register access to manipulate clock speeds, voltage, or EM emissions while a sensitive operation is running.</p><pre><code>// Conceptual C code for a fault injection self-test\n// This is highly simplified and hardware-dependent.\n\nvoid run_crypto_self_test() {\n    unsigned char input[16] = { ... };\n    unsigned char key[16] = { ... };\n    unsigned char expected_output[16] = { ... };\n    unsigned char actual_output[16];\n\n    // Run once under normal conditions\n    aes_encrypt(actual_output, input, key);\n    if (memcmp(actual_output, expected_output, 16) != 0) {\n        log_error(\"Baseline crypto test failed!\");\n        return;\n    }\n\n    // Run test again while inducing a fault\n    log_info(\"Inducing voltage glitch for fault injection test...\");\n    \n    // This function would manipulate hardware registers to briefly lower the voltage\n    trigger_voltage_glitch(); \n\n    // Re-run the same cryptographic operation\n    aes_encrypt(actual_output, input, key);\n\n    // Check the result. A silent failure is the worst-case scenario.\n    if (memcmp(actual_output, expected_output, 16) != 0) {\n        log_warning(\"Crypto operation produced incorrect result under fault condition. This is a potential vulnerability.\");\n    } else {\n        log_info(\"Fault injection test passed; hardware countermeasures appear effective.\");\n    }\n\n    // Restore normal operating conditions\n    restore_normal_voltage();\n}</code></pre><p><strong>Action:</strong> For high-stakes edge AI devices where physical tampering is a credible threat, partner with hardware security experts to develop self-test routines. These routines should be scheduled to run automatically during maintenance windows or on-demand as part of a comprehensive device health check.</p>"
+                        }
+                    ]
+                },
+                {
+                    "id": "AID-H-003.005",
+                    "name": "Infrastructure as Code (IaC) Security Scanning for AI Systems",
+                    "pillar": "infra",
+                    "phase": "validation",
+                    "description": "Covers the 'pre-deployment' phase of automatically scanning Infrastructure as Code (IaC) files (e.g., Terraform, CloudFormation, Kubernetes YAML) in the CI/CD pipeline. This 'shift-left' security practice aims to detect and block security misconfigurations, such as insecure network paths that could undermine model supply chain security, before infrastructure is provisioned.",
+                    "toolsOpenSource": [
+                        "Checkov, Terrascan, tfsec, KICS",
+                        "TruffleHog, gitleaks",
+                        "Open Policy Agent (OPA)"
+                    ],
+                    "toolsCommercial": [
+                        "Snyk IaC",
+                        "Prisma Cloud",
+                        "Wiz",
+                        "Tenable.cs"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.TA0004 Initial Access"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Misconfigurations (L4)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM03:2025 Supply Chain"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML06:2023 AI Supply Chain Attacks"
+                            ]
+                        }
+                    ],
+                    "implementationStrategies": [
+                        {
+                            "strategy": "Integrate IaC security scanners into the CI/CD pipeline to act as a merge blocker.",
+                            "howTo": "<h5>Concept:</h5><p>Scan your infrastructure configurations for security issues *before* they are deployed. By adding an IaC scanning step to your pull request checks, you can create an automated security gate that prevents insecure infrastructure code from being merged.</p><h5>Implement an IaC Scanning Job</h5><p>This complete GitHub Actions workflow uses Checkov to scan infrastructure files and is configured to fail the build on any high-severity issues.</p><pre><code># File: .github/workflows/iac_scan.yml\nname: IaC Security Scan\non: [pull_request]\njobs:\n  checkov_scan:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - name: Run Checkov action\n        uses: bridgecrewio/checkov-action@master\n        with:\n          directory: ./infrastructure\n          framework: terraform,kubernetes\n          hard_fail_on: HIGH,CRITICAL</code></pre><p><strong>Action:</strong> Add an IaC scanning step using a tool like Checkov to your pull request workflow. Configure it to act as a gate, failing the check if high-severity misconfigurations are detected.</p>"
+                        },
+                        {
+                            "strategy": "Develop and enforce custom policies to prevent insecure network paths for AI workloads.",
+                            "howTo": "<h5>Concept:</h5><p>Create custom IaC scanning rules to enforce AI-specific security policies. A critical policy is to ensure production inference namespaces cannot make direct outbound connections to public model hubs. Standard Kubernetes NetworkPolicy cannot do this by FQDN; a DNS-aware CNI like Cilium is required.</p><h5>Implement a Custom Cilium Network Policy</h5><p>The correct pattern is to default-deny all egress and then explicitly allow traffic to the trusted internal mirror. `egressDeny` does not support `toFQDNs`.</p><pre><code># File: k8s_policies/allow_internal_mirror_only.yaml\napiVersion: cilium.io/v2\nkind: CiliumNetworkPolicy\nmetadata:\n  name: allow-only-internal-mirror\n  namespace: ai-inference\nspec:\n  # Apply to all pods in the namespace\n  endpointSelector: {}\n  # Allow egress traffic ONLY to this specific destination\n  egress:\n  - toEndpoints:\n    - matchLabels:\n        'k8s:io.kubernetes.pod.namespace': 'kube-system'\n        'k8s-app': 'kube-dns'\n    toPorts:\n    - ports:\n      - port: '53'\n        protocol: ANY\n  - toFQDNs:\n    - matchName: models.my-internal-mirror.corp\n# By not specifying a default-allow egress rule, all other outbound traffic is denied.</code></pre><p><strong>Action:</strong> Create custom IaC scanning policies that enforce your security standards for AI infrastructure, including rules that ensure production environments deploy FQDN-aware network policies to block egress to public model repositories.</p>"
+                        }
+                    ]
+                },
+                {
+                    "id": "AID-H-003.006",
+                    "name": "Model SBOM & Provenance Attestation",
+                    "pillar": "infra, model",
+                    "phase": "building, validation, operation",
+                    "description": "Produce a model-centric SBOM that inventories model bytes (files, hashes), tokenizer, config, format, and loader code commit; bind it to the exact artifact digest via in-toto/SLSA attestation signed with Sigstore. Verify the attestation and digest binding at admission and re-verify hashes at runtime before loading. This creates a tamper-evident content contract for the model, closing name/namespace trust gaps.",
+                    "toolsOpenSource": [
+                        "Sigstore/cosign",
+                        "in-toto / SLSA",
+                        "oras (OCI artifacts)",
+                        "jq, sha256sum",
+                        "safetensors"
+                    ],
+                    "toolsCommercial": [
+                        "JFrog Artifactory (OCI + metadata)",
+                        "Databricks/SageMaker/Vertex registries",
+                        "Protect AI (model scanning)"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0010.003: AI Supply Chain Compromise: Model",
+                                "AML.T0074: Masquerading",
+                                "AML.T0076: Corrupt AI Model",
+                                "AML.T0058: Publish Poisoned Models"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Model Tampering (L1)",
+                                "Supply Chain Attacks (Cross-Layer)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM03:2025 Supply Chain",
+                                "LLM04:2025 Data and Model Poisoning"
+                            ]
+                        }
+                    ],
+                    "implementationStrategies": [
+                        {
+                            "strategy": "Create deterministic model package and compute digest",
+                            "howTo": "<h5>Concept</h5><p>Deterministic packing ensures stable digests across environments.</p><pre><code># package the exported model dir deterministically\nMODEL_DIR=./model_export\nTARBALL=model.tar\ntar --sort=name --mtime='UTC 2024-01-01' --owner=0 --group=0 --numeric-owner \\\n    -cf \"$TARBALL\" -C \"$MODEL_DIR\" .\nDIGEST=$(sha256sum \"$TARBALL\" | awk '{print $1}')\necho $DIGEST > model.tar.sha256</code></pre>"
+                        },
+                        {
+                            "strategy": "Generate Model SBOM (JSON) describing bytes and critical metadata",
+                            "howTo": "<h5>Fields (minimum)</h5><ul><li><code>artifactDigest</code> (sha256 of package)</li><li><code>files[]</code>: path + sha256</li><li><code>model_format</code> (e.g., safetensors/onnx)</li><li><code>framework</code> and versions</li><li><code>tokenizer_hash</code>, <code>config_hash</code></li><li><code>loader_commit</code> (git SHA)</li><li><code>license</code>, <code>source_url</code> (pinned commit)</li><li><code>trust_remote_code</code> flag</li></ul><pre><code># generate hashes (example)\njq -n --arg digest \"sha256:${DIGEST}\" \\\n  '{artifactDigest:$digest, model_format:\"safetensors\", files:[] }' > model-sbom.json</code></pre>"
+                        },
+                        {
+                            "strategy": "Attach SBOM via in-toto/SLSA attestation and sign with Sigstore",
+                            "howTo": "<h5>Concept</h5><p>Bind SBOM to the artifact digest; sign with CI OIDC; require Rekor transparency.</p><pre><code>export COSIGN_EXPERIMENTAL=1\ncosign attest --yes \\\n  --type model-sbom \\\n  --predicate model-sbom.json \\\n  \"$TARBALL\"</code></pre>"
+                        },
+                        {
+                            "strategy": "Publish as OCI artifact with digest addressing (optional but recommended)",
+                            "howTo": "<pre><code># push by digest\noras push $OCI_REGISTRY/models@sha256:${DIGEST} \\\n  --artifact-type application/vnd.model.layer.v1+tar \\\n  \"$TARBALL\"</code></pre>"
+                        },
+                        {
+                            "strategy": "Admission policy: verify attestation issuer/subject, Rekor inclusion, and digest binding",
+                            "howTo": "<h5>Concept</h5><p>Fail closed if attestation is missing, issuer/subject do not match policy, or <code>artifactDigest</code> mismatches.</p><pre><code># Kyverno (illustrative snippet)\napiVersion: kyverno.io/v1\nkind: ClusterPolicy\nmetadata:\n  name: verify-model-attestation\nspec:\n  validationFailureAction: Enforce\n  rules:\n    - name: attest-model-sbom\n      match:\n        any:\n        - resources:\n            kinds: [Pod]\n      verifyImages:\n      - image: \"registry.example.com/models:*\"\n        attestations:\n        - type: model-sbom\n          conditions:\n          - key: \"{{ regex_match('https://token.actions.githubusercontent.com', '{{ attestation.bundle.verificationMaterial.tlogEntries[0].logId }}') }}\"\n            operator: Equals\n            value: true</code></pre>"
+                        },
+                        {
+                            "strategy": "Runtime guard: re-hash before load and block on mismatch",
+                            "howTo": "<pre><code>EXPECTED=$(jq -r .artifactDigest model-sbom.json | sed 's/sha256://')\nACTUAL=$(sha256sum /models/model.tar | awk '{print $1}')\n[ \"$EXPECTED\" = \"$ACTUAL\" ] || { echo '❌ SBOM digest mismatch'; exit 1; }\n# proceed to extract and load...</code></pre>"
+                        },
+                        {
+                            "strategy": "Tombstone & revocation handling for upstream namespace/owner changes",
+                            "howTo": "<h5>Concept</h5><p>Maintain a 'tombstone' list in the mirror: if external namespace is deleted or owner changes, quarantine prior references; require explicit re-onboarding and attestation re-issuance.</p>"
+                        },
+                        {
+                            "strategy": "Format allow-list and unsafe deserialization ban",
+                            "howTo": "<h5>Concept</h5><p>Admission checks must reject unsafe formats (e.g., raw pickle) in production; allow <code>safetensors</code> / ONNX by policy.</p>"
                         }
                     ]
                 }

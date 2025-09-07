@@ -864,6 +864,61 @@ export const detectTactic = {
                             "howTo": "<h5>Concept:</h5><p>A Kubernetes Admission Controller acts as a gatekeeper, intercepting requests to the Kubernetes API and enforcing policies before any object is created or modified. You can use a policy engine like OPA Gatekeeper to write rules that prevent the deployment of insecure configurations, such as a pod trying to mount a sensitive host directory.</p><h5>Step 1: Define a Gatekeeper ConstraintTemplate</h5><p>First, define a template for your policy. This template contains the Rego logic that will be evaluated against the resource.</p><pre><code># File: k8s/policies/constraint-template.yaml\\napiVersion: templates.gatekeeper.sh/v1\\nkind: ConstraintTemplate\\nmetadata:\\n  name: k8snohostpathmounts\\nspec:\\n  crd:\\n    spec:\\n      names:\\n        kind: K8sNoHostpathMounts\\n  targets:\\n    - target: admission.k8s.gatekeeper.sh\\n      rego: |\\n        package k8snohostpathmounts\\n\\n        violation[{\"msg\": msg}] {\\n          input.review.object.spec.volumes[_].hostPath.path != null\\n          msg := sprintf(\\\"HostPath volume mounts are not allowed: %v\\\", [input.review.object.spec.volumes[_].hostPath.path])\\n        }\\n</code></pre><h5>Step 2: Apply the Constraint</h5><p>Once the template is created, you apply a `Constraint` resource to enforce the policy across the cluster or in specific namespaces.</p><pre><code># File: k8s/policies/constraint.yaml\\napiVersion: constraints.gatekeeper.sh/v1beta1\\nkind: K8sNoHostpathMounts\\nmetadata:\\n  name: no-hostpath-for-ai-pods\\nspec:\\n  match:\\n    # Apply this policy only to pods in the 'ai-production' namespace\\n    kinds:\\n      - apiGroups: [\\\"]\\n        kinds: [\\\"Pod\\\"]\\n    namespaces:\\n      - \\\"ai-production\\\"\\n</code></pre><p><strong>Action:</strong> Deploy OPA Gatekeeper or Kyverno as an admission controller in your Kubernetes cluster. Create and apply policies that codify your security rules, such as disallowing host path mounts, preventing the creation of services with public IPs, and enforcing specific annotations on ingress objects.</p>"
                         }
                     ]
+                },
+                {
+                    "id": "AID-D-004.004",
+                    "name": "Model Source & Namespace Drift Detection",
+                    "pillar": "infra, app",
+                    "phase": "validation, operation",
+                    "description": "A set of high-signal detective controls that monitor for symptoms of a model namespace reuse attack or supply chain policy failure. This technique focuses on detecting lifecycle changes in external model repositories (e.g., deletions, redirects) during the curation process and on identifying unexpected network traffic from production systems to public model hubs at runtime.",
+                    "toolsOpenSource": [
+                        "Falco, Cilium Tetragon",
+                        "ELK Stack/OpenSearch, Splunk",
+                        "Custom scripts using `curl`"
+                    ],
+                    "toolsCommercial": [
+                        "SIEM Platforms (Splunk, Sentinel, Chronicle)",
+                        "Cloud Provider Network Monitoring (VPC Flow Logs, AWS GuardDuty)",
+                        "EDR/XDR solutions"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0010.003: AI Supply Chain Compromise: Model",
+                                "AML.T0074 Masquerading"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Supply Chain Attacks (Cross-Layer)",
+                                "Lateral Movement (Cross-Layer)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM03:2025 Supply Chain"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML06:2023 AI Supply Chain Attacks"
+                            ]
+                        }
+                    ],
+                    "implementationStrategies": [
+                        {
+                            "strategy": "Alert on 404 or 3xx status codes when validating external model URLs during CI curation.",
+                            "howTo": "<h5>Concept:</h5><p>An HTTP 404 (Not Found) or any 3xx (Redirect) response when checking a model's URL is a strong, early indicator that the namespace may have been deleted or is undergoing a change. This is a key symptom of the namespace reuse attack vector and must be treated as a security event. Using `--location` with `curl` will incorrectly follow redirects and report a 200, hiding the signal.</p><h5>Implement a URL Status Check</h5><pre><code># In a CI/CD script for model curation\n\nMODEL_URL=\"https://huggingface.co/DeletedOrg/ModelName\"\n\n# Use -I for a HEAD request and --max-redirs 0 to prevent following redirects.\nSTATUS_CODE=$(curl -sI -o /dev/null -w \"%{http_code}\" --max-redirs 0 \"$MODEL_URL\")\n\nif [ \"$STATUS_CODE\" -ne 200 ]; then\n    echo \"🚨 ALERT: Model URL $MODEL_URL returned non-200 status: $STATUS_CODE.\"\n    echo \"This could indicate a deleted/redirected namespace. Quarantining reference.\"\n    # Logic to send a Slack/PagerDuty alert\n    exit 1\nfi\n\necho \"✅ Model URL is active with status 200.\"\n</code></pre><p><strong>Action:</strong> In your model curation pipeline, add an automated step to check the HTTP status of the model's source URL without following redirects. Trigger a high-priority alert for security review if the status is anything other than 200 OK.</p>"
+                        },
+                        {
+                            "strategy": "Monitor for runtime DNS queries or egress traffic from production pods to public model hubs.",
+                            "howTo": "<h5>Concept:</h5><p>If your hardening policies are correctly implemented, your production AI services should have no reason to ever contact a public model hub like `huggingface.co`. Any attempt to do so is a high-confidence indicator of a misconfiguration, a policy bypass, or malicious code that has slipped through the supply chain. <br><br>Note: For the `fd.sip.name` field to be effective, the environment must allow Falco to perform or receive DNS resolutions. If this is not feasible, an alternative is to monitor DNS logs directly or use a CNI-level tool like Cilium Hubble.</p><h5>Implement a Runtime Egress Detection Rule</h5><p>This safer Falco pattern explicitly checks for connection events and uses Falco's documented field for resolved domain names.</p><pre><code># File: falco_rules/ai_egress_violation.yaml\n- rule: Prod AI Pod Egress to Public Model Hub\n  desc: Egress from prod AI namespaces to public model hubs (HF domains)\n  condition: >\n    evt.type=connect and fd.l4proto in (tcp, udp) and\n    k8s.ns.name in (ai-prod, ai-inference) and\n    fd.sip.name in (huggingface.co, hf.co)\n  output: >\n    Disallowed egress to public model hub (ns=%k8s.ns.name pod=%k8s.pod.name\n    user=%user.name cmd=%proc.cmdline dst=%fd.name)\n  priority: CRITICAL\n  tags: [network, supply_chain, aidefend]</code></pre><p><strong>Action:</strong> Deploy a runtime security tool and create a critical-priority rule that alerts on any connection attempt from your production AI namespaces to the domains of public model repositories.</p>"
+                        }
+                    ]
                 }
             ]
         },
