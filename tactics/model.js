@@ -379,6 +379,37 @@ export const modelTactic = {
                             ]
                         }
                     ]
+                },
+                {
+                    "id": "AID-M-002.004",
+                    "name": "Trust-Tiered Memory/KB (Knowledge Base) Write-Gate",
+                    "pillar": "data, model",
+                    "phase": "building, validation, operation",
+                    "description": "Place a policy-enforced write-gate in front of agent memory/KB/vector stores. Route writes into trust-tiered namespaces (trusted, probation, quarantined) based on evidence presence, validator score, and policy decisions. Retrieval prefers trusted; probation requires re-verification; quarantined is excluded.",
+                    "toolsOpenSource": [
+                        "SPIFFE/SPIRE (workload identity)",
+                        "Envoy/Nginx (write-gate proxy)",
+                        "OPA/Kyverno (write policy)",
+                        "Milvus/Weaviate (namespaces/collections)",
+                        "Sigstore/cosign (signing/verification)"
+                    ],
+                    "toolsCommercial": [
+                        "Pinecone (separate indexes/namespaces)",
+                        "Databricks Unity Catalog (data lineage/access)",
+                        "JFrog Artifactory/XRay (artifact policy concepts for KB artifacts)"
+                    ],
+                    "defendsAgainst": [
+                        { "framework": "MITRE ATLAS", "items": ["AML.T0010 AI Supply Chain Compromise (Data)", "AML.T0020 Poison Training Data"] },
+                        { "framework": "MAESTRO", "items": ["Data Poisoning (Training Phase) (L1)", "Data Poisoning (L2)"] },
+                        { "framework": "OWASP LLM Top 10 2025", "items": ["LLM01:2025 Prompt Injection (via poisoned context)", "LLM02:2025 Sensitive Information Disclosure (write-path controls)"] },
+                        { "framework": "OWASP ML Top 10 2023", "items": ["ML02:2023 Data Poisoning", "ML09:2023 Output Integrity Attack"] }
+                    ],
+                    "implementationStrategies": [
+                        {
+                            "strategy": "FastAPI write-gate + Pinecone namespaces + OPA routing",
+                            "howTo": "<h5>Concept:</h5><p>Terminate mTLS at a write-gate, verify caller identity, require <code>evidenceRefs[]</code> and a validator report, then route to <code>trusted</code>/<code>probation</code>/<code>quarantined</code> namespaces based on policy.</p><h5>Python (FastAPI) gate:</h5><pre><code class=\"language-python\"># write_gate.py\nfrom fastapi import FastAPI, Request, HTTPException\nimport requests, pinecone, os\nfrom pydantic import BaseModel, conlist\n\nclass Write(BaseModel):\n  claims: list\n  evidenceRefs: conlist(str, min_items=1)\n  validatorReport: dict\n  riskTier: str\n  signer: str\n\napp = FastAPI()\nOPA_URL = os.getenv(\"OPA_URL\")\nPINECONE_ENV = os.getenv(\"PINECONE_ENV\")\nINDEX = os.getenv(\"INDEX\", \"kb\")\n\npinecone.init(api_key=os.getenv(\"PINECONE_API_KEY\"), environment=PINECONE_ENV)\nindex = pinecone.Index(INDEX)\n\n@app.post(\"/kb/write\")\nasync def write(req: Write, request: Request):\n  # verify caller identity (e.g., SPIFFE/JWT in header)\n  idhdr = request.headers.get(\"X-Workload-Identity\")\n  if not idhdr:\n    raise HTTPException(401, detail=\"missing_identity\")\n  # policy decision\n  pd = requests.post(OPA_URL, json={\"input\": req.dict()}).json()\n  tier = pd.get(\"result\", {}).get(\"tier\", \"quarantined\")\n  # route to namespace\n  ns = {\"trusted\": \"trusted\", \"probation\": \"probation\", \"quarantined\": \"quarantined\"}[tier]\n  vectors = [(c.get(\"id\"), c.get(\"embedding\"), {\"evidence\": \";\".join(req.evidenceRefs)}) for c in req.claims]\n  index.upsert(vectors=vectors, namespace=ns)\n  return {\"namespace\": ns}\n</code></pre><h5>OPA routing (Rego):</h5><pre><code class=\"language-rego\">package kbwrite\n\n# default to quarantine\ntier := \"quarantined\"\n\n# trusted if enough evidence and validator confidence high\ntier := \"trusted\" {\n  count(input.evidenceRefs) >= 2\n  input.validatorReport.confidence >= 0.8\n}\n\n# probation when partial\ntier := \"probation\" {\n  count(input.evidenceRefs) == 1\n  input.validatorReport.confidence >= 0.6\n}\n</code></pre>"
+                        }
+                    ]
                 }
 
             ]
