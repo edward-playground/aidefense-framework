@@ -1092,20 +1092,22 @@ export const modelTactic = {
                 },
                 {
                     "id": "AID-M-005.002",
-                    "name": "Pre-Deployment - Infrastructure as Code (IaC) Security Scanning", "pillar": "infra", "phase": "validation",
-                    "description": "Covers the 'pre-deployment' phase of automatically scanning Infrastructure as Code (IaC) files (e.g., Terraform, CloudFormation, Bicep, Kubernetes YAML) in the CI/CD pipeline. This 'shift-left' security practice aims to detect and block security misconfigurations, policy violations, and hardcoded secrets before insecure infrastructure is ever provisioned in a live environment.",
+                    "name": "Configuration Baseline Definition & Posture SLOs (Service Level Objectives)",
+                    "pillar": "infra",
+                    "phase": "building, validation",
+                    "description": "During build and validation, define security configuration baselines for AI infrastructure and services as policy-as-code, and establish measurable posture SLO/SLI and release gates. This technique focuses on producing versioned, signed baselines and scoring criteria as the single source of truth for subsequent deployments and audits; it does not include runtime CSPM or continuous monitoring (those belong under Detect).",
                     "implementationStrategies": [
                         {
-                            "strategy": "Integrate IaC security scanners into the CI/CD pipeline to act as a security gate.",
-                            "howTo": "<h5>Concept:</h5><p>Scan your infrastructure configurations for security issues *before* they are deployed. By adding an IaC scanning step to your pull request checks, you can create an automated security gate that prevents insecure infrastructure code from being merged into your main branch.</p><h5>Implement an IaC Scanning Job in GitHub Actions</h5><p>This workflow uses a tool like Checkov to scan Terraform files. It is configured to fail the build if any `HIGH` or `CRITICAL` severity issues are found, effectively blocking the pull request.</p><pre><code># File: .github/workflows/iac_scan.yml\\nname: IaC Security Scan\n\non:\n  pull_request:\n    paths:\n      - 'infrastructure/**'\n\njobs:\n  checkov_scan:\n    runs-on: ubuntu-latest\\n    steps:\\n      - name: Checkout code\\n        uses: actions/checkout@v3\n\n      - name: Run Checkov action\\n        uses: bridgecrewio/checkov-action@master\\n        with:\\n          directory: ./infrastructure\\n          framework: terraform\\n          # Fail the build for any check of HIGH or CRITICAL severity\\n          soft_fail_on: FAILED\\n          check: CKV_AWS_26,CKV_AWS_24 # Example checks, or use --skip-check\n          # Use --hard-fail-on to fail the build for specific checks\n          hard_fail_on: HIGH,CRITICAL\n</code></pre><p><strong>Action:</strong> Add an IaC scanning step using a tool like Checkov or tfsec to your pull request workflow. Configure it to act as a gate, failing the check if high-severity misconfigurations are detected.</p>"
+                            "strategy": "Author security baselines as policy-as-code and wire them into CI gates",
+                            "howTo": "<h5>Concept:</h5><p>Use OPA/Gatekeeper, Kyverno, Regula, or Conftest to express baseline conditions (e.g., no public endpoints, no direct internet egress, mandatory encryption/labels) as code and enforce them in IaC PRs.</p><h5>Example (OPA/Rego):</h5><pre><code>package aidefend.baseline\n\ndeny[msg] {\n  input.resource.kind == \"SageMakerNotebookInstance\"\n  input.resource.spec.root_access == \"Enabled\"\n  msg := \"Root access must be disabled per baseline\"\n}\n\ndeny[msg] {\n  input.resource.kind == \"VPCSecurityGroup\"\n  input.resource.spec.ingress[_].cidr == \"0.0.0.0/0\"\n  msg := \"No wide-open ingress per baseline\"\n}</code></pre><p><strong>Action:</strong> Run these rules via Conftest/OPA in CI; PRs with any critical violations cannot merge.</p>"
                         },
                         {
-                            "strategy": "Scan for hardcoded secrets within IaC and configuration files.",
-                            "howTo": "<h5>Concept:</h5><p>Developers sometimes accidentally commit secrets like API keys or passwords directly into Terraform variables or other configuration files. A dedicated secrets scanner should be run alongside IaC misconfiguration scanners to find these high-impact vulnerabilities.</p><h5>Add a Secrets Scanning Step to the Pipeline</h5><p>Use a tool like TruffleHog, which is designed to find high-entropy strings and patterns that match common secret formats, and add it to your CI/CD workflow.</p><pre><code># File: .github/workflows/iac_scan.yml (add this step)\n\n      - name: Scan for hardcoded secrets with TruffleHog\\n        uses: trufflesecurity/trufflehog@main\\n        with:\\n          path: ./infrastructure/\\n          base: ${{ github.event.pull_request.base.sha }}\\n          head: ${{ github.event.pull_request.head.sha }}\\n          extra_args: --only-verified --fail\n          # The --fail flag will cause the workflow to fail if a verified secret is found</code></pre><p><strong>Action:</strong> Integrate a dedicated secrets scanner like TruffleHog into your CI/CD pipeline to run on every commit or pull request, ensuring no secrets are accidentally committed in your IaC files.</p>"
+                            "strategy": "Define posture SLO/SLI and scoring rules; document release gates",
+                            "howTo": "<h5>Concept:</h5><p>Quantify baseline coverage, critical/high/medium violations, and exceptions (with expiry), then turn them into release gates.</p><h5>Example (SLO Spec, YAML):</h5><pre><code>slo:\n  baseline_coverage:\n    target: 100%\n  violations:\n    critical: 0\n    high: 0\n    medium: <= 3\n  exceptions:\n    require_approval: true\n    max_ttl_days: 30\n    owner: \"PlatformSec\"\n  gates:\n    - name: pre-merge\n      require: [\"critical==0\", \"high==0\", \"signed_report==true\"]\n    - name: pre-release\n      require: [\"medium<=3\", \"exceptions_valid==true\"]</code></pre><p><strong>Action:</strong> Check SLO/SLI and gates into the governance repo; produce a signed compliance report in CI for audit.</p>"
                         },
                         {
-                            "strategy": "Develop and enforce custom security policies specific to AI workloads.",
-                            "howTo": "<h5>Concept:</h5><p>While standard scanners are good, you can create custom policies to enforce your organization's specific security rules for AI. For example, you can write a rule that mandates all S3 buckets tagged as `AI-Training-Data` must have versioning and encryption enabled, or that SageMaker notebook instances must not have public internet access.</p><h5>Write a Custom Check in Checkov (Python)</h5><p>You can extend Checkov with custom policies written in Python.</p><pre><code># File: custom_checks/SageMakerInternetAccess.py\\nfrom checkov.terraform.checks.resource.base_resource_check import BaseResourceCheck\\nfrom checkov.common.models.enums import CheckResult, CheckCategories\n\nclass SageMakerNoDirectInternet(BaseResourceCheck):\\n    def __init__(self):\\n        name = \"Ensure SageMaker Notebooks do not have direct internet access\"\\n        id = \"CKV_CUSTOM_AWS_101\"\\n        supported_resources = ['aws_sagemaker_notebook_instance']\\n        categories = [CheckCategories.NETWORKING]\\n        super().__init__(name=name, id=id, categories=categories, supported_resources=supported_resources)\\n\n    def scan_resource_conf(self, conf):\\n        if 'direct_internet_access' in conf and conf['direct_internet_access'][0] == 'Enabled':\\n            return CheckResult.FAILED\\n        return CheckResult.PASSED\n</code></pre><p><strong>Action:</strong> Create a library of custom security policies that enforce your organization's specific hardening standards for AI infrastructure. Run these custom checks alongside the scanner's default rules in your CI/CD pipeline.</p>"
+                            "strategy": "Produce and sign a Baseline Manifest to ensure versioning and immutability",
+                            "howTo": "<h5>Concept:</h5><p>For every release, emit <code>baseline_manifest</code> listing ruleset versions, control mappings, exceptions with expiry, and hashes of scan reports; sign with Sigstore/cosign and archive alongside release artifacts.</p><h5>Example (baseline_manifest.json):</h5><pre><code>{\n  \"baseline_version\": \"v1.4.2\",\n  \"ruleset_refs\": [\"opa://aidefend/baseline@sha256:...\"],\n  \"control_mappings\": {\"CIS_AWS\": [\"1.1\", \"1.14\"], \"MAESTRO\": [\"L4\"]},\n  \"slo\": {\"critical\": 0, \"high\": 0, \"medium_max\": 3},\n  \"exceptions\": [{\"id\": \"EXP-123\", \"rule\": \"sg_no_0_0_0_0\", \"owner\": \"DataPlat\", \"expires\": \"2025-12-31\"}],\n  \"reports\": {\"iac_scan\": \"sha256:...\", \"policy_eval\": \"sha256:...\"}\n}</code></pre><p><strong>Action:</strong> Verify the manifest signature during release and bind it to artifact digests; block promotion if the signed manifest is missing or invalid.</p>"
                         }
                     ],
                     "toolsOpenSource": [
@@ -1123,21 +1125,15 @@ export const modelTactic = {
                     "defendsAgainst": [
                         {
                             "framework": "MITRE ATLAS",
-                            "items": [
-                                "AML.TA0004 Initial Access"
-                            ]
+                            "items": ["AML.TA0004 Initial Access"]
                         },
                         {
                             "framework": "MAESTRO",
-                            "items": [
-                                "Misconfigurations (L4)"
-                            ]
+                            "items": ["Misconfigurations (L4)"]
                         },
                         {
                             "framework": "OWASP LLM Top 10 2025",
-                            "items": [
-                                "LLM03:2025 Supply Chain"
-                            ]
+                            "items": ["LLM03:2025 Supply Chain"]
                         },
                         {
                             "framework": "OWASP ML Top 10 2023",
@@ -1147,70 +1143,8 @@ export const modelTactic = {
                             ]
                         }
                     ]
-                },
-                {
-                    "id": "AID-M-005.003",
-                    "name": "Post-Deployment - Configuration Drift & Posture Monitoring", "pillar": "infra", "phase": "operation",
-                    "description": "Covers the 'post-deployment' phase of using Cloud Security Posture Management (CSPM) tools and custom scripts to continuously monitor live cloud environments. This technique aims to detect and alert on 'configuration drift'—unauthorized or accidental changes that cause a system to deviate from its established secure baseline—providing a real-time view of the security posture for all AI system components.",
-                    "implementationStrategies": [
-                        {
-                            "strategy": "Enable and configure cloud-native security posture management (CSPM) services.",
-                            "howTo": "<h5>Concept:</h5><p>Cloud providers offer built-in services that continuously assess your environment against security best practices and compliance standards. Enabling these services provides a foundational layer of automated drift detection and posture monitoring.</p><h5>Enable CSPM Services with IaC</h5><p>Use Terraform to programmatically enable services like AWS Security Hub and subscribe to relevant security standards like the CIS AWS Foundations Benchmark.</p><pre><code># File: infrastructure/cspm.tf (Terraform)\\n\n# Enable AWS Security Hub in the account\\nresource \"aws_securityhub_account\" \"main\" {}\n\n# Subscribe to the CIS AWS Foundations Benchmark standard\\nresource \"aws_securityhub_standards_subscription\" \"cis\" {\\n  depends_on   = [aws_securityhub_account.main]\\n  standards_arn = \"arn:aws:securityhub:::ruleset/cis-aws-foundations-benchmark/v/1.2.0\"\\n}\n\n# Subscribe to the AWS Foundational Security Best Practices standard\\nresource \"aws_securityhub_standards_subscription\" \"aws_best_practices\" {\\n  depends_on   = [aws_securityhub_account.main]\\n  standards_arn = \"arn:aws:securityhub:us-east-1::standards/aws-foundational-security-best-practices/v/1.0.0\"\\n}</code></pre><p><strong>Action:</strong> Programmatically enable and configure your cloud provider's native CSPM service (AWS Security Hub, Microsoft Defender for Cloud, Google Security Command Center) to get immediate visibility into common misconfigurations.</p>"
-                        },
-                        {
-                            "strategy": "Implement automated scripts to detect configuration drift from your specific baselines.",
-                            "howTo": "<h5>Concept:</h5><p>A configuration that was secure when deployed can be changed manually later, creating a security gap. You can write custom scripts that run on a schedule to check live resources against your specific, defined baselines and alert on any deviations.</p><h5>Write a Drift Detection Script for AI Resources</h5><p>This Python script uses the cloud provider's SDK to inspect live resources (like a SageMaker Notebook instance) and compare their settings to a secure baseline.</p><pre><code># File: monitoring/check_sagemaker_drift.py\\nimport boto3\n\ndef check_notebook_drift(notebook_name):\\n    sagemaker = boto3.client('sagemaker')\\n    details = sagemaker.describe_notebook_instance(NotebookInstanceName=notebook_name)\\n\n    violations = []\\n    # Check 1: Root access should be disabled in our baseline\\n    if details.get('RootAccess') == 'Enabled':\\n        violations.append('RootAccess is enabled.')\n    # Check 2: Direct internet access should be disabled\\n    if details.get('DirectInternetAccess') == 'Enabled':\\n        violations.append('DirectInternetAccess is enabled.')\\n    # Check 3: Must be in a VPC\\n    if 'SubnetId' not in details:\\n        violations.append('Notebook is not deployed in a VPC.')\n\n    if violations:\\n        print(f\\\"🚨 DRIFT DETECTED for {notebook_name}: {violations}\\\")\\n        # send_alert(...)\\n    else:\\n        print(f\\\"✅ No configuration drift detected for {notebook_name}.\\\")</code></pre><p><strong>Action:</strong> Create and schedule custom scripts that check the live configuration of your critical AI resources against your defined secure baselines. The script should trigger an alert if any drift is detected.</p>"
-                        },
-                        {
-                            "strategy": "Integrate AI-specific configuration policies into CSPM tools using custom rules.",
-                            "howTo": "<h5>Concept:</h5><p>Extend your general-purpose CSPM tool to understand the unique risks of AI workloads by writing custom rules. These rules can leverage resource tags to apply stricter policies to your most sensitive AI components.</p><h5>Create a Custom AWS Config Rule</h5><p>This Lambda function acts as a custom AWS Config rule. It checks S3 buckets and applies a stricter policy if the bucket is tagged as containing sensitive AI training data.</p><pre><code># File: custom_rules/lambda_check_ai_data.py\\nimport boto3\n\ndef lambda_handler(event, context):\\n    invoking_event = json.loads(event['invokingEvent'])\\n    config_item = invoking_event['configurationItem']\\n    \n    # Check if the resource is an S3 bucket with our sensitive data tag\\n    if config_item['resourceType'] == 'AWS::S3::Bucket' and \\n       config_item['tags'].get('Data-Classification') == 'confidential':\n\n        # If it's sensitive, check if public access is blocked\\n        is_public = check_s3_public_access(config_item['resourceId'])\\n        if is_public:\\n            # If it's sensitive AND public, it's NON_COMPLIANT\\n            put_evaluation(event, 'NON_COMPLIANT', 'Confidential AI data bucket is public.')\\n        else:\\n            put_evaluation(event, 'COMPLIANT', 'Bucket is private.')\\n    else:\\n        put_evaluation(event, 'NOT_APPLICABLE', 'Rule does not apply.')</code></pre><p><strong>Action:</strong> Work with your cloud security team to translate your AI-specific risks into custom, automated policies (like custom AWS Config rules) within your organization's CSPM tool.</p>"
-                        },
-                        {
-                            "strategy": "Automate remediation for common, high-risk drift scenarios.",
-                            "howTo": "<h5>Concept:</h5><p>For certain critical misconfigurations, the response should be immediate and automatic. You can use a SOAR (Security Orchestration, Automation, and Response) approach where a drift alert triggers a serverless function that automatically reverts the insecure change.</p><h5>Create an Automated Remediation Function</h5><p>This Lambda function can be triggered by an EventBridge rule that watches for a specific CSPM finding. Its sole purpose is to fix one type of misconfiguration.</p><pre><code># File: remediation/fix_public_s3.py\\nimport boto3\n\ndef lambda_handler(event, context):\\n    # Extract the bucket name from the security finding event\\n    bucket_name = event['detail']['findings'][0]['Resources'][0]['Id'].split(':::')[1]\n    \n    s3_client = boto3.client('s3')\n    print(f\\\"Attempting to auto-remediate public S3 bucket: {bucket_name}\\\")\n    try:\\n        s3_client.put_public_access_block(\\n            Bucket=bucket_name,\\n            PublicAccessBlockConfiguration={\\n                'BlockPublicAcls': True, 'IgnorePublicAcls': True,\\n                'BlockPublicPolicy': True, 'RestrictPublicBuckets': True\\n            }\\n        )\\n        print(f\\\"✅ Auto-remediation successful for {bucket_name}.\\\")\\n    except Exception as e:\\n        print(f\\\"❌ Auto-remediation failed: {e}\\\")</code></pre><p><strong>Action:</strong> Identify a small number of critical, unambiguous misconfigurations (like a public S3 bucket). Create and deploy automated remediation functions that are triggered by CSPM alerts to instantly revert these specific changes.</p>"
-                        }
-                    ],
-                    "toolsOpenSource": [
-                        "CloudSploit (by Aqua Security)",
-                        "Prowler (for AWS security auditing)",
-                        "ScoutSuite",
-                        "Checkov (in drift detection mode)",
-                        "Forseti Security (for GCP)"
-                    ],
-                    "toolsCommercial": [
-                        "CSPM Platforms (Wiz, Prisma Cloud, Microsoft Defender for Cloud, Orca Security, Tenable.cs)",
-                        "Cloud Provider Services (AWS Security Hub, Google Security Command Center, Azure Security Center)"
-                    ],
-                    "defendsAgainst": [
-                        {
-                            "framework": "MITRE ATLAS",
-                            "items": [
-                                "AML.T0017 Persistence"
-                            ]
-                        },
-                        {
-                            "framework": "MAESTRO",
-                            "items": [
-                                "Misconfigurations (L4)",
-                                "Policy Bypass (L6)"
-                            ]
-                        },
-                        {
-                            "framework": "OWASP LLM Top 10 2025",
-                            "items": [
-                                "LLM03:2025 Supply Chain",
-                                "LLM07:2025 System Prompt Leakage"
-                            ]
-                        },
-                        {
-                            "framework": "OWASP ML Top 10 2023",
-                            "items": [
-                                "ML06:2023 AI Supply Chain Attacks",
-                                "ML05:2023 Model Theft"
-                            ]
-                        }
-                    ]
                 }
+
             ]
         },
         {

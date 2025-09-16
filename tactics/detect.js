@@ -797,8 +797,8 @@ export const detectTactic = {
                 },
                 {
                     "id": "AID-D-004.003",
-                    "name": "Configuration & Policy Drift Monitoring", "pillar": "infra, app", "phase": "operation",
-                    "description": "Detect unauthorised edits to model-serving YAMLs, feature-store ACLs, RAG index schemas or inference-time policy files.",
+                    "name": "Runtime Configuration & Policy Drift Detection and Monitoring", "pillar": "infra, app", "phase": "operation",
+                    "description": "Detect unauthorized edits to model-serving YAMLs, feature-store ACLs, RAG index schemas or inference-time policy files.",
                     "toolsOpenSource": [
                         "Git (for version control and signed commits)",
                         "GitHub/GitLab/Bitbucket webhooks",

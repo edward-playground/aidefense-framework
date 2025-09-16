@@ -654,7 +654,7 @@ export const evictTactic = {
         },
         {
             "id": "AID-E-004",
-            "name": "Post-Incident System Patching & Hardening", "pillar": "infra, app", "phase": "improvement",
+            "name": "Post-Eviction System Patching & Hardening", "pillar": "infra, app", "phase": "improvement",
             "description": "After an attack vector has been identified and the adversary evicted, rapidly apply necessary security patches to vulnerable software components (e.g., ML libraries, operating systems, web servers, agent frameworks) and harden system configurations that were exploited or found to be weak. This step aims to close the specific vulnerabilities used by the attacker and strengthen overall security posture to prevent reinfection or similar future attacks.",
             "toolsOpenSource": [
                 "Package managers (apt, yum, pip, conda)",

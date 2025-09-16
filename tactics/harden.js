@@ -203,7 +203,7 @@ export const hardenTactic = {
                 },
                 {
                     "id": "AID-H-002.002",
-                    "name": "Inference-Time Prompt & Input Validation", "pillar": "app", "phase": "building, operation",
+                    "name": "Inference-Time Prompt & Input Validation", "pillar": "app", "phase": "building",
                     "description": "Focuses on real-time defense against malicious inputs at the point of inference, such as prompt injection, jailbreaking attempts, or other input-based evasions. This technique acts as a guardrail for the live, operational model.",
                     "toolsOpenSource": [
                         "NVIDIA NeMo Guardrails",
@@ -520,7 +520,7 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                 },
                 {
                     "id": "AID-H-003.002",
-                    "name": "Model Artifact Verification & Secure Distribution",
+                    "name": "CI/CD Release Gating, Model Artifact Signing & Secure Distribution",
                     "pillar": "infra, model",
                     "phase": "building, validation",
                     "description": "Mandatory, automated acceptance criteria applied to a model artifact before promotion to production. Acts as a final security gate to ensure only trusted, verified, and safely configured models are deployed by validating their origin, integrity, provenance, and operational policies. This control assumes production never trusts public names directly; only immutable, attested bytes from an internal mirror are allowed.",
@@ -752,7 +752,8 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                         {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
-                                "ML06:2023 AI Supply Chain Attacks"
+                                "ML06:2023 AI Supply Chain Attacks",
+                                "ML05:2023 Model Theft (by preventing insecure storage configurations)"
                             ]
                         }
                     ],
@@ -760,6 +761,10 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                         {
                             "strategy": "Integrate IaC security scanners into the CI/CD pipeline to act as a merge blocker.",
                             "howTo": "<h5>Concept:</h5><p>Scan your infrastructure configurations for security issues *before* they are deployed. By adding an IaC scanning step to your pull request checks, you can create an automated security gate that prevents insecure infrastructure code from being merged.</p><h5>Implement an IaC Scanning Job</h5><p>This complete GitHub Actions workflow uses Checkov to scan infrastructure files and is configured to fail the build on any high-severity issues.</p><pre><code># File: .github/workflows/iac_scan.yml\nname: IaC Security Scan\non: [pull_request]\njobs:\n  checkov_scan:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - name: Run Checkov action\n        uses: bridgecrewio/checkov-action@master\n        with:\n          directory: ./infrastructure\n          framework: terraform,kubernetes\n          hard_fail_on: HIGH,CRITICAL</code></pre><p><strong>Action:</strong> Add an IaC scanning step using a tool like Checkov to your pull request workflow. Configure it to act as a gate, failing the check if high-severity misconfigurations are detected.</p>"
+                        },
+                        {
+                            "strategy": "Scan for hardcoded secrets within IaC and configuration files.",
+                            "howTo": "<h5>Concept:</h5><p>Developers sometimes accidentally commit secrets like API keys or passwords directly into Terraform variables or other configuration files. A dedicated secrets scanner should be run alongside IaC misconfiguration scanners to find these high-impact vulnerabilities.</p><h5>Add a Secrets Scanning Step to the Pipeline</h5><p>Use a tool like TruffleHog, which is designed to find high-entropy strings and patterns that match common secret formats, and add it to your CI/CD workflow.</p><pre><code># File: .github/workflows/iac_scan.yml (add this step)\n\n      - name: Scan for hardcoded secrets with TruffleHog\\n        uses: trufflesecurity/trufflehog@main\\n        with:\\n          path: ./infrastructure/\\n          base: ${{ github.event.pull_request.base.sha }}\\n          head: ${{ github.event.pull_request.head.sha }}\\n          extra_args: --only-verified --fail\n          # The --fail flag will cause the workflow to fail if a verified secret is found</code></pre><p><strong>Action:</strong> Integrate a dedicated secrets scanner like TruffleHog into your CI/CD pipeline to run on every commit or pull request, ensuring no secrets are accidentally committed in your IaC files.</p>"
                         },
                         {
                             "strategy": "Develop and enforce custom policies to prevent insecure network paths for AI workloads.",
@@ -1476,7 +1481,7 @@ def check_image_text_consistency(image_path: str, user_prompt: str, threshold=0.
                 },
                 {
                     "id": "AID-H-006.002",
-                    "name": "Output Content Sanitization & Validation", "pillar": "app", "phase": "building, operation",
+                    "name": "Output Content Sanitization & Validation", "pillar": "app", "phase": "building",
                     "description": "Applies security checks and sanitization to the content generated by an AI model before it is displayed to a user or passed to a downstream system. This involves escaping output to prevent injection attacks (e.g., Cross-Site Scripting, Shell Injection) and validating specific content types, such as URLs, against blocklists or safety APIs to prevent users from being directed to malicious websites.",
                     "implementationStrategies": [
                         {
