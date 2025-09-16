@@ -1,5 +1,5 @@
 // 導入介紹內容
-import { aidefendIntroduction } from './intro.js';
+import { aidefendIntroduction } from './aidefend-intro.js';
 
 // 導入所有拆分的 tactics
 import { modelTactic } from './tactics/model.js';
