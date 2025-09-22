@@ -4047,7 +4047,7 @@ class SmoothedClassifier(torch.nn.Module):
                 },
                 {
                     "id": "AID-H-022.002",
-                    "name": "Runtime Integrity Verification",
+                    "name": "Runtime Integrity Enforcement (Signed Configurations)",
                     "pillar": "app, infra",
                     "phase": "operation",
                     "description": "Ensures that an AI agent, at the moment of execution, loads and operates on a configuration that is cryptographically verified to be authentic and untampered. This is a critical runtime check that serves as a final guardrail, protecting the agent even if client-side or repository controls fail. It forms a verifiable trust chain from the secure build pipeline to the running agent.",
@@ -4109,6 +4109,219 @@ class SmoothedClassifier(torch.nn.Module):
                             "howTo": "<h5>Concept:</h5><p>The security of your signing process depends on the security of your signing keys. These keys must be managed in a secure system (like a KMS or HSM), have their access tightly controlled, and be rotated periodically to limit the impact of a potential key compromise.</p><h5>Use a KMS for Signing Operations</h5><p>Instead of handling raw key files in your CI/CD runner, use a Key Management Service (KMS) for all signing operations. The private key never leaves the KMS.</p><pre><code># Conceptual script using AWS KMS for signing\nimport boto3\nimport base64\n\nKMS_KEY_ID = \"alias/agent-config-signing-key\"\n\ndef sign_with_kms(file_path):\n    client = boto3.client('kms')\n    with open(file_path, 'rb') as f:\n        file_bytes = f.read()\n    \n    response = client.sign(\n        KeyId=KMS_KEY_ID,\n        Message=file_bytes,\n        MessageType='RAW',\n        SigningAlgorithm='RSASSA_PSS_SHA_256'\n    )\n    signature = base64.b64encode(response['Signature']).decode('utf-8')\n    return signature\n\n# The CI/CD runner's IAM role would be granted permission to use this specific KMS key.\n# Keys should be configured with an automated rotation schedule (e.g., annually).</code></pre><p><strong>Action:</strong> Store your configuration signing keys in a hardware-backed KMS. Configure automated key rotation and use IAM policies to strictly limit which CI/CD jobs have permission to use the key for signing operations.</p>"
                         }
                     ]
+                }
+            ]
+        },
+        {
+            "id": "AID-H-023",
+            "name": "Secure Build & Dependency Installation Environment",
+            "pillar": "infra",
+            "phase": "building",
+            "description": "A foundational 'shift-left' defense that treats the software dependency installation process (e.g., `npm ci`, `pip install`) as a potentially hostile, untrusted step. This technique focuses on isolating the build environment to prevent malicious installation scripts (like those used in the Shai-Hulud attack) from exfiltrating data, accessing the network, or gaining persistence on the developer machine or CI/CD runner. It ensures that even if a malicious package is inadvertently downloaded, its ability to cause harm is severely contained.",
+            "defendsAgainst": [
+                {
+                    "framework": "MITRE ATLAS",
+                    "items": [
+                        "AML.T0011.001: User Execution: Malicious Package",
+                        "AML.T0072: Reverse Shell",
+                        "AML.T0025: Exfiltration via Cyber Means"
+                    ]
+                },
+                {
+                    "framework": "MAESTRO",
+                    "items": [
+                        "Lateral Movement (Cross-Layer)",
+                        "Compromised Container Images (L4)",
+                        "Supply Chain Attacks (Cross-Layer)"
+                    ]
+                },
+                {
+                    "framework": "OWASP LLM Top 10 2025",
+                    "items": [
+                        "LLM03:2025 Supply Chain"
+                    ]
+                },
+                {
+                    "framework": "OWASP ML Top 10 2023",
+                    "items": [
+                        "ML06:2023 ML Supply Chain Attacks"
+                    ]
+                }
+            ],
+            "subTechniques": [
+                {
+                    "id": "AID-H-023.001",
+                    "name": "Sandboxed Dependency Installation",
+                    "pillar": "infra",
+                    "phase": "building",
+                    "description": "Executes the dependency installation process within a strongly isolated, ephemeral environment with restricted network access and permissions, directly neutralizing the threat of malicious `postinstall` scripts.",
+                    "toolsOpenSource": [
+                        "Docker, Podman (for containerized builds)",
+                        "npm, pnpm, yarn, Corepack (as the package managers to be controlled)"
+                    ],
+                    "toolsCommercial": [
+                        "JFrog Artifactory / Xray (as the secure internal mirror/proxy)"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0011.001: User Execution: Malicious Package",
+                                "AML.T0072: Reverse Shell",
+                                "AML.T0025: Exfiltration via Cyber Means"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Lateral Movement (Cross-Layer)",
+                                "Supply Chain Attacks (Cross-Layer)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM03:2025 Supply Chain"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML06:2023 ML Supply Chain Attacks"
+                            ]
+                        }
+                    ],
+                    "implementationStrategies": [
+                        {
+                            "strategy": "Use ephemeral, network-restricted containers for all dependency installations.",
+                            "howTo": "<h5>Concept:</h5><p>The core of this defense is to run package installation in a 'jail' where it cannot communicate with an attacker's server. To avoid failures from a cold cache, the best practice is to use an internal registry and restrict the build container's network access to only that registry.</p><h5>Implement in a CI/CD Pipeline (GitHub Actions)</h5><pre><code># File: .github/workflows/secure-build.yml\n\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - name: Cache dependencies\n        # Cache key should be specific to avoid cross-poisoning\n        uses: actions/cache@v3\n        with:\n          path: ~/.npm\n          key: ${{ runner.os }}-node20-npm-${{ hashFiles('**/package-lock.json') }}\n\n      - name: Run install in a sandboxed container\n        # This step uses a separate Docker container with networking restricted to a trusted internal registry.\n        run: |\n          docker network create build_net || true\n          docker run --rm --network build_net \\\n            -e npm_config_registry=https://registry.internal.corp \\\n            -v $(pwd):/app -v ~/.npm:/root/.npm -w /app node:20 \\\n            npm ci --ignore-scripts --prefer-offline</code></pre><p><strong>Action:</strong> Use a multi-phase build process. First, populate a cache or internal mirror from a trusted network environment. Then, execute the dependency installation step (`npm ci`, `pnpm install`, etc.) in a sandboxed container with networking either disabled (using `--offline` flags) or restricted exclusively to your internal mirror.</p>"
+                        },
+                        {
+                            "strategy": "Enforce strict lockfile discipline and globally disable automatic script execution.",
+                            "howTo": "<h5>Concept:</h5><p>Prevent lockfile poisoning and remove the primary execution vector of malicious packages by enforcing strict policies on lockfiles and installation scripts across all package managers.</p><h5>Step 1: Enforce Lockfile Integrity</h5><p>In your CI pipeline, mandate the use of commands that strictly adhere to the lockfile. Reject any Pull Request where the lockfile has been modified without a corresponding change in `package.json`.</p><ul><li>**npm:** `npm ci`</li><li>**pnpm:** `pnpm install --frozen-lockfile`</li><li>**yarn:** `yarn install --immutable`</li></ul><h5>Step 2: Globally Disable `postinstall` Scripts</h5><p>Configure your project's `.npmrc` file to disable script execution by default. Use `Corepack` to pin the package manager's version for reproducibility.</p><pre><code># File: .npmrc\nignore-scripts=true\n\n# In package.json, pin the package manager\n\"packageManager\": \"pnpm@9.1.0\"</code></pre><p><strong>Action:</strong> Set `ignore-scripts=true` in your project's `.npmrc` file and enforce lockfile-based installations in CI. Maintain an allowlist of packages that require install scripts and execute their official, documented commands as a separate, explicit, and vetted step.</p>"
+                        },
+                        {
+                            "strategy": "Harden internal package mirrors with a quarantine-and-promote workflow.",
+                            "howTo": "<h5>Concept:</h5><p>An internal registry should not be a blind mirror of public repositories. It must act as a security gate, quarantining new package versions until they are scanned and approved, preventing the internal spread of malicious code.</p><p><strong>Action:</strong> Configure your internal package registry (e.g., JFrog Artifactory) to place newly mirrored packages or versions into a 'quarantine' repository. Set up an automated workflow that scans these quarantined packages for vulnerabilities and malicious code. Additionally, enforce policies that block packages with `git` URL dependencies or `workspace:*` ranges from being used in production builds. Only packages that pass all checks should be promoted to the 'production' registry accessible by developers and CI/CD systems.</p>"
+                        }
+                    ]
+                },
+                {
+                    "id": "AID-H-023.002",
+                    "name": "Proactive Package Vetting",
+                    "pillar": "infra",
+                    "phase": "building",
+                    "description": "Integrates automated security and reputation analysis into the developer workflow, providing intelligence about a package's risks *before* it is added as a dependency. This 'shift-left' approach prevents malicious packages from ever entering the codebase.",
+                    "toolsOpenSource": [
+                        "OpenSSF Scorecard",
+                        "OpenSSF Dependency Review Action",
+                        "Socket.dev (CLI tool)",
+                        "Semgrep (for static code analysis)"
+                    ],
+                    "toolsCommercial": [
+                        "Snyk",
+                        "Socket.dev (Platform)",
+                        "GitHub Advanced Security"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0010: AI Supply Chain Compromise",
+                                "AML.T0011.001: User Execution: Malicious Package",
+                                "AML.T0074: Masquerading"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Supply Chain Attacks (Cross-Layer)",
+                                "Compromised Framework Components (L3)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM03:2025 Supply Chain"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML06:2023 ML Supply Chain Attacks"
+                            ]
+                        }
+                    ],
+                    "implementationStrategies": [
+                        {
+                            "strategy": "Integrate package reputation and behavioral analysis tools into the Pull Request process.",
+                            "howTo": "<h5>Concept:</h5><p>Use automated tools that review every new dependency added in a Pull Request, analyzing its history, maintainers, code structure, and behavior to flag suspicious indicators.</p><h5>Key Indicators to Flag for Automatic Failure or Manual Review:</h5><ul><li>**Maintainer Churn:** A new, unverified maintainer is added, especially in conjunction with a new install script.</li><li>**Repo Status:** The source code repository has recently been renamed, archived, or transferred.</li><li>**Addition of Install Scripts:** A new version of a package suddenly adds a `postinstall` script where none existed before.</li><li>**Typosquatting/Homoglyphs:** The package name is suspiciously similar to a popular, legitimate package.</li></ul><h5>Use OpenSSF and Commercial Tools in CI/CD</h5><p>Pairing tools like the OpenSSF Scorecard with the Dependency Review Action in GitHub provides a strong, vendor-neutral baseline for vetting dependencies.</p><pre><code># File: .github/workflows/dependency-review.yml\n\nname: Dependency Review\non: [pull_request]\n\njobs:\n  dependency-review:\n    runs-on: ubuntu-latest\n    steps:\n      - name: 'Checkout Repository'\n        uses: actions/checkout@v4\n      - name: 'Dependency Review'\n        # This action checks for dependencies with known vulnerabilities or non-compliant licenses.\n        uses: actions/dependency-review-action@v4</code></pre><p><strong>Action:</strong> Add automated package analysis checks (e.g., Socket.dev, Snyk, OpenSSF Actions) to your Pull Request workflow. Configure rules to fail the build if a new dependency exhibits high-risk characteristics, forcing a security review before the code can be merged.</p>"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "AID-H-024",
+            "name": "Publisher Integrity & Workflow Hardening",
+            "pillar": "infra",
+            "phase": "building, validation",
+            "description": "A critical supply chain defense that ensures software packages (e.g., NPM, PyPI) are published only from a secure, auditable, and authorized source. This technique breaks the attack chain where a stolen developer credential is used to publish a malicious version of a legitimate package. It achieves this by prohibiting publications from local developer machines and mandating that all releases originate from a hardened CI/CD pipeline that authenticates using short-lived, identity-based tokens and generates verifiable provenance attestations.",
+            "toolsOpenSource": [
+                "GitHub Actions, GitLab CI (with OIDC support)",
+                "Sigstore (for signing and attestations)",
+                "Open Policy Agent (OPA), Conftest (for policy checks on workflows)",
+                "npm CLI"
+            ],
+            "toolsCommercial": [
+                "JFrog Artifactory, Sonatype Nexus (as secure internal registries/proxies)",
+                "CircleCI, Jenkins Enterprise",
+                "GitHub Advanced Security",
+                "CI/CD security tools (e.g., Snyk, Socket.dev for workflow analysis)"
+            ],
+            "defendsAgainst": [
+                {
+                    "framework": "MITRE ATLAS",
+                    "items": [
+                        "AML.T0010: AI Supply Chain Compromise",
+                        "AML.T0012: Valid Accounts",
+                        "AML.T0074: Masquerading",
+                        "AML.T0058: Publish Poisoned Models"
+                    ]
+                },
+                {
+                    "framework": "MAESTRO",
+                    "items": [
+                        "Supply Chain Attacks (Cross-Layer)",
+                        "Model Tampering (L1)",
+                        "Compromised Framework Components (L3)"
+                    ]
+                },
+                {
+                    "framework": "OWASP LLM Top 10 2025",
+                    "items": [
+                        "LLM03:2025 Supply Chain"
+                    ]
+                },
+                {
+                    "framework": "OWASP ML Top 10 2023",
+                    "items": [
+                        "ML06:2023 ML Supply Chain Attacks"
+                    ]
+                }
+            ],
+            "implementationStrategies": [
+                {
+                    "strategy": "Mandate CI/CD-only publishing using npm Trusted Publishing (OIDC).",
+                    "howTo": "<h5>Concept:</h5><p>Use **npm Trusted Publishing** (GA as of July 2025) to configure the npm registry to trust your CI/CD provider (e.g., GitHub Actions) via OIDC. This allows the CI/CD job to authenticate with its own identity and get a short-lived token for each run. This eliminates the need for long-lived secrets and makes publishing from a developer machine impossible for that package, as the registry will reject it.</p><h5>Implement the Publishing Workflow</h5><pre><code># File: .github/workflows/publish.yml\n\nname: Publish Package to npm\non:\n  release:\n    types: [created]\n\njobs:\n  publish-npm:\n    runs-on: ubuntu-latest\n    permissions:\n      id-token: write # Grant the job permission to get an OIDC token\n      contents: read\n    environment: production # Use a protected environment\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with:\n          node-version: '20'\n          registry-url: 'https://registry.npmjs.org'\n      - run: npm ci\n      # Explicitly using --provenance is the safest approach, although it may be default in some OIDC contexts.\n      - run: npm publish --provenance</code></pre><p><strong>Action:</strong> Prohibit publishing from developer machines by configuring **npm Trusted Publishing** for your packages. This binds the package to a specific repository and CI/CD workflow, which becomes the sole authorized publisher.</p>"
+                },
+                {
+                    "strategy": "Harden the CI/CD workflow definition to prevent tampering and enforce least privilege.",
+                    "howTo": "<h5>Concept:</h5><p>The publishing workflow is a highly privileged process and must be protected. This is achieved by using the CI/CD platform's built-in security features to protect the workflow file itself and limit its runtime permissions.</p><h5>Implement GitHub Security Controls</h5><ol><li><strong>Branch Protection:</strong> Disallow direct pushes to your main branch.</li><li><strong>CODEOWNERS:</strong> Require approval from a specific security team for any changes to the `/.github/workflows/` directory.</li><li><strong>Pin Actions to Commit SHA:</strong> Pin third-party actions to a commit hash to prevent hijacking (e.g., `uses: actions/setup-node@60edb5...`).</li><li><strong>GitHub Environments:</strong> Use protected environments that require approval from specific reviewers before a job can proceed.</li><li><strong>Restrict `GITHUB_TOKEN` Permissions:</strong> Set the default 'Workflow permissions' to 'Read-only' at the organization or repository level.</li></ol><p><strong>Action:</strong> Protect your publishing workflow with mandatory pull request reviews via `CODEOWNERS` and protected environments. Pin all third-party actions to a commit hash and enforce a default read-only permission model for the `GITHUB_TOKEN`.</p>"
+                },
+                {
+                    "strategy": "Implement consumer-side policies to enforce publisher integrity.",
+                    "howTo": "<h5>Concept:</h5><p>Create a final line of defense by configuring your internal systems to reject packages that do not meet your new, stricter security standards. This enforces the policy on the consumption side, protecting developers even if a malicious package bypasses publishing controls.</p><p><strong>Action:</strong> Configure your internal package registry (e.g., Artifactory) or build tools to reject any new package versions that are not accompanied by a valid, verifiable provenance attestation. Additionally, use the registry's policies to block the installation of any package that contains a `postinstall` script, unless that specific package has been explicitly allow-listed after a manual security review.</p>"
                 }
             ]
         }
