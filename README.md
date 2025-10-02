@@ -7,7 +7,7 @@
 
 ---
 
-### 🚀 Live Demo
+### 🚀 Framework Website
 
 **[Go to the AIDEFEND framework site](https://edward-playground.github.io/aidefense-framework/)**
 
