@@ -9,7 +9,7 @@
 
 ### 🚀 Live Demo
 
-**[Explore the interactive AIDEFEND framework here](https://edward-playground.github.io/aidefense-framework/)**
+**[Go to the AIDEFEND framework site](https://edward-playground.github.io/aidefense-framework/)**
 
 ---
 
