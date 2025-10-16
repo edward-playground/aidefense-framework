@@ -1205,7 +1205,7 @@ export const modelTactic = {
                     ],
                     "toolsCommercial": [
                         "SOAR platforms (Palo Alto XSOAR, Splunk SOAR)",
-                        "Incident Management platforms (PagerDuty, Opsgenie)",
+                        "Incident Management platforms (PagerDuty)",
                         "Business Process Management (BPM) software (ServiceNow, Pega)"
                     ],
                     "defendsAgainst": [
@@ -1314,7 +1314,7 @@ def hitl_checkpoint_drill(checkpoint_id: str = "HITL-CP-001"):
                         "Oncall (by Grafana Labs), go-incident (open-source incident management)"
                     ],
                     "toolsCommercial": [
-                        "Incident Management Platforms (PagerDuty, Opsgenie, xMatters)",
+                        "Incident Management Platforms (PagerDuty, xMatters)",
                         "Cybersecurity training platforms (Immersive Labs, RangeForce)",
                         "SOAR platforms (Palo Alto XSOAR, Splunk SOAR)"
                     ],
@@ -1366,7 +1366,7 @@ def hitl_checkpoint_drill(checkpoint_id: str = "HITL-CP-001"):
                         "Oncall (by Grafana Labs)"
                     ],
                     "toolsCommercial": [
-                        "Incident Management Platforms (PagerDuty, Opsgenie)",
+                        "Incident Management Platforms (PagerDuty)",
                         "SIEM/Log Analytics Platforms (Splunk, Datadog, Google Chronicle, Microsoft Sentinel)",
                         "SOAR Platforms (Palo Alto XSOAR, Splunk SOAR)"
                     ],

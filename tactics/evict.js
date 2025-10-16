@@ -534,7 +534,6 @@ export const evictTactic = {
                                 "Runtime Code Injection (L4)",
                                 "Memory Corruption (L4)",
                                 "Misconfigurations (L4)",
-                                "Policy Bypass (L6)",
                                 "Backdoor Attacks (L1)",
                                 "Compromised Framework Components (L3)",
                                 "Compromised Container Images (L4)",

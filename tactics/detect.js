@@ -559,9 +559,7 @@ export const detectTactic = {
                         {
                             "framework": "MAESTRO",
                             "items": [
-                                "Agent Goal Manipulation (L7)",
-                                "Runaway Agent Behavior (L7)",
-                                "Policy Bypass (L6)"
+                                "Agent Goal Manipulation (L7)"
                             ]
                         },
                         {
@@ -625,8 +623,7 @@ export const detectTactic = {
                         "Model Tampering (L1)",
                         "Runtime Code Injection (L4)",
                         "Memory Corruption (L4)",
-                        "Misconfigurations (L4)",
-                        "Policy Bypass (L6)"
+                        "Misconfigurations (L4)"
                     ]
                 },
                 {
@@ -827,7 +824,6 @@ export const detectTactic = {
                             "items": [
                                 "Misconfigurations (L4: Deployment & Infrastructure)",
                                 "Data Tampering (L2: Data Operations)",
-                                "Policy Bypass (L6: Security & Compliance)",
                                 "Unauthorized Access (Cross-Layer)",
                                 "Compromised Agent Registry (L7: Agent Ecosystem)"
                             ]
@@ -917,6 +913,77 @@ export const detectTactic = {
                         {
                             "strategy": "Monitor for runtime DNS queries or egress traffic from production pods to public model hubs.",
                             "howTo": "<h5>Concept:</h5><p>If your hardening policies are correctly implemented, your production AI services should have no reason to ever contact a public model hub like `huggingface.co`. Any attempt to do so is a high-confidence indicator of a misconfiguration, a policy bypass, or malicious code that has slipped through the supply chain. <br><br>Note: For the `fd.sip.name` field to be effective, the environment must allow Falco to perform or receive DNS resolutions. If this is not feasible, an alternative is to monitor DNS logs directly or use a CNI-level tool like Cilium Hubble.</p><h5>Implement a Runtime Egress Detection Rule</h5><p>This safer Falco pattern explicitly checks for connection events and uses Falco's documented field for resolved domain names.</p><pre><code># File: falco_rules/ai_egress_violation.yaml\n- rule: Prod AI Pod Egress to Public Model Hub\n  desc: Egress from prod AI namespaces to public model hubs (HF domains)\n  condition: >\n    evt.type=connect and fd.l4proto in (tcp, udp) and\n    k8s.ns.name in (ai-prod, ai-inference) and\n    fd.sip.name in (huggingface.co, hf.co)\n  output: >\n    Disallowed egress to public model hub (ns=%k8s.ns.name pod=%k8s.pod.name\n    user=%user.name cmd=%proc.cmdline dst=%fd.name)\n  priority: CRITICAL\n  tags: [network, supply_chain, aidefend]</code></pre><p><strong>Action:</strong> Deploy a runtime security tool and create a critical-priority rule that alerts on any connection attempt from your production AI namespaces to the domains of public model repositories.</p>"
+                        }
+                    ]
+                },
+                {
+                    "id": "AID-D-004.005",
+                    "name": "Runtime Prompt Integrity Verification",
+                    "pillar": "app",
+                    "phase": "operation",
+                    "description": "A runtime mechanism that ensures the integrity and provenance of every turn in a conversational context. It involves cryptographically binding each prompt or tool output to its content and origin within a structured, canonical 'turn envelope'. This creates a verifiable, chained history that is validated before every LLM call to detect and block tampering, context manipulation, or prompt infection attacks. This technique adds a crucial layer of runtime security for the dynamic conversational state, complementing static artifact integrity checks.",
+                    "toolsOpenSource": [
+                        "Cryptographic libraries (Python's hashlib, pyca/cryptography; Node.js's crypto)",
+                        "Workload Identity Systems (SPIFFE/SPIRE)",
+                        "Key Management (HashiCorp Vault)",
+                        "SIEM/Log Analytics (ELK Stack, OpenSearch) for audit ledgers"
+                    ],
+                    "toolsCommercial": [
+                        "Key Management Services (AWS KMS, Azure Key Vault, Google Cloud KMS)",
+                        "Hardware Security Modules (HSMs) for signing operations",
+                        "IDaaS Platforms (Okta, Auth0) for user identity context",
+                        "SIEM Platforms (Splunk, Datadog, Microsoft Sentinel)"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0018 Manipulate AI Model (via context manipulation)",
+                                "AML.T0074 Masquerading (by binding prompts to a verifiable origin)",
+                                "AML.T0061 LLM Prompt Self-Replication (Prompt Infection)"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Agent Goal Manipulation (L7)",
+                                "Repudiation (L7)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM01:2025 Prompt Injection (especially indirect and multi-turn attacks)",
+                                "LLM03:2025 Supply Chain (by verifying outputs from chained tools)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML09:2023 Output Integrity Attack (when verifying tool outputs)"
+                            ]
+                        }
+                    ],
+                    "implementationStrategies": [
+                        {
+                            "strategy": "Define a canonical 'turn envelope' for all context entries.",
+                            "howTo": "<h5>Concept:</h5><p>To ensure reliable cryptographic verification, every entry in the conversational history (user prompts, tool outputs) must be represented in a standardized, deterministic format called a 'turn envelope'. This structured object includes not just the content but also all critical metadata. This entire envelope is then serialized canonically before being hashed or signed.</p><h5>Example Turn Envelope and Canonicalization</h5><pre><code># File: agent_security/envelope.py\nimport json\nimport hashlib\n\ndef create_turn_envelope(index, prev_hash, actor_id, content, content_type='user_prompt'):\n    \"\"\"Creates a structured envelope for a conversational turn.\"\"\"\n    content_hash = hashlib.sha256(content.encode('utf-8')).hexdigest()\n    return {\n        'index': index, # Monotonically increasing turn index\n        'prev_hash': prev_hash, # Hash of the previous turn's envelope\n        'actor_id': actor_id, # Verified identity of the originator\n        'content_type': content_type,\n        'content_hash': content_hash\n        # Other metadata like timestamp, request_id, policy_version can be added here\n    }\n\ndef canonicalize_and_hash(envelope: dict) -> str:\n    \"\"\"Serializes an envelope into a deterministic string and hashes it.\"\"\"\n    # sort_keys and no whitespace are critical for a deterministic output\n    canonical_str = json.dumps(envelope, sort_keys=True, separators=(',', ':'))\n    return hashlib.sha256(canonical_str.encode('utf-8')).hexdigest()</code></pre><p><strong>Action:</strong> Define a standard JSON schema for a 'turn envelope'. Ensure all conversational history is stored as a list of these envelopes. Use a canonical serialization function before any hashing or signing operation.</p>"
+                        },
+                        {
+                            "strategy": "Chain context entries using an anchored integrity mechanism (Signing or HMAC).",
+                            "howTo": "<h5>Concept:</h5><p>A simple chained hash is forgeable by an attacker who can recompute the chain. Each link must be anchored to a trusted source using a digital signature (for non-repudiation) or an HMAC (for symmetric integrity). This prevents an attacker from successfully modifying the history.</p><h5>Implement a Signing Mechanism</h5><p>For service-to-service communication, use a KMS for signing operations to avoid exposing private keys.</p><pre><code># File: agent_security/turn_signer.py\nfrom cryptography.hazmat.primitives import hashes\nfrom cryptography.hazmat.primitives.asymmetric import padding\nfrom cryptography.exceptions import InvalidSignature\n\n# The envelope is signed, not the raw content string.\ndef sign_envelope(envelope_bytes: bytes, private_key) -> bytes:\n    return private_key.sign(\n        envelope_bytes,\n        padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH),\n        hashes.SHA256()\n    )\n\ndef verify_envelope(envelope_bytes: bytes, signature: bytes, public_key) -> bool:\n    try:\n        public_key.verify(\n            signature, envelope_bytes,\n            padding.PSS(mgf=padding.MGF1(hashes.SHA256()), salt_length=padding.PSS.MAX_LENGTH),\n            hashes.SHA256()\n        )\n        return True\n    except InvalidSignature:\n        # Catch the specific error for a failed verification\n        return False\n    except Exception:\n        # Re-raise other crypto errors (e.g., malformed key)\n        raise</code></pre><p><strong>Action:</strong> For high-trust interactions, digitally sign the canonicalized envelope of each turn. The private key should be managed by a KMS or other secure store. The receiving system must verify the signature with the sender's public key.</p>"
+                        },
+                        {
+                            "strategy": "Verify the entire context chain before every LLM call.",
+                            "howTo": "<h5>Concept:</h5><p>The core of this defense is a fail-closed verification loop that runs before every interaction with the LLM. It iterates through the entire conversational history, validating the hash of each turn against the `prev_hash` field of the next turn. A single broken link must invalidate the entire session and block the request.</p><h5>Implement a Chain Verification Loop</h5><pre><code># File: agent_security/chain_verifier.py\n\ndef verify_context_chain(history: list[dict]) -> bool:\n    \"\"\"Verifies the integrity of the entire conversational history chain.\"\"\"\n    last_verified_hash = \"_genesis_hash_\" # A known, constant starting value\n\n    for turn_envelope in sorted(history, key=lambda t: t['index']):\n        # 1. Check if the current turn's prev_hash matches the last known good hash\n        if turn_envelope['prev_hash'] != last_verified_hash:\n            log_security_event(\"Chain broken at index \", turn_envelope['index'])\n            return False # Chain is tampered with!\n\n        # 2. Re-calculate the hash of the current envelope to ensure it's valid\n        # This also ensures the monotonic index hasn't been re-ordered.\n        current_hash = canonicalize_and_hash(turn_envelope)\n\n        # 3. (Optional but recommended) Verify signature on the envelope here\n        # if not verify_envelope(...): return False\n\n        # 4. If all checks pass, update the hash for the next iteration\n        last_verified_hash = current_hash\n\n    return True\n\n# --- In the main application ---\n# if not verify_context_chain(session_history):\n#     raise RuntimeError(\"Context integrity validation failed! Request blocked.\")\n# # Only if verification passes, proceed to assemble prompt for LLM...</code></pre><p><strong>Action:</strong> Before each LLM call, execute a verification function that iterates through the conversational history. The function must validate that the `prev_hash` of each turn correctly links to the recomputed hash of the prior turn. The request must be blocked if validation fails.</p>"
+                        },
+                        {
+                            "strategy": "Handle binary or multimodal content via out-of-band hashing.",
+                            "howTo": "<h5>Concept:</h5><p>Do not embed large binary payloads (like images or PDFs) directly into the conversational context chain. Instead, store the binary content out-of-band (e.g., in an object store like S3). The turn envelope should then contain the `content_type` and the cryptographic hash of the raw binary content, creating a verifiable link to the out-of-band data.</p><h5>Example Envelope for Binary Content</h5><pre><code># An image is uploaded by the user and stored in S3.\n# The application computes its hash before storing.\nimage_hash = hashlib.sha256(image_bytes).hexdigest()\n\n# The turn envelope contains the hash, not the image itself.\nturn_envelope = {\n    'index': 3,\n    'prev_hash': '...',\n    'actor_id': 'user:alice',\n    'content_type': 'image/jpeg',\n    'content_hash': image_hash,\n    'storage_uri': 's3://my-bucket/uploads/image123.jpg'\n}\n\n# The agent can then use the storage_uri to securely fetch the content\n# and verify its integrity by re-computing the hash before use.</code></pre><p><strong>Action:</strong> For multimodal inputs, store the binary data in a separate location. The turn envelope in the context chain must contain the hash of this binary data, allowing for integrity verification without bloating the context history.</p>"
+                        },
+                        {
+                            "strategy": "Maintain a secure audit ledger for provenance and non-repudiation.",
+                            "howTo": "<h5>Concept:</h5><p>Leverage the verified metadata from each turn to create a high-signal, low-noise audit trail. This ledger should be a compact, append-only log that is optimized for security analysis, providing a definitive record of who did what and when.</p><h5>Log Standardized Events to a Secure Store</h5><p>For every verified turn, generate a structured log entry and send it to a secure, immutable log store. This provides a uniform audit trail for investigations.</p><pre><code># File: agent_security/audit_ledger.py\nimport json\n\n# Assume siem_logger is configured to send to a secure, dedicated stream.\n\ndef log_to_ledger(turn_envelope: dict, decision: str):\n    \"\"\"Logs a minimal, verifiable record of a conversational turn.\"\"\"\n    ledger_entry = {\n        'request_id': turn_envelope.get('request_id'),\n        'timestamp': turn_envelope.get('timestamp'),\n        'actor_id': turn_envelope.get('actor_id'),\n        'content_hash': turn_envelope.get('content_hash'),\n        'envelope_hash': canonicalize_and_hash(turn_envelope),\n        'cert_id': turn_envelope.get('cert_id'),\n        'policy_version': turn_envelope.get('policy_version'),\n        'decision': decision, # e.g., 'PROCESSED', 'BLOCKED_BY_POLICY'\n        'turn_index': turn_envelope.get('index')\n    }\n    siem_logger.info(json.dumps(ledger_entry))\n</code></pre><p><strong>Action:</strong> Create a standardized audit ledger schema. After each prompt is verified, generate a log entry containing the key provenance and security context fields and write it to an append-only, secure logging endpoint.</p>"
                         }
                     ]
                 }
@@ -1076,8 +1143,7 @@ export const detectTactic = {
                             "items": [
                                 "Model Stealing (L1)",
                                 "Agent Tool Misuse (L7)",
-                                "DoS on Framework APIs (L3)",
-                                "Policy Bypass (L6)"
+                                "DoS on Framework APIs (L3)"
                             ]
                         },
                         {
