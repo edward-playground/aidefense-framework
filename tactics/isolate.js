@@ -333,78 +333,192 @@ export const isolateTactic = {
         },
         {
             "id": "AID-I-002",
-            "name": "Network Segmentation & Isolation for AI Systems", "pillar": "infra", "phase": "operation",
-            "description": "Implement network segmentation and microsegmentation strategies to isolate AI systems and their components (e.g., training environments, model serving endpoints, data stores, agent control planes) from general corporate networks and other critical IT/OT systems. This involves enforcing strict communication rules through firewalls, proxies, and network policies to limit an attacker's ability to pivot from a compromised AI component to other parts of the network, or to exfiltrate data to unauthorized destinations. This technique reduces the \\\"blast radius\\\" of a security incident involving an AI system.",
-            "toolsOpenSource": [
-                "Linux Netfilter (iptables, nftables), firewalld",
-                "Kubernetes Network Policies",
-                "Service Mesh (Istio, Linkerd, Kuma)",
-                "CNI plugins (Calico, Cilium)",
-                "Open-source API Gateways (Kong, Tyk, APISIX)"
-            ],
-            "toolsCommercial": [
-                "Microsegmentation platforms (Illumio, Guardicore, Cisco Secure Workload, Akamai Guardicore)",
-                "Next-Generation Firewalls (NGFWs)",
-                "Cloud-native firewall services (AWS Network Firewall, Azure Firewall, Google Cloud Firewall)",
-                "Commercial API Gateway solutions"
-            ],
+            "name": "Network Segmentation & Isolation for AI Systems",
+            "description": "Implement network segmentation and microsegmentation strategies using firewalls, proxies, private endpoints, and transport layer security to enforce strict communication boundaries for AI systems. This involves isolating internal components (e.g., training vs. inference environments, data stores) to limit lateral movement, and securing connections to external dependencies (e.g., MaaS APIs) to prevent data exfiltration, SSRF, and MitM attacks. The goal is to reduce the blast radius of a compromise by enforcing least-privilege network access both internally and externally.",
             "defendsAgainst": [
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
+                        "AML.T0044 Full AI Model Access (limits access)",
+                        "AML.T0036 Data from Information Repositories (limits access)",
                         "AML.T0025 Exfiltration via Cyber Means",
-                        "AML.T0044 Full AI Model Access",
+                        "AML.T0049 Exploit Public-Facing Application (SSRF)",
                         "AML.T0072 Reverse Shell"
                     ]
                 },
                 {
                     "framework": "MAESTRO",
                     "items": [
-                        "Data Exfiltration (L2/Cross-Layer)",
                         "Lateral Movement (Cross-Layer)",
-                        "Compromised RAG Pipelines (L2, isolating components)"
+                        "Compromised RAG Pipelines (L2, isolating internal DB access)",
+                        "Data Exfiltration (Cross-Layer)",
+                        "Orchestration Attacks (L4)"
                     ]
                 },
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
-                        "LLM02:2025 Sensitive Information Disclosure (limits exfil paths)",
-                        "LLM03:2025 Supply Chain (isolating third-party components)",
-                        "LLM06:2025 Excessive Agency (limits reach of compromised agent)"
+                        "LLM02:2025 Sensitive Information Disclosure (via exfiltration)",
+                        "LLM06:2025 Excessive Agency",
+                        "LLM03:2025 Supply Chain"
                     ]
                 },
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "ML05:2023 Model Theft (isolating repositories)",
-                        "ML06:2023 AI Supply Chain Attacks (segmenting components)"
+                        "ML05:2023 Model Theft",
+                        "ML06:2023 ML Supply Chain Attacks"
                     ]
                 }
             ],
-            "implementationStrategies": [
+            "subTechniques": [
                 {
-                    "strategy": "Host critical AI components on dedicated network segments (VLANs, VPCs).",
-                    "howTo": "<h5>Concept:</h5><p>This is 'macro-segmentation'. By placing different environments (e.g., training, inference, data storage) in separate virtual networks, you create strong, high-level boundaries. A compromise in one segment, like a data science experimentation VPC, is prevented at the network level from accessing the production inference VPC.</p><h5>Define Separate VPCs with Infrastructure as Code</h5><p>Use a tool like Terraform to define distinct, non-overlapping Virtual Private Clouds (VPCs) for each environment. This ensures the separation is deliberate, version-controlled, and reproducible.</p><pre><code># File: infrastructure/networks.tf (Terraform)\\n\\n# VPC for the production AI inference service\\nresource \\\"aws_vpc\\\" \\\"prod_vpc\\\" {\\n  cidr_block = \\\"10.0.0.0/16\\\"\\n  tags = { Name = \\\"aidefend-prod-vpc\\\" }\\n}\\n\n# A completely separate VPC for the AI model training environment\\nresource \\\"aws_vpc\\\" \\\"training_vpc\\\" {\\n  cidr_block = \\\"10.1.0.0/16\\\"\\n  tags = { Name = \\\"aidefend-training-vpc\\\" }\\n}\\n\n# A VPC for the data science team's sandboxed experimentation\\nresource \\\"aws_vpc\\\" \\\"sandbox_vpc\\\" {\\n  cidr_block = \\\"10.2.0.0/16\\\"\\n  tags = { Name = \\\"aidefend-sandbox-vpc\\\" }\\n}\\n\n# By default, these VPCs cannot communicate with each other.\\n# Any connection (e.g., VPC Peering) must be explicitly defined and secured.</code></pre><p><strong>Action:</strong> Provision separate, dedicated VPCs for your production, staging, and development/training environments. Do not allow VPC peering between them by default. All promotion of artifacts (like models) between environments should happen through a secure, audited CI/CD pipeline that connects to registries, not by direct network access between the VPCs.</p>"
+                    "id": "AID-I-002.001",
+                    "name": "Internal AI Network Segmentation",
+                    "pillar": "infra",
+                    "phase": "operation",
+                    "description": "Implement network segmentation and microsegmentation strategies to isolate AI systems and their *internal* components (e.g., training environments, model serving endpoints, data stores, agent control planes) from general corporate networks and other critical IT/OT systems. Enforces strict internal communication rules through firewalls, security groups, and network policies to limit lateral movement and reduce the internal blast radius of a compromise.",
+                    "toolsOpenSource": [
+                        "Linux Netfilter (iptables, nftables), firewalld",
+                        "Kubernetes Network Policies",
+                        "Service Mesh (Istio, Linkerd, Kuma) for internal policies",
+                        "CNI plugins (Calico, Cilium)",
+                        "Cloud provider CLIs/SDKs (AWS CLI, gcloud, Azure CLI)",
+                        "Terraform, Ansible, CloudFormation, Pulumi (for IaC)"
+                    ],
+                    "toolsCommercial": [
+                        "Microsegmentation platforms (Illumio, Guardicore [Akamai], Cisco Secure Workload)",
+                        "Cloud-native firewall services (AWS Security Groups, Azure NSGs, GCP Firewall Rules)",
+                        "Commercial Service Mesh offerings (e.g., Istio distributions with enterprise support)"
+                    ],
+                    "implementationStrategies": [
+                        {
+                            "strategy": "Host critical AI components on dedicated network segments (VLANs, VPCs).",
+                            "howTo": "<h5>Concept:</h5><p>This is 'macro-segmentation'. By placing different environments (e.g., training, inference, data storage) in separate virtual networks, you create strong, high-level boundaries. A compromise in one segment, like a data science experimentation VPC, is prevented at the network level from accessing the production inference VPC.</p><h5>Define Separate VPCs with Infrastructure as Code</h5><p>Use a tool like Terraform to define distinct, non-overlapping Virtual Private Clouds (VPCs) for each environment. This ensures the separation is deliberate, version-controlled, and reproducible.</p><pre><code># File: infrastructure/networks.tf (Terraform)\n\n# VPC for the production AI inference service\nresource \"aws_vpc\" \"prod_vpc\" {\n  cidr_block = \"10.0.0.0/16\"\n  tags = { Name = \"aidefend-prod-vpc\" }\n}\n\n# A completely separate VPC for the AI model training environment\nresource \"aws_vpc\" \"training_vpc\" {\n  cidr_block = \"10.1.0.0/16\"\n  tags = { Name = \"aidefend-training-vpc\" }\n}\n\n# A VPC for the data science team's sandboxed experimentation\nresource \"aws_vpc\" \"sandbox_vpc\" {\n  cidr_block = \"10.2.0.0/16\"\n  tags = { Name = \"aidefend-sandbox-vpc\" }\n}\n\n# By default, these VPCs cannot communicate with each other.\n# Any connection (e.g., VPC Peering) must be explicitly defined and secured.</code></pre><p><strong>Action:</strong> Provision separate, dedicated VPCs for your production, staging, and development/training environments. Do not allow VPC peering between them by default. All promotion of artifacts (like models) between environments should happen through a secure, audited CI/CD pipeline that connects to registries, not by direct network access between the VPCs.</p>"
+                        },
+                        {
+                            "strategy": "Apply least privilege to *internal* network communications for AI systems.",
+                            "howTo": "<h5>Concept:</h5><p>Within a VPC, use firewall rules (like Security Groups in AWS) to enforce least-privilege access between components. A resource should only be able to receive traffic on the specific ports and from the specific internal sources it absolutely needs to function. All other traffic should be denied.</p><h5>Create Fine-Grained Security Group Rules</h5><p>This Terraform example defines two security groups. The first is for a model inference server, which only allows traffic on port 8080 from the second security group, which is attached to an internal API gateway. This prevents anyone else, including other services in the same VPC, from directly accessing the model. For default-deny egress in AWS Security Groups, explicitly set an empty egress rule list.</p><pre><code># File: infrastructure/security_groups.tf (Terraform)\ndata \"aws_vpc\" \"prod_vpc\" {\n  filter { name = \"tag:Name\" values = [\"aidefend-prod-vpc\"] }\n}\n\n# Security group for the Internal API Gateway\nresource \"aws_security_group\" \"internal_api_gateway_sg\" {\n  name_prefix = \"internal-api-gateway-sg-\"\n  vpc_id      = data.aws_vpc.prod_vpc.id\n  tags        = { Name = \"internal-api-gateway-sg\" }\n  # Define egress rules needed for the gateway itself as required\n}\n\n# Security group for the Model Inference service\nresource \"aws_security_group\" \"inference_sg\" {\n  name_prefix = \"inference-server-sg-\"\n  vpc_id      = data.aws_vpc.prod_vpc.id\n  tags        = { Name = \"inference-server-sg\" }\n\n  # Ingress Rule: Allow traffic ONLY from the Internal API Gateway on the app port\n  ingress {\n    description              = \"Allow TCP 8080 from Internal API Gateway\"\n    from_port                = 8080\n    to_port                  = 8080\n    protocol                 = \"tcp\"\n    source_security_group_id = aws_security_group.internal_api_gateway_sg.id\n  }\n\n  # Default-deny egress: explicitly empty egress list\n  egress = []\n}\n</code></pre><p><strong>Action:</strong> For each component of your AI system, create a dedicated security group. Define ingress rules that only allow traffic from the specific security groups of the internal services that need to connect to it. Implement default-deny egress by setting <code>egress = []</code>, then add narrowly-scoped outbound rules only if strictly required.</p>"
+                        },
+                        {
+                            "strategy": "Implement microsegmentation (SDN, service mesh, host-based firewalls) for fine-grained internal control.",
+                            "howTo": "<h5>Concept:</h5><p>Microsegmentation provides fine-grained, identity-aware traffic control between individual workloads (e.g., pods in Kubernetes). Even if two pods are on the same network segment, they cannot communicate unless an explicit policy allows it. This requires a baseline 'default-deny' policy to be effective.</p><h5>Implement Kubernetes NetworkPolicies (with Default Deny)</h5><p>First, apply a default-deny policy to the namespace. Then, create specific 'allow' policies for required traffic.</p><pre><code># File: k8s/default-deny-policy.yaml\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: default-deny-all\n  namespace: ai-production\nspec:\n  podSelector: {}\n  policyTypes:\n  - Ingress\n  - Egress\n---\n# File: k8s/allow-gateway-to-inference.yaml\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-gateway-to-inference\n  namespace: ai-production\nspec:\n  podSelector:\n    matchLabels:\n      app: model-server\n  policyTypes:\n  - Ingress\n  ingress:\n  - from:\n    - podSelector:\n        matchLabels:\n          app: api-gateway\n    ports:\n    - protocol: TCP\n      port: 8080</code></pre><p><strong>Action:</strong> Deploy a CNI plugin that supports <code>NetworkPolicy</code> enforcement (e.g., Calico, Cilium). Implement a 'default-deny-all' policy for each namespace containing AI workloads. Then, create specific, least-privilege policies to allow only the necessary communication paths between pods.</p>"
+                        },
+                        {
+                            "strategy": "Separate development/testing environments from production using distinct accounts or projects.",
+                            "howTo": "<h5>Concept:</h5><p>This is a fundamental security control that isolates volatile and less-secure development environments from the stable, hardened production environment using strong administrative boundaries provided by cloud providers.</p><h5>Implement a Multi-Account/Multi-Project Cloud Strategy with SCPs</h5><p>Structure your cloud organization and apply Service Control Policies (SCPs in AWS, Organization Policies in GCP, Azure Policy) to enforce separation.</p><pre><code># Conceptual Cloud Organization Structure (e.g., AWS Organizations)\n\nMy-AI-Organization/ (Root)\n└── OU: AI-Workloads\n    ├── Account: 111111111111 (AI-Prod)\n    ├── Account: 222222222222 (AI-Staging)\n    └── Account: 333333333333 (AI-Dev/Sandbox)\n\n# --- Example AWS SCP to prevent Prod <-> Dev Peering ---\n# Attach this policy to the AI-Workloads OU or Root\n{\n  \"Version\": \"2012-10-17\",\n  \"Statement\": [\n    {\n      \"Sid\": \"DenyProdDevPeering\",\n      \"Effect\": \"Deny\",\n      \"Action\": [\n        \"ec2:AcceptVpcPeeringConnection\",\n        \"ec2:CreateVpcPeeringConnection\"\n      ],\n      \"Resource\": \"*\",\n      \"Condition\": {\n        \"StringEquals\": {\n          \"aws:PrincipalAccount\": [\"111111111111\"],\n          \"ec2:AccepterVpcInfo/OwnerId\": [\"333333333333\"],\n          \"ec2:RequesterVpcInfo/OwnerId\": [\"333333333333\"]\n        }\n      }\n    }\n  ]\n}</code></pre><p><strong>Action:</strong> Structure your cloud environment using separate accounts (AWS) or projects (GCP/Azure) for development, staging, and production. Use organization-level policies (SCPs, Org Policies) to programmatically prevent the creation of network paths (VPC Peering, Direct Connect, VPNs) between production and non-production environments.</p>"
+                        },
+                        {
+                            "strategy": "Regularly review and audit internal network segmentation rules.",
+                            "howTo": "<h5>Concept:</h5><p>Internal firewall rules and network policies can become outdated ('rule rot'). Regular, automated audits are necessary to find and remediate overly permissive internal rules, including rules allowing access between security groups.</p><h5>Implement an Automated Security Group Auditor (Improved)</h5><p>Write a script that uses your cloud provider's SDK to scan all security groups for high-risk misconfigurations, including overly broad internal CIDR access and risky SG-to-SG rules.</p><pre><code># File: audits/check_internal_security_groups_v2.py\nimport boto3\nimport json\nfrom ipaddress import ip_network\n\nINTERNAL_RANGES = [ip_network('10.0.0.0/8'), ip_network('172.16.0.0/12'), ip_network('192.168.0.0/16')]\nSENSITIVE_PORTS = [22, 3389, 6379, 27017]\nBROAD_PREFIX_THRESHOLD = 16\n\ndef is_internal(cidr):\n    try:\n        ip = ip_network(cidr)\n        return any(ip.subnet_of(internal_range) for internal_range in INTERNAL_RANGES)\n    except ValueError:\n        return False\n\ndef audit_internal_sg_rules(region):\n    ec2 = boto3.client('ec2', region_name=region)\n    offending_rules = []\n    all_groups = {g['GroupId']: g for g in ec2.describe_security_groups()['SecurityGroups']}\n\n    for group_id, group in all_groups.items():\n        for rule in group.get('IpPermissions', []):\n            from_port = rule.get('FromPort')\n            to_port = rule.get('ToPort')\n            is_sensitive_port_range = False\n            if rule.get('IpProtocol') == '-1':\n                is_sensitive_port_range = True\n            elif from_port is not None and to_port is not None:\n                is_sensitive_port_range = any(from_port <= p <= to_port for p in SENSITIVE_PORTS)\n\n            for ip_range in rule.get('IpRanges', []):\n                cidr = ip_range.get('CidrIp')\n                if cidr and is_internal(cidr) and is_sensitive_port_range:\n                    try:\n                        prefix = ip_network(cidr).prefixlen\n                        if prefix <= BROAD_PREFIX_THRESHOLD:\n                            offending_rules.append({'group_id': group_id, 'reason': f'Broad internal CIDR ({cidr}) allowed to sensitive port.'})\n                            break\n                    except ValueError:\n                        pass\n\n            for sg_source in rule.get('UserIdGroupPairs', []):\n                source_group_id = sg_source.get('GroupId')\n                # Optional: analyze source SG here if needed\n        \n    return offending_rules\n</code></pre><p><strong>Action:</strong> Schedule an automated script to run weekly that audits all internal firewall rules (Security Groups, NSGs, K8s NetworkPolicies). Enhance the script to check IPv4, IPv6, and group-based rules against your organization's internal network standards and sensitive port policies.</p>"
+                        }
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0044 Full AI Model Access (limits internal access)",
+                                "AML.T0036 Data from Information Repositories (limits internal access)"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Lateral Movement (Cross-Layer)",
+                                "Compromised RAG Pipelines (L2, isolating internal DB access)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM02:2025 Sensitive Information Disclosure (limits internal data exposure)",
+                                "LLM06:2025 Excessive Agency (limits internal reach of compromised agent)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML05:2023 Model Theft (limits internal access to model artifacts)",
+                                "ML06:2023 ML Supply Chain Attacks (limits blast radius of internally compromised component)"
+                            ]
+                        }
+                    ]
                 },
                 {
-                    "strategy": "Apply least privilege to network communications for AI systems.",
-                    "howTo": "<h5>Concept:</h5><p>Within a VPC, use firewall rules (like Security Groups in AWS) to enforce least-privilege access between components. A resource should only be able to receive traffic on the specific ports and from the specific sources it absolutely needs to function. All other traffic should be denied.</p><h5>Create Fine-Grained Security Group Rules</h5><p>This Terraform example defines two security groups. The first is for a model inference server, which only allows traffic on port 8080 from the second security group, which is attached to an API gateway. This prevents anyone else, including other services in the same VPC, from directly accessing the model.</p><pre><code># File: infrastructure/security_groups.tf (Terraform)\\n\n# Security group for the API Gateway\\nresource \\\"aws_security_group\\\" \\\"api_gateway_sg\\\" {\\n  name   = \\\"api-gateway-sg\\\"\\n  vpc_id = aws_vpc.prod_vpc.id\\n}\\n\n# Security group for the Model Inference service\\nresource \\\"aws_security_group\\\" \\\"inference_sg\\\" {\\n  name   = \\\"inference-server-sg\\\"\\n  vpc_id = aws_vpc.prod_vpc.id\\n\n  # Ingress Rule: Allow traffic ONLY from the API Gateway on the app port\\n  ingress {\\n    description      = \\\"Allow traffic from API Gateway\\\"\\n    from_port        = 8080\\n    to_port          = 8080\\n    protocol         = \\\"tcp\\\"\\n    # This line links the two groups, enforcing least privilege\\n    source_security_group_id = aws_security_group.api_gateway_sg.id\\n  }\\n\n  # Egress Rule: Deny all outbound traffic by default\\n  # (Add specific rules here if the service needs to call other APIs)\n  egress {\\n    from_port   = 0\\n    to_port     = 0\\n    protocol    = \\\"-1\\\"\\n    cidr_blocks = [\\\"0.0.0.0/0\\\"]\\n  }\\n}</code></pre><p><strong>Action:</strong> For each component of your AI system (e.g., API, model server, database), create a dedicated security group. Define ingress rules that only allow traffic from the specific security groups of the services that need to connect to it. Start with a default-deny egress policy and only add outbound rules that are strictly necessary.</p>"
-                },
-                {
-                    "strategy": "Utilize API gateways or forward proxies to mediate and control AI traffic.",
-                    "howTo": "<h5>Concept:</h5><p>An API Gateway is a centralized control point for all incoming (ingress) traffic, allowing you to enforce security policies like authentication and rate limiting. A forward proxy is a control point for all outgoing (egress) traffic, ensuring your AI agents can only connect to an approved list of external APIs.</p><h5>Step 1: Configure an API Gateway for Ingress Control</h5><p>This example for the Kong API Gateway defines a route and applies a JWT validation plugin and a rate-limiting plugin before forwarding traffic to the backend inference service.</p><pre><code># File: kong_config.yaml (Kong declarative configuration)\\nservices:\\n- name: inference-service\\n  url: http://my-inference-server.ai-production.svc:8080\\n  routes:\\n  - name: inference-route\\n    paths:\\n    - /predict\\n    plugins:\\n    # Enforce JWT authentication on every request\\n    - name: jwt\\n    # Prevent abuse by limiting requests\\n    - name: rate-limiting\\n      config:\\n        minute: 100\\n        policy: local</code></pre><h5>Step 2: Configure a Forward Proxy for Egress Control</h5><p>This example for the Squid proxy defines an Access Control List (ACL) that whitelists specific external domains an AI agent is allowed to contact.</p><pre><code># File: /etc/squid/squid.conf (Squid configuration)\\n\n# Define an ACL for approved external APIs\\nacl allowed_external_apis dstdomain .weather.com .wikipedia.org .api.github.com\n\n# Allow HTTP access only to the whitelisted domains\\nhttp_access allow allowed_external_apis\n\n# Deny all other external connections\\nhttp_access deny all</code></pre><p><strong>Action:</strong> Place an API Gateway in front of all your AI inference APIs to manage authentication and traffic. Route all outbound internet traffic from your AI agents through a forward proxy configured with a strict allowlist of approved domains.</p>"
-                },
-                {
-                    "strategy": "Implement microsegmentation (SDN, service mesh, host-based firewalls).",
-                    "howTo": "<h5>Concept:</h5><p>Microsegmentation provides fine-grained, identity-aware traffic control between individual workloads (e.g., pods in Kubernetes). It's a core component of a Zero Trust network. Even if two pods are on the same network segment, they cannot communicate unless an explicit policy allows it.</p><h5>Implement a Kubernetes NetworkPolicy</h5><p>A `NetworkPolicy` resource acts as a pod-level firewall. This policy selects the `model-server` pod and specifies that it will only accept ingress traffic from pods that have the label `app: api-gateway`. All other traffic, even from within the same namespace, is blocked.</p><pre><code># File: k8s/microsegmentation-policy.yaml\\napiVersion: networking.k8s.io/v1\\nkind: NetworkPolicy\\nmetadata:\\n  name: model-server-policy\\n  namespace: ai-production\\nspec:\\n  # Apply this policy to pods with the label 'app=model-server'\\n  podSelector:\\n    matchLabels:\\n      app: model-server\\n  \n  policyTypes:\\n  - Ingress\\n\n  # Define the ingress allowlist\\n  ingress:\\n  - from:\\n    # Allow traffic only from pods with the label 'app=api-gateway'\\n    - podSelector:\\n        matchLabels:\\n          app: api-gateway\\n    ports:\\n    # Only on the specific port the application listens on\\n    - protocol: TCP\\n      port: 8080</code></pre><p><strong>Action:</strong> Deploy a CNI (Container Network Interface) plugin that supports `NetworkPolicy` enforcement, such as Calico or Cilium, in your Kubernetes cluster. Implement a 'default-deny' policy for the namespace and then create specific, least-privilege policies for each service that only allow necessary communication paths.</p>"
-                },
-                {
-                    "strategy": "Separate development/testing environments from production.",
-                    "howTo": "<h5>Concept:</h5><p>This is a fundamental security control that isolates volatile and less-secure development environments from the stable, hardened production environment. This separation should be enforced at the highest level possible, such as using completely separate cloud accounts or projects.</p><h5>Implement a Multi-Account/Multi-Project Cloud Strategy</h5><p>Structure your cloud organization to reflect this separation. This provides strong IAM and network isolation by default.</p><pre><code># Conceptual Cloud Organization Structure\\n\nMy-AI-Organization/\\n├── 📂 Accounts/\\n│   ├── 👤 **000000000000 (Management Account)**\\n│   │   └── Controls billing and organization policies\\n│   ├── 👤 **111111111111 (Security Tooling Account)**\\n│   │   └── Hosts centralized security services (SIEM, vulnerability scanner, etc.)\\n│   ├── 👤 **222222222222 (Shared Services Account)**\\n│   │   └── Hosts CI/CD runners, container registries\\n│   ├── 👤 **333333333333 (AI Sandbox/Dev Account)**\\n│   │   └── Data scientists experiment here. Permissive access. No production data.\\n│   └── 👤 **444444444444 (AI Production Account)**\\n│       └── Hosts the production inference APIs. Highly restricted access.\\n\n# Network connectivity between the Sandbox and Production accounts is forbidden.\\n# Promotion happens by pushing a signed container image from the Sandbox account's\\n# registry to the Production account's registry via an automated CI/CD pipeline.</code></pre><p><strong>Action:</strong> Structure your cloud environment using separate accounts (AWS) or projects (GCP) for development, staging, and production. Use organization-level policies (e.g., AWS SCPs) to prevent the creation of network paths between production and non-production environments.</p>"
-                },
-                {
-                    "strategy": "Regularly review and audit network segmentation rules.",
-                    "howTo": "<h5>Concept:</h5><p>Firewall rules and network policies can become outdated or misconfigured over time ('rule rot'), creating security gaps. Regular, automated audits are necessary to find and remediate overly permissive rules.</p><h5>Implement an Automated Security Group Auditor</h5><p>Write a script that uses your cloud provider's SDK to scan all security groups for common high-risk misconfigurations, such as allowing unrestricted public access to sensitive ports.</p><pre><code># File: audits/check_security_groups.py\\nimport boto3\\n\nDANGEROUS_PORTS = [22, 3389, 3306, 5432] # SSH, RDP, MySQL, Postgres\n\ndef audit_security_groups(region):\\n    \\\"\\\"\\\"Scans all security groups for overly permissive ingress rules.\\\"\\\"\\\"\\n    ec2 = boto3.client('ec2', region_name=region)\\n    offending_rules = []\n    \n    for group in ec2.describe_security_groups()['SecurityGroups']:\\n        for rule in group.get('IpPermissions', []):\\n            is_dangerous_port = any(rule.get('FromPort') == p for p in DANGEROUS_PORTS)\\n            for ip_range in rule.get('IpRanges', []):\\n                if ip_range.get('CidrIp') == '0.0.0.0/0':\\n                    if rule.get('FromPort') == -1 or is_dangerous_port:\\n                        offending_rules.append({\\n                            'group_id': group['GroupId'],\\n                            'group_name': group['GroupName'],\\n                            'rule': rule\\n                        })\\n    return offending_rules\n\n# --- Usage ---\n# risky_rules = audit_security_groups('us-east-1')\\n# if risky_rules:\\n#     print(\\\"🚨 Found overly permissive security group rules:\\\")\\n#     for rule in risky_rules:\\n#         print(json.dumps(rule, indent=2))\\n#     # Send report to security team</code></pre><p><strong>Action:</strong> Schedule an automated script to run weekly that audits all firewall rules (e.g., AWS Security Groups, Azure NSGs) in your AI-related accounts. The script should specifically check for rules that allow ingress from `0.0.0.0/0` on sensitive management ports and generate a report for the security team to review.</p>"
+                    "id": "AID-I-002.002",
+                    "name": "Secure External AI Service Connectivity",
+                    "pillar": "infra",
+                    "phase": "operation",
+                    "description": "Applies strict network path control, transport security, policy mediation, and monitoring specifically to connections originating from the AI system and targeting external services, particularly third-party or Model-as-a-Service (MaaS) foundation model APIs. Aims to prevent data exfiltration, Server-Side Request Forgery (SSRF), Man-in-the-Middle (MitM) attacks, and abuse of external dependencies.",
+                    "toolsOpenSource": [
+                        "Open-source API Gateways (Kong, Tyk, APISIX)",
+                        "Open-source Proxies (Squid, Nginx, HAProxy)",
+                        "OpenSSL (as a library for verification logic)",
+                        "SPIFFE/SPIRE (for workload identity for mTLS)",
+                        "Falco, Cilium Tetragon, Sysdig (for egress monitoring)",
+                        "Terraform, CloudFormation, Pulumi (for IaC of private endpoints)",
+                        "Requests (Python library), cURL (as clients needing security)"
+                    ],
+                    "toolsCommercial": [
+                        "Cloud Provider Private Connectivity (AWS PrivateLink, Azure Private Link, Google Private Service Connect)",
+                        "Commercial API Gateway solutions (Apigee, MuleSoft, AWS API Gateway, Azure API Management)",
+                        "Cloud-native firewall services (AWS Network Firewall, Azure Firewall Premium, Google Cloud Firewall)",
+                        "Certificate Management Platforms (Venafi, DigiCert)",
+                        "SIEM/Log Analytics Platforms (Splunk, Datadog, Sentinel, Chronicle)"
+                    ],
+                    "implementationStrategies": [
+                        {
+                            "strategy": "Integrate external MaaS/API endpoints via private network connections.",
+                            "howTo": "<h5>Concept:</h5><p>Keep traffic to critical external AI services off the public internet. Use cloud provider services like AWS PrivateLink, Azure Private Link, or Google Private Service Connect to create a private, secure endpoint for the MaaS provider within your own VPC. All traffic then flows over the cloud provider's backbone network.</p><h5>Create a Private Endpoint (Example: AWS PrivateLink)</h5><p>Use Infrastructure as Code to provision a VPC Endpoint for the MaaS provider's service, assuming they offer a PrivateLink-compatible service and you have completed the necessary subscription/acceptance flow.</p><pre><code># File: infrastructure/external_connectivity.tf (Terraform)\n\ndata \"aws_vpc\" \"prod_vpc\" {\n  filter { name = \"tag:Name\" values = [\"aidefend-prod-vpc\"] }\n}\n\ndata \"aws_subnets\" \"private_subnets\" {\n  filter { name = \"vpc-id\" values = [data.aws_vpc.prod_vpc.id] }\n  filter { name = \"tag:Tier\" values = [\"Private\"] }\n}\n\n# Find the MaaS provider's VPC Endpoint Service Name (must be obtained from provider)\ndata \"aws_vpc_endpoint_service\" \"maas_service\" {\n  service_name = \"com.amazonaws.vpce.us-east-1.provider-specific-service-name\"\n}\n\n# SG for the Interface Endpoint ENIs: allow ingress 443 from the AI workloads' SG\nresource \"aws_security_group\" \"maas_endpoint_sg\" {\n  name_prefix = \"maas-endpoint-sg-\"\n  vpc_id      = data.aws_vpc.prod_vpc.id\n  ingress {\n    from_port   = 443\n    to_port     = 443\n    protocol    = \"tcp\"\n    # Example: allow from an existing AI workload SG (replace with your SG id)\n    security_groups = [aws_security_group.allow_maas_client_egress_sg.id]\n  }\n  egress = []\n  tags = { Name = \"maas-endpoint-sg\" }\n}\n\n# SG for AI clients that will call the endpoint: restrict egress to 443 only\nresource \"aws_security_group\" \"allow_maas_client_egress_sg\" {\n  name_prefix = \"allow-maas-client-egress-\"\n  vpc_id      = data.aws_vpc.prod_vpc.id\n  egress {\n    from_port   = 443\n    to_port     = 443\n    protocol    = \"tcp\"\n    # Narrow further at firewall/NACL or by resolving the endpoint ENI IPs\n    cidr_blocks = [\"0.0.0.0/0\"]\n  }\n  tags = { Name = \"allow-maas-client-egress-sg\" }\n}\n\n# Create a VPC Endpoint (Interface) in your private subnets\nresource \"aws_vpc_endpoint\" \"maas_endpoint\" {\n  vpc_id              = data.aws_vpc.prod_vpc.id\n  service_name        = data.aws_vpc_endpoint_service.maas_service.service_name\n  vpc_endpoint_type   = \"Interface\"\n  subnet_ids          = data.aws_subnets.private_subnets.ids\n  security_group_ids  = [aws_security_group.maas_endpoint_sg.id]\n  private_dns_enabled = true\n}\n\n# Ensure client instances/pods use the endpoint's private DNS. Lock down routing and DNS split-horizon as needed.\n</code></pre><p><strong>Action:</strong> Connect to external MaaS providers using private endpoints. Configure endpoint SG to accept only from client SGs and restrict client egress to 443 (further narrowed by firewall/DNS policies). Complete provider-side acceptance as required.</p>"
+                        },
+                        {
+                            "strategy": "Enforce strict egress controls using firewalls and proxies with verified DNS/SNI allow-lists.",
+                            "howTo": "<h5>Concept:</h5><p>Implement a default-deny egress policy. Explicitly allow connections only to approved external domains needed by the AI system. Use Layer 7 inspection (TLS SNI, FQDN filtering) for greater precision than IP-based rules.</p><h5>Step 1: Configure Firewall/Proxy Allowlist with TLS Inspection</h5><p>Use a stateful firewall that supports TLS inspection (like Azure Firewall Premium, AWS Network Firewall, or a dedicated proxy like Squid with SSL Bump) to filter outbound HTTPS traffic based on the FQDN.</p><pre><code># Conceptual Azure Firewall Policy Application Rule Collection (requires TLS Inspection enabled)\n{\n  \"ruleCollectionType\": \"ApplicationRuleCollection\",\n  \"name\": \"AllowExternalAIServicesHTTPS\",\n  \"priority\": 200,\n  \"action\": { \"type\": \"Allow\" },\n  \"rules\": [\n    {\n      \"name\": \"AllowOpenAIAPI\",\n      \"protocols\": [ { \"protocolType\": \"Https\", \"port\": 443 } ],\n      \"sourceAddresses\": [ \"10.0.1.0/24\" ],\n      \"targetFqdns\": [ \"api.openai.com\" ]\n    },\n    {\n      \"name\": \"AllowWeatherAPI\",\n      \"protocols\": [ { \"protocolType\": \"Https\", \"port\": 443 } ],\n      \"sourceAddresses\": [ \"10.0.1.0/24\" ],\n      \"targetFqdns\": [ \"api.weather.com\" ]\n    }\n  ]\n}\n# Deny-all outbound TCP/UDP rule collection should exist with lower priority.\n</code></pre><h5>Step 2: Monitor for Violations with Name/IP Fallback</h5><p>Use runtime tools or SIEM to detect connections to destinations not on the allowlist. Include a fallback check by IP when FQDN is unavailable.</p><pre><code># File: falco_rules/ai_egress_violation.yaml\n- list: approved_domains\n  items: [api.openai.com, api.weather.com, internal.registry.corp]\n- list: approved_ips\n  items: [\"203.0.113.10\", \"203.0.113.11\"]\n\n- rule: Prod AI Pod Egress Violation\n  desc: Egress from prod AI workloads to disallowed destinations\n  condition: >\n    evt.type=connect and evt.dir=> and fd.l4proto in (tcp, udp) and\n    (container.image.repository contains \"ai-workload\" or k8s.ns.name in (ai-prod, ai-inference)) and\n    (\n      (fd.sip.name exists and fd.sip.name not in (approved_domains)) or\n      (not fd.sip.name exists and fd.sip not in (approved_ips))\n    )\n  output: >\n    Disallowed egress detected (proc=%proc.name cmd=%proc.cmdline container=%container.name image=%container.image.repository k8s.ns=%k8s.ns.name k8s.pod=%k8s.pod.name dstip=%fd.sip dstdomain=%fd.sip.name)\n  priority: CRITICAL\n  tags: [network, aidefend]\n</code></pre><p><strong>Action:</strong> Enforce default-deny at the perimeter and allow only approved FQDNs/SNIs. Monitor violations using Falco/Tetragon or SIEM ingestion of firewall logs with both name and IP checks.</p>"
+                        },
+                        {
+                            "strategy": "Implement transport layer security (e.g., mTLS, Certificate Pinning) for critical egress connections.",
+                            "howTo": "<h5>Concept:</h5><p>Encrypt traffic with TLS and strongly authenticate the external server using Certificate Pinning (SPKI hash) or Mutual TLS (mTLS) if supported. Note: post-handshake SPKI checks have TOCTOU limitations; prefer integrating pinning into the TLS stack or using mTLS.</p><h5>Implement Certificate Pinning Verification (Post-Handshake Check - Caution)</h5><pre><code># File: external_clients/pinned_client_spki_check.py\nimport requests\nimport ssl\nimport socket\nimport hashlib\nimport base64\nfrom cryptography import x509\nfrom cryptography.hazmat.primitives import serialization\nfrom cryptography.hazmat.backends import default_backend\n\nEXPECTED_SPKI_HASH_B64 = 'YOUR_EXPECTED_BASE64_SPKI_HASH=='\nEXPECTED_SPKI_HASH_BYTES = base64.b64decode(EXPECTED_SPKI_HASH_B64)\nTARGET_HOST = 'maas.example.com'\nTARGET_PORT = 443\n\ndef get_cert_spki_hash(hostname, port):\n    context = ssl.create_default_context()\n    conn_sock = context.wrap_socket(socket.create_connection((hostname, port)), server_hostname=hostname)\n    cert_der = conn_sock.getpeercert(binary_form=True)\n    conn_sock.close()\n    cert = x509.load_der_x509_certificate(cert_der, default_backend())\n    spki_der = cert.public_key().public_bytes(\n        encoding=serialization.Encoding.DER,\n        format=serialization.PublicFormat.SubjectPublicKeyInfo\n    )\n    return hashlib.sha256(spki_der).digest()\n\nactual = get_cert_spki_hash(TARGET_HOST, TARGET_PORT)\nif actual == EXPECTED_SPKI_HASH_BYTES:\n    print(\"✅ Certificate SPKI pin verified successfully (post-handshake).\")\nelse:\n    raise ConnectionRefusedError(\"Certificate pin mismatch\")\n</code></pre><p><strong>Action:</strong> Use SPKI pinning for high-sensitivity APIs when feasible, understanding the operational costs. Prefer mTLS with short-lived client certs where both parties support it.</p>"
+                        },
+                        {
+                            "strategy": "Utilize API Gateways to mediate external AI service traffic and apply security policies.",
+                            "howTo": "<h5>Concept:</h5><p>An API Gateway provides a centralized control point for outbound traffic toward external AI services. It can enforce authentication, rate limits, schema validation, and resilience patterns. Configure health checks on the upstream entity.</p><h5>Configure Kong Gateway for External Upstream (Revised)</h5><pre><code># File: kong_config_external.yaml (Kong declarative configuration)\n_format_version: \"3.0\"\n\nupstreams:\n- name: maas-upstream\n  targets:\n  - target: api.maas-provider.com:443\n  healthchecks:\n    active:\n      https_verify_certificate: true\n      healthy:\n        http_statuses: [200, 201]\n        successes: 2\n      unhealthy:\n        http_statuses: [429, 500, 503]\n        timeouts: 3\n        http_failures: 3\n      interval: 10\n      timeout: 2\n\nservices:\n- name: external-maas-service\n  host: maas-upstream\n  port: 443\n  protocol: https\n  plugins:\n  - name: request-transformer\n    config:\n      add:\n        headers:\n        - \"Authorization: Bearer ${KONG_MAAS_API_KEY}\"\n  - name: rate-limiting\n    config:\n      minute: 500\n      policy: local\n\nroutes:\n- name: maas-route\n  paths:\n  - /internal/proxy/maas\n  strip_path: true\n  service: { name: external-maas-service }\n</code></pre><p><strong>Action:</strong> Route outbound MaaS traffic through the gateway. Inject secrets via environment variables or a supported secret store. Use upstream health checks for resilience.</p>"
+                        },
+                        {
+                            "strategy": "Monitor external egress traffic for anomalies and policy violations.",
+                            "howTo": "<h5>Concept:</h5><p>Continuously monitor volume, destinations, timing, and TLS metadata of outbound connections. Deviations can indicate exfiltration, C2, or policy bypass.</p><h5>Create a SIEM Alert for Anomalous Egress Volume (Boundary-Focused)</h5><pre><code># Conceptual Splunk SPL (AWS VPC Flow Logs with boundary focus)\nindex=vpcflowlogs sourcetype=aws:vpcflowlogs direction=egress \n(srcaddr=10.0.1.0/24 OR srcaddr=10.0.2.0/24) AND (interface_id=nat-* OR interface_id=igw-*)\nNOT (dstaddr=10.0.0.0/8 OR dstaddr=172.16.0.0/12 OR dstaddr=192.168.0.0/16)\n| timechart span=1h sum(bytes) as bytes_out by srcaddr\n| streamstats window=24 global=f avg(bytes_out) as avg_bytes_out stddev(bytes_out) as stddev_bytes_out by srcaddr\n| eval threshold_upper = avg_bytes_out + (3 * stddev_bytes_out)\n| where bytes_out > threshold_upper AND avg_bytes_out > 1000000 \n| table _time, srcaddr, bytes_out, avg_bytes_out, stddev_bytes_out, threshold_upper\n</code></pre><p><strong>Action:</strong> Ingest boundary egress logs and baseline normal volumes and destinations. Alert on significant deviations and newly observed ASNs/domains for AI subnets.</p>"
+                        }
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0025 Exfiltration via Cyber Means",
+                                "AML.T0049 Exploit Public-Facing Application (SSRF)",
+                                "AML.T0072 Reverse Shell"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Data Exfiltration (Cross-Layer)",
+                                "Orchestration Attacks (L4)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM02:2025 Sensitive Information Disclosure (via exfiltration)",
+                                "LLM03:2025 Supply Chain (securing external connections)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML05:2023 Model Theft (securing API access)",
+                                "ML06:2023 ML Supply Chain Attacks (securing external component access)"
+                            ]
+                        }
+                    ]
                 }
             ]
         },
