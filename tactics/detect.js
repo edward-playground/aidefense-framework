@@ -43,7 +43,7 @@ export const detectTactic = {
             "subTechniques": [
                 {
                     "id": "AID-D-001.001",
-                    "name": "Per-Prompt Content & Obfuscation Analysis", "pillar": "app", "phase": "operation",
+                    "name": "Per-Prompt Content & Obfuscation Analysis", "pillar": ["app"], "phase": ["operation"],
                     "description": "Performs real-time analysis on individual prompts to detect malicious content, prompt injection, and jailbreaking attempts. This sub-technique combines two key functions: 1) identifying known malicious patterns and harmful intent using heuristics, regex, and specialized guardrail models, and 2) detecting attempts to hide or obscure these attacks through obfuscation techniques like character encoding (e.g., Base64), homoglyphs, or high-entropy strings. It acts as a primary, synchronous guardrail at the input layer.",
                     "implementationStrategies": [
                         {
@@ -110,7 +110,7 @@ export const detectTactic = {
                 },
                 {
                     "id": "AID-D-001.002",
-                    "name": "Synthetic Media & Deepfake Forensics", "pillar": "data, app", "phase": "validation, operation",
+                    "name": "Synthetic Media & Deepfake Forensics", "pillar": ["data", "app"], "phase": ["validation", "operation"],
                     "description": "Detects manipulated or synthetically generated media (e.g., deepfakes) by performing a forensic analysis that identifies a combination of specific technical artifacts and inconsistencies. This technique fuses evidence from multiple indicators across different modalities—such as image compression anomalies, unnatural biological signals (blinking, vocal patterns), audio-visual mismatches, and hidden data payloads—to provide a more robust and reliable assessment of the media's authenticity.",
                     "implementationStrategies": [
                         {
@@ -177,7 +177,7 @@ export const detectTactic = {
                 },
                 {
                     "id": "AID-D-001.003",
-                    "name": "Vector-Space Anomaly Detection", "pillar": "model, app", "phase": "operation",
+                    "name": "Vector-Space Anomaly Detection", "pillar": ["model", "app"], "phase": ["operation"],
                     "description": "Detects semantically novel or anomalous inputs by operating on their vector embeddings rather than their raw content. This technique establishes a baseline of 'normal' inputs by clustering the embeddings of known-good data. At inference time, inputs whose embeddings are statistical outliers or fall far from the normal cluster centroids are flagged as suspicious. This is effective against novel attacks that bypass keyword or pattern-based filters by using unusual but semantically malicious phrasing.",
                     "implementationStrategies": [
                         {
@@ -238,8 +238,8 @@ export const detectTactic = {
                 {
                     "id": "AID-D-001.004",
                     "name": "LLM Guardrail for Intent/Privilege Escalation",
-                    "pillar": "app",
-                    "phase": "operation",
+                    "pillar": ["app"],
+                    "phase": ["operation"],
                     "description": "Use a fast secondary LLM (guardrail) to classify prompts for intent switching, instruction bypass, or privilege escalation before reaching the primary model.",
                     "defendsAgainst": [
                         { "framework": "MITRE ATLAS", "items": ["AML.T0051 LLM Prompt Injection", "AML.T0054 LLM Jailbreak"] },
@@ -260,7 +260,7 @@ export const detectTactic = {
         },
         {
             "id": "AID-D-002",
-            "name": "AI Model Anomaly & Performance Drift Detection", "pillar": "model, app", "phase": "operation, validation",
+            "name": "AI Model Anomaly & Performance Drift Detection", "pillar": ["model", "app"], "phase": ["operation", "validation"],
             "description": "Continuously monitor the outputs, performance metrics (e.g., accuracy, confidence scores, precision, recall, F1-score, output distribution), and potentially internal states or feature attributions of AI models during operation. This monitoring aims to detect significant deviations from established baselines or expected behavior. Such anomalies or drift can indicate various issues, including concept drift (changes in the underlying data distribution), data drift (changes in input data characteristics), or malicious activities like ongoing data poisoning attacks, subtle model evasion attempts, or model skewing.",
             "implementationStrategies": [
                 {
@@ -374,8 +374,8 @@ export const detectTactic = {
                 {
                     "id": "AID-D-003.001",
                     "name": "Harmful Content & Policy Filtering",
-                    "pillar": "app",
-                    "phase": "operation",
+                    "pillar": ["app"],
+                    "phase": ["operation"],
                     "description": "Inspect model-generated text before it is returned to the user. The goal is to stop content that violates safety, compliance, trust & safety, or brand rules. This includes hate speech, self-harm encouragement, explicit content, criminal instructions, phishing-style scams, or content that would create legal or reputational risk.",
                     "toolsOpenSource": [
                         "Hugging Face Transformers (for custom classifiers)",
@@ -442,8 +442,8 @@ export const detectTactic = {
                 {
                     "id": "AID-D-003.002",
                     "name": "Sensitive Information & Data Leakage Detection",
-                    "pillar": "data, app",
-                    "phase": "operation",
+                    "pillar": ["data", "app"],
+                    "phase": ["operation"],
                     "description": "Prevent the model from leaking confidential data (for example, PII, secrets, source code, internal project names, private tickets) in its output. The system scans every response before it is shown or logged in the clear. If sensitive content is detected, the response is redacted, blocked, or escalated.",
                     "toolsOpenSource": [
                         "Microsoft Presidio (for PII detection and anonymization)",
@@ -516,8 +516,8 @@ export const detectTactic = {
                 {
                     "id": "AID-D-003.003",
                     "name": "Agentic Tool Use & Action Policy Monitoring",
-                    "pillar": "app",
-                    "phase": "operation",
+                    "pillar": ["app"],
+                    "phase": ["operation"],
                     "description": "Before an autonomous agent is allowed to execute a tool call (for example, call an API, read a file, draft an email, trigger payment), enforce hard guardrails. Each proposed action is checked against: (1) an allowlist of which tools this agent role is allowed to use, (2) strict parameter schemas, (3) stateful business policies like 'human approval required', and (4) audit logging. This prevents a compromised agent from doing something dangerous, high-impact, or illegal.",
                     "toolsOpenSource": [
                         "Open Policy Agent (OPA) for stateful policy-as-code",
@@ -583,8 +583,8 @@ export const detectTactic = {
                 {
                     "id": "AID-D-003.004",
                     "name": "Tool-Call Sequence Anomaly Detection",
-                    "pillar": "app",
-                    "phase": "operation",
+                    "pillar": ["app"],
+                    "phase": ["operation"],
                     "description": "Model and continuously score the sequence of tool calls made by an agent (for example: search_knowledge_base → summarize → create_support_ticket). A healthy agent follows predictable flows. A hijacked agent may suddenly jump to unusual or high-risk tools (for example: read_internal_db → send_email → execute_payment). By learning 'normal' transition probabilities, you can flag suspicious sessions in real time.",
                     "toolsOpenSource": [
                         "pandas",
@@ -676,8 +676,8 @@ export const detectTactic = {
                 {
                     "id": "AID-D-004.001",
                     "name": "Static Artifact Hash & Signature Verification",
-                    "pillar": "infra, model, app",
-                    "phase": "building, validation",
+                    "pillar": ["infra", "model", "app"],
+                    "phase": ["building", "validation"],
                     "description": "Periodically compute and verify cryptographic hashes (e.g. SHA256) of stored model artifacts, datasets, and container image layers, and compare them against an authorized manifest or registry of approved versions. The goal is to detect any unauthorized modification, file replacement, or malicious payload insertion before deployment or promotion.",
                     "toolsOpenSource": [
                         "MLflow Model Registry",
@@ -755,8 +755,8 @@ export const detectTactic = {
                 {
                     "id": "AID-D-004.002",
                     "name": "Runtime Attestation & Memory Integrity",
-                    "pillar": "infra",
-                    "phase": "operation",
+                    "pillar": ["infra"],
+                    "phase": ["operation"],
                     "description": "Attest the running model process (code, weights, enclave MRENCLAVE) to detect in-memory patching or DLL injection.",
                     "toolsOpenSource": [
                         "Intel SGX SDK",
@@ -830,8 +830,8 @@ export const detectTactic = {
                 {
                     "id": "AID-D-004.003",
                     "name": "Runtime Configuration & Policy Drift Detection and Monitoring",
-                    "pillar": "infra, app",
-                    "phase": "operation",
+                    "pillar": ["infra", "app"],
+                    "phase": ["operation"],
                     "description": "Continuously detect and respond to unauthorized or out-of-process changes to AI-serving configurations, such as model-serving YAMLs, feature-store ACLs, RAG index schemas, and inference-time policy files. The goal is to ensure that what is actually running in production always matches what was formally approved, version-controlled, and reviewed. This prevents silent config drift and prevents attackers or rushed operators from weakening runtime protections.",
                     "toolsOpenSource": [
                         "Git (for version control and signed commits)",
@@ -901,8 +901,8 @@ export const detectTactic = {
                 {
                     "id": "AID-D-004.004",
                     "name": "Model Source & Namespace Drift Detection",
-                    "pillar": "infra, app",
-                    "phase": "validation, operation",
+                    "pillar": ["infra", "app"],
+                    "phase": ["validation", "operation"],
                     "description": "A set of high-signal detective controls that monitor for symptoms of a model namespace reuse attack or supply chain policy failure. This technique focuses on detecting lifecycle changes in external model repositories (e.g., deletions, redirects) during the curation process and on identifying unexpected network traffic from production systems to public model hubs at runtime.",
                     "toolsOpenSource": [
                         "Falco, Cilium Tetragon",
@@ -956,8 +956,8 @@ export const detectTactic = {
                 {
                     "id": "AID-D-004.005",
                     "name": "Runtime Prompt Integrity Verification",
-                    "pillar": "app",
-                    "phase": "operation",
+                    "pillar": ["app"],
+                    "phase": ["operation"],
                     "description": "A runtime mechanism that ensures the integrity and provenance of every turn in a conversational context. It involves cryptographically binding each prompt or tool output to its content and origin within a structured, canonical 'turn envelope'. This creates a verifiable, chained history that is validated before every LLM call to detect and block tampering, context manipulation, or prompt infection attacks. This technique adds a crucial layer of runtime security for the dynamic conversational state, complementing static artifact integrity checks.",
                     "toolsOpenSource": [
                         "Cryptographic libraries (Python's hashlib, pyca/cryptography; Node.js's crypto)",
@@ -1070,7 +1070,7 @@ export const detectTactic = {
             ], "subTechniques": [
                 {
                     "id": "AID-D-005.001",
-                    "name": "AI System Log Generation & Collection", "pillar": "infra", "phase": "operation",
+                    "name": "AI System Log Generation & Collection", "pillar": ["infra"], "phase": ["operation"],
                     "description": "This foundational technique covers the instrumentation of AI applications to produce detailed, structured logs for all significant events, and the implementation of a secure pipeline to collect and forward these logs to a central analysis platform. The goal is to create a high-fidelity, auditable record of system activity, which is a prerequisite for all other detection, investigation, and threat hunting capabilities.",
                     "toolsOpenSource": [
                         "logging (Python library), loguru, structlog",
@@ -1145,7 +1145,7 @@ export const detectTactic = {
                 },
                 {
                     "id": "AID-D-005.002",
-                    "name": "Security Monitoring & Alerting for AI", "pillar": "infra, app", "phase": "operation",
+                    "name": "Security Monitoring & Alerting for AI", "pillar": ["infra", "app"], "phase": ["operation"],
                     "description": "This technique covers the real-time monitoring of ingested AI system logs and the creation of specific rules to detect and generate alerts for known suspicious or malicious patterns. It focuses on the operational security task of identifying potential threats as they occur by comparing live activity against predefined attack signatures and behavioral heuristics. This is the core function of a Security Operations Center (SOC) in defending AI systems.",
                     "toolsOpenSource": [
                         "ELK Stack / OpenSearch (with alerting features)",
@@ -1218,7 +1218,7 @@ export const detectTactic = {
                 },
                 {
                     "id": "AID-D-005.003",
-                    "name": "Proactive AI Threat Hunting", "pillar": "infra, model, app", "phase": "operation",
+                    "name": "Proactive AI Threat Hunting", "pillar": ["infra", "model", "app"], "phase": ["operation"],
                     "description": "This technique covers the proactive, hypothesis-driven search through AI system logs and telemetry for subtle, unknown, or 'low-and-slow' attacks that do not trigger predefined alerts. Threat hunting assumes an attacker may already be present and evading standard detections. It focuses on identifying novel attack patterns, reconnaissance activities, and anomalous behaviors by using exploratory data analysis, complex queries, and machine learning on historical data.",
                     "toolsOpenSource": [
                         "Jupyter Notebooks (with Pandas, Scikit-learn, Matplotlib)",
@@ -1283,7 +1283,7 @@ export const detectTactic = {
                 },
                 {
                     "id": "AID-D-005.004",
-                    "name": "Specialized Agent & Session Logging", "pillar": "app", "phase": "operation",
+                    "name": "Specialized Agent & Session Logging", "pillar": ["app"], "phase": ["operation"],
                     "description": "This technique covers the highly specialized logging required for autonomous and agentic AI systems, which goes beyond standard API request/response logging. It involves instrumenting the agent's internal decision-making loop to capture its goals, plans, intermediate thoughts, tool selections, and interactions with memory or knowledge bases. This detailed audit trail is essential for debugging, ensuring compliance, and detecting complex threats like goal manipulation or emergent, unsafe behaviors.",
                     "toolsOpenSource": [
                         "Agentic frameworks with callback/handler systems (LangChain, AutoGen, CrewAI, LlamaIndex)",
@@ -1349,8 +1349,8 @@ export const detectTactic = {
                 {
                     "id": "AID-D-005.005",
                     "name": "Accelerator Telemetry Anomaly Detection",
-                    "pillar": "infra",
-                    "phase": "operation",
+                    "pillar": ["infra"],
+                    "phase": ["operation"],
                     "description": "Continuously baseline and monitor accelerator telemetry (power, temperature, utilization, PMCs). Alert on deviations indicating cryptomining, DoS, or side-channel probing.",
                     "defendsAgainst": [
                         { "framework": "MITRE ATLAS", "items": ["AML.T0029 Denial of AI Service", "AML.T0034 Cost Harvesting", "AML.T0024.002 Invert AI Model (if using side-channels)"] },
@@ -1372,7 +1372,7 @@ export const detectTactic = {
         },
         {
             "id": "AID-D-006",
-            "name": "Explainability (XAI) Manipulation Detection", "pillar": "model", "phase": "validation, operation",
+            "name": "Explainability (XAI) Manipulation Detection", "pillar": ["model"], "phase": ["validation", "operation"],
             "description": "Implement mechanisms to monitor and validate the outputs and behavior of eXplainable AI (XAI) methods. The goal is to detect attempts by adversaries to manipulate or mislead these explanations, ensuring that XAI outputs accurately reflect the model's decision-making process and are not crafted to conceal malicious operations, biases, or vulnerabilities. This is crucial if XAI is used for debugging, compliance, security monitoring, or building user trust.",
             "perfImpact": {
                 "level": "High on Inference Latency",
@@ -1445,7 +1445,7 @@ export const detectTactic = {
         },
         {
             "id": "AID-D-007",
-            "name": "Multimodal Inconsistency Detection", "pillar": "data, model", "phase": "operation",
+            "name": "Multimodal Inconsistency Detection", "pillar": ["data", "model"], "phase": ["operation"],
             "description": "For AI systems processing multiple input modalities (e.g., text, image, audio, video), implement mechanisms to detect and respond to inconsistencies, contradictions, or malicious instructions hidden via cross-modal interactions. This involves analyzing inputs and outputs across modalities to identify attempts to bypass security controls or manipulate one modality using another, and applying defenses to mitigate such threats. This is especially critical for detecting multimodal prompt injection (e.g. hidden instructions in images or audio that override the text instruction channel) and preventing single-modality takeover of agent behavior.",
             "toolsOpenSource": [
                 "Computer vision libraries (OpenCV, Pillow) for image analysis (e.g., detecting text in images, QR code scanning, deepfake detection).",
@@ -1531,7 +1531,7 @@ export const detectTactic = {
         },
         {
             "id": "AID-D-008",
-            "name": "AI-Based Security Analytics for AI systems", "pillar": "data, model, infra, app", "phase": "operation",
+            "name": "AI-Based Security Analytics for AI systems", "pillar": ["data", "model", "infra", "app"], "phase": ["operation"],
             "description": "Employ specialized AI/ML models (secondary AI defenders) to analyze telemetry, logs, and behavioral patterns from primary AI systems to detect sophisticated, subtle, or novel attacks that may evade rule-based or traditional detection methods. This includes identifying anomalous interactions, emergent malicious behaviors, coordinated attacks, or signs of AI-generated attacks targeting the primary AI systems.",
             "perfImpact": {
                 "level": "Medium to High on Monitoring Overhead & Latency",
@@ -1621,7 +1621,7 @@ export const detectTactic = {
         },
         {
             "id": "AID-D-009",
-            "name": "Cross-Agent Fact Verification & Hallucination Cascade Prevention", "pillar": "app, data", "phase": "operation",
+            "name": "Cross-Agent Fact Verification & Hallucination Cascade Prevention", "pillar": ["app", "data"], "phase": ["operation"],
             "description": "Implement real-time fact verification and consistency checking mechanisms across multiple AI agents to detect and prevent the propagation of hallucinated or false information through agent networks. This technique employs distributed consensus algorithms, external knowledge base validation, and inter-agent truth verification to break hallucination cascades before they spread through the system. This prevents a single compromised or hallucinating agent from polluting shared memory, RAG indexes, or downstream decision pipelines with fabricated or manipulated 'facts', and stops those false assertions from being amplified by other agents.",
             "toolsOpenSource": [
                 "Apache Kafka with custom fact-verification consumers for distributed fact checking",
@@ -1705,7 +1705,7 @@ export const detectTactic = {
         },
         {
             "id": "AID-D-010",
-            "name": "AI Goal Integrity Monitoring & Deviation Detection", "pillar": "app", "phase": "operation",
+            "name": "AI Goal Integrity Monitoring & Deviation Detection", "pillar": ["app"], "phase": ["operation"],
             "description": "Continuously monitor and validate AI agent goals, objectives, and decision-making patterns to detect unauthorized goal manipulation or intent deviation. This technique establishes cryptographically signed goal states, implements goal consistency verification, and provides real-time alerting when agents deviate from their intended objectives or exhibit goal manipulation indicators.",
             "toolsOpenSource": [
                 "HashiCorp Vault for cryptographic goal signing and verification",
@@ -1821,7 +1821,7 @@ export const detectTactic = {
             "subTechniques": [
                 {
                     "id": "AID-D-011.001",
-                    "name": "Agent Behavioral Analytics & Anomaly Detection", "pillar": "app", "phase": "operation",
+                    "name": "Agent Behavioral Analytics & Anomaly Detection", "pillar": ["app"], "phase": ["operation"],
                     "description": "This data science-driven technique focuses on detecting rogue or compromised agents by analyzing their behavior over time. It involves creating a quantitative 'fingerprint' of an agent's normal operational patterns from logs and telemetry. By continuously comparing an agent's live behavior against its established baseline, this technique can identify significant deviations, drifts, or anomalous patterns that indicate a compromise or hijacking.",
                     "toolsOpenSource": [
                         "scikit-learn (for clustering and anomaly detection models like Isolation Forest, DBSCAN)",
@@ -1881,7 +1881,7 @@ export const detectTactic = {
                 },
                 {
                     "id": "AID-D-011.002",
-                    "name": "Inter-Agent Security & Consensus Monitoring", "pillar": "app", "phase": "operation",
+                    "name": "Inter-Agent Security & Consensus Monitoring", "pillar": ["app"], "phase": ["operation"],
                     "description": "This sub-technique covers the security of agent-to-agent interactions within a multi-agent system. It focuses on implementing mechanisms that allow agents to monitor and validate each other's behavior, report anomalies, and reach consensus before performing critical, system-wide actions. This creates a distributed, peer-to-peer defense layer within the agent ecosystem. Please note that, unlike AID-D-009 (which focuses on fact validation) and AID-D-010 (which focuses on goal integrity), AID-D-011.002 enforces peer governance over actions — especially high-impact or irreversible actions — via quorum and behavioral consistency checks.",
                     "toolsOpenSource": [
                         "Agentic frameworks with inter-agent communication protocols (AutoGen, CrewAI)",
@@ -1936,7 +1936,7 @@ export const detectTactic = {
                 },
                 {
                     "id": "AID-D-011.003",
-                    "name": "Agent Infrastructure & Population Control", "pillar": "infra, app", "phase": "operation",
+                    "name": "Agent Infrastructure & Population Control", "pillar": ["infra", "app"], "phase": ["operation"],
                     "description": "This sub-technique covers the infrastructure and orchestration-level controls for managing the agent population and responding to threats. It focuses on a top-down view of the agent ecosystem, ensuring that only authorized agents are running and providing mechanisms to rapidly isolate and contain agents that are confirmed to be rogue or malicious. These are typically automated responses triggered by other detection systems.",
                     "toolsOpenSource": [
                         "Kubernetes (for pod management and network policies)",
@@ -2030,7 +2030,7 @@ export const detectTactic = {
             "subTechniques": [
                 {
                     "id": "AID-D-012.001",
-                    "name": "Discrepancy-Based GNN Backdoor Detection", "pillar": "model", "phase": "validation",
+                    "name": "Discrepancy-Based GNN Backdoor Detection", "pillar": ["model"], "phase": ["validation"],
                     "description": "Detects backdoored nodes in a Graph Neural Network (GNN) by identifying significant discrepancies between a potentially compromised model and a clean baseline model (established via AID-M-003.003). The technique specifically looks for semantic drift (changes in a node's meaning) and attribute over-emphasis (unusual feature importance) caused by the backdoor. Clustering algorithms are then often used to isolate the small group of poisoned nodes based on these detected discrepancies.",
                     "implementationStrategies": [
                         {
@@ -2093,7 +2093,7 @@ export const detectTactic = {
                 },
                 {
                     "id": "AID-D-012.002",
-                    "name": "Structure-Feature Relationship Analysis for GNN Defense", "pillar": "data, model", "phase": "operation",
+                    "name": "Structure-Feature Relationship Analysis for GNN Defense", "pillar": ["data", "model"], "phase": ["operation"],
                     "description": "Detects and mitigates training-time adversarial attacks on Graph Neural Networks (GNNs) that perturb the graph structure. The core principle is to analyze the relationship between the graph's connectivity (structure) and the attributes of its nodes (features). By identifying and then pruning or down-weighting anomalous edges that violate expected structure-feature properties (e.g., connecting highly dissimilar nodes), this technique creates a revised, more robust graph for the GNN's message passing, hardening it against structural poisoning.",
                     "implementationStrategies": [
                         {
@@ -2156,7 +2156,7 @@ export const detectTactic = {
                 },
                 {
                     "id": "AID-D-012.003",
-                    "name": "Structural & Topological Anomaly Detection", "pillar": "data", "phase": "operation",
+                    "name": "Structural & Topological Anomaly Detection", "pillar": ["data"], "phase": ["operation"],
                     "description": "Detects potential poisoning or backdoor attacks in graphs by analyzing their topological structure, independent of node features. This technique identifies suspicious patterns such as unusually dense subgraphs (cliques), nodes with anomalously high centrality or degree, or other structural irregularities that deviate from the expected properties of the graph and are often characteristic of coordinated attacks.",
                     "implementationStrategies": [
                         {
@@ -2213,7 +2213,7 @@ export const detectTactic = {
         },
         {
             "id": "AID-D-013",
-            "name": "RL Reward & Policy Manipulation Detection", "pillar": "model", "phase": "operation",
+            "name": "RL Reward & Policy Manipulation Detection", "pillar": ["model"], "phase": ["operation"],
             "description": "This technique focuses on monitoring and analyzing Reinforcement Learning (RL) systems to detect two primary threats: reward hacking and reward tampering. Reward hacking occurs when an agent discovers an exploit in the environment's reward function to achieve a high score for unintended or harmful behavior. Reward tampering involves an external actor manipulating the reward signal being sent to the agent. This technique uses statistical analysis of the reward stream and behavioral analysis of the agent's learned policy to detect these manipulations.",
             "toolsOpenSource": [
                 "RL libraries with logging callbacks (Stable-Baselines3, RLlib)",
@@ -2288,8 +2288,8 @@ export const detectTactic = {
                 {
                     "id": "AID-D-014.001",
                     "name": "Post-Retrieval Malicious Content Scanning",
-                    "pillar": "data",
-                    "phase": "operation",
+                    "pillar": ["data"],
+                    "phase": ["operation"],
                     "description": "Treat retrieved RAG chunks as untrusted input; scan for prompt-injection patterns or malicious payloads before inclusion in LLM context.",
                     "defendsAgainst": [
                         { "framework": "MITRE ATLAS", "items": ["AML.T0070 RAG Poisoning", "AML.T0051 LLM Prompt Injection"] },
@@ -2309,8 +2309,8 @@ export const detectTactic = {
                 {
                     "id": "AID-D-014.002",
                     "name": "Query-Document Semantic Relevance Verification",
-                    "pillar": "data",
-                    "phase": "operation",
+                    "pillar": ["data"],
+                    "phase": ["operation"],
                     "description": "Verify cosine similarity between the user query and each candidate chunk using the same embedding model; drop low-similarity items to resist poisoning.",
                     "defendsAgainst": [
                         { "framework": "MITRE ATLAS", "items": ["AML.T0070 RAG Poisoning", "AML.T0071 False RAG Entry Injection"] },
@@ -2330,8 +2330,8 @@ export const detectTactic = {
                 {
                     "id": "AID-D-014.003",
                     "name": "Source Concentration Monitoring",
-                    "pillar": "data",
-                    "phase": "operation",
+                    "pillar": ["data"],
+                    "phase": ["operation"],
                     "description": "Alert when top-k retrievals are dominated by a single uncommon source, indicating possible answer drift or targeted source poisoning.",
                     "defendsAgainst": [
                         { "framework": "MITRE ATLAS", "items": ["AML.T0070 RAG Poisoning", "AML.T0071 False RAG Entry Injection"] },

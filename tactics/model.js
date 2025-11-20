@@ -39,8 +39,8 @@ export const modelTactic = {
                 {
                     "id": "AID-M-001.001",
                     "name": "AI Component & Infrastructure Inventory",
-                    "pillar": "infra",
-                    "phase": "scoping, operation, improvement",
+                    "pillar": ["infra"],
+                    "phase": ["scoping", "operation", "improvement"],
                     "description": "Systematically catalogs all AI/ML assets, including models (categorized by type, version, and ownership), datasets, software components, and the specialized hardware they run on (e.g., GPUs, TPUs). This technique focuses on creating a dynamic, up-to-date inventory to provide comprehensive visibility into all components that constitute the AI ecosystem, which is a prerequisite for accurate risk assessment and the application of targeted security controls.",
                     "implementationStrategies": [
                         {
@@ -103,8 +103,8 @@ export const modelTactic = {
                 {
                     "id": "AID-M-001.002",
                     "name": "AI System Dependency Mapping",
-                    "pillar": "infra, app",
-                    "phase": "building, validation, operation",
+                    "pillar": ["infra", "app"],
+                    "phase": ["building", "validation", "operation"],
                     "description": "Systematically identifies and documents all components and services that an AI system depends on to function correctly. This includes direct software libraries, transitive dependencies, external data sources, third-party APIs, and other internal AI models or microservices. This dependency map is crucial for understanding the complete supply chain attack surface and for performing comprehensive security assessments.",
                     "implementationStrategies": [
                         {
@@ -210,7 +210,7 @@ export const modelTactic = {
                 }
             ], "subTechniques": [
                 {
-                    "id": "AID-M-002.001", "pillar": "data, model", "phase": "building",
+                    "id": "AID-M-002.001", "pillar": ["data", "model"], "phase": ["building"],
                     "name": "Data & Artifact Versioning",
                     "description": "Implements systems and processes to version control datasets and model artifacts, treating them with the same rigor as source code. By tracking every version of a data file and linking it to specific code commits, this technique ensures perfect reproducibility, provides an auditable history of changes, and enables rapid rollbacks to a known-good state, which is critical for recovering from data corruption or poisoning incidents.",
                     "implementationStrategies": [
@@ -269,7 +269,7 @@ export const modelTactic = {
                 },
                 {
                     "id": "AID-M-002.002",
-                    "name": "Cryptographic Integrity Verification", "pillar": "data, infra, model, app", "phase": "building, validation",
+                    "name": "Cryptographic Integrity Verification", "pillar": ["data", "infra", "model", "app"], "phase": ["building", "validation"],
                     "description": "Employs cryptographic hashing and digital signatures to create and verify a tamper-evident chain of custody for AI artifacts. This technique ensures that datasets, models, and other critical files are authentic and have not been altered or corrupted at any point in their lifecycle, from creation and storage to deployment and use. It provides a strong mathematical guarantee of artifact integrity.",
                     "implementationStrategies": [
                         {
@@ -323,7 +323,7 @@ export const modelTactic = {
                     ]
                 },
                 {
-                    "id": "AID-M-002.003", "pillar": "data", "phase": "scoping, building",
+                    "id": "AID-M-002.003", "pillar": ["data"], "phase": ["scoping", "building"],
                     "name": "Third-Party Data Vetting",
                     "description": "Implements a formal, security-focused process for onboarding any external or third-party datasets. This technique involves a combination of procedural checks (source reputation, licensing) and technical scans (PII detection, integrity verification, statistical profiling) to identify and mitigate risks before untrusted data is introduced into the organization's AI ecosystem.",
                     "implementationStrategies": [
@@ -387,8 +387,8 @@ export const modelTactic = {
                 {
                     "id": "AID-M-002.004",
                     "name": "Trust-Tiered Memory/KB (Knowledge Base) Write-Gate",
-                    "pillar": "data, model",
-                    "phase": "building, validation, operation",
+                    "pillar": ["data", "model"],
+                    "phase": ["building", "validation", "operation"],
                     "description": "Place a policy-enforced write-gate in front of agent memory/KB/vector stores. Route writes into trust-tiered namespaces (trusted, probation, quarantined) based on evidence presence, validator score, and policy decisions. Retrieval prefers trusted; probation requires re-verification; quarantined is excluded.",
                     "toolsOpenSource": [
                         "SPIFFE/SPIRE (workload identity)",
@@ -460,7 +460,7 @@ export const modelTactic = {
             "subTechniques": [
                 {
                     "id": "AID-M-003.001",
-                    "name": "Model Card & Datasheet Generation", "pillar": "model", "phase": "building, validation",
+                    "name": "Model Card & Datasheet Generation", "pillar": ["model"], "phase": ["building", "validation"],
                     "description": "A systematic process of creating and maintaining standardized documentation for AI models (Model Cards) and datasets (Datasheets). This documentation captures crucial metadata, including the model's intended use cases, limitations, performance metrics, fairness evaluations, ethical considerations, and details about the data's provenance and characteristics. This ensures transparency, enables responsible governance, and provides a foundational reference for security audits and risk assessments.",
                     "implementationStrategies": [
                         {
@@ -528,7 +528,7 @@ export const modelTactic = {
                 },
                 {
                     "id": "AID-M-003.002",
-                    "name": "Performance & Operational Metric Baselining", "pillar": "model", "phase": "validation, operation",
+                    "name": "Performance & Operational Metric Baselining", "pillar": ["model"], "phase": ["validation", "operation"],
                     "description": "Establishes a quantitative, empirical baseline of a model's expected behavior under normal conditions. This involves calculating and recording two types of metrics: 1) key performance indicators (e.g., accuracy, precision, F1-score) on a trusted, 'golden' dataset, and 2) operational metrics (e.g., inference latency, confidence scores, output distributions) derived from simulated or live traffic. This documented baseline serves as the ground truth for drift detection, anomaly detection, and ongoing performance monitoring.",
                     "implementationStrategies": [
                         {
@@ -594,7 +594,7 @@ export const modelTactic = {
                     ]
                 },
                 {
-                    "id": "AID-M-003.003", "pillar": "model", "phase": "validation, operation",
+                    "id": "AID-M-003.003", "pillar": ["model"], "phase": ["validation", "operation"],
                     "name": "Explainability (XAI) Output Baselining",
                     "description": "Establishes a baseline of normal or expected outputs from eXplainable AI (XAI) methods for a given AI model. By generating and documenting typical explanations (e.g., feature attributions, decision rules) for a diverse set of known, benign inputs, this technique creates a reference point to detect future anomalies. A significant deviation from this baseline can indicate that an attacker is attempting to manipulate or mislead the explanation method itself to conceal malicious activity, as investigated by AID-D-006.",
                     "implementationStrategies": [
@@ -656,7 +656,7 @@ export const modelTactic = {
                     ]
                 },
                 {
-                    "id": "AID-M-003.004", "pillar": "app", "phase": "scoping, validation, operation",
+                    "id": "AID-M-003.004", "pillar": ["app"], "phase": ["scoping", "validation", "operation"],
                     "name": "Agent Goal & Mission Baselining",
                     "description": "Specifically for autonomous or agentic AI, this technique involves formally defining, documenting, and cryptographically signing the agent's core mission, objectives, operational constraints, and goal hierarchy. This signed 'mission directive' serves as a trusted, immutable baseline. It is a critical prerequisite for runtime monitoring systems (like AID-D-010) to detect goal manipulation, unauthorized deviations, or emergent behaviors that contradict the agent's intended purpose.",
                     "implementationStrategies": [
@@ -718,7 +718,7 @@ export const modelTactic = {
                     ]
                 },
                 {
-                    "id": "AID-M-003.005", "pillar": "model", "phase": "validation, operation",
+                    "id": "AID-M-003.005", "pillar": ["model"], "phase": ["validation", "operation"],
                     "name": "Generative Model Inversion for Anomaly Pre-screening",
                     "description": "Utilizes a generative model (e.g., a Generative Adversarial Network - GAN) to establish a baseline of 'normal' data characteristics. An input, such as an image, is projected into the model's latent space to find a vector that best reconstructs the input. A high reconstruction error suggests the input is anomalous, out-of-distribution, or potentially a synthetic deepfake not created by a similar generative process. This technique models the expected data fidelity to pre-screen inputs for potential threats.",
                     "implementationStrategies": [
@@ -785,7 +785,7 @@ export const modelTactic = {
                     ]
                 },
                 {
-                    "id": "AID-M-003.006", "pillar": "model", "phase": "validation, operation",
+                    "id": "AID-M-003.006", "pillar": ["model"], "phase": ["validation", "operation"],
                     "name": "Graph Energy Analysis for GNN Robustness",
                     "description": "Utilizes metrics derived from a graph's adjacency matrix, such as graph subspace energy, as a quantifiable indicator of a Graph Neural Network's (GNN) robustness to adversarial topology perturbations. By modeling and baselining these structural properties, this technique can guide the development of more inherently resilient GNNs, for instance, by enhancing adversarial training to generate perturbations that are not only effective but also structurally significant according to the energy metric.",
                     "implementationStrategies": [
@@ -848,7 +848,7 @@ export const modelTactic = {
                     ]
                 },
                 {
-                    "id": "AID-M-003.007", "pillar": "model", "phase": "validation",
+                    "id": "AID-M-003.007", "pillar": ["model"], "phase": ["validation"],
                     "name": "Self-Supervised Discrepancy Analysis for GNN Backdoor Defense",
                     "description": "Employs self-supervised learning to train an auxiliary Graph Neural Network (GNN) model that learns the intrinsic semantic information and attribute importance of nodes without using potentially poisoned labels.  This process creates a trusted baseline model of 'normal' node characteristics. This baseline is then used as a reference to detect discrepancies—such as semantic drift or attribute over-emphasis—in a primary GNN trained on the potentially compromised data, which is a foundational step for identifying and mitigating backdoor attacks. ",
                     "implementationStrategies": [
@@ -915,7 +915,7 @@ export const modelTactic = {
         },
         {
             "id": "AID-M-004",
-            "name": "AI Threat Modeling & Risk Assessment", "pillar": "data, infra, model, app", "phase": "scoping, operation",
+            "name": "AI Threat Modeling & Risk Assessment", "pillar": ["data", "infra", "model", "app"], "phase": ["scoping", "operation"],
             "description": "Systematically identify, analyze, and prioritize potential AI-specific threats and vulnerabilities for each AI component (e.g., data, models, algorithms, pipelines, agentic capabilities, APIs) throughout its lifecycle. This process involves understanding how an adversary might attack the AI system and assessing the potential impact of such attacks. The outcomes guide the design of appropriate defensive measures and inform risk management strategies. This proactive approach is essential for building resilient AI systems.",
             "implementationStrategies": [
                 {
@@ -1034,7 +1034,7 @@ export const modelTactic = {
             ], "subTechniques": [
                 {
                     "id": "AID-M-005.001",
-                    "name": "Design - Secure Configuration Baseline Development", "pillar": "infra", "phase": "scoping",
+                    "name": "Design - Secure Configuration Baseline Development", "pillar": ["infra"], "phase": ["scoping"],
                     "description": "Covers the 'design' phase of creating and documenting secure, hardened templates and configurations for all AI system components, based on industry benchmarks. This proactive technique involves defining 'golden standard' configurations for infrastructure, containers, and AI platforms to ensure that systems are secure by default, systematically reducing the attack surface by eliminating common misconfigurations before deployment.",
                     "implementationStrategies": [
                         {
@@ -1097,8 +1097,8 @@ export const modelTactic = {
                 {
                     "id": "AID-M-005.002",
                     "name": "Configuration Baseline Definition & Posture SLOs (Service Level Objectives)",
-                    "pillar": "infra",
-                    "phase": "building, validation",
+                    "pillar": ["infra"],
+                    "phase": ["building", "validation"],
                     "description": "During build and validation, define security configuration baselines for AI infrastructure and services as policy-as-code, and establish measurable posture SLO/SLI and release gates. This technique focuses on producing versioned, signed baselines and scoring criteria as the single source of truth for subsequent deployments and audits; it does not include runtime CSPM or continuous monitoring (those belong under Detect).",
                     "implementationStrategies": [
                         {
@@ -1188,7 +1188,7 @@ export const modelTactic = {
             "subTechniques": [
                 {
                     "id": "AID-M-006.001",
-                    "name": "HITL Checkpoint Design & Documentation", "pillar": "app", "phase": "scoping, building",
+                    "name": "HITL Checkpoint Design & Documentation", "pillar": ["app"], "phase": ["scoping", "building"],
                     "description": "This sub-technique covers the initial development phase of implementing Human-in-the-Loop controls. It involves formally defining the specific triggers that require human intervention in code and configuration, implementing the technical hooks for the AI agent to pause and await a decision, and creating the clear Standard Operating Procedures (SOPs) that operators will follow when an intervention is required.",
                     "implementationStrategies": [
                         {
@@ -1242,7 +1242,7 @@ export const modelTactic = {
                     ]
                 }, {
                     "id": "AID-M-006.002",
-                    "name": "HITL Operator Training & Readiness Testing", "pillar": "app", "phase": "validation",
+                    "name": "HITL Operator Training & Readiness Testing", "pillar": ["app"], "phase": ["validation"],
                     "description": "Covers the human and procedural readiness aspects of a Human-in-the-Loop (HITL) system. This technique involves developing comprehensive training programs and running simulated emergency scenarios ('fire drills') for human operators. It also includes regularly auditing and testing the technical HITL mechanisms to ensure both operator preparedness and end-to-end functionality, confirming that human control can be asserted effectively and reliably when needed.",
                     "implementationStrategies": [
                         {
@@ -1294,7 +1294,7 @@ export const modelTactic = {
                     ]
                 }, {
                     "id": "AID-M-006.003",
-                    "name": "HITL Escalation & Activity Monitoring", "pillar": "app", "phase": "operation",
+                    "name": "HITL Escalation & Activity Monitoring", "pillar": ["app"], "phase": ["operation"],
                     "description": "Covers the live operational and security aspects of a Human-in-the-Loop (HITL) system. This technique involves defining and implementing the technical escalation paths for undecided or unhandled intervention requests and ensuring that all HITL activations, operator decisions, and system responses are securely logged. This provides a comprehensive audit trail for forensic analysis and real-time monitoring to detect anomalous operator behavior or high-frequency intervention events.",
                     "implementationStrategies": [
                         {
@@ -1350,8 +1350,8 @@ export const modelTactic = {
         {
             "id": "AID-M-007",
             "name": "AI Use Case & Safety Boundary Modeling",
-            "pillar": "app, data",
-            "phase": "scoping, validation",
+            "pillar": ["app", "data"],
+            "phase": ["scoping", "validation"],
             "description": "This technique involves the formal, technical documentation and validation of an AI system's intended purpose, operational boundaries, and ethical guardrails. It translates abstract governance policies into concrete, machine-readable artifacts and automated tests that model the system's safety posture. The goal is to proactively define and enforce the AI's scope of acceptable use, assess it for fairness and bias, and analyze its potential for misuse, creating a verifiable record for security, compliance, and responsible AI assurance, integrated as CI/CD gates and policy-as-code.",
             "toolsOpenSource": [
                 "Fairness toolkits (Fairlearn, IBM AI Fairness 360, Themis-ML)",

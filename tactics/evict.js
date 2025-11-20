@@ -38,7 +38,7 @@ export const evictTactic = {
             "subTechniques": [
                 {
                     "id": "AID-E-001.001",
-                    "name": "Foundational Credential Management", "pillar": "infra", "phase": "response",
+                    "name": "Foundational Credential Management", "pillar": ["infra"], "phase": ["response"],
                     "description": "This sub-technique covers the standard, proactive lifecycle management and incident response for credentials associated with human users and traditional services (e.g., database accounts, long-lived service account keys). It includes essential security hygiene practices like regularly rotating secrets, as well as reactive measures such as forcing password resets and cleaning up unauthorized accounts after a compromise has been detected.",
                     "toolsOpenSource": [
                         "Cloud provider CLIs/SDKs (AWS CLI, gcloud, Azure CLI)",
@@ -96,7 +96,7 @@ export const evictTactic = {
                 },
                 {
                     "id": "AID-E-001.002",
-                    "name": "Automated & Real-time Invalidation", "pillar": "infra", "phase": "response",
+                    "name": "Automated & Real-time Invalidation", "pillar": ["infra"], "phase": ["response"],
                     "description": "This sub-technique covers the immediate, automated, and reactive side of credential eviction. It focuses on integrating security alerting with response workflows to automatically disable compromised credentials the moment they are detected. It also addresses the challenge of ensuring that revocations for stateless tokens (like JWTs) are propagated and enforced in real-time to immediately terminate an attacker's session.",
                     "toolsOpenSource": [
                         "Cloud provider automation (AWS Lambda, Azure Functions, Google Cloud Functions)",
@@ -150,7 +150,7 @@ export const evictTactic = {
                 },
                 {
                     "id": "AID-E-001.003",
-                    "name": "AI Agent & Workload Identity Revocation", "pillar": "infra, app", "phase": "response",
+                    "name": "AI Agent & Workload Identity Revocation", "pillar": ["infra", "app"], "phase": ["response"],
                     "description": "This sub-technique covers the specialized task of revoking credentials and identities for non-human, AI-specific entities. It addresses modern, ephemeral identity types like those used by autonomous agents and containerized workloads, such as short-lived mTLS certificates, cloud workload identities (e.g., IAM Roles for Service Accounts), and SPIFFE Verifiable Identity Documents (SVIDs). The goal is to immediately evict a compromised AI workload from the trust domain.",
                     "toolsOpenSource": [
                         "Workload Identity Systems (SPIFFE/SPIRE)",
@@ -210,7 +210,7 @@ export const evictTactic = {
         },
         {
             "id": "AID-E-002",
-            "name": "AI Process & Session Eviction", "pillar": "infra, app", "phase": "response",
+            "name": "AI Process & Session Eviction", "pillar": ["infra", "app"], "phase": ["response"],
             "description": "Terminate any running AI model instances, agent processes, user sessions, or containerized workloads that are confirmed to be malicious, compromised, or actively involved in an attack. This immediate action halts the adversary's ongoing activities within the AI system and removes their active foothold.",
             "toolsOpenSource": [
                 "OS process management (kill, pkill, taskkill)",
@@ -313,7 +313,7 @@ export const evictTactic = {
             "subTechniques": [
                 {
                     "id": "AID-E-003.001",
-                    "name": "Neural Network Backdoor Detection & Removal", "pillar": "model", "phase": "improvement",
+                    "name": "Neural Network Backdoor Detection & Removal", "pillar": ["model"], "phase": ["improvement"],
                     "description": "Focuses on identifying and removing backdoors embedded within neural network model parameters, including trigger-based backdoors that cause misclassification on specific inputs.",
                     "toolsOpenSource": [
                         "Adversarial Robustness Toolbox (ART) by IBM (includes Neural Cleanse, Activation Defence)",
@@ -394,7 +394,7 @@ export const evictTactic = {
                 },
                 {
                     "id": "AID-E-003.002",
-                    "name": "Poisoned Data Detection & Cleansing", "pillar": "data", "phase": "improvement",
+                    "name": "Poisoned Data Detection & Cleansing", "pillar": ["data"], "phase": ["improvement"],
                     "description": "Identifies and removes maliciously crafted data points from training sets, vector databases, or other data stores that could influence model behavior or enable attacks.",
                     "toolsOpenSource": [
                         "scikit-learn (for Isolation Forest, DBSCAN)",
@@ -485,7 +485,7 @@ export const evictTactic = {
                 },
                 {
                     "id": "AID-E-003.003",
-                    "name": "Malicious Code & Configuration Cleanup", "pillar": "infra, app", "phase": "improvement, response",
+                    "name": "Malicious Code & Configuration Cleanup", "pillar": ["infra", "app"], "phase": ["improvement", "response"],
                     "description": "Removes malicious scripts, modified configuration files, unauthorized tools, or persistence mechanisms that attackers may have introduced into the AI system infrastructure.",
                     "toolsOpenSource": [
                         "AIDE (Advanced Intrusion Detection Environment)",
@@ -576,7 +576,7 @@ export const evictTactic = {
                 },
                 {
                     "id": "AID-E-003.004",
-                    "name": "Malicious Node Eviction in Graph Datasets", "pillar": "data", "phase": "improvement",
+                    "name": "Malicious Node Eviction in Graph Datasets", "pillar": ["data"], "phase": ["improvement"],
                     "description": "After a detection method identifies nodes that are likely poisoned or part of a backdoor trigger, this eviction technique systematically removes those nodes and their associated edges from the graph dataset. This cleansing action is performed before the final, clean Graph Neural Network (GNN) model is trained or retrained, ensuring the malicious artifacts and their influence are fully purged from the training process.",
                     "implementationStrategies": [
                         {
@@ -641,7 +641,7 @@ export const evictTactic = {
         },
         {
             "id": "AID-E-004",
-            "name": "Post-Eviction System Patching & Hardening", "pillar": "infra, app", "phase": "improvement",
+            "name": "Post-Eviction System Patching & Hardening", "pillar": ["infra", "app"], "phase": ["improvement"],
             "description": "After an attack vector has been identified and the adversary evicted, rapidly apply necessary security patches to vulnerable software components (e.g., ML libraries, operating systems, web servers, agent frameworks) and harden system configurations that were exploited or found to be weak. This step aims to close the specific vulnerabilities used by the attacker and strengthen overall security posture to prevent reinfection or similar future attacks.",
             "toolsOpenSource": [
                 "Package managers (apt, yum, pip, conda)",
@@ -713,8 +713,8 @@ export const evictTactic = {
         {
             "id": "AID-E-005",
             "name": "Compromised Session Termination & State Purging",
-            "pillar": "infra, app",
-            "phase": "response",
+            "pillar": ["infra", "app"],
+            "phase": ["response"],
             "description": "When communication channels or user/agent sessions are suspected or confirmed compromised, immediately expel the adversary and dismantle all footholds. This includes terminating active sessions, revoking tokens, purging tainted conversational memory, and disabling malicious execution paths like unknown webhooks or queued jobs. The goal is to prevent any residual access so the attacker cannot continue or instantly re-enter.",
             "toolsOpenSource": [
                 "Application server admin interfaces for session expiration",
@@ -813,8 +813,8 @@ export const evictTactic = {
                 {
                     "id": "AID-E-006.001",
                     "name": "Cryptographic Erasure & Media Sanitization",
-                    "pillar": "data, infra",
-                    "phase": "improvement",
+                    "pillar": ["data", "infra"],
+                    "phase": ["improvement"],
                     "description": "Employs cryptographic and physical methods to render AI data and models on storage media permanently unrecoverable. This is the core technical process for decommissioning AI assets, ensuring compliance with data protection regulations and preventing future data leakage.",
                     "implementationStrategies": [
                         {
@@ -839,8 +839,8 @@ export const evictTactic = {
                 {
                     "id": "AID-E-006.002",
                     "name": "Secure Asset Transfer & Ownership Change",
-                    "pillar": "model, data, infra",
-                    "phase": "improvement",
+                    "pillar": ["model", "data", "infra"],
+                    "phase": ["improvement"],
                     "description": "Defines the technical process for securely transferring ownership of an AI asset to another entity. This involves cryptographic verification of the transferred artifact and a corresponding secure deletion of the original asset to prevent residual security risks.",
                     "implementationStrategies": [
                         {

@@ -5,8 +5,8 @@ export const hardenTactic = {
         {
             "id": "AID-H-001",
             "name": "Adversarial Robustness Training",
-            "pillar": "model",
-            "phase": "building",
+            "pillar": ["model"],
+            "phase": ["building"],
             "description": "A set of techniques that proactively improve a model's resilience to adversarial inputs by training it with examples specifically crafted to try and fool it. This process 'vaccinates' the model against various forms of attack—from subtle, full-image perturbations to localized, high-visibility adversarial patches—by directly incorporating adversarial defense into the training loop, forcing the model to learn more robust and generalizable features.",
             "toolsOpenSource": [
                 "Adversarial Robustness Toolbox (ART), CleverHans, Foolbox, Torchattacks",
@@ -130,8 +130,8 @@ export const hardenTactic = {
                 {
                     "id": "AID-H-002.001",
                     "name": "Training & Fine-Tuning Data Sanitization",
-                    "pillar": "data",
-                    "phase": "building",
+                    "pillar": ["data"],
+                    "phase": ["building"],
                     "description": "Focuses on detecting and removing poisoned samples, unwanted biases, or sensitive data from datasets before they are used for model training or fine-tuning. This pre-processing step is critical for preventing the model from learning vulnerabilities or undesirable behaviors from the outset.",
                     "toolsOpenSource": [
                         "Great Expectations (for data validation and quality checks)",
@@ -207,8 +207,8 @@ export const hardenTactic = {
                 {
                     "id": "AID-H-002.002",
                     "name": "Inference-Time Prompt & Input Validation",
-                    "pillar": "app",
-                    "phase": "operation",
+                    "pillar": ["app"],
+                    "phase": ["operation"],
                     "description": "Focuses on real-time defense against malicious inputs at the point of inference, such as prompt injection, jailbreaking attempts, or other input-based evasions. This technique acts as a guardrail for the live, operational model.",
                     "toolsOpenSource": [
                         "NVIDIA NeMo Guardrails",
@@ -306,8 +306,8 @@ export const hardenTactic = {
                 {
                     "id": "AID-H-002.003",
                     "name": "Multimodal Input Sanitization",
-                    "pillar": "data",
-                    "phase": "building, operation",
+                    "pillar": ["data"],
+                    "phase": ["building", "operation"],
                     "description": "Focuses on the unique challenges of validating and sanitizing non-textual inputs like images, audio, and video before they are processed by a model. This includes implementing defensive transformations to remove adversarial perturbations, stripping potentially malicious metadata, and ensuring consistency across modalities to prevent cross-modal attacks.",
                     "implementationStrategies": [
                         {
@@ -432,8 +432,8 @@ export const hardenTactic = {
                 {
                     "id": "AID-H-003.001",
                     "name": "Software Dependency & Package Security",
-                    "pillar": "infra",
-                    "phase": "building",
+                    "pillar": ["infra"],
+                    "phase": ["building"],
                     "description": "Ensure integrity of all third-party code and libraries (Python packages, containers, build tools) used to develop and serve AI workloads.",
                     "toolsOpenSource": [
                         "Trivy",
@@ -503,8 +503,8 @@ export const hardenTactic = {
                 {
                     "id": "AID-H-003.002",
                     "name": "CI/CD Release Gating, Model Artifact Signing & Secure Distribution",
-                    "pillar": "infra, model",
-                    "phase": "building, validation",
+                    "pillar": ["infra", "model"],
+                    "phase": ["building", "validation"],
                     "description": "Mandatory, automated acceptance criteria applied to a model artifact before promotion to production. Acts as a final security gate to ensure only trusted, verified, and safely configured models are deployed by validating their origin, integrity, provenance, and operational policies. This control assumes production never trusts public names directly; only immutable, attested bytes from an internal mirror are allowed.",
                     "toolsOpenSource": [
                         "MLflow Model Registry",
@@ -579,8 +579,8 @@ export const hardenTactic = {
                 {
                     "id": "AID-H-003.003",
                     "name": "Dataset Supply Chain Validation",
-                    "pillar": "data",
-                    "phase": "building",
+                    "pillar": ["data"],
+                    "phase": ["building"],
                     "description": "Authenticate, checksum and license-check every external dataset (training, fine-tuning, RAG).",
                     "toolsOpenSource": [
                         "DVC (Data Version Control)",
@@ -642,8 +642,8 @@ export const hardenTactic = {
                 {
                     "id": "AID-H-003.004",
                     "name": "Hardware & Firmware Integrity Assurance",
-                    "pillar": "infra",
-                    "phase": "building",
+                    "pillar": ["infra"],
+                    "phase": ["building"],
                     "description": "Verify accelerator cards, firmware and BIOS/UEFI images are genuine and un-modified before joining an AI cluster.",
                     "toolsOpenSource": [
                         "Open-source secure boot implementations (e.g., U-Boot)",
@@ -702,8 +702,8 @@ export const hardenTactic = {
                 {
                     "id": "AID-H-003.005",
                     "name": "Infrastructure as Code (IaC) Security Scanning for AI Systems",
-                    "pillar": "infra",
-                    "phase": "validation",
+                    "pillar": ["infra"],
+                    "phase": ["validation"],
                     "description": "Covers the 'pre-deployment' phase of automatically scanning Infrastructure as Code (IaC) files (e.g., Terraform, CloudFormation, Kubernetes YAML) in the CI/CD pipeline. This 'shift-left' security practice aims to detect and block security misconfigurations, such as insecure network paths that could undermine model supply chain security, before infrastructure is provisioned.",
                     "toolsOpenSource": [
                         "Checkov",
@@ -765,8 +765,8 @@ export const hardenTactic = {
                 {
                     "id": "AID-H-003.006",
                     "name": "Model SBOM & Provenance Attestation",
-                    "pillar": "infra, model",
-                    "phase": "building, validation, operation",
+                    "pillar": ["infra", "model"],
+                    "phase": ["building", "validation", "operation"],
                     "description": "Produce a model-centric SBOM that inventories model bytes (files, hashes), tokenizer, config, format, and loader code commit; bind it to the exact artifact digest via in-toto/SLSA attestation signed with Sigstore. Verify the attestation and digest binding at admission and re-verify hashes at runtime before loading. This creates a tamper-evident content contract for the model, closing name/namespace trust gaps.",
                     "toolsOpenSource": [
                         "Sigstore/cosign",
@@ -886,7 +886,7 @@ export const hardenTactic = {
             "subTechniques": [
                 {
                     "id": "AID-H-004.001",
-                    "name": "User & Privileged Access Management", "pillar": "infra", "phase": "building, operation",
+                    "name": "User & Privileged Access Management", "pillar": ["infra"], "phase": ["building", "operation"],
                     "description": "Focuses on securing access for human users, such as developers, data scientists, and system administrators, who manage and interact with AI systems. The goal is to enforce strong authentication and granular permissions for human identities.",
                     "toolsOpenSource": [
                         "Keycloak",
@@ -941,7 +941,7 @@ export const hardenTactic = {
                 },
                 {
                     "id": "AID-H-004.002",
-                    "name": "Service & API Authentication", "pillar": "infra", "phase": "building, operation",
+                    "name": "Service & API Authentication", "pillar": ["infra"], "phase": ["building", "operation"],
                     "description": "Focuses on securing machine-to-machine communication for AI services. This includes authenticating service accounts, applications, and other services that need to interact with AI model APIs, data stores, or MLOps pipelines.",
                     "toolsOpenSource": [
                         "OAuth2-Proxy",
@@ -995,7 +995,7 @@ export const hardenTactic = {
                 },
                 {
                     "id": "AID-H-004.003",
-                    "name": "Secure Agent-to-Agent Communication", "pillar": "app", "phase": "building, operation",
+                    "name": "Secure Agent-to-Agent Communication", "pillar": ["app"], "phase": ["building", "operation"],
                     "description": "Focuses on the unique challenge of securing communications within multi-agent systems. This ensures that autonomous agents can trust each other, and that their messages cannot be spoofed, tampered with, or replayed by an adversary.",
                     "toolsOpenSource": [
                         "SPIFFE/SPIRE",
@@ -1088,7 +1088,7 @@ export const hardenTactic = {
             "subTechniques": [
                 {
                     "id": "AID-H-005.001",
-                    "name": "Differential Privacy for AI", "pillar": "data, model", "phase": "building",
+                    "name": "Differential Privacy for AI", "pillar": ["data", "model"], "phase": ["building"],
                     "description": "Implements differential privacy mechanisms to add calibrated noise to model training, outputs, or data queries, ensuring that individual data points cannot be identified while maintaining overall utility.",
                     "perfImpact": {
                         "level": "High on Training Time & Model Utility",
@@ -1151,7 +1151,7 @@ export const hardenTactic = {
                 },
                 {
                     "id": "AID-H-005.002",
-                    "name": "Homomorphic Encryption for AI", "pillar": "data, model, infra", "phase": "building, operation",
+                    "name": "Homomorphic Encryption for AI", "pillar": ["data", "model", "infra"], "phase": ["building", "operation"],
                     "description": "Enables computation on encrypted data, allowing models to train or perform inference without ever decrypting sensitive information, providing strong cryptographic guarantees.",
                     "perfImpact": {
                         "level": "Extremely High on Inference Latency & Computational Cost",
@@ -1219,7 +1219,7 @@ export const hardenTactic = {
                 },
                 {
                     "id": "AID-H-005.003",
-                    "name": "Adaptive Data Augmentation for Membership Inference Defense", "pillar": "model", "phase": "building, validation",
+                    "name": "Adaptive Data Augmentation for Membership Inference Defense", "pillar": ["model"], "phase": ["building", "validation"],
                     "description": "Employs adaptive data augmentation techniques, such as 'mixup', during the model training process to harden it against membership inference attacks (MIAs).  Mixup creates new training samples by linearly interpolating between existing samples and their labels.  The 'adaptive' component involves dynamically adjusting the mixup strategy during training, which enhances the model's generalization and makes it more difficult for an attacker to determine if a specific data point was part of the training set. ",
                     "implementationStrategies": [
                         {
@@ -1280,7 +1280,7 @@ export const hardenTactic = {
                 },
                 {
                     "id": "AID-H-005.004",
-                    "name": "LLM Training Data Deduplication", "pillar": "data", "phase": "building",
+                    "name": "LLM Training Data Deduplication", "pillar": ["data"], "phase": ["building"],
                     "description": "A data-centric hardening technique that involves systematically removing duplicate or near-duplicate sequences from the training datasets for Large Language Models (LLMs). This pre-processing step directly mitigates the risk of unintended memorization, where LLMs are prone to learn and regenerate specific training examples verbatim, which can lead to the leakage of sensitive or copyrighted information. ",
                     "implementationStrategies": [
                         {
@@ -1407,7 +1407,7 @@ export const hardenTactic = {
             "subTechniques": [
                 {
                     "id": "AID-H-006.001",
-                    "name": "Structured Output Enforcement", "pillar": "app", "phase": "building, operation",
+                    "name": "Structured Output Enforcement", "pillar": ["app"], "phase": ["building", "operation"],
                     "description": "Forces LLMs to generate output that conforms to a strict, pre-defined schema (e.g., JSON, YAML) instead of free-form text. This ensures the output can be safely parsed and validated by downstream systems, preventing the generation of unintended or malicious scripts, formats, or commands.",
                     "toolsOpenSource": [
                         "Instructor",
@@ -1470,7 +1470,7 @@ export const hardenTactic = {
                 },
                 {
                     "id": "AID-H-006.002",
-                    "name": "Output Content Sanitization & Validation", "pillar": "app", "phase": "building, operation",
+                    "name": "Output Content Sanitization & Validation", "pillar": ["app"], "phase": ["building", "operation"],
                     "description": "Applies security checks and sanitization to the content generated by an AI model before it is displayed to a user or passed to a downstream system. This involves escaping output to prevent injection attacks (e.g., Cross-Site Scripting, Shell Injection) and validating specific content types, such as URLs, against blocklists or safety APIs to prevent users from being directed to malicious websites.",
                     "implementationStrategies": [
                         {
@@ -1620,8 +1620,8 @@ def is_url_safe(url: str):
                 {
                     "id": "AID-H-006.003",
                     "name": "Passive AI Output Obfuscation",
-                    "pillar": "model, app",
-                    "phase": "building, operation",
+                    "pillar": ["model", "app"],
+                    "phase": ["building", "operation"],
                     "description": "A hardening technique that intentionally reduces the precision or fidelity of an AI model's output before it is returned to an end-user or downstream system. This proactive control aims to significantly increase the difficulty of model extraction, inversion, and membership inference attacks, which often rely on precise output values (like confidence scores or logits) to reverse-engineer the model or its training data. By returning less information—such as binned confidence scores, rounded numerical predictions, or only the top predicted class—the utility for legitimate users is maintained while the value of the output for an attacker is drastically reduced.",
                     "toolsOpenSource": [
                         "NumPy, SciPy (for numerical manipulation and noise generation)",
@@ -1719,7 +1719,7 @@ def is_url_safe(url: str):
             ], "subTechniques": [
                 {
                     "id": "AID-H-007.001",
-                    "name": "Secure Training Environment Provisioning", "pillar": "infra", "phase": "building, operation",
+                    "name": "Secure Training Environment Provisioning", "pillar": ["infra"], "phase": ["building", "operation"],
                     "description": "This sub-technique focuses on the infrastructure layer of AI security. It covers the creation of dedicated, isolated, and hardened environments for training jobs using Infrastructure as Code (IaC), least-privilege IAM roles, and, where necessary, confidential computing. The goal is to build a secure foundation for the training process, protecting it from both internal and external threats, and ensuring the confidentiality and integrity of the data and model being processed.",
                     "implementationStrategies": [
                         {
@@ -1779,7 +1779,7 @@ def is_url_safe(url: str):
                     ]
                 },
                 {
-                    "id": "AID-H-007.002", "pillar": "infra", "phase": "operation",
+                    "id": "AID-H-007.002", "pillar": ["infra"], "phase": ["operation"],
                     "name": "Runtime Training Job Monitoring & Auditing",
                     "description": "Focuses on instrumenting the training script itself to continuously monitor for behavioral anomalies and to create a detailed, immutable audit log. This involves real-time tracking of key training metrics (e.g., loss, gradient norms) to detect signs of instability or poisoning, and systematically logging all parameters, code versions, and data versions to ensure any training run is fully auditable and reproducible.",
                     "implementationStrategies": [
@@ -1839,7 +1839,7 @@ def is_url_safe(url: str):
                 },
                 {
                     "id": "AID-H-007.003",
-                    "name": "Training Process Reproducibility", "pillar": "infra, model", "phase": "building, validation, improvement",
+                    "name": "Training Process Reproducibility", "pillar": ["infra", "model"], "phase": ["building", "validation", "improvement"],
                     "description": "This sub-technique focuses on the governance and versioning aspect of securing the training process. It covers the strict version control of all inputs to a training job—including source code, configuration files, dependencies, the dataset, and the container image—to ensure any run can be perfectly and verifiably reproduced. This is critical for auditing, debugging incidents, and ensuring the integrity of the model's entire lifecycle.",
                     "implementationStrategies": [
                         {
@@ -2006,7 +2006,7 @@ with mlflow.start_run() as run:
             "subTechniques": [
                 {
                     "id": "AID-H-008.001",
-                    "name": "Secure Aggregation Protocols for Federated Learning", "pillar": "model", "phase": "building, operation",
+                    "name": "Secure Aggregation Protocols for Federated Learning", "pillar": ["model"], "phase": ["building", "operation"],
                     "description": "Employs cryptographic methods in Federated Learning (FL) to protect the privacy of individual client contributions, such as model updates or gradients.  These protocols are designed so the central server can compute the aggregate (sum or average) of all client updates but cannot inspect or reverse-engineer any individual contribution.  This hardens the FL process against inference attacks by the server and preserves user privacy in collaborative learning environments. ",
                     "implementationStrategies": [
                         {
@@ -2065,7 +2065,7 @@ with mlflow.start_run() as run:
                 },
                 {
                     "id": "AID-H-008.002",
-                    "name": "Byzantine-Robust Aggregation Rules", "pillar": "model", "phase": "building, operation",
+                    "name": "Byzantine-Robust Aggregation Rules", "pillar": ["model"], "phase": ["building", "operation"],
                     "description": "A class of statistical, non-cryptographic aggregation methods designed to protect the integrity of the global model in Federated Learning. These rules identify and mitigate the impact of outlier or malicious model updates from compromised clients (Byzantine actors) by using functions like median, trimmed mean, or distance-based scoring (e.g., Krum) to filter out or down-weight anomalous contributions before they can corrupt the final aggregated model.",
                     "implementationStrategies": [
                         {
@@ -2164,7 +2164,7 @@ with mlflow.start_run() as run:
             "subTechniques": [
                 {
                     "id": "AID-H-009.001",
-                    "name": "Hardware Root of Trust & Secure Boot", "pillar": "infra", "phase": "building",
+                    "name": "Hardware Root of Trust & Secure Boot", "pillar": ["infra"], "phase": ["building"],
                     "description": "This sub-technique focuses on ensuring that the hardware and its boot-level software start in a known, trusted state. It covers the implementation and verification of Secure Boot chains for servers equipped with AI accelerators. This process establishes a chain of trust from an immutable hardware root, ensuring that every piece of software loaded during startup—from the UEFI firmware to the bootloader and operating system kernel—is cryptographically signed and verified, preventing boot-level malware.",
                     "implementationStrategies": [
                         {
@@ -2268,7 +2268,7 @@ PS > Get-AuthenticodeSignature -FilePath "C:\\Program Files\\NVIDIA Corporation\
                 },
                 {
                     "id": "AID-H-009.002",
-                    "name": "Accelerator Firmware & Driver Patch Management", "pillar": "infra", "phase": "building, operation",
+                    "name": "Accelerator Firmware & Driver Patch Management", "pillar": ["infra"], "phase": ["building", "operation"],
                     "description": "This sub-technique covers the operational lifecycle management for the software that runs directly on the AI hardware. It includes processes for monitoring for vulnerabilities in firmware and drivers for GPUs, TPUs, and other accelerators, and applying security patches in a timely, controlled manner to prevent exploitation of known vulnerabilities.",
                     "implementationStrategies": [
                         {
@@ -2361,7 +2361,7 @@ ScanPolicy:
                 },
                 {
                     "id": "AID-H-009.003",
-                    "name": "Hardware Supply Chain Security", "pillar": "infra", "phase": "scoping",
+                    "name": "Hardware Supply Chain Security", "pillar": ["infra"], "phase": ["scoping"],
                     "description": "This sub-technique focuses on the procurement and sourcing of AI hardware. It covers vetting suppliers, verifying the authenticity of components, and contractually requiring features like side-channel attack resistance. The goal is to mitigate the risk of acquiring counterfeit, tampered, or inherently vulnerable hardware components that could be used to compromise AI systems.",
                     "implementationStrategies": [
                         {
@@ -2436,8 +2436,8 @@ ScanPolicy:
                 {
                     "id": "AID-H-009.004",
                     "name": "Accelerator Isolation & VRAM/KV-Cache Hygiene",
-                    "pillar": "infra",
-                    "phase": "operation",
+                    "pillar": ["infra"],
+                    "phase": ["operation"],
                     "description": "In shared compute environments, prevent data leakage across GPU jobs by clearing VRAM/KV-cache after tasks, partitioning accelerators, and staying patched against known issues (e.g., LeftoverLocals).",
                     "defendsAgainst": [
                         { "framework": "MITRE ATLAS", "items": ["AML.T0025 Exfiltration via Cyber Means", "AML.T0037 Data from Local System"] },
@@ -2457,8 +2457,8 @@ ScanPolicy:
                 {
                     "id": "AID-H-009.005",
                     "name": "Confidential Inference & Remote Attestation",
-                    "pillar": "infra",
-                    "phase": "building",
+                    "pillar": ["infra"],
+                    "phase": ["building"],
                     "description": "Run inference in TEEs or confidential VMs to protect model weights, inputs, and KV-cache in encrypted memory. Verify enclave integrity via remote attestation before sending sensitive assets.",
                     "defendsAgainst": [
                         { "framework": "MITRE ATLAS", "items": ["AML.T0024.002 Invert AI Model", "AML.T0025 Exfiltration via Cyber Means"] },
@@ -2481,7 +2481,7 @@ ScanPolicy:
         },
         {
             "id": "AID-H-010",
-            "name": "Transformer Architecture Defenses", "pillar": "model", "phase": "building",
+            "name": "Transformer Architecture Defenses", "pillar": ["model"], "phase": ["building"],
             "description": "Implement security measures specifically designed to mitigate vulnerabilities inherent in the Transformer architecture, such as attention mechanism manipulation, position embedding attacks, and risks associated with self-attention complexity. These defenses reduce an attacker's ability to steer model behavior by injecting or repositioning a small set of crafted tokens that dominate attention, cause targeted misclassification, or override safety behavior. They aim to protect against attacks that exploit how Transformers process and prioritize information.",
             "toolsOpenSource": [
                 "TextAttack (for generating adversarial examples against Transformers)",
@@ -2537,7 +2537,7 @@ ScanPolicy:
         },
         {
             "id": "AID-H-011",
-            "name": "Classifier-Free Guidance Hardening", "pillar": "model", "phase": "building, operation",
+            "name": "Classifier-Free Guidance Hardening", "pillar": ["model"], "phase": ["building", "operation"],
             "description": "A set of techniques focused on hardening the Classifier-Free Guidance (CFG) mechanism in diffusion models. CFG is a core component that steers image generation towards a text prompt, but adversaries can exploit high guidance scale values to force the model to generate harmful, unsafe, or out-of-distribution content. These hardening techniques aim to control the CFG scale and its influence, preventing its misuse while preserving the model's creative capabilities. High CFG scales can overpower built-in safety conditioning and negative prompts, effectively steering the diffusion model toward disallowed or high-risk generations. This hardening treats CFG as a runtime safety-critical control surface, not just a creative knob, and enforces guardrails on how guidance is applied at inference time.",
             "implementationStrategies": [
                 {
@@ -2633,7 +2633,7 @@ ScanPolicy:
             ], "subTechniques": [
                 {
                     "id": "AID-H-012.001",
-                    "name": "Graph Data Sanitization & Provenance", "pillar": "data", "phase": "building",
+                    "name": "Graph Data Sanitization & Provenance", "pillar": ["data"], "phase": ["building"],
                     "description": "This sub-technique covers the data-centric defenses performed on a graph before training. It focuses on analyzing the graph's structure to identify and remove anomalous nodes or edges, and on incorporating provenance information (e.g., trust scores based on data sources) to down-weight the influence of less trusted parts of the graph during model training.",
                     "implementationStrategies": [
                         {
@@ -2685,7 +2685,7 @@ ScanPolicy:
                 },
                 {
                     "id": "AID-H-012.002",
-                    "name": "Robust GNN Training & Architecture", "pillar": "model", "phase": "building",
+                    "name": "Robust GNN Training & Architecture", "pillar": ["model"], "phase": ["building"],
                     "description": "This sub-technique covers the model-centric defenses against GNN poisoning. It focuses on modifying the GNN's architecture (e.g., using robust aggregation functions) and the training process (e.g., applying regularization) to make the model itself inherently more resilient to the effects of malicious data or structural perturbations.",
                     "implementationStrategies": [
                         {
@@ -2817,7 +2817,7 @@ def regularized_training_step(data):
                 },
                 {
                     "id": "AID-H-012.003",
-                    "name": "Certified GNN Robustness", "pillar": "model", "phase": "building",
+                    "name": "Certified GNN Robustness", "pillar": ["model"], "phase": ["building"],
                     "description": "This sub-technique covers the advanced, formal verification approach to defending Graph Neural Networks (GNNs). It provides a mathematical guarantee that a model's prediction for a specific node will remain unchanged even if an attacker adds or removes up to a certain number of edges in the graph. This 'certified radius' of robustness represents a distinct, high-assurance implementation path against structural poisoning attacks.",
                     "implementationStrategies": [
                         {
@@ -2963,8 +2963,8 @@ class GraphRobustnessVerifier:
                 {
                     "id": "AID-H-013.001",
                     "name": "Robust Reward Function Engineering",
-                    "pillar": "model",
-                    "phase": "building",
+                    "pillar": ["model"],
+                    "phase": ["building"],
                     "description": "Directly engineer the reward function to be less exploitable. Define multiple positive goals and explicit negative penalties so that the agent cannot get a high score by doing something misaligned, unsafe, or trivial. The goal is to encode real-world intent (what ‘good’ means and what ‘bad’ means) into the reward surface, instead of assuming a single simplistic metric will be enough.",
                     "implementationStrategies": [
                         {
@@ -3015,8 +3015,8 @@ class GraphRobustnessVerifier:
                 {
                     "id": "AID-H-013.002",
                     "name": "Human-in-the-Loop Reward Learning",
-                    "pillar": "model",
-                    "phase": "building",
+                    "pillar": ["model"],
+                    "phase": ["building"],
                     "description": "Learn the reward function from humans instead of hand-writing it. This includes preference-based learning (humans choose which trajectory looks better) and Inverse Reinforcement Learning (IRL), where the system infers what objective an expert was optimizing. This is critical for complex or high-impact tasks where 'good behavior' is intuitive to humans but hard to specify numerically.",
                     "implementationStrategies": [
                         {
@@ -3069,8 +3069,8 @@ class GraphRobustnessVerifier:
                 {
                     "id": "AID-H-013.003",
                     "name": "Potential-Based Reward Shaping",
-                    "pillar": "model",
-                    "phase": "building",
+                    "pillar": ["model"],
+                    "phase": ["building"],
                     "description": "Apply potential-based reward shaping (PBRS) to guide exploration without accidentally teaching the agent a hacked shortcut. PBRS adds dense 'shaping' reward at each step to help the agent learn faster, but does it in a mathematically safe way that does not change the optimal policy. This reduces the need for the agent to search for weird exploits just to get signal.",
                     "implementationStrategies": [
                         {
@@ -3122,8 +3122,8 @@ class GraphRobustnessVerifier:
                 {
                     "id": "AID-H-013.004",
                     "name": "RL Agent Behavioral Audit & Sandbox Evaluation",
-                    "pillar": "model",
-                    "phase": "validation",
+                    "pillar": ["model"],
+                    "phase": ["validation"],
                     "description": "Before deploying an RL policy (or promoting it to production), analyze the agent’s actual behavior and not just its numeric reward. The goal is to catch 'creative exploits' where the policy earns huge reward by doing something undesired, unsafe, or reputation-damaging, even if it technically maximizes the current reward function.",
                     "implementationStrategies": [
                         {
@@ -3171,8 +3171,8 @@ class GraphRobustnessVerifier:
                 {
                     "id": "AID-H-013.005",
                     "name": "Secure Reward Signal Integrity & Transport",
-                    "pillar": "model",
-                    "phase": "operation",
+                    "pillar": ["model"],
+                    "phase": ["operation"],
                     "description": "Protect the integrity and authenticity of the reward signal itself. In many real systems, the reward is computed by an external service (simulation backend, telemetry service, rules arbiter). If an attacker can tamper with that reward in transit, the agent will learn a malicious or useless policy. This subtechnique treats the reward channel like a critical security surface: mutually authenticated transport plus cryptographic signing of the reward payload.",
                     "implementationStrategies": [
                         {
@@ -3266,7 +3266,7 @@ class GraphRobustnessVerifier:
                 {
                     "id": "AID-H-014.001",
                     "name": "Digital Content & Data Watermarking",
-                    "pillar": "data, model", "phase": "building",
+                    "pillar": ["data", "model"], "phase": ["building"],
                     "description": "This subtechnique covers the methods for embedding robust, imperceptible signals into various data types (including images, audio, video, text, and code) for the purposes of tracing provenance, detecting misuse, or identifying AI-generated content. The watermark is designed to be resilient to common transformations, allowing an owner to prove that a piece of content originated from their system even after it has been distributed or modified.",
                     "implementationStrategies": [
                         {
@@ -3299,7 +3299,7 @@ class GraphRobustnessVerifier:
                 {
                     "id": "AID-H-014.002",
                     "name": "Adversarial Data Cloaking",
-                    "pillar": "data", "phase": "building",
+                    "pillar": ["data"], "phase": ["building"],
                     "description": "This subtechnique covers the approach of adding small, targeted, and often imperceptible perturbations to source data. Unlike watermarking, which aims for a signal to be robustly detected, cloaking aims to disrupt or 'cloak' the data from being effectively used by specific downstream AI models. This is a proactive defense to sabotage the utility of stolen data for malicious purposes like deepfake generation or unauthorized model training.",
                     "implementationStrategies": [
                         {
@@ -3333,7 +3333,7 @@ class GraphRobustnessVerifier:
         },
         {
             "id": "AID-H-015",
-            "name": "Ensemble Methods for Robustness", "pillar": "model", "phase": "building",
+            "name": "Ensemble Methods for Robustness", "pillar": ["model"], "phase": ["building"],
             "description": "An architectural defense that improves a system's resilience by combining the predictions of multiple, independently trained AI models. An attacker must now successfully deceive a majority of the models in the ensemble to cause a misclassification, significantly increasing the difficulty of a successful evasion attack. This technique is applied at inference time and is distinct from training-time hardening methods.",
             "implementationStrategies": [
                 {
@@ -3392,8 +3392,8 @@ class GraphRobustnessVerifier:
         {
             "id": "AID-H-016",
             "name": "Certified Defenses",
-            "pillar": "model",
-            "phase": "building, validation",
+            "pillar": ["model"],
+            "phase": ["building", "validation"],
             "description": "A set of advanced techniques that provide a mathematical, provable guarantee that a model's output will not change for any input within a defined 'robustness radius'. Unlike empirical defenses like standard adversarial training, which improve resilience against known attack types, certified defenses use formal methods to prove that no attack within a certain magnitude (e.g., L-infinity norm) can cause a misclassification. This is a highly specialized task that offers the highest level of assurance against evasion attacks.",
             "implementationStrategies": [
                 {
@@ -3457,8 +3457,8 @@ class GraphRobustnessVerifier:
         {
             "id": "AID-H-017",
             "name": "System Prompt Hardening",
-            "pillar": "app",
-            "phase": "building",
+            "pillar": ["app"],
+            "phase": ["building"],
             "description": "Design and maintain robust, unambiguous system prompts that clearly separate trusted instructions from untrusted content, enforce instruction hierarchy, and minimize the attack surface for prompt injection and jailbreak attempts. This technique focuses on structure (delimiters, namespaces), precedence (policy > system > developer > user), and safe inclusion of dynamic context so the agent reliably follows organizational guardrails.",
             "toolsOpenSource": [
                 "Structured prompt templates (YAML / JSON)",
@@ -3562,8 +3562,8 @@ class GraphRobustnessVerifier:
                 {
                     "id": "AID-H-018.001",
                     "name": "Interruptible & Auditable Reasoning Loops",
-                    "pillar": "app",
-                    "phase": "building, operation",
+                    "pillar": ["app"],
+                    "phase": ["building", "operation"],
                     "description": "Architect an agent's main operational loop (e.g., ReAct) as a state machine or generator that yields control after each discrete step. This design makes the agent's 'thought process' observable, allowing an external orchestrator to inspect, audit, and potentially interrupt or require human approval for high-risk actions before they are executed.",
                     "toolsOpenSource": [
                         "Agentic frameworks with callback handlers (LangChain, LlamaIndex, AutoGen)",
@@ -3607,8 +3607,8 @@ class GraphRobustnessVerifier:
                 {
                     "id": "AID-H-018.002",
                     "name": "Least-Privilege Tool Architecture",
-                    "pillar": "app",
-                    "phase": "building",
+                    "pillar": ["app"],
+                    "phase": ["building"],
                     "description": "Design an agent's capabilities with the principle of least privilege by providing small, single-purpose tools with strongly-typed parameters instead of generic, powerful tools (e.g., a raw SQL executor). This reduces the attack surface and minimizes potential damage from tool misuse.",
                     "toolsOpenSource": [
                         "Pydantic (for defining typed tool inputs)",
@@ -3640,8 +3640,8 @@ class GraphRobustnessVerifier:
                 {
                     "id": "AID-H-018.003",
                     "name": "Decoupled Reasoning & Action Dispatch",
-                    "pillar": "app",
-                    "phase": "building, operation",
+                    "pillar": ["app"],
+                    "phase": ["building", "operation"],
                     "description": "Architect the system to separate the 'brain' (the LLM generating a plan) from the 'hands' (the code executing the plan). The LLM's role is strictly limited to producing a structured, data-only output (e.g., JSON), which is then passed to a separate, hard-coded dispatcher module for validation and execution. This creates a critical security boundary.",
                     "toolsOpenSource": [
                         "Web frameworks (FastAPI, Flask) for building the dispatcher service",
@@ -3673,8 +3673,8 @@ class GraphRobustnessVerifier:
                 {
                     "id": "AID-H-018.004",
                     "name": "Transient & Isolated State Management",
-                    "pillar": "app",
-                    "phase": "building, operation",
+                    "pillar": ["app"],
+                    "phase": ["building", "operation"],
                     "description": "Harden an agent's memory against persistent attacks by treating its short-term memory as ephemeral and isolated per session. Agents should be designed to be as stateless as possible, reloading their core, signed mission objectives at the start of each new interaction to prevent malicious instructions from being carried over between tasks.",
                     "toolsOpenSource": [
                         "LangChain memory modules (e.g., ConversationBufferWindowMemory)",
@@ -3704,8 +3704,8 @@ class GraphRobustnessVerifier:
                 {
                     "id": "AID-H-018.005",
                     "name": "Agent Behavior Certification & Runtime Enforcement",
-                    "pillar": "app",
-                    "phase": "building, operation",
+                    "pillar": ["app"],
+                    "phase": ["building", "operation"],
                     "description": "Codify an agent's authorized capabilities (tools, file scopes, network access) into a signed, machine-readable manifest (the 'Behavior Certificate'). This certificate is then enforced at runtime by middleware hooks that intercept and validate every agent action on a deny-by-default basis, providing a concrete and auditable contract for agent behavior.",
                     "toolsOpenSource": [
                         "GnuPG, pyca/cryptography (for signing certificates)",
@@ -3755,8 +3755,8 @@ class GraphRobustnessVerifier:
                 {
                     "id": "AID-H-019.001",
                     "name": "Tool Parameter Constraint & Schema Validation",
-                    "pillar": "app",
-                    "phase": "building, operation",
+                    "pillar": ["app"],
+                    "phase": ["building", "operation"],
                     "description": "Define strict, machine-readable schemas for each agent tool's input parameters and enforce validation before execution (types, formats, ranges, enums). Prevents malicious parameter injection (command/SQL injection, path traversal).",
                     "defendsAgainst": [
                         { "framework": "MITRE ATLAS", "items": ["AML.T0053 LLM Plugin Compromise"] },
@@ -3780,8 +3780,8 @@ class GraphRobustnessVerifier:
                 {
                     "id": "AID-H-019.002",
                     "name": "Policy-Based Access Control",
-                    "pillar": "app",
-                    "phase": "building, operation",
+                    "pillar": ["app"],
+                    "phase": ["building", "operation"],
                     "description": "Externalize authorization decisions for tool usage with a policy engine (e.g., OPA), enabling context-aware, stateful rules that decouple policy from application code.",
                     "defendsAgainst": [
                         { "framework": "MITRE ATLAS", "items": ["AML.T0053 LLM Plugin Compromise", "AML.T0012 Valid Accounts"] },
@@ -3801,8 +3801,8 @@ class GraphRobustnessVerifier:
                 {
                     "id": "AID-H-019.003",
                     "name": "High-Impact Two-Channel Validator",
-                    "pillar": "app",
-                    "phase": "validation, operation",
+                    "pillar": ["app"],
+                    "phase": ["validation", "operation"],
                     "description": "Before executing high-impact tool calls (payments, infra changes, code execution, knowledge-base/memory writes), require a second, independent validation channel (separate model family or rules/OPA bundle) to affirm goal alignment, policy compliance, evidence sufficiency, and bounded blast radius. Deny or auto-degrade if validator confidence is below threshold or violations exist.",
                     "toolsOpenSource": [
                         "Open Policy Agent (OPA) / Rego bundles",
@@ -3844,8 +3844,8 @@ class GraphRobustnessVerifier:
                 {
                     "id": "AID-H-020.001",
                     "name": "URL Normalization & Allowlist Filtering",
-                    "pillar": "app",
-                    "phase": "building, operation",
+                    "pillar": ["app"],
+                    "phase": ["building", "operation"],
                     "description": "Create a safe HTTP wrapper that normalizes URLs, enforces scheme/domain allowlists, resolves DNS and blocks private/internal IP ranges to prevent SSRF.",
                     "defendsAgainst": [
                         { "framework": "MITRE ATLAS", "items": ["AML.T0049 Exploit Public-Facing Application"] },
@@ -3865,8 +3865,8 @@ class GraphRobustnessVerifier:
                 {
                     "id": "AID-H-020.002",
                     "name": "Secure HTML Rendering & Content Demotion",
-                    "pillar": "app",
-                    "phase": "building, operation",
+                    "pillar": ["app"],
+                    "phase": ["building", "operation"],
                     "description": "Strip scripts, styles, iframes, and active content; extract plain text before passing to LLM to mitigate stored XSS and indirect prompt injection.",
                     "defendsAgainst": [
                         { "framework": "MITRE ATLAS", "items": ["AML.T0051 LLM Prompt Injection", "AML.T0049 Exploit Public-Facing Application"] },
@@ -3899,8 +3899,8 @@ class GraphRobustnessVerifier:
                 {
                     "id": "AID-H-021.001",
                     "name": "Chunk-Level Integrity Signing",
-                    "pillar": "data",
-                    "phase": "building, operation",
+                    "pillar": ["data"],
+                    "phase": ["building", "operation"],
                     "description": "Compute and store a cryptographic hash or digital signature per chunk at ingestion; verify on retrieval to detect tampering.",
                     "defendsAgainst": [
                         { "framework": "MITRE ATLAS", "items": ["AML.T0070 RAG Poisoning", "AML.T0059 Erode Dataset Integrity"] },
@@ -3920,8 +3920,8 @@ class GraphRobustnessVerifier:
                 {
                     "id": "AID-H-021.002",
                     "name": "Source Reputation Weighting",
-                    "pillar": "data",
-                    "phase": "building, operation",
+                    "pillar": ["data"],
+                    "phase": ["building", "operation"],
                     "description": "Assign and store per-chunk reputation scores based on source trust. Re-rank retrievals by combining similarity and reputation to bias toward trusted sources.",
                     "defendsAgainst": [
                         { "framework": "MITRE ATLAS", "items": ["AML.T0070 RAG Poisoning", "AML.T0066 Retrieval Content Crafting", "AML.T0071 False RAG Entry Injection"] },
@@ -3982,8 +3982,8 @@ class GraphRobustnessVerifier:
                 {
                     "id": "AID-H-022.001",
                     "name": "Client-Side Configuration Enforcement",
-                    "pillar": "infra, app",
-                    "phase": "building",
+                    "pillar": ["infra", "app"],
+                    "phase": ["building"],
                     "description": "Proactively prevents the creation and use of insecure AI agent configurations on developer endpoints. This is a 'shift-left' defense that uses endpoint security tools, policy-as-code scanners, and local development guardrails to block high-risk settings before they can ever be committed to source control or executed.",
                     "defendsAgainst": [
                         {
@@ -4043,8 +4043,8 @@ class GraphRobustnessVerifier:
                 {
                     "id": "AID-H-022.002",
                     "name": "Runtime Integrity Enforcement (Signed Configurations)",
-                    "pillar": "app, infra",
-                    "phase": "operation",
+                    "pillar": ["app", "infra"],
+                    "phase": ["operation"],
                     "description": "Ensures that an AI agent, at the moment of execution, loads and operates on a configuration that is cryptographically verified to be authentic and untampered. This is a critical runtime check that serves as a final guardrail, protecting the agent even if client-side or repository controls fail. It forms a verifiable trust chain from the secure build pipeline to the running agent.",
                     "defendsAgainst": [
                         {
@@ -4145,8 +4145,8 @@ class GraphRobustnessVerifier:
                 {
                     "id": "AID-H-023.001",
                     "name": "Sandboxed Dependency Installation",
-                    "pillar": "infra",
-                    "phase": "building",
+                    "pillar": ["infra"],
+                    "phase": ["building"],
                     "description": "Executes the dependency installation process within a strongly isolated, ephemeral environment with restricted network access and permissions, directly neutralizing the threat of malicious `postinstall` scripts.",
                     "toolsOpenSource": [
                         "Docker, Podman (for containerized builds)",
@@ -4203,8 +4203,8 @@ class GraphRobustnessVerifier:
                 {
                     "id": "AID-H-023.002",
                     "name": "Proactive Package Vetting",
-                    "pillar": "infra",
-                    "phase": "building",
+                    "pillar": ["infra"],
+                    "phase": ["building"],
                     "description": "Integrates automated security and reputation analysis into the developer workflow, providing intelligence about a package's risks *before* it is added as a dependency. This 'shift-left' approach prevents malicious packages from ever entering the codebase.",
                     "toolsOpenSource": [
                         "OpenSSF Scorecard",
@@ -4258,8 +4258,8 @@ class GraphRobustnessVerifier:
         {
             "id": "AID-H-024",
             "name": "Publisher Integrity & Workflow Hardening",
-            "pillar": "infra",
-            "phase": "building, validation",
+            "pillar": ["infra"],
+            "phase": ["building", "validation"],
             "description": "A critical supply chain defense that ensures software packages (e.g., NPM, PyPI) are published only from a secure, auditable, and authorized source. This technique breaks the attack chain where a stolen developer credential is used to publish a malicious version of a legitimate package. It achieves this by prohibiting publications from local developer machines and mandating that all releases originate from a hardened CI/CD pipeline that authenticates using short-lived, identity-based tokens and generates verifiable provenance attestations.",
             "toolsOpenSource": [
                 "GitHub Actions, GitLab CI (with OIDC support)",

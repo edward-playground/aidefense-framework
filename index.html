@@ -1530,16 +1530,16 @@
                                 eligibleTechniques.push(fullSub);
 
                                 // Add the sub-technique to the relevant Pillar and Phase buckets.
-                                fullSub.pillar?.split(', ').forEach(p => pillars[p]?.techniques.push(fullSub));
-                                fullSub.phase?.split(', ').forEach(ph => phases[ph]?.techniques.push(fullSub));
+                                fullSub.pillar?.forEach(p => pillars[p]?.techniques.push(fullSub));
+                                fullSub.phase?.forEach(ph => phases[ph]?.techniques.push(fullSub));
                             });
                         } else {
                             // If there are NO sub-techniques, the parent itself is the "leaf node".
                             const fullTech = { ...tech, tactic: tactic.name };
 
                             // Add the parent technique to the relevant Pillar and Phase buckets.
-                            fullTech.pillar?.split(', ').forEach(p => pillars[p]?.techniques.push(fullTech));
-                            fullTech.phase?.split(', ').forEach(ph => phases[ph]?.techniques.push(fullTech));
+                            fullTech.pillar?.forEach(p => pillars[p]?.techniques.push(fullTech));
+                            fullTech.phase?.forEach(ph => phases[ph]?.techniques.push(fullTech));
                         }
                     });
                 });

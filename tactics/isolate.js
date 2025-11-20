@@ -40,7 +40,7 @@ export const isolateTactic = {
             "subTechniques": [
                 {
                     "id": "AID-I-001.001",
-                    "name": "Container-Based Isolation", "pillar": "infra", "phase": "operation",
+                    "name": "Container-Based Isolation", "pillar": ["infra"], "phase": ["operation"],
                     "description": "Utilizes container technologies like Docker or Kubernetes to package and run AI workloads in isolated user-space environments. This approach provides process and filesystem isolation and allows for resource management and network segmentation.",
                     "toolsOpenSource": [
                         "Docker",
@@ -124,7 +124,7 @@ export const isolateTactic = {
                 },
                 {
                     "id": "AID-I-001.002",
-                    "name": "MicroVM & Low-Level Sandboxing", "pillar": "infra", "phase": "operation",
+                    "name": "MicroVM & Low-Level Sandboxing", "pillar": ["infra"], "phase": ["operation"],
                     "description": "Employs lightweight Virtual Machines (MicroVMs) or kernel-level sandboxing technologies to provide a stronger isolation boundary than traditional containers. This is critical for running untrusted code or highly sensitive AI workloads.",
                     "perfImpact": {
                         "level": "Low to Medium on Startup Time & CPU/Memory Overhead",
@@ -210,8 +210,8 @@ export const isolateTactic = {
                 {
                     "id": "AID-I-001.003",
                     "name": "Ephemeral Single-Use Sandboxes for Tools",
-                    "pillar": "infra",
-                    "phase": "operation",
+                    "pillar": ["infra"],
+                    "phase": ["operation"],
                     "description": "Run tool executions inside strongly isolated, single-use sandboxes (e.g., microVMs). Destroy the environment immediately after one invocation to prevent persistence and cross-session contamination.",
                     "defendsAgainst": [
                         { "framework": "MITRE ATLAS", "items": ["AML.T0050 Command and Scripting Interpreter"] },
@@ -231,8 +231,8 @@ export const isolateTactic = {
                 {
                     "id": "AID-I-001.004",
                     "name": "Seccomp-bpf & Network Egress Restrictions",
-                    "pillar": "infra",
-                    "phase": "operation",
+                    "pillar": ["infra"],
+                    "phase": ["operation"],
                     "description": "Minimize kernel/system call surface and restrict outbound network destinations for sandboxed executions to reduce post-exploitation blast radius.",
                     "defendsAgainst": [
                         { "framework": "MITRE ATLAS", "items": ["AML.T0072 Reverse Shell"] },
@@ -252,8 +252,8 @@ export const isolateTactic = {
                 {
                     "id": "AID-I-001.005",
                     "name": "Pre-Execution Behavioral Analysis in Ephemeral Sandboxes",
-                    "pillar": "infra, app",
-                    "phase": "operation, validation",
+                    "pillar": ["infra", "app"],
+                    "phase": ["operation", "validation"],
                     "description": "This proactive defense technique subjects any AI-generated executable artifact (e.g., scripts, binaries, container images created by an agent) to mandatory behavioral analysis within a short-lived, strongly isolated sandbox (such as a microVM) *before* it is deployed or executed in a production context. This pre-execution security gate applies to artifacts originating from both automated CI/CD pipelines and interactive developer IDEs, serving as a final vetting step to contain threats from malicious AI-generated code before they can have any impact.",
                     "toolsOpenSource": [
                         "Firecracker",
@@ -371,8 +371,8 @@ export const isolateTactic = {
                 {
                     "id": "AID-I-002.001",
                     "name": "Internal AI Network Segmentation",
-                    "pillar": "infra",
-                    "phase": "operation",
+                    "pillar": ["infra"],
+                    "phase": ["operation"],
                     "description": "Implement network segmentation and microsegmentation strategies to isolate AI systems and their *internal* components (e.g., training environments, model serving endpoints, data stores, agent control planes) from general corporate networks and other critical IT/OT systems. Enforces strict internal communication rules through firewalls, security groups, and network policies to limit lateral movement and reduce the internal blast radius of a compromise. This also isolates high-privilege agent backends (e.g. orchestration layers with access to credentials, vector DBs, or model registries) from lower-trust, user-facing inference frontends, so that a compromised public-facing agent cannot laterally move into data-rich components.",
                     "toolsOpenSource": [
                         "Linux Netfilter (iptables, nftables), firewalld",
@@ -443,8 +443,8 @@ export const isolateTactic = {
                 {
                     "id": "AID-I-002.002",
                     "name": "Secure External AI Service Connectivity",
-                    "pillar": "infra",
-                    "phase": "operation",
+                    "pillar": ["infra"],
+                    "phase": ["operation"],
                     "description": "Applies strict network path control, transport security, policy mediation, and monitoring specifically to connections originating from the AI system and targeting external services, particularly third-party or Model-as-a-Service (MaaS) foundation model APIs. Aims to prevent data exfiltration, Server-Side Request Forgery (SSRF), Man-in-the-Middle (MitM) attacks, and abuse of external dependencies. This also prevents prompt-injected agents from exfiltrating secrets or invoking arbitrary external services; they can only call approved upstreams through a governed path.",
                     "toolsOpenSource": [
                         "Open-source API Gateways (Kong, Tyk, APISIX)",
@@ -521,7 +521,7 @@ export const isolateTactic = {
         },
         {
             "id": "AID-I-003",
-            "name": "Quarantine & Throttling of AI Interactions", "pillar": "infra, app", "phase": "response",
+            "name": "Quarantine & Throttling of AI Interactions", "pillar": ["infra", "app"], "phase": ["response"],
             "description": "Implement mechanisms to automatically or manually isolate, rate-limit, or place into a restricted \\\"safe mode\\\" specific AI system interactions when suspicious activity is detected. This could apply to individual user sessions, API keys, IP addresses, or even entire AI agent instances. The objective is to prevent potential attacks from fully executing, spreading, or causing significant harm by quickly containing or degrading the capabilities of the suspicious entity. This is an active response measure triggered by detection systems. This can be applied pre-emptively (automatic) or under human approval (SOAR analyst click-to-quarantine) depending on confidence score, and all actions must be logged/auditable for compliance and forensic review.",
             "toolsOpenSource": [
                 "Fail2Ban (adapted for AI logs)",
@@ -603,7 +603,7 @@ export const isolateTactic = {
         },
         {
             "id": "AID-I-004",
-            "name": "Agent Memory & State Isolation", "pillar": "app, data", "phase": "operation",
+            "name": "Agent Memory & State Isolation", "pillar": ["app", "data"], "phase": ["operation"],
             "description": "Specifically for agentic AI systems, implement mechanisms to isolate and manage the agent's memory (e.g., conversational context, short-term state, knowledge retrieved from vector databases) and periodically reset or flush it. This defense aims to prevent malicious instructions, poisoned data, or exploited states (e.g., a \\\"jailbroken\\\" state) from persisting across multiple interactions, sessions, or from affecting other unrelated agent tasks or instances. It helps to limit the temporal scope of a successful manipulation.",
             "toolsOpenSource": [
                 "LangChain Guardrails or custom callback handlers",
@@ -680,7 +680,7 @@ export const isolateTactic = {
         },
         {
             "id": "AID-I-005",
-            "name": "Emergency \"Kill-Switch\" / AI System Halt", "pillar": "infra, app", "phase": "response",
+            "name": "Emergency \"Kill-Switch\" / AI System Halt", "pillar": ["infra", "app"], "phase": ["response"],
             "description": "Establish and maintain a reliable, rapidly invokable mechanism to immediately halt, disable, or severely restrict the operation of an AI model or autonomous agent if it exhibits confirmed critical malicious behavior, goes \\\"rogue\\\" (acts far outside its intended parameters in a harmful way), or if a severe, ongoing attack is detected and other containment measures are insufficient. This is a last-resort containment measure designed to prevent catastrophic harm or further compromise.",
             "toolsOpenSource": [
                 "Custom scripts/automation playbooks (Ansible, cloud CLIs) to stop/delete resources",
@@ -754,8 +754,8 @@ export const isolateTactic = {
         {
             "id": "AID-I-006",
             "name": "Malicious Participant Isolation in Federated Unlearning",
-            "pillar": "model",
-            "phase": "response",
+            "pillar": ["model"],
+            "phase": ["response"],
             "description": "Identifies and logically isolates the influence of malicious clients within a Federated Learning (FL) system, particularly during a machine unlearning or model restoration process. Once identified, the malicious participants' data contributions and model updates are excluded from the unlearning or retraining calculations. This technique is critical for preventing attackers from sabotaging the model recovery process and ensuring the final restored model is not corrupted.",
             "implementationStrategies": [
                 {
@@ -831,8 +831,8 @@ export const isolateTactic = {
         {
             "id": "AID-I-007",
             "name": "Client-Side AI Execution Isolation",
-            "pillar": "app",
-            "phase": "operation",
+            "pillar": ["app"],
+            "phase": ["operation"],
             "description": "This technique focuses on containing a compromised or malicious client-side model, preventing it from accessing sensitive data from other browser tabs, local application context, or the operating system. It addresses the security challenges of AI models that execute in untrusted environments like a user's web browser, Electron shell, hybrid mobile app, or native mobile runtime. This assumes the model or model runtime may already be tampered with or coerced (e.g. prompt-injected, modified weights, wrapped with hostile JS). The goal is not to \"fix\" the model but to strictly confine its blast radius using sandboxing, least capability, and controlled IPC.",
             "toolsOpenSource": [
                 "WebAssembly runtimes (Wasmtime, Wasmer, browser WebAssembly runtime)",
