@@ -3639,21 +3639,29 @@ class GraphRobustnessVerifier:
                 },
                 {
                     "id": "AID-H-018.003",
-                    "name": "Decoupled Reasoning & Action Dispatch",
+                    "name": "Decoupled Plan-Then-Execute Architecture",
                     "pillar": ["app"],
                     "phase": ["building", "operation"],
-                    "description": "Architect the system to separate the 'brain' (the LLM generating a plan) from the 'hands' (the code executing the plan). The LLM's role is strictly limited to producing a structured, data-only output (e.g., JSON), which is then passed to a separate, hard-coded dispatcher module for validation and execution. This creates a critical security boundary.",
+                    "description": "Architect the agent so that all high-level reasoning and task planning happen in a non-side-effecting LLM phase, separate from any code or tool execution. The LLM is restricted to outputting a structured plan (for example JSON with action names and parameters) and never calls tools directly. A deterministic Action Selector or Orchestrator then validates, transforms, and dispatches this plan against explicit safety policies and allowlists before invoking real tools. This combines planning and explanation separation from side-effectful actions, making it harder for hallucinated or injected instructions to directly reach infrastructure or sensitive APIs.",
                     "toolsOpenSource": [
-                        "Web frameworks (FastAPI, Flask) for building the dispatcher service",
-                        "Open Policy Agent (OPA) for externalizing validation logic",
-                        "gRPC or REST for communication between the reasoning and dispatch modules"
+                        "FastAPI / Flask (middleware logic)",
+                        "Open Policy Agent (OPA) (for action selection rules)",
+                        "Pydantic / pydantic-core (for schema enforcement)",
+                        "LangChain / LangGraph (custom chains and graph-based orchestration)"
                     ],
                     "toolsCommercial": [
-                        "API Gateway solutions (Kong, Apigee) to act as the dispatch point",
-                        "Enterprise policy management tools (Styra DAS)"
+                        "Kong API Gateway (for dispatch routing)",
+                        "Styra DAS"
                     ],
                     "defendsAgainst": [
-                        { "framework": "MITRE ATLAS", "items": ["AML.T0050: Command and Scripting Interpreter"] },
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0050: Command and Scripting Interpreter",
+                                "AML.T0051: LLM Prompt Injection",
+                                "AML.T0054: LLM Jailbreak"
+                            ]
+                        },
                         {
                             "framework": "MAESTRO",
                             "items": [
@@ -3661,12 +3669,19 @@ class GraphRobustnessVerifier:
                                 "Input Validation Attacks (L3)"
                             ]
                         },
-                        { "framework": "OWASP LLM Top 10 2025", "items": ["LLM05:2025 Improper Output Handling", "LLM06:2025 Excessive Agency"] }
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM06:2025 Excessive Agency",
+                                "LLM05:2025 Improper Output Handling",
+                                "LLM01:2025 Prompt Injection"
+                            ]
+                        }
                     ],
                     "implementationStrategies": [
                         {
-                            "strategy": "Architect a system that separates the LLM's planning from the tool execution logic.",
-                            "howTo": "<h5>Concept:</h5><p>A secure agent architecture separates the 'brain' (the LLM that decides *what* to do) from the 'hands' (the code that *actually does* it). The LLM's only job is to generate a structured request (e.g., a JSON object). This request is then passed to a separate, secure dispatcher module for validation and execution. This application-layer dispatcher often sits behind a traditional API Gateway, which handles edge concerns like authentication and rate limiting.</p><h5>Architect a Decoupled System</h5><p>The agent's flow should always pass through a non-LLM, programmatic security layer.</p><p><code>[User Prompt] -> [1. Agent Brain (LLM)]</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| (Outputs a JSON action request)</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v</code><br><code>[Action Request] -> [2. Secure Dispatcher (Python Code)]</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;| (Validates request against policy)</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;v</code><br><code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;[3. Tool Execution]</code></p><p><strong>Action:</strong> Design your agent so that the LLM's role is strictly limited to generating a structured plan (e.g., JSON). This plan is then passed as data to a separate, hard-coded 'Secure Dispatcher' service. This dispatcher is responsible for all security validation and the actual execution of tools, creating a critical security boundary.</p>"
+                            "strategy": "Implement an 'Action Selector' middleware to gatekeep LLM plans.",
+                            "howTo": "<h5>Concept:</h5><p>The LLM should never have direct access to exec(), raw API clients, shells, or database drivers. Instead, it outputs a proposed_action structure (for example JSON with 'action' and 'parameters'). A deterministic Action Selector receives this proposal, validates it against an allowlist and context policy (for example: is this action allowed for this agent role and this user session?), and only then triggers the real tool. If validation fails, the action is rejected without execution.</p><h5>Code: Action Selector Pattern</h5><pre><code># File: agent/action_selector.py\nfrom typing import Dict, Any, Callable\nfrom pathlib import Path\nimport logging\n\n# Define strict allowlists per agent role\nALLOWED_ACTIONS = {\n    'support_bot': {'search_kb', 'create_ticket'},\n    'admin_bot': {'search_kb', 'create_ticket', 'restart_service'},\n}\n\n# Simple registry of safe tool functions\nTOOL_REGISTRY: Dict[str, Callable[[Dict[str, Any]], Dict[str, Any]]] = {}\n\n\ndef register_tool(name: str):\n    def decorator(func: Callable[[Dict[str, Any]], Dict[str, Any]]):\n        TOOL_REGISTRY[name] = func\n        return func\n    return decorator\n\n\ndef _is_safe_path(path_str: str) -> bool:\n    '''Basic path traversal protection using pathlib resolution.'''\n    try:\n        base = Path('/srv/app/data').resolve()\n        target = (base / path_str).resolve()\n        return str(target).startswith(str(base))\n    except Exception:\n        return False\n\n\ndef execute_plan(agent_role: str, plan: Dict[str, Any]) -> Dict[str, Any]:\n    action_name = plan.get('action')\n    params = plan.get('parameters') or {}\n\n    # 1. Deterministic gatekeeping (Action Selector)\n    allowed_actions = ALLOWED_ACTIONS.get(agent_role, set())\n    if action_name not in allowed_actions:\n        logging.warning(\n            'BLOCKED: Agent %s tried unauthorized action %s',\n            agent_role,\n            action_name,\n        )\n        return {'error': 'Action not authorized by policy.'}\n\n    # 2. Parameter validation (for example, prevent path traversal)\n    path = params.get('path')\n    if path is not None and not _is_safe_path(path):\n        logging.warning(\n            'BLOCKED: Agent %s attempted unsafe path access: %s',\n            agent_role,\n            path,\n        )\n        return {'error': 'Invalid path parameter.'}\n\n    # 3. Execution dispatch via registry\n    tool = TOOL_REGISTRY.get(action_name)\n    if tool is None:\n        logging.error('No registered tool for action: %s', action_name)\n        return {'error': 'Internal routing error.'}\n\n    return tool(params)\n</code></pre><p><strong>Action:</strong> Refactor agent loops so the LLM output is parsed as data, not code. Pass this data through a deterministic execute_plan function that (1) checks the requested action against a role-based allowlist, (2) validates sensitive parameters such as paths and resource scopes, and (3) dispatches only to tools registered in a safe registry.</p>"
                         }
                     ]
                 },
@@ -3736,6 +3751,67 @@ class GraphRobustnessVerifier:
                         {
                             "strategy": "Implement a runtime enforcement gate to validate actions against the certificate.",
                             "howTo": "<h5>Concept:</h5><p>The enforcement mechanism is a middleware gate in the agent's action dispatcher. Before executing any action, this gate intercepts the call and validates it against the loaded Behavior Certificate. It must operate on a deny-by-default basis, rejecting any action that is not explicitly permitted.</p><h5>Example Enforcement Gate in a Dispatcher</h5><pre><code># File: agent_arch/enforcement_gate.py\nimport json\n\n# Conceptual functions for clarity\n# def log_security_event(event, tool, reason): ...\n# def request_human_approval(tool, params): ...\n\nclass EnforcementGate:\n    def __init__(self, signed_cert_path, public_key_path):\n        # The signature of the certificate MUST be verified upon loading.\n        # Reject if verification fails.\n        self.cert = self.load_and_verify_cert(signed_cert_path, public_key_path)\n        if not self.cert:\n            raise RuntimeError(\"Behavior Certificate is missing or has an invalid signature!\")\n\n    def is_action_allowed(self, tool_name: str, params: dict) -> bool:\n        # Deny by default\n        if tool_name not in self.cert['capabilities']['allowed_tools']:\n            log_security_event('Disallowed tool call', tool_name, 'UNKNOWN_TOOL')\n            return False\n\n        # TODO: Implement file path validation against cert['file_access_scopes']\n        # TODO: Implement URL/domain validation against cert['network_access']\n\n        # Check if the operation is critical and requires HITL\n        if tool_name in self.cert['critical_operations']:\n            # This function must be fail-closed and log an approval_id\n            if not request_human_approval(tool_name, params):\n                log_security_event('HITL approval denied', tool_name, 'CRITICAL_OP_REJECTED')\n                return False\n        \n        # If all checks pass, explicitly allow\n        return True</code></pre><p><strong>Action:</strong> Implement a runtime enforcement gate that loads and cryptographically verifies the agent's signed Behavior Certificate. This gate must intercept every tool call and validate it against the certificate's allowlists and scopes, operating on a fail-closed, deny-by-default principle. All tool executions MUST pass through this gate; direct/bypass execution paths are considered policy violations / break-glass events and must be logged as incidents.</p>"
+                        }
+                    ]
+                },
+                {
+                    "id": "AID-H-018.006",
+                    "name": "Agent Capability Discovery & Delegation Control",
+                    "pillar": [
+                        "app",
+                        "infra"
+                    ],
+                    "phase": [
+                        "operation"
+                    ],
+                    "description": "In multi-agent systems (for example those using MCP or custom A2A protocols), validate not only the identity of an agent but also its authorized capabilities before accepting delegated tasks. Use signed capability manifests or JWT-SVID style tokens to assert which tools and data scopes an agent is allowed to access, and enforce hop limits and loop detection on delegation chains. This prevents low-privilege or compromised agents from falsely advertising high-privilege abilities or triggering unbounded recursive delegation.",
+                    "toolsOpenSource": [
+                        "SPIFFE/SPIRE (for identity and attribute attestation)",
+                        "Open Policy Agent (OPA) (for delegation policy)",
+                        "gRPC Interceptors (for hop limit enforcement)",
+                        "Model Context Protocol (MCP) SDKs"
+                    ],
+                    "toolsCommercial": [
+                        "Service Mesh (Istio, Linkerd) with custom attributes",
+                        "API Gateways (Kong, Apigee) with inter-service routing policies"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0073 Impersonation",
+                                "AML.T0029 Denial of AI Service"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Inaccurate Agent Capability Description (L7)",
+                                "Agent Identity Attack (L7)",
+                                "Orchestration Attacks (L4)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM06:2025 Excessive Agency"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML09:2023 Output Integrity Attack"
+                            ]
+                        }
+                    ],
+                    "implementationStrategies": [
+                        {
+                            "strategy": "Enforce signed Capability Manifests for agent registration and discovery.",
+                            "howTo": "<h5>Concept:</h5><p>When an agent joins the mesh, it must present a cryptographically signed capability manifest. This manifest (often conveyed as a JWT-SVID or similar signed token) lists the tools and data scopes the control plane has approved for that agent. Other agents or the orchestrator verify this signature and the requested capability before delegating tasks, preventing a compromised low-privilege agent from falsely advertising high-privilege abilities such as 'I can access the payment DB'.</p><h5>Manifest Verification Logic</h5><pre><code># File: agent/capability_verifier.py\nimport jwt  # PyJWT or compatible library\n\n# Trusted public key of the control plane or SPIRE server\nTRUSTED_PUB_KEY = '-----BEGIN PUBLIC KEY-----...-----END PUBLIC KEY-----'\n\n\ndef verify_agent_capabilities(agent_token: str, requested_tool: str) -> bool:\n    '''Verify that the signed token allows use of the requested tool.'''\n    try:\n        # The token (for example a JWT-SVID) contains signed claims about capabilities\n        claims = jwt.decode(agent_token, TRUSTED_PUB_KEY, algorithms=['ES256'])\n\n        allowed_tools = claims.get('capabilities', {}).get('tools', [])\n        if requested_tool not in allowed_tools:\n            raise PermissionError(\n                f\"Agent {claims.get('sub')} requested '{requested_tool}' but manifest only allows: {allowed_tools}\"\n            )\n\n        return True\n    except Exception as exc:\n        # In production, route this to central security logging or SIEM\n        print(f'Capability verification failed: {exc}')\n        return False\n</code></pre><p><strong>Action:</strong> Issue JWT-SVID style tokens that include a capabilities claim for each agent. Middleware at the orchestrator or service mesh boundary must verify both the token signature and that the requested tool or resource falls within the allowed capabilities before processing any delegation request.</p>"
+                        },
+                        {
+                            "strategy": "Implement 'Hop Limits' and 'Trace IDs' in inter-agent messages to prevent recursive DoS.",
+                            "howTo": "<h5>Concept:</h5><p>Malicious or misconfigured agents may trigger infinite delegation loops (for example Agent A → Agent B → Agent A) to exhaust system resources. Enforce a strict Max-Hops counter in the message metadata. Each agent increments the counter; if it reaches the configured limit, the request is dropped and a security event is logged.</p><h5>Delegation Middleware (FastAPI-style example)</h5><pre><code># File: agent/middleware.py\nfrom fastapi import HTTPException, Request\nimport logging\n\nMAX_DELEGATION_HOPS = 5\n\n\nasync def handle_delegation_request(request: Request):\n    # Headers are strings; default to '0' if header missing\n    current_hops_str = request.headers.get('X-Hop-Count', '0')\n    trace_id = request.headers.get('X-Trace-ID', 'unknown-trace-id')\n\n    try:\n        current_hops = int(current_hops_str)\n    except ValueError:\n        logging.warning(\n            'Invalid X-Hop-Count header %r on request %s, normalizing to 0',\n            current_hops_str,\n            trace_id,\n        )\n        current_hops = 0\n\n    if current_hops >= MAX_DELEGATION_HOPS:\n        logging.warning(\n            'Recursive delegation detected. Dropping request %s at hop %d.',\n            trace_id,\n            current_hops,\n        )\n        raise HTTPException(status_code=400, detail='Max delegation hops exceeded.')\n\n    # Prepare headers for the next hop\n    next_headers = {\n        'X-Hop-Count': str(current_hops + 1),\n        'X-Trace-ID': trace_id,\n    }\n\n    # Example: forward the request to the next agent with updated headers\n    # await forward_request(..., headers=next_headers)\n    return next_headers\n</code></pre><p><strong>Action:</strong> Configure your orchestrator, sidecar, or API gateway to inject and enforce hop-count and trace ID headers on all agent-to-agent traffic. Requests that exceed the maximum depth should be rejected and surfaced as security telemetry.</p>"
                         }
                     ]
                 }

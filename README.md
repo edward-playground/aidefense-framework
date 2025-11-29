@@ -53,6 +53,7 @@ This view organizes defenses by the development stage where they are most releva
 2.  **Explore Techniques**: Click on any column header to learn more about that tactic, pillar, or phase. Click on any individual defensive technique to open a detailed modal view.
 3.  **Search Everything**: Use the search bar to filter all content by keywords, technique IDs, or threat mappings (e.g., "Prompt Injection", "AID-H-002", "MAESTRO", "LLM01").
 
+4.  **An exciting update is coming soon!**
 ---
 
 ### 📚 Acknowledgments & Disclaimer
