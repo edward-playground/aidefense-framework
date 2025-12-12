@@ -882,7 +882,14 @@
                         <a href="https://github.com/edward-playground/aidefense-framework" target="_blank"
                             rel="noopener noreferrer" id="githubLink" class="header-button text-button"
                             title="View AIDEFEND on GitHub">
-                            View AIDEFEND on GitHub
+                            <span class="hidden lg:inline">View AIDEFEND on GitHub</span>
+                            <span class="inline lg:hidden">GitHub</span>
+                        </a>
+                        <a href="https://github.com/edward-playground/aidefend-mcp" target="_blank"
+                            rel="noopener noreferrer" id="mcpLink" class="header-button text-button"
+                            title="View MCP Service on GitHub">
+                            <span class="hidden lg:inline">View MCP Service on GitHub</span>
+                            <span class="inline lg:hidden">MCP Service</span>
                         </a>
                         <button id="themeToggleBtn" class="header-button" title="Toggle Theme">
                         </button>
@@ -980,7 +987,8 @@
                 strategyMinus: `<svg class="strategy-accordion-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clip-rule="evenodd" /></svg>`,
                 chevron: `<svg class="expand-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M7.21 14.77a.75.75 0 01.02-1.06L11.168 10 7.23 6.29a.75.75 0 111.04-1.08l4.5 4.25a.75.75 0 010 1.08l-4.5 4.25a.75.75 0 01-1.06-.02z" clip-rule="evenodd" /></svg>`,
                 audience: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10 8a3 3 0 100-6 3 3 0 000 6zM3.465 14.493a1.23 1.23 0 00.41 1.412A9.957 9.957 0 0010 18c2.31 0 4.438-.784 6.131-2.095a1.23 1.23 0 00.41-1.412A6.998 6.998 0 0010 11.5a6.998 6.998 0 00-6.535 2.993z" /></svg>`,
-                useCase: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M15.988 3.012A2.25 2.25 0 0118 5.25v6.5A2.25 2.25 0 0115.75 14h-3.04a2.252 2.252 0 01-1.523.672c-.675 0-1.284-.28-1.688-.734l-3.328-3.328a2.25 2.25 0 010-3.182l3.328-3.328a2.25 2.25 0 011.688-.734h3.04zM12 9.75a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-.008z" clip-rule="evenodd" /><path d="M9.122 7.182a.75.75 0 011.06 0l2.5 2.5a.75.75 0 010 1.06l-2.5 2.5a.75.75 0 01-1.06-1.06L10.81 11H2.75a.75.75 0 010-1.5h8.06l-1.7-1.7a.75.75 0 010-1.06z" clip-rule="evenodd" /></svg>`
+                useCase: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M15.988 3.012A2.25 2.25 0 0118 5.25v6.5A2.25 2.25 0 0115.75 14h-3.04a2.252 2.252 0 01-1.523.672c-.675 0-1.284-.28-1.688-.734l-3.328-3.328a2.25 2.25 0 010-3.182l3.328-3.328a2.25 2.25 0 011.688-.734h3.04zM12 9.75a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-.008z" clip-rule="evenodd" /><path d="M9.122 7.182a.75.75 0 011.06 0l2.5 2.5a.75.75 0 010 1.06l-2.5 2.5a.75.75 0 01-1.06-1.06L10.81 11H2.75a.75.75 0 010-1.5h8.06l-1.7-1.7a.75.75 0 010-1.06z" clip-rule="evenodd" /></svg>`,
+                plug: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a4 4 0 00-4 4v2a2 2 0 00-2 2v3a2 2 0 002 2h2v5a1 1 0 102 0v-5h2a2 2 0 002-2v-3a2 2 0 00-2-2V6a4 4 0 00-4-4zm-2 6V6a2 2 0 014 0v2H8z"/></svg>`
             };
 
             let currentView = 'tactic';
@@ -1568,6 +1576,19 @@
                         githubSvg.style.marginRight = '0.5rem';
                     }
                     githubLink.insertBefore(githubIcon, githubLink.firstChild);
+                }
+                // Add MCP icon
+                const mcpLink = document.getElementById('mcpLink');
+                if (mcpLink) {
+                    const mcpIcon = createElement('span');
+                    setIcon(mcpIcon, 'plug');
+                    const mcpSvg = mcpIcon.querySelector('svg');
+                    if (mcpSvg) {
+                        mcpSvg.style.width = '1rem';
+                        mcpSvg.style.height = '1rem';
+                        mcpSvg.style.marginRight = '0.5rem';
+                    }
+                    mcpLink.insertBefore(mcpIcon, mcpLink.firstChild);
                 }
                 const versionSection = aidefendData.introduction.sections.find(s => s.title === "Version & Date");
                 if (versionSection && versionSection.paragraphs.length > 0) {
