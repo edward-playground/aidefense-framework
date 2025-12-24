@@ -1420,10 +1420,59 @@ export const detectTactic = {
                     ],
                     "toolsOpenSource": ["NVIDIA DCGM Exporter", "Prometheus", "Grafana"],
                     "toolsCommercial": ["Datadog", "New Relic", "Splunk Observability"]
+                },
+                {
+                    "id": "AID-D-005.006",
+                    "name": "ANS Registry & Resolution Telemetry Monitoring",
+                    "pillar": ["infra", "app"],
+                    "phase": ["operation", "response"],
+                    "description": "Monitors Agent Name Service (ANS) registration events and resolution traffic to identify anomalies indicative of registry poisoning, Sybil-style namespace abuse, directory reconnaissance, or credential churn. It correlates identity, issuer, and query outcomes (e.g., NXDOMAIN/Agent Not Found, version-range mismatches) into actionable security alerts.",
+                    "defendsAgainst": [
+                        { "framework": "MITRE ATLAS", "items": ["AML.T0029 Denial of AI Service", "AML.T0034 Cost Harvesting"] },
+                        { "framework": "MAESTRO", "items": ["Agent Impersonation (L7)", "Directory Scanning (L7)", "Resource Hijacking (L4)"] },
+                        { "framework": "OWASP LLM Top 10 2025", "items": ["LLM10:2025 Unbounded Consumption"] }
+                    ],
+                    "implementationStrategies": [
+                        {
+                            "strategy": "Registration Churn & Namespace Abuse Detection",
+                            "howTo": "<h5>Concept:</h5><p>Attackers may attempt a Sybil attack by registering thousands of malicious agents under a specific namespace or provider. Monitoring the rate of new registrations per Issuer/Provider is critical.</p><h5>Telemetry (Python/Prometheus):</h5><pre><code>from prometheus_client import Counter, Histogram\nimport logging\n\n# Metrics for monitoring registration patterns\nREGISTRATION_TOTAL = Counter(\n    'ans_registration_attempts_total', \n    'Total ANS registration requests', \n    ['provider', 'status', 'issuer_id']\n)\n\ndef monitor_registration(registration_request):\n    provider = registration_request.get('provider', 'unknown')\n    issuer = registration_request.get('certificate', {}).get('issuer', 'unknown')\n    \n    try:\n        # Process registration logic here...\n        # ...\n        REGISTRATION_TOTAL.labels(provider=provider, status='success', issuer_id=issuer).inc()\n    except ValidationException:\n        REGISTRATION_TOTAL.labels(provider=provider, status='failed_validation', issuer_id=issuer).inc()\n        logging.warning(f\"Suspicious registration spike detected from provider: {provider}\")\n</code></pre><h5>Action:</h5><p>Set an alert threshold (e.g., >100 registrations/min per provider) to trigger manual review or temporary namespace quarantine.</p>"
+                        },
+                        {
+                            "strategy": "Resolution Anomaly & Reconnaissance Detection",
+                            "howTo": "<h5>Concept:</h5><p>High rates of 'Agent Not Found' (NXDOMAIN) or version-probing suggest an attacker is scanning the directory for vulnerable agent versions. Tracking the failure-to-success ratio per client identity is essential.</p><h5>Telemetry (Python/Prometheus):</h5><pre><code>RESOLUTION_OUTCOMES = Counter(\n    'ans_resolution_outcomes_total', \n    'Outcomes of ANS resolution queries', \n    ['client_id', 'outcome_type']\n)\n\ndef log_resolution_query(client_id, result_type):\n    \"\"\"\n    result_type should be one of: 'success', 'agent_not_found', 'version_mismatch', 'signature_invalid'\n    \"\"\"\n    RESOLUTION_OUTCOMES.labels(client_id=client_id, outcome_type=result_type).inc()\n    \n    # Logic for real-time anomaly detection\n    # For example: If agent_not_found / success ratio > 5.0, flag client_id for scanning\n</code></pre><h5>Action:</h5><p>Implement rate-limiting by client identity at the ANS Service gateway. Flag identities that repeatedly probe for deprecated versions or non-existent capabilities.</p>"
+                        }
+                    ],
+                    "toolsOpenSource": ["Prometheus", "Grafana", "ELK Stack", "Nginx", "Falco"],
+                    "toolsCommercial": ["Datadog", "Splunk", "Dynatrace", "AWS CloudWatch"]
                 }
             ]
 
         },
+        {
+            "id": "AID-D-005.006",
+            "name": "ANS (Agent Name Service) Registry & Resolution Telemetry Monitoring",
+            "pillar": ["infra", "app"],
+            "phase": ["operation", "response"],
+            "description": "Monitor ANS (Agent Name Service) registration events and resolution traffic to detect registry poisoning, Sybil-like namespace abuse, directory scanning, and abnormal certificate churn. Correlate identity, issuer, namespace, and query outcomes (NXDOMAIN, version probes) into actionable detections.",
+            "defendsAgainst": [
+                { "framework": "MITRE ATLAS", "items": ["AML.T0029 Denial of AI Service", "AML.T0034 Cost Harvesting"] },
+                { "framework": "MAESTRO", "items": ["Sybil Attacks (L7)", "Directory Scanning (L7)", "Resource Hijacking (L4)"] },
+                { "framework": "OWASP LLM Top 10 2025", "items": ["LLM10:2025 Unbounded Consumption"] }
+            ],
+            "implementationStrategies": [
+                {
+                    "strategy": "Registration Churn & Issuer/Namespace Abuse Detection",
+                    "howTo": "Alert on sudden spikes in new agent registrations per issuer/namespace; quarantine suspicious namespaces; require step-up verification for bursts."
+                },
+                {
+                    "strategy": "Resolution Anomaly Detection (NXDOMAIN ratio, version-probing, QPS per identity)",
+                    "howTo": "Track ans_resolution_fail_total and NXDOMAIN ratio; rate limit by authenticated client identity; flag repeated version probes."
+                }
+            ],
+            "toolsOpenSource": ["Prometheus", "Grafana", "ELK Stack", "Nginx"],
+            "toolsCommercial": ["Datadog", "Splunk", "Dynatrace"]
+        }
+        ,
         {
             "id": "AID-D-006",
             "name": "Explainability (XAI) Manipulation Detection", "pillar": ["model"], "phase": ["validation", "operation"],

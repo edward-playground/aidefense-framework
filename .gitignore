@@ -1,2 +1,16 @@
 CLAUDE.md
 */CLAUDE.md
+
+node_modules/
+package.json
+package-lock.json
+LOCAL_AUDIT_README.md
+*.log
+*.tmp
+_debug*
+
+# Dev tools (local only)
+devtools/
+
+# Local settings
+.claude/
