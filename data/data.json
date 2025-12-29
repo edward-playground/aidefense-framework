@@ -2,7 +2,7 @@
   "version": {
     "schemaVersion": "1.0",
     "dataVersion": "2025.12.29",
-    "generatedAt": "2025-12-29T12:06:37.165Z",
+    "generatedAt": "2025-12-29T15:01:42.108Z",
     "source": "bundled"
   },
   "tactics": [
@@ -178,7 +178,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-M-001",
+          "url": "https://aidefend.net",
           "keywords": [
             "asset",
             "inventory",
@@ -518,7 +518,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-M-002",
+          "url": "https://aidefend.net",
           "keywords": [
             "data",
             "provenance",
@@ -1072,7 +1072,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-M-003",
+          "url": "https://aidefend.net",
           "keywords": [
             "model",
             "behavior",
@@ -1146,7 +1146,7 @@
             "Some AI red teaming platforms"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-M-004",
+          "url": "https://aidefend.net",
           "keywords": [
             "threat",
             "modeling",
@@ -1340,7 +1340,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-M-005",
+          "url": "https://aidefend.net",
           "keywords": [
             "configuration",
             "benchmarking",
@@ -1589,7 +1589,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-M-006",
+          "url": "https://aidefend.net",
           "keywords": [
             "human-in-the-loop",
             "hitl",
@@ -1664,7 +1664,7 @@
             "GRC (Governance, Risk, and Compliance) platforms"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-M-007",
+          "url": "https://aidefend.net",
           "keywords": [
             "use",
             "case",
@@ -1726,7 +1726,7 @@
             "Credo AI"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-M-008",
+          "url": "https://aidefend.net",
           "keywords": [
             "automated",
             "agentic",
@@ -1785,7 +1785,7 @@
             "OneTrust AI Governance"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-M-009",
+          "url": "https://aidefend.net",
           "keywords": [
             "agent",
             "autonomy",
@@ -1868,7 +1868,7 @@
             "RL Platforms (Microsoft Bonsai, AnyLogic)"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-H-001",
+          "url": "https://aidefend.net",
           "keywords": [
             "adversarial",
             "robustness",
@@ -2168,7 +2168,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-H-002",
+          "url": "https://aidefend.net",
           "keywords": [
             "ai-contextualized",
             "data",
@@ -2681,7 +2681,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-H-003",
+          "url": "https://aidefend.net",
           "keywords": [
             "secure",
             "supply",
@@ -2995,7 +2995,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-H-004",
+          "url": "https://aidefend.net",
           "keywords": [
             "identity",
             "access",
@@ -3320,7 +3320,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-H-005",
+          "url": "https://aidefend.net",
           "keywords": [
             "privacy-preserving",
             "machine",
@@ -3614,7 +3614,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-H-006",
+          "url": "https://aidefend.net",
           "keywords": [
             "output",
             "hardening",
@@ -3889,7 +3889,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-H-007",
+          "url": "https://aidefend.net",
           "keywords": [
             "secure",
             "resilient",
@@ -4083,7 +4083,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-H-008",
+          "url": "https://aidefend.net",
           "keywords": [
             "robust",
             "federated",
@@ -4458,7 +4458,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-H-009",
+          "url": "https://aidefend.net",
           "keywords": [
             "accelerator",
             "hardware",
@@ -4520,7 +4520,7 @@
             "Adversarial attack simulation tools with profiles for Transformer models."
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-H-010",
+          "url": "https://aidefend.net",
           "keywords": [
             "transformer",
             "architecture",
@@ -4593,7 +4593,7 @@
             "AI Observability platforms (Arize AI, Fiddler, WhyLabs)"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-H-011",
+          "url": "https://aidefend.net",
           "keywords": [
             "classifier-free",
             "guidance",
@@ -4838,7 +4838,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-H-012",
+          "url": "https://aidefend.net",
           "keywords": [
             "graph",
             "neural",
@@ -5196,7 +5196,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-H-013",
+          "url": "https://aidefend.net",
           "keywords": [
             "reinforcement",
             "learning",
@@ -5384,7 +5384,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-H-014",
+          "url": "https://aidefend.net",
           "keywords": [
             "proactive",
             "data",
@@ -5449,7 +5449,7 @@
             "Some AutoML platforms offer automated ensembling as a feature."
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-H-015",
+          "url": "https://aidefend.net",
           "keywords": [
             "ensemble",
             "methods",
@@ -5518,7 +5518,7 @@
             "Formal verification / assurance services for safety-critical ML deployments"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-H-016",
+          "url": "https://aidefend.net",
           "keywords": [
             "certified",
             "defenses",
@@ -5583,7 +5583,7 @@
             "Secret & key management (AWS KMS, Azure Key Vault, GCP KMS) for signing/verification of policy files"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-H-017",
+          "url": "https://aidefend.net",
           "keywords": [
             "system",
             "prompt",
@@ -5993,7 +5993,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-H-018",
+          "url": "https://aidefend.net",
           "keywords": [
             "secure",
             "agent",
@@ -6238,7 +6238,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-H-019",
+          "url": "https://aidefend.net",
           "keywords": [
             "tool",
             "authorization",
@@ -6422,7 +6422,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-H-020",
+          "url": "https://aidefend.net",
           "keywords": [
             "safe",
             "fetch",
@@ -6600,7 +6600,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-H-021",
+          "url": "https://aidefend.net",
           "keywords": [
             "rag",
             "index",
@@ -6795,7 +6795,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-H-022",
+          "url": "https://aidefend.net",
           "keywords": [
             "agent",
             "configuration",
@@ -6972,7 +6972,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-H-023",
+          "url": "https://aidefend.net",
           "keywords": [
             "secure",
             "build",
@@ -7043,7 +7043,7 @@
             "CI/CD security tools (e.g., Snyk, Socket.dev for workflow analysis)"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-H-024",
+          "url": "https://aidefend.net",
           "keywords": [
             "publisher",
             "integrity",
@@ -7457,7 +7457,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-D-001",
+          "url": "https://aidefend.net",
           "keywords": [
             "adversarial",
             "input",
@@ -7529,7 +7529,7 @@
             "Weights & Biases (for logging and tracking metrics over time)"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-D-002",
+          "url": "https://aidefend.net",
           "keywords": [
             "model",
             "anomaly",
@@ -7885,7 +7885,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-D-003",
+          "url": "https://aidefend.net",
           "keywords": [
             "output",
             "monitoring",
@@ -8329,7 +8329,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-D-004",
+          "url": "https://aidefend.net",
           "keywords": [
             "model",
             "artifact",
@@ -8826,7 +8826,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-D-005",
+          "url": "https://aidefend.net",
           "keywords": [
             "activity",
             "logging",
@@ -8896,7 +8896,7 @@
             "Specialized AI assurance or red teaming tools that assess XAI method reliability."
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-D-006",
+          "url": "https://aidefend.net",
           "keywords": [
             "explainability",
             "xai",
@@ -8976,7 +8976,7 @@
             "AI red teaming services specializing in multimodal systems."
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-D-007",
+          "url": "https://aidefend.net",
           "keywords": [
             "multimodal",
             "inconsistency",
@@ -9059,7 +9059,7 @@
             "Cloud provider ML services for building and deploying custom monitoring models (e.g., SageMaker, Vertex AI, Azure ML)."
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-D-008",
+          "url": "https://aidefend.net",
           "keywords": [
             "ai-based",
             "security",
@@ -9143,7 +9143,7 @@
             "Neo4j Enterprise for enterprise-grade knowledge graph verification"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-D-009",
+          "url": "https://aidefend.net",
           "keywords": [
             "cross-agent",
             "fact",
@@ -9226,7 +9226,7 @@
             "IBM QRadar for goal manipulation threat detection"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-D-010",
+          "url": "https://aidefend.net",
           "keywords": [
             "goal",
             "integrity",
@@ -9488,7 +9488,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-D-011",
+          "url": "https://aidefend.net",
           "keywords": [
             "agent",
             "behavioral",
@@ -9748,7 +9748,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-D-012",
+          "url": "https://aidefend.net",
           "keywords": [
             "graph",
             "anomaly",
@@ -9816,7 +9816,7 @@
             "Simulation platforms (NVIDIA Isaac Sim)"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-D-013",
+          "url": "https://aidefend.net",
           "keywords": [
             "reward",
             "policy",
@@ -10056,7 +10056,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-D-014",
+          "url": "https://aidefend.net",
           "keywords": [
             "rag",
             "content",
@@ -10492,7 +10492,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-I-001",
+          "url": "https://aidefend.net",
           "keywords": [
             "execution",
             "sandboxing",
@@ -10706,7 +10706,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-I-002",
+          "url": "https://aidefend.net",
           "keywords": [
             "network",
             "segmentation",
@@ -10783,7 +10783,7 @@
             "WAFs with advanced rate limiting"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-I-003",
+          "url": "https://aidefend.net",
           "keywords": [
             "quarantine",
             "throttling",
@@ -10860,7 +10860,7 @@
             "Enterprise agent platforms with secure state management"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-I-004",
+          "url": "https://aidefend.net",
           "keywords": [
             "agent",
             "memory",
@@ -10933,7 +10933,7 @@
             "EDR/XDR solutions (SentinelOne, CrowdStrike) to kill processes/isolate hosts"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-I-005",
+          "url": "https://aidefend.net",
           "keywords": [
             "emergency",
             "kill-switch",
@@ -11011,7 +11011,7 @@
             "AI Security Platforms (Protect AI, HiddenLayer)"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-I-006",
+          "url": "https://aidefend.net",
           "keywords": [
             "malicious",
             "participant",
@@ -11085,7 +11085,7 @@
             "Enterprise Mobile Device Management (MDM) solutions with app sandboxing / clipboard control / data loss prevention"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-I-007",
+          "url": "https://aidefend.net",
           "keywords": [
             "client-side",
             "execution",
@@ -11171,7 +11171,7 @@
             "Specialized AI security vendors with AI honeypot capabilities"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-DV-001",
+          "url": "https://aidefend.net",
           "keywords": [
             "honeypot",
             "services",
@@ -11248,7 +11248,7 @@
             "Some DLP solutions adaptable for honey data"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-DV-002",
+          "url": "https://aidefend.net",
           "keywords": [
             "honey",
             "data",
@@ -11323,7 +11323,7 @@
             "Commercial cyber deception platforms (e.g. TrapX-style / Acalvio-style) extended to AI/LLM endpoints to observe attacker behavior under controlled deception"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-DV-003",
+          "url": "https://aidefend.net",
           "keywords": [
             "dynamic",
             "response",
@@ -11402,7 +11402,7 @@
             "Content authenticity platforms"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-DV-004",
+          "url": "https://aidefend.net",
           "keywords": [
             "output",
             "watermarking",
@@ -11476,7 +11476,7 @@
             "Adaptable deception technology platforms"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-DV-005",
+          "url": "https://aidefend.net",
           "keywords": [
             "decoy",
             "agent",
@@ -11546,7 +11546,7 @@
             "API management and security solutions."
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-DV-006",
+          "url": "https://aidefend.net",
           "keywords": [
             "deceptive",
             "system",
@@ -11614,7 +11614,7 @@
             "MLOps Platforms (Amazon SageMaker, Google Vertex AI, Databricks)"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-DV-007",
+          "url": "https://aidefend.net",
           "keywords": [
             "training-phase",
             "obfuscation",
@@ -11687,7 +11687,7 @@
             "Data-centric AI platforms (Snorkel AI)"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-DV-008",
+          "url": "https://aidefend.net",
           "keywords": [
             "poisoning",
             "detection",
@@ -11948,7 +11948,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-E-001",
+          "url": "https://aidefend.net",
           "keywords": [
             "credential",
             "revocation",
@@ -12015,7 +12015,7 @@
             "APM tools with session management"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-E-002",
+          "url": "https://aidefend.net",
           "keywords": [
             "process",
             "session",
@@ -12414,7 +12414,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-E-003",
+          "url": "https://aidefend.net",
           "keywords": [
             "backdoor",
             "malicious",
@@ -12481,7 +12481,7 @@
             "SCA tools (Snyk, Mend)"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-E-004",
+          "url": "https://aidefend.net",
           "keywords": [
             "post-eviction",
             "system",
@@ -12552,7 +12552,7 @@
             "SIEM/SOAR platforms for orchestrating automated eviction actions (Splunk SOAR, Palo Alto XSOAR)"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-E-005",
+          "url": "https://aidefend.net",
           "keywords": [
             "compromised",
             "session",
@@ -12683,7 +12683,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-E-006",
+          "url": "https://aidefend.net",
           "keywords": [
             "end-of-life",
             "eol",
@@ -12890,7 +12890,7 @@
               ]
             }
           ],
-          "url": "https://aidefend.dev/techniques/AID-R-001",
+          "url": "https://aidefend.net",
           "keywords": [
             "secure",
             "model",
@@ -12962,7 +12962,7 @@
             "Cloud provider managed backup services (AWS Backup, Azure Backup)"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-R-002",
+          "url": "https://aidefend.net",
           "keywords": [
             "data",
             "integrity",
@@ -13032,7 +13032,7 @@
             "SIEM/SOAR platforms for monitoring and correlation (Splunk, Microsoft Sentinel, Datadog)"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-R-003",
+          "url": "https://aidefend.net",
           "keywords": [
             "secure",
             "session",
@@ -13117,7 +13117,7 @@
             "Managed threat intelligence / ISAC-style sharing channels for sanitized TTP distribution"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-R-004",
+          "url": "https://aidefend.net",
           "keywords": [
             "post-incident",
             "hardening",
@@ -13194,7 +13194,7 @@
             "Cloud object storage with Object Lock / WORM mode for forensic quarantine (e.g. S3 Object Lock)"
           ],
           "subTechniques": [],
-          "url": "https://aidefend.dev/techniques/AID-R-005",
+          "url": "https://aidefend.net",
           "keywords": [
             "rapid",
             "vector",

@@ -388,7 +388,7 @@ function transformTechnique(tech, tacticId) {
     toolsOpenSource: tech.toolsOpenSource || [],
     toolsCommercial: tech.toolsCommercial || [],
     subTechniques: (tech.subTechniques || []).map(transformSubTechnique),
-    url: `https://aidefend.dev/techniques/${tech.id}`,
+    url: 'https://aidefend.net',
   };
   // Extract keywords using the full technique object (for tools, strategies, etc.)
   transformed.keywords = extractKeywords(transformed);
