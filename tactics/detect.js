@@ -1449,31 +1449,6 @@ export const detectTactic = {
 
         },
         {
-            "id": "AID-D-005.006",
-            "name": "ANS (Agent Name Service) Registry & Resolution Telemetry Monitoring",
-            "pillar": ["infra", "app"],
-            "phase": ["operation", "response"],
-            "description": "Monitor ANS (Agent Name Service) registration events and resolution traffic to detect registry poisoning, Sybil-like namespace abuse, directory scanning, and abnormal certificate churn. Correlate identity, issuer, namespace, and query outcomes (NXDOMAIN, version probes) into actionable detections.",
-            "defendsAgainst": [
-                { "framework": "MITRE ATLAS", "items": ["AML.T0029 Denial of AI Service", "AML.T0034 Cost Harvesting"] },
-                { "framework": "MAESTRO", "items": ["Sybil Attacks (L7)", "Directory Scanning (L7)", "Resource Hijacking (L4)"] },
-                { "framework": "OWASP LLM Top 10 2025", "items": ["LLM10:2025 Unbounded Consumption"] }
-            ],
-            "implementationStrategies": [
-                {
-                    "strategy": "Registration Churn & Issuer/Namespace Abuse Detection",
-                    "howTo": "Alert on sudden spikes in new agent registrations per issuer/namespace; quarantine suspicious namespaces; require step-up verification for bursts."
-                },
-                {
-                    "strategy": "Resolution Anomaly Detection (NXDOMAIN ratio, version-probing, QPS per identity)",
-                    "howTo": "Track ans_resolution_fail_total and NXDOMAIN ratio; rate limit by authenticated client identity; flag repeated version probes."
-                }
-            ],
-            "toolsOpenSource": ["Prometheus", "Grafana", "ELK Stack", "Nginx"],
-            "toolsCommercial": ["Datadog", "Splunk", "Dynatrace"]
-        }
-        ,
-        {
             "id": "AID-D-006",
             "name": "Explainability (XAI) Manipulation Detection", "pillar": ["model"], "phase": ["validation", "operation"],
             "description": "Implement mechanisms to monitor and validate the outputs and behavior of eXplainable AI (XAI) methods. The goal is to detect attempts by adversaries to manipulate or mislead these explanations, ensuring that XAI outputs accurately reflect the model's decision-making process and are not crafted to conceal malicious operations, biases, or vulnerabilities. This is crucial if XAI is used for debugging, compliance, security monitoring, or building user trust.",
