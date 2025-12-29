@@ -14,7 +14,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIDEFEND Framework</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="./js/tailwindcss.js"></script>
+    <script src="./js/purify.min.js"></script>
     <style>
         :root {
             /* Light Theme */
@@ -1295,13 +1296,13 @@
                     header.appendChild(iconWrapper);
                     const content = createElement('div', { className: 'accordion-content' });
                     const contentInner = createElement('div', { className: 'accordion-content-inner' });
-                    if (section.paragraphs) section.paragraphs.forEach(p => contentInner.innerHTML += `<p>${p}</p>`);
+                    if (section.paragraphs) section.paragraphs.forEach(p => contentInner.innerHTML += `<p>${DOMPurify.sanitize(p)}</p>`);
                     if (section.listItems) {
                         const ul = createElement('ul');
-                        section.listItems.forEach(item => ul.innerHTML += `<li>${item}</li>`);
+                        section.listItems.forEach(item => ul.innerHTML += `<li>${DOMPurify.sanitize(item)}</li>`);
                         contentInner.appendChild(ul);
                     }
-                    if (section.concludingParagraphs) section.concludingParagraphs.forEach(p => contentInner.innerHTML += `<p>${p}</p>`);
+                    if (section.concludingParagraphs) section.concludingParagraphs.forEach(p => contentInner.innerHTML += `<p>${DOMPurify.sanitize(p)}</p>`);
                     content.appendChild(contentInner);
                     item.appendChild(header);
                     item.appendChild(content);
@@ -1377,12 +1378,12 @@
             function showTacticModal(tactic) {
                 clearElement(elements.modalBody);
                 const fullTactic = aidefendData.tactics.find(t => t.name === tactic.name) || tactic;
-                elements.modalBody.innerHTML = `<h2>${fullTactic.name}</h2><p class="mb-4 leading-relaxed text-sm">${fullTactic.purpose || 'No purpose description available.'}</p>`;
+                elements.modalBody.innerHTML = `<h2>${DOMPurify.sanitize(fullTactic.name)}</h2><p class="mb-4 leading-relaxed text-sm">${DOMPurify.sanitize(fullTactic.purpose || 'No purpose description available.')}</p>`;
                 showModal();
             }
             function showPillarOrPhaseModal(item) {
                 clearElement(elements.modalBody);
-                elements.modalBody.innerHTML = `<h2>${item.name}</h2><p class="mb-4 leading-relaxed text-sm">${item.focus || 'No description available.'}</p>`;
+                elements.modalBody.innerHTML = `<h2>${DOMPurify.sanitize(item.name)}</h2><p class="mb-4 leading-relaxed text-sm">${DOMPurify.sanitize(item.focus || 'No description available.')}</p>`;
                 showModal();
             }
             function showTechniqueModal(technique, groupName) {
@@ -1391,12 +1392,12 @@
                 elements.modalBody.appendChild(createElement('p', { className: 'text-sm opacity-80 mb-1', textContent: `${groupType}: ${groupName}` }));
                 elements.modalBody.appendChild(createElement('h2', { textContent: `${technique.id}: ${technique.name}` }));
                 const p = createElement('p', { className: 'mb-4 leading-relaxed text-sm' });
-                p.innerHTML = technique.description || 'No description available.';
+                p.innerHTML = DOMPurify.sanitize(technique.description || 'No description available.');
                 elements.modalBody.appendChild(p);
                 if (technique.perfImpact) {
                     const perfDiv = createElement('div', { className: 'perf-impact-note' });
                     const perfP = createElement('p');
-                    perfP.innerHTML = `<strong>💡 Performance Impact (${technique.perfImpact.level}): </strong>${technique.perfImpact.description}`;
+                    perfP.innerHTML = DOMPurify.sanitize(`<strong>💡 Performance Impact (${technique.perfImpact.level}): </strong>${technique.perfImpact.description}`);
                     perfDiv.appendChild(perfP);
                     elements.modalBody.appendChild(perfDiv);
                 }
@@ -1421,7 +1422,7 @@
                         header.appendChild(iconWrapper);
                         const content = createElement('div', { className: 'strategy-accordion-content' });
                         const contentInner = createElement('div', { className: 'strategy-accordion-content-inner' });
-                        if (strategy.howTo) { contentInner.innerHTML = strategy.howTo; }
+                        if (strategy.howTo) { contentInner.innerHTML = DOMPurify.sanitize(strategy.howTo); }
                         content.appendChild(contentInner);
                         item.appendChild(header);
                         item.appendChild(content);
@@ -1445,9 +1446,9 @@
                 section.appendChild(createElement('h4', { className: 'font-semibold text-md mb-2', textContent: 'Defends Against:' }));
                 defendsAgainst.forEach(da => {
                     const daDiv = createElement('div', { className: 'mb-2' });
-                    daDiv.innerHTML += `<p class="defends-against-framework text-sm">${da.framework}:</p>`;
+                    daDiv.innerHTML += `<p class="defends-against-framework text-sm">${DOMPurify.sanitize(da.framework)}:</p>`;
                     const itemsList = createElement('ul', { className: 'list-disc list-inside ml-4 text-xs opacity-90 space-y-0.5' });
-                    da.items.forEach(item => itemsList.innerHTML += `<li>${item}</li>`);
+                    da.items.forEach(item => itemsList.innerHTML += `<li>${DOMPurify.sanitize(item)}</li>`);
                     daDiv.appendChild(itemsList);
                     section.appendChild(daDiv);
                 });
