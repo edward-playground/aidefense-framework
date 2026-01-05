@@ -126,7 +126,7 @@ export const isolateTactic = {
                     "id": "AID-I-001.002",
                     "name": "MicroVM & Low-Level Sandboxing", "pillar": ["infra"], "phase": ["operation"],
                     "description": "Employs lightweight Virtual Machines (MicroVMs) or kernel-level sandboxing technologies to provide a stronger isolation boundary than traditional containers. This is critical for running untrusted code or highly sensitive AI workloads.",
-                    "perfImpact": {
+                    "warning": {
                         "level": "Low to Medium on Startup Time & CPU/Memory Overhead",
                         "description": "<p>Stronger isolation technologies like gVisor or Firecracker impose a greater performance penalty than standard containers. <p><strong>CPU Overhead:</strong> Can introduce a <strong>5% to 15% CPU performance overhead</strong> compared to running in a standard container. <p><strong>Startup Time:</strong> Adds a small but measurable delay, typically <strong>5ms to 50ms</strong> of additional startup time per instance."
                     },

@@ -1,8 +1,8 @@
 {
   "version": {
     "schemaVersion": "1.0",
-    "dataVersion": "2025.12.29",
-    "generatedAt": "2025-12-29T15:01:42.108Z",
+    "dataVersion": "2026.01.04",
+    "generatedAt": "2026-01-04T12:56:09.783Z",
     "source": "bundled"
   },
   "tactics": [
@@ -3383,24 +3383,8 @@
             }
           ],
           "implementationStrategies": [],
-          "toolsOpenSource": [
-            "Instructor",
-            "Pydantic",
-            "Guardrails AI",
-            "NVIDIA NeMo Guardrails",
-            "LangChain (Output Parsers)",
-            "bleach (for HTML)",
-            "sqlparse (for SQL)",
-            "Python `ast` module"
-          ],
-          "toolsCommercial": [
-            "Lakera Guard",
-            "Protect AI Guardian",
-            "CalypsoAI Validator",
-            "Azure Content Safety",
-            "Google Cloud DLP API",
-            "Web Application Firewalls (WAFs) with output inspection capabilities (e.g., Cloudflare, Akamai)"
-          ],
+          "toolsOpenSource": [],
+          "toolsCommercial": [],
           "subTechniques": [
             {
               "id": "AID-H-006.001",
@@ -3416,10 +3400,12 @@
               "toolsOpenSource": [
                 "Instructor",
                 "Pydantic",
+                "Guardrails AI",
+                "NVIDIA NeMo Guardrails",
                 "JSONformer",
                 "Outlines",
                 "TypeChat",
-                "LangChain PydanticOutputParser",
+                "LangChain (Output Parsers)",
                 "Native tool-use/function-calling capabilities of open-source models (Llama, Mistral, etc.)",
                 "Microsoft Semantic Kernel"
               ],
@@ -3463,6 +3449,8 @@
                 "enforcement",
                 "instructor",
                 "pydantic",
+                "guardrails",
+                "nvidia",
                 "jsonformer",
                 "outlines",
                 "typechat",
@@ -3470,9 +3458,7 @@
                 "native",
                 "microsoft",
                 "openai",
-                "google",
-                "anthropic",
-                "malicious"
+                "google"
               ]
             },
             {
@@ -3488,6 +3474,9 @@
               ],
               "toolsOpenSource": [
                 "Python's `html` and `shlex` libraries",
+                "bleach (for HTML sanitization)",
+                "sqlparse (for SQL validation)",
+                "Python `ast` module (for code analysis)",
                 "OWASP Java Encoder Project",
                 "DOMPurify (for client-side HTML sanitization)",
                 "Requests (for API calls)",
@@ -3495,7 +3484,9 @@
               ],
               "toolsCommercial": [
                 "Google Safe Browse API",
-                "Cloud WAFs (AWS WAF, Azure WAF, Cloudflare WAF)",
+                "Azure Content Safety",
+                "Google Cloud DLP API",
+                "Cloud WAFs (AWS WAF, Azure WAF, Cloudflare WAF, Akamai)",
                 "API Security platforms (Noname Security, Salt Security)"
               ],
               "defendsAgainst": [
@@ -3533,16 +3524,16 @@
                 "sanitization",
                 "validation",
                 "python's",
+                "bleach",
+                "sqlparse",
+                "python",
                 "dompurify",
                 "requests",
                 "modsecurity",
                 "google",
+                "azure",
                 "cloud",
-                "api",
-                "injection",
-                "malicious",
-                "firewall",
-                "input validation"
+                "api"
               ]
             },
             {
@@ -3619,18 +3610,15 @@
             "output",
             "hardening",
             "sanitization",
-            "instructor",
-            "pydantic",
-            "guardrails",
-            "nvidia",
-            "langchain",
-            "bleach",
-            "sqlparse",
-            "python",
-            "lakera",
-            "protect",
-            "calypsoai",
-            "azure"
+            "vector",
+            "data exfiltration",
+            "prompt injection",
+            "model inversion",
+            "implement",
+            "programmatic",
+            "transformations",
+            "structuring",
+            "generated"
           ]
         },
         {
@@ -5991,6 +5979,71 @@
                 "compromised",
                 "agents"
               ]
+            },
+            {
+              "id": "AID-H-018.007",
+              "name": "Dual-LLM Isolation Pattern",
+              "description": "Implement a Privileged-LLM (P-LLM) and Quarantined-LLM (Q-LLM) split to isolate untrusted data processing from privileged planning and tool execution. The Q-LLM is the only component allowed to directly read raw untrusted content (web pages, emails, retrieved documents, tool outputs). The P-LLM can plan and request tool actions, but it must never see raw untrusted content; it only consumes Q-LLM's structured, validated outputs. This pattern reduces the impact of indirect prompt injection: even if untrusted content contains malicious instructions, they are confined to the Q-LLM, which has no tool privileges. <p>This privileged/quarantined separation pattern is formally described as the CaMeL (CApabilities for MachinE Learning) architecture by Google DeepMind, utilizing a dedicated coding/parsing model to isolate control flow from untrusted data.</p>",
+              "pillar": "app",
+              "phase": "building",
+              "implementationStrategies": [
+                "Enforce a hard trust boundary: Q-LLM reads raw untrusted content and outputs validated structured data; P-LLM plans/actions using only that structured data, never raw content."
+              ],
+              "toolsOpenSource": [
+                "Pydantic (structured outputs + validation)",
+                "jsonschema (schema validation)",
+                "Envoy / API Gateway (routing and policy enforcement)",
+                "Service mesh (Istio/Linkerd) (network isolation)",
+                "LangChain / LangGraph (separating planning vs execution flows)"
+              ],
+              "toolsCommercial": [
+                "LLM gateways (routing, policy, observability)",
+                "Cloud KMS / Secrets Manager (key and secret isolation)",
+                "Enterprise service mesh offerings (policy enforcement and telemetry)"
+              ],
+              "defendsAgainst": [
+                {
+                  "framework": "MITRE ATLAS",
+                  "items": [
+                    "AML.T0051: LLM Prompt Injection",
+                    "AML.T0051.001: LLM Prompt Injection: Indirect",
+                    "AML.T0054: LLM Jailbreak"
+                  ]
+                },
+                {
+                  "framework": "OWASP LLM Top 10 2025",
+                  "items": [
+                    "LLM01:2025 Prompt Injection",
+                    "LLM02:2025 Sensitive Information Disclosure",
+                    "LLM06:2025 Excessive Agency"
+                  ]
+                },
+                {
+                  "framework": "MAESTRO",
+                  "items": [
+                    "Compromised RAG Pipelines (L2)",
+                    "Input Validation Attacks (L3)",
+                    "Data Leakage (Cross-Layer)"
+                  ]
+                }
+              ],
+              "keywords": [
+                "dual-llm",
+                "isolation",
+                "pattern",
+                "prompt injection",
+                "machine learning",
+                "pydantic",
+                "jsonschema",
+                "envoy",
+                "service",
+                "langchain",
+                "llm",
+                "cloud",
+                "enterprise",
+                "prompt",
+                "injection"
+              ]
             }
           ],
           "url": "https://aidefend.net",
@@ -6235,6 +6288,143 @@
                 "microservice",
                 "data poisoning",
                 "prompt injection"
+              ]
+            },
+            {
+              "id": "AID-H-019.004",
+              "name": "Intent-Based Dynamic Capability Scoping",
+              "description": "Dynamically restrict an agent's tool capabilities per request (or per session) based on the user's initial intent, instead of granting a broad, static role-based allowlist. The system derives a minimal set of allowed tools and action budgets before execution and enforces it in a tamper-proof way using a signed session scope. This prevents prompt injection from expanding an agent's effective privileges: even if the model \"decides\" to call a disallowed tool, the runtime enforcement layer blocks it. <p>This approach aligns with the capability-based defense strategy proposed in Google DeepMind's CaMeL (CApabilities for MachinE Learning), designed to prevent prompt injection from expanding runtime privileges.</p>",
+              "pillar": "app",
+              "phase": "building",
+              "implementationStrategies": [
+                "Generate a minimal, signed per-request capability scope from the trusted user query, then enforce it at the tool dispatcher (deny-by-default)."
+              ],
+              "toolsOpenSource": [
+                "Open Policy Agent (OPA)",
+                "Cedar (policy language for authorization)",
+                "python-jose / jwcrypto (JWS/JWT signing and verification)",
+                "PyJWT (JWT handling; prefer JWS libraries for signed scopes)",
+                "cryptography (Ed25519/RSA signature verification)",
+                "Envoy Proxy (L7 policy / enforcement building block)",
+                "LangChain / LangGraph (tool dispatch hooks)",
+                "Microsoft Semantic Kernel (function invocation filters)"
+              ],
+              "toolsCommercial": [
+                "Cloud KMS / HSM (AWS KMS, Google Cloud KMS, Azure Key Vault) for signing keys",
+                "API Gateway policy enforcement (Apigee, Kong Enterprise, AWS API Gateway, Azure API Management)",
+                "Service mesh platforms with centralized policy management (vendor distributions)",
+                "LLM security gateways (vendor products) with tool-policy enforcement"
+              ],
+              "defendsAgainst": [
+                {
+                  "framework": "MITRE ATLAS",
+                  "items": [
+                    "AML.T0051: LLM Prompt Injection",
+                    "AML.T0051.000: LLM Prompt Injection: Direct",
+                    "AML.T0051.001: LLM Prompt Injection: Indirect",
+                    "AML.T0054: LLM Jailbreak"
+                  ]
+                },
+                {
+                  "framework": "MAESTRO",
+                  "items": [
+                    "Agent Tool Misuse (L7)",
+                    "Agent Goal Manipulation (L7)",
+                    "Framework Evasion (L3)",
+                    "Privilege Escalation (Cross-Layer)"
+                  ]
+                },
+                {
+                  "framework": "OWASP LLM Top 10 2025",
+                  "items": [
+                    "LLM01:2025 Prompt Injection",
+                    "LLM06:2025 Excessive Agency"
+                  ]
+                }
+              ],
+              "keywords": [
+                "intent-based",
+                "dynamic",
+                "capability",
+                "scoping",
+                "prompt injection",
+                "machine learning",
+                "open",
+                "cedar",
+                "python-jose",
+                "pyjwt",
+                "cryptography",
+                "envoy",
+                "langchain",
+                "microsoft",
+                "cloud"
+              ]
+            },
+            {
+              "id": "AID-H-019.005",
+              "name": "Value-Level Capability Metadata & Data Flow Sink Enforcement",
+              "description": "Enforce data-flow safety for agentic systems by tracking the provenance and sensitivity of runtime values (e.g., tool outputs, RAG chunks, web content) and blocking unsafe transfers into sensitive sinks (e.g., outbound email, external HTTP requests, database writes). This closes a critical 'data flow diversion' gap: even if an attacker cannot change which tool is called, they may still manipulate tool parameters (e.g., recipients, URLs, file targets) to exfiltrate data. This sub-technique complements role-based allowlists and parameter schema validation by answering a different question: not only 'Is this parameter well-formed?' but also 'Should this value be allowed to flow to this destination?'.",
+              "pillar": "app",
+              "phase": "building",
+              "implementationStrategies": [
+                "Application-layer value tagging (taint) plus sensitive-sink checks in the tool dispatcher, backed by a versioned policy engine (OPA) and session-isolated metadata storage.",
+                "Network-layer egress filtering (service mesh / firewall) to enforce outbound constraints even if application-layer checks fail, with default-deny posture and centrally managed allowlists."
+              ],
+              "toolsOpenSource": [
+                "Open Policy Agent (OPA) / Rego (policy evaluation)",
+                "Envoy Proxy (L7 policy / egress control)",
+                "Istio Service Mesh (Egress Gateway)",
+                "Cilium (eBPF-based network policy and observability)",
+                "Kubernetes NetworkPolicy (baseline egress restrictions)"
+              ],
+              "toolsCommercial": [
+                "Palo Alto Networks (NGFW / Prisma Access)",
+                "Zscaler Internet Access (ZIA) / Cloud firewall",
+                "Cloudflare Gateway / Zero Trust",
+                "AWS Network Firewall / Gateway Load Balancer",
+                "Azure Firewall / Private Link / NAT Gateway controls"
+              ],
+              "defendsAgainst": [
+                {
+                  "framework": "OWASP LLM Top 10 2025",
+                  "items": [
+                    "LLM01:2025 Prompt Injection"
+                  ]
+                },
+                {
+                  "framework": "MITRE ATLAS",
+                  "items": [
+                    "AML.T0051: LLM Prompt Injection"
+                  ]
+                },
+                {
+                  "framework": "MAESTRO",
+                  "items": [
+                    "Data Exfiltration (L2)",
+                    "Compromised RAG Pipelines (L2)",
+                    "Data Tampering (L2)",
+                    "Input Validation Attacks (L3)",
+                    "Privilege Escalation (Cross-Layer)",
+                    "Data Leakage (Cross-Layer)"
+                  ]
+                }
+              ],
+              "keywords": [
+                "value-level",
+                "capability",
+                "metadata",
+                "data",
+                "flow",
+                "sink",
+                "enforcement",
+                "open",
+                "envoy",
+                "istio",
+                "cilium",
+                "kubernetes",
+                "palo",
+                "zscaler",
+                "cloudflare"
               ]
             }
           ],
@@ -7072,7 +7262,7 @@
         {
           "id": "AID-D-001",
           "name": "Adversarial Input & Prompt Injection Detection",
-          "description": "Implement mechanisms to continuously monitor and analyze inputs to AI models, specifically looking for characteristics indicative of adversarial manipulation or malicious prompt content. This includes detecting statistically anomalous inputs (e.g., out-of-distribution samples, inputs with unusual perturbation patterns) and scanning prompts for known malicious patterns, hidden commands, jailbreak sequences, or attempts to inject executable code or harmful instructions. The goal is to block, flag, or sanitize such inputs before they can significantly impact the model's behavior or compromise the system.",
+          "description": "Continuously monitor and analyze inputs to AI models to detect characteristics of adversarial manipulation, malicious prompt content, or jailbreak attempts.<p>Key defense capabilities:</p><ul><li>Detecting statistically anomalous inputs (e.g., out-of-distribution samples).</li><li>Scanning for known malicious patterns, hidden commands, and jailbreak sequences.</li><li>Identifying attempts to inject executable code or harmful instructions.</li></ul><p>The goal is to block, flag, or sanitize such inputs before they can significantly impact the model's behavior.</p>",
           "pillar": "app",
           "phase": "operation",
           "defendsAgainst": [
@@ -7466,10 +7656,8 @@
             "detection",
             "prompt injection",
             "malicious",
-            "scanning",
-            "prompts",
             "jailbreak",
-            "compromise",
+            "scanning",
             "input validation"
           ]
         },
@@ -7882,6 +8070,72 @@
                 "splunk",
                 "elastic",
                 "agent"
+              ]
+            },
+            {
+              "id": "AID-D-003.005",
+              "name": "Stateful Session Monitoring: Intent Drift + Safety Invariants",
+              "description": "Attackers can split one malicious goal into many small, individually normal requests. Stateful monitoring reconnects those steps into one picture. This is to detect multi-step, stateful attacks that bypass single-turn guardrails by maintaining session memory and enforcing session-level safety invariants. <p>The monitor tracks (1) intent drift over time (e.g., a conversation slowly shifting from 'summarize emails' to 'forward confidential content externally'), and (2) invariant violations (e.g., 'sensitive data read in this session must never be sent to external recipients').</p> <p>When thresholds are exceeded, the system blocks execution, escalates to human-in-the-loop (HITL), or triggers incident response.",
+              "pillar": "app",
+              "phase": "operation",
+              "implementationStrategies": [
+                "Maintain a session security ledger (state + intent vector) and enforce versioned safety invariants on every tool call and high-risk model output."
+              ],
+              "toolsOpenSource": [
+                "Redis (session state + TTL) or Postgres (durable session ledger)",
+                "OpenTelemetry (distributed tracing)",
+                "WhyLogs / LangKit (LLM telemetry features)",
+                "FAISS / pgvector (optional intent vector storage)",
+                "OPA / Rego (invariant policy evaluation)"
+              ],
+              "toolsCommercial": [
+                "SIEM/SOAR (Splunk, Sentinel, Chronicle) for correlation and response",
+                "Managed Redis / database services",
+                "Observability platforms (Datadog, New Relic) for tracing/metrics"
+              ],
+              "defendsAgainst": [
+                {
+                  "framework": "MITRE ATLAS",
+                  "items": [
+                    "AML.T0051: LLM Prompt Injection",
+                    "AML.T0054: LLM Jailbreak",
+                    "AML.T0051.001: LLM Prompt Injection: Indirect"
+                  ]
+                },
+                {
+                  "framework": "OWASP LLM Top 10 2025",
+                  "items": [
+                    "LLM01:2025 Prompt Injection",
+                    "LLM06:2025 Excessive Agency",
+                    "LLM02:2025 Sensitive Information Disclosure"
+                  ]
+                },
+                {
+                  "framework": "MAESTRO",
+                  "items": [
+                    "Evasion of Detection (L6)",
+                    "Data Leakage through Observability (L6)",
+                    "Privilege Escalation (Cross-Layer)",
+                    "Data Leakage (Cross-Layer)"
+                  ]
+                }
+              ],
+              "keywords": [
+                "stateful",
+                "session",
+                "monitoring",
+                "intent",
+                "drift",
+                "safety",
+                "invariants",
+                "incident response",
+                "redis",
+                "opentelemetry",
+                "whylogs",
+                "faiss",
+                "opa",
+                "siem/soar",
+                "managed"
               ]
             }
           ],
@@ -12631,7 +12885,36 @@
                 "Hardware Security Modules (HSMs)",
                 "Enterprise data destruction software and services (Blancco, KillDisk)"
               ],
-              "defendsAgainst": [],
+              "defendsAgainst": [
+                {
+                  "framework": "MITRE ATLAS",
+                  "items": [
+                    "AML.T0025 Exfiltration via Cyber Means",
+                    "AML.T0036 Data from Information Repositories"
+                  ]
+                },
+                {
+                  "framework": "MAESTRO",
+                  "items": [
+                    "Data Exfiltration (L2)",
+                    "Model Stealing (L1, from residual artifacts)"
+                  ]
+                },
+                {
+                  "framework": "OWASP LLM Top 10 2025",
+                  "items": [
+                    "LLM02:2025 Sensitive Information Disclosure"
+                  ]
+                },
+                {
+                  "framework": "OWASP ML Top 10 2023",
+                  "items": [
+                    "ML03:2023 Model Inversion Attack",
+                    "ML04:2023 Membership Inference Attack",
+                    "ML05:2023 Model Theft"
+                  ]
+                }
+              ],
               "keywords": [
                 "cryptographic",
                 "erasure",
@@ -12643,7 +12926,11 @@
                 "hardware",
                 "enterprise",
                 "leakage",
-                "encryption"
+                "encryption",
+                "data exfiltration",
+                "model stealing",
+                "model inversion",
+                "membership inference"
               ]
             },
             {
@@ -12667,7 +12954,37 @@
                 "Managed File Transfer (MFT) platforms",
                 "Data Loss Prevention (DLP) systems to monitor the transfer"
               ],
-              "defendsAgainst": [],
+              "defendsAgainst": [
+                {
+                  "framework": "MITRE ATLAS",
+                  "items": [
+                    "AML.T0025 Exfiltration via Cyber Means",
+                    "AML.T0048.004 External Harms: AI Intellectual Property Theft",
+                    "AML.T0010 AI Supply Chain Compromise"
+                  ]
+                },
+                {
+                  "framework": "MAESTRO",
+                  "items": [
+                    "Data Exfiltration (L2)",
+                    "Model Stealing (L1, from retained copies)"
+                  ]
+                },
+                {
+                  "framework": "OWASP LLM Top 10 2025",
+                  "items": [
+                    "LLM02:2025 Sensitive Information Disclosure",
+                    "LLM03:2025 Supply Chain"
+                  ]
+                },
+                {
+                  "framework": "OWASP ML Top 10 2023",
+                  "items": [
+                    "ML05:2023 Model Theft",
+                    "ML06:2023 AI Supply Chain Attacks"
+                  ]
+                }
+              ],
               "keywords": [
                 "secure",
                 "asset",
@@ -12679,7 +12996,10 @@
                 "sha256sum",
                 "rsync",
                 "managed",
-                "verification"
+                "verification",
+                "supply chain",
+                "data exfiltration",
+                "model stealing"
               ]
             }
           ],

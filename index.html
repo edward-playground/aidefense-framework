@@ -697,7 +697,7 @@
             color: var(--text-secondary-color);
         }
 
-        .perf-impact-note {
+        .warning-note {
             background-color: #f0f4f8;
             border-left: 4px solid #4a90e2;
             padding: 12px 18px;
@@ -707,17 +707,17 @@
             line-height: 1.6;
         }
 
-        html.dark .perf-impact-note {
+        html.dark .warning-note {
             background-color: #2c3e50;
             border-left-color: #5dade2;
         }
 
-        .perf-impact-note p {
+        .warning-note p {
             margin: 0;
             padding: 0;
         }
 
-        .perf-impact-note strong {
+        .warning-note strong {
             color: var(--text-color);
         }
 
@@ -1394,12 +1394,12 @@
                 const p = createElement('p', { className: 'mb-4 leading-relaxed text-sm' });
                 p.innerHTML = DOMPurify.sanitize(technique.description || 'No description available.');
                 elements.modalBody.appendChild(p);
-                if (technique.perfImpact) {
-                    const perfDiv = createElement('div', { className: 'perf-impact-note' });
-                    const perfP = createElement('p');
-                    perfP.innerHTML = DOMPurify.sanitize(`<strong>💡 Performance Impact (${technique.perfImpact.level}): </strong>${technique.perfImpact.description}`);
-                    perfDiv.appendChild(perfP);
-                    elements.modalBody.appendChild(perfDiv);
+                if (technique.warning) {
+                    const warningDiv = createElement('div', { className: 'warning-note' });
+                    const warningP = createElement('p');
+                    warningP.innerHTML = DOMPurify.sanitize(`<strong>💡 Warning: ${technique.warning.level} </strong>${technique.warning.description}`);
+                    warningDiv.appendChild(warningP);
+                    elements.modalBody.appendChild(warningDiv);
                 }
                 renderDetailSection('Implementation Strategies', technique.implementationStrategies);
                 renderDetailSection('Potential Tools - Open Source', technique.toolsOpenSource);

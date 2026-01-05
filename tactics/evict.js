@@ -816,6 +816,36 @@ export const evictTactic = {
                     "pillar": ["data", "infra"],
                     "phase": ["improvement"],
                     "description": "Employs cryptographic and physical methods to render AI data and models on storage media permanently unrecoverable. This is the core technical process for decommissioning AI assets, ensuring compliance with data protection regulations and preventing future data leakage.",
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0025 Exfiltration via Cyber Means",
+                                "AML.T0036 Data from Information Repositories"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Data Exfiltration (L2)",
+                                "Model Stealing (L1, from residual artifacts)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM02:2025 Sensitive Information Disclosure"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML03:2023 Model Inversion Attack",
+                                "ML04:2023 Membership Inference Attack",
+                                "ML05:2023 Model Theft"
+                            ]
+                        }
+                    ],
                     "implementationStrategies": [
                         {
                             "strategy": "Perform crypto-shredding by destroying the encryption keys for model/data storage at end-of-life.",
@@ -842,6 +872,37 @@ export const evictTactic = {
                     "pillar": ["model", "data", "infra"],
                     "phase": ["improvement"],
                     "description": "Defines the technical process for securely transferring ownership of an AI asset to another entity. This involves cryptographic verification of the transferred artifact and a corresponding secure deletion of the original asset to prevent residual security risks.",
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0025 Exfiltration via Cyber Means",
+                                "AML.T0048.004 External Harms: AI Intellectual Property Theft",
+                                "AML.T0010 AI Supply Chain Compromise"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Data Exfiltration (L2)",
+                                "Model Stealing (L1, from retained copies)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM02:2025 Sensitive Information Disclosure",
+                                "LLM03:2025 Supply Chain"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML05:2023 Model Theft",
+                                "ML06:2023 AI Supply Chain Attacks"
+                            ]
+                        }
+                    ],
                     "implementationStrategies": [
                         {
                             "strategy": "Package, encrypt, sign, and attest AI assets before transfer to a new owner.",
