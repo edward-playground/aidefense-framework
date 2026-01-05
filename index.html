@@ -538,8 +538,9 @@
             margin-bottom: 0.5rem;
         }
 
+        /* Controls line spacing for list items including defendsAgainst items */
         .modal-content li {
-            margin-bottom: 0.375rem;
+            margin-bottom: 0.25rem;
         }
 
         .modal-content a {
@@ -592,10 +593,43 @@
             color: var(--modal-close-btn-hover-text);
         }
 
-        .defends-against-framework {
-            font-weight: 500;
+        /* Framework title styling (MITRE ATLAS, MAESTRO, OWASP, etc.)
+           - font-size: controls title size
+           - margin-bottom: controls gap between title and first item */
+        .modal-content p.defends-against-framework {
+            font-size: 1rem;
+            font-weight: 600;
             color: var(--technique-item-text);
             opacity: 0.9;
+            margin-bottom: 0;
+        }
+
+        /* Defends Against list items styling
+           - font-size: controls item text size
+           - border-spacing: controls gap between items (vertical)
+           - line-height: controls line height within each item */
+        .defends-against-list {
+            display: table;
+            border-collapse: separate;
+            border-spacing: 0 8px;
+            margin-left: 1rem;
+            font-size: 0.875rem;
+            line-height: 1.7;
+        }
+
+        .defends-against-item {
+            display: table-row;
+        }
+
+        .defends-against-item::before {
+            content: '•';
+            display: table-cell;
+            width: 1rem;
+            text-align: left;
+        }
+
+        .defends-against-item-text {
+            display: table-cell;
         }
 
         .site-footer {
@@ -1410,7 +1444,8 @@
             function renderDetailSection(title, items) {
                 if (!items || items.length === 0) return;
                 const section = createElement('div', { className: 'mt-4' });
-                section.appendChild(createElement('h3', { className: 'font-semibold text-lg mb-2', textContent: title + ':' }));
+                const titleSize = title.startsWith('Potential Tools') ? 'text-base' : 'text-lg';
+                section.appendChild(createElement('h3', { className: `font-semibold ${titleSize} mb-2`, textContent: title + ':' }));
                 if (title === 'Implementation Strategies') {
                     const container = createElement('div', { className: 'strategy-accordion-container' });
                     items.forEach(strategy => {
@@ -1443,12 +1478,12 @@
             function renderDefendsAgainstSection(defendsAgainst) {
                 if (!defendsAgainst || defendsAgainst.length === 0) return;
                 const section = createElement('div', { className: 'mt-4' });
-                section.appendChild(createElement('h4', { className: 'font-semibold text-md mb-2', textContent: 'Defends Against:' }));
+                section.appendChild(createElement('h3', { className: 'font-semibold text-base mb-2', textContent: 'Defends Against:' }));
                 defendsAgainst.forEach(da => {
                     const daDiv = createElement('div', { className: 'mb-2' });
-                    daDiv.innerHTML += `<p class="defends-against-framework text-sm">${DOMPurify.sanitize(da.framework)}:</p>`;
-                    const itemsList = createElement('ul', { className: 'list-disc list-inside ml-4 text-xs opacity-90 space-y-0.5' });
-                    da.items.forEach(item => itemsList.innerHTML += `<li>${DOMPurify.sanitize(item)}</li>`);
+                    daDiv.innerHTML += `<p class="defends-against-framework">${DOMPurify.sanitize(da.framework)}:</p>`;
+                    const itemsList = createElement('div', { className: 'defends-against-list opacity-90' });
+                    da.items.forEach(item => itemsList.innerHTML += `<div class="defends-against-item"><span class="defends-against-item-text">${DOMPurify.sanitize(item)}</span></div>`);
                     daDiv.appendChild(itemsList);
                     section.appendChild(daDiv);
                 });
