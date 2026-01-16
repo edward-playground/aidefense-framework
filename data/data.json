@@ -1,8 +1,8 @@
 {
   "version": {
     "schemaVersion": "1.0",
-    "dataVersion": "2026.01.04",
-    "generatedAt": "2026-01-04T12:56:09.783Z",
+    "dataVersion": "2026.01.16",
+    "generatedAt": "2026-01-16T00:10:28.091Z",
     "source": "bundled"
   },
   "tactics": [
@@ -10324,6 +10324,343 @@
             "context",
             "prompt injection",
             "data poisoning"
+          ]
+        },
+        {
+          "id": "AID-D-015",
+          "name": "User Trust Calibration & High-Risk Action Confirmation",
+          "description": "Close the last-mile gap for human-agent trust by surfacing backend trust/verification signals to the user experience and by enforcing explicit confirmation flows for high-risk actions. Even with strong backend filtering, users can still be socially engineered by plausible outputs or be surprised by autonomous actions. This technique standardizes trust metadata, UI warnings, and step-up confirmations for actions with real-world impact.",
+          "pillar": "app",
+          "phase": "operation",
+          "defendsAgainst": [
+            {
+              "framework": "MITRE ATLAS",
+              "items": [
+                "AML.T0052: Phishing",
+                "AML.T0048.002: External Harms: Societal Harm",
+                "AML.T0048.000: External Harms: Financial Harm",
+                "AML.T0067: LLM Trusted Output Components Manipulation"
+              ]
+            },
+            {
+              "framework": "MAESTRO",
+              "items": [
+                "Inaccurate Agent Capability Description (L7)",
+                "Agent Tool Misuse (L7)",
+                "Data Exfiltration (L2, via coerced user approvals)"
+              ]
+            },
+            {
+              "framework": "OWASP LLM Top 10 2025",
+              "items": [
+                "LLM09:2025 Misinformation",
+                "LLM06:2025 Excessive Agency",
+                "LLM05:2025 Improper Output Handling",
+                "LLM02:2025 Sensitive Information Disclosure"
+              ]
+            },
+            {
+              "framework": "OWASP ML Top 10 2023",
+              "items": [
+                "ML09:2023 Output Integrity Attack"
+              ]
+            }
+          ],
+          "implementationStrategies": [],
+          "toolsOpenSource": [],
+          "toolsCommercial": [],
+          "subTechniques": [
+            {
+              "id": "AID-D-015.001",
+              "name": "Trust Metadata Exposure (Verification/Provenance Signals)",
+              "description": "Expose standardized trust metadata in API responses so front-ends can consistently display warnings, provenance, and verification status. Signals may include source diversity, verification state, signed memory validity, and tool attestation status. The goal is consistent trust calibration and reduced susceptibility to targeted misinformation.",
+              "pillar": "app",
+              "phase": "operation",
+              "implementationStrategies": [
+                "Return a schema-versioned trust metadata object (trust_score, verification_state, source_diversity, signed_memory_valid, tool_attestation) for every response and tool plan; log it for audit after redaction."
+              ],
+              "toolsOpenSource": [
+                "OpenTelemetry (trace attributes for trust signals)",
+                "JSON Schema (contract for trust metadata)",
+                "FastAPI (API middleware patterns)"
+              ],
+              "toolsCommercial": [
+                "Datadog (dashboards/alerts for trust signal anomalies)",
+                "Splunk (analysis of trust signal distributions)"
+              ],
+              "defendsAgainst": [
+                {
+                  "framework": "MITRE ATLAS",
+                  "items": [
+                    "AML.T0052: Phishing",
+                    "AML.T0067: LLM Trusted Output Components Manipulation"
+                  ]
+                },
+                {
+                  "framework": "OWASP LLM Top 10 2025",
+                  "items": [
+                    "LLM09:2025 Misinformation",
+                    "LLM05:2025 Improper Output Handling"
+                  ]
+                }
+              ],
+              "keywords": [
+                "trust",
+                "metadata",
+                "exposure",
+                "verification",
+                "provenance",
+                "signals",
+                "opentelemetry",
+                "json",
+                "fastapi",
+                "datadog",
+                "splunk",
+                "audit"
+              ]
+            },
+            {
+              "id": "AID-D-015.002",
+              "name": "High-Risk Action Step-Up & Out-of-Band Confirmation",
+              "description": "Require explicit user confirmation (and optionally out-of-band verification) before executing high-risk actions such as transferring funds, changing IAM permissions, deleting resources, or exporting sensitive data. This reduces social engineering and surprise autonomy even if the model is manipulated.",
+              "pillar": "app",
+              "phase": "operation",
+              "implementationStrategies": [
+                "Enforce policy-driven confirmation gates for high-risk actions (step-up MFA, two-person approval, or out-of-band confirmation), bound to an immutable plan hash to prevent content swapping."
+              ],
+              "toolsOpenSource": [
+                "Keycloak (step-up authentication patterns)",
+                "OPA (policy decisions for when to require step-up)",
+                "WebAuthn (strong user confirmation)"
+              ],
+              "toolsCommercial": [
+                "Okta (step-up auth)",
+                "Duo Security (MFA/out-of-band confirmation)",
+                "Microsoft Entra ID (Conditional Access)"
+              ],
+              "defendsAgainst": [
+                {
+                  "framework": "MITRE ATLAS",
+                  "items": [
+                    "AML.T0048.000: Financial Harm",
+                    "AML.T0052: Phishing"
+                  ]
+                },
+                {
+                  "framework": "OWASP LLM Top 10 2025",
+                  "items": [
+                    "LLM06:2025 Excessive Agency",
+                    "LLM02:2025 Sensitive Information Disclosure"
+                  ]
+                }
+              ],
+              "keywords": [
+                "high-risk",
+                "action",
+                "step-up",
+                "out-of-band",
+                "confirmation",
+                "keycloak",
+                "opa",
+                "webauthn",
+                "okta",
+                "duo",
+                "microsoft",
+                "verification",
+                "permissions",
+                "sensitive"
+              ]
+            }
+          ],
+          "url": "https://aidefend.net",
+          "keywords": [
+            "user",
+            "trust",
+            "calibration",
+            "high-risk",
+            "action",
+            "confirmation",
+            "verification",
+            "filtering",
+            "autonomous",
+            "data exfiltration"
+          ]
+        },
+        {
+          "id": "AID-D-016",
+          "name": "Rogue Agent Discovery, Reputation & Quarantine Pipeline",
+          "description": "Establish continuous governance for agent identity, emergence, and behavior by building a discovery and reputation pipeline that detects unknown or compromised agents, scores risk, and automatically quarantines or evicts them. This creates a closed-loop: discover → score → restrict/quarantine → investigate → restore/evict, with full auditability.",
+          "pillar": "infra",
+          "phase": "operation",
+          "defendsAgainst": [
+            {
+              "framework": "MITRE ATLAS",
+              "items": [
+                "AML.T0053: AI Agent Tool Invocation",
+                "AML.T0061: LLM Prompt Self-Replication",
+                "AML.T0072: Reverse Shell",
+                "AML.T0050: Command and Scripting Interpreter"
+              ]
+            },
+            {
+              "framework": "MAESTRO",
+              "items": [
+                "Compromised Agent Registry (L7)",
+                "Lateral Movement (Cross-Layer)",
+                "Agent Tool Misuse (L7)"
+              ]
+            },
+            {
+              "framework": "OWASP LLM Top 10 2025",
+              "items": [
+                "LLM06:2025 Excessive Agency",
+                "LLM10:2025 Unbounded Consumption",
+                "LLM05:2025 Improper Output Handling"
+              ]
+            },
+            {
+              "framework": "OWASP ML Top 10 2023",
+              "items": [
+                "ML06:2023 AI Supply Chain Attacks"
+              ]
+            }
+          ],
+          "implementationStrategies": [],
+          "toolsOpenSource": [],
+          "toolsCommercial": [],
+          "subTechniques": [
+            {
+              "id": "AID-D-016.001",
+              "name": "Agent Graph Baseline & New-Agent Discovery",
+              "description": "Build a baseline of expected agent identities and communication edges (agent graph). Detect new/unknown agents, unusual fan-out patterns, and anomalous call paths using service mesh and registry telemetry. This provides early warning for rogue agents and self-replication patterns.",
+              "pillar": "infra",
+              "phase": "operation",
+              "implementationStrategies": [
+                "Maintain a versioned agent registry baseline and alert on unknown agent identities or new communication edges, using stable identity keys (SPIFFE IDs/service accounts) and time-windowed anomaly detection."
+              ],
+              "toolsOpenSource": [
+                "Istio (service mesh telemetry)",
+                "Envoy (L7 telemetry primitives)",
+                "SPIFFE/SPIRE (workload identity)",
+                "OpenTelemetry (traces/metrics/logs)",
+                "Prometheus (metrics + alerting)"
+              ],
+              "toolsCommercial": [
+                "Datadog",
+                "Splunk",
+                "Microsoft Sentinel (SIEM)"
+              ],
+              "defendsAgainst": [
+                {
+                  "framework": "MITRE ATLAS",
+                  "items": [
+                    "AML.T0061: LLM Prompt Self-Replication",
+                    "AML.T0053: AI Agent Tool Invocation"
+                  ]
+                },
+                {
+                  "framework": "MAESTRO",
+                  "items": [
+                    "Compromised Agent Registry (L7)",
+                    "Lateral Movement (Cross-Layer)"
+                  ]
+                }
+              ],
+              "keywords": [
+                "agent",
+                "graph",
+                "baseline",
+                "new-agent",
+                "discovery",
+                "istio",
+                "envoy",
+                "spiffe/spire",
+                "opentelemetry",
+                "prometheus",
+                "datadog",
+                "splunk",
+                "microsoft",
+                "agents",
+                "anomaly detection"
+              ]
+            },
+            {
+              "id": "AID-D-016.002",
+              "name": "Reputation Scoring → Quarantine → Evict/Restore Closed Loop",
+              "description": "Score agent reputation continuously using signals (unknown identity, signature failures, abnormal tool usage, egress anomalies). Automatically quarantine by reducing privileges, isolating network, and limiting tool access. Provide clear paths to evict (kill/disable) or restore (post-incident) with auditable approvals.",
+              "pillar": "infra",
+              "phase": "operation",
+              "implementationStrategies": [
+                "Define a policy-auditable reputation score using structured events, time-window aggregation, de-duplication, and time decay; auto-quarantine when thresholds are crossed.",
+                "Provide a staged restore/evict procedure with explicit approvals, immutable audit logs, and post-incident safe-mode monitoring."
+              ],
+              "toolsOpenSource": [
+                "OPA (policy-based quarantine decisions)",
+                "Kubernetes NetworkPolicy (isolation)",
+                "Istio AuthorizationPolicy (L7 enforcement)",
+                "OpenTelemetry (security events)",
+                "Falco (runtime alerts)"
+              ],
+              "toolsCommercial": [
+                "Palo Alto Prisma Cloud",
+                "CrowdStrike (host isolation/containment in some environments)",
+                "SentinelOne (process kill/isolation in some environments)",
+                "Splunk SOAR (automation playbooks)"
+              ],
+              "defendsAgainst": [
+                {
+                  "framework": "MITRE ATLAS",
+                  "items": [
+                    "AML.T0072: Reverse Shell",
+                    "AML.T0050: Command and Scripting Interpreter",
+                    "AML.T0053: AI Agent Tool Invocation"
+                  ]
+                },
+                {
+                  "framework": "MAESTRO",
+                  "items": [
+                    "Data Exfiltration (L2)",
+                    "Agent Tool Misuse (L7)"
+                  ]
+                },
+                {
+                  "framework": "OWASP LLM Top 10 2025",
+                  "items": [
+                    "LLM06:2025 Excessive Agency",
+                    "LLM02:2025 Sensitive Information Disclosure"
+                  ]
+                }
+              ],
+              "keywords": [
+                "reputation",
+                "scoring",
+                "quarantine",
+                "evict",
+                "restore",
+                "closed",
+                "loop",
+                "opa",
+                "kubernetes",
+                "istio",
+                "opentelemetry",
+                "falco",
+                "palo",
+                "crowdstrike",
+                "sentinelone"
+              ]
+            }
+          ],
+          "url": "https://aidefend.net",
+          "keywords": [
+            "rogue",
+            "agent",
+            "discovery",
+            "reputation",
+            "quarantine",
+            "pipeline",
+            "compromised",
+            "agents",
+            "supply chain"
           ]
         }
       ]
