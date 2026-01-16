@@ -8,6 +8,7 @@ LOCAL_AUDIT_README.md
 *.log
 *.tmp
 _debug*
+.vscode/
 
 # Dev tools (local only)
 devtools/

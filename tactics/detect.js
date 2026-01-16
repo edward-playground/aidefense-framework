@@ -2483,6 +2483,259 @@ export const detectTactic = {
                     "toolsCommercial": ["Datadog", "New Relic", "Splunk Observability"]
                 }
             ]
+        },
+        {
+            "id": "AID-D-015",
+            "name": "User Trust Calibration & High-Risk Action Confirmation",
+            "description": "Close the last-mile gap for human-agent trust by surfacing backend trust/verification signals to the user experience and by enforcing explicit confirmation flows for high-risk actions. Even with strong backend filtering, users can still be socially engineered by plausible outputs or be surprised by autonomous actions. This technique standardizes trust metadata, UI warnings, and step-up confirmations for actions with real-world impact.",
+            "defendsAgainst": [
+                {
+                    "framework": "MITRE ATLAS",
+                    "items": [
+                        "AML.T0052: Phishing",
+                        "AML.T0048.002: External Harms: Societal Harm",
+                        "AML.T0048.000: External Harms: Financial Harm",
+                        "AML.T0067: LLM Trusted Output Components Manipulation"
+                    ]
+                },
+                {
+                    "framework": "MAESTRO",
+                    "items": [
+                        "Inaccurate Agent Capability Description (L7)",
+                        "Agent Tool Misuse (L7)",
+                        "Data Exfiltration (L2, via coerced user approvals)"
+                    ]
+                },
+                {
+                    "framework": "OWASP LLM Top 10 2025",
+                    "items": [
+                        "LLM09:2025 Misinformation",
+                        "LLM06:2025 Excessive Agency",
+                        "LLM05:2025 Improper Output Handling",
+                        "LLM02:2025 Sensitive Information Disclosure"
+                    ]
+                },
+                {
+                    "framework": "OWASP ML Top 10 2023",
+                    "items": [
+                        "ML09:2023 Output Integrity Attack"
+                    ]
+                }
+            ],
+            "subTechniques": [
+                {
+                    "id": "AID-D-015.001",
+                    "name": "Trust Metadata Exposure (Verification/Provenance Signals)",
+                    "pillar": ["app", "data"],
+                    "phase": ["operation"],
+                    "description": "Expose standardized trust metadata in API responses so front-ends can consistently display warnings, provenance, and verification status. Signals may include source diversity, verification state, signed memory validity, and tool attestation status. The goal is consistent trust calibration and reduced susceptibility to targeted misinformation.",
+                    "toolsOpenSource": [
+                        "OpenTelemetry (trace attributes for trust signals)",
+                        "JSON Schema (contract for trust metadata)",
+                        "FastAPI (API middleware patterns)"
+                    ],
+                    "toolsCommercial": [
+                        "Datadog (dashboards/alerts for trust signal anomalies)",
+                        "Splunk (analysis of trust signal distributions)"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0052: Phishing",
+                                "AML.T0067: LLM Trusted Output Components Manipulation"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM09:2025 Misinformation",
+                                "LLM05:2025 Improper Output Handling"
+                            ]
+                        }
+                    ],
+                    "implementationStrategies": [
+                        {
+                            "strategy": "Return a schema-versioned trust metadata object (trust_score, verification_state, source_diversity, signed_memory_valid, tool_attestation) for every response and tool plan; log it for audit after redaction.",
+                            "howTo": "<h5>Concept:</h5><p>Trust signals must be machine-readable, stable, and versioned. UI should not infer trust heuristics ad-hoc. Backend must compute and attach trust metadata with a contract (JSON Schema / Pydantic), and audit logs must redact sensitive fields.</p><h5>Example: versioned contract + FastAPI middleware</h5><pre><code># File: api/trust_metadata.py\nfrom __future__ import annotations\n\nimport os\nimport time\nfrom enum import Enum\nfrom typing import Dict, List, Optional\nfrom pydantic import BaseModel, Field\n\n\nclass VerificationState(str, Enum):\n    VERIFIED = \"VERIFIED\"\n    PARTIALLY_VERIFIED = \"PARTIALLY_VERIFIED\"\n    UNVERIFIED = \"UNVERIFIED\"\n\n\nclass ToolAttestation(BaseModel):\n    tool_id: str\n    status: str = Field(..., description=\"VERIFIED | UNVERIFIED | FAILED\")\n    version: Optional[str] = None\n    artifact_digest: Optional[str] = None\n    attestor: Optional[str] = None\n\n\nclass TrustMetadataV1(BaseModel):\n    schema_version: str = \"trust-metadata.v1\"\n    computed_at: int\n    trust_score: float = Field(..., ge=0.0, le=1.0)\n    verification_state: VerificationState\n    source_diversity: float = Field(..., ge=0.0, le=1.0)\n    signed_memory_valid: bool\n    tool_attestations: List[ToolAttestation] = []\n    reasons: List[str] = []\n\n\ndef compute_trust_metadata() -> TrustMetadataV1:\n    # Production: derive from detectors/attestors (not UI).\n    # Keep deterministic inputs; persist reasons for audits.\n    return TrustMetadataV1(\n        computed_at=int(time.time()),\n        trust_score=0.45,\n        verification_state=VerificationState.UNVERIFIED,\n        source_diversity=0.2,\n        signed_memory_valid=True,\n        tool_attestations=[\n            ToolAttestation(tool_id=\"payments_tool\", status=\"VERIFIED\", version=\"1.3.2\", artifact_digest=\"sha256:...\", attestor=\"cosign\")\n        ],\n        reasons=[\"Low source diversity\", \"Response not independently verified\"]\n    )\n\n\n# In FastAPI route handler:\n#   meta = compute_trust_metadata()\n#   return {\"answer\": answer, \"trust_metadata\": meta.model_dump()}\n\n# Logging note (production):\n# - Log trust_metadata with redaction: do not log raw sources/PII.\n# - Add OTel attributes: trust_score, verification_state for correlation.\n</code></pre><p><strong>Action:</strong> Define and version the trust metadata schema. Attach it to every agent response and every tool plan. Ensure metadata is computed from backend controls (verification/attestation) and is logged with redaction for audits.</p>"
+                        }
+                    ]
+                },
+                {
+                    "id": "AID-D-015.002",
+                    "name": "High-Risk Action Step-Up & Out-of-Band Confirmation",
+                    "pillar": ["app"],
+                    "phase": ["operation"],
+                    "description": "Require explicit user confirmation (and optionally out-of-band verification) before executing high-risk actions such as transferring funds, changing IAM permissions, deleting resources, or exporting sensitive data. This reduces social engineering and surprise autonomy even if the model is manipulated.",
+                    "toolsOpenSource": [
+                        "Keycloak (step-up authentication patterns)",
+                        "OPA (policy decisions for when to require step-up)",
+                        "WebAuthn (strong user confirmation)"
+                    ],
+                    "toolsCommercial": [
+                        "Okta (step-up auth)",
+                        "Duo Security (MFA/out-of-band confirmation)",
+                        "Microsoft Entra ID (Conditional Access)"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0048.000: Financial Harm",
+                                "AML.T0052: Phishing"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM06:2025 Excessive Agency",
+                                "LLM02:2025 Sensitive Information Disclosure"
+                            ]
+                        }
+                    ],
+                    "implementationStrategies": [
+                        {
+                            "strategy": "Enforce policy-driven confirmation gates for high-risk actions (step-up MFA, two-person approval, or out-of-band confirmation), bound to an immutable plan hash to prevent content swapping.",
+                            "howTo": "<h5>Concept:</h5><p>Execution must pass a deterministic gate that cannot be bypassed by prompt injection. The user must approve an immutable representation of the plan (plan_hash). Store approvals as auditable records with nonce + expiry to prevent replay. Use OPA for policy decisions (who needs step-up, what actions require two-person rule).</p><h5>Example: plan-hash bound confirmation gate</h5><pre><code># File: action_gates/confirmation_gate.py\nfrom __future__ import annotations\n\nimport os\nimport time\nimport json\nimport hashlib\nfrom dataclasses import dataclass\nfrom typing import Dict, Optional\n\nHIGH_RISK_ACTIONS = {\"TRANSFER_FUNDS\", \"CHANGE_IAM\", \"EXPORT_CUSTOMER_DATA\", \"DELETE_RESOURCE\"}\nCONFIRM_TTL_SECONDS = int(os.getenv(\"CONFIRM_TTL_SECONDS\", \"600\"))  # 10 minutes\n\n\n@dataclass(frozen=True)\nclass ActionPlan:\n    action_type: str\n    target: str\n    parameters: Dict\n\n    def canonical(self) -> bytes:\n        payload = {\n            \"action_type\": self.action_type,\n            \"target\": self.target,\n            \"parameters\": self.parameters\n        }\n        # Canonical JSON to produce stable hashes\n        return json.dumps(payload, sort_keys=True, separators=(\",\", \":\")).encode(\"utf-8\")\n\n\ndef plan_hash(plan: ActionPlan) -> str:\n    return hashlib.sha256(plan.canonical()).hexdigest()\n\n\ndef require_step_up(action_type: str, trust_score: float) -> bool:\n    if action_type in HIGH_RISK_ACTIONS:\n        return True\n    if trust_score < 0.5:\n        return True\n    return False\n\n\ndef create_confirmation_challenge(user_id: str, plan_h: str) -> Dict:\n    # Production: store to DB with status=PENDING; include nonce + expiry; optionally require WebAuthn/OOB\n    now = int(time.time())\n    challenge = {\n        \"user_id\": user_id,\n        \"plan_hash\": plan_h,\n        \"nonce\": hashlib.sha256(f\"{user_id}:{plan_h}:{now}\".encode()).hexdigest(),\n        \"issued_ts\": now,\n        \"expires_ts\": now + CONFIRM_TTL_SECONDS\n    }\n    return challenge\n\n\n# Orchestrator pattern (must be enforced server-side):\n# if require_step_up(plan.action_type, trust_metadata.trust_score):\n#     h = plan_hash(plan)\n#     challenge = create_confirmation_challenge(user_id, h)\n#     block execution until user approves challenge via MFA/OOB\n#     write audit log: user_id, plan_hash, decision, policy_version, timestamps\n</code></pre><p><strong>Action:</strong> Bind approvals to <code>plan_hash</code> and enforce expiry/nonce to prevent replay. Store approvals in immutable audit logs (user identity, timestamp, plan_hash, policy version). Implement the gate inside the orchestrator/tool-router so it cannot be bypassed by injected prompts.</p>"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": "AID-D-016",
+            "name": "Rogue Agent Discovery, Reputation & Quarantine Pipeline",
+            "description": "Establish continuous governance for agent identity, emergence, and behavior by building a discovery and reputation pipeline that detects unknown or compromised agents, scores risk, and automatically quarantines or evicts them. This creates a closed-loop: discover → score → restrict/quarantine → investigate → restore/evict, with full auditability.",
+            "defendsAgainst": [
+                {
+                    "framework": "MITRE ATLAS",
+                    "items": [
+                        "AML.T0053: AI Agent Tool Invocation",
+                        "AML.T0061: LLM Prompt Self-Replication",
+                        "AML.T0072: Reverse Shell",
+                        "AML.T0050: Command and Scripting Interpreter"
+                    ]
+                },
+                {
+                    "framework": "MAESTRO",
+                    "items": [
+                        "Compromised Agent Registry (L7)",
+                        "Lateral Movement (Cross-Layer)",
+                        "Agent Tool Misuse (L7)"
+                    ]
+                },
+                {
+                    "framework": "OWASP LLM Top 10 2025",
+                    "items": [
+                        "LLM06:2025 Excessive Agency",
+                        "LLM10:2025 Unbounded Consumption",
+                        "LLM05:2025 Improper Output Handling"
+                    ]
+                },
+                {
+                    "framework": "OWASP ML Top 10 2023",
+                    "items": [
+                        "ML06:2023 AI Supply Chain Attacks"
+                    ]
+                }
+            ],
+            "subTechniques": [
+                {
+                    "id": "AID-D-016.001",
+                    "name": "Agent Graph Baseline & New-Agent Discovery",
+                    "pillar": ["infra", "app"],
+                    "phase": ["operation"],
+                    "description": "Build a baseline of expected agent identities and communication edges (agent graph). Detect new/unknown agents, unusual fan-out patterns, and anomalous call paths using service mesh and registry telemetry. This provides early warning for rogue agents and self-replication patterns.",
+                    "toolsOpenSource": [
+                        "Istio (service mesh telemetry)",
+                        "Envoy (L7 telemetry primitives)",
+                        "SPIFFE/SPIRE (workload identity)",
+                        "OpenTelemetry (traces/metrics/logs)",
+                        "Prometheus (metrics + alerting)"
+                    ],
+                    "toolsCommercial": [
+                        "Datadog",
+                        "Splunk",
+                        "Microsoft Sentinel (SIEM)"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0061: LLM Prompt Self-Replication",
+                                "AML.T0053: AI Agent Tool Invocation"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Compromised Agent Registry (L7)",
+                                "Lateral Movement (Cross-Layer)"
+                            ]
+                        }
+                    ],
+                    "implementationStrategies": [
+                        {
+                            "strategy": "Maintain a versioned agent registry baseline and alert on unknown agent identities or new communication edges, using stable identity keys (SPIFFE IDs/service accounts) and time-windowed anomaly detection.",
+                            "howTo": "<h5>Concept:</h5><p>Production-grade discovery requires (1) stable identities, (2) versioned baselines with change control, (3) time-windowed detection to reduce noise, and (4) SIEM-grade event schemas. Avoid hard-coded sets and avoid mixing display names with identity keys.</p><h5>Example: baseline loader + edge monitor </h5><pre><code># File: governance/agent_graph_monitor.py\nfrom __future__ import annotations\n\nimport os\nimport time\nimport json\nimport logging\nfrom dataclasses import dataclass\nfrom typing import Dict, Set, Tuple, Optional\n\n# Junior-friendly structured logging (JSON payload in message)\nlogger = logging.getLogger(\"aidefend.agent_graph\")\nlogger.setLevel(os.getenv(\"LOG_LEVEL\", \"INFO\"))\n\n\n@dataclass(frozen=True)\nclass EdgeObservation:\n    src_id: str                 # e.g., spiffe://prod/ns/default/sa/orchestrator\n    dst_id: str                 # e.g., spiffe://prod/ns/default/sa/retriever\n    observed_ts: int            # epoch seconds\n    trace_id: Optional[str] = None\n\n\n@dataclass(frozen=True)\nclass Baseline:\n    version: str\n    allowed_agents: Set[str]\n    allowed_edges: Set[Tuple[str, str]]\n\n\ndef load_baseline_from_config() -> Baseline:\n    \"\"\"\n    Production expectation:\n    - Baseline is sourced from a config store (GitOps repo / CMDB / registry service).\n    - Updates are code-reviewed and deployed with an explicit version.\n    \"\"\"\n    version = os.getenv(\"AGENT_BASELINE_VERSION\", \"v1\")\n    # Minimal demo: env var JSON to keep the snippet self-contained.\n    # In production: load from config file / service + signature validation.\n    agents_json = os.getenv(\"AGENT_BASELINE_AGENTS_JSON\", \"[]\")\n    edges_json = os.getenv(\"AGENT_BASELINE_EDGES_JSON\", \"[]\")\n\n    allowed_agents = set(json.loads(agents_json))\n    allowed_edges = set(tuple(x) for x in json.loads(edges_json))\n\n    return Baseline(version=version, allowed_agents=allowed_agents, allowed_edges=allowed_edges)\n\n\ndef emit_security_event(emit_fn, event: Dict) -> None:\n    \"\"\"Normalize security events to a stable schema.\"\"\"\n    emit_fn(event)\n\n\ndef on_edge_observed(obs: EdgeObservation, baseline: Baseline, emit_fn) -> None:\n    unknown_agent = (obs.src_id not in baseline.allowed_agents) or (obs.dst_id not in baseline.allowed_agents)\n    new_edge = (obs.src_id, obs.dst_id) not in baseline.allowed_edges\n\n    if not unknown_agent and not new_edge:\n        return\n\n    # Severity guidance (tune in policy): unknown identity is higher than new edge.\n    if unknown_agent:\n        evt = {\n            \"event_type\": \"UNKNOWN_AGENT_IDENTITY\",\n            \"severity\": \"HIGH\",\n            \"baseline_version\": baseline.version,\n            \"observed_ts\": obs.observed_ts,\n            \"src_id\": obs.src_id,\n            \"dst_id\": obs.dst_id,\n            \"trace_id\": obs.trace_id,\n            \"reason\": \"Observed agent identity not in allowlisted baseline\",\n        }\n        logger.warning(json.dumps(evt, ensure_ascii=False))\n        emit_security_event(emit_fn, evt)\n\n    if new_edge:\n        evt = {\n            \"event_type\": \"NEW_AGENT_EDGE\",\n            \"severity\": \"MEDIUM\",\n            \"baseline_version\": baseline.version,\n            \"observed_ts\": obs.observed_ts,\n            \"src_id\": obs.src_id,\n            \"dst_id\": obs.dst_id,\n            \"trace_id\": obs.trace_id,\n            \"reason\": \"Observed communication edge not in baseline (possible drift/replication/lateral movement)\",\n        }\n        logger.warning(json.dumps(evt, ensure_ascii=False))\n        emit_security_event(emit_fn, evt)\n\n\n# Ingestion note (production):\n# - Derive src_id/dst_id from service mesh telemetry (Istio/Envoy) using workload identity (SPIFFE IDs / service accounts).\n# - Use a time-windowed aggregator to detect fan-out anomalies (e.g., N new unique dsts in 5 minutes).\n</code></pre><p><strong>Action:</strong> Source baseline from a controlled registry (GitOps/CMDB) with explicit <code>baseline_version</code>. Derive identities from service mesh telemetry (SPIFFE ID/service account), and feed these events into the reputation/quarantine loop (AID-D-016.002). Add time-window aggregation for fan-out anomalies to reduce noise and improve signal quality.</p>"
+                        }
+                    ]
+                },
+                {
+                    "id": "AID-D-016.002",
+                    "name": "Reputation Scoring → Quarantine → Evict/Restore Closed Loop",
+                    "pillar": ["infra", "app", "data"],
+                    "phase": ["operation", "response"],
+                    "description": "Score agent reputation continuously using signals (unknown identity, signature failures, abnormal tool usage, egress anomalies). Automatically quarantine by reducing privileges, isolating network, and limiting tool access. Provide clear paths to evict (kill/disable) or restore (post-incident) with auditable approvals.",
+                    "toolsOpenSource": [
+                        "OPA (policy-based quarantine decisions)",
+                        "Kubernetes NetworkPolicy (isolation)",
+                        "Istio AuthorizationPolicy (L7 enforcement)",
+                        "OpenTelemetry (security events)",
+                        "Falco (runtime alerts)"
+                    ],
+                    "toolsCommercial": [
+                        "Palo Alto Prisma Cloud",
+                        "CrowdStrike (host isolation/containment in some environments)",
+                        "SentinelOne (process kill/isolation in some environments)",
+                        "Splunk SOAR (automation playbooks)"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0072: Reverse Shell",
+                                "AML.T0050: Command and Scripting Interpreter",
+                                "AML.T0053: AI Agent Tool Invocation"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Data Exfiltration (L2)",
+                                "Agent Tool Misuse (L7)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM06:2025 Excessive Agency",
+                                "LLM02:2025 Sensitive Information Disclosure"
+                            ]
+                        }
+                    ],
+                    "implementationStrategies": [
+                        {
+                            "strategy": "Define a policy-auditable reputation score using structured events, time-window aggregation, de-duplication, and time decay; auto-quarantine when thresholds are crossed.",
+                            "howTo": "<h5>Concept:</h5><p>Production scoring needs: structured events (type, timestamp, source, confidence), windowing (e.g., last 30 minutes), dedupe (avoid event storms), and decay (avoid permanent penalty). Every decision should emit a <em>decision record</em> containing inputs, weights, threshold, and policy version for auditability.</p><h5>Example: scoring with window + decay (Redis-backed)</h5><pre><code># File: governance/reputation_quarantine.py\nfrom __future__ import annotations\n\nimport os\nimport time\nimport json\nimport math\nimport logging\nfrom typing import Dict, List, Optional\nfrom dataclasses import dataclass\n\nlogger = logging.getLogger(\"aidefend.reputation\")\nlogger.setLevel(os.getenv(\"LOG_LEVEL\", \"INFO\"))\n\nWINDOW_SECONDS = int(os.getenv(\"REPUTATION_WINDOW_SECONDS\", \"1800\"))  # 30 minutes\nTHRESHOLD = int(os.getenv(\"REPUTATION_QUARANTINE_THRESHOLD\", \"70\"))\nDECAY_HALF_LIFE_SECONDS = int(os.getenv(\"REPUTATION_DECAY_HALF_LIFE_SECONDS\", \"900\"))  # 15 minutes\n\nWEIGHTS: Dict[str, int] = json.loads(os.getenv(\"REPUTATION_EVENT_WEIGHTS_JSON\", json.dumps({\n  \"UNKNOWN_AGENT_IDENTITY\": 40,\n  \"TOOL_SIGNATURE_VERIFY_FAIL\": 40,\n  \"EGRESS_ANOMALY\": 20,\n  \"ABNORMAL_FANOUT\": 15\n})))\n\n\n@dataclass(frozen=True)\nclass SecuritySignal:\n    event_type: str\n    observed_ts: int\n    source: str                 # e.g., istio, falco, tool-gateway\n    confidence: float = 1.0     # 0..1\n    dedupe_key: Optional[str] = None\n\n\ndef _decay_multiplier(age_seconds: int) -> float:\n    # Exponential decay: weight halves every half-life interval\n    if age_seconds <= 0:\n        return 1.0\n    return math.pow(0.5, age_seconds / float(DECAY_HALF_LIFE_SECONDS))\n\n\ndef score_signals(now_ts: int, signals: List[SecuritySignal]) -> Dict:\n    total = 0.0\n    contributions = []\n\n    for s in signals:\n        w = float(WEIGHTS.get(s.event_type, 0))\n        age = max(0, now_ts - s.observed_ts)\n        if age > WINDOW_SECONDS:\n            continue\n        m = _decay_multiplier(age)\n        c = w * m * float(s.confidence)\n        if c <= 0:\n            continue\n        total += c\n        contributions.append({\n            \"event_type\": s.event_type,\n            \"weight\": w,\n            \"age_seconds\": age,\n            \"decay_multiplier\": round(m, 4),\n            \"confidence\": s.confidence,\n            \"contribution\": round(c, 2)\n        })\n\n    decision = {\n        \"reputation_score\": int(round(total)),\n        \"threshold\": THRESHOLD,\n        \"window_seconds\": WINDOW_SECONDS,\n        \"half_life_seconds\": DECAY_HALF_LIFE_SECONDS,\n        \"contributions\": contributions\n    }\n    return decision\n\n\ndef should_quarantine(reputation_score: int) -> bool:\n    return reputation_score >= THRESHOLD\n\n\n# Storage note (production):\n# - Persist signals in Redis/stream/TSDB keyed by agent_id (to work across pods).\n# - Apply dedupe using dedupe_key + TTL to avoid event storms.\n# - Always emit a decision record to SIEM for audit.\n</code></pre><p><strong>Action:</strong> Store signals in a shared store (Redis/stream) so scoring is correct across replicas. Emit an immutable decision record (including policy version, weights, and contributions). If <code>should_quarantine</code> is true, trigger deterministic quarantine controls (NetworkPolicy/Istio AuthorizationPolicy/tool allowlist clamp), and log who/what/why for audit.</p>"
+                        },
+                        {
+                            "strategy": "Provide a staged restore/evict procedure with explicit approvals, immutable audit logs, and post-incident safe-mode monitoring.",
+                            "howTo": "<h5>Concept:</h5><p>Containment is not resolution. Evict/restore must be a controlled state machine with immutable audit trails. Restoration should start in safe mode (no external tools / reduced egress) and gradually re-enable capabilities based on verification and monitoring.</p><h5>Example: auditable state machine (operational playbook)</h5><pre><code># File: governance/quarantine_actions.md\n\n## States\n- NORMAL\n- QUARANTINED (network/tool isolation enforced)\n- EVICTED (identity disabled / workload removed)\n- RESTORING_SAFE_MODE (limited tools/egress + heightened monitoring)\n- RESTORED\n\n## Quarantine (automatic)\n- Apply restrictive Kubernetes NetworkPolicy (deny egress except SIEM/telemetry endpoints)\n- Apply Istio AuthorizationPolicy to deny high-risk tool routes\n- Remove tool permissions from orchestrator allowlist (deny-by-default)\n- Emit SIEM event: agent_id, score, triggers, baseline/policy version\n\n## Evict (requires approval)\n- Disable service account / SPIFFE identity (revocation)\n- Delete/scale-to-zero deployments\n- Revoke tokens/keys (KMS/Vault)\n- Create incident record (ticket) and attach evidence\n\n## Restore (requires dual sign-off)\n- Security + Engineering approvals recorded (who/when/why)\n- Restore in SAFE MODE for 24h:\n  - No external tools\n  - Egress only to required internal services\n  - Higher alert sensitivity\n- Gradually re-enable tools/egress after verification\n</code></pre><p><strong>Action:</strong> Keep restore/evict as auditable procedures with approvals. In regulated environments, require dual sign-off, immutable logs, and a defined safe-mode window with explicit re-enable criteria.</p>"
+                        }
+                    ]
+                }
+            ]
         }
     ]
 };
