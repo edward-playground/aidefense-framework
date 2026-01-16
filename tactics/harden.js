@@ -4712,7 +4712,7 @@ class GraphRobustnessVerifier:
           pillar: ["data"],
           phase: ["building", "operation"],
           description:
-            "Compute and store a cryptographic hash or digital signature per chunk at ingestion; verify on retrieval to detect tampering.",
+            "Provides fine-grained RAG data unit integrity by computing and storing cryptographic hashes or digital signatures per chunk at ingestion time, with verify-on-retrieval semantics to detect tampering before inclusion in LLM context. This micro-level integrity control complements macro-scale artifact integrity (AID-M-002.002) by protecting individual retrieval units within the vector index.",
           defendsAgainst: [
             {
               framework: "MITRE ATLAS",
@@ -4740,7 +4740,7 @@ class GraphRobustnessVerifier:
           implementationStrategies: [
             {
               strategy:
-                "Store SHA-256 per chunk and verify on retrieval before inclusion in context.",
+                "Hash each chunk payload and metadata at ingestion; verify integrity at retrieval time before inclusion in LLM context.",
               howTo:
                 "<h5>Concept:</h5><p>This refines content integrity verification from the whole-file level down to the individual chunks that a RAG system actually uses. This prevents an attacker from directly tampering with individual chunk content within the index database. To sign embeddings, sign a stable serialization of metadata (chunk_hash, model_id, precision, timestamp) rather than the raw float array to avoid float drift issues.</p><h5>Step 1: Compute and Store Hashes During Ingestion</h5><pre><code># File: rag_pipeline/ingestion.py\nimport hashlib\nfrom langchain.text_splitter import RecursiveCharacterTextSplitter\n\ndef process_and_hash_document(document_text: str, source_uri: str):\n    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)\n    documents = text_splitter.create_documents([document_text])\n    \n    for doc in documents:\n        chunk_bytes = doc.page_content.encode('utf-8')\n        doc.metadata['sha256_hash'] = hashlib.sha256(chunk_bytes).hexdigest()\n        doc.metadata['source_uri'] = source_uri\n    return documents\n</code></pre><h5>Step 2: Verify at Retrieval Time</h5><pre><code># File: rag_pipeline/retrieval.py\ndef retrieve_and_verify(query: str):\n    retrieved_docs = vector_db.similarity_search(query)\n    verified_docs = []\n    for doc in retrieved_docs:\n        stored_hash = doc.metadata.get('sha256_hash')\n        if not stored_hash: continue\n        \n        current_hash = hashlib.sha256(doc.page_content.encode('utf-8')).hexdigest()\n        if current_hash == stored_hash:\n            verified_docs.append(doc)\n        else:\n            log_security_event(f\"TAMPERING DETECTED in chunk from {doc.metadata['source_uri']}\")\n    return verified_docs</code></pre><p><strong>Action:</strong> Modify your RAG ingestion pipeline to compute and store a SHA-256 hash for each document chunk. In the retrieval pipeline, add a verification step to ensure the returned content matches its stored hash, alerting on any mismatch.</p>",
             },

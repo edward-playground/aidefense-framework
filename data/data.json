@@ -2,7 +2,7 @@
   "version": {
     "schemaVersion": "1.0",
     "dataVersion": "2026.01.16",
-    "generatedAt": "2026-01-16T00:10:28.091Z",
+    "generatedAt": "2026-01-16T16:31:26.899Z",
     "source": "bundled"
   },
   "tactics": [
@@ -313,11 +313,11 @@
             {
               "id": "AID-M-002.002",
               "name": "Cryptographic Integrity Verification",
-              "description": "Employs cryptographic hashing and digital signatures to create and verify a tamper-evident chain of custody for AI artifacts. This technique ensures that datasets, models, and other critical files are authentic and have not been altered or corrupted at any point in their lifecycle, from creation and storage to deployment and use. It provides a strong mathematical guarantee of artifact integrity.",
+              "description": "Employs cryptographic hashing and digital signatures to create and verify a tamper-evident chain of custody for macro-scale AI artifacts throughout their lifecycle. Focuses on whole-artifact integrity for datasets, model weights, container images, and manifests to ensure you deploy exactly what you built. This technique provides artifact lifecycle integrity from creation through storage to deployment, with provenance verification to prove authenticity and origin. For fine-grained chunk-level integrity in RAG pipelines, see AID-H-021.001.",
               "pillar": "data",
               "phase": "building",
               "implementationStrategies": [
-                "Generate and verify checksums (e.g., SHA-256) at critical pipeline stages.",
+                "Generate and verify whole-artifact checksums (e.g., SHA-256) for datasets, models, and container images at critical pipeline stages.",
                 "Digitally sign critical artifacts to prove authenticity and origin."
               ],
               "toolsOpenSource": [
@@ -372,6 +372,8 @@
                 "cloud",
                 "code",
                 "hashing",
+                "container",
+                "rag",
                 "pipeline",
                 "supply chain"
               ]
@@ -1003,15 +1005,15 @@
             },
             {
               "id": "AID-M-003.007",
-              "name": "Self-Supervised Discrepancy Analysis for GNN Backdoor Defense",
-              "description": "Employs self-supervised learning to train an auxiliary Graph Neural Network (GNN) model that learns the intrinsic semantic information and attribute importance of nodes without using potentially poisoned labels.  This process creates a trusted baseline model of 'normal' node characteristics. This baseline is then used as a reference to detect discrepancies—such as semantic drift or attribute over-emphasis—in a primary GNN trained on the potentially compromised data, which is a foundational step for identifying and mitigating backdoor attacks. ",
+              "name": "GNN Structural Baselining & Discrepancy Profiling",
+              "description": "Employs self-supervised learning during the validation phase to generate baseline artifacts for Graph Neural Network (GNN) backdoor defense. Trains an auxiliary GNN model that learns intrinsic semantic information and attribute importance of nodes without using potentially poisoned labels, producing clean embedding distributions, drift profiles, and discrepancy statistics. These baseline artifacts are persisted for use by downstream detection techniques (see AID-D-012.001). This technique does not perform alerting; it generates and stores the trusted reference state. Outputs: baselines/clean_node_embeddings.npy, baselines/node_semantic_drift.npy, baselines/primary_embeddings.npy (NumPy arrays).",
               "pillar": "model",
               "phase": "validation",
               "implementationStrategies": [
                 "Train an auxiliary GNN model using a self-supervised task to learn clean node representations.",
                 "Extract clean baseline embeddings and attribute importance from the auxiliary model.",
                 "Train the primary (potentially compromised) model using standard supervised learning.",
-                "Compute and log discrepancy metrics between the primary and auxiliary models for each node."
+                "Compute and persist discrepancy metrics between the primary and auxiliary models as baseline artifacts."
               ],
               "toolsOpenSource": [
                 "PyTorch Geometric, Deep Graph Library (DGL) (for GNN implementation)",
@@ -1054,13 +1056,11 @@
                 }
               ],
               "keywords": [
-                "self-supervised",
-                "discrepancy",
-                "analysis",
                 "gnn",
-                "backdoor",
-                "defense",
-                "backdoor attack",
+                "structural",
+                "baselining",
+                "discrepancy",
+                "profiling",
                 "neural network",
                 "pytorch",
                 "networkx",
@@ -1068,7 +1068,9 @@
                 "xai",
                 "graph",
                 "neural",
-                "semantic"
+                "backdoor",
+                "semantic",
+                "embedding"
               ]
             }
           ],
@@ -6670,11 +6672,11 @@
             {
               "id": "AID-H-021.001",
               "name": "Chunk-Level Integrity Signing",
-              "description": "Compute and store a cryptographic hash or digital signature per chunk at ingestion; verify on retrieval to detect tampering.",
+              "description": "Provides fine-grained RAG data unit integrity by computing and storing cryptographic hashes or digital signatures per chunk at ingestion time, with verify-on-retrieval semantics to detect tampering before inclusion in LLM context. This micro-level integrity control complements macro-scale artifact integrity (AID-M-002.002) by protecting individual retrieval units within the vector index.",
               "pillar": "data",
               "phase": "building",
               "implementationStrategies": [
-                "Store SHA-256 per chunk and verify on retrieval before inclusion in context."
+                "Hash each chunk payload and metadata at ingestion; verify integrity at retrieval time before inclusion in LLM context."
               ],
               "toolsOpenSource": [
                 "hashlib",
@@ -6723,8 +6725,11 @@
                 "aws",
                 "azure",
                 "google",
-                "retrieval",
+                "rag",
+                "llm",
                 "context",
+                "retrieval",
+                "vector",
                 "data poisoning"
               ]
             },
@@ -8200,12 +8205,12 @@
             {
               "id": "AID-D-004.001",
               "name": "Static Artifact Hash & Signature Verification",
-              "description": "Periodically compute and verify cryptographic hashes (e.g. SHA256) of stored model artifacts, datasets, and container image layers, and compare them against an authorized manifest or registry of approved versions. The goal is to detect any unauthorized modification, file replacement, or malicious payload insertion before deployment or promotion.",
+              "description": "Acts as the verifier and auditor for macro-scale artifact integrity established by AID-M-002.002. Computes and verifies cryptographic hashes of stored model artifacts, datasets, and container image layers against authorized manifests or registries. Detects unauthorized modifications, signature failures, and drift from approved baselines before deployment or promotion. This detection technique validates that artifacts signed during building remain untampered through the validation pipeline.",
               "pillar": "infra",
               "phase": "building",
               "implementationStrategies": [
-                "Keep authorized hash list in a write-once model registry.",
-                "Schedule recurring sha256sum or Tripwire checks over approved model artifacts.",
+                "Verify artifact hashes against authorized manifest in a write-once model registry.",
+                "Detect drift from baseline manifests using file integrity monitoring (sha256sum, Tripwire).",
                 "Trigger immediate security escalation if an artifact hash deviates or goes missing."
               ],
               "toolsOpenSource": [
@@ -9799,13 +9804,13 @@
           "subTechniques": [
             {
               "id": "AID-D-012.001",
-              "name": "Discrepancy-Based GNN Backdoor Detection",
-              "description": "Detects backdoored nodes in a Graph Neural Network (GNN) by identifying significant discrepancies between a potentially compromised model and a clean baseline model (established via AID-M-003.003). The technique specifically looks for semantic drift (changes in a node's meaning) and attribute over-emphasis (unusual feature importance) caused by the backdoor. Clustering algorithms are then often used to isolate the small group of poisoned nodes based on these detected discrepancies.",
+              "name": "GNN Backdoor Scanning Against Baselined Profiles",
+              "description": "Consumes baseline artifacts generated by AID-M-003.007 (clean embedding distributions, drift profiles, discrepancy statistics) to detect backdoored nodes in a Graph Neural Network (GNN). Compares current model states against the persisted baselines to identify semantic drift and attribute over-emphasis indicative of backdoor attacks. Uses clustering algorithms to isolate anomalous node groups and triggers alerts when suspicious patterns are detected. Inputs: Baseline artifacts from AID-M-003.007 at baselines/ directory (clean_node_embeddings.npy, node_semantic_drift.npy, primary_embeddings.npy).",
               "pillar": "model",
               "phase": "validation",
               "implementationStrategies": [
-                "Compute a 'semantic drift' score for each node by comparing embeddings.",
-                "Measure 'attribute over-emphasis' by comparing feature importance vectors.",
+                "Load baseline artifacts from AID-M-003.007 and compute semantic drift scores for anomaly detection.",
+                "Compare feature importance vectors against baselines to detect attribute over-emphasis.",
                 "Use clustering on the combined discrepancy scores to isolate the group of poisoned nodes.",
                 "Set an automated detection threshold based on the size and separation of the anomalous cluster."
               ],
@@ -9850,21 +9855,21 @@
                 }
               ],
               "keywords": [
-                "discrepancy-based",
                 "gnn",
                 "backdoor",
-                "detection",
+                "scanning",
+                "baselined",
+                "profiles",
+                "backdoor attack",
                 "neural network",
                 "pytorch",
                 "scikit-learn",
                 "numpy",
                 "gnnexplainer",
                 "graph",
+                "embedding",
                 "neural",
-                "compromised",
-                "semantic",
-                "embeddings",
-                "vectors"
+                "semantic"
               ]
             },
             {
