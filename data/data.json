@@ -1,8 +1,8 @@
 {
   "version": {
     "schemaVersion": "1.0",
-    "dataVersion": "2026.01.16",
-    "generatedAt": "2026-01-16T16:31:26.899Z",
+    "dataVersion": "2026.01.19",
+    "generatedAt": "2026-01-19T01:18:13.302Z",
     "source": "bundled"
   },
   "tactics": [
@@ -8142,6 +8142,81 @@
                 "siem/soar",
                 "managed"
               ]
+            },
+            {
+              "id": "AID-D-003.006",
+              "name": "Memory Write-Abuse & Drift Monitoring",
+              "description": "Detect and respond to runtime memory poisoning and persistence abuse by monitoring abnormal memory write patterns (rate spikes, repeated content fingerprints, cross-namespace writes) and read-path integrity failures (signature/HMAC verification failures, quarantine hit-rate anomalies). This sub-technique produces SIEM-grade signals and triggers policy-driven containment actions (write throttling/blocks, quarantine routing, privilege step-down, or session quarantine) while preserving auditability and minimizing false positives. This complements cryptographic integrity controls (e.g., signed writes / verified reads) by turning integrity and lifecycle signals into actionable detections and response playbooks.",
+              "pillar": "app",
+              "phase": "operation",
+              "implementationStrategies": [
+                "Emit SIEM-grade telemetry for memory write behavior (rate spikes, repeated fingerprints, cross-namespace writes) using a shared store; trigger automated containment via policy hooks.",
+                "Monitor read-path integrity signals (verification failure rate, quarantine hit rate) and fail-closed to keep tainted memory out of context."
+              ],
+              "toolsOpenSource": [
+                "OpenTelemetry (metrics/traces/log export)",
+                "Prometheus (metrics + alerting)",
+                "Grafana (dashboards)",
+                "Redis (shared counters + sliding windows)",
+                "Apache Kafka (security event pipeline)",
+                "OpenSearch (log indexing)",
+                "OPA / Rego (policy-based response hooks)"
+              ],
+              "toolsCommercial": [
+                "Datadog (observability + alerting)",
+                "Splunk Enterprise Security (SIEM)",
+                "Microsoft Sentinel (SIEM)",
+                "Elastic Observability"
+              ],
+              "defendsAgainst": [
+                {
+                  "framework": "MITRE ATLAS",
+                  "items": [
+                    "AML.T0080 AI Agent Context Poisoning",
+                    "AML.T0080.000 AI Agent Context Poisoning: Memory"
+                  ]
+                },
+                {
+                  "framework": "MAESTRO",
+                  "items": [
+                    "Data Poisoning (L2)",
+                    "Agent Goal Manipulation (L7)",
+                    "Agent Tool Misuse (L7)"
+                  ]
+                },
+                {
+                  "framework": "OWASP LLM Top 10 2025",
+                  "items": [
+                    "LLM04:2025 Data and Model Poisoning",
+                    "LLM08:2025 Vector and Embedding Weaknesses",
+                    "LLM10:2025 Unbounded Consumption"
+                  ]
+                },
+                {
+                  "framework": "OWASP ML Top 10 2023",
+                  "items": [
+                    "ML06:2023 AI Supply Chain Attacks",
+                    "ML09:2023 Output Integrity Attack"
+                  ]
+                }
+              ],
+              "keywords": [
+                "memory",
+                "write-abuse",
+                "drift",
+                "monitoring",
+                "opentelemetry",
+                "prometheus",
+                "grafana",
+                "redis",
+                "apache",
+                "opensearch",
+                "opa",
+                "datadog",
+                "splunk",
+                "microsoft",
+                "elastic"
+              ]
             }
           ],
           "url": "https://aidefend.net",
@@ -11401,78 +11476,301 @@
         {
           "id": "AID-I-004",
           "name": "Agent Memory & State Isolation",
-          "description": "Specifically for agentic AI systems, implement mechanisms to isolate and manage the agent's memory (e.g., conversational context, short-term state, knowledge retrieved from vector databases) and periodically reset or flush it. This defense aims to prevent malicious instructions, poisoned data, or exploited states (e.g., a \\\"jailbroken\\\" state) from persisting across multiple interactions, sessions, or from affecting other unrelated agent tasks or instances. It helps to limit the temporal scope of a successful manipulation.",
+          "description": "Manage the lifecycle, integrity, and isolation of agent memory in agentic AI systems. Agent memory (runtime context, tool traces, and persistent vector/RAG stores) is uniquely susceptible to (1) prompt injection persistence, (2) memory/KB poisoning, and (3) cross-session or cross-tenant contamination. This technique family enforces isolation across four layers: Runtime Hygiene (App), Persistent Partitioning (Data), Cryptographic Integrity (Security), and Transactional Promotion Gates (Ops/Governance).",
           "pillar": "app",
           "phase": "operation",
           "defendsAgainst": [
             {
               "framework": "MITRE ATLAS",
               "items": [
-                "AML.T0018.001 Manipulate AI Model: Poison LLM Memory",
+                "AML.T0051 LLM Prompt Injection",
+                "AML.T0061 LLM Prompt Self-Replication",
+                "AML.T0070 RAG Poisoning",
                 "AML.T0080.000 AI Agent Context Poisoning: Memory",
-                "AML.T0051 LLM Prompt Injection (limits impact duration)",
-                "AML.T0061 LLM Prompt Self-Replication"
+                "AML.T0018.001 Manipulate AI Model: Poison LLM Memory"
               ]
             },
             {
               "framework": "MAESTRO",
               "items": [
-                "Agent Goal Manipulation / Agent Tool Misuse (L7, preventing persistent manipulated state)",
-                "Data Poisoning (L2, if agent memory is target)"
+                "Agent Goal Manipulation (L7) (via persistent instruction/memory poisoning)",
+                "Agent Tool Misuse (L7) (via poisoned recalled context)",
+                "Data Poisoning (L2) (when memory/KB is treated as data)",
+                "Compromised RAG Pipelines (L2)"
               ]
             },
             {
               "framework": "OWASP LLM Top 10 2025",
               "items": [
-                "LLM01:2025 Prompt Injection (non-persistent malicious context)",
-                "LLM04:2025 Data and Model Poisoning (agent memory as poisoned data)",
-                "LLM08:2025 Vector and Embedding Weaknesses (mitigating malicious data in vector DB)"
+                "LLM01:2025 Prompt Injection",
+                "LLM02:2025 Sensitive Information Disclosure",
+                "LLM04:2025 Data and Model Poisoning",
+                "LLM08:2025 Vector and Embedding Weaknesses",
+                "LLM10:2025 Unbounded Consumption"
               ]
             },
             {
               "framework": "OWASP ML Top 10 2023",
               "items": [
-                "ML06:2023 ML Supply Chain Attacks (preventing untrusted/malicious memory from being re-ingested as 'trusted data')",
-                "ML09:2023 Output Integrity Attack (preventing poisoned memory from being re-used as 'ground truth')"
+                "ML02:2023 Data Poisoning Attack",
+                "ML06:2023 AI Supply Chain Attacks",
+                "ML09:2023 Output Integrity Attack"
               ]
             }
           ],
-          "implementationStrategies": [
-            "Per-session/per-user conversational context isolation",
-            "Short windowed memory to limit persistence of injection and jailbreak states",
-            "Partition long-term memory (vector/RAG stores) by trust level and tenant context",
-            "Gate all writes to long-term memory with structured validation and human review for high-trust tiers",
-            "Validate and sanitize persisted conversation/state before loading it back into the agent",
-            "Periodic volatile memory resets for long-running agents",
-            "Enforce memory write size limits to prevent shared-memory denial-of-service"
+          "implementationStrategies": [],
+          "toolsOpenSource": [],
+          "toolsCommercial": [],
+          "subTechniques": [
+            {
+              "id": "AID-I-004.001",
+              "name": "Runtime Context Isolation & Hygiene",
+              "description": "Enforces strict boundaries and hygiene for volatile working memory (RAM/Redis). Prevents cross-session/cross-tenant context bleed, limits the temporal blast radius of prompt injections (via windowing/resets), and prevents resource exhaustion (DoS/cost burn) via size/token ceilings and TTL.",
+              "pillar": "app",
+              "phase": "operation",
+              "implementationStrategies": [
+                "Enforce per-session isolation with mandatory TTL, deterministic size/token limits, and fail-closed serialization to prevent cross-tenant bleed and DoS.",
+                "Use sliding windows and controlled volatile resets for long-running agents; reseed only from a trusted baseline goal/config (fail-closed)."
+              ],
+              "toolsOpenSource": [
+                "Redis (key TTL, eviction policies)",
+                "Memcached",
+                "OpenTelemetry (distributed tracing for memory events)",
+                "LangChain (memory modules) / Semantic Kernel (memory abstractions)"
+              ],
+              "toolsCommercial": [
+                "Redis Enterprise",
+                "Momento (serverless cache)"
+              ],
+              "defendsAgainst": [
+                {
+                  "framework": "MITRE ATLAS",
+                  "items": [
+                    "AML.T0051 LLM Prompt Injection",
+                    "AML.T0061 LLM Prompt Self-Replication"
+                  ]
+                },
+                {
+                  "framework": "OWASP LLM Top 10 2025",
+                  "items": [
+                    "LLM01:2025 Prompt Injection",
+                    "LLM02:2025 Sensitive Information Disclosure",
+                    "LLM10:2025 Unbounded Consumption"
+                  ]
+                }
+              ],
+              "keywords": [
+                "runtime",
+                "context",
+                "isolation",
+                "hygiene",
+                "prompt injection",
+                "redis",
+                "memcached",
+                "opentelemetry",
+                "langchain",
+                "momento",
+                "prompt",
+                "token",
+                "nist",
+                "agents"
+              ]
+            },
+            {
+              "id": "AID-I-004.002",
+              "name": "Persistent Memory Partitioning (Trust & Tenant Isolation)",
+              "description": "Defines structural isolation for long-term memory (Vector DB/RAG). Uses namespaces/collections partitioned by tenant and trust tier, and enforces retrieval authorization via a centralized policy decision (never by agent self-assertion).",
+              "pillar": "data",
+              "phase": "building",
+              "implementationStrategies": [
+                "Partition long-term memory by tenant + trust tier; retrieval must consult a central entitlement/policy service and be fully audited."
+              ],
+              "toolsOpenSource": [
+                "Qdrant (collections/tenancy patterns)",
+                "Weaviate (multi-tenancy features)",
+                "Milvus (partitions/collections)",
+                "OPA (policy-as-code for retrieval authorization)"
+              ],
+              "toolsCommercial": [
+                "Pinecone (indexes/namespaces)",
+                "Zilliz Cloud"
+              ],
+              "defendsAgainst": [
+                {
+                  "framework": "MITRE ATLAS",
+                  "items": [
+                    "AML.T0070 RAG Poisoning",
+                    "AML.T0080.000 AI Agent Context Poisoning: Memory"
+                  ]
+                },
+                {
+                  "framework": "MAESTRO",
+                  "items": [
+                    "Compromised RAG Pipelines (L2)",
+                    "Data Poisoning (L2)"
+                  ]
+                },
+                {
+                  "framework": "OWASP LLM Top 10 2025",
+                  "items": [
+                    "LLM02:2025 Sensitive Information Disclosure",
+                    "LLM08:2025 Vector and Embedding Weaknesses"
+                  ]
+                }
+              ],
+              "keywords": [
+                "persistent",
+                "memory",
+                "partitioning",
+                "trust",
+                "tenant",
+                "isolation",
+                "qdrant",
+                "weaviate",
+                "milvus",
+                "opa",
+                "pinecone",
+                "zilliz",
+                "vector",
+                "rag",
+                "retrieval"
+              ]
+            },
+            {
+              "id": "AID-I-004.003",
+              "name": "Cryptographic Memory Integrity (Signed Write/Verify Read)",
+              "description": "Establishes an end-to-end integrity loop for persistent memory: a controlled writer issues signed records (content-hash + metadata + key id), and an integrity-first loader verifies signatures and hashes before any content can re-enter agent context. This prevents direct-to-DB poisoning/tampering and forces memory provenance to be verifiable.",
+              "pillar": "app",
+              "phase": "operation",
+              "implementationStrategies": [
+                "Controlled writer: sign canonical metadata containing content-hash + namespace + issuer + timestamp + key-id; store detached signature alongside the record.",
+                "Integrity-first loader: verify signature (constant-time) -> re-hash content -> enforce schema/size -> only then return content to the agent (fail-closed)."
+              ],
+              "toolsOpenSource": [
+                "HashiCorp Vault (Transit) / SPIFFE-SVID for workload identity",
+                "Sigstore/cosign (attestation patterns)",
+                "Python stdlib (hashlib, hmac) / PyCA cryptography (asymmetric signing)"
+              ],
+              "toolsCommercial": [
+                "AWS KMS",
+                "Azure Key Vault",
+                "Google Cloud KMS"
+              ],
+              "defendsAgainst": [
+                {
+                  "framework": "MITRE ATLAS",
+                  "items": [
+                    "AML.T0018.001 Manipulate AI Model: Poison LLM Memory",
+                    "AML.T0080.000 AI Agent Context Poisoning: Memory"
+                  ]
+                },
+                {
+                  "framework": "OWASP LLM Top 10 2025",
+                  "items": [
+                    "LLM04:2025 Data and Model Poisoning"
+                  ]
+                },
+                {
+                  "framework": "OWASP ML Top 10 2023",
+                  "items": [
+                    "ML02:2023 Data Poisoning Attack",
+                    "ML09:2023 Output Integrity Attack"
+                  ]
+                }
+              ],
+              "keywords": [
+                "cryptographic",
+                "memory",
+                "integrity",
+                "signed",
+                "write",
+                "verify",
+                "read",
+                "hashicorp",
+                "sigstore/cosign",
+                "python",
+                "aws",
+                "azure",
+                "google",
+                "agent",
+                "context"
+              ]
+            },
+            {
+              "id": "AID-I-004.004",
+              "name": "Transactional Promotion Gates (Quarantine -> Trusted)",
+              "description": "Implements a strict state machine and atomic promotion workflow for high-risk memory writes. Items routed into quarantine cannot influence agent behavior until reviewed and promoted. Promotion must be transactional, auditable, and typically re-signed as trusted. Aligns with trust-tiered memory write-gates (e.g., trusted/probation/quarantined).",
+              "pillar": "app",
+              "phase": "operation",
+              "implementationStrategies": [
+                "Quarantine state machine with atomic promotion: enforce allowed transitions and re-sign on promotion (fail-closed)."
+              ],
+              "toolsOpenSource": [
+                "PostgreSQL (transactions, row locks, RLS)",
+                "Kafka / Redis Streams (promotion queues)",
+                "Temporal / Celery (workflow execution)",
+                "OPA (policy-as-code for approval rules)"
+              ],
+              "toolsCommercial": [
+                "ServiceNow (approval workflows)",
+                "Jira Service Management"
+              ],
+              "defendsAgainst": [
+                {
+                  "framework": "MITRE ATLAS",
+                  "items": [
+                    "AML.T0070 RAG Poisoning",
+                    "AML.T0080.000 AI Agent Context Poisoning: Memory"
+                  ]
+                },
+                {
+                  "framework": "MAESTRO",
+                  "items": [
+                    "Data Poisoning (L2)",
+                    "Compromised RAG Pipelines (L2)"
+                  ]
+                },
+                {
+                  "framework": "OWASP LLM Top 10 2025",
+                  "items": [
+                    "LLM04:2025 Data and Model Poisoning",
+                    "LLM08:2025 Vector and Embedding Weaknesses"
+                  ]
+                }
+              ],
+              "keywords": [
+                "transactional",
+                "promotion",
+                "gates",
+                "quarantine",
+                "trusted",
+                "postgresql",
+                "kafka",
+                "temporal",
+                "opa",
+                "servicenow",
+                "jira",
+                "agent",
+                "data poisoning"
+              ]
+            }
           ],
-          "toolsOpenSource": [
-            "LangChain Guardrails or custom callback handlers",
-            "Custom wrappers in agentic frameworks (AutoGen, CrewAI, Semantic Kernel, LlamaIndex)",
-            "Vector databases (Weaviate, Qdrant, Pinecone) with access controls"
-          ],
-          "toolsCommercial": [
-            "Lasso Security (agent memory lineage/monitoring)",
-            "Enterprise agent platforms with secure state management"
-          ],
-          "subTechniques": [],
           "url": "https://aidefend.net",
           "keywords": [
             "agent",
             "memory",
             "state",
             "isolation",
-            "vector database",
-            "langchain",
-            "custom",
-            "vector",
-            "lasso",
-            "enterprise",
+            "prompt injection",
             "agentic",
             "context",
-            "malicious",
+            "vector",
+            "rag",
+            "prompt",
             "injection",
-            "jailbreak"
+            "poisoning",
+            "data poisoning",
+            "supply chain"
           ]
         },
         {
