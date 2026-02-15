@@ -14,11 +14,11 @@ export const detectTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0015: Evade AI Model",
-                        "AML.T0043: Craft Adversarial Data",
-                        "AML.T0051: LLM Prompt Injection",
-                        "AML.T0054: LLM Jailbreak",
-                        "AML.T0068: LLM Prompt Obfuscation"
+                        "AML.T0015 Evade AI Model",
+                        "AML.T0043 Craft Adversarial Data",
+                        "AML.T0051 LLM Prompt Injection",
+                        "AML.T0054 LLM Jailbreak",
+                        "AML.T0068 LLM Prompt Obfuscation"
                     ]
                 },
                 {
@@ -27,8 +27,7 @@ export const detectTactic = {
                         "Adversarial Examples (L1)",
                         "Evasion of Security AI Agents (L6)",
                         "Input Validation Attacks (L3)",
-                        "Reprogramming Attacks (L1)",
-                        "Cross-Modal Manipulation Attacks (L1)"
+                        "Reprogramming Attacks (L1)"
                     ]
                 },
                 {
@@ -41,6 +40,31 @@ export const detectTactic = {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
                         "ML01:2023 Input Manipulation Attack"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI01:2026 Agent Goal Hijack (adversarial inputs can redirect agent goals)",
+                        "ASI05:2026 Unexpected Code Execution (RCE) (injected prompts may trigger code execution)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.022 Evasion",
+                        "NISTAML.018 Prompt Injection",
+                        "NISTAML.015 Indirect Prompt Injection"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-1.1 Direct Prompt Injection",
+                        "AISubtech-1.1.1 Instruction Manipulation (Direct Prompt Injection)",
+                        "AISubtech-1.1.2 Obfuscation (Direct Prompt Injection)",
+                        "AITech-1.2 Indirect Prompt Injection",
+                        "AITech-2.1 Jailbreak"
                     ]
                 }
             ],
@@ -86,9 +110,12 @@ export const detectTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0051: LLM Prompt Injection",
-                                "AML.T0054: LLM Jailbreak",
-                                "AML.T0068: LLM Prompt Obfuscation"
+                                "AML.T0051 LLM Prompt Injection",
+                                "AML.T0051.000 LLM Prompt Injection: Direct",
+                                "AML.T0051.001 LLM Prompt Injection: Indirect",
+                                "AML.T0051.002 LLM Prompt Injection: Triggered",
+                                "AML.T0054 LLM Jailbreak",
+                                "AML.T0068 LLM Prompt Obfuscation"
                             ]
                         },
                         {
@@ -108,6 +135,31 @@ export const detectTactic = {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
                                 "ML01:2023 Input Manipulation Attack"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI01:2026 Agent Goal Hijack (adversarial prompts can redirect agent goals)",
+                                "ASI05:2026 Unexpected Code Execution (RCE) (injected prompts may trigger code execution)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.018 Prompt Injection",
+                                "NISTAML.022 Evasion (obfuscation techniques are a form of evasion)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-1.1 Direct Prompt Injection",
+                                "AISubtech-1.1.1 Instruction Manipulation (Direct Prompt Injection)",
+                                "AISubtech-1.1.2 Obfuscation (Direct Prompt Injection)",
+                                "AITech-2.1 Jailbreak",
+                                "AISubtech-2.1.2 Obfuscation (Jailbreak)",
+                                "AISubtech-2.1.3 Semantic Manipulation (Jailbreak)"
                             ]
                         }
                     ]
@@ -150,17 +202,24 @@ export const detectTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0043: Craft Adversarial Data",
-                                "AML.T0048: External Harms",
-                                "AML.T0073: Impersonation"
+                                "AML.T0043 Craft Adversarial Data",
+                                "AML.T0043.000 Craft Adversarial Data: White-Box Optimization",
+                                "AML.T0043.003 Craft Adversarial Data: Manual Modification",
+                                "AML.T0048 External Harms",
+                                "AML.T0048.000 External Harms: Financial Harm",
+                                "AML.T0048.001 External Harms: Reputational Harm",
+                                "AML.T0048.002 External Harms: Societal Harm",
+                                "AML.T0048.003 External Harms: User Harm",
+                                "AML.T0073 Impersonation",
+                                "AML.T0088 Generate Deepfakes"
                             ]
                         },
                         {
                             "framework": "MAESTRO",
                             "items": [
                                 "Adversarial Examples (L1)",
-                                "Misinformation Generation (Cross-Layer)",
-                                "Cross-Modal Manipulation Attacks (L1)"
+                                "Goal Misalignment Cascades (Cross-Layer) (misinformation from misaligned agent outputs)",
+                                "Framework Evasion (L3) (cross-modal attacks exploit framework input handling)"
                             ]
                         },
                         {
@@ -175,6 +234,30 @@ export const detectTactic = {
                             "items": [
                                 "ML01:2023 Input Manipulation Attack",
                                 "ML09:2023 Output Integrity Attack"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI09:2026 Human-Agent Trust Exploitation (deepfakes exploit human trust in agent-presented media)",
+                                "ASI01:2026 Agent Goal Hijack (synthetic media can redirect agent goals via visual inputs)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.022 Evasion",
+                                "NISTAML.027 Misaligned Outputs (deepfakes produce misaligned/fabricated outputs)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-1.4 Multi-Modal Injection and Manipulation",
+                                "AITech-3.1 Masquerading / Obfuscation / Impersonation",
+                                "AISubtech-3.1.1 Identity Obfuscation",
+                                "AISubtech-3.1.2 Trusted Agent Spoofing (deepfake impersonation of trusted entities)",
+                                "AISubtech-15.1.5 Safety Harms and Toxicity: Disinformation (synthetic media enables disinformation)"
                             ]
                         }
                     ]
@@ -211,9 +294,13 @@ export const detectTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0015: Evade AI Model",
-                                "AML.T0051: LLM Prompt Injection",
-                                "AML.T0054: LLM Jailbreak"
+                                "AML.T0015 Evade AI Model",
+                                "AML.T0051 LLM Prompt Injection",
+                                "AML.T0051.000 LLM Prompt Injection: Direct",
+                                "AML.T0051.001 LLM Prompt Injection: Indirect",
+                                "AML.T0054 LLM Jailbreak",
+                                "AML.T0043.001 Craft Adversarial Data: Black-Box Optimization (anomalous embeddings from optimized adversarial inputs)",
+                                "AML.T0043.002 Craft Adversarial Data: Black-Box Transfer (anomalous embeddings from transferred adversarial examples)"
                             ]
                         },
                         {
@@ -221,7 +308,7 @@ export const detectTactic = {
                             "items": [
                                 "Adversarial Examples (L1)",
                                 "Input Validation Attacks (L3)",
-                                "Misinformation Generation (Cross-Layer)"
+                                "Goal Misalignment Cascades (Cross-Layer) (misinformation from misaligned agent outputs)"
                             ]
                         },
                         {
@@ -236,6 +323,31 @@ export const detectTactic = {
                             "items": [
                                 "ML01:2023 Input Manipulation Attack"
                             ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI01:2026 Agent Goal Hijack (anomalous embeddings reveal goal-hijack attempts)",
+                                "ASI06:2026 Memory & Context Poisoning (embedding anomalies can detect poisoned context)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.018 Prompt Injection",
+                                "NISTAML.022 Evasion",
+                                "NISTAML.025 Black-box Evasion (embedding distance detects novel evasion variants)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-1.1 Direct Prompt Injection",
+                                "AITech-1.2 Indirect Prompt Injection",
+                                "AITech-9.2 Detection Evasion",
+                                "AISubtech-9.2.1 Obfuscation Vulnerabilities (embedding analysis catches obfuscated attacks)",
+                                "AISubtech-1.1.2 Obfuscation (Direct Prompt Injection)"
+                            ]
                         }
                     ]
                 },
@@ -246,10 +358,37 @@ export const detectTactic = {
                     "phase": ["operation"],
                     "description": "Use a fast secondary LLM (guardrail) to classify prompts for intent switching, instruction bypass, or privilege escalation before reaching the primary model.",
                     "defendsAgainst": [
-                        { "framework": "MITRE ATLAS", "items": ["AML.T0051 LLM Prompt Injection", "AML.T0054 LLM Jailbreak"] },
+                        { "framework": "MITRE ATLAS", "items": ["AML.T0051 LLM Prompt Injection", "AML.T0051.000 LLM Prompt Injection: Direct", "AML.T0051.001 LLM Prompt Injection: Indirect", "AML.T0054 LLM Jailbreak", "AML.T0053 AI Agent Tool Invocation (guardrail detects privilege escalation via tool misuse)"] },
                         { "framework": "MAESTRO", "items": ["Reprogramming Attacks (L1)", "Agent Goal Manipulation (L7)"] },
                         { "framework": "OWASP LLM Top 10 2025", "items": ["LLM01:2025 Prompt Injection"] },
-                        { "framework": "OWASP ML Top 10 2023", "items": ["ML01:2023 Input Manipulation Attack"] }
+                        { "framework": "OWASP ML Top 10 2023", "items": ["ML01:2023 Input Manipulation Attack"] },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI01:2026 Agent Goal Hijack",
+                                "ASI03:2026 Identity and Privilege Abuse",
+                                "ASI10:2026 Rogue Agents (guardrail detects intent drift toward rogue behavior)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.018 Prompt Injection",
+                                "NISTAML.027 Misaligned Outputs (detects intent escalation leading to misaligned outputs)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-1.1 Direct Prompt Injection",
+                                "AISubtech-1.1.1 Instruction Manipulation (Direct Prompt Injection)",
+                                "AITech-1.3 Goal Manipulation",
+                                "AITech-14.1 Unauthorized Access",
+                                "AISubtech-14.2.1 Permission Escalation via Delegation",
+                                "AITech-2.1 Jailbreak",
+                                "AISubtech-2.1.1 Context Manipulation (Jailbreak)"
+                            ]
+                        }
                     ],
                     "implementationStrategies": [
                         {
@@ -283,8 +422,14 @@ export const detectTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0051: LLM Prompt Injection",
-                                "AML.T0054: LLM Jailbreak"
+                                "AML.T0051 LLM Prompt Injection",
+                                "AML.T0051.000 LLM Prompt Injection: Direct",
+                                "AML.T0051.001 LLM Prompt Injection: Indirect",
+                                "AML.T0051.002 LLM Prompt Injection: Triggered",
+                                "AML.T0054 LLM Jailbreak",
+                                "AML.T0080 AI Agent Context Poisoning (canary detects context window tampering)",
+                                "AML.T0080.000 AI Agent Context Poisoning: Memory",
+                                "AML.T0080.001 AI Agent Context Poisoning: Thread"
                             ]
                         },
                         {
@@ -304,6 +449,31 @@ export const detectTactic = {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
                                 "ML01:2023 Input Manipulation Attack"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI01:2026 Agent Goal Hijack (canary failure reveals hijacked agent goals)",
+                                "ASI06:2026 Memory & Context Poisoning (canary tokens detect context window tampering)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.018 Prompt Injection",
+                                "NISTAML.015 Indirect Prompt Injection (canary detects indirect injection that overrides system prompt)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-1.1 Direct Prompt Injection",
+                                "AISubtech-1.1.1 Instruction Manipulation (Direct Prompt Injection)",
+                                "AITech-1.2 Indirect Prompt Injection",
+                                "AITech-4.2 Context Boundary Attacks",
+                                "AISubtech-4.2.1 Context Window Exploitation",
+                                "AITech-2.1 Jailbreak"
                             ]
                         }
                     ],
@@ -362,17 +532,21 @@ export const detectTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0031: Erode AI Model Integrity",
-                        "AML.T0015: Evade ML Model",
-                        "AML.T0020: Poison Training Data"
+                        "AML.T0031 Erode AI Model Integrity",
+                        "AML.T0015 Evade AI Model",
+                        "AML.T0020 Poison Training Data",
+                        "AML.T0018 Manipulate AI Model",
+                        "AML.T0018.000 Manipulate AI Model: Poison AI Model",
+                        "AML.T0018.001 Manipulate AI Model: Modify AI Model Architecture (architecture changes cause detectable drift)",
+                        "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (backdoor activation causes detectable output drift)"
                     ]
                 },
                 {
                     "framework": "MAESTRO",
                     "items": [
-                        "Unpredictable agent behavior / Performance Degradation (L5)",
-                        "Model Skewing (L2)",
-                        "Manipulation of Evaluation Metrics (L5)"
+                        "Manipulation of Evaluation Metrics (L5) (drift detection catches degraded performance)",
+                        "Data Tampering (L2) (drift from skewed training data)",
+                        "Data Poisoning (L2) (poisoned training data causes detectable drift)"
                     ]
                 },
                 {
@@ -386,6 +560,35 @@ export const detectTactic = {
                     "items": [
                         "ML08:2023 Model Skewing"
                     ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI10:2026 Rogue Agents (drift detection reveals agents deviating from intended behavior)",
+                        "ASI08:2026 Cascading Failures (detecting drift early prevents cascading failures across agent networks)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.013 Data Poisoning",
+                        "NISTAML.011 Model Poisoning (Availability)",
+                        "NISTAML.026 Model Poisoning (Integrity)",
+                        "NISTAML.021 Clean-label Backdoor (drift detection reveals backdoor activation effects)",
+                        "NISTAML.023 Backdoor Poisoning (drift detection reveals backdoor activation effects)",
+                        "NISTAML.024 Targeted Poisoning"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-6.1 Training Data Poisoning",
+                        "AISubtech-6.1.1 Knowledge Base Poisoning",
+                        "AISubtech-6.1.2 Reinforcement Biasing",
+                        "AITech-9.1 Model or Agentic System Manipulation",
+                        "AISubtech-9.2.2 Backdoors and Trojans",
+                        "AISubtech-15.1.19 Integrity Compromise: Hallucinations / Misinformation (drift toward hallucinated outputs)"
+                    ]
                 }
             ]
         },
@@ -397,20 +600,28 @@ export const detectTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0048.002: External Harms: Societal Harm",
-                        "AML.T0057: LLM Data Leakage",
-                        "AML.T0052: Phishing",
-                        "AML.T0047: AI-Enabled Product or Service",
-                        "AML.T0061: LLM Prompt Self-Replication",
-                        "AML.T0053: AI Agent Tool Invocation",
-                        "AML.T0067: LLM Trusted Output Components Manipulation",
-                        "AML.T0077: LLM Response Rendering"
+                        "AML.T0048 External Harms",
+                        "AML.T0048.000 External Harms: Financial Harm",
+                        "AML.T0048.001 External Harms: Reputational Harm",
+                        "AML.T0048.002 External Harms: Societal Harm",
+                        "AML.T0048.003 External Harms: User Harm",
+                        "AML.T0057 LLM Data Leakage",
+                        "AML.T0052 Phishing",
+                        "AML.T0052.000 Phishing: Spearphishing via Social Engineering LLM",
+                        "AML.T0047 AI-Enabled Product or Service",
+                        "AML.T0061 LLM Prompt Self-Replication",
+                        "AML.T0053 AI Agent Tool Invocation",
+                        "AML.T0067 LLM Trusted Output Components Manipulation",
+                        "AML.T0067.000 LLM Trusted Output Components Manipulation: Citations",
+                        "AML.T0077 LLM Response Rendering",
+                        "AML.T0086 Exfiltration via AI Agent Tool Invocation (output monitoring catches data encoded in tool parameters)",
+                        "AML.T0088 Generate Deepfakes (output filters detect synthetic media in responses)"
                     ]
                 },
                 {
                     "framework": "MAESTRO",
                     "items": [
-                        "Misinformation Generation (L1/L7)",
+                        "Inaccurate Agent Capability Description (L7)",
                         "Data Exfiltration (L2)",
                         "Data Leakage through Observability (L5)"
                     ]
@@ -429,6 +640,38 @@ export const detectTactic = {
                     "items": [
                         "ML03:2023 Model Inversion Attack",
                         "ML09:2023 Output Integrity Attack"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI01:2026 Agent Goal Hijack (output monitoring detects hijacked agent producing off-policy outputs)",
+                        "ASI02:2026 Tool Misuse and Exploitation",
+                        "ASI08:2026 Cascading Failures (output policy enforcement stops harmful outputs from cascading)",
+                        "ASI09:2026 Human-Agent Trust Exploitation",
+                        "ASI10:2026 Rogue Agents (output monitoring detects rogue agent behavior)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.027 Misaligned Outputs",
+                        "NISTAML.036 Leaking information from user interactions",
+                        "NISTAML.038 Data Extraction",
+                        "NISTAML.04 Misuse Violations"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-12.2 Insecure Output Handling",
+                        "AITech-8.2 Data Exfiltration / Exposure",
+                        "AISubtech-8.2.2 LLM Data Leakage",
+                        "AITech-8.3 Information Disclosure",
+                        "AITech-15.1 Harmful Content",
+                        "AISubtech-15.1.5 Safety Harms and Toxicity: Disinformation",
+                        "AISubtech-15.1.19 Integrity Compromise: Hallucinations / Misinformation",
+                        "AITech-12.1 Tool Exploitation (output monitoring catches malicious tool invocations)"
                     ]
                 }
             ],
@@ -458,14 +701,20 @@ export const detectTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0048.002: External Harms: Societal Harm",
-                                "AML.T0057: LLM Data Leakage"
+                                "AML.T0048 External Harms",
+                                "AML.T0048.000 External Harms: Financial Harm (blocks scam/fraud content)",
+                                "AML.T0048.001 External Harms: Reputational Harm",
+                                "AML.T0048.002 External Harms: Societal Harm",
+                                "AML.T0048.003 External Harms: User Harm",
+                                "AML.T0057 LLM Data Leakage",
+                                "AML.T0054 LLM Jailbreak (filters catch jailbreak-induced harmful output)",
+                                "AML.T0088 Generate Deepfakes (content filters detect synthetic media indicators)"
                             ]
                         },
                         {
                             "framework": "MAESTRO",
                             "items": [
-                                "Misinformation Generation (L1/L7)",
+                                "Inaccurate Agent Capability Description (L7)",
                                 "Data Exfiltration (L2)",
                                 "Agent Tool Misuse (L7)",
                                 "Compromised Agent Registry (L7)"
@@ -483,6 +732,29 @@ export const detectTactic = {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
                                 "ML09:2023 Output Integrity Attack"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI09:2026 Human-Agent Trust Exploitation",
+                                "ASI08:2026 Cascading Failures (harmful content from one agent can cascade to downstream agents)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.027 Misaligned Outputs",
+                                "NISTAML.04 Misuse Violations"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-12.2 Insecure Output Handling",
+                                "AITech-15.1 Harmful Content",
+                                "AISubtech-15.1.5 Safety Harms and Toxicity: Disinformation",
+                                "AISubtech-15.1.19 Integrity Compromise: Hallucinations / Misinformation"
                             ]
                         }
                     ],
@@ -526,12 +798,17 @@ export const detectTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0024.000: Exfiltration via AI Inference API: Infer Training Data Membership",
-                                "AML.T0024.001: Exfiltration via AI Inference API: Invert AI Model",
-                                "AML.T0057: LLM Data Leakage",
-                                "AML.T0048.003: External Harms: User Harm",
-                                "AML.T0047: AI-Enabled Product or Service",
-                                "AML.T0077: LLM Response Rendering"
+                                "AML.T0024 Exfiltration via AI Inference API",
+                                "AML.T0024.000 Exfiltration via AI Inference API: Infer Training Data Membership",
+                                "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model",
+                                "AML.T0057 LLM Data Leakage",
+                                "AML.T0048.003 External Harms: User Harm",
+                                "AML.T0047 AI-Enabled Product or Service",
+                                "AML.T0077 LLM Response Rendering",
+                                "AML.T0056 Extract LLM System Prompt (DLP detects system prompt content in outputs)",
+                                "AML.T0085 Data from AI Services (DLP catches sensitive data retrieved via AI services)",
+                                "AML.T0085.000 Data from AI Services: RAG Databases (detects sensitive RAG content in responses)",
+                                "AML.T0086 Exfiltration via AI Agent Tool Invocation (DLP catches data encoded in tool parameters)"
                             ]
                         },
                         {
@@ -539,7 +816,7 @@ export const detectTactic = {
                             "items": [
                                 "Data Exfiltration (L2)",
                                 "Data Leakage through Observability (L5)",
-                                "Model Inversion / Extraction (L2)"
+                                "Membership Inference Attacks (L1) (detecting data leakage patterns)"
                             ]
                         },
                         {
@@ -553,6 +830,36 @@ export const detectTactic = {
                             "items": [
                                 "ML03:2023 Model Inversion Attack",
                                 "ML04:2023 Membership Inference Attack"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI02:2026 Tool Misuse and Exploitation (DLP detects sensitive data exfiltrated through tool outputs)",
+                                "ASI09:2026 Human-Agent Trust Exploitation (prevents agents from leaking PII to build false trust)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.03 Privacy Compromises",
+                                "NISTAML.032 Reconstruction",
+                                "NISTAML.033 Membership Inference",
+                                "NISTAML.036 Leaking information from user interactions",
+                                "NISTAML.038 Data Extraction",
+                                "NISTAML.035 Prompt Extraction (detects system prompt content in outputs)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AISubtech-8.2.1 Training Data Exposure",
+                                "AISubtech-8.2.2 LLM Data Leakage",
+                                "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
+                                "AITech-8.3 Information Disclosure",
+                                "AITech-8.4 Prompt/Meta Extraction",
+                                "AISubtech-15.1.25 Privacy Attacks: PII / PHI / PCI"
                             ]
                         }
                     ],
@@ -597,15 +904,22 @@ export const detectTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0053: AI Agent Tool Invocation",
-                                "AML.T0048: External Harms",
-                                "AML.TA0005: Execution"
+                                "AML.T0053 AI Agent Tool Invocation",
+                                "AML.T0048 External Harms",
+                                "AML.T0048.000 External Harms: Financial Harm (blocks unauthorized payment tool calls)",
+                                "AML.T0086 Exfiltration via AI Agent Tool Invocation",
+                                "AML.T0051 LLM Prompt Injection (policy enforcement blocks injection-triggered tool calls)",
+                                "AML.T0051.001 LLM Prompt Injection: Indirect (blocks tool calls triggered by indirect injections)",
+                                "AML.T0051.002 LLM Prompt Injection: Triggered",
+                                "AML.T0084 Discover AI Agent Configuration (policy monitoring detects probing of tool definitions)",
+                                "AML.T0084.001 Discover AI Agent Configuration: Tool Definitions"
                             ]
                         },
                         {
                             "framework": "MAESTRO",
                             "items": [
-                                "Agent Goal Manipulation (L7)"
+                                "Agent Goal Manipulation (L7)",
+                                "Agent Tool Misuse (L7)"
                             ]
                         },
                         {
@@ -620,6 +934,38 @@ export const detectTactic = {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
                                 "ML09:2023 Output Integrity Attack"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI01:2026 Agent Goal Hijack",
+                                "ASI02:2026 Tool Misuse and Exploitation",
+                                "ASI03:2026 Identity and Privilege Abuse",
+                                "ASI05:2026 Unexpected Code Execution (RCE)",
+                                "ASI10:2026 Rogue Agents"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.018 Prompt Injection (blocks injection-triggered tool invocations)",
+                                "NISTAML.015 Indirect Prompt Injection",
+                                "NISTAML.039 Compromising connected resources",
+                                "NISTAML.04 Misuse Violations"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-12.1 Tool Exploitation",
+                                "AISubtech-12.1.1 Parameter Manipulation",
+                                "AISubtech-12.1.2 Tool Poisoning",
+                                "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
+                                "AISubtech-12.1.4 Tool Shadowing",
+                                "AITech-14.2 Abuse of Delegated Authority",
+                                "AISubtech-14.2.1 Permission Escalation via Delegation",
+                                "AITech-4.1 Agent Injection"
                             ]
                         }
                     ],
@@ -661,8 +1007,12 @@ export const detectTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0053: AI Agent Tool Invocation",
-                                "AML.TA0005: Execution"
+                                "AML.T0053 AI Agent Tool Invocation",
+                                "AML.T0051 LLM Prompt Injection (anomalous tool sequences reveal injection-driven behavior)",
+                                "AML.T0051.001 LLM Prompt Injection: Indirect (indirect injections produce atypical tool chains)",
+                                "AML.T0051.002 LLM Prompt Injection: Triggered",
+                                "AML.T0086 Exfiltration via AI Agent Tool Invocation (unusual tool sequences signal exfiltration attempts)",
+                                "AML.T0048 External Harms (detects tool chains leading to harmful outcomes)"
                             ]
                         },
                         {
@@ -675,13 +1025,42 @@ export const detectTactic = {
                         {
                             "framework": "OWASP LLM Top 10 2025",
                             "items": [
-                                "LLM06:2025 Excessive Agency"
+                                "LLM06:2025 Excessive Agency",
+                                "LLM01:2025 Prompt Injection (injection-triggered tool chains appear anomalous)"
                             ]
                         },
                         {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
                                 "ML09:2023 Output Integrity Attack"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI01:2026 Agent Goal Hijack (hijacked agents produce anomalous tool sequences)",
+                                "ASI02:2026 Tool Misuse and Exploitation",
+                                "ASI08:2026 Cascading Failures (anomalous sequences detect cascading tool misuse)",
+                                "ASI10:2026 Rogue Agents"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.018 Prompt Injection (detects injection via anomalous tool sequences)",
+                                "NISTAML.015 Indirect Prompt Injection",
+                                "NISTAML.039 Compromising connected resources (anomalous tool chains reveal lateral movement)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-12.1 Tool Exploitation",
+                                "AISubtech-12.1.1 Parameter Manipulation",
+                                "AISubtech-12.1.4 Tool Shadowing (anomaly detection catches shadowed tool substitution)",
+                                "AITech-4.1 Agent Injection (injected agents produce atypical tool sequences)",
+                                "AITech-9.1 Model or Agentic System Manipulation",
+                                "AISubtech-11.1.1 Agent-Specific Evasion (detects evasion attempts via unusual tool patterns)"
                             ]
                         }
                     ],
@@ -714,9 +1093,17 @@ export const detectTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0051: LLM Prompt Injection",
-                                "AML.T0054: LLM Jailbreak",
-                                "AML.T0051.001: LLM Prompt Injection: Indirect"
+                                "AML.T0051 LLM Prompt Injection",
+                                "AML.T0051.000 LLM Prompt Injection: Direct",
+                                "AML.T0051.001 LLM Prompt Injection: Indirect",
+                                "AML.T0051.002 LLM Prompt Injection: Triggered",
+                                "AML.T0054 LLM Jailbreak",
+                                "AML.T0053 AI Agent Tool Invocation (session tracking detects tool abuse across turns)",
+                                "AML.T0080 AI Agent Context Poisoning",
+                                "AML.T0080.001 AI Agent Context Poisoning: Thread",
+                                "AML.T0086 Exfiltration via AI Agent Tool Invocation (session invariants block multi-turn exfiltration)",
+                                "AML.T0094 Delay Execution of LLM Instructions (stateful monitoring detects delayed payload activation)",
+                                "AML.T0065 LLM Prompt Crafting (drift detection catches iterative prompt refinement)"
                             ]
                         },
                         {
@@ -730,10 +1117,49 @@ export const detectTactic = {
                         {
                             "framework": "MAESTRO",
                             "items": [
-                                "Evasion of Detection (L6)",
-                                "Data Leakage through Observability (L6)",
+                                "Evasion of Detection (L5)",
+                                "Data Leakage through Observability (L5)",
                                 "Privilege Escalation (Cross-Layer)",
                                 "Data Leakage (Cross-Layer)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML01:2023 Input Manipulation Attack (multi-turn input manipulation detected via intent drift)",
+                                "ML09:2023 Output Integrity Attack"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI01:2026 Agent Goal Hijack (intent drift detection catches gradual goal hijacking)",
+                                "ASI06:2026 Memory & Context Poisoning",
+                                "ASI02:2026 Tool Misuse and Exploitation (session invariants block multi-turn tool abuse)",
+                                "ASI08:2026 Cascading Failures (session-level monitoring catches cascading across turns)",
+                                "ASI10:2026 Rogue Agents (stateful tracking detects rogue behavior patterns)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.018 Prompt Injection",
+                                "NISTAML.015 Indirect Prompt Injection",
+                                "NISTAML.036 Leaking information from user interactions (session invariants prevent progressive data leakage)",
+                                "NISTAML.039 Compromising connected resources"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-1.1 Direct Prompt Injection",
+                                "AITech-1.2 Indirect Prompt Injection",
+                                "AISubtech-1.2.1 Instruction Manipulation (Indirect Prompt Injection)",
+                                "AITech-4.2 Context Boundary Attacks",
+                                "AISubtech-4.2.1 Context Window Exploitation",
+                                "AISubtech-4.2.2 Session Boundary Violation",
+                                "AITech-7.1 Reasoning Corruption (intent drift detects corrupted reasoning across turns)",
+                                "AITech-1.3 Goal Manipulation"
                             ]
                         }
                     ],
@@ -770,7 +1196,13 @@ export const detectTactic = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0080 AI Agent Context Poisoning",
-                                "AML.T0080.000 AI Agent Context Poisoning: Memory"
+                                "AML.T0080.000 AI Agent Context Poisoning: Memory",
+                                "AML.T0080.001 AI Agent Context Poisoning: Thread (cross-namespace writes indicate thread poisoning)",
+                                "AML.T0081 Modify AI Agent Configuration (memory write monitoring detects config tampering via memory)",
+                                "AML.T0051 LLM Prompt Injection (detects injection payloads persisted to memory)",
+                                "AML.T0051.001 LLM Prompt Injection: Indirect (indirect injections that write to memory)",
+                                "AML.T0061 LLM Prompt Self-Replication (repetitive write fingerprints detect self-replicating prompts)",
+                                "AML.T0092 Manipulate User LLM Chat History (memory write abuse covers chat history manipulation)"
                             ]
                         },
                         {
@@ -795,6 +1227,34 @@ export const detectTactic = {
                                 "ML06:2023 AI Supply Chain Attacks",
                                 "ML09:2023 Output Integrity Attack"
                             ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI06:2026 Memory & Context Poisoning",
+                                "ASI01:2026 Agent Goal Hijack (memory poisoning enables persistent goal hijacking)",
+                                "ASI10:2026 Rogue Agents (rogue agents exhibit abnormal memory write patterns)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.013 Data Poisoning (memory write abuse is a form of runtime data poisoning)",
+                                "NISTAML.018 Prompt Injection (detects injection payloads persisted to memory)",
+                                "NISTAML.015 Indirect Prompt Injection"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-5.1 Memory System Persistence",
+                                "AISubtech-5.1.1 Long-term / Short-term Memory Injection",
+                                "AITech-7.2 Memory System Corruption",
+                                "AISubtech-7.2.1 Memory Anchor Attacks",
+                                "AISubtech-7.2.2 Memory Index Manipulation",
+                                "AITech-5.2 Configuration Persistence",
+                                "AISubtech-5.2.1 Agent Profile Tampering (memory writes that alter agent profile)"
+                            ]
                         }
                     ],
                     "implementationStrategies": [
@@ -818,21 +1278,27 @@ export const detectTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0018: Manipulate AI Model",
-                        "AML.T0018.002: Manipulate AI Model: Embed Malware",
-                        "AML.T0058: Publish Poisoned Models",
-                        "AML.T0069: Discover LLM System Information (detects unauthorized changes that expand unintended disclosure surface)",
-                        "AML.T0074 Masquerading"
+                        "AML.T0018 Manipulate AI Model",
+                        "AML.T0018.000 Manipulate AI Model: Poison AI Model",
+                        "AML.T0018.001 Manipulate AI Model: Modify AI Model Architecture",
+                        "AML.T0018.002 Manipulate AI Model: Embed Malware",
+                        "AML.T0058 Publish Poisoned Models",
+                        "AML.T0076 Corrupt AI Model",
+                        "AML.T0010 AI Supply Chain Compromise",
+                        "AML.T0010.003 AI Supply Chain Compromise: Model",
+                        "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
+                        "AML.T0074 Masquerading",
+                        "AML.T0069 Discover LLM System Information (detects unauthorized changes that expand unintended disclosure surface)"
                     ]
                 },
                 {
                     "framework": "MAESTRO",
                     "items": [
                         "Data Tampering (L2)",
-                        "Model Tampering (L1)",
-                        "Runtime Code Injection (L4)",
-                        "Memory Corruption (L4)",
-                        "Misconfigurations (L4)"
+                        "Backdoor Attacks (L1)",
+                        "Orchestration Attacks (L4)",
+                        "Denial of Service (DoS) Attacks (L4)",
+                        "Infrastructure-as-Code (IaC) Manipulation (L4)"
                     ]
                 },
                 {
@@ -847,6 +1313,34 @@ export const detectTactic = {
                     "items": [
                         "ML06:2023 AI Supply Chain Attacks",
                         "ML10:2023 Model Poisoning"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI04:2026 Agentic Supply Chain Vulnerabilities",
+                        "ASI10:2026 Rogue Agents (tampered models can produce rogue agent behavior)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.05 Supply Chain Attacks",
+                        "NISTAML.051 Model Poisoning (Supply Chain)",
+                        "NISTAML.011 Model Poisoning (Availability)",
+                        "NISTAML.026 Model Poisoning (Integrity)",
+                        "NISTAML.023 Backdoor Poisoning"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-9.1 Model or Agentic System Manipulation",
+                        "AISubtech-9.2.2 Backdoors and Trojans",
+                        "AITech-6.1 Training Data Poisoning",
+                        "AITech-9.3 Dependency / Plugin Compromise",
+                        "AISubtech-9.3.1 Malicious Package / Tool Injection",
+                        "AISubtech-9.3.3 Dependency Replacement / Rug Pull"
                     ]
                 }
             ],
@@ -880,22 +1374,28 @@ export const detectTactic = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0018 Manipulate AI Model",
+                                "AML.T0018.000 Manipulate AI Model: Poison AI Model",
+                                "AML.T0018.001 Manipulate AI Model: Modify AI Model Architecture",
                                 "AML.T0018.002 Manipulate AI Model: Embed Malware",
                                 "AML.T0020 Poison Training Data",
                                 "AML.T0058 Publish Poisoned Models",
                                 "AML.T0076 Corrupt AI Model",
+                                "AML.T0010 AI Supply Chain Compromise",
+                                "AML.T0010.001 AI Supply Chain Compromise: AI Software",
+                                "AML.T0010.002 AI Supply Chain Compromise: Data",
                                 "AML.T0010.003 AI Supply Chain Compromise: Model",
-                                "AML.T0010.004 AI Supply Chain Compromise: Container Registry"
+                                "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
+                                "AML.T0074 Masquerading",
+                                "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (hash verification detects backdoor-embedded artifacts)"
                             ]
                         },
                         {
                             "framework": "MAESTRO",
                             "items": [
-                                "Model Tampering (L1)",
+                                "Backdoor Attacks (L1)",
                                 "Data Tampering (L2)",
                                 "Compromised Container Images (L4)",
-                                "Supply Chain Attacks (Cross-Layer)",
-                                "Backdoor Attacks (L1)"
+                                "Supply Chain Attacks (Cross-Layer)"
                             ]
                         },
                         {
@@ -912,6 +1412,34 @@ export const detectTactic = {
                                 "ML10:2023 Model Poisoning",
                                 "ML02:2023 Data Poisoning Attack",
                                 "ML09:2023 Output Integrity Attack"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.05 Supply Chain Attacks",
+                                "NISTAML.051 Model Poisoning (Supply Chain)",
+                                "NISTAML.023 Backdoor Poisoning",
+                                "NISTAML.021 Clean-label Backdoor",
+                                "NISTAML.013 Data Poisoning"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-9.1 Model or Agentic System Manipulation",
+                                "AISubtech-9.2.2 Backdoors and Trojans",
+                                "AITech-9.3 Dependency / Plugin Compromise",
+                                "AISubtech-9.3.1 Malicious Package / Tool Injection",
+                                "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
+                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
+                                "AITech-6.1 Training Data Poisoning"
                             ]
                         }
                     ],
@@ -958,19 +1486,22 @@ export const detectTactic = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0018 Manipulate AI Model",
+                                "AML.T0018.001 Manipulate AI Model: Modify AI Model Architecture",
                                 "AML.T0018.002 Manipulate AI Model: Embed Malware",
                                 "AML.T0072 Reverse Shell",
-                                "AML.T0025 Exfiltration via Cyber Means"
+                                "AML.T0025 Exfiltration via Cyber Means",
+                                "AML.T0010.001 AI Supply Chain Compromise: AI Software (runtime attestation detects compromised AI frameworks)",
+                                "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (TEE prevents model extraction from memory)"
                             ]
                         },
                         {
                             "framework": "MAESTRO",
                             "items": [
-                                "Memory Corruption (L4)",
-                                "Runtime Code Injection (L4)",
-                                "Compromised Training Environment (L4)",
+                                "Denial of Service (DoS) Attacks (L4)",
+                                "Orchestration Attacks (L4)",
+                                "Compromised Container Images (L4)",
                                 "Data Exfiltration (L2)",
-                                "Model Tampering (L1)"
+                                "Backdoor Attacks (L1)"
                             ]
                         },
                         {
@@ -987,6 +1518,32 @@ export const detectTactic = {
                                 "ML06:2023 AI Supply Chain Attacks",
                                 "ML05:2023 Model Theft",
                                 "ML09:2023 Output Integrity Attack"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities (runtime attestation validates agent execution environment)",
+                                "ASI05:2026 Unexpected Code Execution (RCE) (TEE and memory integrity detect code injection)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.05 Supply Chain Attacks",
+                                "NISTAML.031 Model Extraction (TEE protects model weights in memory)",
+                                "NISTAML.023 Backdoor Poisoning (attestation detects runtime backdoor activation)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-9.1 Model or Agentic System Manipulation",
+                                "AISubtech-9.1.1 Code Execution",
+                                "AISubtech-9.2.2 Backdoors and Trojans",
+                                "AITech-10.1 Model Extraction",
+                                "AISubtech-10.1.2 Weight Reconstruction (TEE prevents memory-based weight extraction)",
+                                "AITech-9.3 Dependency / Plugin Compromise"
                             ]
                         }
                     ],
@@ -1031,16 +1588,23 @@ export const detectTactic = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0018 Manipulate AI Model",
-                                "AML.T0069 Discover LLM System Information"
+                                "AML.T0081 Modify AI Agent Configuration",
+                                "AML.T0069 Discover LLM System Information",
+                                "AML.T0069.002 Discover LLM System Information: System Prompt (config drift exposes system prompt changes)",
+                                "AML.T0084 Discover AI Agent Configuration (detects unauthorized probing via config changes)",
+                                "AML.T0084.000 Discover AI Agent Configuration: Embedded Knowledge",
+                                "AML.T0084.001 Discover AI Agent Configuration: Tool Definitions",
+                                "AML.T0070 RAG Poisoning (config drift detection catches RAG index schema changes)",
+                                "AML.T0010.001 AI Supply Chain Compromise: AI Software (detects unauthorized framework changes)"
                             ]
                         },
                         {
                             "framework": "MAESTRO",
                             "items": [
-                                "Misconfigurations (L4: Deployment & Infrastructure)",
-                                "Data Tampering (L2: Data Operations)",
-                                "Unauthorized Access (Cross-Layer)",
-                                "Compromised Agent Registry (L7: Agent Ecosystem)"
+                                "Infrastructure-as-Code (IaC) Manipulation (L4)",
+                                "Data Tampering (L2)",
+                                "Privilege Escalation (Cross-Layer)",
+                                "Compromised Agent Registry (L7)"
                             ]
                         },
                         {
@@ -1058,6 +1622,33 @@ export const detectTactic = {
                                 "ML09:2023 Output Integrity Attack",
                                 "ML10:2023 Model Poisoning",
                                 "ML08:2023 Model Skewing"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities (config drift can weaken agent supply chain controls)",
+                                "ASI10:2026 Rogue Agents (config changes can enable rogue agent behavior)",
+                                "ASI03:2026 Identity and Privilege Abuse (config drift can weaken access controls)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.05 Supply Chain Attacks",
+                                "NISTAML.035 Prompt Extraction (config drift may expose system prompts)",
+                                "NISTAML.039 Compromising connected resources (config drift opens access to connected resources)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-5.2 Configuration Persistence",
+                                "AISubtech-5.2.1 Agent Profile Tampering",
+                                "AITech-9.1 Model or Agentic System Manipulation",
+                                "AITech-14.1 Unauthorized Access",
+                                "AISubtech-14.1.2 Insufficient Access Controls (config drift weakens access controls)",
+                                "AITech-8.4 Prompt/Meta Extraction (config changes can expose prompt metadata)"
                             ]
                         }
                     ],
@@ -1096,8 +1687,12 @@ export const detectTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0010.003: AI Supply Chain Compromise: Model",
-                                "AML.T0074 Masquerading"
+                                "AML.T0010 AI Supply Chain Compromise",
+                                "AML.T0010.003 AI Supply Chain Compromise: Model",
+                                "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
+                                "AML.T0074 Masquerading",
+                                "AML.T0058 Publish Poisoned Models (detects replaced/redirected model namespaces)",
+                                "AML.T0018.002 Manipulate AI Model: Embed Malware (namespace takeover enables malware embedding)"
                             ]
                         },
                         {
@@ -1117,6 +1712,28 @@ export const detectTactic = {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
                                 "ML06:2023 AI Supply Chain Attacks"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.05 Supply Chain Attacks",
+                                "NISTAML.051 Model Poisoning (Supply Chain)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-9.3 Dependency / Plugin Compromise",
+                                "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
+                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
+                                "AITech-9.1 Model or Agentic System Manipulation"
                             ]
                         }
                     ],
@@ -1153,9 +1770,18 @@ export const detectTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0018 Manipulate AI Model (via context manipulation)",
-                                "AML.T0074 Masquerading (by binding prompts to a verifiable origin)",
-                                "AML.T0061 LLM Prompt Self-Replication (Prompt Infection)"
+                                "AML.T0051 LLM Prompt Injection",
+                                "AML.T0051.000 LLM Prompt Injection: Direct",
+                                "AML.T0051.001 LLM Prompt Injection: Indirect",
+                                "AML.T0051.002 LLM Prompt Injection: Triggered",
+                                "AML.T0061 LLM Prompt Self-Replication",
+                                "AML.T0074 Masquerading (prompt integrity binds each turn to a verifiable origin)",
+                                "AML.T0080 AI Agent Context Poisoning",
+                                "AML.T0080.000 AI Agent Context Poisoning: Memory",
+                                "AML.T0080.001 AI Agent Context Poisoning: Thread",
+                                "AML.T0092 Manipulate User LLM Chat History",
+                                "AML.T0093 Prompt Infiltration via Public-Facing Application (integrity chain detects injected turns)",
+                                "AML.T0094 Delay Execution of LLM Instructions (chain verification detects injected delayed instructions)"
                             ]
                         },
                         {
@@ -1168,14 +1794,44 @@ export const detectTactic = {
                         {
                             "framework": "OWASP LLM Top 10 2025",
                             "items": [
-                                "LLM01:2025 Prompt Injection (especially indirect and multi-turn attacks)",
+                                "LLM01:2025 Prompt Injection",
                                 "LLM03:2025 Supply Chain (by verifying outputs from chained tools)"
                             ]
                         },
                         {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
-                                "ML09:2023 Output Integrity Attack (when verifying tool outputs)"
+                                "ML09:2023 Output Integrity Attack (when verifying tool outputs)",
+                                "ML01:2023 Input Manipulation Attack (integrity chain detects tampered inputs)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI01:2026 Agent Goal Hijack (prompt integrity prevents context manipulation for goal hijacking)",
+                                "ASI06:2026 Memory & Context Poisoning",
+                                "ASI07:2026 Insecure Inter-Agent Communication (integrity chain verifies prompts across agent boundaries)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.018 Prompt Injection",
+                                "NISTAML.015 Indirect Prompt Injection",
+                                "NISTAML.035 Prompt Extraction (integrity verification detects unauthorized prompt access)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-1.1 Direct Prompt Injection",
+                                "AITech-1.2 Indirect Prompt Injection",
+                                "AITech-4.2 Context Boundary Attacks",
+                                "AISubtech-4.2.1 Context Window Exploitation",
+                                "AISubtech-4.2.2 Session Boundary Violation",
+                                "AITech-5.1 Memory System Persistence",
+                                "AISubtech-5.1.1 Long-term / Short-term Memory Injection",
+                                "AITech-3.1 Masquerading / Obfuscation / Impersonation (integrity chain authenticates turn origins)"
                             ]
                         }
                     ],
@@ -1214,6 +1870,9 @@ export const detectTactic = {
                     "items": [
                         "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (query patterns)",
                         "AML.T0051 LLM Prompt Injection (repeated attempts)",
+                        "AML.T0051.000 LLM Prompt Injection: Direct",
+                        "AML.T0051.001 LLM Prompt Injection: Indirect",
+                        "AML.T0051.002 LLM Prompt Injection: Triggered",
                         "AML.T0057 LLM Data Leakage (output logging)",
                         "AML.T0012 Valid Accounts (anomalous usage)",
                         "AML.T0046 Spamming AI System with Chaff Data"
@@ -1244,6 +1903,32 @@ export const detectTactic = {
                         "ML05:2023 Model Theft (query patterns)",
                         "ML01:2023 Input Manipulation Attack (logged inputs)"
                     ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI02:2026 Tool Misuse and Exploitation (logging detects misuse patterns)",
+                        "ASI08:2026 Cascading Failures (logging enables root cause tracing)",
+                        "ASI10:2026 Rogue Agents (activity logs reveal rogue behavior)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.031 Model Extraction",
+                        "NISTAML.018 Prompt Injection",
+                        "NISTAML.036 Leaking information from user interactions",
+                        "NISTAML.01 Availability Violations"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-10.1 Model Extraction",
+                        "AITech-8.2 Data Exfiltration / Exposure",
+                        "AITech-13.1 Disruption of Availability",
+                        "AITech-14.1 Unauthorized Access"
+                    ]
                 }
             ], "subTechniques": [
                 {
@@ -1270,16 +1955,20 @@ export const detectTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "Enables detection of: AML.TA0002 Reconnaissance (unusual query patterns)",
+                                "AML.T0040 AI Model Inference API Access (unusual query patterns logged)",
                                 "AML.T0024 Exfiltration via AI Inference API (anomalous data in logs)",
+                                "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model",
                                 "AML.T0051 LLM Prompt Injection (repeated injection attempts)",
+                                "AML.T0051.000 LLM Prompt Injection: Direct",
+                                "AML.T0051.001 LLM Prompt Injection: Indirect",
+                                "AML.T0051.002 LLM Prompt Injection: Triggered",
                                 "AML.T0046 Spamming AI System with Chaff Data (high volume from single source)"
                             ]
                         },
                         {
                             "framework": "MAESTRO",
                             "items": [
-                                "Enables detection for: Misinformation Generation (by logging outputs)",
+                                "Repudiation (L7) (logging enables attribution of agent actions)",
                                 "Agent Tool Misuse (L7)",
                                 "Data Exfiltration (L2)",
                                 "Resource Hijacking (L4)"
@@ -1288,7 +1977,7 @@ export const detectTactic = {
                         {
                             "framework": "OWASP LLM Top 10 2025",
                             "items": [
-                                "Enables detection of: LLM01:2025 Prompt Injection (logging the attempts)",
+                                "LLM01:2025 Prompt Injection (logging the attempts)",
                                 "LLM02:2025 Sensitive Information Disclosure (logging the outputs)",
                                 "LLM06:2025 Excessive Agency (logging agent actions)",
                                 "LLM10:2025 Unbounded Consumption (logging usage patterns)"
@@ -1297,8 +1986,35 @@ export const detectTactic = {
                         {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
-                                "Enables detection of: ML01:2023 Input Manipulation Attack (logging malicious inputs)",
+                                "ML01:2023 Input Manipulation Attack (logging malicious inputs)",
                                 "ML05:2023 Model Theft (logging high-volume query patterns)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI02:2026 Tool Misuse and Exploitation (log generation captures tool call details)",
+                                "ASI08:2026 Cascading Failures (comprehensive logs enable failure chain analysis)",
+                                "ASI10:2026 Rogue Agents (log collection surfaces unauthorized agent activity)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.018 Prompt Injection",
+                                "NISTAML.031 Model Extraction",
+                                "NISTAML.036 Leaking information from user interactions",
+                                "NISTAML.01 Availability Violations (usage patterns reveal DoS attempts)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-10.1 Model Extraction",
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AISubtech-8.2.2 LLM Data Leakage (output logging captures leaks)",
+                                "AITech-14.1 Unauthorized Access",
+                                "AITech-13.1 Disruption of Availability"
                             ]
                         }
                     ],
@@ -1346,7 +2062,10 @@ export const detectTactic = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0051 LLM Prompt Injection (detecting repeated attempts)",
-                                "AML.T0024.002 Invert AI Model (detecting high query volumes)",
+                                "AML.T0051.000 LLM Prompt Injection: Direct",
+                                "AML.T0051.001 LLM Prompt Injection: Indirect",
+                                "AML.T0051.002 LLM Prompt Injection: Triggered",
+                                "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (detecting high query volumes)",
                                 "AML.T0012 Valid Accounts (detecting anomalous usage from an account)",
                                 "AML.T0046 Spamming AI System with Chaff Data",
                                 "AML.T0055 Unsecured Credentials (detecting use of known compromised keys)"
@@ -1357,7 +2076,7 @@ export const detectTactic = {
                             "items": [
                                 "Model Stealing (L1)",
                                 "Agent Tool Misuse (L7)",
-                                "DoS on Framework APIs (L3)"
+                                "Denial of Service on Framework APIs (L3)"
                             ]
                         },
                         {
@@ -1372,6 +2091,34 @@ export const detectTactic = {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
                                 "ML05:2023 Model Theft"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI02:2026 Tool Misuse and Exploitation (alerting on suspicious tool call patterns)",
+                                "ASI08:2026 Cascading Failures (alerts on cascading error patterns)",
+                                "ASI10:2026 Rogue Agents (alerting on unauthorized agent actions)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.018 Prompt Injection",
+                                "NISTAML.031 Model Extraction",
+                                "NISTAML.01 Availability Violations",
+                                "NISTAML.036 Leaking information from user interactions"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-10.1 Model Extraction",
+                                "AISubtech-10.1.1 API Query Stealing",
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AITech-13.1 Disruption of Availability",
+                                "AITech-14.1 Unauthorized Access",
+                                "AISubtech-14.1.1 Credential Theft"
                             ]
                         }
                     ],
@@ -1414,10 +2161,10 @@ export const detectTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0024.002 Invert AI Model (by finding probing patterns)",
-                                "AML.TA0002 Reconnaissance (finding subtle scanning)",
+                                "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (finding probing patterns)",
+                                "AML.T0040 AI Model Inference API Access (finding subtle scanning)",
                                 "AML.T0057 LLM Data Leakage (finding low-and-slow exfiltration)",
-                                "Novel variants of AML.T0015 (Evade AI Model)"
+                                "AML.T0015 Evade AI Model (hunting for novel evasion patterns)"
                             ]
                         },
                         {
@@ -1441,6 +2188,33 @@ export const detectTactic = {
                             "items": [
                                 "ML05:2023 Model Theft",
                                 "ML04:2023 Membership Inference Attack (detecting probing patterns)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI10:2026 Rogue Agents (hunting for subtle rogue agent indicators)",
+                                "ASI06:2026 Memory & Context Poisoning (hunting for poisoned context patterns)",
+                                "ASI01:2026 Agent Goal Hijack (hunting for goal drift evidence)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.031 Model Extraction",
+                                "NISTAML.033 Membership Inference",
+                                "NISTAML.022 Evasion (hunting for novel evasion techniques)",
+                                "NISTAML.036 Leaking information from user interactions"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-10.1 Model Extraction",
+                                "AISubtech-10.1.1 API Query Stealing",
+                                "AITech-9.2 Detection Evasion",
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AITech-8.1 Membership Inference"
                             ]
                         }
                     ],
@@ -1477,31 +2251,62 @@ export const detectTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0053 (AI Agent Tool Invocation)",
-                                "AML.T0061 (LLM Prompt Self-Replication)"
+                                "AML.T0053 AI Agent Tool Invocation",
+                                "AML.T0061 LLM Prompt Self-Replication",
+                                "AML.T0080 AI Agent Context Poisoning",
+                                "AML.T0080.000 AI Agent Context Poisoning: Memory",
+                                "AML.T0080.001 AI Agent Context Poisoning: Thread",
+                                "AML.T0081 Modify AI Agent Configuration"
                             ]
                         },
                         {
                             "framework": "MAESTRO",
                             "items": [
-                                "Enables detection for: Agent Goal Manipulation (L7)",
+                                "Agent Goal Manipulation (L7)",
                                 "Agent Tool Misuse (L7)",
                                 "Repudiation (L7)",
-                                "Evasion of Auditing/Compliance (L6)"
+                                "Regulatory Non-Compliance by AI Security Agents (L6)"
                             ]
                         },
                         {
                             "framework": "OWASP LLM Top 10 2025",
                             "items": [
-                                "Enables detection of: LLM06:2025 (Excessive Agency)",
-                                "LLM01:2025 (Prompt Injection, by logging the full chain of events)",
-                                "LLM08:2025 (Vector and Embedding Weaknesses, by logging RAG interactions)"
+                                "LLM06:2025 Excessive Agency",
+                                "LLM01:2025 Prompt Injection",
+                                "LLM08:2025 Vector and Embedding Weaknesses (logging RAG interactions)"
                             ]
                         },
                         {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
-                                "Can help diagnose ML08:2023 (Model Skewing) if it manifests as anomalous agent behavior."
+                                "ML08:2023 Model Skewing (anomalous agent behavior may indicate skewing)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI02:2026 Tool Misuse and Exploitation",
+                                "ASI06:2026 Memory & Context Poisoning (session logging captures memory manipulation)",
+                                "ASI10:2026 Rogue Agents (detailed session logs reveal rogue behavior)",
+                                "ASI01:2026 Agent Goal Hijack (logging full reasoning chain detects goal drift)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.018 Prompt Injection",
+                                "NISTAML.039 Compromising connected resources (agent tool call logs reveal resource abuse)",
+                                "NISTAML.036 Leaking information from user interactions"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-7.2 Memory System Corruption",
+                                "AISubtech-7.2.1 Memory Anchor Attacks",
+                                "AITech-14.2 Abuse of Delegated Authority",
+                                "AISubtech-14.2.1 Permission Escalation via Delegation",
+                                "AISubtech-8.2.3 Data Exfiltration via Agent Tooling"
                             ]
                         }
                     ],
@@ -1531,10 +2336,13 @@ export const detectTactic = {
                     "phase": ["operation"],
                     "description": "Continuously baseline and monitor accelerator telemetry (power, temperature, utilization, PMCs). Alert on deviations indicating cryptomining, DoS, or side-channel probing.",
                     "defendsAgainst": [
-                        { "framework": "MITRE ATLAS", "items": ["AML.T0029 Denial of AI Service", "AML.T0034 Cost Harvesting", "AML.T0024.002 Invert AI Model (if using side-channels)"] },
-                        { "framework": "MAESTRO", "items": ["Resource Hijacking (L4)", "Side-Channel Attacks (L4)"] },
+                        { "framework": "MITRE ATLAS", "items": ["AML.T0029 Denial of AI Service", "AML.T0034 Cost Harvesting", "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (side-channel detection)"] },
+                        { "framework": "MAESTRO", "items": ["Resource Hijacking (L4)", "Lateral Movement (L4) (anomalous resource patterns indicate lateral movement)"] },
                         { "framework": "OWASP LLM Top 10 2025", "items": ["LLM10:2025 Unbounded Consumption"] },
-                        { "framework": "OWASP ML Top 10 2023", "items": ["ML06:2023 AI Supply Chain Attacks (if malware is introduced)"] }
+                        { "framework": "OWASP ML Top 10 2023", "items": ["ML06:2023 AI Supply Chain Attacks (malware introduces anomalous compute patterns)"] },
+                        { "framework": "OWASP Agentic AI Top 10 2026", "items": ["ASI08:2026 Cascading Failures (telemetry anomalies indicate cascading resource exhaustion)"] },
+                        { "framework": "NIST Adversarial Machine Learning 2025", "items": ["NISTAML.01 Availability Violations", "NISTAML.014 Energy-latency", "NISTAML.031 Model Extraction (side-channel telemetry patterns)"] },
+                        { "framework": "Cisco Integrated AI Security and Safety Framework", "items": ["AITech-13.1 Disruption of Availability", "AISubtech-13.1.1 Compute Exhaustion", "AITech-13.2 Cost Harvesting / Repurposing", "AISubtech-13.2.1 Service Misuse for Cost Inflation"] }
                     ],
                     "implementationStrategies": [
                         {
@@ -1553,8 +2361,12 @@ export const detectTactic = {
                     "description": "Monitors Agent Name Service (ANS) registration events and resolution traffic to identify anomalies indicative of registry poisoning, Sybil-style namespace abuse, directory reconnaissance, or credential churn. It correlates identity, issuer, and query outcomes (e.g., NXDOMAIN/Agent Not Found, version-range mismatches) into actionable security alerts.",
                     "defendsAgainst": [
                         { "framework": "MITRE ATLAS", "items": ["AML.T0029 Denial of AI Service", "AML.T0034 Cost Harvesting"] },
-                        { "framework": "MAESTRO", "items": ["Agent Impersonation (L7)", "Directory Scanning (L7)", "Resource Hijacking (L4)"] },
-                        { "framework": "OWASP LLM Top 10 2025", "items": ["LLM10:2025 Unbounded Consumption"] }
+                        { "framework": "MAESTRO", "items": ["Agent Impersonation (L7)", "Malicious Agent Discovery (L7)", "Resource Hijacking (L4)"] },
+                        { "framework": "OWASP LLM Top 10 2025", "items": ["LLM10:2025 Unbounded Consumption"] },
+                        { "framework": "OWASP ML Top 10 2023", "items": ["ML06:2023 AI Supply Chain Attacks (registry poisoning is a supply chain vector)"] },
+                        { "framework": "OWASP Agentic AI Top 10 2026", "items": ["ASI03:2026 Identity and Privilege Abuse", "ASI04:2026 Agentic Supply Chain Vulnerabilities (registry poisoning compromises agent supply chain)", "ASI07:2026 Insecure Inter-Agent Communication (resolution tampering disrupts agent communication)", "ASI10:2026 Rogue Agents (Sybil-style registration detects rogue agents)"] },
+                        { "framework": "NIST Adversarial Machine Learning 2025", "items": ["NISTAML.01 Availability Violations", "NISTAML.05 Supply Chain Attacks (registry poisoning is supply chain attack)", "NISTAML.039 Compromising connected resources"] },
+                        { "framework": "Cisco Integrated AI Security and Safety Framework", "items": ["AITech-13.1 Disruption of Availability", "AITech-14.1 Unauthorized Access", "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)", "AITech-3.1 Masquerading / Obfuscation / Impersonation"] }
                     ],
                     "implementationStrategies": [
                         {
@@ -1593,28 +2405,52 @@ export const detectTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.TA0007 Defense Evasion (if XAI is part of a defensive monitoring system and is itself targeted to be fooled). Potentially a new ATLAS technique: \"AML.TXXXX Manipulate AI Explainability\"."
+                        "AML.T0015 Evade AI Model (XAI manipulation enables defense evasion)",
+                        "AML.T0031 Erode AI Model Integrity (manipulated explanations erode trust)"
                     ]
                 },
                 {
                     "framework": "MAESTRO",
                     "items": [
-                        "Evasion of Auditing/Compliance (L6: Security & Compliance, if manipulated XAI is used to mislead auditors)",
-                        "Manipulation of Evaluation Metrics (L5: Evaluation & Observability, if explanations are used as part of the evaluation and are unreliable)",
-                        "Obfuscation of Malicious Behavior (Cross-Layer).",
+                        "Evasion of Security AI Agents (L6) (manipulated XAI misleads security auditors)",
+                        "Manipulation of Evaluation Metrics (L5) (unreliable explanations corrupt evaluation)",
+                        "Evasion of Detection (L5) (obfuscated behavior evades observability)",
                         "Lack of Explainability in Security AI Agents (L6)"
                     ]
                 },
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
-                        "Indirectly supports investigation of LLM01:2025 Prompt Injection or LLM04:2025 Data and Model Poisoning by ensuring that any XAI methods used to understand the resulting behavior are themselves trustworthy."
+                        "LLM01:2025 Prompt Injection (XAI validates explanation integrity post-injection)",
+                        "LLM04:2025 Data and Model Poisoning (XAI detects poisoning-induced explanation anomalies)"
                     ]
                 },
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "Indirectly supports diagnosis of ML08:2023 Model Skewing or ML10:2023 Model Poisoning, by ensuring XAI methods used to identify these issues are not being manipulated."
+                        "ML08:2023 Model Skewing (XAI detects skewing through explanation drift)",
+                        "ML10:2023 Model Poisoning (XAI detects poisoning-induced explanation changes)"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI09:2026 Human-Agent Trust Exploitation (manipulated XAI exploits trust)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.022 Evasion",
+                        "NISTAML.025 Black-box Evasion"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-11.1 Environment-Aware Evasion",
+                        "AITech-11.2 Model-Selective Evasion",
+                        "AITech-9.2 Detection Evasion"
                     ]
                 }
             ],
@@ -1667,32 +2503,60 @@ export const detectTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0051 LLM Prompt Injection (specifically cross-modal variants like in Scenario #7 of LLM01:2025 )",
-                        "AML.T0015 Evade AI Model (if evasion exploits multimodal vulnerabilities)",
-                        "AML.T0043 Craft Adversarial Data (for multimodal adversarial examples)."
+                        "AML.T0051 LLM Prompt Injection (cross-modal injection variants)",
+                        "AML.T0051.000 LLM Prompt Injection: Direct",
+                        "AML.T0051.001 LLM Prompt Injection: Indirect",
+                        "AML.T0015 Evade AI Model (multimodal evasion)",
+                        "AML.T0043 Craft Adversarial Data (multimodal adversarial examples)",
+                        "AML.T0043.000 Craft Adversarial Data: White-Box Optimization",
+                        "AML.T0043.003 Craft Adversarial Data: Manual Modification"
                     ]
                 },
                 {
                     "framework": "MAESTRO",
                     "items": [
-                        "Cross-Modal Manipulation Attacks (L1: Foundation Models / L2: Data Operations)",
-                        "Input Validation Attacks (L3: Agent Frameworks, for multimodal inputs)",
-                        "Data Poisoning (L2: Data Operations, if multimodal data is used for poisoning and inconsistencies are introduced)."
+                        "Adversarial Examples (L1)",
+                        "Input Validation Attacks (L3)",
+                        "Data Poisoning (L2) (multimodal data inconsistencies indicate poisoning)"
                     ]
                 },
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
-                        "LLM01:2025 Prompt Injection (specifically Multimodal Injection Scenario #7)",
-                        "LLM04:2025 Data and Model Poisoning (if using tainted or inconsistent multimodal data)",
-                        "LLM08:2025 Vector and Embedding Weaknesses (if multimodal embeddings are manipulated or store inconsistent data)."
+                        "LLM01:2025 Prompt Injection (multimodal injection)",
+                        "LLM04:2025 Data and Model Poisoning (tainted multimodal data)",
+                        "LLM08:2025 Vector and Embedding Weaknesses (manipulated multimodal embeddings)"
                     ]
                 },
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "ML01:2023 Input Manipulation Attack (specifically for multimodal inputs)",
-                        "ML02:2023 Data Poisoning Attack (using inconsistent or malicious multimodal data)."
+                        "ML01:2023 Input Manipulation Attack (multimodal inputs)",
+                        "ML02:2023 Data Poisoning Attack (malicious multimodal data)"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI01:2026 Agent Goal Hijack (cross-modal goal manipulation)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.018 Prompt Injection",
+                        "NISTAML.022 Evasion",
+                        "NISTAML.024 Targeted Poisoning"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-1.4 Multi-Modal Injection and Manipulation",
+                        "AITech-19.1 Cross-Modal Inconsistency Exploits",
+                        "AISubtech-19.1.1 Contradictory Inputs Attack",
+                        "AISubtech-19.1.2 Modality Skewing",
+                        "AITech-19.2 Fusion Payload Split"
                     ]
                 }
             ],
@@ -1756,17 +2620,23 @@ export const detectTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "Many tactics by providing an advanced detection layer. Particularly useful against novel or evasive variants of AML.T0015 Evade AI Model, AML.T0051 LLM Prompt Injection, AML.T0024.002 Invert AI Model, AML.TA0007 Active Scanning & Probing, and sophisticated reconnaissance activities (AML.TA0001). Could also help detect AI-generated attacks if their patterns differ from human-initiated ones."
+                        "AML.T0015 Evade AI Model (AI defender detects novel evasion)",
+                        "AML.T0051 LLM Prompt Injection (AI defender detects obfuscated injections)",
+                        "AML.T0051.000 LLM Prompt Injection: Direct",
+                        "AML.T0051.001 LLM Prompt Injection: Indirect",
+                        "AML.T0051.002 LLM Prompt Injection: Triggered",
+                        "AML.T0024 Exfiltration via AI Inference API (AI analytics detects extraction patterns)",
+                        "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model"
                     ]
                 },
                 {
                     "framework": "MAESTRO",
                     "items": [
-                        "Advanced Evasion Techniques (L1, L5, L6)",
-                        "Subtle Data or Model Poisoning effects not caught by simpler checks (L1, L2)",
-                        "Sophisticated Agent Manipulation (L7)",
-                        "Novel Attack Vectors (Cross-Layer)",
-                        "Resource Hijacking (L4, through anomalous pattern detection)."
+                        "Evasion of Detection (L5)",
+                        "Evasion of Security AI Agents (L6)",
+                        "Data Poisoning (L2) (anomaly detection catches subtle poisoning effects)",
+                        "Agent Goal Manipulation (L7)",
+                        "Resource Hijacking (L4) (anomalous pattern detection)"
                     ]
                 },
                 {
@@ -1774,7 +2644,7 @@ export const detectTactic = {
                     "items": [
                         "LLM01:2025 Prompt Injection (novel or obfuscated injections)",
                         "LLM06:2025 Excessive Agency (subtle deviations in agent behavior)",
-                        "LLM10:2025 Unbounded Consumption (anomalous resource usage patterns indicating DoS or economic attacks)."
+                        "LLM10:2025 Unbounded Consumption (anomalous resource usage patterns indicating DoS or economic attacks)"
                     ]
                 },
                 {
@@ -1782,7 +2652,33 @@ export const detectTactic = {
                     "items": [
                         "ML01:2023 Input Manipulation Attack (sophisticated adversarial inputs)",
                         "ML05:2023 Model Theft (anomalous query patterns indicative of advanced extraction)",
-                        "ML02:2023 Data Poisoning Attack (detecting subtle behavioral shifts post-deployment)."
+                        "ML02:2023 Data Poisoning Attack (detecting subtle behavioral shifts post-deployment)"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI01:2026 Agent Goal Hijack (AI analytics detects hijacked agent behavior)",
+                        "ASI08:2026 Cascading Failures (AI analytics detects cascading anomaly patterns)",
+                        "ASI10:2026 Rogue Agents (AI-based behavioral analysis detects rogue agents)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.018 Prompt Injection",
+                        "NISTAML.022 Evasion",
+                        "NISTAML.025 Black-box Evasion",
+                        "NISTAML.031 Model Extraction"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-11.1 Environment-Aware Evasion",
+                        "AITech-11.2 Model-Selective Evasion",
+                        "AITech-9.2 Detection Evasion",
+                        "AISubtech-11.1.1 Agent-Specific Evasion"
                     ]
                 }
             ],
@@ -1872,6 +2768,29 @@ export const detectTactic = {
                         "ML08:2023 Model Skewing",
                         "ML09:2023 Output Integrity Attack (Ensures fabricated agent claims aren't treated as authoritative facts or injected into downstream processes)"
                     ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI01:2026 Agent Goal Hijack (hallucinated facts redirect agent goals)",
+                        "ASI08:2026 Cascading Failures (hallucination cascades across agent networks)",
+                        "ASI09:2026 Human-Agent Trust Exploitation (fabricated facts exploit human trust in agent outputs)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.027 Misaligned Outputs",
+                        "NISTAML.015 Indirect Prompt Injection"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-7.1 Reasoning Corruption",
+                        "AITech-15.1 Harmful Content",
+                        "AITech-4.1 Agent Injection"
+                    ]
                 }
             ],
             "implementationStrategies": [
@@ -1928,6 +2847,8 @@ export const detectTactic = {
                     "framework": "MITRE ATLAS",
                     "items": [
                         "AML.T0051 LLM Prompt Injection",
+                        "AML.T0051.000 LLM Prompt Injection: Direct",
+                        "AML.T0051.001 LLM Prompt Injection: Indirect",
                         "AML.T0054 LLM Jailbreak",
                         "AML.T0078 Drive-by Compromise",
                         "AML.T0018 Manipulate AI Model"
@@ -1954,6 +2875,30 @@ export const detectTactic = {
                     "items": [
                         "ML01:2023 Input Manipulation Attack",
                         "ML09:2023 Output Integrity Attack (Detects or prevents altered / fabricated model output that could mislead downstream systems)"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI01:2026 Agent Goal Hijack",
+                        "ASI08:2026 Cascading Failures (goal deviation triggers cascading failures)",
+                        "ASI10:2026 Rogue Agents (goal deviation is a primary indicator of rogue behavior)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.027 Misaligned Outputs",
+                        "NISTAML.039 Compromising connected resources"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-1.3 Goal Manipulation",
+                        "AISubtech-1.3.1 Goal Manipulation (Models, Agents)",
+                        "AISubtech-1.3.2 Goal Manipulation (Tools, Prompts, Resources)",
+                        "AITech-12.1 Tool Exploitation"
                     ]
                 }
             ],
@@ -1997,14 +2942,19 @@ export const detectTactic = {
                     "framework": "MITRE ATLAS",
                     "items": [
                         "AML.T0048 External Harms",
-                        "AML.T0073 Impersonation"
+                        "AML.T0073 Impersonation",
+                        "AML.T0074 Masquerading",
+                        "AML.T0053 AI Agent Tool Invocation (rogue agents abuse tool access)",
+                        "AML.T0081 Modify AI Agent Configuration (detects unauthorized config changes by rogue agents)",
+                        "AML.T0086 Exfiltration via AI Agent Tool Invocation (detects data exfil by compromised agents)"
                     ]
                 },
                 {
                     "framework": "MAESTRO",
                     "items": [
                         "Compromised Agents (L7) (Detects/contains agents operating outside intended policy)",
-                        "Agent Identity Attack (L7)"
+                        "Agent Identity Attack (L7)",
+                        "Agent Impersonation (L7)"
                     ]
                 },
                 {
@@ -2016,7 +2966,33 @@ export const detectTactic = {
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "ML06:2023 ML Supply Chain Attacks (Detects compromised or swapped models/agents introduced into the environment)"
+                        "ML06:2023 AI Supply Chain Attacks (Detects compromised or swapped models/agents introduced into the environment)"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI10:2026 Rogue Agents",
+                        "ASI03:2026 Identity and Privilege Abuse (detects impersonating or privilege-abusing agents)",
+                        "ASI07:2026 Insecure Inter-Agent Communication (behavioral attestation surfaces compromised inter-agent channels)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.039 Compromising connected resources (rogue agents may access connected systems)",
+                        "NISTAML.027 Misaligned Outputs (rogue agents produce misaligned outputs)"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-4.1 Agent Injection",
+                        "AISubtech-4.1.1 Rogue Agent Introduction",
+                        "AITech-3.1 Masquerading / Obfuscation / Impersonation",
+                        "AISubtech-3.1.2 Trusted Agent Spoofing",
+                        "AITech-11.1 Environment-Aware Evasion (rogue agents may use evasion to avoid detection)",
+                        "AISubtech-11.1.1 Agent-Specific Evasion"
                     ]
                 }
             ],
@@ -2042,15 +3018,19 @@ export const detectTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.TA0006 Persistence (if a rogue agent is the persistence mechanism)",
-                                "AML.T0048 External Harms (by detecting the anomalous behavior that leads to harm)"
+                                "AML.T0048 External Harms (by detecting the anomalous behavior that leads to harm)",
+                                "AML.T0073 Impersonation (behavioral analytics detects impostor agents)",
+                                "AML.T0074 Masquerading",
+                                "AML.T0053 AI Agent Tool Invocation (anomalous tool usage patterns reveal hijacked agents)",
+                                "AML.T0084 Discover AI Agent Configuration (detects reconnaissance probing of agent capabilities)",
+                                "AML.T0084.001 Discover AI Agent Configuration: Tool Definitions"
                             ]
                         },
                         {
                             "framework": "MAESTRO",
                             "items": [
                                 "Compromised Agents (L7)",
-                                "Agent Goal Manipulation (L7, by detecting the resulting behavioral changes)"
+                                "Agent Goal Manipulation (L7) (detecting resulting behavioral changes)"
                             ]
                         },
                         {
@@ -2062,7 +3042,31 @@ export const detectTactic = {
                         {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
-                                "ML06:2023 ML Supply Chain Attacks (if a compromised dependency causes anomalous agent behavior)"
+                                "ML06:2023 AI Supply Chain Attacks (if a compromised dependency causes anomalous agent behavior)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI10:2026 Rogue Agents",
+                                "ASI01:2026 Agent Goal Hijack (behavioral baselines detect hijacked goals)",
+                                "ASI02:2026 Tool Misuse and Exploitation (anomalous tool patterns reveal misuse)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.027 Misaligned Outputs (behavioral drift indicates misalignment)",
+                                "NISTAML.039 Compromising connected resources (anomalous access patterns to connected resources)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-4.1 Agent Injection",
+                                "AISubtech-4.1.1 Rogue Agent Introduction",
+                                "AITech-11.1 Environment-Aware Evasion (behavioral analytics detects evasion attempts)",
+                                "AISubtech-11.1.1 Agent-Specific Evasion"
                             ]
                         }
                     ],
@@ -2108,7 +3112,7 @@ export const detectTactic = {
                             "framework": "MAESTRO",
                             "items": [
                                 "Compromised Agents (L7)",
-                                "Agent Identity Attack (L7, peer verification helps establish trust)",
+                                "Agent Identity Attack (L7) (peer verification establishes trust)",
                                 "Agent Goal Manipulation (L7)"
                             ]
                         },
@@ -2122,6 +3126,32 @@ export const detectTactic = {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
                                 "ML09:2023 Output Integrity Attack (if output affects other agents)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI07:2026 Insecure Inter-Agent Communication",
+                                "ASI03:2026 Identity and Privilege Abuse (peer verification establishes trust between agents)",
+                                "ASI08:2026 Cascading Failures (consensus prevents single-agent failures from cascading)",
+                                "ASI10:2026 Rogue Agents (peer monitoring detects rogue behavior)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.027 Misaligned Outputs",
+                                "NISTAML.039 Compromising connected resources (inter-agent trust prevents compromised agents from reaching connected systems)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-4.1 Agent Injection",
+                                "AITech-4.2 Context Boundary Attacks",
+                                "AITech-4.3 Protocol Manipulation",
+                                "AISubtech-1.1.3 Multi-Agent Prompt Injection",
+                                "AISubtech-1.2.3 Multi-Agent (Indirect Prompt Injection)"
                             ]
                         }
                     ],
@@ -2177,7 +3207,30 @@ export const detectTactic = {
                         {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
-                                "ML06:2023 ML Supply Chain Attacks"
+                                "ML06:2023 AI Supply Chain Attacks"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities (prevents unauthorized agent code from running)",
+                                "ASI10:2026 Rogue Agents (quarantine and population control contain rogue agents)",
+                                "ASI08:2026 Cascading Failures (isolating rogue agents prevents cascading failures)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.05 Supply Chain Attacks",
+                                "NISTAML.01 Availability Violations (population control ensures agent availability)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-4.1 Agent Injection",
+                                "AITech-13.1 Disruption of Availability",
+                                "AISubtech-18.2.2 Dedicated Malicious Server or Infrastructure"
                             ]
                         }
                     ],
@@ -2226,6 +3279,29 @@ export const detectTactic = {
                     "items": [
                         "ML02:2023 Data Poisoning Attack",
                         "ML10:2023 Model Poisoning"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI04:2026 Agentic Supply Chain Vulnerabilities (backdoor detection in supply chain components)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.023 Backdoor Poisoning",
+                        "NISTAML.021 Clean-label Backdoor",
+                        "NISTAML.024 Targeted Poisoning",
+                        "NISTAML.013 Data Poisoning"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-6.1 Training Data Poisoning",
+                        "AITech-9.2 Detection Evasion",
+                        "AITech-9.1 Model or Agentic System Manipulation"
                     ]
                 }
             ],
@@ -2281,7 +3357,7 @@ export const detectTactic = {
                         {
                             "framework": "OWASP LLM Top 10 2025",
                             "items": [
-                                "Not directly applicable"
+                                "LLM04:2025 Data and Model Poisoning (backdoor detection in GNN-based models)"
                             ]
                         },
                         {
@@ -2289,6 +3365,28 @@ export const detectTactic = {
                             "items": [
                                 "ML02:2023 Data Poisoning Attack",
                                 "ML10:2023 Model Poisoning"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities (backdoor scanning detects supply chain backdoors)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.023 Backdoor Poisoning",
+                                "NISTAML.021 Clean-label Backdoor",
+                                "NISTAML.051 Model Poisoning (Supply Chain)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-6.1 Training Data Poisoning",
+                                "AITech-9.1 Model or Agentic System Manipulation",
+                                "AITech-9.2 Detection Evasion"
                             ]
                         }
                     ]
@@ -2344,7 +3442,7 @@ export const detectTactic = {
                         {
                             "framework": "OWASP LLM Top 10 2025",
                             "items": [
-                                "Not directly applicable"
+                                "LLM04:2025 Data and Model Poisoning (structural poisoning detection in GNN models)"
                             ]
                         },
                         {
@@ -2352,6 +3450,26 @@ export const detectTactic = {
                             "items": [
                                 "ML01:2023 Input Manipulation Attack",
                                 "ML02:2023 Data Poisoning Attack"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities (structural analysis detects poisoned graph components)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.023 Backdoor Poisoning",
+                                "NISTAML.024 Targeted Poisoning"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-6.1 Training Data Poisoning",
+                                "AITech-9.2 Detection Evasion"
                             ]
                         }
                     ]
@@ -2400,13 +3518,33 @@ export const detectTactic = {
                         {
                             "framework": "OWASP LLM Top 10 2025",
                             "items": [
-                                "Not directly applicable"
+                                "LLM04:2025 Data and Model Poisoning (topological anomaly detection in graph data)"
                             ]
                         },
                         {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
                                 "ML02:2023 Data Poisoning Attack"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities (structural anomalies may indicate supply chain compromise)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.023 Backdoor Poisoning",
+                                "NISTAML.013 Data Poisoning"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-6.1 Training Data Poisoning",
+                                "AITech-9.2 Detection Evasion"
                             ]
                         }
                     ]
@@ -2455,6 +3593,29 @@ export const detectTactic = {
                     "items": [
                         "ML08:2023 Model Skewing (where agent behavior is skewed by an exploitable reward)"
                     ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI01:2026 Agent Goal Hijack (RL manipulation redirects agent goals)",
+                        "ASI10:2026 Rogue Agents (reward hacking creates rogue behavior)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.024 Targeted Poisoning",
+                        "NISTAML.013 Data Poisoning (reward signal is training data)",
+                        "NISTAML.027 Misaligned Outputs"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-6.1 Training Data Poisoning (reward poisoning)",
+                        "AITech-7.1 Reasoning Corruption",
+                        "AISubtech-1.3.1 Goal Manipulation (Models, Agents)"
+                    ]
                 }
             ],
             "implementationStrategies": [
@@ -2482,9 +3643,12 @@ export const detectTactic = {
             "description": "This technique involves the real-time monitoring of a Retrieval-Augmented Generation (RAG) system's behavior at inference time. It focuses on two key checks: 1) Content Analysis, where retrieved document chunks are scanned for harmful content or malicious payloads before being passed to the LLM, and 2) Relevance Analysis, which verifies that the retrieved documents are semantically relevant to the user's original query. A significant mismatch in relevance can indicate a vector manipulation or poisoning attack designed to force the model to use unintended context.",
             "defendsAgainst": [
                 { "framework": "MITRE ATLAS", "items": ["AML.T0070 RAG Poisoning", "AML.T0066 Retrieval Content Crafting", "AML.T0071 False RAG Entry Injection", "AML.T0051 LLM Prompt Injection (if payload is in RAG source)"] },
-                { "framework": "MAESTRO", "items": ["Compromised RAG Pipelines (L2)", "Data Poisoning (L2)", "Misinformation Generation (Cross-Layer)"] },
+                { "framework": "MAESTRO", "items": ["Compromised RAG Pipelines (L2)", "Data Poisoning (L2)", "Goal Misalignment Cascades (Cross-Layer) (misinformation from misaligned agent outputs)"] },
                 { "framework": "OWASP LLM Top 10 2025", "items": ["LLM08:2025 Vector and Embedding Weaknesses", "LLM04:2025 Data and Model Poisoning"] },
-                { "framework": "OWASP ML Top 10 2023", "items": ["ML02:2023 Data Poisoning Attack"] }
+                { "framework": "OWASP ML Top 10 2023", "items": ["ML02:2023 Data Poisoning Attack"] },
+                { "framework": "OWASP Agentic AI Top 10 2026", "items": ["ASI01:2026 Agent Goal Hijack (RAG poisoning redirects agent goals)", "ASI06:2026 Memory & Context Poisoning"] },
+                { "framework": "NIST Adversarial Machine Learning 2025", "items": ["NISTAML.015 Indirect Prompt Injection", "NISTAML.027 Misaligned Outputs", "NISTAML.024 Targeted Poisoning"] },
+                { "framework": "Cisco Integrated AI Security and Safety Framework", "items": ["AITech-1.2 Indirect Prompt Injection", "AITech-7.2 Memory System Corruption", "AITech-7.3 Data Source Abuse and Manipulation"] }
             ],
             "subTechniques": [
                 {
@@ -2497,7 +3661,10 @@ export const detectTactic = {
                         { "framework": "MITRE ATLAS", "items": ["AML.T0070 RAG Poisoning", "AML.T0051 LLM Prompt Injection"] },
                         { "framework": "MAESTRO", "items": ["Compromised RAG Pipelines (L2)", "Data Poisoning (L2)"] },
                         { "framework": "OWASP LLM Top 10 2025", "items": ["LLM08:2025 Vector and Embedding Weaknesses", "LLM01:2025 Prompt Injection (indirect)"] },
-                        { "framework": "OWASP ML Top 10 2023", "items": ["ML02:2023 Data Poisoning Attack"] }
+                        { "framework": "OWASP ML Top 10 2023", "items": ["ML02:2023 Data Poisoning Attack"] },
+                        { "framework": "OWASP Agentic AI Top 10 2026", "items": ["ASI01:2026 Agent Goal Hijack", "ASI06:2026 Memory & Context Poisoning", "ASI04:2026 Agentic Supply Chain Vulnerabilities"] },
+                        { "framework": "NIST Adversarial Machine Learning 2025", "items": ["NISTAML.015 Indirect Prompt Injection", "NISTAML.027 Misaligned Outputs"] },
+                        { "framework": "Cisco Integrated AI Security and Safety Framework", "items": ["AITech-1.2 Indirect Prompt Injection", "AISubtech-1.2.1 Instruction Manipulation (Indirect Prompt Injection)", "AISubtech-1.2.2 Obfuscation (Indirect Prompt Injection)", "AITech-7.3 Data Source Abuse and Manipulation"] }
                     ],
                     "implementationStrategies": [
                         {
@@ -2518,7 +3685,10 @@ export const detectTactic = {
                         { "framework": "MITRE ATLAS", "items": ["AML.T0070 RAG Poisoning", "AML.T0071 False RAG Entry Injection"] },
                         { "framework": "MAESTRO", "items": ["Compromised RAG Pipelines (L2)"] },
                         { "framework": "OWASP LLM Top 10 2025", "items": ["LLM08:2025 Vector and Embedding Weaknesses"] },
-                        { "framework": "OWASP ML Top 10 2023", "items": ["ML02:2023 Data Poisoning Attack"] }
+                        { "framework": "OWASP ML Top 10 2023", "items": ["ML02:2023 Data Poisoning Attack"] },
+                        { "framework": "OWASP Agentic AI Top 10 2026", "items": ["ASI06:2026 Memory & Context Poisoning"] },
+                        { "framework": "NIST Adversarial Machine Learning 2025", "items": ["NISTAML.015 Indirect Prompt Injection", "NISTAML.024 Targeted Poisoning"] },
+                        { "framework": "Cisco Integrated AI Security and Safety Framework", "items": ["AITech-7.2 Memory System Corruption", "AITech-7.3 Data Source Abuse and Manipulation"] }
                     ],
                     "implementationStrategies": [
                         {
@@ -2537,9 +3707,12 @@ export const detectTactic = {
                     "description": "Alert when top-k retrievals are dominated by a single uncommon source, indicating possible answer drift or targeted source poisoning.",
                     "defendsAgainst": [
                         { "framework": "MITRE ATLAS", "items": ["AML.T0070 RAG Poisoning", "AML.T0071 False RAG Entry Injection"] },
-                        { "framework": "MAESTRO", "items": ["Compromised RAG Pipelines (L2)", "Misinformation Generation (Cross-Layer)"] },
+                        { "framework": "MAESTRO", "items": ["Compromised RAG Pipelines (L2)", "Goal Misalignment Cascades (Cross-Layer) (misinformation from misaligned agent outputs)"] },
                         { "framework": "OWASP LLM Top 10 2025", "items": ["LLM08:2025 Vector and Embedding Weaknesses", "LLM09:2025 Misinformation"] },
-                        { "framework": "OWASP ML Top 10 2023", "items": ["ML02:2023 Data Poisoning Attack"] }
+                        { "framework": "OWASP ML Top 10 2023", "items": ["ML02:2023 Data Poisoning Attack"] },
+                        { "framework": "OWASP Agentic AI Top 10 2026", "items": ["ASI06:2026 Memory & Context Poisoning", "ASI04:2026 Agentic Supply Chain Vulnerabilities"] },
+                        { "framework": "NIST Adversarial Machine Learning 2025", "items": ["NISTAML.024 Targeted Poisoning", "NISTAML.013 Data Poisoning"] },
+                        { "framework": "Cisco Integrated AI Security and Safety Framework", "items": ["AITech-7.3 Data Source Abuse and Manipulation", "AITech-6.1 Training Data Poisoning"] }
                     ],
                     "implementationStrategies": [
                         {
@@ -2560,10 +3733,10 @@ export const detectTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0052: Phishing",
-                        "AML.T0048.002: External Harms: Societal Harm",
-                        "AML.T0048.000: External Harms: Financial Harm",
-                        "AML.T0067: LLM Trusted Output Components Manipulation"
+                        "AML.T0052 Phishing",
+                        "AML.T0048.002 External Harms: Societal Harm",
+                        "AML.T0048.000 External Harms: Financial Harm",
+                        "AML.T0067 LLM Trusted Output Components Manipulation"
                     ]
                 },
                 {
@@ -2571,7 +3744,7 @@ export const detectTactic = {
                     "items": [
                         "Inaccurate Agent Capability Description (L7)",
                         "Agent Tool Misuse (L7)",
-                        "Data Exfiltration (L2, via coerced user approvals)"
+                        "Data Exfiltration (L2) (via coerced user approvals)"
                     ]
                 },
                 {
@@ -2587,6 +3760,26 @@ export const detectTactic = {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
                         "ML09:2023 Output Integrity Attack"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI09:2026 Human-Agent Trust Exploitation"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.027 Misaligned Outputs",
+                        "NISTAML.04 Misuse Violations"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-15.1 Harmful Content",
+                        "AITech-3.1 Masquerading / Obfuscation / Impersonation"
                     ]
                 }
             ],
@@ -2610,8 +3803,15 @@ export const detectTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0052: Phishing",
-                                "AML.T0067: LLM Trusted Output Components Manipulation"
+                                "AML.T0052 Phishing",
+                                "AML.T0067 LLM Trusted Output Components Manipulation"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Inaccurate Agent Capability Description (L7)",
+                                "Lack of Explainability in Security AI Agents (L6)"
                             ]
                         },
                         {
@@ -2619,6 +3819,31 @@ export const detectTactic = {
                             "items": [
                                 "LLM09:2025 Misinformation",
                                 "LLM05:2025 Improper Output Handling"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML09:2023 Output Integrity Attack (trust metadata ensures output integrity)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI09:2026 Human-Agent Trust Exploitation"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.027 Misaligned Outputs"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-15.1 Harmful Content",
+                                "AITech-3.1 Masquerading / Obfuscation / Impersonation"
                             ]
                         }
                     ],
@@ -2649,8 +3874,15 @@ export const detectTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0048.000: Financial Harm",
-                                "AML.T0052: Phishing"
+                                "AML.T0048.000 External Harms: Financial Harm",
+                                "AML.T0052 Phishing"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Agent Tool Misuse (L7)",
+                                "Agent Goal Manipulation (L7)"
                             ]
                         },
                         {
@@ -2658,6 +3890,34 @@ export const detectTactic = {
                             "items": [
                                 "LLM06:2025 Excessive Agency",
                                 "LLM02:2025 Sensitive Information Disclosure"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML09:2023 Output Integrity Attack"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI09:2026 Human-Agent Trust Exploitation",
+                                "ASI02:2026 Tool Misuse and Exploitation",
+                                "ASI03:2026 Identity and Privilege Abuse"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.039 Compromising connected resources",
+                                "NISTAML.04 Misuse Violations"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-12.1 Tool Exploitation",
+                                "AITech-14.2 Abuse of Delegated Authority"
                             ]
                         }
                     ],
@@ -2678,10 +3938,10 @@ export const detectTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0053: AI Agent Tool Invocation",
-                        "AML.T0061: LLM Prompt Self-Replication",
-                        "AML.T0072: Reverse Shell",
-                        "AML.T0050: Command and Scripting Interpreter"
+                        "AML.T0053 AI Agent Tool Invocation",
+                        "AML.T0061 LLM Prompt Self-Replication",
+                        "AML.T0072 Reverse Shell",
+                        "AML.T0050 Command and Scripting Interpreter"
                     ]
                 },
                 {
@@ -2704,6 +3964,28 @@ export const detectTactic = {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
                         "ML06:2023 AI Supply Chain Attacks"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI10:2026 Rogue Agents",
+                        "ASI07:2026 Insecure Inter-Agent Communication",
+                        "ASI03:2026 Identity and Privilege Abuse"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.05 Supply Chain Attacks",
+                        "NISTAML.039 Compromising connected resources"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-4.1 Agent Injection",
+                        "AITech-3.1 Masquerading / Obfuscation / Impersonation"
                     ]
                 }
             ],
@@ -2730,8 +4012,8 @@ export const detectTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0061: LLM Prompt Self-Replication",
-                                "AML.T0053: AI Agent Tool Invocation"
+                                "AML.T0061 LLM Prompt Self-Replication",
+                                "AML.T0053 AI Agent Tool Invocation"
                             ]
                         },
                         {
@@ -2739,6 +4021,41 @@ export const detectTactic = {
                             "items": [
                                 "Compromised Agent Registry (L7)",
                                 "Lateral Movement (Cross-Layer)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM06:2025 Excessive Agency (baseline detects unauthorized agent proliferation)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML06:2023 AI Supply Chain Attacks (new agents from compromised supply chain)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI10:2026 Rogue Agents",
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities",
+                                "ASI07:2026 Insecure Inter-Agent Communication"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.05 Supply Chain Attacks",
+                                "NISTAML.039 Compromising connected resources"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-4.1 Agent Injection",
+                                "AITech-3.1 Masquerading / Obfuscation / Impersonation",
+                                "AISubtech-18.2.2 Dedicated Malicious Server or Infrastructure"
                             ]
                         }
                     ],
@@ -2772,9 +4089,9 @@ export const detectTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0072: Reverse Shell",
-                                "AML.T0050: Command and Scripting Interpreter",
-                                "AML.T0053: AI Agent Tool Invocation"
+                                "AML.T0072 Reverse Shell",
+                                "AML.T0050 Command and Scripting Interpreter",
+                                "AML.T0053 AI Agent Tool Invocation"
                             ]
                         },
                         {
@@ -2789,6 +4106,35 @@ export const detectTactic = {
                             "items": [
                                 "LLM06:2025 Excessive Agency",
                                 "LLM02:2025 Sensitive Information Disclosure"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML06:2023 AI Supply Chain Attacks (reputation scoring quarantines supply chain compromised agents)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI10:2026 Rogue Agents",
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities",
+                                "ASI07:2026 Insecure Inter-Agent Communication",
+                                "ASI03:2026 Identity and Privilege Abuse"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.05 Supply Chain Attacks",
+                                "NISTAML.039 Compromising connected resources"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-4.1 Agent Injection",
+                                "AITech-3.1 Masquerading / Obfuscation / Impersonation"
                             ]
                         }
                     ],

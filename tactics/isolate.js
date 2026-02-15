@@ -10,12 +10,12 @@ export const isolateTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0053: AI Agent Tool Invocation",
-                        "AML.T0020: Poison Training Data",
-                        "AML.T0072: Reverse Shell",
+                        "AML.T0053 AI Agent Tool Invocation",
+                        "AML.T0020 Poison Training Data",
+                        "AML.T0072 Reverse Shell",
                         "AML.T0050 Command and Scripting Interpreter",
                         "AML.T0029 Denial of AI Service",
-                        "AML.T0034 Cost Harvesting (limiting rates)"
+                        "AML.T0034 Cost Harvesting"
                     ]
                 },
                 {
@@ -25,7 +25,8 @@ export const isolateTactic = {
                         "Lateral Movement (Cross-Layer)",
                         "Agent Tool Misuse (L7)",
                         "Resource Hijacking (L4)",
-                        "Framework Evasion (L3)"
+                        "Framework Evasion (L3)",
+                        "Orchestration Attacks (L4)"
                     ]
                 },
                 {
@@ -34,6 +35,41 @@ export const isolateTactic = {
                         "LLM05:2025 Improper Output Handling",
                         "LLM06:2025 Excessive Agency",
                         "LLM10:2025 Unbounded Consumption"
+                    ]
+                },
+                {
+                    "framework": "OWASP ML Top 10 2023",
+                    "items": [
+                        "ML06:2023 AI Supply Chain Attacks",
+                        "ML05:2023 Model Theft",
+                        "ML09:2023 Output Integrity Attack"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI02:2026 Tool Misuse and Exploitation",
+                        "ASI05:2026 Unexpected Code Execution (RCE)",
+                        "ASI10:2026 Rogue Agents",
+                        "ASI08:2026 Cascading Failures (sandboxing limits blast radius)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.039 Compromising connected resources",
+                        "NISTAML.05 Supply Chain Attacks (contains compromised component impact)",
+                        "NISTAML.018 Prompt Injection (limits post-injection agent capabilities)"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-12.1 Tool Exploitation",
+                        "AITech-13.1 Disruption of Availability",
+                        "AITech-13.2 Cost Harvesting / Repurposing",
+                        "AISubtech-9.1.1 Code Execution",
+                        "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access"
                     ]
                 }
             ],
@@ -80,7 +116,7 @@ export const isolateTactic = {
                                 "Lateral Movement (Cross-Layer)",
                                 "Agent Tool Misuse (L7)",
                                 "Resource Hijacking (L4)",
-                                "Runtime Code Injection (L4)"
+                                "Orchestration Attacks (L4)"
                             ]
                         },
                         {
@@ -96,6 +132,30 @@ export const isolateTactic = {
                                 "ML06:2023 AI Supply Chain Attacks",
                                 "ML05:2023 Model Theft",
                                 "ML09:2023 Output Integrity Attack"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI02:2026 Tool Misuse and Exploitation",
+                                "ASI05:2026 Unexpected Code Execution (RCE)",
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities (compromised container images)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.039 Compromising connected resources",
+                                "NISTAML.05 Supply Chain Attacks (compromised container supply chain)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-12.1 Tool Exploitation",
+                                "AITech-13.1 Disruption of Availability",
+                                "AISubtech-9.1.1 Code Execution",
+                                "AITech-9.3 Dependency / Plugin Compromise (compromised container dependencies)"
                             ]
                         }
                     ],
@@ -153,7 +213,7 @@ export const isolateTactic = {
                             "items": [
                                 "AML.T0053 AI Agent Tool Invocation",
                                 "AML.T0072 Reverse Shell",
-                                "AML.T0017 Persistence",
+                                "AML.T0050 Command and Scripting Interpreter",
                                 "AML.T0029 Denial of AI Service",
                                 "AML.T0034 Cost Harvesting",
                                 "AML.T0018.002 Manipulate AI Model: Embed Malware"
@@ -166,9 +226,9 @@ export const isolateTactic = {
                                 "Lateral Movement (Cross-Layer)",
                                 "Agent Tool Misuse (L7)",
                                 "Resource Hijacking (L4)",
-                                "Runtime Code Injection (L4)",
-                                "Memory Corruption (L4)",
-                                "Privilege Escalation (L6)"
+                                "Orchestration Attacks (L4)",
+                                "Denial of Service (DoS) Attacks (L4)",
+                                "Privilege Escalation (Cross-Layer)"
                             ]
                         },
                         {
@@ -185,6 +245,30 @@ export const isolateTactic = {
                                 "ML06:2023 AI Supply Chain Attacks",
                                 "ML09:2023 Output Integrity Attack",
                                 "ML05:2023 Model Theft"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI05:2026 Unexpected Code Execution (RCE)",
+                                "ASI02:2026 Tool Misuse and Exploitation",
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities (stronger isolation for compromised components)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.039 Compromising connected resources",
+                                "NISTAML.05 Supply Chain Attacks (hardware-level isolation for compromised components)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-12.1 Tool Exploitation",
+                                "AISubtech-9.1.1 Code Execution",
+                                "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
+                                "AITech-13.1 Disruption of Availability"
                             ]
                         }
                     ],
@@ -214,10 +298,13 @@ export const isolateTactic = {
                     "phase": ["operation"],
                     "description": "Run tool executions inside strongly isolated, single-use sandboxes (e.g., microVMs). Destroy the environment immediately after one invocation to prevent persistence and cross-session contamination.",
                     "defendsAgainst": [
-                        { "framework": "MITRE ATLAS", "items": ["AML.T0050 Command and Scripting Interpreter"] },
-                        { "framework": "MAESTRO", "items": ["Runtime Code Injection (L4)", "Lateral Movement (Cross-Layer)"] },
+                        { "framework": "MITRE ATLAS", "items": ["AML.T0050 Command and Scripting Interpreter", "AML.T0072 Reverse Shell", "AML.T0053 AI Agent Tool Invocation"] },
+                        { "framework": "MAESTRO", "items": ["Orchestration Attacks (L4)", "Lateral Movement (Cross-Layer)", "Agent Tool Misuse (L7)", "Resource Hijacking (L4) (ephemeral teardown prevents sustained hijacking)"] },
                         { "framework": "OWASP LLM Top 10 2025", "items": ["LLM06:2025 Excessive Agency"] },
-                        { "framework": "OWASP ML Top 10 2023", "items": ["ML06:2023 AI Supply Chain Attacks"] }
+                        { "framework": "OWASP ML Top 10 2023", "items": ["ML06:2023 AI Supply Chain Attacks"] },
+                        { "framework": "OWASP Agentic AI Top 10 2026", "items": ["ASI02:2026 Tool Misuse and Exploitation", "ASI05:2026 Unexpected Code Execution (RCE)"] },
+                        { "framework": "NIST Adversarial Machine Learning 2025", "items": ["NISTAML.039 Compromising connected resources", "NISTAML.018 Prompt Injection (ephemeral teardown destroys injected persistence)"] },
+                        { "framework": "Cisco Integrated AI Security and Safety Framework", "items": ["AISubtech-9.1.1 Code Execution", "AITech-12.1 Tool Exploitation", "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access"] }
                     ],
                     "implementationStrategies": [
                         {
@@ -235,10 +322,13 @@ export const isolateTactic = {
                     "phase": ["operation"],
                     "description": "Minimize kernel/system call surface and restrict outbound network destinations for sandboxed executions to reduce post-exploitation blast radius.",
                     "defendsAgainst": [
-                        { "framework": "MITRE ATLAS", "items": ["AML.T0072 Reverse Shell"] },
-                        { "framework": "MAESTRO", "items": ["Runtime Code Injection (L4)", "Lateral Movement (Cross-Layer)"] },
-                        { "framework": "OWASP LLM Top 10 2025", "items": ["LLM06:2025 Excessive Agency"] },
-                        { "framework": "OWASP ML Top 10 2023", "items": ["ML06:2023 AI Supply Chain Attacks"] }
+                        { "framework": "MITRE ATLAS", "items": ["AML.T0072 Reverse Shell", "AML.T0025 Exfiltration via Cyber Means", "AML.T0050 Command and Scripting Interpreter"] },
+                        { "framework": "MAESTRO", "items": ["Lateral Movement (Cross-Layer)", "Privilege Escalation (Cross-Layer)", "Data Leakage (Cross-Layer) (egress restrictions prevent data exfiltration)", "Orchestration Attacks (L4)"] },
+                        { "framework": "OWASP LLM Top 10 2025", "items": ["LLM06:2025 Excessive Agency", "LLM02:2025 Sensitive Information Disclosure (egress restrictions block exfiltration)"] },
+                        { "framework": "OWASP ML Top 10 2023", "items": ["ML06:2023 AI Supply Chain Attacks", "ML05:2023 Model Theft (network restrictions prevent model exfiltration)"] },
+                        { "framework": "OWASP Agentic AI Top 10 2026", "items": ["ASI02:2026 Tool Misuse and Exploitation", "ASI05:2026 Unexpected Code Execution (RCE)"] },
+                        { "framework": "NIST Adversarial Machine Learning 2025", "items": ["NISTAML.039 Compromising connected resources", "NISTAML.031 Model Extraction (network restrictions block extraction)"] },
+                        { "framework": "Cisco Integrated AI Security and Safety Framework", "items": ["AISubtech-9.1.1 Code Execution", "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access", "AITech-8.2 Data Exfiltration / Exposure"] }
                     ],
                     "implementationStrategies": [
                         {
@@ -285,10 +375,11 @@ export const isolateTactic = {
                         {
                             "framework": "MAESTRO",
                             "items": [
-                                "Runtime Code Injection (L4)",
+                                "Compromised Container Images (L4)",
                                 "Agent Tool Misuse (L7)",
                                 "Lateral Movement (Cross-Layer)",
-                                "Resource Hijacking (L4)"
+                                "Resource Hijacking (L4)",
+                                "Supply Chain Attacks (Cross-Layer)"
                             ]
                         },
                         {
@@ -303,6 +394,30 @@ export const isolateTactic = {
                             "items": [
                                 "ML06:2023 AI Supply Chain Attacks",
                                 "ML09:2023 Output Integrity Attack"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI05:2026 Unexpected Code Execution (RCE)",
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.05 Supply Chain Attacks",
+                                "NISTAML.051 Model Poisoning (Supply Chain) (detects malicious behavior from poisoned models)",
+                                "NISTAML.039 Compromising connected resources"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AISubtech-9.1.1 Code Execution",
+                                "AITech-9.3 Dependency / Plugin Compromise",
+                                "AITech-12.2 Insecure Output Handling",
+                                "AISubtech-12.2.1 Code Detection / Malicious Code Output"
                             ]
                         }
                     ],
@@ -338,7 +453,7 @@ export const isolateTactic = {
                         "AML.T0044 Full AI Model Access (limits access)",
                         "AML.T0036 Data from Information Repositories (limits access)",
                         "AML.T0025 Exfiltration via Cyber Means",
-                        "AML.T0049 Exploit Public-Facing Application (e.g. SSRF-driven internal pivot / forced egress abuse)",
+                        "AML.T0049 Exploit Public-Facing Application (SSRF-driven internal pivot)",
                         "AML.T0072 Reverse Shell"
                     ]
                 },
@@ -346,8 +461,9 @@ export const isolateTactic = {
                     "framework": "MAESTRO",
                     "items": [
                         "Lateral Movement (Cross-Layer)",
-                        "Compromised RAG Pipelines (L2, isolating internal DB access)",
-                        "Data Exfiltration (Cross-Layer)",
+                        "Compromised RAG Pipelines (L2) (isolating internal DB access)",
+                        "Data Leakage (Cross-Layer)",
+                        "Data Exfiltration (L2)",
                         "Orchestration Attacks (L4)"
                     ]
                 },
@@ -356,14 +472,39 @@ export const isolateTactic = {
                     "items": [
                         "LLM02:2025 Sensitive Information Disclosure (via exfiltration)",
                         "LLM06:2025 Excessive Agency",
-                        "LLM03:2025 Supply Chain (reduces exposure to compromised upstream model providers / API dependencies)"
+                        "LLM03:2025 Supply Chain (reduces exposure to compromised upstream providers)"
                     ]
                 },
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
                         "ML05:2023 Model Theft",
-                        "ML06:2023 ML Supply Chain Attacks"
+                        "ML06:2023 AI Supply Chain Attacks"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI02:2026 Tool Misuse and Exploitation (network restrictions limit tool reach)",
+                        "ASI03:2026 Identity and Privilege Abuse (network segmentation enforces boundaries)",
+                        "ASI10:2026 Rogue Agents (network isolation contains rogue agents)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.039 Compromising connected resources",
+                        "NISTAML.031 Model Extraction (network restrictions block extraction paths)",
+                        "NISTAML.038 Data Extraction"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-8.2 Data Exfiltration / Exposure",
+                        "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
+                        "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access",
+                        "AITech-14.1 Unauthorized Access"
                     ]
                 }
             ],
@@ -421,7 +562,8 @@ export const isolateTactic = {
                             "framework": "MAESTRO",
                             "items": [
                                 "Lateral Movement (Cross-Layer)",
-                                "Compromised RAG Pipelines (L2, isolating internal DB access)"
+                                "Compromised RAG Pipelines (L2) (isolating internal DB access)",
+                                "Data Leakage (Cross-Layer)"
                             ]
                         },
                         {
@@ -435,7 +577,29 @@ export const isolateTactic = {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
                                 "ML05:2023 Model Theft (limits internal access to model artifacts)",
-                                "ML06:2023 ML Supply Chain Attacks (limits blast radius of internally compromised component)"
+                                "ML06:2023 AI Supply Chain Attacks (limits blast radius of internally compromised component)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI03:2026 Identity and Privilege Abuse (network segmentation enforces access boundaries)",
+                                "ASI10:2026 Rogue Agents (internal segmentation contains rogue agent lateral movement)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.039 Compromising connected resources",
+                                "NISTAML.031 Model Extraction (internal segmentation limits extraction paths)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-14.1 Unauthorized Access",
+                                "AISubtech-9.1.2 Unauthorized or Unsolicited System Access",
+                                "AITech-8.2 Data Exfiltration / Exposure (internal segmentation limits data reach)"
                             ]
                         }
                     ]
@@ -497,8 +661,10 @@ export const isolateTactic = {
                         {
                             "framework": "MAESTRO",
                             "items": [
-                                "Data Exfiltration (Cross-Layer)",
-                                "Orchestration Attacks (L4)"
+                                "Data Exfiltration (L2)",
+                                "Data Leakage (Cross-Layer)",
+                                "Orchestration Attacks (L4)",
+                                "Supply Chain Attacks (Cross-Layer) (securing external dependencies)"
                             ]
                         },
                         {
@@ -512,7 +678,31 @@ export const isolateTactic = {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
                                 "ML05:2023 Model Theft (securing API access)",
-                                "ML06:2023 ML Supply Chain Attacks (securing external component access)"
+                                "ML06:2023 AI Supply Chain Attacks (securing external component access)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI02:2026 Tool Misuse and Exploitation (egress controls prevent tool-based exfiltration)",
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities (securing external API dependencies)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.039 Compromising connected resources",
+                                "NISTAML.038 Data Extraction",
+                                "NISTAML.05 Supply Chain Attacks (securing external service connections)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
+                                "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access",
+                                "AITech-9.3 Dependency / Plugin Compromise (securing external plugin connections)"
                             ]
                         }
                     ]
@@ -539,34 +729,62 @@ export const isolateTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0024.002 Invert AI Model (rate-limiting)",
-                        "AML.T0029 Denial of AI Service (throttling)",
-                        "AML.T0034 Cost Harvesting (limiting rates)",
+                        "AML.T0029 Denial of AI Service",
+                        "AML.T0034 Cost Harvesting",
                         "AML.T0040 AI Model Inference API Access",
-                        "AML.T0046 Spamming AI System with Chaff Data"
+                        "AML.T0046 Spamming AI System with Chaff Data",
+                        "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (rate-limiting slows extraction)"
                     ]
                 },
                 {
                     "framework": "MAESTRO",
                     "items": [
-                        "Model Stealing (L1, throttling)",
-                        "DoS on Framework APIs / Data Infrastructure (L3/L2)",
-                        "Resource Hijacking (L4, containing processes)",
-                        "Agent Pricing Model Manipulation (L7, rate limiting)",
+                        "Model Stealing (L1) (throttling limits query volume)",
+                        "Denial of Service on Framework APIs (L3)",
+                        "Denial of Service on Data Infrastructure (L2)",
+                        "Denial of Service (DoS) Attacks (L4)",
+                        "Resource Hijacking (L4) (quarantine contains hijacked resources)",
+                        "Agent Pricing Model Manipulation (L7) (rate limiting prevents economic abuse)",
                         "Model Extraction of AI Security Agents (L6)"
                     ]
                 },
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
-                        "LLM10:2025 Unbounded Consumption (throttling/quarantining)",
-                        "LLM01:2025 Prompt Injection (containment of repeated prompt-injection-driven abuse after detection)"
+                        "LLM10:2025 Unbounded Consumption",
+                        "LLM01:2025 Prompt Injection (quarantine contains repeat prompt injection abuse)"
                     ]
                 },
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
                         "ML05:2023 Model Theft (throttling excessive queries)"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI10:2026 Rogue Agents (quarantine isolates rogue agents)",
+                        "ASI08:2026 Cascading Failures (throttling limits cascade propagation)",
+                        "ASI02:2026 Tool Misuse and Exploitation (quarantine contains tool misuse)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.01 Availability Violations",
+                        "NISTAML.014 Energy-latency",
+                        "NISTAML.031 Model Extraction (rate limiting slows extraction)",
+                        "NISTAML.039 Compromising connected resources (quarantine limits lateral impact)"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-13.1 Disruption of Availability",
+                        "AISubtech-13.1.1 Compute Exhaustion",
+                        "AITech-10.1 Model Extraction",
+                        "AISubtech-10.1.1 API Query Stealing"
                     ]
                 }
             ],
@@ -612,8 +830,7 @@ export const isolateTactic = {
                         "AML.T0051 LLM Prompt Injection",
                         "AML.T0061 LLM Prompt Self-Replication",
                         "AML.T0070 RAG Poisoning",
-                        "AML.T0080.000 AI Agent Context Poisoning: Memory",
-                        "AML.T0018.001 Manipulate AI Model: Poison LLM Memory"
+                        "AML.T0080.000 AI Agent Context Poisoning: Memory"
                     ]
                 },
                 {
@@ -642,6 +859,31 @@ export const isolateTactic = {
                         "ML06:2023 AI Supply Chain Attacks",
                         "ML09:2023 Output Integrity Attack"
                     ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI06:2026 Memory & Context Poisoning",
+                        "ASI01:2026 Agent Goal Hijack (poisoned memory can redirect agent goals)",
+                        "ASI07:2026 Insecure Inter-Agent Communication (memory isolation prevents cross-agent contamination)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.018 Prompt Injection",
+                        "NISTAML.015 Indirect Prompt Injection",
+                        "NISTAML.013 Data Poisoning"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-5.1 Memory System Persistence",
+                        "AISubtech-5.1.1 Long-term / Short-term Memory Injection",
+                        "AITech-4.2 Context Boundary Attacks",
+                        "AISubtech-6.1.1 Knowledge Base Poisoning"
+                    ]
                 }
             ],
             "subTechniques": [
@@ -666,7 +908,16 @@ export const isolateTactic = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0051 LLM Prompt Injection",
-                                "AML.T0061 LLM Prompt Self-Replication"
+                                "AML.T0061 LLM Prompt Self-Replication",
+                                "AML.T0080.000 AI Agent Context Poisoning: Memory"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Agent Goal Manipulation (L7) (poisoned runtime context redirects agent behavior)",
+                                "Data Tampering (L2) (runtime context treated as volatile data)",
+                                "Data Leakage (Cross-Layer) (cross-session bleed exposes tenant data)"
                             ]
                         },
                         {
@@ -675,6 +926,35 @@ export const isolateTactic = {
                                 "LLM01:2025 Prompt Injection",
                                 "LLM02:2025 Sensitive Information Disclosure",
                                 "LLM10:2025 Unbounded Consumption"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML09:2023 Output Integrity Attack (corrupted context leads to corrupted outputs)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI06:2026 Memory & Context Poisoning",
+                                "ASI08:2026 Cascading Failures (context bleed can propagate across sessions)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.018 Prompt Injection",
+                                "NISTAML.015 Indirect Prompt Injection"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-4.2 Context Boundary Attacks",
+                                "AISubtech-4.2.1 Context Window Exploitation",
+                                "AISubtech-4.2.2 Session Boundary Violation",
+                                "AITech-5.1 Memory System Persistence (runtime context can be used for persistence)"
                             ]
                         }
                     ],
@@ -717,7 +997,8 @@ export const isolateTactic = {
                             "framework": "MAESTRO",
                             "items": [
                                 "Compromised RAG Pipelines (L2)",
-                                "Data Poisoning (L2)"
+                                "Data Poisoning (L2)",
+                                "Data Leakage (Cross-Layer) (tenant isolation prevents cross-tenant data exposure)"
                             ]
                         },
                         {
@@ -725,6 +1006,35 @@ export const isolateTactic = {
                             "items": [
                                 "LLM02:2025 Sensitive Information Disclosure",
                                 "LLM08:2025 Vector and Embedding Weaknesses"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML02:2023 Data Poisoning Attack",
+                                "ML09:2023 Output Integrity Attack (partitioning prevents cross-tenant retrieval of poisoned data)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI06:2026 Memory & Context Poisoning",
+                                "ASI03:2026 Identity and Privilege Abuse (authorization-gated retrieval prevents unauthorized access)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.013 Data Poisoning",
+                                "NISTAML.015 Indirect Prompt Injection (partitioning limits scope of poisoned content retrieval)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-5.1 Memory System Persistence",
+                                "AISubtech-5.1.1 Long-term / Short-term Memory Injection",
+                                "AISubtech-6.1.1 Knowledge Base Poisoning"
                             ]
                         }
                     ],
@@ -755,8 +1065,16 @@ export const isolateTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0018.001 Manipulate AI Model: Poison LLM Memory",
-                                "AML.T0080.000 AI Agent Context Poisoning: Memory"
+                                "AML.T0080.000 AI Agent Context Poisoning: Memory",
+                                "AML.T0070 RAG Poisoning (crypto integrity prevents direct-to-DB poisoning)"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Data Tampering (L2)",
+                                "Data Poisoning (L2) (integrity verification detects poisoned writes)",
+                                "Compromised RAG Pipelines (L2) (signed records prevent pipeline tampering)"
                             ]
                         },
                         {
@@ -770,6 +1088,28 @@ export const isolateTactic = {
                             "items": [
                                 "ML02:2023 Data Poisoning Attack",
                                 "ML09:2023 Output Integrity Attack"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI06:2026 Memory & Context Poisoning",
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities (integrity verification prevents tampered memory artifacts)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.013 Data Poisoning",
+                                "NISTAML.015 Indirect Prompt Injection (signed records detect injected content)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-5.1 Memory System Persistence",
+                                "AISubtech-5.1.1 Long-term / Short-term Memory Injection",
+                                "AISubtech-6.1.1 Knowledge Base Poisoning"
                             ]
                         }
                     ],
@@ -812,7 +1152,8 @@ export const isolateTactic = {
                             "framework": "MAESTRO",
                             "items": [
                                 "Data Poisoning (L2)",
-                                "Compromised RAG Pipelines (L2)"
+                                "Compromised RAG Pipelines (L2)",
+                                "Data Tampering (L2) (promotion gates prevent unreviewed tampering from reaching trusted memory)"
                             ]
                         },
                         {
@@ -820,6 +1161,35 @@ export const isolateTactic = {
                             "items": [
                                 "LLM04:2025 Data and Model Poisoning",
                                 "LLM08:2025 Vector and Embedding Weaknesses"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML02:2023 Data Poisoning Attack",
+                                "ML09:2023 Output Integrity Attack (quarantine prevents poisoned data from affecting outputs)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI06:2026 Memory & Context Poisoning",
+                                "ASI09:2026 Human-Agent Trust Exploitation (promotion gates enforce human review before trust elevation)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.013 Data Poisoning",
+                                "NISTAML.015 Indirect Prompt Injection (quarantine prevents injected content from entering trusted memory)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AISubtech-5.1.1 Long-term / Short-term Memory Injection",
+                                "AISubtech-6.1.1 Knowledge Base Poisoning",
+                                "AITech-5.1 Memory System Persistence"
                             ]
                         }
                     ],
@@ -849,28 +1219,58 @@ export const isolateTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0048 External Harms (Societal, Financial, Reputational, User)",
-                        "AML.T0029 Denial of AI Service (by runaway agent)"
+                        "AML.T0048 External Harms",
+                        "AML.T0029 Denial of AI Service",
+                        "AML.T0034 Cost Harvesting (kill-switch stops runaway cost)"
                     ]
                 },
                 {
                     "framework": "MAESTRO",
                     "items": [
-                        "Agent acting on compromised goals/tools leading to severe harm (L7)",
-                        "Runaway/critically malfunctioning foundation models (L1)"
+                        "Agent Goal Manipulation (L7)",
+                        "Agent Tool Misuse (L7)",
+                        "Compromised Agents (L7)",
+                        "Denial of Service (DoS) Attacks (L1) (kill-switch halts runaway foundation models)",
+                        "Resource Hijacking (L4) (kill-switch stops hijacked compute)"
                     ]
                 },
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
-                        "LLM06:2025 Excessive Agency (ultimate backstop)",
-                        "LLM10:2025 Unbounded Consumption (preventing catastrophic costs)"
+                        "LLM06:2025 Excessive Agency",
+                        "LLM10:2025 Unbounded Consumption"
                     ]
                 },
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "Any ML attack scenario causing immediate, unacceptable harm requiring emergency shutdown."
+                        "ML10:2023 Model Poisoning (kill-switch halts poisoned model causing active harm)",
+                        "ML09:2023 Output Integrity Attack (kill-switch stops corrupted outputs)"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI10:2026 Rogue Agents",
+                        "ASI08:2026 Cascading Failures",
+                        "ASI01:2026 Agent Goal Hijack",
+                        "ASI02:2026 Tool Misuse and Exploitation"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.04 Misuse Violations",
+                        "NISTAML.01 Availability Violations",
+                        "NISTAML.039 Compromising connected resources (kill-switch limits blast radius)"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-13.1 Disruption of Availability (kill-switch prevents ongoing disruption)",
+                        "AITech-13.2 Cost Harvesting / Repurposing",
+                        "AISubtech-13.1.1 Compute Exhaustion"
                     ]
                 }
             ],
@@ -964,7 +1364,9 @@ export const isolateTactic = {
                     "framework": "MAESTRO",
                     "items": [
                         "Data Poisoning (L2)",
-                        "Attacks on Decentralized Learning (Cross-Layer)"
+                        "Data Poisoning (Training Phase) (L1)",
+                        "Backdoor Attacks (L1) (FL poisoning can introduce model backdoors)",
+                        "Supply Chain Attacks (Cross-Layer) (FL participants form part of the training supply chain)"
                     ]
                 },
                 {
@@ -978,6 +1380,29 @@ export const isolateTactic = {
                     "items": [
                         "ML02:2023 Data Poisoning Attack",
                         "ML10:2023 Model Poisoning"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI04:2026 Agentic Supply Chain Vulnerabilities (FL participants contribute to model supply chain)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.013 Data Poisoning",
+                        "NISTAML.023 Backdoor Poisoning",
+                        "NISTAML.024 Targeted Poisoning",
+                        "NISTAML.011 Model Poisoning (Availability)"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-6.1 Training Data Poisoning",
+                        "AISubtech-6.1.2 Reinforcement Biasing (FL updates are a form of reinforcement signal)",
+                        "AISubtech-6.1.3 Reinforcement Signal Corruption"
                     ]
                 }
             ]
@@ -1011,8 +1436,10 @@ export const isolateTactic = {
                 {
                     "framework": "MAESTRO",
                     "items": [
-                        "Data Exfiltration (L2, from the client)",
-                        "Runtime Code Injection (L4, hostile JS/WASM in the browser process or hybrid app sandbox)"
+                        "Data Exfiltration (L2) (from the client)",
+                        "Lateral Movement (Cross-Layer) (isolation prevents compromised client model from accessing other apps)",
+                        "Compromised Framework Components (L3) (isolating hostile client-side JS/WASM runtimes)",
+                        "Data Leakage (Cross-Layer) (sandboxing prevents cross-app data exposure)"
                     ]
                 },
                 {
@@ -1026,6 +1453,30 @@ export const isolateTactic = {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
                         "ML06:2023 AI Supply Chain Attacks (containing a malicious downloaded client-side model/runtime so it cannot pivot)"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI05:2026 Unexpected Code Execution (RCE)",
+                        "ASI02:2026 Tool Misuse and Exploitation (client-side isolation prevents tool misuse by compromised model)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.039 Compromising connected resources",
+                        "NISTAML.038 Data Extraction",
+                        "NISTAML.05 Supply Chain Attacks (containing malicious downloaded model)"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-8.2 Data Exfiltration / Exposure",
+                        "AISubtech-8.2.2 LLM Data Leakage",
+                        "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
+                        "AITech-12.1 Tool Exploitation (sandboxing prevents tool exploitation by client-side model)"
                     ]
                 }
             ],

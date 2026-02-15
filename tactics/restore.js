@@ -10,30 +10,70 @@ export const restoreTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0018 Manipulate AI Model / AML.T0019 Publish Poisoned Datasets",
+                        "AML.T0018 Manipulate AI Model",
+                        "AML.T0019 Publish Poisoned Datasets",
                         "AML.T0020 Poison Training Data",
-                        "AML.T0031 Erode AI Model Integrity"
+                        "AML.T0031 Erode AI Model Integrity",
+                        "AML.T0058 Publish Poisoned Models",
+                        "AML.T0076 Corrupt AI Model"
                     ]
                 },
                 {
                     "framework": "MAESTRO",
                     "items": [
                         "Backdoor Attacks (L1)",
-                        "Data Poisoning (L2, retraining)",
-                        "Model Skewing (L2, restoring/retraining)"
+                        "Data Poisoning (Training Phase) (L1)",
+                        "Data Poisoning (L2)",
+                        "Supply Chain Attacks (L3)",
+                        "Compromised Container Images (L4) (restoration deploys from verified, pre-incident container images)",
+                        "Supply Chain Attacks (Cross-Layer)"
                     ]
                 },
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
+                        "LLM03:2025 Supply Chain",
                         "LLM04:2025 Data and Model Poisoning"
                     ]
                 },
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "ML10:2023 Model Poisoning",
-                        "ML02:2023 Data Poisoning Attack"
+                        "ML02:2023 Data Poisoning Attack",
+                        "ML06:2023 AI Supply Chain Attacks (restoring from trusted backups undoes supply chain compromise)",
+                        "ML07:2023 Transfer Learning Attack (restoring pre-compromise model reverses transfer learning attacks)",
+                        "ML10:2023 Model Poisoning"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI04:2026 Agentic Supply Chain Vulnerabilities",
+                        "ASI06:2026 Memory & Context Poisoning",
+                        "ASI08:2026 Cascading Failures (restoration breaks cascading failure chains by returning to known-good state)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.011 Model Poisoning (Availability)",
+                        "NISTAML.013 Data Poisoning",
+                        "NISTAML.023 Backdoor Poisoning",
+                        "NISTAML.024 Targeted Poisoning",
+                        "NISTAML.026 Model Poisoning (Integrity)",
+                        "NISTAML.05 Supply Chain Attacks",
+                        "NISTAML.051 Model Poisoning (Supply Chain)"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-6.1 Training Data Poisoning",
+                        "AITech-7.1 Reasoning Corruption",
+                        "AITech-7.2 Memory System Corruption",
+                        "AITech-9.1 Model or Agentic System Manipulation",
+                        "AITech-9.2 Detection Evasion (restoring known-good model removes evasion-enabling modifications)",
+                        "AITech-9.3 Dependency / Plugin Compromise (verified rollback restores trusted dependency stack)"
                     ]
                 }
             ],
@@ -76,14 +116,17 @@ export const restoreTactic = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0018 Manipulate AI Model",
+                                "AML.T0058 Publish Poisoned Models",
                                 "AML.T0076 Corrupt AI Model"
                             ]
                         },
                         {
                             "framework": "MAESTRO",
                             "items": [
-                                "Model Tampering (L1)",
-                                "Compromised Container Images (L4)"
+                                "Backdoor Attacks (L1)",
+                                "Supply Chain Attacks (L3)",
+                                "Compromised Container Images (L4)",
+                                "Supply Chain Attacks (Cross-Layer)"
                             ]
                         },
                         {
@@ -96,8 +139,33 @@ export const restoreTactic = {
                         {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
-                                "ML06:2023 AI Supply Chain Attacks",
+                                "ML06:2023 AI Supply Chain Attacks (rollback to pre-compromise version removes supply chain artifacts)",
+                                "ML07:2023 Transfer Learning Attack (rollback reverses effects of compromised transfer learning)",
                                 "ML10:2023 Model Poisoning"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.011 Model Poisoning (Availability)",
+                                "NISTAML.023 Backdoor Poisoning",
+                                "NISTAML.026 Model Poisoning (Integrity)",
+                                "NISTAML.05 Supply Chain Attacks",
+                                "NISTAML.051 Model Poisoning (Supply Chain)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-9.1 Model or Agentic System Manipulation",
+                                "AITech-9.2 Detection Evasion",
+                                "AITech-9.3 Dependency / Plugin Compromise"
                             ]
                         }
                     ]
@@ -121,19 +189,19 @@ export const restoreTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0020 Poison Training Data",
                                 "AML.T0018 Manipulate AI Model",
                                 "AML.T0019 Publish Poisoned Datasets",
+                                "AML.T0020 Poison Training Data",
                                 "AML.T0059 Erode Dataset Integrity"
                             ]
                         },
                         {
                             "framework": "MAESTRO",
                             "items": [
-                                "Data Poisoning (L2)",
                                 "Backdoor Attacks (L1)",
-                                "Model Skewing (L2)",
-                                "Attacks on Decentralized Learning (Cross-Layer)"
+                                "Data Poisoning (Training Phase) (L1)",
+                                "Data Poisoning (L2)",
+                                "Compromised RAG Pipelines (L2) (retraining on clean data fixes models trained on poisoned RAG outputs)"
                             ]
                         },
                         {
@@ -146,7 +214,35 @@ export const restoreTactic = {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
                                 "ML02:2023 Data Poisoning Attack",
+                                "ML08:2023 Model Skewing (retraining eliminates feedback-loop-induced model skewing)",
                                 "ML10:2023 Model Poisoning"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities",
+                                "ASI06:2026 Memory & Context Poisoning"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.012 Clean-label Poisoning",
+                                "NISTAML.013 Data Poisoning",
+                                "NISTAML.021 Clean-label Backdoor",
+                                "NISTAML.023 Backdoor Poisoning",
+                                "NISTAML.024 Targeted Poisoning",
+                                "NISTAML.026 Model Poisoning (Integrity)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-6.1 Training Data Poisoning",
+                                "AITech-7.1 Reasoning Corruption",
+                                "AITech-9.1 Model or Agentic System Manipulation",
+                                "AITech-9.2 Detection Evasion"
                             ]
                         }
                     ],
@@ -192,29 +288,58 @@ export const restoreTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0020 Poison Training Data (restoring clean dataset)",
-                        "AML.T0031 Erode AI Model Integrity (restoring corrupted data stores)",
-                        "AML.T0059 Erode Dataset Integrity"
+                        "AML.T0019 Publish Poisoned Datasets",
+                        "AML.T0020 Poison Training Data",
+                        "AML.T0031 Erode AI Model Integrity",
+                        "AML.T0059 Erode Dataset Integrity",
+                        "AML.T0070 RAG Poisoning",
+                        "AML.T0071 False RAG Entry Injection"
                     ]
                 },
                 {
                     "framework": "MAESTRO",
                     "items": [
-                        "Data Poisoning / Data Tampering (L2)",
-                        "Compromised RAG Pipelines (L2, restoring vector DBs)"
+                        "Data Poisoning (Training Phase) (L1) (data recovery provides clean data for model retraining)",
+                        "Data Poisoning (L2)",
+                        "Data Tampering (L2)",
+                        "Compromised RAG Pipelines (L2)"
                     ]
                 },
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
-                        "LLM04:2025 Data and Model Poisoning (restoring dataset integrity)",
-                        "LLM08:2025 Vector and Embedding Weaknesses (if vector DBs corrupted)"
+                        "LLM04:2025 Data and Model Poisoning",
+                        "LLM08:2025 Vector and Embedding Weaknesses"
                     ]
                 },
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "ML02:2023 Data Poisoning Attack (restoring clean training data)"
+                        "ML02:2023 Data Poisoning Attack",
+                        "ML08:2023 Model Skewing (recovering clean data eliminates skewing feedback loops)"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI06:2026 Memory & Context Poisoning"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.012 Clean-label Poisoning",
+                        "NISTAML.013 Data Poisoning",
+                        "NISTAML.024 Targeted Poisoning",
+                        "NISTAML.037 Training Data Attacks"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-6.1 Training Data Poisoning",
+                        "AITech-7.2 Memory System Corruption",
+                        "AITech-7.3 Data Source Abuse and Manipulation"
                     ]
                 }
             ],
@@ -261,27 +386,56 @@ export const restoreTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0012 Valid Accounts (by hardening the re-authentication of a previously hijacked account)"
+                        "AML.T0012 Valid Accounts",
+                        "AML.T0055 Unsecured Credentials (re-auth invalidates previously unsecured credentials)",
+                        "AML.T0083 Credentials from AI Agent Configuration (re-auth invalidates extracted agent credentials)",
+                        "AML.T0091 Use Alternate Authentication Material"
                     ]
                 },
                 {
                     "framework": "MAESTRO",
                     "items": [
-                        "Agent Identity Attack (L7, by forcing re-authentication and restoring trusted state)",
-                        "Evasion of Auditing/Compliance (L6, by ensuring communication and monitoring)"
+                        "Agent Identity Attack (L7)",
+                        "Agent Impersonation (L7)",
+                        "Compromised Agents (L7) (clean session re-establishment after rogue agent containment)",
+                        "Lateral Movement (L4) (re-auth breaks lateral movement within AI infrastructure)",
+                        "Privilege Escalation (Cross-Layer) (re-auth with proper scoping prevents privilege escalation recurrence)"
                     ]
                 },
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
-                        "LLM01:2025 Prompt Injection (restoring clean context)",
-                        "LLM02:2025 Sensitive Information Disclosure (by preventing re-compromise)"
+                        "N/A"
                     ]
                 },
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "Helps prevent re-exploitation of attacks that rely on credential theft."
+                        "N/A"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI02:2026 Tool Misuse and Exploitation (re-establishing identity prevents tool misuse via stolen sessions)",
+                        "ASI03:2026 Identity and Privilege Abuse",
+                        "ASI07:2026 Insecure Inter-Agent Communication (re-auth with fresh tokens secures inter-agent channels)",
+                        "ASI08:2026 Cascading Failures (session re-establishment breaks cascading failure chains)",
+                        "ASI10:2026 Rogue Agents (clean re-establishment helps contain and recover from rogue agents)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.039 Compromising connected resources (re-auth prevents compromised sessions from reaching connected systems)"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-3.1 Masquerading / Obfuscation / Impersonation",
+                        "AITech-14.1 Unauthorized Access (re-auth invalidates unauthorized access gained via stolen credentials)",
+                        "AITech-14.2 Abuse of Delegated Authority (re-auth with proper scoping prevents delegated authority abuse)"
                     ]
                 }
             ],
@@ -330,31 +484,61 @@ export const restoreTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "Reduces likelihood of repeat execution of previously successful techniques such as AML.T0020 Poison Training Data, AML.T0018 Manipulate AI Model, AML.T0031 Erode AI Model Integrity, by turning those observed TTPs into hardened controls, SIEM/SOAR detections, and regression tests.",
-                        "Improves long-term resilience against Persistence (AML.T0017) and Valid Accounts abuse (AML.T0012) by forcing re-authentication policy updates and session hygiene to become standard practice after incidents."
+                        "AML.T0010 AI Supply Chain Compromise (hardening updates supply chain provenance and signing requirements)",
+                        "AML.T0018 Manipulate AI Model (PIR creates regression tests validating model integrity controls)",
+                        "AML.T0020 Poison Training Data (hardening updates data ingestion validation policies)",
+                        "AML.T0031 Erode AI Model Integrity (hardening creates monitoring baselines for integrity drift)",
+                        "AML.T0051 LLM Prompt Injection (hardening updates sanitization rules and detection systems)"
                     ]
                 },
                 {
                     "framework": "MAESTRO",
                     "items": [
-                        "L1 / L2 model manipulation and data poisoning attacks become part of automated regression tests and MLOps gating, reducing the chance of re-poisoning or model tampering on redeploy.",
-                        "L6 Security & Compliance: creates auditable PIR artifacts, legal/regulatory notification bundles, and communication matrices so that future high-severity incidents can be handled consistently and provably."
+                        "Backdoor Attacks (L1) (PIR creates backdoor detection regression tests)",
+                        "Data Poisoning (L2) (hardening updates data ingestion and validation policies)",
+                        "Compromised Framework Components (L3) (hardening updates framework dependency security controls)",
+                        "Supply Chain Attacks (Cross-Layer) (hardening updates supply chain provenance and signing)"
                     ]
                 },
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
-                        "LLM01:2025 Prompt Injection (lessons are codified into hardened input/output sanitizers and enforced via shared libraries and CI lint rules).",
-                        "LLM02:2025 Sensitive Information Disclosure (post-incident rollout of mandatory PII redaction filters and corresponding SIEM alerts).",
-                        "LLM04:2025 Data and Model Poisoning (threat model likelihood raised, regression tests added for data poisoning vectors).",
-                        "LLM03:2025 Supply Chain (root-caused attacks on components/tooling are converted into policy-as-code hardening and artifact integrity verification steps)."
+                        "LLM01:2025 Prompt Injection (hardening creates permanent input sanitization and detection rules)",
+                        "LLM03:2025 Supply Chain (hardening updates supply chain validation and provenance checks)",
+                        "LLM04:2025 Data and Model Poisoning (hardening creates data/model validation regression tests)"
                     ]
                 },
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "ML02:2023 Data Poisoning Attack and ML10:2023 Model Poisoning: produces cleansed training pipelines, adds validation gates, and requires cryptographic integrity checks before redeployment.",
-                        "ML06:2023 AI Supply Chain Attacks: forces codebase / IaC / dependency hardening and artifact signing to become default in future releases."
+                        "ML02:2023 Data Poisoning Attack (hardening creates permanent data validation gates)",
+                        "ML06:2023 AI Supply Chain Attacks (hardening updates supply chain security policies)",
+                        "ML10:2023 Model Poisoning (hardening creates model integrity verification tests)"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI01:2026 Agent Goal Hijack (hardening updates goal integrity monitoring thresholds)",
+                        "ASI04:2026 Agentic Supply Chain Vulnerabilities (hardening updates agentic supply chain controls)",
+                        "ASI05:2026 Unexpected Code Execution (RCE) (hardening updates sandboxing and execution policies)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.013 Data Poisoning (hardening institutionalizes data sanitization policies)",
+                        "NISTAML.018 Prompt Injection (hardening creates permanent prompt defense rules)",
+                        "NISTAML.023 Backdoor Poisoning (PIR creates backdoor detection regression tests)",
+                        "NISTAML.05 Supply Chain Attacks (hardening updates supply chain provenance requirements)"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-6.1 Training Data Poisoning (hardening updates data ingestion validation)",
+                        "AITech-9.1 Model or Agentic System Manipulation (hardening creates model integrity verification)",
+                        "AITech-9.3 Dependency / Plugin Compromise (hardening updates dependency security controls)"
                     ]
                 }
             ],
@@ -407,29 +591,58 @@ export const restoreTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0070 RAG Poisoning (malicious or manipulative content injected into the retrieval corpus)",
-                        "AML.T0059 Erode Dataset Integrity (attacker alters knowledge base quality/accuracy to steer model behavior)",
-                        "AML.T0025 Exfiltration via Cyber Means (attacker plants prompts/instructions that coerce the model to leak internal secrets)"
+                        "AML.T0025 Exfiltration via Cyber Means (rollback removes exfiltration triggers embedded in RAG index)",
+                        "AML.T0059 Erode Dataset Integrity",
+                        "AML.T0070 RAG Poisoning",
+                        "AML.T0071 False RAG Entry Injection"
                     ]
                 },
                 {
                     "framework": "MAESTRO",
                     "items": [
-                        "Compromised RAG Pipelines (L2, untrusted or adversarial retrieval context fed to the model/agent)",
-                        "Data Poisoning (L2, subversion of the retrieval knowledge source to mislead downstream reasoning)"
+                        "Data Poisoning (L2)",
+                        "Data Tampering (L2)",
+                        "Compromised RAG Pipelines (L2)"
                     ]
                 },
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
-                        "LLM08:2025 Vector and Embedding Weaknesses (poisoned or weaponized embeddings/chunks inside the vector DB)",
-                        "LLM04:2025 Data and Model Poisoning (index corruption that influences model behavior through retrieval context)"
+                        "LLM01:2025 Prompt Injection (rollback removes indirect prompt injections embedded in RAG index)",
+                        "LLM04:2025 Data and Model Poisoning",
+                        "LLM08:2025 Vector and Embedding Weaknesses"
                     ]
                 },
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "ML02:2023 Data Poisoning Attack (insertion of polluted or malicious data into training/evaluation/retrieval stores)"
+                        "ML02:2023 Data Poisoning Attack"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI01:2026 Agent Goal Hijack (rollback removes RAG content that could redirect agent goals)",
+                        "ASI04:2026 Agentic Supply Chain Vulnerabilities (rollback removes poisoned third-party RAG plugins)",
+                        "ASI06:2026 Memory & Context Poisoning",
+                        "ASI08:2026 Cascading Failures (rapid rollback prevents poisoned RAG from cascading across agents)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.013 Data Poisoning",
+                        "NISTAML.015 Indirect Prompt Injection",
+                        "NISTAML.024 Targeted Poisoning",
+                        "NISTAML.027 Misaligned Outputs (rollback removes RAG content causing misaligned LLM outputs)"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-6.1 Training Data Poisoning (rollback removes poisoned RAG data feeding into fine-tuning loops)",
+                        "AITech-7.2 Memory System Corruption",
+                        "AITech-7.3 Data Source Abuse and Manipulation"
                     ]
                 }
             ],

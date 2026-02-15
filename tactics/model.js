@@ -29,17 +29,17 @@ export const modelTactic = {
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
-                        "Indirectly LLM03:2025 Supply Chain"
+                        "LLM03:2025 Supply Chain"
                     ]
                 },
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "Indirectly ML06:2023 AI Supply Chain Attacks"
+                        "ML06:2023 AI Supply Chain Attacks"
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic Top 10 2026",
+                    "framework": "OWASP Agentic AI Top 10 2026",
                     "items": [
                         "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                     ]
@@ -123,11 +123,11 @@ export const modelTactic = {
                         {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
-                                "ML06:2023 ML Supply Chain Attacks"
+                                "ML06:2023 AI Supply Chain Attacks"
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic Top 10 2026",
+                            "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
                                 "ASI10:2026 Rogue Agents"
@@ -215,7 +215,7 @@ export const modelTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic Top 10 2026",
+                            "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                             ]
@@ -279,11 +279,11 @@ export const modelTactic = {
                         "ML02:2023 Data Poisoning Attack",
                         "ML10:2023 Model Poisoning",
                         "ML07:2023 Transfer Learning Attack",
-                        "ML06:2023 ML Supply Chain Attacks"
+                        "ML06:2023 AI Supply Chain Attacks"
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic Top 10 2026",
+                    "framework": "OWASP Agentic AI Top 10 2026",
                     "items": [
                         "ASI04:2026 Agentic Supply Chain Vulnerabilities",
                         "ASI06:2026 Memory & Context Poisoning"
@@ -372,7 +372,7 @@ export const modelTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic Top 10 2026",
+                            "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -455,7 +455,7 @@ export const modelTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic Top 10 2026",
+                            "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                             ]
@@ -550,7 +550,7 @@ export const modelTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic Top 10 2026",
+                            "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                             ]
@@ -632,7 +632,7 @@ export const modelTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic Top 10 2026",
+                            "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
                                 "ASI06:2026 Memory & Context Poisoning",
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities (when third-party tools/artefacts can write into memory/KB)"
@@ -732,7 +732,7 @@ export const modelTactic = {
                         "AITech-9.2 Detection Evasion",
                         "AISubtech-9.2.2 Backdoors and Trojans",
                         "AITech-2.1 Jailbreak",
-                        "AISubtech-8.2.1 Misinformation / Hallucination",
+                        "AISubtech-15.1.19 Integrity Compromise: Hallucinations / Misinformation",
                         "AITech-7.1 Reasoning Corruption"
                     ]
                 }
@@ -809,7 +809,7 @@ export const modelTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic Top 10 2026",
+                            "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                             ]
@@ -998,7 +998,7 @@ export const modelTactic = {
                                 "ML09:2023 Output Integrity Attack"]
                         },
                         {
-                            "framework": "OWASP Agentic Top 10 2026",
+                            "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
                                 "ASI09:2026 Human-Agent Trust Exploitation (misleading explanations to conceal malicious behavior)",
                                 "ASI10:2026 Rogue Agents"
@@ -1364,7 +1364,7 @@ export const modelTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic Top 10 2026",
+                            "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -1457,43 +1457,66 @@ export const modelTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "Enables systematic identification and assessment of adversary behaviors across all MITRE ATLAS tactics (Reconnaissance through Impact) and techniques"
+                        "AML.T0020 Poison Training Data (threat modeling identifies poisoning risks)",
+                        "AML.T0010 AI Supply Chain Compromise (threat modeling maps supply chain risks)",
+                        "AML.T0051 LLM Prompt Injection (threat modeling identifies injection surfaces)",
+                        "AML.T0015 Evade AI Model (threat modeling assesses evasion risks)",
+                        "AML.T0043 Craft Adversarial Data (threat modeling identifies adversarial input vectors)"
                     ]
                 },
                 {
                     "framework": "MAESTRO",
                     "items": [
-                        "Enables systematic threat analysis across all 7 MAESTRO layers (L1 Foundation Models through L7 Agent Ecosystem) and Cross-Layer threats"
+                        "Supply Chain Attacks (Cross-Layer)",
+                        "Data Poisoning (L2)",
+                        "Adversarial Examples (L1)",
+                        "Agent Goal Manipulation (L7)",
+                        "Compromised RAG Pipelines (L2)"
                     ]
                 },
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
-                        "Enables proactive risk identification and prioritization for all LLM risks (LLM01:2025 through LLM10:2025)"
+                        "LLM01:2025 Prompt Injection (threat modeling identifies injection vectors)",
+                        "LLM03:2025 Supply Chain (threat modeling maps supply chain risks)",
+                        "LLM04:2025 Data and Model Poisoning (threat modeling identifies poisoning surfaces)",
+                        "LLM06:2025 Excessive Agency (threat modeling scopes agent capabilities)"
                     ]
                 },
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "Enables proactive risk identification and prioritization for all ML risks (ML01:2023 through ML10:2023)"
+                        "ML01:2023 Input Manipulation Attack (threat modeling identifies adversarial input risks)",
+                        "ML02:2023 Data Poisoning Attack (threat modeling identifies poisoning vectors)",
+                        "ML06:2023 AI Supply Chain Attacks (threat modeling maps supply chain dependencies)"
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic Top 10 2026",
+                    "framework": "OWASP Agentic AI Top 10 2026",
                     "items": [
-                        "Enables proactive risk identification and prioritization for all agentic AI risks (ASI01:2026 through ASI10:2026)"
+                        "ASI01:2026 Agent Goal Hijack (threat modeling identifies goal manipulation risks)",
+                        "ASI02:2026 Tool Misuse and Exploitation (threat modeling assesses tool misuse scenarios)",
+                        "ASI04:2026 Agentic Supply Chain Vulnerabilities (threat modeling maps agentic supply chain)",
+                        "ASI06:2026 Memory & Context Poisoning (threat modeling identifies memory poisoning risks)"
                     ]
                 },
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
-                        "Enables systematic assessment of all NIST AML attack categories: NISTAML.01 Availability Violations, NISTAML.02 Integrity Violations, NISTAML.03 Privacy Compromises, NISTAML.04 Misuse Violations, NISTAML.05 Supply Chain Attacks"
+                        "NISTAML.01 Availability Violations (threat modeling assesses availability risks)",
+                        "NISTAML.02 Integrity Violations (threat modeling assesses integrity risks)",
+                        "NISTAML.03 Privacy Compromises (threat modeling assesses privacy risks)",
+                        "NISTAML.05 Supply Chain Attacks (threat modeling maps supply chain attack surface)"
                     ]
                 },
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "Enables comprehensive threat identification across all 19 Cisco AI Security Objectives (OB-001 through OB-019) and associated Techniques/Subtechniques"
+                        "AITech-1.1 Direct Prompt Injection (threat modeling identifies injection surfaces)",
+                        "AITech-1.2 Indirect Prompt Injection (threat modeling maps indirect injection vectors)",
+                        "AITech-6.1 Training Data Poisoning (threat modeling identifies poisoning risks)",
+                        "AITech-9.3 Dependency / Plugin Compromise (threat modeling maps dependency risks)",
+                        "AITech-11.1 Environment-Aware Evasion (threat modeling assesses evasion risks)"
                     ]
                 }
             ]
@@ -1541,7 +1564,7 @@ export const modelTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic Top 10 2026",
+                    "framework": "OWASP Agentic AI Top 10 2026",
                     "items": [
                         "ASI02:2026 Tool Misuse and Exploitation",
                         "ASI03:2026 Identity and Privilege Abuse (partially mitigated via access/config baseline)",
@@ -1644,7 +1667,7 @@ export const modelTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic Top 10 2026",
+                            "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
                                 "Partially mitigates ASI04:2026 Agentic Supply Chain Vulnerabilities",
                                 "ASI03:2026 Identity and Privilege Abuse (partially mitigated via hardened defaults / least privilege)"
@@ -1739,7 +1762,7 @@ export const modelTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic Top 10 2026",
+                            "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
                                 "Partially mitigates ASI04:2026 Agentic Supply Chain Vulnerabilities",
                                 "ASI03:2026 Identity and Privilege Abuse (partially mitigated via posture SLOs and access-control baselines)"
@@ -1808,7 +1831,7 @@ export const modelTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic Top 10 2026",
+                    "framework": "OWASP Agentic AI Top 10 2026",
                     "items": [
                         "ASI02:2026 Tool Misuse and Exploitation",
                         "ASI08:2026 Cascading Failures (HITL emergency halt/override can break runaway chains)",
@@ -1898,7 +1921,7 @@ export const modelTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic Top 10 2026",
+                            "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
                                 "ASI01:2026 Agent Goal Hijack (HITL can halt or correct hijacked plans)",
                                 "ASI02:2026 Tool Misuse and Exploitation",
@@ -1987,7 +2010,7 @@ export const modelTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic Top 10 2026",
+                            "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
                                 "ASI09:2026 Human-Agent Trust Exploitation",
                                 "ASI02:2026 Tool Misuse and Exploitation (fire drills prepare operators)",
@@ -2076,7 +2099,7 @@ export const modelTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic Top 10 2026",
+                            "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
                                 "ASI09:2026 Human-Agent Trust Exploitation",
                                 "ASI02:2026 Tool Misuse and Exploitation (HITL activation spikes and escalation can indicate tool abuse attempts)",
@@ -2131,15 +2154,24 @@ export const modelTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0048 External Harms (by defining and testing against misuse that leads to societal, reputational, or user harm)"
+                        "AML.T0048 External Harms (by defining and testing against misuse that leads to societal, reputational, or user harm)",
+                        "AML.T0051.000 LLM Prompt Injection: Direct (policy conformance tests + refusal rules target direct prompt override attempts)",
+                        "AML.T0054 LLM Jailbreak (by codifying refusal policies and red-teaming for jailbreak resilience)"
                     ]
                 },
                 {
                     "framework": "MAESTRO",
                     "items": [
-                        "Misuse for Malicious Purposes (Cross-Layer)",
-                        "Evasion of Auditing/Compliance (L6, by creating the auditable artifacts)",
-                        "Unpredictable agent behavior / Performance Degradation (L5, by defining clear boundaries)"
+                        "Regulatory Non-Compliance by AI Security Agents (L6)",
+                        "Bias in Security AI Agents (L6)",
+                        "Lack of Explainability in Security AI Agents (L6)",
+                        "Reprogramming Attacks (L1)",
+                        "Manipulation of Evaluation Metrics (L5) (by defining fairness/performance thresholds and validating them as CI gates)",
+                        "Inaccurate Agent Capability Description (L7) (by producing explicit, versioned documentation of intended use and forbidden use cases)",
+                        "Agent Tool Misuse (L7) (boundaries and forbidden actions define acceptable tool usage)",
+                        "Agent Goal Manipulation (L7) (use-case baselining + red-team suites test goal/intent drift against policy)",
+                        "Goal Misalignment Cascades (Cross-Layer) (boundary specs + validation gates reduce unsafe-goal propagation)",
+                        "Data Leakage (Cross-Layer) (disallowed data categories + redaction rules reduce cross-layer leakage)"
                     ]
                 },
                 {
@@ -2147,6 +2179,7 @@ export const modelTactic = {
                     "items": [
                         "LLM01:2025 Prompt Injection (by codifying forbidden intents/topics and enforcing refusal tests)",
                         "LLM02:2025 Sensitive Information Disclosure (by defining disallowed data categories and output rules)",
+                        "LLM05:2025 Improper Output Handling (output policy + automated checks reduce unsafe rendering/unsafe content propagation)",
                         "LLM06:2025 Excessive Agency (by strict operational boundaries and forbidden actions)",
                         "LLM09:2025 Misinformation (by defining forbidden topics and content categories)"
                     ]
@@ -2154,8 +2187,36 @@ export const modelTactic = {
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "ML04:2023 Data Leakage (by specifying disallowed data domains and output redaction rules)",
                         "ML08:2023 Model Skewing (by providing a framework for fairness and bias assessment)"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI01:2026 Agent Goal Hijack (explicit goal boundaries + validation suites reduce goal/intent manipulation impact)",
+                        "ASI02:2026 Tool Misuse and Exploitation (machine-readable allowed/forbidden actions help constrain tool usage)",
+                        "ASI08:2026 Cascading Failures (fail-safe policies + gating tests reduce unsafe behavior propagation)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.04 Misuse Violations (addressed by intended/forbidden uses + automated refusal/conformance tests)",
+                        "NISTAML.015 Indirect Prompt Injection (validation suites probe indirect instruction channels (docs/RAG))",
+                        "NISTAML.018 Prompt Injection (conformance tests validate refusal behavior against prompt manipulation)",
+                        "NISTAML.027 Misaligned Outputs (safety boundary policies + red-teaming detect policy-violating outputs pre-release)",
+                        "NISTAML.036 Leaking information from user interactions (output rules + redaction tests reduce leakage in responses)",
+                        "NISTAML.039 Compromising connected resources (operational boundaries + human oversight reduce harmful downstream actions)"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-1.3 Goal Manipulation",
+                        "AITech-15.1 Harmful Content (by defining and validating content guardrails through forbidden content categories and refusal tests)",
+                        "AISubtech-15.1.5 Safety Harms and Toxicity: Disinformation (tests validate refusal/safe completion for disinformation prompts)",
+                        "AITech-2.1 Jailbreak (by codifying refusal policies and red-teaming for safety filter bypass resilience)",
+                        "AITech-18.1 Fraudulent Use (misuse testing includes phishing/spam scenarios)"
                     ]
                 }
             ],
@@ -2209,21 +2270,75 @@ export const modelTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0048 External Harms"
+                        "AML.T0048 External Harms",
+                        "AML.T0054 LLM Jailbreak (by benchmarking jailbreak resistance rate via garak and AgentHarm probes)",
+                        "AML.T0051 LLM Prompt Injection (by running promptinject probe suites in CI/CD and gating on pass rate threshold)",
+                        "AML.T0053 AI Agent Tool Invocation (by benchmarking unauthorized tool execution via ToolEmu scenarios)"
                     ]
                 },
                 {
                     "framework": "MAESTRO",
                     "items": [
-                        "Evaluation & Observability (L5 in general)",
-                        "Framework Evasion (L3)"
+                        "Framework Evasion (L3)",
+                        "Manipulation of Evaluation Metrics (L5) (by providing standardized, reproducible benchmark metrics resistant to manipulation)",
+                        "Evasion of Detection (L5) (by probing for evasion techniques such as obfuscation and encoding in benchmark suites)",
+                        "Agent Tool Misuse (L7) (by benchmarking tool misuse scenarios via ToolEmu)",
+                        "Inaccurate Agent Capability Description (L7)",
+                        "Input Validation Attacks (L3)",
+                        "Integration Risks (L7)"
                     ]
                 },
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
-                        "LLM06:2025 Excessive Agency",
-                        "LLM01:2025 Prompt Injection"
+                        "LLM01:2025 Prompt Injection",
+                        "LLM02:2025 Sensitive Information Disclosure",
+                        "LLM06:2025 Excessive Agency"
+                    ]
+                },
+                {
+                    "framework": "OWASP ML Top 10 2023",
+                    "items": [
+                        "ML01:2023 Input Manipulation Attack"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI01:2026 Agent Goal Hijack",
+                        "ASI02:2026 Tool Misuse and Exploitation",
+                        "ASI05:2026 Unexpected Code Execution (RCE) (if benchmarks cover unsafe tool execution / RCE cases)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.018 Prompt Injection",
+                        "NISTAML.04 Misuse Violations",
+                        "NISTAML.039 Compromising Connected Resources",
+                        "NISTAML.027 Misaligned Outputs",
+                        "NISTAML.022 Evasion"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-1.1 Direct Prompt Injection",
+                        "AISubtech-1.1.1 Instruction Manipulation",
+                        "AISubtech-1.1.2 Obfuscation",
+                        "AITech-1.2 Indirect Prompt Injection",
+                        "AISubtech-1.2.1 Instruction Manipulation",
+                        "AISubtech-1.2.2 Obfuscation",
+                        "AITech-2.1 Jailbreak",
+                        "AISubtech-2.1.2 Obfuscation",
+                        "AISubtech-2.1.3 Semantic Manipulation",
+                        "AISubtech-2.1.4 Token Exploitation",
+                        "AITech-12.1 Tool Exploitation",
+                        "AISubtech-12.1.1 Parameter Manipulation",
+                        "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
+                        "AITech-12.2 Insecure Output Handling",
+                        "AITech-9.2 Detection Evasion",
+                        "AISubtech-9.2.1 Obfuscation Vulnerabilities"
                     ]
                 }
             ],
@@ -2259,20 +2374,59 @@ export const modelTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0048 External Harms"
+                        "AML.T0048 External Harms",
+                        "AML.T0053 AI Agent Tool Invocation (by restricting which tools each autonomy tier can invoke via OPA policy enforcement)",
+                        "AML.T0101 Data Destruction via AI Agent Tool Invocation (by blocking write/destructive tool access for lower autonomy tiers)"
                     ]
                 },
                 {
                     "framework": "MAESTRO",
                     "items": [
                         "Integration Risks (L7)",
-                        "Agent Goal Manipulation (L7)"
+                        "Agent Goal Manipulation (L7)",
+                        "Agent Tool Misuse (L7)",
+                        "Privilege Escalation (Cross-Layer)",
+                        "Inaccurate Agent Capability Description (L7)"
                     ]
                 },
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
                         "LLM06:2025 Excessive Agency"
+                    ]
+                },
+                {
+                    "framework": "OWASP ML Top 10 2023",
+                    "items": [
+                        "N/A"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI02:2026 Tool Misuse and Exploitation (by enforcing per-tier tool restrictions that limit the tool misuse attack surface)",
+                        "ASI01:2026 Agent Goal Hijack (SUPPORTING—bidirectional mapping exists)",
+                        "ASI03:2026 Identity and Privilege Abuse (by defining explicit privilege boundaries per autonomy level, blocking scope escalation at admission)",
+                        "ASI08:2026 Cascading Failures (by requiring mandatory HITL for lower tiers, breaking autonomous fault propagation chains)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.039 Compromising Connected Resources",
+                        "NISTAML.04 Misuse Violations"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-14.2 Abuse of Delegated Authority",
+                        "AISubtech-14.2.1 Permission Escalation via Delegation",
+                        "AITech-12.1 Tool Exploitation (autonomy governance constrains tool scope/approval)",
+                        "AISubtech-12.1.1 Parameter Manipulation (approval + tool restrictions reduce exploitability)",
+                        "AISubtech-12.1.3 Unsafe System / Browser / File Execution (partial—high-risk actions gated by autonomy level)",
+                        "AITech-1.3 Goal Manipulation (HITL/control bundles reduce goal hijack impact)",
+                        "AISubtech-1.3.1 Goal Manipulation (Models, Agents) (partial)"
                     ]
                 }
             ],

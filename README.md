@@ -20,7 +20,7 @@
     * **Pillars View**: Organized by technology stack components (Data, Model, Infrastructure, Application).
     * **Phases View**: Structured around the AI development and operational lifecycle.
 * **Comprehensive Technique Details**: Each defensive technique includes a detailed description, implementation strategies with code examples, and lists of relevant open-source and commercial tools.
-* **Threat Mapping**: Techniques are explicitly mapped to known threats from established frameworks like **MITRE ATLAS**, **MAESTRO**, and the **OWASP Top 10** for LLMs and ML.
+* **Threat Mapping**: Techniques are explicitly mapped to known threats from established frameworks like **MITRE ATLAS**, **MAESTRO**, the **OWASP Top 10** for LLMs, ML, and Agentic Applications, **Cisco Integrated AI Security and Safety Framework**, and **NIST Adversarial Machine Learning 2025**.
 * **Interactive Interface**: A clean, responsive UI with powerful search functionality to quickly find relevant techniques and threats.
 * **Light & Dark Modes**: A comfortable viewing experience for any environment.
 
@@ -60,7 +60,7 @@ This view organizes defenses by the development stage where they are most releva
 
 This work is a personal initiative led by Edward Lee. It is intended for informational and educational purposes only.
 
-**Please note:** This work was inspired by, and references, numerous incredible open-source security frameworks. However, **AIDEFEND is not affiliated with, endorsed by, or otherwise connected to The MITRE Corporation, the Cloud Security Alliance (creator of the MAESTRO framework), Google, or OWASP.**
+**Please note:** This work was inspired by, and references, numerous incredible open-source security frameworks. However, **AIDEFEND is not affiliated with, endorsed by, or otherwise connected to The MITRE Corporation, the Cloud Security Alliance (creator of the MAESTRO framework), Google, OWASP, Cisco, or NIST.**
 
 The framework synthesizes concepts and knowledge from the following foundational resources:
 * [MAESTRO Framework](https://cloudsecurityalliance.org/blog/2025/02/06/agentic-ai-threat-modeling-framework-maestro/)
@@ -70,6 +70,9 @@ The framework synthesizes concepts and knowledge from the following foundational
 * [Google Secure AI Framework (SAIF)](https://saif.google/)
 * [OWASP Top 10 for LLM Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
 * [OWASP Top 10 for Machine Learning Security](https://owasp.org/www-project-machine-learning-security-top-10/)
+* [OWASP Top 10 for Agentic Applications 2026](https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/)
+* [Cisco Integrated AI Security and Safety Framework](https://learn-cloudsecurity.cisco.com/ai-security-framework)
+* [NIST Adversarial Machine Learning 2025](https://csrc.nist.gov/pubs/ai/100/2/e2025/final)
 
 ---
 
