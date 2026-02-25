@@ -1,7 +1,7 @@
 # 🛡️ AIDEFEND: An AI Defense Framework
 
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg?style=for-the-badge)](https://creativecommons.org/licenses/by/4.0/)
-[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge)](https://edward-playground.github.io/aidefense-framework/)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge)](https://aidefend.net)
 
 > AIDEFEND (Artificial Intelligence Defense Framework) is an open, AI-focused knowledge base of defensive countermeasures designed to help security professionals protect AI/ML systems from emerging threats.
 
@@ -9,26 +9,27 @@
 
 ### 🚀 Framework Website
 
-**[Go to the AIDEFEND framework site](https://edward-playground.github.io/aidefense-framework/)**
+**[Go to the AIDEFEND framework site](https://aidefend.net)**
 
 ---
 
 ### 💡 Key Features
 
-* **Three Strategic Views**: Organize and explore defenses from multiple perspectives to suit different roles and use cases:
+* **Four Strategic Views**: Organize and explore defenses from multiple perspectives to suit different roles and use cases:
     * **Tactics View**: Aligned with the seven high-level tactics of MITRE D3FEND.
     * **Pillars View**: Organized by technology stack components (Data, Model, Infrastructure, Application).
     * **Phases View**: Structured around the AI development and operational lifecycle.
+    * **Frameworks View**: Browse defenses mapped to specific threat frameworks (OWASP LLM/ML/Agentic Top 10, MAESTRO, MITRE ATLAS, NIST AML, Cisco AI Security).
 * **Comprehensive Technique Details**: Each defensive technique includes a detailed description, implementation strategies with code examples, and lists of relevant open-source and commercial tools.
 * **Threat Mapping**: Techniques are explicitly mapped to known threats from established frameworks like **MITRE ATLAS**, **MAESTRO**, the **OWASP Top 10** for LLMs, ML, and Agentic Applications, **Cisco Integrated AI Security and Safety Framework**, and **NIST Adversarial Machine Learning 2025**.
 * **Interactive Interface**: A clean, responsive UI with powerful search functionality to quickly find relevant techniques and threats.
-* **Light & Dark Modes**: A comfortable viewing experience for any environment.
+* **Four Themes**: Dark, Light, High Contrast, and The Matrix — a comfortable viewing experience for any environment.
 
 ---
 
 ### 🏛️ The Framework Views
 
-AIDEFEND allows you to view the defensive landscape through three distinct lenses, helping you answer key strategic questions.
+AIDEFEND allows you to view the defensive landscape through four distinct lenses, helping you answer key strategic questions.
 
 #### **1. Tactics View**
 > **Question:** *What high-level approach and concept is being used for this defense?*
@@ -45,12 +46,17 @@ This view organizes defenses by the technology stack component they secure: **Da
 
 This view organizes defenses by the development stage where they are most relevant, from initial **Design & Scoping** through **Building, Validation, Operation, Incident Response, and Restoration**. This process-driven view helps MLOps and DevSecOps teams embed security throughout the entire AI lifecycle.
 
+#### **4. Frameworks View**
+> **Question:** *What known threats from established frameworks does this defense address?*
+
+This view lets you browse defenses mapped to specific threat frameworks — **OWASP Top 10 for LLM Applications (2025)**, **OWASP ML Top 10 (2023)**, **OWASP Agentic AI Top 10 (2026)**, **MAESTRO**, **MITRE ATLAS**, **NIST Adversarial Machine Learning (2025)**, and **Cisco AI Security**. Each framework page includes a brief description, a link to the official source, and an organized breakdown of its threat categories with corresponding AIDEFEND defensive techniques.
+
 ---
 
 ### ⚙️ How to Use This Tool
 
-1.  **Select a View**: Use the "View by:" switcher at the top of the page to choose between Tactics, Pillars, or Phases.
-2.  **Explore Techniques**: Click on any column header to learn more about that tactic, pillar, or phase. Click on any individual defensive technique to open a detailed modal view.
+1.  **Select a View**: Use the "View by:" switcher at the top of the page to choose between Tactics, Pillars, Phases, or Frameworks.
+2.  **Explore Techniques**: Click on any column header to learn more about that tactic, pillar, or phase. Click on any individual defensive technique to open a detailed modal view. In Frameworks view, use the dropdown to switch between threat frameworks.
 3.  **Search Everything**: Use the search bar to filter all content by keywords, technique IDs, or threat mappings (e.g., "Prompt Injection", "AID-H-002", "MAESTRO", "LLM01").
 
 4.  **AIDEFEND MCP/REST API Service**: Now available! A 100% Local, private RAG system for the AIDEFEND framework. [Try it now](https://github.com/edward-playground/aidefend-mcp).

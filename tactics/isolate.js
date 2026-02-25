@@ -15,7 +15,13 @@ export const isolateTactic = {
                         "AML.T0072 Reverse Shell",
                         "AML.T0050 Command and Scripting Interpreter",
                         "AML.T0029 Denial of AI Service",
-                        "AML.T0034 Cost Harvesting"
+                        "AML.T0034 Cost Harvesting",
+                        "AML.T0089 Process Discovery (sandbox isolation limits process enumeration visibility)",
+                        "AML.T0090 OS Credential Dumping (isolated environments prevent host credential access)",
+                        "AML.T0100 AI Agent Clickbait (sandboxed execution contains clickbait-triggered actions)",
+                        "AML.T0102 Generate Malicious Commands (sandbox containment limits impact of generated malicious commands)",
+                        "AML.T0103 Deploy AI Agent",
+                        "AML.T0105 Escape to Host"
                     ]
                 },
                 {
@@ -58,7 +64,7 @@ export const isolateTactic = {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
                         "NISTAML.039 Compromising connected resources",
-                        "NISTAML.05 Supply Chain Attacks (contains compromised component impact)",
+                        "NISTAML.051 Model Poisoning (Supply Chain) (contains compromised component impact)",
                         "NISTAML.018 Prompt Injection (limits post-injection agent capabilities)"
                     ]
                 },
@@ -106,7 +112,9 @@ export const isolateTactic = {
                                 "AML.T0053 AI Agent Tool Invocation",
                                 "AML.T0072 Reverse Shell",
                                 "AML.T0029 Denial of AI Service",
-                                "AML.T0034 Cost Harvesting"
+                                "AML.T0034 Cost Harvesting",
+                                "AML.T0097 Virtualization/Sandbox Evasion (container-level isolation raises evasion difficulty)",
+                                "AML.T0105 Escape to Host"
                             ]
                         },
                         {
@@ -146,7 +154,7 @@ export const isolateTactic = {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
                                 "NISTAML.039 Compromising connected resources",
-                                "NISTAML.05 Supply Chain Attacks (compromised container supply chain)"
+                                "NISTAML.051 Model Poisoning (Supply Chain) (compromised container supply chain)"
                             ]
                         },
                         {
@@ -216,7 +224,10 @@ export const isolateTactic = {
                                 "AML.T0050 Command and Scripting Interpreter",
                                 "AML.T0029 Denial of AI Service",
                                 "AML.T0034 Cost Harvesting",
-                                "AML.T0018.002 Manipulate AI Model: Embed Malware"
+                                "AML.T0018.002 Manipulate AI Model: Embed Malware",
+                                "AML.T0105 Escape to Host",
+                                "AML.T0106 Exploitation for Credential Access",
+                                "AML.T0011.002 User Execution: Poisoned AI Agent Tool"
                             ]
                         },
                         {
@@ -259,7 +270,7 @@ export const isolateTactic = {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
                                 "NISTAML.039 Compromising connected resources",
-                                "NISTAML.05 Supply Chain Attacks (hardware-level isolation for compromised components)"
+                                "NISTAML.051 Model Poisoning (Supply Chain) (hardware-level isolation for compromised components)"
                             ]
                         },
                         {
@@ -298,7 +309,7 @@ export const isolateTactic = {
                     "phase": ["operation"],
                     "description": "Run tool executions inside strongly isolated, single-use sandboxes (e.g., microVMs). Destroy the environment immediately after one invocation to prevent persistence and cross-session contamination.",
                     "defendsAgainst": [
-                        { "framework": "MITRE ATLAS", "items": ["AML.T0050 Command and Scripting Interpreter", "AML.T0072 Reverse Shell", "AML.T0053 AI Agent Tool Invocation"] },
+                        { "framework": "MITRE ATLAS", "items": ["AML.T0050 Command and Scripting Interpreter", "AML.T0072 Reverse Shell", "AML.T0053 AI Agent Tool Invocation", "AML.T0100 AI Agent Clickbait (ephemeral teardown prevents clickbait-triggered persistence)"] },
                         { "framework": "MAESTRO", "items": ["Orchestration Attacks (L4)", "Lateral Movement (Cross-Layer)", "Agent Tool Misuse (L7)", "Resource Hijacking (L4) (ephemeral teardown prevents sustained hijacking)"] },
                         { "framework": "OWASP LLM Top 10 2025", "items": ["LLM06:2025 Excessive Agency"] },
                         { "framework": "OWASP ML Top 10 2023", "items": ["ML06:2023 AI Supply Chain Attacks"] },
@@ -322,7 +333,7 @@ export const isolateTactic = {
                     "phase": ["operation"],
                     "description": "Minimize kernel/system call surface and restrict outbound network destinations for sandboxed executions to reduce post-exploitation blast radius.",
                     "defendsAgainst": [
-                        { "framework": "MITRE ATLAS", "items": ["AML.T0072 Reverse Shell", "AML.T0025 Exfiltration via Cyber Means", "AML.T0050 Command and Scripting Interpreter"] },
+                        { "framework": "MITRE ATLAS", "items": ["AML.T0072 Reverse Shell", "AML.T0025 Exfiltration via Cyber Means", "AML.T0050 Command and Scripting Interpreter", "AML.T0089 Process Discovery (syscall filtering blocks process enumeration)", "AML.T0102 Generate Malicious Commands (seccomp restrictions limit execution of generated malicious commands)", "AML.T0105 Escape to Host", "AML.T0106 Exploitation for Credential Access"] },
                         { "framework": "MAESTRO", "items": ["Lateral Movement (Cross-Layer)", "Privilege Escalation (Cross-Layer)", "Data Leakage (Cross-Layer) (egress restrictions prevent data exfiltration)", "Orchestration Attacks (L4)"] },
                         { "framework": "OWASP LLM Top 10 2025", "items": ["LLM06:2025 Excessive Agency", "LLM02:2025 Sensitive Information Disclosure (egress restrictions block exfiltration)"] },
                         { "framework": "OWASP ML Top 10 2023", "items": ["ML06:2023 AI Supply Chain Attacks", "ML05:2023 Model Theft (network restrictions prevent model exfiltration)"] },
@@ -369,7 +380,8 @@ export const isolateTactic = {
                                 "AML.T0050 Command and Scripting Interpreter",
                                 "AML.T0072 Reverse Shell",
                                 "AML.T0018.002 Manipulate AI Model: Embed Malware",
-                                "AML.T0025 Exfiltration via Cyber Means"
+                                "AML.T0025 Exfiltration via Cyber Means",
+                                "AML.T0097 Virtualization/Sandbox Evasion (pre-execution analysis detects sandbox evasion techniques)"
                             ]
                         },
                         {
@@ -406,7 +418,6 @@ export const isolateTactic = {
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
-                                "NISTAML.05 Supply Chain Attacks",
                                 "NISTAML.051 Model Poisoning (Supply Chain) (detects malicious behavior from poisoned models)",
                                 "NISTAML.039 Compromising connected resources"
                             ]
@@ -454,7 +465,10 @@ export const isolateTactic = {
                         "AML.T0036 Data from Information Repositories (limits access)",
                         "AML.T0025 Exfiltration via Cyber Means",
                         "AML.T0049 Exploit Public-Facing Application (SSRF-driven internal pivot)",
-                        "AML.T0072 Reverse Shell"
+                        "AML.T0072 Reverse Shell",
+                        "AML.T0075 Cloud Service Discovery (network segmentation limits cloud resource enumeration)",
+                        "AML.T0096 AI Service API (network isolation restricts C2 via AI service channels)",
+                        "AML.T0108 AI Agent (C2)"
                     ]
                 },
                 {
@@ -555,7 +569,8 @@ export const isolateTactic = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0044 Full AI Model Access (limits internal access)",
-                                "AML.T0036 Data from Information Repositories (limits internal access)"
+                                "AML.T0036 Data from Information Repositories (limits internal access)",
+                                "AML.T0075 Cloud Service Discovery (microsegmentation limits internal cloud resource discovery)"
                             ]
                         },
                         {
@@ -655,7 +670,10 @@ export const isolateTactic = {
                                 "AML.T0025 Exfiltration via Cyber Means",
                                 "AML.T0049 Exploit Public-Facing Application (SSRF)",
                                 "AML.T0072 Reverse Shell",
-                                "AML.T0034 Cost Harvesting"
+                                "AML.T0034 Cost Harvesting",
+                                "AML.T0096 AI Service API (egress monitoring detects C2 communication via AI service channels)",
+                                "AML.T0108 AI Agent (C2)",
+                                "AML.T0011.003 User Execution: Malicious Link"
                             ]
                         },
                         {
@@ -693,7 +711,7 @@ export const isolateTactic = {
                             "items": [
                                 "NISTAML.039 Compromising connected resources",
                                 "NISTAML.038 Data Extraction",
-                                "NISTAML.05 Supply Chain Attacks (securing external service connections)"
+                                "NISTAML.051 Model Poisoning (Supply Chain) (securing external service connections)"
                             ]
                         },
                         {
@@ -733,7 +751,9 @@ export const isolateTactic = {
                         "AML.T0034 Cost Harvesting",
                         "AML.T0040 AI Model Inference API Access",
                         "AML.T0046 Spamming AI System with Chaff Data",
-                        "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (rate-limiting slows extraction)"
+                        "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (rate-limiting slows extraction)",
+                        "AML.T0042 Verify Attack (rate limiting and throttling disrupt attacker feedback loops)",
+                        "AML.T0096 AI Service API (rate limiting and throttling restrict C2 communication throughput)"
                     ]
                 },
                 {
@@ -772,8 +792,8 @@ export const isolateTactic = {
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
-                        "NISTAML.01 Availability Violations",
                         "NISTAML.014 Energy-latency",
+                        "NISTAML.018 Prompt Injection (rate limiting contains prompt injection abuse)",
                         "NISTAML.031 Model Extraction (rate limiting slows extraction)",
                         "NISTAML.039 Compromising connected resources (quarantine limits lateral impact)"
                     ]
@@ -830,7 +850,9 @@ export const isolateTactic = {
                         "AML.T0051 LLM Prompt Injection",
                         "AML.T0061 LLM Prompt Self-Replication",
                         "AML.T0070 RAG Poisoning",
-                        "AML.T0080.000 AI Agent Context Poisoning: Memory"
+                        "AML.T0080.000 AI Agent Context Poisoning: Memory",
+                        "AML.T0099 AI Agent Tool Data Poisoning (memory isolation prevents poisoned tool data from persisting across sessions)",
+                        "AML.T0108 AI Agent (C2)"
                     ]
                 },
                 {
@@ -990,7 +1012,8 @@ export const isolateTactic = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0070 RAG Poisoning",
-                                "AML.T0080.000 AI Agent Context Poisoning: Memory"
+                                "AML.T0080.000 AI Agent Context Poisoning: Memory",
+                                "AML.T0064 Gather RAG-Indexed Targets (tenant partitioning limits RAG index reconnaissance scope)"
                             ]
                         },
                         {
@@ -1221,7 +1244,9 @@ export const isolateTactic = {
                     "items": [
                         "AML.T0048 External Harms",
                         "AML.T0029 Denial of AI Service",
-                        "AML.T0034 Cost Harvesting (kill-switch stops runaway cost)"
+                        "AML.T0034 Cost Harvesting (kill-switch stops runaway cost)",
+                        "AML.T0103 Deploy AI Agent",
+                        "AML.T0108 AI Agent (C2)"
                     ]
                 },
                 {
@@ -1260,8 +1285,9 @@ export const isolateTactic = {
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
-                        "NISTAML.04 Misuse Violations",
-                        "NISTAML.01 Availability Violations",
+                        "NISTAML.018 Prompt Injection (misuse via prompt-based safety bypass)",
+                        "NISTAML.014 Energy-latency (kill-switch halts runaway resource consumption)",
+                        "NISTAML.027 Misaligned Outputs (kill-switch halts actively harmful outputs)",
                         "NISTAML.039 Compromising connected resources (kill-switch limits blast radius)"
                     ]
                 },
@@ -1430,7 +1456,8 @@ export const isolateTactic = {
                     "framework": "MITRE ATLAS",
                     "items": [
                         "AML.T0025 Exfiltration via Cyber Means (from client device)",
-                        "AML.T0037 Data from Local System (stealing browser/app state, session tokens, local storage)"
+                        "AML.T0037 Data from Local System (stealing browser/app state, session tokens, local storage)",
+                        "AML.T0011.003 User Execution: Malicious Link"
                     ]
                 },
                 {
@@ -1467,7 +1494,7 @@ export const isolateTactic = {
                     "items": [
                         "NISTAML.039 Compromising connected resources",
                         "NISTAML.038 Data Extraction",
-                        "NISTAML.05 Supply Chain Attacks (containing malicious downloaded model)"
+                        "NISTAML.051 Model Poisoning (Supply Chain) (containing malicious downloaded model)"
                     ]
                 },
                 {

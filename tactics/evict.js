@@ -11,7 +11,10 @@ export const evictTactic = {
                     "framework": "MITRE ATLAS",
                     "items": [
                         "AML.T0012 Valid Accounts",
-                        "AML.T0055 Unsecured Credentials"
+                        "AML.T0055 Unsecured Credentials",
+                        "AML.T0090 OS Credential Dumping",
+                        "AML.T0098 AI Agent Tool Credential Harvesting",
+                        "AML.T0106 Exploitation for Credential Access"
                     ]
                 },
                 {
@@ -154,7 +157,9 @@ export const evictTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0012 Valid Accounts (by immediately disabling the account)"
+                                "AML.T0012 Valid Accounts (by immediately disabling the account)",
+                                "AML.T0090 OS Credential Dumping (by immediately invalidating dumped credentials)",
+                                "AML.T0106 Exploitation for Credential Access"
                             ]
                         },
                         {
@@ -313,7 +318,8 @@ export const evictTactic = {
                         "AML.T0051 LLM Prompt Injection",
                         "AML.T0054 LLM Jailbreak (terminates manipulated session)",
                         "AML.T0072 Reverse Shell (terminating reverse shell connections)",
-                        "AML.T0080 AI Agent Context Poisoning (terminating poisoned agent sessions)"
+                        "AML.T0080 AI Agent Context Poisoning (terminating poisoned agent sessions)",
+                        "AML.T0108 AI Agent (C2)"
                     ]
                 },
                 {
@@ -400,7 +406,8 @@ export const evictTactic = {
                         "AML.T0020 Poison Training Data",
                         "AML.T0059 Erode Dataset Integrity",
                         "AML.T0070 RAG Poisoning",
-                        "AML.T0071 False RAG Entry Injection"
+                        "AML.T0071 False RAG Entry Injection",
+                        "AML.T0104 Publish Poisoned AI Agent Tool"
                     ]
                 },
                 {
@@ -472,8 +479,7 @@ export const evictTactic = {
                         "HiddenLayer MLSec Platform",
                         "Adversa.AI",
                         "Bosch AIShield",
-                        "CognitiveScale (Cortex Certifai)",
-                        "IBM Watson OpenScale"
+                        "IBM watsonx.governance"
                     ],
                     "defendsAgainst": [
                         {
@@ -743,7 +749,6 @@ export const evictTactic = {
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
-                                "NISTAML.05 Supply Chain Attacks",
                                 "NISTAML.051 Model Poisoning (Supply Chain)"
                             ]
                         },
@@ -892,7 +897,10 @@ export const evictTactic = {
                         "AML.T0010.001 AI Supply Chain Compromise: AI Software (patching vulnerable frameworks)",
                         "AML.T0011.001 User Execution: Malicious Package (patching exploited packages)",
                         "AML.T0072 Reverse Shell (patching exploitation vectors)",
-                        "AML.T0031 Erode AI Model Integrity (patching vulnerabilities enabling integrity erosion)"
+                        "AML.T0031 Erode AI Model Integrity (patching vulnerabilities enabling integrity erosion)",
+                        "AML.T0105 Escape to Host",
+                        "AML.T0106 Exploitation for Credential Access",
+                        "AML.T0107 Exploitation for Defense Evasion"
                     ]
                 },
                 {
@@ -928,7 +936,6 @@ export const evictTactic = {
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
-                        "NISTAML.05 Supply Chain Attacks",
                         "NISTAML.051 Model Poisoning (Supply Chain)"
                     ]
                 },
@@ -991,7 +998,8 @@ export const evictTactic = {
                         "AML.T0051 LLM Prompt Injection (purging injected session state)",
                         "AML.T0054 LLM Jailbreak (terminating jailbroken sessions)",
                         "AML.T0080.000 AI Agent Context Poisoning: Memory (purging poisoned agent memory)",
-                        "AML.T0080.001 AI Agent Context Poisoning: Thread (purging poisoned conversation threads)"
+                        "AML.T0080.001 AI Agent Context Poisoning: Thread (purging poisoned conversation threads)",
+                        "AML.T0108 AI Agent (C2)"
                     ]
                 },
                 {
@@ -1245,7 +1253,7 @@ export const evictTactic = {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
                                 "NISTAML.031 Model Extraction",
-                                "NISTAML.05 Supply Chain Attacks"
+                                "NISTAML.051 Model Poisoning (Supply Chain) (secure transfer prevents supply chain compromise)"
                             ]
                         },
                         {

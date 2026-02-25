@@ -1,7 +1,7 @@
-// 導入介紹內容
+// 導入介紹內容 (Import introduction content)
 import { aidefendIntroduction } from './aidefend-intro.js';
 
-// 導入所有拆分的 tactics
+// 導入所有拆分的 tactics (Import all split tactics)
 import { modelTactic } from './tactics/model.js';
 import { hardenTactic } from './tactics/harden.js';
 import { detectTactic } from './tactics/detect.js';
@@ -10,7 +10,7 @@ import { deceiveTactic } from './tactics/deceive.js';
 import { evictTactic } from './tactics/evict.js';
 import { restoreTactic } from './tactics/restore.js';
 
-// 重新組合回原始的 aidefendData 物件
+// 重新組合回原始的 aidefendData 物件 (Recombine into original aidefendData object)
 export const aidefendData = {
     "introduction": aidefendIntroduction,
     "tactics": [
@@ -24,5 +24,5 @@ export const aidefendData = {
     ]
 };
 
-// 預設將 aidefendData 匯出 以供其他模組使用
+// 預設將 aidefendData 匯出 以供其他模組使用 (Default export aidefendData for other modules)
 export default aidefendData;

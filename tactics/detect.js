@@ -18,7 +18,14 @@ export const detectTactic = {
                         "AML.T0043 Craft Adversarial Data",
                         "AML.T0051 LLM Prompt Injection",
                         "AML.T0054 LLM Jailbreak",
-                        "AML.T0068 LLM Prompt Obfuscation"
+                        "AML.T0068 LLM Prompt Obfuscation",
+                        "AML.T0041 Physical Environment Access (adversarial detection catches physical perturbations)",
+                        "AML.T0099 AI Agent Tool Data Poisoning (adversarial detection catches poisoned tool outputs)",
+                        "AML.T0104 Publish Poisoned AI Agent Tool",
+                        "AML.T0107 Exploitation for Defense Evasion",
+                        "AML.T0108 AI Agent (C2)",
+                        "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
+                        "AML.T0011.003 User Execution: Malicious Link"
                     ]
                 },
                 {
@@ -103,7 +110,7 @@ export const detectTactic = {
                         "Google Perspective API",
                         "Lakera Guard",
                         "Protect AI Guardian",
-                        "CalypsoAI Validator",
+                        "CalypsoAI Moderator",
                         "Securiti LLM Firewall"
                     ],
                     "defendsAgainst": [
@@ -615,7 +622,9 @@ export const detectTactic = {
                         "AML.T0067.000 LLM Trusted Output Components Manipulation: Citations",
                         "AML.T0077 LLM Response Rendering",
                         "AML.T0086 Exfiltration via AI Agent Tool Invocation (output monitoring catches data encoded in tool parameters)",
-                        "AML.T0088 Generate Deepfakes (output filters detect synthetic media in responses)"
+                        "AML.T0088 Generate Deepfakes (output filters detect synthetic media in responses)",
+                        "AML.T0103 Deploy AI Agent",
+                        "AML.T0108 AI Agent (C2)"
                     ]
                 },
                 {
@@ -658,7 +667,7 @@ export const detectTactic = {
                         "NISTAML.027 Misaligned Outputs",
                         "NISTAML.036 Leaking information from user interactions",
                         "NISTAML.038 Data Extraction",
-                        "NISTAML.04 Misuse Violations"
+                        "NISTAML.018 Prompt Injection (misuse via safety bypass)"
                     ]
                 },
                 {
@@ -745,7 +754,7 @@ export const detectTactic = {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
                                 "NISTAML.027 Misaligned Outputs",
-                                "NISTAML.04 Misuse Violations"
+                                "NISTAML.018 Prompt Injection (misuse via safety bypass)"
                             ]
                         },
                         {
@@ -808,7 +817,9 @@ export const detectTactic = {
                                 "AML.T0056 Extract LLM System Prompt (DLP detects system prompt content in outputs)",
                                 "AML.T0085 Data from AI Services (DLP catches sensitive data retrieved via AI services)",
                                 "AML.T0085.000 Data from AI Services: RAG Databases (detects sensitive RAG content in responses)",
-                                "AML.T0086 Exfiltration via AI Agent Tool Invocation (DLP catches data encoded in tool parameters)"
+                                "AML.T0086 Exfiltration via AI Agent Tool Invocation (DLP catches data encoded in tool parameters)",
+                                "AML.T0082 RAG Credential Harvesting (sensitive info detection catches credential content in outputs)",
+                                "AML.T0098 AI Agent Tool Credential Harvesting (sensitive info detection catches credential access via tools)"
                             ]
                         },
                         {
@@ -842,12 +853,12 @@ export const detectTactic = {
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
-                                "NISTAML.03 Privacy Compromises",
                                 "NISTAML.032 Reconstruction",
                                 "NISTAML.033 Membership Inference",
                                 "NISTAML.036 Leaking information from user interactions",
                                 "NISTAML.038 Data Extraction",
-                                "NISTAML.035 Prompt Extraction (detects system prompt content in outputs)"
+                                "NISTAML.035 Prompt Extraction (detects system prompt content in outputs)",
+                                "NISTAML.037 Training Data Attacks (DLP detects training data leakage in outputs)"
                             ]
                         },
                         {
@@ -912,7 +923,9 @@ export const detectTactic = {
                                 "AML.T0051.001 LLM Prompt Injection: Indirect (blocks tool calls triggered by indirect injections)",
                                 "AML.T0051.002 LLM Prompt Injection: Triggered",
                                 "AML.T0084 Discover AI Agent Configuration (policy monitoring detects probing of tool definitions)",
-                                "AML.T0084.001 Discover AI Agent Configuration: Tool Definitions"
+                                "AML.T0084.001 Discover AI Agent Configuration: Tool Definitions",
+                                "AML.T0098 AI Agent Tool Credential Harvesting (action policy monitoring detects unauthorized credential access)",
+                                "AML.T0102 Generate Malicious Commands (action policy monitoring catches malicious command generation)"
                             ]
                         },
                         {
@@ -952,7 +965,7 @@ export const detectTactic = {
                                 "NISTAML.018 Prompt Injection (blocks injection-triggered tool invocations)",
                                 "NISTAML.015 Indirect Prompt Injection",
                                 "NISTAML.039 Compromising connected resources",
-                                "NISTAML.04 Misuse Violations"
+                                "NISTAML.027 Misaligned Outputs (misuse via policy-violating tool invocations)"
                             ]
                         },
                         {
@@ -1012,7 +1025,8 @@ export const detectTactic = {
                                 "AML.T0051.001 LLM Prompt Injection: Indirect (indirect injections produce atypical tool chains)",
                                 "AML.T0051.002 LLM Prompt Injection: Triggered",
                                 "AML.T0086 Exfiltration via AI Agent Tool Invocation (unusual tool sequences signal exfiltration attempts)",
-                                "AML.T0048 External Harms (detects tool chains leading to harmful outcomes)"
+                                "AML.T0048 External Harms (detects tool chains leading to harmful outcomes)",
+                                "AML.T0096 AI Service API (sequence anomaly detection catches C2 communication patterns)"
                             ]
                         },
                         {
@@ -1288,7 +1302,9 @@ export const detectTactic = {
                         "AML.T0010.003 AI Supply Chain Compromise: Model",
                         "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
                         "AML.T0074 Masquerading",
-                        "AML.T0069 Discover LLM System Information (detects unauthorized changes that expand unintended disclosure surface)"
+                        "AML.T0069 Discover LLM System Information (detects unauthorized changes that expand unintended disclosure surface)",
+                        "AML.T0104 Publish Poisoned AI Agent Tool",
+                        "AML.T0107 Exploitation for Defense Evasion"
                     ]
                 },
                 {
@@ -1325,7 +1341,6 @@ export const detectTactic = {
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
-                        "NISTAML.05 Supply Chain Attacks",
                         "NISTAML.051 Model Poisoning (Supply Chain)",
                         "NISTAML.011 Model Poisoning (Availability)",
                         "NISTAML.026 Model Poisoning (Integrity)",
@@ -1386,7 +1401,9 @@ export const detectTactic = {
                                 "AML.T0010.003 AI Supply Chain Compromise: Model",
                                 "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
                                 "AML.T0074 Masquerading",
-                                "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (hash verification detects backdoor-embedded artifacts)"
+                                "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (hash verification detects backdoor-embedded artifacts)",
+                                "AML.T0104 Publish Poisoned AI Agent Tool",
+                                "AML.T0011.002 User Execution: Poisoned AI Agent Tool"
                             ]
                         },
                         {
@@ -1423,7 +1440,6 @@ export const detectTactic = {
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
-                                "NISTAML.05 Supply Chain Attacks",
                                 "NISTAML.051 Model Poisoning (Supply Chain)",
                                 "NISTAML.023 Backdoor Poisoning",
                                 "NISTAML.021 Clean-label Backdoor",
@@ -1469,7 +1485,6 @@ export const detectTactic = {
                         "Open Enclave SDK",
                         "AWS Nitro Enclaves SDK",
                         "Google Asylo SDK",
-                        "Verifiable Confidential AI (VCAI) projects",
                         "eBPF tools (e.g., Falco, Cilium Tetragon, bcc)",
                         "Open-source attestation services (e.g., from Confidential Computing Consortium)"
                     ],
@@ -1491,7 +1506,8 @@ export const detectTactic = {
                                 "AML.T0072 Reverse Shell",
                                 "AML.T0025 Exfiltration via Cyber Means",
                                 "AML.T0010.001 AI Supply Chain Compromise: AI Software (runtime attestation detects compromised AI frameworks)",
-                                "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (TEE prevents model extraction from memory)"
+                                "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (TEE prevents model extraction from memory)",
+                                "AML.T0107 Exploitation for Defense Evasion"
                             ]
                         },
                         {
@@ -1530,7 +1546,7 @@ export const detectTactic = {
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
-                                "NISTAML.05 Supply Chain Attacks",
+                                "NISTAML.051 Model Poisoning (Supply Chain) (TEE attestation detects tampered supply chain artifacts)",
                                 "NISTAML.031 Model Extraction (TEE protects model weights in memory)",
                                 "NISTAML.023 Backdoor Poisoning (attestation detects runtime backdoor activation)"
                             ]
@@ -1635,7 +1651,7 @@ export const detectTactic = {
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
-                                "NISTAML.05 Supply Chain Attacks",
+                                "NISTAML.051 Model Poisoning (Supply Chain) (config drift may introduce supply chain compromised artifacts)",
                                 "NISTAML.035 Prompt Extraction (config drift may expose system prompts)",
                                 "NISTAML.039 Compromising connected resources (config drift opens access to connected resources)"
                             ]
@@ -1723,7 +1739,6 @@ export const detectTactic = {
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
-                                "NISTAML.05 Supply Chain Attacks",
                                 "NISTAML.051 Model Poisoning (Supply Chain)"
                             ]
                         },
@@ -1875,7 +1890,8 @@ export const detectTactic = {
                         "AML.T0051.002 LLM Prompt Injection: Triggered",
                         "AML.T0057 LLM Data Leakage (output logging)",
                         "AML.T0012 Valid Accounts (anomalous usage)",
-                        "AML.T0046 Spamming AI System with Chaff Data"
+                        "AML.T0046 Spamming AI System with Chaff Data",
+                        "AML.T0096 AI Service API (comprehensive logging captures C2 communication traces)"
                     ]
                 },
                 {
@@ -1918,7 +1934,7 @@ export const detectTactic = {
                         "NISTAML.031 Model Extraction",
                         "NISTAML.018 Prompt Injection",
                         "NISTAML.036 Leaking information from user interactions",
-                        "NISTAML.01 Availability Violations"
+                        "NISTAML.014 Energy-latency (logging detects resource exhaustion and DoS patterns)"
                     ]
                 },
                 {
@@ -2004,7 +2020,7 @@ export const detectTactic = {
                                 "NISTAML.018 Prompt Injection",
                                 "NISTAML.031 Model Extraction",
                                 "NISTAML.036 Leaking information from user interactions",
-                                "NISTAML.01 Availability Violations (usage patterns reveal DoS attempts)"
+                                "NISTAML.014 Energy-latency (usage patterns reveal DoS attempts)"
                             ]
                         },
                         {
@@ -2046,7 +2062,7 @@ export const detectTactic = {
                         "Grafana Loki with Promtail",
                         "Wazuh",
                         "Sigma (for defining SIEM rules in a standard format)",
-                        "ElastAlert"
+                        "ElastAlert2"
                     ],
                     "toolsCommercial": [
                         "Splunk Enterprise Security",
@@ -2068,7 +2084,12 @@ export const detectTactic = {
                                 "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (detecting high query volumes)",
                                 "AML.T0012 Valid Accounts (detecting anomalous usage from an account)",
                                 "AML.T0046 Spamming AI System with Chaff Data",
-                                "AML.T0055 Unsecured Credentials (detecting use of known compromised keys)"
+                                "AML.T0055 Unsecured Credentials (detecting use of known compromised keys)",
+                                "AML.T0021 Establish Accounts (alerting on unauthorized account creation patterns)",
+                                "AML.T0075 Cloud Service Discovery (detecting unauthorized cloud resource enumeration)",
+                                "AML.T0089 Process Discovery (alerting on anomalous process enumeration in AI environments)",
+                                "AML.T0096 AI Service API (monitoring for C2 communication via AI service channels)",
+                                "AML.T0097 Virtualization/Sandbox Evasion (detecting sandbox detection and evasion attempts)"
                             ]
                         },
                         {
@@ -2106,7 +2127,7 @@ export const detectTactic = {
                             "items": [
                                 "NISTAML.018 Prompt Injection",
                                 "NISTAML.031 Model Extraction",
-                                "NISTAML.01 Availability Violations",
+                                "NISTAML.014 Energy-latency (alerting detects resource exhaustion patterns)",
                                 "NISTAML.036 Leaking information from user interactions"
                             ]
                         },
@@ -2164,7 +2185,8 @@ export const detectTactic = {
                                 "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (finding probing patterns)",
                                 "AML.T0040 AI Model Inference API Access (finding subtle scanning)",
                                 "AML.T0057 LLM Data Leakage (finding low-and-slow exfiltration)",
-                                "AML.T0015 Evade AI Model (hunting for novel evasion patterns)"
+                                "AML.T0015 Evade AI Model (hunting for novel evasion patterns)",
+                                "AML.T0042 Verify Attack (hunting for attacker feedback loop activity)"
                             ]
                         },
                         {
@@ -2341,7 +2363,7 @@ export const detectTactic = {
                         { "framework": "OWASP LLM Top 10 2025", "items": ["LLM10:2025 Unbounded Consumption"] },
                         { "framework": "OWASP ML Top 10 2023", "items": ["ML06:2023 AI Supply Chain Attacks (malware introduces anomalous compute patterns)"] },
                         { "framework": "OWASP Agentic AI Top 10 2026", "items": ["ASI08:2026 Cascading Failures (telemetry anomalies indicate cascading resource exhaustion)"] },
-                        { "framework": "NIST Adversarial Machine Learning 2025", "items": ["NISTAML.01 Availability Violations", "NISTAML.014 Energy-latency", "NISTAML.031 Model Extraction (side-channel telemetry patterns)"] },
+                        { "framework": "NIST Adversarial Machine Learning 2025", "items": ["NISTAML.014 Energy-latency", "NISTAML.031 Model Extraction (side-channel telemetry patterns)"] },
                         { "framework": "Cisco Integrated AI Security and Safety Framework", "items": ["AITech-13.1 Disruption of Availability", "AISubtech-13.1.1 Compute Exhaustion", "AITech-13.2 Cost Harvesting / Repurposing", "AISubtech-13.2.1 Service Misuse for Cost Inflation"] }
                     ],
                     "implementationStrategies": [
@@ -2365,7 +2387,7 @@ export const detectTactic = {
                         { "framework": "OWASP LLM Top 10 2025", "items": ["LLM10:2025 Unbounded Consumption"] },
                         { "framework": "OWASP ML Top 10 2023", "items": ["ML06:2023 AI Supply Chain Attacks (registry poisoning is a supply chain vector)"] },
                         { "framework": "OWASP Agentic AI Top 10 2026", "items": ["ASI03:2026 Identity and Privilege Abuse", "ASI04:2026 Agentic Supply Chain Vulnerabilities (registry poisoning compromises agent supply chain)", "ASI07:2026 Insecure Inter-Agent Communication (resolution tampering disrupts agent communication)", "ASI10:2026 Rogue Agents (Sybil-style registration detects rogue agents)"] },
-                        { "framework": "NIST Adversarial Machine Learning 2025", "items": ["NISTAML.01 Availability Violations", "NISTAML.05 Supply Chain Attacks (registry poisoning is supply chain attack)", "NISTAML.039 Compromising connected resources"] },
+                        { "framework": "NIST Adversarial Machine Learning 2025", "items": ["NISTAML.014 Energy-latency (ANS DoS disrupts agent availability)", "NISTAML.051 Model Poisoning (Supply Chain) (registry poisoning is supply chain attack)", "NISTAML.039 Compromising connected resources"] },
                         { "framework": "Cisco Integrated AI Security and Safety Framework", "items": ["AITech-13.1 Disruption of Availability", "AITech-14.1 Unauthorized Access", "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)", "AITech-3.1 Masquerading / Obfuscation / Impersonation"] }
                     ],
                     "implementationStrategies": [
@@ -2626,7 +2648,8 @@ export const detectTactic = {
                         "AML.T0051.001 LLM Prompt Injection: Indirect",
                         "AML.T0051.002 LLM Prompt Injection: Triggered",
                         "AML.T0024 Exfiltration via AI Inference API (AI analytics detects extraction patterns)",
-                        "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model"
+                        "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model",
+                        "AML.T0107 Exploitation for Defense Evasion"
                     ]
                 },
                 {
@@ -2745,7 +2768,8 @@ export const detectTactic = {
                         "AML.T0066 Retrieval Content Crafting",
                         "AML.T0067 LLM Trusted Output Components Manipulation",
                         "AML.T0071 False RAG Entry Injection",
-                        "AML.T0062 Discover LLM Hallucinations (Prevents unverified hallucinations from being committed to shared memory and amplified by other agents)"
+                        "AML.T0062 Discover LLM Hallucinations (Prevents unverified hallucinations from being committed to shared memory and amplified by other agents)",
+                        "AML.T0060 Publish Hallucinated Entities (cross-referencing outputs against known hallucination-squatted packages)"
                     ]
                 },
                 {
@@ -2851,7 +2875,8 @@ export const detectTactic = {
                         "AML.T0051.001 LLM Prompt Injection: Indirect",
                         "AML.T0054 LLM Jailbreak",
                         "AML.T0078 Drive-by Compromise",
-                        "AML.T0018 Manipulate AI Model"
+                        "AML.T0018 Manipulate AI Model",
+                        "AML.T0103 Deploy AI Agent"
                     ]
                 },
                 {
@@ -2946,7 +2971,10 @@ export const detectTactic = {
                         "AML.T0074 Masquerading",
                         "AML.T0053 AI Agent Tool Invocation (rogue agents abuse tool access)",
                         "AML.T0081 Modify AI Agent Configuration (detects unauthorized config changes by rogue agents)",
-                        "AML.T0086 Exfiltration via AI Agent Tool Invocation (detects data exfil by compromised agents)"
+                        "AML.T0086 Exfiltration via AI Agent Tool Invocation (detects data exfil by compromised agents)",
+                        "AML.T0103 Deploy AI Agent",
+                        "AML.T0105 Escape to Host",
+                        "AML.T0108 AI Agent (C2)"
                     ]
                 },
                 {
@@ -3221,8 +3249,8 @@ export const detectTactic = {
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
-                                "NISTAML.05 Supply Chain Attacks",
-                                "NISTAML.01 Availability Violations (population control ensures agent availability)"
+                                "NISTAML.051 Model Poisoning (Supply Chain) (population control prevents unauthorized supply chain agents)",
+                                "NISTAML.014 Energy-latency (population control prevents resource exhaustion from rogue agents)"
                             ]
                         },
                         {
@@ -3642,7 +3670,7 @@ export const detectTactic = {
             "name": "RAG Content & Relevance Monitoring",
             "description": "This technique involves the real-time monitoring of a Retrieval-Augmented Generation (RAG) system's behavior at inference time. It focuses on two key checks: 1) Content Analysis, where retrieved document chunks are scanned for harmful content or malicious payloads before being passed to the LLM, and 2) Relevance Analysis, which verifies that the retrieved documents are semantically relevant to the user's original query. A significant mismatch in relevance can indicate a vector manipulation or poisoning attack designed to force the model to use unintended context.",
             "defendsAgainst": [
-                { "framework": "MITRE ATLAS", "items": ["AML.T0070 RAG Poisoning", "AML.T0066 Retrieval Content Crafting", "AML.T0071 False RAG Entry Injection", "AML.T0051 LLM Prompt Injection (if payload is in RAG source)"] },
+                { "framework": "MITRE ATLAS", "items": ["AML.T0070 RAG Poisoning", "AML.T0066 Retrieval Content Crafting", "AML.T0071 False RAG Entry Injection", "AML.T0051 LLM Prompt Injection (if payload is in RAG source)", "AML.T0064 Gather RAG-Indexed Targets (monitoring detects reconnaissance against RAG indexes)"] },
                 { "framework": "MAESTRO", "items": ["Compromised RAG Pipelines (L2)", "Data Poisoning (L2)", "Goal Misalignment Cascades (Cross-Layer) (misinformation from misaligned agent outputs)"] },
                 { "framework": "OWASP LLM Top 10 2025", "items": ["LLM08:2025 Vector and Embedding Weaknesses", "LLM04:2025 Data and Model Poisoning"] },
                 { "framework": "OWASP ML Top 10 2023", "items": ["ML02:2023 Data Poisoning Attack"] },
@@ -3658,7 +3686,7 @@ export const detectTactic = {
                     "phase": ["operation"],
                     "description": "Treat retrieved RAG chunks as untrusted input; scan for prompt-injection patterns or malicious payloads before inclusion in LLM context.",
                     "defendsAgainst": [
-                        { "framework": "MITRE ATLAS", "items": ["AML.T0070 RAG Poisoning", "AML.T0051 LLM Prompt Injection"] },
+                        { "framework": "MITRE ATLAS", "items": ["AML.T0070 RAG Poisoning", "AML.T0051 LLM Prompt Injection", "AML.T0082 RAG Credential Harvesting (scanning detects credential harvesting payloads in retrieved chunks)", "AML.T0099 AI Agent Tool Data Poisoning (scanning detects poisoned tool data in RAG content)"] },
                         { "framework": "MAESTRO", "items": ["Compromised RAG Pipelines (L2)", "Data Poisoning (L2)"] },
                         { "framework": "OWASP LLM Top 10 2025", "items": ["LLM08:2025 Vector and Embedding Weaknesses", "LLM01:2025 Prompt Injection (indirect)"] },
                         { "framework": "OWASP ML Top 10 2023", "items": ["ML02:2023 Data Poisoning Attack"] },
@@ -3736,7 +3764,9 @@ export const detectTactic = {
                         "AML.T0052 Phishing",
                         "AML.T0048.002 External Harms: Societal Harm",
                         "AML.T0048.000 External Harms: Financial Harm",
-                        "AML.T0067 LLM Trusted Output Components Manipulation"
+                        "AML.T0067 LLM Trusted Output Components Manipulation",
+                        "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
+                        "AML.T0011.003 User Execution: Malicious Link"
                     ]
                 },
                 {
@@ -3772,7 +3802,7 @@ export const detectTactic = {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
                         "NISTAML.027 Misaligned Outputs",
-                        "NISTAML.04 Misuse Violations"
+                        "NISTAML.018 Prompt Injection (misuse via social engineering the user through manipulated outputs)"
                     ]
                 },
                 {
@@ -3910,7 +3940,7 @@ export const detectTactic = {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
                                 "NISTAML.039 Compromising connected resources",
-                                "NISTAML.04 Misuse Violations"
+                                "NISTAML.018 Prompt Injection (misuse via injection-triggered high-risk actions)"
                             ]
                         },
                         {
@@ -3941,7 +3971,9 @@ export const detectTactic = {
                         "AML.T0053 AI Agent Tool Invocation",
                         "AML.T0061 LLM Prompt Self-Replication",
                         "AML.T0072 Reverse Shell",
-                        "AML.T0050 Command and Scripting Interpreter"
+                        "AML.T0050 Command and Scripting Interpreter",
+                        "AML.T0103 Deploy AI Agent",
+                        "AML.T0108 AI Agent (C2)"
                     ]
                 },
                 {
@@ -3977,7 +4009,7 @@ export const detectTactic = {
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
-                        "NISTAML.05 Supply Chain Attacks",
+                        "NISTAML.051 Model Poisoning (Supply Chain) (rogue agents may originate from compromised supply chain)",
                         "NISTAML.039 Compromising connected resources"
                     ]
                 },
@@ -4046,7 +4078,7 @@ export const detectTactic = {
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
-                                "NISTAML.05 Supply Chain Attacks",
+                                "NISTAML.051 Model Poisoning (Supply Chain) (new agents may originate from compromised supply chain)",
                                 "NISTAML.039 Compromising connected resources"
                             ]
                         },
@@ -4126,7 +4158,7 @@ export const detectTactic = {
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
-                                "NISTAML.05 Supply Chain Attacks",
+                                "NISTAML.051 Model Poisoning (Supply Chain) (reputation scoring quarantines supply chain compromised agents)",
                                 "NISTAML.039 Compromising connected resources"
                             ]
                         },

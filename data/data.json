@@ -1,8 +1,8 @@
 {
   "version": {
     "schemaVersion": "2.0",
-    "dataVersion": "2026.02.15",
-    "generatedAt": "2026-02-15T05:57:16.920Z",
+    "dataVersion": "2026.02.25",
+    "generatedAt": "2026-02-25T09:43:20.997Z",
     "source": "bundled",
     "keywordStructure": "categorized"
   },
@@ -59,7 +59,7 @@
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.05 Supply Chain Attacks"
+                "NISTAML.051 Model Poisoning (Supply Chain)"
               ]
             },
             {
@@ -139,7 +139,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks"
+                    "NISTAML.051 Model Poisoning (Supply Chain)"
                   ]
                 },
                 {
@@ -240,7 +240,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks"
+                    "NISTAML.051 Model Poisoning (Supply Chain)"
                   ]
                 },
                 {
@@ -377,7 +377,7 @@
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
                 "NISTAML.013 Data Poisoning",
-                "NISTAML.05 Supply Chain Attacks",
+                "NISTAML.051 Model Poisoning (Supply Chain)",
                 "NISTAML.037 Training Data Attacks",
                 "NISTAML.023 Backdoor Poisoning"
               ]
@@ -462,7 +462,7 @@
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
                     "NISTAML.013 Data Poisoning",
-                    "NISTAML.05 Supply Chain Attacks",
+                    "NISTAML.051 Model Poisoning (Supply Chain)",
                     "NISTAML.037 Training Data Attacks"
                   ]
                 },
@@ -573,7 +573,6 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks",
                     "NISTAML.051 Model Poisoning (Supply Chain)",
                     "NISTAML.023 Backdoor Poisoning"
                   ]
@@ -689,7 +688,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks",
+                    "NISTAML.051 Model Poisoning (Supply Chain)",
                     "NISTAML.013 Data Poisoning",
                     "NISTAML.024 Targeted Poisoning",
                     "NISTAML.037 Training Data Attacks",
@@ -810,7 +809,7 @@
                   "items": [
                     "NISTAML.013 Data Poisoning",
                     "NISTAML.024 Targeted Poisoning",
-                    "NISTAML.05 Supply Chain Attacks (when KB ingestion relies on third-party pipelines/connectors)",
+                    "NISTAML.051 Model Poisoning (Supply Chain) (when KB ingestion relies on third-party pipelines/connectors)",
                     "NISTAML.015 Indirect Prompt Injection"
                   ]
                 },
@@ -946,7 +945,6 @@
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.02 Integrity Violations",
                 "NISTAML.022 Evasion",
                 "NISTAML.025 Black-box Evasion",
                 "NISTAML.027 Misaligned Outputs",
@@ -991,7 +989,7 @@
                 "Google Vertex AI Model Registry",
                 "Amazon SageMaker Model Registry",
                 "Databricks Unity Catalog",
-                "AI Governance Platforms (IBM Watson OpenScale, Fiddler AI, Arize AI)",
+                "AI Governance Platforms (IBM watsonx.governance, Fiddler AI, Arize AI)",
                 "Data Cataloging Platforms (Alation, Collibra)"
               ],
               "defendsAgainst": [
@@ -1037,7 +1035,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks",
+                    "NISTAML.051 Model Poisoning (Supply Chain)",
                     "NISTAML.037 Training Data Attacks"
                   ]
                 },
@@ -1149,7 +1147,7 @@
                 {
                   "framework": "OWASP Agentic AI Top 10 2026",
                   "items": [
-                    "Partially mitigates ASI08:2026 Cascading Failures (early detection of latency/performance regressions)"
+                    "ASI08:2026 Cascading Failures (partially mitigates; early detection of latency/performance regressions)"
                   ]
                 },
                 {
@@ -1231,7 +1229,7 @@
               "toolsCommercial": [
                 "AI Observability Platforms (Fiddler, Arize AI, WhyLabs)",
                 "Cloud Provider XAI tools (Google Vertex AI Explainable AI, Amazon SageMaker Clarify, Azure Machine Learning Interpretability)",
-                "AI Governance Platforms (IBM Watson OpenScale)"
+                "AI Governance Platforms (IBM watsonx.governance)"
               ],
               "defendsAgainst": [
                 {
@@ -1349,7 +1347,7 @@
               "toolsCommercial": [
                 "Cloud Provider KMS (AWS KMS, Azure Key Vault, Google Cloud KMS)",
                 "Code Signing Services (DigiCert, GlobalSign)",
-                "AI Safety & Governance Platforms (Lasso Security, Protect AI Guardian, CalypsoAI Validator)"
+                "AI Safety & Governance Platforms (Lasso Security, Protect AI Guardian, CalypsoAI Moderator)"
               ],
               "defendsAgainst": [
                 {
@@ -1392,7 +1390,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.04 Misuse Violations",
+                    "NISTAML.018 Prompt Injection (misuse via safety bypass)",
                     "NISTAML.027 Misaligned Outputs",
                     "NISTAML.039 Compromising connected resources"
                   ]
@@ -1624,8 +1622,7 @@
                     "NISTAML.013 Data Poisoning",
                     "NISTAML.022 Evasion",
                     "NISTAML.025 Black-box Evasion",
-                    "NISTAML.024 Targeted Poisoning",
-                    "NISTAML.02 Integrity Violations"
+                    "NISTAML.024 Targeted Poisoning"
                   ]
                 },
                 {
@@ -1730,15 +1727,14 @@
                     "NISTAML.013 Data Poisoning",
                     "NISTAML.021 Clean-label Backdoor",
                     "NISTAML.023 Backdoor Poisoning",
-                    "NISTAML.024 Clean-label Poisoning",
-                    "NISTAML.030 Model Poisoning (Integrity)"
+                    "NISTAML.024 Targeted Poisoning",
+                    "NISTAML.026 Model Poisoning (Integrity)"
                   ]
                 },
                 {
                   "framework": "Cisco Integrated AI Security and Safety Framework",
                   "items": [
                     "AITech-6.1 Training Data Poisoning",
-                    "AITech-6.2 Model Poisoning",
                     "AITech-7.3 Data Source Abuse and Manipulation",
                     "AITech-9.2 Detection Evasion",
                     "AISubtech-9.2.2 Backdoors and Trojans"
@@ -1870,10 +1866,13 @@
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.01 Availability Violations (threat modeling assesses availability risks)",
-                "NISTAML.02 Integrity Violations (threat modeling assesses integrity risks)",
-                "NISTAML.03 Privacy Compromises (threat modeling assesses privacy risks)",
-                "NISTAML.05 Supply Chain Attacks (threat modeling maps supply chain attack surface)"
+                "NISTAML.013 Data Poisoning (threat modeling assesses data poisoning risks)",
+                "NISTAML.018 Prompt Injection (threat modeling assesses prompt injection surfaces)",
+                "NISTAML.015 Indirect Prompt Injection (threat modeling assesses indirect injection channels)",
+                "NISTAML.022 Evasion (threat modeling assesses evasion risks)",
+                "NISTAML.023 Backdoor Poisoning (threat modeling assesses backdoor risks)",
+                "NISTAML.031 Model Extraction (threat modeling assesses privacy/extraction risks)",
+                "NISTAML.051 Model Poisoning (Supply Chain) (threat modeling maps supply chain attack surface)"
               ]
             },
             {
@@ -1904,7 +1903,6 @@
             "MAESTRO framework documentation",
             "OWASP Top 10 checklists",
             "OWASP Threat Dragon, Microsoft Threat Modeling Tool",
-            "Academic frameworks (ATM for LLMs, ATFAA)",
             "NIST AI RMF and Playbook"
           ],
           "toolsCommercial": [
@@ -2007,9 +2005,8 @@
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.05 Supply Chain Attacks",
                 "NISTAML.051 Model Poisoning (Supply Chain)",
-                "Partially mitigates NISTAML.039 Compromising Connected Resources",
+                "NISTAML.039 Compromising connected resources (hardened configs reduce exposed attack surface on connected systems)",
                 "NISTAML.014 Energy-latency"
               ]
             },
@@ -2095,7 +2092,7 @@
                 {
                   "framework": "OWASP Agentic AI Top 10 2026",
                   "items": [
-                    "Partially mitigates ASI04:2026 Agentic Supply Chain Vulnerabilities",
+                    "ASI04:2026 Agentic Supply Chain Vulnerabilities (partial mitigation)",
                     "ASI03:2026 Identity and Privilege Abuse (partially mitigated via hardened defaults / least privilege)"
                   ]
                 },
@@ -2103,8 +2100,7 @@
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
                     "NISTAML.039 Compromising connected resources",
-                    "NISTAML.05 Supply Chain Attacks",
-                    "Partially mitigates NISTAML.051 Model Poisoning (Supply Chain)"
+                    "NISTAML.051 Model Poisoning (Supply Chain) (partially mitigated)"
                   ]
                 },
                 {
@@ -2206,20 +2202,19 @@
                   "framework": "OWASP ML Top 10 2023",
                   "items": [
                     "ML06:2023 AI Supply Chain Attacks",
-                    "Partially mitigates ML05:2023 Model Theft (via secure storage configuration policies)"
+                    "ML05:2023 Model Theft (partially mitigates via secure storage configuration policies)"
                   ]
                 },
                 {
                   "framework": "OWASP Agentic AI Top 10 2026",
                   "items": [
-                    "Partially mitigates ASI04:2026 Agentic Supply Chain Vulnerabilities",
+                    "ASI04:2026 Agentic Supply Chain Vulnerabilities (partial mitigation)",
                     "ASI03:2026 Identity and Privilege Abuse (partially mitigated via posture SLOs and access-control baselines)"
                   ]
                 },
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks",
                     "NISTAML.039 Compromising connected resources",
                     "NISTAML.051 Model Poisoning (Supply Chain) (partially mitigated via signed baseline manifests and promotion verification)"
                   ]
@@ -2370,7 +2365,7 @@
                 "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
                 "AITech-14.2 Abuse of Delegated Authority",
                 "AISubtech-14.2.1 Permission Escalation via Delegation",
-                "AITech-15.1: Harmful Content"
+                "AITech-15.1 Harmful Content"
               ]
             }
           ],
@@ -2809,9 +2804,8 @@
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.04 Misuse Violations (addressed by intended/forbidden uses + automated refusal/conformance tests)",
+                "NISTAML.018 Prompt Injection (misuse via safety bypass; conformance tests validate refusal behavior)",
                 "NISTAML.015 Indirect Prompt Injection (validation suites probe indirect instruction channels (docs/RAG))",
-                "NISTAML.018 Prompt Injection (conformance tests validate refusal behavior against prompt manipulation)",
                 "NISTAML.027 Misaligned Outputs (safety boundary policies + red-teaming detect policy-violating outputs pre-release)",
                 "NISTAML.036 Leaking information from user interactions (output rules + redaction tests reduce leakage in responses)",
                 "NISTAML.039 Compromising connected resources (operational boundaries + human oversight reduce harmful downstream actions)"
@@ -2844,7 +2838,7 @@
             "Testing frameworks (pytest)"
           ],
           "toolsCommercial": [
-            "AI Governance Platforms (Credo AI, OneTrust AI Governance, IBM Watson OpenScale)",
+            "AI Governance Platforms (Credo AI, OneTrust AI Governance, IBM watsonx.governance)",
             "Bias detection & mitigation tools (Fiddler AI, Arize AI, Arthur)",
             "GRC (Governance, Risk, and Compliance) platforms"
           ],
@@ -2941,8 +2935,8 @@
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
                 "NISTAML.018 Prompt Injection",
-                "NISTAML.04 Misuse Violations",
-                "NISTAML.039 Compromising Connected Resources",
+                "NISTAML.015 Indirect Prompt Injection (benchmarks cover indirect injection scenarios)",
+                "NISTAML.039 Compromising connected resources",
                 "NISTAML.027 Misaligned Outputs",
                 "NISTAML.022 Evasion"
               ]
@@ -2951,15 +2945,15 @@
               "framework": "Cisco Integrated AI Security and Safety Framework",
               "items": [
                 "AITech-1.1 Direct Prompt Injection",
-                "AISubtech-1.1.1 Instruction Manipulation",
-                "AISubtech-1.1.2 Obfuscation",
+                "AISubtech-1.1.1 Instruction Manipulation (Direct Prompt Injection)",
+                "AISubtech-1.1.2 Obfuscation (Direct Prompt Injection)",
                 "AITech-1.2 Indirect Prompt Injection",
-                "AISubtech-1.2.1 Instruction Manipulation",
-                "AISubtech-1.2.2 Obfuscation",
+                "AISubtech-1.2.1 Instruction Manipulation (Indirect Prompt Injection)",
+                "AISubtech-1.2.2 Obfuscation (Indirect Prompt Injection)",
                 "AITech-2.1 Jailbreak",
-                "AISubtech-2.1.2 Obfuscation",
-                "AISubtech-2.1.3 Semantic Manipulation",
-                "AISubtech-2.1.4 Token Exploitation",
+                "AISubtech-2.1.2 Obfuscation (Jailbreak)",
+                "AISubtech-2.1.3 Semantic Manipulation (Jailbreak)",
+                "AISubtech-2.1.4 Token Exploitation (Jailbreak)",
                 "AITech-12.1 Tool Exploitation",
                 "AISubtech-12.1.1 Parameter Manipulation",
                 "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
@@ -2979,8 +2973,8 @@
             "promptfoo"
           ],
           "toolsCommercial": [
-            "Robust Intelligence",
-            "Lakera Red Teaming",
+            "Cisco AI Defense (formerly Robust Intelligence)",
+            "Lakera Red",
             "Credo AI"
           ],
           "subTechniques": [],
@@ -3031,7 +3025,8 @@
               "items": [
                 "AML.T0048 External Harms",
                 "AML.T0053 AI Agent Tool Invocation (by restricting which tools each autonomy tier can invoke via OPA policy enforcement)",
-                "AML.T0101 Data Destruction via AI Agent Tool Invocation (by blocking write/destructive tool access for lower autonomy tiers)"
+                "AML.T0101 Data Destruction via AI Agent Tool Invocation (by blocking write/destructive tool access for lower autonomy tiers)",
+                "AML.T0103 Deploy AI Agent"
               ]
             },
             {
@@ -3060,7 +3055,7 @@
               "framework": "OWASP Agentic AI Top 10 2026",
               "items": [
                 "ASI02:2026 Tool Misuse and Exploitation (by enforcing per-tier tool restrictions that limit the tool misuse attack surface)",
-                "ASI01:2026 Agent Goal Hijack (SUPPORTING—bidirectional mapping exists)",
+                "ASI01:2026 Agent Goal Hijack (autonomy level governance constrains scope of goal hijack impact)",
                 "ASI03:2026 Identity and Privilege Abuse (by defining explicit privilege boundaries per autonomy level, blocking scope escalation at admission)",
                 "ASI08:2026 Cascading Failures (by requiring mandatory HITL for lower tiers, breaking autonomous fault propagation chains)"
               ]
@@ -3068,8 +3063,8 @@
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.039 Compromising Connected Resources",
-                "NISTAML.04 Misuse Violations"
+                "NISTAML.039 Compromising connected resources",
+                "NISTAML.018 Prompt Injection (misuse via safety bypass; autonomy governance constrains impact)"
               ]
             },
             {
@@ -3147,7 +3142,9 @@
                 "AML.T0043 Craft Adversarial Data",
                 "AML.T0031 Erode AI Model Integrity",
                 "AML.T0018 Manipulate AI Model (robust training reduces effectiveness of model manipulation)",
-                "AML.T0020 Poison Training Data (adversarially trained models are more resilient to poisoned data)"
+                "AML.T0020 Poison Training Data (adversarially trained models are more resilient to poisoned data)",
+                "AML.T0041 Physical Environment Access (robust training reduces effectiveness of physical adversarial perturbations)",
+                "AML.T0107 Exploitation for Defense Evasion"
               ]
             },
             {
@@ -3186,7 +3183,7 @@
               "items": [
                 "NISTAML.022 Evasion",
                 "NISTAML.025 Black-box Evasion",
-                "NISTAML.02 Integrity Violations",
+                "NISTAML.026 Model Poisoning (Integrity) (robust training resists integrity-compromising poisoning)",
                 "NISTAML.024 Targeted Poisoning (robust training resists targeted poison triggers)",
                 "NISTAML.023 Backdoor Poisoning (robust training can expose backdoor patterns)"
               ]
@@ -3217,7 +3214,7 @@
             "MLflow, Weights & Biases (for experiment tracking)"
           ],
           "toolsCommercial": [
-            "AI security platforms (Robust Intelligence, HiddenLayer, Protect AI, Adversa.AI)",
+            "AI security platforms (Cisco AI Defense (formerly Robust Intelligence), HiddenLayer, Protect AI, Adversa.AI)",
             "MLOps platforms (Amazon SageMaker, Google Vertex AI, Databricks, Azure ML)",
             "RL Platforms (Microsoft Bonsai, AnyLogic)"
           ],
@@ -3493,7 +3490,7 @@
                 "Google Perspective API",
                 "Lakera Guard",
                 "Protect AI Guardian",
-                "CalypsoAI Validator",
+                "CalypsoAI Moderator",
                 "Securiti LLM Firewall"
               ],
               "defendsAgainst": [
@@ -3508,7 +3505,9 @@
                     "AML.T0061 LLM Prompt Self-Replication",
                     "AML.T0093 Prompt Infiltration via Public-Facing Application",
                     "AML.T0056 Extract LLM System Prompt (input validation blocks extraction attempts)",
-                    "AML.T0043 Craft Adversarial Data (inference-time validation catches some adversarial inputs)"
+                    "AML.T0043 Craft Adversarial Data (inference-time validation catches some adversarial inputs)",
+                    "AML.T0099 AI Agent Tool Data Poisoning (input validation blocks poisoned tool outputs)",
+                    "AML.T0011.003 User Execution: Malicious Link"
                   ]
                 },
                 {
@@ -3545,8 +3544,7 @@
                   "items": [
                     "NISTAML.018 Prompt Injection",
                     "NISTAML.015 Indirect Prompt Injection",
-                    "NISTAML.027 Misaligned Outputs (input validation prevents manipulation leading to misaligned outputs)",
-                    "NISTAML.04 Misuse Violations (input validation prevents prompt-based misuse)"
+                    "NISTAML.027 Misaligned Outputs (input validation prevents manipulation leading to misaligned outputs)"
                   ]
                 },
                 {
@@ -3759,7 +3757,9 @@
                 "AML.T0059 Erode Dataset Integrity",
                 "AML.T0076 Corrupt AI Model",
                 "AML.T0074 Masquerading",
-                "AML.T0079 Stage Capabilities (supply chain is used to stage malicious artifacts)"
+                "AML.T0079 Stage Capabilities (supply chain is used to stage malicious artifacts)",
+                "AML.T0104 Publish Poisoned AI Agent Tool",
+                "AML.T0011.002 User Execution: Poisoned AI Agent Tool"
               ]
             },
             {
@@ -3801,7 +3801,6 @@
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.05 Supply Chain Attacks",
                 "NISTAML.051 Model Poisoning (Supply Chain)",
                 "NISTAML.023 Backdoor Poisoning",
                 "NISTAML.013 Data Poisoning (supply chain data poisoning)"
@@ -3856,7 +3855,11 @@
                     "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
                     "AML.T0011.001 User Execution: Malicious Package",
                     "AML.T0011.000 User Execution: Unsafe AI Artifacts",
-                    "AML.T0074 Masquerading (malicious packages masquerading as legitimate)"
+                    "AML.T0074 Masquerading (malicious packages masquerading as legitimate)",
+                    "AML.T0060 Publish Hallucinated Entities (dependency scanning detects hallucination-squatted packages)",
+                    "AML.T0104 Publish Poisoned AI Agent Tool",
+                    "AML.T0106 Exploitation for Credential Access",
+                    "AML.T0011.002 User Execution: Poisoned AI Agent Tool"
                   ]
                 },
                 {
@@ -3890,7 +3893,6 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks",
                     "NISTAML.051 Model Poisoning (Supply Chain) (compromised dependencies can poison models)"
                   ]
                 },
@@ -3972,7 +3974,8 @@
                     "AML.T0076 Corrupt AI Model",
                     "AML.T0074 Masquerading",
                     "AML.T0018 Manipulate AI Model (release gating detects model manipulation before deployment)",
-                    "AML.T0018.002 Manipulate AI Model: Embed Malware"
+                    "AML.T0018.002 Manipulate AI Model: Embed Malware",
+                    "AML.T0104 Publish Poisoned AI Agent Tool"
                   ]
                 },
                 {
@@ -4008,7 +4011,6 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks",
                     "NISTAML.051 Model Poisoning (Supply Chain)",
                     "NISTAML.023 Backdoor Poisoning (signature verification catches backdoored models)"
                   ]
@@ -4124,7 +4126,7 @@
                   "items": [
                     "NISTAML.013 Data Poisoning",
                     "NISTAML.037 Training Data Attacks",
-                    "NISTAML.05 Supply Chain Attacks",
+                    "NISTAML.051 Model Poisoning (Supply Chain) (dataset validation prevents supply chain data poisoning)",
                     "NISTAML.024 Targeted Poisoning (validation catches targeted poison samples in datasets)",
                     "NISTAML.023 Backdoor Poisoning (dataset checksumming detects unexpected modifications from backdoor insertion)"
                   ]
@@ -4227,7 +4229,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks",
+                    "NISTAML.051 Model Poisoning (Supply Chain) (hardware supply chain compromise can poison models during training)",
                     "NISTAML.023 Backdoor Poisoning (hardware backdoors can embed persistent backdoors in AI training pipeline)"
                   ]
                 },
@@ -4339,7 +4341,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks"
+                    "NISTAML.051 Model Poisoning (Supply Chain) (IaC scanning prevents supply chain compromise of deployment infrastructure)"
                   ]
                 },
                 {
@@ -4457,8 +4459,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks",
-                    "NISTAML.051 Model Poisoning (SBOM and attestation prevent supply chain model poisoning)",
+                    "NISTAML.051 Model Poisoning (Supply Chain) (SBOM and attestation prevent supply chain model poisoning)",
                     "NISTAML.023 Backdoor Poisoning (format allow-list and provenance verification detect backdoored models)"
                   ]
                 },
@@ -4555,7 +4556,11 @@
                 "AML.T0055 Unsecured Credentials",
                 "AML.T0073 Impersonation",
                 "AML.T0091 Use Alternate Authentication Material",
-                "AML.T0035 AI Artifact Collection (IAM controls prevent unauthorized collection of AI artifacts)"
+                "AML.T0035 AI Artifact Collection (IAM controls prevent unauthorized collection of AI artifacts)",
+                "AML.T0021 Establish Accounts (IAM controls prevent unauthorized account creation)",
+                "AML.T0082 RAG Credential Harvesting (access controls limit credential exposure in RAG)",
+                "AML.T0090 OS Credential Dumping (short-lived tokens reduce value of dumped credentials)",
+                "AML.T0106 Exploitation for Credential Access"
               ]
             },
             {
@@ -4596,9 +4601,9 @@
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.03 Privacy Compromises (access controls are primary defense against privacy attacks)",
                 "NISTAML.031 Model Extraction (access controls limit API queries for model stealing)",
                 "NISTAML.033 Membership Inference (access controls limit inference queries)",
+                "NISTAML.032 Reconstruction (access controls limit queries needed for reconstruction attacks)",
                 "NISTAML.039 Compromising connected resources"
               ]
             },
@@ -4647,7 +4652,8 @@
                     "AML.T0036 Data from Information Repositories",
                     "AML.T0037 Data from Local System",
                     "AML.T0055 Unsecured Credentials",
-                    "AML.T0044 Full AI Model Access (privileged access management prevents unauthorized full model access)"
+                    "AML.T0044 Full AI Model Access (privileged access management prevents unauthorized full model access)",
+                    "AML.T0021 Establish Accounts (user access controls prevent unauthorized account creation)"
                   ]
                 },
                 {
@@ -4678,8 +4684,8 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.03 Privacy Compromises (access controls limit privacy attacks)",
-                    "NISTAML.031 Model Extraction (restricting user access limits model extraction)"
+                    "NISTAML.031 Model Extraction (restricting user access limits model extraction)",
+                    "NISTAML.033 Membership Inference (user identity management limits inference queries)"
                   ]
                 },
                 {
@@ -4750,7 +4756,9 @@
                     "AML.T0024 Exfiltration via AI Inference API",
                     "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (API auth prevents systematic extraction queries)",
                     "AML.T0005 Create Proxy AI Model (authenticated APIs prevent unauthorized queries for model replication)",
-                    "AML.T0005.001 Create Proxy AI Model: Train Proxy via Replication (API auth rate-limits mass querying)"
+                    "AML.T0005.001 Create Proxy AI Model: Train Proxy via Replication (API auth rate-limits mass querying)",
+                    "AML.T0090 OS Credential Dumping (service auth with short-lived tokens reduces dumped credential value)",
+                    "AML.T0106 Exploitation for Credential Access"
                   ]
                 },
                 {
@@ -4963,7 +4971,7 @@
               ],
               "toolsOpenSource": [
                 "SPIFFE/SPIRE",
-                "pyspiffe",
+                "py-spiffe",
                 "cryptography.io",
                 "Step-ca"
               ],
@@ -5144,10 +5152,10 @@
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.03 Privacy Compromises",
                 "NISTAML.031 Model Extraction",
                 "NISTAML.032 Reconstruction",
                 "NISTAML.033 Membership Inference",
+                "NISTAML.034 Property Inference (privacy-preserving computation prevents property inference)",
                 "NISTAML.038 Data Extraction",
                 "NISTAML.036 Leaking information from user interactions"
               ]
@@ -5232,9 +5240,9 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.03 Privacy Compromises",
                     "NISTAML.033 Membership Inference",
                     "NISTAML.032 Reconstruction (DP noise makes reconstruction attacks less effective)",
+                    "NISTAML.034 Property Inference (DP noise obscures dataset properties)",
                     "NISTAML.038 Data Extraction (DP reduces extractable training data from model)"
                   ]
                 },
@@ -5293,9 +5301,8 @@
               ],
               "toolsOpenSource": [
                 "Microsoft SEAL",
-                "PALISADE",
                 "HElib",
-                "OpenFHE"
+                "OpenFHE (formerly PALISADE)"
               ],
               "toolsCommercial": [
                 "Duality Technologies",
@@ -5343,10 +5350,10 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.03 Privacy Compromises",
                     "NISTAML.032 Reconstruction (HE prevents data reconstruction from encrypted computations)",
                     "NISTAML.033 Membership Inference",
                     "NISTAML.034 Property Inference (HE prevents property inference by keeping data encrypted)",
+                    "NISTAML.036 Leaking information from user interactions (HE prevents leakage during encrypted computation)",
                     "NISTAML.038 Data Extraction"
                   ]
                 },
@@ -5409,7 +5416,7 @@
               ],
               "toolsCommercial": [
                 "Privacy-enhancing technology platforms (Gretel.ai, Tonic.ai, SarUS, Immuta)",
-                "AI Security platforms (Protect AI, HiddenLayer, Robust Intelligence, Weights & Biases)",
+                "AI Security platforms (Protect AI, HiddenLayer, Cisco AI Defense (formerly Robust Intelligence), Weights & Biases)",
                 "MLOps Platforms for custom training (Amazon SageMaker, Google Vertex AI, Databricks, Azure ML)"
               ],
               "defendsAgainst": [
@@ -5449,9 +5456,9 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.03 Privacy Compromises",
                     "NISTAML.033 Membership Inference",
-                    "NISTAML.032 Reconstruction (mixup training reduces memorization, hardening against reconstruction)"
+                    "NISTAML.032 Reconstruction (mixup training reduces memorization, hardening against reconstruction)",
+                    "NISTAML.038 Data Extraction (mixup reduces memorization that enables data extraction)"
                   ]
                 },
                 {
@@ -5560,9 +5567,9 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.03 Privacy Compromises",
                     "NISTAML.033 Membership Inference",
                     "NISTAML.032 Reconstruction (dedup reduces memorization that enables data reconstruction)",
+                    "NISTAML.034 Property Inference (dedup reduces data repetition that enables property inference)",
                     "NISTAML.036 Leaking information from user interactions (dedup prevents repeated data from being memorized and leaked)",
                     "NISTAML.038 Data Extraction"
                   ]
@@ -5695,7 +5702,7 @@
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
                 "NISTAML.027 Misaligned Outputs",
-                "NISTAML.04 Misuse Violations (output sanitization prevents misuse)",
+                "NISTAML.018 Prompt Injection (output guardrails block misuse enabled by prompt injection)",
                 "NISTAML.038 Data Extraction (output sanitization can redact extracted data)",
                 "NISTAML.039 Compromising connected resources (sanitized outputs prevent exploitation of downstream systems)"
               ]
@@ -5844,7 +5851,7 @@
                 "ModSecurity (open-source WAF)"
               ],
               "toolsCommercial": [
-                "Google Safe Browse API",
+                "Google Safe Browsing API",
                 "Azure Content Safety",
                 "Google Cloud DLP API",
                 "Cloud WAFs (AWS WAF, Azure WAF, Cloudflare WAF, Akamai)",
@@ -5858,7 +5865,9 @@
                     "AML.T0050 Command and Scripting Interpreter",
                     "AML.T0048 External Harms",
                     "AML.T0077 LLM Response Rendering (sanitization neutralizes rendering exploits)",
-                    "AML.T0057 LLM Data Leakage (sanitization can redact leaked data)"
+                    "AML.T0057 LLM Data Leakage (sanitization can redact leaked data)",
+                    "AML.T0060 Publish Hallucinated Entities (output sanitization prevents hallucinated entity references)",
+                    "AML.T0082 RAG Credential Harvesting (output sanitization prevents credential leakage in responses)"
                   ]
                 },
                 {
@@ -5952,7 +5961,7 @@
               ],
               "toolsCommercial": [
                 "API Gateways with response transformation capabilities (Kong, Apigee, MuleSoft)",
-                "AI Security Firewalls (Protect AI Guardian, Lakera Guard, CalypsoAI Validator)"
+                "AI Security Firewalls (Protect AI Guardian, Lakera Guard, CalypsoAI Moderator)"
               ],
               "defendsAgainst": [
                 {
@@ -5962,7 +5971,8 @@
                     "AML.T0024.000 Exfiltration via AI Inference API: Infer Training Data Membership",
                     "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model",
                     "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model",
-                    "AML.T0048.004 External Harms: AI Intellectual Property Theft"
+                    "AML.T0048.004 External Harms: AI Intellectual Property Theft",
+                    "AML.T0042 Verify Attack (obfuscation reduces fidelity of attacker feedback loops)"
                   ]
                 },
                 {
@@ -5996,10 +6006,10 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.03 Privacy Compromises",
                     "NISTAML.031 Model Extraction",
                     "NISTAML.032 Reconstruction",
-                    "NISTAML.033 Membership Inference"
+                    "NISTAML.033 Membership Inference",
+                    "NISTAML.034 Property Inference (API hardening limits queries needed for property inference)"
                   ]
                 },
                 {
@@ -6127,12 +6137,11 @@
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.02 Integrity Violations",
+                "NISTAML.026 Model Poisoning (Integrity)",
                 "NISTAML.013 Data Poisoning",
                 "NISTAML.024 Targeted Poisoning",
                 "NISTAML.023 Backdoor Poisoning",
-                "NISTAML.026 Model Poisoning (Integrity)",
-                "NISTAML.05 Supply Chain Attacks"
+                "NISTAML.051 Model Poisoning (Supply Chain)"
               ]
             },
             {
@@ -6208,7 +6217,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks",
+                    "NISTAML.051 Model Poisoning (Supply Chain) (training environment is part of the model supply chain)",
                     "NISTAML.013 Data Poisoning (secure environment prevents data poisoning during training)"
                   ]
                 },
@@ -6315,10 +6324,9 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.02 Integrity Violations",
+                    "NISTAML.026 Model Poisoning (Integrity)",
                     "NISTAML.013 Data Poisoning",
-                    "NISTAML.024 Targeted Poisoning",
-                    "NISTAML.026 Model Poisoning (Integrity)"
+                    "NISTAML.024 Targeted Poisoning"
                   ]
                 },
                 {
@@ -6427,7 +6435,6 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks",
                     "NISTAML.051 Model Poisoning (Supply Chain) (reproducibility enables detection of supply chain poisoning)"
                   ]
                 },
@@ -6630,9 +6637,9 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.03 Privacy Compromises",
                     "NISTAML.033 Membership Inference",
-                    "NISTAML.032 Reconstruction (secure aggregation prevents data reconstruction from FL updates)"
+                    "NISTAML.032 Reconstruction (secure aggregation prevents data reconstruction from FL updates)",
+                    "NISTAML.034 Property Inference (secure aggregation prevents property inference from FL updates)"
                   ]
                 },
                 {
@@ -6860,7 +6867,7 @@
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.05 Supply Chain Attacks",
+                "NISTAML.051 Model Poisoning (Supply Chain) (hardware supply chain compromise enables model poisoning)",
                 "NISTAML.031 Model Extraction (hardware side-channels can enable extraction)"
               ]
             },
@@ -6936,7 +6943,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks"
+                    "NISTAML.051 Model Poisoning (Supply Chain) (secure boot prevents boot-level supply chain compromise)"
                   ]
                 },
                 {
@@ -7037,7 +7044,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks"
+                    "NISTAML.051 Model Poisoning (Supply Chain) (firmware supply chain compromise enables model poisoning)"
                   ]
                 },
                 {
@@ -7135,7 +7142,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks"
+                    "NISTAML.051 Model Poisoning (Supply Chain) (hardware component verification prevents supply chain compromise)"
                   ]
                 },
                 {
@@ -7297,7 +7304,8 @@
                   "items": [
                     "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model",
                     "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model",
-                    "AML.T0025 Exfiltration via Cyber Means"
+                    "AML.T0025 Exfiltration via Cyber Means",
+                    "AML.T0090 OS Credential Dumping (confidential inference protects credentials in encrypted memory)"
                   ]
                 },
                 {
@@ -7331,7 +7339,7 @@
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
                     "NISTAML.031 Model Extraction",
-                    "NISTAML.03 Privacy Compromises"
+                    "NISTAML.032 Reconstruction (confidential inference prevents data reconstruction from encrypted memory)"
                   ]
                 },
                 {
@@ -7448,7 +7456,7 @@
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
                 "NISTAML.022 Evasion",
-                "NISTAML.02 Integrity Violations"
+                "NISTAML.025 Black-box Evasion (attention hardening resists black-box evasion attacks)"
               ]
             },
             {
@@ -7552,7 +7560,7 @@
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.04 Misuse Violations",
+                "NISTAML.022 Evasion (CFG hardening resists adversarial evasion of content filters)",
                 "NISTAML.027 Misaligned Outputs (CFG hardening prevents misaligned image generation)"
               ]
             },
@@ -7577,7 +7585,7 @@
             "NVIDIA NeMo Guardrails"
           ],
           "toolsCommercial": [
-            "AI security firewalls (Lakera Guard, Protect AI Guardian, CalypsoAI Validator)",
+            "AI security firewalls (Lakera Guard, Protect AI Guardian, CalypsoAI Moderator)",
             "API Gateways with advanced validation (Kong, Apigee)",
             "AI Observability platforms (Arize AI, Fiddler, WhyLabs)"
           ],
@@ -8061,7 +8069,7 @@
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
                 "NISTAML.027 Misaligned Outputs",
-                "NISTAML.04 Misuse Violations (hacked RL agent can be misused)"
+                "NISTAML.026 Model Poisoning (Integrity) (reward hacking poisons model behavior via corrupted signals)"
               ]
             },
             {
@@ -8133,7 +8141,7 @@
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
                     "NISTAML.027 Misaligned Outputs",
-                    "NISTAML.04 Misuse Violations"
+                    "NISTAML.026 Model Poisoning (Integrity) (constrained RL prevents integrity-compromising reward manipulation)"
                   ]
                 },
                 {
@@ -8232,7 +8240,7 @@
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
                     "NISTAML.027 Misaligned Outputs",
-                    "NISTAML.04 Misuse Violations"
+                    "NISTAML.026 Model Poisoning (Integrity) (HITL oversight prevents integrity-compromising reward manipulation)"
                   ]
                 },
                 {
@@ -8414,7 +8422,7 @@
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
                     "NISTAML.027 Misaligned Outputs",
-                    "NISTAML.04 Misuse Violations"
+                    "NISTAML.026 Model Poisoning (Integrity) (audit catches integrity-compromising policy divergence)"
                   ]
                 },
                 {
@@ -8643,7 +8651,7 @@
                 "NISTAML.031 Model Extraction",
                 "NISTAML.032 Reconstruction",
                 "NISTAML.038 Data Extraction",
-                "NISTAML.04 Misuse Violations (watermarking deters and traces misuse)"
+                "NISTAML.027 Misaligned Outputs (watermarking enables tracing of misaligned or misused outputs)"
               ]
             },
             {
@@ -8917,7 +8925,9 @@
                 "AML.T0015 Evade AI Model",
                 "AML.T0043 Craft Adversarial Data",
                 "AML.T0018 Manipulate AI Model",
-                "AML.T0020 Poison Training Data (ensemble diversity limits impact of individual poisoned models)"
+                "AML.T0020 Poison Training Data (ensemble diversity limits impact of individual poisoned models)",
+                "AML.T0041 Physical Environment Access (ensemble diversity increases difficulty of physical adversarial attacks)",
+                "AML.T0107 Exploitation for Defense Evasion"
               ]
             },
             {
@@ -9020,7 +9030,9 @@
               "items": [
                 "AML.T0015 Evade AI Model",
                 "AML.T0043 Craft Adversarial Data",
-                "AML.T0031 Erode AI Model Integrity"
+                "AML.T0031 Erode AI Model Integrity",
+                "AML.T0041 Physical Environment Access (certified defenses provide formal robustness against physical perturbations)",
+                "AML.T0107 Exploitation for Defense Evasion"
               ]
             },
             {
@@ -9077,7 +9089,7 @@
             "TensorFlow"
           ],
           "toolsCommercial": [
-            "Model validation and AI robustness assessment platforms (e.g., Robust Intelligence)",
+            "Model validation and AI robustness assessment platforms (e.g., Cisco AI Defense (formerly Robust Intelligence))",
             "Formal verification / assurance services for safety-critical ML deployments"
           ],
           "subTechniques": [],
@@ -9129,7 +9141,8 @@
                 "AML.T0054 LLM Jailbreak",
                 "AML.T0048 External Harms",
                 "AML.T0065 LLM Prompt Crafting",
-                "AML.T0068 LLM Prompt Obfuscation"
+                "AML.T0068 LLM Prompt Obfuscation",
+                "AML.T0108 AI Agent (C2)"
               ]
             },
             {
@@ -9167,7 +9180,7 @@
               "items": [
                 "NISTAML.018 Prompt Injection",
                 "NISTAML.015 Indirect Prompt Injection",
-                "NISTAML.04 Misuse Violations",
+                "NISTAML.039 Compromising connected resources (hardened system prompts prevent prompt-based access to connected resources)",
                 "NISTAML.027 Misaligned Outputs (prompt hierarchy ensures aligned outputs)"
               ]
             },
@@ -9252,7 +9265,9 @@
                 "AML.T0049 Exploit Public-Facing Application",
                 "AML.T0048 External Harms",
                 "AML.T0051 LLM Prompt Injection",
-                "AML.T0054 LLM Jailbreak"
+                "AML.T0054 LLM Jailbreak",
+                "AML.T0103 Deploy AI Agent",
+                "AML.T0108 AI Agent (C2)"
               ]
             },
             {
@@ -9295,7 +9310,7 @@
                 "NISTAML.018 Prompt Injection",
                 "NISTAML.015 Indirect Prompt Injection",
                 "NISTAML.039 Compromising connected resources",
-                "NISTAML.04 Misuse Violations"
+                "NISTAML.027 Misaligned Outputs (secure agent architecture prevents misaligned agent behavior)"
               ]
             },
             {
@@ -9370,7 +9385,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.04 Misuse Violations",
+                    "NISTAML.027 Misaligned Outputs (interruptible loops catch misaligned agent actions before execution)",
                     "NISTAML.039 Compromising connected resources (interruptible loops prevent cascading resource compromise)"
                   ]
                 },
@@ -9438,7 +9453,9 @@
                   "items": [
                     "AML.T0050 Command and Scripting Interpreter",
                     "AML.T0049 Exploit Public-Facing Application",
-                    "AML.T0053 AI Agent Tool Invocation"
+                    "AML.T0053 AI Agent Tool Invocation",
+                    "AML.T0098 AI Agent Tool Credential Harvesting (least privilege limits credential exposure via tools)",
+                    "AML.T0103 Deploy AI Agent"
                   ]
                 },
                 {
@@ -9472,7 +9489,7 @@
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
                     "NISTAML.039 Compromising connected resources",
-                    "NISTAML.04 Misuse Violations"
+                    "NISTAML.018 Prompt Injection (capability scoping limits impact of prompt injection-based misuse)"
                   ]
                 },
                 {
@@ -9540,7 +9557,9 @@
                     "AML.T0051.001 LLM Prompt Injection: Indirect",
                     "AML.T0053 AI Agent Tool Invocation",
                     "AML.T0054 LLM Jailbreak",
-                    "AML.T0048 External Harms (plan validation prevents harmful tool execution)"
+                    "AML.T0048 External Harms (plan validation prevents harmful tool execution)",
+                    "AML.T0100 AI Agent Clickbait (plan-execute separation prevents automatic navigation to malicious content)",
+                    "AML.T0102 Generate Malicious Commands (plan-execute separation prevents direct execution of generated commands)"
                   ]
                 },
                 {
@@ -9579,7 +9598,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.04 Misuse Violations",
+                    "NISTAML.027 Misaligned Outputs (plan validation catches misaligned actions before execution)",
                     "NISTAML.015 Indirect Prompt Injection (decoupled architecture prevents injection from reaching tools)",
                     "NISTAML.018 Prompt Injection",
                     "NISTAML.039 Compromising connected resources (plan validation prevents reaching connected systems)"
@@ -9682,7 +9701,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.04 Misuse Violations (prevents persistent misuse across sessions)",
+                    "NISTAML.018 Prompt Injection (ephemeral state prevents persistent prompt injection effects across sessions)",
                     "NISTAML.015 Indirect Prompt Injection (clearing memory prevents persistent indirect injection)"
                   ]
                 },
@@ -9754,7 +9773,9 @@
                     "AML.T0048 External Harms",
                     "AML.T0053 AI Agent Tool Invocation",
                     "AML.T0051 LLM Prompt Injection (certificate enforcement blocks injection from reaching unauthorized tools)",
-                    "AML.T0054 LLM Jailbreak (certificate enforcement contains jailbreak within authorized capabilities)"
+                    "AML.T0054 LLM Jailbreak (certificate enforcement contains jailbreak within authorized capabilities)",
+                    "AML.T0103 Deploy AI Agent",
+                    "AML.T0108 AI Agent (C2)"
                   ]
                 },
                 {
@@ -9792,7 +9813,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.04 Misuse Violations",
+                    "NISTAML.027 Misaligned Outputs (behavior certification detects misaligned agent outputs)",
                     "NISTAML.039 Compromising connected resources (certificate limits resource access scope)"
                   ]
                 },
@@ -9899,7 +9920,7 @@
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
                     "NISTAML.039 Compromising connected resources (delegation controls prevent reaching connected systems)",
-                    "NISTAML.04 Misuse Violations"
+                    "NISTAML.018 Prompt Injection (delegation controls limit propagation of prompt injection across agents)"
                   ]
                 },
                 {
@@ -9975,7 +9996,8 @@
                     "AML.T0051.001 LLM Prompt Injection: Indirect",
                     "AML.T0054 LLM Jailbreak",
                     "AML.T0050 Command and Scripting Interpreter (P-LLM only sees validated structures, not raw commands)",
-                    "AML.T0053 AI Agent Tool Invocation (tool access restricted to P-LLM which never sees untrusted content)"
+                    "AML.T0053 AI Agent Tool Invocation (tool access restricted to P-LLM which never sees untrusted content)",
+                    "AML.T0099 AI Agent Tool Data Poisoning (dual-LLM pattern isolates poisoned tool data from execution)"
                   ]
                 },
                 {
@@ -10014,7 +10036,7 @@
                   "items": [
                     "NISTAML.015 Indirect Prompt Injection",
                     "NISTAML.018 Prompt Injection",
-                    "NISTAML.04 Misuse Violations",
+                    "NISTAML.039 Compromising connected resources (dual isolation prevents untrusted content from reaching connected systems)",
                     "NISTAML.038 Data Extraction (dual isolation prevents data extraction through untrusted channels)"
                   ]
                 },
@@ -10103,7 +10125,12 @@
               "items": [
                 "AML.T0053 AI Agent Tool Invocation",
                 "AML.T0050 Command and Scripting Interpreter (tool authorization prevents unauthorized command execution)",
-                "AML.T0048 External Harms (capability scoping prevents harmful external actions)"
+                "AML.T0048 External Harms (capability scoping prevents harmful external actions)",
+                "AML.T0098 AI Agent Tool Credential Harvesting (tool auth controls limit credential access)",
+                "AML.T0103 Deploy AI Agent",
+                "AML.T0105 Escape to Host",
+                "AML.T0108 AI Agent (C2)",
+                "AML.T0011.002 User Execution: Poisoned AI Agent Tool"
               ]
             },
             {
@@ -10139,7 +10166,7 @@
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.04 Misuse Violations",
+                "NISTAML.018 Prompt Injection (tool authorization limits impact of prompt injection-based tool misuse)",
                 "NISTAML.039 Compromising connected resources"
               ]
             },
@@ -10216,7 +10243,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.04 Misuse Violations",
+                    "NISTAML.018 Prompt Injection (schema validation blocks injection payloads in tool parameters)",
                     "NISTAML.039 Compromising connected resources (parameter constraints prevent reaching unintended resources)"
                   ]
                 },
@@ -10315,7 +10342,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.04 Misuse Violations",
+                    "NISTAML.018 Prompt Injection (policy engine blocks injection-driven unauthorized tool access)",
                     "NISTAML.039 Compromising connected resources"
                   ]
                 },
@@ -10383,7 +10410,8 @@
                   "items": [
                     "AML.T0053 AI Agent Tool Invocation",
                     "AML.T0048 External Harms (two-channel validation catches harmful actions before execution)",
-                    "AML.T0051 LLM Prompt Injection (second channel independently validates injection attempts)"
+                    "AML.T0051 LLM Prompt Injection (second channel independently validates injection attempts)",
+                    "AML.T0011.003 User Execution: Malicious Link"
                   ]
                 },
                 {
@@ -10420,7 +10448,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.04 Misuse Violations",
+                    "NISTAML.027 Misaligned Outputs (validator detects misaligned tool call patterns)",
                     "NISTAML.039 Compromising connected resources (validator blocks unauthorized resource access)"
                   ]
                 },
@@ -10494,7 +10522,8 @@
                     "AML.T0051.000 LLM Prompt Injection: Direct",
                     "AML.T0051.001 LLM Prompt Injection: Indirect",
                     "AML.T0053 AI Agent Tool Invocation",
-                    "AML.T0054 LLM Jailbreak"
+                    "AML.T0054 LLM Jailbreak",
+                    "AML.T0098 AI Agent Tool Credential Harvesting (dynamic scoping limits credential exposure per session)"
                   ]
                 },
                 {
@@ -10531,7 +10560,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.04 Misuse Violations",
+                    "NISTAML.027 Misaligned Outputs (signed scopes constrain misaligned agent behavior)",
                     "NISTAML.015 Indirect Prompt Injection (dynamic scoping prevents injection from expanding privileges)",
                     "NISTAML.018 Prompt Injection",
                     "NISTAML.039 Compromising connected resources"
@@ -10720,7 +10749,7 @@
                 "Styra DAS (OPA platform)",
                 "Okta (IdP + policy integration)",
                 "Auth0 (IdP + policy integration)",
-                "Aserto (authorization platform)"
+                "Topaz (formerly Aserto)"
               ],
               "defendsAgainst": [
                 {
@@ -10760,7 +10789,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.04 Misuse Violations",
+                    "NISTAML.018 Prompt Injection (re-verification catches injection-driven authorization bypass at execution time)",
                     "NISTAML.039 Compromising connected resources (re-verification prevents stale access to resources)"
                   ]
                 },
@@ -10846,7 +10875,10 @@
               "items": [
                 "AML.T0049 Exploit Public-Facing Application",
                 "AML.T0072 Reverse Shell",
-                "AML.T0051.001 LLM Prompt Injection: Indirect (prevents indirect injection via fetched web content)"
+                "AML.T0051.001 LLM Prompt Injection: Indirect (prevents indirect injection via fetched web content)",
+                "AML.T0100 AI Agent Clickbait (safe fetch prevents navigation to malicious content)",
+                "AML.T0108 AI Agent (C2)",
+                "AML.T0011.003 User Execution: Malicious Link"
               ]
             },
             {
@@ -10883,7 +10915,7 @@
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
                 "NISTAML.015 Indirect Prompt Injection (safe fetch prevents fetching malicious injection content)",
-                "NISTAML.05 Supply Chain Attacks",
+                "NISTAML.018 Prompt Injection (safe fetch sanitizes fetched content that could contain injections)",
                 "NISTAML.039 Compromising connected resources (SSRF prevention blocks access to internal resources)"
               ]
             },
@@ -10923,7 +10955,8 @@
                 {
                   "framework": "MITRE ATLAS",
                   "items": [
-                    "AML.T0049 Exploit Public-Facing Application"
+                    "AML.T0049 Exploit Public-Facing Application",
+                    "AML.T0011.003 User Execution: Malicious Link"
                   ]
                 },
                 {
@@ -10955,7 +10988,7 @@
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
                     "NISTAML.039 Compromising connected resources (blocks access to internal network resources)",
-                    "NISTAML.05 Supply Chain Attacks"
+                    "NISTAML.015 Indirect Prompt Injection (URL normalization prevents SSRF triggered by indirect injection payloads)"
                   ]
                 },
                 {
@@ -11023,7 +11056,9 @@
                   "items": [
                     "AML.T0051 LLM Prompt Injection",
                     "AML.T0051.001 LLM Prompt Injection: Indirect",
-                    "AML.T0049 Exploit Public-Facing Application"
+                    "AML.T0049 Exploit Public-Facing Application",
+                    "AML.T0100 AI Agent Clickbait (secure rendering prevents exploitation from fetched malicious content)",
+                    "AML.T0011.003 User Execution: Malicious Link"
                   ]
                 },
                 {
@@ -11144,7 +11179,11 @@
                 "AML.T0070 RAG Poisoning",
                 "AML.T0071 False RAG Entry Injection",
                 "AML.T0059 Erode Dataset Integrity",
-                "AML.T0066 Retrieval Content Crafting"
+                "AML.T0066 Retrieval Content Crafting",
+                "AML.T0064 Gather RAG-Indexed Targets (RAG hygiene hardens the index against reconnaissance)",
+                "AML.T0082 RAG Credential Harvesting (RAG hygiene prevents credentials from entering the index)",
+                "AML.T0099 AI Agent Tool Data Poisoning (RAG hygiene prevents poisoned data from persisting in index)",
+                "AML.T0108 AI Agent (C2)"
               ]
             },
             {
@@ -11181,7 +11220,7 @@
               "items": [
                 "NISTAML.013 Data Poisoning",
                 "NISTAML.024 Targeted Poisoning",
-                "NISTAML.05 Supply Chain Attacks (compromised RAG data sources)"
+                "NISTAML.051 Model Poisoning (Supply Chain) (compromised RAG data sources are a supply chain vector)"
               ]
             },
             {
@@ -11436,7 +11475,11 @@
                 "AML.T0051 LLM Prompt Injection",
                 "AML.T0018 Manipulate AI Model",
                 "AML.T0054 LLM Jailbreak",
-                "AML.T0081 Modify AI Agent Configuration"
+                "AML.T0081 Modify AI Agent Configuration",
+                "AML.T0103 Deploy AI Agent",
+                "AML.T0105 Escape to Host",
+                "AML.T0107 Exploitation for Defense Evasion",
+                "AML.T0108 AI Agent (C2)"
               ]
             },
             {
@@ -11476,8 +11519,8 @@
               "items": [
                 "NISTAML.018 Prompt Injection",
                 "NISTAML.015 Indirect Prompt Injection (config file as indirect injection channel)",
-                "NISTAML.02 Integrity Violations",
-                "NISTAML.05 Supply Chain Attacks (config files compromised in supply chain)"
+                "NISTAML.026 Model Poisoning (Integrity) (tampered config files compromise model behavioral integrity)",
+                "NISTAML.051 Model Poisoning (Supply Chain) (config files compromised in supply chain)"
               ]
             },
             {
@@ -11557,7 +11600,7 @@
                   "items": [
                     "NISTAML.018 Prompt Injection",
                     "NISTAML.015 Indirect Prompt Injection (blocks indirect injection via config files)",
-                    "NISTAML.02 Integrity Violations"
+                    "NISTAML.026 Model Poisoning (Integrity) (client-side enforcement prevents integrity-compromising config changes)"
                   ]
                 },
                 {
@@ -11628,7 +11671,9 @@
                     "AML.T0018 Manipulate AI Model",
                     "AML.T0051 LLM Prompt Injection",
                     "AML.T0081 Modify AI Agent Configuration",
-                    "AML.T0010 AI Supply Chain Compromise (signed configs detect supply chain-compromised config files)"
+                    "AML.T0010 AI Supply Chain Compromise (signed configs detect supply chain-compromised config files)",
+                    "AML.T0103 Deploy AI Agent",
+                    "AML.T0105 Escape to Host"
                   ]
                 },
                 {
@@ -11665,8 +11710,8 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.02 Integrity Violations",
-                    "NISTAML.05 Supply Chain Attacks",
+                    "NISTAML.026 Model Poisoning (Integrity) (runtime verification detects integrity-compromising config tampering)",
+                    "NISTAML.051 Model Poisoning (Supply Chain) (signed configs detect supply chain tampering)",
                     "NISTAML.018 Prompt Injection (prevents config-injected prompts from loading)"
                   ]
                 },
@@ -11801,7 +11846,6 @@
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.05 Supply Chain Attacks",
                 "NISTAML.051 Model Poisoning (Supply Chain)"
               ]
             },
@@ -11876,7 +11920,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks"
+                    "NISTAML.051 Model Poisoning (Supply Chain) (sandboxed installs contain supply chain compromise from malicious packages)"
                   ]
                 },
                 {
@@ -11947,7 +11991,9 @@
                   "items": [
                     "AML.T0010 AI Supply Chain Compromise",
                     "AML.T0011.001 User Execution: Malicious Package",
-                    "AML.T0074 Masquerading"
+                    "AML.T0074 Masquerading",
+                    "AML.T0060 Publish Hallucinated Entities (package vetting detects hallucination-squatted packages)",
+                    "AML.T0104 Publish Poisoned AI Agent Tool"
                   ]
                 },
                 {
@@ -11978,7 +12024,6 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks",
                     "NISTAML.051 Model Poisoning (Supply Chain) (vetting prevents supply chain model poisoning)"
                   ]
                 },
@@ -12068,7 +12113,8 @@
                 "AML.T0010.001 AI Supply Chain Compromise: AI Software",
                 "AML.T0012 Valid Accounts",
                 "AML.T0074 Masquerading",
-                "AML.T0058 Publish Poisoned Models"
+                "AML.T0058 Publish Poisoned Models",
+                "AML.T0104 Publish Poisoned AI Agent Tool"
               ]
             },
             {
@@ -12100,7 +12146,6 @@
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.05 Supply Chain Attacks",
                 "NISTAML.051 Model Poisoning (Supply Chain)"
               ]
             },
@@ -12181,7 +12226,10 @@
               "items": [
                 "AML.T0010.001 AI Supply Chain Compromise: AI Software",
                 "AML.T0074 Masquerading",
-                "AML.T0073 Impersonation"
+                "AML.T0073 Impersonation",
+                "AML.T0060 Publish Hallucinated Entities (tool integrity verification blocks hallucination-squatted packages)",
+                "AML.T0104 Publish Poisoned AI Agent Tool",
+                "AML.T0011.002 User Execution: Poisoned AI Agent Tool"
               ]
             },
             {
@@ -12216,7 +12264,7 @@
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.05 Supply Chain Attacks",
+                "NISTAML.051 Model Poisoning (Supply Chain) (tool resolution integrity prevents supply chain compromise via misdirected tools)",
                 "NISTAML.039 Compromising connected resources (tool misdirection compromises connected resources)"
               ]
             },
@@ -12260,7 +12308,9 @@
                   "items": [
                     "AML.T0010.001 AI Supply Chain Compromise: AI Software",
                     "AML.T0074 Masquerading",
-                    "AML.T0073 Impersonation (version pinning prevents impersonation via unversioned tool references)"
+                    "AML.T0073 Impersonation (version pinning prevents impersonation via unversioned tool references)",
+                    "AML.T0104 Publish Poisoned AI Agent Tool",
+                    "AML.T0011.002 User Execution: Poisoned AI Agent Tool"
                   ]
                 },
                 {
@@ -12293,7 +12343,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks",
+                    "NISTAML.051 Model Poisoning (Supply Chain) (version pinning prevents supply chain compromise via unpinned tool references)",
                     "NISTAML.039 Compromising connected resources (unversioned tool references can compromise connected resources)"
                   ]
                 },
@@ -12357,7 +12407,9 @@
                 {
                   "framework": "MITRE ATLAS",
                   "items": [
-                    "AML.T0010 AI Supply Chain Compromise (descriptor hash detects compromised tool metadata)"
+                    "AML.T0010 AI Supply Chain Compromise (descriptor hash detects compromised tool metadata)",
+                    "AML.T0104 Publish Poisoned AI Agent Tool",
+                    "AML.T0011.002 User Execution: Poisoned AI Agent Tool"
                   ]
                 },
                 {
@@ -12388,8 +12440,8 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks",
-                    "NISTAML.02 Integrity Violations"
+                    "NISTAML.051 Model Poisoning (Supply Chain) (descriptor tampering is a supply chain integrity issue)",
+                    "NISTAML.026 Model Poisoning (Integrity) (hash binding detects integrity-compromising descriptor tampering)"
                   ]
                 },
                 {
@@ -12455,7 +12507,9 @@
                   "framework": "MITRE ATLAS",
                   "items": [
                     "AML.T0074 Masquerading",
-                    "AML.T0073 Impersonation (typosquat detection prevents impersonation via similar tool names)"
+                    "AML.T0073 Impersonation (typosquat detection prevents impersonation via similar tool names)",
+                    "AML.T0104 Publish Poisoned AI Agent Tool",
+                    "AML.T0011.002 User Execution: Poisoned AI Agent Tool"
                   ]
                 },
                 {
@@ -12487,7 +12541,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks (typosquatting is a supply chain attack vector)"
+                    "NISTAML.051 Model Poisoning (Supply Chain) (typosquatting is a supply chain attack vector)"
                   ]
                 },
                 {
@@ -12577,7 +12631,13 @@
               "items": [
                 "AML.T0050 Command and Scripting Interpreter",
                 "AML.T0011.001 User Execution: Malicious Package",
-                "AML.T0072 Reverse Shell (code execution prevention blocks reverse shell establishment)"
+                "AML.T0072 Reverse Shell (code execution prevention blocks reverse shell establishment)",
+                "AML.T0100 AI Agent Clickbait (code execution prevention blocks malicious payloads from fetched content)",
+                "AML.T0102 Generate Malicious Commands (code execution prevention blocks generated malicious commands)",
+                "AML.T0105 Escape to Host",
+                "AML.T0106 Exploitation for Credential Access",
+                "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
+                "AML.T0011.003 User Execution: Malicious Link"
               ]
             },
             {
@@ -12655,7 +12715,9 @@
                   "framework": "MITRE ATLAS",
                   "items": [
                     "AML.T0050 Command and Scripting Interpreter",
-                    "AML.T0072 Reverse Shell (blocks shell-related constructs)"
+                    "AML.T0072 Reverse Shell (blocks shell-related constructs)",
+                    "AML.T0102 Generate Malicious Commands (dangerous construct blocking catches generated malicious commands)",
+                    "AML.T0011.002 User Execution: Poisoned AI Agent Tool"
                   ]
                 },
                 {
@@ -12850,7 +12912,8 @@
                   "framework": "MITRE ATLAS",
                   "items": [
                     "AML.T0050 Command and Scripting Interpreter",
-                    "AML.T0072 Reverse Shell (static scan detects reverse shell patterns)"
+                    "AML.T0072 Reverse Shell (static scan detects reverse shell patterns)",
+                    "AML.T0102 Generate Malicious Commands (static analysis scans generated code for malicious patterns)"
                   ]
                 },
                 {
@@ -12970,7 +13033,14 @@
                 "AML.T0043 Craft Adversarial Data",
                 "AML.T0051 LLM Prompt Injection",
                 "AML.T0054 LLM Jailbreak",
-                "AML.T0068 LLM Prompt Obfuscation"
+                "AML.T0068 LLM Prompt Obfuscation",
+                "AML.T0041 Physical Environment Access (adversarial detection catches physical perturbations)",
+                "AML.T0099 AI Agent Tool Data Poisoning (adversarial detection catches poisoned tool outputs)",
+                "AML.T0104 Publish Poisoned AI Agent Tool",
+                "AML.T0107 Exploitation for Defense Evasion",
+                "AML.T0108 AI Agent (C2)",
+                "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
+                "AML.T0011.003 User Execution: Malicious Link"
               ]
             },
             {
@@ -13048,7 +13118,7 @@
                 "Google Perspective API",
                 "Lakera Guard",
                 "Protect AI Guardian",
-                "CalypsoAI Validator",
+                "CalypsoAI Moderator",
                 "Securiti LLM Firewall"
               ],
               "defendsAgainst": [
@@ -13770,7 +13840,9 @@
                 "AML.T0067.000 LLM Trusted Output Components Manipulation: Citations",
                 "AML.T0077 LLM Response Rendering",
                 "AML.T0086 Exfiltration via AI Agent Tool Invocation (output monitoring catches data encoded in tool parameters)",
-                "AML.T0088 Generate Deepfakes (output filters detect synthetic media in responses)"
+                "AML.T0088 Generate Deepfakes (output filters detect synthetic media in responses)",
+                "AML.T0103 Deploy AI Agent",
+                "AML.T0108 AI Agent (C2)"
               ]
             },
             {
@@ -13813,7 +13885,7 @@
                 "NISTAML.027 Misaligned Outputs",
                 "NISTAML.036 Leaking information from user interactions",
                 "NISTAML.038 Data Extraction",
-                "NISTAML.04 Misuse Violations"
+                "NISTAML.018 Prompt Injection (misuse via safety bypass)"
               ]
             },
             {
@@ -13908,7 +13980,7 @@
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
                     "NISTAML.027 Misaligned Outputs",
-                    "NISTAML.04 Misuse Violations"
+                    "NISTAML.018 Prompt Injection (misuse via safety bypass)"
                   ]
                 },
                 {
@@ -13988,7 +14060,9 @@
                     "AML.T0056 Extract LLM System Prompt (DLP detects system prompt content in outputs)",
                     "AML.T0085 Data from AI Services (DLP catches sensitive data retrieved via AI services)",
                     "AML.T0085.000 Data from AI Services: RAG Databases (detects sensitive RAG content in responses)",
-                    "AML.T0086 Exfiltration via AI Agent Tool Invocation (DLP catches data encoded in tool parameters)"
+                    "AML.T0086 Exfiltration via AI Agent Tool Invocation (DLP catches data encoded in tool parameters)",
+                    "AML.T0082 RAG Credential Harvesting (sensitive info detection catches credential content in outputs)",
+                    "AML.T0098 AI Agent Tool Credential Harvesting (sensitive info detection catches credential access via tools)"
                   ]
                 },
                 {
@@ -14022,12 +14096,12 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.03 Privacy Compromises",
                     "NISTAML.032 Reconstruction",
                     "NISTAML.033 Membership Inference",
                     "NISTAML.036 Leaking information from user interactions",
                     "NISTAML.038 Data Extraction",
-                    "NISTAML.035 Prompt Extraction (detects system prompt content in outputs)"
+                    "NISTAML.035 Prompt Extraction (detects system prompt content in outputs)",
+                    "NISTAML.037 Training Data Attacks (DLP detects training data leakage in outputs)"
                   ]
                 },
                 {
@@ -14110,7 +14184,9 @@
                     "AML.T0051.001 LLM Prompt Injection: Indirect (blocks tool calls triggered by indirect injections)",
                     "AML.T0051.002 LLM Prompt Injection: Triggered",
                     "AML.T0084 Discover AI Agent Configuration (policy monitoring detects probing of tool definitions)",
-                    "AML.T0084.001 Discover AI Agent Configuration: Tool Definitions"
+                    "AML.T0084.001 Discover AI Agent Configuration: Tool Definitions",
+                    "AML.T0098 AI Agent Tool Credential Harvesting (action policy monitoring detects unauthorized credential access)",
+                    "AML.T0102 Generate Malicious Commands (action policy monitoring catches malicious command generation)"
                   ]
                 },
                 {
@@ -14150,7 +14226,7 @@
                     "NISTAML.018 Prompt Injection (blocks injection-triggered tool invocations)",
                     "NISTAML.015 Indirect Prompt Injection",
                     "NISTAML.039 Compromising connected resources",
-                    "NISTAML.04 Misuse Violations"
+                    "NISTAML.027 Misaligned Outputs (misuse via policy-violating tool invocations)"
                   ]
                 },
                 {
@@ -14231,7 +14307,8 @@
                     "AML.T0051.001 LLM Prompt Injection: Indirect (indirect injections produce atypical tool chains)",
                     "AML.T0051.002 LLM Prompt Injection: Triggered",
                     "AML.T0086 Exfiltration via AI Agent Tool Invocation (unusual tool sequences signal exfiltration attempts)",
-                    "AML.T0048 External Harms (detects tool chains leading to harmful outcomes)"
+                    "AML.T0048 External Harms (detects tool chains leading to harmful outcomes)",
+                    "AML.T0096 AI Service API (sequence anomaly detection catches C2 communication patterns)"
                   ]
                 },
                 {
@@ -14621,7 +14698,9 @@
                 "AML.T0010.003 AI Supply Chain Compromise: Model",
                 "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
                 "AML.T0074 Masquerading",
-                "AML.T0069 Discover LLM System Information (detects unauthorized changes that expand unintended disclosure surface)"
+                "AML.T0069 Discover LLM System Information (detects unauthorized changes that expand unintended disclosure surface)",
+                "AML.T0104 Publish Poisoned AI Agent Tool",
+                "AML.T0107 Exploitation for Defense Evasion"
               ]
             },
             {
@@ -14658,7 +14737,6 @@
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.05 Supply Chain Attacks",
                 "NISTAML.051 Model Poisoning (Supply Chain)",
                 "NISTAML.011 Model Poisoning (Availability)",
                 "NISTAML.026 Model Poisoning (Integrity)",
@@ -14727,7 +14805,9 @@
                     "AML.T0010.003 AI Supply Chain Compromise: Model",
                     "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
                     "AML.T0074 Masquerading",
-                    "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (hash verification detects backdoor-embedded artifacts)"
+                    "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (hash verification detects backdoor-embedded artifacts)",
+                    "AML.T0104 Publish Poisoned AI Agent Tool",
+                    "AML.T0011.002 User Execution: Poisoned AI Agent Tool"
                   ]
                 },
                 {
@@ -14764,7 +14844,6 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks",
                     "NISTAML.051 Model Poisoning (Supply Chain)",
                     "NISTAML.023 Backdoor Poisoning",
                     "NISTAML.021 Clean-label Backdoor",
@@ -14837,7 +14916,6 @@
                 "Open Enclave SDK",
                 "AWS Nitro Enclaves SDK",
                 "Google Asylo SDK",
-                "Verifiable Confidential AI (VCAI) projects",
                 "eBPF tools (e.g., Falco, Cilium Tetragon, bcc)",
                 "Open-source attestation services (e.g., from Confidential Computing Consortium)"
               ],
@@ -14859,7 +14937,8 @@
                     "AML.T0072 Reverse Shell",
                     "AML.T0025 Exfiltration via Cyber Means",
                     "AML.T0010.001 AI Supply Chain Compromise: AI Software (runtime attestation detects compromised AI frameworks)",
-                    "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (TEE prevents model extraction from memory)"
+                    "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (TEE prevents model extraction from memory)",
+                    "AML.T0107 Exploitation for Defense Evasion"
                   ]
                 },
                 {
@@ -14898,7 +14977,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks",
+                    "NISTAML.051 Model Poisoning (Supply Chain) (TEE attestation detects tampered supply chain artifacts)",
                     "NISTAML.031 Model Extraction (TEE protects model weights in memory)",
                     "NISTAML.023 Backdoor Poisoning (attestation detects runtime backdoor activation)"
                   ]
@@ -15018,7 +15097,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks",
+                    "NISTAML.051 Model Poisoning (Supply Chain) (config drift may introduce supply chain compromised artifacts)",
                     "NISTAML.035 Prompt Extraction (config drift may expose system prompts)",
                     "NISTAML.039 Compromising connected resources (config drift opens access to connected resources)"
                   ]
@@ -15130,7 +15209,6 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks",
                     "NISTAML.051 Model Poisoning (Supply Chain)"
                   ]
                 },
@@ -15355,7 +15433,8 @@
                 "AML.T0051.002 LLM Prompt Injection: Triggered",
                 "AML.T0057 LLM Data Leakage (output logging)",
                 "AML.T0012 Valid Accounts (anomalous usage)",
-                "AML.T0046 Spamming AI System with Chaff Data"
+                "AML.T0046 Spamming AI System with Chaff Data",
+                "AML.T0096 AI Service API (comprehensive logging captures C2 communication traces)"
               ]
             },
             {
@@ -15398,7 +15477,7 @@
                 "NISTAML.031 Model Extraction",
                 "NISTAML.018 Prompt Injection",
                 "NISTAML.036 Leaking information from user interactions",
-                "NISTAML.01 Availability Violations"
+                "NISTAML.014 Energy-latency (logging detects resource exhaustion and DoS patterns)"
               ]
             },
             {
@@ -15496,7 +15575,7 @@
                     "NISTAML.018 Prompt Injection",
                     "NISTAML.031 Model Extraction",
                     "NISTAML.036 Leaking information from user interactions",
-                    "NISTAML.01 Availability Violations (usage patterns reveal DoS attempts)"
+                    "NISTAML.014 Energy-latency (usage patterns reveal DoS attempts)"
                   ]
                 },
                 {
@@ -15561,7 +15640,7 @@
                 "Grafana Loki with Promtail",
                 "Wazuh",
                 "Sigma (for defining SIEM rules in a standard format)",
-                "ElastAlert"
+                "ElastAlert2"
               ],
               "toolsCommercial": [
                 "Splunk Enterprise Security",
@@ -15583,7 +15662,12 @@
                     "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (detecting high query volumes)",
                     "AML.T0012 Valid Accounts (detecting anomalous usage from an account)",
                     "AML.T0046 Spamming AI System with Chaff Data",
-                    "AML.T0055 Unsecured Credentials (detecting use of known compromised keys)"
+                    "AML.T0055 Unsecured Credentials (detecting use of known compromised keys)",
+                    "AML.T0021 Establish Accounts (alerting on unauthorized account creation patterns)",
+                    "AML.T0075 Cloud Service Discovery (detecting unauthorized cloud resource enumeration)",
+                    "AML.T0089 Process Discovery (alerting on anomalous process enumeration in AI environments)",
+                    "AML.T0096 AI Service API (monitoring for C2 communication via AI service channels)",
+                    "AML.T0097 Virtualization/Sandbox Evasion (detecting sandbox detection and evasion attempts)"
                   ]
                 },
                 {
@@ -15621,7 +15705,7 @@
                   "items": [
                     "NISTAML.018 Prompt Injection",
                     "NISTAML.031 Model Extraction",
-                    "NISTAML.01 Availability Violations",
+                    "NISTAML.014 Energy-latency (alerting detects resource exhaustion patterns)",
                     "NISTAML.036 Leaking information from user interactions"
                   ]
                 },
@@ -15697,7 +15781,8 @@
                     "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (finding probing patterns)",
                     "AML.T0040 AI Model Inference API Access (finding subtle scanning)",
                     "AML.T0057 LLM Data Leakage (finding low-and-slow exfiltration)",
-                    "AML.T0015 Evade AI Model (hunting for novel evasion patterns)"
+                    "AML.T0015 Evade AI Model (hunting for novel evasion patterns)",
+                    "AML.T0042 Verify Attack (hunting for attacker feedback loop activity)"
                   ]
                 },
                 {
@@ -15960,7 +16045,6 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.01 Availability Violations",
                     "NISTAML.014 Energy-latency",
                     "NISTAML.031 Model Extraction (side-channel telemetry patterns)"
                   ]
@@ -16073,8 +16157,8 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.01 Availability Violations",
-                    "NISTAML.05 Supply Chain Attacks (registry poisoning is supply chain attack)",
+                    "NISTAML.014 Energy-latency (ANS DoS disrupts agent availability)",
+                    "NISTAML.051 Model Poisoning (Supply Chain) (registry poisoning is supply chain attack)",
                     "NISTAML.039 Compromising connected resources"
                   ]
                 },
@@ -16419,7 +16503,8 @@
                 "AML.T0051.001 LLM Prompt Injection: Indirect",
                 "AML.T0051.002 LLM Prompt Injection: Triggered",
                 "AML.T0024 Exfiltration via AI Inference API (AI analytics detects extraction patterns)",
-                "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model"
+                "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model",
+                "AML.T0107 Exploitation for Defense Evasion"
               ]
             },
             {
@@ -16550,7 +16635,8 @@
                 "AML.T0066 Retrieval Content Crafting",
                 "AML.T0067 LLM Trusted Output Components Manipulation",
                 "AML.T0071 False RAG Entry Injection",
-                "AML.T0062 Discover LLM Hallucinations (Prevents unverified hallucinations from being committed to shared memory and amplified by other agents)"
+                "AML.T0062 Discover LLM Hallucinations (Prevents unverified hallucinations from being committed to shared memory and amplified by other agents)",
+                "AML.T0060 Publish Hallucinated Entities (cross-referencing outputs against known hallucination-squatted packages)"
               ]
             },
             {
@@ -16675,7 +16761,8 @@
                 "AML.T0051.001 LLM Prompt Injection: Indirect",
                 "AML.T0054 LLM Jailbreak",
                 "AML.T0078 Drive-by Compromise",
-                "AML.T0018 Manipulate AI Model"
+                "AML.T0018 Manipulate AI Model",
+                "AML.T0103 Deploy AI Agent"
               ]
             },
             {
@@ -16803,7 +16890,10 @@
                 "AML.T0074 Masquerading",
                 "AML.T0053 AI Agent Tool Invocation (rogue agents abuse tool access)",
                 "AML.T0081 Modify AI Agent Configuration (detects unauthorized config changes by rogue agents)",
-                "AML.T0086 Exfiltration via AI Agent Tool Invocation (detects data exfil by compromised agents)"
+                "AML.T0086 Exfiltration via AI Agent Tool Invocation (detects data exfil by compromised agents)",
+                "AML.T0103 Deploy AI Agent",
+                "AML.T0105 Escape to Host",
+                "AML.T0108 AI Agent (C2)"
               ]
             },
             {
@@ -17139,8 +17229,8 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks",
-                    "NISTAML.01 Availability Violations (population control ensures agent availability)"
+                    "NISTAML.051 Model Poisoning (Supply Chain) (population control prevents unauthorized supply chain agents)",
+                    "NISTAML.014 Energy-latency (population control prevents resource exhaustion from rogue agents)"
                   ]
                 },
                 {
@@ -17741,7 +17831,8 @@
                 "AML.T0070 RAG Poisoning",
                 "AML.T0066 Retrieval Content Crafting",
                 "AML.T0071 False RAG Entry Injection",
-                "AML.T0051 LLM Prompt Injection (if payload is in RAG source)"
+                "AML.T0051 LLM Prompt Injection (if payload is in RAG source)",
+                "AML.T0064 Gather RAG-Indexed Targets (monitoring detects reconnaissance against RAG indexes)"
               ]
             },
             {
@@ -17816,7 +17907,9 @@
                   "framework": "MITRE ATLAS",
                   "items": [
                     "AML.T0070 RAG Poisoning",
-                    "AML.T0051 LLM Prompt Injection"
+                    "AML.T0051 LLM Prompt Injection",
+                    "AML.T0082 RAG Credential Harvesting (scanning detects credential harvesting payloads in retrieved chunks)",
+                    "AML.T0099 AI Agent Tool Data Poisoning (scanning detects poisoned tool data in RAG content)"
                   ]
                 },
                 {
@@ -18132,7 +18225,9 @@
                 "AML.T0052 Phishing",
                 "AML.T0048.002 External Harms: Societal Harm",
                 "AML.T0048.000 External Harms: Financial Harm",
-                "AML.T0067 LLM Trusted Output Components Manipulation"
+                "AML.T0067 LLM Trusted Output Components Manipulation",
+                "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
+                "AML.T0011.003 User Execution: Malicious Link"
               ]
             },
             {
@@ -18168,7 +18263,7 @@
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
                 "NISTAML.027 Misaligned Outputs",
-                "NISTAML.04 Misuse Violations"
+                "NISTAML.018 Prompt Injection (misuse via social engineering the user through manipulated outputs)"
               ]
             },
             {
@@ -18337,7 +18432,7 @@
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
                     "NISTAML.039 Compromising connected resources",
-                    "NISTAML.04 Misuse Violations"
+                    "NISTAML.018 Prompt Injection (misuse via injection-triggered high-risk actions)"
                   ]
                 },
                 {
@@ -18422,7 +18517,9 @@
                 "AML.T0053 AI Agent Tool Invocation",
                 "AML.T0061 LLM Prompt Self-Replication",
                 "AML.T0072 Reverse Shell",
-                "AML.T0050 Command and Scripting Interpreter"
+                "AML.T0050 Command and Scripting Interpreter",
+                "AML.T0103 Deploy AI Agent",
+                "AML.T0108 AI Agent (C2)"
               ]
             },
             {
@@ -18458,7 +18555,7 @@
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.05 Supply Chain Attacks",
+                "NISTAML.051 Model Poisoning (Supply Chain) (rogue agents may originate from compromised supply chain)",
                 "NISTAML.039 Compromising connected resources"
               ]
             },
@@ -18533,7 +18630,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks",
+                    "NISTAML.051 Model Poisoning (Supply Chain) (new agents may originate from compromised supply chain)",
                     "NISTAML.039 Compromising connected resources"
                   ]
                 },
@@ -18645,7 +18742,7 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks",
+                    "NISTAML.051 Model Poisoning (Supply Chain) (reputation scoring quarantines supply chain compromised agents)",
                     "NISTAML.039 Compromising connected resources"
                   ]
                 },
@@ -18744,7 +18841,13 @@
                 "AML.T0072 Reverse Shell",
                 "AML.T0050 Command and Scripting Interpreter",
                 "AML.T0029 Denial of AI Service",
-                "AML.T0034 Cost Harvesting"
+                "AML.T0034 Cost Harvesting",
+                "AML.T0089 Process Discovery (sandbox isolation limits process enumeration visibility)",
+                "AML.T0090 OS Credential Dumping (isolated environments prevent host credential access)",
+                "AML.T0100 AI Agent Clickbait (sandboxed execution contains clickbait-triggered actions)",
+                "AML.T0102 Generate Malicious Commands (sandbox containment limits impact of generated malicious commands)",
+                "AML.T0103 Deploy AI Agent",
+                "AML.T0105 Escape to Host"
               ]
             },
             {
@@ -18787,7 +18890,7 @@
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
                 "NISTAML.039 Compromising connected resources",
-                "NISTAML.05 Supply Chain Attacks (contains compromised component impact)",
+                "NISTAML.051 Model Poisoning (Supply Chain) (contains compromised component impact)",
                 "NISTAML.018 Prompt Injection (limits post-injection agent capabilities)"
               ]
             },
@@ -18847,7 +18950,9 @@
                     "AML.T0053 AI Agent Tool Invocation",
                     "AML.T0072 Reverse Shell",
                     "AML.T0029 Denial of AI Service",
-                    "AML.T0034 Cost Harvesting"
+                    "AML.T0034 Cost Harvesting",
+                    "AML.T0097 Virtualization/Sandbox Evasion (container-level isolation raises evasion difficulty)",
+                    "AML.T0105 Escape to Host"
                   ]
                 },
                 {
@@ -18887,7 +18992,7 @@
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
                     "NISTAML.039 Compromising connected resources",
-                    "NISTAML.05 Supply Chain Attacks (compromised container supply chain)"
+                    "NISTAML.051 Model Poisoning (Supply Chain) (compromised container supply chain)"
                   ]
                 },
                 {
@@ -18965,7 +19070,10 @@
                     "AML.T0050 Command and Scripting Interpreter",
                     "AML.T0029 Denial of AI Service",
                     "AML.T0034 Cost Harvesting",
-                    "AML.T0018.002 Manipulate AI Model: Embed Malware"
+                    "AML.T0018.002 Manipulate AI Model: Embed Malware",
+                    "AML.T0105 Escape to Host",
+                    "AML.T0106 Exploitation for Credential Access",
+                    "AML.T0011.002 User Execution: Poisoned AI Agent Tool"
                   ]
                 },
                 {
@@ -19008,7 +19116,7 @@
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
                     "NISTAML.039 Compromising connected resources",
-                    "NISTAML.05 Supply Chain Attacks (hardware-level isolation for compromised components)"
+                    "NISTAML.051 Model Poisoning (Supply Chain) (hardware-level isolation for compromised components)"
                   ]
                 },
                 {
@@ -19075,7 +19183,8 @@
                   "items": [
                     "AML.T0050 Command and Scripting Interpreter",
                     "AML.T0072 Reverse Shell",
-                    "AML.T0053 AI Agent Tool Invocation"
+                    "AML.T0053 AI Agent Tool Invocation",
+                    "AML.T0100 AI Agent Clickbait (ephemeral teardown prevents clickbait-triggered persistence)"
                   ]
                 },
                 {
@@ -19172,7 +19281,11 @@
                   "items": [
                     "AML.T0072 Reverse Shell",
                     "AML.T0025 Exfiltration via Cyber Means",
-                    "AML.T0050 Command and Scripting Interpreter"
+                    "AML.T0050 Command and Scripting Interpreter",
+                    "AML.T0089 Process Discovery (syscall filtering blocks process enumeration)",
+                    "AML.T0102 Generate Malicious Commands (seccomp restrictions limit execution of generated malicious commands)",
+                    "AML.T0105 Escape to Host",
+                    "AML.T0106 Exploitation for Credential Access"
                   ]
                 },
                 {
@@ -19283,7 +19396,8 @@
                     "AML.T0050 Command and Scripting Interpreter",
                     "AML.T0072 Reverse Shell",
                     "AML.T0018.002 Manipulate AI Model: Embed Malware",
-                    "AML.T0025 Exfiltration via Cyber Means"
+                    "AML.T0025 Exfiltration via Cyber Means",
+                    "AML.T0097 Virtualization/Sandbox Evasion (pre-execution analysis detects sandbox evasion techniques)"
                   ]
                 },
                 {
@@ -19320,7 +19434,6 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks",
                     "NISTAML.051 Model Poisoning (Supply Chain) (detects malicious behavior from poisoned models)",
                     "NISTAML.039 Compromising connected resources"
                   ]
@@ -19412,7 +19525,10 @@
                 "AML.T0036 Data from Information Repositories (limits access)",
                 "AML.T0025 Exfiltration via Cyber Means",
                 "AML.T0049 Exploit Public-Facing Application (SSRF-driven internal pivot)",
-                "AML.T0072 Reverse Shell"
+                "AML.T0072 Reverse Shell",
+                "AML.T0075 Cloud Service Discovery (network segmentation limits cloud resource enumeration)",
+                "AML.T0096 AI Service API (network isolation restricts C2 via AI service channels)",
+                "AML.T0108 AI Agent (C2)"
               ]
             },
             {
@@ -19501,7 +19617,8 @@
                   "framework": "MITRE ATLAS",
                   "items": [
                     "AML.T0044 Full AI Model Access (limits internal access)",
-                    "AML.T0036 Data from Information Repositories (limits internal access)"
+                    "AML.T0036 Data from Information Repositories (limits internal access)",
+                    "AML.T0075 Cloud Service Discovery (microsegmentation limits internal cloud resource discovery)"
                   ]
                 },
                 {
@@ -19616,7 +19733,10 @@
                     "AML.T0025 Exfiltration via Cyber Means",
                     "AML.T0049 Exploit Public-Facing Application (SSRF)",
                     "AML.T0072 Reverse Shell",
-                    "AML.T0034 Cost Harvesting"
+                    "AML.T0034 Cost Harvesting",
+                    "AML.T0096 AI Service API (egress monitoring detects C2 communication via AI service channels)",
+                    "AML.T0108 AI Agent (C2)",
+                    "AML.T0011.003 User Execution: Malicious Link"
                   ]
                 },
                 {
@@ -19654,7 +19774,7 @@
                   "items": [
                     "NISTAML.039 Compromising connected resources",
                     "NISTAML.038 Data Extraction",
-                    "NISTAML.05 Supply Chain Attacks (securing external service connections)"
+                    "NISTAML.051 Model Poisoning (Supply Chain) (securing external service connections)"
                   ]
                 },
                 {
@@ -19746,7 +19866,9 @@
                 "AML.T0034 Cost Harvesting",
                 "AML.T0040 AI Model Inference API Access",
                 "AML.T0046 Spamming AI System with Chaff Data",
-                "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (rate-limiting slows extraction)"
+                "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (rate-limiting slows extraction)",
+                "AML.T0042 Verify Attack (rate limiting and throttling disrupt attacker feedback loops)",
+                "AML.T0096 AI Service API (rate limiting and throttling restrict C2 communication throughput)"
               ]
             },
             {
@@ -19785,8 +19907,8 @@
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.01 Availability Violations",
                 "NISTAML.014 Energy-latency",
+                "NISTAML.018 Prompt Injection (rate limiting contains prompt injection abuse)",
                 "NISTAML.031 Model Extraction (rate limiting slows extraction)",
                 "NISTAML.039 Compromising connected resources (quarantine limits lateral impact)"
               ]
@@ -19869,7 +19991,9 @@
                 "AML.T0051 LLM Prompt Injection",
                 "AML.T0061 LLM Prompt Self-Replication",
                 "AML.T0070 RAG Poisoning",
-                "AML.T0080.000 AI Agent Context Poisoning: Memory"
+                "AML.T0080.000 AI Agent Context Poisoning: Memory",
+                "AML.T0099 AI Agent Tool Data Poisoning (memory isolation prevents poisoned tool data from persisting across sessions)",
+                "AML.T0108 AI Agent (C2)"
               ]
             },
             {
@@ -20062,7 +20186,8 @@
                   "framework": "MITRE ATLAS",
                   "items": [
                     "AML.T0070 RAG Poisoning",
-                    "AML.T0080.000 AI Agent Context Poisoning: Memory"
+                    "AML.T0080.000 AI Agent Context Poisoning: Memory",
+                    "AML.T0064 Gather RAG-Indexed Targets (tenant partitioning limits RAG index reconnaissance scope)"
                   ]
                 },
                 {
@@ -20401,7 +20526,9 @@
               "items": [
                 "AML.T0048 External Harms",
                 "AML.T0029 Denial of AI Service",
-                "AML.T0034 Cost Harvesting (kill-switch stops runaway cost)"
+                "AML.T0034 Cost Harvesting (kill-switch stops runaway cost)",
+                "AML.T0103 Deploy AI Agent",
+                "AML.T0108 AI Agent (C2)"
               ]
             },
             {
@@ -20440,8 +20567,9 @@
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.04 Misuse Violations",
-                "NISTAML.01 Availability Violations",
+                "NISTAML.018 Prompt Injection (misuse via prompt-based safety bypass)",
+                "NISTAML.014 Energy-latency (kill-switch halts runaway resource consumption)",
+                "NISTAML.027 Misaligned Outputs (kill-switch halts actively harmful outputs)",
                 "NISTAML.039 Compromising connected resources (kill-switch limits blast radius)"
               ]
             },
@@ -20639,7 +20767,8 @@
               "framework": "MITRE ATLAS",
               "items": [
                 "AML.T0025 Exfiltration via Cyber Means (from client device)",
-                "AML.T0037 Data from Local System (stealing browser/app state, session tokens, local storage)"
+                "AML.T0037 Data from Local System (stealing browser/app state, session tokens, local storage)",
+                "AML.T0011.003 User Execution: Malicious Link"
               ]
             },
             {
@@ -20676,7 +20805,7 @@
               "items": [
                 "NISTAML.039 Compromising connected resources",
                 "NISTAML.038 Data Extraction",
-                "NISTAML.05 Supply Chain Attacks (containing malicious downloaded model)"
+                "NISTAML.051 Model Poisoning (Supply Chain) (containing malicious downloaded model)"
               ]
             },
             {
@@ -20918,8 +21047,9 @@
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
                 "NISTAML.031 Model Extraction (canary data traces stolen training data)",
-                "NISTAML.05 Supply Chain Attacks (decoy artifacts detect supply chain compromise)",
-                "NISTAML.03 Privacy Compromises (canary tokens detect privacy attacks)"
+                "NISTAML.051 Model Poisoning (Supply Chain) (decoy artifacts detect supply chain compromise)",
+                "NISTAML.037 Training Data Attacks (canary tokens detect training data extraction)",
+                "NISTAML.033 Membership Inference (canary data reveals unauthorized model training on stolen data)"
               ]
             },
             {
@@ -21343,7 +21473,8 @@
                 "AML.T0056 Extract LLM System Prompt (deceptive identity prevents accurate prompt extraction)",
                 "AML.T0013 Discover AI Model Ontology (misleading responses frustrate ontology discovery)",
                 "AML.T0014 Discover AI Model Family (deceptive identity hides model family)",
-                "AML.T0006 Active Scanning (honeypot endpoints attract and log scanning)"
+                "AML.T0006 Active Scanning (honeypot endpoints attract and log scanning)",
+                "AML.T0064 Gather RAG-Indexed Targets (deceptive content misleads RAG index reconnaissance)"
               ]
             },
             {
@@ -21375,7 +21506,8 @@
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.031 Model Extraction (deceptive system info misleads extraction approaches)"
+                "NISTAML.031 Model Extraction (deceptive system info misleads extraction approaches)",
+                "NISTAML.035 Prompt Extraction (deceptive identity prevents accurate system prompt extraction)"
               ]
             },
             {
@@ -21480,7 +21612,7 @@
               "items": [
                 "NISTAML.032 Reconstruction (DP training prevents reconstruction of training data)",
                 "NISTAML.033 Membership Inference (noise injection prevents membership inference)",
-                "NISTAML.03 Privacy Compromises"
+                "NISTAML.034 Property Inference (noise and DP prevent inferring training data properties)"
               ]
             },
             {
@@ -21505,7 +21637,7 @@
           ],
           "toolsCommercial": [
             "Privacy-Enhancing Technology Platforms (Gretel.ai, Tonic.ai, SarUS, Immuta)",
-            "AI Security Platforms (Protect AI, HiddenLayer, Robust Intelligence)",
+            "AI Security Platforms (Protect AI, HiddenLayer, Cisco AI Defense (formerly Robust Intelligence))",
             "MLOps Platforms (Amazon SageMaker, Google Vertex AI, Databricks)"
           ],
           "subTechniques": [],
@@ -21683,7 +21815,10 @@
               "framework": "MITRE ATLAS",
               "items": [
                 "AML.T0012 Valid Accounts",
-                "AML.T0055 Unsecured Credentials"
+                "AML.T0055 Unsecured Credentials",
+                "AML.T0090 OS Credential Dumping",
+                "AML.T0098 AI Agent Tool Credential Harvesting",
+                "AML.T0106 Exploitation for Credential Access"
               ]
             },
             {
@@ -21852,7 +21987,9 @@
                 {
                   "framework": "MITRE ATLAS",
                   "items": [
-                    "AML.T0012 Valid Accounts (by immediately disabling the account)"
+                    "AML.T0012 Valid Accounts (by immediately disabling the account)",
+                    "AML.T0090 OS Credential Dumping (by immediately invalidating dumped credentials)",
+                    "AML.T0106 Exploitation for Credential Access"
                   ]
                 },
                 {
@@ -22075,7 +22212,8 @@
                 "AML.T0051 LLM Prompt Injection",
                 "AML.T0054 LLM Jailbreak (terminates manipulated session)",
                 "AML.T0072 Reverse Shell (terminating reverse shell connections)",
-                "AML.T0080 AI Agent Context Poisoning (terminating poisoned agent sessions)"
+                "AML.T0080 AI Agent Context Poisoning (terminating poisoned agent sessions)",
+                "AML.T0108 AI Agent (C2)"
               ]
             },
             {
@@ -22195,7 +22333,8 @@
                 "AML.T0020 Poison Training Data",
                 "AML.T0059 Erode Dataset Integrity",
                 "AML.T0070 RAG Poisoning",
-                "AML.T0071 False RAG Entry Injection"
+                "AML.T0071 False RAG Entry Injection",
+                "AML.T0104 Publish Poisoned AI Agent Tool"
               ]
             },
             {
@@ -22279,8 +22418,7 @@
                 "HiddenLayer MLSec Platform",
                 "Adversa.AI",
                 "Bosch AIShield",
-                "CognitiveScale (Cortex Certifai)",
-                "IBM Watson OpenScale"
+                "IBM watsonx.governance"
               ],
               "defendsAgainst": [
                 {
@@ -22588,7 +22726,6 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.05 Supply Chain Attacks",
                     "NISTAML.051 Model Poisoning (Supply Chain)"
                   ]
                 },
@@ -22787,7 +22924,10 @@
                 "AML.T0010.001 AI Supply Chain Compromise: AI Software (patching vulnerable frameworks)",
                 "AML.T0011.001 User Execution: Malicious Package (patching exploited packages)",
                 "AML.T0072 Reverse Shell (patching exploitation vectors)",
-                "AML.T0031 Erode AI Model Integrity (patching vulnerabilities enabling integrity erosion)"
+                "AML.T0031 Erode AI Model Integrity (patching vulnerabilities enabling integrity erosion)",
+                "AML.T0105 Escape to Host",
+                "AML.T0106 Exploitation for Credential Access",
+                "AML.T0107 Exploitation for Defense Evasion"
               ]
             },
             {
@@ -22823,7 +22963,6 @@
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.05 Supply Chain Attacks",
                 "NISTAML.051 Model Poisoning (Supply Chain)"
               ]
             },
@@ -22904,7 +23043,8 @@
                 "AML.T0051 LLM Prompt Injection (purging injected session state)",
                 "AML.T0054 LLM Jailbreak (terminating jailbroken sessions)",
                 "AML.T0080.000 AI Agent Context Poisoning: Memory (purging poisoned agent memory)",
-                "AML.T0080.001 AI Agent Context Poisoning: Thread (purging poisoned conversation threads)"
+                "AML.T0080.001 AI Agent Context Poisoning: Thread (purging poisoned conversation threads)",
+                "AML.T0108 AI Agent (C2)"
               ]
             },
             {
@@ -23232,7 +23372,7 @@
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
                     "NISTAML.031 Model Extraction",
-                    "NISTAML.05 Supply Chain Attacks"
+                    "NISTAML.051 Model Poisoning (Supply Chain) (secure transfer prevents supply chain compromise)"
                   ]
                 },
                 {
@@ -23368,7 +23508,6 @@
                 "NISTAML.023 Backdoor Poisoning",
                 "NISTAML.024 Targeted Poisoning",
                 "NISTAML.026 Model Poisoning (Integrity)",
-                "NISTAML.05 Supply Chain Attacks",
                 "NISTAML.051 Model Poisoning (Supply Chain)"
               ]
             },
@@ -23456,7 +23595,6 @@
                     "NISTAML.011 Model Poisoning (Availability)",
                     "NISTAML.023 Backdoor Poisoning",
                     "NISTAML.026 Model Poisoning (Integrity)",
-                    "NISTAML.05 Supply Chain Attacks",
                     "NISTAML.051 Model Poisoning (Supply Chain)"
                   ]
                 },
@@ -23958,7 +24096,7 @@
                 "NISTAML.013 Data Poisoning (hardening institutionalizes data sanitization policies)",
                 "NISTAML.018 Prompt Injection (hardening creates permanent prompt defense rules)",
                 "NISTAML.023 Backdoor Poisoning (PIR creates backdoor detection regression tests)",
-                "NISTAML.05 Supply Chain Attacks (hardening updates supply chain provenance requirements)"
+                "NISTAML.051 Model Poisoning (Supply Chain) (hardening updates supply chain provenance requirements)"
               ]
             },
             {

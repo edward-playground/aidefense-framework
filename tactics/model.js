@@ -47,7 +47,7 @@ export const modelTactic = {
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
-                        "NISTAML.05 Supply Chain Attacks"
+                        "NISTAML.051 Model Poisoning (Supply Chain)"
                     ]
                 },
                 {
@@ -136,7 +136,7 @@ export const modelTactic = {
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
-                                "NISTAML.05 Supply Chain Attacks"
+                                "NISTAML.051 Model Poisoning (Supply Chain)"
                             ]
                         },
                         {
@@ -223,7 +223,7 @@ export const modelTactic = {
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
-                                "NISTAML.05 Supply Chain Attacks"
+                                "NISTAML.051 Model Poisoning (Supply Chain)"
                             ]
                         },
                         {
@@ -293,7 +293,7 @@ export const modelTactic = {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
                         "NISTAML.013 Data Poisoning",
-                        "NISTAML.05 Supply Chain Attacks",
+                        "NISTAML.051 Model Poisoning (Supply Chain)",
                         "NISTAML.037 Training Data Attacks",
                         "NISTAML.023 Backdoor Poisoning"
                     ]
@@ -381,7 +381,7 @@ export const modelTactic = {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
                                 "NISTAML.013 Data Poisoning",
-                                "NISTAML.05 Supply Chain Attacks",
+                                "NISTAML.051 Model Poisoning (Supply Chain)",
                                 "NISTAML.037 Training Data Attacks"
                             ]
                         },
@@ -463,7 +463,6 @@ export const modelTactic = {
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
-                                "NISTAML.05 Supply Chain Attacks",
                                 "NISTAML.051 Model Poisoning (Supply Chain)",
                                 "NISTAML.023 Backdoor Poisoning"
                             ]
@@ -558,7 +557,7 @@ export const modelTactic = {
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
-                                "NISTAML.05 Supply Chain Attacks",
+                                "NISTAML.051 Model Poisoning (Supply Chain)",
                                 "NISTAML.013 Data Poisoning",
                                 "NISTAML.024 Targeted Poisoning",
                                 "NISTAML.037 Training Data Attacks",
@@ -643,7 +642,7 @@ export const modelTactic = {
                             "items": [
                                 "NISTAML.013 Data Poisoning",
                                 "NISTAML.024 Targeted Poisoning",
-                                "NISTAML.05 Supply Chain Attacks (when KB ingestion relies on third-party pipelines/connectors)",
+                                "NISTAML.051 Model Poisoning (Supply Chain) (when KB ingestion relies on third-party pipelines/connectors)",
                                 "NISTAML.015 Indirect Prompt Injection",
                             ]
                         },
@@ -719,7 +718,6 @@ export const modelTactic = {
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
-                        "NISTAML.02 Integrity Violations",
                         "NISTAML.022 Evasion",
                         "NISTAML.025 Black-box Evasion",
                         "NISTAML.027 Misaligned Outputs",
@@ -771,7 +769,7 @@ export const modelTactic = {
                         "Google Vertex AI Model Registry",
                         "Amazon SageMaker Model Registry",
                         "Databricks Unity Catalog",
-                        "AI Governance Platforms (IBM Watson OpenScale, Fiddler AI, Arize AI)",
+                        "AI Governance Platforms (IBM watsonx.governance, Fiddler AI, Arize AI)",
                         "Data Cataloging Platforms (Alation, Collibra)"
                     ],
                     "defendsAgainst": [
@@ -817,7 +815,7 @@ export const modelTactic = {
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
-                                "NISTAML.05 Supply Chain Attacks",
+                                "NISTAML.051 Model Poisoning (Supply Chain)",
                                 "NISTAML.037 Training Data Attacks"
                             ]
                         },
@@ -906,7 +904,7 @@ export const modelTactic = {
                         {
                             "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
-                                "Partially mitigates ASI08:2026 Cascading Failures (early detection of latency/performance regressions)"
+                                "ASI08:2026 Cascading Failures (partially mitigates; early detection of latency/performance regressions)"
                             ]
                         },
                         {
@@ -962,7 +960,7 @@ export const modelTactic = {
                     "toolsCommercial": [
                         "AI Observability Platforms (Fiddler, Arize AI, WhyLabs)",
                         "Cloud Provider XAI tools (Google Vertex AI Explainable AI, Amazon SageMaker Clarify, Azure Machine Learning Interpretability)",
-                        "AI Governance Platforms (IBM Watson OpenScale)"
+                        "AI Governance Platforms (IBM watsonx.governance)"
                     ],
                     "defendsAgainst": [
                         {
@@ -1056,7 +1054,7 @@ export const modelTactic = {
                     "toolsCommercial": [
                         "Cloud Provider KMS (AWS KMS, Azure Key Vault, Google Cloud KMS)",
                         "Code Signing Services (DigiCert, GlobalSign)",
-                        "AI Safety & Governance Platforms (Lasso Security, Protect AI Guardian, CalypsoAI Validator)"
+                        "AI Safety & Governance Platforms (Lasso Security, Protect AI Guardian, CalypsoAI Moderator)"
                     ],
                     "defendsAgainst": [
                         {
@@ -1099,7 +1097,7 @@ export const modelTactic = {
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
-                                "NISTAML.04 Misuse Violations",
+                                "NISTAML.018 Prompt Injection (misuse via safety bypass)",
                                 "NISTAML.027 Misaligned Outputs",
                                 "NISTAML.039 Compromising connected resources"
                             ]
@@ -1286,8 +1284,7 @@ export const modelTactic = {
                                 "NISTAML.013 Data Poisoning",
                                 "NISTAML.022 Evasion",
                                 "NISTAML.025 Black-box Evasion",
-                                "NISTAML.024 Targeted Poisoning",
-                                "NISTAML.02 Integrity Violations"
+                                "NISTAML.024 Targeted Poisoning"
                             ]
                         },
                         {
@@ -1376,15 +1373,14 @@ export const modelTactic = {
                                 "NISTAML.013 Data Poisoning",
                                 "NISTAML.021 Clean-label Backdoor",
                                 "NISTAML.023 Backdoor Poisoning",
-                                "NISTAML.024 Clean-label Poisoning",
-                                "NISTAML.030 Model Poisoning (Integrity)"
+                                "NISTAML.024 Targeted Poisoning",
+                                "NISTAML.026 Model Poisoning (Integrity)"
                             ]
                         },
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
                                 "AITech-6.1 Training Data Poisoning",
-                                "AITech-6.2 Model Poisoning",
                                 "AITech-7.3 Data Source Abuse and Manipulation",
                                 "AITech-9.2 Detection Evasion",
                                 "AISubtech-9.2.2 Backdoors and Trojans"
@@ -1445,7 +1441,6 @@ export const modelTactic = {
                 "MAESTRO framework documentation",
                 "OWASP Top 10 checklists",
                 "OWASP Threat Dragon, Microsoft Threat Modeling Tool",
-                "Academic frameworks (ATM for LLMs, ATFAA)",
                 "NIST AI RMF and Playbook"
             ],
             "toolsCommercial": [
@@ -1503,10 +1498,13 @@ export const modelTactic = {
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
-                        "NISTAML.01 Availability Violations (threat modeling assesses availability risks)",
-                        "NISTAML.02 Integrity Violations (threat modeling assesses integrity risks)",
-                        "NISTAML.03 Privacy Compromises (threat modeling assesses privacy risks)",
-                        "NISTAML.05 Supply Chain Attacks (threat modeling maps supply chain attack surface)"
+                        "NISTAML.013 Data Poisoning (threat modeling assesses data poisoning risks)",
+                        "NISTAML.018 Prompt Injection (threat modeling assesses prompt injection surfaces)",
+                        "NISTAML.015 Indirect Prompt Injection (threat modeling assesses indirect injection channels)",
+                        "NISTAML.022 Evasion (threat modeling assesses evasion risks)",
+                        "NISTAML.023 Backdoor Poisoning (threat modeling assesses backdoor risks)",
+                        "NISTAML.031 Model Extraction (threat modeling assesses privacy/extraction risks)",
+                        "NISTAML.051 Model Poisoning (Supply Chain) (threat modeling maps supply chain attack surface)"
                     ]
                 },
                 {
@@ -1575,9 +1573,8 @@ export const modelTactic = {
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
-                        "NISTAML.05 Supply Chain Attacks",
                         "NISTAML.051 Model Poisoning (Supply Chain)",
-                        "Partially mitigates NISTAML.039 Compromising Connected Resources",
+                        "NISTAML.039 Compromising connected resources (hardened configs reduce exposed attack surface on connected systems)",
                         "NISTAML.014 Energy-latency"
                     ]
                 },
@@ -1669,7 +1666,7 @@ export const modelTactic = {
                         {
                             "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
-                                "Partially mitigates ASI04:2026 Agentic Supply Chain Vulnerabilities",
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities (partial mitigation)",
                                 "ASI03:2026 Identity and Privilege Abuse (partially mitigated via hardened defaults / least privilege)"
                             ]
                         },
@@ -1677,8 +1674,7 @@ export const modelTactic = {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
                                 "NISTAML.039 Compromising connected resources",
-                                "NISTAML.05 Supply Chain Attacks",
-                                "Partially mitigates NISTAML.051 Model Poisoning (Supply Chain)"
+                                "NISTAML.051 Model Poisoning (Supply Chain) (partially mitigated)"
                             ]
                         },
                         {
@@ -1758,20 +1754,19 @@ export const modelTactic = {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
                                 "ML06:2023 AI Supply Chain Attacks",
-                                "Partially mitigates ML05:2023 Model Theft (via secure storage configuration policies)"
+                                "ML05:2023 Model Theft (partially mitigates via secure storage configuration policies)"
                             ]
                         },
                         {
                             "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
-                                "Partially mitigates ASI04:2026 Agentic Supply Chain Vulnerabilities",
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities (partial mitigation)",
                                 "ASI03:2026 Identity and Privilege Abuse (partially mitigated via posture SLOs and access-control baselines)"
                             ]
                         },
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
-                                "NISTAML.05 Supply Chain Attacks",
                                 "NISTAML.039 Compromising connected resources",
                                 "NISTAML.051 Model Poisoning (Supply Chain) (partially mitigated via signed baseline manifests and promotion verification)"
                             ]
@@ -1856,7 +1851,7 @@ export const modelTactic = {
                         "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
                         "AITech-14.2 Abuse of Delegated Authority",
                         "AISubtech-14.2.1 Permission Escalation via Delegation",
-                        "AITech-15.1: Harmful Content"
+                        "AITech-15.1 Harmful Content"
                     ]
                 }
             ],
@@ -2146,7 +2141,7 @@ export const modelTactic = {
                 "Testing frameworks (pytest)"
             ],
             "toolsCommercial": [
-                "AI Governance Platforms (Credo AI, OneTrust AI Governance, IBM Watson OpenScale)",
+                "AI Governance Platforms (Credo AI, OneTrust AI Governance, IBM watsonx.governance)",
                 "Bias detection & mitigation tools (Fiddler AI, Arize AI, Arthur)",
                 "GRC (Governance, Risk, and Compliance) platforms"
             ],
@@ -2201,9 +2196,8 @@ export const modelTactic = {
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
-                        "NISTAML.04 Misuse Violations (addressed by intended/forbidden uses + automated refusal/conformance tests)",
+                        "NISTAML.018 Prompt Injection (misuse via safety bypass; conformance tests validate refusal behavior)",
                         "NISTAML.015 Indirect Prompt Injection (validation suites probe indirect instruction channels (docs/RAG))",
-                        "NISTAML.018 Prompt Injection (conformance tests validate refusal behavior against prompt manipulation)",
                         "NISTAML.027 Misaligned Outputs (safety boundary policies + red-teaming detect policy-violating outputs pre-release)",
                         "NISTAML.036 Leaking information from user interactions (output rules + redaction tests reduce leakage in responses)",
                         "NISTAML.039 Compromising connected resources (operational boundaries + human oversight reduce harmful downstream actions)"
@@ -2262,8 +2256,8 @@ export const modelTactic = {
                 "promptfoo"
             ],
             "toolsCommercial": [
-                "Robust Intelligence",
-                "Lakera Red Teaming",
+                "Cisco AI Defense (formerly Robust Intelligence)",
+                "Lakera Red",
                 "Credo AI"
             ],
             "defendsAgainst": [
@@ -2314,8 +2308,8 @@ export const modelTactic = {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
                         "NISTAML.018 Prompt Injection",
-                        "NISTAML.04 Misuse Violations",
-                        "NISTAML.039 Compromising Connected Resources",
+                        "NISTAML.015 Indirect Prompt Injection (benchmarks cover indirect injection scenarios)",
+                        "NISTAML.039 Compromising connected resources",
                         "NISTAML.027 Misaligned Outputs",
                         "NISTAML.022 Evasion"
                     ]
@@ -2324,15 +2318,15 @@ export const modelTactic = {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
                         "AITech-1.1 Direct Prompt Injection",
-                        "AISubtech-1.1.1 Instruction Manipulation",
-                        "AISubtech-1.1.2 Obfuscation",
+                        "AISubtech-1.1.1 Instruction Manipulation (Direct Prompt Injection)",
+                        "AISubtech-1.1.2 Obfuscation (Direct Prompt Injection)",
                         "AITech-1.2 Indirect Prompt Injection",
-                        "AISubtech-1.2.1 Instruction Manipulation",
-                        "AISubtech-1.2.2 Obfuscation",
+                        "AISubtech-1.2.1 Instruction Manipulation (Indirect Prompt Injection)",
+                        "AISubtech-1.2.2 Obfuscation (Indirect Prompt Injection)",
                         "AITech-2.1 Jailbreak",
-                        "AISubtech-2.1.2 Obfuscation",
-                        "AISubtech-2.1.3 Semantic Manipulation",
-                        "AISubtech-2.1.4 Token Exploitation",
+                        "AISubtech-2.1.2 Obfuscation (Jailbreak)",
+                        "AISubtech-2.1.3 Semantic Manipulation (Jailbreak)",
+                        "AISubtech-2.1.4 Token Exploitation (Jailbreak)",
                         "AITech-12.1 Tool Exploitation",
                         "AISubtech-12.1.1 Parameter Manipulation",
                         "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
@@ -2376,7 +2370,8 @@ export const modelTactic = {
                     "items": [
                         "AML.T0048 External Harms",
                         "AML.T0053 AI Agent Tool Invocation (by restricting which tools each autonomy tier can invoke via OPA policy enforcement)",
-                        "AML.T0101 Data Destruction via AI Agent Tool Invocation (by blocking write/destructive tool access for lower autonomy tiers)"
+                        "AML.T0101 Data Destruction via AI Agent Tool Invocation (by blocking write/destructive tool access for lower autonomy tiers)",
+                        "AML.T0103 Deploy AI Agent"
                     ]
                 },
                 {
@@ -2405,7 +2400,7 @@ export const modelTactic = {
                     "framework": "OWASP Agentic AI Top 10 2026",
                     "items": [
                         "ASI02:2026 Tool Misuse and Exploitation (by enforcing per-tier tool restrictions that limit the tool misuse attack surface)",
-                        "ASI01:2026 Agent Goal Hijack (SUPPORTING—bidirectional mapping exists)",
+                        "ASI01:2026 Agent Goal Hijack (autonomy level governance constrains scope of goal hijack impact)",
                         "ASI03:2026 Identity and Privilege Abuse (by defining explicit privilege boundaries per autonomy level, blocking scope escalation at admission)",
                         "ASI08:2026 Cascading Failures (by requiring mandatory HITL for lower tiers, breaking autonomous fault propagation chains)"
                     ]
@@ -2413,8 +2408,8 @@ export const modelTactic = {
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
-                        "NISTAML.039 Compromising Connected Resources",
-                        "NISTAML.04 Misuse Violations"
+                        "NISTAML.039 Compromising connected resources",
+                        "NISTAML.018 Prompt Injection (misuse via safety bypass; autonomy governance constrains impact)"
                     ]
                 },
                 {

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en" data-theme="dark">
 
 <head>
     <!-- Google tag (gtag.js) -->
@@ -13,57 +13,101 @@
     </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AIDEFEND Framework</title>
+    <title>AIDEFEND Framework — AI Security Defense Knowledge Base</title>
+    <meta name="description" content="AIDEFEND is a practical knowledge base mapping 219 AI security defense techniques across 7 major frameworks including MITRE ATLAS, OWASP LLM/ML/Agentic Top 10, MAESTRO, NIST Adversarial ML, and Cisco AI Security & Safety.">
+    <meta name="keywords" content="AI security, LLM security, machine learning security, MITRE ATLAS, OWASP LLM Top 10, OWASP ML Top 10, OWASP Agentic AI Top 10, MAESTRO CSA, NIST adversarial machine learning, Cisco AI security & safety framework, AI defense techniques, AI threat modeling, agentic AI security, prompt injection defense, AI supply chain security, adversarial ML, AI red team, AI blue team">
+    <meta name="author" content="AIDEFEND">
+    <meta name="robots" content="index, follow">
+    <!-- Open Graph / Social Sharing -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="AIDEFEND Framework — AI Security Defense Knowledge Base">
+    <meta property="og:description" content="219 defense techniques mapped across MITRE ATLAS, OWASP, MAESTRO, NIST & Cisco frameworks. Organized by tactics, pillars, phases, and external frameworks for AI security professionals.">
+    <meta property="og:url" content="https://aidefend.net/">
+    <meta property="og:site_name" content="AIDEFEND Framework">
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="AIDEFEND Framework — AI Security Defense Knowledge Base">
+    <meta name="twitter:description" content="219 defense techniques mapped across MITRE ATLAS, OWASP, MAESTRO, NIST & Cisco frameworks for AI security professionals.">
+    <link rel="canonical" href="https://aidefend.net/">
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "AIDEFEND Framework",
+        "alternateName": "AIDEFEND",
+        "description": "A practical knowledge base for AI security defenses, mapping 219 defense techniques across MITRE ATLAS, OWASP LLM/ML/Agentic Top 10, MAESTRO, NIST Adversarial ML, and Cisco AI Security & Safety frameworks.",
+        "url": "https://aidefend.net/",
+        "applicationCategory": "SecurityApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires a modern web browser with JavaScript enabled",
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "author": {
+            "@type": "Organization",
+            "name": "AIDEFEND"
+        },
+        "about": {
+            "@type": "Thing",
+            "name": "AI Security",
+            "description": "Defense techniques for securing artificial intelligence systems against adversarial threats"
+        }
+    }
+    </script>
     <script src="./js/tailwindcss.js"></script>
     <script src="./js/purify.min.js"></script>
     <style>
         :root {
-            /* Light Theme */
-            --bg-color: #f0f2f5;
-            --text-color: #37474f;
-            --text-secondary-color: #607d8b;
-            --header-bg: #ffffff;
-            --header-border: #e0e0e0;
-            --column-bg: #ffffff;
-            --column-border: #e0e0e0;
-            --column-header-text: #455a64;
+            /* Light Theme — Rose Gold */
+            --font-family: 'Inter', sans-serif;
+            --bg-color: #f0e8e5;
+            --text-color: #3b3233;
+            --text-secondary-color: #7a6b68;
+            --header-bg: #f8f3f1;
+            --header-border: #ddd4d0;
+            --column-bg: #f8f3f1;
+            --column-border: #ddd4d0;
+            --column-header-text: #4a3b38;
             --column-header-hover-text: #1976d2;
-            --technique-item-bg: #ffffff;
-            --technique-item-border: #e8eaf6;
-            --technique-item-text: #2196f3;
-            --technique-item-hover-bg: #e3f2fd;
+            --technique-item-bg: #f8f3f1;
+            --technique-item-border: #e5dbd6;
+            --technique-item-text: #1976d2;
+            --technique-item-hover-bg: #ebe1dc;
             --technique-item-hover-text: #1565c0;
-            --technique-item-highlight-bg: #bbdefb;
+            --technique-item-highlight-bg: #d4c5bf;
             --technique-item-highlight-text: #0d47a1;
-            --technique-id-text: #78909c;
-            --subtechnique-bg: #fafafa;
-            --modal-content-bg: #ffffff;
-            --modal-close-btn-text: #757575;
-            --modal-close-btn-hover-text: #212121;
-            --search-bg: #eceff1;
-            --search-border: #b0bec5;
+            --technique-id-text: #8a7b76;
+            --subtechnique-bg: #f5f0ee;
+            --modal-content-bg: #f8f3f1;
+            --modal-close-btn-text: #7a6b68;
+            --modal-close-btn-hover-text: #2a2223;
+            --search-bg: #ebe4e0;
+            --search-border: #bdb2ac;
             --search-focus-ring: #2196f3;
-            --scrollbar-track: #e0e0e0;
-            --scrollbar-thumb: #90a4ae;
-            --scrollbar-thumb-hover: #78909c;
-            --icon-fill: #607d8b;
+            --scrollbar-track: #ddd4d0;
+            --scrollbar-thumb: #a09290;
+            --scrollbar-thumb-hover: #8a7b76;
+            --icon-fill: #7a6b68;
             --icon-hover-fill: #2196f3;
             --link-color: #1976d2;
             --link-hover-color: #0d47a1;
             --shadow-umbra: rgba(0, 0, 0, 0.15);
             --shadow-penumbra: rgba(0, 0, 0, 0.1);
             --shadow-ambient: rgba(0, 0, 0, 0.08);
-            --footer-bg: #e0e0e0;
-            --footer-text: #757575;
-            --footer-border: #c0c0c0;
-            --view-switcher-bg: #e8eaf6;
-            --view-switcher-btn-bg: #ffffff;
-            --view-switcher-btn-text: #546e7a;
+            --footer-bg: #ddd4d0;
+            --footer-text: #7a6b68;
+            --footer-border: #c5bab5;
+            --view-switcher-bg: #e5dbd6;
+            --view-switcher-btn-bg: #f8f3f1;
+            --view-switcher-btn-text: #5a4b48;
             --view-switcher-btn-active-bg: #3f51b5;
             --view-switcher-btn-active-text: #ffffff;
         }
 
-        html.dark {
+        html[data-theme="dark"] {
             /* Dark Theme */
             --bg-color: #1a1a1a;
             --text-color: #e0e0e0;
@@ -109,12 +153,132 @@
             --view-switcher-btn-active-text: #121212;
         }
 
+        html[data-theme="retro"] {
+            /* Retro Terminal — Phosphor Green on Black */
+            --font-family: 'Courier New', Consolas, 'Liberation Mono', monospace;
+            --bg-color: #0a0a0a;
+            --text-color: #00ff41;
+            --text-secondary-color: #00cc33;
+            --header-bg: #0f0f0f;
+            --header-border: #003300;
+            --column-bg: #0f0f0f;
+            --column-border: #003300;
+            --column-header-text: #00ff41;
+            --column-header-hover-text: #66ff88;
+            --technique-item-bg: #111111;
+            --technique-item-border: #003300;
+            --technique-item-text: #00ff41;
+            --technique-item-hover-bg: #0a1a0a;
+            --technique-item-hover-text: #66ff88;
+            --technique-item-highlight-bg: #0a2a0a;
+            --technique-item-highlight-text: #aaffaa;
+            --technique-id-text: #00aa2a;
+            --subtechnique-bg: #0d0d0d;
+            --modal-content-bg: #0f0f0f;
+            --modal-close-btn-text: #00aa2a;
+            --modal-close-btn-hover-text: #00ff41;
+            --search-bg: #111111;
+            --search-border: #004400;
+            --search-focus-ring: #00ff41;
+            --scrollbar-track: #0a0a0a;
+            --scrollbar-thumb: #004400;
+            --scrollbar-thumb-hover: #006600;
+            --icon-fill: #00cc33;
+            --icon-hover-fill: #00ff41;
+            --link-color: #33ff66;
+            --link-hover-color: #88ffaa;
+            --shadow-umbra: rgba(0, 255, 65, 0.1);
+            --shadow-penumbra: rgba(0, 255, 65, 0.06);
+            --shadow-ambient: rgba(0, 255, 65, 0.04);
+            --footer-bg: #0d0d0d;
+            --footer-text: #00aa2a;
+            --footer-border: #003300;
+            --view-switcher-bg: #111111;
+            --view-switcher-btn-bg: #1a1a1a;
+            --view-switcher-btn-text: #00cc33;
+            --view-switcher-btn-active-bg: #00ff41;
+            --view-switcher-btn-active-text: #0a0a0a;
+        }
+
+        html[data-theme="highcontrast"] {
+            /* High Contrast — Material Design principles:
+               - Surface hierarchy via subtle gray levels
+               - Shadows removed (invisible on black)
+               - Yellow #ffd700 for interactive elements (15.4:1 on black)
+               - White for body text (21:1 on black)
+               - Structural borders use medium gray */
+            --bg-color: #000000;
+            --text-color: #ffffff;
+            --text-secondary-color: #c8c8c8;
+            --header-bg: #0d0d0d;
+            --header-border: #555555;
+            --column-bg: #0d0d0d;
+            --column-border: #555555;
+            --column-header-text: #ffffff;
+            --column-header-hover-text: #ffd700;
+            --technique-item-bg: #1a1a1a;
+            --technique-item-border: #666666;
+            --technique-item-text: #ffd700;
+            --technique-item-hover-bg: #262626;
+            --technique-item-hover-text: #ffea00;
+            --technique-item-highlight-bg: #2a2500;
+            --technique-item-highlight-text: #ffff66;
+            --technique-id-text: #b0b0b0;
+            --subtechnique-bg: #121212;
+            --modal-content-bg: #0d0d0d;
+            --modal-close-btn-text: #c8c8c8;
+            --modal-close-btn-hover-text: #ffd700;
+            --search-bg: #1a1a1a;
+            --search-border: #666666;
+            --search-focus-ring: #ffd700;
+            --scrollbar-track: #0d0d0d;
+            --scrollbar-thumb: #555555;
+            --scrollbar-thumb-hover: #888888;
+            --icon-fill: #c8c8c8;
+            --icon-hover-fill: #ffd700;
+            --link-color: #ffd700;
+            --link-hover-color: #ffea00;
+            --shadow-umbra: transparent;
+            --shadow-penumbra: transparent;
+            --shadow-ambient: transparent;
+            --footer-bg: #0d0d0d;
+            --footer-text: #c8c8c8;
+            --footer-border: #555555;
+            --view-switcher-bg: #1a1a1a;
+            --view-switcher-btn-bg: #0d0d0d;
+            --view-switcher-btn-text: #ffffff;
+            --view-switcher-btn-active-bg: #ffd700;
+            --view-switcher-btn-active-text: #000000;
+        }
+
+        /* High Contrast — additional accessibility rules (WCAG 2.1 / Material Design)
+           - 1.4.12 Text Spacing: line-height ≥1.5, letter-spacing ≥0.12em, word-spacing ≥0.16em
+           - 1.4.8 Visual Presentation: large text for readability
+           - 2.4.7 / 2.4.13 Focus Visible: thick, high-contrast focus indicator
+           - 2.5.8 Target Size: ≥44×44px interactive touch targets */
+        html[data-theme="highcontrast"] body {
+            font-size: 110%;
+            line-height: 1.6;
+            letter-spacing: 0.02em;
+            word-spacing: 0.05em;
+        }
+        html[data-theme="highcontrast"] *:focus-visible {
+            outline: 3px solid #ffd700;
+            outline-offset: 2px;
+        }
+        html[data-theme="highcontrast"] button,
+        html[data-theme="highcontrast"] a,
+        html[data-theme="highcontrast"] select,
+        html[data-theme="highcontrast"] input {
+            min-height: 44px;
+        }
+
         html {
             height: 100%;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
+            font-family: var(--font-family);
             background-color: var(--bg-color);
             color: var(--text-color);
             transition: background-color 0.3s ease, color 0.3s ease;
@@ -171,6 +335,25 @@
             transition: background-color 0.3s ease, border-color 0.3s ease;
         }
 
+        #matrixCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            display: none;
+            z-index: 0;
+        }
+
+        html[data-theme="retro"] .header-main {
+            overflow: hidden;
+        }
+
+        html[data-theme="retro"] #matrixCanvas {
+            display: block;
+        }
+
         .header-title {
             font-size: 2rem;
             font-weight: 500;
@@ -179,6 +362,10 @@
 
         .header-subtitle {
             font-size: 0.875rem;
+            color: var(--text-secondary-color);
+        }
+
+        .header-version-text {
             color: var(--text-secondary-color);
         }
 
@@ -240,7 +427,7 @@
             color: var(--icon-hover-fill);
         }
 
-        html.dark .header-button:hover {
+        html:is([data-theme="dark"],[data-theme="retro"],[data-theme="highcontrast"]) .header-button:hover {
             background-color: rgba(255, 255, 255, 0.08);
         }
 
@@ -305,7 +492,6 @@
             margin-bottom: 0.75rem;
         }
 
-        /* --- UI/UX IMPROVEMENT START --- */
         .technique-item {
             display: flex;
             /*justify-content: space-between;*/
@@ -324,8 +510,6 @@
             min-height: 60px;
             /* Ensures consistent height */
         }
-
-        /* --- UI/UX IMPROVEMENT END --- */
 
         .technique-item-content {
             flex-grow: 1;
@@ -381,15 +565,12 @@
             width: 1.25rem;
             height: 1.25rem;
             transition: transform 0.3s ease;
-            /* margin-left: 1rem; */
-            /* This can be removed */
         }
 
         .expand-icon.expanded {
             transform: rotate(45deg);
         }
 
-        /* --- UI/UX IMPROVEMENT START --- */
         .sub-technique-list {
             list-style-type: none;
             padding-left: 1rem;
@@ -404,13 +585,10 @@
             transition: max-height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
         }
 
-        /* --- UI/UX IMPROVEMENT END --- */
-
         .sub-technique-list.expanded {
             max-height: 1000px;
         }
 
-        /* --- UI/UX IMPROVEMENT START --- */
         .subtechnique-item {
             display: block;
             background-color: var(--subtechnique-bg);
@@ -424,8 +602,6 @@
             line-height: 1.4;
             margin-bottom: 0.5rem;
         }
-
-        /* --- UI/UX IMPROVEMENT END --- */
 
         .subtechnique-item:hover {
             background-color: var(--technique-item-hover-bg);
@@ -453,7 +629,7 @@
             transition: opacity 0.2s ease, visibility 0.2s ease;
         }
 
-        html.dark .modal-overlay {
+        html:is([data-theme="dark"],[data-theme="retro"],[data-theme="highcontrast"]) .modal-overlay {
             background-color: rgba(0, 0, 0, 0.7);
         }
 
@@ -493,6 +669,10 @@
             font-weight: 500;
             margin-bottom: 1rem;
             color: var(--column-header-hover-text);
+        }
+
+        .modal-subtitle {
+            padding-right: 5.5rem;
         }
 
         .modal-content h3 {
@@ -591,6 +771,140 @@
 
         .modal-close-button:hover {
             color: var(--modal-close-btn-hover-text);
+        }
+
+        @media (max-width: 480px) {
+            .modal-content {
+                padding: 1.25rem 1rem;
+            }
+            .modal-close-button {
+                top: 0.6rem;
+                right: 0.6rem;
+                font-size: 1.5rem;
+            }
+            .modal-content h2 {
+                font-size: 1.2rem;
+            }
+            .modal-subtitle {
+                padding-right: 4rem;
+            }
+        }
+
+        /* --- Modal header action buttons (copy, link — near close btn) --- */
+        .modal-header-actions {
+            position: absolute;
+            top: 1.15rem;
+            right: 3.2rem;
+            display: flex;
+            gap: 0.15rem;
+            align-items: center;
+            z-index: 1;
+        }
+        .modal-header-actions:empty {
+            display: none;
+        }
+        .copy-btn, .link-btn {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 1.75rem;
+            height: 1.75rem;
+            padding: 0.3rem;
+            border: none;
+            background: transparent;
+            color: var(--text-secondary-color);
+            cursor: pointer;
+            opacity: 0.4;
+            transition: opacity 0.2s ease, color 0.2s ease, background-color 0.15s ease;
+            border-radius: 0.35rem;
+        }
+        .copy-btn:hover, .link-btn:hover {
+            opacity: 1;
+            color: var(--search-focus-ring);
+            background-color: var(--view-switcher-bg);
+        }
+        .copy-btn svg, .link-btn svg {
+            width: 1rem;
+            height: 1rem;
+        }
+        .copy-btn.copied, .link-btn.copied {
+            opacity: 1;
+            color: #4caf50;
+        }
+        @media (max-width: 480px) {
+            .modal-header-actions {
+                top: 0.65rem;
+                right: 2.4rem;
+            }
+            .copy-btn, .link-btn {
+                width: 1.5rem;
+                height: 1.5rem;
+                padding: 0.2rem;
+            }
+            .copy-btn svg, .link-btn svg {
+                width: 0.85rem;
+                height: 0.85rem;
+            }
+        }
+        .copy-toast {
+            position: fixed;
+            z-index: 100000;
+            background: #4caf50;
+            color: #fff;
+            padding: 0.2rem 0.55rem;
+            border-radius: 0.3rem;
+            font-size: 0.65rem;
+            font-weight: 600;
+            white-space: nowrap;
+            pointer-events: none;
+            animation: toastPop 1.5s ease forwards;
+            box-shadow: 0 2px 8px rgba(76,175,80,0.3);
+        }
+        @keyframes toastPop {
+            0% { opacity: 0; transform: translateX(-50%) translateY(3px); }
+            12% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            80% { opacity: 1; transform: translateX(-50%) translateY(0); }
+            100% { opacity: 0; transform: translateX(-50%) translateY(-3px); }
+        }
+        .strategy-accordion-content-inner pre {
+            position: relative;
+        }
+        .code-copy-btn {
+            position: absolute;
+            top: 0.4rem;
+            right: 0.4rem;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0.3rem;
+            border: 1px solid var(--column-border);
+            border-radius: 0.35rem;
+            background-color: var(--column-bg);
+            color: var(--text-secondary-color);
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s ease, background-color 0.15s ease, color 0.15s ease;
+            z-index: 2;
+        }
+        .strategy-accordion-content-inner pre:hover .code-copy-btn {
+            opacity: 0.85;
+        }
+        .code-copy-btn:hover {
+            opacity: 1 !important;
+            background-color: var(--view-switcher-bg);
+        }
+        .code-copy-btn svg {
+            width: 0.75rem;
+            height: 0.75rem;
+        }
+        .code-copy-btn.copied {
+            opacity: 1 !important;
+            color: #4caf50;
+            border-color: #4caf50;
+        }
+        @media (max-width: 768px) {
+            .code-copy-btn { opacity: 0.7; }
         }
 
         /* Framework title styling (MITRE ATLAS, MAESTRO, OWASP, etc.)
@@ -741,7 +1055,7 @@
             line-height: 1.6;
         }
 
-        html.dark .warning-note {
+        html:is([data-theme="dark"],[data-theme="retro"],[data-theme="highcontrast"]) .warning-note {
             background-color: #2c3e50;
             border-left-color: #5dade2;
         }
@@ -759,6 +1073,7 @@
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            flex-wrap: wrap;
         }
 
         .view-by-label {
@@ -797,7 +1112,7 @@
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
         }
 
-        html.dark .view-switcher-btn.active {
+        html:is([data-theme="dark"],[data-theme="retro"],[data-theme="highcontrast"]) .view-switcher-btn.active {
             box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
         }
 
@@ -892,6 +1207,402 @@
                 grid-template-columns: 1fr;
             }
         }
+
+        /* --- Framework View Styles --- */
+        .framework-selector {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .framework-selector-label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--text-secondary-color);
+            white-space: nowrap;
+        }
+
+        .framework-selector select {
+            background-color: var(--view-switcher-btn-bg);
+            color: var(--view-switcher-btn-text);
+            border: 1px solid var(--column-border);
+            border-radius: 0.375rem;
+            padding: 0.5rem 2rem 0.5rem 0.75rem;
+            font-size: 0.875rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23999'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.5rem center;
+            background-size: 1.25rem;
+            max-width: 320px;
+        }
+
+        .framework-selector select:focus {
+            outline: none;
+            border-color: var(--search-focus-ring);
+            box-shadow: 0 0 0 2px var(--search-focus-ring);
+        }
+
+        .framework-selector select:hover {
+            border-color: var(--search-focus-ring);
+        }
+
+        @media (max-width: 640px) {
+            .framework-selector {
+                width: 100%;
+            }
+            .framework-selector select {
+                max-width: 100%;
+                width: 100%;
+            }
+        }
+
+        .fw-page-title {
+            text-align: center;
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--column-header-text);
+            padding: 1.25rem 1rem 0.25rem 1rem;
+            margin: 0 auto;
+            max-width: 1400px;
+            letter-spacing: 0.01em;
+        }
+        .fw-title-link {
+            display: inline-flex;
+            align-items: center;
+            margin-left: 0.5rem;
+            color: var(--text-secondary-color);
+            opacity: 0.5;
+            vertical-align: middle;
+            transition: opacity 0.2s ease, color 0.2s ease;
+        }
+        .fw-title-link:hover {
+            opacity: 1;
+            color: var(--link-color);
+        }
+        .fw-page-brief {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-secondary-color);
+            max-width: 800px;
+            margin: 0.15rem auto 0.5rem auto;
+            padding: 0 1rem;
+            line-height: 1.5;
+        }
+        @media (max-width: 768px) {
+            .fw-page-title { font-size: 1.1rem; padding: 1rem 0.75rem 0.15rem 0.75rem; }
+        }
+        @media (max-width: 480px) {
+            .fw-page-title { font-size: 0.95rem; }
+        }
+
+        .fw-accordion-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 1.0rem 0.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .fw-accordion-section {
+            background-color: var(--column-bg);
+            border-radius: 0.75rem;
+            overflow: hidden;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .fw-accordion-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.75rem 1.25rem;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            user-select: none;
+        }
+
+        .fw-accordion-header:hover {
+            color: var(--column-header-hover-text);
+        }
+
+        .fw-accordion-header-left {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .fw-accordion-header-id {
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--view-switcher-btn-active-text);
+            background-color: var(--view-switcher-btn-active-bg);
+            padding: 0.25rem 0.6rem;
+            border-radius: 0.25rem;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .fw-accordion-header-name {
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: var(--column-header-text);
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .fw-accordion-header:hover .fw-accordion-header-name {
+            color: var(--column-header-hover-text);
+        }
+
+        .fw-accordion-count {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--view-switcher-btn-active-text);
+            background-color: var(--view-switcher-btn-active-bg);
+            padding: 0.15rem 0.5rem;
+            border-radius: 999px;
+            white-space: nowrap;
+            flex-shrink: 0;
+            min-width: 1.5rem;
+            text-align: center;
+        }
+
+        .fw-accordion-chevron {
+            width: 1.25rem;
+            height: 1.25rem;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+            color: var(--text-secondary-color);
+            margin-left: 0.5rem;
+            position: relative;
+        }
+        .fw-accordion-chevron .expand-icon {
+            position: static;
+            transform: none;
+        }
+
+        .fw-accordion-section.expanded .fw-accordion-chevron {
+            transform: rotate(90deg);
+        }
+
+        .fw-accordion-body {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
+        }
+
+        .fw-accordion-body-inner {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            padding: 0 1.25rem 1.25rem 1.25rem;
+            list-style: none;
+            margin: 0;
+        }
+
+        .fw-accordion-body-inner .technique-container {
+            flex: 0 0 calc(25% - 0.375rem);
+            min-width: 180px;
+            margin-bottom: 0;
+        }
+
+        @media (max-width: 1024px) {
+            .fw-accordion-body-inner .technique-container {
+                flex: 0 0 calc(33.33% - 0.333rem);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .fw-accordion-body-inner .technique-container {
+                flex: 0 0 calc(50% - 0.25rem);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .fw-accordion-body-inner .technique-container {
+                flex: 0 0 100%;
+            }
+        }
+        /* --- Sub-grouping toggle within accordion body --- */
+        .fw-group-toggle {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.25rem;
+            padding: 0 1.25rem 0.75rem 1.25rem;
+            border-bottom: 1px solid var(--column-border);
+            margin-bottom: 0.75rem;
+        }
+
+        .fw-group-toggle-btn {
+            padding: 0.3rem 0.75rem;
+            border-radius: 999px;
+            background-color: var(--view-switcher-btn-bg);
+            color: var(--view-switcher-btn-text);
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            border: 1px solid transparent;
+            white-space: nowrap;
+            user-select: none;
+        }
+
+        .fw-group-toggle-btn:hover {
+            border-color: var(--search-focus-ring);
+            color: var(--column-header-hover-text);
+        }
+
+        .fw-group-toggle-btn.active {
+            background-color: var(--view-switcher-btn-active-bg);
+            color: var(--view-switcher-btn-active-text);
+        }
+
+        .fw-subgroup {
+            padding: 0 1.25rem 0.75rem 1.25rem;
+        }
+
+        .fw-subgroup:last-child {
+            padding-bottom: 1.25rem;
+        }
+
+        .fw-subgroup-header {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--technique-id-text);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            padding: 0.5rem 0 0.5rem 0;
+            margin: 0;
+            border-bottom: 1px solid var(--column-border);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .fw-subgroup-header-count {
+            font-size: 0.65rem;
+            font-weight: 600;
+            color: var(--view-switcher-btn-active-text);
+            background-color: var(--view-switcher-btn-active-bg);
+            padding: 0.05rem 0.4rem;
+            border-radius: 999px;
+            min-width: 1rem;
+            text-align: center;
+        }
+
+        .fw-subgroup-techniques {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .fw-subgroup-techniques > .technique-container {
+            flex: 0 0 calc(25% - 0.375rem);
+            min-width: 180px;
+            margin-bottom: 0;
+        }
+
+
+        @media (max-width: 1200px) {
+            .fw-subgroup-techniques > .technique-container {
+                flex: 0 0 calc(33.33% - 0.333rem);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .fw-subgroup-techniques > .technique-container {
+                flex: 0 0 calc(50% - 0.25rem);
+                min-width: 160px;
+            }
+            .fw-group-toggle {
+                padding: 0 0.75rem 0.5rem 0.75rem;
+            }
+            .fw-subgroup {
+                padding: 0 0.75rem 0.75rem 0.75rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .fw-subgroup-techniques > .technique-container {
+                flex: 0 0 100%;
+            }
+            .fw-group-toggle-btn {
+                font-size: 0.65rem;
+                padding: 0.25rem 0.6rem;
+            }
+        }
+
+        /* ── Hierarchical accordion (objective → technique nesting) ── */
+
+        /* Container for child technique sections inside an objective body */
+        .fw-child-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.375rem;
+            padding: 0.5rem 0.75rem 0.75rem;
+        }
+
+        /* Technique (child) level nested inside an objective */
+        .fw-technique-section {
+            border-radius: 0.75rem;
+            background-color: var(--column-bg);
+            transition: background-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .fw-technique-section > .fw-accordion-header {
+            padding: 0.65rem 1rem;
+        }
+        .fw-technique-section > .fw-accordion-header .fw-accordion-header-id {
+            font-size: 0.7rem;
+        }
+        .fw-technique-section > .fw-accordion-header .fw-accordion-header-name {
+            font-size: 0.9rem;
+        }
+
+        /* Mobile: tighter nested padding */
+        @media (max-width: 768px) {
+            .fw-child-container {
+                padding: 0.375rem 0.5rem 0.5rem;
+                gap: 0.25rem;
+            }
+            .fw-technique-section > .fw-accordion-header {
+                padding: 0.5rem 0.75rem;
+            }
+            .fw-objective-section > .fw-accordion-header {
+                padding: 0.6rem 1rem;
+            }
+            .fw-objective-section > .fw-accordion-header .fw-accordion-header-name {
+                font-size: 0.95rem;
+            }
+        }
+        @media (max-width: 480px) {
+            .fw-child-container {
+                padding: 0.25rem 0.375rem 0.375rem;
+            }
+            .fw-technique-section > .fw-accordion-header {
+                padding: 0.45rem 0.6rem;
+            }
+            .fw-technique-section > .fw-accordion-header .fw-accordion-header-id {
+                font-size: 0.65rem;
+            }
+            .fw-technique-section > .fw-accordion-header .fw-accordion-header-name {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* --- Framework View Styles End --- */
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
@@ -899,7 +1610,8 @@
 <body class="text-gray-800">
     <div id="page-container">
         <header class="header-main py-4 px-6 fixed top-0 left-0 right-0 z-50 elevation-4">
-            <div class="mx-auto" style="max-width: 1600px;">
+            <canvas id="matrixCanvas"></canvas>
+            <div class="mx-auto" style="max-width: 1600px; position: relative; z-index: 1;">
                 <div class="flex flex-col md:flex-row justify-between items-center mb-3">
                     <div class="text-center md:text-left mb-3 md:mb-0">
                         <h1 class="header-title">
@@ -908,7 +1620,7 @@
                             </a>
                         </h1>
                         <p class="header-subtitle">A Practical Knowledge Base for AI Security Defenses</p>
-                        <p class="text-xs text-gray-400 mt-0.5 header-version-text" id="framework-version">Version</p>
+                        <p class="text-xs mt-0.5 header-version-text" id="framework-version">Version</p>
                     </div>
                     <div class="flex flex-wrap justify-center md:justify-end items-center gap-1">
                         <button id="aboutBtn" class="header-button text-button" title="About AIDEFEND">
@@ -930,18 +1642,30 @@
                         </button>
                     </div>
                 </div>
-                <div class="flex flex-col sm:flex-row justify-between items-center">
-                    <div id="view-switcher-container" class="view-switcher-container mb-2 sm:mb-0">
+                <div class="flex flex-wrap justify-between items-center gap-2">
+                    <div id="view-switcher-container" class="view-switcher-container">
                         <button id="viewInfoBtn"
                             class="font-semibold text-sm mr-2 shrink-0 view-by-label cursor-pointer">View by:</button>
                         <div id="view-switcher" class="view-switcher">
                             <button class="view-switcher-btn active" data-view="tactic">Tactics</button>
                             <button class="view-switcher-btn" data-view="pillar">Pillars</button>
                             <button class="view-switcher-btn" data-view="phase">Phases</button>
+                            <button class="view-switcher-btn" data-view="framework">Frameworks</button>
+                        </div>
+                        <div id="framework-selector" class="framework-selector" style="display:none;">
+                            <select id="framework-dropdown">
+                                <option value="atlas">MITRE ATLAS™</option>
+                                <option value="maestro">MAESTRO</option>
+                                <option value="owasp-llm">OWASP LLM Top 10 (2025)</option>
+                                <option value="owasp-ml">OWASP ML Top 10 (2023)</option>
+                                <option value="owasp-agentic">OWASP Agentic AI Top 10 (2026)</option>
+                                <option value="nist" data-short="NIST Adversarial ML (2025)" data-full="NIST Adversarial Machine Learning (AI 100-2 E2025)">NIST Adversarial Machine Learning (AI 100-2 E2025)</option>
+                                <option value="cisco" data-short="Cisco AI Security &amp; Safety Framework" data-full="Cisco Integrated AI Security &amp; Safety Framework">Cisco Integrated AI Security & Safety Framework</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="search-input-wrapper search-container flex-grow w-full sm:w-auto sm:ml-4">
-                        <input type="text" id="search-bar"
+                    <div class="search-input-wrapper search-container flex-grow" style="min-width:220px">
+                        <input type="text" id="search-bar" maxlength="724"
                             placeholder="Search keywords, AIDEFEND/ATLAS techniques, MAESTRO threats, OWASP Top10s, Cisco, NIST AML, etc..."
                             class="w-full p-2.5 text-sm">
                         <button id="searchClearBtn" class="search-clear-button" title="Clear search">
@@ -958,11 +1682,24 @@
         </header>
         <div id="content-wrapper" class="pt-48 px-4 sm:px-6 lg:px-4 pb-8">
             <main id="main-content" class="mx-auto w-full"></main>
+            <noscript>
+                <div style="padding:2rem;max-width:800px;margin:auto;color:var(--text-color)">
+                    <h2>AIDEFEND Framework — AI Security Defense Knowledge Base</h2>
+                    <p>AIDEFEND maps 219 defensive techniques across 7 major AI security frameworks:
+                       MITRE ATLAS, MAESTRO, OWASP LLM Top 10 2025, OWASP ML Top 10 2023,
+                       OWASP Agentic AI Top 10 2026, NIST Adversarial ML 2025, and
+                       Cisco AI Security &amp; Safety Framework.</p>
+                    <p>Techniques are organized into 7 defensive tactics: Model, Harden, Detect,
+                       Isolate, Deceive, Evict, and Restore.</p>
+                    <p>Please enable JavaScript to use the interactive framework browser.</p>
+                </div>
+            </noscript>
         </div>
     </div>
     <div id="infoModal" class="modal-overlay">
         <div id="modalBackdrop" class="absolute inset-0"></div>
         <div class="modal-content elevation-8">
+            <div class="modal-header-actions" id="modalActions"></div>
             <button id="modalClose" class="modal-close-button">&times;</button>
             <div id="modalBody"></div>
         </div>
@@ -987,7 +1724,7 @@
                 2023</a>/<a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/" target="_blank"
                 rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">Agentic
                 2026</a>, <a href="https://learn-cloudsecurity.cisco.com/ai-security-framework" target="_blank"
-                rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">Cisco AI Security Framework</a>, and <a
+                rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">Cisco AI Security & Safety Framework</a>, and <a
                 href="https://csrc.nist.gov/pubs/ai/100/2/e2025/final" target="_blank"
                 rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">NIST AML 2025</a>.</p>
         <p>2026 Edward's Playground - AIDEFEND framework Initiative. For informational purposes only.</p>
@@ -997,10 +1734,10 @@
                 License (CC BY 4.0)</a></p>
     </footer>
     <script type="module">
-        // 從您的主檔案導入 aidefendData
+        // 從您的主檔案導入 aidefendData (Import aidefendData from main file)
         import { aidefendData } from './main.js';
 
-        // 在這個模組作用域內使用 aidefendData 
+        // 在這個模組作用域內使用 aidefendData (Use aidefendData within this module scope) 
         window.onload = function () {
             const elements = {
                 mainContent: document.getElementById('main-content'),
@@ -1010,6 +1747,7 @@
                 modalBackdrop: document.getElementById('modalBackdrop'),
                 modalBody: document.getElementById('modalBody'),
                 modalClose: document.getElementById('modalClose'),
+                modalActions: document.getElementById('modalActions'),
                 themeToggleBtn: document.getElementById('themeToggleBtn'),
                 aboutBtn: document.getElementById('aboutBtn'),
                 html: document.documentElement,
@@ -1019,8 +1757,6 @@
             const icons = {
                 plus: `<svg class="accordion-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" /></svg>`,
                 minus: `<svg class="accordion-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4 10a.75.75 0 01.75-.75h10.5a.75.75 0 010 1.5H4.75A.75.75 0 014 10z" clip-rule="evenodd" /></svg>`,
-                sun: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.166 7.758a.75.75 0 001.06 1.06l1.591-1.59a.75.75 0 00-1.06-1.061L6.166 7.758z" /></svg>`,
-                moon: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-3.51 1.713-6.636 4.362-8.492a.75.75 0 01.819.162z" clip-rule="evenodd" /></svg>`,
                 shieldCheck: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M9.661 2.237a.531.531 0 01.678 0 11.947 11.947 0 007.078 2.749.5.5 0 01.479.425c.069.52.104 1.05.104 1.59 0 5.162-3.26 9.563-7.834 11.256a.48.48 0 01-.332 0C5.26 16.564 2 12.163 2 7c0-.538.035-1.069.104-1.589a.5.5 0 01.48-.425 11.947 11.947 0 007.077-2.75zm4.196 5.954a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clip-rule="evenodd"/></svg>`,
                 github: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>`,
                 strategyPlus: `<svg class="strategy-accordion-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" /></svg>`,
@@ -1031,10 +1767,20 @@
                 plug: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"><path d="M10 2a4 4 0 00-4 4v2a2 2 0 00-2 2v3a2 2 0 002 2h2v5a1 1 0 102 0v-5h2a2 2 0 002-2v-3a2 2 0 00-2-2V6a4 4 0 00-4-4zm-2 6V6a2 2 0 014 0v2H8z"/></svg>`
             };
 
+            const themes = ['dark','light','highcontrast','retro'];
+            const themeIcons = {
+                light: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.166 7.758a.75.75 0 001.06 1.06l1.591-1.59a.75.75 0 00-1.06-1.061L6.166 7.758z"/></svg>`,
+                dark: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path fill-rule="evenodd" d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-3.51 1.713-6.636 4.362-8.492a.75.75 0 01.819.162z" clip-rule="evenodd"/></svg>`,
+                retro: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 14H4V8h16v10z"/><path d="M7 10h2v2H7zm0 3h8v2H7z"/></svg>`,
+                highcontrast: `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18V4c4.41 0 8 3.59 8 8s-3.59 8-8 8z"/></svg>`
+            };
+
             let currentView = 'tactic';
+            let currentFramework = 'atlas';
             let eligibleTechniques = [];
             let pillars = {};
             let phases = {};
+            let frameworkViews = {};
 
             const viewDescriptions = {
                 tactic: {
@@ -1057,8 +1803,251 @@
                     focus: "This view organizes defenses by the development stage where they are most relevant, from initial <strong>Design & Scoping</strong> through <strong>Building, Validation, Operation, Incident Response and System Restoration</strong>.",
                     audience: "MLOps Engineers, Product Managers, and Security/DevSecOps Teams.",
                     useCase: "A company building a new, business-critical AI application from scratch wants to ensure it is <strong>secure by design</strong>. The project lead uses the <strong>Phases View</strong> as their step-by-step security roadmap.<br><br><ul><li>In the project's first week, they use the <strong>'AI System Design & Scoping'</strong> phase to guide their initial threat modeling (AID-M-004) and establish security requirements before development begins.</li><li>As the MLOps team builds the CI/CD pipeline, they consult the <strong>'Model Training, Building & Hardening'</strong> phase to integrate proactive controls like dependency scanning (AID-H-003).</li><li>Before launch, the security team uses the <strong>'Pre-Deployment Validation'</strong> phase to structure their red teaming and assurance activities.</li></ul><br>This process-driven view helps the team apply the right defenses at the right time, ensuring security is embedded throughout the entire AI lifecycle."
+                },
+                framework: {
+                    name: 'Frameworks View',
+                    question: "<strong>Which external security framework standard does this defense align to?</strong>",
+                    focus: "This view organizes AIDEFEND techniques by external security framework standards (OWASP, MITRE ATLAS, MAESTRO, NIST, Cisco). Select a framework from the dropdown to see which AIDEFEND defenses map to each risk category, threat layer, or attack tactic in that framework.",
+                    audience: "Compliance Officers, GRC Analysts, Security Auditors, and Framework Practitioners.",
+                    useCase: "A security auditor is assessing an organization's AI defenses against the <strong>OWASP LLM Top 10 (2025)</strong>. They use the <strong>Frameworks View</strong> and select the OWASP LLM framework to instantly see which AIDEFEND techniques defend against each risk.<br><br><ul><li>Under <strong>LLM01 – Prompt Injection</strong>, they verify controls like Prompt Injection Detection (AID-D-001) and Input Sanitization (AID-H-001) are in place.</li><li>Under <strong>LLM06 – Excessive Agency</strong>, they check for Secure Agent Architecture (AID-H-018) and Autonomy Level Controls (AID-M-006).</li></ul><br>This framework-aligned view enables direct mapping between compliance requirements and implemented defenses."
                 }
             };
+
+            // ATLAS technique → tactic(s) lookup (from official MITRE ATLAS GitHub v5.4.0)
+            const atlasTechToTactics = {
+                'AML.T0000': ['Reconnaissance'], 'AML.T0001': ['Reconnaissance'], 'AML.T0002': ['Resource Development'],
+                'AML.T0003': ['Reconnaissance'], 'AML.T0004': ['Reconnaissance'], 'AML.T0005': ['AI Attack Staging'],
+                'AML.T0006': ['Reconnaissance'], 'AML.T0007': ['Discovery'], 'AML.T0008': ['Resource Development'],
+                'AML.T0010': ['Initial Access'], 'AML.T0011': ['Execution'], 'AML.T0012': ['Initial Access', 'Privilege Escalation'],
+                'AML.T0013': ['Discovery'], 'AML.T0014': ['Discovery'], 'AML.T0015': ['Initial Access', 'Defense Evasion', 'Impact'],
+                'AML.T0016': ['Resource Development'], 'AML.T0017': ['Resource Development'], 'AML.T0018': ['Persistence', 'AI Attack Staging'],
+                'AML.T0019': ['Resource Development'], 'AML.T0020': ['Resource Development', 'Persistence'], 'AML.T0021': ['Resource Development'],
+                'AML.T0024': ['Exfiltration'], 'AML.T0025': ['Exfiltration'], 'AML.T0029': ['Impact'],
+                'AML.T0031': ['Impact'], 'AML.T0034': ['Impact'], 'AML.T0035': ['Collection'],
+                'AML.T0036': ['Collection'], 'AML.T0037': ['Collection'], 'AML.T0040': ['AI Model Access'],
+                'AML.T0041': ['AI Model Access'], 'AML.T0042': ['AI Attack Staging'], 'AML.T0043': ['AI Attack Staging'],
+                'AML.T0044': ['AI Model Access'], 'AML.T0046': ['Impact'], 'AML.T0047': ['AI Model Access'],
+                'AML.T0048': ['Impact'], 'AML.T0049': ['Initial Access'], 'AML.T0050': ['Execution'],
+                'AML.T0051': ['Execution'], 'AML.T0052': ['Initial Access', 'Lateral Movement'], 'AML.T0053': ['Execution', 'Privilege Escalation'],
+                'AML.T0054': ['Privilege Escalation', 'Defense Evasion'], 'AML.T0055': ['Credential Access'], 'AML.T0056': ['Exfiltration'],
+                'AML.T0057': ['Exfiltration'], 'AML.T0058': ['Resource Development'], 'AML.T0059': ['Impact'],
+                'AML.T0060': ['Resource Development'], 'AML.T0061': ['Persistence'], 'AML.T0062': ['Discovery'],
+                'AML.T0063': ['Discovery'], 'AML.T0064': ['Reconnaissance'], 'AML.T0065': ['Resource Development'],
+                'AML.T0066': ['Resource Development'], 'AML.T0067': ['Defense Evasion'], 'AML.T0068': ['Defense Evasion'],
+                'AML.T0069': ['Discovery'], 'AML.T0070': ['Persistence'], 'AML.T0071': ['Defense Evasion'],
+                'AML.T0072': ['Command and Control'], 'AML.T0073': ['Defense Evasion'], 'AML.T0074': ['Defense Evasion'],
+                'AML.T0075': ['Discovery'], 'AML.T0076': ['Defense Evasion'], 'AML.T0077': ['Exfiltration'],
+                'AML.T0078': ['Initial Access'], 'AML.T0079': ['Resource Development'], 'AML.T0080': ['Persistence'],
+                'AML.T0081': ['Persistence', 'Defense Evasion'], 'AML.T0082': ['Credential Access'], 'AML.T0083': ['Credential Access'],
+                'AML.T0084': ['Discovery'], 'AML.T0085': ['Collection'], 'AML.T0086': ['Exfiltration'],
+                'AML.T0087': ['Reconnaissance'], 'AML.T0088': ['AI Attack Staging'], 'AML.T0089': ['Discovery'],
+                'AML.T0090': ['Credential Access'], 'AML.T0091': ['Lateral Movement'], 'AML.T0092': ['Defense Evasion'],
+                'AML.T0093': ['Initial Access', 'Persistence'], 'AML.T0094': ['Defense Evasion'], 'AML.T0095': ['Reconnaissance'],
+                'AML.T0096': ['Command and Control'], 'AML.T0097': ['Defense Evasion'], 'AML.T0098': ['Credential Access'],
+                'AML.T0099': ['Persistence'], 'AML.T0100': ['Execution'], 'AML.T0101': ['Impact'],
+                'AML.T0102': ['AI Attack Staging'], 'AML.T0103': ['Execution'], 'AML.T0104': ['Resource Development'],
+                'AML.T0105': ['Privilege Escalation'], 'AML.T0106': ['Credential Access'], 'AML.T0107': ['Defense Evasion'],
+                'AML.T0108': ['Command and Control']
+            };
+
+            // Framework view configuration — all 7 frameworks (all use accordion layout)
+            const frameworkViewConfig = {
+                'owasp-llm': {
+                    frameworkKey: 'OWASP LLM Top 10 2025',
+                    label: 'OWASP LLM Top 10 (2025)',
+                    pageTitle: 'OWASP Large Language Model Top 10 (2025)',
+                    about: 'A curated list of the most critical security risks to large language model applications, published by OWASP Foundation.',
+                    url: 'https://owasp.org/www-project-top-10-for-large-language-model-applications/',
+                    layout: 'accordion',
+                    groups: [
+                        { key: 'LLM01:2025', name: 'LLM01 – Prompt Injection', description: 'Prompt injection occurs when user prompts or external data sources alter the LLM\u2019s behavior in unintended ways. Direct prompt injection overwrites or manipulates system prompts, while indirect prompt injection embeds malicious instructions in external content (websites, documents, APIs) that the LLM processes.' },
+                        { key: 'LLM02:2025', name: 'LLM02 – Sensitive Information Disclosure', description: 'LLMs may inadvertently reveal sensitive information through their responses, including proprietary algorithms, training data contents, personally identifiable information (PII), confidential business data, or security credentials. This can occur through direct queries, prompt injection attacks, or unintended memorization of training data.' },
+                        { key: 'LLM03:2025', name: 'LLM03 – Supply Chain', description: 'LLM supply chain vulnerabilities arise from dependencies on third-party components including pre-trained models, training datasets, plugins, extensions, and development tools. Compromised base models may contain backdoors or biases, poisoned training data can introduce vulnerabilities, and malicious plugins can execute unauthorized code.' },
+                        { key: 'LLM04:2025', name: 'LLM04 – Data and Model Poisoning', description: 'Attackers corrupt data used in pre-training, fine-tuning, or retrieval-augmented generation (RAG) to introduce vulnerabilities, backdoors, or biases. Poisoning can cause the model to produce incorrect outputs, exhibit biased behavior, leak sensitive information, or activate hidden malicious behaviors when triggered by specific inputs.' },
+                        { key: 'LLM05:2025', name: 'LLM05 – Improper Output Handling', description: 'Insufficient validation, sanitization, and handling of LLM-generated outputs can enable downstream attacks when outputs are passed to other systems. LLM outputs may contain malicious content including XSS payloads, SQL injection, command injection, or SSRF attacks that execute in downstream systems without proper filtering.' },
+                        { key: 'LLM06:2025', name: 'LLM06 – Excessive Agency', description: 'LLM-based systems may be granted excessive functionality, permissions, or autonomy beyond what is necessary for the intended task. This includes access to sensitive systems, ability to execute code, make API calls, or take actions without adequate human oversight. Combined with prompt injection or hallucination, this can lead to unauthorized actions.' },
+                        { key: 'LLM07:2025', name: 'LLM07 – System Prompt Leakage', description: 'System prompts or instructions designed to be hidden from users may be exposed through various techniques. Attackers can craft prompts that cause the LLM to reveal its system instructions, initial prompts, or configuration details, exposing proprietary business logic, security controls, and content filtering rules.' },
+                        { key: 'LLM08:2025', name: 'LLM08 – Vector and Embedding Weaknesses', description: 'Vulnerabilities in vector databases and embedding systems used for RAG can be exploited to manipulate knowledge retrieval. Attackers may poison vector stores with adversarial content, manipulate embedding representations, or exploit similarity search algorithms, causing the LLM to retrieve and use malicious or unauthorized information.' },
+                        { key: 'LLM09:2025', name: 'LLM09 – Misinformation', description: 'LLMs may generate false, misleading, or fabricated information (hallucinations) that appears credible and authoritative. This misinformation can cause security compromises when acted upon, reputational damage when published, and legal liability from incorrect advice. The confident presentation of false information makes detection difficult.' },
+                        { key: 'LLM10:2025', name: 'LLM10 – Unbounded Consumption', description: 'LLMs can consume excessive computational resources through denial of service attacks, resource-intensive queries, or unexpected operational patterns. Attackers may craft inputs that cause maximum token generation, trigger expensive operations, or abuse rate limiting gaps, leading to service degradation and increased operational costs.' }
+                    ],
+                    parseGroup(item) { const m = item.match(/(LLM\d{2}:\d{4})/); return m ? m[1] : null; }
+                },
+                'owasp-ml': {
+                    frameworkKey: 'OWASP ML Top 10 2023',
+                    label: 'OWASP ML Top 10 (2023)',
+                    pageTitle: 'OWASP Machine Learning Top 10 (2023)',
+                    about: 'A security awareness and risk prioritization guide addressing common vulnerabilities in machine learning systems, published by OWASP Foundation.',
+                    url: 'https://owasp.org/www-project-machine-learning-security-top-10/',
+                    layout: 'accordion',
+                    groups: [
+                        { key: 'ML01:2023', name: 'ML01 – Input Manipulation Attack', description: 'Adversarial attacks where inputs are carefully crafted with perturbations to cause model misclassification, bypass security measures, or trigger unintended behaviors. Attackers may modify pixels in images, add noise to audio, or manipulate text to fool ML classifiers while remaining imperceptible to humans.' },
+                        { key: 'ML02:2023', name: 'ML02 – Data Poisoning Attack', description: 'Attacks that inject malicious data into training datasets to compromise model behavior, introduce biases, or create backdoors. Poisoning can occur during initial training, fine-tuning, or continuous learning phases. Attackers may modify labels (label flipping), inject adversarial samples, or manipulate data distributions.' },
+                        { key: 'ML03:2023', name: 'ML03 – Model Inversion Attack', description: 'Privacy attacks that exploit model predictions to reconstruct sensitive information about training data or recover private attributes. By querying the model and analyzing confidence scores, attackers can reverse-engineer training samples, reconstruct faces from facial recognition systems, or infer sensitive features.' },
+                        { key: 'ML04:2023', name: 'ML04 – Membership Inference Attack', description: 'Attacks that determine whether specific data points were used in training the target model. Attackers exploit differences in model behavior between training and non-training data, often using shadow models or statistical analysis of prediction scores.' },
+                        { key: 'ML05:2023', name: 'ML05 – Model Theft', description: 'Attacks aimed at extracting or stealing a copy of the target model through API queries, resulting in intellectual property theft or enabling further attacks. Attackers systematically query the model\u2019s inference API to collect input-output pairs, then train a replica model that mimics the original\u2019s behavior.' },
+                        { key: 'ML06:2023', name: 'ML06 – AI Supply Chain Attacks', description: 'Attacks targeting ML supply chain components including MLOps platforms, model repositories (Hugging Face, PyTorch Hub), cloud AI services, and specialized ML software. Compromised components can inject backdoors, poison models during training, or introduce vulnerabilities that propagate to all downstream users.' },
+                        { key: 'ML07:2023', name: 'ML07 – Transfer Learning Attack', description: 'Attacks exploiting vulnerabilities in transfer learning processes where pre-trained models are adapted for new tasks. Attackers can embed backdoors in base models that persist through fine-tuning, exploit feature space vulnerabilities that transfer to downstream models, or manipulate the fine-tuning process itself.' },
+                        { key: 'ML08:2023', name: 'ML08 – Model Skewing', description: 'Attacks manipulating feedback loops in MLOps systems to gradually skew model predictions over time. In systems with continuous learning or reinforcement from user feedback, attackers inject biased feedback data to shift model behavior, including fake reviews or coordinated rating manipulation.' },
+                        { key: 'ML09:2023', name: 'ML09 – Output Integrity Attack', description: 'Attacks that modify, manipulate, or forge model outputs to change behavior or cause harm to downstream systems. This includes tampering with model predictions before they reach consuming applications, manipulating confidence scores, or exploiting insufficient output validation.' },
+                        { key: 'ML10:2023', name: 'ML10 – Model Poisoning', description: 'Direct attacks on the model itself rather than training data, including manipulation of model weights, architecture modifications, or embedding malicious code in model files. Serialized model formats (pickle, joblib) are particularly vulnerable to code execution attacks.' }
+                    ],
+                    parseGroup(item) { const m = item.match(/(ML\d{2}:\d{4})/); return m ? m[1] : null; }
+                },
+                'owasp-agentic': {
+                    frameworkKey: 'OWASP Agentic AI Top 10 2026',
+                    label: 'OWASP Agentic AI Top 10 (2026)',
+                    pageTitle: 'OWASP Agentic AI Top 10 (2026)',
+                    about: 'A comprehensive guide identifying the most critical security risks specific to autonomous AI agents and multi-agent systems, published by OWASP Foundation.',
+                    url: 'https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/',
+                    layout: 'accordion',
+                    groups: [
+                        { key: 'ASI01:2026', name: 'ASI01 – Agent Goal Hijack', description: 'Attackers manipulate an agent\u2019s objectives, task selection, or decision pathways through prompt-based manipulation, deceptive tool outputs, malicious artefacts, forged agent-to-agent messages, or poisoned external data. Unlike single-model prompt injection, ASI01 captures the broader agentic impact where manipulated inputs redirect goals, planning, and multi-step behavior.' },
+                        { key: 'ASI02:2026', name: 'ASI02 – Tool Misuse and Exploitation', description: 'Agents misuse legitimate tools due to prompt injection, misalignment, unsafe delegation, or ambiguous instructions, leading to data exfiltration, tool output manipulation, or workflow hijacking. Risks are amplified by agent memory, dynamic tool selection, and delegation chaining.' },
+                        { key: 'ASI03:2026', name: 'ASI03 – Identity and Privilege Abuse', description: 'Dynamic trust and delegation in agents are exploited to escalate access and bypass controls by manipulating delegation chains, role inheritance, control flows, and agent context. This arises from the architectural mismatch between user-centric identity systems and agentic design.' },
+                        { key: 'ASI04:2026', name: 'ASI04 – Agentic Supply Chain Vulnerabilities', description: 'Agents, tools, and related artefacts provided by third parties may be malicious, compromised, or tampered with in transit, including dynamically sourced models, tools, plug-ins, datasets, agentic interfaces (MCP, A2A), registries, and update channels. Agentic ecosystems compose capabilities at runtime, creating a live supply chain that can cascade vulnerabilities.' },
+                        { key: 'ASI05:2026', name: 'ASI05 – Unexpected Code Execution (RCE)', description: 'Attackers exploit code-generation features or embedded tool access to escalate actions into remote code execution, local misuse, or exploitation of internal systems. Agent-generated code created in real-time can bypass traditional security controls, leading to host compromise, persistence, or sandbox escape.' },
+                        { key: 'ASI06:2026', name: 'ASI06 – Memory & Context Poisoning', description: 'Adversaries corrupt or seed an agent\u2019s stored and retrievable context (conversation history, memory tools, or expanded context) with malicious or misleading data, causing future reasoning, planning, or tool use to become biased, unsafe, or aid exfiltration.' },
+                        { key: 'ASI07:2026', name: 'ASI07 – Insecure Inter-Agent Communication', description: 'Multi-agent systems that coordinate via APIs, message buses, and shared memory are vulnerable when exchanges lack proper authentication, integrity, or semantic validation. The threat spans transport, routing, discovery, and semantic layers, leading to misinformation, privilege confusion, or coordinated manipulation.' },
+                        { key: 'ASI08:2026', name: 'ASI08 – Cascading Failures', description: 'A single fault (hallucination, malicious input, corrupted tool, or poisoned memory) propagates across autonomous agents, compounding into system-wide harm. Because agents plan, persist, and delegate autonomously, a single error can bypass stepwise human checks and chain into privileged operations.' },
+                        { key: 'ASI09:2026', name: 'ASI09 – Human-Agent Trust Exploitation', description: 'Adversaries or misaligned designs exploit the strong trust humans place in agents due to their natural language fluency, emotional intelligence, and perceived expertise. By leveraging authority bias and automation bias, attackers can bypass oversight, causing data breaches, financial losses, and reputational harms.' },
+                        { key: 'ASI10:2026', name: 'ASI10 – Rogue Agents', description: 'Malicious or compromised AI agents deviate from their intended function or authorized scope, acting harmfully, deceptively, or parasitically within multi-agent or human-agent ecosystems. Their individual actions may appear legitimate while emergent behavior becomes harmful.' }
+                    ],
+                    parseGroup(item) { const m = item.match(/(ASI\d{2}:\d{4})/); return m ? m[1] : null; }
+                },
+                'maestro': {
+                    frameworkKey: 'MAESTRO',
+                    label: 'MAESTRO',
+                    pageTitle: 'MAESTRO (Multi-Agent Environment, Security, Threat Risk, and Outcome)',
+                    about: 'An agentic AI threat modeling framework created by Ken Huang, published by the Cloud Security Alliance (CSA).',
+                    url: 'https://cloudsecurityalliance.org/blog/2025/02/06/agentic-ai-threat-modeling-framework-maestro',
+                    layout: 'accordion',
+                    groups: [
+                        { key: 'Cross-Layer', name: 'Cross-Layer – Cross-Layer Threats', description: 'Threats that span multiple MAESTRO layers rather than being confined to a single one. These include supply chain attacks propagating across layers, lateral movement between layers, privilege escalation across layer boundaries, cross-layer data leakage, and goal misalignment cascades.' },
+                        { key: 'L7', name: 'Layer 7 – Agent Ecosystem', description: 'The marketplace and ecosystem layer where AI agents interface with real-world applications, users, and other agents. Threats include agent impersonation, identity attacks, goal manipulation, marketplace manipulation, and compromised agent registries.' },
+                        { key: 'L6', name: 'Layer 6 – Security & Compliance', description: 'A vertical layer that cuts across all other layers, ensuring security and compliance controls are integrated into all AI agent operations. This layer also addresses scenarios where AI agents themselves serve as security tools, covering threats such as security agent compromise, regulatory non-compliance, and lack of explainability.' },
+                        { key: 'L5', name: 'Layer 5 – Evaluation & Observability', description: 'How AI agents are evaluated and monitored, including tools and processes for tracking performance, detecting anomalies, and maintaining situational awareness. Threats target the integrity of evaluation metrics and observability tooling to hide malicious behavior or leak sensitive information.' },
+                        { key: 'L4', name: 'Layer 4 – Deployment & Infrastructure', description: 'The infrastructure on which AI agents run, including cloud environments, on-premise servers, containerized microservices, and orchestration platforms like Kubernetes. Threats include compromised container images, Infrastructure-as-Code manipulation, resource hijacking, and lateral movement.' },
+                        { key: 'L3', name: 'Layer 3 – Agent Frameworks', description: 'The frameworks and toolkits used to build AI agents, such as conversational AI toolkits or data-integration frameworks. Security concerns include compromised framework components, supply chain attacks on dependencies, input validation weaknesses, and framework evasion techniques.' },
+                        { key: 'L2', name: 'Layer 2 – Data Operations', description: 'Where data is processed, prepared, and stored for AI agents, including databases, vector stores, and RAG pipelines. Threats at this layer target data integrity and availability through poisoning, exfiltration, tampering, and compromised retrieval-augmented generation workflows.' },
+                        { key: 'L1', name: 'Layer 1 – Foundation Models', description: 'The core AI model layer on which an agent is built, such as a large language model (LLM) or other forms of AI. Security concerns at this layer include adversarial examples, model stealing, backdoor attacks, data poisoning during training, and denial of service targeting model inference.' }
+                    ],
+                    parseGroup(item) { const m = item.match(/\((L[1-7]|Cross-Layer)\)/); return m ? m[1] : null; }
+                },
+                'atlas': {
+                    frameworkKey: 'MITRE ATLAS',
+                    label: 'MITRE ATLAS\u2122',
+                    pageTitle: 'MITRE ATLAS\u2122 (Adversarial Threat Landscape for AI Systems)',
+                    about: 'A knowledge base of adversary tactics and techniques targeting AI/ML systems, modeled after MITRE ATT\u0026CK\u00AE, developed by MITRE.',
+                    url: 'https://atlas.mitre.org/',
+                    layout: 'accordion',
+                    groups: [
+                        { key: 'Reconnaissance', name: 'AML.TA0002 – Reconnaissance', description: 'The adversary is trying to gather information about the AI system they can use to plan future operations. This includes actively or passively gathering information about the victim organization\u2019s AI capabilities and research efforts, which can be leveraged to obtain relevant AI artifacts or tailor attacks.' },
+                        { key: 'Resource Development', name: 'AML.TA0003 – Resource Development', description: 'The adversary is trying to establish resources they can use to support operations, including creating, purchasing, or compromising resources such as AI artifacts, infrastructure, accounts, or capabilities that can be leveraged in other phases like AI Attack Staging.' },
+                        { key: 'Initial Access', name: 'AML.TA0004 – Initial Access', description: 'The adversary is trying to gain access to the AI system. The target could be a network, mobile device, or edge device such as a sensor platform, with local onboard or cloud-enabled AI capabilities.' },
+                        { key: 'AI Model Access', name: 'AML.TA0000 – AI Model Access', description: 'The adversary is attempting to gain some level of access to an AI model, ranging from full knowledge of internals to access to the physical environment where data is collected. Access may require system access, be publicly available via API, or be indirect through product interaction.' },
+                        { key: 'Execution', name: 'AML.TA0005 – Execution', description: 'The adversary is trying to run malicious code embedded in AI artifacts or software. Techniques that run malicious code are often paired with techniques from all other tactics to achieve broader goals, like exploring a network or stealing data.' },
+                        { key: 'Persistence', name: 'AML.TA0006 – Persistence', description: 'The adversary is trying to maintain their foothold via AI artifacts or software. Techniques often involve leaving behind modified ML artifacts such as poisoned training data or manipulated AI models to keep access across restarts and interruptions.' },
+                        { key: 'Privilege Escalation', name: 'AML.TA0012 – Privilege Escalation', description: 'The adversary is trying to gain higher-level permissions on a system or network by taking advantage of system weaknesses, misconfigurations, and vulnerabilities. These techniques often overlap with Persistence techniques.' },
+                        { key: 'Defense Evasion', name: 'AML.TA0007 – Defense Evasion', description: 'The adversary is trying to avoid being detected by AI-enabled security software. Techniques include evading AI-enabled security tools such as malware detectors and anomaly detection systems.' },
+                        { key: 'Credential Access', name: 'AML.TA0013 – Credential Access', description: 'The adversary is trying to steal account names and passwords using techniques such as keylogging or credential dumping. Legitimate credentials give adversaries access to systems, make them harder to detect, and enable creating more accounts.' },
+                        { key: 'Discovery', name: 'AML.TA0008 – Discovery', description: 'The adversary is trying to figure out your AI environment. Techniques help adversaries observe the environment and orient themselves before deciding how to act, discovering what they can control and how it could benefit their objectives.' },
+                        { key: 'Lateral Movement', name: 'AML.TA0015 – Lateral Movement', description: 'The adversary is trying to move through your AI environment. Adversaries may pivot towards AI Ops infrastructure such as model registries, experiment trackers, vector databases, notebooks, or training pipelines.' },
+                        { key: 'Collection', name: 'AML.TA0009 – Collection', description: 'The adversary is trying to gather AI artifacts and other related information relevant to their goal. Common target sources include software repositories, container registries, model repositories, and object stores.' },
+                        { key: 'AI Attack Staging', name: 'AML.TA0001 – AI Attack Staging', description: 'The adversary is leveraging their knowledge of and access to the target system to tailor the attack. Techniques include training proxy models, poisoning the target model, and crafting adversarial data to feed the target model.' },
+                        { key: 'Command and Control', name: 'AML.TA0014 – Command and Control', description: 'The adversary is trying to communicate with compromised AI systems to control them. Adversaries commonly attempt to mimic normal, expected traffic to avoid detection.' },
+                        { key: 'Exfiltration', name: 'AML.TA0010 – Exfiltration', description: 'The adversary is trying to steal AI artifacts or other information about the AI system. Data may be stolen for its valuable intellectual property or for use in staging future operations.' },
+                        { key: 'Impact', name: 'AML.TA0011 – Impact', description: 'The adversary is trying to manipulate, interrupt, erode confidence in, or destroy your AI systems and data. Techniques include destroying or tampering with data and disrupting availability or compromising integrity of business and operational processes.' }
+                    ],
+                    parseGroup(item) {
+                        const m = item.match(/^(AML\.T\d{4})/);
+                        if (!m) return null;
+                        const tactics = atlasTechToTactics[m[1]];
+                        return tactics || null; // returns array of tactic names
+                    }
+                },
+                'nist': {
+                    frameworkKey: 'NIST Adversarial Machine Learning 2025',
+                    label: 'NIST Adversarial ML (2025)',
+                    pageTitle: 'NIST Adversarial Machine Learning (AI 100-2 E2025)',
+                    about: 'A taxonomy and terminology of attacks and mitigations for AI systems, published by NIST (March 2025).',
+                    url: 'https://csrc.nist.gov/pubs/ai/100/2/e2025/final',
+                    layout: 'accordion',
+                    techniqueGroups: {
+                        '011': { name: 'NISTAML.011 \u2013 Model Poisoning (Availability)', description: 'An attack in which the adversary directly modifies model parameters to inject malicious functionality that causes availability breakdown. Requires model control through direct access, federated learning, or supply chain compromise. PredAI.' },
+                        '012': { name: 'NISTAML.012 \u2013 Clean-label Poisoning', description: 'Adversary injects correctly-labeled but strategically chosen data points into training data to degrade model performance or create targeted misclassification. Does not require control over labels, making it harder to detect. PredAI.' },
+                        '013': { name: 'NISTAML.013 \u2013 Data Poisoning', description: 'Adversary corrupts training data through label flipping, injecting adversarial samples, or manipulating data distributions. Can degrade overall accuracy (availability) or cause targeted misclassification (integrity). PredAI/GenAI.' },
+                        '014': { name: 'NISTAML.014 \u2013 Energy-latency', description: 'Adversary crafts inputs specifically designed to maximize computational cost, increasing energy consumption and inference latency. Can cause denial of service through resource exhaustion. PredAI/GenAI.' },
+                        '015': { name: 'NISTAML.015 \u2013 Indirect Prompt Injection', description: 'Adversarial instructions embedded in external content (websites, documents, APIs, tool outputs) that the LLM processes, causing unintended behavior. GenAI.' },
+                        '018': { name: 'NISTAML.018 \u2013 Prompt Injection', description: 'Adversary crafts direct prompts to override system instructions, bypass safety alignment, or manipulate model behavior. The primary technique for misuse violations. GenAI.' },
+                        '021': { name: 'NISTAML.021 \u2013 Clean-label Backdoor', description: 'A backdoor attack where the adversary only uses correctly-labeled examples to embed a hidden trigger pattern. The model behaves normally except when the trigger is present, causing targeted misclassification. PredAI.' },
+                        '022': { name: 'NISTAML.022 \u2013 Evasion', description: 'Adversary crafts adversarial examples at inference time to cause misclassification while remaining imperceptible to humans. Exploits model decision boundaries through gradient-based or query-based approaches. PredAI.' },
+                        '023': { name: 'NISTAML.023 \u2013 Backdoor Poisoning', description: 'Adversary poisons training data with a hidden trigger pattern and corresponding target label. At inference, inputs containing the trigger are misclassified to the attacker\u2019s chosen target while clean inputs are classified correctly. PredAI/GenAI.' },
+                        '024': { name: 'NISTAML.024 \u2013 Targeted Poisoning', description: 'Adversary poisons training data to cause misclassification of specific, pre-selected test inputs while maintaining overall model accuracy on other inputs. PredAI/GenAI.' },
+                        '025': { name: 'NISTAML.025 \u2013 Black-box Evasion', description: 'Evasion attacks performed without knowledge of model internals, using only query access to craft adversarial examples. Often leverages transferability from surrogate models or gradient estimation techniques. PredAI.' },
+                        '026': { name: 'NISTAML.026 \u2013 Model Poisoning (Integrity)', description: 'An attack in which the adversary directly modifies model parameters to inject targeted misclassification behavior while maintaining overall accuracy. PredAI/GenAI.' },
+                        '027': { name: 'NISTAML.027 \u2013 Misaligned Outputs', description: 'GenAI systems produce outputs that deviate from intended behavior, including hallucinations, biased content, or responses that circumvent alignment training. GenAI.' },
+                        '031': { name: 'NISTAML.031 \u2013 Model Extraction', description: 'Adversary systematically queries a model\u2019s API to collect input-output pairs and train a replica that mimics the original\u2019s behavior. Enables IP theft and further attacks. PredAI/GenAI.' },
+                        '032': { name: 'NISTAML.032 \u2013 Reconstruction', description: 'Privacy attacks that exploit model predictions to reconstruct sensitive training data or recover private attributes. Includes model inversion and data reconstruction techniques. PredAI.' },
+                        '033': { name: 'NISTAML.033 \u2013 Membership Inference', description: 'Attacks that determine whether specific data points were used in training the target model. Exploits statistical differences in model behavior between training and non-training data. PredAI/GenAI.' },
+                        '034': { name: 'NISTAML.034 \u2013 Property Inference', description: 'Adversary infers aggregate properties about the training dataset (e.g., demographic distributions, presence of specific features) that were not intended to be revealed. PredAI.' },
+                        '035': { name: 'NISTAML.035 \u2013 Prompt Extraction', description: 'Techniques to extract system prompts, hidden instructions, or configuration details from GenAI systems. Exposes proprietary business logic and security controls. GenAI.' },
+                        '036': { name: 'NISTAML.036 \u2013 Leaking Information from User Interactions', description: 'GenAI systems inadvertently reveal sensitive information from previous user interactions, conversation history, or context windows. GenAI.' },
+                        '037': { name: 'NISTAML.037 \u2013 Training Data Attacks', description: 'Attacks targeting the extraction or exposure of training data contents from GenAI models, potentially revealing copyrighted, personal, or proprietary information memorized during training. GenAI.' },
+                        '038': { name: 'NISTAML.038 \u2013 Data Extraction', description: 'Techniques to extract sensitive data that the GenAI model has access to during inference, including RAG contents, connected databases, or tool outputs. GenAI.' },
+                        '039': { name: 'NISTAML.039 \u2013 Compromising Connected Resources', description: 'Attacks that leverage GenAI system access to connected tools, APIs, databases, or external services to access, exfiltrate, or manipulate data beyond the model\u2019s intended scope. GenAI.' },
+                        '051': { name: 'NISTAML.051 \u2013 Model Poisoning (Supply Chain)', description: 'Malicious functionality inserted into ML models or components distributed through the supply chain. Exploits trust relationships where organizations use pre-trained models from third parties. PredAI/GenAI.' }
+                    },
+                    groups: [
+                        { key: '01', name: 'NISTAML.01 \u2013 Availability Violations', description: 'Attacks that deliberately interfere with an AI system to disrupt the ability of users or processes to obtain timely and reliable access to the system\u2019s outputs or functionality. Availability violations cause the AI system to become unusable, unreliable, or significantly degraded in performance.', children: ['011','012','013','014','015','018'] },
+                        { key: '02', name: 'NISTAML.02 \u2013 Integrity Violations', description: 'Attacks that deliberately interfere with an AI system to force it to misperform against its intended objectives and produce outputs or predictions that align with the attacker\u2019s objectives rather than the system\u2019s designed purpose. Integrity violations compromise the trustworthiness of AI system outputs.', children: ['012','013','015','018','021','022','023','024','025','026','027'] },
+                        { key: '03', name: 'NISTAML.03 \u2013 Privacy Compromises', description: 'Attacks that result in unintended leakage of restricted or proprietary information from an AI system. This includes information about training data, model weights or architecture, sensitive information the model accesses during inference, or information revealed by users during interactions.', children: ['015','018','031','032','033','034','035','036','037','038','039'] },
+                        { key: '04', name: 'NISTAML.04 \u2013 Misuse Violations', description: 'An attacker seeks to deliberately circumvent technical restrictions imposed by the GenAI system\u2019s owner on its use, such as restrictions designed to prevent the system from producing outputs that could cause harm to others. Primary attack vector: NISTAML.018 Prompt Injection. GenAI only.', children: ['018'] },
+                        { key: '05', name: 'NISTAML.05 \u2013 Supply Chain Attacks', description: 'Attacks that exploit vulnerabilities in the AI development and deployment supply chain, including dependencies on third-party data, models, components, and infrastructure. AI systems inherit traditional software supply chain risks while introducing new attack vectors specific to machine learning.', children: ['051'] }
+                    ],
+                    parseGroup(item) {
+                        const m3 = item.match(/NISTAML\.(\d{3})/);
+                        if (m3) return m3[1];
+                        const m2 = item.match(/NISTAML\.(\d{2})\b/);
+                        if (m2) return m2[1];
+                        return null;
+                    }
+                },
+                'cisco': {
+                    frameworkKey: 'Cisco Integrated AI Security and Safety Framework',
+                    label: 'Cisco AI Security & Safety Framework',
+                    pageTitle: 'Cisco Integrated AI Security & Safety Framework',
+                    about: 'A structured framework addressing security and safety considerations across the AI lifecycle, from development to deployment, published by Cisco.',
+                    url: 'https://learn-cloudsecurity.cisco.com/ai-security-framework',
+                    layout: 'accordion',
+                    groups: [
+                        { key: '1', name: 'OB-001 – Goal Hijacking', description: 'Attacks where adversaries manipulate AI system directives, override intended behavior, or redirect models toward attacker-defined objectives. This includes direct and indirect prompt injection, goal manipulation, and multi-modal injection techniques.' },
+                        { key: '2', name: 'OB-002 – Jailbreak', description: 'Techniques to bypass safety constraints, content filters, or alignment mechanisms to force generation of restricted outputs. Includes context manipulation, obfuscation, semantic manipulation, token exploitation, and multi-agent collaboration.' },
+                        { key: '3', name: 'OB-003 – Masquerading / Obfuscation / Impersonation', description: 'Attacks involving false identity assumption, credential spoofing, or deceptive representation within AI systems. Includes identity obfuscation and trusted agent spoofing.' },
+                        { key: '4', name: 'OB-004 – Communication Compromise', description: 'Interception, alteration, or impersonation of communications between AI systems and users; man-in-the-middle attacks on agent communications. Includes agent injection, context boundary attacks, and protocol manipulation.' },
+                        { key: '5', name: 'OB-005 – Persistence', description: 'Establishing long-term presence or capability to maintain access within AI systems through memory or configuration manipulation. Includes memory system persistence and configuration persistence.' },
+                        { key: '6', name: 'OB-006 – Feedback Loop Manipulation', description: 'Corrupting training data, reinforcement signals, or model update mechanisms to degrade system performance or introduce bias. Includes knowledge base poisoning, reinforcement biasing, and signal corruption.' },
+                        { key: '7', name: 'OB-007 – Sabotage / Integrity Degradation', description: 'Deliberate corruption of reasoning, memory systems, data sources, or tokens to degrade AI system functionality or reliability. Includes reasoning corruption, memory system corruption, data source abuse, and token manipulation.' },
+                        { key: '8', name: 'OB-008 – Data Privacy Violations', description: 'Unauthorized access to, inference of, or exposure of private or sensitive information processed by AI systems. Includes membership inference, data exfiltration, information disclosure, and prompt extraction.' },
+                        { key: '9', name: 'OB-009 – Supply Chain Compromise', description: 'Manipulation of models, dependencies, build pipelines, or artifacts to introduce backdoors or malicious behavior. Includes code execution, system access, injection attacks, and dependency compromise.' },
+                        { key: '10', name: 'OB-010 – Model Theft / Extraction', description: 'Unauthorized replication or reconstruction of model weights, parameters, or sensitive training data through API queries or inference. Includes API query stealing, weight reconstruction, and model inversion.' },
+                        { key: '11', name: 'OB-011 – Adversarial Evasion', description: 'Environment-aware or model-selective attacks designed to evade detection systems or defensive mechanisms. Includes agent-specific evasion, tool-scoped evasion, environment-scoped payloads, and defense-aware payloads.' },
+                        { key: '12', name: 'OB-012 – Action-Space and Integration Abuse', description: 'Exploitation of tool integration, parameter manipulation, or insecure output handling to cause unintended system behavior. Includes parameter manipulation, tool poisoning, unsafe execution, and tool shadowing.' },
+                        { key: '13', name: 'OB-013 – Availability Abuse', description: 'Attacks targeting system availability through resource exhaustion, denial of service, or cost harvesting. Includes compute exhaustion, memory flooding, model DoS, application DoS, and decision paralysis.' },
+                        { key: '14', name: 'OB-014 – Privilege Compromise', description: 'Unauthorized access or escalation of privileges within AI systems or associated infrastructure. Includes credential theft, insufficient access controls, and permission escalation via delegation.' },
+                        { key: '15', name: 'OB-015 – Harmful / Misleading / Inaccurate Content', description: 'Generation of dangerous, deceptive, or unreliable outputs including malware, abuse, disinformation, or privacy violations. Covers categories of harmful content across cybersecurity, safety, integrity, IP, and privacy domains.' },
+                        { key: '16', name: 'OB-016 – Surveillance', description: 'Unauthorized monitoring, eavesdropping, or logging of sensitive conversations or system interactions. Includes logging sensitive conversations without consent.' },
+                        { key: '17', name: 'OB-017 – Cyber-Physical / Sensor Attacks', description: 'Manipulation of sensor inputs or physical-world signals to deceive AI systems controlling physical infrastructure. Includes spoofing of audio or visual action signals.' },
+                        { key: '18', name: 'OB-018 – System Misuse / Malicious Application', description: 'Fraudulent, spammy, or malicious use of AI systems for mass automation, social engineering, or infrastructure abuse. Includes spam/scam generation and API abuse for mass automation.' },
+                        { key: '19', name: 'OB-019 – Multi-Modal / Cross-Modal Risks', description: 'Exploits targeting inconsistencies between modalities or leveraging modality fusion for coordinated attacks. Includes contradictory inputs, modality skewing, convergence payload injection, and chained payload execution.' }
+                    ],
+                    parseGroup(item) {
+                        const m = item.match(/AI(?:Tech|Subtech)-(\d+)\./);
+                        return m ? m[1] : null;
+                    }
+                }
+            };
+
             function clearElement(element) {
                 while (element.firstChild) {
                     element.removeChild(element.firstChild);
@@ -1079,33 +2068,276 @@
                     element.innerHTML = icons[iconKey];
                 }
             }
+            // --- Matrix Digital Rain ---
+            const matrixRain = (() => {
+                const canvas = document.getElementById('matrixCanvas');
+                const ctx = canvas.getContext('2d');
+                let animId = null;
+                let streams = [];
+                const fontSize = 14;
+                const maxStreams = 15; // sparse — few streams at a time
+                // Katakana + Latin + digits for authentic Matrix look
+                const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン' +
+                    'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%&*<>{}[]|/\\';
+
+                let cleanups = []; // deferred column wipes: { x, framesLeft }
+
+                function makeStream(w, h) {
+                    return {
+                        x: Math.floor(Math.random() * (w / fontSize)) * fontSize,
+                        y: Math.random() * -h,            // start above header
+                        speed: 0.2 + Math.random() * 0.5, // each stream has its own speed
+                        opacity: 0.18 + Math.random() * 0.12 // varied brightness
+                    };
+                }
+
+                function resize() {
+                    const header = canvas.parentElement;
+                    const dpr = window.devicePixelRatio || 1;
+                    const w = header.offsetWidth;
+                    const h = header.offsetHeight;
+                    canvas.width = w * dpr;
+                    canvas.height = h * dpr;
+                    canvas.style.width = w + 'px';
+                    canvas.style.height = h + 'px';
+                    ctx.scale(dpr, dpr);
+                }
+
+                let lastTime = 0;
+                const dropInterval = 80; // ms per tick
+
+                function draw(timestamp) {
+                    const elapsed = timestamp - lastTime;
+                    if (elapsed >= dropInterval) {
+                        lastTime = timestamp;
+                        const header = canvas.parentElement;
+                        const w = header.offsetWidth;
+                        const h = header.offsetHeight;
+                        // Fade trails by subtracting alpha — canvas stays transparent, CSS bg shows through
+                        ctx.save();
+                        ctx.globalCompositeOperation = 'destination-out';
+                        ctx.fillStyle = 'rgba(0, 0, 0, 0.15)';
+                        ctx.fillRect(0, 0, w, h);
+                        ctx.restore();
+
+                        // Process deferred cleanups — after enough fade frames, clearRect to kill residue
+                        for (let j = cleanups.length - 1; j >= 0; j--) {
+                            cleanups[j].framesLeft--;
+                            if (cleanups[j].framesLeft <= 0) {
+                                ctx.clearRect(cleanups[j].x, 0, fontSize, h);
+                                cleanups.splice(j, 1);
+                            }
+                        }
+
+                        // Spawn new streams gradually to fill up to maxStreams
+                        while (streams.length < maxStreams) {
+                            streams.push(makeStream(w, h));
+                        }
+
+                        ctx.font = fontSize + 'px monospace';
+                        for (let i = streams.length - 1; i >= 0; i--) {
+                            const s = streams[i];
+                            s.y += s.speed * fontSize;
+                            if (s.y > 0 && s.y < h) {
+                                const char = chars[Math.floor(Math.random() * chars.length)];
+                                // Lead character
+                                ctx.fillStyle = `rgba(0, 255, 65, ${s.opacity * 1.5})`;
+                                ctx.fillText(char, s.x, s.y);
+                                // Dimmer trail one step above
+                                if (s.y - fontSize > 0) {
+                                    ctx.fillStyle = `rgba(0, 255, 65, ${s.opacity * 0.5})`;
+                                    ctx.fillText(chars[Math.floor(Math.random() * chars.length)], s.x, s.y - fontSize);
+                                }
+                            }
+                            // Once past bottom: queue deferred cleanup, recycle stream
+                            if (s.y > h + fontSize) {
+                                cleanups.push({ x: s.x, framesLeft: 18 });
+                                streams[i] = makeStream(w, h);
+                            }
+                        }
+                    }
+                    animId = requestAnimationFrame(draw);
+                }
+
+                let resizeObserver = null;
+                function start() {
+                    if (animId) return;
+                    resize();
+                    lastTime = 0;
+                    // Start with fully transparent canvas — CSS header-bg shows through
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    animId = requestAnimationFrame(draw);
+                    // Re-fit canvas when header resizes
+                    resizeObserver = new ResizeObserver(() => resize());
+                    resizeObserver.observe(canvas.parentElement);
+                }
+
+                function stop() {
+                    if (animId) {
+                        cancelAnimationFrame(animId);
+                        animId = null;
+                    }
+                    if (resizeObserver) {
+                        resizeObserver.disconnect();
+                        resizeObserver = null;
+                    }
+                    // Clear canvas
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    streams = [];
+                    cleanups = [];
+                }
+
+                return { start, stop };
+            })();
+
             function applyTheme(theme) {
-                elements.html.classList.toggle('dark', theme === 'dark');
-                setIcon(elements.themeToggleBtn, theme === 'dark' ? 'sun' : 'moon');
+                document.documentElement.setAttribute('data-theme', theme);
+                elements.themeToggleBtn.innerHTML = themeIcons[theme] || themeIcons.light;
+                const themeNames = { dark: 'Dark', light: 'Light', highcontrast: 'High Contrast', retro: 'The Matrix' };
+                elements.themeToggleBtn.title = themeNames[theme] || theme;
+                // Toggle Matrix rain
+                if (theme === 'retro') {
+                    matrixRain.start();
+                } else {
+                    matrixRain.stop();
+                }
             }
             function toggleTheme() {
-                const newTheme = elements.html.classList.contains('dark') ? 'light' : 'dark';
-                localStorage.setItem('aidefendTheme', newTheme);
-                applyTheme(newTheme);
+                const current = document.documentElement.getAttribute('data-theme') || 'light';
+                const idx = themes.indexOf(current);
+                const next = themes[(idx + 1) % themes.length];
+                localStorage.setItem('aidefendTheme', next);
+                applyTheme(next);
             }
-            function matchesText(text, term) {
-                return text && text.toLowerCase().includes(term);
+            // --- Deep linking helpers ---
+            function findTechniqueById(id) {
+                for (const tactic of aidefendData.tactics) {
+                    for (const tech of (tactic.techniques || [])) {
+                        if (tech.id === id) return { technique: tech, groupName: tactic.name };
+                        for (const sub of (tech.subTechniques || [])) {
+                            if (sub.id === id) return { technique: sub, groupName: tactic.name };
+                        }
+                    }
+                }
+                return null;
             }
-            function matchesTechnique(tech, term) {
-                return matchesText(tech.name, term) ||
-                    matchesText(tech.id, term) ||
-                    matchesText(tech.description, term) ||
-                    (tech.defendsAgainst && tech.defendsAgainst.some(da => da.items && da.items.some(item => matchesText(item, term)))) ||
-                    (tech.implementationStrategies && tech.implementationStrategies.some(s => matchesText(s.strategy, term))) ||
-                    (tech.toolsOpenSource && tech.toolsOpenSource.some(t => matchesText(t, term))) ||
-                    (tech.toolsCommercial && tech.toolsCommercial.some(t => matchesText(t, term)));
+            function restoreFromHash() {
+                const hash = window.location.hash;
+                if (!hash || hash.length < 3) return;
+                const params = new URLSearchParams(hash.substring(1));
+                const techId = params.get('t');
+                if (techId) {
+                    const found = findTechniqueById(techId);
+                    if (found) {
+                        showTechniqueModal(found.technique, found.groupName);
+                    }
+                }
+            }
+
+            // --- Copy / Share icon SVGs ---
+            const COPY_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>';
+            const CHECK_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>';
+            const LINK_SVG = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>';
+
+            // --- Copy to clipboard helpers ---
+            function stripHtml(html) {
+                const tmp = document.createElement('div');
+                tmp.innerHTML = html || '';
+                return tmp.textContent || tmp.innerText || '';
+            }
+            function showCopyToast(anchorEl, message) {
+                const toast = document.createElement('span');
+                toast.className = 'copy-toast';
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                const rect = anchorEl.getBoundingClientRect();
+                toast.style.left = (rect.left + rect.width / 2) + 'px';
+                toast.style.top = (rect.bottom + 6) + 'px';
+                toast.style.transform = 'translateX(-50%)';
+                setTimeout(() => toast.remove(), 1500);
+            }
+            function createCopyButton(textToCopy) {
+                const btn = document.createElement('button');
+                btn.className = 'copy-btn';
+                btn.title = 'Copy to clipboard';
+                btn.innerHTML = COPY_SVG;
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    navigator.clipboard.writeText(textToCopy).then(() => {
+                        btn.classList.add('copied');
+                        btn.innerHTML = CHECK_SVG;
+                        showCopyToast(btn, 'Content Copied!');
+                        setTimeout(() => {
+                            btn.classList.remove('copied');
+                            btn.innerHTML = COPY_SVG;
+                        }, 1500);
+                    });
+                });
+                return btn;
+            }
+            function createLinkButton(technique) {
+                const btn = document.createElement('button');
+                btn.className = 'link-btn';
+                btn.title = 'Copy direct link';
+                btn.innerHTML = LINK_SVG;
+                btn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const linkUrl = window.location.origin + window.location.pathname + '#t=' + encodeURIComponent(technique.id);
+                    navigator.clipboard.writeText(linkUrl).then(() => {
+                        btn.classList.add('copied');
+                        btn.innerHTML = CHECK_SVG;
+                        showCopyToast(btn, 'URL Copied!');
+                        setTimeout(() => {
+                            btn.classList.remove('copied');
+                            btn.innerHTML = LINK_SVG;
+                        }, 1500);
+                    });
+                });
+                return btn;
+            }
+            function injectCodeCopyButtons(container) {
+                container.querySelectorAll('pre').forEach(pre => {
+                    const btn = document.createElement('button');
+                    btn.className = 'code-copy-btn';
+                    btn.title = 'Copy code';
+                    btn.innerHTML = COPY_SVG;
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        const codeEl = pre.querySelector('code');
+                        const text = codeEl ? codeEl.textContent : pre.textContent;
+                        navigator.clipboard.writeText(text).then(() => {
+                            btn.classList.add('copied');
+                            btn.innerHTML = CHECK_SVG;
+                            showCopyToast(btn, 'Code Copied!');
+                            setTimeout(() => {
+                                btn.classList.remove('copied');
+                                btn.innerHTML = COPY_SVG;
+                            }, 1500);
+                        });
+                    });
+                    pre.appendChild(btn);
+                });
+            }
+
+            function matchesText(text, re) {
+                return text && re.test(text);
+            }
+            function matchesTechnique(tech, re) {
+                return matchesText(tech.name, re) ||
+                    matchesText(tech.id, re) ||
+                    matchesText(tech.description, re) ||
+                    (tech.defendsAgainst && tech.defendsAgainst.some(da => da.items && da.items.some(item => matchesText(item, re)))) ||
+                    (tech.implementationStrategies && tech.implementationStrategies.some(s => matchesText(s.strategy, re))) ||
+                    (tech.toolsOpenSource && tech.toolsOpenSource.some(t => matchesText(t, re))) ||
+                    (tech.toolsCommercial && tech.toolsCommercial.some(t => matchesText(t, re)));
             }
             function getFilteredTechniqueIds(searchTerm) {
                 if (!searchTerm) return new Set(eligibleTechniques.map(t => t.id));
-                const term = searchTerm.toLowerCase();
+                const escaped = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                const re = new RegExp('\\b' + escaped, 'i');
                 const matches = new Set();
                 eligibleTechniques.forEach(tech => {
-                    if (matchesTechnique(tech, term)) {
+                    if (matchesTechnique(tech, re)) {
                         matches.add(tech.id);
                     }
                 });
@@ -1120,6 +2352,9 @@
                         break;
                     case 'phase':
                         renderPhaseGrid(searchTerm);
+                        break;
+                    case 'framework':
+                        renderFrameworkGrid(searchTerm);
                         break;
                     case 'tactic':
                     default:
@@ -1217,6 +2452,250 @@
                 }
                 elements.mainContent.appendChild(gridContainer);
             }
+
+            // Pillar/Phase display name maps for sub-grouping
+            const pillarNames = { data: 'AI Data & Feature Security', infra: 'Infrastructure & Platform Security', model: 'Model & Algorithm Security', app: 'Application, Agent & Interface Security' };
+            const phaseNames = { scoping: 'AI System Design & Scoping', building: 'Model Training, Building & Hardening', validation: 'Pre-Deployment Validation & Assurance', operation: 'Production Operation & Monitoring', response: 'Incident Containment & Eviction', improvement: 'System Restoration & Improvement' };
+
+            function buildGroupedBody(techniquesToRender, groupMode, groupName, filteredIds, searchTerm) {
+                const frag = document.createDocumentFragment();
+                if (groupMode === 'all') {
+                    const ul = createElement('ul', { className: 'fw-accordion-body-inner' });
+                    techniquesToRender.forEach(tech => ul.appendChild(renderTechniqueItem(tech, groupName, filteredIds, searchTerm)));
+                    frag.appendChild(ul);
+                    return frag;
+                }
+                // Build groups
+                const groups = {};
+                const nameMap = groupMode === 'pillar' ? pillarNames : groupMode === 'phase' ? phaseNames : null;
+                techniquesToRender.forEach(tech => {
+                    let keys = [];
+                    if (groupMode === 'tactic') {
+                        keys = tech.tactic ? [tech.tactic] : ['Other'];
+                    } else if (groupMode === 'pillar') {
+                        const p = tech.pillar;
+                        keys = Array.isArray(p) ? p : (p ? [p] : ['other']);
+                    } else if (groupMode === 'phase') {
+                        const ph = tech.phase;
+                        keys = Array.isArray(ph) ? ph : (ph ? [ph] : ['other']);
+                    }
+                    if (keys.length === 0) keys = ['Other'];
+                    keys.forEach(k => {
+                        if (!groups[k]) groups[k] = [];
+                        groups[k].push(tech);
+                    });
+                });
+                // Determine order
+                let orderedKeys;
+                if (groupMode === 'tactic') {
+                    const tacticOrder = ['Model', 'Harden', 'Detect', 'Isolate', 'Deceive', 'Evict', 'Restore'];
+                    orderedKeys = tacticOrder.filter(k => groups[k]);
+                    Object.keys(groups).forEach(k => { if (!orderedKeys.includes(k)) orderedKeys.push(k); });
+                } else if (groupMode === 'pillar') {
+                    const pillarOrder = ['data', 'infra', 'model', 'app'];
+                    orderedKeys = pillarOrder.filter(k => groups[k]);
+                    Object.keys(groups).forEach(k => { if (!orderedKeys.includes(k)) orderedKeys.push(k); });
+                } else {
+                    const phaseOrder = ['scoping', 'building', 'validation', 'operation', 'response', 'improvement'];
+                    orderedKeys = phaseOrder.filter(k => groups[k]);
+                    Object.keys(groups).forEach(k => { if (!orderedKeys.includes(k)) orderedKeys.push(k); });
+                }
+                orderedKeys.forEach(key => {
+                    const techs = groups[key];
+                    const displayName = nameMap ? (nameMap[key] || key) : key;
+                    const subgroup = createElement('div', { className: 'fw-subgroup' });
+                    const subHeader = createElement('div', { className: 'fw-subgroup-header' });
+                    subHeader.appendChild(document.createTextNode(displayName));
+                    subHeader.appendChild(createElement('span', { className: 'fw-subgroup-header-count', textContent: String(techs.length) }));
+                    subgroup.appendChild(subHeader);
+                    const ul = createElement('ul', { className: 'fw-subgroup-techniques' });
+                    techs.forEach(tech => ul.appendChild(renderTechniqueItem(tech, groupName, filteredIds, searchTerm)));
+                    subgroup.appendChild(ul);
+                    frag.appendChild(subgroup);
+                });
+                return frag;
+            }
+
+            function renderFrameworkGrid(searchTerm) {
+                const config = frameworkViewConfig[currentFramework];
+                if (!config) return;
+                const fwData = frameworkViews[currentFramework] || {};
+                const filteredIds = getFilteredTechniqueIds(searchTerm);
+
+                // Check for zero results
+                if (searchTerm && filteredIds.size === 0) {
+                    elements.mainContent.appendChild(createElement('p', {
+                        className: 'text-center text-gray-500 dark:text-gray-400 py-10',
+                        textContent: `No techniques found matching "${searchTerm}".`
+                    }));
+                    return;
+                }
+
+                // Framework page title + external link icon
+                const titleEl = createElement('h2', { className: 'fw-page-title' });
+                titleEl.appendChild(document.createTextNode(config.pageTitle || config.label));
+                if (config.url) {
+                    const linkBtn = createElement('a', { className: 'fw-title-link', href: config.url, title: 'Open official framework page' });
+                    linkBtn.setAttribute('target', '_blank');
+                    linkBtn.setAttribute('rel', 'noopener noreferrer');
+                    linkBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+                    titleEl.appendChild(linkBtn);
+                }
+                elements.mainContent.appendChild(titleEl);
+
+                // Brief description under title
+                if (config.about) {
+                    const briefEl = createElement('p', { className: 'fw-page-brief', textContent: config.about });
+                    elements.mainContent.appendChild(briefEl);
+                }
+
+                // All frameworks use accordion layout
+                const container = createElement('div', { className: 'fw-accordion-container' });
+                // Helper: build an accordion header row
+                function buildAccordionHeader(group, techs, cfg) {
+                    const header = createElement('div', { className: 'fw-accordion-header' });
+                    const headerLeft = createElement('div', { className: 'fw-accordion-header-left' });
+                    const dashIdx = group.name.indexOf(' \u2013 ');
+                    if (dashIdx > 0) {
+                        headerLeft.appendChild(createElement('span', { className: 'fw-accordion-header-id', textContent: group.name.substring(0, dashIdx) }));
+                        headerLeft.appendChild(createElement('span', { className: 'fw-accordion-header-name', textContent: group.name.substring(dashIdx + 3) }));
+                    } else {
+                        headerLeft.appendChild(createElement('span', { className: 'fw-accordion-header-name', textContent: group.name }));
+                    }
+                    header.appendChild(headerLeft);
+                    header.appendChild(createElement('span', { className: 'fw-accordion-count', textContent: String(techs.length) }));
+                    const chev = createElement('div', { className: 'fw-accordion-chevron' });
+                    chev.innerHTML = icons.chevron;
+                    header.appendChild(chev);
+                    return header;
+                }
+
+                // Helper: build toggle bar + grouped body inside an accordion body
+                function buildAccordionBodyContent(body, section, techniquesToRender, groupName, filteredIds2, searchTerm2, parentBody, groupObj) {
+                    // Description data kept in groupObj for future use; visual display removed
+                    if (techniquesToRender.length === 0) return;
+                    const toggleBar = createElement('div', { className: 'fw-group-toggle' });
+                    const modes = [
+                        { key: 'tactic', label: 'By Tactic' },
+                        { key: 'pillar', label: 'By Pillar' },
+                        { key: 'phase', label: 'By Phase' },
+                        { key: 'all', label: 'All' }
+                    ];
+                    let currentMode = 'tactic';
+                    const contentContainer = createElement('div');
+                    contentContainer.appendChild(buildGroupedBody(techniquesToRender, 'tactic', groupName, filteredIds2, searchTerm2));
+                    modes.forEach(mode => {
+                        const btn = createElement('div', { className: `fw-group-toggle-btn ${mode.key === 'tactic' ? 'active' : ''}`, textContent: mode.label });
+                        btn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            if (currentMode === mode.key) return;
+                            currentMode = mode.key;
+                            toggleBar.querySelectorAll('.fw-group-toggle-btn').forEach(b => b.classList.remove('active'));
+                            btn.classList.add('active');
+                            clearElement(contentContainer);
+                            contentContainer.appendChild(buildGroupedBody(techniquesToRender, mode.key, groupName, filteredIds2, searchTerm2));
+                            if (section.classList.contains('expanded')) {
+                                body.style.maxHeight = 'none';
+                                requestAnimationFrame(() => { body.style.maxHeight = body.scrollHeight + 'px'; });
+                                if (parentBody) { parentBody.style.maxHeight = 'none'; }
+                            }
+                        });
+                        toggleBar.appendChild(btn);
+                    });
+                    body.appendChild(toggleBar);
+                    body.appendChild(contentContainer);
+                }
+
+                config.groups.forEach(group => {
+                    // ── Hierarchical rendering (objectives → nested techniques) ──
+                    if (group.children && config.techniqueGroups) {
+                        // Aggregate unique techniques across all child groups
+                        const allTechMap = new Map();
+                        group.children.forEach(ck => { (fwData[ck] || []).forEach(t => { if (!allTechMap.has(t.id)) allTechMap.set(t.id, t); }); });
+                        (fwData[group.key] || []).forEach(t => { if (!allTechMap.has(t.id)) allTechMap.set(t.id, t); });
+                        const allFiltered = [...allTechMap.values()].filter(t => !searchTerm || filteredIds.has(t.id));
+
+                        const section = createElement('div', { className: 'fw-accordion-section fw-objective-section elevation-2' });
+                        const header = buildAccordionHeader(group, allFiltered, config);
+                        const body = createElement('div', { className: 'fw-accordion-body' });
+                        const childContainer = createElement('div', { className: 'fw-child-container' });
+
+                        group.children.forEach(childKey => {
+                            const childInfo = config.techniqueGroups[childKey];
+                            if (!childInfo) return;
+                            const childTechs = (fwData[childKey] || []).filter(t => !searchTerm || filteredIds.has(t.id));
+                            const childGroup = { name: childInfo.name, description: childInfo.description, key: childKey };
+
+                            const childSection = createElement('div', { className: 'fw-accordion-section fw-technique-section elevation-2' });
+                            const childHeader = buildAccordionHeader(childGroup, childTechs, config);
+                            const childBody = createElement('div', { className: 'fw-accordion-body' });
+
+                            buildAccordionBodyContent(childBody, childSection, childTechs, childInfo.name, filteredIds, searchTerm, body, childGroup);
+
+                            childSection.appendChild(childHeader);
+                            childSection.appendChild(childBody);
+
+                            childHeader.addEventListener('click', () => {
+                                const isExp = childSection.classList.toggle('expanded');
+                                if (isExp) {
+                                    childBody.style.maxHeight = childBody.scrollHeight + 'px';
+                                    // Parent uses max-height:none so it grows naturally
+                                    if (section.classList.contains('expanded')) { body.style.maxHeight = 'none'; }
+                                } else {
+                                    childBody.style.maxHeight = null;
+                                }
+                            });
+                            childContainer.appendChild(childSection);
+                        });
+
+                        body.appendChild(childContainer);
+                        section.appendChild(header);
+                        section.appendChild(body);
+
+                        header.addEventListener('click', () => {
+                            const isExp = section.classList.toggle('expanded');
+                            if (isExp) {
+                                body.style.maxHeight = body.scrollHeight + 'px';
+                                // After expand animation, switch to none so nested accordions can grow
+                                body.addEventListener('transitionend', function h() {
+                                    if (section.classList.contains('expanded')) body.style.maxHeight = 'none';
+                                    body.removeEventListener('transitionend', h);
+                                });
+                            } else {
+                                // From 'none' → must set px first, then remove to animate to 0
+                                body.style.maxHeight = body.scrollHeight + 'px';
+                                void body.offsetHeight;
+                                body.style.maxHeight = null;
+                            }
+                        });
+                        container.appendChild(section);
+                    } else {
+                        // ── Flat rendering (all other frameworks) ──
+                        const techniques = (fwData[group.key] || []);
+                        const techniquesToRender = techniques.filter(tech => !searchTerm || filteredIds.has(tech.id));
+
+                        const section = createElement('div', { className: 'fw-accordion-section elevation-2' });
+                        const header = buildAccordionHeader(group, techniquesToRender, config);
+                        const body = createElement('div', { className: 'fw-accordion-body' });
+
+                        buildAccordionBodyContent(body, section, techniquesToRender, group.name, filteredIds, searchTerm, null, group);
+
+                        section.appendChild(header);
+                        section.appendChild(body);
+                        header.addEventListener('click', () => {
+                            const isExpanded = section.classList.toggle('expanded');
+                            if (isExpanded) {
+                                body.style.maxHeight = body.scrollHeight + 'px';
+                            } else {
+                                body.style.maxHeight = null;
+                            }
+                        });
+                        container.appendChild(section);
+                    }
+                });
+                elements.mainContent.appendChild(container);
+            }
+
 
             function renderTechniqueItem(tech, groupName, filteredIds, searchTerm) {
                 const li = createElement('li', { className: 'technique-container' });
@@ -1322,6 +2801,12 @@
                 elements.modal.classList.remove('active');
                 document.body.classList.remove('modal-open');
                 clearElement(elements.modalBody);
+                clearElement(elements.modalActions);
+                // Clear technique deep link hash and restore default title
+                if (window.location.hash) {
+                    history.replaceState(null, '', window.location.pathname + window.location.search);
+                }
+                document.title = 'AIDEFEND Framework \u2014 AI Security Defense Knowledge Base';
             }
             function createAccordion(sections, defaultOpenIndex = 0) {
                 const container = createElement('div', { className: 'accordion-container' });
@@ -1409,7 +2894,7 @@
                         tabsContainer.querySelector('.active')?.classList.remove('active');
                         contentContainer.querySelector('.active')?.classList.remove('active');
                         e.target.classList.add('active');
-                        document.getElementById(`tab-content-${tabId}`).classList.add('active');
+                        document.getElementById(`tab-content-${tabId}`)?.classList.add('active');
                     }
                 });
                 showModal();
@@ -1427,8 +2912,21 @@
             }
             function showTechniqueModal(technique, groupName) {
                 clearElement(elements.modalBody);
-                const groupType = currentView.charAt(0).toUpperCase() + currentView.slice(1);
-                elements.modalBody.appendChild(createElement('p', { className: 'text-sm opacity-80 mb-1', textContent: `${groupType}: ${groupName}` }));
+                let groupLabel;
+                if (currentView === 'framework') {
+                    const config = frameworkViewConfig[currentFramework];
+                    groupLabel = config ? `${config.label}: ${groupName}` : groupName;
+                } else {
+                    const groupType = currentView.charAt(0).toUpperCase() + currentView.slice(1);
+                    groupLabel = `${groupType}: ${groupName}`;
+                }
+                elements.modalBody.appendChild(createElement('p', { className: 'text-sm opacity-80 mb-1 modal-subtitle', textContent: groupLabel }));
+                // Header action buttons (copy + link — positioned near close button)
+                clearElement(elements.modalActions);
+                const plainDesc = stripHtml(technique.description || '');
+                elements.modalActions.appendChild(createCopyButton(technique.id + ': ' + technique.name + '\n\n' + plainDesc));
+                elements.modalActions.appendChild(createLinkButton(technique));
+                // Title
                 elements.modalBody.appendChild(createElement('h2', { textContent: `${technique.id}: ${technique.name}` }));
                 const p = createElement('p', { className: 'mb-4 leading-relaxed text-sm' });
                 p.innerHTML = DOMPurify.sanitize(technique.description || 'No description available.');
@@ -1444,6 +2942,9 @@
                 renderDetailSection('Potential Tools - Open Source', technique.toolsOpenSource);
                 renderDetailSection('Potential Tools - Commercial', technique.toolsCommercial);
                 renderDefendsAgainstSection(technique.defendsAgainst);
+                // Deep link: update URL hash and page title
+                history.replaceState(null, '', '#t=' + encodeURIComponent(technique.id));
+                document.title = technique.id + ': ' + technique.name + ' | AIDEFEND Framework';
                 showModal();
             }
             function renderDetailSection(title, items) {
@@ -1462,7 +2963,10 @@
                         header.appendChild(iconWrapper);
                         const content = createElement('div', { className: 'strategy-accordion-content' });
                         const contentInner = createElement('div', { className: 'strategy-accordion-content-inner' });
-                        if (strategy.howTo) { contentInner.innerHTML = DOMPurify.sanitize(strategy.howTo); }
+                        if (strategy.howTo) {
+                            contentInner.innerHTML = DOMPurify.sanitize(strategy.howTo);
+                            injectCodeCopyButtons(contentInner);
+                        }
                         content.appendChild(contentInner);
                         item.appendChild(header);
                         item.appendChild(content);
@@ -1498,16 +3002,10 @@
                 const header = document.querySelector('.header-main');
                 const contentWrapper = document.getElementById('content-wrapper');
                 if (header && contentWrapper) {
-                    // Check if we are in the mobile view (screen width < 640px)
-                    if (window.innerWidth < 640) {
-                        const headerHeight = header.offsetHeight;
-                        const extraMargin = 24; // A bit of space
-                        contentWrapper.style.paddingTop = `${headerHeight + extraMargin}px`;
-                    } else {
-                        // We are in desktop view, so remove the inline style
-                        // and let the original 'pt-48' class take over.
-                        contentWrapper.style.paddingTop = '';
-                    }
+                    const headerHeight = header.offsetHeight;
+                    document.documentElement.style.setProperty('--header-height', headerHeight + 'px');
+                    const extraMargin = 24;
+                    contentWrapper.style.paddingTop = `${headerHeight + extraMargin}px`;
                 }
             }
             function addEventListeners() {
@@ -1516,17 +3014,41 @@
                 elements.themeToggleBtn.addEventListener('click', toggleTheme);
                 elements.aboutBtn.addEventListener('click', showIntroductionModal);
                 elements.viewInfoBtn.addEventListener('click', showViewInfoModal);
+                const frameworkSelector = document.getElementById('framework-selector');
+                const frameworkDropdown = document.getElementById('framework-dropdown');
+
                 elements.viewSwitcher.addEventListener('click', (e) => {
                     if (e.target.tagName === 'BUTTON') {
                         const newView = e.target.dataset.view;
                         if (newView !== currentView) {
-                            document.querySelector('.view-switcher-btn.active').classList.remove('active');
+                            document.querySelector('.view-switcher-btn.active')?.classList.remove('active');
                             e.target.classList.add('active');
                             currentView = newView;
+                            // Show/hide framework selector
+                            frameworkSelector.style.display = newView === 'framework' ? 'inline-flex' : 'none';
                             renderMainGrid();
+                            updateContentPadding();
                         }
                     }
                 });
+
+                frameworkDropdown.addEventListener('change', (e) => {
+                    currentFramework = e.target.value;
+                    renderMainGrid();
+                    window.scrollTo(0, 0);
+                });
+
+                // Swap dropdown option text between short/full based on element width
+                function updateDropdownLabels() {
+                    const w = frameworkDropdown.offsetWidth;
+                    const useShort = w > 0 && w < 350;
+                    frameworkDropdown.querySelectorAll('option[data-short]').forEach(opt => {
+                        opt.textContent = useShort ? opt.dataset.short : opt.dataset.full;
+                    });
+                }
+                updateDropdownLabels();
+                new ResizeObserver(updateDropdownLabels).observe(frameworkDropdown);
+
                 // Bug Fix #1: Removed debounce timer for instant search response
                 elements.searchBar.addEventListener('input', (e) => {
                     const searchTerm = e.target.value.trim();
@@ -1543,6 +3065,28 @@
                 document.addEventListener('keydown', (event) => {
                     if (event.key === 'Escape' && elements.modal.classList.contains('active')) {
                         hideModal();
+                    }
+                });
+                // Deep link: handle browser back/forward
+                window.addEventListener('popstate', () => {
+                    const hash = window.location.hash;
+                    if (hash && hash.includes('t=')) {
+                        const params = new URLSearchParams(hash.substring(1));
+                        const techId = params.get('t');
+                        if (techId) {
+                            const found = findTechniqueById(decodeURIComponent(techId));
+                            if (found) {
+                                showTechniqueModal(found.technique, found.groupName);
+                                return;
+                            }
+                        }
+                    }
+                    // No valid hash — close modal if open
+                    if (elements.modal.classList.contains('active')) {
+                        elements.modal.classList.remove('active');
+                        document.body.classList.remove('modal-open');
+                        clearElement(elements.modalBody);
+                        clearElement(elements.modalActions);
                     }
                 });
             }
@@ -1592,7 +3136,47 @@
                         }
                     });
                 });
+
+                // Prepare framework views
+                prepareFrameworkViews();
             }
+
+            function prepareFrameworkViews() {
+                frameworkViews = {};
+                Object.entries(frameworkViewConfig).forEach(([viewKey, config]) => {
+                    const groupData = {};
+                    config.groups.forEach(g => { groupData[g.key] = []; });
+                    if (config.techniqueGroups) {
+                        Object.keys(config.techniqueGroups).forEach(k => { if (!groupData[k]) groupData[k] = []; });
+                    }
+
+                    eligibleTechniques.forEach(tech => {
+                        if (!tech.defendsAgainst) return;
+                        const fwEntry = tech.defendsAgainst.find(da => da.framework === config.frameworkKey);
+                        if (!fwEntry || !fwEntry.items) return;
+                        // Skip N/A (exact "N/A" or "N/A (...)" explanatory variants)
+                        if (fwEntry.items.every(item => item === 'N/A' || item.startsWith('N/A '))) return;
+
+                        const addedToGroups = new Set(); // deduplicate within this technique
+                        fwEntry.items.forEach(item => {
+                            const parsed = config.parseGroup(item);
+                            if (!parsed) return;
+
+                            // ATLAS returns array of tactic names; others return a string
+                            const groupKeys = Array.isArray(parsed) ? parsed : [parsed];
+                            groupKeys.forEach(key => {
+                                if (groupData[key] && !addedToGroups.has(key)) {
+                                    groupData[key].push(tech);
+                                    addedToGroups.add(key);
+                                }
+                            });
+                        });
+                    });
+
+                    frameworkViews[viewKey] = groupData;
+                });
+            }
+
             function initialize() {
                 const savedTheme = localStorage.getItem('aidefendTheme') || 'dark';
                 applyTheme(savedTheme);
@@ -1643,6 +3227,8 @@
                 renderMainGrid();
                 addEventListeners();
                 updateContentPadding();
+                // Deep link: restore technique from URL hash on page load
+                restoreFromHash();
             }
             initialize();
         };

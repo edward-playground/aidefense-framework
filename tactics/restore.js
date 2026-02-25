@@ -61,7 +61,6 @@ export const restoreTactic = {
                         "NISTAML.023 Backdoor Poisoning",
                         "NISTAML.024 Targeted Poisoning",
                         "NISTAML.026 Model Poisoning (Integrity)",
-                        "NISTAML.05 Supply Chain Attacks",
                         "NISTAML.051 Model Poisoning (Supply Chain)"
                     ]
                 },
@@ -156,7 +155,6 @@ export const restoreTactic = {
                                 "NISTAML.011 Model Poisoning (Availability)",
                                 "NISTAML.023 Backdoor Poisoning",
                                 "NISTAML.026 Model Poisoning (Integrity)",
-                                "NISTAML.05 Supply Chain Attacks",
                                 "NISTAML.051 Model Poisoning (Supply Chain)"
                             ]
                         },
@@ -530,7 +528,7 @@ export const restoreTactic = {
                         "NISTAML.013 Data Poisoning (hardening institutionalizes data sanitization policies)",
                         "NISTAML.018 Prompt Injection (hardening creates permanent prompt defense rules)",
                         "NISTAML.023 Backdoor Poisoning (PIR creates backdoor detection regression tests)",
-                        "NISTAML.05 Supply Chain Attacks (hardening updates supply chain provenance requirements)"
+                        "NISTAML.051 Model Poisoning (Supply Chain) (hardening updates supply chain provenance requirements)"
                     ]
                 },
                 {

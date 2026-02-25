@@ -162,8 +162,9 @@ export const deceiveTactic = {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
                         "NISTAML.031 Model Extraction (canary data traces stolen training data)",
-                        "NISTAML.05 Supply Chain Attacks (decoy artifacts detect supply chain compromise)",
-                        "NISTAML.03 Privacy Compromises (canary tokens detect privacy attacks)"
+                        "NISTAML.051 Model Poisoning (Supply Chain) (decoy artifacts detect supply chain compromise)",
+                        "NISTAML.037 Training Data Attacks (canary tokens detect training data extraction)",
+                        "NISTAML.033 Membership Inference (canary data reveals unauthorized model training on stolen data)"
                     ]
                 },
                 {
@@ -514,7 +515,8 @@ export const deceiveTactic = {
                         "AML.T0056 Extract LLM System Prompt (deceptive identity prevents accurate prompt extraction)",
                         "AML.T0013 Discover AI Model Ontology (misleading responses frustrate ontology discovery)",
                         "AML.T0014 Discover AI Model Family (deceptive identity hides model family)",
-                        "AML.T0006 Active Scanning (honeypot endpoints attract and log scanning)"
+                        "AML.T0006 Active Scanning (honeypot endpoints attract and log scanning)",
+                        "AML.T0064 Gather RAG-Indexed Targets (deceptive content misleads RAG index reconnaissance)"
                     ]
                 },
                 {
@@ -546,7 +548,8 @@ export const deceiveTactic = {
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
-                        "NISTAML.031 Model Extraction (deceptive system info misleads extraction approaches)"
+                        "NISTAML.031 Model Extraction (deceptive system info misleads extraction approaches)",
+                        "NISTAML.035 Prompt Extraction (deceptive identity prevents accurate system prompt extraction)"
                     ]
                 },
                 {
@@ -607,7 +610,7 @@ export const deceiveTactic = {
             ],
             "toolsCommercial": [
                 "Privacy-Enhancing Technology Platforms (Gretel.ai, Tonic.ai, SarUS, Immuta)",
-                "AI Security Platforms (Protect AI, HiddenLayer, Robust Intelligence)",
+                "AI Security Platforms (Protect AI, HiddenLayer, Cisco AI Defense (formerly Robust Intelligence))",
                 "MLOps Platforms (Amazon SageMaker, Google Vertex AI, Databricks)"
             ],
             "defendsAgainst": [
@@ -649,7 +652,7 @@ export const deceiveTactic = {
                     "items": [
                         "NISTAML.032 Reconstruction (DP training prevents reconstruction of training data)",
                         "NISTAML.033 Membership Inference (noise injection prevents membership inference)",
-                        "NISTAML.03 Privacy Compromises"
+                        "NISTAML.034 Property Inference (noise and DP prevent inferring training data properties)"
                     ]
                 },
                 {
