@@ -387,7 +387,8 @@ export const restoreTactic = {
                         "AML.T0012 Valid Accounts",
                         "AML.T0055 Unsecured Credentials (re-auth invalidates previously unsecured credentials)",
                         "AML.T0083 Credentials from AI Agent Configuration (re-auth invalidates extracted agent credentials)",
-                        "AML.T0091 Use Alternate Authentication Material"
+                        "AML.T0091 Use Alternate Authentication Material",
+                        "AML.T0091.000 Use Alternate Authentication Material: Application Access Token"
                     ]
                 },
                 {
@@ -461,7 +462,7 @@ export const restoreTactic = {
             "name": "Post-Incident Hardening, Verification & Institutionalization",
             "pillar": ["data", "infra", "model", "app"],
             "phase": ["improvement"],
-            "description": "Following containment and recovery, convert the incident into durable security improvements. This includes: (1) producing a formal, version-controlled Post-Incident Review (PIR) that documents root cause and precise TTPs; (2) updating threat models and risk scores based on real evidence; (3) enforcing fixes through engineering tickets with measurable acceptance tests; (4) validating fixes via targeted security testing and storing proof; (5) updating policy-as-code, IaC modules, shared security libraries, and CI/CD lint rules so that the same class of failure cannot silently recur; and (6) generating auditable communication/notification artifacts for legal, compliance, and (if needed) customers without leaking exploit detail.",
+            "description": "Following containment, recovery, and immediate tactical patching, convert the incident into durable security improvements over the following days to weeks. This includes: (1) producing a formal, version-controlled Post-Incident Review (PIR) that documents root cause and precise TTPs; (2) updating threat models and risk scores based on real evidence; (3) enforcing fixes through engineering tickets with measurable acceptance tests; (4) validating fixes via targeted security testing and storing proof; (5) updating policy-as-code, IaC modules, shared security libraries, and CI/CD lint rules so that the same class of failure cannot silently recur; and (6) generating auditable communication/notification artifacts for legal, compliance, and (if needed) customers without leaking exploit detail.",
             "toolsOpenSource": [
                 "MITRE ATLAS Navigator (to map observed TTPs)",
                 "AI red teaming / LLM security testing frameworks (garak, Counterfit, vigil-llm)",

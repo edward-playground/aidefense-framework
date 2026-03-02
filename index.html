@@ -59,1551 +59,8 @@
     </script>
     <script src="./js/tailwindcss.js"></script>
     <script src="./js/purify.min.js"></script>
-    <style>
-        :root {
-            /* Light Theme — Rose Gold */
-            --font-family: 'Inter', sans-serif;
-            --bg-color: #f0e8e5;
-            --text-color: #3b3233;
-            --text-secondary-color: #7a6b68;
-            --header-bg: #f8f3f1;
-            --header-border: #ddd4d0;
-            --column-bg: #f8f3f1;
-            --column-border: #ddd4d0;
-            --column-header-text: #4a3b38;
-            --column-header-hover-text: #1976d2;
-            --technique-item-bg: #f8f3f1;
-            --technique-item-border: #e5dbd6;
-            --technique-item-text: #1976d2;
-            --technique-item-hover-bg: #ebe1dc;
-            --technique-item-hover-text: #1565c0;
-            --technique-item-highlight-bg: #d4c5bf;
-            --technique-item-highlight-text: #0d47a1;
-            --technique-id-text: #8a7b76;
-            --subtechnique-bg: #f5f0ee;
-            --modal-content-bg: #f8f3f1;
-            --modal-close-btn-text: #7a6b68;
-            --modal-close-btn-hover-text: #2a2223;
-            --search-bg: #ebe4e0;
-            --search-border: #bdb2ac;
-            --search-focus-ring: #2196f3;
-            --scrollbar-track: #ddd4d0;
-            --scrollbar-thumb: #a09290;
-            --scrollbar-thumb-hover: #8a7b76;
-            --icon-fill: #7a6b68;
-            --icon-hover-fill: #2196f3;
-            --link-color: #1976d2;
-            --link-hover-color: #0d47a1;
-            --shadow-umbra: rgba(0, 0, 0, 0.15);
-            --shadow-penumbra: rgba(0, 0, 0, 0.1);
-            --shadow-ambient: rgba(0, 0, 0, 0.08);
-            --footer-bg: #ddd4d0;
-            --footer-text: #7a6b68;
-            --footer-border: #c5bab5;
-            --view-switcher-bg: #e5dbd6;
-            --view-switcher-btn-bg: #f8f3f1;
-            --view-switcher-btn-text: #5a4b48;
-            --view-switcher-btn-active-bg: #3f51b5;
-            --view-switcher-btn-active-text: #ffffff;
-        }
-
-        html[data-theme="dark"] {
-            /* Dark Theme */
-            --bg-color: #1a1a1a;
-            --text-color: #e0e0e0;
-            --text-secondary-color: #b0b0b0;
-            --header-bg: #222222;
-            --header-border: #333333;
-            --column-bg: #222222;
-            --column-border: #333333;
-            --column-header-text: #f0f0f0;
-            --column-header-hover-text: #90caf9;
-            --technique-item-bg: #2b2b2b;
-            --technique-item-border: #3d3d3d;
-            --technique-item-text: #90caf9;
-            --technique-item-hover-bg: #383838;
-            --technique-item-hover-text: #bbdefb;
-            --technique-item-highlight-bg: #1e3a5f;
-            --technique-item-highlight-text: #e3f2fd;
-            --technique-id-text: #c0c0c0;
-            --subtechnique-bg: #252525;
-            --modal-content-bg: #222222;
-            --modal-close-btn-text: #b0b0b0;
-            --modal-close-btn-hover-text: #f0f0f0;
-            --search-bg: #333333;
-            --search-border: #444444;
-            --search-focus-ring: #90caf9;
-            --scrollbar-track: #2b2b2b;
-            --scrollbar-thumb: #555555;
-            --scrollbar-thumb-hover: #777777;
-            --icon-fill: #c0c0c0;
-            --icon-hover-fill: #90caf9;
-            --link-color: #90caf9;
-            --link-hover-color: #e3f2fd;
-            --shadow-umbra: rgba(0, 0, 0, 0.5);
-            --shadow-penumbra: rgba(0, 0, 0, 0.35);
-            --shadow-ambient: rgba(0, 0, 0, 0.3);
-            --footer-bg: #2b2b2b;
-            --footer-text: #a0a0a0;
-            --footer-border: #3d3d3d;
-            --view-switcher-bg: #333333;
-            --view-switcher-btn-bg: #424242;
-            --view-switcher-btn-text: #e0e0e0;
-            --view-switcher-btn-active-bg: #90caf9;
-            --view-switcher-btn-active-text: #121212;
-        }
-
-        html[data-theme="retro"] {
-            /* Retro Terminal — Phosphor Green on Black */
-            --font-family: 'Courier New', Consolas, 'Liberation Mono', monospace;
-            --bg-color: #0a0a0a;
-            --text-color: #00ff41;
-            --text-secondary-color: #00cc33;
-            --header-bg: #0f0f0f;
-            --header-border: #003300;
-            --column-bg: #0f0f0f;
-            --column-border: #003300;
-            --column-header-text: #00ff41;
-            --column-header-hover-text: #66ff88;
-            --technique-item-bg: #111111;
-            --technique-item-border: #003300;
-            --technique-item-text: #00ff41;
-            --technique-item-hover-bg: #0a1a0a;
-            --technique-item-hover-text: #66ff88;
-            --technique-item-highlight-bg: #0a2a0a;
-            --technique-item-highlight-text: #aaffaa;
-            --technique-id-text: #00aa2a;
-            --subtechnique-bg: #0d0d0d;
-            --modal-content-bg: #0f0f0f;
-            --modal-close-btn-text: #00aa2a;
-            --modal-close-btn-hover-text: #00ff41;
-            --search-bg: #111111;
-            --search-border: #004400;
-            --search-focus-ring: #00ff41;
-            --scrollbar-track: #0a0a0a;
-            --scrollbar-thumb: #004400;
-            --scrollbar-thumb-hover: #006600;
-            --icon-fill: #00cc33;
-            --icon-hover-fill: #00ff41;
-            --link-color: #33ff66;
-            --link-hover-color: #88ffaa;
-            --shadow-umbra: rgba(0, 255, 65, 0.1);
-            --shadow-penumbra: rgba(0, 255, 65, 0.06);
-            --shadow-ambient: rgba(0, 255, 65, 0.04);
-            --footer-bg: #0d0d0d;
-            --footer-text: #00aa2a;
-            --footer-border: #003300;
-            --view-switcher-bg: #111111;
-            --view-switcher-btn-bg: #1a1a1a;
-            --view-switcher-btn-text: #00cc33;
-            --view-switcher-btn-active-bg: #00ff41;
-            --view-switcher-btn-active-text: #0a0a0a;
-        }
-
-        html[data-theme="highcontrast"] {
-            /* High Contrast — Material Design principles:
-               - Surface hierarchy via subtle gray levels
-               - Shadows removed (invisible on black)
-               - Yellow #ffd700 for interactive elements (15.4:1 on black)
-               - White for body text (21:1 on black)
-               - Structural borders use medium gray */
-            --bg-color: #000000;
-            --text-color: #ffffff;
-            --text-secondary-color: #c8c8c8;
-            --header-bg: #0d0d0d;
-            --header-border: #555555;
-            --column-bg: #0d0d0d;
-            --column-border: #555555;
-            --column-header-text: #ffffff;
-            --column-header-hover-text: #ffd700;
-            --technique-item-bg: #1a1a1a;
-            --technique-item-border: #666666;
-            --technique-item-text: #ffd700;
-            --technique-item-hover-bg: #262626;
-            --technique-item-hover-text: #ffea00;
-            --technique-item-highlight-bg: #2a2500;
-            --technique-item-highlight-text: #ffff66;
-            --technique-id-text: #b0b0b0;
-            --subtechnique-bg: #121212;
-            --modal-content-bg: #0d0d0d;
-            --modal-close-btn-text: #c8c8c8;
-            --modal-close-btn-hover-text: #ffd700;
-            --search-bg: #1a1a1a;
-            --search-border: #666666;
-            --search-focus-ring: #ffd700;
-            --scrollbar-track: #0d0d0d;
-            --scrollbar-thumb: #555555;
-            --scrollbar-thumb-hover: #888888;
-            --icon-fill: #c8c8c8;
-            --icon-hover-fill: #ffd700;
-            --link-color: #ffd700;
-            --link-hover-color: #ffea00;
-            --shadow-umbra: transparent;
-            --shadow-penumbra: transparent;
-            --shadow-ambient: transparent;
-            --footer-bg: #0d0d0d;
-            --footer-text: #c8c8c8;
-            --footer-border: #555555;
-            --view-switcher-bg: #1a1a1a;
-            --view-switcher-btn-bg: #0d0d0d;
-            --view-switcher-btn-text: #ffffff;
-            --view-switcher-btn-active-bg: #ffd700;
-            --view-switcher-btn-active-text: #000000;
-        }
-
-        /* High Contrast — additional accessibility rules (WCAG 2.1 / Material Design)
-           - 1.4.12 Text Spacing: line-height ≥1.5, letter-spacing ≥0.12em, word-spacing ≥0.16em
-           - 1.4.8 Visual Presentation: large text for readability
-           - 2.4.7 / 2.4.13 Focus Visible: thick, high-contrast focus indicator
-           - 2.5.8 Target Size: ≥44×44px interactive touch targets */
-        html[data-theme="highcontrast"] body {
-            font-size: 110%;
-            line-height: 1.6;
-            letter-spacing: 0.02em;
-            word-spacing: 0.05em;
-        }
-        html[data-theme="highcontrast"] *:focus-visible {
-            outline: 3px solid #ffd700;
-            outline-offset: 2px;
-        }
-        html[data-theme="highcontrast"] button,
-        html[data-theme="highcontrast"] a,
-        html[data-theme="highcontrast"] select,
-        html[data-theme="highcontrast"] input {
-            min-height: 44px;
-        }
-
-        html {
-            height: 100%;
-        }
-
-        body {
-            font-family: var(--font-family);
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            transition: background-color 0.3s ease, color 0.3s ease;
-            min-height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        #page-container {
-            flex: 1 0 auto;
-        }
-
-        footer {
-            flex-shrink: 0;
-        }
-
-        body.modal-open {
-            overflow: hidden;
-        }
-
-        ::-webkit-scrollbar {
-            width: 8px;
-            height: 8px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--scrollbar-track);
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--scrollbar-thumb);
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--scrollbar-thumb-hover);
-        }
-
-        .elevation-2 {
-            box-shadow: 0px 3px 1px -2px var(--shadow-umbra), 0px 2px 2px 0px var(--shadow-penumbra), 0px 1px 5px 0px var(--shadow-ambient);
-        }
-
-        .elevation-4 {
-            box-shadow: 0px 2px 4px -1px var(--shadow-umbra), 0px 4px 5px 0px var(--shadow-penumbra), 0px 1px 10px 0px var(--shadow-ambient);
-        }
-
-        .elevation-8 {
-            box-shadow: 0px 5px 5px -3px var(--shadow-umbra), 0px 8px 10px 1px var(--shadow-penumbra), 0px 3px 14px 2px var(--shadow-ambient);
-        }
-
-        .header-main {
-            background-color: var(--header-bg);
-            transition: background-color 0.3s ease, border-color 0.3s ease;
-        }
-
-        #matrixCanvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            display: none;
-            z-index: 0;
-        }
-
-        html[data-theme="retro"] .header-main {
-            overflow: hidden;
-        }
-
-        html[data-theme="retro"] #matrixCanvas {
-            display: block;
-        }
-
-        .header-title {
-            font-size: 2rem;
-            font-weight: 500;
-            color: var(--text-color);
-        }
-
-        .header-subtitle {
-            font-size: 0.875rem;
-            color: var(--text-secondary-color);
-        }
-
-        .header-version-text {
-            color: var(--text-secondary-color);
-        }
-
-        .search-input-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .search-container input {
-            background-color: var(--search-bg);
-            border: 1px solid var(--search-border);
-            color: var(--text-color);
-            border-radius: 0.5rem;
-            padding-right: 2.5rem;
-        }
-
-        .search-container input::placeholder {
-            color: var(--text-secondary-color);
-        }
-
-        .search-container input:focus {
-            --tw-ring-color: var(--search-focus-ring);
-            border-color: var(--search-focus-ring);
-            box-shadow: 0 0 0 2px var(--search-focus-ring);
-        }
-
-        .search-clear-button {
-            position: absolute;
-            right: 0.5rem;
-            padding: 0.25rem;
-            color: var(--text-secondary-color);
-            cursor: pointer;
-            display: none;
-        }
-
-        .search-clear-button:hover {
-            color: var(--text-color);
-        }
-
-        .search-clear-button svg {
-            width: 1.25rem;
-            height: 1.25rem;
-        }
-
-        .header-button {
-            background-color: transparent;
-            color: var(--icon-fill);
-            border: none;
-            padding: 0.625rem;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .header-button:hover {
-            background-color: rgba(0, 0, 0, 0.04);
-            color: var(--icon-hover-fill);
-        }
-
-        html:is([data-theme="dark"],[data-theme="retro"],[data-theme="highcontrast"]) .header-button:hover {
-            background-color: rgba(255, 255, 255, 0.08);
-        }
-
-        .header-button svg {
-            width: 1.5rem;
-            height: 1.5rem;
-            fill: currentColor;
-            margin-right: 0;
-        }
-
-        .header-button.text-button {
-            padding: 0.5rem 1rem;
-            border-radius: 0.25rem;
-            font-weight: 500;
-        }
-
-        .header-button.text-button svg {
-            margin-right: 0.5rem;
-            width: 1.25rem;
-            height: 1.25rem;
-        }
-
-        .matrix-grid {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.28rem;
-            padding: 1.0rem 0.5rem;
-            align-items: flex-start;
-            justify-content: center;
-        }
-
-        .matrix-column {
-            flex-grow: 0;
-            flex-shrink: 0;
-            min-width: 170px;
-            background-color: var(--column-bg);
-            border-radius: 0.75rem;
-            padding: 0.6rem;
-            min-height: 200px;
-            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .column-header {
-            font-size: 1.25rem;
-            font-weight: 500;
-            color: var(--column-header-text);
-            margin-bottom: 1rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid var(--column-border);
-            transition: color 0.3s ease, border-color 0.3s ease;
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .column-header:hover {
-            color: var(--column-header-hover-text);
-        }
-
-        .technique-container {
-            margin-bottom: 0.75rem;
-        }
-
-        .technique-item {
-            display: flex;
-            /*justify-content: space-between;*/
-            align-items: center;
-            /* Vertically center content and icon */
-            background-color: var(--technique-item-bg);
-            position: relative;
-            /* Add this */
-            padding: 0.75rem 2.5rem 0.75rem 1rem;
-            font-size: 0.875rem;
-            color: var(--technique-item-text);
-            border-radius: 0.5rem;
-            cursor: pointer;
-            transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.2s ease, box-shadow 0.2s ease;
-            line-height: 1.5;
-            min-height: 60px;
-            /* Ensures consistent height */
-        }
-
-        .technique-item-content {
-            flex-grow: 1;
-        }
-
-        .technique-item:hover {
-            background-color: var(--technique-item-hover-bg);
-            color: var(--technique-item-hover-text);
-            transform: translateY(-2px);
-        }
-
-        .technique-item.highlight {
-            background-color: var(--technique-item-highlight-bg);
-            color: var(--technique-item-highlight-text);
-            font-weight: 600;
-        }
-
-        .subtechnique-item.highlight {
-            background-color: var(--technique-item-highlight-bg) !important;
-            color: var(--technique-item-highlight-text) !important;
-            font-weight: 600;
-        }
-
-        .technique-id {
-            font-weight: 500;
-            color: var(--technique-id-text);
-            font-size: 0.75rem;
-            margin-right: 0.35rem;
-            display: block;
-            margin-bottom: 0.125rem;
-        }
-
-        .technique-name {
-            font-weight: 500;
-            max-width: 140px;
-        }
-
-        .technique-item.no-sub .technique-name {
-            max-width: 100%;
-            /* Or you could set a larger value like '100%' */
-        }
-
-        .expand-icon {
-            position: absolute;
-            /* Add this */
-            right: 0.1rem;
-            /* Add this: Positions it 1rem from the right edge */
-            top: 50%;
-            /* Add this: Centers it vertically */
-            transform: translateY(-50%);
-            /* Add this: Fine-tunes vertical centering */
-            flex-shrink: 0;
-            width: 1.25rem;
-            height: 1.25rem;
-            transition: transform 0.3s ease;
-        }
-
-        .expand-icon.expanded {
-            transform: rotate(45deg);
-        }
-
-        .sub-technique-list {
-            list-style-type: none;
-            padding-left: 1rem;
-            /* Indent the list */
-            margin-top: 0.5rem;
-            margin-left: 0.75rem;
-            /* Align with parent padding */
-            border-left: 2px solid var(--technique-item-border);
-            /* Connecting line */
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
-
-        .sub-technique-list.expanded {
-            max-height: 1000px;
-        }
-
-        .subtechnique-item {
-            display: block;
-            background-color: var(--subtechnique-bg);
-            padding: 0.6rem 0.8rem;
-            font-size: 0.8rem;
-            color: var(--technique-item-hover-text);
-            border-radius: 0.375rem;
-            /* Removed the thick left border to rely on the list's border */
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            line-height: 1.4;
-            margin-bottom: 0.5rem;
-        }
-
-        .subtechnique-item:hover {
-            background-color: var(--technique-item-hover-bg);
-            color: var(--technique-item-hover-text);
-            transform: translateX(3px);
-        }
-
-        .subtechnique-item .technique-id {
-            font-size: 0.7rem;
-        }
-
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.2s ease, visibility 0.2s ease;
-        }
-
-        html:is([data-theme="dark"],[data-theme="retro"],[data-theme="highcontrast"]) .modal-overlay {
-            background-color: rgba(0, 0, 0, 0.7);
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-content {
-            background-color: var(--modal-content-bg);
-            color: var(--text-color);
-            padding: 2rem;
-            border-radius: 0.5rem;
-            width: 90%;
-            max-width: 800px;
-            max-height: 90vh;
-            overflow-y: auto;
-            position: relative;
-            transition: background-color 0.3s ease, color 0.3s ease, transform 0.2s ease;
-            transform: scale(0.95);
-        }
-
-        .modal-overlay.active .modal-content {
-            transform: scale(1);
-        }
-
-        .modal-content h2.modal-main-title {
-            font-size: 1.75rem;
-            font-weight: 500;
-            margin-bottom: 1rem;
-            /* Reduced margin */
-            color: var(--column-header-hover-text);
-        }
-
-        .modal-content h2 {
-            font-size: 1.5rem;
-            font-weight: 500;
-            margin-bottom: 1rem;
-            color: var(--column-header-hover-text);
-        }
-
-        .modal-subtitle {
-            padding-right: 5.5rem;
-        }
-
-        .modal-content h3 {
-            font-size: 1.25rem;
-            font-weight: 500;
-            margin-top: 1.5rem;
-            margin-bottom: 0.75rem;
-            color: var(--text-color);
-        }
-
-        .modal-content h4 {
-            font-size: 1rem;
-            font-weight: 500;
-            margin-top: 1rem;
-            margin-bottom: 0.5rem;
-            color: var(--text-color);
-        }
-
-        .modal-content h5 {
-            font-size: 0.9rem;
-            font-weight: 600;
-            margin-top: 0.75rem;
-            margin-bottom: 0.25rem;
-            color: var(--text-color);
-        }
-
-        .modal-content p {
-            font-size: 0.9375rem;
-            line-height: 1.7;
-            margin-bottom: 1rem;
-        }
-
-        .modal-content ul {
-            list-style-type: disc;
-            margin-left: 1.5rem;
-            font-size: 0.9375rem;
-            line-height: 1.7;
-            margin-bottom: 1rem;
-        }
-
-        .modal-content ul ul {
-            margin-top: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        /* Controls line spacing for list items including defendsAgainst items */
-        .modal-content li {
-            margin-bottom: 0.25rem;
-        }
-
-        .modal-content a {
-            color: var(--link-color);
-            text-decoration: none;
-            font-weight: 500;
-        }
-
-        .modal-content a:hover {
-            color: var(--link-hover-color);
-            text-decoration: underline;
-        }
-
-        .modal-content code {
-            font-family: monospace;
-            background-color: var(--search-bg);
-            padding: 0.1rem 0.3rem;
-            border-radius: 0.25rem;
-            font-size: 0.8rem;
-        }
-
-        .modal-content pre {
-            background-color: var(--search-bg);
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            margin: 0.5rem 0;
-            overflow-x: auto;
-        }
-
-        .modal-content pre code {
-            padding: 0;
-            background: none;
-        }
-
-        .modal-close-button {
-            position: absolute;
-            top: 1rem;
-            right: 1rem;
-            background: none;
-            border: none;
-            font-size: 1.75rem;
-            color: var(--modal-close-btn-text);
-            cursor: pointer;
-            line-height: 1;
-            transition: color 0.3s ease;
-            padding: 0.25rem;
-        }
-
-        .modal-close-button:hover {
-            color: var(--modal-close-btn-hover-text);
-        }
-
-        @media (max-width: 480px) {
-            .modal-content {
-                padding: 1.25rem 1rem;
-            }
-            .modal-close-button {
-                top: 0.6rem;
-                right: 0.6rem;
-                font-size: 1.5rem;
-            }
-            .modal-content h2 {
-                font-size: 1.2rem;
-            }
-            .modal-subtitle {
-                padding-right: 4rem;
-            }
-        }
-
-        /* --- Modal header action buttons (copy, link — near close btn) --- */
-        .modal-header-actions {
-            position: absolute;
-            top: 1.15rem;
-            right: 3.2rem;
-            display: flex;
-            gap: 0.15rem;
-            align-items: center;
-            z-index: 1;
-        }
-        .modal-header-actions:empty {
-            display: none;
-        }
-        .copy-btn, .link-btn {
-            position: relative;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 1.75rem;
-            height: 1.75rem;
-            padding: 0.3rem;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary-color);
-            cursor: pointer;
-            opacity: 0.4;
-            transition: opacity 0.2s ease, color 0.2s ease, background-color 0.15s ease;
-            border-radius: 0.35rem;
-        }
-        .copy-btn:hover, .link-btn:hover {
-            opacity: 1;
-            color: var(--search-focus-ring);
-            background-color: var(--view-switcher-bg);
-        }
-        .copy-btn svg, .link-btn svg {
-            width: 1rem;
-            height: 1rem;
-        }
-        .copy-btn.copied, .link-btn.copied {
-            opacity: 1;
-            color: #4caf50;
-        }
-        @media (max-width: 480px) {
-            .modal-header-actions {
-                top: 0.65rem;
-                right: 2.4rem;
-            }
-            .copy-btn, .link-btn {
-                width: 1.5rem;
-                height: 1.5rem;
-                padding: 0.2rem;
-            }
-            .copy-btn svg, .link-btn svg {
-                width: 0.85rem;
-                height: 0.85rem;
-            }
-        }
-        .copy-toast {
-            position: fixed;
-            z-index: 100000;
-            background: #4caf50;
-            color: #fff;
-            padding: 0.2rem 0.55rem;
-            border-radius: 0.3rem;
-            font-size: 0.65rem;
-            font-weight: 600;
-            white-space: nowrap;
-            pointer-events: none;
-            animation: toastPop 1.5s ease forwards;
-            box-shadow: 0 2px 8px rgba(76,175,80,0.3);
-        }
-        @keyframes toastPop {
-            0% { opacity: 0; transform: translateX(-50%) translateY(3px); }
-            12% { opacity: 1; transform: translateX(-50%) translateY(0); }
-            80% { opacity: 1; transform: translateX(-50%) translateY(0); }
-            100% { opacity: 0; transform: translateX(-50%) translateY(-3px); }
-        }
-        .strategy-accordion-content-inner pre {
-            position: relative;
-        }
-        .code-copy-btn {
-            position: absolute;
-            top: 0.4rem;
-            right: 0.4rem;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            padding: 0.3rem;
-            border: 1px solid var(--column-border);
-            border-radius: 0.35rem;
-            background-color: var(--column-bg);
-            color: var(--text-secondary-color);
-            cursor: pointer;
-            opacity: 0;
-            transition: opacity 0.2s ease, background-color 0.15s ease, color 0.15s ease;
-            z-index: 2;
-        }
-        .strategy-accordion-content-inner pre:hover .code-copy-btn {
-            opacity: 0.85;
-        }
-        .code-copy-btn:hover {
-            opacity: 1 !important;
-            background-color: var(--view-switcher-bg);
-        }
-        .code-copy-btn svg {
-            width: 0.75rem;
-            height: 0.75rem;
-        }
-        .code-copy-btn.copied {
-            opacity: 1 !important;
-            color: #4caf50;
-            border-color: #4caf50;
-        }
-        @media (max-width: 768px) {
-            .code-copy-btn { opacity: 0.7; }
-        }
-
-        /* Framework title styling (MITRE ATLAS, MAESTRO, OWASP, etc.)
-           - font-size: controls title size
-           - margin-bottom: controls gap between title and first item */
-        .modal-content p.defends-against-framework {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--technique-item-text);
-            opacity: 0.9;
-            margin-bottom: 0;
-        }
-
-        /* Defends Against list items styling
-           - font-size: controls item text size
-           - border-spacing: controls gap between items (vertical)
-           - line-height: controls line height within each item */
-        .defends-against-list {
-            display: table;
-            border-collapse: separate;
-            border-spacing: 0 8px;
-            margin-left: 1rem;
-            font-size: 0.875rem;
-            line-height: 1.7;
-        }
-
-        .defends-against-item {
-            display: table-row;
-        }
-
-        .defends-against-item::before {
-            content: '•';
-            display: table-cell;
-            width: 1rem;
-            text-align: left;
-        }
-
-        .defends-against-item-text {
-            display: table-cell;
-        }
-
-        .site-footer {
-            background-color: var(--footer-bg);
-            color: var(--footer-text);
-            padding: 1rem 1rem;
-            text-align: center;
-            font-size: 0.875rem;
-            border-top: 1px solid var(--footer-border);
-            margin-top: auto;
-        }
-
-        .site-footer p {
-            margin-bottom: 0.25rem;
-            line-height: 1.5;
-        }
-
-        .accordion-item {
-            border-bottom: 1px solid var(--header-border);
-        }
-
-        .accordion-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 1.25rem 0.5rem;
-            cursor: pointer;
-            font-size: 1.125rem;
-            font-weight: 500;
-            color: var(--text-color);
-            transition: color 0.2s ease;
-        }
-
-        .accordion-header:hover {
-            color: var(--column-header-hover-text);
-        }
-
-        .accordion-icon {
-            width: 1.25rem;
-            height: 1.25rem;
-            transition: transform 0.3s ease-in-out;
-            flex-shrink: 0;
-            margin-left: 1rem;
-        }
-
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
-            font-size: 0.9375rem;
-            line-height: 1.7;
-            color: var(--text-secondary-color);
-        }
-
-        .accordion-content-inner {
-            padding: 0 0.5rem 1.25rem 0.5rem;
-        }
-
-        .strategy-accordion-container {
-            margin-top: 0.5rem;
-        }
-
-        .strategy-accordion-item {
-            border-bottom: 1px solid var(--column-border);
-        }
-
-        .strategy-accordion-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem 0.5rem;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        .strategy-accordion-header:hover {
-            color: var(--technique-item-hover-text);
-        }
-
-        .strategy-accordion-icon {
-            width: 1rem;
-            height: 1rem;
-            transition: transform 0.3s ease-in-out;
-            flex-shrink: 0;
-            margin-left: 0.5rem;
-        }
-
-        .strategy-accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease-in-out;
-        }
-
-        .strategy-accordion-content-inner {
-            padding: 0.5rem 0.5rem 1rem 1rem;
-            font-size: 0.85rem;
-            line-height: 1.6;
-            color: var(--text-secondary-color);
-        }
-
-        .warning-note {
-            background-color: #f0f4f8;
-            border-left: 4px solid #4a90e2;
-            padding: 12px 18px;
-            margin: 16px 0;
-            border-radius: 4px;
-            font-size: 0.9em;
-            line-height: 1.6;
-        }
-
-        html:is([data-theme="dark"],[data-theme="retro"],[data-theme="highcontrast"]) .warning-note {
-            background-color: #2c3e50;
-            border-left-color: #5dade2;
-        }
-
-        .warning-note p {
-            margin: 0;
-            padding: 0;
-        }
-
-        .warning-note strong {
-            color: var(--text-color);
-        }
-
-        .view-switcher-container {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .view-by-label {
-            color: var(--text-color);
-            transition: color 0.2s ease;
-        }
-
-        .view-by-label:hover {
-            color: var(--column-header-hover-text);
-        }
-
-        .view-switcher {
-            background-color: var(--view-switcher-bg);
-            border-radius: 0.5rem;
-            padding: 0.25rem;
-            display: inline-flex;
-            align-items: center;
-        }
-
-        .view-switcher-btn {
-            padding: 0.5rem 1rem;
-            border: none;
-            background-color: var(--view-switcher-btn-bg);
-            color: var(--view-switcher-btn-text);
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            margin: 0 0.125rem;
-        }
-
-        .view-switcher-btn.active {
-            background-color: var(--view-switcher-btn-active-bg);
-            color: var(--view-switcher-btn-active-text);
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
-        }
-
-        html:is([data-theme="dark"],[data-theme="retro"],[data-theme="highcontrast"]) .view-switcher-btn.active {
-            box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-        }
-
-        .view-info-tabs {
-            display: flex;
-            border-bottom: 1px solid var(--column-border);
-            margin-bottom: 1.5rem;
-        }
-
-        .view-info-tab {
-            padding: 0.75rem 1.25rem;
-            cursor: pointer;
-            font-size: 0.9rem;
-            font-weight: 500;
-            border: none;
-            background-color: transparent;
-            color: var(--text-secondary-color);
-            border-bottom: 2px solid transparent;
-            margin-bottom: -1px;
-            transition: color 0.2s, border-color 0.2s;
-        }
-
-        .view-info-tab:hover {
-            color: var(--text-color);
-        }
-
-        .view-info-tab.active {
-            color: var(--technique-item-text);
-            border-bottom-color: var(--technique-item-text);
-        }
-
-        .view-info-tab-content {
-            display: none;
-        }
-
-        .view-info-tab-content.active {
-            display: block;
-        }
-
-        .view-info-card {
-            background-color: var(--technique-item-bg);
-            border: 1px solid var(--technique-item-border);
-            border-radius: 0.75rem;
-            padding: 1.25rem;
-        }
-
-        .view-info-card h3 {
-            color: var(--technique-item-text);
-            font-size: 1.25rem;
-            margin-top: 0;
-            margin-bottom: 0.75rem;
-        }
-
-        .view-info-card .view-question {
-            color: var(--technique-item-text);
-            margin-bottom: 1rem;
-            display: block;
-        }
-
-        .view-info-card .view-focus-text {
-            margin-bottom: 1.5rem;
-            flex-grow: 1;
-        }
-
-        .view-info-card .view-detail {
-            display: flex;
-            align-items: flex-start;
-            gap: 0.75rem;
-            margin-top: 1rem;
-        }
-
-        .view-info-card .view-detail-icon {
-            flex-shrink: 0;
-            width: 1.25rem;
-            height: 1.25rem;
-            color: var(--technique-item-text);
-            margin-top: 0.125rem;
-        }
-
-        .view-info-card .view-detail-content {
-            font-size: 0.9rem;
-            line-height: 1.6;
-        }
-
-        .view-info-card .view-detail-content strong {
-            color: var(--text-color);
-            font-weight: 600;
-        }
-
-        @media (max-width: 768px) {
-            .view-cards-container {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* --- Framework View Styles --- */
-        .framework-selector {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .framework-selector-label {
-            font-size: 0.8rem;
-            font-weight: 500;
-            color: var(--text-secondary-color);
-            white-space: nowrap;
-        }
-
-        .framework-selector select {
-            background-color: var(--view-switcher-btn-bg);
-            color: var(--view-switcher-btn-text);
-            border: 1px solid var(--column-border);
-            border-radius: 0.375rem;
-            padding: 0.5rem 2rem 0.5rem 0.75rem;
-            font-size: 0.875rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s ease-in-out;
-            -webkit-appearance: none;
-            -moz-appearance: none;
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23999'%3E%3Cpath fill-rule='evenodd' d='M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z' clip-rule='evenodd'/%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 0.5rem center;
-            background-size: 1.25rem;
-            max-width: 320px;
-        }
-
-        .framework-selector select:focus {
-            outline: none;
-            border-color: var(--search-focus-ring);
-            box-shadow: 0 0 0 2px var(--search-focus-ring);
-        }
-
-        .framework-selector select:hover {
-            border-color: var(--search-focus-ring);
-        }
-
-        @media (max-width: 640px) {
-            .framework-selector {
-                width: 100%;
-            }
-            .framework-selector select {
-                max-width: 100%;
-                width: 100%;
-            }
-        }
-
-        .fw-page-title {
-            text-align: center;
-            font-size: 1.35rem;
-            font-weight: 700;
-            color: var(--column-header-text);
-            padding: 1.25rem 1rem 0.25rem 1rem;
-            margin: 0 auto;
-            max-width: 1400px;
-            letter-spacing: 0.01em;
-        }
-        .fw-title-link {
-            display: inline-flex;
-            align-items: center;
-            margin-left: 0.5rem;
-            color: var(--text-secondary-color);
-            opacity: 0.5;
-            vertical-align: middle;
-            transition: opacity 0.2s ease, color 0.2s ease;
-        }
-        .fw-title-link:hover {
-            opacity: 1;
-            color: var(--link-color);
-        }
-        .fw-page-brief {
-            text-align: center;
-            font-size: 0.8rem;
-            color: var(--text-secondary-color);
-            max-width: 800px;
-            margin: 0.15rem auto 0.5rem auto;
-            padding: 0 1rem;
-            line-height: 1.5;
-        }
-        @media (max-width: 768px) {
-            .fw-page-title { font-size: 1.1rem; padding: 1rem 0.75rem 0.15rem 0.75rem; }
-        }
-        @media (max-width: 480px) {
-            .fw-page-title { font-size: 0.95rem; }
-        }
-
-        .fw-accordion-container {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            padding: 1.0rem 0.5rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .fw-accordion-section {
-            background-color: var(--column-bg);
-            border-radius: 0.75rem;
-            overflow: hidden;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .fw-accordion-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.75rem 1.25rem;
-            cursor: pointer;
-            transition: color 0.2s ease;
-            user-select: none;
-        }
-
-        .fw-accordion-header:hover {
-            color: var(--column-header-hover-text);
-        }
-
-        .fw-accordion-header-left {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            flex: 1;
-            min-width: 0;
-        }
-
-        .fw-accordion-header-id {
-            font-size: 0.8rem;
-            font-weight: 700;
-            color: var(--view-switcher-btn-active-text);
-            background-color: var(--view-switcher-btn-active-bg);
-            padding: 0.25rem 0.6rem;
-            border-radius: 0.25rem;
-            white-space: nowrap;
-            flex-shrink: 0;
-        }
-
-        .fw-accordion-header-name {
-            font-size: 1.05rem;
-            font-weight: 500;
-            color: var(--column-header-text);
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .fw-accordion-header:hover .fw-accordion-header-name {
-            color: var(--column-header-hover-text);
-        }
-
-        .fw-accordion-count {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--view-switcher-btn-active-text);
-            background-color: var(--view-switcher-btn-active-bg);
-            padding: 0.15rem 0.5rem;
-            border-radius: 999px;
-            white-space: nowrap;
-            flex-shrink: 0;
-            min-width: 1.5rem;
-            text-align: center;
-        }
-
-        .fw-accordion-chevron {
-            width: 1.25rem;
-            height: 1.25rem;
-            flex-shrink: 0;
-            transition: transform 0.3s ease;
-            color: var(--text-secondary-color);
-            margin-left: 0.5rem;
-            position: relative;
-        }
-        .fw-accordion-chevron .expand-icon {
-            position: static;
-            transform: none;
-        }
-
-        .fw-accordion-section.expanded .fw-accordion-chevron {
-            transform: rotate(90deg);
-        }
-
-        .fw-accordion-body {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
-        }
-
-        .fw-accordion-body-inner {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            padding: 0 1.25rem 1.25rem 1.25rem;
-            list-style: none;
-            margin: 0;
-        }
-
-        .fw-accordion-body-inner .technique-container {
-            flex: 0 0 calc(25% - 0.375rem);
-            min-width: 180px;
-            margin-bottom: 0;
-        }
-
-        @media (max-width: 1024px) {
-            .fw-accordion-body-inner .technique-container {
-                flex: 0 0 calc(33.33% - 0.333rem);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .fw-accordion-body-inner .technique-container {
-                flex: 0 0 calc(50% - 0.25rem);
-            }
-        }
-
-        @media (max-width: 480px) {
-            .fw-accordion-body-inner .technique-container {
-                flex: 0 0 100%;
-            }
-        }
-        /* --- Sub-grouping toggle within accordion body --- */
-        .fw-group-toggle {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.25rem;
-            padding: 0 1.25rem 0.75rem 1.25rem;
-            border-bottom: 1px solid var(--column-border);
-            margin-bottom: 0.75rem;
-        }
-
-        .fw-group-toggle-btn {
-            padding: 0.3rem 0.75rem;
-            border-radius: 999px;
-            background-color: var(--view-switcher-btn-bg);
-            color: var(--view-switcher-btn-text);
-            font-size: 0.7rem;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.15s ease;
-            border: 1px solid transparent;
-            white-space: nowrap;
-            user-select: none;
-        }
-
-        .fw-group-toggle-btn:hover {
-            border-color: var(--search-focus-ring);
-            color: var(--column-header-hover-text);
-        }
-
-        .fw-group-toggle-btn.active {
-            background-color: var(--view-switcher-btn-active-bg);
-            color: var(--view-switcher-btn-active-text);
-        }
-
-        .fw-subgroup {
-            padding: 0 1.25rem 0.75rem 1.25rem;
-        }
-
-        .fw-subgroup:last-child {
-            padding-bottom: 1.25rem;
-        }
-
-        .fw-subgroup-header {
-            font-size: 0.75rem;
-            font-weight: 600;
-            color: var(--technique-id-text);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 0.5rem 0 0.5rem 0;
-            margin: 0;
-            border-bottom: 1px solid var(--column-border);
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .fw-subgroup-header-count {
-            font-size: 0.65rem;
-            font-weight: 600;
-            color: var(--view-switcher-btn-active-text);
-            background-color: var(--view-switcher-btn-active-bg);
-            padding: 0.05rem 0.4rem;
-            border-radius: 999px;
-            min-width: 1rem;
-            text-align: center;
-        }
-
-        .fw-subgroup-techniques {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        .fw-subgroup-techniques > .technique-container {
-            flex: 0 0 calc(25% - 0.375rem);
-            min-width: 180px;
-            margin-bottom: 0;
-        }
-
-
-        @media (max-width: 1200px) {
-            .fw-subgroup-techniques > .technique-container {
-                flex: 0 0 calc(33.33% - 0.333rem);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .fw-subgroup-techniques > .technique-container {
-                flex: 0 0 calc(50% - 0.25rem);
-                min-width: 160px;
-            }
-            .fw-group-toggle {
-                padding: 0 0.75rem 0.5rem 0.75rem;
-            }
-            .fw-subgroup {
-                padding: 0 0.75rem 0.75rem 0.75rem;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .fw-subgroup-techniques > .technique-container {
-                flex: 0 0 100%;
-            }
-            .fw-group-toggle-btn {
-                font-size: 0.65rem;
-                padding: 0.25rem 0.6rem;
-            }
-        }
-
-        /* ── Hierarchical accordion (objective → technique nesting) ── */
-
-        /* Container for child technique sections inside an objective body */
-        .fw-child-container {
-            display: flex;
-            flex-direction: column;
-            gap: 0.375rem;
-            padding: 0.5rem 0.75rem 0.75rem;
-        }
-
-        /* Technique (child) level nested inside an objective */
-        .fw-technique-section {
-            border-radius: 0.75rem;
-            background-color: var(--column-bg);
-            transition: background-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        .fw-technique-section > .fw-accordion-header {
-            padding: 0.65rem 1rem;
-        }
-        .fw-technique-section > .fw-accordion-header .fw-accordion-header-id {
-            font-size: 0.7rem;
-        }
-        .fw-technique-section > .fw-accordion-header .fw-accordion-header-name {
-            font-size: 0.9rem;
-        }
-
-        /* Mobile: tighter nested padding */
-        @media (max-width: 768px) {
-            .fw-child-container {
-                padding: 0.375rem 0.5rem 0.5rem;
-                gap: 0.25rem;
-            }
-            .fw-technique-section > .fw-accordion-header {
-                padding: 0.5rem 0.75rem;
-            }
-            .fw-objective-section > .fw-accordion-header {
-                padding: 0.6rem 1rem;
-            }
-            .fw-objective-section > .fw-accordion-header .fw-accordion-header-name {
-                font-size: 0.95rem;
-            }
-        }
-        @media (max-width: 480px) {
-            .fw-child-container {
-                padding: 0.25rem 0.375rem 0.375rem;
-            }
-            .fw-technique-section > .fw-accordion-header {
-                padding: 0.45rem 0.6rem;
-            }
-            .fw-technique-section > .fw-accordion-header .fw-accordion-header-id {
-                font-size: 0.65rem;
-            }
-            .fw-technique-section > .fw-accordion-header .fw-accordion-header-name {
-                font-size: 0.8rem;
-            }
-        }
-
-        /* --- Framework View Styles End --- */
-    </style>
+    <link rel="stylesheet" href="css/themes.css">
+    <link rel="stylesheet" href="css/main.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
@@ -1654,7 +111,8 @@
                         </div>
                         <div id="framework-selector" class="framework-selector" style="display:none;">
                             <select id="framework-dropdown">
-                                <option value="atlas">MITRE ATLAS™</option>
+                                <option value="atlas-matrix">MITRE ATLAS™ - Matrix</option>
+                                <option value="atlas">MITRE ATLAS™ - Tactics</option>
                                 <option value="maestro">MAESTRO</option>
                                 <option value="owasp-llm">OWASP LLM Top 10 (2025)</option>
                                 <option value="owasp-ml">OWASP ML Top 10 (2023)</option>
@@ -1777,7 +235,7 @@
             };
 
             let currentView = 'tactic';
-            let currentFramework = 'atlas';
+            let currentFramework = 'atlas-matrix';
             let eligibleTechniques = [];
             let pillars = {};
             let phases = {};
@@ -1850,6 +308,91 @@
                 'AML.T0105': ['Privilege Escalation'], 'AML.T0106': ['Credential Access'], 'AML.T0107': ['Defense Evasion'],
                 'AML.T0108': ['Command and Control']
             };
+
+            // ATLAS technique ID → display name (from official MITRE ATLAS GitHub v5.4.0)
+            const atlasTechNames = {
+                'AML.T0000': 'Search Open Technical Databases', 'AML.T0000.000': 'Journals and Conference Proceedings', 'AML.T0000.001': 'Pre-Print Repositories', 'AML.T0000.002': 'Technical Blogs',
+                'AML.T0001': 'Search Open AI Vulnerability Analysis',
+                'AML.T0002': 'Acquire Public AI Artifacts', 'AML.T0002.000': 'Datasets', 'AML.T0002.001': 'Models',
+                'AML.T0003': 'Search Victim-Owned Websites', 'AML.T0004': 'Search Application Repositories',
+                'AML.T0005': 'Create Proxy AI Model', 'AML.T0005.000': 'Train Proxy via Gathered AI Artifacts', 'AML.T0005.001': 'Train Proxy via Replication', 'AML.T0005.002': 'Use Pre-Trained Model',
+                'AML.T0006': 'Active Scanning', 'AML.T0007': 'Discover AI Artifacts',
+                'AML.T0008': 'Acquire Infrastructure', 'AML.T0008.000': 'AI Development Workspaces', 'AML.T0008.001': 'Consumer Hardware', 'AML.T0008.002': 'Domains', 'AML.T0008.003': 'Physical Countermeasures',
+                'AML.T0010': 'AI Supply Chain Compromise', 'AML.T0010.000': 'Hardware', 'AML.T0010.001': 'AI Software', 'AML.T0010.002': 'Data', 'AML.T0010.003': 'Model', 'AML.T0010.004': 'Container Registry',
+                'AML.T0011': 'User Execution', 'AML.T0011.000': 'Unsafe AI Artifacts', 'AML.T0011.001': 'Malicious Package', 'AML.T0011.002': 'Poisoned AI Agent Tool', 'AML.T0011.003': 'Malicious Link',
+                'AML.T0012': 'Valid Accounts', 'AML.T0013': 'Discover AI Model Ontology', 'AML.T0014': 'Discover AI Model Family', 'AML.T0015': 'Evade AI Model',
+                'AML.T0016': 'Obtain Capabilities', 'AML.T0016.000': 'Adversarial AI Attack Implementations', 'AML.T0016.001': 'Software Tools', 'AML.T0016.002': 'Generative AI',
+                'AML.T0017': 'Develop Capabilities', 'AML.T0017.000': 'Adversarial AI Attacks',
+                'AML.T0018': 'Manipulate AI Model', 'AML.T0018.000': 'Poison AI Model', 'AML.T0018.001': 'Modify AI Model Architecture', 'AML.T0018.002': 'Embed Malware',
+                'AML.T0019': 'Publish Poisoned Datasets', 'AML.T0020': 'Poison Training Data', 'AML.T0021': 'Establish Accounts',
+                'AML.T0024': 'Exfiltration via AI Inference API', 'AML.T0024.000': 'Infer Training Data Membership', 'AML.T0024.001': 'Invert AI Model', 'AML.T0024.002': 'Extract AI Model',
+                'AML.T0025': 'Exfiltration via Cyber Means', 'AML.T0029': 'Denial of AI Service', 'AML.T0031': 'Erode AI Model Integrity', 'AML.T0034': 'Cost Harvesting',
+                'AML.T0035': 'AI Artifact Collection', 'AML.T0036': 'Data from Information Repositories', 'AML.T0037': 'Data from Local System',
+                'AML.T0040': 'AI Model Inference API Access', 'AML.T0041': 'Physical Environment Access', 'AML.T0042': 'Verify Attack',
+                'AML.T0043': 'Craft Adversarial Data', 'AML.T0043.000': 'White-Box Optimization', 'AML.T0043.001': 'Black-Box Optimization', 'AML.T0043.002': 'Black-Box Transfer', 'AML.T0043.003': 'Manual Modification', 'AML.T0043.004': 'Insert Backdoor Trigger',
+                'AML.T0044': 'Full AI Model Access', 'AML.T0046': 'Spamming AI System with Chaff Data', 'AML.T0047': 'AI-Enabled Product or Service',
+                'AML.T0048': 'External Harms', 'AML.T0048.000': 'Financial Harm', 'AML.T0048.001': 'Reputational Harm', 'AML.T0048.002': 'Societal Harm', 'AML.T0048.003': 'User Harm', 'AML.T0048.004': 'AI Intellectual Property Theft',
+                'AML.T0049': 'Exploit Public-Facing Application', 'AML.T0050': 'Command and Scripting Interpreter',
+                'AML.T0051': 'LLM Prompt Injection', 'AML.T0051.000': 'Direct', 'AML.T0051.001': 'Indirect', 'AML.T0051.002': 'Triggered',
+                'AML.T0052': 'Phishing', 'AML.T0052.000': 'Spearphishing via Social Engineering LLM',
+                'AML.T0053': 'AI Agent Tool Invocation', 'AML.T0054': 'LLM Jailbreak', 'AML.T0055': 'Unsecured Credentials',
+                'AML.T0056': 'Extract LLM System Prompt', 'AML.T0057': 'LLM Data Leakage', 'AML.T0058': 'Publish Poisoned Models',
+                'AML.T0059': 'Erode Dataset Integrity', 'AML.T0060': 'Publish Hallucinated Entities', 'AML.T0061': 'LLM Prompt Self-Replication',
+                'AML.T0062': 'Discover LLM Hallucinations', 'AML.T0063': 'Discover AI Model Outputs', 'AML.T0064': 'Gather RAG-Indexed Targets',
+                'AML.T0065': 'LLM Prompt Crafting', 'AML.T0066': 'Retrieval Content Crafting',
+                'AML.T0067': 'LLM Trusted Output Components Manipulation', 'AML.T0067.000': 'Citations',
+                'AML.T0068': 'LLM Prompt Obfuscation',
+                'AML.T0069': 'Discover LLM System Information', 'AML.T0069.000': 'Special Character Sets', 'AML.T0069.001': 'System Instruction Keywords', 'AML.T0069.002': 'System Prompt',
+                'AML.T0070': 'RAG Poisoning', 'AML.T0071': 'False RAG Entry Injection', 'AML.T0072': 'Reverse Shell', 'AML.T0073': 'Impersonation', 'AML.T0074': 'Masquerading',
+                'AML.T0075': 'Cloud Service Discovery', 'AML.T0076': 'Corrupt AI Model', 'AML.T0077': 'LLM Response Rendering', 'AML.T0078': 'Drive-by Compromise',
+                'AML.T0079': 'Stage Capabilities',
+                'AML.T0080': 'AI Agent Context Poisoning', 'AML.T0080.000': 'Memory', 'AML.T0080.001': 'Thread',
+                'AML.T0081': 'Modify AI Agent Configuration', 'AML.T0082': 'RAG Credential Harvesting', 'AML.T0083': 'Credentials from AI Agent Configuration',
+                'AML.T0084': 'Discover AI Agent Configuration', 'AML.T0084.000': 'Embedded Knowledge', 'AML.T0084.001': 'Tool Definitions', 'AML.T0084.002': 'Activation Triggers',
+                'AML.T0085': 'Data from AI Services', 'AML.T0085.000': 'RAG Databases', 'AML.T0085.001': 'AI Agent Tools',
+                'AML.T0086': 'Exfiltration via AI Agent Tool Invocation', 'AML.T0087': 'Gather Victim Identity Information', 'AML.T0088': 'Generate Deepfakes',
+                'AML.T0089': 'Process Discovery', 'AML.T0090': 'OS Credential Dumping',
+                'AML.T0091': 'Use Alternate Authentication Material', 'AML.T0091.000': 'Application Access Token',
+                'AML.T0092': 'Manipulate User LLM Chat History', 'AML.T0093': 'Prompt Infiltration via Public-Facing Application',
+                'AML.T0094': 'Delay Execution of LLM Instructions', 'AML.T0095': 'Search Open Websites/Domains',
+                'AML.T0096': 'AI Service API', 'AML.T0097': 'Virtualization/Sandbox Evasion', 'AML.T0098': 'AI Agent Tool Credential Harvesting',
+                'AML.T0099': 'AI Agent Tool Data Poisoning', 'AML.T0100': 'AI Agent Clickbait', 'AML.T0101': 'Data Destruction via AI Agent Tool Invocation',
+                'AML.T0102': 'Generate Malicious Commands', 'AML.T0103': 'Deploy AI Agent', 'AML.T0104': 'Publish Poisoned AI Agent Tool',
+                'AML.T0105': 'Escape to Host', 'AML.T0106': 'Exploitation for Credential Access', 'AML.T0107': 'Exploitation for Defense Evasion', 'AML.T0108': 'AI Agent'
+            };
+
+            // ATLAS parent → subtechnique IDs (from official MITRE ATLAS GitHub v5.4.0)
+            const atlasSubTechniques = {
+                'AML.T0000': ['AML.T0000.000','AML.T0000.001','AML.T0000.002'],
+                'AML.T0002': ['AML.T0002.000','AML.T0002.001'],
+                'AML.T0005': ['AML.T0005.000','AML.T0005.001','AML.T0005.002'],
+                'AML.T0008': ['AML.T0008.000','AML.T0008.001','AML.T0008.002','AML.T0008.003'],
+                'AML.T0010': ['AML.T0010.000','AML.T0010.001','AML.T0010.002','AML.T0010.003','AML.T0010.004'],
+                'AML.T0011': ['AML.T0011.000','AML.T0011.001','AML.T0011.002','AML.T0011.003'],
+                'AML.T0016': ['AML.T0016.000','AML.T0016.001','AML.T0016.002'],
+                'AML.T0017': ['AML.T0017.000'],
+                'AML.T0018': ['AML.T0018.000','AML.T0018.001','AML.T0018.002'],
+                'AML.T0024': ['AML.T0024.000','AML.T0024.001','AML.T0024.002'],
+                'AML.T0043': ['AML.T0043.000','AML.T0043.001','AML.T0043.002','AML.T0043.003','AML.T0043.004'],
+                'AML.T0048': ['AML.T0048.000','AML.T0048.001','AML.T0048.002','AML.T0048.003','AML.T0048.004'],
+                'AML.T0051': ['AML.T0051.000','AML.T0051.001','AML.T0051.002'],
+                'AML.T0052': ['AML.T0052.000'],
+                'AML.T0067': ['AML.T0067.000'],
+                'AML.T0069': ['AML.T0069.000','AML.T0069.001','AML.T0069.002'],
+                'AML.T0080': ['AML.T0080.000','AML.T0080.001'],
+                'AML.T0084': ['AML.T0084.000','AML.T0084.001','AML.T0084.002'],
+                'AML.T0085': ['AML.T0085.000','AML.T0085.001'],
+                'AML.T0091': ['AML.T0091.000']
+            };
+
+            const atlasTacticInfo = {"Reconnaissance":{"id":"AML.TA0002","desc":"The adversary is trying to gather information about the AI system they can use to plan future operations. Reconnaissance consists of techniques that involve adversaries actively or passively gathering information that can be used to support targeting. Such information may include details of the victim organizations' AI capabilities and research efforts."},"Resource Development":{"id":"AML.TA0003","desc":"The adversary is trying to establish resources they can use to support operations. Resource Development consists of techniques that involve adversaries creating, purchasing, or compromising/stealing resources that can be used to support targeting. Such resources include AI artifacts, infrastructure, accounts, or capabilities."},"Initial Access":{"id":"AML.TA0004","desc":"The adversary is trying to gain access to the AI system. The target system could be a network, mobile device, or an edge device such as a sensor platform. Initial Access consists of techniques that use various entry vectors to gain their initial foothold within the system."},"AI Model Access":{"id":"AML.TA0000","desc":"The adversary is attempting to gain some level of access to an AI model. AI Model Access enables techniques that use various types of access to the AI model that can be used by the adversary to gain information, develop attacks, and as a means to input data to the model. The level of access can range from the full knowledge of the internals of the model to access to the physical environment where data is collected for use in the AI model."},"Execution":{"id":"AML.TA0005","desc":"The adversary is trying to run malicious code embedded in AI artifacts or software. Execution consists of techniques that result in adversary-controlled code running on a local or remote system. Techniques that run malicious code are often paired with techniques from all other tactics to achieve broader goals."},"Persistence":{"id":"AML.TA0006","desc":"The adversary is trying to maintain their foothold via AI artifacts or software. Persistence consists of techniques that adversaries use to keep access to systems across restarts, changed credentials, and other interruptions that could cut off their access. Techniques used for persistence often involve leaving behind modified ML artifacts such as poisoned training data or manipulated AI models."},"Privilege Escalation":{"id":"AML.TA0012","desc":"The adversary is trying to gain higher-level permissions. Privilege Escalation consists of techniques that adversaries use to gain higher-level permissions on a system or network. Common approaches are to take advantage of system weaknesses, misconfigurations, and vulnerabilities."},"Defense Evasion":{"id":"AML.TA0007","desc":"The adversary is trying to avoid being detected by AI-enabled security software. Defense Evasion consists of techniques that adversaries use to avoid detection throughout their compromise. Techniques used for defense evasion include evading AI-enabled security software such as malware detectors."},"Credential Access":{"id":"AML.TA0013","desc":"The adversary is trying to steal account names and passwords. Credential Access consists of techniques for stealing credentials like account names and passwords. Techniques used to get credentials include keylogging or credential dumping."},"Discovery":{"id":"AML.TA0008","desc":"The adversary is trying to figure out your AI environment. Discovery consists of techniques an adversary may use to gain knowledge about the system and internal network. These techniques help adversaries observe the environment and orient themselves before deciding how to act."},"Lateral Movement":{"id":"AML.TA0015","desc":"The adversary is trying to move through your AI environment. Lateral Movement consists of techniques that adversaries may use to gain access to and control other systems or components in the environment. Adversaries may pivot towards AI Ops infrastructure such as model registries, experiment trackers, vector databases, notebooks, or training pipelines."},"Collection":{"id":"AML.TA0009","desc":"The adversary is trying to gather AI artifacts and other related information relevant to their goal. Collection consists of techniques adversaries may use to gather information and the sources information is collected from that are relevant to following through on the adversary's objectives."},"AI Attack Staging":{"id":"AML.TA0001","desc":"The adversary is leveraging their knowledge of and access to the target system to tailor the attack. AI Attack Staging consists of techniques adversaries use to prepare their attack on the target AI model. Techniques can include training proxy models, poisoning the target model, and crafting adversarial data to feed the target model."},"Command and Control":{"id":"AML.TA0014","desc":"The adversary is trying to communicate with compromised AI systems to control them. Command and Control consists of techniques that adversaries may use to communicate with systems under their control within a victim network."},"Exfiltration":{"id":"AML.TA0010","desc":"The adversary is trying to steal AI artifacts or other information about the AI system. Exfiltration consists of techniques that adversaries may use to steal data from your network. Techniques for getting data out of a target network typically include transferring it over their command and control channel or an alternate channel."},"Impact":{"id":"AML.TA0011","desc":"The adversary is trying to manipulate, interrupt, erode confidence in, or destroy your AI systems and data. Impact consists of techniques that adversaries use to disrupt availability or compromise integrity by manipulating business and operational processes."}};
+
+            const atlasTechDescs = {"AML.T0000":"Adversaries may search for publicly available research and technical documentation to learn how and where AI is used within a victim organization. The adversary can use this information to identify targets for attack, or to tailor an existing attack to make it more effective. Organizations often use open source model architectures trained on additional proprietary data in production. Knowledge of this underlying architecture allows the adversary to craft more realistic proxy models. An adversary can search these resources for publications for authors employed at the victim organization. Research and technical materials may exist as academic papers published in Journals and Conference Proceedings, or stored in Pre-Print Repositories, as well as Technical Blogs.","AML.T0000.000":"Many of the publications accepted at premier artificial intelligence conferences and journals come from commercial labs. Some journals and conferences are open access, others may require paying for access or a membership. These publications will often describe in detail all aspects of a particular approach for reproducibility. This information can be used by adversaries to implement the paper.","AML.T0000.001":"Pre-Print repositories, such as arXiv, contain the latest academic research papers that haven't been peer reviewed. They may contain research notes, or technical reports that aren't typically published in journals or conference proceedings. Pre-print repositories also serve as a central location to share papers that have been accepted to journals. Searching pre-print repositories provide adversaries with a relatively up-to-date view of what researchers in the victim organization are working on.","AML.T0000.002":"Research labs at academic institutions and company R&D divisions often have blogs that highlight their use of artificial intelligence and its application to the organization's unique problems. Individual researchers also frequently document their work in blogposts. An adversary may search for posts made by the target victim organization or its employees. In comparison to Journals and Conference Proceedings and Pre-Print Repositories, this material will often contain more practical aspects of the AI system. This could include underlying technologies and frameworks used, and possibly some information about the API access and use case. This will help the adversary better understand how that organization is using AI internally and the details of their approach that could aid in tailoring an attack.","AML.T0001":"Much like Search Open Technical Databases, there is often ample research available on the vulnerabilities of common AI models. Once a target has been identified, an adversary will likely try to identify any pre-existing work that has been done for this class of models. This will include not only reading academic papers that may identify the particulars of a successful attack, but also identifying pre-existing implementations of those attacks. The adversary may obtain Adversarial AI Attack Implementations or develop their own Adversarial AI Attacks if necessary.","AML.T0002":"Adversaries may search public sources, including cloud storage, public-facing services, and software or data repositories, to identify AI artifacts. These AI artifacts may include the software stack used to train and deploy models, training and testing data, model configurations and parameters. An adversary will be particularly interested in artifacts hosted by or associated with the victim organization as they may represent what that organization uses in a production environment. Adversaries may identify artifact repositories via other resources associated with the victim organization (e.g. Search Victim-Owned Websites or Search Open Technical Databases). These AI artifacts often provide adversaries with details of the AI task and approach. AI artifacts can aid in an adversary's ability to Create Proxy AI Model. If these artifacts include pieces of the actual model in production, they can be used to directly Craft Adversarial Data. Acquiring some artifacts requires registration (providing user details such email/name), AWS keys, or written requests, and may require the adversary to Establish Accounts. Artifacts might be hosted on victim-controlled infrastructure, providing the victim with some information on who has accessed that data.","AML.T0002.000":"Adversaries may collect public datasets to use in their operations. Datasets used by the victim organization or datasets that are representative of the data used by the victim organization may be valuable to adversaries. Datasets can be stored in cloud storage, or on victim-owned websites. Some datasets require the adversary to Establish Accounts for access. Acquired datasets help the adversary advance their operations, stage attacks, and tailor attacks to the victim organization.","AML.T0002.001":"Adversaries may acquire public models to use in their operations. Adversaries may seek models used by the victim organization or models that are representative of those used by the victim organization. Representative models may include model architectures, or pre-trained models which define the architecture as well as model parameters from training on a dataset. The adversary may search public sources for common model architecture configuration file formats such as YAML or Python configuration files, and common model storage file formats such as ONNX (.onnx), HDF5 (.h5), Pickle (.pkl), PyTorch (.pth), or TensorFlow (.pb, .tflite). Acquired models are useful in advancing the adversary's operations and are frequently used to tailor attacks to the victim model.","AML.T0003":"Adversaries may search websites owned by the victim for information that can be used during targeting. Victim-owned websites may contain technical details about their AI-enabled products or services. Victim-owned websites may contain a variety of details, including names of departments/divisions, physical locations, and data about key employees such as names, roles, and contact info. These sites may also have details highlighting business operations and relationships. Adversaries may search victim-owned websites to gather actionable information. This information may help adversaries tailor their attacks (e.g. Develop Adversarial AI Attacks or Manual Modification). Information from these sources may reveal opportunities for other forms of reconnaissance (e.g. Search Open Technical Databases or Search Open AI Vulnerability Analysis).","AML.T0004":"Adversaries may search open application repositories during targeting. Examples of these include Google Play, the iOS App store, the macOS App Store, and the Microsoft Store. Adversaries may craft search queries seeking applications that contain AI-enabled components. Frequently, the next step is to Acquire Public AI Artifacts.","AML.T0005":"Adversaries may obtain models to serve as proxies for the target model in use at the victim organization. Proxy models are used to simulate complete access to the target model in a fully offline manner. Adversaries may train models from representative datasets, attempt to replicate models from victim inference APIs, or use available pre-trained models.","AML.T0005.000":"Proxy models may be trained from AI artifacts (such as data, model architectures, and pre-trained models) that are representative of the target model gathered by the adversary. This can be used to develop attacks that require higher levels of access than the adversary has available or as a means to validate pre-existing attacks without interacting with the target model.","AML.T0005.001":"Adversaries may replicate a private model. By repeatedly querying the victim's AI Model Inference API, the adversary can collect the target model's inferences into a dataset. The inferences are used as labels for training a separate model offline that will mimic the behavior and performance of the target model. A replicated model that closely mimics the target model is a valuable resource in staging the attack. The adversary can use the replicated model to Craft Adversarial Data for various purposes (e.g. Evade AI Model, Spamming AI System with Chaff Data).","AML.T0005.002":"Adversaries may use an off-the-shelf pre-trained model as a proxy for the victim model to aid in staging the attack.","AML.T0006":"An adversary may probe or scan the victim system to gather information for targeting. This is distinct from other reconnaissance techniques that do not involve direct interaction with the victim system. Adversaries may scan for open ports on a potential victim's network, which can indicate specific services or tools the victim is utilizing. This could include a scan for tools related to AI DevOps or AI services themselves such as public AI chat agents (ex: Copilot Studio Hunter). They can also send emails to organization service addresses and inspect the replies for indicators that an AI agent is managing the inbox. Information gained from Active Scanning may yield targets that provide opportunities for other forms of reconnaissance such as Search Open Technical Databases, Search Open AI Vulnerability Analysis, or Gather RAG-Indexed Targets.","AML.T0007":"Adversaries may search private sources to identify AI learning artifacts that exist on the system and gather information about them. These artifacts can include the software stack used to train and deploy models, training and testing data management systems, container registries, software repositories, and model zoos. This information can be used to identify targets for further collection, exfiltration, or disruption, and to tailor and improve attacks.","AML.T0008":"Adversaries may buy, lease, or rent infrastructure for use throughout their operation. A wide variety of infrastructure exists for hosting and orchestrating adversary operations. Infrastructure solutions include physical or cloud servers, domains, mobile devices, and third-party web services. Free resources may also be used, but they are typically limited. Infrastructure can also include physical components such as countermeasures that degrade or disrupt AI components or sensors, including printed materials, wearables, or disguises. Use of these infrastructure solutions allows an adversary to stage, launch, and execute an operation. Solutions may help adversary operations blend in with traffic that is seen as normal, such as contact to third-party web services. Depending on the implementation, adversaries may use infrastructure that makes it difficult to physically tie back to them as well as utilize infrastructure that can be rapidly provisioned, modified, and shut down.","AML.T0008.000":"Developing and staging AI attacks often requires expensive compute resources. Adversaries may need access to one or many GPUs in order to develop an attack. They may try to anonymously use free resources such as Google Colaboratory, or cloud resources such as AWS, Azure, or Google Cloud as an efficient way to stand up temporary resources to conduct operations. Multiple workspaces may be used to avoid detection.","AML.T0008.001":"Adversaries may acquire consumer hardware to conduct their attacks. Owning the hardware provides the adversary with complete control of the environment. These devices can be hard to trace.","AML.T0008.002":"Adversaries may acquire domains to support their operations. Domains can be used to host poisoned data, replace legitimate datapoints in victim datasets via data poisoning, or serve as infrastructure for command and control. Domain names that mimic legitimate AI services or data repositories can be used to deceive victims into downloading malicious content.","AML.T0008.003":"Adversaries may acquire physical items to disrupt AI sensors and computer vision systems. This can include printed adversarial patterns that cause misclassification, laser pointers to blind cameras, IR LEDs to disrupt facial recognition, or wearable items designed to evade AI-based surveillance. Physical countermeasures allow adversaries to attack AI systems in the real world.","AML.T0010":"Adversaries may gain initial access to a system by compromising the unique portions of the AI supply chain. This could include Hardware, Data and its annotations, parts of the AI Software stack, or the Model itself. In some instances the attacker will need secondary access to fully carry out an attack using compromised components of the supply chain.","AML.T0010.000":"Adversaries may target AI systems by disrupting or manipulating the hardware supply chain. AI models often run on specialized hardware such as GPUs, TPUs, or embedded devices, but may also be optimized to operate on CPUs.","AML.T0010.001":"Most AI systems rely on a limited set of AI frameworks. An adversary could get access to a large number of AI systems through a compromise of one of their supply chains. Many AI projects also rely on other open source implementations of various algorithms. These can also be compromised in a targeted way to get access to specific systems.","AML.T0010.002":"Data is a key vector of supply chain compromise for adversaries. Every AI project will require some form of data. Many rely on large open source datasets that are publicly available. An adversary could rely on compromising these sources of data. The malicious data could be a result of Poison Training Data or include traditional malware. An adversary can also target private datasets in the labeling phase. The creation of private datasets will often require the hiring of outside labeling services. An adversary can poison a dataset by modifying the labels being generated by the labeling service.","AML.T0010.003":"AI-enabled systems often rely on open sourced models in various ways. Most commonly, the victim organization may be using these models for fine tuning. These models will be downloaded from an external source and then used as the base for the model as it is tuned on a smaller, private dataset. Loading models often requires executing some saved code in the form of a saved model file. These can be compromised with traditional malware, or through some adversarial AI techniques.","AML.T0010.004":"Adversaries may push manipulated container images to registries, affecting AI development and deployment pipelines. Container images used for AI workloads may include pre-trained models, training scripts, or inference services. By compromising these images, adversaries can inject backdoors, modify model behavior, or introduce malware that executes when the container is deployed.","AML.T0011":"An adversary may rely upon specific actions by a user in order to gain execution. Users may inadvertently execute unsafe code introduced via AI Supply Chain Compromise. Users may be subjected to social engineering to get them to execute malicious code by, for example, opening a malicious document file or link.","AML.T0011.000":"Adversaries may develop unsafe AI artifacts that when executed have a deleterious effect. The adversary can use this technique to establish persistent access to systems. These models may be introduced via AI Supply Chain Compromise. Serialization of models is a popular technique for model storage, transfer, and loading. However, this format without proper checking presents an opportunity for code execution.","AML.T0011.001":"Adversaries may develop software packages that appear useful for AI tasks but have harmful effects when imported into ML environments. These packages may be published to popular package repositories like PyPI or npm with names similar to legitimate AI libraries (typosquatting). When imported, the malicious package can execute arbitrary code, steal credentials, or compromise the training or inference pipeline.","AML.T0011.002":"A victim may invoke a poisoned tool when interacting with their AI agent. A poisoned tool may execute an LLM Prompt Injection or perform LLM Plugin Compromise. Poisoned AI agent tools may be introduced into the victim's environment via AI Supply Chain Compromise, or the user may configure their agent to connect to remote tools.","AML.T0011.003":"An adversary may rely upon a user clicking a malicious link in order to gain execution. Users may be subjected to social engineering to get them to click on a link that will lead to code execution. Clicking on a link may also lead to other execution techniques such as exploitation of a browser or application vulnerability. There are many ways an adversary can leverage malicious links to gain access to a victim system via an AI system. For example, an AI Agent that is configured to not validate website origin headers will accept connections from any website, allowing adversaries the ability to get around previously inaccessible network.","AML.T0012":"Adversaries may obtain and abuse credentials of existing accounts as a means of gaining Initial Access. Credentials may take the form of usernames and passwords of individual user accounts or API keys that provide access to various AI resources and services. Compromised credentials may provide access to additional AI artifacts and allow the adversary to perform Discover AI Artifacts. Compromised credentials may also grant an adversary increased privileges such as write access to AI artifacts used during development or production.","AML.T0013":"Adversaries may discover the ontology of an AI model's output space, for example, the types of objects a model can detect. The adversary may discover the ontology by repeated queries to the model, forcing it to enumerate its output space. Or the ontology may be discovered in a configuration file or in documentation about the model. The model ontology helps the adversary understand how the model is being used by the victim. It is useful to the adversary in creating targeted attacks.","AML.T0014":"Adversaries may discover the general family of model. General information about the model may be revealed in documentation, or the adversary may use carefully constructed examples and analyze the model's responses to categorize it. Knowledge of the model family can help the adversary identify means of attacking the model and help tailor the attack.","AML.T0015":"Adversaries can Craft Adversarial Data that prevents an AI model from correctly identifying the contents of the data or Generate Deepfakes that fools an AI model expecting authentic data. This technique can be used to evade a downstream task where AI is utilized. The adversary may evade AI-based virus/malware detection or network scanning towards the goal of a traditional cyber attack. AI model evasion through deepfake generation may also provide initial access to systems that use AI-based biometric authentication.","AML.T0016":"Adversaries may search for and obtain software capabilities for use in their operations. Capabilities may be specific to AI-based attacks (Adversarial AI Attack Implementations) or generic software tools repurposed for malicious intent (Software Tools). In both instances, an adversary may modify or customize the capability to aid in targeting a particular AI-enabled system.","AML.T0016.000":"Adversaries may search for existing open source implementations of AI attacks. The research community often publishes their code for reproducibility and to further future research. Libraries intended for research purposes, such as CleverHans, the Adversarial Robustness Toolbox, and FoolBox, can be weaponized by an adversary. Adversaries may also obtain and use tools that were not originally designed for adversarial AI attacks as part of their attack.","AML.T0016.001":"Adversaries may search for and obtain software tools to support their operations. Software designed for legitimate use may be repurposed by an adversary for malicious intent. An adversary may modify or customize software tools to achieve their purpose. Software tools used to support attacks on AI systems are not necessarily AI-based themselves.","AML.T0016.002":"Adversaries may obtain LLMs and generative AI models for use in their operations. These models can be used for malware generation, deepfake creation, automated phishing content generation, and social engineering at scale. Adversaries may use publicly available models, fine-tune models for specific malicious purposes, or access models through APIs.","AML.T0017":"Adversaries may develop their own capabilities to support operations. This process encompasses identifying requirements, building solutions, and deploying capabilities. Capabilities used to support attacks on AI-enabled systems are not necessarily AI-based themselves. Examples include setting up websites with adversarial information or creating Jupyter notebooks with obfuscated exfiltration code.","AML.T0017.000":"Adversaries may develop their own adversarial attacks. They may leverage existing libraries as a starting point (Adversarial AI Attack Implementations). They may implement ideas described in public research papers or develop custom made attacks for the victim model.","AML.T0018":"Adversaries may directly manipulate an AI model to change its behavior or introduce malicious code. Manipulating a model gives the adversary a persistent change in the system. This can include poisoning the model by changing its weights, modifying the model architecture to change its behavior, and embedding malware which may be executed when the model is loaded.","AML.T0018.000":"Adversaries may manipulate an AI model's weights to change its behavior or performance, resulting in a poisoned model. Adversaries may poison a model by directly manipulating its weights, training the model on poisoned data, further fine-tuning the model, or otherwise interfering with its training process. The change in behavior of poisoned models may be limited to targeted categories in predictive AI models, or targeted topics, concepts, or facts in generative AI models, or aim for a general performance degradation.","AML.T0018.001":"Adversaries may directly modify an AI model's architecture to re-define its behavior. This can include adding or removing layers as well as adding pre or post-processing operations. The effects could include removing the ability to predict certain classes, adding erroneous operations to increase computation costs, or degrading performance. Additionally, a separate adversary-defined network could be injected into the computation graph, which can change the behavior based on the inputs, effectively creating a backdoor.","AML.T0018.002":"Adversaries may embed malicious code into AI model files using unsafe deserialization formats like pickle, joblib, or other serialization methods that allow arbitrary code execution. When the model file is loaded by a victim, the embedded malware executes, potentially providing the adversary with remote access, data exfiltration capabilities, or persistent access to the system.","AML.T0019":"Adversaries may Poison Training Data and publish it to a public location. The poisoned dataset may be a novel dataset or a poisoned variant of an existing open source dataset. This data may be introduced to a victim system via AI Supply Chain Compromise.","AML.T0020":"Adversaries may attempt to poison datasets used by an AI model by modifying the underlying data or its labels. This allows the adversary to embed vulnerabilities in AI models trained on the data that may not be easily detectable. Data poisoning attacks may or may not require modifying the labels. The embedded vulnerability is activated at a later time by data samples with an Insert Backdoor Trigger. Poisoned data can be introduced via AI Supply Chain Compromise or the data may be poisoned after the adversary gains Initial Access to the system.","AML.T0021":"Adversaries may create accounts with various services for use in targeting, to gain access to resources needed in ML Attack Staging, or for victim impersonation.","AML.T0024":"Adversaries may exfiltrate private information via AI Model Inference API Access. AI Models have been shown leak private information about their training data (e.g. Infer Training Data Membership, Invert AI Model). The model itself may also be extracted (Extract AI Model) for the purposes of AI Intellectual Property Theft. Exfiltration of information relating to private training data raises privacy concerns. Private training data may include personally identifiable information, or other protected data.","AML.T0024.000":"Adversaries may infer the membership of a data sample or global characteristics of the data in its training set, which raises privacy concerns. Some strategies make use of a shadow model that could be obtained via Train Proxy via Replication, others use statistics of model prediction scores. This can cause the victim model to leak private information, such as PII of those in the training set or other forms of protected IP.","AML.T0024.001":"AI models' training data could be reconstructed by exploiting the confidence scores that are available via an inference API. By querying the inference API strategically, adversaries can back out potentially private information embedded within the training data. This could lead to privacy violations if the attacker can reconstruct the data of sensitive features used in the algorithm.","AML.T0024.002":"Adversaries may extract a functional copy of a private model. By repeatedly querying the victim's AI Model Inference API, the adversary can collect the target model's inferences into a dataset. The inferences are used as labels for training a separate model offline that will mimic the behavior and performance of the target model. Adversaries may extract the model to avoid paying per query in an artificial-intelligence-as-a-service (AIaaS) setting. Model extraction is used for AI Intellectual Property Theft.","AML.T0025":"Adversaries may exfiltrate AI artifacts or other information relevant to their goals via traditional cyber means. See the ATT&CK Exfiltration tactic for more information.","AML.T0029":"Adversaries may target AI-enabled systems with a flood of requests for the purpose of degrading or shutting down the service. Since many AI systems require significant amounts of specialized compute, they are often expensive bottlenecks that can become overloaded. Adversaries can intentionally craft inputs that require heavy amounts of useless compute from the AI system.","AML.T0031":"Adversaries may degrade the target model's performance with adversarial data inputs to erode confidence in the system over time. This can lead to the victim organization wasting time and money both attempting to fix the system and performing the tasks it was meant to automate by hand.","AML.T0034":"Adversaries may target different AI services to send useless queries or computationally expensive inputs to increase the cost of running services at the victim organization. Sponge examples are a particular type of adversarial data designed to maximize energy consumption and thus operating cost.","AML.T0035":"Adversaries may collect AI artifacts for Exfiltration or for use in ML Attack Staging. AI artifacts include models and datasets as well as other telemetry data produced when interacting with a model.","AML.T0036":"Adversaries may leverage information repositories to mine valuable information. Information repositories are tools that allow for storage of information, typically to facilitate collaboration or information sharing between users, and can store a wide variety of data that may aid adversaries in further objectives, or direct access to the target information. Information stored in a repository may vary based on the specific instance or environment. Specific common information repositories include SharePoint, Confluence, and enterprise databases such as SQL Server.","AML.T0037":"Adversaries may search local system sources, such as file systems and configuration files or local databases, to find files of interest and sensitive data prior to Exfiltration. This can include basic fingerprinting information and sensitive data such as ssh keys.","AML.T0040":"Adversaries may gain access to a model via legitimate access to the inference API. Inference API access can be a source of information to the adversary (Discover AI Model Ontology, Discover AI Model Family), a means of staging the attack (Verify Attack, Craft Adversarial Data), or for introducing data to the target system for Impact (Evade AI Model, Erode AI Model Integrity). Many systems rely on the same models provided via an inference API, which means they share the same vulnerabilities. This is especially true of foundation models which are prohibitively resource intensive to train. Adversaries may use their access to model APIs to identify vulnerabilities such as jailbreaks or hallucinations and then target applications that use the same models.","AML.T0041":"In addition to the attacks that take place purely in the digital domain, adversaries may also exploit the physical environment for their attacks. If the model is interacting with data collected from the real world in some way, the adversary can influence the model through access to wherever the data is being collected. By modifying the data in the collection process, the adversary can perform modified versions of attacks designed for digital access.","AML.T0042":"Adversaries can verify the efficacy of their attack via an inference API or access to an offline copy of the target model. This gives the adversary confidence that their approach works and allows them to carry out the attack at a later time of their choosing. The adversary may verify the attack once but use it against many edge devices running copies of the target model. The adversary may verify their attack digitally, then deploy it in the Physical Environment at a later time. Verifying the attack may be hard to detect since the adversary can use a minimal number of queries or an offline copy of the model.","AML.T0043":"Adversarial data are inputs to an AI model that have been modified such that they cause the adversary's desired effect in the target model. Effects can range from misclassification, to missed detections, to maximizing energy consumption. Typically, the modification is constrained in magnitude or location so that a human still perceives the data as if it were unmodified, but human perceptibility may not always be a concern depending on the adversary's intended effect. For example, an adversarial input for an image classification task is an image the AI model would misclassify, but a human would still recognize as containing the correct class. Depending on the adversary's knowledge of and access to the target model, the adversary may use different classes of algorithms to develop the adversarial example such as White-Box Optimization, Black-Box Optimization, Black-Box Transfer, or Manual Modification. The adversary may Verify Attack their approach works if they have white-box or inference API access to the model. This allows the adversary to gain confidence their attack is effective in a 'live' environment where their attack may be noticed. They can then use the attack at a later time to accomplish their goals. An adversary may optimize adversarial examples for Evade AI Model, or to Erode AI Model Integrity.","AML.T0043.000":"In White-Box Optimization, the adversary has full access to the target model and optimizes the adversarial example directly. Adversarial examples trained in this manner are most effective against the target model.","AML.T0043.001":"In Black-Box attacks, the adversary has black-box (i.e. AI Model Inference API via API access) access to the target model. With black-box attacks, the adversary may be using an API that the victim is monitoring. These attacks are generally less effective and require more inferences than White-Box Optimization attacks, but they require much less access.","AML.T0043.002":"In Black-Box Transfer attacks, the adversary uses one or more proxy models (trained via Create Proxy AI Model or Train Proxy via Replication) they have full access to and are representative of the target model. The adversary uses White-Box Optimization on the proxy models to generate adversarial examples. If the set of proxy models are close enough to the target model, the adversarial example should generalize from one to another. This means that an attack that works for the proxy models will likely then work for the target model. If the adversary has AI Model Inference API Access, they may use Verify Attack to confirm the attack is working and incorporate that information into their training process.","AML.T0043.003":"Adversaries may manually modify the input data to craft adversarial data. They may use their knowledge of the target model to modify parts of the data they suspect helps the model in performing its task. The adversary may use trial and error until they are able to verify they have a working adversarial input.","AML.T0043.004":"The adversary may add a perceptual trigger into inference data. The trigger may be imperceptible or non-obvious to humans. This technique is used in conjunction with Poison AI Model and allows the adversary to produce their desired effect in the target model.","AML.T0044":"Adversaries may gain full 'white-box' access to an AI model. This means the adversary has complete knowledge of the model architecture, its parameters, and class ontology. They may exfiltrate the model to Craft Adversarial Data and Verify Attack in an offline environment where it is hard to detect their behavior.","AML.T0046":"Adversaries may spam the AI system with chaff data that causes increase in the number of detections. This can cause analysts at the victim organization to waste time reviewing and correcting incorrect inferences. Adversaries may also spam AI agents with excessive low-severity auditable events or agentic actions that require a human-in-the-loop, wasting time for the victim organization in human review of the agentic AI system.","AML.T0047":"Adversaries may use a product or service that uses artificial intelligence under the hood to gain access to the underlying AI model. This type of indirect model access may reveal details of the AI model or its inferences in logs or metadata.","AML.T0048":"Adversaries may abuse their access to a victim system and use its resources or capabilities to further their goals by causing harms external to that system. These harms could affect the organization (e.g. Financial Harm, Reputational Harm), its users (e.g. User Harm), or the general public (e.g. Societal Harm).","AML.T0048.000":"Financial harm involves the loss of wealth, property, or other monetary assets due to theft, fraud or forgery, or pressure to provide financial resources to the adversary.","AML.T0048.001":"Reputational harm involves a degradation of public perception and trust in organizations. Examples of reputation-harming incidents include scandals or false impersonations.","AML.T0048.002":"Societal harms might generate harmful outcomes that reach either the general public or specific vulnerable groups such as the exposure of children to vulgar content.","AML.T0048.003":"User harms may encompass a variety of harm types including financial and reputational that are directed at or felt by individual victims of the attack rather than at the organization level.","AML.T0048.004":"Adversaries may exfiltrate AI artifacts to steal intellectual property and cause economic harm to organizations. This includes stealing proprietary models, training data, model architectures, hyperparameters, and other AI-related trade secrets. Stolen AI IP can be used by competitors, sold on black markets, or used to develop attacks against the victim's AI systems.","AML.T0049":"Adversaries may attempt to take advantage of a weakness in an Internet-facing computer or program using software, data, or commands in order to cause unintended or unanticipated behavior. The weakness in the system can be a bug, a glitch, or a design vulnerability. These applications are often websites, but can include databases (like SQL), standard services (like SMB or SSH), network device administration and management protocols (like SNMP and Smart Install), and any other applications with Internet accessible open sockets, such as web servers and related services.","AML.T0050":"Adversaries may abuse command and scripting interpreters to execute commands, scripts, or binaries. These interfaces and languages provide ways of interacting with computer systems and are a common feature across many different platforms. Most systems come with some built-in command-line interface and scripting capabilities, for example, Linux and macOS have some flavor of Unix Shell while Windows installations include the Windows Command Shell and PowerShell. There are also cross-platform interpreters such as Python, as well as those commonly associated with client applications such as JavaScript and Visual Basic. Adversaries may abuse these technologies in various ways as a means of executing arbitrary commands. Commands and scripts can be embedded in Initial Access payloads delivered to victims as lure documents or as secondary payloads downloaded from an existing C2. Adversaries may also execute commands through interactive terminals/shells, as well as utilize various Remote Services in order to achieve remote Execution.","AML.T0051":"An adversary may craft malicious prompts as inputs to an LLM that cause the LLM to act in unintended ways. These prompt injections are designed to cause the model to ignore aspects of its original instructions and follow the adversary's instructions instead. The vulnerability of LLMs to this type of attack arises from the difficulty of distinguishing instructions and data within an LLM prompt. These injections could cause the LLM to ignore aspects of its original instructions or system prompt and execute actions unintended by its application developers or administrators. These unintended actions could include generating harmful content, disclosing sensitive information, invoking unintended tool calls, or allowing unauthorized access to downstream systems.","AML.T0051.000":"Adversaries may directly inject prompts as a user of the LLM system. Direct prompt injection gives the adversary access as an actor within the application, where they may jailbreak the LLM, bypass security or content filters, install persistent instructions in memory, harvest user data, generate malicious outputs, or pivot to other components and APIs. Injections may be obfuscated using techniques such as special characters, multi-language payloads, or encoded text.","AML.T0051.001":"Adversaries may inject prompts indirectly via a separate data channel ingested by the LLM, such as a web page or document. Indirect prompt injection targets external content consumed by the LLM as part of its operation. Injecting via a separate channel is advantageous for attacking LLMs not directly accessible to the adversary.","AML.T0051.002":"Adversaries may trigger a prompt injection via a user action or event within the victim's environment. Triggered prompt injections often target AI agents activated by means identified during discovery. These malicious prompts may be hidden or obfuscated from the user and may already exist in the victim's environment from prompt infiltration techniques.","AML.T0052":"Adversaries may send phishing messages to gain access to victim systems. AI-generated content enables phishing attacks to be more targeted and conducted at scale. Generative AI may be used to create text, audio, or video for use in phishing emails or messages, as well as fraudulent websites for harvesting credentials.","AML.T0052.000":"Adversaries may use LLMs to act as social engineers seeking sensitive information from targeted victims. Unlike traditional phishing, this subtechnique engages in targeted, dynamic conversations to seek particular information or actions from the victim.","AML.T0053":"Adversaries may invoke an AI agent's tools by manipulating it's inputs. Some AI agents have the capability to invoke tools by manipulating their inputs with malicious instructions or by abusing gaps in application logic. AI agent tools can include database connections, API integrations, code execution, and file access.","AML.T0054":"Adversaries may craft injections designed to place an LLM into states where it no longer abides by the guidelines set for it by its developers. These jailbreaks place LLMs in a state where they will freely respond to any prompt, no matter how unethical, illegal, or dangerous. The core goal is to bypass the content restrictions (guardrails) put in place by the LLM developers to prevent harmful outputs.","AML.T0055":"Adversaries may search compromised systems to find and obtain insecurely stored credentials. These credentials can be stored and/or misplaced in many locations on a system, including plaintext files (e.g., Bash history), operating system or application-specific repositories (e.g., Credentials in Registry), or other specialized files/artifacts (e.g., private keys). AI systems may have additional locations to search for insecurely stored credentials such as environment variables, configuration files, and code repositories.","AML.T0056":"Adversaries may extract system prompts from LLMs via prompt injection or access to the LLM configuration files. System prompts are instructions provided by application developers to align the LLM to their business needs. System prompts may contain details on internal services or APIs, and often contain instructions on safety guardrails. Access to a system prompt can help an adversary craft more effective jailbreaks to bypass guardrails, provide competitive intelligence about functionality, reveal underlying architecture, or disclose private information embedded in the prompt.","AML.T0057":"Adversaries may craft prompts that cause LLMs to leak training data, proprietary information, or details of other user's conversations. This could reveal private details, expose organizational intellectual property, enable competitive intelligence gathering, leak PII, or violate confidentiality agreements. Some models have been shown to memorize portions of their training data, and adversaries may elicit this data by abusing model behavior.","AML.T0058":"Adversaries may publish a poisoned model to model registries for introduction into a victim's environment via supply chain compromise. These models may be poisoned to behave in unexpected ways when presented with a specific trigger, or may include malicious code that is executed when the model is loaded.","AML.T0059":"Adversaries may poison a portion of a victim dataset to reduce its usefulness and degrade the quality of models trained on it. Portions of the data can be poisoned to cause trained models to make erroneous predictions on some subset of data, or generally degrade model performance. This causes the victim organization to waste resources on training an unusable model.","AML.T0060":"Adversaries may create entities, such as packages and websites, matching known LLM hallucinations to redirect users to adversary-controlled resources. This relies on users trusting the output of an LLM for recommendations and blindly following them. This technique combines the LLMs propensity to hallucinate with an adversary's preparation to take advantage of it.","AML.T0061":"Adversaries may craft prompt injections that cause LLMs to replicate the malicious prompt across LLM-based communications for persistence. These techniques allow for a prompt injection payload to persist beyond an individual conversation and spread to other users' conversations by replicating itself.","AML.T0062":"Adversaries may identify hallucinated entities for targeting through Publish Hallucinated Entities attacks. LLMs are prone to generating content that does not reflect reality. In some cases, these non-existent entities (such as packages) can be identified and later created by an adversary to target users who blindly follow LLM recommendations.","AML.T0063":"Adversaries may discover non-required model outputs that exist in logs or in responses to inference queries. These outputs can include raw model outputs, such as confidence scores or embeddings, which could reveal information about the underlying model architecture, serve as a side channel, or be manipulated by an adversary.","AML.T0064":"Adversaries may identify external data sources that are indexed by LLM-enabled retrieval augmented generation (RAG) systems. Data sources indexed by RAG systems can be targeted for poisoning through LLM Prompt Injection or manipulation of legitimate data to influence the LLM's responses.","AML.T0065":"Adversaries may iterate on prompts using knowledge acquired during reconnaissance and other discovery techniques to produce prompts that consistently bypass defenses and achieve the adversary's objectives. Prompt crafting may occur over time and involve building up of complex prompts to circumvent security measures and accomplish the adversary's goals.","AML.T0066":"Adversaries may write content that is designed to be retrieved by an LLM-based application, influencing users or injecting false entries into RAG systems. This content may be crafted to be highly relevant to specific queries or topics, increasing the likelihood of retrieval. When content is engineered to be ranked higher, it displaces legitimate content from the model's context window, altering the model's response.","AML.T0067":"Adversaries may manipulate components of an LLM's response, such as citations and formatting, to make the output appear more trustworthy to the user. By exploiting the way users perceive and interact with LLM outputs, adversaries can increase the likelihood that users will act on manipulated content. This can include manipulating citations to direct users to malicious sources, or formatting content to appear more authoritative.","AML.T0067.000":"Adversaries may manipulate the citations an LLM includes in its response to make the output appear more trustworthy. This can include inserting references to legitimate sources, or replacing real citations with malicious ones.","AML.T0068":"Adversaries may obfuscate malicious prompt injections to evade detection by security tools, users, or both. This can include using small text, hidden HTML elements, invisible characters, or data embedded in files. Obfuscation techniques aim to make the malicious content difficult to identify while still being processed by the LLM.","AML.T0069":"Adversaries may discover system information about an LLM-based application, including system instructions and special characteristics of the LLM. This information can be used to develop more effective attacks by revealing the LLM's capabilities, limitations, and security measures.","AML.T0069.000":"Adversaries may discover delimiters and special characters used by an LLM for confusing, obfuscating, or manipulating the model's behavior. These characters may be used by the system to separate different components of a prompt, or may have special meaning to the LLM.","AML.T0069.001":"Adversaries may discover keywords with special meaning to an LLM, enabling manipulation and unauthorized tool invocation. These keywords may be used to trigger specific behaviors or access hidden functionality within the LLM.","AML.T0069.002":"Adversaries may discover the system prompt of an LLM to learn about its capabilities, permissions, and methods to circumvent its guardrails. The system prompt is a set of instructions that define the LLM's behavior and can contain sensitive information about the application's security measures.","AML.T0070":"Adversaries may inject malicious content into data sources used by retrieval augmented generation (RAG) systems. This content can be designed to influence the LLM's responses, inject false information, or trigger prompt injections when retrieved. By contaminating the data source, adversaries can affect the integrity of future responses generated by the LLM.","AML.T0071":"Adversaries may introduce false entries into RAG databases to corrupt knowledge bases and influence LLM responses. By injecting fake entries, adversaries can manipulate the information retrieved by the LLM, leading to incorrect or misleading responses. This technique may bypass traditional monitoring tools that focus on prompt-level attacks.","AML.T0072":"Adversaries may use a reverse shell to establish a command and control channel with victim systems. A reverse shell is a connection initiated by the victim system to the adversary's system, allowing the adversary to execute commands on the victim system. AI agents with code execution capabilities can be manipulated to establish reverse shell connections.","AML.T0073":"Adversaries may impersonate trusted entities using AI-generated content to persuade victims and gain access to AI DevOps resources. This can include using deepfakes, voice cloning, or LLM-generated text to convincingly impersonate colleagues, executives, or other trusted parties. Impersonation can be used to trick users into revealing sensitive information, approving fraudulent requests, or granting unauthorized access.","AML.T0074":"Adversaries may manipulate features of AI artifacts to make them appear legitimate to users and security tools. This can include renaming files, modifying metadata, or using deceptive naming conventions to disguise malicious models, datasets, or code as legitimate resources. Masquerading helps adversaries evade detection and trick users into executing malicious content.","AML.T0075":"An adversary may attempt to enumerate the cloud services running on a system after gaining access. Cloud services can include PaaS, IaaS, SaaS, and AIaaS offerings. This information can reveal opportunities for lateral movement, privilege escalation, or further exploitation of AI systems hosted in cloud environments.","AML.T0076":"Adversaries may corrupt AI model files to prevent proper deserialization or to execute malicious code when the model is loaded. This can involve modifying model weights, architecture, or metadata in ways that cause errors or unexpected behavior. Corrupted models may fail to load, produce incorrect outputs, or trigger malicious payloads embedded in the model file.","AML.T0077":"Adversaries may manipulate LLMs to include hidden information in their responses that is exfiltrated when the response is rendered. This can include embedding data in images, using invisible characters, or crafting markdown that sends data to external servers when rendered by the client application.","AML.T0078":"Adversaries may gain access to a system through a user visiting a website or an AI agent's web retrieval over the normal course of browsing or agent operations. With this technique, the user's web browser or AI agent is typically targeted for exploitation, but adversaries may also use compromised websites for non-exploitation behavior such as injecting malicious prompts that could alter the model's behavior.","AML.T0079":"Adversaries may upload, install, or otherwise set up capabilities that can be used during targeting. Staging capabilities includes uploading or publishing poisoned datasets or malicious models to public repositories, or deploying adversarial tools on infrastructure that may be used during subsequent attacks. These staged resources can then be leveraged via supply chain compromise or other attack vectors.","AML.T0080":"Adversaries may manipulate the contextual information used by AI agents to persistently alter their responses and actions. This includes poisoning the agent's memory, conversation thread, or other contextual data sources that influence the agent's behavior over time. Context poisoning allows adversaries to maintain persistent influence over the agent's outputs.","AML.T0080.000":"Adversaries may manipulate an LLM's memory across sessions via prompt injection to persist malicious instructions. By injecting content that gets stored in the agent's long-term memory, adversaries can ensure their malicious instructions continue to influence the agent's behavior in future conversations.","AML.T0080.001":"Adversaries may introduce malicious instructions into chat threads that persist for the duration of the conversation. By poisoning the conversation context, adversaries can influence the agent's responses throughout the session without needing to inject instructions in every message.","AML.T0081":"Adversaries may modify AI agent configuration files to embed malicious instructions, redirect outputs, or weaken security controls. Configuration files often contain system prompts, tool definitions, and security settings that control the agent's behavior. By altering these configurations, adversaries can persistently change how the agent operates.","AML.T0082":"Adversaries may leverage access to LLMs to collect credentials stored in documents that have been inadvertently ingested into RAG retrieval systems. Documents containing passwords, API keys, or other credentials may be indexed by RAG systems, allowing adversaries to extract these credentials through targeted queries to the LLM.","AML.T0083":"Adversaries may extract API keys and connection strings from AI agent configuration files to access external systems and services. Agent configurations often contain credentials for databases, APIs, and other services that the agent needs to perform its functions. These credentials can be used for lateral movement or to access sensitive resources.","AML.T0084":"Adversaries may identify agent capabilities by accessing configuration dashboards or querying agents about their available tools and data sources. Understanding an agent's configuration helps adversaries identify potential attack vectors, available tools that can be abused, and data sources that may contain sensitive information.","AML.T0084.000":"Adversaries may discover data sources and knowledge bases accessible to AI agents. This includes identifying RAG databases, document stores, and other knowledge sources that the agent can query, which may contain sensitive organizational information.","AML.T0084.001":"Adversaries may discover tools available to AI agents to understand what actions the agent can execute and the extent of its reach within the system. Tool definitions reveal APIs, databases, and external services the agent can interact with.","AML.T0084.002":"Adversaries may discover keywords and events that trigger agent actions, enabling them to craft inputs that activate specific agent behaviors. Understanding activation triggers helps adversaries reliably invoke agent tools or actions from external contexts.","AML.T0085":"Adversaries may exploit access to organizational AI services to collect sensitive information. This includes querying LLMs connected to RAG databases containing sensitive documents, or using AI agent tools to access internal systems and retrieve confidential data.","AML.T0085.000":"Adversaries may prompt AI services to retrieve data from RAG databases containing sensitive organizational information. By crafting targeted queries, adversaries can extract confidential documents, internal communications, or other sensitive data that has been indexed by the RAG system.","AML.T0085.001":"Adversaries may prompt AI services to invoke agent tools that retrieve data from organizational APIs and internal systems. By manipulating the agent to use its tool integrations, adversaries can access databases, internal APIs, and other systems that the agent has permissions to query.","AML.T0086":"Adversaries may exfiltrate sensitive data by encoding it into AI agent tool parameters. By manipulating the agent to invoke tools with data embedded in API calls or other parameters, adversaries can transmit information to external systems while appearing to perform legitimate agent actions.","AML.T0087":"Adversaries may gather information about a victim's identity that can be used for AI-enabled attacks. This includes collecting photos, voice samples, writing samples, and other personal data that can be used to create deepfakes, train impersonation models, or craft convincing phishing campaigns.","AML.T0088":"Adversaries may use generative AI to create convincing synthetic media for impersonation and evading biometric authentication systems. Deepfakes can include synthetic audio, video, and images that convincingly portray real individuals. These can be used for social engineering, fraud, disinformation, and bypassing facial or voice recognition security systems.","AML.T0089":"Adversaries may attempt to get information about processes running on a system. Once obtained, this information could be used to gain an understanding of common AI-related software/applications running on systems within the network. Identifying the AI software stack can lead to new targets and attack pathways. AI-related software may require application tokens to authenticate with backend services, providing opportunities for credential access and lateral movement. On Windows, the Tasklist utility displays a list of applications and services with their Process IDs (PID) for all tasks running on either a local or a remote computer. Windows environments may also use PowerShell with the Get-Process cmdlet, or use the Windows API directly by calling CreateToolhelp32Snapshot. On Mac and Linux, the ps command lists current processes with PIDs, users, and CPU/memory usage. Information about processes can also be retrieved from the /proc virtual filesystem.","AML.T0090":"Adversaries may extract credentials from OS caches, application memory, or other sources on a compromised system. Credentials are often in the form of a hash or clear text, and can include usernames, passwords, and application tokens. Credentials can be used to perform lateral movement to access other AI services such as AI agents, LLMs, or AI inference APIs, or to access software tools and data sources in the AI DevOps lifecycle.","AML.T0091":"Adversaries may use alternate authentication material, such as password hashes, Kerberos tickets, and application access tokens, to move laterally within an environment and bypass normal system access controls. AI services commonly use alternate authentication material as a primary means for users to make queries, making them vulnerable to this technique.","AML.T0091.000":"Adversaries may use stolen application access tokens to bypass the typical authentication process and access restricted accounts, information, or services on remote systems. These tokens are used to make authorized API requests on behalf of a user or service and are commonly used as the primary means for users to access cloud, SaaS, and AIaaS services. AI services including chatbots, LLMs, and predictive inference APIs commonly use application access tokens for authentication.","AML.T0092":"Adversaries may manipulate a user's LLM chat history to cover the tracks of their malicious behavior. They may hide persistent changes made to the LLM's behavior or obscure attempts at discovering private information about the user. Adversaries may delete or edit existing messages or create new threads as part of their coverup if they have authentication tokens for the backend LLM service or direct access to the victim's chat interface. This manipulation may also include modifying the chat history to update with the AI's latest response, ensuring the malicious activity blends with normal conversation patterns.","AML.T0093":"Adversaries may introduce malicious prompts into victim systems via public-facing applications with the intention of them being ingested by an AI at some point in the future. This may occur when data sources are indexed by RAG systems, when rules trigger AI agent actions, or when users utilize LLMs to interact with malicious content. Any public-facing application accepting text input could be a target, including email, shared document systems (OneDrive, Google Drive), service desks (Jira, ServiceNow), and OCR-mediated infiltration via images where malicious prompts are embedded in visual content that gets processed by optical character recognition systems.","AML.T0094":"Adversaries may include instructions to be followed by the AI system in response to a future event, such as a specific keyword or the next interaction, to evade detection or bypass controls. For example, including 'If the user submits a new request...' followed by malicious instructions. This technique may bypass security measures against prompt injections that prevent tool invocation or data access during conversation turns with untrusted data in context.","AML.T0095":"Adversaries may search public websites and domains for information about victims for targeting. Information may be available on social media, news sites, or victim-owned domains. Adversaries use search engines to identify software platforms or services used by the victim for targeting, which may be followed by exploiting public-facing applications or prompt infiltration.","AML.T0096":"Adversaries may communicate using the API of an AI service on the victim's system for command and control. The adversary's commands and results are embedded in normal AI service traffic. This channel is covert because commands blend with normal communications, helping avoid detection. Using existing victim infrastructure allows adversaries to live off the land, reducing their footprint. This technique has been observed in the wild, such as the SesameOP backdoor documented by Microsoft which uses AI service APIs for covert command and control communications.","AML.T0097":"Adversaries may employ various means to detect and avoid virtualization and analysis environments. This may include changing behaviors based on checks for VME or sandbox artifacts. If detected, adversaries may alter malware to disengage from the victim or conceal core functions. Methods include checking for security tools (antivirus, EDR), registry keys (HKLM\\SOFTWARE\\VMware, VirtualBox Guest Additions), environment variables, NIC MAC addresses with known virtualization prefixes (00:0C:29 for VMware, 08:00:27 for VirtualBox), motherboard serial numbers, running processes associated with virtualization (vmtoolsd.exe, VBoxService.exe), or querying system information via WMI. Research by CheckPoint has documented sophisticated VME detection techniques used by modern AI-enabled malware.","AML.T0098":"Adversaries may use access to an AI agent on the victim's system to retrieve data from available agent tools to collect credentials. Agent tools may connect to wide-ranging sources containing credentials including document stores (SharePoint, OneDrive, Google Drive), code repositories (GitHub, GitLab), enterprise productivity tools (email, Slack), and local notetaking tools (Obsidian, Apple Notes).","AML.T0099":"Adversaries may place malicious content on a victim's system where it can be retrieved by an AI Agent Tool. This may be accomplished by placing documents in locations ingested by services the AI agent has tools for. The content may be targeted to be retrieved by common queries and may include false information or prompt injections with malicious instructions.","AML.T0100":"Adversaries may craft deceptive web content designed to bait Computer-Using AI agents or AI web browsers into taking unintended actions, such as clicking buttons, copying code, or navigating to specific web pages. These attacks exploit the agent's interpretation of UI content, visual cues, or prompt-like language embedded in sites. When successful, they can lead agents to inadvertently copy and execute malicious code on the user's operating system.","AML.T0101":"Adversaries may invoke an AI agent's tool capable of performing mutative operations to perform data destruction. Adversaries may destroy data and files on specific systems or in large numbers on a network to interrupt availability to systems, services, and network resources.","AML.T0102":"Adversaries may use LLMs to dynamically generate malicious commands from natural language. Dynamically generated commands may be harder to detect as the attack signature constantly changes. AI-generated commands may allow adversaries to rapidly adapt to different environments. Adversaries may utilize LLMs in the victim's environment or call external services. Prompts to generate malicious code can blend with normal traffic. This technique has been observed in real-world attacks, such as APT28's use of AI capabilities in the LAMEHUG malware family to dynamically generate and adapt malicious payloads.","AML.T0103":"Adversaries may launch AI agents in the victim's environment to execute actions on their behalf. AI agents may have access to a wide range of tools and data sources, as well as permissions to access and interact with other services and systems in the victim's environment. The adversary may leverage these capabilities to carry out their operations. Adversaries may configure the AI agent by providing an initial system prompt and granting access to tools, effectively defining their goals for the agent to achieve. They may deploy the agent with excessive trust permissions and disable any user interactions to ensure the agent's actions aren't blocked. Launching an AI agent may provide for some autonomous behavior, allowing for the agent to make decisions and determine how to achieve the adversary's goals.","AML.T0104":"Adversaries may create and publish poisoned AI agent tools. Poisoned tools may contain an LLM Prompt Injection, which can lead to a variety of impacts. Tools may be published to open source version control repositories (e.g. GitHub, GitLab), to package registries (e.g. npm), or to repositories specifically designed for sharing tools (e.g. OpenClaw Hub). These registries may be largely unregulated and may contain many poisoned tools.","AML.T0105":"Adversaries may break out of a container or virtualized environment to gain access to the underlying host. This can allow an adversary access to other containerized or virtualized resources from the host level or to the host itself. In principle, containerized / virtualized resources should provide a clear separation of application functionality and be isolated from the host environment. There are many ways an adversary may escape from a container or sandbox environment via AI Systems. For example, modifying an AI Agent's configuration to disable safety features or user confirmations could allow the adversary to invoke tools to be run on host environments rather than in the sandbox.","AML.T0106":"Adversaries may exploit software vulnerabilities in an attempt to collect credentials. Exploitation of a software vulnerability occurs when an adversary takes advantage of a programming error in a program, service, or within the operating system software or kernel itself to execute adversary-controlled code.","AML.T0107":"Adversaries may exploit a system or application vulnerability to bypass security features. Exploitation of a vulnerability occurs when an adversary takes advantage of a programming error in a program, service, or within the operating system software or kernel itself to execute adversary-controlled code. Vulnerabilities may exist in defensive security software that can be used to disable or circumvent them.","AML.T0108":"Adversaries may abuse AI agents present on the victim's system for command and control. AI agents are often granted access to tools that can execute shell commands, reach out to the internet, and interact with other services in the victim's environment, making them capable C2 agents. The adversary may modify the behavior of an AI agent for C2 via LLM Prompt Injection and rely on the agent's ability to invoke tools to retrieve and execute the adversary's commands. They may maintain persistent control of an agent via Modify AI Agent Configuration or AI Agent Context Poisoning. They may instruct the agent to not report their actions to the user in an attempt to remain covert."};
+
+            // Runtime: ATLAS technique ID → array of AIDEFEND techniques that defend against it
+            let atlasDefenseMap = {};
+            let _atlasIndicatorAC = null; // AbortController for scroll indicator listeners
+            let _fwDropdownObserver = null; // ResizeObserver for framework dropdown labels
 
             // Framework view configuration — all 7 frameworks (all use accordion layout)
             const frameworkViewConfig = {
@@ -1937,9 +480,9 @@
                 },
                 'atlas': {
                     frameworkKey: 'MITRE ATLAS',
-                    label: 'MITRE ATLAS\u2122',
+                    label: 'MITRE ATLAS\u2122 \u2013 Tactics',
                     pageTitle: 'MITRE ATLAS\u2122 (Adversarial Threat Landscape for AI Systems)',
-                    about: 'A knowledge base of adversary tactics and techniques targeting AI/ML systems, modeled after MITRE ATT\u0026CK\u00AE, developed by MITRE.',
+                    about: 'A knowledge base of adversary tactics and techniques targeting AI/ML systems developed by MITRE.',
                     url: 'https://atlas.mitre.org/',
                     layout: 'accordion',
                     groups: [
@@ -2203,11 +746,13 @@
                     matrixRain.stop();
                 }
             }
+            function safeGetStorage(key) { try { return localStorage.getItem(key); } catch (e) { return null; } }
+            function safeSetStorage(key, val) { try { localStorage.setItem(key, val); } catch (e) { /* ignore — theme still applies, just won't persist */ } }
             function toggleTheme() {
                 const current = document.documentElement.getAttribute('data-theme') || 'light';
                 const idx = themes.indexOf(current);
                 const next = themes[(idx + 1) % themes.length];
-                localStorage.setItem('aidefendTheme', next);
+                safeSetStorage('aidefendTheme', next);
                 applyTheme(next);
             }
             // --- Deep linking helpers ---
@@ -2257,6 +802,33 @@
                 toast.style.transform = 'translateX(-50%)';
                 setTimeout(() => toast.remove(), 1500);
             }
+            function copyToClipboard(text, btn, successMsg, restoreIcon) {
+                const doSuccess = () => {
+                    btn.classList.add('copied');
+                    btn.innerHTML = CHECK_SVG;
+                    showCopyToast(btn, successMsg);
+                    setTimeout(() => { btn.classList.remove('copied'); btn.innerHTML = restoreIcon; }, 1500);
+                };
+                if (navigator.clipboard && window.isSecureContext) {
+                    navigator.clipboard.writeText(text).then(doSuccess).catch(() => {
+                        showCopyToast(btn, 'Copy failed \u2014 try Ctrl+C');
+                    });
+                } else {
+                    // Fallback for non-secure contexts (file://, older browsers)
+                    try {
+                        const ta = document.createElement('textarea');
+                        ta.value = text;
+                        ta.style.cssText = 'position:fixed;left:-9999px;top:-9999px';
+                        document.body.appendChild(ta);
+                        ta.select();
+                        document.execCommand('copy');
+                        ta.remove();
+                        doSuccess();
+                    } catch (e) {
+                        showCopyToast(btn, 'Copy failed \u2014 try Ctrl+C');
+                    }
+                }
+            }
             function createCopyButton(textToCopy) {
                 const btn = document.createElement('button');
                 btn.className = 'copy-btn';
@@ -2264,15 +836,7 @@
                 btn.innerHTML = COPY_SVG;
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    navigator.clipboard.writeText(textToCopy).then(() => {
-                        btn.classList.add('copied');
-                        btn.innerHTML = CHECK_SVG;
-                        showCopyToast(btn, 'Content Copied!');
-                        setTimeout(() => {
-                            btn.classList.remove('copied');
-                            btn.innerHTML = COPY_SVG;
-                        }, 1500);
-                    });
+                    copyToClipboard(textToCopy, btn, 'Technique & Description Copied!', COPY_SVG);
                 });
                 return btn;
             }
@@ -2284,15 +848,7 @@
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const linkUrl = window.location.origin + window.location.pathname + '#t=' + encodeURIComponent(technique.id);
-                    navigator.clipboard.writeText(linkUrl).then(() => {
-                        btn.classList.add('copied');
-                        btn.innerHTML = CHECK_SVG;
-                        showCopyToast(btn, 'URL Copied!');
-                        setTimeout(() => {
-                            btn.classList.remove('copied');
-                            btn.innerHTML = LINK_SVG;
-                        }, 1500);
-                    });
+                    copyToClipboard(linkUrl, btn, 'URL Copied!', LINK_SVG);
                 });
                 return btn;
             }
@@ -2306,15 +862,7 @@
                         e.stopPropagation();
                         const codeEl = pre.querySelector('code');
                         const text = codeEl ? codeEl.textContent : pre.textContent;
-                        navigator.clipboard.writeText(text).then(() => {
-                            btn.classList.add('copied');
-                            btn.innerHTML = CHECK_SVG;
-                            showCopyToast(btn, 'Code Copied!');
-                            setTimeout(() => {
-                                btn.classList.remove('copied');
-                                btn.innerHTML = COPY_SVG;
-                            }, 1500);
-                        });
+                        copyToClipboard(text, btn, 'Code Copied!', COPY_SVG);
                     });
                     pre.appendChild(btn);
                 });
@@ -2345,6 +893,8 @@
                 return matches;
             }
             function renderMainGrid() {
+                if (_atlasIndicatorAC) { _atlasIndicatorAC.abort(); _atlasIndicatorAC = null; }
+                document.querySelectorAll('.atlas-scroll-indicator').forEach(el => el.remove());
                 clearElement(elements.mainContent);
                 const searchTerm = elements.searchBar.value.trim();
                 switch (currentView) {
@@ -2355,7 +905,11 @@
                         renderPhaseGrid(searchTerm);
                         break;
                     case 'framework':
-                        renderFrameworkGrid(searchTerm);
+                        if (currentFramework === 'atlas-matrix') {
+                            renderAtlasMatrix(searchTerm);
+                        } else {
+                            renderFrameworkGrid(searchTerm);
+                        }
                         break;
                     case 'tactic':
                     default:
@@ -2517,6 +1071,563 @@
                 return frag;
             }
 
+            // === ATLAS Matrix View helpers ===
+            function getAtlasCoverageClass(count) {
+                if (count >= 6) return 'cov-high';
+                if (count >= 3) return 'cov-medium';
+                if (count >= 1) return 'cov-low';
+                return 'cov-none';
+            }
+            function getAtlasCoverageLabel(count) {
+                if (count === 0) return 'No coverage';
+                return count + (count === 1 ? ' defense' : ' defenses');
+            }
+
+            function renderAtlasMatrix(searchTerm) {
+                const config = frameworkViewConfig.atlas;
+                const filteredIds = searchTerm ? getFilteredTechniqueIds(searchTerm) : null;
+
+                // Build a set of ATLAS technique IDs that match the search (via their defenses)
+                let matchedAtlasIds = null;
+                let exactMatchAtlasId = null;
+                if (searchTerm) {
+                    matchedAtlasIds = new Set();
+                    const lc = searchTerm.toLowerCase();
+                    Object.entries(atlasTechNames).forEach(([id, name]) => {
+                        if (id.toLowerCase().includes(lc) || name.toLowerCase().includes(lc)) matchedAtlasIds.add(id);
+                    });
+                    // Exact match: normalize search term to ATLAS ID format for pulse effect
+                    const idMatch = searchTerm.match(/^(?:aml\.)?t(\d{4}(?:\.\d{3})?)$/i);
+                    if (idMatch) {
+                        exactMatchAtlasId = 'AML.T' + idMatch[1];
+                    }
+                    // Indirect path: only for non-ATLAS-ID searches (avoids cross-contamination)
+                    const isAtlasIdSearch = /^(aml\.)?t\d/i.test(searchTerm);
+                    if (!isAtlasIdSearch) {
+                        Object.entries(atlasDefenseMap).forEach(([atlasId, defenses]) => {
+                            defenses.forEach(d => { if (filteredIds && filteredIds.has(d.id)) matchedAtlasIds.add(atlasId); });
+                        });
+                    }
+                }
+
+                // Page title + external link
+                const titleEl = createElement('h2', { className: 'fw-page-title' });
+                titleEl.appendChild(document.createTextNode('MITRE ATLAS\u2122 \u2014 Attack Chain Matrix'));
+                const linkBtn = createElement('a', { className: 'fw-title-link', href: 'https://atlas.mitre.org/', title: 'Open official ATLAS page' });
+                linkBtn.setAttribute('target', '_blank');
+                linkBtn.setAttribute('rel', 'noopener noreferrer');
+                linkBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+                titleEl.appendChild(linkBtn);
+                elements.mainContent.appendChild(titleEl);
+
+                const brief = createElement('p', { className: 'fw-page-brief' });
+                brief.textContent = 'ATLAS attack techniques organized as a left-to-right attack chain across 16 tactics. Border colors indicate AIDEFEND defense coverage depth. Click any technique to see mapped defenses.';
+                elements.mainContent.appendChild(brief);
+
+                // Toolbar: legend + export buttons
+                const toolbar = createElement('div', { className: 'atlas-matrix-toolbar' });
+                // Legend
+                const legend = createElement('div', { className: 'atlas-matrix-legend' });
+                [
+                    { cls: '#4caf50', label: '6+ defenses' },
+                    { cls: '#ff9800', label: '3\u20135 defenses' },
+                    { cls: '#f44336', label: '1\u20132 defenses' },
+                    { cls: 'transparent', label: 'No coverage' }
+                ].forEach(item => {
+                    const li = createElement('div', { className: 'atlas-matrix-legend-item' });
+                    const sw = createElement('div', { className: 'atlas-matrix-legend-swatch' });
+                    sw.style.backgroundColor = item.cls;
+                    li.appendChild(sw);
+                    li.appendChild(createElement('span', { textContent: item.label }));
+                    legend.appendChild(li);
+                });
+                toolbar.appendChild(legend);
+                elements.mainContent.appendChild(toolbar);
+
+                // Build tactic → parent technique IDs mapping (reverse of atlasTechToTactics)
+                const tacticToTechs = {};
+                config.groups.forEach(g => { tacticToTechs[g.key] = []; });
+                Object.entries(atlasTechToTactics).forEach(([techId, tactics]) => {
+                    tactics.forEach(tactic => {
+                        if (tacticToTechs[tactic]) tacticToTechs[tactic].push(techId);
+                    });
+                });
+                Object.values(tacticToTechs).forEach(arr => arr.sort());
+
+                // Scrollable container
+                const scroll = createElement('div', { className: 'atlas-matrix-scroll' });
+                const grid = createElement('div', { className: 'atlas-matrix-grid' });
+
+                config.groups.forEach(group => {
+                    const col = createElement('div', { className: 'atlas-matrix-col elevation-2' });
+
+                    const header = createElement('div', { className: 'atlas-matrix-col-header' });
+                    const tacticIdParts = group.name.split(' \u2013 ');
+                    header.appendChild(createElement('span', { className: 'tactic-id', textContent: tacticIdParts[0] }));
+                    header.appendChild(document.createTextNode(group.key));
+                    header.style.cursor = 'pointer';
+                    header.addEventListener('click', () => showAtlasTacticModal(group.key, tacticIdParts[0]));
+                    col.appendChild(header);
+
+                    const techIds = tacticToTechs[group.key] || [];
+                    col.appendChild(createElement('div', { className: 'atlas-matrix-col-count', textContent: techIds.length + ' technique' + (techIds.length !== 1 ? 's' : '') }));
+
+                    // Technique cells
+                    techIds.forEach(techId => {
+                        const defenses = atlasDefenseMap[techId] || [];
+                        const subIds = atlasSubTechniques[techId] || [];
+                        const covClass = getAtlasCoverageClass(defenses.length);
+                        const covLabel = getAtlasCoverageLabel(defenses.length);
+
+                        const cell = createElement('div', { className: 'atlas-matrix-cell ' + covClass });
+                        cell.setAttribute('data-atlas-id', techId);
+
+                        if ((atlasTechToTactics[techId] || []).length > 1) {
+                            cell.classList.add('multi-tactic-indicator');
+                            cell.title = 'Appears in: ' + (atlasTechToTactics[techId] || []).join(', ');
+                        }
+                        if (matchedAtlasIds && matchedAtlasIds.has(techId)) cell.classList.add('search-match');
+                        if (exactMatchAtlasId && techId === exactMatchAtlasId) cell.classList.add('search-exact-match');
+                        if (matchedAtlasIds && !matchedAtlasIds.has(techId)) {
+                            const hasMatchingSub = subIds.some(sid => matchedAtlasIds.has(sid));
+                            if (!hasMatchingSub) cell.classList.add('search-dim');
+                        }
+
+                        cell.appendChild(createElement('div', { className: 'cell-name', textContent: atlasTechNames[techId] || techId }));
+                        cell.appendChild(createElement('div', { className: 'cell-id', textContent: techId }));
+                        cell.appendChild(createElement('span', { className: 'cell-badge badge-' + covClass.replace('cov-', ''), textContent: covLabel }));
+
+                        if (subIds.length > 0) {
+                            const expandBtn = createElement('div', { className: 'cell-expand' });
+                            expandBtn.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
+                            expandBtn.addEventListener('click', (e) => {
+                                e.stopPropagation();
+                                expandBtn.classList.toggle('rotated');
+                                const subsEl = cell.nextElementSibling;
+                                if (subsEl && subsEl.classList.contains('atlas-matrix-subs')) subsEl.classList.toggle('open');
+                            });
+                            cell.appendChild(expandBtn);
+                        }
+
+                        cell.addEventListener('click', () => showAtlasDefenseModal(techId));
+                        col.appendChild(cell);
+
+                        if (subIds.length > 0) {
+                            const subsContainer = createElement('div', { className: 'atlas-matrix-subs' });
+                            subIds.forEach(subId => {
+                                const subDefenses = atlasDefenseMap[subId] || [];
+                                const subCovClass = getAtlasCoverageClass(subDefenses.length);
+                                const subCovLabel = getAtlasCoverageLabel(subDefenses.length);
+                                const sub = createElement('div', { className: 'atlas-matrix-sub ' + subCovClass });
+                                if (matchedAtlasIds && matchedAtlasIds.has(subId)) sub.classList.add('search-match');
+                                if (exactMatchAtlasId && subId === exactMatchAtlasId) sub.classList.add('search-exact-match');
+                                if (matchedAtlasIds && !matchedAtlasIds.has(subId)) sub.classList.add('search-dim');
+                                sub.appendChild(createElement('div', { className: 'sub-name', textContent: atlasTechNames[subId] || subId }));
+                                sub.appendChild(createElement('div', { className: 'sub-id', textContent: subId }));
+                                sub.appendChild(createElement('span', { className: 'cell-badge badge-' + subCovClass.replace('cov-', ''), textContent: subCovLabel }));
+                                sub.addEventListener('click', (e) => { e.stopPropagation(); showAtlasDefenseModal(subId); });
+                                subsContainer.appendChild(sub);
+                            });
+                            if (matchedAtlasIds && subIds.some(sid => matchedAtlasIds.has(sid))) {
+                                subsContainer.classList.add('open');
+                                const expandBtn = cell.querySelector('.cell-expand');
+                                if (expandBtn) expandBtn.classList.add('rotated');
+                            }
+                            col.appendChild(subsContainer);
+                        }
+                    });
+
+                    grid.appendChild(col);
+                });
+
+                scroll.appendChild(grid);
+
+                // --- Off-screen match scroll indicators ---
+                const scrollWrapper = createElement('div', { className: 'atlas-scroll-wrapper' });
+                elements.mainContent.appendChild(scrollWrapper);
+                scrollWrapper.appendChild(scroll);
+
+                const indicatorLeft = createElement('div', { className: 'atlas-scroll-indicator' });
+                const indicatorRight = createElement('div', { className: 'atlas-scroll-indicator' });
+                indicatorLeft.setAttribute('role', 'button');
+                indicatorRight.setAttribute('role', 'button');
+                indicatorLeft.setAttribute('tabindex', '0');
+                indicatorRight.setAttribute('tabindex', '0');
+                document.body.appendChild(indicatorLeft);
+                document.body.appendChild(indicatorRight);
+
+                let _nearestLeftX = 0, _nearestRightX = 0;
+                let _nearestLeftEl = null, _nearestRightEl = null;
+                const _fixedHeader = document.querySelector('.header-main');
+
+                function positionIndicators() {
+                    const rect = scroll.getBoundingClientRect();
+                    const headerBottom = _fixedHeader ? _fixedHeader.getBoundingClientRect().bottom : 0;
+                    const vTop = Math.max(rect.top, headerBottom);
+                    const vBot = Math.min(rect.bottom, window.innerHeight);
+                    if (vBot <= vTop + 40) {
+                        indicatorLeft.classList.remove('visible');
+                        indicatorRight.classList.remove('visible');
+                        return false;
+                    }
+                    const cy = (vTop + vBot) / 2;
+                    indicatorLeft.style.top = cy + 'px';
+                    indicatorLeft.style.transform = 'translateY(-50%)';
+                    indicatorLeft.style.left = (rect.left + 8) + 'px';
+                    indicatorRight.style.top = cy + 'px';
+                    indicatorRight.style.transform = 'translateY(-50%)';
+                    indicatorRight.style.right = (window.innerWidth - rect.right + 8) + 'px';
+                    indicatorRight.style.left = 'auto';
+                    return true;
+                }
+
+                function updateScrollIndicators() {
+                    if (!positionIndicators()) return;
+                    const matches = scroll.querySelectorAll('.atlas-matrix-cell.search-match, .atlas-matrix-sub.search-match');
+                    if (!matches.length) {
+                        indicatorLeft.classList.remove('visible');
+                        indicatorRight.classList.remove('visible');
+                        return;
+                    }
+                    const sL = scroll.scrollLeft;
+                    const sR = sL + scroll.clientWidth;
+                    let offLeft = 0, offRight = 0;
+                    let nearL = -1, nearR = Infinity;
+                    let nearLEl = null, nearREl = null;
+
+                    matches.forEach(m => {
+                        let ox = 0, el = m;
+                        while (el && el !== scroll) { ox += el.offsetLeft; el = el.offsetParent; }
+                        const cellR = ox + m.offsetWidth;
+                        if (cellR <= sL) {
+                            offLeft++;
+                            if (ox > nearL) { nearL = ox; nearLEl = m; }
+                        } else if (ox >= sR) {
+                            offRight++;
+                            if (ox < nearR) { nearR = ox; nearREl = m; }
+                        }
+                    });
+
+                    _nearestLeftX = nearL;
+                    _nearestRightX = nearR;
+                    _nearestLeftEl = nearLEl;
+                    _nearestRightEl = nearREl;
+
+                    if (offLeft > 0) {
+                        indicatorLeft.textContent = '\u2190 ' + offLeft;
+                        indicatorLeft.setAttribute('aria-label', 'Scroll left to ' + offLeft + ' match' + (offLeft > 1 ? 'es' : ''));
+                        indicatorLeft.classList.add('visible');
+                    } else {
+                        indicatorLeft.classList.remove('visible');
+                    }
+                    if (offRight > 0) {
+                        indicatorRight.textContent = offRight + ' \u2192';
+                        indicatorRight.setAttribute('aria-label', 'Scroll right to ' + offRight + ' match' + (offRight > 1 ? 'es' : ''));
+                        indicatorRight.classList.add('visible');
+                    } else {
+                        indicatorRight.classList.remove('visible');
+                    }
+                }
+
+                function scrollToMatch(x, el) {
+                    scroll.scrollTo({ left: Math.max(0, x - scroll.clientWidth / 3), behavior: 'smooth' });
+                    if (el) {
+                        const r = el.getBoundingClientRect();
+                        const headerH = _fixedHeader ? _fixedHeader.offsetHeight : 0;
+                        if (r.top < headerH + 20 || r.bottom > window.innerHeight - 40) {
+                            const elDocY = r.top + window.scrollY;
+                            const usableCenter = headerH + (window.innerHeight - headerH) / 2;
+                            const targetY = elDocY - usableCenter + r.height / 2;
+                            window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
+                        }
+                    }
+                }
+                function scrollToLeft() { scrollToMatch(_nearestLeftX, _nearestLeftEl); }
+                function scrollToRight() { scrollToMatch(_nearestRightX, _nearestRightEl); }
+
+                indicatorLeft.addEventListener('click', scrollToLeft);
+                indicatorRight.addEventListener('click', scrollToRight);
+                indicatorLeft.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); scrollToLeft(); } });
+                indicatorRight.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); scrollToRight(); } });
+
+                _atlasIndicatorAC = new AbortController();
+                const acSignal = { signal: _atlasIndicatorAC.signal };
+                let rafId = 0;
+                const onUpdate = () => { cancelAnimationFrame(rafId); rafId = requestAnimationFrame(updateScrollIndicators); };
+                scroll.addEventListener('scroll', onUpdate, acSignal);
+                window.addEventListener('resize', onUpdate, acSignal);
+                window.addEventListener('scroll', onUpdate, acSignal);
+                requestAnimationFrame(updateScrollIndicators);
+
+                // --- Drag-to-scroll for smooth horizontal panning ---
+                let isDragging = false, startX = 0, scrollLeft0 = 0, hasMoved = false;
+                scroll.addEventListener('mousedown', (e) => {
+                    if (e.button !== 0) return;
+                    isDragging = true; hasMoved = false;
+                    startX = e.pageX; scrollLeft0 = scroll.scrollLeft;
+                    scroll.classList.add('is-dragging');
+                });
+                scroll.addEventListener('mousemove', (e) => {
+                    if (!isDragging) return;
+                    const dx = e.pageX - startX;
+                    if (Math.abs(dx) > 4) hasMoved = true;
+                    scroll.scrollLeft = scrollLeft0 - dx;
+                });
+                const stopDrag = () => { isDragging = false; scroll.classList.remove('is-dragging'); };
+                scroll.addEventListener('mouseup', stopDrag);
+                scroll.addEventListener('mouseleave', stopDrag);
+                // Prevent click on cells when drag ended
+                scroll.addEventListener('click', (e) => { if (hasMoved) { e.stopPropagation(); hasMoved = false; } }, true);
+
+                // --- Multi-tactic cross-highlighting ---
+                grid.addEventListener('mouseenter', (e) => {
+                    const cell = e.target.closest('.atlas-matrix-cell');
+                    if (!cell) return;
+                    const atlasId = cell.getAttribute('data-atlas-id');
+                    if (!atlasId) return;
+                    const allCells = grid.querySelectorAll('.atlas-matrix-cell[data-atlas-id="' + atlasId + '"]');
+                    if (allCells.length > 1) {
+                        allCells.forEach(c => c.classList.add('cross-highlight'));
+                    }
+                }, true);
+                grid.addEventListener('mouseleave', (e) => {
+                    const cell = e.target.closest('.atlas-matrix-cell');
+                    if (!cell) return;
+                    const atlasId = cell.getAttribute('data-atlas-id');
+                    if (!atlasId) return;
+                    grid.querySelectorAll('.atlas-matrix-cell[data-atlas-id="' + atlasId + '"]').forEach(c => c.classList.remove('cross-highlight'));
+                }, true);
+            }
+
+            function showAtlasTacticModal(tacticName, tacticIdStr) {
+                clearElement(elements.modalBody);
+                clearElement(elements.modalActions);
+                const info = atlasTacticInfo[tacticName];
+                const tacticId = info ? info.id : tacticIdStr;
+
+                // Subtitle
+                elements.modalBody.appendChild(createElement('p', { className: 'text-sm opacity-80 mb-1 modal-subtitle', textContent: 'MITRE ATLAS\u2122 Tactic' }));
+
+                // Title with tactic ID + external link
+                const titleH2 = createElement('h2');
+                titleH2.appendChild(document.createTextNode(tacticId + ' ' + tacticName));
+                const extLink = createElement('a', {
+                    className: 'fw-title-link',
+                    href: 'https://atlas.mitre.org/tactics/' + tacticId,
+                    title: 'View on MITRE ATLAS'
+                });
+                extLink.setAttribute('target', '_blank');
+                extLink.setAttribute('rel', 'noopener noreferrer');
+                extLink.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+                titleH2.appendChild(extLink);
+                elements.modalBody.appendChild(titleH2);
+
+                // Official description
+                if (info && info.desc) {
+                    const descEl = createElement('p', {
+                        className: 'text-sm mb-4',
+                        textContent: info.desc
+                    });
+                    descEl.style.lineHeight = '1.6';
+                    descEl.style.color = 'var(--text-color)';
+                    elements.modalBody.appendChild(descEl);
+                }
+
+                showModal();
+            }
+
+            function showAtlasDefenseModal(atlasId) {
+                clearElement(elements.modalBody);
+                clearElement(elements.modalActions);
+                const techName = atlasTechNames[atlasId] || atlasId;
+                const defenses = atlasDefenseMap[atlasId] || [];
+
+                // Subtitle: framework context + tactic(s) inline
+                const parentId = atlasId.match(/^(AML\.T\d{4})/)?.[1] || atlasId;
+                const tactics = atlasTechToTactics[parentId] || [];
+                const subtitleText = 'MITRE ATLAS\u2122 Technique' + (tactics.length > 0 ? ' \u00B7 ' + tactics.join(', ') : '');
+                elements.modalBody.appendChild(createElement('p', { className: 'text-sm opacity-80 mb-1 modal-subtitle', textContent: subtitleText }));
+
+                // Title with external link icon
+                const titleH2 = createElement('h2');
+                titleH2.appendChild(document.createTextNode(atlasId + ' ' + techName));
+                const atlasExtLink = createElement('a', {
+                    className: 'fw-title-link',
+                    href: 'https://atlas.mitre.org/techniques/' + parentId,
+                    title: 'View on MITRE ATLAS'
+                });
+                atlasExtLink.setAttribute('target', '_blank');
+                atlasExtLink.setAttribute('rel', 'noopener noreferrer');
+                atlasExtLink.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>';
+                titleH2.appendChild(atlasExtLink);
+                elements.modalBody.appendChild(titleH2);
+
+                // Official technique description
+                const desc = atlasTechDescs[atlasId];
+                if (desc) {
+                    const descEl = createElement('p', { className: 'text-sm mb-4' });
+                    descEl.textContent = desc;
+                    descEl.style.lineHeight = '1.6';
+                    descEl.style.color = 'var(--text-color)';
+                    descEl.style.opacity = '0.85';
+                    elements.modalBody.appendChild(descEl);
+                }
+
+                // Helper: render a single defense card (technique-item style)
+                function buildDefenseCard(tech) {
+                    const li = createElement('li', { className: 'technique-container' });
+                    const card = createElement('a', { className: 'technique-item no-sub elevation-2' });
+                    const directUrl = window.location.origin + window.location.pathname + '#t=' + encodeURIComponent(tech.id);
+                    card.setAttribute('href', directUrl);
+                    card.setAttribute('target', '_blank');
+                    card.setAttribute('rel', 'noopener');
+                    card.style.textDecoration = 'none';
+                    const content = createElement('div', { className: 'technique-item-content' });
+                    content.appendChild(createElement('span', { className: 'technique-id', textContent: tech.id }));
+                    content.appendChild(createElement('span', { className: 'technique-name', textContent: tech.name }));
+                    card.appendChild(content);
+                    li.appendChild(card);
+                    return li;
+                }
+
+                // Helper: build defense cards grouped by mode
+                function buildDefenseGrouped(defs, mode) {
+                    const frag = document.createDocumentFragment();
+                    if (defs.length === 0) {
+                        frag.appendChild(createElement('div', { className: 'atlas-defense-empty', textContent: 'No defenses mapped.' }));
+                        return frag;
+                    }
+                    if (mode === 'all') {
+                        const ul = createElement('ul', { className: 'fw-subgroup-techniques' });
+                        defs.forEach(tech => ul.appendChild(buildDefenseCard(tech)));
+                        frag.appendChild(ul);
+                        return frag;
+                    }
+                    const nameMap = mode === 'pillar' ? pillarNames : mode === 'phase' ? phaseNames : null;
+                    const groups = {};
+                    defs.forEach(tech => {
+                        let keys = [];
+                        if (mode === 'tactic') {
+                            keys = tech.tactic ? [tech.tactic] : ['Other'];
+                        } else if (mode === 'pillar') {
+                            const p = tech.pillar;
+                            keys = Array.isArray(p) ? p : (p ? [p] : ['other']);
+                        } else if (mode === 'phase') {
+                            const ph = tech.phase;
+                            keys = Array.isArray(ph) ? ph : (ph ? [ph] : ['other']);
+                        }
+                        if (keys.length === 0) keys = ['Other'];
+                        keys.forEach(k => { if (!groups[k]) groups[k] = []; groups[k].push(tech); });
+                    });
+                    let orderedKeys;
+                    if (mode === 'tactic') {
+                        const order = ['Model', 'Harden', 'Detect', 'Isolate', 'Deceive', 'Evict', 'Restore'];
+                        orderedKeys = order.filter(k => groups[k]);
+                    } else if (mode === 'pillar') {
+                        const order = ['data', 'infra', 'model', 'app'];
+                        orderedKeys = order.filter(k => groups[k]);
+                    } else {
+                        const order = ['scoping', 'building', 'validation', 'operation', 'response', 'improvement'];
+                        orderedKeys = order.filter(k => groups[k]);
+                    }
+                    Object.keys(groups).forEach(k => { if (!orderedKeys.includes(k)) orderedKeys.push(k); });
+                    orderedKeys.forEach(key => {
+                        const techs = groups[key];
+                        const displayName = nameMap ? (nameMap[key] || key) : key;
+                        const subgroup = createElement('div', { className: 'fw-subgroup' });
+                        const subHeader = createElement('div', { className: 'fw-subgroup-header' });
+                        subHeader.appendChild(document.createTextNode(displayName));
+                        subHeader.appendChild(createElement('span', { className: 'fw-subgroup-header-count', textContent: String(techs.length) }));
+                        subgroup.appendChild(subHeader);
+                        const ul = createElement('ul', { className: 'fw-subgroup-techniques' });
+                        techs.forEach(tech => ul.appendChild(buildDefenseCard(tech)));
+                        subgroup.appendChild(ul);
+                        frag.appendChild(subgroup);
+                    });
+                    return frag;
+                }
+
+                // Defenses section with toggle
+                const defSection = createElement('div', { className: 'mt-2' });
+                const defTitle = createElement('h3', { className: 'font-semibold text-base mb-2' });
+                defTitle.textContent = 'AIDEFEND Defenses (' + defenses.length + '):';
+                defSection.appendChild(defTitle);
+
+                if (defenses.length === 0) {
+                    defSection.appendChild(createElement('div', { className: 'atlas-defense-empty', textContent: 'No AIDEFEND defenses currently mapped to this technique.' }));
+                } else {
+                    // Toggle bar
+                    const toggleBar = createElement('div', { className: 'fw-group-toggle' });
+                    const defContent = createElement('div');
+                    let currentMode = 'tactic';
+                    defContent.appendChild(buildDefenseGrouped(defenses, 'tactic'));
+                    [
+                        { key: 'tactic', label: 'By Tactic' },
+                        { key: 'pillar', label: 'By Pillar' },
+                        { key: 'phase', label: 'By Phase' },
+                        { key: 'all', label: 'All' }
+                    ].forEach(mode => {
+                        const btn = createElement('div', { className: 'fw-group-toggle-btn' + (mode.key === 'tactic' ? ' active' : ''), textContent: mode.label });
+                        btn.addEventListener('click', () => {
+                            if (currentMode === mode.key) return;
+                            currentMode = mode.key;
+                            toggleBar.querySelectorAll('.fw-group-toggle-btn').forEach(b => b.classList.remove('active'));
+                            btn.classList.add('active');
+                            clearElement(defContent);
+                            defContent.appendChild(buildDefenseGrouped(defenses, mode.key));
+                        });
+                        toggleBar.appendChild(btn);
+                    });
+                    defSection.appendChild(toggleBar);
+                    defSection.appendChild(defContent);
+                }
+                elements.modalBody.appendChild(defSection);
+
+                // Also show subtechnique defenses if clicking a parent
+                const subIds = atlasSubTechniques[atlasId] || [];
+                if (subIds.length > 0) {
+                    const subSection = createElement('div', { className: 'mt-4' });
+                    subSection.appendChild(createElement('h3', { className: 'font-semibold text-base mb-2', textContent: 'Sub-Technique Defenses:' }));
+                    subIds.forEach(subId => {
+                        const subDefs = atlasDefenseMap[subId] || [];
+                        const subDiv = createElement('div', { className: 'mb-3' });
+                        subDiv.appendChild(createElement('p', { className: 'text-sm font-semibold mb-1 opacity-80', textContent: subId + ' ' + (atlasTechNames[subId] || subId) + ' (' + subDefs.length + ')' }));
+                        if (subDefs.length === 0) {
+                            subDiv.appendChild(createElement('div', { className: 'atlas-defense-empty', textContent: 'No defenses mapped.' }));
+                        } else {
+                            // Sub-technique also gets its own toggle
+                            const subToggle = createElement('div', { className: 'fw-group-toggle' });
+                            const subContent = createElement('div');
+                            let subMode = 'tactic';
+                            subContent.appendChild(buildDefenseGrouped(subDefs, 'tactic'));
+                            [
+                                { key: 'tactic', label: 'By Tactic' },
+                                { key: 'pillar', label: 'By Pillar' },
+                                { key: 'phase', label: 'By Phase' },
+                                { key: 'all', label: 'All' }
+                            ].forEach(mode => {
+                                const btn = createElement('div', { className: 'fw-group-toggle-btn' + (mode.key === 'tactic' ? ' active' : ''), textContent: mode.label });
+                                btn.addEventListener('click', () => {
+                                    if (subMode === mode.key) return;
+                                    subMode = mode.key;
+                                    subToggle.querySelectorAll('.fw-group-toggle-btn').forEach(b => b.classList.remove('active'));
+                                    btn.classList.add('active');
+                                    clearElement(subContent);
+                                    subContent.appendChild(buildDefenseGrouped(subDefs, mode.key));
+                                });
+                                subToggle.appendChild(btn);
+                            });
+                            subDiv.appendChild(subToggle);
+                            subDiv.appendChild(subContent);
+                        }
+                        subSection.appendChild(subDiv);
+                    });
+                    elements.modalBody.appendChild(subSection);
+                }
+
+                showModal();
+            }
+
             function renderFrameworkGrid(searchTerm) {
                 const config = frameworkViewConfig[currentFramework];
                 if (!config) return;
@@ -2555,6 +1666,7 @@
                 // Helper: build an accordion header row
                 function buildAccordionHeader(group, techs, cfg) {
                     const header = createElement('div', { className: 'fw-accordion-header' });
+                    header.setAttribute('aria-expanded', 'false');
                     const headerLeft = createElement('div', { className: 'fw-accordion-header-left' });
                     const dashIdx = group.name.indexOf(' \u2013 ');
                     if (dashIdx > 0) {
@@ -2610,11 +1722,11 @@
                 config.groups.forEach(group => {
                     // ── Hierarchical rendering (objectives → nested techniques) ──
                     if (group.children && config.techniqueGroups) {
-                        // Aggregate unique techniques across all child groups
-                        const allTechMap = new Map();
-                        group.children.forEach(ck => { (fwData[ck] || []).forEach(t => { if (!allTechMap.has(t.id)) allTechMap.set(t.id, t); }); });
-                        (fwData[group.key] || []).forEach(t => { if (!allTechMap.has(t.id)) allTechMap.set(t.id, t); });
-                        const allFiltered = [...allTechMap.values()].filter(t => !searchTerm || filteredIds.has(t.id));
+                        // Sum technique counts across all child groups (consistent with flat framework views)
+                        const allTechs = [];
+                        group.children.forEach(ck => { (fwData[ck] || []).forEach(t => allTechs.push(t)); });
+                        (fwData[group.key] || []).forEach(t => allTechs.push(t));
+                        const allFiltered = allTechs.filter(t => !searchTerm || filteredIds.has(t.id));
 
                         const section = createElement('div', { className: 'fw-accordion-section fw-objective-section elevation-2' });
                         const header = buildAccordionHeader(group, allFiltered, config);
@@ -2638,6 +1750,7 @@
 
                             childHeader.addEventListener('click', () => {
                                 const isExp = childSection.classList.toggle('expanded');
+                                childHeader.setAttribute('aria-expanded', String(isExp));
                                 if (isExp) {
                                     childBody.style.maxHeight = childBody.scrollHeight + 'px';
                                     // Parent uses max-height:none so it grows naturally
@@ -2655,6 +1768,7 @@
 
                         header.addEventListener('click', () => {
                             const isExp = section.classList.toggle('expanded');
+                            header.setAttribute('aria-expanded', String(isExp));
                             if (isExp) {
                                 body.style.maxHeight = body.scrollHeight + 'px';
                                 // After expand animation, switch to none so nested accordions can grow
@@ -2685,6 +1799,7 @@
                         section.appendChild(body);
                         header.addEventListener('click', () => {
                             const isExpanded = section.classList.toggle('expanded');
+                            header.setAttribute('aria-expanded', String(isExpanded));
                             if (isExpanded) {
                                 body.style.maxHeight = body.scrollHeight + 'px';
                             } else {
@@ -2777,6 +1892,7 @@
             function toggleSubTechniques(header, content, iconWrapper) {
                 const isExpanded = content.classList.toggle('expanded');
                 header.classList.toggle('expanded', isExpanded);
+                header.setAttribute('aria-expanded', String(isExpanded));
                 iconWrapper.style.transform = isExpanded ? 'rotate(90deg)' : 'rotate(0deg)';
                 content.style.maxHeight = isExpanded ? content.scrollHeight + 'px' : null;
             }
@@ -3048,13 +2164,25 @@
                     });
                 }
                 updateDropdownLabels();
-                new ResizeObserver(updateDropdownLabels).observe(frameworkDropdown);
+                if (_fwDropdownObserver) _fwDropdownObserver.disconnect();
+                _fwDropdownObserver = new ResizeObserver(updateDropdownLabels);
+                _fwDropdownObserver.observe(frameworkDropdown);
 
                 // Bug Fix #1: Removed debounce timer for instant search response
                 elements.searchBar.addEventListener('input', (e) => {
                     const searchTerm = e.target.value.trim();
                     elements.searchClearBtn.style.display = searchTerm ? 'block' : 'none';
+                    // Preserve ATLAS matrix horizontal scroll position across re-renders
+                    let savedScrollLeft = 0;
+                    if (currentView === 'framework' && currentFramework === 'atlas-matrix') {
+                        const s = document.querySelector('.atlas-matrix-scroll');
+                        if (s) savedScrollLeft = s.scrollLeft;
+                    }
                     renderMainGrid();
+                    if (savedScrollLeft) {
+                        const s = document.querySelector('.atlas-matrix-scroll');
+                        if (s) { s.style.scrollBehavior = 'auto'; s.scrollLeft = savedScrollLeft; s.style.scrollBehavior = ''; }
+                    }
                 });
                 elements.searchClearBtn.addEventListener('click', () => {
                     elements.searchBar.value = '';
@@ -3176,10 +2304,27 @@
 
                     frameworkViews[viewKey] = groupData;
                 });
+
+                // Build ATLAS defense reverse-index: ATLAS technique ID → AIDEFEND techniques
+                atlasDefenseMap = {};
+                eligibleTechniques.forEach(tech => {
+                    if (!tech.defendsAgainst) return;
+                    const fwEntry = tech.defendsAgainst.find(da => da.framework === 'MITRE ATLAS');
+                    if (!fwEntry || !fwEntry.items) return;
+                    fwEntry.items.forEach(item => {
+                        const m = item.match(/^(AML\.T\d{4}(?:\.\d{3})?)/);
+                        if (!m) return;
+                        const atlasId = m[1];
+                        if (!atlasDefenseMap[atlasId]) atlasDefenseMap[atlasId] = [];
+                        if (!atlasDefenseMap[atlasId].some(t => t.id === tech.id)) {
+                            atlasDefenseMap[atlasId].push(tech);
+                        }
+                    });
+                });
             }
 
             function initialize() {
-                const savedTheme = localStorage.getItem('aidefendTheme') || 'dark';
+                const savedTheme = safeGetStorage('aidefendTheme') || 'dark';
                 applyTheme(savedTheme);
                 const aboutIcon = createElement('span');
                 setIcon(aboutIcon, 'shieldCheck');

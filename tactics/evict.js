@@ -13,6 +13,8 @@ export const evictTactic = {
                         "AML.T0012 Valid Accounts",
                         "AML.T0055 Unsecured Credentials",
                         "AML.T0090 OS Credential Dumping",
+                        "AML.T0091 Use Alternate Authentication Material",
+                        "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
                         "AML.T0098 AI Agent Tool Credential Harvesting",
                         "AML.T0106 Exploitation for Credential Access"
                     ]
@@ -82,7 +84,9 @@ export const evictTactic = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0012 Valid Accounts",
-                                "AML.T0055 Unsecured Credentials"
+                                "AML.T0055 Unsecured Credentials",
+                                "AML.T0091 Use Alternate Authentication Material",
+                                "AML.T0091.000 Use Alternate Authentication Material: Application Access Token"
                             ]
                         },
                         {
@@ -159,6 +163,8 @@ export const evictTactic = {
                             "items": [
                                 "AML.T0012 Valid Accounts (by immediately disabling the account)",
                                 "AML.T0090 OS Credential Dumping (by immediately invalidating dumped credentials)",
+                                "AML.T0091 Use Alternate Authentication Material (immediately revoking stolen tokens/hashes)",
+                                "AML.T0091.000 Use Alternate Authentication Material: Application Access Token (real-time JWT/API token revocation)",
                                 "AML.T0106 Exploitation for Credential Access"
                             ]
                         },
@@ -235,7 +241,9 @@ export const evictTactic = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0073 Impersonation",
-                                "AML.T0012 Valid Accounts"
+                                "AML.T0012 Valid Accounts",
+                                "AML.T0091 Use Alternate Authentication Material (revoking stolen workload identity credentials)",
+                                "AML.T0091.000 Use Alternate Authentication Material: Application Access Token"
                             ]
                         },
                         {
@@ -299,7 +307,7 @@ export const evictTactic = {
         {
             "id": "AID-E-002",
             "name": "AI Process & Session Eviction", "pillar": ["infra", "app"], "phase": ["response"],
-            "description": "Terminate any running AI model instances, agent processes, user sessions, or containerized workloads that are confirmed to be malicious, compromised, or actively involved in an attack. This immediate action halts the adversary's ongoing activities within the AI system and removes their active foothold.",
+            "description": "Terminate any running AI model instances, agent processes, or containerized workloads that are confirmed to be malicious, compromised, or actively involved in an attack. This technique is focused on removing active runtime footholds and stopping live execution immediately.",
             "toolsOpenSource": [
                 "OS process management (kill, pkill, taskkill)",
                 "Container orchestration CLIs (kubectl delete pod --force)",
@@ -319,6 +327,8 @@ export const evictTactic = {
                         "AML.T0054 LLM Jailbreak (terminates manipulated session)",
                         "AML.T0072 Reverse Shell (terminating reverse shell connections)",
                         "AML.T0080 AI Agent Context Poisoning (terminating poisoned agent sessions)",
+                        "AML.T0091 Use Alternate Authentication Material (terminating sessions using stolen tokens)",
+                        "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
                         "AML.T0108 AI Agent (C2)"
                     ]
                 },
@@ -877,7 +887,7 @@ export const evictTactic = {
         {
             "id": "AID-E-004",
             "name": "Post-Eviction System Patching & Hardening", "pillar": ["infra", "app"], "phase": ["improvement"],
-            "description": "After an attack vector has been identified and the adversary evicted, rapidly apply necessary security patches to vulnerable software components (e.g., ML libraries, operating systems, web servers, agent frameworks) and harden system configurations that were exploited or found to be weak. This step aims to close the specific vulnerabilities used by the attacker and strengthen overall security posture to prevent reinfection or similar future attacks.",
+            "description": "After an attack vector has been identified and the adversary evicted, perform immediate tactical patching and hardening in the next 24-72 hours. This technique focuses on rapidly closing the exact exploited path: patching vulnerable software components, correcting abused configurations, tightening IAM and network boundaries around the compromised component, and disabling unnecessary services or agent capabilities that increased blast radius. Its goal is to prevent immediate reinfection or trivial re-exploitation before longer-term institutional improvements are completed.",
             "toolsOpenSource": [
                 "Package managers (apt, yum, pip, conda)",
                 "Configuration management tools (Ansible, Chef, Puppet)",
@@ -979,7 +989,7 @@ export const evictTactic = {
             "name": "Compromised Session Termination & State Purging",
             "pillar": ["infra", "app"],
             "phase": ["response"],
-            "description": "When communication channels or user/agent sessions are suspected or confirmed compromised, immediately expel the adversary and dismantle all footholds. This includes terminating active sessions, revoking tokens, purging tainted conversational memory, and disabling malicious execution paths like unknown webhooks or queued jobs. The goal is to prevent any residual access so the attacker cannot continue or instantly re-enter.",
+            "description": "When communication channels or user/agent sessions are suspected or confirmed compromised, immediately expel the adversary and remove residual application-layer footholds. This technique focuses on application state after active runtime containment (see AID-E-002): terminating active sessions, revoking or globally invalidating tokens, purging tainted conversational memory, and dismantling malicious webhooks, rogue tool registrations, queued jobs, or background workers. The goal is to prevent any residual access or auto-respawn path after the initial foothold has been killed.",
             "toolsOpenSource": [
                 "Application server admin interfaces for session expiration",
                 "Custom scripts using JWT libraries or flushing session stores (Redis, Memcached)",
@@ -999,6 +1009,8 @@ export const evictTactic = {
                         "AML.T0054 LLM Jailbreak (terminating jailbroken sessions)",
                         "AML.T0080.000 AI Agent Context Poisoning: Memory (purging poisoned agent memory)",
                         "AML.T0080.001 AI Agent Context Poisoning: Thread (purging poisoned conversation threads)",
+                        "AML.T0091 Use Alternate Authentication Material (terminating sessions using stolen auth material)",
+                        "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
                         "AML.T0108 AI Agent (C2)"
                     ]
                 },
@@ -1056,8 +1068,8 @@ export const evictTactic = {
                     "howTo": "<h5>Concept:</h5><p>When you confirm a session hijack or identity takeover, you cannot assume you know exactly which tokens the attacker has. The safest immediate containment move is to revoke every active session and token associated with the affected user / tenant / agent identity. In high-severity cases, you may force-logout <em>all</em> sessions across an environment (org-wide kill switch) to cut off attacker access in bulk.</p><h5>Targeted or Global Session Flush</h5><p>If you use server-side state (Redis, Memcached) for sessions, you can enumerate and delete keys that match a pattern (e.g. <code>session:user123:*</code> for targeted, or <code>session:*</code> for global). This immediately invalidates cookies and bearer tokens that depend on that server-side state.</p><pre><code># File: incident_response/flush_sessions.py\nimport redis\n\ndef flush_sessions(prefix: str = \"session:*\"):\n    \"\"\"Delete server-side session keys that match a pattern.\\n    Use a specific prefix (e.g. session:user123:*) for scoped eviction,\\n    or session:* as an emergency kill switch.\"\"\"\n    r = redis.Redis(host=\"localhost\", port=6379, db=0)\n    cursor = 0\n    total_deleted = 0\n    while True:\n        cursor, keys = r.scan(cursor=cursor, match=prefix, count=1000)\n        if keys:\n            total_deleted += r.delete(*keys)\n        if cursor == 0:\n            break\n    print(f\"✅ Deleted {total_deleted} session keys for pattern {prefix}.\")\n</code></pre><p><strong>Action:</strong> Maintain a tested admin/IR playbook that can 1) scope-evict sessions for a single account, team, or agent service, and 2) run an emergency global eviction if blast radius is unclear. This playbook should be callable from SOAR.</p>"
                 },
                 {
-                    "strategy": "Revoke stateless tokens (JWT, API tokens) and rotate signing keys.",
-                    "howTo": "<h5>Concept:</h5><p>Attackers often steal bearer tokens or JWTs. Unlike server-side sessions, JWTs remain valid until they expire unless you actively revoke them. You must introduce a denylist (revocation list) and force all verifiers to check it. For high-severity incidents, rotate the signing key so <em>all</em> previously issued tokens become invalid at once.</p><h5>Implement a JWT Revocation List</h5><pre><code># File: eviction_scripts/revoke_jwt.py\nimport time\nimport redis\nimport jwt\n\ndef revoke_jwt(token: str, secret: str, redis_client):\n    \"\"\"Extract jti/exp from the token and store its jti in a denylist\\n    with a TTL that matches the token's remaining lifetime.\"\"\"\n    try:\n        payload = jwt.decode(token, secret, algorithms=[\"HS256\"], options={\"verify_exp\": False})\n        jti = payload.get(\"jti\")\n        exp = payload.get(\"exp\")\n        if not jti or not exp:\n            return\n        remaining_ttl = max(0, exp - int(time.time()))\n        if remaining_ttl > 0:\n            redis_client.set(f\"jwt_revoked:{jti}\", \"revoked\", ex=remaining_ttl)\n            print(f\"🚫 Revoked token jti={jti} for {remaining_ttl}s\")\n    except jwt.PyJWTError as e:\n        print(f\"Invalid token: {e}\")\n</code></pre><p><strong>Critical Requirements:</strong> (1) All services that validate JWTs must also check <code>jwt_revoked:{jti}</code> before accepting the token. (2) Your IR runbook must include \"rotate JWT signing key now\" for P1/P0 incidents; key rotation immediately invalidates every stolen-but-not-yet-used token.</p>"
+                    "strategy": "Perform global invalidation for stateless tokens by rotating signing keys; use AID-E-001.002 for per-token revocation.",
+                    "howTo": "<h5>Concept:</h5><p>For stateless tokens such as JWTs, detailed per-token revocation logic already belongs in <code>AID-E-001.002</code>. This strategy should focus on the incident-wide action that <em>globally</em> invalidates previously issued stateless tokens: rotating the signing key (or equivalent trust anchor) so stolen tokens can no longer be verified.</p><h5>Operational Scope</h5><p>Use <code>AID-E-001.002</code> when you need targeted revocation of specific JWTs or API tokens. Use this strategy when blast radius is unclear, multiple tokens may be exposed, or incident severity requires immediate environment-wide invalidation.</p><p><strong>Action:</strong> For P1/P0 incidents involving stolen bearer tokens or unknown token exposure, rotate the JWT signing key (or equivalent token-verification secret) and force all relying services to reload trust material immediately. Treat <code>AID-E-001.002</code> as the canonical implementation for per-token revocation and this strategy as the canonical control for global invalidation.</p>"
                 },
                 {
                     "strategy": "Purge tainted conversational memory / agent state so the attacker’s injected goals cannot respawn.",

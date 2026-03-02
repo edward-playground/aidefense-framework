@@ -1,0 +1,239 @@
+:root {
+    /* Light Theme — Rose Gold */
+    --font-family: 'Inter', sans-serif;
+    --bg-color: #f0e8e5;
+    --text-color: #3b3233;
+    --text-secondary-color: #7a6b68;
+    --header-bg: #f8f3f1;
+    --header-border: #ddd4d0;
+    --column-bg: #f8f3f1;
+    --column-border: #ddd4d0;
+    --column-header-text: #4a3b38;
+    --column-header-hover-text: #1976d2;
+    --technique-item-bg: #f8f3f1;
+    --technique-item-border: #e5dbd6;
+    --technique-item-text: #1976d2;
+    --technique-item-hover-bg: #ebe1dc;
+    --technique-item-hover-text: #1565c0;
+    --technique-item-highlight-bg: #d4c5bf;
+    --technique-item-highlight-text: #0d47a1;
+    --technique-id-text: #8a7b76;
+    --subtechnique-bg: #f5f0ee;
+    --modal-content-bg: #f8f3f1;
+    --modal-close-btn-text: #7a6b68;
+    --modal-close-btn-hover-text: #2a2223;
+    --search-bg: #ebe4e0;
+    --search-border: #bdb2ac;
+    --search-focus-ring: #2196f3;
+    --scrollbar-track: #ddd4d0;
+    --scrollbar-thumb: #a09290;
+    --scrollbar-thumb-hover: #8a7b76;
+    --icon-fill: #7a6b68;
+    --icon-hover-fill: #2196f3;
+    --link-color: #1976d2;
+    --link-hover-color: #0d47a1;
+    --shadow-umbra: rgba(0, 0, 0, 0.15);
+    --shadow-penumbra: rgba(0, 0, 0, 0.1);
+    --shadow-ambient: rgba(0, 0, 0, 0.08);
+    --footer-bg: #ddd4d0;
+    --footer-text: #7a6b68;
+    --footer-border: #c5bab5;
+    --view-switcher-bg: #e5dbd6;
+    --view-switcher-btn-bg: #f8f3f1;
+    --view-switcher-btn-text: #5a4b48;
+    --view-switcher-btn-active-bg: #3f51b5;
+    --view-switcher-btn-active-text: #ffffff;
+}
+
+html[data-theme="dark"] {
+    /* Dark Theme */
+    --bg-color: #1a1a1a;
+    --text-color: #e0e0e0;
+    --text-secondary-color: #b0b0b0;
+    --header-bg: #222222;
+    --header-border: #333333;
+    --column-bg: #222222;
+    --column-border: #333333;
+    --column-header-text: #f0f0f0;
+    --column-header-hover-text: #90caf9;
+    --technique-item-bg: #2b2b2b;
+    --technique-item-border: #3d3d3d;
+    --technique-item-text: #90caf9;
+    --technique-item-hover-bg: #383838;
+    --technique-item-hover-text: #bbdefb;
+    --technique-item-highlight-bg: #1e3a5f;
+    --technique-item-highlight-text: #e3f2fd;
+    --technique-id-text: #c0c0c0;
+    --subtechnique-bg: #252525;
+    --modal-content-bg: #222222;
+    --modal-close-btn-text: #b0b0b0;
+    --modal-close-btn-hover-text: #f0f0f0;
+    --search-bg: #333333;
+    --search-border: #444444;
+    --search-focus-ring: #90caf9;
+    --scrollbar-track: #2b2b2b;
+    --scrollbar-thumb: #555555;
+    --scrollbar-thumb-hover: #777777;
+    --icon-fill: #c0c0c0;
+    --icon-hover-fill: #90caf9;
+    --link-color: #90caf9;
+    --link-hover-color: #e3f2fd;
+    --shadow-umbra: rgba(0, 0, 0, 0.5);
+    --shadow-penumbra: rgba(0, 0, 0, 0.35);
+    --shadow-ambient: rgba(0, 0, 0, 0.3);
+    --footer-bg: #2b2b2b;
+    --footer-text: #a0a0a0;
+    --footer-border: #3d3d3d;
+    --view-switcher-bg: #333333;
+    --view-switcher-btn-bg: #424242;
+    --view-switcher-btn-text: #e0e0e0;
+    --view-switcher-btn-active-bg: #90caf9;
+    --view-switcher-btn-active-text: #121212;
+}
+
+html[data-theme="retro"] {
+    /* Retro Terminal — Phosphor Green on Black */
+    --font-family: 'Courier New', Consolas, 'Liberation Mono', monospace;
+    --bg-color: #0a0a0a;
+    --text-color: #00ff41;
+    --text-secondary-color: #00cc33;
+    --header-bg: #0f0f0f;
+    --header-border: #003300;
+    --column-bg: #0f0f0f;
+    --column-border: #003300;
+    --column-header-text: #00ff41;
+    --column-header-hover-text: #66ff88;
+    --technique-item-bg: #111111;
+    --technique-item-border: #003300;
+    --technique-item-text: #00ff41;
+    --technique-item-hover-bg: #0a1a0a;
+    --technique-item-hover-text: #66ff88;
+    --technique-item-highlight-bg: #0a2a0a;
+    --technique-item-highlight-text: #aaffaa;
+    --technique-id-text: #00aa2a;
+    --subtechnique-bg: #0d0d0d;
+    --modal-content-bg: #0f0f0f;
+    --modal-close-btn-text: #00aa2a;
+    --modal-close-btn-hover-text: #00ff41;
+    --search-bg: #111111;
+    --search-border: #004400;
+    --search-focus-ring: #00ff41;
+    --scrollbar-track: #0a0a0a;
+    --scrollbar-thumb: #004400;
+    --scrollbar-thumb-hover: #006600;
+    --icon-fill: #00cc33;
+    --icon-hover-fill: #00ff41;
+    --link-color: #33ff66;
+    --link-hover-color: #88ffaa;
+    --shadow-umbra: rgba(0, 255, 65, 0.1);
+    --shadow-penumbra: rgba(0, 255, 65, 0.06);
+    --shadow-ambient: rgba(0, 255, 65, 0.04);
+    --footer-bg: #0d0d0d;
+    --footer-text: #00aa2a;
+    --footer-border: #003300;
+    --view-switcher-bg: #111111;
+    --view-switcher-btn-bg: #1a1a1a;
+    --view-switcher-btn-text: #00cc33;
+    --view-switcher-btn-active-bg: #00ff41;
+    --view-switcher-btn-active-text: #0a0a0a;
+}
+
+html[data-theme="highcontrast"] {
+    /* High Contrast — Material Design principles:
+       - Surface hierarchy via subtle gray levels
+       - Shadows removed (invisible on black)
+       - Yellow #ffd700 for interactive elements (15.4:1 on black)
+       - White for body text (21:1 on black)
+       - Structural borders use medium gray */
+    --bg-color: #000000;
+    --text-color: #ffffff;
+    --text-secondary-color: #c8c8c8;
+    --header-bg: #0d0d0d;
+    --header-border: #555555;
+    --column-bg: #0d0d0d;
+    --column-border: #555555;
+    --column-header-text: #ffffff;
+    --column-header-hover-text: #ffd700;
+    --technique-item-bg: #1a1a1a;
+    --technique-item-border: #666666;
+    --technique-item-text: #ffd700;
+    --technique-item-hover-bg: #262626;
+    --technique-item-hover-text: #ffea00;
+    --technique-item-highlight-bg: #2a2500;
+    --technique-item-highlight-text: #ffff66;
+    --technique-id-text: #b0b0b0;
+    --subtechnique-bg: #121212;
+    --modal-content-bg: #0d0d0d;
+    --modal-close-btn-text: #c8c8c8;
+    --modal-close-btn-hover-text: #ffd700;
+    --search-bg: #1a1a1a;
+    --search-border: #666666;
+    --search-focus-ring: #ffd700;
+    --scrollbar-track: #0d0d0d;
+    --scrollbar-thumb: #555555;
+    --scrollbar-thumb-hover: #888888;
+    --icon-fill: #c8c8c8;
+    --icon-hover-fill: #ffd700;
+    --link-color: #ffd700;
+    --link-hover-color: #ffea00;
+    --shadow-umbra: transparent;
+    --shadow-penumbra: transparent;
+    --shadow-ambient: transparent;
+    --footer-bg: #0d0d0d;
+    --footer-text: #c8c8c8;
+    --footer-border: #555555;
+    --view-switcher-bg: #1a1a1a;
+    --view-switcher-btn-bg: #0d0d0d;
+    --view-switcher-btn-text: #ffffff;
+    --view-switcher-btn-active-bg: #ffd700;
+    --view-switcher-btn-active-text: #000000;
+}
+
+/* High Contrast — additional accessibility rules (WCAG 2.1 / Material Design)
+   - 1.4.12 Text Spacing: line-height ≥1.5, letter-spacing ≥0.12em, word-spacing ≥0.16em
+   - 1.4.8 Visual Presentation: large text for readability
+   - 2.4.7 / 2.4.13 Focus Visible: thick, high-contrast focus indicator
+   - 2.5.8 Target Size: ≥44×44px interactive touch targets */
+html[data-theme="highcontrast"] body {
+    font-size: 110%;
+    line-height: 1.6;
+    letter-spacing: 0.02em;
+    word-spacing: 0.05em;
+}
+html[data-theme="highcontrast"] *:focus-visible {
+    outline: 3px solid #ffd700;
+    outline-offset: 2px;
+}
+html[data-theme="highcontrast"] button,
+html[data-theme="highcontrast"] a,
+html[data-theme="highcontrast"] select,
+html[data-theme="highcontrast"] input {
+    min-height: 44px;
+}
+
+/* ===== Theme-Specific Component Overrides ===== */
+
+html[data-theme="retro"] .header-main {
+    overflow: hidden;
+}
+
+html[data-theme="retro"] #matrixCanvas {
+    display: block;
+}
+
+html:is([data-theme="dark"],[data-theme="retro"],[data-theme="highcontrast"]) .header-button:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+html:is([data-theme="dark"],[data-theme="retro"],[data-theme="highcontrast"]) .modal-overlay {
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+html:is([data-theme="dark"],[data-theme="retro"],[data-theme="highcontrast"]) .warning-note {
+    background-color: #2c3e50;
+    border-left-color: #5dade2;
+}
+
+html:is([data-theme="dark"],[data-theme="retro"],[data-theme="highcontrast"]) .view-switcher-btn.active {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
+}

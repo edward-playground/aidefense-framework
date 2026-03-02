@@ -32,8 +32,8 @@ export const hardenTactic = {
             "AML.T0018 Manipulate AI Model (robust training reduces effectiveness of model manipulation)",
             "AML.T0020 Poison Training Data (adversarially trained models are more resilient to poisoned data)",
             "AML.T0041 Physical Environment Access (robust training reduces effectiveness of physical adversarial perturbations)",
-                      "AML.T0107 Exploitation for Defense Evasion",
-],
+            "AML.T0107 Exploitation for Defense Evasion",
+          ],
         },
         {
           framework: "MAESTRO",
@@ -146,6 +146,7 @@ export const hardenTactic = {
             "AML.T0065 LLM Prompt Crafting",
             "AML.T0056 Extract LLM System Prompt",
             "AML.T0043 Craft Adversarial Data",
+            "AML.T0069.000 Discover LLM System Information: Special Character Sets (input sanitization strips/encodes control tokens and special characters)",
             "AML.T0093 Prompt Infiltration via Public-Facing Application",
           ],
         },
@@ -359,8 +360,8 @@ export const hardenTactic = {
                 "AML.T0056 Extract LLM System Prompt (input validation blocks extraction attempts)",
                 "AML.T0043 Craft Adversarial Data (inference-time validation catches some adversarial inputs)",
                 "AML.T0099 AI Agent Tool Data Poisoning (input validation blocks poisoned tool outputs)",
-                              "AML.T0011.003 User Execution: Malicious Link",
-],
+                "AML.T0011.003 User Execution: Malicious Link",
+              ],
             },
             {
               framework: "MAESTRO",
@@ -600,9 +601,9 @@ export const hardenTactic = {
             "AML.T0076 Corrupt AI Model",
             "AML.T0074 Masquerading",
             "AML.T0079 Stage Capabilities (supply chain is used to stage malicious artifacts)",
-                      "AML.T0104 Publish Poisoned AI Agent Tool",
+            "AML.T0104 Publish Poisoned AI Agent Tool",
             "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
-],
+          ],
         },
         {
           framework: "MAESTRO",
@@ -691,10 +692,10 @@ export const hardenTactic = {
                 "AML.T0011.000 User Execution: Unsafe AI Artifacts",
                 "AML.T0074 Masquerading (malicious packages masquerading as legitimate)",
                 "AML.T0060 Publish Hallucinated Entities (dependency scanning detects hallucination-squatted packages)",
-                              "AML.T0104 Publish Poisoned AI Agent Tool",
+                "AML.T0104 Publish Poisoned AI Agent Tool",
                 "AML.T0106 Exploitation for Credential Access",
                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
-],
+              ],
             },
             {
               framework: "MAESTRO",
@@ -797,8 +798,8 @@ export const hardenTactic = {
                 "AML.T0074 Masquerading",
                 "AML.T0018 Manipulate AI Model (release gating detects model manipulation before deployment)",
                 "AML.T0018.002 Manipulate AI Model: Embed Malware",
-                              "AML.T0104 Publish Poisoned AI Agent Tool",
-],
+                "AML.T0104 Publish Poisoned AI Agent Tool",
+              ],
             },
             {
               framework: "MAESTRO",
@@ -1305,12 +1306,13 @@ export const hardenTactic = {
             "AML.T0055 Unsecured Credentials",
             "AML.T0073 Impersonation",
             "AML.T0091 Use Alternate Authentication Material",
+            "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
             "AML.T0035 AI Artifact Collection (IAM controls prevent unauthorized collection of AI artifacts)",
             "AML.T0021 Establish Accounts (IAM controls prevent unauthorized account creation)",
             "AML.T0082 RAG Credential Harvesting (access controls limit credential exposure in RAG)",
             "AML.T0090 OS Credential Dumping (short-lived tokens reduce value of dumped credentials)",
-                      "AML.T0106 Exploitation for Credential Access",
-],
+            "AML.T0106 Exploitation for Credential Access",
+          ],
         },
         {
           framework: "MAESTRO",
@@ -1485,8 +1487,10 @@ export const hardenTactic = {
                 "AML.T0005 Create Proxy AI Model (authenticated APIs prevent unauthorized queries for model replication)",
                 "AML.T0005.001 Create Proxy AI Model: Train Proxy via Replication (API auth rate-limits mass querying)",
                 "AML.T0090 OS Credential Dumping (service auth with short-lived tokens reduces dumped credential value)",
-                              "AML.T0106 Exploitation for Credential Access",
-],
+                "AML.T0091 Use Alternate Authentication Material (API auth validates credential provenance)",
+                "AML.T0091.000 Use Alternate Authentication Material: Application Access Token (API auth detects/blocks stolen application tokens)",
+                "AML.T0106 Exploitation for Credential Access",
+              ],
             },
             {
               framework: "MAESTRO",
@@ -1586,6 +1590,7 @@ export const hardenTactic = {
                 "AML.T0073 Impersonation",
                 "AML.T0055 Unsecured Credentials",
                 "AML.T0091 Use Alternate Authentication Material (secure agent communication prevents forged auth material)",
+                "AML.T0091.000 Use Alternate Authentication Material: Application Access Token (secure agent communication prevents stolen token use)",
                 "AML.T0080 AI Agent Context Poisoning (secure communication prevents message tampering that poisons agent context)",
                 "AML.T0080.001 AI Agent Context Poisoning: Thread (authenticated messages prevent thread poisoning)",
               ],
@@ -1687,6 +1692,7 @@ export const hardenTactic = {
                 "AML.T0073 Impersonation",
                 "AML.T0074 Masquerading (ANS prevents agent masquerading through verified identity)",
                 "AML.T0091 Use Alternate Authentication Material (ANS revocation checks invalidate compromised credentials)",
+                "AML.T0091.000 Use Alternate Authentication Material: Application Access Token (ANS verifies token provenance)",
               ],
             },
             {
@@ -3888,6 +3894,8 @@ ScanPolicy:
         {
           framework: "Cisco Integrated AI Security and Safety Framework",
           items: [
+            "AITech-11.1 Environment-Aware Evasion",
+            "AITech-11.2 Model-Selective Evasion",
             "AITech-15.1 Harmful Content (attention hardening prevents adversarial content generation)",
           ],
         },
@@ -5124,8 +5132,8 @@ class GraphRobustnessVerifier:
             "AML.T0018 Manipulate AI Model",
             "AML.T0020 Poison Training Data (ensemble diversity limits impact of individual poisoned models)",
             "AML.T0041 Physical Environment Access (ensemble diversity increases difficulty of physical adversarial attacks)",
-                      "AML.T0107 Exploitation for Defense Evasion",
-],
+            "AML.T0107 Exploitation for Defense Evasion",
+          ],
         },
         {
           framework: "MAESTRO",
@@ -5220,8 +5228,8 @@ class GraphRobustnessVerifier:
             "AML.T0043 Craft Adversarial Data",
             "AML.T0031 Erode AI Model Integrity",
             "AML.T0041 Physical Environment Access (certified defenses provide formal robustness against physical perturbations)",
-                      "AML.T0107 Exploitation for Defense Evasion",
-],
+            "AML.T0107 Exploitation for Defense Evasion",
+          ],
         },
         {
           framework: "MAESTRO",
@@ -5287,8 +5295,10 @@ class GraphRobustnessVerifier:
             "AML.T0048 External Harms",
             "AML.T0065 LLM Prompt Crafting",
             "AML.T0068 LLM Prompt Obfuscation",
-                      "AML.T0108 AI Agent (C2)",
-],
+            "AML.T0056 Extract LLM System Prompt (hardened system prompts resist extraction attempts)",
+            "AML.T0069.001 Discover LLM System Information: System Instruction Keywords (instruction hierarchy reduces exploitability of discovered keywords)",
+            "AML.T0108 AI Agent (C2)",
+          ],
         },
         {
           framework: "MAESTRO",
@@ -5325,6 +5335,7 @@ class GraphRobustnessVerifier:
             "NISTAML.015 Indirect Prompt Injection",
             "NISTAML.039 Compromising connected resources (hardened system prompts prevent prompt-based access to connected resources)",
             "NISTAML.027 Misaligned Outputs (prompt hierarchy ensures aligned outputs)",
+            "NISTAML.035 Prompt Extraction",
           ],
         },
         {
@@ -5391,9 +5402,9 @@ class GraphRobustnessVerifier:
             "AML.T0048 External Harms",
             "AML.T0051 LLM Prompt Injection",
             "AML.T0054 LLM Jailbreak",
-                      "AML.T0103 Deploy AI Agent",
+            "AML.T0103 Deploy AI Agent",
             "AML.T0108 AI Agent (C2)",
-],
+          ],
         },
         {
           framework: "MAESTRO",
@@ -5543,8 +5554,8 @@ class GraphRobustnessVerifier:
                 "AML.T0049 Exploit Public-Facing Application",
                 "AML.T0053 AI Agent Tool Invocation",
                 "AML.T0098 AI Agent Tool Credential Harvesting (least privilege limits credential exposure via tools)",
-                              "AML.T0103 Deploy AI Agent",
-],
+                "AML.T0103 Deploy AI Agent",
+              ],
             },
             {
               framework: "MAESTRO",
@@ -5789,9 +5800,9 @@ class GraphRobustnessVerifier:
                 "AML.T0053 AI Agent Tool Invocation",
                 "AML.T0051 LLM Prompt Injection (certificate enforcement blocks injection from reaching unauthorized tools)",
                 "AML.T0054 LLM Jailbreak (certificate enforcement contains jailbreak within authorized capabilities)",
-                              "AML.T0103 Deploy AI Agent",
+                "AML.T0103 Deploy AI Agent",
                 "AML.T0108 AI Agent (C2)",
-],
+              ],
             },
             {
               framework: "MAESTRO",
@@ -6046,11 +6057,13 @@ class GraphRobustnessVerifier:
             "AML.T0050 Command and Scripting Interpreter (tool authorization prevents unauthorized command execution)",
             "AML.T0048 External Harms (capability scoping prevents harmful external actions)",
             "AML.T0098 AI Agent Tool Credential Harvesting (tool auth controls limit credential access)",
-                      "AML.T0103 Deploy AI Agent",
+            "AML.T0103 Deploy AI Agent",
             "AML.T0105 Escape to Host",
             "AML.T0108 AI Agent (C2)",
             "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
-],
+            "AML.T0085 Data from AI Services (tool authorization prevents unauthorized data collection via agent tools)",
+            "AML.T0085.001 Data from AI Services: AI Agent Tools",
+          ],
         },
         {
           framework: "MAESTRO",
@@ -6268,8 +6281,8 @@ class GraphRobustnessVerifier:
                 "AML.T0053 AI Agent Tool Invocation",
                 "AML.T0048 External Harms (two-channel validation catches harmful actions before execution)",
                 "AML.T0051 LLM Prompt Injection (second channel independently validates injection attempts)",
-                              "AML.T0011.003 User Execution: Malicious Link",
-],
+                "AML.T0011.003 User Execution: Malicious Link",
+              ],
             },
             {
               framework: "MAESTRO",
@@ -6356,7 +6369,9 @@ class GraphRobustnessVerifier:
                 "AML.T0051.001 LLM Prompt Injection: Indirect",
                 "AML.T0053 AI Agent Tool Invocation",
                 "AML.T0054 LLM Jailbreak",
-                "AML.T0098 AI Agent Tool Credential Harvesting (dynamic scoping limits credential exposure per session)"
+                "AML.T0098 AI Agent Tool Credential Harvesting (dynamic scoping limits credential exposure per session)",
+                "AML.T0085 Data from AI Services (dynamic scoping restricts tools available for data collection)",
+                "AML.T0085.001 Data from AI Services: AI Agent Tools (per-request scoping limits which agent tools can retrieve data)"
               ]
             },
             {
@@ -6441,7 +6456,9 @@ class GraphRobustnessVerifier:
                 "AML.T0051 LLM Prompt Injection",
                 "AML.T0051.001 LLM Prompt Injection: Indirect (prevents indirect injection from diverting data flows to attacker-controlled sinks)",
                 "AML.T0086 Exfiltration via AI Agent Tool Invocation",
-                "AML.T0053 AI Agent Tool Invocation (sink enforcement controls what tools can receive sensitive data)"
+                "AML.T0053 AI Agent Tool Invocation (sink enforcement controls what tools can receive sensitive data)",
+                "AML.T0085 Data from AI Services (sink enforcement prevents exfiltration of data collected via AI services)",
+                "AML.T0085.001 Data from AI Services: AI Agent Tools (prevents agent tools from sending collected data to unauthorized sinks)"
               ]
             },
             {
@@ -6649,9 +6666,9 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             "AML.T0072 Reverse Shell",
             "AML.T0051.001 LLM Prompt Injection: Indirect (prevents indirect injection via fetched web content)",
             "AML.T0100 AI Agent Clickbait (safe fetch prevents navigation to malicious content)",
-                      "AML.T0108 AI Agent (C2)",
+            "AML.T0108 AI Agent (C2)",
             "AML.T0011.003 User Execution: Malicious Link",
-],
+          ],
         },
         {
           framework: "MAESTRO",
@@ -6708,8 +6725,8 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
           defendsAgainst: [
             {
               framework: "MITRE ATLAS",
-              items: ["AML.T0049 Exploit Public-Facing Application","AML.T0011.003 User Execution: Malicious Link",
-],
+              items: ["AML.T0049 Exploit Public-Facing Application", "AML.T0011.003 User Execution: Malicious Link",
+              ],
             },
             {
               framework: "MAESTRO",
@@ -6777,8 +6794,8 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
                 "AML.T0051.001 LLM Prompt Injection: Indirect",
                 "AML.T0049 Exploit Public-Facing Application",
                 "AML.T0100 AI Agent Clickbait (secure rendering prevents exploitation from fetched malicious content)",
-                              "AML.T0011.003 User Execution: Malicious Link",
-],
+                "AML.T0011.003 User Execution: Malicious Link",
+              ],
             },
             {
               framework: "MAESTRO",
@@ -6854,8 +6871,8 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             "AML.T0064 Gather RAG-Indexed Targets (RAG hygiene hardens the index against reconnaissance)",
             "AML.T0082 RAG Credential Harvesting (RAG hygiene prevents credentials from entering the index)",
             "AML.T0099 AI Agent Tool Data Poisoning (RAG hygiene prevents poisoned data from persisting in index)",
-                      "AML.T0108 AI Agent (C2)",
-],
+            "AML.T0108 AI Agent (C2)",
+          ],
         },
         {
           framework: "MAESTRO",
@@ -7054,11 +7071,9 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             "AML.T0018 Manipulate AI Model",
             "AML.T0054 LLM Jailbreak",
             "AML.T0081 Modify AI Agent Configuration",
-                      "AML.T0103 Deploy AI Agent",
             "AML.T0105 Escape to Host",
-            "AML.T0107 Exploitation for Defense Evasion",
             "AML.T0108 AI Agent (C2)",
-],
+          ],
         },
         {
           framework: "MAESTRO",
@@ -7217,9 +7232,8 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
                 "AML.T0051 LLM Prompt Injection",
                 "AML.T0081 Modify AI Agent Configuration",
                 "AML.T0010 AI Supply Chain Compromise (signed configs detect supply chain-compromised config files)",
-                              "AML.T0103 Deploy AI Agent",
                 "AML.T0105 Escape to Host",
-],
+              ],
             },
             {
               framework: "MAESTRO",
@@ -7472,8 +7486,8 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
                 "AML.T0011.001 User Execution: Malicious Package",
                 "AML.T0074 Masquerading",
                 "AML.T0060 Publish Hallucinated Entities (package vetting detects hallucination-squatted packages)",
-                              "AML.T0104 Publish Poisoned AI Agent Tool",
-],
+                "AML.T0104 Publish Poisoned AI Agent Tool",
+              ],
             },
             {
               framework: "MAESTRO",
@@ -7548,8 +7562,8 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             "AML.T0012 Valid Accounts",
             "AML.T0074 Masquerading",
             "AML.T0058 Publish Poisoned Models",
-                      "AML.T0104 Publish Poisoned AI Agent Tool",
-],
+            "AML.T0104 Publish Poisoned AI Agent Tool",
+          ],
         },
         {
           framework: "MAESTRO",
@@ -7612,8 +7626,6 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
       name: "Tool & MCP Resolution Integrity",
       description:
         "Enforce deterministic, verified resolution of tools and Model Context Protocol (MCP) endpoints to prevent typosquatting, alias collision, and registry-based misdirection. Resolution must be fail-closed: ambiguous matches require explicit disambiguation rather than best-guess selection. This ensures that when an agent calls a tool, it binds to the exact, authorized namespace, version, and descriptor bytes intended.",
-      pillar: ["infra", "app"],
-      phase: ["operation"],
       defendsAgainst: [
         {
           framework: "MITRE ATLAS",
@@ -7622,9 +7634,9 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             "AML.T0074 Masquerading",
             "AML.T0073 Impersonation",
             "AML.T0060 Publish Hallucinated Entities (tool integrity verification blocks hallucination-squatted packages)",
-                      "AML.T0104 Publish Poisoned AI Agent Tool",
+            "AML.T0104 Publish Poisoned AI Agent Tool",
             "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
-],
+          ],
         },
         {
           framework: "MAESTRO",
@@ -7693,9 +7705,9 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
                 "AML.T0010.001 AI Supply Chain Compromise: AI Software",
                 "AML.T0074 Masquerading",
                 "AML.T0073 Impersonation (version pinning prevents impersonation via unversioned tool references)",
-                              "AML.T0104 Publish Poisoned AI Agent Tool",
+                "AML.T0104 Publish Poisoned AI Agent Tool",
                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
-],
+              ],
             },
             {
               framework: "MAESTRO",
@@ -7813,9 +7825,9 @@ def resolve_tool(tool_ref: str, allowlist: dict) -&gt; ToolRecord:
               framework: "MITRE ATLAS",
               items: [
                 "AML.T0010 AI Supply Chain Compromise (descriptor hash detects compromised tool metadata)",
-                              "AML.T0104 Publish Poisoned AI Agent Tool",
+                "AML.T0104 Publish Poisoned AI Agent Tool",
                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
-],
+              ],
             },
             {
               framework: "MAESTRO",
@@ -7912,9 +7924,9 @@ def verify_descriptor_hash(tool_id: str, descriptor: dict, expected_hash: str) -
               items: [
                 "AML.T0074 Masquerading",
                 "AML.T0073 Impersonation (typosquat detection prevents impersonation via similar tool names)",
-                              "AML.T0104 Publish Poisoned AI Agent Tool",
+                "AML.T0104 Publish Poisoned AI Agent Tool",
                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
-],
+              ],
             },
             {
               framework: "MAESTRO",
@@ -7972,8 +7984,6 @@ def verify_descriptor_hash(tool_id: str, descriptor: dict, expected_hash: str) -
       name: "Unsafe Code Execution Prevention",
       description:
         "Prevent unexpected code execution (RCE) through unsafe evaluation paths by banning dangerous constructs, enforcing safe interpreters, and requiring a pre-execution static scan gate for agent-generated code. This is a cheap, fail-fast preventive layer that complements sandbox containment and dynamic behavioral analysis.",
-      pillar: ["app"],
-      phase: ["building", "operation"],
       defendsAgainst: [
         {
           framework: "MITRE ATLAS",
@@ -7983,11 +7993,9 @@ def verify_descriptor_hash(tool_id: str, descriptor: dict, expected_hash: str) -
             "AML.T0072 Reverse Shell (code execution prevention blocks reverse shell establishment)",
             "AML.T0100 AI Agent Clickbait (code execution prevention blocks malicious payloads from fetched content)",
             "AML.T0102 Generate Malicious Commands (code execution prevention blocks generated malicious commands)",
-                      "AML.T0105 Escape to Host",
-            "AML.T0106 Exploitation for Credential Access",
+            "AML.T0105 Escape to Host",
             "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
-            "AML.T0011.003 User Execution: Malicious Link",
-],
+          ],
         },
         {
           framework: "MAESTRO",
@@ -8054,8 +8062,8 @@ def verify_descriptor_hash(tool_id: str, descriptor: dict, expected_hash: str) -
                 "AML.T0050 Command and Scripting Interpreter",
                 "AML.T0072 Reverse Shell (blocks shell-related constructs)",
                 "AML.T0102 Generate Malicious Commands (dangerous construct blocking catches generated malicious commands)",
-                              "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
-],
+                "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
+              ],
             },
             {
               framework: "MAESTRO",

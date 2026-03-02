@@ -845,8 +845,8 @@ function transformSubTechnique(subTech) {
     id: subTech.id,
     name: subTech.name,
     description: subTech.description || '',
-    pillar: Array.isArray(subTech.pillar) ? subTech.pillar[0] : subTech.pillar,
-    phase: Array.isArray(subTech.phase) ? subTech.phase[0] : subTech.phase,
+    pillar: Array.isArray(subTech.pillar) ? subTech.pillar : [subTech.pillar].filter(Boolean),
+    phase: Array.isArray(subTech.phase) ? subTech.phase : [subTech.phase].filter(Boolean),
     // Only include strategy names, not the full howTo content
     implementationStrategies: (subTech.implementationStrategies || []).map(
       strat => strat.strategy || strat.name || ''
@@ -864,18 +864,42 @@ function transformSubTechnique(subTech) {
  * Transform a technique from source format to target format
  */
 function transformTechnique(tech, tacticId) {
-  // Get pillar/phase from technique level or first sub-technique
+  // Get pillar/phase from technique level, or aggregate from all sub-techniques
   const techPillar = tech.pillar;
   const techPhase = tech.phase;
-  const firstSub = tech.subTechniques?.[0];
+  const subs = tech.subTechniques || [];
 
-  let pillar = techPillar
-    ? (Array.isArray(techPillar) ? techPillar[0] : techPillar)
-    : (firstSub?.pillar?.[0] || derivePillarFromId(tech.id));
+  let pillar, phase;
 
-  let phase = techPhase
-    ? (Array.isArray(techPhase) ? techPhase[0] : techPhase)
-    : (firstSub?.phase?.[0] || 'operation');
+  if (techPillar) {
+    // Standalone technique (Pattern B) — preserve full array
+    pillar = Array.isArray(techPillar) ? techPillar : [techPillar].filter(Boolean);
+  } else if (subs.length > 0) {
+    // Parent technique (Pattern A) — aggregate deduplicated union from all sub-techniques
+    const allPillars = new Set();
+    subs.forEach(s => {
+      const p = s.pillar;
+      if (Array.isArray(p)) p.forEach(v => allPillars.add(v));
+      else if (p) allPillars.add(p);
+    });
+    pillar = allPillars.size > 0 ? [...allPillars] : [derivePillarFromId(tech.id)];
+  } else {
+    pillar = [derivePillarFromId(tech.id)];
+  }
+
+  if (techPhase) {
+    phase = Array.isArray(techPhase) ? techPhase : [techPhase].filter(Boolean);
+  } else if (subs.length > 0) {
+    const allPhases = new Set();
+    subs.forEach(s => {
+      const p = s.phase;
+      if (Array.isArray(p)) p.forEach(v => allPhases.add(v));
+      else if (p) allPhases.add(p);
+    });
+    phase = allPhases.size > 0 ? [...allPhases] : ['operation'];
+  } else {
+    phase = ['operation'];
+  }
 
   // Get implementation strategies from technique level if present
   const techStrategies = (tech.implementationStrategies || []).map(
@@ -901,23 +925,13 @@ function transformTechnique(tech, tacticId) {
 }
 
 /**
- * Derive pillar from technique ID
+ * Fallback pillar when a technique has no pillar field.
+ * Tactic codes (D, H, I, etc.) are orthogonal to pillar values
+ * (data, model, infra, app), so no mapping is possible — return
+ * a safe default and warn so the gap is visible.
  */
 function derivePillarFromId(id) {
-  const match = id.match(/AID-(\w+)-/);
-  if (match) {
-    const code = match[1];
-    const pillarMap = {
-      'D': 'detect',
-      'H': 'harden',
-      'I': 'isolate',
-      'M': 'model',
-      'DV': 'deceive',
-      'E': 'evict',
-      'R': 'restore',
-    };
-    return pillarMap[code] || 'app';
-  }
+  console.warn(`[generate-dataset] WARNING: technique ${id} has no pillar — using fallback 'app'`);
   return 'app';
 }
 
