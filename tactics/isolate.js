@@ -32,7 +32,8 @@ export const isolateTactic = {
                         "Agent Tool Misuse (L7)",
                         "Resource Hijacking (L4)",
                         "Framework Evasion (L3)",
-                        "Orchestration Attacks (L4)"
+                        "Orchestration Attacks (L4)",
+                        "Lateral Movement (L4) (sandboxing prevents lateral movement from compromised AI processes)"
                     ]
                 },
                 {
@@ -124,7 +125,8 @@ export const isolateTactic = {
                                 "Lateral Movement (Cross-Layer)",
                                 "Agent Tool Misuse (L7)",
                                 "Resource Hijacking (L4)",
-                                "Orchestration Attacks (L4)"
+                                "Orchestration Attacks (L4)",
+                                "Lateral Movement (L4) (container isolation prevents lateral movement)"
                             ]
                         },
                         {
@@ -239,7 +241,8 @@ export const isolateTactic = {
                                 "Resource Hijacking (L4)",
                                 "Orchestration Attacks (L4)",
                                 "Denial of Service (DoS) Attacks (L4)",
-                                "Privilege Escalation (Cross-Layer)"
+                                "Privilege Escalation (Cross-Layer)",
+                                "Lateral Movement (L4) (microVM isolation prevents lateral movement)"
                             ]
                         },
                         {
@@ -428,7 +431,8 @@ export const isolateTactic = {
                                 "AISubtech-9.1.1 Code Execution",
                                 "AITech-9.3 Dependency / Plugin Compromise",
                                 "AITech-12.2 Insecure Output Handling",
-                                "AISubtech-12.2.1 Code Detection / Malicious Code Output"
+                                "AISubtech-12.2.1 Code Detection / Malicious Code Output",
+                                "AITech-11.1 Environment-Aware Evasion (behavioral analysis detects environment-probing before execution)"
                             ]
                         }
                     ],
@@ -689,7 +693,8 @@ export const isolateTactic = {
                             "framework": "OWASP LLM Top 10 2025",
                             "items": [
                                 "LLM02:2025 Sensitive Information Disclosure (via exfiltration)",
-                                "LLM03:2025 Supply Chain (securing external connections)"
+                                "LLM03:2025 Supply Chain (securing external connections)",
+                                "LLM06:2025 Excessive Agency (proxy-based egress control limits what external actions agents can take)"
                             ]
                         },
                         {
@@ -804,7 +809,9 @@ export const isolateTactic = {
                         "AITech-13.1 Disruption of Availability",
                         "AISubtech-13.1.1 Compute Exhaustion",
                         "AITech-10.1 Model Extraction",
-                        "AISubtech-10.1.1 API Query Stealing"
+                        "AISubtech-10.1.1 API Query Stealing",
+                        "AITech-13.2 Cost Harvesting / Repurposing",
+                        "AISubtech-13.2.1 Service Misuse for Cost Inflation (throttling prevents cost inflation attacks)"
                     ]
                 }
             ],
@@ -852,7 +859,9 @@ export const isolateTactic = {
                         "AML.T0070 RAG Poisoning",
                         "AML.T0080.000 AI Agent Context Poisoning: Memory",
                         "AML.T0099 AI Agent Tool Data Poisoning (memory isolation prevents poisoned tool data from persisting across sessions)",
-                        "AML.T0108 AI Agent (C2)"
+                        "AML.T0108 AI Agent (C2)",
+                        "AML.T0080 AI Agent Context Poisoning",
+                        "AML.T0092 Manipulate User LLM Chat History (memory isolation prevents chat history manipulation from persisting)"
                     ]
                 },
                 {
@@ -931,7 +940,8 @@ export const isolateTactic = {
                             "items": [
                                 "AML.T0051 LLM Prompt Injection",
                                 "AML.T0061 LLM Prompt Self-Replication",
-                                "AML.T0080.000 AI Agent Context Poisoning: Memory"
+                                "AML.T0080.000 AI Agent Context Poisoning: Memory",
+                                "AML.T0092 Manipulate User LLM Chat History (runtime context hygiene prevents chat history tampering from persisting)"
                             ]
                         },
                         {
@@ -1049,7 +1059,8 @@ export const isolateTactic = {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
                                 "NISTAML.013 Data Poisoning",
-                                "NISTAML.015 Indirect Prompt Injection (partitioning limits scope of poisoned content retrieval)"
+                                "NISTAML.015 Indirect Prompt Injection (partitioning limits scope of poisoned content retrieval)",
+                                "NISTAML.036 Leaking information from user interactions (tenant partitioning prevents cross-tenant data leakage)"
                             ]
                         },
                         {
@@ -1057,7 +1068,8 @@ export const isolateTactic = {
                             "items": [
                                 "AITech-5.1 Memory System Persistence",
                                 "AISubtech-5.1.1 Long-term / Short-term Memory Injection",
-                                "AISubtech-6.1.1 Knowledge Base Poisoning"
+                                "AISubtech-6.1.1 Knowledge Base Poisoning",
+                                "AITech-7.2 Memory System Corruption (partitioning limits memory corruption blast radius to single tenant)"
                             ]
                         }
                     ],
@@ -1089,7 +1101,8 @@ export const isolateTactic = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0080.000 AI Agent Context Poisoning: Memory",
-                                "AML.T0070 RAG Poisoning (crypto integrity prevents direct-to-DB poisoning)"
+                                "AML.T0070 RAG Poisoning (crypto integrity prevents direct-to-DB poisoning)",
+                                "AML.T0099 AI Agent Tool Data Poisoning (cryptographic integrity detects tool-sourced poisoned data in memory)"
                             ]
                         },
                         {
@@ -1103,7 +1116,8 @@ export const isolateTactic = {
                         {
                             "framework": "OWASP LLM Top 10 2025",
                             "items": [
-                                "LLM04:2025 Data and Model Poisoning"
+                                "LLM04:2025 Data and Model Poisoning",
+                                "LLM08:2025 Vector and Embedding Weaknesses (signed records detect tampered vector/embedding entries)"
                             ]
                         },
                         {
@@ -1168,7 +1182,8 @@ export const isolateTactic = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0070 RAG Poisoning",
-                                "AML.T0080.000 AI Agent Context Poisoning: Memory"
+                                "AML.T0080.000 AI Agent Context Poisoning: Memory",
+                                "AML.T0099 AI Agent Tool Data Poisoning (promotion gates quarantine tool-sourced data until reviewed)"
                             ]
                         },
                         {
@@ -1246,7 +1261,9 @@ export const isolateTactic = {
                         "AML.T0029 Denial of AI Service",
                         "AML.T0034 Cost Harvesting (kill-switch stops runaway cost)",
                         "AML.T0103 Deploy AI Agent",
-                        "AML.T0108 AI Agent (C2)"
+                        "AML.T0108 AI Agent (C2)",
+                        "AML.T0053 AI Agent Tool Invocation (kill-switch halts unauthorized tool invocations)",
+                        "AML.T0072 Reverse Shell (kill-switch terminates reverse shell connections)"
                     ]
                 },
                 {
@@ -1279,7 +1296,8 @@ export const isolateTactic = {
                         "ASI10:2026 Rogue Agents",
                         "ASI08:2026 Cascading Failures",
                         "ASI01:2026 Agent Goal Hijack",
-                        "ASI02:2026 Tool Misuse and Exploitation"
+                        "ASI02:2026 Tool Misuse and Exploitation",
+                        "ASI05:2026 Unexpected Code Execution (RCE) (kill-switch halts runaway code execution)"
                     ]
                 },
                 {
@@ -1296,7 +1314,8 @@ export const isolateTactic = {
                     "items": [
                         "AITech-13.1 Disruption of Availability (kill-switch prevents ongoing disruption)",
                         "AITech-13.2 Cost Harvesting / Repurposing",
-                        "AISubtech-13.1.1 Compute Exhaustion"
+                        "AISubtech-13.1.1 Compute Exhaustion",
+                        "AITech-12.1 Tool Exploitation (kill-switch halts exploited tool chains)"
                     ]
                 }
             ],
@@ -1383,7 +1402,8 @@ export const isolateTactic = {
                     "framework": "MITRE ATLAS",
                     "items": [
                         "AML.T0020 Poison Training Data",
-                        "AML.T0019 Publish Poisoned Datasets"
+                        "AML.T0019 Publish Poisoned Datasets",
+                        "AML.T0018 Manipulate AI Model (malicious FL participants directly manipulate the model via updates)"
                     ]
                 },
                 {
@@ -1405,7 +1425,8 @@ export const isolateTactic = {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
                         "ML02:2023 Data Poisoning Attack",
-                        "ML10:2023 Model Poisoning"
+                        "ML10:2023 Model Poisoning",
+                        "ML08:2023 Model Skewing (FL poisoning skews model via feedback loop manipulation)"
                     ]
                 },
                 {
@@ -1420,7 +1441,8 @@ export const isolateTactic = {
                         "NISTAML.013 Data Poisoning",
                         "NISTAML.023 Backdoor Poisoning",
                         "NISTAML.024 Targeted Poisoning",
-                        "NISTAML.011 Model Poisoning (Availability)"
+                        "NISTAML.011 Model Poisoning (Availability)",
+                        "NISTAML.026 Model Poisoning (Integrity) (isolating malicious FL participants prevents integrity-targeted poisoning)"
                     ]
                 },
                 {
@@ -1457,7 +1479,8 @@ export const isolateTactic = {
                     "items": [
                         "AML.T0025 Exfiltration via Cyber Means (from client device)",
                         "AML.T0037 Data from Local System (stealing browser/app state, session tokens, local storage)",
-                        "AML.T0011.003 User Execution: Malicious Link"
+                        "AML.T0011.003 User Execution: Malicious Link",
+                        "AML.T0053 AI Agent Tool Invocation (client-side isolation prevents compromised model from invoking host tools)"
                     ]
                 },
                 {
@@ -1466,14 +1489,16 @@ export const isolateTactic = {
                         "Data Exfiltration (L2) (from the client)",
                         "Lateral Movement (Cross-Layer) (isolation prevents compromised client model from accessing other apps)",
                         "Compromised Framework Components (L3) (isolating hostile client-side JS/WASM runtimes)",
-                        "Data Leakage (Cross-Layer) (sandboxing prevents cross-app data exposure)"
+                        "Data Leakage (Cross-Layer) (sandboxing prevents cross-app data exposure)",
+                        "Agent Tool Misuse (L7) (client-side sandboxing prevents tool misuse by compromised client model)"
                     ]
                 },
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
                         "LLM02:2025 Sensitive Information Disclosure (blocking direct access to other DOM state / tokens / org data)",
-                        "LLM05:2025 Improper Output Handling (preventing model-produced HTML/JS from gaining privileged DOM execution)"
+                        "LLM05:2025 Improper Output Handling (preventing model-produced HTML/JS from gaining privileged DOM execution)",
+                        "LLM06:2025 Excessive Agency (client-side sandboxing limits agency of compromised model)"
                     ]
                 },
                 {

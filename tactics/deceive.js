@@ -26,7 +26,9 @@ export const deceiveTactic = {
                         "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model",
                         "AML.T0048.004 External Harms: AI Intellectual Property Theft",
                         "AML.T0051 LLM Prompt Injection (honeypot captures injection attempts)",
-                        "AML.T0054 LLM Jailbreak (honeypot captures jailbreak techniques)"
+                        "AML.T0054 LLM Jailbreak (honeypot captures jailbreak techniques)",
+                        "AML.T0005 Create Proxy AI Model (honeypot attracts adversaries attempting model replication via API queries)",
+                        "AML.T0005.001 Create Proxy AI Model: Train Proxy via Replication (decoy API captures replication queries)"
                     ]
                 },
                 {
@@ -62,7 +64,8 @@ export const deceiveTactic = {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
                         "NISTAML.031 Model Extraction (honeypot lures extraction attempts)",
-                        "NISTAML.018 Prompt Injection (honeypot captures injection techniques)"
+                        "NISTAML.018 Prompt Injection (honeypot captures injection techniques)",
+                        "NISTAML.032 Reconstruction (honeypot captures model inversion/reconstruction attempts)"
                     ]
                 },
                 {
@@ -126,7 +129,8 @@ export const deceiveTactic = {
                         "AML.T0025 Exfiltration via Cyber Means (honey data/canaries trigger alerts on exfiltration)",
                         "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (decoy model artifacts lure extraction)",
                         "AML.T0010 AI Supply Chain Compromise (decoy artifacts detect supply chain probing)",
-                        "AML.T0057 LLM Data Leakage (canary tokens in training data detect leakage)"
+                        "AML.T0057 LLM Data Leakage (canary tokens in training data detect leakage)",
+                        "AML.T0035 AI Artifact Collection (decoy artifacts detect unauthorized artifact collection)"
                     ]
                 },
                 {
@@ -164,7 +168,8 @@ export const deceiveTactic = {
                         "NISTAML.031 Model Extraction (canary data traces stolen training data)",
                         "NISTAML.051 Model Poisoning (Supply Chain) (decoy artifacts detect supply chain compromise)",
                         "NISTAML.037 Training Data Attacks (canary tokens detect training data extraction)",
-                        "NISTAML.033 Membership Inference (canary data reveals unauthorized model training on stolen data)"
+                        "NISTAML.033 Membership Inference (canary data reveals unauthorized model training on stolen data)",
+                        "NISTAML.038 Data Extraction (canary tokens detect data extraction)"
                     ]
                 },
                 {
@@ -266,7 +271,8 @@ export const deceiveTactic = {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
                         "NISTAML.031 Model Extraction (noisy responses degrade extraction quality)",
-                        "NISTAML.018 Prompt Injection (deceptive responses make injection unreliable)"
+                        "NISTAML.018 Prompt Injection (deceptive responses make injection unreliable)",
+                        "NISTAML.032 Reconstruction (deceptive outputs prevent training data reconstruction)"
                     ]
                 },
                 {
@@ -429,7 +435,8 @@ export const deceiveTactic = {
                         "Agent Goal Manipulation (L7) (decoy goals detect goal manipulation)",
                         "Agent Tool Misuse (L7) (canary tools detect unauthorized tool usage)",
                         "Agent Identity Attack (L7) (canary tasks detect identity-based manipulation)",
-                        "Orchestration Attacks (L4) (decoy components alert when orchestration is abused)"
+                        "Orchestration Attacks (L4) (decoy components alert when orchestration is abused)",
+                        "Compromised Agents (L7) (canary tasks detect compromised agent behavior)"
                     ]
                 },
                 {
@@ -451,7 +458,8 @@ export const deceiveTactic = {
                     "items": [
                         "ASI01:2026 Agent Goal Hijack (canary goals detect goal hijacking)",
                         "ASI02:2026 Tool Misuse and Exploitation (decoy tools detect unauthorized tool use)",
-                        "ASI10:2026 Rogue Agents (canary tasks expose rogue agent behavior)"
+                        "ASI10:2026 Rogue Agents (canary tasks expose rogue agent behavior)",
+                        "ASI06:2026 Memory & Context Poisoning (canary tasks detect memory/context poisoning attempts)"
                     ]
                 },
                 {
@@ -466,7 +474,8 @@ export const deceiveTactic = {
                     "items": [
                         "AITech-1.3 Goal Manipulation (canary goals detect goal manipulation)",
                         "AITech-12.1 Tool Exploitation (decoy tools detect tool exploitation)",
-                        "AISubtech-4.1.1 Rogue Agent Introduction (canary tasks detect rogue agent introduction)"
+                        "AISubtech-4.1.1 Rogue Agent Introduction (canary tasks detect rogue agent introduction)",
+                        "AITech-5.1 Memory System Persistence (canary tasks detect persistent memory manipulation)"
                     ]
                 }
             ],
@@ -518,7 +527,8 @@ export const deceiveTactic = {
                         "AML.T0006 Active Scanning (honeypot endpoints attract and log scanning)",
                         "AML.T0064 Gather RAG-Indexed Targets (deceptive content misleads RAG index reconnaissance)",
                         "AML.T0069.000 Discover LLM System Information: Special Character Sets (deceptive responses mislead delimiter/token probing)",
-                        "AML.T0069.001 Discover LLM System Information: System Instruction Keywords (deceptive info frustrates keyword discovery)"
+                        "AML.T0069.001 Discover LLM System Information: System Instruction Keywords (deceptive info frustrates keyword discovery)",
+                        "AML.T0075 Cloud Service Discovery (deceptive system info misleads cloud service enumeration)"
                     ]
                 },
                 {
@@ -654,6 +664,7 @@ export const deceiveTactic = {
                     "items": [
                         "NISTAML.032 Reconstruction (DP training prevents reconstruction of training data)",
                         "NISTAML.033 Membership Inference (noise injection prevents membership inference)",
+                        "NISTAML.038 Data Extraction (training-phase obfuscation reduces data extraction effectiveness)",
                         "NISTAML.034 Property Inference (noise and DP prevent inferring training data properties)"
                     ]
                 },
@@ -729,7 +740,9 @@ export const deceiveTactic = {
                         "NISTAML.013 Data Poisoning (canaries detect data poisoning)",
                         "NISTAML.024 Targeted Poisoning (canaries detect targeted poisoning attempts)",
                         "NISTAML.023 Backdoor Poisoning (canary loss spikes detect backdoor insertion)",
-                        "NISTAML.038 Data Extraction (provenance canaries detect training data extraction)"
+                        "NISTAML.038 Data Extraction (provenance canaries detect training data extraction)",
+                        "NISTAML.021 Clean-label Backdoor (canary anomalies detect clean-label backdoor insertion)",
+                        "NISTAML.012 Clean-label Poisoning (canary loss spikes reveal clean-label poisoning)"
                     ]
                 },
                 {

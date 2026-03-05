@@ -15,7 +15,9 @@ export const restoreTactic = {
                         "AML.T0020 Poison Training Data",
                         "AML.T0031 Erode AI Model Integrity",
                         "AML.T0058 Publish Poisoned Models",
-                        "AML.T0076 Corrupt AI Model"
+                        "AML.T0076 Corrupt AI Model",
+                        "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (restoration removes backdoor triggers from training pipeline)",
+                        "AML.T0010 AI Supply Chain Compromise (restoration recovers from supply chain compromise)"
                     ]
                 },
                 {
@@ -61,7 +63,9 @@ export const restoreTactic = {
                         "NISTAML.023 Backdoor Poisoning",
                         "NISTAML.024 Targeted Poisoning",
                         "NISTAML.026 Model Poisoning (Integrity)",
-                        "NISTAML.051 Model Poisoning (Supply Chain)"
+                        "NISTAML.051 Model Poisoning (Supply Chain)",
+                        "NISTAML.012 Clean-label Poisoning (restoration removes clean-label poisoned data)",
+                        "NISTAML.021 Clean-label Backdoor (restoration removes clean-label backdoors)"
                     ]
                 },
                 {
@@ -72,7 +76,8 @@ export const restoreTactic = {
                         "AITech-7.2 Memory System Corruption",
                         "AITech-9.1 Model or Agentic System Manipulation",
                         "AITech-9.2 Detection Evasion (restoring known-good model removes evasion-enabling modifications)",
-                        "AITech-9.3 Dependency / Plugin Compromise (verified rollback restores trusted dependency stack)"
+                        "AITech-9.3 Dependency / Plugin Compromise (verified rollback restores trusted dependency stack)",
+                        "AISubtech-9.2.2 Backdoors and Trojans (restoration removes backdoors from compromised models)"
                     ]
                 }
             ],
@@ -116,7 +121,9 @@ export const restoreTactic = {
                             "items": [
                                 "AML.T0018 Manipulate AI Model",
                                 "AML.T0058 Publish Poisoned Models",
-                                "AML.T0076 Corrupt AI Model"
+                                "AML.T0076 Corrupt AI Model",
+                                "AML.T0031 Erode AI Model Integrity (rollback restores model integrity)",
+                                "AML.T0020 Poison Training Data (rollback reverts to pre-poisoning model)"
                             ]
                         },
                         {
@@ -125,7 +132,8 @@ export const restoreTactic = {
                                 "Backdoor Attacks (L1)",
                                 "Supply Chain Attacks (L3)",
                                 "Compromised Container Images (L4)",
-                                "Supply Chain Attacks (Cross-Layer)"
+                                "Supply Chain Attacks (Cross-Layer)",
+                                "Data Poisoning (Training Phase) (L1) (rollback reverts to pre-poisoning checkpoint)"
                             ]
                         },
                         {
@@ -140,7 +148,8 @@ export const restoreTactic = {
                             "items": [
                                 "ML06:2023 AI Supply Chain Attacks (rollback to pre-compromise version removes supply chain artifacts)",
                                 "ML07:2023 Transfer Learning Attack (rollback reverses effects of compromised transfer learning)",
-                                "ML10:2023 Model Poisoning"
+                                "ML10:2023 Model Poisoning",
+                                "ML02:2023 Data Poisoning Attack (rollback reverts to pre-poisoning model)"
                             ]
                         },
                         {
@@ -155,7 +164,9 @@ export const restoreTactic = {
                                 "NISTAML.011 Model Poisoning (Availability)",
                                 "NISTAML.023 Backdoor Poisoning",
                                 "NISTAML.026 Model Poisoning (Integrity)",
-                                "NISTAML.051 Model Poisoning (Supply Chain)"
+                                "NISTAML.051 Model Poisoning (Supply Chain)",
+                                "NISTAML.013 Data Poisoning (rollback restores model to pre-poisoning state)",
+                                "NISTAML.024 Targeted Poisoning (rollback reverts targeted poisoning effects)"
                             ]
                         },
                         {
@@ -163,7 +174,9 @@ export const restoreTactic = {
                             "items": [
                                 "AITech-9.1 Model or Agentic System Manipulation",
                                 "AITech-9.2 Detection Evasion",
-                                "AITech-9.3 Dependency / Plugin Compromise"
+                                "AITech-9.3 Dependency / Plugin Compromise",
+                                "AITech-6.1 Training Data Poisoning (rollback reverts poisoning effects)",
+                                "AISubtech-9.2.2 Backdoors and Trojans (rollback restores to pre-backdoor checkpoint)"
                             ]
                         }
                     ]
@@ -190,7 +203,9 @@ export const restoreTactic = {
                                 "AML.T0018 Manipulate AI Model",
                                 "AML.T0019 Publish Poisoned Datasets",
                                 "AML.T0020 Poison Training Data",
-                                "AML.T0059 Erode Dataset Integrity"
+                                "AML.T0059 Erode Dataset Integrity",
+                                "AML.T0031 Erode AI Model Integrity (retraining restores model integrity)",
+                                "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (retraining on clean data removes backdoor triggers)"
                             ]
                         },
                         {
@@ -213,7 +228,8 @@ export const restoreTactic = {
                             "items": [
                                 "ML02:2023 Data Poisoning Attack",
                                 "ML08:2023 Model Skewing (retraining eliminates feedback-loop-induced model skewing)",
-                                "ML10:2023 Model Poisoning"
+                                "ML10:2023 Model Poisoning",
+                                "ML07:2023 Transfer Learning Attack (retraining on verified base removes transfer attack vectors)"
                             ]
                         },
                         {
@@ -231,7 +247,9 @@ export const restoreTactic = {
                                 "NISTAML.021 Clean-label Backdoor",
                                 "NISTAML.023 Backdoor Poisoning",
                                 "NISTAML.024 Targeted Poisoning",
-                                "NISTAML.026 Model Poisoning (Integrity)"
+                                "NISTAML.026 Model Poisoning (Integrity)",
+                                "NISTAML.011 Model Poisoning (Availability) (retraining restores model availability)",
+                                "NISTAML.051 Model Poisoning (Supply Chain) (retraining from verified sources remediates supply chain poisoning)"
                             ]
                         },
                         {
@@ -240,7 +258,8 @@ export const restoreTactic = {
                                 "AITech-6.1 Training Data Poisoning",
                                 "AITech-7.1 Reasoning Corruption",
                                 "AITech-9.1 Model or Agentic System Manipulation",
-                                "AITech-9.2 Detection Evasion"
+                                "AITech-9.2 Detection Evasion",
+                                "AISubtech-9.2.2 Backdoors and Trojans (retraining on clean data removes backdoors)"
                             ]
                         }
                     ],
@@ -329,7 +348,8 @@ export const restoreTactic = {
                         "NISTAML.012 Clean-label Poisoning",
                         "NISTAML.013 Data Poisoning",
                         "NISTAML.024 Targeted Poisoning",
-                        "NISTAML.037 Training Data Attacks"
+                        "NISTAML.037 Training Data Attacks",
+                        "NISTAML.023 Backdoor Poisoning (data recovery removes backdoor-poisoned samples)"
                     ]
                 },
                 {
@@ -337,7 +357,8 @@ export const restoreTactic = {
                     "items": [
                         "AITech-6.1 Training Data Poisoning",
                         "AITech-7.2 Memory System Corruption",
-                        "AITech-7.3 Data Source Abuse and Manipulation"
+                        "AITech-7.3 Data Source Abuse and Manipulation",
+                        "AISubtech-6.1.1 Knowledge Base Poisoning (data recovery restores poisoned knowledge bases)"
                     ]
                 }
             ],
@@ -434,7 +455,9 @@ export const restoreTactic = {
                     "items": [
                         "AITech-3.1 Masquerading / Obfuscation / Impersonation",
                         "AITech-14.1 Unauthorized Access (re-auth invalidates unauthorized access gained via stolen credentials)",
-                        "AITech-14.2 Abuse of Delegated Authority (re-auth with proper scoping prevents delegated authority abuse)"
+                        "AITech-14.2 Abuse of Delegated Authority (re-auth with proper scoping prevents delegated authority abuse)",
+                        "AISubtech-14.1.1 Credential Theft (re-establishment invalidates stolen credentials)",
+                        "AISubtech-3.1.2 Trusted Agent Spoofing (clean identity re-establishment prevents continued spoofing)"
                     ]
                 }
             ],
@@ -590,10 +613,10 @@ export const restoreTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0025 Exfiltration via Cyber Means (rollback removes exfiltration triggers embedded in RAG index)",
                         "AML.T0059 Erode Dataset Integrity",
                         "AML.T0070 RAG Poisoning",
-                        "AML.T0071 False RAG Entry Injection"
+                        "AML.T0071 False RAG Entry Injection",
+                        "AML.T0051 LLM Prompt Injection (rollback removes injected content from vector index)"
                     ]
                 },
                 {
@@ -633,7 +656,8 @@ export const restoreTactic = {
                         "NISTAML.013 Data Poisoning",
                         "NISTAML.015 Indirect Prompt Injection",
                         "NISTAML.024 Targeted Poisoning",
-                        "NISTAML.027 Misaligned Outputs (rollback removes RAG content causing misaligned LLM outputs)"
+                        "NISTAML.027 Misaligned Outputs (rollback removes RAG content causing misaligned LLM outputs)",
+                        "NISTAML.018 Prompt Injection (rollback removes prompt-injection-poisoned vectors)"
                     ]
                 },
                 {
@@ -641,7 +665,9 @@ export const restoreTactic = {
                     "items": [
                         "AITech-6.1 Training Data Poisoning (rollback removes poisoned RAG data feeding into fine-tuning loops)",
                         "AITech-7.2 Memory System Corruption",
-                        "AITech-7.3 Data Source Abuse and Manipulation"
+                        "AITech-7.3 Data Source Abuse and Manipulation",
+                        "AISubtech-6.1.1 Knowledge Base Poisoning (rollback restores poisoned knowledge base indices)",
+                        "AITech-1.2 Indirect Prompt Injection (rollback removes indirect injection content from vector stores)"
                     ]
                 }
             ],

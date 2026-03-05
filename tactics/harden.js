@@ -29,6 +29,8 @@ export const hardenTactic = {
             "AML.T0015 Evade AI Model",
             "AML.T0043 Craft Adversarial Data",
             "AML.T0031 Erode AI Model Integrity",
+            "AML.T0005.000 Create Proxy AI Model: Train Proxy via Gathered AI Artifacts (robust models resist adversarial examples crafted via proxy)",
+            "AML.T0005.002 Create Proxy AI Model: Use Pre-Trained Model (robust models resist transfer attacks from public proxy models)",
             "AML.T0018 Manipulate AI Model (robust training reduces effectiveness of model manipulation)",
             "AML.T0020 Poison Training Data (adversarially trained models are more resilient to poisoned data)",
             "AML.T0041 Physical Environment Access (robust training reduces effectiveness of physical adversarial perturbations)",
@@ -83,6 +85,7 @@ export const hardenTactic = {
             "AITech-11.2 Model-Selective Evasion",
             "AITech-6.1 Training Data Poisoning (robust models partially resist poisoning effects)",
             "AITech-9.1 Model or Agentic System Manipulation (robust training hardens model against manipulation)",
+            "AISubtech-11.1.1 Agent-Specific Evasion (robust training hardens models against agent-specific evasion attacks)",
           ],
         },
       ],
@@ -148,6 +151,8 @@ export const hardenTactic = {
             "AML.T0043 Craft Adversarial Data",
             "AML.T0069.000 Discover LLM System Information: Special Character Sets (input sanitization strips/encodes control tokens and special characters)",
             "AML.T0093 Prompt Infiltration via Public-Facing Application",
+            "AML.T0051.000 LLM Prompt Injection: Direct",
+            "AML.T0051.001 LLM Prompt Injection: Indirect",
           ],
         },
         {
@@ -205,6 +210,8 @@ export const hardenTactic = {
             "AITech-1.4 Multi-Modal Injection and Manipulation",
             "AITech-6.1 Training Data Poisoning",
             "AITech-7.3 Data Source Abuse and Manipulation",
+            "AITech-2.1 Jailbreak (input validation blocks jailbreak attempts)",
+            "AISubtech-7.3.1 Corrupted Third-Party Data (sanitization detects corrupted third-party data)",
           ],
         },
       ],
@@ -288,6 +295,8 @@ export const hardenTactic = {
               items: [
                 "AITech-6.1 Training Data Poisoning",
                 "AITech-9.1 Model or Agentic System Manipulation (clean data prevents model manipulation via poisoning)",
+                "AISubtech-6.1.2 Reinforcement Biasing (sanitization of RLHF feedback data detects biased signals)",
+                "AISubtech-7.3.1 Corrupted Third-Party Data (dataset sanitization detects corrupted external data)",
               ],
             },
           ],
@@ -361,6 +370,9 @@ export const hardenTactic = {
                 "AML.T0043 Craft Adversarial Data (inference-time validation catches some adversarial inputs)",
                 "AML.T0099 AI Agent Tool Data Poisoning (input validation blocks poisoned tool outputs)",
                 "AML.T0011.003 User Execution: Malicious Link",
+                "AML.T0051.000 LLM Prompt Injection: Direct",
+                "AML.T0051.001 LLM Prompt Injection: Indirect",
+                "AML.T0051.002 LLM Prompt Injection: Triggered (input validation blocks triggered prompt injection)",
               ],
             },
             {
@@ -377,6 +389,7 @@ export const hardenTactic = {
               items: [
                 "LLM01:2025 Prompt Injection",
                 "LLM08:2025 Vector and Embedding Weaknesses",
+                "LLM07:2025 System Prompt Leakage (input validation blocks prompt extraction attempts)",
               ],
             },
             {
@@ -388,6 +401,7 @@ export const hardenTactic = {
               items: [
                 "ASI01:2026 Agent Goal Hijack (input validation blocks prompt-based goal manipulation)",
                 "ASI05:2026 Unexpected Code Execution (RCE) (input validation prevents code injection via prompts)",
+                "ASI06:2026 Memory & Context Poisoning (input validation prevents injection that poisons agent memory)",
               ],
             },
             {
@@ -563,6 +577,7 @@ export const hardenTactic = {
               items: [
                 "NISTAML.022 Evasion",
                 "NISTAML.018 Prompt Injection (via non-text modalities)",
+                "NISTAML.015 Indirect Prompt Injection (via multimodal content embedding malicious instructions)",
               ],
             },
             {
@@ -595,6 +610,7 @@ export const hardenTactic = {
             "AML.T0011 User Execution",
             "AML.T0011.000 User Execution: Unsafe AI Artifacts",
             "AML.T0011.001 User Execution: Malicious Package",
+            "AML.T0005.000 Create Proxy AI Model: Train Proxy via Gathered AI Artifacts (supply chain controls prevent artifact gathering)",
             "AML.T0019 Publish Poisoned Datasets",
             "AML.T0058 Publish Poisoned Models",
             "AML.T0059 Erode Dataset Integrity",
@@ -655,6 +671,9 @@ export const hardenTactic = {
             "AITech-9.3 Dependency / Plugin Compromise",
             "AITech-9.1 Model or Agentic System Manipulation",
             "AITech-6.1 Training Data Poisoning (poisoned data via supply chain)",
+            "AISubtech-9.2.2 Backdoors and Trojans (supply chain management detects backdoored artifacts)",
+            "AISubtech-9.3.1 Malicious Package / Tool Injection",
+            "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
           ],
         },
       ],
@@ -733,6 +752,8 @@ export const hardenTactic = {
               framework: "Cisco Integrated AI Security and Safety Framework",
               items: [
                 "AITech-9.3 Dependency / Plugin Compromise",
+                "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers) (dependency scanning detects typosquatted packages)",
+                "AISubtech-9.3.3 Dependency Replacement / Rug Pull (version pinning and hash verification detect replaced dependencies)",
               ],
             },
           ],
@@ -796,9 +817,11 @@ export const hardenTactic = {
                 "AML.T0058 Publish Poisoned Models",
                 "AML.T0076 Corrupt AI Model",
                 "AML.T0074 Masquerading",
+                "AML.T0005.000 Create Proxy AI Model: Train Proxy via Gathered AI Artifacts (signed artifacts prevent unauthorized exfiltration)",
                 "AML.T0018 Manipulate AI Model (release gating detects model manipulation before deployment)",
                 "AML.T0018.002 Manipulate AI Model: Embed Malware",
                 "AML.T0104 Publish Poisoned AI Agent Tool",
+                "AML.T0011.000 User Execution: Unsafe AI Artifacts",
               ],
             },
             {
@@ -836,6 +859,7 @@ export const hardenTactic = {
               items: [
                 "NISTAML.051 Model Poisoning (Supply Chain)",
                 "NISTAML.023 Backdoor Poisoning (signature verification catches backdoored models)",
+                "NISTAML.026 Model Poisoning (Integrity) (release gating detects integrity-violating model modifications before deployment)",
               ],
             },
             {
@@ -843,6 +867,8 @@ export const hardenTactic = {
               items: [
                 "AITech-9.1 Model or Agentic System Manipulation",
                 "AITech-9.3 Dependency / Plugin Compromise",
+                "AISubtech-9.2.2 Backdoors and Trojans (release gating and signature verification detect backdoored model artifacts)",
+                "AISubtech-9.3.1 Malicious Package / Tool Injection (signed artifacts and internal mirroring prevent malicious model injection)",
               ],
             },
           ],
@@ -1223,6 +1249,7 @@ export const hardenTactic = {
               items: [
                 "NISTAML.051 Model Poisoning (Supply Chain) (SBOM and attestation prevent supply chain model poisoning)",
                 "NISTAML.023 Backdoor Poisoning (format allow-list and provenance verification detect backdoored models)",
+                "NISTAML.026 Model Poisoning (Integrity) (provenance attestation and digest verification detect integrity-violating model modifications)",
               ],
             },
             {
@@ -1431,6 +1458,7 @@ export const hardenTactic = {
               framework: "Cisco Integrated AI Security and Safety Framework",
               items: [
                 "AITech-14.1 Unauthorized Access",
+                "AITech-14.2 Abuse of Delegated Authority (access management prevents privilege delegation abuse)",
               ],
             },
           ],
@@ -1635,6 +1663,7 @@ export const hardenTactic = {
                 "AISubtech-3.1.2 Trusted Agent Spoofing",
                 "AISubtech-4.1.1 Rogue Agent Introduction",
                 "AISubtech-4.3.1 Schema Inconsistencies (strict contract validation prevents schema-based attacks)",
+                "AISubtech-4.3.2 Namespace Collision (unique agent identities prevent namespace collisions)",
               ],
             },
           ],
@@ -1693,6 +1722,7 @@ export const hardenTactic = {
                 "AML.T0074 Masquerading (ANS prevents agent masquerading through verified identity)",
                 "AML.T0091 Use Alternate Authentication Material (ANS revocation checks invalidate compromised credentials)",
                 "AML.T0091.000 Use Alternate Authentication Material: Application Access Token (ANS verifies token provenance)",
+                "AML.T0021 Establish Accounts (ANS registration/verification prevents unauthorized agents from establishing identities)",
               ],
             },
             {
@@ -1702,6 +1732,8 @@ export const hardenTactic = {
                 "Compromised Agent Registry (L7)",
                 "Malicious Agent Discovery (L7) (ANS prevents malicious agents from being discovered as legitimate)",
                 "Marketplace Manipulation (L7) (capability pinning prevents fraudulent agent listings)",
+                "Agent Identity Attack (L7) (ANS cryptographic identity binding prevents agent identity attacks)",
+                "Compromised Agents (L7) (ANS revocation checks detect and block compromised agent credentials)",
               ],
             },
             {
@@ -1733,6 +1765,7 @@ export const hardenTactic = {
                 "AISubtech-3.1.1 Identity Obfuscation",
                 "AISubtech-3.1.2 Trusted Agent Spoofing",
                 "AISubtech-4.1.1 Rogue Agent Introduction (ANS prevents rogue agents from being discovered)",
+                "AITech-14.1 Unauthorized Access (ANS identity verification prevents unauthorized agent access to the ecosystem)",
               ],
             },
           ],
@@ -1904,6 +1937,8 @@ export const hardenTactic = {
                 "AITech-8.2 Data Exfiltration / Exposure",
                 "AISubtech-8.1.1 Presence Detection",
                 "AISubtech-8.2.1 Training Data Exposure",
+                "AITech-10.2 Model Inversion (DP noise degrades model inversion effectiveness)",
+                "AISubtech-10.2.1 Model Inversion (DP noise directly impedes inversion attacks)",
               ],
             },
           ],
@@ -2126,6 +2161,7 @@ export const hardenTactic = {
                 "AITech-10.2 Model Inversion (mixup training hardens against inversion attacks)",
                 "AISubtech-10.2.1 Model Inversion",
                 "AISubtech-10.1.3 Sensitive Data Reconstruction (mixup reduces memorization, protecting against data reconstruction)",
+                "AITech-8.1 Membership Inference",
               ],
             },
           ],
@@ -2245,6 +2281,7 @@ export const hardenTactic = {
             "AML.T0048 External Harms (by cleaning malicious payloads)",
             "AML.T0052 Phishing (by sanitizing malicious links)",
             "AML.T0057 LLM Data Leakage (by redacting sensitive info)",
+            "AML.T0086 Exfiltration via AI Agent Tool Invocation (output sanitization prevents data exfiltration via tool parameters)",
           ],
         },
         {
@@ -2331,6 +2368,8 @@ export const hardenTactic = {
                 "AML.T0050 Command and Scripting Interpreter",
                 "AML.T0077 LLM Response Rendering (structured output constrains response format)",
                 "AML.T0067 LLM Trusted Output Components Manipulation (structured schemas prevent format manipulation)",
+                "AML.T0086 Exfiltration via AI Agent Tool Invocation (structured output prevents data encoding in tool parameters)",
+                "AML.T0101 Data Destruction via AI Agent Tool Invocation (structured schemas constrain destructive tool calls)",
               ],
             },
             {
@@ -2371,6 +2410,7 @@ export const hardenTactic = {
               items: [
                 "AITech-12.2 Insecure Output Handling",
                 "AISubtech-12.2.1 Code Detection / Malicious Code Output",
+                "AITech-12.1 Tool Exploitation (structured output constrains tool invocation parameters)",
               ],
             },
           ],
@@ -2536,6 +2576,7 @@ def is_url_safe(url: str):
                 "AML.T0057 LLM Data Leakage (sanitization can redact leaked data)",
                 "AML.T0060 Publish Hallucinated Entities (output sanitization prevents hallucinated entity references)",
                 "AML.T0082 RAG Credential Harvesting (output sanitization prevents credential leakage in responses)",
+                "AML.T0086 Exfiltration via AI Agent Tool Invocation",
               ],
             },
             {
@@ -2690,6 +2731,8 @@ def is_url_safe(url: str):
             "AML.T0020 Poison Training Data",
             "AML.T0019 Publish Poisoned Datasets",
             "AML.T0010 AI Supply Chain Compromise (compromised tools or libraries targeting the training loop)",
+            "AML.T0010.002 AI Supply Chain Compromise: Data",
+            "AML.T0010.003 AI Supply Chain Compromise: Model",
           ],
         },
         {
@@ -2735,6 +2778,7 @@ def is_url_safe(url: str):
           items: [
             "AITech-6.1 Training Data Poisoning",
             "AITech-9.1 Model or Agentic System Manipulation (training process manipulation)",
+            "AITech-9.3 Dependency / Plugin Compromise",
           ],
         },
       ],
@@ -2822,6 +2866,7 @@ def is_url_safe(url: str):
               items: [
                 "AITech-9.3 Dependency / Plugin Compromise (hardened training environment prevents dependency compromise)",
                 "AITech-14.1 Unauthorized Access (secure environment prevents unauthorized access to training)",
+                "AITech-9.1 Model or Agentic System Manipulation (secure environment prevents model manipulation)",
               ],
             },
           ],
@@ -3351,6 +3396,7 @@ with mlflow.start_run() as run:
           items: [
             "AITech-10.1 Model Extraction (hardware side-channels can enable model extraction)",
             "AITech-9.3 Dependency / Plugin Compromise (hardware as dependency in AI supply chain)",
+            "AITech-8.2 Data Exfiltration / Exposure (hardware side-channels and co-tenancy can enable data exfiltration from accelerator memory)",
           ],
         },
       ],
@@ -3561,6 +3607,7 @@ ScanPolicy:
               items: [
                 "AML.T0010.001 AI Supply Chain Compromise: AI Software",
                 "AML.T0010.000 AI Supply Chain Compromise: Hardware (firmware is hardware-level software)",
+                "AML.T0010 AI Supply Chain Compromise (firmware/drivers are part of the broader AI supply chain)",
               ],
             },
             {
@@ -3588,6 +3635,7 @@ ScanPolicy:
               framework: "NIST Adversarial Machine Learning 2025",
               items: [
                 "NISTAML.051 Model Poisoning (Supply Chain) (firmware supply chain compromise enables model poisoning)",
+                "NISTAML.031 Model Extraction (unpatched driver vulnerabilities like LeftoverLocals can enable model extraction from accelerator memory)",
               ],
             },
             {
@@ -3687,6 +3735,7 @@ ScanPolicy:
               framework: "Cisco Integrated AI Security and Safety Framework",
               items: [
                 "AITech-9.3 Dependency / Plugin Compromise (hardware component verification prevents compromise)",
+                "AISubtech-9.2.2 Backdoors and Trojans (hardware supply chain verification detects hardware-level backdoors and trojans)",
               ],
             },
           ],
@@ -3705,6 +3754,7 @@ ScanPolicy:
                 "AML.T0025 Exfiltration via Cyber Means",
                 "AML.T0037 Data from Local System",
                 "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (VRAM hygiene prevents model data leakage between tenants)",
+                "AML.T0044 Full AI Model Access (VRAM isolation prevents co-tenants from gaining full access to model weights in shared accelerator memory)",
               ],
             },
             {
@@ -3732,6 +3782,7 @@ ScanPolicy:
               items: [
                 "NISTAML.031 Model Extraction (VRAM hygiene prevents extraction via leftover data)",
                 "NISTAML.038 Data Extraction",
+                "NISTAML.036 Leaking information from user interactions (VRAM hygiene prevents leakage of user interaction data from KV-cache between sessions)",
               ],
             },
             {
@@ -3739,6 +3790,7 @@ ScanPolicy:
               items: [
                 "AITech-8.2 Data Exfiltration / Exposure (VRAM clearing prevents data exposure between tenants)",
                 "AITech-10.1 Model Extraction (VRAM isolation prevents model extraction via leftover weights)",
+                "AISubtech-10.1.2 Weight Reconstruction (VRAM clearing prevents reconstruction of model weights from leftover accelerator memory)",
               ],
             },
           ],
@@ -3897,6 +3949,7 @@ ScanPolicy:
             "AITech-11.1 Environment-Aware Evasion",
             "AITech-11.2 Model-Selective Evasion",
             "AITech-15.1 Harmful Content (attention hardening prevents adversarial content generation)",
+            "AISubtech-11.1.1 Agent-Specific Evasion (attention hardening resists agent-targeted evasion)",
           ],
         },
       ],
@@ -4032,6 +4085,8 @@ ScanPolicy:
             "AML.T0020 Poison Training Data",
             "AML.T0019 Publish Poisoned Datasets (poisoned graph datasets consumed by GNN)",
             "AML.T0031 Erode AI Model Integrity (graph poisoning erodes GNN predictions)",
+            "AML.T0043 Craft Adversarial Data (adversarial graph structure perturbations)",
+            "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (graph structure can embed backdoor triggers via specific subgraph patterns)",
           ],
         },
         {
@@ -4067,6 +4122,7 @@ ScanPolicy:
           framework: "Cisco Integrated AI Security and Safety Framework",
           items: [
             "AITech-6.1 Training Data Poisoning",
+            "AISubtech-7.3.1 Corrupted Third-Party Data (poisoned graph data from external sources)",
           ],
         },
       ],
@@ -4136,12 +4192,14 @@ ScanPolicy:
                 "NISTAML.013 Data Poisoning",
                 "NISTAML.024 Targeted Poisoning",
                 "NISTAML.023 Backdoor Poisoning (sanitization detects anomalous backdoor patterns in graph)",
+                "NISTAML.012 Clean-label Poisoning (sanitization can detect clean-label poisoning patterns in graph data)",
               ],
             },
             {
               framework: "Cisco Integrated AI Security and Safety Framework",
               items: [
                 "AITech-6.1 Training Data Poisoning",
+                "AISubtech-7.3.1 Corrupted Third-Party Data (sanitization catches poisoned graph data from external sources)",
               ],
             },
           ],
@@ -4428,6 +4486,7 @@ class GraphRobustnessVerifier:
                 "NISTAML.024 Targeted Poisoning",
                 "NISTAML.022 Evasion (certified radius guarantees prediction stability under perturbation)",
                 "NISTAML.026 Model Poisoning (Integrity)",
+                "NISTAML.025 Black-box Evasion (certified radius guarantees resistance even against unknown black-box perturbations)",
               ],
             },
             {
@@ -4597,11 +4656,17 @@ class GraphRobustnessVerifier:
           defendsAgainst: [
             {
               framework: "MITRE ATLAS",
-              items: ["AML.T0048 External Harms"],
+              items: [
+                "AML.T0048 External Harms",
+                "AML.T0031 Erode AI Model Integrity (HITL reward learning resists integrity erosion from misaligned reward signals)",
+              ],
             },
             {
               framework: "MAESTRO",
-              items: ["Agent Goal Manipulation (L7)"],
+              items: [
+                "Agent Goal Manipulation (L7)",
+                "Compromised Agents (L7) (HITL oversight prevents agents from learning compromised behavior patterns)",
+              ],
             },
             {
               framework: "OWASP LLM Top 10 2025",
@@ -4703,7 +4768,7 @@ class GraphRobustnessVerifier:
             {
               framework: "Cisco Integrated AI Security and Safety Framework",
               items: [
-                "AISubtech-6.1.2 Reinforcement Biasing",
+                "AISubtech-6.1.2 Reinforcement Biasing (PBRS provides mathematically safe shaping that prevents reinforcement biasing exploits)",
               ],
             },
           ],
@@ -4745,6 +4810,7 @@ class GraphRobustnessVerifier:
               items: [
                 "Agent Goal Manipulation (L7)",
                 "Compromised Agents (L7)",
+                "Manipulation of Evaluation Metrics (L5) (behavioral audit catches evaluation metric manipulation by correlating reward with actual behavior)",
               ],
             },
             {
@@ -4848,6 +4914,7 @@ class GraphRobustnessVerifier:
               items: [
                 "NISTAML.027 Misaligned Outputs",
                 "NISTAML.026 Model Poisoning (Integrity) (reward manipulation leads to model poisoning)",
+                "NISTAML.013 Data Poisoning (reward signal tampering is functionally equivalent to data poisoning of the RL training loop)",
               ],
             },
             {
@@ -5172,6 +5239,8 @@ class GraphRobustnessVerifier:
           framework: "Cisco Integrated AI Security and Safety Framework",
           items: [
             "AITech-7.1 Reasoning Corruption (ensemble consensus prevents single-model reasoning corruption)",
+            "AITech-11.1 Environment-Aware Evasion (ensemble diversity defeats environment-specific adversarial inputs)",
+            "AITech-11.2 Model-Selective Evasion (ensemble diversity defeats model-specific adversarial inputs)",
           ],
         },
       ],
@@ -5262,6 +5331,7 @@ class GraphRobustnessVerifier:
             "AITech-11.1 Environment-Aware Evasion",
             "AITech-11.2 Model-Selective Evasion",
             "AISubtech-11.1.4 Defense-Aware Payloads (certified bounds hold against defense-aware attacks)",
+            "AISubtech-11.1.1 Agent-Specific Evasion (certified bounds prevent evasion attacks tailored to specific model processing patterns)",
           ],
         },
       ],
@@ -5298,6 +5368,7 @@ class GraphRobustnessVerifier:
             "AML.T0056 Extract LLM System Prompt (hardened system prompts resist extraction attempts)",
             "AML.T0069.001 Discover LLM System Information: System Instruction Keywords (instruction hierarchy reduces exploitability of discovered keywords)",
             "AML.T0108 AI Agent (C2)",
+            "AML.T0051.002 LLM Prompt Injection: Triggered (system prompt hardening prevents time/event-triggered payload execution)",
           ],
         },
         {
@@ -5347,6 +5418,8 @@ class GraphRobustnessVerifier:
             "AISubtech-2.1.1 Context Manipulation (Jailbreak)",
             "AISubtech-2.1.2 Obfuscation (Jailbreak)",
             "AISubtech-2.1.3 Semantic Manipulation (Jailbreak)",
+            "AISubtech-1.1.1 Instruction Manipulation (Direct Prompt Injection)",
+            "AISubtech-1.2.1 Instruction Manipulation (Indirect Prompt Injection)",
           ],
         },
       ],
@@ -5404,6 +5477,7 @@ class GraphRobustnessVerifier:
             "AML.T0054 LLM Jailbreak",
             "AML.T0103 Deploy AI Agent",
             "AML.T0108 AI Agent (C2)",
+            "AML.T0053 AI Agent Tool Invocation",
           ],
         },
         {
@@ -5484,6 +5558,7 @@ class GraphRobustnessVerifier:
               items: [
                 "AML.T0048 External Harms",
                 "AML.T0050 Command and Scripting Interpreter",
+                "AML.T0053 AI Agent Tool Invocation (interruptible loops allow inspection before tool invocation)",
               ],
             },
             {
@@ -5555,6 +5630,8 @@ class GraphRobustnessVerifier:
                 "AML.T0053 AI Agent Tool Invocation",
                 "AML.T0098 AI Agent Tool Credential Harvesting (least privilege limits credential exposure via tools)",
                 "AML.T0103 Deploy AI Agent",
+                "AML.T0086 Exfiltration via AI Agent Tool Invocation (least-privilege tools limit data exfiltration surface)",
+                "AML.T0101 Data Destruction via AI Agent Tool Invocation (granular tools prevent destructive operations)",
               ],
             },
             {
@@ -5593,6 +5670,7 @@ class GraphRobustnessVerifier:
               framework: "Cisco Integrated AI Security and Safety Framework",
               items: [
                 "AITech-12.1 Tool Exploitation",
+                "AITech-14.2 Abuse of Delegated Authority (least-privilege tools prevent delegated authority abuse)",
               ],
             },
           ],
@@ -5719,6 +5797,7 @@ class GraphRobustnessVerifier:
                 "AML.T0080 AI Agent Context Poisoning",
                 "AML.T0080.000 AI Agent Context Poisoning: Memory",
                 "AML.T0051.001 LLM Prompt Injection: Indirect (prevents persistent indirect injection across sessions)",
+                "AML.T0092 Manipulate User LLM Chat History (ephemeral state prevents persistent chat history manipulation across sessions)",
               ],
             },
             {
@@ -5762,6 +5841,7 @@ class GraphRobustnessVerifier:
                 "AISubtech-5.1.1 Long-term / Short-term Memory Injection",
                 "AITech-5.2 Configuration Persistence (ephemeral state prevents persistent config changes)",
                 "AITech-4.1 Agent Injection (session isolation prevents persistent injection)",
+                "AISubtech-4.2.2 Session Boundary Violation (ephemeral state enforces clean session boundaries)",
               ],
             },
           ],
@@ -5802,6 +5882,8 @@ class GraphRobustnessVerifier:
                 "AML.T0054 LLM Jailbreak (certificate enforcement contains jailbreak within authorized capabilities)",
                 "AML.T0103 Deploy AI Agent",
                 "AML.T0108 AI Agent (C2)",
+                "AML.T0086 Exfiltration via AI Agent Tool Invocation (certificate limits tools available for data exfiltration)",
+                "AML.T0101 Data Destruction via AI Agent Tool Invocation (certificate restricts destructive tool capabilities)",
               ],
             },
             {
@@ -5983,7 +6065,8 @@ class GraphRobustnessVerifier:
                 "AML.T0054 LLM Jailbreak",
                 "AML.T0050 Command and Scripting Interpreter (P-LLM only sees validated structures, not raw commands)",
                 "AML.T0053 AI Agent Tool Invocation (tool access restricted to P-LLM which never sees untrusted content)",
-                "AML.T0099 AI Agent Tool Data Poisoning (dual-LLM pattern isolates poisoned tool data from execution)"
+                "AML.T0099 AI Agent Tool Data Poisoning (dual-LLM pattern isolates poisoned tool data from execution)",
+                "AML.T0067 LLM Trusted Output Components Manipulation (dual-LLM isolation prevents Q-LLM output from being treated as trusted commands)"
               ]
             },
             {
@@ -6012,7 +6095,8 @@ class GraphRobustnessVerifier:
               "items": [
                 "ASI01:2026 Agent Goal Hijack (untrusted content cannot hijack P-LLM goals)",
                 "ASI06:2026 Memory & Context Poisoning (isolation prevents untrusted content from poisoning privileged context)",
-                "ASI05:2026 Unexpected Code Execution (RCE) (untrusted content confined to Q-LLM which cannot execute code)"
+                "ASI05:2026 Unexpected Code Execution (RCE) (untrusted content confined to Q-LLM which cannot execute code)",
+                "ASI02:2026 Tool Misuse and Exploitation (P-LLM tool access isolation prevents untrusted content from triggering tool misuse)"
               ]
             },
             {
@@ -6031,7 +6115,8 @@ class GraphRobustnessVerifier:
                 "AITech-1.2 Indirect Prompt Injection",
                 "AITech-4.2 Context Boundary Attacks",
                 "AITech-12.1 Tool Exploitation (tool access restricted to P-LLM which never sees untrusted content)",
-                "AITech-8.4 Prompt/Meta Extraction (P-LLM prompts never exposed to untrusted content)"
+                "AITech-8.4 Prompt/Meta Extraction (P-LLM prompts never exposed to untrusted content)",
+                "AITech-12.2 Insecure Output Handling (dual-LLM isolation ensures Q-LLM outputs are validated before P-LLM consumption)"
               ]
             }
           ],
@@ -6106,6 +6191,8 @@ class GraphRobustnessVerifier:
             "AITech-12.1 Tool Exploitation",
             "AITech-12.2 Insecure Output Handling",
             "AITech-4.1 Agent Injection (tool authorization blocks injected agent tool use)",
+            "AITech-14.2 Abuse of Delegated Authority",
+            "AISubtech-12.1.1 Parameter Manipulation",
           ],
         },
       ],
@@ -6165,6 +6252,7 @@ class GraphRobustnessVerifier:
                 "AITech-12.1 Tool Exploitation",
                 "AITech-12.2 Insecure Output Handling",
                 "AITech-4.1 Agent Injection (schema validation blocks malformed injected parameters)",
+                "AISubtech-12.1.1 Parameter Manipulation",
               ],
             },
           ],
@@ -6242,6 +6330,8 @@ class GraphRobustnessVerifier:
               items: [
                 "AITech-12.1 Tool Exploitation",
                 "AITech-4.1 Agent Injection (policy engine blocks unauthorized agent actions)",
+                "AITech-14.1 Unauthorized Access",
+                "AITech-14.2 Abuse of Delegated Authority (policy engine detects abuse of delegated permissions)",
               ],
             },
           ],
@@ -6311,6 +6401,7 @@ class GraphRobustnessVerifier:
                 "ASI01:2026 Agent Goal Hijack (independent validator catches goal hijack attempts)",
                 "ASI09:2026 Human-Agent Trust Exploitation (second channel provides independent validation of agent actions)",
                 "ASI08:2026 Cascading Failures (validator catches unsafe actions before they cascade)",
+                "ASI05:2026 Unexpected Code Execution (RCE) (two-channel validation catches code execution attempts in high-impact actions)",
               ],
             },
             {
@@ -6318,6 +6409,7 @@ class GraphRobustnessVerifier:
               items: [
                 "NISTAML.027 Misaligned Outputs (validator detects misaligned tool call patterns)",
                 "NISTAML.039 Compromising connected resources (validator blocks unauthorized resource access)",
+                "NISTAML.018 Prompt Injection (independent validator catches prompt injection-driven high-impact actions)",
               ],
             },
             {
@@ -6488,7 +6580,8 @@ class GraphRobustnessVerifier:
               "framework": "OWASP Agentic AI Top 10 2026",
               "items": [
                 "ASI02:2026 Tool Misuse and Exploitation (prevents data exfiltration via legitimate tool chains)",
-                "ASI01:2026 Agent Goal Hijack (sink enforcement prevents hijacked goals from exfiltrating data)"
+                "ASI01:2026 Agent Goal Hijack (sink enforcement prevents hijacked goals from exfiltrating data)",
+                "ASI05:2026 Unexpected Code Execution (RCE) (sink enforcement prevents code execution via exfiltration paths)"
               ]
             },
             {
@@ -6506,7 +6599,8 @@ class GraphRobustnessVerifier:
                 "AITech-8.2 Data Exfiltration / Exposure",
                 "AITech-8.3 Information Disclosure",
                 "AITech-12.1 Tool Exploitation (sink enforcement prevents tool-based exfiltration)",
-                "AITech-12.2 Insecure Output Handling"
+                "AITech-12.2 Insecure Output Handling",
+                "AISubtech-8.2.3 Data Exfiltration via Agent Tooling"
               ]
             }
           ],
@@ -6586,6 +6680,8 @@ class GraphRobustnessVerifier:
               items: [
                 "AITech-12.1 Tool Exploitation",
                 "AITech-4.1 Agent Injection (continuous re-authorization catches injected actions)",
+                "AITech-14.1 Unauthorized Access (continuous re-authorization prevents time-delayed unauthorized access)",
+                "AITech-14.2 Abuse of Delegated Authority (continuous re-authorization catches delegated authority abuse)",
               ],
             },
           ],
@@ -6668,6 +6764,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             "AML.T0100 AI Agent Clickbait (safe fetch prevents navigation to malicious content)",
             "AML.T0108 AI Agent (C2)",
             "AML.T0011.003 User Execution: Malicious Link",
+            "AML.T0093 Prompt Infiltration via Public-Facing Application",
           ],
         },
         {
@@ -6696,6 +6793,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             "ASI04:2026 Agentic Supply Chain Vulnerabilities (safe fetch controls untrusted external data sources)",
             "ASI01:2026 Agent Goal Hijack (prevents goal hijack via malicious fetched content)",
             "ASI05:2026 Unexpected Code Execution (RCE) (browser sandbox prevents code execution via malicious fetched content)",
+            "ASI02:2026 Tool Misuse and Exploitation (safe fetch prevents tool-based SSRF exploitation)",
           ],
         },
         {
@@ -6747,6 +6845,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
               framework: "OWASP Agentic AI Top 10 2026",
               items: [
                 "ASI04:2026 Agentic Supply Chain Vulnerabilities (allowlist filtering controls external data sources)",
+                "ASI02:2026 Tool Misuse and Exploitation (URL normalization prevents tool-based SSRF exploitation)",
               ],
             },
             {
@@ -6819,6 +6918,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
               framework: "OWASP Agentic AI Top 10 2026",
               items: [
                 "ASI01:2026 Agent Goal Hijack (content demotion prevents embedded malicious instructions from hijacking goals)",
+                "ASI06:2026 Memory & Context Poisoning (content demotion prevents embedded instructions from poisoning agent context)",
               ],
             },
             {
@@ -6872,6 +6972,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             "AML.T0082 RAG Credential Harvesting (RAG hygiene prevents credentials from entering the index)",
             "AML.T0099 AI Agent Tool Data Poisoning (RAG hygiene prevents poisoned data from persisting in index)",
             "AML.T0108 AI Agent (C2)",
+            "AML.T0051.001 LLM Prompt Injection: Indirect (RAG hygiene prevents poisoned index entries from serving as indirect injection vectors)",
           ],
         },
         {
@@ -6907,6 +7008,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             "NISTAML.013 Data Poisoning",
             "NISTAML.024 Targeted Poisoning",
             "NISTAML.051 Model Poisoning (Supply Chain) (compromised RAG data sources are a supply chain vector)",
+            "NISTAML.015 Indirect Prompt Injection (poisoned RAG entries are an indirect prompt injection vector)",
           ],
         },
         {
@@ -6914,6 +7016,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
           items: [
             "AITech-6.1 Training Data Poisoning (RAG index poisoning is analogous to training data poisoning)",
             "AITech-7.3 Data Source Abuse and Manipulation",
+            "AITech-7.2 Memory System Corruption (RAG index hygiene prevents corruption of retrieval memory systems)",
           ],
         },
       ],
@@ -6932,6 +7035,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
                 "AML.T0070 RAG Poisoning",
                 "AML.T0059 Erode Dataset Integrity",
                 "AML.T0071 False RAG Entry Injection (integrity verification detects injected entries)",
+                "AML.T0066 Retrieval Content Crafting (chunk-level signing detects crafted retrieval content)",
               ],
             },
             {
@@ -6961,6 +7065,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
               items: [
                 "NISTAML.013 Data Poisoning",
                 "NISTAML.024 Targeted Poisoning (detects targeted modifications to individual chunks)",
+                "NISTAML.015 Indirect Prompt Injection (chunk integrity prevents poisoned chunks from serving as indirect injection vectors)",
               ],
             },
             {
@@ -7399,6 +7504,8 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
                 "AML.T0011.001 User Execution: Malicious Package",
                 "AML.T0072 Reverse Shell",
                 "AML.T0025 Exfiltration via Cyber Means",
+                "AML.T0010 AI Supply Chain Compromise",
+                "AML.T0010.001 AI Supply Chain Compromise: AI Software",
               ],
             },
             {
@@ -7487,6 +7594,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
                 "AML.T0074 Masquerading",
                 "AML.T0060 Publish Hallucinated Entities (package vetting detects hallucination-squatted packages)",
                 "AML.T0104 Publish Poisoned AI Agent Tool",
+                "AML.T0058 Publish Poisoned Models (package vetting detects poisoned model packages)",
               ],
             },
             {
@@ -7502,7 +7610,11 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             },
             {
               framework: "OWASP ML Top 10 2023",
-              items: ["ML06:2023 AI Supply Chain Attacks"],
+              items: [
+                "ML06:2023 AI Supply Chain Attacks",
+                "ML07:2023 Transfer Learning Attack (package vetting detects compromised pre-trained model packages)",
+                "ML10:2023 Model Poisoning (package vetting detects packages with embedded model trojans)",
+              ],
             },
             {
               framework: "OWASP Agentic AI Top 10 2026",
@@ -7563,6 +7675,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             "AML.T0074 Masquerading",
             "AML.T0058 Publish Poisoned Models",
             "AML.T0104 Publish Poisoned AI Agent Tool",
+            "AML.T0055 Unsecured Credentials (OIDC tokens eliminate long-lived credentials)",
           ],
         },
         {
@@ -7636,6 +7749,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             "AML.T0060 Publish Hallucinated Entities (tool integrity verification blocks hallucination-squatted packages)",
             "AML.T0104 Publish Poisoned AI Agent Tool",
             "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
+            "AML.T0010 AI Supply Chain Compromise",
           ],
         },
         {
@@ -7707,6 +7821,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
                 "AML.T0073 Impersonation (version pinning prevents impersonation via unversioned tool references)",
                 "AML.T0104 Publish Poisoned AI Agent Tool",
                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
+                "AML.T0060 Publish Hallucinated Entities (version pinning prevents resolution of hallucination-squatted tools)",
               ],
             },
             {
@@ -7827,6 +7942,7 @@ def resolve_tool(tool_ref: str, allowlist: dict) -&gt; ToolRecord:
                 "AML.T0010 AI Supply Chain Compromise (descriptor hash detects compromised tool metadata)",
                 "AML.T0104 Publish Poisoned AI Agent Tool",
                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
+                "AML.T0074 Masquerading (hash binding detects descriptor-level masquerading)",
               ],
             },
             {
@@ -7834,6 +7950,7 @@ def resolve_tool(tool_ref: str, allowlist: dict) -&gt; ToolRecord:
               items: [
                 "Supply Chain Attacks (Cross-Layer)",
                 "Data Tampering (L2) (descriptor tampering detected by hash binding)",
+                "Compromised Agent Registry (L7) (descriptor hash binding detects registry-level descriptor tampering)",
               ],
             },
             { framework: "OWASP LLM Top 10 2025", items: ["LLM03:2025 Supply Chain"] },
@@ -7926,6 +8043,7 @@ def verify_descriptor_hash(tool_id: str, descriptor: dict, expected_hash: str) -
                 "AML.T0073 Impersonation (typosquat detection prevents impersonation via similar tool names)",
                 "AML.T0104 Publish Poisoned AI Agent Tool",
                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
+                "AML.T0060 Publish Hallucinated Entities (typosquat detection catches hallucination-squatted packages)",
               ],
             },
             {
@@ -7959,6 +8077,7 @@ def verify_descriptor_hash(tool_id: str, descriptor: dict, expected_hash: str) -
               items: [
                 "AISubtech-12.1.4 Tool Shadowing",
                 "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
+                "AISubtech-9.3.1 Malicious Package / Tool Injection (typosquat detection prevents malicious package injection via similar names)",
               ],
             },
           ],
@@ -7995,6 +8114,7 @@ def verify_descriptor_hash(tool_id: str, descriptor: dict, expected_hash: str) -
             "AML.T0102 Generate Malicious Commands (code execution prevention blocks generated malicious commands)",
             "AML.T0105 Escape to Host",
             "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
+            "AML.T0051 LLM Prompt Injection (code execution prevention blocks injection-driven code execution)",
           ],
         },
         {
@@ -8015,13 +8135,17 @@ def verify_descriptor_hash(tool_id: str, descriptor: dict, expected_hash: str) -
         },
         {
           framework: "OWASP Agentic AI Top 10 2026",
-          items: ["ASI05:2026 Unexpected Code Execution (RCE)"],
+          items: [
+            "ASI05:2026 Unexpected Code Execution (RCE)",
+            "ASI02:2026 Tool Misuse and Exploitation (code execution prevention blocks tool-driven code execution)",
+          ],
         },
         {
           framework: "NIST Adversarial Machine Learning 2025",
           items: [
             "NISTAML.039 Compromising connected resources (code execution can compromise connected systems)",
             "NISTAML.027 Misaligned Outputs (malicious code generation is a misaligned output)",
+            "NISTAML.018 Prompt Injection (code execution prevention blocks injection-driven malicious code execution)",
           ],
         },
         {
@@ -8063,6 +8187,7 @@ def verify_descriptor_hash(tool_id: str, descriptor: dict, expected_hash: str) -
                 "AML.T0072 Reverse Shell (blocks shell-related constructs)",
                 "AML.T0102 Generate Malicious Commands (dangerous construct blocking catches generated malicious commands)",
                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
+                "AML.T0105 Escape to Host (dangerous construct blocking prevents host escape via eval/exec)",
               ],
             },
             {
@@ -8082,7 +8207,10 @@ def verify_descriptor_hash(tool_id: str, descriptor: dict, expected_hash: str) -
             },
             {
               framework: "OWASP Agentic AI Top 10 2026",
-              items: ["ASI05:2026 Unexpected Code Execution (RCE)"],
+              items: [
+                "ASI05:2026 Unexpected Code Execution (RCE)",
+                "ASI02:2026 Tool Misuse and Exploitation (dangerous construct detection prevents tool-driven unsafe code patterns)",
+              ],
             },
             {
               framework: "NIST Adversarial Machine Learning 2025",
@@ -8178,7 +8306,11 @@ def scan_python(code: str):
           defendsAgainst: [
             {
               framework: "MITRE ATLAS",
-              items: ["AML.T0050 Command and Scripting Interpreter"],
+              items: [
+                "AML.T0050 Command and Scripting Interpreter",
+                "AML.T0072 Reverse Shell (restricted interpreters prevent reverse shell establishment)",
+                "AML.T0105 Escape to Host (restricted interpreters prevent filesystem/network access needed for host escape)",
+              ],
             },
             {
               framework: "MAESTRO",
@@ -8197,7 +8329,10 @@ def scan_python(code: str):
             },
             {
               framework: "OWASP Agentic AI Top 10 2026",
-              items: ["ASI05:2026 Unexpected Code Execution (RCE)"],
+              items: [
+                "ASI05:2026 Unexpected Code Execution (RCE)",
+                "ASI02:2026 Tool Misuse and Exploitation (restricted interpreters constrain what agent-generated code can do)",
+              ],
             },
             {
               framework: "NIST Adversarial Machine Learning 2025",
@@ -8260,6 +8395,7 @@ def run_restricted(code_str: str):
                 "AML.T0050 Command and Scripting Interpreter",
                 "AML.T0072 Reverse Shell (static scan detects reverse shell patterns)",
                 "AML.T0102 Generate Malicious Commands (static analysis scans generated code for malicious patterns)",
+                "AML.T0105 Escape to Host (static scan detects host escape patterns)",
               ],
             },
             {
@@ -8286,6 +8422,7 @@ def run_restricted(code_str: str):
               items: [
                 "NISTAML.027 Misaligned Outputs",
                 "NISTAML.039 Compromising connected resources",
+                "NISTAML.018 Prompt Injection (static scan detects injection-generated malicious code before execution)",
               ],
             },
             {

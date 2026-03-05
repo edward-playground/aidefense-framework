@@ -59,7 +59,9 @@ export const evictTactic = {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
                         "AITech-14.1 Unauthorized Access",
-                        "AITech-14.2 Abuse of Delegated Authority"
+                        "AITech-14.2 Abuse of Delegated Authority",
+                        "AISubtech-14.1.1 Credential Theft (credential revocation invalidates stolen credentials)",
+                        "AISubtech-14.2.1 Permission Escalation via Delegation (rotation limits delegation abuse window)"
                     ]
                 }
             ],
@@ -123,7 +125,8 @@ export const evictTactic = {
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-14.1 Unauthorized Access"
+                                "AITech-14.1 Unauthorized Access",
+                                "AISubtech-14.1.1 Credential Theft (foundational credential management addresses credential theft)"
                             ]
                         }
                     ],
@@ -206,7 +209,8 @@ export const evictTactic = {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
                                 "AITech-14.1 Unauthorized Access",
-                                "AITech-8.2 Data Exfiltration / Exposure (stopping active exfiltration)"
+                                "AITech-8.2 Data Exfiltration / Exposure (stopping active exfiltration)",
+                                "AISubtech-14.1.1 Credential Theft (automated invalidation rapidly responds to credential theft)"
                             ]
                         }
                     ],
@@ -283,7 +287,9 @@ export const evictTactic = {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
                                 "AITech-14.1 Unauthorized Access",
-                                "AITech-3.1 Masquerading / Obfuscation / Impersonation"
+                                "AITech-3.1 Masquerading / Obfuscation / Impersonation",
+                                "AISubtech-14.1.1 Credential Theft (agent identity revocation invalidates stolen agent credentials)",
+                                "AISubtech-3.1.2 Trusted Agent Spoofing (identity revocation prevents continued agent spoofing)"
                             ]
                         }
                     ],
@@ -360,14 +366,16 @@ export const evictTactic = {
                         "ASI10:2026 Rogue Agents",
                         "ASI05:2026 Unexpected Code Execution (RCE) (terminating unauthorized code execution)",
                         "ASI02:2026 Tool Misuse and Exploitation",
-                        "ASI08:2026 Cascading Failures (halting failure propagation by terminating processes)"
+                        "ASI08:2026 Cascading Failures (halting failure propagation by terminating processes)",
+                        "ASI01:2026 Agent Goal Hijack (eviction terminates hijacked agent sessions)"
                     ]
                 },
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
                         "NISTAML.018 Prompt Injection (stopping injected sessions)",
-                        "NISTAML.039 Compromising connected resources"
+                        "NISTAML.039 Compromising connected resources",
+                        "NISTAML.015 Indirect Prompt Injection (session eviction terminates indirect injection chains)"
                     ]
                 },
                 {
@@ -375,7 +383,9 @@ export const evictTactic = {
                     "items": [
                         "AITech-12.1 Tool Exploitation",
                         "AITech-13.2 Cost Harvesting / Repurposing",
-                        "AITech-1.3 Goal Manipulation"
+                        "AITech-1.3 Goal Manipulation",
+                        "AISubtech-13.2.1 Service Misuse for Cost Inflation (eviction terminates resource-abusing sessions)",
+                        "AISubtech-9.1.1 Code Execution (eviction terminates unauthorized code execution)"
                     ]
                 }
             ],
@@ -417,7 +427,8 @@ export const evictTactic = {
                         "AML.T0059 Erode Dataset Integrity",
                         "AML.T0070 RAG Poisoning",
                         "AML.T0071 False RAG Entry Injection",
-                        "AML.T0104 Publish Poisoned AI Agent Tool"
+                        "AML.T0104 Publish Poisoned AI Agent Tool",
+                        "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (removal targets inserted backdoor triggers)"
                     ]
                 },
                 {
@@ -459,7 +470,9 @@ export const evictTactic = {
                     "items": [
                         "NISTAML.023 Backdoor Poisoning",
                         "NISTAML.013 Data Poisoning",
-                        "NISTAML.051 Model Poisoning (Supply Chain)"
+                        "NISTAML.051 Model Poisoning (Supply Chain)",
+                        "NISTAML.021 Clean-label Backdoor (removal targets clean-label backdoors)",
+                        "NISTAML.026 Model Poisoning (Integrity) (removal restores model integrity)"
                     ]
                 },
                 {
@@ -467,7 +480,9 @@ export const evictTactic = {
                     "items": [
                         "AITech-6.1 Training Data Poisoning",
                         "AITech-9.1 Model or Agentic System Manipulation",
-                        "AITech-9.3 Dependency / Plugin Compromise"
+                        "AITech-9.3 Dependency / Plugin Compromise",
+                        "AISubtech-9.2.2 Backdoors and Trojans (direct removal of backdoors and trojans)",
+                        "AISubtech-9.1.1 Code Execution (removal of malicious code artifacts)"
                     ]
                 }
             ],
@@ -539,14 +554,16 @@ export const evictTactic = {
                             "items": [
                                 "NISTAML.023 Backdoor Poisoning",
                                 "NISTAML.021 Clean-label Backdoor",
-                                "NISTAML.051 Model Poisoning (Supply Chain)"
+                                "NISTAML.051 Model Poisoning (Supply Chain)",
+                                "NISTAML.026 Model Poisoning (Integrity) (backdoor removal restores model integrity)"
                             ]
                         },
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
                                 "AITech-9.1 Model or Agentic System Manipulation",
-                                "AITech-6.1 Training Data Poisoning"
+                                "AITech-6.1 Training Data Poisoning",
+                                "AISubtech-9.2.2 Backdoors and Trojans (neural network backdoor detection and removal)"
                             ]
                         }
                     ],
@@ -648,14 +665,16 @@ export const evictTactic = {
                             "items": [
                                 "NISTAML.013 Data Poisoning",
                                 "NISTAML.024 Targeted Poisoning",
-                                "NISTAML.023 Backdoor Poisoning"
+                                "NISTAML.023 Backdoor Poisoning",
+                                "NISTAML.012 Clean-label Poisoning (cleansing removes clean-label poisoned samples)"
                             ]
                         },
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
                                 "AITech-6.1 Training Data Poisoning",
-                                "AITech-7.3 Data Source Abuse and Manipulation"
+                                "AITech-7.3 Data Source Abuse and Manipulation",
+                                "AISubtech-6.1.1 Knowledge Base Poisoning (cleansing removes poisoned knowledge base entries)"
                             ]
                         }
                     ],
@@ -720,7 +739,8 @@ export const evictTactic = {
                                 "AML.T0011.001 User Execution: Malicious Package",
                                 "AML.T0018 Manipulate AI Model",
                                 "AML.T0018.002 Manipulate AI Model: Embed Malware",
-                                "AML.T0072 Reverse Shell"
+                                "AML.T0072 Reverse Shell",
+                                "AML.T0104 Publish Poisoned AI Agent Tool (cleanup removes poisoned agent tools)"
                             ]
                         },
                         {
@@ -759,7 +779,8 @@ export const evictTactic = {
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
-                                "NISTAML.051 Model Poisoning (Supply Chain)"
+                                "NISTAML.051 Model Poisoning (Supply Chain)",
+                                "NISTAML.023 Backdoor Poisoning (cleanup removes backdoor configurations)"
                             ]
                         },
                         {
@@ -767,7 +788,9 @@ export const evictTactic = {
                             "items": [
                                 "AITech-9.3 Dependency / Plugin Compromise",
                                 "AITech-5.2 Configuration Persistence",
-                                "AITech-9.1 Model or Agentic System Manipulation"
+                                "AITech-9.1 Model or Agentic System Manipulation",
+                                "AISubtech-9.1.1 Code Execution (cleanup removes malicious code)",
+                                "AISubtech-9.3.1 Malicious Package / Tool Injection (cleanup removes injected malicious packages)"
                             ]
                         }
                     ],
@@ -871,13 +894,15 @@ export const evictTactic = {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
                                 "NISTAML.013 Data Poisoning",
-                                "NISTAML.023 Backdoor Poisoning"
+                                "NISTAML.023 Backdoor Poisoning",
+                                "NISTAML.024 Targeted Poisoning (eviction removes targeted poisoning nodes)"
                             ]
                         },
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-6.1 Training Data Poisoning"
+                                "AITech-6.1 Training Data Poisoning",
+                                "AITech-9.1 Model or Agentic System Manipulation (node eviction removes manipulation artifacts)"
                             ]
                         }
                     ]
@@ -910,7 +935,8 @@ export const evictTactic = {
                         "AML.T0031 Erode AI Model Integrity (patching vulnerabilities enabling integrity erosion)",
                         "AML.T0105 Escape to Host",
                         "AML.T0106 Exploitation for Credential Access",
-                        "AML.T0107 Exploitation for Defense Evasion"
+                        "AML.T0107 Exploitation for Defense Evasion",
+                        "AML.T0010.004 AI Supply Chain Compromise: Container Registry (patching secures compromised container registries)"
                     ]
                 },
                 {
@@ -940,20 +966,24 @@ export const evictTactic = {
                     "framework": "OWASP Agentic AI Top 10 2026",
                     "items": [
                         "ASI04:2026 Agentic Supply Chain Vulnerabilities (patching compromised dependencies)",
-                        "ASI05:2026 Unexpected Code Execution (RCE) (patching code execution vulnerabilities)"
+                        "ASI05:2026 Unexpected Code Execution (RCE) (patching code execution vulnerabilities)",
+                        "ASI02:2026 Tool Misuse and Exploitation (patching hardens against tool exploitation)"
                     ]
                 },
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
-                        "NISTAML.051 Model Poisoning (Supply Chain)"
+                        "NISTAML.051 Model Poisoning (Supply Chain)",
+                        "NISTAML.039 Compromising connected resources (patching secures connected resources post-eviction)"
                     ]
                 },
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
                         "AITech-9.3 Dependency / Plugin Compromise",
-                        "AITech-5.2 Configuration Persistence (hardening configurations post-eviction)"
+                        "AITech-5.2 Configuration Persistence (hardening configurations post-eviction)",
+                        "AISubtech-9.1.1 Code Execution (patching removes exploitable code execution vectors)",
+                        "AISubtech-9.3.1 Malicious Package / Tool Injection (patching removes injected malicious packages)"
                     ]
                 }
             ],
@@ -1011,7 +1041,9 @@ export const evictTactic = {
                         "AML.T0080.001 AI Agent Context Poisoning: Thread (purging poisoned conversation threads)",
                         "AML.T0091 Use Alternate Authentication Material (terminating sessions using stolen auth material)",
                         "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
-                        "AML.T0108 AI Agent (C2)"
+                        "AML.T0108 AI Agent (C2)",
+                        "AML.T0098 AI Agent Tool Credential Harvesting (session purge invalidates harvested credentials)",
+                        "AML.T0072 Reverse Shell (session termination closes reverse shell connections)"
                     ]
                 },
                 {
@@ -1043,14 +1075,17 @@ export const evictTactic = {
                         "ASI03:2026 Identity and Privilege Abuse (terminating sessions with abused privileges)",
                         "ASI06:2026 Memory & Context Poisoning (purging poisoned memory and context)",
                         "ASI10:2026 Rogue Agents (terminating rogue agent sessions)",
-                        "ASI08:2026 Cascading Failures (stopping cascading session compromise)"
+                        "ASI08:2026 Cascading Failures (stopping cascading session compromise)",
+                        "ASI01:2026 Agent Goal Hijack (session termination stops hijacked agent actions)",
+                        "ASI02:2026 Tool Misuse and Exploitation (state purging stops tool exploitation in progress)"
                     ]
                 },
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
                         "NISTAML.018 Prompt Injection (purging injected session state)",
-                        "NISTAML.039 Compromising connected resources"
+                        "NISTAML.039 Compromising connected resources",
+                        "NISTAML.015 Indirect Prompt Injection (session termination stops indirect injection chains)"
                     ]
                 },
                 {
@@ -1058,7 +1093,9 @@ export const evictTactic = {
                     "items": [
                         "AITech-5.1 Memory System Persistence (purging persistent malicious memory)",
                         "AITech-14.1 Unauthorized Access",
-                        "AITech-4.2 Context Boundary Attacks (terminating cross-context attacks)"
+                        "AITech-4.2 Context Boundary Attacks (terminating cross-context attacks)",
+                        "AISubtech-14.1.1 Credential Theft (state purging invalidates stolen in-session credentials)",
+                        "AITech-7.2 Memory System Corruption (state purging clears corrupted memory)"
                     ]
                 }
             ],
@@ -1186,7 +1223,8 @@ export const evictTactic = {
                             "items": [
                                 "NISTAML.031 Model Extraction",
                                 "NISTAML.033 Membership Inference",
-                                "NISTAML.032 Reconstruction"
+                                "NISTAML.032 Reconstruction",
+                                "NISTAML.038 Data Extraction (cryptographic erasure prevents data extraction from decommissioned media)"
                             ]
                         },
                         {

@@ -451,7 +451,8 @@ export const modelTactic = {
                         {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
-                                "ML06:2023 AI Supply Chain Attacks"
+                                "ML06:2023 AI Supply Chain Attacks",
+                                "ML10:2023 Model Poisoning"
                             ]
                         },
                         {
@@ -603,7 +604,10 @@ export const modelTactic = {
                                 "AML.T0059 Erode Dataset Integrity",
                                 "AML.T0080 AI Agent Context Poisoning",
                                 "AML.T0080.000 AI Agent Context Poisoning: Memory",
-                                "AML.T0010.002 AI Supply Chain Compromise: Data"
+                                "AML.T0010.002 AI Supply Chain Compromise: Data",
+                                "AML.T0066 Retrieval Content Crafting (write-gate prevents crafted retrieval content from entering trusted KB namespace)",
+                                "AML.T0061 LLM Prompt Self-Replication (write-gate prevents self-replicating prompts from persisting into KB/memory)",
+                                "AML.T0092 Manipulate User LLM Chat History (write-gate controls writes to agent memory that includes chat history)"
                             ]
                         },
                         {
@@ -656,7 +660,8 @@ export const modelTactic = {
                                 "AISubtech-7.2.2 Memory Index Manipulation",
                                 "AITech-1.2 Indirect Prompt Injection (when malicious instructions are persisted into memory/KB)",
                                 "AISubtech-1.2.1 Instruction Manipulation (Indirect Prompt Injection) (same as above)",
-                                "AISubtech-6.1.1 Knowledge Base Poisoning (KB/vector store poisoning)"
+                                "AISubtech-6.1.1 Knowledge Base Poisoning (KB/vector store poisoning)",
+                                "AITech-7.3 Data Source Abuse and Manipulation (write-gate filters corrupted third-party data before KB ingestion)"
                             ]
                         }
                     ],
@@ -2287,7 +2292,8 @@ export const modelTactic = {
                     "items": [
                         "LLM01:2025 Prompt Injection",
                         "LLM02:2025 Sensitive Information Disclosure",
-                        "LLM06:2025 Excessive Agency"
+                        "LLM06:2025 Excessive Agency",
+                        "LLM07:2025 System Prompt Leakage (benchmarks test prompt leakage resistance)"
                     ]
                 },
                 {
@@ -2402,7 +2408,8 @@ export const modelTactic = {
                         "ASI02:2026 Tool Misuse and Exploitation (by enforcing per-tier tool restrictions that limit the tool misuse attack surface)",
                         "ASI01:2026 Agent Goal Hijack (autonomy level governance constrains scope of goal hijack impact)",
                         "ASI03:2026 Identity and Privilege Abuse (by defining explicit privilege boundaries per autonomy level, blocking scope escalation at admission)",
-                        "ASI08:2026 Cascading Failures (by requiring mandatory HITL for lower tiers, breaking autonomous fault propagation chains)"
+                        "ASI08:2026 Cascading Failures (by requiring mandatory HITL for lower tiers, breaking autonomous fault propagation chains)",
+                        "ASI10:2026 Rogue Agents (autonomy governance constrains rogue agent impact)"
                     ]
                 },
                 {
