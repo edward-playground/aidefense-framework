@@ -391,6 +391,7 @@ body.modal-open {
 .modal-content .fw-subgroup:first-child .fw-subgroup-header { padding-top: 0; }
 .modal-content .fw-subgroup:last-child { padding-bottom: 0; }
 .atlas-defense-empty { text-align: center; padding: 1.5rem; color: var(--text-secondary-color); font-size: 0.85rem; }
+.atlas-no-defense-note { text-align: center; padding: 0 1.5rem 1rem; color: var(--text-secondary-color); font-size: 0.8rem; font-style: italic; opacity: 0.75; line-height: 1.5; }
 
 .technique-id {
     font-weight: 500;

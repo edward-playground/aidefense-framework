@@ -486,8 +486,8 @@
                     url: 'https://atlas.mitre.org/',
                     layout: 'accordion',
                     groups: [
-                        { key: 'Reconnaissance', name: 'AML.TA0002 – Reconnaissance', description: 'The adversary is trying to gather information about the AI system they can use to plan future operations. This includes actively or passively gathering information about the victim organization\u2019s AI capabilities and research efforts, which can be leveraged to obtain relevant AI artifacts or tailor attacks.' },
-                        { key: 'Resource Development', name: 'AML.TA0003 – Resource Development', description: 'The adversary is trying to establish resources they can use to support operations, including creating, purchasing, or compromising resources such as AI artifacts, infrastructure, accounts, or capabilities that can be leveraged in other phases like AI Attack Staging.' },
+                        { key: 'Reconnaissance', name: 'AML.TA0002 – Reconnaissance', description: 'The adversary is trying to gather information about the AI system they can use to plan future operations. This includes actively or passively gathering information about the victim organization\u2019s AI capabilities and research efforts, which can be leveraged to obtain relevant AI artifacts or tailor attacks.', noDefenseNote: 'Reconnaissance involves passive information gathering that is difficult to prevent with AI-specific countermeasures. Traditional OPSEC and information security practices are the primary defense.' },
+                        { key: 'Resource Development', name: 'AML.TA0003 – Resource Development', description: 'The adversary is trying to establish resources they can use to support operations, including creating, purchasing, or compromising resources such as AI artifacts, infrastructure, accounts, or capabilities that can be leveraged in other phases like AI Attack Staging.', noDefenseNote: 'Resource development occurs outside the defender\'s visibility. Defenses focus on detecting the use of these resources rather than preventing their acquisition.' },
                         { key: 'Initial Access', name: 'AML.TA0004 – Initial Access', description: 'The adversary is trying to gain access to the AI system. The target could be a network, mobile device, or edge device such as a sensor platform, with local onboard or cloud-enabled AI capabilities.' },
                         { key: 'AI Model Access', name: 'AML.TA0000 – AI Model Access', description: 'The adversary is attempting to gain some level of access to an AI model, ranging from full knowledge of internals to access to the physical environment where data is collected. Access may require system access, be publicly available via API, or be indirect through product interaction.' },
                         { key: 'Execution', name: 'AML.TA0005 – Execution', description: 'The adversary is trying to run malicious code embedded in AI artifacts or software. Techniques that run malicious code are often paired with techniques from all other tactics to achieve broader goals, like exploring a network or stealing data.' },
@@ -1439,13 +1439,19 @@
             function showAtlasDefenseModal(atlasId) {
                 clearElement(elements.modalBody);
                 clearElement(elements.modalActions);
-                const techName = atlasTechNames[atlasId] || atlasId;
+                const rawName = atlasTechNames[atlasId] || atlasId;
                 const defenses = atlasDefenseMap[atlasId] || [];
 
-                // Subtitle: framework context + tactic(s) inline
+                // For subtechniques, prepend parent name: "AI Supply Chain Compromise: Hardware"
                 const parentId = atlasId.match(/^(AML\.T\d{4})/)?.[1] || atlasId;
+                const isSubTechnique = parentId !== atlasId;
+                const techName = isSubTechnique && atlasTechNames[parentId]
+                    ? atlasTechNames[parentId] + ': ' + rawName
+                    : rawName;
+
+                // Subtitle: framework context + tactic(s) inline
                 const tactics = atlasTechToTactics[parentId] || [];
-                const subtitleText = 'MITRE ATLAS\u2122 Technique' + (tactics.length > 0 ? ' \u00B7 ' + tactics.join(', ') : '');
+                const subtitleText = 'MITRE ATLAS\u2122 ' + (isSubTechnique ? 'Subtechnique' : 'Technique') + (tactics.length > 0 ? ' \u00B7 ' + tactics.join(', ') : '');
                 elements.modalBody.appendChild(createElement('p', { className: 'text-sm opacity-80 mb-1 modal-subtitle', textContent: subtitleText }));
 
                 // Title with external link icon
@@ -1555,6 +1561,11 @@
 
                 if (defenses.length === 0) {
                     defSection.appendChild(createElement('div', { className: 'atlas-defense-empty', textContent: 'No AIDEFEND defenses currently mapped to this technique.' }));
+                    // Tactic-level note (auto-hides when defenses are later added)
+                    const tacticNote = frameworkViewConfig.atlas.groups.find(g => (atlasTechToTactics[parentId] || []).includes(g.key))?.noDefenseNote;
+                    if (tacticNote) {
+                        defSection.appendChild(createElement('p', { className: 'atlas-no-defense-note', textContent: tacticNote }));
+                    }
                 } else {
                     // Toggle bar
                     const toggleBar = createElement('div', { className: 'fw-group-toggle' });
@@ -1594,6 +1605,10 @@
                         subDiv.appendChild(createElement('p', { className: 'text-sm font-semibold mb-1 opacity-80', textContent: subId + ' ' + (atlasTechNames[subId] || subId) + ' (' + subDefs.length + ')' }));
                         if (subDefs.length === 0) {
                             subDiv.appendChild(createElement('div', { className: 'atlas-defense-empty', textContent: 'No defenses mapped.' }));
+                            const subTacticNote = frameworkViewConfig.atlas.groups.find(g => (atlasTechToTactics[parentId] || []).includes(g.key))?.noDefenseNote;
+                            if (subTacticNote) {
+                                subDiv.appendChild(createElement('p', { className: 'atlas-no-defense-note', textContent: subTacticNote }));
+                            }
                         } else {
                             // Sub-technique also gets its own toggle
                             const subToggle = createElement('div', { className: 'fw-group-toggle' });
