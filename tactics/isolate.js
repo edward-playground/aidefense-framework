@@ -11,7 +11,6 @@ export const isolateTactic = {
                     "framework": "MITRE ATLAS",
                     "items": [
                         "AML.T0053 AI Agent Tool Invocation",
-                        "AML.T0020 Poison Training Data",
                         "AML.T0072 Reverse Shell",
                         "AML.T0050 Command and Scripting Interpreter",
                         "AML.T0029 Denial of AI Service",
@@ -66,7 +65,8 @@ export const isolateTactic = {
                     "items": [
                         "NISTAML.039 Compromising connected resources",
                         "NISTAML.051 Model Poisoning (Supply Chain) (contains compromised component impact)",
-                        "NISTAML.018 Prompt Injection (limits post-injection agent capabilities)"
+                        "NISTAML.018 Prompt Injection (limits post-injection agent capabilities)",
+                        "NISTAML.015 Indirect Prompt Injection"
                     ]
                 },
                 {
@@ -149,7 +149,8 @@ export const isolateTactic = {
                             "items": [
                                 "ASI02:2026 Tool Misuse and Exploitation",
                                 "ASI05:2026 Unexpected Code Execution (RCE)",
-                                "ASI04:2026 Agentic Supply Chain Vulnerabilities (compromised container images)"
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities (compromised container images)",
+                                "ASI10:2026 Rogue Agents"
                             ]
                         },
                         {
@@ -266,7 +267,8 @@ export const isolateTactic = {
                             "items": [
                                 "ASI05:2026 Unexpected Code Execution (RCE)",
                                 "ASI02:2026 Tool Misuse and Exploitation",
-                                "ASI04:2026 Agentic Supply Chain Vulnerabilities (stronger isolation for compromised components)"
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities (stronger isolation for compromised components)",
+                                "ASI10:2026 Rogue Agents"
                             ]
                         },
                         {
@@ -316,7 +318,7 @@ export const isolateTactic = {
                         { "framework": "MAESTRO", "items": ["Orchestration Attacks (L4)", "Lateral Movement (Cross-Layer)", "Agent Tool Misuse (L7)", "Resource Hijacking (L4) (ephemeral teardown prevents sustained hijacking)"] },
                         { "framework": "OWASP LLM Top 10 2025", "items": ["LLM06:2025 Excessive Agency"] },
                         { "framework": "OWASP ML Top 10 2023", "items": ["ML06:2023 AI Supply Chain Attacks"] },
-                        { "framework": "OWASP Agentic AI Top 10 2026", "items": ["ASI02:2026 Tool Misuse and Exploitation", "ASI05:2026 Unexpected Code Execution (RCE)"] },
+                        { "framework": "OWASP Agentic AI Top 10 2026", "items": ["ASI02:2026 Tool Misuse and Exploitation", "ASI05:2026 Unexpected Code Execution (RCE)", "ASI10:2026 Rogue Agents"] },
                         { "framework": "NIST Adversarial Machine Learning 2025", "items": ["NISTAML.039 Compromising connected resources", "NISTAML.018 Prompt Injection (ephemeral teardown destroys injected persistence)"] },
                         { "framework": "Cisco Integrated AI Security and Safety Framework", "items": ["AISubtech-9.1.1 Code Execution", "AITech-12.1 Tool Exploitation", "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access"] }
                     ],
@@ -977,7 +979,8 @@ export const isolateTactic = {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
                                 "NISTAML.018 Prompt Injection",
-                                "NISTAML.015 Indirect Prompt Injection"
+                                "NISTAML.015 Indirect Prompt Injection",
+                                "NISTAML.036 Leaking information from user interactions"
                             ]
                         },
                         {

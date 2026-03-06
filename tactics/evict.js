@@ -88,14 +88,16 @@ export const evictTactic = {
                                 "AML.T0012 Valid Accounts",
                                 "AML.T0055 Unsecured Credentials",
                                 "AML.T0091 Use Alternate Authentication Material",
-                                "AML.T0091.000 Use Alternate Authentication Material: Application Access Token"
+                                "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
+                                "AML.T0090 OS Credential Dumping"
                             ]
                         },
                         {
                             "framework": "MAESTRO",
                             "items": [
                                 "Lateral Movement (Cross-Layer)",
-                                "Resource Hijacking (L4)"
+                                "Resource Hijacking (L4)",
+                                "Privilege Escalation (Cross-Layer)"
                             ]
                         },
                         {
@@ -247,7 +249,8 @@ export const evictTactic = {
                                 "AML.T0073 Impersonation",
                                 "AML.T0012 Valid Accounts",
                                 "AML.T0091 Use Alternate Authentication Material (revoking stolen workload identity credentials)",
-                                "AML.T0091.000 Use Alternate Authentication Material: Application Access Token"
+                                "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
+                                "AML.T0098 AI Agent Tool Credential Harvesting"
                             ]
                         },
                         {
@@ -335,7 +338,9 @@ export const evictTactic = {
                         "AML.T0080 AI Agent Context Poisoning (terminating poisoned agent sessions)",
                         "AML.T0091 Use Alternate Authentication Material (terminating sessions using stolen tokens)",
                         "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
-                        "AML.T0108 AI Agent (C2)"
+                        "AML.T0108 AI Agent (C2)",
+                        "AML.T0029 Denial of AI Service",
+                        "AML.T0034 Cost Harvesting"
                     ]
                 },
                 {
@@ -522,9 +527,7 @@ export const evictTactic = {
                             "items": [
                                 "Backdoor Attacks (L1)",
                                 "Data Poisoning (Training Phase) (L1)",
-                                "Data Poisoning (L2)",
-                                "Compromised Container Images (L4)",
-                                "Evasion of Security AI Agents (L6)"
+                                "Data Poisoning (L2)"
                             ]
                         },
                         {
@@ -555,7 +558,8 @@ export const evictTactic = {
                                 "NISTAML.023 Backdoor Poisoning",
                                 "NISTAML.021 Clean-label Backdoor",
                                 "NISTAML.051 Model Poisoning (Supply Chain)",
-                                "NISTAML.026 Model Poisoning (Integrity) (backdoor removal restores model integrity)"
+                                "NISTAML.026 Model Poisoning (Integrity) (backdoor removal restores model integrity)",
+                                "NISTAML.024 Targeted Poisoning"
                             ]
                         },
                         {
@@ -740,7 +744,8 @@ export const evictTactic = {
                                 "AML.T0018 Manipulate AI Model",
                                 "AML.T0018.002 Manipulate AI Model: Embed Malware",
                                 "AML.T0072 Reverse Shell",
-                                "AML.T0104 Publish Poisoned AI Agent Tool (cleanup removes poisoned agent tools)"
+                                "AML.T0104 Publish Poisoned AI Agent Tool (cleanup removes poisoned agent tools)",
+                                "AML.T0081 Modify AI Agent Configuration"
                             ]
                         },
                         {
@@ -758,8 +763,7 @@ export const evictTactic = {
                         {
                             "framework": "OWASP LLM Top 10 2025",
                             "items": [
-                                "LLM03:2025 Supply Chain",
-                                "LLM08:2025 Vector and Embedding Weaknesses"
+                                "LLM03:2025 Supply Chain"
                             ]
                         },
                         {
@@ -1085,7 +1089,8 @@ export const evictTactic = {
                     "items": [
                         "NISTAML.018 Prompt Injection (purging injected session state)",
                         "NISTAML.039 Compromising connected resources",
-                        "NISTAML.015 Indirect Prompt Injection (session termination stops indirect injection chains)"
+                        "NISTAML.015 Indirect Prompt Injection (session termination stops indirect injection chains)",
+                        "NISTAML.036 Leaking information from user interactions"
                     ]
                 },
                 {

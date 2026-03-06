@@ -778,6 +778,13 @@
                         showTechniqueModal(found.technique, found.groupName);
                     }
                 }
+                const atlasId = params.get('atlas');
+                if (atlasId) {
+                    currentView = 'framework';
+                    currentFramework = 'atlas-matrix';
+                    renderMainGrid();
+                    showAtlasDefenseModal(decodeURIComponent(atlasId));
+                }
             }
 
             // --- Copy / Share icon SVGs ---
@@ -882,6 +889,8 @@
             }
             function getFilteredTechniqueIds(searchTerm) {
                 if (!searchTerm) return new Set(eligibleTechniques.map(t => t.id));
+                searchTerm = searchTerm.replace(/^(AID)?-?(DV|[MHDIER])-?(\d{1,3}(?:\.\d{1,3})?)$/i,
+                    (m, aid, code, num) => (aid ? aid + '-' : '') + code.toUpperCase() + '-' + num);
                 const escaped = searchTerm.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
                 const re = new RegExp('\\b' + escaped, 'i');
                 const matches = new Set();
@@ -1479,6 +1488,37 @@
                     elements.modalBody.appendChild(descEl);
                 }
 
+                // Copy buttons (reuse existing clipboard helpers)
+                const copyLines = [atlasId + ' ' + techName];
+                if (desc) copyLines.push('', desc);
+                if (defenses.length > 0) {
+                    copyLines.push('', 'AIDEFEND Defenses (' + defenses.length + '):');
+                    defenses.forEach(d => copyLines.push('- ' + d.id + ' ' + d.name));
+                }
+                const atlasCopyBtn = document.createElement('button');
+                atlasCopyBtn.className = 'copy-btn';
+                atlasCopyBtn.title = 'Copy to clipboard';
+                atlasCopyBtn.innerHTML = COPY_SVG;
+                atlasCopyBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    copyToClipboard(copyLines.join('\n'), atlasCopyBtn, 'ATLAS Technique Copied!', COPY_SVG);
+                });
+                elements.modalActions.appendChild(atlasCopyBtn);
+                const atlasLinkBtn = document.createElement('button');
+                atlasLinkBtn.className = 'link-btn';
+                atlasLinkBtn.title = 'Copy direct link';
+                atlasLinkBtn.innerHTML = LINK_SVG;
+                atlasLinkBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    copyToClipboard(window.location.origin + window.location.pathname + '#atlas=' + encodeURIComponent(atlasId),
+                        atlasLinkBtn, 'URL Copied!', LINK_SVG);
+                });
+                elements.modalActions.appendChild(atlasLinkBtn);
+
+                // Deep link: update URL hash and page title
+                history.replaceState(null, '', '#atlas=' + encodeURIComponent(atlasId));
+                document.title = atlasId + ' ' + techName + ' | AIDEFEND Framework';
+
                 // Helper: render a single defense card (technique-item style)
                 function buildDefenseCard(tech) {
                     const li = createElement('li', { className: 'technique-container' });
@@ -1851,7 +1891,10 @@
 
 
                 if (isParentMatch) {
-                    itemDiv.classList.add('highlight');
+                    const isExact = searchTerm && (
+                        tech.name.toLowerCase() === searchTerm.toLowerCase() ||
+                        tech.id.toLowerCase() === searchTerm.toLowerCase());
+                    itemDiv.classList.add(isExact ? 'highlight-exact' : 'highlight');
                 }
 
                 if (hasSub) {
@@ -1882,7 +1925,7 @@
                         itemDiv.classList.add('expanded');
                         subList.classList.add('expanded');
                         if (iconWrapper) {
-                            iconWrapper.style.transform = 'rotate(90deg)';
+                            iconWrapper.style.transform = 'translateY(-50%) rotate(90deg)';
                         }
                         setTimeout(() => subList.style.maxHeight = subList.scrollHeight + "px", 0);
                     }
@@ -1908,7 +1951,7 @@
                 const isExpanded = content.classList.toggle('expanded');
                 header.classList.toggle('expanded', isExpanded);
                 header.setAttribute('aria-expanded', String(isExpanded));
-                iconWrapper.style.transform = isExpanded ? 'rotate(90deg)' : 'rotate(0deg)';
+                iconWrapper.style.transform = isExpanded ? 'translateY(-50%) rotate(90deg)' : 'translateY(-50%)';
                 content.style.maxHeight = isExpanded ? content.scrollHeight + 'px' : null;
             }
             function renderSubTechniqueItem(subTech, groupName, filteredIds, searchTerm) {
@@ -1920,7 +1963,9 @@
                 subDiv.appendChild(createElement('span', { className: 'technique-id', textContent: subTech.id }));
                 subDiv.appendChild(createElement('span', { className: 'technique-name', textContent: subTech.name }));
                 if (searchTerm && filteredIds.has(subTech.id)) {
-                    subDiv.classList.add('highlight');
+                    const isExact = subTech.name.toLowerCase() === searchTerm.toLowerCase() ||
+                        subTech.id.toLowerCase() === searchTerm.toLowerCase();
+                    subDiv.classList.add(isExact ? 'highlight-exact' : 'highlight');
                 }
                 subLi.appendChild(subDiv);
                 return subLi;
@@ -2223,6 +2268,17 @@
                                 showTechniqueModal(found.technique, found.groupName);
                                 return;
                             }
+                        }
+                    }
+                    if (hash && hash.includes('atlas=')) {
+                        const params = new URLSearchParams(hash.substring(1));
+                        const atlasId = params.get('atlas');
+                        if (atlasId) {
+                            currentView = 'framework';
+                            currentFramework = 'atlas-matrix';
+                            renderMainGrid();
+                            showAtlasDefenseModal(decodeURIComponent(atlasId));
+                            return;
                         }
                     }
                     // No valid hash — close modal if open

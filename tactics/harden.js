@@ -1841,9 +1841,7 @@ export const hardenTactic = {
         },
         {
           framework: "OWASP Agentic AI Top 10 2026",
-          items: [
-            "ASI05:2026 Unexpected Code Execution (RCE) (privacy-preserving computation prevents exposure of sensitive data during execution)",
-          ],
+          items: ["N/A"],
         },
         {
           framework: "NIST Adversarial Machine Learning 2025",
@@ -2259,6 +2257,9 @@ export const hardenTactic = {
                 "AITech-10.2 Model Inversion (dedup hardens against inversion by reducing memorization)",
                 "AISubtech-10.2.1 Model Inversion",
                 "AISubtech-10.1.3 Sensitive Data Reconstruction",
+                "AITech-8.1 Membership Inference",
+                "AISubtech-8.1.1 Presence Detection",
+                "AISubtech-8.2.2 LLM Data Leakage",
               ],
             },
           ],
@@ -3157,6 +3158,7 @@ with mlflow.start_run() as run:
             "NISTAML.024 Targeted Poisoning",
             "NISTAML.026 Model Poisoning (Integrity)",
             "NISTAML.033 Membership Inference (secure aggregation protects FL participant privacy)",
+            "NISTAML.011 Model Poisoning (Availability)",
           ],
         },
         {
@@ -3330,6 +3332,8 @@ with mlflow.start_run() as run:
                 "NISTAML.013 Data Poisoning",
                 "NISTAML.024 Targeted Poisoning",
                 "NISTAML.026 Model Poisoning (Integrity)",
+                "NISTAML.011 Model Poisoning (Availability)",
+                "NISTAML.012 Clean-label Poisoning",
               ],
             },
             {
@@ -4545,6 +4549,7 @@ class GraphRobustnessVerifier:
             "AISubtech-6.1.2 Reinforcement Biasing",
             "AISubtech-6.1.3 Reinforcement Signal Corruption",
             "AITech-7.1 Reasoning Corruption (reward hacking corrupts agent reasoning)",
+            "AITech-1.3 Goal Manipulation",
           ],
         },
       ],
@@ -4763,6 +4768,7 @@ class GraphRobustnessVerifier:
               framework: "NIST Adversarial Machine Learning 2025",
               items: [
                 "NISTAML.027 Misaligned Outputs",
+                "NISTAML.026 Model Poisoning (Integrity)",
               ],
             },
             {
@@ -4839,6 +4845,7 @@ class GraphRobustnessVerifier:
               framework: "Cisco Integrated AI Security and Safety Framework",
               items: [
                 "AISubtech-6.1.2 Reinforcement Biasing",
+                "AITech-7.1 Reasoning Corruption",
               ],
             },
           ],
@@ -4921,6 +4928,7 @@ class GraphRobustnessVerifier:
               framework: "Cisco Integrated AI Security and Safety Framework",
               items: [
                 "AISubtech-6.1.3 Reinforcement Signal Corruption",
+                "AITech-7.1 Reasoning Corruption",
               ],
             },
           ],
@@ -5420,6 +5428,8 @@ class GraphRobustnessVerifier:
             "AISubtech-2.1.3 Semantic Manipulation (Jailbreak)",
             "AISubtech-1.1.1 Instruction Manipulation (Direct Prompt Injection)",
             "AISubtech-1.2.1 Instruction Manipulation (Indirect Prompt Injection)",
+            "AITech-8.4 Prompt/Meta Extraction",
+            "AISubtech-8.4.1 System LLM Prompt Leakage",
           ],
         },
       ],
@@ -5989,7 +5999,7 @@ class GraphRobustnessVerifier:
             },
             {
               framework: "OWASP ML Top 10 2023",
-              items: ["ML09:2023 Output Integrity Attack"],
+              items: ["N/A"],
             },
             {
               framework: "OWASP Agentic AI Top 10 2026",
@@ -6167,7 +6177,7 @@ class GraphRobustnessVerifier:
         },
         {
           framework: "OWASP ML Top 10 2023",
-          items: ["ML09:2023 Output Integrity Attack"],
+          items: ["N/A"],
         },
         {
           framework: "OWASP Agentic AI Top 10 2026",
@@ -6229,7 +6239,7 @@ class GraphRobustnessVerifier:
             },
             {
               framework: "OWASP ML Top 10 2023",
-              items: ["ML09:2023 Output Integrity Attack"],
+              items: ["N/A"],
             },
             {
               framework: "OWASP Agentic AI Top 10 2026",
@@ -6308,7 +6318,7 @@ class GraphRobustnessVerifier:
             },
             {
               framework: "OWASP ML Top 10 2023",
-              items: ["ML09:2023 Output Integrity Attack"],
+              items: ["N/A"],
             },
             {
               framework: "OWASP Agentic AI Top 10 2026",
@@ -6392,7 +6402,7 @@ class GraphRobustnessVerifier:
             },
             {
               framework: "OWASP ML Top 10 2023",
-              items: ["ML09:2023 Output Integrity Attack"],
+              items: ["N/A"],
             },
             {
               framework: "OWASP Agentic AI Top 10 2026",
@@ -6809,6 +6819,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
           items: [
             "AITech-1.2 Indirect Prompt Injection (safe fetch sanitizes fetched content before LLM consumption)",
             "AITech-12.1 Tool Exploitation (safe fetch wrapper prevents tool-based SSRF)",
+            "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
           ],
         },
       ],
@@ -6859,6 +6870,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
               framework: "Cisco Integrated AI Security and Safety Framework",
               items: [
                 "AITech-12.1 Tool Exploitation (URL normalization prevents SSRF via safe fetch tool)",
+                "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access",
               ],
             },
           ],
@@ -7017,6 +7029,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             "AITech-6.1 Training Data Poisoning (RAG index poisoning is analogous to training data poisoning)",
             "AITech-7.3 Data Source Abuse and Manipulation",
             "AITech-7.2 Memory System Corruption (RAG index hygiene prevents corruption of retrieval memory systems)",
+            "AISubtech-6.1.1 Knowledge Base Poisoning",
           ],
         },
       ],
@@ -7073,6 +7086,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
               items: [
                 "AITech-7.3 Data Source Abuse and Manipulation",
                 "AITech-6.1 Training Data Poisoning (chunk integrity detects poisoning at the retrieval unit level)",
+                "AISubtech-6.1.1 Knowledge Base Poisoning",
               ],
             },
           ],
@@ -7200,7 +7214,6 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
         {
           framework: "OWASP ML Top 10 2023",
           items: [
-            "ML01:2023 Input Manipulation Attack",
             "ML06:2023 AI Supply Chain Attacks",
           ],
         },
@@ -7263,7 +7276,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             },
             {
               framework: "OWASP ML Top 10 2023",
-              items: ["ML01:2023 Input Manipulation Attack"],
+              items: ["N/A"],
             },
             {
               framework: "OWASP Agentic AI Top 10 2026",

@@ -1,8 +1,8 @@
 {
   "version": {
     "schemaVersion": "2.0",
-    "dataVersion": "2026.03.05",
-    "generatedAt": "2026-03-05T10:51:57.798Z",
+    "dataVersion": "2026.03.06",
+    "generatedAt": "2026-03-06T04:35:37.115Z",
     "source": "bundled",
     "keywordStructure": "categorized"
   },
@@ -5449,7 +5449,7 @@
             {
               "framework": "OWASP Agentic AI Top 10 2026",
               "items": [
-                "ASI05:2026 Unexpected Code Execution (RCE) (privacy-preserving computation prevents exposure of sensitive data during execution)"
+                "N/A"
               ]
             },
             {
@@ -5906,7 +5906,10 @@
                   "items": [
                     "AITech-10.2 Model Inversion (dedup hardens against inversion by reducing memorization)",
                     "AISubtech-10.2.1 Model Inversion",
-                    "AISubtech-10.1.3 Sensitive Data Reconstruction"
+                    "AISubtech-10.1.3 Sensitive Data Reconstruction",
+                    "AITech-8.1 Membership Inference",
+                    "AISubtech-8.1.1 Presence Detection",
+                    "AISubtech-8.2.2 LLM Data Leakage"
                   ]
                 }
               ],
@@ -6948,7 +6951,8 @@
                 "NISTAML.013 Data Poisoning",
                 "NISTAML.024 Targeted Poisoning",
                 "NISTAML.026 Model Poisoning (Integrity)",
-                "NISTAML.033 Membership Inference (secure aggregation protects FL participant privacy)"
+                "NISTAML.033 Membership Inference (secure aggregation protects FL participant privacy)",
+                "NISTAML.011 Model Poisoning (Availability)"
               ]
             },
             {
@@ -7142,7 +7146,9 @@
                   "items": [
                     "NISTAML.013 Data Poisoning",
                     "NISTAML.024 Targeted Poisoning",
-                    "NISTAML.026 Model Poisoning (Integrity)"
+                    "NISTAML.026 Model Poisoning (Integrity)",
+                    "NISTAML.011 Model Poisoning (Availability)",
+                    "NISTAML.012 Clean-label Poisoning"
                   ]
                 },
                 {
@@ -8549,7 +8555,8 @@
               "items": [
                 "AISubtech-6.1.2 Reinforcement Biasing",
                 "AISubtech-6.1.3 Reinforcement Signal Corruption",
-                "AITech-7.1 Reasoning Corruption (reward hacking corrupts agent reasoning)"
+                "AITech-7.1 Reasoning Corruption (reward hacking corrupts agent reasoning)",
+                "AITech-1.3 Goal Manipulation"
               ]
             }
           ],
@@ -8815,7 +8822,8 @@
                 {
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
-                    "NISTAML.027 Misaligned Outputs"
+                    "NISTAML.027 Misaligned Outputs",
+                    "NISTAML.026 Model Poisoning (Integrity)"
                   ]
                 },
                 {
@@ -8919,7 +8927,8 @@
                 {
                   "framework": "Cisco Integrated AI Security and Safety Framework",
                   "items": [
-                    "AISubtech-6.1.2 Reinforcement Biasing"
+                    "AISubtech-6.1.2 Reinforcement Biasing",
+                    "AITech-7.1 Reasoning Corruption"
                   ]
                 }
               ],
@@ -9028,7 +9037,8 @@
                 {
                   "framework": "Cisco Integrated AI Security and Safety Framework",
                   "items": [
-                    "AISubtech-6.1.3 Reinforcement Signal Corruption"
+                    "AISubtech-6.1.3 Reinforcement Signal Corruption",
+                    "AITech-7.1 Reasoning Corruption"
                   ]
                 }
               ],
@@ -9724,7 +9734,9 @@
                 "AISubtech-2.1.2 Obfuscation (Jailbreak)",
                 "AISubtech-2.1.3 Semantic Manipulation (Jailbreak)",
                 "AISubtech-1.1.1 Instruction Manipulation (Direct Prompt Injection)",
-                "AISubtech-1.2.1 Instruction Manipulation (Indirect Prompt Injection)"
+                "AISubtech-1.2.1 Instruction Manipulation (Indirect Prompt Injection)",
+                "AITech-8.4 Prompt/Meta Extraction",
+                "AISubtech-8.4.1 System LLM Prompt Leakage"
               ]
             }
           ],
@@ -10480,7 +10492,7 @@
                 {
                   "framework": "OWASP ML Top 10 2023",
                   "items": [
-                    "ML09:2023 Output Integrity Attack"
+                    "N/A"
                   ]
                 },
                 {
@@ -10748,7 +10760,7 @@
             {
               "framework": "OWASP ML Top 10 2023",
               "items": [
-                "ML09:2023 Output Integrity Attack"
+                "N/A"
               ]
             },
             {
@@ -10833,7 +10845,7 @@
                 {
                   "framework": "OWASP ML Top 10 2023",
                   "items": [
-                    "ML09:2023 Output Integrity Attack"
+                    "N/A"
                   ]
                 },
                 {
@@ -10938,7 +10950,7 @@
                 {
                   "framework": "OWASP ML Top 10 2023",
                   "items": [
-                    "ML09:2023 Output Integrity Attack"
+                    "N/A"
                   ]
                 },
                 {
@@ -11050,7 +11062,7 @@
                 {
                   "framework": "OWASP ML Top 10 2023",
                   "items": [
-                    "ML09:2023 Output Integrity Attack"
+                    "N/A"
                   ]
                 },
                 {
@@ -11574,7 +11586,8 @@
               "framework": "Cisco Integrated AI Security and Safety Framework",
               "items": [
                 "AITech-1.2 Indirect Prompt Injection (safe fetch sanitizes fetched content before LLM consumption)",
-                "AITech-12.1 Tool Exploitation (safe fetch wrapper prevents tool-based SSRF)"
+                "AITech-12.1 Tool Exploitation (safe fetch wrapper prevents tool-based SSRF)",
+                "AISubtech-12.1.3 Unsafe System / Browser / File Execution"
               ]
             }
           ],
@@ -11651,7 +11664,8 @@
                 {
                   "framework": "Cisco Integrated AI Security and Safety Framework",
                   "items": [
-                    "AITech-12.1 Tool Exploitation (URL normalization prevents SSRF via safe fetch tool)"
+                    "AITech-12.1 Tool Exploitation (URL normalization prevents SSRF via safe fetch tool)",
+                    "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access"
                   ]
                 }
               ],
@@ -11898,7 +11912,8 @@
               "items": [
                 "AITech-6.1 Training Data Poisoning (RAG index poisoning is analogous to training data poisoning)",
                 "AITech-7.3 Data Source Abuse and Manipulation",
-                "AITech-7.2 Memory System Corruption (RAG index hygiene prevents corruption of retrieval memory systems)"
+                "AITech-7.2 Memory System Corruption (RAG index hygiene prevents corruption of retrieval memory systems)",
+                "AISubtech-6.1.1 Knowledge Base Poisoning"
               ]
             }
           ],
@@ -11978,7 +11993,8 @@
                   "framework": "Cisco Integrated AI Security and Safety Framework",
                   "items": [
                     "AITech-7.3 Data Source Abuse and Manipulation",
-                    "AITech-6.1 Training Data Poisoning (chunk integrity detects poisoning at the retrieval unit level)"
+                    "AITech-6.1 Training Data Poisoning (chunk integrity detects poisoning at the retrieval unit level)",
+                    "AISubtech-6.1.1 Knowledge Base Poisoning"
                   ]
                 }
               ],
@@ -12189,7 +12205,6 @@
             {
               "framework": "OWASP ML Top 10 2023",
               "items": [
-                "ML01:2023 Input Manipulation Attack",
                 "ML06:2023 AI Supply Chain Attacks"
               ]
             },
@@ -12277,7 +12292,7 @@
                 {
                   "framework": "OWASP ML Top 10 2023",
                   "items": [
-                    "ML01:2023 Input Manipulation Attack"
+                    "N/A"
                   ]
                 },
                 {
@@ -13833,7 +13848,8 @@
             {
               "framework": "OWASP LLM Top 10 2025",
               "items": [
-                "LLM01:2025 Prompt Injection"
+                "LLM01:2025 Prompt Injection",
+                "LLM07:2025 System Prompt Leakage"
               ]
             },
             {
@@ -14090,7 +14106,11 @@
                     "AITech-3.1 Masquerading / Obfuscation / Impersonation",
                     "AISubtech-3.1.1 Identity Obfuscation",
                     "AISubtech-3.1.2 Trusted Agent Spoofing (deepfake impersonation of trusted entities)",
-                    "AISubtech-15.1.5 Safety Harms and Toxicity: Disinformation (synthetic media enables disinformation)"
+                    "AISubtech-15.1.5 Safety Harms and Toxicity: Disinformation (synthetic media enables disinformation)",
+                    "AISubtech-1.4.1 Image-Text Injection",
+                    "AISubtech-1.4.2 Image Manipulation",
+                    "AISubtech-1.4.3 Audio Command Injection",
+                    "AISubtech-1.4.4 Video Overlay Manipulation"
                   ]
                 }
               ],
@@ -14538,7 +14558,8 @@
                 "AML.T0018.000 Manipulate AI Model: Poison AI Model",
                 "AML.T0018.001 Manipulate AI Model: Modify AI Model Architecture (architecture changes cause detectable drift)",
                 "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (backdoor activation causes detectable output drift)",
-                "AML.T0043 Craft Adversarial Data (drift detection catches effects of crafted adversarial data)"
+                "AML.T0043 Craft Adversarial Data (drift detection catches effects of crafted adversarial data)",
+                "AML.T0076 Corrupt AI Model"
               ]
             },
             {
@@ -14806,8 +14827,7 @@
                   "items": [
                     "Inaccurate Agent Capability Description (L7)",
                     "Data Exfiltration (L2)",
-                    "Agent Tool Misuse (L7)",
-                    "Compromised Agent Registry (L7)"
+                    "Agent Tool Misuse (L7)"
                   ]
                 },
                 {
@@ -15629,7 +15649,6 @@
                 "Data Tampering (L2)",
                 "Backdoor Attacks (L1)",
                 "Orchestration Attacks (L4)",
-                "Denial of Service (DoS) Attacks (L4)",
                 "Infrastructure-as-Code (IaC) Manipulation (L4)",
                 "Supply Chain Attacks (Cross-Layer) (artifact integrity monitoring is a primary defense against supply chain attacks)",
                 "Compromised Container Images (L4) (integrity verification catches compromised container images)"
@@ -15647,7 +15666,8 @@
               "items": [
                 "ML06:2023 AI Supply Chain Attacks",
                 "ML10:2023 Model Poisoning",
-                "ML07:2023 Transfer Learning Attack (integrity monitoring detects compromised pre-trained models)"
+                "ML07:2023 Transfer Learning Attack (integrity monitoring detects compromised pre-trained models)",
+                "ML02:2023 Data Poisoning Attack"
               ]
             },
             {
@@ -15884,7 +15904,6 @@
                 {
                   "framework": "MAESTRO",
                   "items": [
-                    "Denial of Service (DoS) Attacks (L4)",
                     "Orchestration Attacks (L4)",
                     "Compromised Container Images (L4)",
                     "Data Exfiltration (L2)",
@@ -15905,7 +15924,8 @@
                   "items": [
                     "ML06:2023 AI Supply Chain Attacks",
                     "ML05:2023 Model Theft",
-                    "ML09:2023 Output Integrity Attack"
+                    "ML09:2023 Output Integrity Attack",
+                    "ML10:2023 Model Poisoning"
                   ]
                 },
                 {
@@ -16462,7 +16482,8 @@
                 "ASI10:2026 Rogue Agents (activity logs reveal rogue behavior)",
                 "ASI01:2026 Agent Goal Hijack",
                 "ASI06:2026 Memory & Context Poisoning",
-                "ASI07:2026 Insecure Inter-Agent Communication"
+                "ASI07:2026 Insecure Inter-Agent Communication",
+                "ASI03:2026 Identity and Privilege Abuse"
               ]
             },
             {
@@ -16576,7 +16597,8 @@
                     "ASI08:2026 Cascading Failures (comprehensive logs enable failure chain analysis)",
                     "ASI10:2026 Rogue Agents (log collection surfaces unauthorized agent activity)",
                     "ASI01:2026 Agent Goal Hijack",
-                    "ASI06:2026 Memory & Context Poisoning"
+                    "ASI06:2026 Memory & Context Poisoning",
+                    "ASI03:2026 Identity and Privilege Abuse"
                   ]
                 },
                 {
@@ -16718,7 +16740,8 @@
                     "ASI08:2026 Cascading Failures (alerts on cascading error patterns)",
                     "ASI10:2026 Rogue Agents (alerting on unauthorized agent actions)",
                     "ASI01:2026 Agent Goal Hijack",
-                    "ASI06:2026 Memory & Context Poisoning"
+                    "ASI06:2026 Memory & Context Poisoning",
+                    "ASI03:2026 Identity and Privilege Abuse"
                   ]
                 },
                 {
@@ -16975,7 +16998,8 @@
                     "ASI02:2026 Tool Misuse and Exploitation",
                     "ASI06:2026 Memory & Context Poisoning (session logging captures memory manipulation)",
                     "ASI10:2026 Rogue Agents (detailed session logs reveal rogue behavior)",
-                    "ASI01:2026 Agent Goal Hijack (logging full reasoning chain detects goal drift)"
+                    "ASI01:2026 Agent Goal Hijack (logging full reasoning chain detects goal drift)",
+                    "ASI03:2026 Identity and Privilege Abuse"
                   ]
                 },
                 {
@@ -17497,7 +17521,11 @@
                 "AITech-19.1 Cross-Modal Inconsistency Exploits",
                 "AISubtech-19.1.1 Contradictory Inputs Attack",
                 "AISubtech-19.1.2 Modality Skewing",
-                "AITech-19.2 Fusion Payload Split"
+                "AITech-19.2 Fusion Payload Split",
+                "AISubtech-1.4.1 Image-Text Injection",
+                "AISubtech-1.4.2 Image Manipulation",
+                "AISubtech-1.4.3 Audio Command Injection",
+                "AISubtech-1.4.4 Video Overlay Manipulation"
               ]
             }
           ],
@@ -17763,7 +17791,8 @@
                 "ASI01:2026 Agent Goal Hijack (hallucinated facts redirect agent goals)",
                 "ASI08:2026 Cascading Failures (hallucination cascades across agent networks)",
                 "ASI09:2026 Human-Agent Trust Exploitation (fabricated facts exploit human trust in agent outputs)",
-                "ASI06:2026 Memory & Context Poisoning (fact verification prevents poisoned context from entering shared memory)"
+                "ASI06:2026 Memory & Context Poisoning (fact verification prevents poisoned context from entering shared memory)",
+                "ASI07:2026 Insecure Inter-Agent Communication"
               ]
             },
             {
@@ -18111,7 +18140,9 @@
                   "framework": "MAESTRO",
                   "items": [
                     "Compromised Agents (L7)",
-                    "Agent Goal Manipulation (L7) (detecting resulting behavioral changes)"
+                    "Agent Goal Manipulation (L7) (detecting resulting behavioral changes)",
+                    "Agent Identity Attack (L7)",
+                    "Agent Impersonation (L7)"
                   ]
                 },
                 {
@@ -18242,7 +18273,8 @@
                     "ASI07:2026 Insecure Inter-Agent Communication",
                     "ASI03:2026 Identity and Privilege Abuse (peer verification establishes trust between agents)",
                     "ASI08:2026 Cascading Failures (consensus prevents single-agent failures from cascading)",
-                    "ASI10:2026 Rogue Agents (peer monitoring detects rogue behavior)"
+                    "ASI10:2026 Rogue Agents (peer monitoring detects rogue behavior)",
+                    "ASI01:2026 Agent Goal Hijack"
                   ]
                 },
                 {
@@ -19777,7 +19809,8 @@
                 "ASI07:2026 Insecure Inter-Agent Communication",
                 "ASI03:2026 Identity and Privilege Abuse",
                 "ASI02:2026 Tool Misuse and Exploitation (reputation scoring detects tool misuse patterns)",
-                "ASI04:2026 Agentic Supply Chain Vulnerabilities (quarantine pipeline catches supply chain compromised agents)"
+                "ASI04:2026 Agentic Supply Chain Vulnerabilities (quarantine pipeline catches supply chain compromised agents)",
+                "ASI01:2026 Agent Goal Hijack"
               ]
             },
             {
@@ -20105,7 +20138,6 @@
               "framework": "MITRE ATLAS",
               "items": [
                 "AML.T0053 AI Agent Tool Invocation",
-                "AML.T0020 Poison Training Data",
                 "AML.T0072 Reverse Shell",
                 "AML.T0050 Command and Scripting Interpreter",
                 "AML.T0029 Denial of AI Service",
@@ -20160,7 +20192,8 @@
               "items": [
                 "NISTAML.039 Compromising connected resources",
                 "NISTAML.051 Model Poisoning (Supply Chain) (contains compromised component impact)",
-                "NISTAML.018 Prompt Injection (limits post-injection agent capabilities)"
+                "NISTAML.018 Prompt Injection (limits post-injection agent capabilities)",
+                "NISTAML.015 Indirect Prompt Injection"
               ]
             },
             {
@@ -20259,7 +20292,8 @@
                   "items": [
                     "ASI02:2026 Tool Misuse and Exploitation",
                     "ASI05:2026 Unexpected Code Execution (RCE)",
-                    "ASI04:2026 Agentic Supply Chain Vulnerabilities (compromised container images)"
+                    "ASI04:2026 Agentic Supply Chain Vulnerabilities (compromised container images)",
+                    "ASI10:2026 Rogue Agents"
                   ]
                 },
                 {
@@ -20388,7 +20422,8 @@
                   "items": [
                     "ASI05:2026 Unexpected Code Execution (RCE)",
                     "ASI02:2026 Tool Misuse and Exploitation",
-                    "ASI04:2026 Agentic Supply Chain Vulnerabilities (stronger isolation for compromised components)"
+                    "ASI04:2026 Agentic Supply Chain Vulnerabilities (stronger isolation for compromised components)",
+                    "ASI10:2026 Rogue Agents"
                   ]
                 },
                 {
@@ -20495,7 +20530,8 @@
                   "framework": "OWASP Agentic AI Top 10 2026",
                   "items": [
                     "ASI02:2026 Tool Misuse and Exploitation",
-                    "ASI05:2026 Unexpected Code Execution (RCE)"
+                    "ASI05:2026 Unexpected Code Execution (RCE)",
+                    "ASI10:2026 Rogue Agents"
                   ]
                 },
                 {
@@ -21442,7 +21478,8 @@
                   "framework": "NIST Adversarial Machine Learning 2025",
                   "items": [
                     "NISTAML.018 Prompt Injection",
-                    "NISTAML.015 Indirect Prompt Injection"
+                    "NISTAML.015 Indirect Prompt Injection",
+                    "NISTAML.036 Leaking information from user interactions"
                   ]
                 },
                 {
@@ -23331,14 +23368,16 @@
                     "AML.T0012 Valid Accounts",
                     "AML.T0055 Unsecured Credentials",
                     "AML.T0091 Use Alternate Authentication Material",
-                    "AML.T0091.000 Use Alternate Authentication Material: Application Access Token"
+                    "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
+                    "AML.T0090 OS Credential Dumping"
                   ]
                 },
                 {
                   "framework": "MAESTRO",
                   "items": [
                     "Lateral Movement (Cross-Layer)",
-                    "Resource Hijacking (L4)"
+                    "Resource Hijacking (L4)",
+                    "Privilege Escalation (Cross-Layer)"
                   ]
                 },
                 {
@@ -23540,7 +23579,8 @@
                     "AML.T0073 Impersonation",
                     "AML.T0012 Valid Accounts",
                     "AML.T0091 Use Alternate Authentication Material (revoking stolen workload identity credentials)",
-                    "AML.T0091.000 Use Alternate Authentication Material: Application Access Token"
+                    "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
+                    "AML.T0098 AI Agent Tool Credential Harvesting"
                   ]
                 },
                 {
@@ -23672,7 +23712,9 @@
                 "AML.T0080 AI Agent Context Poisoning (terminating poisoned agent sessions)",
                 "AML.T0091 Use Alternate Authentication Material (terminating sessions using stolen tokens)",
                 "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
-                "AML.T0108 AI Agent (C2)"
+                "AML.T0108 AI Agent (C2)",
+                "AML.T0029 Denial of AI Service",
+                "AML.T0034 Cost Harvesting"
               ]
             },
             {
@@ -23915,9 +23957,7 @@
                   "items": [
                     "Backdoor Attacks (L1)",
                     "Data Poisoning (Training Phase) (L1)",
-                    "Data Poisoning (L2)",
-                    "Compromised Container Images (L4)",
-                    "Evasion of Security AI Agents (L6)"
+                    "Data Poisoning (L2)"
                   ]
                 },
                 {
@@ -23948,7 +23988,8 @@
                     "NISTAML.023 Backdoor Poisoning",
                     "NISTAML.021 Clean-label Backdoor",
                     "NISTAML.051 Model Poisoning (Supply Chain)",
-                    "NISTAML.026 Model Poisoning (Integrity) (backdoor removal restores model integrity)"
+                    "NISTAML.026 Model Poisoning (Integrity) (backdoor removal restores model integrity)",
+                    "NISTAML.024 Targeted Poisoning"
                   ]
                 },
                 {
@@ -24181,7 +24222,8 @@
                     "AML.T0018 Manipulate AI Model",
                     "AML.T0018.002 Manipulate AI Model: Embed Malware",
                     "AML.T0072 Reverse Shell",
-                    "AML.T0104 Publish Poisoned AI Agent Tool (cleanup removes poisoned agent tools)"
+                    "AML.T0104 Publish Poisoned AI Agent Tool (cleanup removes poisoned agent tools)",
+                    "AML.T0081 Modify AI Agent Configuration"
                   ]
                 },
                 {
@@ -24199,8 +24241,7 @@
                 {
                   "framework": "OWASP LLM Top 10 2025",
                   "items": [
-                    "LLM03:2025 Supply Chain",
-                    "LLM08:2025 Vector and Embedding Weaknesses"
+                    "LLM03:2025 Supply Chain"
                   ]
                 },
                 {
@@ -24612,7 +24653,8 @@
               "items": [
                 "NISTAML.018 Prompt Injection (purging injected session state)",
                 "NISTAML.039 Compromising connected resources",
-                "NISTAML.015 Indirect Prompt Injection (session termination stops indirect injection chains)"
+                "NISTAML.015 Indirect Prompt Injection (session termination stops indirect injection chains)",
+                "NISTAML.036 Leaking information from user interactions"
               ]
             },
             {
