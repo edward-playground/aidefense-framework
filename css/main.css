@@ -1483,37 +1483,33 @@ body.modal-open {
 
 /* === Desktop Hover Glow Enhancements (pointer devices only) === */
 @media (hover: hover) {
-    /* Technique cards: subtle delayed glow on hover */
+    /* Technique cards: instant glow on hover */
     .technique-item {
         transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.2s ease,
                     box-shadow 0.2s ease;
     }
     .technique-item:hover {
         box-shadow: 0 0 8px 1.5px var(--search-focus-ring);
-        transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.2s ease,
-                    box-shadow 0.3s ease 0.2s;
     }
     .technique-item.highlight-exact,
     .technique-item.highlight-exact:hover {
         box-shadow: 0 0 10px 2px var(--search-focus-ring);
     }
 
-    /* Sub-technique cards: subtle delayed glow on hover */
+    /* Sub-technique cards: instant glow on hover */
     .subtechnique-item {
         transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.2s ease,
                     box-shadow 0.2s ease;
     }
     .subtechnique-item:hover {
         box-shadow: 0 0 6px 1px var(--search-focus-ring);
-        transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.2s ease,
-                    box-shadow 0.25s ease 0.2s;
     }
     .subtechnique-item.highlight-exact,
     .subtechnique-item.highlight-exact:hover {
         box-shadow: 0 0 10px 2px var(--search-focus-ring);
     }
 
-    /* Expand/collapse arrow: blink on hover, synced with glow delay */
+    /* Expand/collapse arrow: blink on hover */
     @keyframes arrowBlink {
         0%, 100% { opacity: 1; }
         50% { opacity: 0.25; }
@@ -1524,11 +1520,10 @@ body.modal-open {
     .technique-item:hover > .expand-icon {
         color: var(--search-focus-ring);
         filter: drop-shadow(0 0 4px var(--search-focus-ring)) drop-shadow(0 0 8px var(--search-focus-ring));
-        transition: transform 0.3s ease, color 0s ease 0.2s, filter 0s ease 0.2s;
-        animation: arrowBlink 1s ease-in-out 0.2s infinite both;
+        animation: arrowBlink 1s ease-in-out infinite both;
     }
 
-    /* ATLAS matrix cells: subtle delayed glow on hover */
+    /* ATLAS matrix cells: instant glow on hover */
     .atlas-matrix-cell {
         outline: 2px solid transparent;
         outline-offset: -1px;
@@ -1536,7 +1531,6 @@ body.modal-open {
     }
     .atlas-matrix-cell:hover {
         outline-color: var(--search-focus-ring);
-        transition: background-color 0.2s ease, transform 0.2s ease, box-shadow 0.25s ease, outline-color 0.3s ease 0.2s;
     }
     .atlas-matrix-cell.search-match,
     .atlas-matrix-cell.search-match:hover,
@@ -1551,7 +1545,6 @@ body.modal-open {
     }
     .atlas-matrix-sub:hover {
         outline-color: var(--search-focus-ring);
-        transition: background-color 0.2s ease, transform 0.2s ease, outline-color 0.25s ease 0.2s;
     }
     .atlas-matrix-sub.search-match,
     .atlas-matrix-sub.search-match:hover,
@@ -1560,15 +1553,14 @@ body.modal-open {
         outline-color: var(--search-focus-ring);
     }
 
-    /* ATLAS expand arrow: blink on hover, synced with outline delay */
+    /* ATLAS expand arrow: blink on hover */
     .atlas-matrix-cell .cell-expand {
         transition: color 0.15s ease, filter 0.15s ease;
     }
     .atlas-matrix-cell:hover .cell-expand {
         color: var(--search-focus-ring);
         filter: drop-shadow(0 0 4px var(--search-focus-ring)) drop-shadow(0 0 8px var(--search-focus-ring));
-        transition: color 0s ease 0.2s, filter 0s ease 0.2s;
-        animation: arrowBlink 1s ease-in-out 0.2s infinite both;
+        animation: arrowBlink 1s ease-in-out infinite both;
     }
 
     /* Header buttons: instant glow on hover */
