@@ -8474,5 +8474,873 @@ def run_semgrep(path: str) -&gt; None:
         },
       ],
     },
+    {
+      id: "AID-H-027",
+      name: "Continuous Closed-Loop Hardening of Retrainable Prompt Injection Detectors",
+      description:
+        "Continuously strengthen a retrainable prompt injection detection model through a governed, closed-loop hardening pipeline. The pipeline generates or collects adversarial prompts that evade the current detector, identifies hard samples from detector errors, reinjects those samples into subsequent training cycles, and validates candidate detector versions on an independent out-of-loop evaluation set before promotion. This technique hardens the detector lifecycle itself rather than acting as a runtime enforcement boundary. It is intended for organizations that own, fine-tune, or otherwise control the training lifecycle of their prompt injection detector models.",
+      warning: {
+        level: "Not a Standalone Runtime Security Boundary",
+        description:
+          "<p>This technique hardens <strong>retrainable detector models</strong> over time. It does <strong>not</strong> replace inline runtime controls such as inference-time prompt validation, deterministic policy enforcement, least-privilege tool access, or agent capability scoping.</p><p>Use this technique to improve detector resilience and coverage, not as the sole security boundary. It applies only when the organization can retrain or fine-tune the detector. If the organization relies exclusively on a fixed third-party API with no retraining path, prefer runtime validation, vendor benchmarking, and compensating controls instead.</p>",
+      },
+      defendsAgainst: [
+        {
+          framework: "MITRE ATLAS",
+          items: [
+            "AML.T0051 LLM Prompt Injection",
+            "AML.T0051.000 LLM Prompt Injection: Direct",
+            "AML.T0051.001 LLM Prompt Injection: Indirect",
+            "AML.T0054 LLM Jailbreak",
+            "AML.T0068 LLM Prompt Obfuscation",
+            "AML.T0065 LLM Prompt Crafting",
+            "AML.T0015 Evade AI Model (hardens the detector itself against evasive prompt variants)",
+            "AML.T0107 Exploitation for Defense Evasion (iterative retraining closes repeatedly exploited detector gaps)",
+          ],
+        },
+        {
+          framework: "MAESTRO",
+          items: [
+            "Adversarial Examples (L1)",
+            "Input Validation Attacks (L3)",
+            "Framework Evasion (L3)",
+            "Evasion of Detection (L5)",
+            "Evasion of Security AI Agents (L6) (when the hardened detector is deployed as a security AI guardrail)",
+          ],
+        },
+        {
+          framework: "OWASP LLM Top 10 2025",
+          items: ["LLM01:2025 Prompt Injection"],
+        },
+        {
+          framework: "OWASP ML Top 10 2023",
+          items: ["ML01:2023 Input Manipulation Attack"],
+        },
+        {
+          framework: "OWASP Agentic AI Top 10 2026",
+          items: [
+            "ASI01:2026 Agent Goal Hijack (when the detector is used on agent inputs or agent-facing external content)",
+          ],
+        },
+        {
+          framework: "NIST Adversarial Machine Learning 2025",
+          items: [
+            "NISTAML.018 Prompt Injection",
+            "NISTAML.015 Indirect Prompt Injection",
+            "NISTAML.022 Evasion",
+            "NISTAML.025 Black-box Evasion",
+          ],
+        },
+        {
+          framework: "Cisco Integrated AI Security and Safety Framework",
+          items: [
+            "AITech-1.1 Direct Prompt Injection",
+            "AITech-1.2 Indirect Prompt Injection",
+            "AITech-2.1 Jailbreak",
+            "AITech-9.2 Detection Evasion",
+            "AISubtech-1.1.2 Obfuscation (Direct Prompt Injection)",
+            "AISubtech-1.2.2 Obfuscation (Indirect Prompt Injection)",
+            "AISubtech-2.1.2 Obfuscation (Jailbreak)",
+            "AISubtech-2.1.3 Semantic Manipulation (Jailbreak)",
+            "AISubtech-2.1.4 Token Exploitation (Jailbreak)",
+            "AISubtech-9.2.1 Obfuscation Vulnerabilities",
+          ],
+        },
+      ],
+      subTechniques: [
+        {
+          id: "AID-H-027.001",
+          name: "Hard-Sample Mining & Controlled Detector Retraining",
+          pillar: ["model", "app"],
+          phase: ["validation", "operation", "improvement"],
+          description:
+            "Systematically collect detector errors — especially false negatives on malicious prompts and false positives on benign prompts — and use them as governed hard samples for periodic retraining of the prompt injection detector. The purpose is to harden the detector against the exact decision boundaries it currently fails on. Candidate detector versions must be benchmarked against a fixed out-of-loop evaluation set and explicit promotion criteria before replacing the production detector.",
+          toolsOpenSource: [
+            "Hugging Face Transformers",
+            "PyTorch",
+            "TensorFlow",
+            "MLflow",
+            "DVC",
+            "Apache Airflow",
+            "scikit-learn",
+            "pandas",
+            "Jupyter",
+          ],
+          toolsCommercial: [
+            "Amazon SageMaker AI",
+            "Vertex AI",
+            "Databricks Mosaic AI",
+            "Weights & Biases",
+            "Cisco AI Defense",
+            "Protect AI",
+          ],
+          defendsAgainst: [
+            {
+              framework: "MITRE ATLAS",
+              items: [
+                "AML.T0051 LLM Prompt Injection",
+                "AML.T0054 LLM Jailbreak",
+                "AML.T0068 LLM Prompt Obfuscation",
+                "AML.T0065 LLM Prompt Crafting",
+                "AML.T0015 Evade AI Model",
+                "AML.T0107 Exploitation for Defense Evasion",
+              ],
+            },
+            {
+              framework: "MAESTRO",
+              items: [
+                "Adversarial Examples (L1)",
+                "Input Validation Attacks (L3)",
+                "Framework Evasion (L3)",
+                "Evasion of Detection (L5)",
+              ],
+            },
+            {
+              framework: "OWASP LLM Top 10 2025",
+              items: ["LLM01:2025 Prompt Injection"],
+            },
+            {
+              framework: "OWASP ML Top 10 2023",
+              items: ["ML01:2023 Input Manipulation Attack"],
+            },
+            {
+              framework: "OWASP Agentic AI Top 10 2026",
+              items: [
+                "ASI01:2026 Agent Goal Hijack (when the detector is used in front of an agent or agent toolchain)",
+              ],
+            },
+            {
+              framework: "NIST Adversarial Machine Learning 2025",
+              items: [
+                "NISTAML.018 Prompt Injection",
+                "NISTAML.015 Indirect Prompt Injection",
+                "NISTAML.022 Evasion",
+                "NISTAML.025 Black-box Evasion",
+              ],
+            },
+            {
+              framework: "Cisco Integrated AI Security and Safety Framework",
+              items: [
+                "AITech-1.1 Direct Prompt Injection",
+                "AITech-1.2 Indirect Prompt Injection",
+                "AITech-2.1 Jailbreak",
+                "AITech-9.2 Detection Evasion",
+                "AISubtech-9.2.1 Obfuscation Vulnerabilities",
+              ],
+            },
+          ],
+          implementationStrategies: [
+            {
+              strategy:
+                "Maintain a governed hard-sample repository and periodic retraining loop.",
+              howTo: `<h5>Concept:</h5>
+<p>Treat prompt-injection detector misses as security-relevant training data. Collect false negatives, false positives, analyst-confirmed evasive prompts, and representative benign near-misses into a dedicated hard-sample repository. Each record should retain metadata such as source, taxonomy label, detector version, observed timestamp, and reviewer disposition.</p>
+
+<h5>Step 1: Define the hard-sample record schema</h5>
+<p>Every sample entering the repository must carry provenance metadata so that downstream retraining can be audited and reproduced.</p>
+<pre><code>import json, hashlib, datetime
+from dataclasses import dataclass, asdict
+from enum import Enum
+from typing import Optional
+
+class Disposition(str, Enum):
+    FALSE_NEGATIVE = "false_negative"   # detector missed a malicious prompt
+    FALSE_POSITIVE = "false_positive"   # detector flagged a benign prompt
+    EVASION        = "evasion"          # analyst-confirmed evasive variant
+    NEAR_MISS      = "near_miss"        # benign prompt close to decision boundary
+
+@dataclass
+class HardSample:
+    text: str
+    label: str                          # "malicious" | "benign"
+    disposition: Disposition
+    taxonomy_category: str              # e.g. "obfuscation", "indirect_injection"
+    detector_version: str               # model version that produced the error
+    source: str                         # e.g. "production_logs", "red_team", "fuzzer"
+    reviewer: str                       # analyst who confirmed the disposition
+    observed_at: str = ""
+    sample_id: str = ""
+
+    def __post_init__(self):
+        if not self.observed_at:
+            self.observed_at = datetime.datetime.utcnow().isoformat() + "Z"
+        if not self.sample_id:
+            self.sample_id = hashlib.sha256(self.text.encode()).hexdigest()[:16]
+
+    def to_dict(self):
+        return asdict(self)</code></pre>
+
+<h5>Step 2: Merge approved hard samples into the training corpus with a bounded sampling cap</h5>
+<p>To prevent the corpus from collapsing into a narrow adversarial region, cap the proportion of hard samples per category. This keeps the detector generalizable while still learning from its errors.</p>
+<pre><code>import pandas as pd
+from collections import Counter
+
+MAX_HARD_SAMPLE_RATIO = 0.15  # hard samples ≤ 15% of total corpus per category
+
+def merge_hard_samples(
+    base_corpus: pd.DataFrame,      # columns: text, label, taxonomy_category, source
+    hard_samples: list[HardSample],
+) -> pd.DataFrame:
+    """Merge approved hard samples into base corpus with bounded sampling."""
+    hard_df = pd.DataFrame([s.to_dict() for s in hard_samples])
+
+    merged_rows = []
+    for category in base_corpus["taxonomy_category"].unique():
+        base_cat = base_corpus[base_corpus["taxonomy_category"] == category]
+        hard_cat = hard_df[hard_df["taxonomy_category"] == category]
+
+        max_hard = int(len(base_cat) * MAX_HARD_SAMPLE_RATIO)
+        if len(hard_cat) > max_hard:
+            hard_cat = hard_cat.sample(n=max_hard, random_state=42)
+
+        merged_rows.append(base_cat)
+        if len(hard_cat) > 0:
+            merged_rows.append(hard_cat[base_cat.columns])
+
+    result = pd.concat(merged_rows, ignore_index=True)
+    print(f"Merged corpus: {len(result)} samples "
+          f"({len(result) - len(base_corpus)} hard samples added)")
+    return result</code></pre>
+
+<h5>Step 3: Retrain, register, and version the candidate detector</h5>
+<p>Use MLflow (or equivalent) to register every candidate detector with an immutable training manifest so that any promoted version can be traced back to its exact training data and hyperparameters.</p>
+<pre><code>import mlflow
+from transformers import AutoModelForSequenceClassification, AutoTokenizer, Trainer, TrainingArguments
+
+def retrain_detector(
+    merged_corpus: pd.DataFrame,
+    base_model_name: str = "protectai/deberta-v3-base-prompt-injection-v2",
+    output_dir: str = "./detector_candidate",
+) -> str:
+    """Fine-tune the detector on the merged corpus and register with MLflow."""
+    tokenizer = AutoTokenizer.from_pretrained(base_model_name)
+    model = AutoModelForSequenceClassification.from_pretrained(base_model_name, num_labels=2)
+
+    # Tokenize the merged corpus
+    from datasets import Dataset
+    ds = Dataset.from_pandas(merged_corpus[["text", "label"]])
+    ds = ds.map(lambda x: tokenizer(x["text"], truncation=True, max_length=512), batched=True)
+
+    training_args = TrainingArguments(
+        output_dir=output_dir,
+        num_train_epochs=3,
+        per_device_train_batch_size=16,
+        learning_rate=2e-5,
+        weight_decay=0.01,
+        evaluation_strategy="epoch",
+        save_strategy="epoch",
+        load_best_model_at_end=True,
+    )
+
+    trainer = Trainer(model=model, args=training_args, train_dataset=ds)
+    trainer.train()
+
+    # Register with MLflow
+    with mlflow.start_run(run_name="detector-hardening") as run:
+        mlflow.log_param("base_model", base_model_name)
+        mlflow.log_param("corpus_size", len(merged_corpus))
+        mlflow.log_param("hard_sample_ratio", MAX_HARD_SAMPLE_RATIO)
+        mlflow.transformers.log_model(
+            transformers_model={"model": model, "tokenizer": tokenizer},
+            artifact_path="detector",
+            registered_model_name="prompt-injection-detector",
+        )
+        return run.info.run_id</code></pre>`,
+            },
+            {
+              strategy:
+                "Use explicit promotion gates instead of blindly replacing the production detector.",
+              howTo: `<h5>Concept:</h5>
+<p>The retraining loop is only safe if promotion is governed. A candidate detector should not be promoted simply because aggregate accuracy increases. Promotion criteria should include malicious recall, benign false-positive rate, category-level regressions, and operational constraints such as latency and model size.</p>
+
+<h5>Step 1: Define promotion gate thresholds</h5>
+<p>Set minimum recall for malicious prompts, maximum false-positive rate on benign traffic, and a regression tolerance per attack category. These thresholds should be reviewed quarterly.</p>
+<pre><code>from dataclasses import dataclass
+
+@dataclass
+class PromotionGate:
+    min_malicious_recall: float = 0.95     # must catch ≥ 95% of malicious prompts
+    max_benign_fpr: float = 0.02           # ≤ 2% false positives on benign traffic
+    max_category_regression: float = 0.03  # no category drops > 3% vs. current production
+    max_latency_p99_ms: float = 50.0       # inference latency budget</code></pre>
+
+<h5>Step 2: Evaluate the candidate against the out-of-loop holdout and the production baseline</h5>
+<pre><code>from sklearn.metrics import classification_report, recall_score, precision_score
+import numpy as np
+
+def evaluate_candidate(
+    candidate_preds: np.ndarray,   # 0=benign, 1=malicious
+    labels: np.ndarray,
+    categories: np.ndarray,        # taxonomy category per sample
+    production_metrics: dict,      # {category: {"recall": float, ...}}
+    gate: PromotionGate,
+) -> dict:
+    """Evaluate candidate detector against promotion gates. Returns pass/fail verdict."""
+    # Overall metrics
+    malicious_mask = labels == 1
+    benign_mask = labels == 0
+    overall_recall = recall_score(labels, candidate_preds, pos_label=1)
+    benign_fpr = np.mean(candidate_preds[benign_mask] == 1)
+
+    # Category-level regression check
+    regressions = []
+    for cat in np.unique(categories):
+        cat_mask = categories == cat
+        cat_recall = recall_score(labels[cat_mask], candidate_preds[cat_mask], pos_label=1, zero_division=0)
+        prod_recall = production_metrics.get(cat, {}).get("recall", 0.0)
+        delta = prod_recall - cat_recall
+        if delta > gate.max_category_regression:
+            regressions.append({"category": cat, "production": prod_recall,
+                                "candidate": cat_recall, "regression": delta})
+
+    passed = (
+        overall_recall >= gate.min_malicious_recall
+        and benign_fpr <= gate.max_benign_fpr
+        and len(regressions) == 0
+    )
+
+    return {
+        "passed": passed,
+        "overall_recall": round(overall_recall, 4),
+        "benign_fpr": round(benign_fpr, 4),
+        "regressions": regressions,
+        "verdict": "PROMOTE" if passed else "HOLD — see regressions or threshold failures",
+    }</code></pre>
+
+<h5>Step 3: Record the promotion decision with audit evidence</h5>
+<pre><code>import json, datetime
+
+def record_promotion_decision(eval_result: dict, candidate_run_id: str, reviewer: str):
+    """Write an immutable audit record for the promotion decision."""
+    record = {
+        "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
+        "candidate_run_id": candidate_run_id,
+        "reviewer": reviewer,
+        "decision": eval_result["verdict"],
+        "overall_recall": eval_result["overall_recall"],
+        "benign_fpr": eval_result["benign_fpr"],
+        "regressions": eval_result["regressions"],
+    }
+    # Append to an append-only audit log (JSONL)
+    with open("detector_promotion_audit.jsonl", "a") as f:
+        f.write(json.dumps(record) + "\\n")
+    print(f"Promotion decision: {record['decision']} (run_id={candidate_run_id})")
+    return record</code></pre>
+
+<p><strong>Key principle:</strong> If any gate fails, keep the current production detector and convert the failure into backlog items for the next hardening cycle. Never auto-promote.</p>`,
+            },
+          ],
+        },
+        {
+          id: "AID-H-027.002",
+          name: "Adversarial Prompt Fuzzing for Detector Corpus Expansion",
+          pillar: ["app"],
+          phase: ["building", "validation", "improvement"],
+          description:
+            "Expand detector training and evaluation corpora with adversarial prompt variants generated through semantic, syntactic, and format-preserving fuzzing. The purpose is to expose overfitting to surface-level textual features and force the detector to generalize to attack intent across paraphrases, punctuation or casing mutations, and alternate structured representations such as JSON, YAML, Markdown, or XML. This sub-technique is for corpus generation and detector hardening only; it is not itself an inline runtime filter.",
+          toolsOpenSource: [
+            "garak",
+            "TextAttack",
+            "nlpaug",
+            "Hugging Face Transformers",
+            "Jinja",
+          ],
+          toolsCommercial: ["Lakera", "Cisco AI Defense", "Protect AI"],
+          defendsAgainst: [
+            {
+              framework: "MITRE ATLAS",
+              items: [
+                "AML.T0068 LLM Prompt Obfuscation",
+                "AML.T0065 LLM Prompt Crafting",
+                "AML.T0051 LLM Prompt Injection",
+                "AML.T0054 LLM Jailbreak",
+                "AML.T0015 Evade AI Model",
+              ],
+            },
+            {
+              framework: "MAESTRO",
+              items: [
+                "Adversarial Examples (L1)",
+                "Input Validation Attacks (L3)",
+                "Framework Evasion (L3)",
+                "Evasion of Detection (L5)",
+              ],
+            },
+            {
+              framework: "OWASP LLM Top 10 2025",
+              items: ["LLM01:2025 Prompt Injection"],
+            },
+            {
+              framework: "OWASP ML Top 10 2023",
+              items: ["ML01:2023 Input Manipulation Attack"],
+            },
+            {
+              framework: "OWASP Agentic AI Top 10 2026",
+              items: [
+                "ASI01:2026 Agent Goal Hijack (when obfuscated prompts are used to redirect agent behavior)",
+              ],
+            },
+            {
+              framework: "NIST Adversarial Machine Learning 2025",
+              items: [
+                "NISTAML.018 Prompt Injection",
+                "NISTAML.015 Indirect Prompt Injection",
+                "NISTAML.022 Evasion",
+              ],
+            },
+            {
+              framework: "Cisco Integrated AI Security and Safety Framework",
+              items: [
+                "AITech-1.1 Direct Prompt Injection",
+                "AITech-1.2 Indirect Prompt Injection",
+                "AITech-2.1 Jailbreak",
+                "AITech-9.2 Detection Evasion",
+                "AISubtech-1.1.2 Obfuscation (Direct Prompt Injection)",
+                "AISubtech-1.2.2 Obfuscation (Indirect Prompt Injection)",
+                "AISubtech-2.1.2 Obfuscation (Jailbreak)",
+                "AISubtech-2.1.3 Semantic Manipulation (Jailbreak)",
+                "AISubtech-2.1.4 Token Exploitation (Jailbreak)",
+                "AISubtech-9.2.1 Obfuscation Vulnerabilities",
+              ],
+            },
+          ],
+          implementationStrategies: [
+            {
+              strategy:
+                "Generate balanced semantic, syntactic, and format-preserving variants for both malicious and benign corpora.",
+              howTo: `<h5>Concept:</h5>
+<p>Detector robustness improves when the training and evaluation corpora include multiple representations of the same underlying intent. Use three mutation families: semantic paraphrases that preserve meaning, syntactic mutations that alter casing, spacing, or punctuation, and format-preserving wrappers such as JSON, YAML, Markdown, or XML. Apply the same transformations to <strong>both malicious and benign</strong> prompts to prevent the detector from learning "fuzzed text = malicious" shortcuts.</p>
+
+<h5>Step 1: Implement the three mutation families</h5>
+<p>Each mutator takes a source prompt and returns variants with lineage metadata. The syntactic mutator handles casing/spacing/punctuation. The format mutator wraps prompts in structured formats. The semantic mutator uses an LLM to paraphrase while preserving intent.</p>
+<pre><code>import random, json, hashlib, datetime
+from dataclasses import dataclass, asdict
+from typing import Generator
+
+@dataclass
+class FuzzedSample:
+    text: str
+    source_text: str
+    source_id: str
+    label: str                  # preserves original label ("malicious" | "benign")
+    mutation_type: str          # "syntactic" | "format" | "semantic"
+    mutation_detail: str        # e.g. "uppercase", "json_wrap", "paraphrase"
+    generated_at: str = ""
+    sample_id: str = ""
+
+    def __post_init__(self):
+        if not self.generated_at:
+            self.generated_at = datetime.datetime.utcnow().isoformat() + "Z"
+        if not self.sample_id:
+            self.sample_id = hashlib.sha256(self.text.encode()).hexdigest()[:16]
+
+def syntactic_mutations(text: str) -> list[tuple[str, str]]:
+    """Generate casing, spacing, and punctuation variants."""
+    return [
+        (text.upper(), "uppercase"),
+        (text.lower(), "lowercase"),
+        (text.replace(" ", "  "), "double_space"),
+        (text.replace(" ", "\\t"), "tab_replace"),
+        ("".join(c + "\\u200b" if i % 3 == 0 else c
+                 for i, c in enumerate(text)), "zero_width_insert"),
+    ]
+
+def format_mutations(text: str) -> list[tuple[str, str]]:
+    """Wrap prompt in structured format containers."""
+    return [
+        (json.dumps({"instruction": text}), "json_wrap"),
+        (f"---\\ninstruction: |\\n  {text}\\n", "yaml_wrap"),
+        (f"# Task\\n\\n{text}\\n", "markdown_wrap"),
+        (f"&lt;request&gt;&lt;instruction&gt;{text}&lt;/instruction&gt;&lt;/request&gt;", "xml_wrap"),
+    ]</code></pre>
+
+<h5>Step 2: Generate fuzzed corpora for both malicious and benign sources</h5>
+<pre><code>def fuzz_corpus(
+    source_samples: list[dict],      # [{"text": ..., "label": ..., "sample_id": ...}]
+    mutation_families: list[str] = None,  # subset of ["syntactic", "format", "semantic"]
+) -> list[FuzzedSample]:
+    """Apply selected mutation families to every source sample."""
+    if mutation_families is None:
+        mutation_families = ["syntactic", "format"]
+
+    results = []
+    for sample in source_samples:
+        text, label, sid = sample["text"], sample["label"], sample["sample_id"]
+
+        if "syntactic" in mutation_families:
+            for variant, detail in syntactic_mutations(text):
+                results.append(FuzzedSample(
+                    text=variant, source_text=text, source_id=sid,
+                    label=label, mutation_type="syntactic", mutation_detail=detail,
+                ))
+
+        if "format" in mutation_families:
+            for variant, detail in format_mutations(text):
+                results.append(FuzzedSample(
+                    text=variant, source_text=text, source_id=sid,
+                    label=label, mutation_type="format", mutation_detail=detail,
+                ))
+
+    print(f"Generated {len(results)} fuzzed samples from {len(source_samples)} sources")
+    return results</code></pre>
+
+<p><strong>Key principle:</strong> Always fuzz both malicious AND benign corpora. If only malicious prompts are fuzzed, the detector learns "weird formatting = attack", which produces high false-positive rates on legitimate structured inputs.</p>`,
+            },
+            {
+              strategy:
+                "Use an optional quality gate before adding generated malicious samples to the corpus.",
+              howTo: `<h5>Concept:</h5>
+<p>Not every synthetically generated prompt is useful. Before admitting a generated malicious sample into the retraining corpus, pass it through a quality gate that checks whether the prompt meaningfully represents a plausible attack against the target environment.</p>
+
+<h5>Step 1: Define the quality gate scoring function</h5>
+<p>The gate scores each candidate sample on plausibility and evasiveness. Samples below the threshold are discarded to prevent corpus pollution.</p>
+<pre><code>from dataclasses import dataclass
+from typing import Optional
+
+@dataclass
+class QualityGateResult:
+    sample_id: str
+    score: float                # 0.0–1.0 composite quality score
+    admitted: bool
+    threshold: float
+    reason: str
+
+def quality_gate(
+    sample: FuzzedSample,
+    detector_fn,                # callable: text -> {"label": str, "confidence": float}
+    threshold: float = 0.4,
+) -> QualityGateResult:
+    """Score a fuzzed malicious sample on its value for hardening the detector.
+
+    High-value samples are those that the current detector MISSES (false negatives)
+    or is uncertain about (low confidence). These are the decision-boundary
+    stress cases that matter most for retraining.
+    """
+    pred = detector_fn(sample.text)
+    detector_missed = pred["label"] == "benign"  # false negative
+    confidence = pred["confidence"]
+
+    # Score: higher = more valuable for hardening
+    # - 1.0 if detector missed entirely (false negative)
+    # - (1 - confidence) if detector caught it but was uncertain
+    if detector_missed:
+        score = 1.0
+    else:
+        score = max(0.0, 1.0 - confidence)
+
+    admitted = score >= threshold
+    reason = ("false_negative" if detector_missed
+              else f"low_confidence={confidence:.3f}" if admitted
+              else f"high_confidence={confidence:.3f}_below_threshold")
+
+    return QualityGateResult(
+        sample_id=sample.sample_id,
+        score=round(score, 4),
+        admitted=admitted,
+        threshold=threshold,
+        reason=reason,
+    )</code></pre>
+
+<h5>Step 2: Filter a batch of fuzzed samples through the gate</h5>
+<pre><code>def filter_fuzzed_batch(
+    samples: list[FuzzedSample],
+    detector_fn,
+    threshold: float = 0.4,
+) -> tuple[list[FuzzedSample], list[QualityGateResult]]:
+    """Filter fuzzed samples, keeping only those that pass the quality gate."""
+    admitted, audit_log = [], []
+
+    for sample in samples:
+        if sample.label != "malicious":
+            admitted.append(sample)  # benign samples bypass the gate
+            continue
+
+        result = quality_gate(sample, detector_fn, threshold)
+        audit_log.append(result)
+        if result.admitted:
+            admitted.append(sample)
+
+    n_checked = len(audit_log)
+    n_admitted = sum(1 for r in audit_log if r.admitted)
+    print(f"Quality gate: {n_admitted}/{n_checked} malicious samples admitted "
+          f"(threshold={threshold})")
+    return admitted, audit_log</code></pre>
+
+<p><strong>Key principle:</strong> Use stricter thresholds for high-assurance hardening cycles and lighter thresholds when rapid corpus expansion is the priority.</p>`,
+            },
+          ],
+        },
+        {
+          id: "AID-H-027.003",
+          name: "Taxonomy-Stratified Coverage Gap Analysis",
+          pillar: ["model", "app"],
+          phase: ["validation", "improvement"],
+          description:
+            "Measure detector performance by attack-technique category rather than relying solely on aggregate metrics. Break down results by a defined prompt-attack taxonomy such as role play, objective manipulation, obfuscation, indirect injection, encoding, or other organization-specific classes. The purpose is to expose category-level blind spots, prioritize the next hard-mining or fuzzing cycle, and prevent detector promotion based on misleading aggregate scores.",
+          toolsOpenSource: ["pandas", "scikit-learn", "Jupyter", "Captum"],
+          toolsCommercial: [
+            "Weights & Biases",
+            "Databricks Mosaic AI",
+            "Arize AI",
+            "Fiddler AI",
+          ],
+          defendsAgainst: [
+            {
+              framework: "MITRE ATLAS",
+              items: [
+                "AML.T0051 LLM Prompt Injection",
+                "AML.T0054 LLM Jailbreak",
+                "AML.T0068 LLM Prompt Obfuscation",
+                "AML.T0065 LLM Prompt Crafting",
+                "AML.T0015 Evade AI Model",
+              ],
+            },
+            {
+              framework: "MAESTRO",
+              items: [
+                "Adversarial Examples (L1)",
+                "Input Validation Attacks (L3)",
+                "Framework Evasion (L3)",
+                "Evasion of Detection (L5)",
+              ],
+            },
+            {
+              framework: "OWASP LLM Top 10 2025",
+              items: ["LLM01:2025 Prompt Injection"],
+            },
+            {
+              framework: "OWASP ML Top 10 2023",
+              items: ["ML01:2023 Input Manipulation Attack"],
+            },
+            {
+              framework: "OWASP Agentic AI Top 10 2026",
+              items: [
+                "ASI01:2026 Agent Goal Hijack (category-level analysis reveals which hijack styles still evade detection)",
+              ],
+            },
+            {
+              framework: "NIST Adversarial Machine Learning 2025",
+              items: [
+                "NISTAML.018 Prompt Injection",
+                "NISTAML.015 Indirect Prompt Injection",
+                "NISTAML.022 Evasion",
+              ],
+            },
+            {
+              framework: "Cisco Integrated AI Security and Safety Framework",
+              items: [
+                "AITech-1.1 Direct Prompt Injection",
+                "AITech-1.2 Indirect Prompt Injection",
+                "AITech-2.1 Jailbreak",
+                "AITech-9.2 Detection Evasion",
+              ],
+            },
+          ],
+          implementationStrategies: [
+            {
+              strategy:
+                "Compute taxonomy-stratified metrics and convert weak categories into the next retraining backlog.",
+              howTo: `<h5>Concept:</h5>
+<p>Aggregate accuracy can hide serious detector weaknesses. A detector that reports 97% overall accuracy may still miss 40% of obfuscation-based attacks or flag 10% of benign structured inputs. Tag the evaluation corpus with a stable taxonomy and report metrics per category to surface these blind spots.</p>
+
+<h5>Step 1: Define a prompt-attack taxonomy and tag the evaluation corpus</h5>
+<p>Use consistent category labels across hardening cycles so that trends are comparable over time.</p>
+<pre><code>import pandas as pd
+from sklearn.metrics import precision_recall_fscore_support
+
+# Standard taxonomy — extend with organization-specific categories as needed
+ATTACK_TAXONOMY = [
+    "direct_injection",
+    "indirect_injection",
+    "jailbreak_roleplay",
+    "jailbreak_objective",
+    "obfuscation_encoding",
+    "obfuscation_casing",
+    "format_wrapping",       # JSON/YAML/XML wrapped payloads
+    "semantic_paraphrase",
+    "multi_turn",
+    "benign",                # always include benign as a category
+]
+
+def stratified_report(
+    eval_df: pd.DataFrame,   # columns: text, label (0|1), pred (0|1), category, source
+    detector_version: str,
+) -> pd.DataFrame:
+    """Compute per-category precision, recall, F1 and sample counts."""
+    rows = []
+    for cat in eval_df["category"].unique():
+        cat_df = eval_df[eval_df["category"] == cat]
+        y_true, y_pred = cat_df["label"].values, cat_df["pred"].values
+
+        if cat == "benign":
+            # For benign, report false-positive rate instead of recall
+            fpr = (y_pred == 1).mean()
+            rows.append({"category": cat, "n": len(cat_df), "fpr": round(fpr, 4),
+                          "precision": None, "recall": None, "f1": None})
+        else:
+            p, r, f1, _ = precision_recall_fscore_support(
+                y_true, y_pred, pos_label=1, average="binary", zero_division=0)
+            rows.append({"category": cat, "n": len(cat_df), "fpr": None,
+                          "precision": round(p, 4), "recall": round(r, 4),
+                          "f1": round(f1, 4)})
+
+    report = pd.DataFrame(rows)
+    report["detector_version"] = detector_version
+    return report</code></pre>
+
+<h5>Step 2: Compare against previous cycle and identify weak categories for the next hardening sprint</h5>
+<pre><code>def identify_weak_categories(
+    current_report: pd.DataFrame,
+    previous_report: pd.DataFrame,
+    min_recall: float = 0.90,
+    max_benign_fpr: float = 0.03,
+    regression_threshold: float = 0.03,
+) -> list[dict]:
+    """Identify categories that need priority attention in the next hardening cycle."""
+    weak = []
+    for _, row in current_report.iterrows():
+        cat = row["category"]
+        prev = previous_report[previous_report["category"] == cat]
+
+        if cat == "benign":
+            if row["fpr"] is not None and row["fpr"] > max_benign_fpr:
+                weak.append({"category": cat, "issue": "high_fpr",
+                             "value": row["fpr"], "threshold": max_benign_fpr})
+        else:
+            if row["recall"] is not None and row["recall"] < min_recall:
+                weak.append({"category": cat, "issue": "low_recall",
+                             "value": row["recall"], "threshold": min_recall})
+
+            # Check for regression vs. previous cycle
+            if len(prev) > 0 and row["recall"] is not None:
+                prev_recall = prev.iloc[0].get("recall")
+                if prev_recall is not None:
+                    delta = prev_recall - row["recall"]
+                    if delta > regression_threshold:
+                        weak.append({"category": cat, "issue": "regression",
+                                     "current": row["recall"], "previous": prev_recall,
+                                     "delta": round(delta, 4)})
+
+    if weak:
+        print(f"⚠ {len(weak)} weak categories identified — feed into next hardening cycle")
+    else:
+        print("✓ All categories within thresholds")
+    return weak</code></pre>
+
+<p><strong>Key principle:</strong> Make category-level reporting a mandatory release gate for detector promotion. Never promote based solely on aggregate metrics.</p>`,
+            },
+            {
+              strategy:
+                "Use untouched out-of-loop evaluation for promotion, and reserve attribution methods for debugging representative misses.",
+              howTo: `<h5>Concept:</h5>
+<p>A fixed out-of-loop evaluation set is necessary to detect overfitting to the closed loop itself. If promotion decisions are based only on in-loop data (the same data that shaped the candidate), the process cannot detect when the detector has memorized specific samples rather than learning generalizable patterns.</p>
+
+<h5>Step 1: Maintain an immutable out-of-loop holdout set</h5>
+<p>This set must never be used for training, hard-sample mining, or fuzzing. It is the ground truth for promotion decisions.</p>
+<pre><code>import hashlib, json
+
+class OutOfLoopHoldout:
+    """Manages an immutable holdout evaluation set for detector promotion."""
+
+    def __init__(self, holdout_path: str):
+        self.holdout_path = holdout_path
+        self.samples = self._load()
+        self.checksum = self._compute_checksum()
+
+    def _load(self) -> list[dict]:
+        with open(self.holdout_path) as f:
+            return json.load(f)
+
+    def _compute_checksum(self) -> str:
+        content = json.dumps(self.samples, sort_keys=True)
+        return hashlib.sha256(content.encode()).hexdigest()[:16]
+
+    def verify_integrity(self, expected_checksum: str) -> bool:
+        """Verify the holdout set has not been modified since last promotion."""
+        match = self.checksum == expected_checksum
+        if not match:
+            raise ValueError(
+                f"Holdout set integrity check FAILED. "
+                f"Expected {expected_checksum}, got {self.checksum}. "
+                f"The holdout set may have been contaminated."
+            )
+        return True</code></pre>
+
+<h5>Step 2: Run the full promotion benchmark</h5>
+<pre><code>import numpy as np
+
+def promotion_benchmark(
+    detector_fn,                # callable: text -> {"label": str, "confidence": float}
+    holdout: OutOfLoopHoldout,
+    previous_report: pd.DataFrame,
+    detector_version: str,
+    expected_checksum: str,
+) -> dict:
+    """Full promotion benchmark: evaluate candidate on untouched holdout."""
+    # Verify holdout integrity before evaluation
+    holdout.verify_integrity(expected_checksum)
+
+    # Run inference on holdout
+    preds, labels, categories = [], [], []
+    for sample in holdout.samples:
+        result = detector_fn(sample["text"])
+        preds.append(1 if result["label"] == "malicious" else 0)
+        labels.append(sample["label_int"])          # 0=benign, 1=malicious
+        categories.append(sample["category"])
+
+    eval_df = pd.DataFrame({
+        "label": labels, "pred": preds, "category": categories,
+    })
+
+    # Generate stratified report
+    report = stratified_report(eval_df, detector_version)
+    weak = identify_weak_categories(report, previous_report)
+
+    return {
+        "detector_version": detector_version,
+        "holdout_checksum": holdout.checksum,
+        "holdout_size": len(holdout.samples),
+        "report": report.to_dict(orient="records"),
+        "weak_categories": weak,
+        "promotion_decision": "PROMOTE" if len(weak) == 0 else "HOLD",
+    }</code></pre>
+
+<h5>Step 3 (Optional): Debug representative misses with attribution</h5>
+<p>For false positives or false negatives that appear repeatedly, use integrated gradients to identify which tokens the detector is overweighting. This is a debugging aid, not a substitute for the benchmark.</p>
+<pre><code>from captum.attr import LayerIntegratedGradients
+
+def debug_miss(model, tokenizer, text: str, target_label: int = 1):
+    """Use integrated gradients to see which tokens drove the detector's decision."""
+    inputs = tokenizer(text, return_tensors="pt", truncation=True, max_length=512)
+    input_ids = inputs["input_ids"]
+
+    embeddings = model.get_input_embeddings()
+    lig = LayerIntegratedGradients(model, embeddings)
+
+    attrs = lig.attribute(
+        inputs=input_ids,
+        target=target_label,
+        n_steps=50,
+    )
+
+    # Map attributions back to tokens
+    tokens = tokenizer.convert_ids_to_tokens(input_ids[0])
+    scores = attrs.sum(dim=-1).squeeze().detach().numpy()
+
+    token_attrs = sorted(
+        zip(tokens, scores), key=lambda x: abs(x[1]), reverse=True
+    )[:10]
+
+    print(f"Top influential tokens for '{text[:60]}...':")
+    for token, score in token_attrs:
+        direction = "→ malicious" if score > 0 else "→ benign"
+        print(f"  {token:20s}  {score:+.4f}  {direction}")</code></pre>
+
+<p><strong>Key principle:</strong> Attribution helps explain <em>why</em> the detector fails on specific samples, guiding targeted fuzzing and data collection. It does not replace empirical benchmark gates.</p>`,
+            },
+          ],
+        },
+      ],
+    },
   ],
 };

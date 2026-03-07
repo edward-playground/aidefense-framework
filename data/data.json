@@ -1,8 +1,8 @@
 {
   "version": {
     "schemaVersion": "2.0",
-    "dataVersion": "2026.03.06",
-    "generatedAt": "2026-03-06T04:35:37.115Z",
+    "dataVersion": "2026.03.07",
+    "generatedAt": "2026-03-07T16:30:00.388Z",
     "source": "bundled",
     "keywordStructure": "categorized"
   },
@@ -13794,6 +13794,486 @@
               "sandbox",
               "containment",
               "analysis"
+            ]
+          }
+        },
+        {
+          "id": "AID-H-027",
+          "name": "Continuous Closed-Loop Hardening of Retrainable Prompt Injection Detectors",
+          "description": "Continuously strengthen a retrainable prompt injection detection model through a governed, closed-loop hardening pipeline. The pipeline generates or collects adversarial prompts that evade the current detector, identifies hard samples from detector errors, reinjects those samples into subsequent training cycles, and validates candidate detector versions on an independent out-of-loop evaluation set before promotion. This technique hardens the detector lifecycle itself rather than acting as a runtime enforcement boundary. It is intended for organizations that own, fine-tune, or otherwise control the training lifecycle of their prompt injection detector models.",
+          "pillar": [
+            "model",
+            "app"
+          ],
+          "phase": [
+            "validation",
+            "operation",
+            "improvement",
+            "building"
+          ],
+          "defendsAgainst": [
+            {
+              "framework": "MITRE ATLAS",
+              "items": [
+                "AML.T0051 LLM Prompt Injection",
+                "AML.T0051.000 LLM Prompt Injection: Direct",
+                "AML.T0051.001 LLM Prompt Injection: Indirect",
+                "AML.T0054 LLM Jailbreak",
+                "AML.T0068 LLM Prompt Obfuscation",
+                "AML.T0065 LLM Prompt Crafting",
+                "AML.T0015 Evade AI Model (hardens the detector itself against evasive prompt variants)",
+                "AML.T0107 Exploitation for Defense Evasion (iterative retraining closes repeatedly exploited detector gaps)"
+              ]
+            },
+            {
+              "framework": "MAESTRO",
+              "items": [
+                "Adversarial Examples (L1)",
+                "Input Validation Attacks (L3)",
+                "Framework Evasion (L3)",
+                "Evasion of Detection (L5)",
+                "Evasion of Security AI Agents (L6) (when the hardened detector is deployed as a security AI guardrail)"
+              ]
+            },
+            {
+              "framework": "OWASP LLM Top 10 2025",
+              "items": [
+                "LLM01:2025 Prompt Injection"
+              ]
+            },
+            {
+              "framework": "OWASP ML Top 10 2023",
+              "items": [
+                "ML01:2023 Input Manipulation Attack"
+              ]
+            },
+            {
+              "framework": "OWASP Agentic AI Top 10 2026",
+              "items": [
+                "ASI01:2026 Agent Goal Hijack (when the detector is used on agent inputs or agent-facing external content)"
+              ]
+            },
+            {
+              "framework": "NIST Adversarial Machine Learning 2025",
+              "items": [
+                "NISTAML.018 Prompt Injection",
+                "NISTAML.015 Indirect Prompt Injection",
+                "NISTAML.022 Evasion",
+                "NISTAML.025 Black-box Evasion"
+              ]
+            },
+            {
+              "framework": "Cisco Integrated AI Security and Safety Framework",
+              "items": [
+                "AITech-1.1 Direct Prompt Injection",
+                "AITech-1.2 Indirect Prompt Injection",
+                "AITech-2.1 Jailbreak",
+                "AITech-9.2 Detection Evasion",
+                "AISubtech-1.1.2 Obfuscation (Direct Prompt Injection)",
+                "AISubtech-1.2.2 Obfuscation (Indirect Prompt Injection)",
+                "AISubtech-2.1.2 Obfuscation (Jailbreak)",
+                "AISubtech-2.1.3 Semantic Manipulation (Jailbreak)",
+                "AISubtech-2.1.4 Token Exploitation (Jailbreak)",
+                "AISubtech-9.2.1 Obfuscation Vulnerabilities"
+              ]
+            }
+          ],
+          "implementationStrategies": [],
+          "toolsOpenSource": [],
+          "toolsCommercial": [],
+          "subTechniques": [
+            {
+              "id": "AID-H-027.001",
+              "name": "Hard-Sample Mining & Controlled Detector Retraining",
+              "description": "Systematically collect detector errors — especially false negatives on malicious prompts and false positives on benign prompts — and use them as governed hard samples for periodic retraining of the prompt injection detector. The purpose is to harden the detector against the exact decision boundaries it currently fails on. Candidate detector versions must be benchmarked against a fixed out-of-loop evaluation set and explicit promotion criteria before replacing the production detector.",
+              "pillar": [
+                "model",
+                "app"
+              ],
+              "phase": [
+                "validation",
+                "operation",
+                "improvement"
+              ],
+              "implementationStrategies": [
+                "Maintain a governed hard-sample repository and periodic retraining loop.",
+                "Use explicit promotion gates instead of blindly replacing the production detector."
+              ],
+              "toolsOpenSource": [
+                "Hugging Face Transformers",
+                "PyTorch",
+                "TensorFlow",
+                "MLflow",
+                "DVC",
+                "Apache Airflow",
+                "scikit-learn",
+                "pandas",
+                "Jupyter"
+              ],
+              "toolsCommercial": [
+                "Amazon SageMaker AI",
+                "Vertex AI",
+                "Databricks Mosaic AI",
+                "Weights & Biases",
+                "Cisco AI Defense",
+                "Protect AI"
+              ],
+              "defendsAgainst": [
+                {
+                  "framework": "MITRE ATLAS",
+                  "items": [
+                    "AML.T0051 LLM Prompt Injection",
+                    "AML.T0054 LLM Jailbreak",
+                    "AML.T0068 LLM Prompt Obfuscation",
+                    "AML.T0065 LLM Prompt Crafting",
+                    "AML.T0015 Evade AI Model",
+                    "AML.T0107 Exploitation for Defense Evasion"
+                  ]
+                },
+                {
+                  "framework": "MAESTRO",
+                  "items": [
+                    "Adversarial Examples (L1)",
+                    "Input Validation Attacks (L3)",
+                    "Framework Evasion (L3)",
+                    "Evasion of Detection (L5)"
+                  ]
+                },
+                {
+                  "framework": "OWASP LLM Top 10 2025",
+                  "items": [
+                    "LLM01:2025 Prompt Injection"
+                  ]
+                },
+                {
+                  "framework": "OWASP ML Top 10 2023",
+                  "items": [
+                    "ML01:2023 Input Manipulation Attack"
+                  ]
+                },
+                {
+                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "items": [
+                    "ASI01:2026 Agent Goal Hijack (when the detector is used in front of an agent or agent toolchain)"
+                  ]
+                },
+                {
+                  "framework": "NIST Adversarial Machine Learning 2025",
+                  "items": [
+                    "NISTAML.018 Prompt Injection",
+                    "NISTAML.015 Indirect Prompt Injection",
+                    "NISTAML.022 Evasion",
+                    "NISTAML.025 Black-box Evasion"
+                  ]
+                },
+                {
+                  "framework": "Cisco Integrated AI Security and Safety Framework",
+                  "items": [
+                    "AITech-1.1 Direct Prompt Injection",
+                    "AITech-1.2 Indirect Prompt Injection",
+                    "AITech-2.1 Jailbreak",
+                    "AITech-9.2 Detection Evasion",
+                    "AISubtech-9.2.1 Obfuscation Vulnerabilities"
+                  ]
+                }
+              ],
+              "keywords": {
+                "attack": [
+                  "prompt injection",
+                  "attack surface",
+                  "malicious",
+                  "prompts",
+                  "prompt",
+                  "injection",
+                  "exploitation",
+                  "vulnerability",
+                  "misconfiguration",
+                  "bypass"
+                ],
+                "defense": [
+                  "hard-sample",
+                  "mining",
+                  "controlled",
+                  "detector",
+                  "retraining",
+                  "governed",
+                  "harden",
+                  "benchmarked",
+                  "evaluation",
+                  "repository"
+                ]
+              }
+            },
+            {
+              "id": "AID-H-027.002",
+              "name": "Adversarial Prompt Fuzzing for Detector Corpus Expansion",
+              "description": "Expand detector training and evaluation corpora with adversarial prompt variants generated through semantic, syntactic, and format-preserving fuzzing. The purpose is to expose overfitting to surface-level textual features and force the detector to generalize to attack intent across paraphrases, punctuation or casing mutations, and alternate structured representations such as JSON, YAML, Markdown, or XML. This sub-technique is for corpus generation and detector hardening only; it is not itself an inline runtime filter.",
+              "pillar": [
+                "app"
+              ],
+              "phase": [
+                "building",
+                "validation",
+                "improvement"
+              ],
+              "implementationStrategies": [
+                "Generate balanced semantic, syntactic, and format-preserving variants for both malicious and benign corpora.",
+                "Use an optional quality gate before adding generated malicious samples to the corpus."
+              ],
+              "toolsOpenSource": [
+                "garak",
+                "TextAttack",
+                "nlpaug",
+                "Hugging Face Transformers",
+                "Jinja"
+              ],
+              "toolsCommercial": [
+                "Lakera",
+                "Cisco AI Defense",
+                "Protect AI"
+              ],
+              "defendsAgainst": [
+                {
+                  "framework": "MITRE ATLAS",
+                  "items": [
+                    "AML.T0068 LLM Prompt Obfuscation",
+                    "AML.T0065 LLM Prompt Crafting",
+                    "AML.T0051 LLM Prompt Injection",
+                    "AML.T0054 LLM Jailbreak",
+                    "AML.T0015 Evade AI Model"
+                  ]
+                },
+                {
+                  "framework": "MAESTRO",
+                  "items": [
+                    "Adversarial Examples (L1)",
+                    "Input Validation Attacks (L3)",
+                    "Framework Evasion (L3)",
+                    "Evasion of Detection (L5)"
+                  ]
+                },
+                {
+                  "framework": "OWASP LLM Top 10 2025",
+                  "items": [
+                    "LLM01:2025 Prompt Injection"
+                  ]
+                },
+                {
+                  "framework": "OWASP ML Top 10 2023",
+                  "items": [
+                    "ML01:2023 Input Manipulation Attack"
+                  ]
+                },
+                {
+                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "items": [
+                    "ASI01:2026 Agent Goal Hijack (when obfuscated prompts are used to redirect agent behavior)"
+                  ]
+                },
+                {
+                  "framework": "NIST Adversarial Machine Learning 2025",
+                  "items": [
+                    "NISTAML.018 Prompt Injection",
+                    "NISTAML.015 Indirect Prompt Injection",
+                    "NISTAML.022 Evasion"
+                  ]
+                },
+                {
+                  "framework": "Cisco Integrated AI Security and Safety Framework",
+                  "items": [
+                    "AITech-1.1 Direct Prompt Injection",
+                    "AITech-1.2 Indirect Prompt Injection",
+                    "AITech-2.1 Jailbreak",
+                    "AITech-9.2 Detection Evasion",
+                    "AISubtech-1.1.2 Obfuscation (Direct Prompt Injection)",
+                    "AISubtech-1.2.2 Obfuscation (Indirect Prompt Injection)",
+                    "AISubtech-2.1.2 Obfuscation (Jailbreak)",
+                    "AISubtech-2.1.3 Semantic Manipulation (Jailbreak)",
+                    "AISubtech-2.1.4 Token Exploitation (Jailbreak)",
+                    "AISubtech-9.2.1 Obfuscation Vulnerabilities"
+                  ]
+                }
+              ],
+              "keywords": {
+                "attack": [
+                  "attack surface",
+                  "adversarial",
+                  "prompt",
+                  "expose",
+                  "attack",
+                  "representations",
+                  "malicious",
+                  "exploitation",
+                  "vulnerability",
+                  "misconfiguration"
+                ],
+                "defense": [
+                  "adversarial",
+                  "prompt",
+                  "fuzzing",
+                  "detector",
+                  "corpus",
+                  "expansion",
+                  "evaluation",
+                  "hardening",
+                  "filter",
+                  "protection",
+                  "prevention",
+                  "secure",
+                  "robust",
+                  "resilient",
+                  "mitigation"
+                ]
+              }
+            },
+            {
+              "id": "AID-H-027.003",
+              "name": "Taxonomy-Stratified Coverage Gap Analysis",
+              "description": "Measure detector performance by attack-technique category rather than relying solely on aggregate metrics. Break down results by a defined prompt-attack taxonomy such as role play, objective manipulation, obfuscation, indirect injection, encoding, or other organization-specific classes. The purpose is to expose category-level blind spots, prioritize the next hard-mining or fuzzing cycle, and prevent detector promotion based on misleading aggregate scores.",
+              "pillar": [
+                "model",
+                "app"
+              ],
+              "phase": [
+                "validation",
+                "improvement"
+              ],
+              "implementationStrategies": [
+                "Compute taxonomy-stratified metrics and convert weak categories into the next retraining backlog.",
+                "Use untouched out-of-loop evaluation for promotion, and reserve attribution methods for debugging representative misses."
+              ],
+              "toolsOpenSource": [
+                "pandas",
+                "scikit-learn",
+                "Jupyter",
+                "Captum"
+              ],
+              "toolsCommercial": [
+                "Weights & Biases",
+                "Databricks Mosaic AI",
+                "Arize AI",
+                "Fiddler AI"
+              ],
+              "defendsAgainst": [
+                {
+                  "framework": "MITRE ATLAS",
+                  "items": [
+                    "AML.T0051 LLM Prompt Injection",
+                    "AML.T0054 LLM Jailbreak",
+                    "AML.T0068 LLM Prompt Obfuscation",
+                    "AML.T0065 LLM Prompt Crafting",
+                    "AML.T0015 Evade AI Model"
+                  ]
+                },
+                {
+                  "framework": "MAESTRO",
+                  "items": [
+                    "Adversarial Examples (L1)",
+                    "Input Validation Attacks (L3)",
+                    "Framework Evasion (L3)",
+                    "Evasion of Detection (L5)"
+                  ]
+                },
+                {
+                  "framework": "OWASP LLM Top 10 2025",
+                  "items": [
+                    "LLM01:2025 Prompt Injection"
+                  ]
+                },
+                {
+                  "framework": "OWASP ML Top 10 2023",
+                  "items": [
+                    "ML01:2023 Input Manipulation Attack"
+                  ]
+                },
+                {
+                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "items": [
+                    "ASI01:2026 Agent Goal Hijack (category-level analysis reveals which hijack styles still evade detection)"
+                  ]
+                },
+                {
+                  "framework": "NIST Adversarial Machine Learning 2025",
+                  "items": [
+                    "NISTAML.018 Prompt Injection",
+                    "NISTAML.015 Indirect Prompt Injection",
+                    "NISTAML.022 Evasion"
+                  ]
+                },
+                {
+                  "framework": "Cisco Integrated AI Security and Safety Framework",
+                  "items": [
+                    "AITech-1.1 Direct Prompt Injection",
+                    "AITech-1.2 Indirect Prompt Injection",
+                    "AITech-2.1 Jailbreak",
+                    "AITech-9.2 Detection Evasion"
+                  ]
+                }
+              ],
+              "keywords": {
+                "attack": [
+                  "attack surface",
+                  "gap",
+                  "manipulation",
+                  "injection",
+                  "expose",
+                  "exploitation",
+                  "vulnerability",
+                  "misconfiguration",
+                  "bypass"
+                ],
+                "defense": [
+                  "taxonomy-stratified",
+                  "coverage",
+                  "gap",
+                  "analysis",
+                  "role",
+                  "prevent",
+                  "evaluation",
+                  "hardening",
+                  "protection",
+                  "prevention",
+                  "secure",
+                  "robust",
+                  "resilient",
+                  "mitigation",
+                  "defense"
+                ]
+              }
+            }
+          ],
+          "url": "https://aidefend.net",
+          "keywords": {
+            "attack": [
+              "prompt injection",
+              "attack surface",
+              "prompt",
+              "injection",
+              "adversarial",
+              "prompts",
+              "evade",
+              "evasion",
+              "bypass",
+              "stealth",
+              "obfuscation",
+              "hiding",
+              "exploitation",
+              "vulnerability",
+              "misconfiguration"
+            ],
+            "defense": [
+              "continuous",
+              "closed-loop",
+              "hardening",
+              "retrainable",
+              "prompt",
+              "injection",
+              "detectors",
+              "detection",
+              "governed",
+              "evaluation",
+              "enforcement",
+              "control"
             ]
           }
         }
