@@ -22,6 +22,7 @@
     * **Frameworks View**: Browse defenses mapped to specific threat frameworks (OWASP LLM/ML/Agentic Top 10, MAESTRO, MITRE ATLAS, NIST AML, Cisco AI Security).
 * **Comprehensive Technique Details**: Each defensive technique includes a detailed description, implementation strategies with code examples, and lists of relevant open-source and commercial tools.
 * **Threat Mapping**: Techniques are explicitly mapped to known threats from established frameworks like **MITRE ATLAS**, **MAESTRO**, the **OWASP Top 10** for LLMs, ML, and Agentic Applications, **Cisco Integrated AI Security and Safety Framework**, and **NIST Adversarial Machine Learning 2025**.
+* **WebMCP Support**: With a [WebMCP](https://anthropic.com/research/webmcp)-capable browser, AI agents can browse and query AIDEFEND's defense knowledge base directly — just ask questions in any language and get answers.
 * **Interactive Interface**: A clean, responsive UI with powerful search functionality to quickly find relevant techniques and threats.
 * **Four Themes**: Dark, Light, High Contrast, and The Matrix — a comfortable viewing experience for any environment.
 
@@ -60,6 +61,10 @@ This view lets you browse defenses mapped to specific threat frameworks — **OW
 3.  **Search Everything**: Use the search bar to filter all content by keywords, technique IDs, or threat mappings (e.g., "Prompt Injection", "AID-H-002", "MAESTRO", "LLM01").
 
 4.  **AIDEFEND MCP/REST API Service**: Now available! A 100% Local, private RAG system for the AIDEFEND framework. [Try it now](https://github.com/edward-playground/aidefend-mcp).
+5.  **Ask AI Agents (WebMCP)**: Use a WebMCP-capable browser to let AI agents query the framework for you:
+    1. Open [aidefend.net](https://aidefend.net) in a WebMCP-capable browser (e.g., Chrome 146+ with WebMCP flag enabled, or Microsoft Edge with upcoming WebMCP support). **Keep the tab open** — the AI agent can only access AIDEFEND tools while the page is active.
+    2. Ask your AI agent (e.g., Gemini, ChatGPT, Claude) a question in any language — e.g., "What defenses exist for prompt injection?" or "如何防禦模型投毒？"
+    3. The AI agent searches the framework, retrieves matching techniques, and returns implementation guidance.
 ---
 
 ### 📚 Acknowledgments & Disclaimer
