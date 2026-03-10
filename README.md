@@ -22,7 +22,7 @@
     * **Frameworks View**: Browse defenses mapped to specific threat frameworks (OWASP LLM/ML/Agentic Top 10, MAESTRO, MITRE ATLAS, NIST AML, Cisco AI Security).
 * **Comprehensive Technique Details**: Each defensive technique includes a detailed description, implementation strategies with code examples, and lists of relevant open-source and commercial tools.
 * **Threat Mapping**: Techniques are explicitly mapped to known threats from established frameworks like **MITRE ATLAS**, **MAESTRO**, the **OWASP Top 10** for LLMs, ML, and Agentic Applications, **Cisco Integrated AI Security and Safety Framework**, and **NIST Adversarial Machine Learning 2025**.
-* **WebMCP Support**: With a [WebMCP](https://anthropic.com/research/webmcp)-capable browser, AI agents can browse and query AIDEFEND's defense knowledge base directly — just ask questions in any language and get answers.
+* **WebMCP Support**: With a [WebMCP](https://webmachinelearning.github.io/webmcp/)-capable browser, AI agents can browse and query AIDEFEND's defense knowledge base directly — just ask questions in any language and get answers.
 * **Interactive Interface**: A clean, responsive UI with powerful search functionality to quickly find relevant techniques and threats.
 * **Four Themes**: Dark, Light, High Contrast, and The Matrix — a comfortable viewing experience for any environment.
 

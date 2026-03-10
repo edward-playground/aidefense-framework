@@ -22,8 +22,7 @@
  * @version 1.0.0
  */
 
-// Pin to a specific version — do not use @latest
-// Before deploying, verify the latest stable version at https://www.npmjs.com/package/@mcp-b/global
+// Verify the latest stable version at https://www.npmjs.com/package/@mcp-b/global
 // Record tested/verified versions here
 import 'https://esm.sh/@mcp-b/global@1.5.0';
 
