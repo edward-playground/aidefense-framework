@@ -1,8 +1,8 @@
 {
   "version": {
     "schemaVersion": "2.0",
-    "dataVersion": "2026.03.07",
-    "generatedAt": "2026-03-07T16:30:00.388Z",
+    "dataVersion": "2026.03.13",
+    "generatedAt": "2026-03-13T15:05:13.439Z",
     "source": "bundled",
     "keywordStructure": "categorized"
   },
@@ -4757,6 +4757,133 @@
                   "sign",
                   "policy",
                   "block"
+                ]
+              }
+            },
+            {
+              "id": "AID-H-003.007",
+              "name": "Adapter / PEFT (Parameter-Efficient Fine-Tuning) Supply Chain Integrity & Provenance Verification",
+              "description": "Verify the integrity, provenance, compatibility, and release policy of adapter-based model extensions such as LoRA, QLoRA, and other PEFT artifacts before they are loaded, attached, merged, promoted, or hot-swapped into runtime systems. This sub-technique focuses on preventing trojaned, tampered, incompatible, or untrusted adapters from altering base model behavior through cryptographic verification, publisher/source attestation, strict binding to the intended base model and runtime, registry allowlisting, and post-load behavioral validation.",
+              "pillar": [
+                "infra",
+                "model"
+              ],
+              "phase": [
+                "building",
+                "validation",
+                "operation"
+              ],
+              "implementationStrategies": [
+                "Require cryptographic verification and provenance attestation for every adapter artifact before load, attach, merge, or promotion.",
+                "Bind each adapter to an approved base-model digest, tokenizer/version, target modules, and runtime compatibility manifest; fail closed on mismatch.",
+                "Enforce internal registry allowlisting, revocation/tombstone handling, and publisher trust policy for adapters sourced from external hubs or marketplaces.",
+                "Run pre-promotion behavioral validation on the adapter-composed model using golden tasks, safety canaries, and regression checks to detect trojans or severe behavior drift."
+              ],
+              "toolsOpenSource": [
+                "Sigstore / cosign",
+                "in-toto / SLSA provenance tooling",
+                "safetensors",
+                "OPA / Conftest / Kyverno",
+                "MLflow Model Registry",
+                "Hugging Face Hub"
+              ],
+              "toolsCommercial": [
+                "JFrog Artifactory / Xray",
+                "AWS CodeArtifact / ECR",
+                "Azure ML Registry",
+                "Weights & Biases Model Registry"
+              ],
+              "defendsAgainst": [
+                {
+                  "framework": "MITRE ATLAS",
+                  "items": [
+                    "AML.T0010 AI Supply Chain Compromise",
+                    "AML.T0010.003 AI Supply Chain Compromise: Model",
+                    "AML.T0011.000 User Execution: Unsafe AI Artifacts",
+                    "AML.T0058 Publish Poisoned Models",
+                    "AML.T0031 Erode AI Model Integrity"
+                  ]
+                },
+                {
+                  "framework": "MAESTRO",
+                  "items": [
+                    "Backdoor Attacks (L1)",
+                    "Backdoor Attacks (L3)",
+                    "Supply Chain Attacks (Cross-Layer)"
+                  ]
+                },
+                {
+                  "framework": "OWASP LLM Top 10 2025",
+                  "items": [
+                    "LLM03:2025 Supply Chain",
+                    "LLM04:2025 Data and Model Poisoning"
+                  ]
+                },
+                {
+                  "framework": "OWASP ML Top 10 2023",
+                  "items": [
+                    "ML06:2023 AI Supply Chain Attacks",
+                    "ML10:2023 Model Poisoning",
+                    "ML07:2023 Transfer Learning Attack"
+                  ]
+                },
+                {
+                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "items": [
+                    "ASI04:2026 Agentic Supply Chain Vulnerabilities"
+                  ]
+                },
+                {
+                  "framework": "NIST Adversarial Machine Learning 2025",
+                  "items": [
+                    "NISTAML.051 Model Poisoning (Supply Chain)",
+                    "NISTAML.023 Backdoor Poisoning"
+                  ]
+                },
+                {
+                  "framework": "Cisco Integrated AI Security and Safety Framework",
+                  "items": [
+                    "AITech-9.1 Model or Agentic System Manipulation",
+                    "AITech-9.3 Dependency / Plugin Compromise",
+                    "AISubtech-9.2.2 Backdoors and Trojans",
+                    "AISubtech-9.3.1 Malicious Package / Tool Injection"
+                  ]
+                }
+              ],
+              "keywords": {
+                "attack": [
+                  "data poisoning",
+                  "supply chain attack",
+                  "untrusted data",
+                  "unauthorized modification",
+                  "man in the middle",
+                  "apt",
+                  "artifacts",
+                  "trojaned",
+                  "tampered",
+                  "untrusted",
+                  "artifact",
+                  "tampering",
+                  "corruption",
+                  "manipulation",
+                  "forgery"
+                ],
+                "defense": [
+                  "model registry",
+                  "adapter",
+                  "peft",
+                  "parameter-efficient",
+                  "fine-tuning",
+                  "supply",
+                  "chain",
+                  "integrity",
+                  "provenance",
+                  "verification",
+                  "verify",
+                  "policy",
+                  "preventing",
+                  "cryptographic",
+                  "attestation"
                 ]
               }
             }
@@ -9891,7 +10018,10 @@
                 "operation"
               ],
               "implementationStrategies": [
-                "Implement a step-wise agent executor that yields control for external validation."
+                "Implement a step-wise agent executor that yields control for external validation.",
+                "Enforce circuit breakers on recursion depth, planner iterations, consecutive tool-call chains, and repeated non-progressing action patterns so the agent halts or yields control before runaway execution propagates.",
+                "Trip the reasoning loop into fail-closed states such as HITL review, safe mode, or workflow termination when the same tool chain repeats, when error-retry cycles exceed policy, or when the agent cannot demonstrate forward progress.",
+                "Emit auditable breaker events that record trigger condition, loop counters, tool-call trace, tenant or session context, and resulting containment action so recursive abuse can be reconstructed during forensics."
               ],
               "toolsOpenSource": [
                 "Agentic frameworks with callback handlers (LangChain, LlamaIndex, AutoGen)",
@@ -9961,6 +10091,8 @@
                   "invalid input",
                   "forensic evasion",
                   "state",
+                  "context",
+                  "abuse",
                   "injection",
                   "bypass",
                   "exploit",
@@ -9969,6 +10101,7 @@
                   "unauthorized"
                 ],
                 "defense": [
+                  "circuit breaker",
                   "interruptible",
                   "auditable",
                   "reasoning",
@@ -9978,12 +10111,11 @@
                   "inspect",
                   "audit",
                   "validation",
-                  "hardening",
-                  "protection",
-                  "prevention",
-                  "secure",
-                  "robust",
-                  "resilient"
+                  "enforce",
+                  "safe",
+                  "policy",
+                  "trace",
+                  "session"
                 ]
               }
             },
@@ -14276,6 +14408,134 @@
               "control"
             ]
           }
+        },
+        {
+          "id": "AID-H-028",
+          "name": "Inference Cache Integrity, Isolation & Poisoning Prevention",
+          "description": "Protect inference-time caches against poisoning, cross-tenant contamination, and unsafe reuse. This technique covers both semantic or prompt-response caches (application layer) and serving-state caches such as prefix or KV caches (infrastructure layer). It enforces strict cache-key binding, tenant/session isolation, freshness and TTL controls, invalidation on model or policy change, provenance logging, and fail-closed reuse policies when authorization, system prompt, or execution context changes. Scope boundary: AID-H-009.004 handles GPU VRAM physical residue hygiene (hardware layer); AID-H-009.005 handles confidential inference via TEE (confidentiality). This technique handles cache logical integrity and isolation (application/serving layer).",
+          "pillar": [
+            "app",
+            "infra"
+          ],
+          "phase": [
+            "building",
+            "operation"
+          ],
+          "defendsAgainst": [
+            {
+              "framework": "MITRE ATLAS",
+              "items": [
+                "AML.T0051.001 LLM Prompt Injection: Indirect",
+                "AML.T0070 RAG Poisoning",
+                "AML.T0071 False RAG Entry Injection",
+                "AML.T0025 Exfiltration via Cyber Means"
+              ]
+            },
+            {
+              "framework": "MAESTRO",
+              "items": [
+                "Compromised RAG Pipelines (L2)",
+                "Data Tampering (L2)",
+                "Data Leakage (Cross-Layer) (cross-tenant cache reuse leaks responses across boundaries)"
+              ]
+            },
+            {
+              "framework": "OWASP LLM Top 10 2025",
+              "items": [
+                "LLM01:2025 Prompt Injection",
+                "LLM04:2025 Data and Model Poisoning",
+                "LLM08:2025 Vector and Embedding Weaknesses"
+              ]
+            },
+            {
+              "framework": "OWASP ML Top 10 2023",
+              "items": [
+                "ML02:2023 Data Poisoning Attack",
+                "ML09:2023 Output Integrity Attack"
+              ]
+            },
+            {
+              "framework": "OWASP Agentic AI Top 10 2026",
+              "items": [
+                "ASI06:2026 Memory & Context Poisoning",
+                "ASI03:2026 Identity and Privilege Abuse (cache reuse across privilege boundaries)",
+                "ASI02:2026 Tool Misuse and Exploitation"
+              ]
+            },
+            {
+              "framework": "NIST Adversarial Machine Learning 2025",
+              "items": [
+                "NISTAML.015 Indirect Prompt Injection",
+                "NISTAML.018 Prompt Injection",
+                "NISTAML.036 Leaking information from user interactions"
+              ]
+            },
+            {
+              "framework": "Cisco Integrated AI Security and Safety Framework",
+              "items": [
+                "AITech-4.2 Context Boundary Attacks",
+                "AITech-7.2 Memory System Corruption",
+                "AISubtech-4.2.2 Session Boundary Violation",
+                "AISubtech-12.1.2 Tool Poisoning"
+              ]
+            }
+          ],
+          "implementationStrategies": [
+            "Bind every cache key to tenant, session, user or agent identity, model version, system-prompt or policy version, and authorization context so cached entries cannot be reused across incompatible trust boundaries.",
+            "Partition semantic caches and serving-state caches by tenant and security context, and fail closed when cache provenance, isolation metadata, or freshness checks are missing.",
+            "Invalidate cache entries on model updates, prompt-template changes, tool-policy changes, or corpus/version changes that would make prior cached outputs unsafe or stale.",
+            "Log cache hits, cache misses, cache-source provenance, and invalidation events so analysts can distinguish fresh generation from reused output during forensics and assurance review."
+          ],
+          "toolsOpenSource": [
+            "Redis / Valkey (per-tenant keyspace, TTL, pub/sub invalidation)",
+            "GPTCache (semantic caching with pluggable backends)",
+            "vLLM (prefix caching, KV cache management)",
+            "Envoy / NGINX (cache partitioning, header-based routing)",
+            "OPA (cache reuse policy enforcement)"
+          ],
+          "toolsCommercial": [
+            "Redis Enterprise (active-active with ACLs)",
+            "Cloudflare API Gateway / WAF",
+            "F5 Distributed Cloud API Security"
+          ],
+          "subTechniques": [],
+          "url": "https://aidefend.net",
+          "keywords": {
+            "attack": [
+              "system prompt",
+              "data poisoning",
+              "supply chain attack",
+              "untrusted data",
+              "unauthorized modification",
+              "cache",
+              "poisoning",
+              "prompt",
+              "context",
+              "key",
+              "inference",
+              "tampering",
+              "corruption",
+              "manipulation",
+              "forgery"
+            ],
+            "defense": [
+              "policy enforcement",
+              "inference",
+              "cache",
+              "integrity",
+              "isolation",
+              "poisoning",
+              "prevention",
+              "authorization",
+              "protect",
+              "session",
+              "policy",
+              "provenance",
+              "logging",
+              "policies",
+              "scope"
+            ]
+          }
         }
       ]
     },
@@ -17770,6 +18030,127 @@
                   "observability",
                   "logging",
                   "audit"
+                ]
+              }
+            },
+            {
+              "id": "AID-D-005.007",
+              "name": "Token, Tool-Use & Cost Spike Detection & Alerting",
+              "description": "Continuously monitor spend-linked operational signals such as token consumption, tool invocation volume, retry bursts, latency inflation, provider cost estimates, and abnormal request fan-out to detect AI service cost abuse (Economic Denial of Wallet / EDW). This sub-technique helps identify recursive tool loops, prompt stuffing, abusive replay, runaway automation, or misconfigured routing before they cause material financial loss or availability degradation. This is the detective counterpart to the preventive controls in AID-I-003 (budget-triggered throttling) and AID-H-018.001 (recursive loop circuit breakers).",
+              "pillar": [
+                "infra",
+                "app"
+              ],
+              "phase": [
+                "operation"
+              ],
+              "implementationStrategies": [
+                "Collect per-tenant, per-user, per-session, per-agent, and per-model counters for input tokens, output tokens, tool calls, retries, latency, and estimated spend.",
+                "Trigger alerts when cost-linked metrics deviate sharply from historical baselines or violate rate-of-change thresholds, especially when correlated with repeated tool chains or non-progressing loops.",
+                "Correlate abnormal spend signals with automated response outcomes such as throttle, safe-mode downgrade, session quarantine, or human review so cost abuse becomes part of the incident timeline."
+              ],
+              "toolsOpenSource": [
+                "OpenTelemetry (metrics, traces, spans)",
+                "Prometheus (time-series metrics, alerting rules)",
+                "Grafana (dashboards, alerting)",
+                "Fluent Bit / Fluentd (log routing)",
+                "ClickHouse (high-cardinality analytics)"
+              ],
+              "toolsCommercial": [
+                "Datadog (APM, cost monitoring, anomaly detection)",
+                "Splunk Enterprise Security (correlation rules)",
+                "New Relic (AI monitoring)",
+                "Elastic Security (ML-based anomaly detection)"
+              ],
+              "defendsAgainst": [
+                {
+                  "framework": "MITRE ATLAS",
+                  "items": [
+                    "AML.T0034 Cost Harvesting",
+                    "AML.T0029 Denial of AI Service",
+                    "AML.T0053 AI Agent Tool Invocation",
+                    "AML.T0040 AI Model Inference API Access"
+                  ]
+                },
+                {
+                  "framework": "MAESTRO",
+                  "items": [
+                    "Resource Hijacking (L4)",
+                    "Denial of Service on Framework APIs (L3)",
+                    "Agent Tool Misuse (L7)"
+                  ]
+                },
+                {
+                  "framework": "OWASP LLM Top 10 2025",
+                  "items": [
+                    "LLM10:2025 Unbounded Consumption"
+                  ]
+                },
+                {
+                  "framework": "OWASP ML Top 10 2023",
+                  "items": [
+                    "N/A"
+                  ]
+                },
+                {
+                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "items": [
+                    "ASI02:2026 Tool Misuse and Exploitation",
+                    "ASI08:2026 Cascading Failures",
+                    "ASI10:2026 Rogue Agents"
+                  ]
+                },
+                {
+                  "framework": "NIST Adversarial Machine Learning 2025",
+                  "items": [
+                    "NISTAML.014 Energy-latency",
+                    "NISTAML.039 Compromising connected resources"
+                  ]
+                },
+                {
+                  "framework": "Cisco Integrated AI Security and Safety Framework",
+                  "items": [
+                    "AITech-13.1 Disruption of Availability",
+                    "AITech-13.2 Cost Harvesting / Repurposing",
+                    "AISubtech-13.2.1 Service Misuse for Cost Inflation",
+                    "AISubtech-13.1.4 Application Denial of Service"
+                  ]
+                }
+              ],
+              "keywords": {
+                "attack": [
+                  "anomalous behavior",
+                  "denial of service",
+                  "resource exhaustion",
+                  "token",
+                  "abnormal",
+                  "abuse",
+                  "prompt",
+                  "misconfigured",
+                  "degradation",
+                  "tokens",
+                  "drift",
+                  "deviation",
+                  "manipulation",
+                  "flooding",
+                  "evasion"
+                ],
+                "defense": [
+                  "circuit breaker",
+                  "human review",
+                  "anomaly detection",
+                  "token",
+                  "tool-use",
+                  "cost",
+                  "spike",
+                  "detection",
+                  "alerting",
+                  "monitor",
+                  "detect",
+                  "availability",
+                  "tokens",
+                  "thresholds",
+                  "session"
                 ]
               }
             }
@@ -21760,7 +22141,10 @@
             "Design AI systems with a 'safe mode' or degraded functionality state.",
             "Utilize SOAR platforms to automate quarantine/throttling actions.",
             "Hallucination Circuit Breaker & Degrade Modes.",
-            "Throttle GPU/CPU for a suspicious tenant namespace in Kubernetes."
+            "Throttle GPU/CPU for a suspicious tenant namespace in Kubernetes.",
+            "Enforce budget-triggered throttling and safe-mode downgrade when per-session, per-user, per-agent, or per-API-key token and spend thresholds are exceeded or when abnormal cost-abuse scores cross policy thresholds.",
+            "Apply multi-dimensional quotas such as input-token ceilings, output-token ceilings, tool-call ceilings, and cumulative session budget ceilings so cost abuse cannot evade control by shifting from one resource dimension to another.",
+            "Escalate from soft throttling to hard containment when budget exhaustion is paired with suspicious signals such as recursive tool loops, repeated retries, anomalous latency growth, or high-confidence abuse detections."
           ],
           "toolsOpenSource": [
             "Fail2Ban (adapted for AI logs)",
@@ -21787,7 +22171,11 @@
               "anomalous",
               "degraded",
               "state",
-              "degrade"
+              "degrade",
+              "token",
+              "abnormal",
+              "abuse",
+              "evade"
             ],
             "defense": [
               "rate limiting",
@@ -22337,6 +22725,129 @@
                   "separation",
                   "boundary",
                   "enclave"
+                ]
+              }
+            },
+            {
+              "id": "AID-I-004.005",
+              "name": "Memory TTL, Staleness Decay & Forced Forgetting",
+              "description": "Apply time-based trust decay and deletion controls to persistent agent memory so stored context does not remain implicitly trusted forever. This sub-technique introduces TTLs, freshness metadata, re-validation gates, downgrade rules, and forced forgetting policies for long-lived memory entries. The goal is to reduce stale-instruction risk, latent memory poisoning, cross-session carryover, and retention of privacy- or mission-sensitive context that should no longer influence agent behavior. Scope boundary: AID-I-004.001 handles session-level / ephemeral context hygiene; this sub-technique handles persistent memory lifecycle management including trust decay, re-validation, and deletion.",
+              "pillar": [
+                "app",
+                "data"
+              ],
+              "phase": [
+                "operation"
+              ],
+              "implementationStrategies": [
+                "Attach freshness metadata such as creation time, expiry time, last access time, last validation time, and trust tier to every persistent memory record.",
+                "Automatically downgrade or quarantine trusted memory that exceeds TTL or staleness thresholds until it is re-validated by policy or human review.",
+                "Apply forced forgetting policies for session-scoped, user-preference, or privacy-sensitive memory classes so they are deleted at session end or after defined retention windows.",
+                "Propagate deletion and downgrade actions across derived artifacts such as embeddings, summaries, secondary indexes, caches, and replicas instead of deleting only the primary record."
+              ],
+              "toolsOpenSource": [
+                "Redis / Valkey (TTL, expiry, keyspace notifications)",
+                "PostgreSQL (row-level TTL via pg_cron, triggers)",
+                "Qdrant / Weaviate / Milvus (payload-based expiry filters)",
+                "Temporal / Celery (scheduled decay and re-validation workflows)",
+                "OpenTelemetry (memory lifecycle event telemetry)"
+              ],
+              "toolsCommercial": [
+                "Redis Enterprise (active-active with TTL sync)",
+                "Pinecone (metadata-filtered deletion)",
+                "Datadog (memory lifecycle dashboards)"
+              ],
+              "defendsAgainst": [
+                {
+                  "framework": "MITRE ATLAS",
+                  "items": [
+                    "AML.T0080 AI Agent Context Poisoning",
+                    "AML.T0080.000 AI Agent Context Poisoning: Memory",
+                    "AML.T0051 LLM Prompt Injection",
+                    "AML.T0061 LLM Prompt Self-Replication",
+                    "AML.T0092 Manipulate User LLM Chat History"
+                  ]
+                },
+                {
+                  "framework": "MAESTRO",
+                  "items": [
+                    "Agent Goal Manipulation (L7)",
+                    "Agent Tool Misuse (L7)",
+                    "Data Poisoning (L2)",
+                    "Compromised RAG Pipelines (L2)"
+                  ]
+                },
+                {
+                  "framework": "OWASP LLM Top 10 2025",
+                  "items": [
+                    "LLM01:2025 Prompt Injection",
+                    "LLM02:2025 Sensitive Information Disclosure",
+                    "LLM04:2025 Data and Model Poisoning",
+                    "LLM09:2025 Misinformation (stale memory causes agent to act on outdated context, producing incorrect or misleading outputs)"
+                  ]
+                },
+                {
+                  "framework": "OWASP ML Top 10 2023",
+                  "items": [
+                    "ML02:2023 Data Poisoning Attack",
+                    "ML09:2023 Output Integrity Attack"
+                  ]
+                },
+                {
+                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "items": [
+                    "ASI06:2026 Memory & Context Poisoning",
+                    "ASI01:2026 Agent Goal Hijack"
+                  ]
+                },
+                {
+                  "framework": "NIST Adversarial Machine Learning 2025",
+                  "items": [
+                    "NISTAML.018 Prompt Injection",
+                    "NISTAML.015 Indirect Prompt Injection",
+                    "NISTAML.013 Data Poisoning"
+                  ]
+                },
+                {
+                  "framework": "Cisco Integrated AI Security and Safety Framework",
+                  "items": [
+                    "AITech-5.1 Memory System Persistence",
+                    "AITech-7.2 Memory System Corruption",
+                    "AISubtech-5.1.1 Long-term / Short-term Memory Injection",
+                    "AISubtech-7.2.1 Memory Anchor Attacks"
+                  ]
+                }
+              ],
+              "keywords": {
+                "attack": [
+                  "malicious input",
+                  "invalid input",
+                  "memory",
+                  "context",
+                  "risk",
+                  "poisoning",
+                  "artifacts",
+                  "embeddings",
+                  "injection",
+                  "bypass",
+                  "exploit"
+                ],
+                "defense": [
+                  "human review",
+                  "memory",
+                  "ttl",
+                  "staleness",
+                  "decay",
+                  "forced",
+                  "forgetting",
+                  "trust",
+                  "trusted",
+                  "rules",
+                  "policies",
+                  "scope",
+                  "validation",
+                  "quarantine",
+                  "thresholds"
                 ]
               }
             }

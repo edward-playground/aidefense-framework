@@ -2558,6 +2558,99 @@ export const detectTactic = {
                     ],
                     "toolsOpenSource": ["Prometheus", "Grafana", "ELK Stack", "Nginx", "Falco"],
                     "toolsCommercial": ["Datadog", "Splunk", "Dynatrace", "AWS CloudWatch"]
+                },
+                {
+                    "id": "AID-D-005.007",
+                    "name": "Token, Tool-Use & Cost Spike Detection & Alerting",
+                    "pillar": ["infra", "app"],
+                    "phase": ["operation"],
+                    "description": "Continuously monitor spend-linked operational signals such as token consumption, tool invocation volume, retry bursts, latency inflation, provider cost estimates, and abnormal request fan-out to detect AI service cost abuse (Economic Denial of Wallet / EDW). This sub-technique helps identify recursive tool loops, prompt stuffing, abusive replay, runaway automation, or misconfigured routing before they cause material financial loss or availability degradation. This is the detective counterpart to the preventive controls in AID-I-003 (budget-triggered throttling) and AID-H-018.001 (recursive loop circuit breakers).",
+                    "toolsOpenSource": [
+                        "OpenTelemetry (metrics, traces, spans)",
+                        "Prometheus (time-series metrics, alerting rules)",
+                        "Grafana (dashboards, alerting)",
+                        "Fluent Bit / Fluentd (log routing)",
+                        "ClickHouse (high-cardinality analytics)"
+                    ],
+                    "toolsCommercial": [
+                        "Datadog (APM, cost monitoring, anomaly detection)",
+                        "Splunk Enterprise Security (correlation rules)",
+                        "New Relic (AI monitoring)",
+                        "Elastic Security (ML-based anomaly detection)"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0034 Cost Harvesting",
+                                "AML.T0029 Denial of AI Service",
+                                "AML.T0053 AI Agent Tool Invocation",
+                                "AML.T0040 AI Model Inference API Access"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Resource Hijacking (L4)",
+                                "Denial of Service on Framework APIs (L3)",
+                                "Agent Tool Misuse (L7)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM10:2025 Unbounded Consumption"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "N/A"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI02:2026 Tool Misuse and Exploitation",
+                                "ASI08:2026 Cascading Failures",
+                                "ASI10:2026 Rogue Agents"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.014 Energy-latency",
+                                "NISTAML.039 Compromising connected resources"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-13.1 Disruption of Availability",
+                                "AITech-13.2 Cost Harvesting / Repurposing",
+                                "AISubtech-13.2.1 Service Misuse for Cost Inflation",
+                                "AISubtech-13.1.4 Application Denial of Service"
+                            ]
+                        }
+                    ],
+                    "implementationStrategies": [
+                        {
+                            "strategy": "Collect per-tenant, per-user, per-session, per-agent, and per-model counters for input tokens, output tokens, tool calls, retries, latency, and estimated spend.",
+                            "howTo": "<h5>Concept:</h5><p>Cost abuse detection starts with granular, real-time metering. Every inference request and tool invocation must emit structured metrics tagged with identity dimensions (tenant, user, session, agent) and resource dimensions (model, tool, provider). These counters feed both real-time alerting and historical baseline computation.</p><h5>Step 1: Instrument the Inference Gateway</h5><pre><code># File: gateway/cost_metrics.py\nfrom opentelemetry import metrics\nfrom opentelemetry.sdk.metrics import MeterProvider\n\nprovider = MeterProvider()\nmetrics.set_meter_provider(provider)\nmeter = metrics.get_meter(\"aidefend.cost\")\n\n# Counters\ninput_tokens_counter = meter.create_counter(\n    name=\"ai.tokens.input\",\n    description=\"Total input tokens consumed\",\n    unit=\"tokens\",\n)\noutput_tokens_counter = meter.create_counter(\n    name=\"ai.tokens.output\",\n    description=\"Total output tokens generated\",\n    unit=\"tokens\",\n)\ntool_calls_counter = meter.create_counter(\n    name=\"ai.tool_calls\",\n    description=\"Total tool invocations by agents\",\n    unit=\"calls\",\n)\nestimated_spend_counter = meter.create_counter(\n    name=\"ai.estimated_spend_usd\",\n    description=\"Estimated USD spend based on provider pricing\",\n    unit=\"usd\",\n)\nrequest_latency = meter.create_histogram(\n    name=\"ai.request.latency_ms\",\n    description=\"Inference request latency\",\n    unit=\"ms\",\n)\n\n\ndef record_inference_metrics(\n    tenant_id: str,\n    user_id: str,\n    session_id: str,\n    agent_id: str,\n    model_id: str,\n    input_token_count: int,\n    output_token_count: int,\n    tool_call_count: int,\n    latency_ms: float,\n    estimated_cost_usd: float,\n):\n    \"\"\"Record cost-linked metrics for a single inference request.\"\"\"\n    labels = {\n        \"tenant_id\": tenant_id,\n        \"user_id\": user_id,\n        \"session_id\": session_id,\n        \"agent_id\": agent_id or \"none\",\n        \"model_id\": model_id,\n    }\n    input_tokens_counter.add(input_token_count, labels)\n    output_tokens_counter.add(output_token_count, labels)\n    tool_calls_counter.add(tool_call_count, labels)\n    estimated_spend_counter.add(estimated_cost_usd, labels)\n    request_latency.record(latency_ms, labels)</code></pre><h5>Step 2: Prometheus Alerting Rules</h5><pre><code># File: monitoring/prometheus_rules.yaml\ngroups:\n  - name: ai_cost_abuse\n    rules:\n      - alert: HighTokenBurnRate\n        expr: |\n          sum by (tenant_id, user_id) (\n            rate(ai_tokens_output_total[5m])\n          ) > 5000\n        for: 2m\n        labels:\n          severity: warning\n        annotations:\n          summary: \"User {{ $labels.user_id }} in tenant {{ $labels.tenant_id }} burning >5000 output tokens/sec over 2 min\"\n\n      - alert: ToolCallExplosion\n        expr: |\n          sum by (tenant_id, agent_id) (\n            rate(ai_tool_calls_total[5m])\n          ) > 50\n        for: 1m\n        labels:\n          severity: critical\n        annotations:\n          summary: \"Agent {{ $labels.agent_id }} making >50 tool calls/sec — possible recursive loop\"\n\n      - alert: SpendSpikeAnomaly\n        expr: |\n          sum by (tenant_id) (\n            increase(ai_estimated_spend_usd_total[1h])\n          ) > 500\n        for: 5m\n        labels:\n          severity: critical\n        annotations:\n          summary: \"Tenant {{ $labels.tenant_id }} estimated spend >$500/hr — investigate immediately\"</code></pre><p><strong>Action:</strong> Instrument your inference gateway to emit per-request cost metrics using OpenTelemetry. Deploy Prometheus alerting rules for token burn rate, tool-call explosion, and spend spikes. Tag every metric with tenant, user, session, agent, and model dimensions so alerts are actionable and can trigger targeted containment (see AID-I-003 throttling strategies).</p>"
+                        },
+                        {
+                            "strategy": "Trigger alerts when cost-linked metrics deviate sharply from historical baselines or violate rate-of-change thresholds, especially when correlated with repeated tool chains or non-progressing loops.",
+                            "howTo": "<h5>Concept:</h5><p>Static thresholds catch obvious abuse but miss slow-burn attacks or legitimate usage spikes. Baseline-relative anomaly detection compares current metrics against the entity's own historical behavior. A user who normally consumes 10K tokens/hour suddenly consuming 500K/hour is suspicious even if 500K is below a global threshold. The most dangerous pattern is a non-progressing loop: the agent keeps calling the same tools in sequence without advancing toward a goal, burning tokens with each iteration.</p><h5>Baseline-Relative Anomaly Detection</h5><pre><code># File: detection/cost_anomaly.py\nimport statistics\nfrom datetime import datetime, timezone\n\n\ndef detect_cost_anomaly(\n    current_value: float,\n    historical_values: list[float],  # e.g., last 7 days of hourly values\n    z_score_threshold: float = 3.0,\n) -> dict:\n    \"\"\"\n    Compare current metric against historical baseline using z-score.\n    Returns anomaly verdict and details.\n    \"\"\"\n    if len(historical_values) < 10:\n        # Not enough history for reliable baseline\n        return {\"anomaly\": False, \"reason\": \"insufficient_history\"}\n\n    mean = statistics.mean(historical_values)\n    stdev = statistics.stdev(historical_values)\n\n    if stdev == 0:\n        # No variance in history — any deviation is suspicious\n        is_anomaly = current_value > mean * 1.5\n    else:\n        z_score = (current_value - mean) / stdev\n        is_anomaly = z_score > z_score_threshold\n\n    return {\n        \"anomaly\": is_anomaly,\n        \"current\": current_value,\n        \"baseline_mean\": round(mean, 2),\n        \"baseline_stdev\": round(stdev, 2),\n        \"z_score\": round((current_value - mean) / max(stdev, 0.01), 2),\n        \"threshold\": z_score_threshold,\n        \"ts\": datetime.now(timezone.utc).isoformat(),\n    }</code></pre><h5>Non-Progressing Loop Detection</h5><pre><code># File: detection/loop_detector.py\nfrom collections import Counter\n\n\ndef detect_non_progressing_loop(\n    tool_call_sequence: list[str],\n    window_size: int = 20,\n    repetition_threshold: float = 0.6,\n) -> dict:\n    \"\"\"\n    Detect if the last N tool calls show a non-progressing repetitive pattern.\n    Returns True if >60% of calls in the window are a repeating cycle.\n    \"\"\"\n    if len(tool_call_sequence) < window_size:\n        return {\"loop_detected\": False}\n\n    window = tool_call_sequence[-window_size:]\n\n    # Check for exact repeating subsequences (cycles)\n    for cycle_len in range(2, window_size // 2 + 1):\n        cycle = tuple(window[:cycle_len])\n        matches = sum(\n            1 for i in range(0, len(window) - cycle_len + 1, cycle_len)\n            if tuple(window[i:i + cycle_len]) == cycle\n        )\n        coverage = (matches * cycle_len) / len(window)\n        if coverage >= repetition_threshold:\n            return {\n                \"loop_detected\": True,\n                \"cycle\": list(cycle),\n                \"cycle_length\": cycle_len,\n                \"coverage\": round(coverage, 2),\n            }\n\n    return {\"loop_detected\": False}</code></pre><p><strong>Action:</strong> Deploy both static threshold alerts (Strategy 1) and baseline-relative anomaly detection. Run loop detection on agent tool-call sequences in real time. When a non-progressing loop is detected, immediately emit a high-severity alert and trigger circuit breaker logic (see AID-H-018.001 strategies). Correlate cost anomalies with loop detection signals to distinguish intentional abuse from legitimate spikes.</p>"
+                        },
+                        {
+                            "strategy": "Correlate abnormal spend signals with automated response outcomes such as throttle, safe-mode downgrade, session quarantine, or human review so cost abuse becomes part of the incident timeline.",
+                            "howTo": "<h5>Concept:</h5><p>Detection without response integration is just noise. Cost spike alerts must automatically feed into the response pipeline: triggering AID-I-003 throttling, AID-H-018.001 circuit breakers, or AID-I-003 safe-mode downgrade. Every detection-to-response action must be logged as a correlated sequence so incident responders can reconstruct the timeline: \"Alert fired at T1 → throttle applied at T2 → user session quarantined at T3 → analyst reviewed at T4.\"</p><h5>Detection-to-Response Correlation</h5><pre><code># File: detection/cost_response_pipeline.py\nimport json\nimport uuid\nfrom datetime import datetime, timezone\n\n\ndef handle_cost_alert(\n    alert: dict,\n    throttle_engine,\n    siem_client,\n) -> dict:\n    \"\"\"\n    Process a cost abuse alert and trigger appropriate response actions.\n    Returns a correlated incident record.\n    \"\"\"\n    incident_id = str(uuid.uuid4())\n    timeline = []\n\n    # 1. Log detection event\n    timeline.append({\n        \"action\": \"ALERT_FIRED\",\n        \"ts\": datetime.now(timezone.utc).isoformat(),\n        \"alert_type\": alert.get(\"alert_name\"),\n        \"severity\": alert.get(\"severity\"),\n        \"tenant_id\": alert.get(\"tenant_id\"),\n        \"user_id\": alert.get(\"user_id\"),\n        \"agent_id\": alert.get(\"agent_id\"),\n        \"metric_value\": alert.get(\"current_value\"),\n    })\n\n    severity = alert.get(\"severity\", \"warning\")\n\n    # 2. Apply proportional response\n    if severity == \"critical\":\n        # Hard throttle + session quarantine\n        throttle_engine.quarantine_session(\n            tenant_id=alert[\"tenant_id\"],\n            session_id=alert.get(\"session_id\"),\n        )\n        timeline.append({\n            \"action\": \"SESSION_QUARANTINED\",\n            \"ts\": datetime.now(timezone.utc).isoformat(),\n        })\n    elif severity == \"warning\":\n        # Soft throttle (reduce rate limits)\n        throttle_engine.apply_soft_throttle(\n            tenant_id=alert[\"tenant_id\"],\n            user_id=alert.get(\"user_id\"),\n            reduction_factor=0.5,\n        )\n        timeline.append({\n            \"action\": \"SOFT_THROTTLE_APPLIED\",\n            \"ts\": datetime.now(timezone.utc).isoformat(),\n            \"reduction_factor\": 0.5,\n        })\n\n    # 3. Send correlated incident to SIEM\n    incident = {\n        \"incident_id\": incident_id,\n        \"type\": \"AI_COST_ABUSE\",\n        \"timeline\": timeline,\n    }\n    siem_client.send(json.dumps(incident))\n\n    return incident</code></pre><p><strong>Action:</strong> Wire cost abuse alerts into your SOAR/response pipeline with correlated incident IDs. Every automated response action (throttle, quarantine, safe-mode) must reference the original alert's incident ID so the full detection-to-response chain is reconstructable. Include cost abuse incidents in your standard IR workflows and post-incident review process.</p>"
+                        }
+                    ],
+                    "warning": {
+                        "level": "Low on Precision of Cost Estimation",
+                        "description": "<p>Estimated spend signals may lag actual provider billing or differ by routing, cached responses, or vendor-specific pricing behavior. Treat this sub-technique as an early-warning and correlation layer, not as the sole source of financial truth. Calibrate alert thresholds against actual billing data monthly.</p>"
+                    }
                 }
             ]
 
