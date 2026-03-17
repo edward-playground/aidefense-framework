@@ -2069,7 +2069,7 @@ export const detectTactic = {
             ], "subTechniques": [
                 {
                     "id": "AID-D-005.001",
-                    "name": "AI System Log Generation & Collection", "pillar": ["infra"], "phase": ["operation"],
+                    "name": "AI System Log Generation & Collection", "pillar": ["infra", "app"], "phase": ["operation"],
                     "description": "This foundational technique covers the instrumentation of AI applications to produce detailed, structured logs for all significant events, and the implementation of a secure pipeline to collect and forward these logs to a central analysis platform. The goal is to create a high-fidelity, auditable record of system activity, which is a prerequisite for all other detection, investigation, and threat hunting capabilities.",
                     "toolsOpenSource": [
                         "logging (Python library), loguru, structlog",

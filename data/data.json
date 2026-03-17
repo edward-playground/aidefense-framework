@@ -1,8 +1,8 @@
 {
   "version": {
     "schemaVersion": "2.0",
-    "dataVersion": "2026.03.13",
-    "generatedAt": "2026-03-13T15:05:13.439Z",
+    "dataVersion": "2026.03.17",
+    "generatedAt": "2026-03-17T09:05:58.789Z",
     "source": "bundled",
     "keywordStructure": "categorized"
   },
@@ -797,7 +797,7 @@
               "description": "Place a policy-enforced write-gate in front of agent memory/KB/vector stores. Route writes into trust-tiered namespaces (trusted, probation, quarantined) based on evidence presence, validator score, and policy decisions. Retrieval prefers trusted; probation requires re-verification; quarantined is excluded.",
               "pillar": [
                 "data",
-                "model"
+                "app"
               ],
               "phase": [
                 "building",
@@ -6771,6 +6771,7 @@
                 "infra"
               ],
               "phase": [
+                "building",
                 "operation"
               ],
               "implementationStrategies": [
@@ -7847,7 +7848,8 @@
                 "infra"
               ],
               "phase": [
-                "building"
+                "building",
+                "operation"
               ],
               "implementationStrategies": [
                 "Perform client-side attestation verification prior to provisioning models or data."
@@ -13089,6 +13091,7 @@
             "infra"
           ],
           "phase": [
+            "building",
             "operation"
           ],
           "defendsAgainst": [
@@ -13161,6 +13164,7 @@
                 "app"
               ],
               "phase": [
+                "building",
                 "operation"
               ],
               "implementationStrategies": [
@@ -13265,9 +13269,11 @@
               "name": "MCP Tool Descriptor Hash Binding & Drift Detection",
               "description": "Pin MCP/tool descriptors by content hash and fail closed on drift at resolution time. Scoped to MCP/tool descriptors only (non-goal: agent capability manifests).",
               "pillar": [
-                "infra"
+                "infra",
+                "app"
               ],
               "phase": [
+                "building",
                 "operation"
               ],
               "implementationStrategies": [
@@ -17260,7 +17266,8 @@
               "name": "AI System Log Generation & Collection",
               "description": "This foundational technique covers the instrumentation of AI applications to produce detailed, structured logs for all significant events, and the implementation of a secure pipeline to collect and forward these logs to a central analysis platform. The goal is to create a high-fidelity, auditable record of system activity, which is a prerequisite for all other detection, investigation, and threat hunting capabilities.",
               "pillar": [
-                "infra"
+                "infra",
+                "app"
               ],
               "phase": [
                 "operation"
@@ -21710,6 +21717,7 @@
             "infra"
           ],
           "phase": [
+            "building",
             "operation"
           ],
           "defendsAgainst": [
@@ -21789,6 +21797,7 @@
                 "infra"
               ],
               "phase": [
+                "building",
                 "operation"
               ],
               "implementationStrategies": [
@@ -21904,6 +21913,7 @@
                 "infra"
               ],
               "phase": [
+                "building",
                 "operation"
               ],
               "implementationStrategies": [
@@ -26817,6 +26827,7 @@
             "data"
           ],
           "phase": [
+            "response",
             "improvement"
           ],
           "defendsAgainst": [

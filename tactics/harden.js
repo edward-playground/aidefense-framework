@@ -2985,7 +2985,7 @@ def is_url_safe(url: str):
         {
           id: "AID-H-007.002",
           pillar: ["infra"],
-          phase: ["operation"],
+          phase: ["building", "operation"],
           name: "Runtime Training Job Monitoring & Auditing",
           description:
             "Focuses on instrumenting the training script itself to continuously monitor for behavioral anomalies and to create a detailed, immutable audit log. This involves real-time tracking of key training metrics (e.g., loss, gradient norms) to detect signs of instability or poisoning, and systematically logging all parameters, code versions, and data versions to ensure any training run is fully auditable and reproducible.",
@@ -3926,7 +3926,7 @@ ScanPolicy:
           id: "AID-H-009.005",
           name: "Confidential Inference & Remote Attestation",
           pillar: ["infra"],
-          phase: ["building"],
+          phase: ["building", "operation"],
           description:
             "Run inference in TEEs or confidential VMs to protect model weights, inputs, and KV-cache in encrypted memory. Verify enclave integrity via remote attestation before sending sensitive assets.",
           defendsAgainst: [
@@ -7938,7 +7938,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
           id: "AID-H-025.001",
           name: "Fully Qualified Tool ID & Version Pinning",
           pillar: ["app"],
-          phase: ["operation"],
+          phase: ["building", "operation"],
           description:
             "Require fully qualified references (namespace/tool@version) for all tool calls; reject bare names and floating aliases to prevent ambiguous or hijacked resolution.",
           toolsOpenSource: [
@@ -8061,8 +8061,8 @@ def resolve_tool(tool_ref: str, allowlist: dict) -&gt; ToolRecord:
         {
           id: "AID-H-025.002",
           name: "MCP Tool Descriptor Hash Binding & Drift Detection",
-          pillar: ["infra"],
-          phase: ["operation"],
+          pillar: ["infra", "app"],
+          phase: ["building", "operation"],
           description:
             "Pin MCP/tool descriptors by content hash and fail closed on drift at resolution time. Scoped to MCP/tool descriptors only (non-goal: agent capability manifests).",
           toolsOpenSource: [

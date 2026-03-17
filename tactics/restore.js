@@ -607,7 +607,7 @@ export const restoreTactic = {
             "id": "AID-R-005",
             "name": "Rapid Vector Index Rollback & Quarantine",
             "pillar": ["data"],
-            "phase": ["improvement"],
+            "phase": ["response", "improvement"],
             "description": "Provide fast, controlled recovery for Retrieval-Augmented Generation (RAG) pipelines after index poisoning or malicious content injection is detected. The vector index is treated as an immutable, versioned artifact. Recovery happens in three stages: (1) atomically roll back to a last known-good snapshot, (2) quarantine and preserve suspicious chunks for forensics while removing them from production retrieval, and (3) rebuild and re-promote a clean index that enforces provenance, policy, and security approvals. Goal: restore trustworthy retrieval quality quickly while preventing re-serving tainted data.",
             "defendsAgainst": [
                 {

@@ -579,7 +579,7 @@ export const modelTactic = {
                 {
                     "id": "AID-M-002.004",
                     "name": "Trust-Tiered Memory/KB (Knowledge Base) Write-Gate",
-                    "pillar": ["data", "model"],
+                    "pillar": ["data", "app"],
                     "phase": ["building", "validation", "operation"],
                     "description": "Place a policy-enforced write-gate in front of agent memory/KB/vector stores. Route writes into trust-tiered namespaces (trusted, probation, quarantined) based on evidence presence, validator score, and policy decisions. Retrieval prefers trusted; probation requires re-verification; quarantined is excluded.",
                     "toolsOpenSource": [

@@ -533,7 +533,7 @@ export const isolateTactic = {
                     "id": "AID-I-002.001",
                     "name": "Internal AI Network Segmentation",
                     "pillar": ["infra"],
-                    "phase": ["operation"],
+                    "phase": ["building", "operation"],
                     "description": "Implement network segmentation and microsegmentation strategies to isolate AI systems and their *internal* components (e.g., training environments, model serving endpoints, data stores, agent control planes) from general corporate networks and other critical IT/OT systems. Enforces strict internal communication rules through firewalls, security groups, and network policies to limit lateral movement and reduce the internal blast radius of a compromise. This also isolates high-privilege agent backends (e.g. orchestration layers with access to credentials, vector DBs, or model registries) from lower-trust, user-facing inference frontends, so that a compromised public-facing agent cannot laterally move into data-rich components.",
                     "toolsOpenSource": [
                         "Linux Netfilter (iptables, nftables), firewalld",
@@ -629,7 +629,7 @@ export const isolateTactic = {
                     "id": "AID-I-002.002",
                     "name": "Secure External AI Service Connectivity",
                     "pillar": ["infra"],
-                    "phase": ["operation"],
+                    "phase": ["building", "operation"],
                     "description": "Applies strict network path control, transport security, policy mediation, and monitoring specifically to connections originating from the AI system and targeting external services, particularly third-party or Model-as-a-Service (MaaS) foundation model APIs. Aims to prevent data exfiltration, Server-Side Request Forgery (SSRF), Man-in-the-Middle (MitM) attacks, and abuse of external dependencies. This also prevents prompt-injected agents from exfiltrating secrets or invoking arbitrary external services; they can only call approved upstreams through a governed path.",
                     "toolsOpenSource": [
                         "Open-source API Gateways (Kong, Tyk, APISIX)",
