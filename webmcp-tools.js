@@ -422,8 +422,8 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
                 // Search in sub-techniques first
                 const sub = allSubTechniques.find(s => s.id.toUpperCase() === queryId);
                 if (sub) {
-                    const strategies = (sub.implementationStrategies || []).map(s => {
-                        const entry = { strategy: s.strategy };
+                    const strategies = (sub.implementationGuidance || []).map(s => {
+                        const entry = { implementation: s.implementation };
                         if (mode === 'full' && s.howTo) {
                             entry.details = stripHtml(s.howTo);
                         }
@@ -443,25 +443,25 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
                     return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
                 }
 
-                // Search in techniques (leaf techniques may have implementationStrategies)
+                // Search in techniques (leaf techniques may have implementationGuidance)
                 const tech = allTechniques.find(t => t.id.toUpperCase() === queryId);
                 if (tech) {
-                    // If the technique has subTechniques but no implementationStrategies itself,
+                    // If the technique has subTechniques but no implementationGuidance itself,
                     // guide the user to query individual sub-techniques
-                    if (!tech.isLeaf && !(tech.implementationStrategies && tech.implementationStrategies.length > 0)) {
+                    if (!tech.isLeaf && !(tech.implementationGuidance && tech.implementationGuidance.length > 0)) {
                         const subList = (tech.subTechniques || []).map(s => ({ id: s.id, name: s.name }));
                         return { content: [{ type: 'text', text: JSON.stringify({
                             id: tech.id,
                             name: tech.name,
                             tactic: tech.tacticName,
-                            message: `This technique has ${subList.length} sub-techniques. Implementation guidance is available at the sub-technique level. Query each sub-technique ID for specific implementation strategies.`,
+                            message: `This technique has ${subList.length} sub-techniques. Implementation guidance is available at the sub-technique level. Query each sub-technique ID for specific implementation guidance.`,
                             subTechniques: subList
                         }, null, 2) }] };
                     }
 
-                    // Leaf technique or technique with its own implementationStrategies
-                    const strategies = (tech.implementationStrategies || []).map(s => {
-                        const entry = { strategy: s.strategy };
+                    // Leaf technique or technique with its own implementationGuidance
+                    const strategies = (tech.implementationGuidance || []).map(s => {
+                        const entry = { implementation: s.implementation };
                         if (mode === 'full' && s.howTo) {
                             entry.details = stripHtml(s.howTo);
                         }

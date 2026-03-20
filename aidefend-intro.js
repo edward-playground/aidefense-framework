@@ -22,8 +22,8 @@ export const aidefendIntroduction = {
         {
             "title": "Version & Date",
             "paragraphs": [
-                "Version: 1.20260317",
-                "Last Updated: March 17, 2026"
+                "Version: 1.20260320",
+                "Last Updated: March 20, 2026"
             ]
         },
         {

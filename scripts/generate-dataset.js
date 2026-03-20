@@ -570,8 +570,8 @@ function extractAttackKeywords(technique) {
   const description = (technique.description || '').toLowerCase();
 
   // Combine text sources (excluding defendsAgainst per user request)
-  const strategies = (technique.implementationStrategies || [])
-    .map(s => typeof s === 'string' ? s : s.strategy || s.name || '')
+  const strategies = (technique.implementationGuidance || [])
+    .map(s => typeof s === 'string' ? s : s.implementation || s.name || '')
     .join(' ')
     .toLowerCase();
 
@@ -694,8 +694,8 @@ function extractDefenseKeywords(technique) {
   const description = (technique.description || '').toLowerCase();
 
   // Get strategies
-  const strategies = (technique.implementationStrategies || [])
-    .map(s => typeof s === 'string' ? s : s.strategy || s.name || '')
+  const strategies = (technique.implementationGuidance || [])
+    .map(s => typeof s === 'string' ? s : s.implementation || s.name || '')
     .join(' ')
     .toLowerCase();
 
@@ -848,8 +848,8 @@ function transformSubTechnique(subTech) {
     pillar: Array.isArray(subTech.pillar) ? subTech.pillar : [subTech.pillar].filter(Boolean),
     phase: Array.isArray(subTech.phase) ? subTech.phase : [subTech.phase].filter(Boolean),
     // Only include strategy names, not the full howTo content
-    implementationStrategies: (subTech.implementationStrategies || []).map(
-      strat => strat.strategy || strat.name || ''
+    implementationGuidance: (subTech.implementationGuidance || []).map(
+      strat => strat.implementation || strat.name || ''
     ).filter(Boolean),
     toolsOpenSource: subTech.toolsOpenSource || [],
     toolsCommercial: subTech.toolsCommercial || [],
@@ -902,8 +902,8 @@ function transformTechnique(tech, tacticId) {
   }
 
   // Get implementation strategies from technique level if present
-  const techStrategies = (tech.implementationStrategies || []).map(
-    strat => strat.strategy || strat.name || ''
+  const techStrategies = (tech.implementationGuidance || []).map(
+    strat => strat.implementation || strat.name || ''
   ).filter(Boolean);
 
   const transformed = {
@@ -913,7 +913,7 @@ function transformTechnique(tech, tacticId) {
     pillar,
     phase,
     defendsAgainst: tech.defendsAgainst || [],
-    implementationStrategies: techStrategies,
+    implementationGuidance: techStrategies,
     toolsOpenSource: tech.toolsOpenSource || [],
     toolsCommercial: tech.toolsCommercial || [],
     subTechniques: (tech.subTechniques || []).map(transformSubTechnique),
@@ -997,8 +997,8 @@ async function main() {
         (sum, t) => sum + t.subTechniques.length, 0
       );
       const stratCount = transformed.techniques.reduce(
-        (sum, t) => sum + t.implementationStrategies.length +
-          t.subTechniques.reduce((s, sub) => s + sub.implementationStrategies.length, 0),
+        (sum, t) => sum + t.implementationGuidance.length +
+          t.subTechniques.reduce((s, sub) => s + sub.implementationGuidance.length, 0),
         0
       );
 
@@ -1053,7 +1053,7 @@ async function main() {
   console.log(`Tactics: ${tactics.length}`);
   console.log(`Techniques: ${totalTechniques}`);
   console.log(`Sub-techniques: ${totalSubTechniques}`);
-  console.log(`Implementation strategies: ${totalStrategies}`);
+  console.log(`Implementation guidance: ${totalStrategies}`);
   console.log(`\nKeywords:`);
   console.log(`  Attack keywords: ${totalAttackKeywords}`);
   console.log(`  Defense keywords: ${totalDefenseKeywords}`);

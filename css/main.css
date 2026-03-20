@@ -753,7 +753,7 @@ body.modal-open {
     80% { opacity: 1; transform: translateX(-50%) translateY(0); }
     100% { opacity: 0; transform: translateX(-50%) translateY(-3px); }
 }
-.strategy-accordion-content-inner pre {
+.guidance-accordion-content-inner pre {
     position: relative;
 }
 .code-copy-btn {
@@ -773,7 +773,7 @@ body.modal-open {
     transition: opacity 0.2s ease, background-color 0.15s ease, color 0.15s ease;
     z-index: 2;
 }
-.strategy-accordion-content-inner pre:hover .code-copy-btn {
+.guidance-accordion-content-inner pre:hover .code-copy-btn {
     opacity: 0.85;
 }
 .code-copy-btn:hover {
@@ -888,15 +888,15 @@ body.modal-open {
     padding: 0 0.5rem 1.25rem 0.5rem;
 }
 
-.strategy-accordion-container {
+.guidance-accordion-container {
     margin-top: 0.5rem;
 }
 
-.strategy-accordion-item {
+.guidance-accordion-item {
     border-bottom: 1px solid var(--column-border);
 }
 
-.strategy-accordion-header {
+.guidance-accordion-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -906,11 +906,11 @@ body.modal-open {
     font-weight: 500;
 }
 
-.strategy-accordion-header:hover {
+.guidance-accordion-header:hover {
     color: var(--technique-item-hover-text);
 }
 
-.strategy-accordion-icon {
+.guidance-accordion-icon {
     width: 1rem;
     height: 1rem;
     transition: transform 0.3s ease-in-out;
@@ -918,13 +918,13 @@ body.modal-open {
     margin-left: 0.5rem;
 }
 
-.strategy-accordion-content {
+.guidance-accordion-content {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.3s ease-in-out;
 }
 
-.strategy-accordion-content-inner {
+.guidance-accordion-content-inner {
     padding: 0.5rem 0.5rem 1rem 1rem;
     font-size: 0.85rem;
     line-height: 1.6;
@@ -1251,6 +1251,9 @@ body.modal-open {
     flex-shrink: 0;
     min-width: 1.5rem;
     text-align: center;
+}
+.fw-accordion-count-zero {
+    opacity: 0.3;
 }
 
 .fw-accordion-chevron {
