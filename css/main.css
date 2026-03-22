@@ -392,7 +392,59 @@ body.modal-open {
 .atlas-matrix-cell.cross-dim { opacity: 0.35; transition: opacity 0.25s ease; }
 
 /* Off-screen match scroll indicators */
+/* Scroll edge fade hints */
 .atlas-scroll-wrapper { position: relative; }
+.atlas-scroll-wrapper::before,
+.atlas-scroll-wrapper::after {
+    content: ''; position: absolute; top: 0; bottom: 0.75rem; width: 48px;
+    z-index: 10; pointer-events: none;
+    transition: opacity 0.35s ease;
+}
+.atlas-scroll-wrapper::before {
+    left: 0; opacity: 0;
+    background: linear-gradient(to right, var(--bg-color) 0%, transparent 100%);
+}
+.atlas-scroll-wrapper::after {
+    right: 0; opacity: 0;
+    background: linear-gradient(to left, var(--bg-color) 0%, transparent 100%);
+}
+.atlas-scroll-wrapper.can-scroll-left::before { opacity: 1; }
+.atlas-scroll-wrapper.can-scroll-right::after { opacity: 1; }
+
+.atlas-scroll-hint {
+    position: absolute; z-index: 11;
+    top: 300px; /* JS overrides this to stay in visible viewport */
+    width: 36px; height: 36px; border-radius: 50%;
+    background: var(--column-bg); border: 1px solid var(--column-border);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; opacity: 0; pointer-events: none;
+    transition: opacity 0.35s ease, background-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+}
+.atlas-scroll-hint svg { width: 18px; height: 18px; stroke: var(--text-secondary-color); stroke-width: 2.5; fill: none; }
+.atlas-scroll-hint:hover { background: var(--technique-item-hover-bg); box-shadow: 0 3px 12px rgba(0,0,0,0.35); }
+.atlas-scroll-hint:hover svg { stroke: var(--text-color); }
+.atlas-scroll-hint:active { transform: scale(0.92); }
+.atlas-scroll-hint.hint-left { left: 6px; }
+.atlas-scroll-hint.hint-right { right: 6px; }
+@keyframes hintPulse {
+    0%, 100% { box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+    50% { box-shadow: 0 0 14px 3px var(--search-focus-ring); }
+}
+.atlas-scroll-wrapper.can-scroll-left .hint-left { opacity: 0.85; pointer-events: auto; }
+.atlas-scroll-wrapper.can-scroll-right .hint-right { opacity: 0.85; pointer-events: auto; }
+.atlas-scroll-hint.hint-pulse { animation: hintPulse 1.5s ease-in-out infinite; }
+.atlas-scroll-wrapper.has-offscreen-matches .hint-left,
+.atlas-scroll-wrapper.has-offscreen-matches .hint-right { opacity: 0; pointer-events: none; }
+.atlas-scroll-wrapper.has-offscreen-matches::before,
+.atlas-scroll-wrapper.has-offscreen-matches::after { opacity: 0; }
+@media (max-width: 768px) {
+    .atlas-scroll-wrapper::before, .atlas-scroll-wrapper::after { width: 32px; }
+    .atlas-scroll-hint { width: 44px; height: 44px; }
+    .atlas-scroll-hint svg { width: 20px; height: 20px; }
+    .atlas-scroll-hint.hint-left { left: 4px; }
+    .atlas-scroll-hint.hint-right { right: 4px; }
+}
 .atlas-scroll-indicator {
     position: fixed; z-index: 100;
     background: var(--search-focus-ring); color: #fff;

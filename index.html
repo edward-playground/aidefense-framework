@@ -1252,10 +1252,63 @@
 
                 scroll.appendChild(grid);
 
-                // --- Off-screen match scroll indicators ---
+                // --- Scroll edge fade hints (gradient + arrow buttons) ---
                 const scrollWrapper = createElement('div', { className: 'atlas-scroll-wrapper' });
                 elements.mainContent.appendChild(scrollWrapper);
                 scrollWrapper.appendChild(scroll);
+
+                const chevronSvg = '<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
+                const hintLeft = createElement('div', { className: 'atlas-scroll-hint hint-left' });
+                hintLeft.innerHTML = '<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>';
+                hintLeft.setAttribute('aria-label', 'Scroll left');
+                const hintRight = createElement('div', { className: 'atlas-scroll-hint hint-right' });
+                hintRight.innerHTML = chevronSvg;
+                hintRight.setAttribute('aria-label', 'Scroll right');
+                scrollWrapper.appendChild(hintLeft);
+                scrollWrapper.appendChild(hintRight);
+
+                function updateScrollHints() {
+                    const threshold = 4;
+                    const canLeft = scroll.scrollLeft > threshold;
+                    const canRight = scroll.scrollLeft + scroll.clientWidth < scroll.scrollWidth - threshold;
+                    scrollWrapper.classList.toggle('can-scroll-left', canLeft);
+                    scrollWrapper.classList.toggle('can-scroll-right', canRight);
+
+                    // Position arrows in the visible portion of the wrapper
+                    const wrapRect = scrollWrapper.getBoundingClientRect();
+                    const hdr = document.querySelector('.header-main');
+                    const hdrBot = hdr ? hdr.getBoundingClientRect().bottom : 0;
+                    const visTop = Math.max(wrapRect.top, hdrBot);
+                    const visBot = Math.min(wrapRect.bottom, window.innerHeight);
+                    if (visBot > visTop + 60) {
+                        const cy = ((visTop + visBot) / 2) - wrapRect.top;
+                        hintLeft.style.top = cy + 'px';
+                        hintRight.style.top = cy + 'px';
+                    }
+                }
+                scroll.addEventListener('scroll', updateScrollHints, { passive: true });
+                window.addEventListener('resize', updateScrollHints);
+                window.addEventListener('scroll', updateScrollHints, { passive: true });
+                requestAnimationFrame(updateScrollHints);
+
+                // Pulse: only on initial render, stop once user has scrolled
+                let _hintUserHasScrolled = false;
+                hintRight.classList.add('hint-pulse');
+                scroll.addEventListener('scroll', function _onFirstScroll() {
+                    if (scroll.scrollLeft > 10) {
+                        _hintUserHasScrolled = true;
+                        hintRight.classList.remove('hint-pulse');
+                        scroll.removeEventListener('scroll', _onFirstScroll);
+                    }
+                });
+
+
+                hintLeft.addEventListener('click', () => { scroll.scrollBy({ left: -400, behavior: 'smooth' }); });
+                hintRight.addEventListener('click', () => {
+                    hintRight.classList.remove('hint-pulse');
+                    _hintUserHasScrolled = true;
+                    scroll.scrollBy({ left: 400, behavior: 'smooth' });
+                });
 
                 const indicatorLeft = createElement('div', { className: 'atlas-scroll-indicator' });
                 const indicatorRight = createElement('div', { className: 'atlas-scroll-indicator' });
@@ -1297,6 +1350,7 @@
                     if (!matches.length) {
                         indicatorLeft.classList.remove('visible');
                         indicatorRight.classList.remove('visible');
+                        scrollWrapper.classList.remove('has-offscreen-matches');
                         return;
                     }
                     const sL = scroll.scrollLeft;
@@ -1337,6 +1391,8 @@
                     } else {
                         indicatorRight.classList.remove('visible');
                     }
+                    // Hide scroll-hint arrows when off-screen match indicators are active
+                    scrollWrapper.classList.toggle('has-offscreen-matches', offLeft > 0 || offRight > 0);
                 }
 
                 function scrollToMatch(x, el) {
