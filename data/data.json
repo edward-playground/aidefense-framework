@@ -1,8 +1,8 @@
 {
   "version": {
     "schemaVersion": "2.0",
-    "dataVersion": "2026.03.19",
-    "generatedAt": "2026-03-19T09:20:24.210Z",
+    "dataVersion": "2026.03.25",
+    "generatedAt": "2026-03-25T14:23:28.068Z",
     "source": "bundled",
     "keywordStructure": "categorized"
   },
@@ -3178,7 +3178,7 @@
         {
           "id": "AID-M-009",
           "name": "Agent Autonomy Level Governance",
-          "description": "Establish a formal governance framework that categorizes AI agents into discrete 'Autonomy Levels' (for example L0 to L4) based on their capabilities and associated risks. Each level mandates a specific bundle of technical controls (for example HITL requirements, logging depth, and tool restrictions). This ensures that high-autonomy agents (such as those that can autonomously write code or spend money) are deployed with correspondingly rigorous safeguards, preventing 'Excessive Agency' by design.",
+          "description": "Establish a dual-dimensional governance framework for AI agent operations.<ul><li><strong>Dimension 1 — Agent Ceiling:</strong> each agent deployment is assigned a maximum autonomy level (L0–L5, per CSA Agentic Trust Framework) that caps its operational authority.</li><li><strong>Dimension 2 — Action Minimum:</strong> each tool or action is classified by blast radius into a minimum required level (per NIST per-action authorization).</li><li><strong>Enforcement:</strong> if agent_ceiling &lt; action_minimum → DENY. The agent cannot self-escalate.</li><li><strong>Human-in-the-loop (HITL) requirements by level:</strong><ul><li>L0–L1 require HITL for every action</li><li>L2 requires HITL for plan approval</li><li>L3 requires HITL only when boundaries are exceeded</li><li>L4–L5 operate with monitoring-only oversight</li></ul></li></ul>This ensures granular governance — the same agent may be authorized for low-risk reads but denied destructive operations — rather than blanket agent-level permissions.",
           "pillar": [
             "app",
             "infra"
@@ -3250,7 +3250,7 @@
             }
           ],
           "implementationGuidance": [
-            "Define Autonomy Levels and enforce control bundles using OPA."
+            "Implement dual-dimensional autonomy governance: agent ceiling (CSA L0–L5) × action minimum (per blast radius). Enforce with OPA."
           ],
           "toolsOpenSource": [
             "Open Policy Agent (OPA)",
@@ -3265,28 +3265,34 @@
           "url": "https://aidefend.net",
           "keywords": {
             "attack": [
-              "cover tracks",
-              "log injection",
-              "shadow ai",
+              "privilege escalation",
               "unauthorized access",
-              "risks",
-              "repudiation",
-              "tampering",
+              "stealth attack",
+              "persistent threat",
+              "shadow ai",
+              "bypass",
+              "evasion",
+              "undetected",
               "reconnaissance",
               "misconfiguration",
               "exposure"
             ],
             "defense": [
+              "blast radius",
               "policy enforcement",
               "agent",
               "autonomy",
               "level",
               "governance",
-              "logging",
-              "safeguards",
-              "preventing",
-              "enforce",
-              "control"
+              "authorization",
+              "human-in-the-loop",
+              "trust",
+              "enforcement",
+              "deny",
+              "authorized",
+              "denied",
+              "permissions",
+              "enforce"
             ]
           }
         }
@@ -17077,6 +17083,131 @@
                   "reliable",
                   "session",
                   "verify"
+                ]
+              }
+            },
+            {
+              "id": "AID-D-001.006",
+              "name": "Recalled Memory Pre-Rehydration Scanning",
+              "description": "Treat every memory entry recalled from persistent storage (session memory, vector databases, serialized conversation history) as untrusted input and scan it for adversarial content before it enters final prompt assembly. This sub-technique addresses a gap that cryptographic memory integrity controls (e.g., AID-I-004.003 Signed Write/Verify Read) do not cover: a memory entry can be legitimately written, properly signed, and cryptographically intact, yet still contain a latent injection payload that was not detected at original write time. Attackers exploiting Logic-layer Prompt Control Injection (LPCI) deliberately embed encoded, obfuscated, or conditionally triggered payloads into memory stores, relying on the fact that most systems only scan at ingress (user input time) and implicitly trust recalled memory during session rehydration. This sub-technique breaks that implicit trust by inserting a recall gate between the memory loader and the prompt builder. The gate re-applies the same safety scanners used for live user input (reusing AID-D-001.001 / AID-H-002.002 detection logic) plus recall-specific checks: role/authority assertion patterns, function-like trigger markers, encoded payload fragments, and previously quarantined content fingerprints. High-risk entries are degraded, quarantined, or routed to human review before they can influence LLM reasoning. This is the detection-side complement to AID-I-004.003 (integrity verification) and AID-I-004.004 (promotion gates): those controls ensure memory was not tampered with after write; this control ensures memory content is safe to re-enter context regardless of how or when it was written.",
+              "pillar": [
+                "app",
+                "data"
+              ],
+              "phase": [
+                "operation"
+              ],
+              "implementationGuidance": [
+                "Insert a recall gate between the memory loader and the prompt builder that re-scans every recalled memory entry using the same safety filters applied to live user input, plus recall-specific checks and explicit failure-mode handling.",
+                "Integrate the recall gate into your orchestrator's prompt assembly pipeline with verdict-based routing that distinguishes safe reuse, downgraded reuse, human escalation, and quarantine.",
+                "Maintain a tenant-aware, versioned quarantine fingerprint store and integrate it with incident response so newly confirmed malicious memory patterns are blocked on future recall without creating cross-tenant bleed-over."
+              ],
+              "toolsOpenSource": [
+                "Guardrails AI (input safety validators reusable on recalled content)",
+                "Llama Guard (safety classification reusable for memory-entry scanning)",
+                "NVIDIA NeMo Guardrails (recall-path input rails and policy orchestration)",
+                "Python hashlib / hmac (content fingerprint computation)"
+              ],
+              "toolsCommercial": [
+                "Lakera Guard (prompt injection detection API reusable on recalled content)",
+                "Protect AI Guardian (content safety scanning reusable on recall path)",
+                "OpenAI Moderation API (supplementary classification signal for recalled entries)",
+                "Redis (session memory store and quarantine fingerprint backend)"
+              ],
+              "defendsAgainst": [
+                {
+                  "framework": "MITRE ATLAS",
+                  "items": [
+                    "AML.T0051.001 LLM Prompt Injection: Indirect (memory replay is an indirect injection path)",
+                    "AML.T0051.002 LLM Prompt Injection: Triggered (recall scanning helps catch dormant trigger-based payloads before re-execution)",
+                    "AML.T0068 LLM Prompt Obfuscation (recall scanning helps detect obfuscated or encoded payloads persisted in memory)",
+                    "AML.T0080.000 AI Agent Context Poisoning: Memory (recalled memory is the primary exploitation path)",
+                    "AML.T0094 Delay Execution of LLM Instructions (recall scanning helps intercept instructions deferred to a future turn or event)"
+                  ]
+                },
+                {
+                  "framework": "MAESTRO",
+                  "items": [
+                    "Agent Goal Manipulation (L7) (poisoned recalled memory can redirect planning or goal interpretation)",
+                    "Input Validation Attacks (L3) (recall gate extends validation to replayed memory, not just live ingress)",
+                    "Compromised RAG Pipelines (L2) (persisted retrieved content can later re-enter context as a malicious memory artifact)"
+                  ]
+                },
+                {
+                  "framework": "OWASP LLM Top 10 2025",
+                  "items": [
+                    "LLM01:2025 Prompt Injection (recalled memory is a prompt injection surface)",
+                    "LLM04:2025 Data and Model Poisoning (poisoned memory or persisted context can be detected at recall time)",
+                    "LLM08:2025 Vector and Embedding Weaknesses (scanning helps catch malicious content recalled from vector-backed stores)"
+                  ]
+                },
+                {
+                  "framework": "OWASP ML Top 10 2023",
+                  "items": [
+                    "ML01:2023 Input Manipulation Attack (recalled memory must be treated as manipulable input)",
+                    "ML02:2023 Data Poisoning Attack (scanning can catch poisoned data persisted into memory stores)"
+                  ]
+                },
+                {
+                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "items": [
+                    "ASI01:2026 Agent Goal Hijack (poisoned recalled memory can hijack downstream reasoning or actions)",
+                    "ASI03:2026 Identity and Privilege Abuse (recall scanning can detect role or authority assertions embedded in memory)",
+                    "ASI06:2026 Memory & Context Poisoning (recalled memory is the core exploitation path for this risk)"
+                  ]
+                },
+                {
+                  "framework": "NIST Adversarial Machine Learning 2025",
+                  "items": [
+                    "NISTAML.015 Indirect Prompt Injection (memory replay is a form of indirect injection)",
+                    "NISTAML.018 Prompt Injection (recall path expands the prompt injection attack surface)",
+                    "NISTAML.013 Data Poisoning (poisoned memory entries can be caught before they re-enter context)"
+                  ]
+                },
+                {
+                  "framework": "Cisco Integrated AI Security and Safety Framework",
+                  "items": [
+                    "AITech-5.1 Memory System Persistence (recall gate reduces exploitation of persisted malicious memory)",
+                    "AISubtech-5.1.1 Long-term / Short-term Memory Injection (recalled memory scanning helps catch injected memory before reuse)",
+                    "AISubtech-7.2.1 Memory Anchor Attacks (recall scanning helps detect persistent anchor payloads designed to survive across sessions)",
+                    "AISubtech-4.2.2 Session Boundary Violation (recall gate helps prevent unsafe cross-session context from re-entering prompt assembly)"
+                  ]
+                }
+              ],
+              "keywords": {
+                "attack": [
+                  "user input",
+                  "vector database",
+                  "conversation history",
+                  "memory",
+                  "vector",
+                  "untrusted",
+                  "adversarial",
+                  "prompt",
+                  "gap",
+                  "injection",
+                  "exploiting",
+                  "degraded",
+                  "tampered",
+                  "context",
+                  "malicious"
+                ],
+                "defense": [
+                  "integrity verification",
+                  "incident response",
+                  "safety filter",
+                  "human review",
+                  "recalled",
+                  "memory",
+                  "pre-rehydration",
+                  "scanning",
+                  "session",
+                  "scan",
+                  "cryptographic",
+                  "integrity",
+                  "signed",
+                  "verify",
+                  "contain"
                 ]
               }
             }
