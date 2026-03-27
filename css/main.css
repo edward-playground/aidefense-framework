@@ -1636,3 +1636,58 @@ body.modal-open {
         box-shadow: 0 0 8px 1.5px var(--search-focus-ring);
     }
 }
+
+/* === Two-Phase Loading: Skeleton & Modal States === */
+
+/* Search bar disabled state during skeleton phase */
+.search-loading {
+    opacity: 0.45;
+    pointer-events: none;
+    cursor: default;
+}
+
+/* Modal loading wrapper — positions spinner over blurred text */
+.modal-loading-wrap {
+    position: relative;
+    min-height: 350px;
+}
+
+/* Modal loading placeholder — blurred fake text fills the modal */
+.modal-loading-placeholder {
+    filter: blur(6px);
+    user-select: none;
+    pointer-events: none;
+    color: var(--text-secondary, #888);
+    line-height: 1.9;
+    font-size: 0.9rem;
+}
+
+/* Modal loading spinner — centered over the blurred text */
+.modal-loading-spinner {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    color: var(--text-color, #ccc);
+    font-size: 0.875rem;
+    z-index: 1;
+}
+.modal-loading-spinner p {
+    margin-top: 0.75rem;
+    opacity: 0.85;
+}
+
+/* CSS-only spinner */
+.skeleton-spinner {
+    display: inline-block;
+    width: 28px;
+    height: 28px;
+    border: 3px solid var(--border-color, #333);
+    border-top-color: var(--search-focus-ring, #6366f1);
+    border-radius: 50%;
+    animation: skeletonSpin 0.8s linear infinite;
+}
+@keyframes skeletonSpin {
+    to { transform: rotate(360deg); }
+}

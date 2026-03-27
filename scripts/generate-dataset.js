@@ -1048,6 +1048,40 @@ async function main() {
   const dataPath = path.join(OUTPUT_DIR, 'data.json');
   fs.writeFileSync(dataPath, content);
 
+  // Generate tactics-index.json (lightweight skeleton for fast initial rendering)
+  const tacticsIndex = {
+    version: {
+      schemaVersion: '2.0',
+      generatedAt: now,
+    },
+    tactics: tactics.map(tactic => ({
+      id: tactic.id,
+      name: tactic.name,
+      description: tactic.description,
+      techniques: tactic.techniques.map(tech => {
+        const entry = {
+          id: tech.id,
+          name: tech.name,
+          pillar: tech.pillar,
+          phase: tech.phase,
+        };
+        if (tech.subTechniques && tech.subTechniques.length > 0) {
+          entry.hasSubTechniques = true;
+          entry.subTechniques = tech.subTechniques.map(sub => ({
+            id: sub.id,
+            name: sub.name,
+            pillar: sub.pillar,
+            phase: sub.phase,
+          }));
+        }
+        return entry;
+      }),
+    })),
+  };
+  const indexContent = JSON.stringify(tacticsIndex);
+  const indexPath = path.join(OUTPUT_DIR, 'tactics-index.json');
+  fs.writeFileSync(indexPath, indexContent);
+
   console.log('\n================================');
   console.log('Generation complete!\n');
   console.log(`Tactics: ${tactics.length}`);
@@ -1061,6 +1095,8 @@ async function main() {
   console.log(`\nOutput: ${dataPath}`);
   console.log(`Size: ${(content.length / 1024).toFixed(1)} KB`);
   console.log(`Checksum: ${checksum.slice(0, 16)}...`);
+  console.log(`\nIndex: ${indexPath}`);
+  console.log(`Index size: ${(indexContent.length / 1024).toFixed(1)} KB`);
 }
 
 main().catch(console.error);

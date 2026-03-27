@@ -194,11 +194,14 @@
     </footer>
     <script type="module" src="./webmcp-tools.js"></script>
     <script type="module">
-        // 從您的主檔案導入 aidefendData (Import aidefendData from main file)
-        import { aidefendData } from './main.js';
+        // Two-phase rendering: load lightweight index first, then full data in background
+        let aidefendData = null;
+        let _skeletonData = null;
+        let _fullDataReady = false;
+        let _skeletonModalTechId = null; // track which technique is open in skeleton modal
+        const _loadedTactics = new Map(); // tactic name → full tactic data (as each file loads)
 
-        // 在這個模組作用域內使用 aidefendData (Use aidefendData within this module scope) 
-        window.onload = function () {
+        window.onload = async function () {
             const elements = {
                 mainContent: document.getElementById('main-content'),
                 searchBar: document.getElementById('search-bar'),
@@ -2260,7 +2263,11 @@
                             currentView = newView;
                             // Show/hide framework selector
                             frameworkSelector.style.display = newView === 'framework' ? 'inline-flex' : 'none';
-                            renderMainGrid();
+                            if (_fullDataReady) {
+                                renderMainGrid();
+                            } else if (_skeletonData) {
+                                renderSkeletonFromIndex(_skeletonData);
+                            }
                             updateContentPadding();
                         }
                     }
@@ -2268,7 +2275,11 @@
 
                 frameworkDropdown.addEventListener('change', (e) => {
                     currentFramework = e.target.value;
-                    renderMainGrid();
+                    if (_fullDataReady) {
+                        renderMainGrid();
+                    } else if (_skeletonData) {
+                        renderSkeletonFromIndex(_skeletonData);
+                    }
                     window.scrollTo(0, 0);
                 });
 
@@ -2451,7 +2462,177 @@
                 });
             }
 
-            function initialize() {
+            // === Two-Phase Rendering ===
+
+            // Phase 1 skeleton: render lightweight grid from tactics-index.json
+            function renderSkeletonFromIndex(indexData) {
+                _skeletonData = indexData;
+                if (currentView === 'framework') {
+                    // Framework view needs defendsAgainst data — show loading message
+                    clearElement(elements.mainContent);
+                    const msg = createElement('div', { className: 'text-center py-20' });
+                    msg.innerHTML = '<div class="skeleton-spinner"></div><p style="margin-top:1rem;opacity:0.85;color:var(--text-color,#ccc);">Loading framework data...</p>';
+                    elements.mainContent.appendChild(msg);
+                    return;
+                }
+                // Build skeleton grid using same CSS structure as full render
+                const gridContainer = createElement('div', { className: 'matrix-grid' });
+                if (currentView === 'tactic' || !currentView) {
+                    indexData.tactics.forEach(tactic => {
+                        const column = createElement('div', { className: 'matrix-column' });
+                        column.style.flexBasis = '13.5%';
+                        column.appendChild(createElement('h3', { className: 'column-header', textContent: tactic.name }));
+                        const ul = createElement('ul');
+                        (tactic.techniques || []).forEach(tech => {
+                            ul.appendChild(renderSkeletonTechniqueItem(tech, tactic.name));
+                        });
+                        column.appendChild(ul);
+                        gridContainer.appendChild(column);
+                    });
+                } else if (currentView === 'pillar') {
+                    const pillarDefs = {
+                        data: 'AI Data & Feature Security', model: 'Model & Algorithm Security',
+                        infra: 'Infrastructure & Platform Security', app: 'Application, Agent & Interface Security'
+                    };
+                    const buckets = { data: [], model: [], infra: [], app: [] };
+                    indexData.tactics.forEach(tactic => {
+                        (tactic.techniques || []).forEach(tech => {
+                            const items = tech.hasSubTechniques ? (tech.subTechniques || []) : [tech];
+                            items.forEach(item => {
+                                (item.pillar || []).forEach(p => { if (buckets[p]) buckets[p].push({ item, tactic: tactic.name }); });
+                            });
+                        });
+                    });
+                    Object.entries(pillarDefs).forEach(([key, name]) => {
+                        const column = createElement('div', { className: 'matrix-column' });
+                        column.style.flexBasis = '24%';
+                        column.appendChild(createElement('h3', { className: 'column-header', textContent: name }));
+                        const ul = createElement('ul');
+                        (buckets[key] || []).forEach(({ item, tactic }) => {
+                            ul.appendChild(renderSkeletonTechniqueItem(item, tactic));
+                        });
+                        column.appendChild(ul);
+                        gridContainer.appendChild(column);
+                    });
+                } else if (currentView === 'phase') {
+                    const phaseDefs = {
+                        scoping: 'AI System Design & Scoping', building: 'Model Training, Building & Hardening',
+                        validation: 'Pre-Deployment Validation & Assurance', operation: 'Production Operation & Monitoring',
+                        response: 'Incident Containment & Eviction', improvement: 'System Restoration & Improvement'
+                    };
+                    const buckets = {};
+                    Object.keys(phaseDefs).forEach(k => buckets[k] = []);
+                    indexData.tactics.forEach(tactic => {
+                        (tactic.techniques || []).forEach(tech => {
+                            const items = tech.hasSubTechniques ? (tech.subTechniques || []) : [tech];
+                            items.forEach(item => {
+                                (item.phase || []).forEach(p => { if (buckets[p]) buckets[p].push({ item, tactic: tactic.name }); });
+                            });
+                        });
+                    });
+                    Object.entries(phaseDefs).forEach(([key, name]) => {
+                        const column = createElement('div', { className: 'matrix-column' });
+                        column.style.flexBasis = '15.5%';
+                        column.appendChild(createElement('h3', { className: 'column-header', textContent: name }));
+                        const ul = createElement('ul');
+                        (buckets[key] || []).forEach(({ item, tactic }) => {
+                            ul.appendChild(renderSkeletonTechniqueItem(item, tactic));
+                        });
+                        column.appendChild(ul);
+                        gridContainer.appendChild(column);
+                    });
+                }
+                clearElement(elements.mainContent);
+                elements.mainContent.appendChild(gridContainer);
+                // Disable search during skeleton phase
+                elements.searchBar.setAttribute('disabled', 'true');
+                elements.searchBar.setAttribute('placeholder', 'Loading full data...');
+                elements.searchBar.classList.add('search-loading');
+            }
+
+            function renderSkeletonTechniqueItem(tech, groupName) {
+                const li = createElement('li', { className: 'technique-container' });
+                const hasSub = tech.hasSubTechniques && tech.subTechniques && tech.subTechniques.length > 0;
+                const itemDiv = createElement('div', { className: `technique-item elevation-2 ${hasSub ? '' : 'no-sub'}` });
+                const contentDiv = createElement('div', {
+                    className: 'technique-item-content',
+                    onclick: (e) => {
+                        e.stopPropagation();
+                        showSkeletonModal(tech, groupName);
+                    }
+                });
+                contentDiv.appendChild(createElement('span', { className: 'technique-id', textContent: tech.id }));
+                contentDiv.appendChild(createElement('span', { className: 'technique-name', textContent: tech.name }));
+                itemDiv.appendChild(contentDiv);
+                if (hasSub) {
+                    const iconWrapper = createElement('div', { className: 'expand-icon' });
+                    setIcon(iconWrapper, 'chevron');
+                    itemDiv.appendChild(iconWrapper);
+                    const subList = createElement('ul', { className: 'sub-technique-list' });
+                    tech.subTechniques.forEach(sub => {
+                        const subLi = createElement('li');
+                        const subDiv = createElement('div', { className: 'technique-item elevation-2 no-sub' });
+                        const subContent = createElement('div', {
+                            className: 'technique-item-content',
+                            onclick: (e) => {
+                                e.stopPropagation();
+                                showSkeletonModal(sub, groupName);
+                            }
+                        });
+                        subContent.appendChild(createElement('span', { className: 'technique-id', textContent: sub.id }));
+                        subContent.appendChild(createElement('span', { className: 'technique-name', textContent: sub.name }));
+                        subDiv.appendChild(subContent);
+                        subLi.appendChild(subDiv);
+                        subList.appendChild(subLi);
+                    });
+                    li.appendChild(itemDiv);
+                    li.appendChild(subList);
+                    itemDiv.onclick = (e) => {
+                        e.stopPropagation();
+                        toggleSubTechniques(itemDiv, subList, iconWrapper);
+                    };
+                } else {
+                    itemDiv.onclick = (e) => {
+                        e.stopPropagation();
+                        showSkeletonModal(tech, groupName);
+                    };
+                    li.appendChild(itemDiv);
+                }
+                return li;
+            }
+
+            function showSkeletonModal(tech, groupName) {
+                // If this tactic's full data is already loaded, use the real modal directly
+                for (const [tacticName, tacticData] of _loadedTactics) {
+                    for (const t of (tacticData.techniques || [])) {
+                        if (t.id === tech.id) { showTechniqueModal(t, tacticName); return; }
+                        for (const sub of (t.subTechniques || [])) {
+                            if (sub.id === tech.id) { showTechniqueModal({ ...sub, parent: t }, tacticName); return; }
+                        }
+                    }
+                }
+                // Tactic not loaded yet — show blur placeholder
+                _skeletonModalTechId = tech.id;
+                clearElement(elements.modalBody);
+                clearElement(elements.modalActions);
+                // Group label
+                const groupType = currentView ? currentView.charAt(0).toUpperCase() + currentView.slice(1) : 'Tactic';
+                elements.modalBody.appendChild(createElement('p', { className: 'text-sm opacity-80 mb-1 modal-subtitle', textContent: `${groupType}: ${groupName}` }));
+                // Title (clear, readable)
+                elements.modalBody.appendChild(createElement('h2', { textContent: `${tech.id}: ${tech.name}` }));
+                // Blurred placeholder text + centered spinner overlay
+                const placeholderWrap = createElement('div', { className: 'modal-loading-wrap' });
+                const placeholder = createElement('div', { className: 'modal-loading-placeholder' });
+                placeholder.innerHTML = '<p>Defensive technique implementation guidance and detailed security controls for protecting AI systems against adversarial threats and vulnerabilities across the machine learning lifecycle.</p><p>Coverage includes threat framework mappings, open-source and commercial tooling recommendations, and production-grade code examples for engineering teams.</p><p>Detailed sub-technique breakdowns with specific countermeasure implementations, configuration templates, and deployment patterns for hardening AI inference pipelines and training workflows.</p><p>Cross-framework mapping analysis connecting defensive controls to MITRE ATLAS attack techniques, OWASP risk categories, MAESTRO threat layers, and NIST adversarial machine learning taxonomy entries.</p><p>Operational runbooks and incident response procedures for detecting, containing, and recovering from adversarial attacks targeting model integrity, data poisoning, and prompt injection vectors.</p>';
+                placeholderWrap.appendChild(placeholder);
+                const spinnerDiv = createElement('div', { className: 'modal-loading-spinner' });
+                spinnerDiv.innerHTML = '<div class="skeleton-spinner"></div><p>Loading details...</p>';
+                placeholderWrap.appendChild(spinnerDiv);
+                elements.modalBody.appendChild(placeholderWrap);
+                showModal();
+            }
+
+            async function initializeApp() {
                 const savedTheme = safeGetStorage('aidefendTheme') || 'dark';
                 applyTheme(savedTheme);
                 const aboutIcon = createElement('span');
@@ -2489,22 +2670,107 @@
                     }
                     mcpLink.insertBefore(mcpIcon, mcpLink.firstChild);
                 }
-                const versionSection = aidefendData.introduction.sections.find(s => s.title === "Version & Date");
-                if (versionSection && versionSection.paragraphs.length > 0) {
-                    const versionString = versionSection.paragraphs[0];
-                    const versionElement = document.getElementById('framework-version');
-                    if (versionElement) {
-                        versionElement.textContent = versionString;
-                    }
-                }
-                prepareDataForViews();
-                renderMainGrid();
                 addEventListeners();
                 updateContentPadding();
-                // Deep link: restore technique from URL hash on page load
-                restoreFromHash();
+
+                // Phase 1: Fetch lightweight index and render skeleton
+                try {
+                    const resp = await fetch('./data/tactics-index.json');
+                    if (resp.ok) {
+                        const indexData = await resp.json();
+                        renderSkeletonFromIndex(indexData);
+                    }
+                } catch(e) { /* Silent fallback — will render when full data loads */ }
+
+                // Phase 2: Load full data in background
+                // Per-tactic early modal hot-swap: fire individual imports so whichever
+                // tactic the user clicked can hot-swap the modal as soon as its file loads,
+                // without waiting for all 7 files. Browser caches modules, so main.js
+                // won't re-download them.
+                const tacticImports = [
+                    { name: 'Model', prop: 'modelTactic', path: './tactics/model.js' },
+                    { name: 'Harden', prop: 'hardenTactic', path: './tactics/harden.js' },
+                    { name: 'Detect', prop: 'detectTactic', path: './tactics/detect.js' },
+                    { name: 'Isolate', prop: 'isolateTactic', path: './tactics/isolate.js' },
+                    { name: 'Deceive', prop: 'deceiveTactic', path: './tactics/deceive.js' },
+                    { name: 'Evict', prop: 'evictTactic', path: './tactics/evict.js' },
+                    { name: 'Restore', prop: 'restoreTactic', path: './tactics/restore.js' },
+                ];
+                function tryHotSwapModal(tacticData, tacticName) {
+                    if (!_skeletonModalTechId || !elements.modal.classList.contains('active')) return;
+                    const techId = _skeletonModalTechId;
+                    for (const tech of (tacticData.techniques || [])) {
+                        if (tech.id === techId) {
+                            _skeletonModalTechId = null;
+                            showTechniqueModal(tech, tacticName);
+                            return;
+                        }
+                        for (const sub of (tech.subTechniques || [])) {
+                            if (sub.id === techId) {
+                                _skeletonModalTechId = null;
+                                showTechniqueModal({ ...sub, parent: tech }, tacticName);
+                                return;
+                            }
+                        }
+                    }
+                }
+                // Fire all individual tactic imports in parallel for early modal hot-swap
+                tacticImports.forEach(({ name, prop, path }) => {
+                    import(path).then(mod => {
+                        _loadedTactics.set(name, mod[prop]); // store for future skeleton clicks
+                        tryHotSwapModal(mod[prop], name);
+                    }).catch(() => {}); // errors handled by main.js import below
+                });
+
+                // Full data load via main.js (modules are cached, no re-download)
+                try {
+                    const mod = await import('./main.js');
+                    aidefendData = mod.aidefendData;
+                    _fullDataReady = true;
+                    // Version display
+                    const versionSection = aidefendData.introduction.sections.find(s => s.title === "Version & Date");
+                    if (versionSection && versionSection.paragraphs.length > 0) {
+                        const versionElement = document.getElementById('framework-version');
+                        if (versionElement) versionElement.textContent = versionSection.paragraphs[0];
+                    }
+                    // Build full data structures and render
+                    prepareDataForViews();
+                    renderMainGrid();
+                    // Re-enable search
+                    elements.searchBar.removeAttribute('disabled');
+                    elements.searchBar.setAttribute('placeholder', 'Search keywords, AIDEFEND/ATLAS techniques, MAESTRO threats, OWASP Top10s, Cisco, NIST AML, etc...');
+                    elements.searchBar.classList.remove('search-loading');
+                    // Final hot-swap check (in case per-tactic swap didn't fire)
+                    if (_skeletonModalTechId && elements.modal.classList.contains('active')) {
+                        const techId = _skeletonModalTechId;
+                        _skeletonModalTechId = null;
+                        for (const tactic of aidefendData.tactics) {
+                            let found = false;
+                            for (const tech of (tactic.techniques || [])) {
+                                if (tech.id === techId) { showTechniqueModal(tech, tactic.name); found = true; break; }
+                                for (const sub of (tech.subTechniques || [])) {
+                                    if (sub.id === techId) { showTechniqueModal({ ...sub, parent: tech }, tactic.name); found = true; break; }
+                                }
+                                if (found) break;
+                            }
+                            if (found) break;
+                        }
+                    }
+                    _skeletonData = null;
+                    // Deep link: restore technique from URL hash
+                    restoreFromHash();
+                } catch(e) {
+                    // Full data load failed — show error but keep skeleton visible
+                    console.error('Failed to load full AIDEFEND data:', e);
+                    const errorDiv = createElement('div', { className: 'text-center py-4' });
+                    errorDiv.innerHTML = '<p style="color:var(--color-error,#ef4444);">Failed to load complete data. Please refresh the page.</p>';
+                    elements.mainContent.appendChild(errorDiv);
+                    elements.searchBar.removeAttribute('disabled');
+                    elements.searchBar.setAttribute('placeholder', 'Search (limited — full data failed to load)');
+                    elements.searchBar.classList.remove('search-loading');
+                }
             }
-            initialize();
+            initializeApp();
         };
     </script>
 </body>
