@@ -19,20 +19,23 @@
     <meta name="author" content="AIDEFEND">
     <meta name="robots" content="index, follow">
     <link rel="icon" type="image/png" href="./assets/favicon.png">
-    <!-- Open Graph / Social Sharing -->
+    <!-- Open Graph / Social Sharing
+         Lesson Learned on Mar. 27, 2026: Don't use large/standard size (1200x630 px) image for og:image. Here we use a small image (480x252) intentionally. 
+         Why: After rounds of tests, I found LinkedIn compresses large images (1200x630) into tiny thumbnails then scales back up, causing blurriness.
+         A smaller source image (480x252) avoids this double-compression and renders sharper. -->
     <meta property="og:type" content="website">
     <meta property="og:title" content="AIDEFEND Framework — AI Security Defense Knowledge Base">
     <meta property="og:description" content="AI Security defense techniques mapped across MITRE ATLAS, OWASP, MAESTRO, NIST & Cisco frameworks. Organized by tactics, pillars, phases, and external frameworks for AI security professionals.">
-    <meta property="og:image" content="https://aidefend.net/assets/480.png">
-    <meta property="og:image:width" content="1200">
-    <meta property="og:image:height" content="630">
+    <meta property="og:image" content="https://aidefend.net/assets/og-image-480x252.png">
+    <meta property="og:image:width" content="480">
+    <meta property="og:image:height" content="252">
     <meta property="og:url" content="https://aidefend.net/">
     <meta property="og:site_name" content="AIDEFEND Framework">
     <!-- Twitter Card -->
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="AIDEFEND Framework — AI Security Defense Knowledge Base">
     <meta name="twitter:description" content="AI Security defense techniques mapped across MITRE ATLAS, OWASP, MAESTRO, NIST & Cisco frameworks for AI security professionals.">
-    <meta name="twitter:image" content="https://aidefend.net/assets/480.png">
+    <meta name="twitter:image" content="https://aidefend.net/assets/og-image-480x252.png">
     <link rel="canonical" href="https://aidefend.net/">
     <!-- Structured Data -->
     <script type="application/ld+json">
