@@ -4,13 +4,13 @@ export const aidefendIntroduction = {
         {
             "title": "What is AIDEFEND?",
             "paragraphs": [
-                "AIDEFEND (Artificial Intelligence Defense Framework) is a knowledge base of defensive countermeasures designed to protect AI/ML systems. Inspired by cybersecurity frameworks like MITRE D3FEND, MITRE ATT&CK®, and MITRE ATLAS®, AIDEFEND complements MITRE ATLAS® by focusing on AI defense.<br><br><strong>Please note: <u>This work is a personal initiative.</u></strong> It was inspired by resources including MITRE's frameworks (D3FEND, ATT&CK, ATLAS), the MAESTRO Threat Modeling framework by Ken Huang (Cloud Security Alliance Research Fellow), Google's Secure AI Framework (SAIF), the OWASP's Top 10 Lists (LLM Applications 2025, ML Security 2023, Agentic Applications 2026), Cisco Integrated AI Security and Safety Framework, and NIST Adversarial Machine Learning 2025. However, <u><strong>this work is not affiliated with, endorsed by, or otherwise connected to the MITRE Corporation, the creator of the MAESTRO framework (Ken Huang), Google, OWASP, Cisco, or NIST.</u></strong>"
+                "AIDEFEND (Artificial Intelligence Defense Framework) is a knowledge base of defensive countermeasures designed to protect AI/ML systems. Inspired by cybersecurity frameworks like MITRE D3FEND, MITRE ATT&CK®, and MITRE ATLAS®, AIDEFEND complements MITRE ATLAS® by focusing on AI defense.<br><br><strong>Please note: <u>This work is a personal initiative.</u></strong> It was inspired by resources including MITRE's frameworks (D3FEND, ATT&CK, ATLAS), the MAESTRO Threat Modeling framework by Ken Huang (Cloud Security Alliance Research Fellow), Google's Secure AI Framework (SAIF), the OWASP's Top 10 Lists (LLM Applications 2025, ML Security 2023, Agentic Applications 2026), Cisco Integrated AI Security and Safety Framework, NIST Adversarial Machine Learning 2025, and Databricks AI Security Framework (DASF) 3.0. However, <u><strong>this work is not affiliated with, endorsed by, or otherwise connected to the MITRE Corporation, the creator of the MAESTRO framework (Ken Huang), Google, OWASP, Cisco, NIST, or Databricks.</u></strong>"
             ]
         },
         {
             "title": "What has been developed?",
             "paragraphs": [
-                "Organized across seven defensive tactics (i.e., Model, Harden, Detect, Isolate, Deceive, Evict, Restore), AIDEFEND, the knowledge base of defensive countermeasures for protecting AI/ML systems, provides practical implementation strategies and code examples for each AI-specific defensive technique. To accommodate different roles, the framework can be viewed by strategic Tactic, technology Pillar, or lifecycle Phase, and maps all defenses to known threats from frameworks like MITRE ATLAS, MAESTRO, and OWASP."
+                "Organized across seven defensive tactics (i.e., Model, Harden, Detect, Isolate, Deceive, Evict, Restore), AIDEFEND, the knowledge base of defensive countermeasures for protecting AI/ML systems, provides practical implementation strategies and code examples for each AI-specific defensive technique. To accommodate different roles, the framework can be viewed by strategic Tactic, technology Pillar, or lifecycle Phase, and maps all defenses to known threats from 9 major AI security frameworks: MITRE ATLAS, MAESTRO, OWASP LLM/ML/Agentic Top 10, NIST Adversarial ML, Cisco AI Security, Google SAIF, and Databricks DASF."
             ]
         },
         {
@@ -22,8 +22,8 @@ export const aidefendIntroduction = {
         {
             "title": "Version & Date",
             "paragraphs": [
-                "Version: 1.20260325",
-                "Last Updated: March 25, 2026"
+                "Version: 1.20260329",
+                "Last Updated: March 29, 2026"
             ]
         },
         {
@@ -38,7 +38,8 @@ export const aidefendIntroduction = {
                 "OWASP Top 10 for Agentic Applications 2026: A comprehensive guide identifying the most critical security risks specific to autonomous AI agents and multi-agent systems.",
                 "Cisco Integrated AI Security and Safety Framework: A structured framework addressing security and safety considerations across the AI lifecycle, from development to deployment.",
                 "NIST Adversarial Machine Learning 2025: NIST's guidance on understanding and mitigating adversarial attacks on machine learning systems.",
-                "Google Secure AI Framework (SAIF): A structured approach to safely design, deploy, and manage AI, ensuring the integrity of data, infrastructure, model and application."
+                "Google Secure AI Framework (SAIF): A structured approach to safely design, deploy, and manage AI, ensuring the integrity of data, infrastructure, model and application.",
+                "Databricks AI Security Framework (DASF) 3.0: A comprehensive risk-based framework addressing AI/ML security across the full data and model lifecycle, with detailed coverage of agentic AI and MCP ecosystem risks."
             ]
         }
     ]

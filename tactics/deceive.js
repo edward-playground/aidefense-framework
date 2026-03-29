@@ -35,8 +35,8 @@ export const deceiveTactic = {
                     "framework": "MAESTRO",
                     "items": [
                         "Model Stealing (L1)",
-                        "Marketplace Manipulation (L7)",
-                        "Evasion of Detection (L5) (honeypot captures evasion techniques)"
+                        "Evasion of Detection (L5) (honeypot captures evasion techniques)",
+                        "Compromised Agents (L7) (decoy agent services observe compromised agent behavior)"
                     ]
                 },
                 {
@@ -49,8 +49,7 @@ export const deceiveTactic = {
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "ML05:2023 Model Theft",
-                        "ML01:2023 Input Manipulation Attack (honeypot observes adversarial input patterns)"
+                        "ML05:2023 Model Theft"
                     ]
                 },
                 {
@@ -73,7 +72,28 @@ export const deceiveTactic = {
                     "items": [
                         "AITech-10.1 Model Extraction (honeypot lures extraction attempts)",
                         "AITech-8.3 Information Disclosure (honeypot captures information probing)",
-                        "AITech-2.1 Jailbreak (honeypot captures jailbreak attempts)"
+                        "AITech-2.1 Jailbreak (honeypot captures jailbreak attempts)",
+                        "AITech-14.1 Unauthorized Access"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "MRE: Model Reverse Engineering (honeypot captures reverse engineering attempts)",
+                        "MXF: Model Exfiltration (decoy APIs lure and detect exfiltration attempts)",
+                        "PIJ: Prompt Injection (honeypot captures injection techniques for intelligence)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Model Management 8.2: Model theft (decoy models lure and detect theft attempts)",
+                        "Model Serving — Inference requests 9.11: Model Inference API Access (decoy APIs capture unauthorized inference access)",
+                        "Model Serving — Inference requests 9.1: Prompt inject (honeypot captures prompt injection techniques)",
+                        "Model Serving — Inference requests 9.12: LLM Jailbreak (honeypot captures jailbreak attempts)",
+                        "Model Serving — Inference requests 9.6: Discover ML model ontology (honeypot captures reconnaissance queries)",
+                        "Model Serving — Inference response 10.4: Discover ML model family (honeypot captures fingerprinting attempts)",
+                        "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems (decoy agent services detect rogue agents)"
                     ]
                 }
             ],
@@ -130,7 +150,8 @@ export const deceiveTactic = {
                         "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (decoy model artifacts lure extraction)",
                         "AML.T0010 AI Supply Chain Compromise (decoy artifacts detect supply chain probing)",
                         "AML.T0057 LLM Data Leakage (canary tokens in training data detect leakage)",
-                        "AML.T0035 AI Artifact Collection (decoy artifacts detect unauthorized artifact collection)"
+                        "AML.T0035 AI Artifact Collection (decoy artifacts detect unauthorized artifact collection)",
+                        "AML.T0005.000 Create Proxy AI Model: Train Proxy via Gathered AI Artifacts (canaries in artifact stores detect gathering for proxy training)"
                     ]
                 },
                 {
@@ -151,8 +172,7 @@ export const deceiveTactic = {
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "ML05:2023 Model Theft (decoy models/API keys lure theft)",
-                        "ML01:2023 Input Manipulation Attack (canary data observes adversarial input patterns)"
+                        "ML05:2023 Model Theft (decoy models/API keys lure theft)"
                     ]
                 },
                 {
@@ -177,7 +197,25 @@ export const deceiveTactic = {
                     "items": [
                         "AITech-8.2 Data Exfiltration / Exposure (canary tokens detect data exfiltration)",
                         "AITech-10.1 Model Extraction (decoy models trace theft attempts)",
-                        "AISubtech-14.1.1 Credential Theft (canary API keys detect credential harvesting)"
+                        "AISubtech-14.1.1 Credential Theft (canary API keys detect credential harvesting)",
+                        "AITech-14.1 Unauthorized Access"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "MXF: Model Exfiltration (canary tokens detect model and data exfiltration)",
+                        "SDD: Sensitive Data Disclosure (honey data mimicking sensitive info triggers alert on disclosure)",
+                        "MST: Model Source Tampering (decoy artifacts detect supply chain probing)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Model 7.2: Model assets leak (decoy artifacts detect model asset exfiltration)",
+                        "Model Management 8.2: Model theft (decoy models trace theft attempts)",
+                        "Agents — Tools MCP Server 13.19: Credential and Token Exposure (canary API keys detect credential harvesting)",
+                        "Agents — Tools MCP Server 13.23: Data Exfiltration (canary tokens detect data exfiltration)"
                     ]
                 }
             ],
@@ -248,23 +286,20 @@ export const deceiveTactic = {
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
-                        "LLM01:2025 Prompt Injection (unreliable outcome for attacker)",
-                        "LLM02:2025 Sensitive Information Disclosure (fake/obfuscated data served)"
+                        "LLM01:2025 Prompt Injection (unreliable outcome for attacker)"
                     ]
                 },
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "ML05:2023 Model Theft (noisy/degraded responses make extracted data unusable)",
-                        "ML01:2023 Input Manipulation Attack (inconsistent outputs for adversarial inputs)"
+                        "ML05:2023 Model Theft (noisy/degraded responses make extracted data unusable)"
                     ]
                 },
                 {
                     "framework": "OWASP Agentic AI Top 10 2026",
                     "items": [
                         "ASI01:2026 Agent Goal Hijack (misleading responses frustrate goal hijacking)",
-                        "ASI02:2026 Tool Misuse and Exploitation (feigned compliance exposes tool misuse intent)",
-                        "ASI10:2026 Rogue Agents (deceptive responses help identify rogue agent behavior)"
+                        "ASI02:2026 Tool Misuse and Exploitation (feigned compliance exposes tool misuse intent)"
                     ]
                 },
                 {
@@ -272,7 +307,8 @@ export const deceiveTactic = {
                     "items": [
                         "NISTAML.031 Model Extraction (noisy responses degrade extraction quality)",
                         "NISTAML.018 Prompt Injection (deceptive responses make injection unreliable)",
-                        "NISTAML.032 Reconstruction (deceptive outputs prevent training data reconstruction)"
+                        "NISTAML.032 Reconstruction (deceptive outputs prevent training data reconstruction)",
+                        "NISTAML.025 Black-box Evasion"
                     ]
                 },
                 {
@@ -280,7 +316,29 @@ export const deceiveTactic = {
                     "items": [
                         "AITech-10.1 Model Extraction (degraded outputs frustrate extraction)",
                         "AITech-2.1 Jailbreak (feigned compliance captures jailbreak intent)",
-                        "AITech-1.1 Direct Prompt Injection (misleading responses for injected prompts)"
+                        "AITech-1.1 Direct Prompt Injection (misleading responses for injected prompts)",
+                        "AITech-12.1 Tool Exploitation (deceptive no-ops expose tool exploitation attempts)"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "MRE: Model Reverse Engineering (deceptive outputs degrade reverse engineering quality)",
+                        "MXF: Model Exfiltration (noisy responses make extracted model data unusable)",
+                        "PIJ: Prompt Injection (deceptive responses make injection results unreliable for attacker)",
+                        "MEV: Model Evasion"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Model Management 8.2: Model theft (noisy and degraded responses make stolen model data unusable)",
+                        "Model Serving — Inference requests 9.2: Model inversion (deceptive outputs prevent model inversion)",
+                        "Model Serving — Inference requests 9.1: Prompt inject (deceptive responses frustrate prompt injection)",
+                        "Model Serving — Inference requests 9.12: LLM Jailbreak (feigned compliance captures jailbreak intent)",
+                        "Model Serving — Inference response 10.5: Black-box attacks (inconsistent deceptive outputs frustrate black-box attacks)",
+                        "Agents — Core 13.6: Intent Breaking & Goal Manipulation",
+                        "Agents — Core 13.2: Tool Misuse (deceptive no-ops expose tool misuse attempts)"
                     ]
                 }
             ],
@@ -328,18 +386,17 @@ export const deceiveTactic = {
                     "framework": "MITRE ATLAS",
                     "items": [
                         "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (watermarks trace stolen model outputs)",
-                        "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model (watermarks trace inversion-derived content)",
                         "AML.T0048.004 External Harms: AI Intellectual Property Theft",
                         "AML.T0057 LLM Data Leakage (watermarks trace leaked outputs)",
-                        "AML.T0048.002 External Harms: Societal Harm (watermarks enable attribution of deepfakes/misinfo)"
+                        "AML.T0048.002 External Harms: Societal Harm (watermarks enable attribution of deepfakes/misinfo)",
+                        "AML.T0005.000 Create Proxy AI Model: Train Proxy via Gathered AI Artifacts (watermarked outputs reveal proxy models trained on stolen data)"
                     ]
                 },
                 {
                     "framework": "MAESTRO",
                     "items": [
                         "Model Stealing (L1) (watermarks trace stolen model outputs)",
-                        "Data Exfiltration (L2) (watermarks trace exfiltrated data)",
-                        "Inaccurate Agent Capability Description (L7) (watermarks enable attribution of false claims from impersonating agents)"
+                        "Data Exfiltration (L2) (watermarks trace exfiltrated data)"
                     ]
                 },
                 {
@@ -359,7 +416,6 @@ export const deceiveTactic = {
                 {
                     "framework": "OWASP Agentic AI Top 10 2026",
                     "items": [
-                        "ASI04:2026 Agentic Supply Chain Vulnerabilities (watermarks trace outputs from compromised supply chain agents)",
                         "ASI10:2026 Rogue Agents (watermarks enable attribution of rogue agent outputs)"
                     ]
                 },
@@ -376,6 +432,21 @@ export const deceiveTactic = {
                         "AITech-10.1 Model Extraction (watermarks prove model theft)",
                         "AITech-10.2 Model Inversion (watermarks trace inversion-derived content)",
                         "AITech-8.2 Data Exfiltration / Exposure (watermarks trace exfiltrated outputs)"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "MXF: Model Exfiltration (watermarks trace stolen model outputs)",
+                        "SDD: Sensitive Data Disclosure (watermarks trace leaked sensitive outputs)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Model Management 8.2: Model theft (watermarks make stolen models traceable)",
+                        "Model Serving — Inference response 10.6: Sensitive data output from a model (watermarks trace leaked sensitive outputs)",
+                        "Agents — Tools MCP Server 13.23: Data Exfiltration (watermarks detect exfiltrated content)"
                     ]
                 }
             ],
@@ -434,7 +505,6 @@ export const deceiveTactic = {
                     "items": [
                         "Agent Goal Manipulation (L7) (decoy goals detect goal manipulation)",
                         "Agent Tool Misuse (L7) (canary tools detect unauthorized tool usage)",
-                        "Agent Identity Attack (L7) (canary tasks detect identity-based manipulation)",
                         "Orchestration Attacks (L4) (decoy components alert when orchestration is abused)",
                         "Compromised Agents (L7) (canary tasks detect compromised agent behavior)"
                     ]
@@ -442,15 +512,13 @@ export const deceiveTactic = {
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
-                        "LLM01:2025 Prompt Injection (injection redirects to canary task, revealing compromise)",
-                        "LLM06:2025 Excessive Agency (agent attempts to use decoy high-privilege tool)"
+                        "LLM01:2025 Prompt Injection (injection redirects to canary task, revealing compromise)"
                     ]
                 },
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "ML01:2023 Input Manipulation Attack (malicious inputs redirect to canary tools, triggering alerts)",
-                        "ML08:2023 Model Skewing (scheduled canary task audits detect behavioral drift)"
+                        "N/A"
                     ]
                 },
                 {
@@ -473,9 +541,29 @@ export const deceiveTactic = {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
                         "AITech-1.3 Goal Manipulation (canary goals detect goal manipulation)",
+                        "AISubtech-1.3.1 Goal Manipulation (Models, Agents) (canary goals target model/agent-level goal manipulation)",
                         "AITech-12.1 Tool Exploitation (decoy tools detect tool exploitation)",
                         "AISubtech-4.1.1 Rogue Agent Introduction (canary tasks detect rogue agent introduction)",
-                        "AITech-5.1 Memory System Persistence (canary tasks detect persistent memory manipulation)"
+                        "AITech-5.1 Memory System Persistence (canary tasks detect persistent memory manipulation)",
+                        "AITech-14.2 Abuse of Delegated Authority"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "PIJ: Prompt Injection (injection redirects agent to canary task, revealing compromise)",
+                        "RA: Rogue Actions (canary tasks detect rogue agent behavior and unauthorized actions)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Agents — Core 13.2: Tool Misuse (canary tools detect unauthorized tool usage)",
+                        "Agents — Core 13.6: Intent Breaking & Goal Manipulation (canary goals detect goal manipulation)",
+                        "Agents — Core 13.7: Misaligned & Deceptive Behaviors (canary tasks detect misaligned agent behavior)",
+                        "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems (canary tasks expose rogue agent behavior)",
+                        "Agents — Tools MCP Server 13.16: Prompt Injection (canary tasks triggered by injection reveal compromise)",
+                        "Agents — Core 13.3: Privilege Compromise"
                     ]
                 }
             ],
@@ -521,14 +609,15 @@ export const deceiveTactic = {
                     "items": [
                         "AML.T0007 Discover AI Artifacts",
                         "AML.T0069 Discover LLM System Information",
-                        "AML.T0056 Extract LLM System Prompt (deceptive identity prevents accurate prompt extraction)",
                         "AML.T0013 Discover AI Model Ontology (misleading responses frustrate ontology discovery)",
                         "AML.T0014 Discover AI Model Family (deceptive identity hides model family)",
                         "AML.T0006 Active Scanning (honeypot endpoints attract and log scanning)",
-                        "AML.T0064 Gather RAG-Indexed Targets (deceptive content misleads RAG index reconnaissance)",
                         "AML.T0069.000 Discover LLM System Information: Special Character Sets (deceptive responses mislead delimiter/token probing)",
                         "AML.T0069.001 Discover LLM System Information: System Instruction Keywords (deceptive info frustrates keyword discovery)",
-                        "AML.T0075 Cloud Service Discovery (deceptive system info misleads cloud service enumeration)"
+                        "AML.T0069.002 Discover LLM System Information: System Prompt (deceptive responses frustrate system prompt discovery)",
+                        "AML.T0075 Cloud Service Discovery (deceptive system info misleads cloud service enumeration)",
+                        "AML.T0005.002 Create Proxy AI Model: Use Pre-Trained Model (misleading model identity causes wrong proxy selection)",
+                        "AML.T0084.000 Discover AI Agent Configuration: Embedded Knowledge (deceptive responses frustrate knowledge source discovery)"
                     ]
                 },
                 {
@@ -541,7 +630,7 @@ export const deceiveTactic = {
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
-                        "LLM07:2025 System Prompt Leakage"
+                        "N/A"
                     ]
                 },
                 {
@@ -553,23 +642,36 @@ export const deceiveTactic = {
                 {
                     "framework": "OWASP Agentic AI Top 10 2026",
                     "items": [
-                        "ASI04:2026 Agentic Supply Chain Vulnerabilities (deceptive system info frustrates supply chain reconnaissance)",
-                        "ASI10:2026 Rogue Agents (deceptive info prevents accurate agent fingerprinting)"
+                        "N/A"
                     ]
                 },
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
-                        "NISTAML.031 Model Extraction (deceptive system info misleads extraction approaches)",
-                        "NISTAML.035 Prompt Extraction (deceptive identity prevents accurate system prompt extraction)"
+                        "NISTAML.031 Model Extraction (deceptive system info misleads extraction approaches)"
                     ]
                 },
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
                         "AITech-8.3 Information Disclosure (deceptive responses prevent real system info disclosure)",
-                        "AITech-8.4 Prompt/Meta Extraction (deceptive identity prevents accurate prompt extraction)",
                         "AISubtech-8.3.2 System Information Leakage (fake system details prevent real leakage)"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "MRE: Model Reverse Engineering (deceptive identity hides model family, frustrating reverse engineering)",
+                        "MXF: Model Exfiltration (deceptive system info misleads extraction approaches)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Model Serving — Inference requests 9.6: Discover ML model ontology (misleading responses frustrate ontology discovery)",
+                        "Model Serving — Inference response 10.3: Discover ML model ontology (deceptive outputs mislead ontology reconnaissance)",
+                        "Model Serving — Inference response 10.4: Discover ML model family (deceptive identity hides model family)",
+                        "Model Management 8.2: Model theft (deceptive system info misleads model theft approaches)"
                     ]
                 }
             ],
@@ -636,8 +738,7 @@ export const deceiveTactic = {
                 {
                     "framework": "MAESTRO",
                     "items": [
-                        "Membership Inference Attacks (L1) (prevents determining if specific records were in training)",
-                        "Model Stealing (L1) (noise makes extraction of training-specific signals unreliable)"
+                        "Membership Inference Attacks (L1) (prevents determining if specific records were in training)"
                     ]
                 },
                 {
@@ -675,6 +776,21 @@ export const deceiveTactic = {
                         "AITech-10.2 Model Inversion",
                         "AISubtech-10.2.1 Model Inversion"
                     ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "SDD: Sensitive Data Disclosure (training noise prevents disclosure of memorized training data)",
+                        "ISD: Inferred Sensitive Data (label smoothing and noise reduce sensitive inference signals)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Model Management 8.4: Model inversion (noise and label smoothing frustrate model inversion)",
+                        "Model Serving — Inference requests 9.2: Model inversion (training obfuscation prevents reconstruction of private data)",
+                        "Model Serving — Inference requests 9.5: Infer training data membership (noise prevents membership inference)"
+                    ]
                 }
             ]
         },
@@ -701,8 +817,7 @@ export const deceiveTactic = {
                         "AML.T0019 Publish Poisoned Datasets (canaries detect poisoned dataset injection)",
                         "AML.T0031 Erode AI Model Integrity",
                         "AML.T0059 Erode Dataset Integrity (canary anomalies detect dataset integrity erosion)",
-                        "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (canary loss spikes reveal backdoor insertion)",
-                        "AML.T0024.000 Exfiltration via AI Inference API: Infer Training Data Membership (provenance canaries detect training data usage in external models)"
+                        "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (canary loss spikes reveal backdoor insertion)"
                     ]
                 },
                 {
@@ -731,7 +846,7 @@ export const deceiveTactic = {
                 {
                     "framework": "OWASP Agentic AI Top 10 2026",
                     "items": [
-                        "ASI06:2026 Memory & Context Poisoning (canaries in knowledge bases detect poisoning of agentic data)"
+                        "N/A"
                     ]
                 },
                 {
@@ -742,7 +857,8 @@ export const deceiveTactic = {
                         "NISTAML.023 Backdoor Poisoning (canary loss spikes detect backdoor insertion)",
                         "NISTAML.038 Data Extraction (provenance canaries detect training data extraction)",
                         "NISTAML.021 Clean-label Backdoor (canary anomalies detect clean-label backdoor insertion)",
-                        "NISTAML.012 Clean-label Poisoning (canary loss spikes reveal clean-label poisoning)"
+                        "NISTAML.012 Clean-label Poisoning (canary loss spikes reveal clean-label poisoning)",
+                        "NISTAML.037 Training Data Attacks"
                     ]
                 },
                 {
@@ -751,7 +867,27 @@ export const deceiveTactic = {
                         "AITech-6.1 Training Data Poisoning",
                         "AISubtech-6.1.1 Knowledge Base Poisoning (canaries detect knowledge base poisoning)",
                         "AITech-8.2 Data Exfiltration / Exposure (provenance canaries detect training data exfiltration)",
-                        "AITech-10.1 Model Extraction (provenance canaries detect model cloning from stolen data)"
+                        "AITech-10.1 Model Extraction (provenance canaries detect model cloning from stolen data)",
+                        "AITech-8.3 Information Disclosure",
+                        "AISubtech-7.3.1 Corrupted Third-Party Data (canaries detect corrupted third-party data entering training pipeline)"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "DP: Data Poisoning (canaries detect data poisoning during training)",
+                        "MXF: Model Exfiltration (provenance canaries detect training data theft)",
+                        "UTD: Unauthorized Training Data (provenance canaries detect unauthorized use of training data)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Datasets 3.1: Data poisoning (canary loss spikes detect data poisoning attacks)",
+                        "Datasets 3.3: Label flipping (canary anomalies detect label flipping attacks)",
+                        "Raw Data 1.11: Compromised 3rd-party datasets (canaries detect compromised dataset injection)",
+                        "Model 7.1: Backdoor machine learning / Trojaned model (canary loss spikes reveal backdoor insertion)",
+                        "Model Management 8.2: Model theft (provenance canaries detect training data theft enabling model cloning)"
                     ]
                 }
             ],

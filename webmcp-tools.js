@@ -301,7 +301,7 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
 
     safeRegisterTool({
         name: 'get_technique_detail',
-        description: "Get full details of an AIDEFEND technique or sub-technique by its ID. Returns description, threat mappings across 7 security frameworks (MITRE ATLAS, OWASP LLM/ML/Agentic Top 10, MAESTRO, NIST AML, Cisco), pillar/phase classification, and sub-technique list.",
+        description: "Get full details of an AIDEFEND technique or sub-technique by its ID. Returns description, threat mappings across 9 security frameworks (MITRE ATLAS, OWASP LLM/ML/Agentic Top 10, MAESTRO, NIST AML, Cisco, Google SAIF 2.0, Databricks DASF 3.0), pillar/phase classification, and sub-technique list.",
         annotations: {
             readOnlyHint: true,
             idempotentHint: true

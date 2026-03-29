@@ -17,7 +17,6 @@ export const isolateTactic = {
                         "AML.T0034 Cost Harvesting",
                         "AML.T0089 Process Discovery (sandbox isolation limits process enumeration visibility)",
                         "AML.T0090 OS Credential Dumping (isolated environments prevent host credential access)",
-                        "AML.T0100 AI Agent Clickbait (sandboxed execution contains clickbait-triggered actions)",
                         "AML.T0102 Generate Malicious Commands (sandbox containment limits impact of generated malicious commands)",
                         "AML.T0103 Deploy AI Agent",
                         "AML.T0105 Escape to Host"
@@ -38,7 +37,6 @@ export const isolateTactic = {
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
-                        "LLM05:2025 Improper Output Handling",
                         "LLM06:2025 Excessive Agency",
                         "LLM10:2025 Unbounded Consumption"
                     ]
@@ -47,8 +45,7 @@ export const isolateTactic = {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
                         "ML06:2023 AI Supply Chain Attacks",
-                        "ML05:2023 Model Theft",
-                        "ML09:2023 Output Integrity Attack"
+                        "ML05:2023 Model Theft"
                     ]
                 },
                 {
@@ -57,16 +54,15 @@ export const isolateTactic = {
                         "ASI02:2026 Tool Misuse and Exploitation",
                         "ASI05:2026 Unexpected Code Execution (RCE)",
                         "ASI10:2026 Rogue Agents",
-                        "ASI08:2026 Cascading Failures (sandboxing limits blast radius)"
+                        "ASI08:2026 Cascading Failures (sandboxing limits blast radius)",
+                        "ASI04:2026 Agentic Supply Chain Vulnerabilities (sandboxing contains compromised supply chain components)"
                     ]
                 },
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
                         "NISTAML.039 Compromising connected resources",
-                        "NISTAML.051 Model Poisoning (Supply Chain) (contains compromised component impact)",
-                        "NISTAML.018 Prompt Injection (limits post-injection agent capabilities)",
-                        "NISTAML.015 Indirect Prompt Injection"
+                        "NISTAML.051 Model Poisoning (Supply Chain) (contains compromised component impact)"
                     ]
                 },
                 {
@@ -76,7 +72,31 @@ export const isolateTactic = {
                         "AITech-13.1 Disruption of Availability",
                         "AITech-13.2 Cost Harvesting / Repurposing",
                         "AISubtech-9.1.1 Code Execution",
-                        "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access"
+                        "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access",
+                        "AITech-14.1 Unauthorized Access"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "IIC: Insecure Integrated Component (sandboxing contains compromised integrated components)",
+                        "RA: Rogue Actions (sandbox containment limits blast radius of rogue agent actions)",
+                        "PIJ: Prompt Injection (sandboxed execution limits post-injection capabilities)",
+                        "MDT: Model Deployment Tampering (sandboxed runtime contains tampered deployment impact)",
+                        "DMS: Denial of ML Service (resource isolation prevents service disruption)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Agents — Core 13.2: Tool Misuse (sandboxing contains tool misuse impact)",
+                        "Agents — Core 13.11: Unexpected RCE and Code Attacks",
+                        "Agents — Core 13.4: Resource Overload (resource limits prevent overload)",
+                        "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems (sandbox isolation contains rogue agents)",
+                        "Model Serving — Inference requests 9.3: Model breakout (sandboxing prevents model breakout)",
+                        "Model 7.3: ML Supply chain vulnerabilities (sandboxing contains compromised supply chain components)",
+                        "Algorithms 5.4: Malicious libraries (sandboxing contains impact of malicious libraries)",
+                        "Platform 12.4: Unauthorized privileged access"
                     ]
                 }
             ],
@@ -140,8 +160,7 @@ export const isolateTactic = {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
                                 "ML06:2023 AI Supply Chain Attacks",
-                                "ML05:2023 Model Theft",
-                                "ML09:2023 Output Integrity Attack"
+                                "ML05:2023 Model Theft"
                             ]
                         },
                         {
@@ -166,7 +185,28 @@ export const isolateTactic = {
                                 "AITech-12.1 Tool Exploitation",
                                 "AITech-13.1 Disruption of Availability",
                                 "AISubtech-9.1.1 Code Execution",
-                                "AITech-9.3 Dependency / Plugin Compromise (compromised container dependencies)"
+                                "AITech-9.3 Dependency / Plugin Compromise (compromised container dependencies)",
+                                "AITech-14.1 Unauthorized Access"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "IIC: Insecure Integrated Component (container isolation contains compromised components)",
+                                "RA: Rogue Actions (container isolation limits rogue action blast radius)",
+                                "MDT: Model Deployment Tampering (container hardening prevents deployment tampering)",
+                                "DMS: Denial of ML Service (resource quotas prevent service disruption)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Agents — Core 13.11: Unexpected RCE and Code Attacks",
+                                "Agents — Core 13.4: Resource Overload (container resource limits prevent overload)",
+                                "Model 7.3: ML Supply chain vulnerabilities (hardened containers limit supply chain compromise)",
+                                "Algorithms 5.4: Malicious libraries (container isolation contains malicious library impact)",
+                                "Model Serving — Inference requests 9.7: Denial of Service (DoS) (resource quotas prevent DoS)",
+                                "Platform 12.4: Unauthorized privileged access"
                             ]
                         }
                     ],
@@ -258,7 +298,6 @@ export const isolateTactic = {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
                                 "ML06:2023 AI Supply Chain Attacks",
-                                "ML09:2023 Output Integrity Attack",
                                 "ML05:2023 Model Theft"
                             ]
                         },
@@ -284,7 +323,29 @@ export const isolateTactic = {
                                 "AITech-12.1 Tool Exploitation",
                                 "AISubtech-9.1.1 Code Execution",
                                 "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
-                                "AITech-13.1 Disruption of Availability"
+                                "AITech-13.1 Disruption of Availability",
+                                "AITech-14.1 Unauthorized Access"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "IIC: Insecure Integrated Component (hardware-level isolation contains compromised components)",
+                                "RA: Rogue Actions (microVM isolation prevents rogue actions from escaping to host)",
+                                "MST: Model Source Tampering (microVM isolation contains impact of tampered model code)",
+                                "MDT: Model Deployment Tampering (microVM isolation contains tampered deployment components)",
+                                "DMS: Denial of ML Service (microVM resource limits prevent service disruption)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Agents — Core 13.11: Unexpected RCE and Code Attacks",
+                                "Agents — Core 13.4: Resource Overload (microVM resource limits prevent overload)",
+                                "Model Serving — Inference requests 9.3: Model breakout (microVM prevents model breakout to host)",
+                                "Model 7.3: ML Supply chain vulnerabilities (hardware-level isolation for compromised components)",
+                                "Algorithms 5.4: Malicious libraries (microVM isolation contains malicious library execution)",
+                                "Platform 12.4: Unauthorized privileged access"
                             ]
                         }
                     ],
@@ -320,7 +381,23 @@ export const isolateTactic = {
                         { "framework": "OWASP ML Top 10 2023", "items": ["ML06:2023 AI Supply Chain Attacks"] },
                         { "framework": "OWASP Agentic AI Top 10 2026", "items": ["ASI02:2026 Tool Misuse and Exploitation", "ASI05:2026 Unexpected Code Execution (RCE)", "ASI10:2026 Rogue Agents"] },
                         { "framework": "NIST Adversarial Machine Learning 2025", "items": ["NISTAML.039 Compromising connected resources", "NISTAML.018 Prompt Injection (ephemeral teardown destroys injected persistence)"] },
-                        { "framework": "Cisco Integrated AI Security and Safety Framework", "items": ["AISubtech-9.1.1 Code Execution", "AITech-12.1 Tool Exploitation", "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access"] }
+                        { "framework": "Cisco Integrated AI Security and Safety Framework", "items": ["AISubtech-9.1.1 Code Execution", "AITech-12.1 Tool Exploitation", "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access"] },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "IIC: Insecure Integrated Component (ephemeral teardown destroys compromised component state)",
+                                "RA: Rogue Actions (ephemeral execution prevents persistent rogue behavior)",
+                                "PIJ: Prompt Injection (ephemeral teardown destroys injected persistence)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Agents — Core 13.2: Tool Misuse (ephemeral teardown prevents tool misuse persistence)",
+                                "Agents — Core 13.11: Unexpected RCE and Code Attacks",
+                                "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems (ephemeral sandboxes prevent rogue agent persistence)"
+                            ]
+                        }
                     ],
                     "implementationGuidance": [
                         {
@@ -341,10 +418,29 @@ export const isolateTactic = {
                         { "framework": "MITRE ATLAS", "items": ["AML.T0072 Reverse Shell", "AML.T0025 Exfiltration via Cyber Means", "AML.T0050 Command and Scripting Interpreter", "AML.T0089 Process Discovery (syscall filtering blocks process enumeration)", "AML.T0102 Generate Malicious Commands (seccomp restrictions limit execution of generated malicious commands)", "AML.T0105 Escape to Host", "AML.T0106 Exploitation for Credential Access"] },
                         { "framework": "MAESTRO", "items": ["Lateral Movement (Cross-Layer)", "Privilege Escalation (Cross-Layer)", "Data Leakage (Cross-Layer) (egress restrictions prevent data exfiltration)", "Orchestration Attacks (L4)"] },
                         { "framework": "OWASP LLM Top 10 2025", "items": ["LLM06:2025 Excessive Agency", "LLM02:2025 Sensitive Information Disclosure (egress restrictions block exfiltration)"] },
-                        { "framework": "OWASP ML Top 10 2023", "items": ["ML06:2023 AI Supply Chain Attacks", "ML05:2023 Model Theft (network restrictions prevent model exfiltration)"] },
+                        { "framework": "OWASP ML Top 10 2023", "items": ["ML05:2023 Model Theft (network restrictions prevent model exfiltration)"] },
                         { "framework": "OWASP Agentic AI Top 10 2026", "items": ["ASI02:2026 Tool Misuse and Exploitation", "ASI05:2026 Unexpected Code Execution (RCE)"] },
                         { "framework": "NIST Adversarial Machine Learning 2025", "items": ["NISTAML.039 Compromising connected resources", "NISTAML.031 Model Extraction (network restrictions block extraction)"] },
-                        { "framework": "Cisco Integrated AI Security and Safety Framework", "items": ["AISubtech-9.1.1 Code Execution", "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access", "AITech-8.2 Data Exfiltration / Exposure"] }
+                        { "framework": "Cisco Integrated AI Security and Safety Framework", "items": ["AISubtech-9.1.1 Code Execution", "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access", "AITech-8.2 Data Exfiltration / Exposure", "AITech-14.1 Unauthorized Access"] },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "MXF: Model Exfiltration (network egress restrictions block model exfiltration)",
+                                "SDD: Sensitive Data Disclosure (egress restrictions prevent data exfiltration)",
+                                "RA: Rogue Actions (syscall filtering and egress restrictions limit rogue action capabilities)",
+                                "IIC: Insecure Integrated Component (seccomp profiles restrict compromised component capabilities)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Model 7.2: Model assets leak (egress restrictions block model asset exfiltration)",
+                                "Agents — Core 13.11: Unexpected RCE and Code Attacks",
+                                "Agents — Tools MCP Server 13.23: Data Exfiltration (network egress restrictions block data exfiltration)",
+                                "Model Serving — Inference requests 9.3: Model breakout (seccomp restrictions prevent breakout)",
+                                "Platform 12.4: Unauthorized privileged access"
+                            ]
+                        }
                     ],
                     "implementationGuidance": [
                         {
@@ -402,15 +498,13 @@ export const isolateTactic = {
                         {
                             "framework": "OWASP LLM Top 10 2025",
                             "items": [
-                                "LLM06:2025 Excessive Agency",
                                 "LLM05:2025 Improper Output Handling"
                             ]
                         },
                         {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
-                                "ML06:2023 AI Supply Chain Attacks",
-                                "ML09:2023 Output Integrity Attack"
+                                "ML06:2023 AI Supply Chain Attacks"
                             ]
                         },
                         {
@@ -435,6 +529,24 @@ export const isolateTactic = {
                                 "AITech-12.2 Insecure Output Handling",
                                 "AISubtech-12.2.1 Code Detection / Malicious Code Output",
                                 "AITech-11.1 Environment-Aware Evasion (behavioral analysis detects environment-probing before execution)"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "MST: Model Source Tampering (behavioral analysis detects tampered model artifacts)",
+                                "IIC: Insecure Integrated Component (pre-execution analysis detects malicious integrated components)",
+                                "IMO: Insecure Model Output (behavioral analysis detects malicious output generation)",
+                                "RA: Rogue Actions (pre-execution analysis catches rogue behavior before production)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Model 7.1: Backdoor machine learning / Trojaned model (behavioral analysis detects trojaned models)",
+                                "Model 7.3: ML Supply chain vulnerabilities (pre-execution analysis vets supply chain artifacts)",
+                                "Algorithms 5.4: Malicious libraries (behavioral analysis detects malicious library behavior)",
+                                "Agents — Core 13.11: Unexpected RCE and Code Attacks"
                             ]
                         }
                     ],
@@ -507,7 +619,8 @@ export const isolateTactic = {
                     "items": [
                         "ASI02:2026 Tool Misuse and Exploitation (network restrictions limit tool reach)",
                         "ASI03:2026 Identity and Privilege Abuse (network segmentation enforces boundaries)",
-                        "ASI10:2026 Rogue Agents (network isolation contains rogue agents)"
+                        "ASI10:2026 Rogue Agents (network isolation contains rogue agents)",
+                        "ASI07:2026 Insecure Inter-Agent Communication"
                     ]
                 },
                 {
@@ -525,6 +638,26 @@ export const isolateTactic = {
                         "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
                         "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access",
                         "AITech-14.1 Unauthorized Access"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "MXF: Model Exfiltration (network segmentation limits model exfiltration paths)",
+                        "SDD: Sensitive Data Disclosure (segmentation limits data exposure scope)",
+                        "RA: Rogue Actions (network isolation contains rogue agent network reach)",
+                        "IIC: Insecure Integrated Component (segmentation limits compromised component lateral movement)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Model 7.2: Model assets leak (network segmentation limits exfiltration paths)",
+                        "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems (network isolation contains rogue agents)",
+                        "Agents — Tools MCP Server 13.23: Data Exfiltration (network segmentation blocks data exfiltration paths)",
+                        "Platform 12.4: Unauthorized privileged access (network segmentation enforces access boundaries)",
+                        "Platform 12.7: Initial Access (segmentation limits initial access scope)",
+                        "Agents — Tools MCP Server 13.25: Insecure Communication"
                     ]
                 }
             ],
@@ -605,7 +738,9 @@ export const isolateTactic = {
                             "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
                                 "ASI03:2026 Identity and Privilege Abuse (network segmentation enforces access boundaries)",
-                                "ASI10:2026 Rogue Agents (internal segmentation contains rogue agent lateral movement)"
+                                "ASI10:2026 Rogue Agents (internal segmentation contains rogue agent lateral movement)",
+                                "ASI07:2026 Insecure Inter-Agent Communication",
+                                "ASI08:2026 Cascading Failures (network segmentation limits cascade propagation)"
                             ]
                         },
                         {
@@ -621,6 +756,23 @@ export const isolateTactic = {
                                 "AITech-14.1 Unauthorized Access",
                                 "AISubtech-9.1.2 Unauthorized or Unsolicited System Access",
                                 "AITech-8.2 Data Exfiltration / Exposure (internal segmentation limits data reach)"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "MXF: Model Exfiltration (internal segmentation limits model theft paths)",
+                                "SDD: Sensitive Data Disclosure (internal segmentation limits data exposure)",
+                                "RA: Rogue Actions (internal segmentation contains rogue agent lateral movement)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Model 7.2: Model assets leak (internal segmentation restricts access to model assets)",
+                                "Platform 12.4: Unauthorized privileged access (internal segmentation enforces privilege boundaries)",
+                                "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems (internal segmentation contains rogue agents)",
+                                "Agents — Core 13.3: Privilege Compromise (segmentation limits privilege escalation scope)"
                             ]
                         }
                     ]
@@ -678,8 +830,7 @@ export const isolateTactic = {
                                 "AML.T0072 Reverse Shell",
                                 "AML.T0034 Cost Harvesting",
                                 "AML.T0096 AI Service API (egress monitoring detects C2 communication via AI service channels)",
-                                "AML.T0108 AI Agent (C2)",
-                                "AML.T0011.003 User Execution: Malicious Link"
+                                "AML.T0108 AI Agent (C2)"
                             ]
                         },
                         {
@@ -710,15 +861,15 @@ export const isolateTactic = {
                             "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
                                 "ASI02:2026 Tool Misuse and Exploitation (egress controls prevent tool-based exfiltration)",
-                                "ASI04:2026 Agentic Supply Chain Vulnerabilities (securing external API dependencies)"
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities (securing external API dependencies)",
+                                "ASI07:2026 Insecure Inter-Agent Communication (secure external connectivity protects agent-to-service communication)"
                             ]
                         },
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
                                 "NISTAML.039 Compromising connected resources",
-                                "NISTAML.038 Data Extraction",
-                                "NISTAML.051 Model Poisoning (Supply Chain) (securing external service connections)"
+                                "NISTAML.038 Data Extraction"
                             ]
                         },
                         {
@@ -727,7 +878,27 @@ export const isolateTactic = {
                                 "AITech-8.2 Data Exfiltration / Exposure",
                                 "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
                                 "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access",
-                                "AITech-9.3 Dependency / Plugin Compromise (securing external plugin connections)"
+                                "AITech-9.3 Dependency / Plugin Compromise (securing external plugin connections)",
+                                "AITech-14.1 Unauthorized Access",
+                                "AITech-16.1 Eavesdropping (transport security prevents eavesdropping on AI service communications)"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "MXF: Model Exfiltration (egress controls prevent model exfiltration to external services)",
+                                "SDD: Sensitive Data Disclosure (egress controls prevent data exfiltration via external APIs)",
+                                "IIC: Insecure Integrated Component (securing external plugin and API connections)",
+                                "RA: Rogue Actions (egress controls prevent prompt-injected agents from calling unauthorized external services)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Agents — Tools MCP Server 13.23: Data Exfiltration (egress controls block exfiltration via external services)",
+                                "Agents — Tools MCP Server 13.25: Insecure Communication (mTLS and certificate pinning secure external channels)",
+                                "Model Serving — Inference response 10.2: Output manipulation (transport security prevents MitM on external connections)",
+                                "Model 7.3: ML Supply chain vulnerabilities (securing external model and API dependencies)"
                             ]
                         }
                     ]
@@ -759,7 +930,6 @@ export const isolateTactic = {
                         "AML.T0040 AI Model Inference API Access",
                         "AML.T0046 Spamming AI System with Chaff Data",
                         "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (rate-limiting slows extraction)",
-                        "AML.T0042 Verify Attack (rate limiting and throttling disrupt attacker feedback loops)",
                         "AML.T0096 AI Service API (rate limiting and throttling restrict C2 communication throughput)"
                     ]
                 },
@@ -772,14 +942,14 @@ export const isolateTactic = {
                         "Denial of Service (DoS) Attacks (L4)",
                         "Resource Hijacking (L4) (quarantine contains hijacked resources)",
                         "Agent Pricing Model Manipulation (L7) (rate limiting prevents economic abuse)",
-                        "Model Extraction of AI Security Agents (L6)"
+                        "Model Extraction of AI Security Agents (L6)",
+                        "Compromised Agents (L7) (quarantine contains compromised agent instances)"
                     ]
                 },
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
-                        "LLM10:2025 Unbounded Consumption",
-                        "LLM01:2025 Prompt Injection (quarantine contains repeat prompt injection abuse)"
+                        "LLM10:2025 Unbounded Consumption"
                     ]
                 },
                 {
@@ -793,14 +963,14 @@ export const isolateTactic = {
                     "items": [
                         "ASI10:2026 Rogue Agents (quarantine isolates rogue agents)",
                         "ASI08:2026 Cascading Failures (throttling limits cascade propagation)",
-                        "ASI02:2026 Tool Misuse and Exploitation (quarantine contains tool misuse)"
+                        "ASI02:2026 Tool Misuse and Exploitation (quarantine contains tool misuse)",
+                        "ASI03:2026 Identity and Privilege Abuse"
                     ]
                 },
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
                         "NISTAML.014 Energy-latency",
-                        "NISTAML.018 Prompt Injection (rate limiting contains prompt injection abuse)",
                         "NISTAML.031 Model Extraction (rate limiting slows extraction)",
                         "NISTAML.039 Compromising connected resources (quarantine limits lateral impact)"
                     ]
@@ -813,7 +983,31 @@ export const isolateTactic = {
                         "AITech-10.1 Model Extraction",
                         "AISubtech-10.1.1 API Query Stealing",
                         "AITech-13.2 Cost Harvesting / Repurposing",
-                        "AISubtech-13.2.1 Service Misuse for Cost Inflation (throttling prevents cost inflation attacks)"
+                        "AISubtech-13.2.1 Service Misuse for Cost Inflation (throttling prevents cost inflation attacks)",
+                        "AITech-14.1 Unauthorized Access",
+                        "AITech-12.1 Tool Exploitation (quarantine contains suspicious tool exploitation)"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "DMS: Denial of ML Service (throttling prevents service exhaustion)",
+                        "MRE: Model Reverse Engineering (rate limiting slows reverse engineering attempts)",
+                        "MXF: Model Exfiltration (rate limiting slows model extraction via API)",
+                        "RA: Rogue Actions (quarantine isolates agents performing rogue actions)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Model Serving — Inference requests 9.7: Denial of Service (DoS)",
+                        "Model Management 8.2: Model theft (throttling slows model theft via API queries)",
+                        "Agents — Core 13.4: Resource Overload (throttling prevents resource overload)",
+                        "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems (quarantine isolates rogue agents)",
+                        "Model Serving — Inference requests 9.11: Model Inference API Access (rate limiting restricts unauthorized API access)",
+                        "Model Serving — Inference response 10.5: Black-box attacks (rate limiting slows black-box attack queries)",
+                        "Agents — Core 13.3: Privilege Compromise",
+                        "Agents — Core 13.2: Tool Misuse (quarantine contains suspicious tool-calling behavior)"
                     ]
                 }
             ],
@@ -873,9 +1067,9 @@ export const isolateTactic = {
                         "AML.T0070 RAG Poisoning",
                         "AML.T0080.000 AI Agent Context Poisoning: Memory",
                         "AML.T0099 AI Agent Tool Data Poisoning (memory isolation prevents poisoned tool data from persisting across sessions)",
-                        "AML.T0108 AI Agent (C2)",
                         "AML.T0080 AI Agent Context Poisoning",
-                        "AML.T0092 Manipulate User LLM Chat History (memory isolation prevents chat history manipulation from persisting)"
+                        "AML.T0092 Manipulate User LLM Chat History (memory isolation prevents chat history manipulation from persisting)",
+                        "AML.T0080.001 AI Agent Context Poisoning: Thread (memory isolation prevents thread-level context contamination)"
                     ]
                 },
                 {
@@ -900,9 +1094,7 @@ export const isolateTactic = {
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "ML02:2023 Data Poisoning Attack",
-                        "ML06:2023 AI Supply Chain Attacks",
-                        "ML09:2023 Output Integrity Attack"
+                        "ML02:2023 Data Poisoning Attack"
                     ]
                 },
                 {
@@ -918,7 +1110,8 @@ export const isolateTactic = {
                     "items": [
                         "NISTAML.018 Prompt Injection",
                         "NISTAML.015 Indirect Prompt Injection",
-                        "NISTAML.013 Data Poisoning"
+                        "NISTAML.013 Data Poisoning",
+                        "NISTAML.036 Leaking information from user interactions"
                     ]
                 },
                 {
@@ -927,7 +1120,28 @@ export const isolateTactic = {
                         "AITech-5.1 Memory System Persistence",
                         "AISubtech-5.1.1 Long-term / Short-term Memory Injection",
                         "AITech-4.2 Context Boundary Attacks",
-                        "AISubtech-6.1.1 Knowledge Base Poisoning"
+                        "AISubtech-6.1.1 Knowledge Base Poisoning",
+                        "AITech-14.1 Unauthorized Access",
+                        "AITech-7.2 Memory System Corruption (memory isolation prevents memory system corruption)"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "PIJ: Prompt Injection (memory isolation limits injection persistence)",
+                        "DP: Data Poisoning (memory isolation prevents poisoned data persistence across sessions)",
+                        "SDD: Sensitive Data Disclosure (memory isolation prevents cross-session and cross-tenant data leakage)",
+                        "RA: Rogue Actions (memory isolation prevents poisoned memory from driving rogue agent actions)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Agents — Core 13.1: Memory Poisoning",
+                        "Agents — Core 13.6: Intent Breaking & Goal Manipulation (memory isolation prevents persistent goal manipulation)",
+                        "Agents — Core 13.12: Agent Communication Poisoning (memory isolation prevents cross-agent contamination)",
+                        "Agents — Tools MCP Server 13.24: Context Spoofing and Manipulation",
+                        "Datasets 3.1: Data poisoning (memory and KB treated as data vulnerable to poisoning)"
                     ]
                 }
             ],
@@ -955,7 +1169,8 @@ export const isolateTactic = {
                                 "AML.T0051 LLM Prompt Injection",
                                 "AML.T0061 LLM Prompt Self-Replication",
                                 "AML.T0080.000 AI Agent Context Poisoning: Memory",
-                                "AML.T0092 Manipulate User LLM Chat History (runtime context hygiene prevents chat history tampering from persisting)"
+                                "AML.T0092 Manipulate User LLM Chat History (runtime context hygiene prevents chat history tampering from persisting)",
+                                "AML.T0080.001 AI Agent Context Poisoning: Thread (runtime context hygiene prevents thread-level poisoning)"
                             ]
                         },
                         {
@@ -984,7 +1199,8 @@ export const isolateTactic = {
                             "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
                                 "ASI06:2026 Memory & Context Poisoning",
-                                "ASI08:2026 Cascading Failures (context bleed can propagate across sessions)"
+                                "ASI08:2026 Cascading Failures (context bleed can propagate across sessions)",
+                                "ASI03:2026 Identity and Privilege Abuse (context isolation prevents privilege carryover between sessions)"
                             ]
                         },
                         {
@@ -992,7 +1208,8 @@ export const isolateTactic = {
                             "items": [
                                 "NISTAML.018 Prompt Injection",
                                 "NISTAML.015 Indirect Prompt Injection",
-                                "NISTAML.036 Leaking information from user interactions"
+                                "NISTAML.036 Leaking information from user interactions",
+                                "NISTAML.014 Energy-latency"
                             ]
                         },
                         {
@@ -1002,6 +1219,24 @@ export const isolateTactic = {
                                 "AISubtech-4.2.1 Context Window Exploitation",
                                 "AISubtech-4.2.2 Session Boundary Violation",
                                 "AITech-5.1 Memory System Persistence (runtime context can be used for persistence)"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "PIJ: Prompt Injection (context isolation limits prompt injection persistence within session)",
+                                "SDD: Sensitive Data Disclosure (session isolation prevents cross-tenant data leakage)",
+                                "DMS: Denial of ML Service (context size ceilings prevent resource exhaustion)",
+                                "RA: Rogue Actions (context reset breaks persistent rogue instructions)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Agents — Core 13.1: Memory Poisoning (runtime context hygiene limits memory poisoning persistence)",
+                                "Agents — Core 13.4: Resource Overload (context size limits prevent resource exhaustion)",
+                                "Agents — Tools MCP Server 13.24: Context Spoofing and Manipulation",
+                                "Model Serving — Inference requests 9.4: Looped input (context windowing prevents harmful feedback loops)"
                             ]
                         }
                     ],
@@ -1037,8 +1272,7 @@ export const isolateTactic = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0070 RAG Poisoning",
-                                "AML.T0080.000 AI Agent Context Poisoning: Memory",
-                                "AML.T0064 Gather RAG-Indexed Targets (tenant partitioning limits RAG index reconnaissance scope)"
+                                "AML.T0080.000 AI Agent Context Poisoning: Memory"
                             ]
                         },
                         {
@@ -1059,8 +1293,7 @@ export const isolateTactic = {
                         {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
-                                "ML02:2023 Data Poisoning Attack",
-                                "ML09:2023 Output Integrity Attack (partitioning prevents cross-tenant retrieval of poisoned data)"
+                                "ML02:2023 Data Poisoning Attack"
                             ]
                         },
                         {
@@ -1084,7 +1317,25 @@ export const isolateTactic = {
                                 "AITech-5.1 Memory System Persistence",
                                 "AISubtech-5.1.1 Long-term / Short-term Memory Injection",
                                 "AISubtech-6.1.1 Knowledge Base Poisoning",
-                                "AITech-7.2 Memory System Corruption (partitioning limits memory corruption blast radius to single tenant)"
+                                "AITech-7.2 Memory System Corruption (partitioning limits memory corruption blast radius to single tenant)",
+                                "AITech-14.1 Unauthorized Access"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "DP: Data Poisoning (partitioning limits poisoning blast radius to single tenant)",
+                                "SDD: Sensitive Data Disclosure (tenant partitioning prevents cross-tenant data exposure)",
+                                "PIJ: Prompt Injection (partitioning limits scope of poisoned content retrieval)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Agents — Core 13.1: Memory Poisoning (partitioning limits memory poisoning to single tenant)",
+                                "Agents — Core 13.3: Privilege Compromise (authorization-gated retrieval prevents unauthorized access)",
+                                "Agents — Tools MCP Server 13.24: Context Spoofing and Manipulation (partitioning prevents cross-tenant context manipulation)",
+                                "Raw Data 1.1: Insufficient access controls (policy-gated retrieval enforces access controls on memory)"
                             ]
                         }
                     ],
@@ -1124,7 +1375,6 @@ export const isolateTactic = {
                             "framework": "MAESTRO",
                             "items": [
                                 "Data Tampering (L2)",
-                                "Data Poisoning (L2) (integrity verification detects poisoned writes)",
                                 "Compromised RAG Pipelines (L2) (signed records prevent pipeline tampering)"
                             ]
                         },
@@ -1146,13 +1396,13 @@ export const isolateTactic = {
                             "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
                                 "ASI06:2026 Memory & Context Poisoning",
-                                "ASI04:2026 Agentic Supply Chain Vulnerabilities (integrity verification prevents tampered memory artifacts)"
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities (integrity verification prevents tampered memory artifacts)",
+                                "ASI03:2026 Identity and Privilege Abuse"
                             ]
                         },
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
-                                "NISTAML.013 Data Poisoning",
                                 "NISTAML.015 Indirect Prompt Injection (signed records detect injected content)"
                             ]
                         },
@@ -1161,7 +1411,23 @@ export const isolateTactic = {
                             "items": [
                                 "AITech-5.1 Memory System Persistence",
                                 "AISubtech-5.1.1 Long-term / Short-term Memory Injection",
-                                "AISubtech-6.1.1 Knowledge Base Poisoning"
+                                "AISubtech-6.1.1 Knowledge Base Poisoning",
+                                "AITech-7.2 Memory System Corruption"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "PIJ: Prompt Injection (signed records detect injected content in persistent memory)",
+                                "MST: Model Source Tampering (integrity verification detects tampered memory artifacts)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Agents — Core 13.1: Memory Poisoning (cryptographic integrity detects and prevents memory poisoning)",
+                                "Agents — Tools MCP Server 13.18: Tool Poisoning (integrity verification detects tool-sourced poisoned data)",
+                                "Raw Data 1.7: Lack of data trustworthiness (signed records ensure data trustworthiness)"
                             ]
                         }
                     ],
@@ -1219,15 +1485,15 @@ export const isolateTactic = {
                         {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
-                                "ML02:2023 Data Poisoning Attack",
-                                "ML09:2023 Output Integrity Attack (quarantine prevents poisoned data from affecting outputs)"
+                                "ML02:2023 Data Poisoning Attack"
                             ]
                         },
                         {
                             "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
                                 "ASI06:2026 Memory & Context Poisoning",
-                                "ASI09:2026 Human-Agent Trust Exploitation (promotion gates enforce human review before trust elevation)"
+                                "ASI09:2026 Human-Agent Trust Exploitation (promotion gates enforce human review before trust elevation)",
+                                "ASI01:2026 Agent Goal Hijack (promotion gates prevent poisoned memory from hijacking agent goals)"
                             ]
                         },
                         {
@@ -1242,7 +1508,25 @@ export const isolateTactic = {
                             "items": [
                                 "AISubtech-5.1.1 Long-term / Short-term Memory Injection",
                                 "AISubtech-6.1.1 Knowledge Base Poisoning",
-                                "AITech-5.1 Memory System Persistence"
+                                "AITech-5.1 Memory System Persistence",
+                                "AITech-7.2 Memory System Corruption"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "DP: Data Poisoning (promotion gates quarantine poisoned data before it reaches trusted memory)",
+                                "PIJ: Prompt Injection (quarantine prevents injected content from entering trusted memory)",
+                                "RA: Rogue Actions (promotion gates prevent unreviewed agent-written data from being trusted)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Agents — Core 13.1: Memory Poisoning (promotion gates quarantine poisoned memory until reviewed)",
+                                "Agents — Core 13.10: Overwhelming Human in the Loop (structured promotion workflow prevents approval fatigue bypass)",
+                                "Datasets 3.1: Data poisoning (quarantine gate prevents poisoned data from entering trusted stores)",
+                                "Agents — Core 13.6: Intent Breaking & Goal Manipulation (promotion gates prevent poisoned state from redirecting agent intent)"
                             ]
                         }
                     ],
@@ -1319,7 +1603,8 @@ export const isolateTactic = {
                             "items": [
                                 "NISTAML.018 Prompt Injection",
                                 "NISTAML.015 Indirect Prompt Injection",
-                                "NISTAML.013 Data Poisoning"
+                                "NISTAML.013 Data Poisoning",
+                                "NISTAML.036 Leaking information from user interactions"
                             ]
                         },
                         {
@@ -1329,6 +1614,23 @@ export const isolateTactic = {
                                 "AITech-7.2 Memory System Corruption",
                                 "AISubtech-5.1.1 Long-term / Short-term Memory Injection",
                                 "AISubtech-7.2.1 Memory Anchor Attacks"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "PIJ: Prompt Injection (TTL and decay limit temporal persistence of injected instructions)",
+                                "DP: Data Poisoning (forced forgetting removes stale poisoned memory entries)",
+                                "SDD: Sensitive Data Disclosure (forced forgetting ensures privacy-sensitive context is deleted after retention windows)",
+                                "EDH: Excessive Data Handling (TTL and forced forgetting prevent excessive memory retention)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Agents — Core 13.1: Memory Poisoning (TTL limits temporal persistence of poisoned memory)",
+                                "Agents — Core 13.6: Intent Breaking & Goal Manipulation (staleness decay removes outdated manipulated goals)",
+                                "Raw Data 1.9: Stale data (TTL and freshness metadata address stale memory risks)"
                             ]
                         }
                     ],
@@ -1403,8 +1705,7 @@ export const isolateTactic = {
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "ML10:2023 Model Poisoning (kill-switch halts poisoned model causing active harm)",
-                        "ML09:2023 Output Integrity Attack (kill-switch stops corrupted outputs)"
+                        "N/A"
                     ]
                 },
                 {
@@ -1420,9 +1721,7 @@ export const isolateTactic = {
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
-                        "NISTAML.018 Prompt Injection (misuse via prompt-based safety bypass)",
                         "NISTAML.014 Energy-latency (kill-switch halts runaway resource consumption)",
-                        "NISTAML.027 Misaligned Outputs (kill-switch halts actively harmful outputs)",
                         "NISTAML.039 Compromising connected resources (kill-switch limits blast radius)"
                     ]
                 },
@@ -1432,7 +1731,29 @@ export const isolateTactic = {
                         "AITech-13.1 Disruption of Availability (kill-switch prevents ongoing disruption)",
                         "AITech-13.2 Cost Harvesting / Repurposing",
                         "AISubtech-13.1.1 Compute Exhaustion",
-                        "AITech-12.1 Tool Exploitation (kill-switch halts exploited tool chains)"
+                        "AITech-12.1 Tool Exploitation (kill-switch halts exploited tool chains)",
+                        "AITech-14.1 Unauthorized Access",
+                        "AITech-4.1 Agent Injection (kill-switch halts injected rogue agents)"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "RA: Rogue Actions (kill-switch halts rogue agent actions immediately)",
+                        "DMS: Denial of ML Service (kill-switch stops runaway service disruption)",
+                        "IIC: Insecure Integrated Component (kill-switch terminates compromised components)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems (kill-switch terminates rogue agents)",
+                        "Agents — Core 13.4: Resource Overload (kill-switch stops runaway resource consumption)",
+                        "Agents — Core 13.7: Misaligned & Deceptive Behaviors (kill-switch halts misaligned agent behavior)",
+                        "Model Serving — Inference requests 9.13: Excessive agency (kill-switch enforces operational boundaries)",
+                        "Model Serving — Inference requests 9.7: Denial of Service (DoS) (kill-switch stops ongoing DoS)",
+                        "Agents — Core 13.3: Privilege Compromise",
+                        "Agents — Core 13.11: Unexpected RCE and Code Attacks (kill-switch halts runaway code execution)"
                     ]
                 }
             ],
@@ -1549,7 +1870,7 @@ export const isolateTactic = {
                 {
                     "framework": "OWASP Agentic AI Top 10 2026",
                     "items": [
-                        "ASI04:2026 Agentic Supply Chain Vulnerabilities (FL participants contribute to model supply chain)"
+                        "N/A"
                     ]
                 },
                 {
@@ -1559,15 +1880,29 @@ export const isolateTactic = {
                         "NISTAML.023 Backdoor Poisoning",
                         "NISTAML.024 Targeted Poisoning",
                         "NISTAML.011 Model Poisoning (Availability)",
-                        "NISTAML.026 Model Poisoning (Integrity) (isolating malicious FL participants prevents integrity-targeted poisoning)"
+                        "NISTAML.026 Model Poisoning (Integrity) (isolating malicious FL participants prevents integrity-targeted poisoning)",
+                        "NISTAML.021 Clean-label Backdoor"
                     ]
                 },
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
                         "AITech-6.1 Training Data Poisoning",
-                        "AISubtech-6.1.2 Reinforcement Biasing (FL updates are a form of reinforcement signal)",
-                        "AISubtech-6.1.3 Reinforcement Signal Corruption"
+                        "AISubtech-9.2.2 Backdoors and Trojans"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "DP: Data Poisoning (isolating malicious FL participants prevents data poisoning)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Datasets 3.1: Data poisoning (isolating malicious participants prevents training data poisoning)",
+                        "Datasets 3.3: Label flipping (isolating malicious participants prevents label flipping attacks)",
+                        "Model 7.1: Backdoor machine learning / Trojaned model (isolating malicious FL clients prevents backdoor insertion)"
                     ]
                 }
             ]
@@ -1596,8 +1931,8 @@ export const isolateTactic = {
                     "items": [
                         "AML.T0025 Exfiltration via Cyber Means (from client device)",
                         "AML.T0037 Data from Local System (stealing browser/app state, session tokens, local storage)",
-                        "AML.T0011.003 User Execution: Malicious Link",
-                        "AML.T0053 AI Agent Tool Invocation (client-side isolation prevents compromised model from invoking host tools)"
+                        "AML.T0053 AI Agent Tool Invocation (client-side isolation prevents compromised model from invoking host tools)",
+                        "AML.T0077 LLM Response Rendering (client-side sandboxing contains render-time attacks from model output)"
                     ]
                 },
                 {
@@ -1614,8 +1949,7 @@ export const isolateTactic = {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
                         "LLM02:2025 Sensitive Information Disclosure (blocking direct access to other DOM state / tokens / org data)",
-                        "LLM05:2025 Improper Output Handling (preventing model-produced HTML/JS from gaining privileged DOM execution)",
-                        "LLM06:2025 Excessive Agency (client-side sandboxing limits agency of compromised model)"
+                        "LLM05:2025 Improper Output Handling (preventing model-produced HTML/JS from gaining privileged DOM execution)"
                     ]
                 },
                 {
@@ -1628,15 +1962,15 @@ export const isolateTactic = {
                     "framework": "OWASP Agentic AI Top 10 2026",
                     "items": [
                         "ASI05:2026 Unexpected Code Execution (RCE)",
-                        "ASI02:2026 Tool Misuse and Exploitation (client-side isolation prevents tool misuse by compromised model)"
+                        "ASI02:2026 Tool Misuse and Exploitation (client-side isolation prevents tool misuse by compromised model)",
+                        "ASI03:2026 Identity and Privilege Abuse (client-side isolation prevents identity/privilege abuse by compromised model)"
                     ]
                 },
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
                         "NISTAML.039 Compromising connected resources",
-                        "NISTAML.038 Data Extraction",
-                        "NISTAML.051 Model Poisoning (Supply Chain) (containing malicious downloaded model)"
+                        "NISTAML.038 Data Extraction"
                     ]
                 },
                 {
@@ -1645,7 +1979,27 @@ export const isolateTactic = {
                         "AITech-8.2 Data Exfiltration / Exposure",
                         "AISubtech-8.2.2 LLM Data Leakage",
                         "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
-                        "AITech-12.1 Tool Exploitation (sandboxing prevents tool exploitation by client-side model)"
+                        "AITech-12.1 Tool Exploitation (sandboxing prevents tool exploitation by client-side model)",
+                        "AITech-14.1 Unauthorized Access"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "MXF: Model Exfiltration (client-side isolation prevents model exfiltration from device)",
+                        "SDD: Sensitive Data Disclosure (client-side sandboxing prevents data leakage to other browser tabs or apps)",
+                        "IIC: Insecure Integrated Component (client-side isolation restricts compromised model capabilities)",
+                        "RA: Rogue Actions (client-side sandbox prevents rogue model from accessing host system)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Model 7.2: Model assets leak (client-side isolation prevents on-device model asset leakage)",
+                        "Agents — Core 13.11: Unexpected RCE and Code Attacks (client-side sandboxing prevents code execution on host)",
+                        "Agents — Tools MCP Server 13.23: Data Exfiltration (CSP and sandbox restrictions block client-side exfiltration)",
+                        "Agents — Tools MCP Client 13.32: Client-Side Code Execution",
+                        "Agents — Tools MCP Client 13.30: Client-Side Data Leakage (client-side isolation prevents local data leakage)"
                     ]
                 }
             ],

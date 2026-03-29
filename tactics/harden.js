@@ -28,12 +28,6 @@ export const hardenTactic = {
           items: [
             "AML.T0015 Evade AI Model",
             "AML.T0043 Craft Adversarial Data",
-            "AML.T0031 Erode AI Model Integrity",
-            "AML.T0005.000 Create Proxy AI Model: Train Proxy via Gathered AI Artifacts (robust models resist adversarial examples crafted via proxy)",
-            "AML.T0005.002 Create Proxy AI Model: Use Pre-Trained Model (robust models resist transfer attacks from public proxy models)",
-            "AML.T0018 Manipulate AI Model (robust training reduces effectiveness of model manipulation)",
-            "AML.T0020 Poison Training Data (adversarially trained models are more resilient to poisoned data)",
-            "AML.T0041 Physical Environment Access (robust training reduces effectiveness of physical adversarial perturbations)",
             "AML.T0107 Exploitation for Defense Evasion",
           ],
         },
@@ -41,31 +35,25 @@ export const hardenTactic = {
           framework: "MAESTRO",
           items: [
             "Adversarial Examples (L1)",
-            "Data Poisoning (Training Phase) (L1)",
             "Evasion of Security AI Agents (L6)",
-            "Data Poisoning (L2) (robust models tolerate some poisoned operational data)",
-            "Backdoor Attacks (L1) (adversarial training can expose backdoor trigger patterns)",
           ],
         },
         {
           framework: "OWASP LLM Top 10 2025",
           items: [
             "LLM01:2025 Prompt Injection",
-            "LLM04:2025 Data and Model Poisoning",
           ],
         },
         {
           framework: "OWASP ML Top 10 2023",
           items: [
             "ML01:2023 Input Manipulation Attack",
-            "ML02:2023 Data Poisoning Attack",
-            "ML10:2023 Model Poisoning",
           ],
         },
         {
           framework: "OWASP Agentic AI Top 10 2026",
           items: [
-            "ASI01:2026 Agent Goal Hijack (adversarial robustness makes underlying model harder to manipulate)",
+            "N/A",
           ],
         },
         {
@@ -73,9 +61,6 @@ export const hardenTactic = {
           items: [
             "NISTAML.022 Evasion",
             "NISTAML.025 Black-box Evasion",
-            "NISTAML.026 Model Poisoning (Integrity) (robust training resists integrity-compromising poisoning)",
-            "NISTAML.024 Targeted Poisoning (robust training resists targeted poison triggers)",
-            "NISTAML.023 Backdoor Poisoning (robust training can expose backdoor patterns)",
           ],
         },
         {
@@ -83,11 +68,23 @@ export const hardenTactic = {
           items: [
             "AITech-11.1 Environment-Aware Evasion",
             "AITech-11.2 Model-Selective Evasion",
-            "AITech-6.1 Training Data Poisoning (robust models partially resist poisoning effects)",
-            "AITech-9.1 Model or Agentic System Manipulation (robust training hardens model against manipulation)",
             "AISubtech-11.1.1 Agent-Specific Evasion (robust training hardens models against agent-specific evasion attacks)",
           ],
         },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "MEV: Model Evasion"
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Model Serving — Inference requests 9.1: Prompt inject",
+            "Model Serving — Inference requests 9.3: Model breakout",
+            "Model Serving — Inference response 10.5: Black-box attacks"
+          ],
+        }
       ],
       implementationGuidance: [
         {
@@ -153,6 +150,8 @@ export const hardenTactic = {
             "AML.T0093 Prompt Infiltration via Public-Facing Application",
             "AML.T0051.000 LLM Prompt Injection: Direct",
             "AML.T0051.001 LLM Prompt Injection: Indirect",
+            "AML.T0080 AI Agent Context Poisoning",
+            "AML.T0080.000 AI Agent Context Poisoning: Memory",
           ],
         },
         {
@@ -214,6 +213,30 @@ export const hardenTactic = {
             "AISubtech-7.3.1 Corrupted Third-Party Data (sanitization detects corrupted third-party data)",
           ],
         },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "DP: Data Poisoning",
+            "PIJ: Prompt Injection",
+            "UTD: Unauthorized Training Data (sanitization filters unauthorized data before ingestion)",
+            "IMO: Insecure Model Output (input validation reduces manipulation leading to insecure outputs)",
+            "RA: Rogue Actions (input validation prevents injection that triggers rogue agent actions)"
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Raw Data 1.3: Poor data quality",
+            "Raw Data 1.7: Lack of data trustworthiness",
+            "Raw Data 1.11: Compromised 3rd-party datasets",
+            "Datasets 3.1: Data poisoning",
+            "Data Prep 2.1: Preprocessing integrity",
+            "Model Serving — Inference requests 9.1: Prompt inject",
+            "Model Serving — Inference requests 9.9: Input Resource Control",
+            "Model Serving — Inference requests 9.12: LLM Jailbreak",
+            "Agents — Core 13.1: Memory Poisoning (input sanitization prevents memory poisoning via injected data)"
+          ],
+        }
       ],
       subTechniques: [
         {
@@ -241,7 +264,6 @@ export const hardenTactic = {
               framework: "MITRE ATLAS",
               items: [
                 "AML.T0020 Poison Training Data",
-                "AML.T0018 Manipulate AI Model",
                 "AML.T0059 Erode Dataset Integrity",
                 "AML.T0019 Publish Poisoned Datasets",
                 "AML.T0057 LLM Data Leakage (removing PII from training data prevents leakage)",
@@ -252,7 +274,6 @@ export const hardenTactic = {
               items: [
                 "Data Poisoning (L2)",
                 "Data Poisoning (Training Phase) (L1)",
-                "Compromised RAG Pipelines (L2)",
                 "Data Tampering (L2)",
               ],
             },
@@ -276,7 +297,6 @@ export const hardenTactic = {
               framework: "OWASP Agentic AI Top 10 2026",
               items: [
                 "ASI04:2026 Agentic Supply Chain Vulnerabilities (sanitizing training data from third-party sources)",
-                "ASI06:2026 Memory & Context Poisoning (clean training data prevents poisoned model behavior)",
               ],
             },
             {
@@ -299,6 +319,28 @@ export const hardenTactic = {
                 "AISubtech-7.3.1 Corrupted Third-Party Data (dataset sanitization detects corrupted external data)",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "DP: Data Poisoning",
+                "UTD: Unauthorized Training Data",
+                "SDD: Sensitive Data Disclosure (PII removal from training data prevents disclosure)",
+                "EDH: Excessive Data Handling (sanitization enforces data handling policies)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Raw Data 1.3: Poor data quality",
+                "Raw Data 1.7: Lack of data trustworthiness",
+                "Raw Data 1.8: Legality of data (sanitization filters legally restricted data)",
+                "Raw Data 1.11: Compromised 3rd-party datasets",
+                "Datasets 3.1: Data poisoning",
+                "Datasets 3.3: Label flipping (sanitization detects label anomalies)",
+                "Data Prep 2.1: Preprocessing integrity",
+                "Evaluation 6.1: Evaluation data poisoning (sanitization applies to evaluation data too)"
+              ],
+            }
           ],
           implementationGuidance: [
             {
@@ -369,10 +411,11 @@ export const hardenTactic = {
                 "AML.T0056 Extract LLM System Prompt (input validation blocks extraction attempts)",
                 "AML.T0043 Craft Adversarial Data (inference-time validation catches some adversarial inputs)",
                 "AML.T0099 AI Agent Tool Data Poisoning (input validation blocks poisoned tool outputs)",
-                "AML.T0011.003 User Execution: Malicious Link",
                 "AML.T0051.000 LLM Prompt Injection: Direct",
                 "AML.T0051.001 LLM Prompt Injection: Indirect",
                 "AML.T0051.002 LLM Prompt Injection: Triggered (input validation blocks triggered prompt injection)",
+                "AML.T0080 AI Agent Context Poisoning",
+                "AML.T0080.000 AI Agent Context Poisoning: Memory",
               ],
             },
             {
@@ -421,6 +464,27 @@ export const hardenTactic = {
                 "AITech-1.4 Multi-Modal Injection and Manipulation",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "PIJ: Prompt Injection",
+                "IMO: Insecure Model Output (input validation reduces manipulation leading to insecure outputs)",
+                "RA: Rogue Actions (input validation prevents injection-triggered rogue actions)",
+                "IIC: Insecure Integrated Component (input validation hardens model inputs from integrated components)",
+                "SDD: Sensitive Data Disclosure (input validation blocks prompt extraction attempts)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model Serving — Inference requests 9.1: Prompt inject",
+                "Model Serving — Inference requests 9.9: Input Resource Control",
+                "Model Serving — Inference requests 9.12: LLM Jailbreak",
+                "Model Serving — Inference requests 9.3: Model breakout",
+                "Agents — Core 13.1: Memory Poisoning (input validation prevents injection that poisons agent memory)",
+                "Agents — Core 13.6: Intent Breaking & Goal Manipulation (input validation blocks adversarial goal manipulation)"
+              ],
+            }
           ],
           implementationGuidance: [
             {
@@ -588,6 +652,20 @@ export const hardenTactic = {
                 "AITech-19.2 Fusion Payload Split",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "MEV: Model Evasion",
+                "PIJ: Prompt Injection (multimodal inputs can carry injection payloads)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model Serving — Inference requests 9.1: Prompt inject (multimodal prompt injection)",
+                "Model Serving — Inference requests 9.3: Model breakout (adversarial multimodal inputs cause model breakout)"
+              ],
+            }
           ],
         },
         {
@@ -669,6 +747,23 @@ export const hardenTactic = {
               "items": [
                 "AITech-6.1 Training Data Poisoning (feature transformation used as poisoning vector)",
                 "AITech-9.3 Dependency / Plugin Compromise (compromised feature pipeline dependency)"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "DP: Data Poisoning (feature pipeline as poisoning vector)",
+                "MST: Model Source Tampering (compromised feature transformation logic)"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Data Prep 2.1: Preprocessing integrity",
+                "Data Prep 2.2: Feature manipulation",
+                "Data Prep 2.3: Raw data criteria",
+                "Algorithms 5.1: Lack of tracking and reproducibility of experiments (feature pipeline versioning ensures reproducibility)",
+                "Raw Data 1.6: Insufficient data lineage (feature lineage from raw source to model input)"
               ]
             }
           ],
@@ -767,6 +862,21 @@ export const hardenTactic = {
               "items": [
                 "AITech-6.1 Training Data Poisoning (label manipulation in supervised or preference data)"
               ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "DP: Data Poisoning (label manipulation as poisoning vector)"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Datasets 3.1: Data poisoning (label-level poisoning)",
+                "Datasets 3.3: Label flipping",
+                "Evaluation 6.1: Evaluation data poisoning (label poisoning affects evaluation integrity)",
+                "Raw Data 1.6: Insufficient data lineage (label provenance tracking requires end-to-end lineage)"
+              ]
             }
           ],
           "implementationGuidance": [
@@ -858,6 +968,21 @@ export const hardenTactic = {
               "items": [
                 "AITech-6.1 Training Data Poisoning (adversarial partitioning as poisoning enabler)"
               ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "DP: Data Poisoning (adversarial partitioning enables selective poisoning)"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Datasets 3.1: Data poisoning (partition manipulation enables poisoned data to evade detection)",
+                "Data Prep 2.4: Adversarial partitions",
+                "Evaluation 6.1: Evaluation data poisoning (train-test leakage corrupts evaluation)",
+                "Evaluation 6.2: Insufficient evaluation data"
+              ]
             }
           ],
           "implementationGuidance": [
@@ -899,13 +1024,10 @@ export const hardenTactic = {
             "AML.T0011 User Execution",
             "AML.T0011.000 User Execution: Unsafe AI Artifacts",
             "AML.T0011.001 User Execution: Malicious Package",
-            "AML.T0005.000 Create Proxy AI Model: Train Proxy via Gathered AI Artifacts (supply chain controls prevent artifact gathering)",
             "AML.T0019 Publish Poisoned Datasets",
             "AML.T0058 Publish Poisoned Models",
             "AML.T0059 Erode Dataset Integrity",
             "AML.T0076 Corrupt AI Model",
-            "AML.T0074 Masquerading",
-            "AML.T0079 Stage Capabilities (supply chain is used to stage malicious artifacts)",
             "AML.T0104 Publish Poisoned AI Agent Tool",
             "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
           ],
@@ -965,6 +1087,26 @@ export const hardenTactic = {
             "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
           ],
         },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "MST: Model Source Tampering",
+            "MDT: Model Deployment Tampering",
+            "DP: Data Poisoning (poisoned data via supply chain)",
+            "IIC: Insecure Integrated Component"
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Algorithms 5.4: Malicious libraries",
+            "Model 7.1: Backdoor machine learning / Trojaned model",
+            "Model 7.3: ML Supply chain vulnerabilities",
+            "Model 7.4: Source code control attack",
+            "Raw Data 1.11: Compromised 3rd-party datasets",
+            "Platform 12.5: Poor security in the software development lifecycle"
+          ],
+        }
       ],
       subTechniques: [
         {
@@ -1001,7 +1143,6 @@ export const hardenTactic = {
                 "AML.T0074 Masquerading (malicious packages masquerading as legitimate)",
                 "AML.T0060 Publish Hallucinated Entities (dependency scanning detects hallucination-squatted packages)",
                 "AML.T0104 Publish Poisoned AI Agent Tool",
-                "AML.T0106 Exploitation for Credential Access",
                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
               ],
             },
@@ -1045,6 +1186,24 @@ export const hardenTactic = {
                 "AISubtech-9.3.3 Dependency Replacement / Rug Pull (version pinning and hash verification detect replaced dependencies)",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "MST: Model Source Tampering (compromised dependencies tamper with model source)",
+                "MDT: Model Deployment Tampering (compromised deployment dependencies)",
+                "IIC: Insecure Integrated Component"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Algorithms 5.4: Malicious libraries",
+                "Model 7.3: ML Supply chain vulnerabilities",
+                "Model 7.4: Source code control attack",
+                "Platform 12.1: Lack of vulnerability management",
+                "Platform 12.5: Poor security in the software development lifecycle"
+              ],
+            }
           ],
           implementationGuidance: [
             {
@@ -1106,7 +1265,6 @@ export const hardenTactic = {
                 "AML.T0058 Publish Poisoned Models",
                 "AML.T0076 Corrupt AI Model",
                 "AML.T0074 Masquerading",
-                "AML.T0005.000 Create Proxy AI Model: Train Proxy via Gathered AI Artifacts (signed artifacts prevent unauthorized exfiltration)",
                 "AML.T0018 Manipulate AI Model (release gating detects model manipulation before deployment)",
                 "AML.T0018.002 Manipulate AI Model: Embed Malware",
                 "AML.T0104 Publish Poisoned AI Agent Tool",
@@ -1160,6 +1318,23 @@ export const hardenTactic = {
                 "AISubtech-9.3.1 Malicious Package / Tool Injection (signed artifacts and internal mirroring prevent malicious model injection)",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "MST: Model Source Tampering (signing detects tampered model artifacts)",
+                "MDT: Model Deployment Tampering (release gating prevents deployment of tampered models)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model 7.1: Backdoor machine learning / Trojaned model",
+                "Model 7.3: ML Supply chain vulnerabilities",
+                "Model Management 8.1: Model attribution",
+                "Model Management 8.3: Model lifecycle without HITL (human-in-the-loop)",
+                "Operations 11.1: Lack of MLOps — repeatable enforced standards"
+              ],
+            }
           ],
           implementationGuidance: [
             {
@@ -1241,7 +1416,6 @@ export const hardenTactic = {
               items: [
                 "ML02:2023 Data Poisoning Attack",
                 "ML06:2023 AI Supply Chain Attacks",
-                "ML07:2023 Transfer Learning Attack",
               ],
             },
             {
@@ -1270,6 +1444,23 @@ export const hardenTactic = {
                 "AISubtech-7.3.1 Corrupted Third-Party Data",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "DP: Data Poisoning",
+                "UTD: Unauthorized Training Data"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Raw Data 1.7: Lack of data trustworthiness",
+                "Raw Data 1.8: Legality of data",
+                "Raw Data 1.11: Compromised 3rd-party datasets",
+                "Datasets 3.1: Data poisoning",
+                "Raw Data 1.6: Insufficient data lineage (provenance metadata provides lineage)"
+              ],
+            }
           ],
           implementationGuidance: [
             {
@@ -1355,6 +1546,19 @@ export const hardenTactic = {
                 "AISubtech-9.2.2 Backdoors and Trojans (firmware backdoors can introduce trojans into AI compute layer)",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "MST: Model Source Tampering (hardware supply chain compromise enables source tampering)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model 7.3: ML Supply chain vulnerabilities (hardware as part of ML supply chain)",
+                "Platform 12.5: Poor security in the software development lifecycle (firmware verification)"
+              ],
+            }
           ],
           implementationGuidance: [
             {
@@ -1445,6 +1649,21 @@ export const hardenTactic = {
                 "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access (IaC scanning detects insecure network paths)",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "MST: Model Source Tampering (IaC misconfigurations can compromise model source integrity)",
+                "MDT: Model Deployment Tampering (IaC scanning prevents insecure deployment configurations)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Platform 12.1: Lack of vulnerability management",
+                "Platform 12.5: Poor security in the software development lifecycle",
+                "Operations 11.1: Lack of MLOps — repeatable enforced standards (IaC scanning enforces infrastructure standards)"
+              ],
+            }
           ],
           implementationGuidance: [
             {
@@ -1545,13 +1764,29 @@ export const hardenTactic = {
               framework: "Cisco Integrated AI Security and Safety Framework",
               items: [
                 "AITech-9.1 Model or Agentic System Manipulation",
-                "AITech-9.2 Detection Evasion (provenance attestation makes it harder to hide malicious modifications)",
                 "AITech-9.3 Dependency / Plugin Compromise (SBOM tracks all model dependencies)",
                 "AISubtech-9.2.2 Backdoors and Trojans (SBOM format allow-list blocks unsafe serialization formats)",
                 "AISubtech-9.3.1 Malicious Package / Tool Injection (attestation prevents malicious model artifacts)",
                 "AISubtech-9.3.3 Dependency Replacement / Rug Pull (digest binding and tombstone handling detect replaced artifacts)",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "MST: Model Source Tampering (SBOM and attestation detect tampered model source)",
+                "MDT: Model Deployment Tampering (provenance attestation prevents deployment of tampered models)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model 7.1: Backdoor machine learning / Trojaned model (SBOM format allow-list blocks unsafe serialization)",
+                "Model 7.3: ML Supply chain vulnerabilities",
+                "Model Management 8.1: Model attribution (SBOM provides model attribution and provenance)",
+                "Model Management 8.3: Model lifecycle without HITL (human-in-the-loop)",
+                "Governance 4.1: Lack of traceability and transparency of model assets (SBOM provides traceability)"
+              ],
+            }
           ],
           implementationGuidance: [
             {
@@ -1630,8 +1865,7 @@ export const hardenTactic = {
                 "AML.T0010 AI Supply Chain Compromise",
                 "AML.T0010.003 AI Supply Chain Compromise: Model",
                 "AML.T0011.000 User Execution: Unsafe AI Artifacts",
-                "AML.T0058 Publish Poisoned Models",
-                "AML.T0031 Erode AI Model Integrity"
+                "AML.T0058 Publish Poisoned Models"
               ]
             },
             {
@@ -1676,8 +1910,25 @@ export const hardenTactic = {
                 "AITech-9.1 Model or Agentic System Manipulation",
                 "AITech-9.3 Dependency / Plugin Compromise",
                 "AISubtech-9.2.2 Backdoors and Trojans",
-                "AISubtech-9.3.1 Malicious Package / Tool Injection"
+                "AISubtech-9.3.1 Malicious Package / Tool Injection",
+                "AISubtech-9.3.3 Dependency Replacement / Rug Pull"
               ]
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "MST: Model Source Tampering (adapter artifacts can tamper with base model behavior)",
+                "MDT: Model Deployment Tampering (tampered adapters alter model at deployment)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model 7.1: Backdoor machine learning / Trojaned model (trojaned adapters can backdoor base models)",
+                "Model 7.3: ML Supply chain vulnerabilities (adapters as supply chain artifacts)",
+                "Algorithms 5.4: Malicious libraries (malicious adapters function like malicious libraries)",
+                "Model Management 8.3: Model lifecycle without HITL (human-in-the-loop)"
+              ],
             }
           ],
           implementationGuidance: [
@@ -1737,7 +1988,6 @@ export const hardenTactic = {
             "AML.T0021 Establish Accounts (IAM controls prevent unauthorized account creation)",
             "AML.T0082 RAG Credential Harvesting (access controls limit credential exposure in RAG)",
             "AML.T0090 OS Credential Dumping (short-lived tokens reduce value of dumped credentials)",
-            "AML.T0106 Exploitation for Credential Access",
           ],
         },
         {
@@ -1757,7 +2007,6 @@ export const hardenTactic = {
           framework: "OWASP LLM Top 10 2025",
           items: [
             "LLM02:2025 Sensitive Information Disclosure",
-            "LLM03:2025 Supply Chain",
             "LLM06:2025 Excessive Agency",
           ],
         },
@@ -1793,6 +2042,26 @@ export const hardenTactic = {
             "AISubtech-3.1.2 Trusted Agent Spoofing (IAM verifies agent identities)",
           ],
         },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "MXF: Model Exfiltration",
+            "MRE: Model Reverse Engineering (access controls limit queries needed for reverse engineering)",
+            "SDD: Sensitive Data Disclosure (IAM prevents unauthorized access to sensitive data)",
+            "RA: Rogue Actions (IAM limits agent permissions to prevent rogue actions)"
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Raw Data 1.1: Insufficient access controls",
+            "Platform 12.4: Unauthorized privileged access",
+            "Model Management 8.2: Model theft",
+            "Model Serving — Inference requests 9.11: Model Inference API Access",
+            "Agents — Core 13.3: Privilege Compromise",
+            "Agents — Core 13.9: Identity Spoofing & Impersonation"
+          ],
+        }
       ],
       subTechniques: [
         {
@@ -1860,6 +2129,21 @@ export const hardenTactic = {
                 "AITech-14.2 Abuse of Delegated Authority (access management prevents privilege delegation abuse)",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "MXF: Model Exfiltration (access controls prevent model theft)",
+                "SDD: Sensitive Data Disclosure (user access management prevents unauthorized data access)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Raw Data 1.1: Insufficient access controls",
+                "Platform 12.4: Unauthorized privileged access",
+                "Model Management 8.2: Model theft"
+              ],
+            }
           ],
           implementationGuidance: [
             {
@@ -1916,7 +2200,6 @@ export const hardenTactic = {
                 "AML.T0090 OS Credential Dumping (service auth with short-lived tokens reduces dumped credential value)",
                 "AML.T0091 Use Alternate Authentication Material (API auth validates credential provenance)",
                 "AML.T0091.000 Use Alternate Authentication Material: Application Access Token (API auth detects/blocks stolen application tokens)",
-                "AML.T0106 Exploitation for Credential Access",
               ],
             },
             {
@@ -1931,7 +2214,6 @@ export const hardenTactic = {
               framework: "OWASP LLM Top 10 2025",
               items: [
                 "LLM02:2025 Sensitive Information Disclosure",
-                "LLM03:2025 Supply Chain",
               ],
             },
             {
@@ -1957,8 +2239,25 @@ export const hardenTactic = {
               items: [
                 "AITech-10.1 Model Extraction",
                 "AISubtech-10.1.1 API Query Stealing (API authentication directly prevents query stealing)",
+                "AITech-7.4 Token Manipulation (short-lived tokens and secure storage prevent token manipulation)",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "MXF: Model Exfiltration (API authentication prevents model theft via inference API)",
+                "MRE: Model Reverse Engineering (API authentication limits queries for reverse engineering)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model Serving — Inference requests 9.11: Model Inference API Access",
+                "Model Serving — Inference requests 9.2: Model inversion (API auth limits queries needed for inversion)",
+                "Model Management 8.2: Model theft",
+                "Agents — Core 13.9: Identity Spoofing & Impersonation"
+              ],
+            }
           ],
           implementationGuidance: [
             {
@@ -2034,7 +2333,7 @@ export const hardenTactic = {
             },
             {
               framework: "OWASP LLM Top 10 2025",
-              items: ["LLM06:2025 Excessive Agency"],
+              items: ["N/A"],
             },
             {
               framework: "OWASP ML Top 10 2023",
@@ -2043,6 +2342,7 @@ export const hardenTactic = {
             {
               framework: "OWASP Agentic AI Top 10 2026",
               items: [
+                "ASI01:2026 Agent Goal Hijack (secure communication prevents goal hijack via forged inter-agent messages)",
                 "ASI03:2026 Identity and Privilege Abuse",
                 "ASI07:2026 Insecure Inter-Agent Communication",
                 "ASI10:2026 Rogue Agents (secure communication verifies agent authenticity)",
@@ -2063,8 +2363,25 @@ export const hardenTactic = {
                 "AISubtech-4.1.1 Rogue Agent Introduction",
                 "AISubtech-4.3.1 Schema Inconsistencies (strict contract validation prevents schema-based attacks)",
                 "AISubtech-4.3.2 Namespace Collision (unique agent identities prevent namespace collisions)",
+                "AISubtech-4.3.4 Replay Exploitation (anti-replay protections prevent replay of captured agent messages)",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "RA: Rogue Actions (secure agent communication prevents rogue actions via spoofed messages)",
+                "IIC: Insecure Integrated Component (secure communication hardens inter-agent integrations)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents — Core 13.9: Identity Spoofing & Impersonation",
+                "Agents — Core 13.12: Agent Communication Poisoning",
+                "Agents — Core 13.3: Privilege Compromise (secure communication prevents cross-agent privilege escalation)",
+                "Agents — Tools MCP Server 13.17: Confused Deputy (secure agent communication prevents confused deputy across agents)"
+              ],
+            }
           ],
           implementationGuidance: [
             {
@@ -2148,6 +2465,7 @@ export const hardenTactic = {
               items: [
                 "ASI03:2026 Identity and Privilege Abuse",
                 "ASI04:2026 Agentic Supply Chain Vulnerabilities (verified discovery prevents supply chain agent compromise)",
+                "ASI07:2026 Insecure Inter-Agent Communication (verified discovery and signed registry prevent discovery/routing attacks)",
                 "ASI10:2026 Rogue Agents (ANS identity verification prevents rogue agents from joining the ecosystem)",
               ],
             },
@@ -2167,6 +2485,21 @@ export const hardenTactic = {
                 "AITech-14.1 Unauthorized Access (ANS identity verification prevents unauthorized agent access to the ecosystem)",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "RA: Rogue Actions (verified agent identity prevents rogue agents from executing actions)",
+                "IIC: Insecure Integrated Component (ANS prevents insecure agent discovery)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents — Core 13.9: Identity Spoofing & Impersonation",
+                "Agents — Core 13.12: Agent Communication Poisoning (ANS prevents poisoned agent discovery)",
+                "Agents — Core 13.3: Privilege Compromise (ANS revocation checks block compromised agent credentials)"
+              ],
+            }
           ],
           implementationGuidance: [
             {
@@ -2213,7 +2546,6 @@ export const hardenTactic = {
             "AML.T0024 Exfiltration via AI Inference API",
             "AML.T0024.000 Exfiltration via AI Inference API: Infer Training Data Membership",
             "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model",
-            "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model",
             "AML.T0025 Exfiltration via Cyber Means",
             "AML.T0057 LLM Data Leakage",
           ],
@@ -2235,7 +2567,6 @@ export const hardenTactic = {
           items: [
             "ML03:2023 Model Inversion Attack",
             "ML04:2023 Membership Inference Attack",
-            "ML07:2023 Transfer Learning Attack",
           ],
         },
         {
@@ -2245,7 +2576,6 @@ export const hardenTactic = {
         {
           framework: "NIST Adversarial Machine Learning 2025",
           items: [
-            "NISTAML.031 Model Extraction",
             "NISTAML.032 Reconstruction",
             "NISTAML.033 Membership Inference",
             "NISTAML.034 Property Inference (privacy-preserving computation prevents property inference)",
@@ -2265,6 +2595,23 @@ export const hardenTactic = {
             "AISubtech-10.2.1 Model Inversion",
           ],
         },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "SDD: Sensitive Data Disclosure",
+            "ISD: Inferred Sensitive Data",
+            "MRE: Model Reverse Engineering (PPML reduces information available for reverse engineering)"
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Model Management 8.4: Model inversion",
+            "Model Serving — Inference requests 9.2: Model inversion",
+            "Model Serving — Inference requests 9.5: Infer training data membership",
+            "Model Serving — Inference response 10.6: Sensitive data output from a model"
+          ],
+        }
       ],
       subTechniques: [
         {
@@ -2338,6 +2685,21 @@ export const hardenTactic = {
                 "AISubtech-10.2.1 Model Inversion (DP noise directly impedes inversion attacks)",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "SDD: Sensitive Data Disclosure (DP prevents memorization and leakage of training data)",
+                "ISD: Inferred Sensitive Data (DP noise prevents inference of individual data characteristics)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model Serving — Inference requests 9.5: Infer training data membership",
+                "Model Serving — Inference requests 9.2: Model inversion (DP noise makes inversion less effective)",
+                "Model Serving — Inference response 10.6: Sensitive data output from a model (DP reduces memorization)"
+              ],
+            }
           ],
           implementationGuidance: [
             {
@@ -2391,8 +2753,6 @@ export const hardenTactic = {
               framework: "MITRE ATLAS",
               items: [
                 "AML.T0024 Exfiltration via AI Inference API (HE prevents data exposure during inference)",
-                "AML.T0024.000 Exfiltration via AI Inference API: Infer Training Data Membership",
-                "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model",
                 "AML.T0025 Exfiltration via Cyber Means (encrypted data remains protected even if exfiltrated)",
                 "AML.T0057 LLM Data Leakage (HE prevents leakage of sensitive training data during computation)",
               ],
@@ -2412,8 +2772,7 @@ export const hardenTactic = {
             {
               framework: "OWASP ML Top 10 2023",
               items: [
-                "ML03:2023 Model Inversion Attack",
-                "ML04:2023 Membership Inference Attack (HE prevents membership inference during encrypted inference)",
+                "N/A",
               ],
             },
             {
@@ -2424,7 +2783,6 @@ export const hardenTactic = {
               framework: "NIST Adversarial Machine Learning 2025",
               items: [
                 "NISTAML.032 Reconstruction (HE prevents data reconstruction from encrypted computations)",
-                "NISTAML.033 Membership Inference",
                 "NISTAML.034 Property Inference (HE prevents property inference by keeping data encrypted)",
                 "NISTAML.036 Leaking information from user interactions (HE prevents leakage during encrypted computation)",
                 "NISTAML.038 Data Extraction",
@@ -2438,6 +2796,20 @@ export const hardenTactic = {
                 "AISubtech-10.1.3 Sensitive Data Reconstruction (HE prevents data reconstruction from model outputs)",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "SDD: Sensitive Data Disclosure (HE prevents data exposure during computation)",
+                "MXF: Model Exfiltration (encrypted data remains protected even if exfiltrated)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Raw Data 1.4: Ineffective storage and encryption (HE provides encryption during computation)",
+                "Datasets 3.2: Ineffective storage and encryption"
+              ],
+            }
           ],
           implementationGuidance: [
             {
@@ -2561,6 +2933,18 @@ export const hardenTactic = {
                 "AITech-8.1 Membership Inference",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "SDD: Sensitive Data Disclosure (mixup prevents memorization that leads to disclosure)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model Serving — Inference requests 9.5: Infer training data membership"
+              ],
+            }
           ],
         },
         {
@@ -2661,6 +3045,19 @@ export const hardenTactic = {
                 "AISubtech-8.2.2 LLM Data Leakage",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "SDD: Sensitive Data Disclosure (deduplication reduces memorization and verbatim data leakage)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model Serving — Inference response 10.6: Sensitive data output from a model",
+                "Raw Data 1.3: Poor data quality (deduplication improves data quality)"
+              ],
+            }
           ],
         },
       ],
@@ -2678,8 +3075,6 @@ export const hardenTactic = {
             "AML.T0067 LLM Trusted Output Components Manipulation",
             "AML.T0050 Command and Scripting Interpreter (via generated code)",
             "AML.T0053 AI Agent Tool Invocation (output hardening prevents malicious tool invocations)",
-            "AML.T0048 External Harms (by cleaning malicious payloads)",
-            "AML.T0052 Phishing (by sanitizing malicious links)",
             "AML.T0057 LLM Data Leakage (by redacting sensitive info)",
             "AML.T0086 Exfiltration via AI Agent Tool Invocation (output sanitization prevents data exfiltration via tool parameters)",
           ],
@@ -2697,7 +3092,6 @@ export const hardenTactic = {
           framework: "OWASP LLM Top 10 2025",
           items: [
             "LLM05:2025 Improper Output Handling",
-            "LLM09:2025 Misinformation",
             "LLM01:2025 Prompt Injection (mitigating the impact of successful injections)",
             "LLM02:2025 Sensitive Information Disclosure",
           ],
@@ -2734,6 +3128,25 @@ export const hardenTactic = {
             "AITech-8.2 Data Exfiltration / Exposure (output sanitization prevents data exposure)",
           ],
         },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "IMO: Insecure Model Output",
+            "SDD: Sensitive Data Disclosure (output sanitization redacts sensitive data)",
+            "RA: Rogue Actions (output hardening prevents malicious tool invocations)",
+            "PIJ: Prompt Injection (output sanitization mitigates impact of successful injection)"
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Model Serving — Inference response 10.2: Output manipulation",
+            "Model Serving — Inference response 10.6: Sensitive data output from a model",
+            "Model Serving — Inference requests 9.13: Excessive agency (output hardening constrains agent actions)",
+            "Agents — Core 13.2: Tool Misuse (output sanitization prevents malicious tool calls)",
+            "Agents — Core 13.7: Misaligned & Deceptive Behaviors (output sanitization detects misaligned outputs)"
+          ],
+        }
       ],
       subTechniques: [
         {
@@ -2770,13 +3183,13 @@ export const hardenTactic = {
                 "AML.T0067 LLM Trusted Output Components Manipulation (structured schemas prevent format manipulation)",
                 "AML.T0086 Exfiltration via AI Agent Tool Invocation (structured output prevents data encoding in tool parameters)",
                 "AML.T0101 Data Destruction via AI Agent Tool Invocation (structured schemas constrain destructive tool calls)",
+                "AML.T0063 Discover AI Model Outputs (structured schemas prevent discovery of non-required output fields)",
               ],
             },
             {
               framework: "MAESTRO",
               items: [
                 "Agent Tool Misuse (L7)",
-                "Reprogramming Attacks (L1)",
                 "Integration Risks (L7) (structured outputs protect downstream integrations)",
               ],
             },
@@ -2813,6 +3226,21 @@ export const hardenTactic = {
                 "AITech-12.1 Tool Exploitation (structured output constrains tool invocation parameters)",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "IMO: Insecure Model Output",
+                "RA: Rogue Actions (structured output prevents unintended actions from free-form text)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model Serving — Inference response 10.2: Output manipulation (structured output resists manipulation)",
+                "Agents — Core 13.2: Tool Misuse (structured output enforces valid tool call schemas)",
+                "Agents — Core 13.11: Unexpected RCE and Code Attacks (structured output prevents code injection)"
+              ],
+            }
           ],
           implementationGuidance: [
             {
@@ -2971,10 +3399,8 @@ def is_url_safe(url: str):
               items: [
                 "AML.T0052 Phishing",
                 "AML.T0050 Command and Scripting Interpreter",
-                "AML.T0048 External Harms",
                 "AML.T0077 LLM Response Rendering (sanitization neutralizes rendering exploits)",
                 "AML.T0057 LLM Data Leakage (sanitization can redact leaked data)",
-                "AML.T0060 Publish Hallucinated Entities (output sanitization prevents hallucinated entity references)",
                 "AML.T0082 RAG Credential Harvesting (output sanitization prevents credential leakage in responses)",
                 "AML.T0086 Exfiltration via AI Agent Tool Invocation",
               ],
@@ -3004,6 +3430,8 @@ def is_url_safe(url: str):
               items: [
                 "ASI02:2026 Tool Misuse and Exploitation",
                 "ASI05:2026 Unexpected Code Execution (RCE) (sanitization prevents code execution via output)",
+                "ASI06:2026 Memory & Context Poisoning (output sanitization prevents malicious content from poisoning downstream agent memory/context)",
+                "ASI09:2026 Human-Agent Trust Exploitation (output sanitization removes manipulative content and malicious URLs before display)",
               ],
             },
             {
@@ -3011,6 +3439,7 @@ def is_url_safe(url: str):
               items: [
                 "NISTAML.027 Misaligned Outputs",
                 "NISTAML.039 Compromising connected resources (sanitized outputs prevent downstream exploitation)",
+                "NISTAML.038 Data Extraction",
               ],
             },
             {
@@ -3019,8 +3448,24 @@ def is_url_safe(url: str):
                 "AITech-12.2 Insecure Output Handling",
                 "AISubtech-12.2.1 Code Detection / Malicious Code Output",
                 "AITech-15.1 Harmful Content",
+                "AITech-8.2 Data Exfiltration / Exposure",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "IMO: Insecure Model Output",
+                "SDD: Sensitive Data Disclosure (output sanitization redacts sensitive data before delivery)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model Serving — Inference response 10.2: Output manipulation",
+                "Model Serving — Inference response 10.6: Sensitive data output from a model",
+                "Agents — Core 13.11: Unexpected RCE and Code Attacks (output sanitization strips malicious code)"
+              ],
+            }
           ],
         },
         {
@@ -3047,8 +3492,8 @@ def is_url_safe(url: str):
                 "AML.T0024.000 Exfiltration via AI Inference API: Infer Training Data Membership",
                 "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model",
                 "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model",
-                "AML.T0048.004 External Harms: AI Intellectual Property Theft",
                 "AML.T0042 Verify Attack (obfuscation reduces fidelity of attacker feedback loops)",
+                "AML.T0063 Discover AI Model Outputs (output obfuscation prevents discovery of high-precision model outputs)",
               ],
             },
             {
@@ -3056,12 +3501,11 @@ def is_url_safe(url: str):
               items: [
                 "Model Stealing (L1)",
                 "Membership Inference Attacks (L1)",
-                "Data Exfiltration (L2) (obfuscated outputs reduce value of exfiltrated data)",
               ],
             },
             {
               framework: "OWASP LLM Top 10 2025",
-              items: ["LLM02:2025 Sensitive Information Disclosure"],
+              items: ["N/A"],
             },
             {
               framework: "OWASP ML Top 10 2023",
@@ -3090,8 +3534,29 @@ def is_url_safe(url: str):
                 "AITech-10.1 Model Extraction",
                 "AITech-10.2 Model Inversion",
                 "AISubtech-10.1.1 API Query Stealing (obfuscation reduces value of API queries for stealing)",
+                "AITech-8.1 Membership Inference",
+                "AISubtech-8.1.1 Presence Detection",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "MXF: Model Exfiltration (obfuscated outputs reduce utility of exfiltrated information)",
+                "MRE: Model Reverse Engineering (reduced output precision hinders reverse engineering)",
+                "SDD: Sensitive Data Disclosure (output obfuscation prevents precise data extraction)",
+                "ISD: Inferred Sensitive Data"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model Management 8.2: Model theft",
+                "Model Management 8.4: Model inversion",
+                "Model Serving — Inference requests 9.2: Model inversion (obfuscated outputs hinder inversion)",
+                "Model Serving — Inference requests 9.5: Infer training data membership (reduced output precision hinders membership inference)",
+                "Model Serving — Inference response 10.5: Black-box attacks (obfuscation reduces attacker feedback fidelity)"
+              ],
+            }
           ],
           implementationGuidance: [
             {
@@ -3129,7 +3594,6 @@ def is_url_safe(url: str):
             "AML.T0018.000 Manipulate AI Model: Poison AI Model",
             "AML.T0031 Erode AI Model Integrity",
             "AML.T0020 Poison Training Data",
-            "AML.T0019 Publish Poisoned Datasets",
             "AML.T0010 AI Supply Chain Compromise (compromised tools or libraries targeting the training loop)",
             "AML.T0010.002 AI Supply Chain Compromise: Data",
             "AML.T0010.003 AI Supply Chain Compromise: Model",
@@ -3148,6 +3612,7 @@ def is_url_safe(url: str):
           framework: "OWASP LLM Top 10 2025",
           items: [
             "LLM04:2025 Data and Model Poisoning",
+            "LLM03:2025 Supply Chain",
           ],
         },
         {
@@ -3155,6 +3620,7 @@ def is_url_safe(url: str):
           items: [
             "ML02:2023 Data Poisoning Attack",
             "ML10:2023 Model Poisoning",
+            "ML06:2023 AI Supply Chain Attacks",
           ],
         },
         {
@@ -3181,6 +3647,23 @@ def is_url_safe(url: str):
             "AITech-9.3 Dependency / Plugin Compromise",
           ],
         },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "DP: Data Poisoning",
+            "MST: Model Source Tampering (securing training process prevents source tampering)"
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Datasets 3.1: Data poisoning",
+            "Algorithms 5.1: Lack of tracking and reproducibility of experiments",
+            "Model 7.1: Backdoor machine learning / Trojaned model (training process monitoring detects backdoor insertion)",
+            "Model 7.3: ML Supply chain vulnerabilities",
+            "Model 7.4: Source code control attack (securing training code prevents source code attacks)"
+          ],
+        }
       ],
       subTechniques: [
         {
@@ -3229,7 +3712,6 @@ def is_url_safe(url: str):
             {
               framework: "MAESTRO",
               items: [
-                "Compromised Container Images (L4) (secure training containers prevent compromise)",
                 "Resource Hijacking (L4)",
                 "Lateral Movement (Cross-Layer)",
               ],
@@ -3269,6 +3751,23 @@ def is_url_safe(url: str):
                 "AITech-9.1 Model or Agentic System Manipulation (secure environment prevents model manipulation)",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "DP: Data Poisoning (secure environment prevents unauthorized data access for poisoning)",
+                "MXF: Model Exfiltration (isolated training environment prevents model theft during training)",
+                "SDD: Sensitive Data Disclosure (confidential computing protects training data in use)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Raw Data 1.1: Insufficient access controls",
+                "Raw Data 1.4: Ineffective storage and encryption",
+                "Platform 12.4: Unauthorized privileged access",
+                "Platform 12.1: Lack of vulnerability management"
+              ],
+            }
           ],
         },
         {
@@ -3323,8 +3822,6 @@ def is_url_safe(url: str):
               items: [
                 "Data Poisoning (L2)",
                 "Data Poisoning (Training Phase) (L1)",
-                "Manipulation of Evaluation Metrics (L5) (monitoring detects metric manipulation)",
-                "Poisoning Observability Data (L5) (monitoring detects poisoned telemetry)",
               ],
             },
             {
@@ -3348,6 +3845,7 @@ def is_url_safe(url: str):
                 "NISTAML.026 Model Poisoning (Integrity)",
                 "NISTAML.013 Data Poisoning",
                 "NISTAML.024 Targeted Poisoning",
+                "NISTAML.023 Backdoor Poisoning",
               ],
             },
             {
@@ -3356,6 +3854,22 @@ def is_url_safe(url: str):
                 "AITech-6.1 Training Data Poisoning (monitoring detects training data poisoning effects)",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "DP: Data Poisoning (runtime monitoring detects poisoning effects during training)",
+                "MST: Model Source Tampering (audit trail detects unauthorized modifications to training process)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Algorithms 5.1: Lack of tracking and reproducibility of experiments",
+                "Model 7.1: Backdoor machine learning / Trojaned model",
+                "Governance 4.1: Lack of traceability and transparency of model assets",
+                "Governance 4.2: Lack of end-to-end ML lifecycle"
+              ],
+            }
           ],
         },
         {
@@ -3506,6 +4020,22 @@ with mlflow.start_run() as run:
                 "AITech-9.3 Dependency / Plugin Compromise (version control of dependencies prevents compromise)",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "MST: Model Source Tampering (version control and reproducibility detect source tampering)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Algorithms 5.1: Lack of tracking and reproducibility of experiments",
+                "Governance 4.1: Lack of traceability and transparency of model assets",
+                "Governance 4.2: Lack of end-to-end ML lifecycle",
+                "Raw Data 1.5: Lack of data versioning",
+                "Model 7.4: Source code control attack"
+              ],
+            }
           ],
         },
         {
@@ -3549,8 +4079,8 @@ with mlflow.start_run() as run:
               "framework": "MITRE ATLAS",
               "items": [
                 "AML.T0010.002 AI Supply Chain Compromise: Data (compromised evaluation datasets or benchmarks)",
+                "AML.T0010.001 AI Supply Chain Compromise: AI Software (compromised evaluation harness or benchmark software)",
                 "AML.T0018 Manipulate AI Model (manipulated model appears acceptable under compromised evaluation)",
-                "AML.T0019 Publish Poisoned Datasets (poisoned benchmark or evaluation datasets published to community)",
                 "AML.T0020 Poison Training Data (evaluation manipulation hides poisoning impact)",
                 "AML.T0031 Erode AI Model Integrity (eroded model passes compromised or insufficient evaluation)",
                 "AML.T0043 Craft Adversarial Data (crafted evaluation data conceals weakness)",
@@ -3562,8 +4092,7 @@ with mlflow.start_run() as run:
               "items": [
                 "Data Poisoning (Training Phase) (L1) (evaluation poisoning enables training-phase poisoning to go undetected)",
                 "Data Poisoning (L2) (evaluation data poisoning as validation evasion)",
-                "Manipulation of Evaluation Metrics (L5) (evaluation data or evidence manipulated to produce false confidence)",
-                "Compromised Observability Tools (L5) (evaluation tooling or reporting path compromised)"
+                "Manipulation of Evaluation Metrics (L5) (evaluation data or evidence manipulated to produce false confidence)"
               ]
             },
             {
@@ -3600,6 +4129,23 @@ with mlflow.start_run() as run:
                 "AITech-6.1 Training Data Poisoning (evaluation poisoning enables poisoned training outcomes to evade detection)",
                 "AITech-9.1 Model or Agentic System Manipulation (evaluation manipulation masks model or system compromise)",
                 "AITech-9.3 Dependency / Plugin Compromise (compromised evaluation libraries or plugins)"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "DP: Data Poisoning (evaluation data poisoning hides training poisoning effects)",
+                "MST: Model Source Tampering (compromised evaluation enables tampered models to pass validation)"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Evaluation 6.1: Evaluation data poisoning",
+                "Evaluation 6.2: Insufficient evaluation data",
+                "Governance 4.2: Lack of end-to-end ML lifecycle (evaluation governance is part of ML lifecycle)",
+                "Datasets 3.1: Data poisoning (evaluation data as poisoning target)",
+                "Algorithms 5.1: Lack of tracking and reproducibility of experiments"
               ]
             }
           ],
@@ -3642,7 +4188,6 @@ with mlflow.start_run() as run:
           framework: "MITRE ATLAS",
           items: [
             "AML.T0020 Poison Training Data",
-            "AML.T0019 Publish Poisoned Datasets",
             "AML.T0018 Manipulate AI Model (FL aggregation prevents model manipulation via malicious updates)",
             "AML.T0018.000 Manipulate AI Model: Poison AI Model",
           ],
@@ -3666,6 +4211,7 @@ with mlflow.start_run() as run:
           items: [
             "ML02:2023 Data Poisoning Attack",
             "ML10:2023 Model Poisoning",
+            "ML04:2023 Membership Inference Attack",
           ],
         },
         {
@@ -3688,6 +4234,18 @@ with mlflow.start_run() as run:
             "AITech-6.1 Training Data Poisoning",
           ],
         },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "DP: Data Poisoning"
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Datasets 3.1: Data poisoning"
+          ],
+        }
       ],
       subTechniques: [
         {
@@ -3733,8 +4291,6 @@ with mlflow.start_run() as run:
             {
               framework: "MITRE ATLAS",
               items: [
-                "AML.T0024 Exfiltration via AI Inference API (secure aggregation prevents inference on individual FL updates)",
-                "AML.T0024.000 Exfiltration via AI Inference API: Infer Training Data Membership",
                 "AML.T0025 Exfiltration via Cyber Means (protects raw client training data and gradients from exposure)",
               ],
             },
@@ -3776,6 +4332,19 @@ with mlflow.start_run() as run:
                 "AITech-8.2 Data Exfiltration / Exposure",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "SDD: Sensitive Data Disclosure (secure aggregation protects individual FL participant data)",
+                "ISD: Inferred Sensitive Data (secure aggregation prevents inference of sensitive attributes from FL updates)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model Serving — Inference requests 9.5: Infer training data membership (secure aggregation prevents membership inference on FL participant data)"
+              ],
+            }
           ],
         },
         {
@@ -3821,7 +4390,6 @@ with mlflow.start_run() as run:
               framework: "MITRE ATLAS",
               items: [
                 "AML.T0020 Poison Training Data",
-                "AML.T0019 Publish Poisoned Datasets",
                 "AML.T0018.000 Manipulate AI Model: Poison AI Model (Byzantine-robust rules filter poisoned model updates)",
               ],
             },
@@ -3861,8 +4429,21 @@ with mlflow.start_run() as run:
               framework: "Cisco Integrated AI Security and Safety Framework",
               items: [
                 "AITech-6.1 Training Data Poisoning",
+                "AITech-9.1 Model or Agentic System Manipulation (Byzantine-robust aggregation protects global model from malicious update manipulation)",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "DP: Data Poisoning (Byzantine-robust aggregation filters poisoned FL updates)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Datasets 3.1: Data poisoning (robust aggregation filters poisoned client updates)"
+              ],
+            }
           ],
         },
       ],
@@ -3903,6 +4484,7 @@ with mlflow.start_run() as run:
           items: [
             "ML05:2023 Model Theft (theft via hardware-level attacks)",
             "ML06:2023 AI Supply Chain Attacks",
+            "ML03:2023 Model Inversion Attack",
           ],
         },
         {
@@ -3924,6 +4506,23 @@ with mlflow.start_run() as run:
             "AITech-8.2 Data Exfiltration / Exposure (hardware side-channels and co-tenancy can enable data exfiltration from accelerator memory)",
           ],
         },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "MST: Model Source Tampering (hardware integrity prevents tampering at compute layer)",
+            "MXF: Model Exfiltration (hardware security prevents side-channel model extraction)",
+            "SDD: Sensitive Data Disclosure (hardware isolation prevents data leakage via side-channels)"
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Model 7.3: ML Supply chain vulnerabilities (hardware supply chain)",
+            "Platform 12.1: Lack of vulnerability management (firmware and driver vulnerabilities)",
+            "Raw Data 1.4: Ineffective storage and encryption (hardware-level encryption protects data at rest and in use)",
+            "Model Management 8.2: Model theft (hardware side-channels can enable model theft)"
+          ],
+        }
       ],
       subTechniques: [
         {
@@ -4021,7 +4620,6 @@ PS > Get-AuthenticodeSignature -FilePath "C:\\Program Files\\NVIDIA Corporation\
               framework: "MAESTRO",
               items: [
                 "Supply Chain Attacks (Cross-Layer)",
-                "Compromised Container Images (L4) (secure boot ensures trusted container execution)",
               ],
             },
             {
@@ -4048,8 +4646,21 @@ PS > Get-AuthenticodeSignature -FilePath "C:\\Program Files\\NVIDIA Corporation\
               framework: "Cisco Integrated AI Security and Safety Framework",
               items: [
                 "AITech-9.3 Dependency / Plugin Compromise (secure boot prevents compromised firmware/drivers)",
+                "AISubtech-9.2.2 Backdoors and Trojans",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "MST: Model Source Tampering (secure boot prevents boot-level firmware tampering)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model 7.3: ML Supply chain vulnerabilities (hardware boot integrity is part of supply chain security)"
+              ],
+            }
           ],
         },
         {
@@ -4139,7 +4750,6 @@ ScanPolicy:
               framework: "MAESTRO",
               items: [
                 "Supply Chain Attacks (Cross-Layer)",
-                "Compromised Container Images (L4) (patched drivers prevent container-level exploits)",
               ],
             },
             {
@@ -4169,6 +4779,19 @@ ScanPolicy:
                 "AITech-9.3 Dependency / Plugin Compromise",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "MST: Model Source Tampering (driver patches prevent exploitation of known firmware vulnerabilities)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Platform 12.1: Lack of vulnerability management",
+                "Model 7.3: ML Supply chain vulnerabilities"
+              ],
+            }
           ],
         },
         {
@@ -4263,6 +4886,18 @@ ScanPolicy:
                 "AISubtech-9.2.2 Backdoors and Trojans (hardware supply chain verification detects hardware-level backdoors and trojans)",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "MST: Model Source Tampering (hardware supply chain verification prevents tampered components)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model 7.3: ML Supply chain vulnerabilities"
+              ],
+            }
           ],
         },
         {
@@ -4278,7 +4913,6 @@ ScanPolicy:
               items: [
                 "AML.T0025 Exfiltration via Cyber Means",
                 "AML.T0037 Data from Local System",
-                "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (VRAM hygiene prevents model data leakage between tenants)",
                 "AML.T0044 Full AI Model Access (VRAM isolation prevents co-tenants from gaining full access to model weights in shared accelerator memory)",
               ],
             },
@@ -4286,7 +4920,6 @@ ScanPolicy:
               framework: "MAESTRO",
               items: [
                 "Data Exfiltration (L2)",
-                "Resource Hijacking (L4) (VRAM isolation prevents unauthorized access to co-located data)",
                 "Data Leakage (Cross-Layer) (VRAM clearing prevents cross-tenant data leakage)",
               ],
             },
@@ -4318,6 +4951,20 @@ ScanPolicy:
                 "AISubtech-10.1.2 Weight Reconstruction (VRAM clearing prevents reconstruction of model weights from leftover accelerator memory)",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "SDD: Sensitive Data Disclosure (VRAM hygiene prevents cross-tenant data leakage)",
+                "MXF: Model Exfiltration (VRAM isolation prevents model data leakage between tenants)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Raw Data 1.4: Ineffective storage and encryption (VRAM isolation as runtime encryption/hygiene)",
+                "Model Serving — Inference requests 9.10: Accidental exposure of unauthorized data to models (VRAM hygiene prevents accidental data exposure)"
+              ],
+            }
           ],
           implementationGuidance: [
             {
@@ -4344,10 +4991,9 @@ ScanPolicy:
             {
               framework: "MITRE ATLAS",
               items: [
-                "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model",
-                "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model",
+                "AML.T0037 Data from Local System (confidential computing prevents local host memory access to models)",
+                "AML.T0044 Full AI Model Access (confidential computing blocks hypervisor-level model extraction)",
                 "AML.T0025 Exfiltration via Cyber Means",
-                "AML.T0090 OS Credential Dumping (confidential inference protects credentials in encrypted memory)",
               ],
             },
             {
@@ -4384,10 +5030,24 @@ ScanPolicy:
               framework: "Cisco Integrated AI Security and Safety Framework",
               items: [
                 "AITech-10.1 Model Extraction (confidential inference prevents model extraction)",
-                "AITech-10.2 Model Inversion (encrypted memory prevents model inversion)",
                 "AITech-8.2 Data Exfiltration / Exposure",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "MXF: Model Exfiltration (confidential inference protects model weights in encrypted memory)",
+                "SDD: Sensitive Data Disclosure (TEE protects sensitive inference data)",
+                "MST: Model Source Tampering (remote attestation verifies execution environment integrity)"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Raw Data 1.4: Ineffective storage and encryption (confidential computing provides hardware-level encryption)",
+                "Model Management 8.2: Model theft (confidential inference protects model weights from theft)"
+              ],
+            }
           ],
           implementationGuidance: [
             {
@@ -4441,8 +5101,6 @@ ScanPolicy:
           items: [
             "Adversarial Examples (L1)",
             "Reprogramming Attacks (L1)",
-            "Input Validation Attacks (L3)",
-            "Framework Evasion (L3)",
           ],
         },
         {
@@ -4458,7 +5116,7 @@ ScanPolicy:
         {
           framework: "OWASP Agentic AI Top 10 2026",
           items: [
-            "ASI01:2026 Agent Goal Hijack (transformer defenses resist goal hijacking via adversarial tokens)",
+            "N/A",
           ],
         },
         {
@@ -4471,12 +5129,26 @@ ScanPolicy:
         {
           framework: "Cisco Integrated AI Security and Safety Framework",
           items: [
-            "AITech-11.1 Environment-Aware Evasion",
-            "AITech-11.2 Model-Selective Evasion",
-            "AITech-15.1 Harmful Content (attention hardening prevents adversarial content generation)",
+            "AITech-1.1 Direct Prompt Injection (attention hardening resists prompt-driven token steering)",
+            "AITech-1.2 Indirect Prompt Injection (attention hardening resists indirect injection steering)",
             "AISubtech-11.1.1 Agent-Specific Evasion (attention hardening resists agent-targeted evasion)",
           ],
         },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "MEV: Model Evasion",
+            "PIJ: Prompt Injection (architecture-level defense against prompt injection via attention hardening)"
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Model Serving — Inference requests 9.1: Prompt inject (attention hardening resists prompt injection)",
+            "Model Serving — Inference requests 9.3: Model breakout (transformer defenses resist adversarial breakout)",
+            "Model Serving — Inference response 10.5: Black-box attacks (attention hardening resists black-box evasion)"
+          ],
+        }
       ],
       implementationGuidance: [
         {
@@ -4554,8 +5226,6 @@ ScanPolicy:
           framework: "MITRE ATLAS",
           items: [
             "AML.T0015 Evade AI Model",
-            "AML.T0048 External Harms",
-            "AML.T0054 LLM Jailbreak",
             "AML.T0043 Craft Adversarial Data (CFG exploitation uses crafted prompts as adversarial data)",
           ],
         },
@@ -4563,13 +5233,12 @@ ScanPolicy:
           framework: "MAESTRO",
           items: [
             "Adversarial Examples (L1)",
-            "Input Validation Attacks (L3)",
             "Reprogramming Attacks (L1)",
           ],
         },
         {
           framework: "OWASP LLM Top 10 2025",
-          items: ["LLM01:2025 Prompt Injection"],
+          items: ["N/A"],
         },
         {
           framework: "OWASP ML Top 10 2023",
@@ -4593,7 +5262,20 @@ ScanPolicy:
           framework: "Cisco Integrated AI Security and Safety Framework",
           items: [
             "AITech-15.1 Harmful Content",
-            "AISubtech-15.1.19 Integrity Compromise: Hallucinations / Misinformation",
+            "AITech-2.1 Jailbreak (CFG exploitation bypasses safety conditioning, analogous to jailbreak)",
+          ],
+        },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "MEV: Model Evasion",
+            "IMO: Insecure Model Output (uncontrolled CFG produces unsafe image outputs)",
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Model Serving — Inference requests 9.3: Model breakout (CFG exploitation can force model outside intended behavior)",
           ],
         },
       ],
@@ -4608,7 +5290,6 @@ ScanPolicy:
           framework: "MITRE ATLAS",
           items: [
             "AML.T0020 Poison Training Data",
-            "AML.T0019 Publish Poisoned Datasets (poisoned graph datasets consumed by GNN)",
             "AML.T0031 Erode AI Model Integrity (graph poisoning erodes GNN predictions)",
             "AML.T0043 Craft Adversarial Data (adversarial graph structure perturbations)",
             "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (graph structure can embed backdoor triggers via specific subgraph patterns)",
@@ -4638,6 +5319,7 @@ ScanPolicy:
           framework: "NIST Adversarial Machine Learning 2025",
           items: [
             "NISTAML.013 Data Poisoning",
+            "NISTAML.012 Clean-label Poisoning",
             "NISTAML.024 Targeted Poisoning",
             "NISTAML.023 Backdoor Poisoning (graph structure can embed backdoor triggers)",
             "NISTAML.026 Model Poisoning (Integrity)",
@@ -4648,6 +5330,23 @@ ScanPolicy:
           items: [
             "AITech-6.1 Training Data Poisoning",
             "AISubtech-7.3.1 Corrupted Third-Party Data (poisoned graph data from external sources)",
+            "AISubtech-9.2.2 Backdoors and Trojans",
+          ],
+        },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "DP: Data Poisoning",
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Datasets 3.1: Data poisoning",
+            "Datasets 3.3: Label flipping (label manipulation in graph node classification)",
+            "Raw Data 1.7: Lack of data trustworthiness (unverified graph data sources enable poisoning)",
+            "Raw Data 1.11: Compromised 3rd-party datasets (poisoned public graph datasets)",
+            "Model 7.1: Backdoor machine learning / Trojaned model",
           ],
         },
       ],
@@ -4688,7 +5387,6 @@ ScanPolicy:
               items: [
                 "AML.T0020 Poison Training Data",
                 "AML.T0059 Erode Dataset Integrity",
-                "AML.T0019 Publish Poisoned Datasets (sanitization catches poisoned graph datasets)",
               ],
             },
             {
@@ -4725,6 +5423,23 @@ ScanPolicy:
               items: [
                 "AITech-6.1 Training Data Poisoning",
                 "AISubtech-7.3.1 Corrupted Third-Party Data (sanitization catches poisoned graph data from external sources)",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "DP: Data Poisoning",
+                "UTD: Unauthorized Training Data (provenance tracking prevents use of unauthorized graph data)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Datasets 3.1: Data poisoning",
+                "Raw Data 1.7: Lack of data trustworthiness",
+                "Raw Data 1.11: Compromised 3rd-party datasets",
+                "Raw Data 1.6: Insufficient data lineage (provenance tracking addresses graph data lineage)",
+                "Data Prep 2.1: Preprocessing integrity (sanitization ensures graph preprocessing integrity)",
               ],
             },
           ],
@@ -4840,7 +5555,6 @@ def regularized_training_step(data):
               framework: "MITRE ATLAS",
               items: [
                 "AML.T0020 Poison Training Data",
-                "AML.T0018 Manipulate AI Model",
                 "AML.T0015 Evade AI Model (robust aggregation resists adversarial graph perturbations)",
                 "AML.T0031 Erode AI Model Integrity",
               ],
@@ -4883,6 +5597,22 @@ def regularized_training_step(data):
               framework: "Cisco Integrated AI Security and Safety Framework",
               items: [
                 "AITech-6.1 Training Data Poisoning",
+                "AISubtech-9.2.2 Backdoors and Trojans",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "DP: Data Poisoning (robust aggregation resists poisoned graph nodes)",
+                "MEV: Model Evasion (robust GNN architecture resists adversarial graph perturbations at inference)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Datasets 3.1: Data poisoning",
+                "Datasets 3.3: Label flipping (robust aggregation limits impact of flipped labels on GNN predictions)",
+                "Model 7.1: Backdoor machine learning / Trojaned model (robust aggregation limits backdoor trigger effectiveness in graph structure)",
               ],
             },
           ],
@@ -4978,6 +5708,7 @@ class GraphRobustnessVerifier:
                 "AML.T0020 Poison Training Data",
                 "AML.T0031 Erode AI Model Integrity",
                 "AML.T0015 Evade AI Model (certified robustness guarantees resistance to structural perturbations)",
+                "AML.T0043 Craft Adversarial Data",
               ],
             },
             {
@@ -5020,6 +5751,20 @@ class GraphRobustnessVerifier:
                 "AITech-6.1 Training Data Poisoning",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "DP: Data Poisoning (certified robustness provides provable resistance to structural poisoning)",
+                "MEV: Model Evasion (certification guarantees prediction stability under adversarial perturbations)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Datasets 3.1: Data poisoning",
+                "Model Serving — Inference response 10.5: Black-box attacks (certified radius guarantees resistance to unknown perturbations)",
+              ],
+            },
           ],
         },
       ],
@@ -5033,9 +5778,7 @@ class GraphRobustnessVerifier:
         {
           framework: "MITRE ATLAS",
           items: [
-            "AML.T0048 External Harms",
             "AML.T0031 Erode AI Model Integrity (reward hacking erodes intended model behavior)",
-            "AML.T0018 Manipulate AI Model",
           ],
         },
         {
@@ -5062,6 +5805,7 @@ class GraphRobustnessVerifier:
           items: [
             "NISTAML.027 Misaligned Outputs",
             "NISTAML.026 Model Poisoning (Integrity) (reward hacking poisons model behavior via corrupted signals)",
+            "NISTAML.013 Data Poisoning",
           ],
         },
         {
@@ -5071,6 +5815,22 @@ class GraphRobustnessVerifier:
             "AISubtech-6.1.3 Reinforcement Signal Corruption",
             "AITech-7.1 Reasoning Corruption (reward hacking corrupts agent reasoning)",
             "AITech-1.3 Goal Manipulation",
+          ],
+        },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "RA: Rogue Actions",
+            "IMO: Insecure Model Output (reward hacking leads to misaligned, unsafe outputs)",
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Agents — Core 13.6: Intent Breaking & Goal Manipulation",
+            "Agents — Core 13.7: Misaligned & Deceptive Behaviors",
+            "Model Serving — Inference requests 9.13: Excessive agency (reward hacking enables excessive agent autonomy)",
+            "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems (reward-hacked RL agents become rogue)",
           ],
         },
       ],
@@ -5109,7 +5869,6 @@ class GraphRobustnessVerifier:
             {
               framework: "MITRE ATLAS",
               items: [
-                "AML.T0048 External Harms",
                 "AML.T0031 Erode AI Model Integrity",
               ],
             },
@@ -5143,7 +5902,21 @@ class GraphRobustnessVerifier:
               framework: "Cisco Integrated AI Security and Safety Framework",
               items: [
                 "AISubtech-6.1.2 Reinforcement Biasing",
-                "AISubtech-6.1.3 Reinforcement Signal Corruption",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "RA: Rogue Actions",
+                "IMO: Insecure Model Output (multi-objective rewards prevent unsafe output generation)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents — Core 13.6: Intent Breaking & Goal Manipulation",
+                "Agents — Core 13.7: Misaligned & Deceptive Behaviors",
+                "Model Serving — Inference requests 9.13: Excessive agency",
               ],
             },
           ],
@@ -5183,7 +5956,6 @@ class GraphRobustnessVerifier:
             {
               framework: "MITRE ATLAS",
               items: [
-                "AML.T0048 External Harms",
                 "AML.T0031 Erode AI Model Integrity (HITL reward learning resists integrity erosion from misaligned reward signals)",
               ],
             },
@@ -5198,7 +5970,6 @@ class GraphRobustnessVerifier:
               framework: "OWASP LLM Top 10 2025",
               items: [
                 "LLM06:2025 Excessive Agency",
-                "LLM09:2025 Misinformation",
               ],
             },
             {
@@ -5210,7 +5981,6 @@ class GraphRobustnessVerifier:
               items: [
                 "ASI10:2026 Rogue Agents",
                 "ASI01:2026 Agent Goal Hijack",
-                "ASI09:2026 Human-Agent Trust Exploitation (HITL reward learning directly addresses human-agent trust)",
               ],
             },
             {
@@ -5224,6 +5994,21 @@ class GraphRobustnessVerifier:
               framework: "Cisco Integrated AI Security and Safety Framework",
               items: [
                 "AISubtech-6.1.2 Reinforcement Biasing",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "RA: Rogue Actions (human preference learning aligns agent behavior to prevent rogue actions)",
+                "IMO: Insecure Model Output (HITL reward learning reduces misaligned unsafe outputs)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents — Core 13.6: Intent Breaking & Goal Manipulation (preference learning preserves human-intended goals)",
+                "Agents — Core 13.7: Misaligned & Deceptive Behaviors",
+                "Model Management 8.3: Model lifecycle without HITL (human-in-the-loop)",
               ],
             },
           ],
@@ -5262,7 +6047,7 @@ class GraphRobustnessVerifier:
           defendsAgainst: [
             {
               framework: "MITRE ATLAS",
-              items: ["AML.T0048 External Harms"],
+              items: ["N/A"],
             },
             {
               framework: "MAESTRO",
@@ -5298,6 +6083,19 @@ class GraphRobustnessVerifier:
                 "AISubtech-6.1.2 Reinforcement Biasing (PBRS provides mathematically safe shaping that prevents reinforcement biasing exploits)",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "RA: Rogue Actions (PBRS preserves optimal policy and prevents reward-hacking shortcuts that lead to rogue behavior)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents — Core 13.6: Intent Breaking & Goal Manipulation (PBRS mathematically guarantees optimal policy preservation)",
+                "Agents — Core 13.7: Misaligned & Deceptive Behaviors (PBRS prevents deceptive reward-maximizing shortcuts)",
+              ],
+            },
           ],
         },
         {
@@ -5328,7 +6126,6 @@ class GraphRobustnessVerifier:
             {
               framework: "MITRE ATLAS",
               items: [
-                "AML.T0048 External Harms",
                 "AML.T0031 Erode AI Model Integrity (behavioral audit catches integrity erosion from reward hacking)",
               ],
             },
@@ -5369,6 +6166,21 @@ class GraphRobustnessVerifier:
                 "AITech-7.1 Reasoning Corruption",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "RA: Rogue Actions (behavioral audit catches rogue agent behavior before deployment)",
+                "IMO: Insecure Model Output (audit detects outputs produced by reward-hacking exploits)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents — Core 13.7: Misaligned & Deceptive Behaviors",
+                "Agents — Core 13.6: Intent Breaking & Goal Manipulation (audit catches goal-divergent behavior pre-deployment)",
+                "Model Serving — Inference response 10.1: Lack of audit and monitoring inference quality",
+              ],
+            },
           ],
         },
         {
@@ -5406,8 +6218,6 @@ class GraphRobustnessVerifier:
             {
               framework: "MITRE ATLAS",
               items: [
-                "AML.T0048 External Harms",
-                "AML.T0018 Manipulate AI Model",
                 "AML.T0031 Erode AI Model Integrity",
               ],
             },
@@ -5452,6 +6262,21 @@ class GraphRobustnessVerifier:
                 "AITech-7.1 Reasoning Corruption",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "MST: Model Source Tampering (reward signal tampering is functionally equivalent to model source tampering)",
+                "DP: Data Poisoning (reward signal corruption is data poisoning of the RL training loop)",
+                "RA: Rogue Actions (compromised reward signals produce rogue agent policies)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents — Core 13.12: Agent Communication Poisoning (reward signal corruption poisons agent training communication)",
+                "Agents — Tools MCP Server 13.25: Insecure Communication (reward channel requires encrypted authenticated transport)",
+              ],
+            },
           ],
         },
       ],
@@ -5465,11 +6290,11 @@ class GraphRobustnessVerifier:
         {
           framework: "MITRE ATLAS",
           items: [
-            "AML.T0048 External Harms",
             "AML.T0024 Exfiltration via AI Inference API",
             "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model",
             "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model",
             "AML.T0057 LLM Data Leakage (watermarks trace leaked data)",
+            "AML.T0005.000 Create Proxy AI Model: Train Proxy via Gathered AI Artifacts (perturbation degrades stolen data quality for proxy training)",
           ],
         },
         {
@@ -5488,7 +6313,7 @@ class GraphRobustnessVerifier:
         },
         {
           framework: "OWASP ML Top 10 2023",
-          items: ["ML09:2023 Output Integrity Attack", "ML05:2023 Model Theft"],
+          items: ["ML09:2023 Output Integrity Attack", "ML05:2023 Model Theft", "ML03:2023 Model Inversion Attack"],
         },
         {
           framework: "OWASP Agentic AI Top 10 2026",
@@ -5500,7 +6325,6 @@ class GraphRobustnessVerifier:
             "NISTAML.031 Model Extraction",
             "NISTAML.032 Reconstruction",
             "NISTAML.038 Data Extraction",
-            "NISTAML.027 Misaligned Outputs (watermarking enables tracing of misaligned or misused outputs)",
           ],
         },
         {
@@ -5509,6 +6333,23 @@ class GraphRobustnessVerifier:
             "AITech-10.1 Model Extraction",
             "AITech-10.2 Model Inversion",
             "AITech-8.2 Data Exfiltration / Exposure",
+          ],
+        },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "MXF: Model Exfiltration (watermarking enables detection of exfiltrated model outputs)",
+            "MRE: Model Reverse Engineering (watermarks trace unauthorized model cloning)",
+            "SDD: Sensitive Data Disclosure (watermarking traces disclosed data provenance)",
+            "UTD: Unauthorized Training Data (watermarks detect unauthorized use of data for training)",
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Model Management 8.2: Model theft",
+            "Model 7.2: Model assets leak (watermarking traces leaked model assets)",
+            "Model Serving — Inference response 10.6: Sensitive data output from a model (watermarks trace sensitive data leakage)",
           ],
         },
       ],
@@ -5566,7 +6407,6 @@ class GraphRobustnessVerifier:
               framework: "OWASP LLM Top 10 2025",
               items: [
                 "LLM02:2025 Sensitive Information Disclosure",
-                "LLM09:2025 Misinformation",
               ],
             },
             {
@@ -5586,7 +6426,6 @@ class GraphRobustnessVerifier:
                 "NISTAML.031 Model Extraction",
                 "NISTAML.032 Reconstruction",
                 "NISTAML.038 Data Extraction",
-                "NISTAML.033 Membership Inference (watermarks help prove data membership)",
               ],
             },
             {
@@ -5595,6 +6434,24 @@ class GraphRobustnessVerifier:
                 "AITech-10.1 Model Extraction",
                 "AITech-10.2 Model Inversion",
                 "AITech-8.2 Data Exfiltration / Exposure",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "MXF: Model Exfiltration (watermarks enable detection of exfiltrated content)",
+                "MRE: Model Reverse Engineering (watermarks trace outputs from cloned models)",
+                "SDD: Sensitive Data Disclosure (watermarks trace disclosed sensitive content)",
+                "UTD: Unauthorized Training Data (watermarks prove unauthorized use of data for training)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model Management 8.2: Model theft",
+                "Model 7.2: Model assets leak",
+                "Model Serving — Inference response 10.6: Sensitive data output from a model",
+                "Agents — Tools MCP Server 13.23: Data Exfiltration (watermarks trace exfiltrated data through agent channels)",
               ],
             },
           ],
@@ -5658,6 +6515,7 @@ class GraphRobustnessVerifier:
               items: [
                 "ML09:2023 Output Integrity Attack",
                 "ML05:2023 Model Theft (cloaking degrades models trained on stolen data)",
+                "ML03:2023 Model Inversion Attack",
               ],
             },
             {
@@ -5678,6 +6536,23 @@ class GraphRobustnessVerifier:
                 "AITech-10.1 Model Extraction",
                 "AITech-10.2 Model Inversion",
                 "AISubtech-10.1.3 Sensitive Data Reconstruction",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "MXF: Model Exfiltration (cloaking degrades utility of exfiltrated data for model training)",
+                "MRE: Model Reverse Engineering (cloaked data sabotages reverse engineering via model inversion)",
+                "SDD: Sensitive Data Disclosure (cloaking protects identity and biometric data from disclosure)",
+                "ISD: Inferred Sensitive Data (cloaking disrupts inference of sensitive attributes from published data)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model Management 8.4: Model inversion (cloaking disrupts identity reconstruction via model inversion)",
+                "Model Serving — Inference requests 9.2: Model inversion (cloaking sabotages inference-time inversion attacks)",
+                "Model Management 8.2: Model theft (cloaking degrades models trained on stolen data)",
               ],
             },
           ],
@@ -5725,10 +6600,7 @@ class GraphRobustnessVerifier:
           items: [
             "AML.T0015 Evade AI Model",
             "AML.T0043 Craft Adversarial Data",
-            "AML.T0018 Manipulate AI Model",
             "AML.T0020 Poison Training Data (ensemble diversity limits impact of individual poisoned models)",
-            "AML.T0041 Physical Environment Access (ensemble diversity increases difficulty of physical adversarial attacks)",
-            "AML.T0107 Exploitation for Defense Evasion",
           ],
         },
         {
@@ -5768,8 +6640,26 @@ class GraphRobustnessVerifier:
           framework: "Cisco Integrated AI Security and Safety Framework",
           items: [
             "AITech-7.1 Reasoning Corruption (ensemble consensus prevents single-model reasoning corruption)",
+            "AITech-9.1 Model or Agentic System Manipulation",
+            "AISubtech-9.2.2 Backdoors and Trojans",
             "AITech-11.1 Environment-Aware Evasion (ensemble diversity defeats environment-specific adversarial inputs)",
             "AITech-11.2 Model-Selective Evasion (ensemble diversity defeats model-specific adversarial inputs)",
+          ],
+        },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "MEV: Model Evasion",
+            "DP: Data Poisoning (ensemble diversity limits impact of individual poisoned models)",
+            "MST: Model Source Tampering (ensemble consensus prevents single tampered model from controlling output)",
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Model Serving — Inference response 10.5: Black-box attacks (ensemble diversity defeats model-specific black-box attacks)",
+            "Model 7.1: Backdoor machine learning / Trojaned model (ensemble diversity limits single backdoor impact)",
+            "Datasets 3.1: Data poisoning (ensemble limits poisoned model influence on final prediction)",
           ],
         },
       ],
@@ -5826,7 +6716,6 @@ class GraphRobustnessVerifier:
             "AML.T0043 Craft Adversarial Data",
             "AML.T0031 Erode AI Model Integrity",
             "AML.T0041 Physical Environment Access (certified defenses provide formal robustness against physical perturbations)",
-            "AML.T0107 Exploitation for Defense Evasion",
           ],
         },
         {
@@ -5863,6 +6752,19 @@ class GraphRobustnessVerifier:
             "AISubtech-11.1.1 Agent-Specific Evasion (certified bounds prevent evasion attacks tailored to specific model processing patterns)",
           ],
         },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "MEV: Model Evasion",
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Model Serving — Inference requests 9.3: Model breakout",
+            "Model Serving — Inference response 10.5: Black-box attacks",
+          ],
+        },
       ],
     },
     {
@@ -5891,12 +6793,11 @@ class GraphRobustnessVerifier:
             "AML.T0051.000 LLM Prompt Injection: Direct",
             "AML.T0051.001 LLM Prompt Injection: Indirect",
             "AML.T0054 LLM Jailbreak",
-            "AML.T0048 External Harms",
             "AML.T0065 LLM Prompt Crafting",
             "AML.T0068 LLM Prompt Obfuscation",
             "AML.T0056 Extract LLM System Prompt (hardened system prompts resist extraction attempts)",
             "AML.T0069.001 Discover LLM System Information: System Instruction Keywords (instruction hierarchy reduces exploitability of discovered keywords)",
-            "AML.T0108 AI Agent (C2)",
+            "AML.T0069.002 Discover LLM System Information: System Prompt (system prompt hardening resists system prompt discovery)",
             "AML.T0051.002 LLM Prompt Injection: Triggered (system prompt hardening prevents time/event-triggered payload execution)",
           ],
         },
@@ -5933,7 +6834,6 @@ class GraphRobustnessVerifier:
           items: [
             "NISTAML.018 Prompt Injection",
             "NISTAML.015 Indirect Prompt Injection",
-            "NISTAML.039 Compromising connected resources (hardened system prompts prevent prompt-based access to connected resources)",
             "NISTAML.027 Misaligned Outputs (prompt hierarchy ensures aligned outputs)",
             "NISTAML.035 Prompt Extraction",
           ],
@@ -5951,6 +6851,27 @@ class GraphRobustnessVerifier:
             "AISubtech-1.2.1 Instruction Manipulation (Indirect Prompt Injection)",
             "AITech-8.4 Prompt/Meta Extraction",
             "AISubtech-8.4.1 System LLM Prompt Leakage",
+            "AITech-1.3 Goal Manipulation (system prompt hardening prevents goal re-specification via injection)",
+            "AISubtech-1.3.1 Goal Manipulation (Models, Agents) (hardened instruction hierarchy resists model/agent goal manipulation)",
+          ],
+        },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "PIJ: Prompt Injection",
+            "SDD: Sensitive Data Disclosure (system prompt hardening prevents system prompt leakage and data disclosure)",
+            "IMO: Insecure Model Output (instruction hierarchy constrains model outputs)",
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Model Serving — Inference requests 9.1: Prompt inject",
+            "Model Serving — Inference requests 9.12: LLM Jailbreak",
+            "Model Serving — Inference requests 9.13: Excessive agency (system prompt hardening constrains agent autonomy)",
+            "Model Serving — Inference response 10.6: Sensitive data output from a model (system prompt hardening prevents sensitive data leakage)",
+            "Agents — Core 13.6: Intent Breaking & Goal Manipulation (hardened system prompts resist goal manipulation)",
+            "Agents — Core 13.2: Tool Misuse",
           ],
         },
       ],
@@ -6002,8 +6923,6 @@ class GraphRobustnessVerifier:
           framework: "MITRE ATLAS",
           items: [
             "AML.T0050 Command and Scripting Interpreter",
-            "AML.T0049 Exploit Public-Facing Application",
-            "AML.T0048 External Harms",
             "AML.T0051 LLM Prompt Injection",
             "AML.T0054 LLM Jailbreak",
             "AML.T0103 Deploy AI Agent",
@@ -6031,7 +6950,6 @@ class GraphRobustnessVerifier:
         {
           framework: "OWASP ML Top 10 2023",
           items: [
-            "ML06:2023 AI Supply Chain Attacks",
             "ML09:2023 Output Integrity Attack",
           ],
         },
@@ -6043,6 +6961,7 @@ class GraphRobustnessVerifier:
             "ASI03:2026 Identity and Privilege Abuse",
             "ASI05:2026 Unexpected Code Execution (RCE)",
             "ASI08:2026 Cascading Failures",
+            "ASI10:2026 Rogue Agents",
           ],
         },
         {
@@ -6061,6 +6980,27 @@ class GraphRobustnessVerifier:
             "AITech-4.2 Context Boundary Attacks",
             "AITech-12.1 Tool Exploitation",
             "AITech-12.2 Insecure Output Handling",
+          ],
+        },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "PIJ: Prompt Injection",
+            "RA: Rogue Actions",
+            "IIC: Insecure Integrated Component",
+            "IMO: Insecure Model Output",
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Model Serving — Inference requests 9.1: Prompt inject",
+            "Model Serving — Inference requests 9.13: Excessive agency",
+            "Agents — Core 13.2: Tool Misuse",
+            "Agents — Core 13.3: Privilege Compromise",
+            "Agents — Core 13.6: Intent Breaking & Goal Manipulation",
+            "Agents — Core 13.11: Unexpected RCE and Code Attacks",
+            "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems",
           ],
         },
       ],
@@ -6108,8 +7048,8 @@ class GraphRobustnessVerifier:
               framework: "OWASP Agentic AI Top 10 2026",
               items: [
                 "ASI01:2026 Agent Goal Hijack",
+                "ASI02:2026 Tool Misuse and Exploitation",
                 "ASI08:2026 Cascading Failures (interruptible loops break cascade propagation)",
-                "ASI09:2026 Human-Agent Trust Exploitation (auditable loops support human oversight)",
               ],
             },
             {
@@ -6124,6 +7064,22 @@ class GraphRobustnessVerifier:
               items: [
                 "AITech-4.1 Agent Injection (interruptible loops catch injected actions before execution)",
                 "AITech-12.1 Tool Exploitation",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "RA: Rogue Actions (interruptible loops catch rogue actions before execution)",
+                "PIJ: Prompt Injection (auditable loops enable detection of injection-driven actions)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents — Core 13.6: Intent Breaking & Goal Manipulation (interruptible loops catch manipulated goals)",
+                "Agents — Core 13.7: Misaligned & Deceptive Behaviors (auditable loops detect misaligned agent behavior)",
+                "Agents — Core 13.4: Resource Overload (circuit breakers in loops prevent resource exhaustion)",
+                "Agents — Core 13.2: Tool Misuse",
               ],
             },
           ],
@@ -6175,10 +7131,8 @@ class GraphRobustnessVerifier:
               framework: "MITRE ATLAS",
               items: [
                 "AML.T0050 Command and Scripting Interpreter",
-                "AML.T0049 Exploit Public-Facing Application",
                 "AML.T0053 AI Agent Tool Invocation",
                 "AML.T0098 AI Agent Tool Credential Harvesting (least privilege limits credential exposure via tools)",
-                "AML.T0103 Deploy AI Agent",
                 "AML.T0086 Exfiltration via AI Agent Tool Invocation (least-privilege tools limit data exfiltration surface)",
                 "AML.T0101 Data Destruction via AI Agent Tool Invocation (granular tools prevent destructive operations)",
               ],
@@ -6187,14 +7141,12 @@ class GraphRobustnessVerifier:
               framework: "MAESTRO",
               items: [
                 "Agent Tool Misuse (L7)",
-                "Input Validation Attacks (L3)",
               ],
             },
             {
               framework: "OWASP LLM Top 10 2025",
               items: [
                 "LLM06:2025 Excessive Agency",
-                "LLM05:2025 Improper Output Handling",
               ],
             },
             {
@@ -6205,6 +7157,7 @@ class GraphRobustnessVerifier:
               framework: "OWASP Agentic AI Top 10 2026",
               items: [
                 "ASI02:2026 Tool Misuse and Exploitation",
+                "ASI03:2026 Identity and Privilege Abuse",
                 "ASI05:2026 Unexpected Code Execution (RCE)",
               ],
             },
@@ -6220,6 +7173,23 @@ class GraphRobustnessVerifier:
               items: [
                 "AITech-12.1 Tool Exploitation",
                 "AITech-14.2 Abuse of Delegated Authority (least-privilege tools prevent delegated authority abuse)",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "RA: Rogue Actions (least-privilege tools limit blast radius of rogue actions)",
+                "IIC: Insecure Integrated Component (granular tools reduce integration attack surface)",
+                "PIJ: Prompt Injection (least-privilege limits injection impact on tool execution)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents — Core 13.2: Tool Misuse",
+                "Agents — Core 13.3: Privilege Compromise (least-privilege tools limit privilege escalation)",
+                "Agents — Core 13.11: Unexpected RCE and Code Attacks (granular tools prevent code injection)",
+                "Model Serving — Inference requests 9.13: Excessive agency",
               ],
             },
           ],
@@ -6291,8 +7261,8 @@ class GraphRobustnessVerifier:
                 "ASI01:2026 Agent Goal Hijack",
                 "ASI02:2026 Tool Misuse and Exploitation",
                 "ASI05:2026 Unexpected Code Execution (RCE)",
+                "ASI03:2026 Identity and Privilege Abuse",
                 "ASI08:2026 Cascading Failures (plan validation at each step prevents cascading)",
-                "ASI09:2026 Human-Agent Trust Exploitation (structured plans are auditable before execution)",
               ],
             },
             {
@@ -6310,8 +7280,29 @@ class GraphRobustnessVerifier:
                 "AITech-4.1 Agent Injection",
                 "AITech-4.2 Context Boundary Attacks (plan validation enforces context boundaries)",
                 "AITech-7.1 Reasoning Corruption (corrupted reasoning caught by plan validation before execution)",
+                "AITech-1.3 Goal Manipulation (plan validation catches manipulated goals before execution)",
                 "AITech-12.1 Tool Exploitation",
                 "AITech-12.2 Insecure Output Handling",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "PIJ: Prompt Injection (plan validation prevents injection from reaching tools)",
+                "RA: Rogue Actions (decoupled architecture prevents rogue tool execution)",
+                "IIC: Insecure Integrated Component (action selector validates all tool interactions)",
+                "IMO: Insecure Model Output (plan validation catches insecure model outputs before execution)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model Serving — Inference requests 9.1: Prompt inject",
+                "Agents — Core 13.2: Tool Misuse (plan validation prevents tool misuse)",
+                "Agents — Core 13.3: Privilege Compromise",
+                "Agents — Core 13.6: Intent Breaking & Goal Manipulation (plan validation catches manipulated goals)",
+                "Agents — Core 13.11: Unexpected RCE and Code Attacks (decoupled architecture prevents direct code execution)",
+                "Model Serving — Inference requests 9.12: LLM Jailbreak (plan validation blocks jailbreak-driven actions)",
               ],
             },
           ],
@@ -6342,7 +7333,6 @@ class GraphRobustnessVerifier:
             {
               framework: "MITRE ATLAS",
               items: [
-                "AML.T0018 Manipulate AI Model",
                 "AML.T0080 AI Agent Context Poisoning",
                 "AML.T0080.000 AI Agent Context Poisoning: Memory",
                 "AML.T0051.001 LLM Prompt Injection: Indirect (prevents persistent indirect injection across sessions)",
@@ -6353,7 +7343,6 @@ class GraphRobustnessVerifier:
               framework: "MAESTRO",
               items: [
                 "Agent Goal Manipulation (L7)",
-                "Data Poisoning (L2)",
                 "Compromised Agents (L7) (ephemeral state limits persistence of compromise)",
               ],
             },
@@ -6361,7 +7350,6 @@ class GraphRobustnessVerifier:
               framework: "OWASP LLM Top 10 2025",
               items: [
                 "LLM01:2025 Prompt Injection",
-                "LLM04:2025 Data and Model Poisoning",
               ],
             },
             {
@@ -6391,6 +7379,20 @@ class GraphRobustnessVerifier:
                 "AITech-5.2 Configuration Persistence (ephemeral state prevents persistent config changes)",
                 "AITech-4.1 Agent Injection (session isolation prevents persistent injection)",
                 "AISubtech-4.2.2 Session Boundary Violation (ephemeral state enforces clean session boundaries)",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "PIJ: Prompt Injection (ephemeral state prevents persistent injection effects across sessions)",
+                "RA: Rogue Actions (session isolation limits persistence of rogue action triggers)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents — Core 13.1: Memory Poisoning",
+                "Agents — Core 13.6: Intent Breaking & Goal Manipulation (ephemeral state prevents persistent goal hijack)",
               ],
             },
           ],
@@ -6441,7 +7443,6 @@ class GraphRobustnessVerifier:
                 "Agent Tool Misuse (L7)",
                 "Agent Goal Manipulation (L7)",
                 "Compromised Agents (L7) (certificate limits what compromised agents can do)",
-                "Framework Evasion (L3) (certificate enforcement is an additional layer beyond framework controls)",
               ],
             },
             {
@@ -6478,6 +7479,24 @@ class GraphRobustnessVerifier:
                 "AITech-12.1 Tool Exploitation",
                 "AITech-4.1 Agent Injection (certificate blocks injected agent actions)",
                 "AITech-4.3 Protocol Manipulation (certificate enforces protocol constraints)",
+                "AITech-14.2 Abuse of Delegated Authority",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "RA: Rogue Actions (behavior certification detects and blocks rogue agent actions)",
+                "PIJ: Prompt Injection (certificate enforcement blocks injection from reaching unauthorized tools)",
+                "IIC: Insecure Integrated Component (certificate limits agent interactions with integrated components)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents — Core 13.2: Tool Misuse (certificate restricts tool usage to authorized capabilities)",
+                "Agents — Core 13.3: Privilege Compromise (certificate-based privilege management prevents escalation)",
+                "Agents — Core 13.7: Misaligned & Deceptive Behaviors (behavior certificates detect misalignment)",
+                "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems (certificates detect rogue agents)",
               ],
             },
           ],
@@ -6543,6 +7562,7 @@ class GraphRobustnessVerifier:
             {
               framework: "OWASP Agentic AI Top 10 2026",
               items: [
+                "ASI02:2026 Tool Misuse and Exploitation",
                 "ASI03:2026 Identity and Privilege Abuse",
                 "ASI07:2026 Insecure Inter-Agent Communication",
                 "ASI10:2026 Rogue Agents (capability verification detects rogue agents with false capabilities)",
@@ -6564,6 +7584,26 @@ class GraphRobustnessVerifier:
                 "AITech-4.2 Context Boundary Attacks (delegation controls enforce boundaries)",
                 "AITech-4.3 Protocol Manipulation",
                 "AISubtech-4.3.5 Capability Inflation",
+                "AITech-14.2 Abuse of Delegated Authority",
+                "AISubtech-14.2.1 Permission Escalation via Delegation (delegation chain validation prevents permission escalation)",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "RA: Rogue Actions (delegation controls prevent rogue agent propagation)",
+                "DMS: Denial of ML Service (hop limits prevent recursive delegation DoS)",
+                "IIC: Insecure Integrated Component (capability verification secures inter-agent integrations)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents — Core 13.2: Tool Misuse",
+                "Agents — Core 13.9: Identity Spoofing & Impersonation (capability manifests prevent agent impersonation)",
+                "Agents — Core 13.12: Agent Communication Poisoning (signed manifests verify agent communication integrity)",
+                "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems (capability verification detects rogue agents)",
+                "Agents — Core 13.3: Privilege Compromise (delegation controls prevent cross-agent privilege escalation)",
               ],
             },
           ],
@@ -6653,8 +7693,7 @@ class GraphRobustnessVerifier:
               "items": [
                 "NISTAML.015 Indirect Prompt Injection",
                 "NISTAML.018 Prompt Injection",
-                "NISTAML.039 Compromising connected resources (dual isolation prevents untrusted content from reaching connected systems)",
-                "NISTAML.038 Data Extraction (dual isolation prevents data extraction through untrusted channels)"
+                "NISTAML.039 Compromising connected resources (dual isolation prevents untrusted content from reaching connected systems)"
               ]
             },
             {
@@ -6666,6 +7705,24 @@ class GraphRobustnessVerifier:
                 "AITech-12.1 Tool Exploitation (tool access restricted to P-LLM which never sees untrusted content)",
                 "AITech-8.4 Prompt/Meta Extraction (P-LLM prompts never exposed to untrusted content)",
                 "AITech-12.2 Insecure Output Handling (dual-LLM isolation ensures Q-LLM outputs are validated before P-LLM consumption)"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "PIJ: Prompt Injection",
+                "SDD: Sensitive Data Disclosure (dual-LLM isolation prevents sensitive data from reaching untrusted processing)",
+                "RA: Rogue Actions (P-LLM isolation prevents untrusted content from triggering rogue tool actions)",
+                "IIC: Insecure Integrated Component (dual-LLM boundary secures integrated tool interactions)"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Model Serving — Inference requests 9.1: Prompt inject",
+                "Model Serving — Inference requests 9.9: Input Resource Control (dual-LLM isolation controls untrusted input resources)",
+                "Agents — Core 13.2: Tool Misuse (P-LLM isolation prevents untrusted content from triggering tool misuse)",
+                "Agents — Core 13.1: Memory Poisoning (dual-LLM isolation prevents untrusted content from poisoning privileged context)"
               ]
             }
           ],
@@ -6744,6 +7801,23 @@ class GraphRobustnessVerifier:
             "AISubtech-12.1.1 Parameter Manipulation",
           ],
         },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "RA: Rogue Actions (tool authorization prevents rogue agent actions)",
+            "PIJ: Prompt Injection (capability scoping limits impact of prompt injection on tool execution)",
+            "IIC: Insecure Integrated Component (tool authorization secures agent-tool integrations)",
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Agents — Core 13.2: Tool Misuse",
+            "Agents — Core 13.3: Privilege Compromise",
+            "Model Serving — Inference requests 9.13: Excessive agency",
+            "Agents — Core 13.11: Unexpected RCE and Code Attacks (tool authorization prevents unauthorized code execution)",
+          ],
+        },
       ],
       subTechniques: [
         {
@@ -6759,7 +7833,6 @@ class GraphRobustnessVerifier:
               items: [
                 "AML.T0053 AI Agent Tool Invocation",
                 "AML.T0050 Command and Scripting Interpreter (schema validation prevents command injection via parameters)",
-                "AML.T0049 Exploit Public-Facing Application (parameter validation prevents injection attacks)",
               ],
             },
             {
@@ -6773,7 +7846,6 @@ class GraphRobustnessVerifier:
               framework: "OWASP LLM Top 10 2025",
               items: [
                 "LLM06:2025 Excessive Agency",
-                "LLM05:2025 Improper Output Handling",
               ],
             },
             {
@@ -6800,8 +7872,22 @@ class GraphRobustnessVerifier:
               items: [
                 "AITech-12.1 Tool Exploitation",
                 "AITech-12.2 Insecure Output Handling",
-                "AITech-4.1 Agent Injection (schema validation blocks malformed injected parameters)",
                 "AISubtech-12.1.1 Parameter Manipulation",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "PIJ: Prompt Injection (schema validation blocks injection payloads in tool parameters)",
+                "RA: Rogue Actions (parameter constraints prevent rogue actions via malformed parameters)",
+                "IIC: Insecure Integrated Component (typed parameters secure tool integrations)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents — Core 13.2: Tool Misuse (parameter schema validation prevents tool misuse)",
+                "Model Serving — Inference requests 9.1: Prompt inject (schema validation blocks injection in tool parameters)",
               ],
             },
           ],
@@ -6838,7 +7924,6 @@ class GraphRobustnessVerifier:
               framework: "MITRE ATLAS",
               items: [
                 "AML.T0053 AI Agent Tool Invocation",
-                "AML.T0012 Valid Accounts",
               ],
             },
             {
@@ -6852,7 +7937,6 @@ class GraphRobustnessVerifier:
               framework: "OWASP LLM Top 10 2025",
               items: [
                 "LLM06:2025 Excessive Agency",
-                "LLM05:2025 Improper Output Handling",
               ],
             },
             {
@@ -6881,6 +7965,22 @@ class GraphRobustnessVerifier:
                 "AITech-4.1 Agent Injection (policy engine blocks unauthorized agent actions)",
                 "AITech-14.1 Unauthorized Access",
                 "AITech-14.2 Abuse of Delegated Authority (policy engine detects abuse of delegated permissions)",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "RA: Rogue Actions (policy engine blocks unauthorized agent actions)",
+                "PIJ: Prompt Injection (policy engine blocks injection-driven unauthorized tool access)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents — Core 13.2: Tool Misuse (policy-based access control prevents tool misuse)",
+                "Agents — Core 13.3: Privilege Compromise (policy engine prevents privilege escalation)",
+                "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems (policy engine detects rogue agent access patterns)",
+                "Agents — Tools MCP Server 13.17: Confused Deputy (policy-based access control prevents confused deputy authorization bypass)",
               ],
             },
           ],
@@ -6920,7 +8020,6 @@ class GraphRobustnessVerifier:
                 "AML.T0053 AI Agent Tool Invocation",
                 "AML.T0048 External Harms (two-channel validation catches harmful actions before execution)",
                 "AML.T0051 LLM Prompt Injection (second channel independently validates injection attempts)",
-                "AML.T0011.003 User Execution: Malicious Link",
               ],
             },
             {
@@ -6928,7 +8027,6 @@ class GraphRobustnessVerifier:
               items: [
                 "Agent Tool Misuse (L7)",
                 "Agent Goal Manipulation (L7)",
-                "Data Poisoning (L2)",
               ],
             },
             {
@@ -6948,7 +8046,7 @@ class GraphRobustnessVerifier:
               items: [
                 "ASI02:2026 Tool Misuse and Exploitation",
                 "ASI01:2026 Agent Goal Hijack (independent validator catches goal hijack attempts)",
-                "ASI09:2026 Human-Agent Trust Exploitation (second channel provides independent validation of agent actions)",
+                "ASI03:2026 Identity and Privilege Abuse",
                 "ASI08:2026 Cascading Failures (validator catches unsafe actions before they cascade)",
                 "ASI05:2026 Unexpected Code Execution (RCE) (two-channel validation catches code execution attempts in high-impact actions)",
               ],
@@ -6967,6 +8065,24 @@ class GraphRobustnessVerifier:
                 "AITech-12.1 Tool Exploitation",
                 "AITech-7.1 Reasoning Corruption (independent validator detects corrupted reasoning)",
                 "AITech-4.1 Agent Injection (second channel catches injected actions)",
+                "AITech-14.2 Abuse of Delegated Authority",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "RA: Rogue Actions (independent validator catches rogue high-impact actions)",
+                "PIJ: Prompt Injection (second channel independently validates injection attempts)",
+                "IMO: Insecure Model Output (validator catches insecure outputs before high-impact execution)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents — Core 13.2: Tool Misuse (two-channel validation prevents high-impact tool misuse)",
+                "Agents — Core 13.3: Privilege Compromise",
+                "Agents — Core 13.5: Cascading Hallucination Attacks (independent validator catches hallucination-driven high-impact actions)",
+                "Agents — Core 13.7: Misaligned & Deceptive Behaviors (second channel detects misaligned high-impact actions)",
               ],
             },
           ],
@@ -7020,7 +8136,6 @@ class GraphRobustnessVerifier:
               "items": [
                 "Agent Tool Misuse (L7)",
                 "Agent Goal Manipulation (L7)",
-                "Framework Evasion (L3)",
                 "Privilege Escalation (Cross-Layer)"
               ]
             },
@@ -7060,6 +8175,21 @@ class GraphRobustnessVerifier:
                 "AITech-4.1 Agent Injection (signed scope prevents injected agents from expanding privileges)",
                 "AITech-1.1 Direct Prompt Injection (dynamic scoping limits injection impact)",
                 "AITech-1.2 Indirect Prompt Injection (dynamic scoping limits injection impact)"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "PIJ: Prompt Injection (dynamic scoping prevents injection from expanding agent privileges)",
+                "RA: Rogue Actions (per-request scoping limits what rogue actions can achieve)"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Agents — Core 13.2: Tool Misuse (dynamic scoping restricts tool misuse per request)",
+                "Agents — Core 13.3: Privilege Compromise (signed session scopes prevent privilege escalation)",
+                "Agents — Core 13.6: Intent Breaking & Goal Manipulation (intent-based scoping constrains manipulated goals)"
               ]
             }
           ],
@@ -7107,8 +8237,6 @@ class GraphRobustnessVerifier:
               "items": [
                 "Data Exfiltration (L2)",
                 "Compromised RAG Pipelines (L2)",
-                "Data Tampering (L2)",
-                "Input Validation Attacks (L3)",
                 "Privilege Escalation (Cross-Layer)",
                 "Data Leakage (Cross-Layer)"
               ]
@@ -7130,7 +8258,7 @@ class GraphRobustnessVerifier:
               "items": [
                 "ASI02:2026 Tool Misuse and Exploitation (prevents data exfiltration via legitimate tool chains)",
                 "ASI01:2026 Agent Goal Hijack (sink enforcement prevents hijacked goals from exfiltrating data)",
-                "ASI05:2026 Unexpected Code Execution (RCE) (sink enforcement prevents code execution via exfiltration paths)"
+                "ASI03:2026 Identity and Privilege Abuse"
               ]
             },
             {
@@ -7149,7 +8277,24 @@ class GraphRobustnessVerifier:
                 "AITech-8.3 Information Disclosure",
                 "AITech-12.1 Tool Exploitation (sink enforcement prevents tool-based exfiltration)",
                 "AITech-12.2 Insecure Output Handling",
-                "AISubtech-8.2.3 Data Exfiltration via Agent Tooling"
+                "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
+                "AITech-14.2 Abuse of Delegated Authority"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "SDD: Sensitive Data Disclosure (sink enforcement prevents sensitive data from flowing to unauthorized destinations)",
+                "PIJ: Prompt Injection (sink enforcement prevents injection-driven data exfiltration)",
+                "RA: Rogue Actions (data flow enforcement prevents rogue exfiltration actions)",
+                "EDH: Excessive Data Handling (sink enforcement controls data handling boundaries)"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Model Serving — Inference response 10.6: Sensitive data output from a model",
+                "Agents — Core 13.2: Tool Misuse (sink enforcement prevents data exfiltration via tool misuse)"
               ]
             }
           ],
@@ -7189,7 +8334,6 @@ class GraphRobustnessVerifier:
               framework: "MITRE ATLAS",
               items: [
                 "AML.T0053 AI Agent Tool Invocation",
-                "AML.T0012 Valid Accounts (re-verification prevents stale credential use)",
               ],
             },
             {
@@ -7231,6 +8375,22 @@ class GraphRobustnessVerifier:
                 "AITech-4.1 Agent Injection (continuous re-authorization catches injected actions)",
                 "AITech-14.1 Unauthorized Access (continuous re-authorization prevents time-delayed unauthorized access)",
                 "AITech-14.2 Abuse of Delegated Authority (continuous re-authorization catches delegated authority abuse)",
+                "AISubtech-14.2.1 Permission Escalation via Delegation (continuous re-authorization prevents stale delegation from escalating permissions)",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "RA: Rogue Actions (continuous re-authorization catches rogue actions at execution time)",
+                "PIJ: Prompt Injection (re-verification catches injection-driven authorization bypass)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents — Core 13.3: Privilege Compromise (continuous re-authorization prevents TOCTOU privilege escalation)",
+                "Agents — Core 13.2: Tool Misuse (execution-time authorization prevents stale-credential tool misuse)",
+                "Agents — Tools MCP Server 13.17: Confused Deputy (continuous re-authorization prevents confused deputy via stale delegation)",
               ],
             },
           ],
@@ -7322,24 +8482,22 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             "Lateral Movement (Cross-Layer)",
             "Compromised RAG Pipelines (L2)",
             "Data Exfiltration (L2) (SSRF prevention blocks data exfiltration via internal resource access)",
-            "Supply Chain Attacks (Cross-Layer) (safe fetch controls untrusted data source access)",
           ],
         },
         {
           framework: "OWASP LLM Top 10 2025",
           items: [
             "LLM01:2025 Prompt Injection (indirect injection via fetched web content)",
-            "LLM03:2025 Supply Chain (untrusted data sources)",
           ],
         },
         {
           framework: "OWASP ML Top 10 2023",
-          items: ["ML06:2023 AI Supply Chain Attacks"],
+          items: ["N/A"],
         },
         {
           framework: "OWASP Agentic AI Top 10 2026",
           items: [
-            "ASI04:2026 Agentic Supply Chain Vulnerabilities (safe fetch controls untrusted external data sources)",
+            "ASI06:2026 Memory & Context Poisoning",
             "ASI01:2026 Agent Goal Hijack (prevents goal hijack via malicious fetched content)",
             "ASI05:2026 Unexpected Code Execution (RCE) (browser sandbox prevents code execution via malicious fetched content)",
             "ASI02:2026 Tool Misuse and Exploitation (safe fetch prevents tool-based SSRF exploitation)",
@@ -7361,6 +8519,23 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
           ],
         },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "PIJ: Prompt Injection (safe fetch prevents indirect injection via fetched web content)",
+            "IIC: Insecure Integrated Component (browser sandbox secures web-fetching integrations)",
+            "RA: Rogue Actions (SSRF prevention blocks rogue internal network actions)",
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Model Serving — Inference requests 9.9: Input Resource Control (safe fetch controls resource inputs to models)",
+            "Model Serving — Inference requests 9.1: Prompt inject (safe fetch sanitizes fetched content containing injections)",
+            "Agents — Core 13.1: Memory Poisoning",
+            "Agents — Core 13.11: Unexpected RCE and Code Attacks (safe fetch prevents code execution from fetched content)",
+          ],
+        },
       ],
       subTechniques: [
         {
@@ -7373,7 +8548,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
           defendsAgainst: [
             {
               framework: "MITRE ATLAS",
-              items: ["AML.T0049 Exploit Public-Facing Application", "AML.T0011.003 User Execution: Malicious Link",
+              items: ["AML.T0011.003 User Execution: Malicious Link",
               ],
             },
             {
@@ -7385,16 +8560,15 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             },
             {
               framework: "OWASP LLM Top 10 2025",
-              items: ["LLM03:2025 Supply Chain (untrusted data sources)"],
+              items: ["N/A"],
             },
             {
               framework: "OWASP ML Top 10 2023",
-              items: ["ML06:2023 AI Supply Chain Attacks"],
+              items: ["N/A"],
             },
             {
               framework: "OWASP Agentic AI Top 10 2026",
               items: [
-                "ASI04:2026 Agentic Supply Chain Vulnerabilities (allowlist filtering controls external data sources)",
                 "ASI02:2026 Tool Misuse and Exploitation (URL normalization prevents tool-based SSRF exploitation)",
               ],
             },
@@ -7402,7 +8576,6 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
               framework: "NIST Adversarial Machine Learning 2025",
               items: [
                 "NISTAML.039 Compromising connected resources (blocks access to internal network resources)",
-                "NISTAML.015 Indirect Prompt Injection (URL normalization prevents SSRF triggered by indirect injection payloads)",
               ],
             },
             {
@@ -7410,6 +8583,19 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
               items: [
                 "AITech-12.1 Tool Exploitation (URL normalization prevents SSRF via safe fetch tool)",
                 "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access",
+                "AITech-14.1 Unauthorized Access",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "IIC: Insecure Integrated Component (allowlist filtering secures outbound integrations)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model Serving — Inference requests 9.9: Input Resource Control (URL allowlisting controls resource inputs)",
               ],
             },
           ],
@@ -7442,9 +8628,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
               items: [
                 "AML.T0051 LLM Prompt Injection",
                 "AML.T0051.001 LLM Prompt Injection: Indirect",
-                "AML.T0049 Exploit Public-Facing Application",
                 "AML.T0100 AI Agent Clickbait (secure rendering prevents exploitation from fetched malicious content)",
-                "AML.T0011.003 User Execution: Malicious Link",
               ],
             },
             {
@@ -7458,7 +8642,6 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
               framework: "OWASP LLM Top 10 2025",
               items: [
                 "LLM01:2025 Prompt Injection (indirect injection via HTML content)",
-                "LLM05:2025 Improper Output Handling",
               ],
             },
             {
@@ -7483,7 +8666,20 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
               framework: "Cisco Integrated AI Security and Safety Framework",
               items: [
                 "AITech-1.2 Indirect Prompt Injection",
-                "AITech-12.2 Insecure Output Handling (content demotion neutralizes malicious active content)",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "PIJ: Prompt Injection (content demotion prevents indirect injection via fetched HTML)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model Serving — Inference requests 9.1: Prompt inject (content demotion strips injection payloads from HTML)",
+                "Model Serving — Inference requests 9.9: Input Resource Control (content sanitization controls resource inputs to models)",
+                "Agents — Core 13.1: Memory Poisoning",
               ],
             },
           ],
@@ -7519,10 +8715,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             "AML.T0071 False RAG Entry Injection",
             "AML.T0059 Erode Dataset Integrity",
             "AML.T0066 Retrieval Content Crafting",
-            "AML.T0064 Gather RAG-Indexed Targets (RAG hygiene hardens the index against reconnaissance)",
-            "AML.T0082 RAG Credential Harvesting (RAG hygiene prevents credentials from entering the index)",
             "AML.T0099 AI Agent Tool Data Poisoning (RAG hygiene prevents poisoned data from persisting in index)",
-            "AML.T0108 AI Agent (C2)",
             "AML.T0051.001 LLM Prompt Injection: Indirect (RAG hygiene prevents poisoned index entries from serving as indirect injection vectors)",
           ],
         },
@@ -7532,7 +8725,6 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             "Compromised RAG Pipelines (L2)",
             "Data Poisoning (L2)",
             "Data Tampering (L2)",
-            "Goal Misalignment Cascades (Cross-Layer) (poisoned RAG index leads to goal misalignment)",
           ],
         },
         {
@@ -7540,6 +8732,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
           items: [
             "LLM08:2025 Vector and Embedding Weaknesses",
             "LLM04:2025 Data and Model Poisoning",
+            "LLM01:2025 Prompt Injection",
           ],
         },
         {
@@ -7550,6 +8743,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
           framework: "OWASP Agentic AI Top 10 2026",
           items: [
             "ASI06:2026 Memory & Context Poisoning",
+            "ASI01:2026 Agent Goal Hijack (poisoned RAG retrieval redirects agent decision pathways)",
             "ASI04:2026 Agentic Supply Chain Vulnerabilities (integrity controls on RAG data sources)",
           ],
         },
@@ -7558,17 +8752,34 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
           items: [
             "NISTAML.013 Data Poisoning",
             "NISTAML.024 Targeted Poisoning",
-            "NISTAML.051 Model Poisoning (Supply Chain) (compromised RAG data sources are a supply chain vector)",
             "NISTAML.015 Indirect Prompt Injection (poisoned RAG entries are an indirect prompt injection vector)",
           ],
         },
         {
           framework: "Cisco Integrated AI Security and Safety Framework",
           items: [
-            "AITech-6.1 Training Data Poisoning (RAG index poisoning is analogous to training data poisoning)",
             "AITech-7.3 Data Source Abuse and Manipulation",
             "AITech-7.2 Memory System Corruption (RAG index hygiene prevents corruption of retrieval memory systems)",
             "AISubtech-6.1.1 Knowledge Base Poisoning",
+          ],
+        },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "DP: Data Poisoning (RAG index poisoning is a form of data poisoning that degrades retrieval quality)",
+            "PIJ: Prompt Injection (poisoned RAG entries serve as indirect prompt injection vectors)",
+            "IIC: Insecure Integrated Component (RAG pipelines are integrated components vulnerable to index manipulation)",
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Datasets 3.1: Data poisoning",
+            "Raw Data 1.7: Lack of data trustworthiness",
+            "Raw Data 1.11: Compromised 3rd-party datasets",
+            "Model Serving — Inference requests 9.9: Input Resource Control",
+            "Agents — Core 13.1: Memory Poisoning (RAG index serves as retrieval memory for agents)",
+          "Agents — Core 13.6: Intent Breaking & Goal Manipulation (poisoned retrieval content redirects agent intent)",
           ],
         },
       ],
@@ -7617,15 +8828,28 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
               items: [
                 "NISTAML.013 Data Poisoning",
                 "NISTAML.024 Targeted Poisoning (detects targeted modifications to individual chunks)",
-                "NISTAML.015 Indirect Prompt Injection (chunk integrity prevents poisoned chunks from serving as indirect injection vectors)",
               ],
             },
             {
               framework: "Cisco Integrated AI Security and Safety Framework",
               items: [
                 "AITech-7.3 Data Source Abuse and Manipulation",
-                "AITech-6.1 Training Data Poisoning (chunk integrity detects poisoning at the retrieval unit level)",
                 "AISubtech-6.1.1 Knowledge Base Poisoning",
+                "AITech-7.2 Memory System Corruption",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "DP: Data Poisoning (chunk-level signing detects poisoned retrieval content at ingestion and retrieval)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Datasets 3.1: Data poisoning",
+                "Raw Data 1.7: Lack of data trustworthiness",
+                "Raw Data 1.11: Compromised 3rd-party datasets",
               ],
             },
           ],
@@ -7696,7 +8920,21 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
               framework: "Cisco Integrated AI Security and Safety Framework",
               items: [
                 "AITech-7.3 Data Source Abuse and Manipulation",
-                "AITech-6.1 Training Data Poisoning (RAG index poisoning is analogous to training data poisoning)",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "DP: Data Poisoning (reputation weighting deprioritizes content from poisoned or untrusted sources)",
+                "PIJ: Prompt Injection (low-reputation sources carrying indirect injection payloads are demoted)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Datasets 3.1: Data poisoning",
+                "Raw Data 1.7: Lack of data trustworthiness",
+                "Raw Data 1.11: Compromised 3rd-party datasets",
               ],
             },
           ],
@@ -7726,11 +8964,8 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
           framework: "MITRE ATLAS",
           items: [
             "AML.T0051 LLM Prompt Injection",
-            "AML.T0018 Manipulate AI Model",
             "AML.T0054 LLM Jailbreak",
             "AML.T0081 Modify AI Agent Configuration",
-            "AML.T0105 Escape to Host",
-            "AML.T0108 AI Agent (C2)",
           ],
         },
         {
@@ -7746,8 +8981,6 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
           items: [
             "LLM01:2025 Prompt Injection",
             "LLM06:2025 Excessive Agency",
-            "LLM07:2025 System Prompt Leakage",
-            "LLM02:2025 Sensitive Information Disclosure",
           ],
         },
         {
@@ -7769,8 +9002,6 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
           items: [
             "NISTAML.018 Prompt Injection",
             "NISTAML.015 Indirect Prompt Injection (config file as indirect injection channel)",
-            "NISTAML.026 Model Poisoning (Integrity) (tampered config files compromise model behavioral integrity)",
-            "NISTAML.051 Model Poisoning (Supply Chain) (config files compromised in supply chain)",
           ],
         },
         {
@@ -7779,6 +9010,25 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             "AITech-5.2 Configuration Persistence",
             "AISubtech-5.2.1 Agent Profile Tampering",
             "AITech-1.3 Goal Manipulation",
+          ],
+        },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "MDT: Model Deployment Tampering",
+            "PIJ: Prompt Injection (configuration files can serve as injection channels into agent system prompts)",
+            "RA: Rogue Actions (compromised configuration can enable rogue agent behavior)",
+            "IIC: Insecure Integrated Component (configuration files are integrated components requiring integrity enforcement)",
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Agents — Core 13.6: Intent Breaking & Goal Manipulation",
+            "Agents — Core 13.7: Misaligned & Deceptive Behaviors",
+            "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems",
+            "Agents — Tools MCP Server 13.20: Insecure Server Configuration",
+            "Model 7.4: Source code control attack",
           ],
         },
       ],
@@ -7829,7 +9079,6 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
               items: [
                 "NISTAML.018 Prompt Injection",
                 "NISTAML.015 Indirect Prompt Injection (blocks indirect injection via config files)",
-                "NISTAML.026 Model Poisoning (Integrity) (client-side enforcement prevents integrity-compromising config changes)",
               ],
             },
             {
@@ -7838,6 +9087,22 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
                 "AITech-5.2 Configuration Persistence",
                 "AISubtech-5.2.1 Agent Profile Tampering",
                 "AITech-1.3 Goal Manipulation (blocks configs that enable goal manipulation)",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "PIJ: Prompt Injection (blocks configuration-based prompt injection at the developer endpoint)",
+                "RA: Rogue Actions (prevents creation of configs that enable rogue agent behavior)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents \u2014 Core 13.6: Intent Breaking & Goal Manipulation",
+                "Agents \u2014 Core 13.7: Misaligned & Deceptive Behaviors",
+                "Agents \u2014 Tools MCP Server 13.20: Insecure Server Configuration",
+                "Model 7.4: Source code control attack",
               ],
             },
           ],
@@ -7885,11 +9150,9 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             {
               framework: "MITRE ATLAS",
               items: [
-                "AML.T0018 Manipulate AI Model",
                 "AML.T0051 LLM Prompt Injection",
                 "AML.T0081 Modify AI Agent Configuration",
                 "AML.T0010 AI Supply Chain Compromise (signed configs detect supply chain-compromised config files)",
-                "AML.T0105 Escape to Host",
               ],
             },
             {
@@ -7903,8 +9166,6 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             {
               framework: "OWASP LLM Top 10 2025",
               items: [
-                "LLM07:2025 System Prompt Leakage",
-                "LLM02:2025 Sensitive Information Disclosure",
                 "LLM01:2025 Prompt Injection (runtime enforcement prevents tampered configs containing injections)",
                 "LLM03:2025 Supply Chain (signed configs as supply chain integrity defense)",
               ],
@@ -7924,8 +9185,6 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             {
               framework: "NIST Adversarial Machine Learning 2025",
               items: [
-                "NISTAML.026 Model Poisoning (Integrity) (runtime verification detects integrity-compromising config tampering)",
-                "NISTAML.051 Model Poisoning (Supply Chain) (signed configs detect supply chain tampering)",
                 "NISTAML.018 Prompt Injection (prevents config-injected prompts from loading)",
               ],
             },
@@ -7935,6 +9194,24 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
                 "AITech-5.2 Configuration Persistence",
                 "AISubtech-5.2.1 Agent Profile Tampering",
                 "AITech-1.3 Goal Manipulation (prevents goal manipulation via tampered config)",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "MDT: Model Deployment Tampering (signed configs detect deployment-stage config tampering)",
+                "PIJ: Prompt Injection (runtime enforcement prevents config-injected prompt manipulation)",
+                "RA: Rogue Actions (prevents agent operation with compromised configuration)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model 7.4: Source code control attack",
+                "Model 7.3: ML Supply chain vulnerabilities",
+                "Agents \u2014 Core 13.6: Intent Breaking & Goal Manipulation",
+                "Agents \u2014 Core 13.13: Rogue Agents in Multi-Agent Systems",
+                "Agents \u2014 Tools MCP Server 13.21: Supply Chain Attacks",
               ],
             },
           ],
@@ -7998,7 +9275,6 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
           framework: "MAESTRO",
           items: [
             "Lateral Movement (Cross-Layer)",
-            "Compromised Container Images (L4)",
             "Supply Chain Attacks (Cross-Layer)",
             "Compromised Framework Components (L3)",
           ],
@@ -8021,7 +9297,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
         {
           framework: "NIST Adversarial Machine Learning 2025",
           items: [
-            "NISTAML.051 Model Poisoning (Supply Chain)",
+            "N/A",
           ],
         },
         {
@@ -8030,6 +9306,24 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             "AITech-9.3 Dependency / Plugin Compromise",
             "AISubtech-9.3.1 Malicious Package / Tool Injection",
             "AISubtech-9.1.1 Code Execution (malicious install scripts achieve code execution)",
+          ],
+        },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "MST: Model Source Tampering (malicious dependencies tamper with model training or serving code)",
+            "MDT: Model Deployment Tampering (compromised packages alter model deployment infrastructure)",
+            "IIC: Insecure Integrated Component (untrusted dependencies are insecure integrated components)",
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Algorithms 5.4: Malicious libraries",
+            "Model 7.3: ML Supply chain vulnerabilities",
+            "Platform 12.5: Poor security in the software development lifecycle",
+            "Agents — Tools MCP Server 13.21: Supply Chain Attacks",
+            "Agents — Core 13.11: Unexpected RCE and Code Attacks",
           ],
         },
       ],
@@ -8065,7 +9359,6 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
               items: [
                 "Lateral Movement (Cross-Layer)",
                 "Supply Chain Attacks (Cross-Layer)",
-                "Compromised Container Images (L4) (sandboxed installs use ephemeral containers)",
               ],
             },
             {
@@ -8086,7 +9379,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             {
               framework: "NIST Adversarial Machine Learning 2025",
               items: [
-                "NISTAML.051 Model Poisoning (Supply Chain) (sandboxed installs contain supply chain compromise from malicious packages)",
+                "N/A",
               ],
             },
             {
@@ -8095,6 +9388,21 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
                 "AITech-9.3 Dependency / Plugin Compromise",
                 "AISubtech-9.3.1 Malicious Package / Tool Injection",
                 "AISubtech-9.1.1 Code Execution (sandboxing contains malicious code execution from install scripts)",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "MST: Model Source Tampering (sandboxing contains compromised dependency execution)",
+                "MDT: Model Deployment Tampering (prevents malicious install scripts from persisting in deployment)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Algorithms 5.4: Malicious libraries",
+                "Model 7.3: ML Supply chain vulnerabilities",
+                "Agents — Core 13.11: Unexpected RCE and Code Attacks",
               ],
             },
           ],
@@ -8146,7 +9454,6 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
                 "AML.T0074 Masquerading",
                 "AML.T0060 Publish Hallucinated Entities (package vetting detects hallucination-squatted packages)",
                 "AML.T0104 Publish Poisoned AI Agent Tool",
-                "AML.T0058 Publish Poisoned Models (package vetting detects poisoned model packages)",
               ],
             },
             {
@@ -8164,7 +9471,6 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
               framework: "OWASP ML Top 10 2023",
               items: [
                 "ML06:2023 AI Supply Chain Attacks",
-                "ML07:2023 Transfer Learning Attack (package vetting detects compromised pre-trained model packages)",
                 "ML10:2023 Model Poisoning (package vetting detects packages with embedded model trojans)",
               ],
             },
@@ -8184,6 +9490,24 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
                 "AITech-9.3 Dependency / Plugin Compromise",
                 "AISubtech-9.3.1 Malicious Package / Tool Injection",
                 "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
+                "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "MST: Model Source Tampering (vetting detects compromised packages before they enter the codebase)",
+                "IIC: Insecure Integrated Component (package analysis identifies insecure dependencies)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Algorithms 5.4: Malicious libraries",
+                "Model 7.3: ML Supply chain vulnerabilities",
+                "Model 7.1: Backdoor machine learning / Trojaned model",
+                "Agents — Tools MCP Server 13.21: Supply Chain Attacks",
+                "Agents — Tools MCP Server 13.18: Tool Poisoning",
               ],
             },
           ],
@@ -8259,9 +9583,27 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
         {
           framework: "Cisco Integrated AI Security and Safety Framework",
           items: [
-            "AITech-9.1 Model or Agentic System Manipulation",
             "AITech-9.3 Dependency / Plugin Compromise",
+            "AISubtech-9.3.1 Malicious Package / Tool Injection",
             "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
+            "AITech-14.1 Unauthorized Access (prevents unauthorized publishing via stolen credentials)",
+          ],
+        },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "MST: Model Source Tampering (publisher integrity prevents credential-based publication of tampered packages)",
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Model 7.3: ML Supply chain vulnerabilities",
+            "Model 7.4: Source code control attack",
+            "Algorithms 5.4: Malicious libraries",
+            "Platform 12.5: Poor security in the software development lifecycle",
+            "Agents — Tools MCP Server 13.21: Supply Chain Attacks",
+            "Agents — Tools MCP Server 13.18: Tool Poisoning",
           ],
         },
       ],
@@ -8297,7 +9639,6 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
           items: [
             "AML.T0010.001 AI Supply Chain Compromise: AI Software",
             "AML.T0074 Masquerading",
-            "AML.T0073 Impersonation",
             "AML.T0060 Publish Hallucinated Entities (tool integrity verification blocks hallucination-squatted packages)",
             "AML.T0104 Publish Poisoned AI Agent Tool",
             "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
@@ -8315,7 +9656,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
         },
         {
           framework: "OWASP LLM Top 10 2025",
-          items: ["LLM03:2025 Supply Chain", "LLM06:2025 Excessive Agency"],
+          items: ["LLM03:2025 Supply Chain"],
         },
         {
           framework: "OWASP ML Top 10 2023",
@@ -8331,7 +9672,6 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
         {
           framework: "NIST Adversarial Machine Learning 2025",
           items: [
-            "NISTAML.051 Model Poisoning (Supply Chain) (tool resolution integrity prevents supply chain compromise via misdirected tools)",
             "NISTAML.039 Compromising connected resources (tool misdirection compromises connected resources)",
           ],
         },
@@ -8339,8 +9679,25 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
           framework: "Cisco Integrated AI Security and Safety Framework",
           items: [
             "AISubtech-12.1.4 Tool Shadowing",
+            "AITech-4.3 Protocol Manipulation (resolution integrity prevents protocol/routing manipulation)",
             "AITech-9.3 Dependency / Plugin Compromise",
             "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
+          ],
+        },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "IIC: Insecure Integrated Component (tool resolution is a critical integration point vulnerable to misdirection)",
+            "RA: Rogue Actions (ambiguous or hijacked tool resolution can trigger rogue actions)",
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Agents — Tools MCP Server 13.18: Tool Poisoning",
+            "Agents — Tools MCP Server 13.21: Supply Chain Attacks",
+            "Agents — Core 13.2: Tool Misuse",
+            "Agents — Tools MCP Client 13.26: Malicious Server Connection",
           ],
         },
       ],
@@ -8370,7 +9727,6 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
               items: [
                 "AML.T0010.001 AI Supply Chain Compromise: AI Software",
                 "AML.T0074 Masquerading",
-                "AML.T0073 Impersonation (version pinning prevents impersonation via unversioned tool references)",
                 "AML.T0104 Publish Poisoned AI Agent Tool",
                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                 "AML.T0060 Publish Hallucinated Entities (version pinning prevents resolution of hallucination-squatted tools)",
@@ -8402,7 +9758,6 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             {
               framework: "NIST Adversarial Machine Learning 2025",
               items: [
-                "NISTAML.051 Model Poisoning (Supply Chain) (version pinning prevents supply chain compromise via unpinned tool references)",
                 "NISTAML.039 Compromising connected resources (unversioned tool references can compromise connected resources)",
               ],
             },
@@ -8410,7 +9765,22 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
               framework: "Cisco Integrated AI Security and Safety Framework",
               items: [
                 "AISubtech-12.1.4 Tool Shadowing",
+                "AISubtech-9.3.1 Malicious Package / Tool Injection",
                 "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "IIC: Insecure Integrated Component (version pinning prevents binding to wrong tool implementation)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents — Tools MCP Server 13.18: Tool Poisoning",
+                "Agents — Tools MCP Server 13.21: Supply Chain Attacks",
+                "Agents — Core 13.2: Tool Misuse",
               ],
             },
           ],
@@ -8514,8 +9884,7 @@ def resolve_tool(tool_ref: str, allowlist: dict) -&gt; ToolRecord:
             {
               framework: "NIST Adversarial Machine Learning 2025",
               items: [
-                "NISTAML.051 Model Poisoning (Supply Chain) (descriptor tampering is a supply chain integrity issue)",
-                "NISTAML.026 Model Poisoning (Integrity) (hash binding detects integrity-compromising descriptor tampering)",
+                "N/A",
               ],
             },
             {
@@ -8523,6 +9892,19 @@ def resolve_tool(tool_ref: str, allowlist: dict) -&gt; ToolRecord:
               items: [
                 "AISubtech-12.1.4 Tool Shadowing (hash binding detects shadowed tool descriptors)",
                 "AITech-9.3 Dependency / Plugin Compromise",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "IIC: Insecure Integrated Component (drift detection identifies compromised tool integrations)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents — Tools MCP Server 13.18: Tool Poisoning",
+                "Agents — Tools MCP Server 13.21: Supply Chain Attacks",
               ],
             },
           ],
@@ -8591,7 +9973,6 @@ def verify_descriptor_hash(tool_id: str, descriptor: dict, expected_hash: str) -
               framework: "MITRE ATLAS",
               items: [
                 "AML.T0074 Masquerading",
-                "AML.T0073 Impersonation (typosquat detection prevents impersonation via similar tool names)",
                 "AML.T0104 Publish Poisoned AI Agent Tool",
                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                 "AML.T0060 Publish Hallucinated Entities (typosquat detection catches hallucination-squatted packages)",
@@ -8621,7 +10002,7 @@ def verify_descriptor_hash(tool_id: str, descriptor: dict, expected_hash: str) -
             },
             {
               framework: "NIST Adversarial Machine Learning 2025",
-              items: ["NISTAML.051 Model Poisoning (Supply Chain) (typosquatting is a supply chain attack vector)"],
+              items: ["N/A"],
             },
             {
               framework: "Cisco Integrated AI Security and Safety Framework",
@@ -8629,6 +10010,21 @@ def verify_descriptor_hash(tool_id: str, descriptor: dict, expected_hash: str) -
                 "AISubtech-12.1.4 Tool Shadowing",
                 "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
                 "AISubtech-9.3.1 Malicious Package / Tool Injection (typosquat detection prevents malicious package injection via similar names)",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "IIC: Insecure Integrated Component (fail-closed resolution prevents binding to typosquatted or impersonated tools)",
+                "RA: Rogue Actions (ambiguous resolution blocked before triggering unintended tool invocation)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents — Tools MCP Server 13.18: Tool Poisoning",
+                "Agents — Core 13.2: Tool Misuse",
+                "Agents — Tools MCP Client 13.26: Malicious Server Connection",
               ],
             },
           ],
@@ -8659,12 +10055,9 @@ def verify_descriptor_hash(tool_id: str, descriptor: dict, expected_hash: str) -
           framework: "MITRE ATLAS",
           items: [
             "AML.T0050 Command and Scripting Interpreter",
-            "AML.T0011.001 User Execution: Malicious Package",
             "AML.T0072 Reverse Shell (code execution prevention blocks reverse shell establishment)",
-            "AML.T0100 AI Agent Clickbait (code execution prevention blocks malicious payloads from fetched content)",
             "AML.T0102 Generate Malicious Commands (code execution prevention blocks generated malicious commands)",
             "AML.T0105 Escape to Host",
-            "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
             "AML.T0051 LLM Prompt Injection (code execution prevention blocks injection-driven code execution)",
           ],
         },
@@ -8707,6 +10100,24 @@ def verify_descriptor_hash(tool_id: str, descriptor: dict, expected_hash: str) -
             "AISubtech-9.1.1 Code Execution",
           ],
         },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "IMO: Insecure Model Output (prevents execution of malicious code in model outputs)",
+            "RA: Rogue Actions (code execution prevention blocks rogue agent code execution)",
+            "IIC: Insecure Integrated Component (prevents unsafe code execution through integrated tool pipelines)",
+            "PIJ: Prompt Injection (blocks injection-driven code execution paths)",
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Agents — Core 13.11: Unexpected RCE and Code Attacks",
+            "Agents — Core 13.2: Tool Misuse",
+            "Model Serving — Inference requests 9.3: Model breakout",
+            "Agents — Tools MCP Client 13.32: Client-Side Code Execution",
+          ],
+        },
       ],
       subTechniques: [
         {
@@ -8737,7 +10148,6 @@ def verify_descriptor_hash(tool_id: str, descriptor: dict, expected_hash: str) -
                 "AML.T0050 Command and Scripting Interpreter",
                 "AML.T0072 Reverse Shell (blocks shell-related constructs)",
                 "AML.T0102 Generate Malicious Commands (dangerous construct blocking catches generated malicious commands)",
-                "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                 "AML.T0105 Escape to Host (dangerous construct blocking prevents host escape via eval/exec)",
               ],
             },
@@ -8775,6 +10185,20 @@ def verify_descriptor_hash(tool_id: str, descriptor: dict, expected_hash: str) -
               items: [
                 "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
                 "AISubtech-12.2.1 Code Detection / Malicious Code Output",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "IMO: Insecure Model Output (detects and blocks dangerous code constructs in model output)",
+                "RA: Rogue Actions (blocks dangerous code patterns that enable rogue actions)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents — Core 13.11: Unexpected RCE and Code Attacks",
+                "Agents — Core 13.2: Tool Misuse",
               ],
             },
           ],
@@ -8893,6 +10317,21 @@ def scan_python(code: str):
               framework: "Cisco Integrated AI Security and Safety Framework",
               items: ["AISubtech-12.1.3 Unsafe System / Browser / File Execution"],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "IMO: Insecure Model Output (restricted interpreters prevent unsafe code execution from model output)",
+                "RA: Rogue Actions (restricted interpreters constrain agent code execution capabilities)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents — Core 13.11: Unexpected RCE and Code Attacks",
+                "Model Serving — Inference requests 9.3: Model breakout",
+                "Agents — Tools MCP Client 13.32: Client-Side Code Execution",
+              ],
+            },
           ],
           implementationGuidance: [
             {
@@ -8983,6 +10422,21 @@ def run_restricted(code_str: str):
                 "AISubtech-9.1.1 Code Execution (static scan gate prevents malicious code execution)",
               ],
             },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "IMO: Insecure Model Output (static scan detects insecure code patterns in model-generated output before execution)",
+                "RA: Rogue Actions (pre-execution scan catches rogue action code before it runs)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents — Core 13.11: Unexpected RCE and Code Attacks",
+                "Agents — Core 13.2: Tool Misuse",
+                "Platform 12.5: Poor security in the software development lifecycle",
+              ],
+            },
           ],
           implementationGuidance: [
             {
@@ -9033,7 +10487,6 @@ def run_semgrep(path: str) -&gt; None:
             "AML.T0068 LLM Prompt Obfuscation",
             "AML.T0065 LLM Prompt Crafting",
             "AML.T0015 Evade AI Model (hardens the detector itself against evasive prompt variants)",
-            "AML.T0107 Exploitation for Defense Evasion (iterative retraining closes repeatedly exploited detector gaps)",
           ],
         },
         {
@@ -9057,7 +10510,7 @@ def run_semgrep(path: str) -&gt; None:
         {
           framework: "OWASP Agentic AI Top 10 2026",
           items: [
-            "ASI01:2026 Agent Goal Hijack (when the detector is used on agent inputs or agent-facing external content)",
+            "N/A",
           ],
         },
         {
@@ -9082,6 +10535,20 @@ def run_semgrep(path: str) -&gt; None:
             "AISubtech-2.1.3 Semantic Manipulation (Jailbreak)",
             "AISubtech-2.1.4 Token Exploitation (Jailbreak)",
             "AISubtech-9.2.1 Obfuscation Vulnerabilities",
+          ],
+        },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "PIJ: Prompt Injection (continuous detector hardening improves prompt injection defense coverage)",
+            "MEV: Model Evasion (closed-loop hardening reduces detector evasion success rates)",
+          ],
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Model Serving — Inference requests 9.1: Prompt inject",
+            "Model Serving — Inference requests 9.12: LLM Jailbreak",
           ],
         },
       ],
@@ -9121,7 +10588,6 @@ def run_semgrep(path: str) -&gt; None:
                 "AML.T0068 LLM Prompt Obfuscation",
                 "AML.T0065 LLM Prompt Crafting",
                 "AML.T0015 Evade AI Model",
-                "AML.T0107 Exploitation for Defense Evasion",
               ],
             },
             {
@@ -9144,7 +10610,7 @@ def run_semgrep(path: str) -&gt; None:
             {
               framework: "OWASP Agentic AI Top 10 2026",
               items: [
-                "ASI01:2026 Agent Goal Hijack (when the detector is used in front of an agent or agent toolchain)",
+                "N/A",
               ],
             },
             {
@@ -9164,6 +10630,20 @@ def run_semgrep(path: str) -&gt; None:
                 "AITech-2.1 Jailbreak",
                 "AITech-9.2 Detection Evasion",
                 "AISubtech-9.2.1 Obfuscation Vulnerabilities",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "PIJ: Prompt Injection (hard-sample mining targets prompt injection detection gaps)",
+                "MEV: Model Evasion (retraining on detector misses reduces evasion attack success)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model Serving — Inference requests 9.1: Prompt inject",
+                "Model Serving — Inference requests 9.12: LLM Jailbreak",
               ],
             },
           ],
@@ -9415,7 +10895,7 @@ def record_promotion_decision(eval_result: dict, candidate_run_id: str, reviewer
             {
               framework: "OWASP Agentic AI Top 10 2026",
               items: [
-                "ASI01:2026 Agent Goal Hijack (when obfuscated prompts are used to redirect agent behavior)",
+                "N/A",
               ],
             },
             {
@@ -9424,6 +10904,7 @@ def record_promotion_decision(eval_result: dict, candidate_run_id: str, reviewer
                 "NISTAML.018 Prompt Injection",
                 "NISTAML.015 Indirect Prompt Injection",
                 "NISTAML.022 Evasion",
+                "NISTAML.025 Black-box Evasion",
               ],
             },
             {
@@ -9439,6 +10920,20 @@ def record_promotion_decision(eval_result: dict, candidate_run_id: str, reviewer
                 "AISubtech-2.1.3 Semantic Manipulation (Jailbreak)",
                 "AISubtech-2.1.4 Token Exploitation (Jailbreak)",
                 "AISubtech-9.2.1 Obfuscation Vulnerabilities",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "PIJ: Prompt Injection (fuzzing expands corpus coverage of injection attack variants)",
+                "MEV: Model Evasion (fuzzing exposes detector overfitting to surface-level features)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model Serving — Inference requests 9.1: Prompt inject",
+                "Model Serving — Inference requests 9.12: LLM Jailbreak",
               ],
             },
           ],
@@ -9653,7 +11148,7 @@ def quality_gate(
             {
               framework: "OWASP Agentic AI Top 10 2026",
               items: [
-                "ASI01:2026 Agent Goal Hijack (category-level analysis reveals which hijack styles still evade detection)",
+                "N/A",
               ],
             },
             {
@@ -9662,6 +11157,7 @@ def quality_gate(
                 "NISTAML.018 Prompt Injection",
                 "NISTAML.015 Indirect Prompt Injection",
                 "NISTAML.022 Evasion",
+                "NISTAML.025 Black-box Evasion",
               ],
             },
             {
@@ -9671,6 +11167,21 @@ def quality_gate(
                 "AITech-1.2 Indirect Prompt Injection",
                 "AITech-2.1 Jailbreak",
                 "AITech-9.2 Detection Evasion",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "PIJ: Prompt Injection (gap analysis identifies category-level blind spots in injection detection)",
+                "MEV: Model Evasion (stratified analysis reveals which evasion styles succeed against the detector)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Model Serving — Inference requests 9.1: Prompt inject",
+                "Model Serving — Inference requests 9.12: LLM Jailbreak",
+                "Evaluation 6.2: Insufficient evaluation data (stratified evaluation exposes dataset gaps)",
               ],
             },
           ],
@@ -9904,15 +11415,15 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
           framework: "MITRE ATLAS",
           items: [
             "AML.T0051.001 LLM Prompt Injection: Indirect",
-            "AML.T0070 RAG Poisoning",
             "AML.T0071 False RAG Entry Injection",
+            "AML.T0080.000 AI Agent Context Poisoning: Memory (cache poisoning contaminates memory-like cached state)",
+            "AML.T0080.001 AI Agent Context Poisoning: Thread (cross-session cache reuse contaminates thread context)",
             "AML.T0025 Exfiltration via Cyber Means"
           ]
         },
         {
           framework: "MAESTRO",
           items: [
-            "Compromised RAG Pipelines (L2)",
             "Data Tampering (L2)",
             "Data Leakage (Cross-Layer) (cross-tenant cache reuse leaks responses across boundaries)"
           ]
@@ -9921,8 +11432,7 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
           framework: "OWASP LLM Top 10 2025",
           items: [
             "LLM01:2025 Prompt Injection",
-            "LLM04:2025 Data and Model Poisoning",
-            "LLM08:2025 Vector and Embedding Weaknesses"
+            "LLM04:2025 Data and Model Poisoning"
           ]
         },
         {
@@ -9936,15 +11446,13 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
           framework: "OWASP Agentic AI Top 10 2026",
           items: [
             "ASI06:2026 Memory & Context Poisoning",
-            "ASI03:2026 Identity and Privilege Abuse (cache reuse across privilege boundaries)",
-            "ASI02:2026 Tool Misuse and Exploitation"
+            "ASI03:2026 Identity and Privilege Abuse (cache reuse across privilege boundaries)"
           ]
         },
         {
           framework: "NIST Adversarial Machine Learning 2025",
           items: [
             "NISTAML.015 Indirect Prompt Injection",
-            "NISTAML.018 Prompt Injection",
             "NISTAML.036 Leaking information from user interactions"
           ]
         },
@@ -9953,8 +11461,27 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
           items: [
             "AITech-4.2 Context Boundary Attacks",
             "AITech-7.2 Memory System Corruption",
-            "AISubtech-4.2.2 Session Boundary Violation",
-            "AISubtech-12.1.2 Tool Poisoning"
+            "AITech-8.2 Data Exfiltration / Exposure",
+            "AITech-8.3 Information Disclosure (cross-tenant cache reuse causes passive disclosure without active exfiltration)",
+            "AISubtech-4.2.2 Session Boundary Violation"
+          ]
+        },
+        {
+          framework: "Google Secure AI Framework 2.0 - Risks",
+          items: [
+            "PIJ: Prompt Injection (poisoned cache entries can serve as indirect injection vectors across sessions)",
+            "SDD: Sensitive Data Disclosure (cross-tenant cache reuse leaks responses across trust boundaries)",
+            "EDH: Excessive Data Handling (cached responses retained beyond authorized session or tenant scope)",
+            "DP: Data Poisoning (cache poisoning corrupts inference quality similar to data poisoning)"
+          ]
+        },
+        {
+          framework: "Databricks AI Security Framework 3.0",
+          items: [
+            "Agents — Core 13.1: Memory Poisoning (inference cache serves as short-term memory vulnerable to poisoning)",
+            "Model Serving — Inference response 10.6: Sensitive data output from a model",
+            "Platform 12.4: Unauthorized privileged access (cache reuse across tenant boundaries)",
+            "Model Serving — Inference requests 9.10: Accidental exposure of unauthorized data to models"
           ]
         }
       ],
@@ -10065,6 +11592,31 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
             "AISubtech-4.3.2 Namespace Collision (MCP server name collision enables interception)",
             "AISubtech-4.3.3 Server Rebinding Attack (client connections redirected to attacker-controlled MCP server)"
           ]
+        },
+        {
+          "framework": "Google Secure AI Framework 2.0 - Risks",
+          "items": [
+            "IIC: Insecure Integrated Component (MCP client is an integrated component requiring security hardening)",
+            "MXF: Model Exfiltration (insecure client credential storage enables unauthorized model access)",
+            "SDD: Sensitive Data Disclosure (client-side cache, log, and temp-file leakage exposes sensitive data)",
+            "MST: Model Source Tampering (compromised client binary or plugin tampers with model interaction pipeline)",
+            "RA: Rogue Actions (unsafe client-mediated permissions or auto-execution enable rogue actions)"
+          ]
+        },
+        {
+          "framework": "Databricks AI Security Framework 3.0",
+          "items": [
+            "Agents — Tools MCP Client 13.26: Malicious Server Connection",
+            "Agents — Tools MCP Client 13.27: Insecure Credential Storage",
+            "Agents — Tools MCP Client 13.28: UI/UX Deception",
+            "Agents — Tools MCP Client 13.29: Insufficient Server Validation",
+            "Agents — Tools MCP Client 13.30: Client-Side Data Leakage",
+            "Agents — Tools MCP Client 13.32: Client-Side Code Execution",
+            "Agents — Tools MCP Client 13.33: Insecure Communication Handling",
+            "Agents — Tools MCP Client 13.34: Session and State Management Failures",
+            "Agents — Tools MCP Client 13.35: Update and Patch Management",
+            "Agents — Tools MCP Server 13.19: Credential and Token Exposure"
+          ]
         }
       ],
       "subTechniques": [
@@ -10136,6 +11688,21 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
               "items": [
                 "AISubtech-4.3.2 Namespace Collision (server name squatting leads client to wrong endpoint)",
                 "AISubtech-4.3.3 Server Rebinding Attack (DNS rebinding redirects client to malicious MCP endpoint)"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "IIC: Insecure Integrated Component (server authenticity verification secures the MCP integration point)"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Agents — Tools MCP Client 13.26: Malicious Server Connection",
+                "Agents — Tools MCP Client 13.29: Insufficient Server Validation",
+                "Agents — Tools MCP Client 13.33: Insecure Communication Handling",
+                "Agents — Tools MCP Server 13.25: Insecure Communication"
               ]
             }
           ],
@@ -10224,7 +11791,23 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
               "items": [
                 "AITech-8.2 Data Exfiltration / Exposure (credentials exposed on the client)",
                 "AITech-8.3 Information Disclosure (credential disclosure)",
+                "AITech-14.1 Unauthorized Access",
                 "AISubtech-14.1.1 Credential Theft (credential harvesting from insecure client storage)"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "MXF: Model Exfiltration (stolen client credentials enable unauthorized access to AI models and services)",
+                "SDD: Sensitive Data Disclosure (credential leakage from local storage enables data disclosure)"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Agents — Tools MCP Client 13.27: Insecure Credential Storage",
+                "Agents — Tools MCP Server 13.19: Credential and Token Exposure",
+                "Platform 12.4: Unauthorized privileged access"
               ]
             }
           ],
@@ -10296,7 +11879,7 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
             {
               "framework": "OWASP Agentic AI Top 10 2026",
               "items": [
-                "ASI02:2026 Tool Misuse and Exploitation (tool results cached or logged insecurely)"
+                "N/A"
               ]
             },
             {
@@ -10310,7 +11893,21 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
               "framework": "Cisco Integrated AI Security and Safety Framework",
               "items": [
                 "AITech-8.2 Data Exfiltration / Exposure (client-side response or log exposure)",
+                "AITech-8.3 Information Disclosure",
                 "AISubtech-15.1.25 Privacy Attacks: PII / PHI / PCI (regulated data retained in local artifacts)"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "SDD: Sensitive Data Disclosure (client-side artifacts leak sensitive AI interaction data)",
+                "EDH: Excessive Data Handling (client caches and logs retain data beyond session scope)"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Agents — Tools MCP Client 13.30: Client-Side Data Leakage"
               ]
             }
           ],
@@ -10395,7 +11992,24 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
               "framework": "Cisco Integrated AI Security and Safety Framework",
               "items": [
                 "AITech-12.1 Tool Exploitation (server output exploits client processing)",
-                "AISubtech-12.1.1 Parameter Manipulation (crafted response parameters abuse parser or renderer)"
+                "AISubtech-12.1.1 Parameter Manipulation (crafted response parameters abuse parser or renderer)",
+                "AISubtech-12.1.3 Unsafe System / Browser / File Execution"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "IMO: Insecure Model Output (server responses must be sanitized before client rendering)",
+                "IIC: Insecure Integrated Component (client parser and renderer are insecure integration surfaces)",
+                "RA: Rogue Actions (server-suggested actions require explicit user confirmation to prevent rogue execution)"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Agents — Tools MCP Client 13.32: Client-Side Code Execution",
+                "Agents — Tools MCP Client 13.28: UI/UX Deception",
+                "Model Serving — Inference response 10.2: Output manipulation"
               ]
             }
           ],
@@ -10479,7 +12093,23 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
               "framework": "Cisco Integrated AI Security and Safety Framework",
               "items": [
                 "AITech-8.3 Information Disclosure (cross-session information exposure)",
+                "AITech-14.1 Unauthorized Access",
                 "AISubtech-4.2.2 Session Boundary Violation (cross-session state contamination through persistent memory or session management flaws)"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "SDD: Sensitive Data Disclosure (cross-session state contamination leaks data across trust boundaries)",
+                "EDH: Excessive Data Handling (stale sessions retain data beyond intended lifetime)"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Agents — Tools MCP Client 13.34: Session and State Management Failures",
+                "Agents — Core 13.9: Identity Spoofing & Impersonation (session hijacking enables impersonation)",
+                "Platform 12.4: Unauthorized privileged access"
               ]
             }
           ],
@@ -10527,7 +12157,8 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
               "framework": "MITRE ATLAS",
               "items": [
                 "AML.T0010 AI Supply Chain Compromise (tampered client binary, plugin, or updater)",
-                "AML.T0010.001 AI Supply Chain Compromise: AI Software (malicious client SDK or dependency)"
+                "AML.T0010.001 AI Supply Chain Compromise: AI Software (malicious client SDK or dependency)",
+                "AML.T0074 Masquerading (malicious plugins masquerading as legitimate extensions)"
               ]
             },
             {
@@ -10558,7 +12189,7 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.051 Model Poisoning (Supply Chain) (supply chain compromise through client component or update path)"
+                "N/A"
               ]
             },
             {
@@ -10566,7 +12197,21 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
               "items": [
                 "AITech-9.3 Dependency / Plugin Compromise (client software supply chain compromise)",
                 "AISubtech-9.3.1 Malicious Package / Tool Injection (malicious client plugin or dependency injection)",
+                "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers) (near-name mimicry of legitimate client plugins)",
                 "AISubtech-9.3.3 Dependency Replacement / Rug Pull (legitimate client plugin replaced with malicious version)"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "IIC: Insecure Integrated Component"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Agents — Tools MCP Client 13.35: Update and Patch Management",
+                "Model 7.3: ML Supply chain vulnerabilities"
               ]
             }
           ],
@@ -10618,7 +12263,6 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
             {
               "framework": "MAESTRO",
               "items": [
-                "Agent Identity Attack (L7) (server impersonates user input through bidirectional sampling)",
                 "Integration Risks (L7) (sampling blurs trust boundary between server-originated and user-originated prompts)"
               ]
             },
@@ -10632,14 +12276,16 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
             {
               "framework": "OWASP ML Top 10 2023",
               "items": [
-                "ML09:2023 Output Integrity Attack (sampling manipulates LLM output integrity through crafted prompts)"
+                "N/A"
               ]
             },
             {
               "framework": "OWASP Agentic AI Top 10 2026",
               "items": [
+                "ASI01:2026 Agent Goal Hijack (sampling request hijacks client LLM conversation direction and decision pathway)",
                 "ASI02:2026 Tool Misuse and Exploitation (covert tool invocation via sampling-triggered completions)",
-                "ASI03:2026 Identity and Privilege Abuse (server assumes user-level authority through sampling channel)"
+                "ASI03:2026 Identity and Privilege Abuse (server assumes user-level authority through sampling channel)",
+                "ASI06:2026 Memory & Context Poisoning"
               ]
             },
             {
@@ -10651,7 +12297,28 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
             {
               "framework": "Cisco Integrated AI Security and Safety Framework",
               "items": [
-                "AITech-12.1 Tool Exploitation (sampling prompt triggers unauthorized tool execution through client LLM)"
+                "AITech-1.3 Goal Manipulation (sampling request manipulates client LLM objective and task selection)",
+                "AITech-12.1 Tool Exploitation (sampling prompt triggers unauthorized tool execution through client LLM)",
+                "AITech-4.2 Context Boundary Attacks"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "PIJ: Prompt Injection (server-originated sampling prompts are an injection vector into the client LLM)",
+                "RA: Rogue Actions (sampling-triggered tool invocations can produce rogue actions without user awareness)",
+                "DMS: Denial of ML Service (unbounded sampling requests consume client LLM resources)"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Agents — Tools MCP Server 13.16: Prompt Injection (server-originated prompt injection via sampling)",
+                "Agents — Core 13.2: Tool Misuse (covert tool invocation via sampling-triggered completions)",
+                "Agents — Tools MCP Server 13.24: Context Spoofing and Manipulation",
+                "Model Serving — Inference requests 9.7: Denial of Service (DoS) (resource theft through hidden token consumption)",
+                "Agents — Core 13.1: Memory Poisoning",
+                "Agents — Core 13.6: Intent Breaking & Goal Manipulation (sampling request redirects client LLM intent and planning)"
               ]
             }
           ],
@@ -10686,8 +12353,7 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
           "items": [
             "AML.T0020 Poison Training Data (unauthorized data entering training or fine-tuning pipelines)",
             "AML.T0057 LLM Data Leakage (data that should never have entered training or memory becomes exposable later)",
-            "AML.T0080 AI Agent Context Poisoning (unauthorized data entering context or memory)",
-            "AML.T0092 Manipulate User LLM Chat History (conversation data reused beyond authorized scope)"
+            "AML.T0080 AI Agent Context Poisoning (unauthorized data entering context or memory)"
           ]
         },
         {
@@ -10702,8 +12368,7 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
           "framework": "OWASP LLM Top 10 2025",
           "items": [
             "LLM02:2025 Sensitive Information Disclosure (data retained or reused beyond authorized scope)",
-            "LLM04:2025 Data and Model Poisoning (unauthorized data entering training or fine-tuning)",
-            "LLM06:2025 Excessive Agency (agents retaining or reusing data outside authorized purpose)"
+            "LLM04:2025 Data and Model Poisoning (unauthorized data entering training or fine-tuning)"
           ]
         },
         {
@@ -10734,7 +12399,29 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
             "AITech-6.1 Training Data Poisoning (unauthorized data used in training)",
             "AITech-7.2 Memory System Corruption (unauthorized data entering memory systems)",
             "AITech-8.2 Data Exfiltration / Exposure (data reused or retained beyond authorized purpose)",
+            "AITech-14.1 Unauthorized Access",
             "AISubtech-15.1.25 Privacy Attacks: PII / PHI / PCI (regulated data handled beyond authorized scope)"
+          ]
+        },
+        {
+          "framework": "Google Secure AI Framework 2.0 - Risks",
+          "items": [
+            "UTD: Unauthorized Training Data (prevents data unauthorized for training from entering training pipelines)",
+            "EDH: Excessive Data Handling (enforces purpose-bound data handling across AI lifecycle stages)",
+            "SDD: Sensitive Data Disclosure (prevents data retained beyond consent scope from becoming exposable)",
+            "DP: Data Poisoning (lifecycle-stage gates prevent unauthorized data from poisoning training or memory)"
+          ]
+        },
+        {
+          "framework": "Databricks AI Security Framework 3.0",
+          "items": [
+            "Raw Data 1.8: Legality of data",
+            "Raw Data 1.1: Insufficient access controls",
+            "Raw Data 1.2: Missing data classification",
+            "Governance 4.1: Lack of traceability and transparency of model assets",
+            "Platform 12.6: Lack of compliance",
+            "Agents — Core 13.1: Memory Poisoning (unauthorized data entering agent memory)",
+            "Model Serving — Inference requests 9.10: Accidental exposure of unauthorized data to models"
           ]
         }
       ],
@@ -10806,6 +12493,22 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
               "items": [
                 "AISubtech-15.1.25 Privacy Attacks: PII / PHI / PCI (regulated data without purpose or consent tagging)"
               ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "UTD: Unauthorized Training Data (data-use tagging identifies data not authorized for training)",
+                "EDH: Excessive Data Handling (classification and purpose tagging enforce data handling boundaries)"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Raw Data 1.2: Missing data classification",
+                "Raw Data 1.8: Legality of data",
+                "Raw Data 1.6: Insufficient data lineage",
+                "Governance 4.1: Lack of traceability and transparency of model assets"
+              ]
             }
           ],
           "implementationGuidance": [
@@ -10852,8 +12555,7 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
               "framework": "MITRE ATLAS",
               "items": [
                 "AML.T0020 Poison Training Data (blocking unauthorized data at training boundaries)",
-                "AML.T0080 AI Agent Context Poisoning (blocking unauthorized data at context and memory boundaries)",
-                "AML.T0092 Manipulate User LLM Chat History (preventing reuse of interaction data outside authorized scope)"
+                "AML.T0080 AI Agent Context Poisoning (blocking unauthorized data at context and memory boundaries)"
               ]
             },
             {
@@ -10894,7 +12596,26 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
               "framework": "Cisco Integrated AI Security and Safety Framework",
               "items": [
                 "AITech-6.1 Training Data Poisoning (blocking unauthorized data at the training boundary)",
-                "AITech-7.2 Memory System Corruption (blocking unauthorized data at memory-write boundary)"
+                "AITech-7.2 Memory System Corruption (blocking unauthorized data at memory-write boundary)",
+                "AITech-14.1 Unauthorized Access"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "UTD: Unauthorized Training Data (stage gate blocks unauthorized data at training and fine-tuning boundaries)",
+                "EDH: Excessive Data Handling (stage gate prevents data from crossing unauthorized lifecycle boundaries)",
+                "DP: Data Poisoning (stage gate prevents unauthorized data from poisoning training or evaluation stages)"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Raw Data 1.1: Insufficient access controls",
+                "Datasets 3.1: Data poisoning",
+                "Agents — Core 13.1: Memory Poisoning (blocking unauthorized data at memory-write boundary)",
+                "Platform 12.6: Lack of compliance",
+                "Model Serving — Inference requests 9.10: Accidental exposure of unauthorized data to models"
               ]
             }
           ],
@@ -10965,8 +12686,7 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
             {
               "framework": "OWASP Agentic AI Top 10 2026",
               "items": [
-                "ASI06:2026 Memory & Context Poisoning (withdrawn data persists in memory)",
-                "ASI09:2026 Human-Agent Trust Exploitation (agent uses data after consent withdrawal)"
+                "ASI06:2026 Memory & Context Poisoning (withdrawn data persists in memory)"
               ]
             },
             {
@@ -10978,7 +12698,26 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
             {
               "framework": "Cisco Integrated AI Security and Safety Framework",
               "items": [
+                "AITech-7.2 Memory System Corruption",
                 "AISubtech-15.1.25 Privacy Attacks: PII / PHI / PCI (consent violations for regulated data)"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "UTD: Unauthorized Training Data (consent withdrawal must trigger removal from training pipelines)",
+                "EDH: Excessive Data Handling (consent-expired data retained in AI systems is excessive handling)",
+                "SDD: Sensitive Data Disclosure (withdrawn-consent data that persists remains exposable through model queries)"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Raw Data 1.8: Legality of data",
+                "Platform 12.6: Lack of compliance",
+                "Raw Data 1.5: Lack of data versioning (versioning needed for consent withdrawal rollback)",
+                "Agents — Core 13.1: Memory Poisoning",
+                "Model Serving — Inference requests 9.10: Accidental exposure of unauthorized data to models"
               ]
             }
           ],

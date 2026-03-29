@@ -485,6 +485,7 @@ body.modal-open {
 .technique-name {
     font-weight: 500;
     max-width: 140px;
+    overflow-wrap: break-word;
 }
 
 .technique-item.no-sub .technique-name {

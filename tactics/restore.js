@@ -50,9 +50,7 @@ export const restoreTactic = {
                 {
                     "framework": "OWASP Agentic AI Top 10 2026",
                     "items": [
-                        "ASI04:2026 Agentic Supply Chain Vulnerabilities",
-                        "ASI06:2026 Memory & Context Poisoning",
-                        "ASI08:2026 Cascading Failures (restoration breaks cascading failure chains by returning to known-good state)"
+                        "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                     ]
                 },
                 {
@@ -78,6 +76,23 @@ export const restoreTactic = {
                         "AITech-9.2 Detection Evasion (restoring known-good model removes evasion-enabling modifications)",
                         "AITech-9.3 Dependency / Plugin Compromise (verified rollback restores trusted dependency stack)",
                         "AISubtech-9.2.2 Backdoors and Trojans (restoration removes backdoors from compromised models)"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "DP: Data Poisoning (restoration recovers from data poisoning effects on model behavior)",
+                        "MST: Model Source Tampering (restoration reverts to pre-tampering model state)",
+                        "MDT: Model Deployment Tampering (restoration redeploys verified pre-incident model and serving stack)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Datasets 3.1: Data poisoning (restoration recovers from data poisoning effects on model)",
+                        "Model 7.1: Backdoor machine learning / Trojaned model (restoration reverts to pre-backdoor model)",
+                        "Model 7.3: ML Supply chain vulnerabilities (restoration recovers from supply chain compromise)",
+                        "Model 7.4: Source code control attack (restoration reverts to pre-tampering model code)"
                     ]
                 }
             ],
@@ -178,6 +193,22 @@ export const restoreTactic = {
                                 "AITech-6.1 Training Data Poisoning (rollback reverts poisoning effects)",
                                 "AISubtech-9.2.2 Backdoors and Trojans (rollback restores to pre-backdoor checkpoint)"
                             ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "DP: Data Poisoning (rollback reverts model to pre-poisoning state)",
+                                "MST: Model Source Tampering (rollback restores pre-tampering model artifact with integrity verification)",
+                                "MDT: Model Deployment Tampering (rollback redeploys trusted serving stack from verified backup)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Model 7.1: Backdoor machine learning / Trojaned model (rollback restores pre-backdoor model version)",
+                                "Model 7.3: ML Supply chain vulnerabilities (rollback to pre-compromise version removes supply chain artifacts)",
+                                "Datasets 3.1: Data poisoning (rollback reverts to model trained on clean data)"
+                            ]
                         }
                     ]
                 },
@@ -227,7 +258,6 @@ export const restoreTactic = {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
                                 "ML02:2023 Data Poisoning Attack",
-                                "ML08:2023 Model Skewing (retraining eliminates feedback-loop-induced model skewing)",
                                 "ML10:2023 Model Poisoning",
                                 "ML07:2023 Transfer Learning Attack (retraining on verified base removes transfer attack vectors)"
                             ]
@@ -235,8 +265,7 @@ export const restoreTactic = {
                         {
                             "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
-                                "ASI04:2026 Agentic Supply Chain Vulnerabilities",
-                                "ASI06:2026 Memory & Context Poisoning"
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                             ]
                         },
                         {
@@ -249,7 +278,8 @@ export const restoreTactic = {
                                 "NISTAML.024 Targeted Poisoning",
                                 "NISTAML.026 Model Poisoning (Integrity)",
                                 "NISTAML.011 Model Poisoning (Availability) (retraining restores model availability)",
-                                "NISTAML.051 Model Poisoning (Supply Chain) (retraining from verified sources remediates supply chain poisoning)"
+                                "NISTAML.051 Model Poisoning (Supply Chain) (retraining from verified sources remediates supply chain poisoning)",
+                                "NISTAML.037 Training Data Attacks"
                             ]
                         },
                         {
@@ -260,6 +290,23 @@ export const restoreTactic = {
                                 "AITech-9.1 Model or Agentic System Manipulation",
                                 "AITech-9.2 Detection Evasion",
                                 "AISubtech-9.2.2 Backdoors and Trojans (retraining on clean data removes backdoors)"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "DP: Data Poisoning (retraining on sanitized data eliminates poisoning effects)",
+                                "UTD: Unauthorized Training Data (retraining ensures only authorized data is used)",
+                                "MST: Model Source Tampering (fresh retraining from verified code eliminates source tampering)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Datasets 3.1: Data poisoning (retraining on clean data eliminates poisoned samples)",
+                                "Datasets 3.3: Label flipping (retraining removes label-flipped data from training process)",
+                                "Model 7.1: Backdoor machine learning / Trojaned model (retraining from scratch removes embedded backdoors)",
+                                "Raw Data 1.7: Lack of data trustworthiness (retraining on verified data restores trustworthiness)"
                             ]
                         }
                     ],
@@ -307,10 +354,10 @@ export const restoreTactic = {
                     "items": [
                         "AML.T0019 Publish Poisoned Datasets",
                         "AML.T0020 Poison Training Data",
-                        "AML.T0031 Erode AI Model Integrity",
                         "AML.T0059 Erode Dataset Integrity",
                         "AML.T0070 RAG Poisoning",
-                        "AML.T0071 False RAG Entry Injection"
+                        "AML.T0071 False RAG Entry Injection",
+                        "AML.T0080.000 AI Agent Context Poisoning: Memory (recovery restores poisoned agent memory-like stores)"
                     ]
                 },
                 {
@@ -332,8 +379,7 @@ export const restoreTactic = {
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "ML02:2023 Data Poisoning Attack",
-                        "ML08:2023 Model Skewing (recovering clean data eliminates skewing feedback loops)"
+                        "ML02:2023 Data Poisoning Attack"
                     ]
                 },
                 {
@@ -358,7 +404,24 @@ export const restoreTactic = {
                         "AITech-6.1 Training Data Poisoning",
                         "AITech-7.2 Memory System Corruption",
                         "AITech-7.3 Data Source Abuse and Manipulation",
-                        "AISubtech-6.1.1 Knowledge Base Poisoning (data recovery restores poisoned knowledge bases)"
+                        "AISubtech-6.1.1 Knowledge Base Poisoning (data recovery restores poisoned knowledge bases)",
+                        "AISubtech-7.3.1 Corrupted Third-Party Data (recovery removes corrupted third-party data from AI datasets)"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "DP: Data Poisoning (data recovery restores poisoned datasets to known-good state)",
+                        "UTD: Unauthorized Training Data (recovery removes unauthorized data introduced during compromise)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Datasets 3.1: Data poisoning (data recovery restores poisoned training datasets)",
+                        "Raw Data 1.7: Lack of data trustworthiness (recovery restores data trustworthiness through validation)",
+                        "Raw Data 1.11: Compromised 3rd-party datasets (recovery removes compromised third-party data)",
+                        "Agents — Core 13.1: Memory Poisoning (recovery restores poisoned RAG/vector data)"
                     ]
                 }
             ],
@@ -409,7 +472,9 @@ export const restoreTactic = {
                         "AML.T0055 Unsecured Credentials (re-auth invalidates previously unsecured credentials)",
                         "AML.T0083 Credentials from AI Agent Configuration (re-auth invalidates extracted agent credentials)",
                         "AML.T0091 Use Alternate Authentication Material",
-                        "AML.T0091.000 Use Alternate Authentication Material: Application Access Token"
+                        "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
+                        "AML.T0092 Manipulate User LLM Chat History (clean re-establishment restores trusted conversational context)",
+                        "AML.T0080.001 AI Agent Context Poisoning: Thread (clean re-establishment restores trusted thread context)"
                     ]
                 },
                 {
@@ -440,8 +505,8 @@ export const restoreTactic = {
                         "ASI02:2026 Tool Misuse and Exploitation (re-establishing identity prevents tool misuse via stolen sessions)",
                         "ASI03:2026 Identity and Privilege Abuse",
                         "ASI07:2026 Insecure Inter-Agent Communication (re-auth with fresh tokens secures inter-agent channels)",
-                        "ASI08:2026 Cascading Failures (session re-establishment breaks cascading failure chains)",
-                        "ASI10:2026 Rogue Agents (clean re-establishment helps contain and recover from rogue agents)"
+                        "ASI10:2026 Rogue Agents (clean re-establishment helps contain and recover from rogue agents)",
+                        "ASI06:2026 Memory & Context Poisoning"
                     ]
                 },
                 {
@@ -457,7 +522,28 @@ export const restoreTactic = {
                         "AITech-14.1 Unauthorized Access (re-auth invalidates unauthorized access gained via stolen credentials)",
                         "AITech-14.2 Abuse of Delegated Authority (re-auth with proper scoping prevents delegated authority abuse)",
                         "AISubtech-14.1.1 Credential Theft (re-establishment invalidates stolen credentials)",
-                        "AISubtech-3.1.2 Trusted Agent Spoofing (clean identity re-establishment prevents continued spoofing)"
+                        "AISubtech-3.1.2 Trusted Agent Spoofing (clean identity re-establishment prevents continued spoofing)",
+                        "AITech-7.2 Memory System Corruption",
+                        "AISubtech-4.2.2 Session Boundary Violation (session re-establishment restores clean session boundaries)",
+                        "AITech-16.1 Eavesdropping (TLS/HSTS hardening during re-onboarding prevents eavesdropping on recovery)"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "SDD: Sensitive Data Disclosure (re-established sessions with MFA prevent continued disclosure via stolen credentials)",
+                        "RA: Rogue Actions (progressive capability re-enablement prevents rogue actions during recovery)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Platform 12.4: Unauthorized privileged access (re-auth with MFA prevents continued unauthorized access)",
+                        "Agents — Core 13.9: Identity Spoofing & Impersonation (clean identity re-establishment prevents continued impersonation)",
+                        "Agents — Core 13.3: Privilege Compromise (re-auth with proper scoping prevents privilege re-abuse)",
+                        "Agents — Tools MCP Server 13.19: Credential and Token Exposure (re-establishment replaces exposed credentials with fresh tokens)",
+                        "Agents — Core 13.1: Memory Poisoning",
+                        "Agents — Tools MCP Client 13.34: Session and State Management Failures (clean re-establishment addresses session/state management failures)"
                     ]
                 }
             ],
@@ -562,6 +648,26 @@ export const restoreTactic = {
                         "AITech-9.1 Model or Agentic System Manipulation (hardening creates model integrity verification)",
                         "AITech-9.3 Dependency / Plugin Compromise (hardening updates dependency security controls)"
                     ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "DP: Data Poisoning (hardening institutionalizes data validation and sanitization policies)",
+                        "PIJ: Prompt Injection (hardening creates permanent input sanitization and detection rules)",
+                        "MST: Model Source Tampering (hardening updates supply chain provenance and signing requirements)",
+                        "MDT: Model Deployment Tampering (hardening updates deployment integrity verification)",
+                        "IIC: Insecure Integrated Component (hardening updates integrated component security controls)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Platform 12.3: Lack of incident response (PIR and hardening strengthen incident response capabilities)",
+                        "Operations 11.1: Lack of MLOps — repeatable enforced standards (hardening codifies security into MLOps standards)",
+                        "Governance 4.2: Lack of end-to-end ML lifecycle (hardening improves ML lifecycle security controls)",
+                        "Model 7.3: ML Supply chain vulnerabilities (hardening updates supply chain security policies)",
+                        "Platform 12.2: Lack of penetration testing, red teaming and bug bounty (BAS/TTP replay validates fixes through targeted security testing)"
+                    ]
                 }
             ],
             "implementationGuidance": [
@@ -616,7 +722,8 @@ export const restoreTactic = {
                         "AML.T0059 Erode Dataset Integrity",
                         "AML.T0070 RAG Poisoning",
                         "AML.T0071 False RAG Entry Injection",
-                        "AML.T0051 LLM Prompt Injection (rollback removes injected content from vector index)"
+                        "AML.T0051 LLM Prompt Injection (rollback removes injected content from vector index)",
+                        "AML.T0080.000 AI Agent Context Poisoning: Memory (rollback restores poisoned retrieval memory context)"
                     ]
                 },
                 {
@@ -645,7 +752,6 @@ export const restoreTactic = {
                     "framework": "OWASP Agentic AI Top 10 2026",
                     "items": [
                         "ASI01:2026 Agent Goal Hijack (rollback removes RAG content that could redirect agent goals)",
-                        "ASI04:2026 Agentic Supply Chain Vulnerabilities (rollback removes poisoned third-party RAG plugins)",
                         "ASI06:2026 Memory & Context Poisoning",
                         "ASI08:2026 Cascading Failures (rapid rollback prevents poisoned RAG from cascading across agents)"
                     ]
@@ -656,18 +762,38 @@ export const restoreTactic = {
                         "NISTAML.013 Data Poisoning",
                         "NISTAML.015 Indirect Prompt Injection",
                         "NISTAML.024 Targeted Poisoning",
-                        "NISTAML.027 Misaligned Outputs (rollback removes RAG content causing misaligned LLM outputs)",
-                        "NISTAML.018 Prompt Injection (rollback removes prompt-injection-poisoned vectors)"
+                        "NISTAML.027 Misaligned Outputs (rollback removes RAG content causing misaligned LLM outputs)"
                     ]
                 },
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-6.1 Training Data Poisoning (rollback removes poisoned RAG data feeding into fine-tuning loops)",
                         "AITech-7.2 Memory System Corruption",
                         "AITech-7.3 Data Source Abuse and Manipulation",
                         "AISubtech-6.1.1 Knowledge Base Poisoning (rollback restores poisoned knowledge base indices)",
-                        "AITech-1.2 Indirect Prompt Injection (rollback removes indirect injection content from vector stores)"
+                        "AITech-1.2 Indirect Prompt Injection (rollback removes indirect injection content from vector stores)",
+                        "AITech-4.2 Context Boundary Attacks",
+                        "AISubtech-7.3.1 Corrupted Third-Party Data (rollback removes corrupted third-party content from vector index)"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "DP: Data Poisoning (rollback removes poisoned data from vector index)",
+                        "PIJ: Prompt Injection (rollback removes indirect prompt injections embedded in RAG index)",
+                        "IMO: Insecure Model Output (rollback removes RAG content causing insecure model outputs)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Datasets 3.1: Data poisoning (rollback removes poisoned embeddings from vector index)",
+                        "Raw Data 1.7: Lack of data trustworthiness (rollback restores trustworthy vector index state)",
+                        "Raw Data 1.11: Compromised 3rd-party datasets (rollback removes compromised third-party RAG content)",
+                        "Agents — Core 13.1: Memory Poisoning (rollback removes poisoned RAG content from agent retrieval)",
+                        "Agents — Core 13.12: Agent Communication Poisoning (rollback removes poisoned content propagated through RAG)",
+                        "Agents — Core 13.5: Cascading Hallucination Attacks",
+                        "Agents — Tools MCP Server 13.24: Context Spoofing and Manipulation (rollback removes spoofed/manipulated context from retrieval index)"
                     ]
                 }
             ],

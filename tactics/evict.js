@@ -15,8 +15,7 @@ export const evictTactic = {
                         "AML.T0090 OS Credential Dumping",
                         "AML.T0091 Use Alternate Authentication Material",
                         "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
-                        "AML.T0098 AI Agent Tool Credential Harvesting",
-                        "AML.T0106 Exploitation for Credential Access"
+                        "AML.T0098 AI Agent Tool Credential Harvesting"
                     ]
                 },
                 {
@@ -31,8 +30,7 @@ export const evictTactic = {
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
-                        "LLM02:2025 Sensitive Information Disclosure (if creds stolen)",
-                        "LLM06:2025 Excessive Agency (if agent creds compromised)"
+                        "LLM02:2025 Sensitive Information Disclosure (if creds stolen)"
                     ]
                 },
                 {
@@ -62,6 +60,23 @@ export const evictTactic = {
                         "AITech-14.2 Abuse of Delegated Authority",
                         "AISubtech-14.1.1 Credential Theft (credential revocation invalidates stolen credentials)",
                         "AISubtech-14.2.1 Permission Escalation via Delegation (rotation limits delegation abuse window)"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "MXF: Model Exfiltration (revoking credentials prevents ongoing model theft)",
+                        "SDD: Sensitive Data Disclosure (credential revocation stops disclosure via stolen access)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Platform 12.4: Unauthorized privileged access",
+                        "Model 7.2: Model assets leak (credential revocation prevents continued model asset exfiltration)",
+                        "Agents — Core 13.3: Privilege Compromise (credential rotation limits privilege abuse window)",
+                        "Agents — Core 13.9: Identity Spoofing & Impersonation (credential revocation invalidates spoofed identities)",
+                        "Agents — Tools MCP Server 13.19: Credential and Token Exposure"
                     ]
                 }
             ],
@@ -96,7 +111,6 @@ export const evictTactic = {
                             "framework": "MAESTRO",
                             "items": [
                                 "Lateral Movement (Cross-Layer)",
-                                "Resource Hijacking (L4)",
                                 "Privilege Escalation (Cross-Layer)"
                             ]
                         },
@@ -129,6 +143,22 @@ export const evictTactic = {
                             "items": [
                                 "AITech-14.1 Unauthorized Access",
                                 "AISubtech-14.1.1 Credential Theft (foundational credential management addresses credential theft)"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "MXF: Model Exfiltration (credential management prevents ongoing exfiltration via stolen credentials)",
+                                "SDD: Sensitive Data Disclosure (rotation limits window for credential-based data disclosure)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Raw Data 1.1: Insufficient access controls",
+                                "Platform 12.4: Unauthorized privileged access",
+                                "Agents — Tools MCP Server 13.19: Credential and Token Exposure",
+                                "Agents — Core 13.3: Privilege Compromise"
                             ]
                         }
                     ],
@@ -169,8 +199,7 @@ export const evictTactic = {
                                 "AML.T0012 Valid Accounts (by immediately disabling the account)",
                                 "AML.T0090 OS Credential Dumping (by immediately invalidating dumped credentials)",
                                 "AML.T0091 Use Alternate Authentication Material (immediately revoking stolen tokens/hashes)",
-                                "AML.T0091.000 Use Alternate Authentication Material: Application Access Token (real-time JWT/API token revocation)",
-                                "AML.T0106 Exploitation for Credential Access"
+                                "AML.T0091.000 Use Alternate Authentication Material: Application Access Token (real-time JWT/API token revocation)"
                             ]
                         },
                         {
@@ -183,8 +212,7 @@ export const evictTactic = {
                         {
                             "framework": "OWASP LLM Top 10 2025",
                             "items": [
-                                "LLM02:2025 Sensitive Information Disclosure (by stopping an active breach)",
-                                "LLM06:2025 Excessive Agency (by disabling a compromised agent's credentials)"
+                                "LLM02:2025 Sensitive Information Disclosure (by stopping an active breach)"
                             ]
                         },
                         {
@@ -212,7 +240,25 @@ export const evictTactic = {
                             "items": [
                                 "AITech-14.1 Unauthorized Access",
                                 "AITech-8.2 Data Exfiltration / Exposure (stopping active exfiltration)",
-                                "AISubtech-14.1.1 Credential Theft (automated invalidation rapidly responds to credential theft)"
+                                "AISubtech-14.1.1 Credential Theft (automated invalidation rapidly responds to credential theft)",
+                                "AISubtech-7.4.1 Token Theft (automated invalidation responds to token theft)",
+                                "AITech-7.4 Token Manipulation (automated invalidation responds to token manipulation)"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "MXF: Model Exfiltration (real-time invalidation terminates active model theft sessions)",
+                                "SDD: Sensitive Data Disclosure (immediate token revocation stops active data leakage)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Platform 12.4: Unauthorized privileged access (automated invalidation responds to unauthorized access in real time)",
+                                "Platform 12.3: Lack of incident response (automated invalidation strengthens incident response capability)",
+                                "Agents — Tools MCP Server 13.19: Credential and Token Exposure",
+                                "Agents — Core 13.3: Privilege Compromise"
                             ]
                         }
                     ],
@@ -250,7 +296,8 @@ export const evictTactic = {
                                 "AML.T0012 Valid Accounts",
                                 "AML.T0091 Use Alternate Authentication Material (revoking stolen workload identity credentials)",
                                 "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
-                                "AML.T0098 AI Agent Tool Credential Harvesting"
+                                "AML.T0098 AI Agent Tool Credential Harvesting",
+                                "AML.T0083 Credentials from AI Agent Configuration (revoking credentials extracted from agent configuration)"
                             ]
                         },
                         {
@@ -264,13 +311,13 @@ export const evictTactic = {
                         {
                             "framework": "OWASP LLM Top 10 2025",
                             "items": [
-                                "LLM06:2025 Excessive Agency (by revoking the identity of the overreaching agent)"
+                                "N/A"
                             ]
                         },
                         {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
-                                "ML06:2023 AI Supply Chain Attacks (if a compromised workload is the result)"
+                                "N/A"
                             ]
                         },
                         {
@@ -293,6 +340,22 @@ export const evictTactic = {
                                 "AITech-3.1 Masquerading / Obfuscation / Impersonation",
                                 "AISubtech-14.1.1 Credential Theft (agent identity revocation invalidates stolen agent credentials)",
                                 "AISubtech-3.1.2 Trusted Agent Spoofing (identity revocation prevents continued agent spoofing)"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "RA: Rogue Actions (identity revocation stops rogue agent actions)",
+                                "MXF: Model Exfiltration (workload identity revocation prevents model theft by compromised agents)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Agents — Core 13.9: Identity Spoofing & Impersonation",
+                                "Agents — Core 13.3: Privilege Compromise (identity revocation prevents continued privilege abuse)",
+                                "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems (revoking rogue agent workload identities)",
+                                "Agents — Tools MCP Server 13.19: Credential and Token Exposure"
                             ]
                         }
                     ],
@@ -340,7 +403,8 @@ export const evictTactic = {
                         "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
                         "AML.T0108 AI Agent (C2)",
                         "AML.T0029 Denial of AI Service",
-                        "AML.T0034 Cost Harvesting"
+                        "AML.T0034 Cost Harvesting",
+                        "AML.T0103 Deploy AI Agent (eviction terminates adversary-deployed agents)"
                     ]
                 },
                 {
@@ -355,14 +419,13 @@ export const evictTactic = {
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
-                        "LLM01:2025 Prompt Injection (ending manipulated session)",
-                        "LLM06:2025 Excessive Agency (terminating overreaching agent)"
+                        "LLM01:2025 Prompt Injection (ending manipulated session)"
                     ]
                 },
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "ML06:2023 AI Supply Chain Attacks (terminating malicious container from compromised supply chain)"
+                        "N/A"
                     ]
                 },
                 {
@@ -390,7 +453,30 @@ export const evictTactic = {
                         "AITech-13.2 Cost Harvesting / Repurposing",
                         "AITech-1.3 Goal Manipulation",
                         "AISubtech-13.2.1 Service Misuse for Cost Inflation (eviction terminates resource-abusing sessions)",
-                        "AISubtech-9.1.1 Code Execution (eviction terminates unauthorized code execution)"
+                        "AISubtech-9.1.1 Code Execution (eviction terminates unauthorized code execution)",
+                        "AITech-14.1 Unauthorized Access",
+                        "AITech-4.1 Agent Injection (eviction terminates injected agent processes)",
+                        "AISubtech-4.1.1 Rogue Agent Introduction (eviction terminates introduced rogue agents)"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "PIJ: Prompt Injection (process eviction terminates injected sessions)",
+                        "DMS: Denial of ML Service (terminating resource-abusing processes restores service availability)",
+                        "RA: Rogue Actions (eviction terminates agent processes executing rogue actions)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Model Serving — Inference requests 9.7: Denial of Service (DoS) (process eviction terminates resource-consuming attacks)",
+                        "Agents — Core 13.2: Tool Misuse (eviction terminates agent tool misuse sessions)",
+                        "Agents — Core 13.4: Resource Overload (eviction terminates resource-overloading processes)",
+                        "Agents — Core 13.6: Intent Breaking & Goal Manipulation (eviction stops goal-hijacked agents)",
+                        "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems (eviction terminates rogue agent processes)",
+                        "Agents — Core 13.11: Unexpected RCE and Code Attacks (eviction terminates unauthorized code execution)",
+                        "Agents — Core 13.3: Privilege Compromise"
                     ]
                 }
             ],
@@ -487,7 +573,30 @@ export const evictTactic = {
                         "AITech-9.1 Model or Agentic System Manipulation",
                         "AITech-9.3 Dependency / Plugin Compromise",
                         "AISubtech-9.2.2 Backdoors and Trojans (direct removal of backdoors and trojans)",
-                        "AISubtech-9.1.1 Code Execution (removal of malicious code artifacts)"
+                        "AISubtech-9.1.1 Code Execution (removal of malicious code artifacts)",
+                        "AITech-7.2 Memory System Corruption"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "DP: Data Poisoning (removal of poisoned data artifacts)",
+                        "MST: Model Source Tampering (removal of tampered model source and dependencies)",
+                        "MDT: Model Deployment Tampering (removal of deployment-level malicious artifacts)",
+                        "PIJ: Prompt Injection (removal of injected RAG content and poisoned memory)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Datasets 3.1: Data poisoning (removal of poisoned training data)",
+                        "Model 7.1: Backdoor machine learning / Trojaned model",
+                        "Model 7.3: ML Supply chain vulnerabilities (removal of compromised supply chain artifacts)",
+                        "Model 7.4: Source code control attack (removal of tampered source code)",
+                        "Algorithms 5.4: Malicious libraries (removal of malicious library artifacts)",
+                        "Raw Data 1.11: Compromised 3rd-party datasets (removal of compromised third-party data)",
+                        "Agents — Core 13.1: Memory Poisoning (removal of poisoned agent memory artifacts)",
+                        "Agents — Tools MCP Server 13.18: Tool Poisoning"
                     ]
                 }
             ],
@@ -517,9 +626,9 @@ export const evictTactic = {
                             "items": [
                                 "AML.T0018 Manipulate AI Model",
                                 "AML.T0018.000 Manipulate AI Model: Poison AI Model",
-                                "AML.T0018.002 Manipulate AI Model: Embed Malware",
                                 "AML.T0020 Poison Training Data",
-                                "AML.T0076 Corrupt AI Model"
+                                "AML.T0076 Corrupt AI Model",
+                                "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (backdoor removal addresses inserted trigger patterns)"
                             ]
                         },
                         {
@@ -542,8 +651,7 @@ export const evictTactic = {
                             "items": [
                                 "ML10:2023 Model Poisoning",
                                 "ML02:2023 Data Poisoning Attack",
-                                "ML06:2023 AI Supply Chain Attacks",
-                                "ML09:2023 Output Integrity Attack"
+                                "ML06:2023 AI Supply Chain Attacks"
                             ]
                         },
                         {
@@ -568,6 +676,21 @@ export const evictTactic = {
                                 "AITech-9.1 Model or Agentic System Manipulation",
                                 "AITech-6.1 Training Data Poisoning",
                                 "AISubtech-9.2.2 Backdoors and Trojans (neural network backdoor detection and removal)"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "DP: Data Poisoning (backdoor detection identifies poisoning-induced backdoors)",
+                                "MST: Model Source Tampering (backdoor detection reveals tampering with model weights)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Model 7.1: Backdoor machine learning / Trojaned model",
+                                "Datasets 3.1: Data poisoning (backdoor detection identifies poisoning artifacts in training data)",
+                                "Model 7.3: ML Supply chain vulnerabilities (backdoor detection catches supply chain compromised models)"
                             ]
                         }
                     ],
@@ -652,9 +775,7 @@ export const evictTactic = {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
                                 "ML02:2023 Data Poisoning Attack",
-                                "ML10:2023 Model Poisoning",
-                                "ML08:2023 Model Skewing",
-                                "ML07:2023 Transfer Learning Attack"
+                                "ML10:2023 Model Poisoning"
                             ]
                         },
                         {
@@ -678,7 +799,27 @@ export const evictTactic = {
                             "items": [
                                 "AITech-6.1 Training Data Poisoning",
                                 "AITech-7.3 Data Source Abuse and Manipulation",
-                                "AISubtech-6.1.1 Knowledge Base Poisoning (cleansing removes poisoned knowledge base entries)"
+                                "AISubtech-6.1.1 Knowledge Base Poisoning (cleansing removes poisoned knowledge base entries)",
+                                "AITech-7.2 Memory System Corruption"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "DP: Data Poisoning",
+                                "UTD: Unauthorized Training Data (cleansing removes unauthorized data from training sets)",
+                                "PIJ: Prompt Injection (cleansing removes injected content from RAG vector databases)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Datasets 3.1: Data poisoning",
+                                "Datasets 3.3: Label flipping (cleansing detects and removes label-flipped samples)",
+                                "Raw Data 1.7: Lack of data trustworthiness (cleansing restores data trustworthiness)",
+                                "Raw Data 1.11: Compromised 3rd-party datasets",
+                                "Data Prep 2.1: Preprocessing integrity (cleansing identifies preprocessing-introduced corruption)",
+                                "Agents — Core 13.1: Memory Poisoning (cleansing removes poisoned RAG/memory data)"
                             ]
                         }
                     ],
@@ -769,8 +910,7 @@ export const evictTactic = {
                         {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
-                                "ML06:2023 AI Supply Chain Attacks",
-                                "ML09:2023 Output Integrity Attack"
+                                "ML06:2023 AI Supply Chain Attacks"
                             ]
                         },
                         {
@@ -795,6 +935,24 @@ export const evictTactic = {
                                 "AITech-9.1 Model or Agentic System Manipulation",
                                 "AISubtech-9.1.1 Code Execution (cleanup removes malicious code)",
                                 "AISubtech-9.3.1 Malicious Package / Tool Injection (cleanup removes injected malicious packages)"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "MST: Model Source Tampering (cleanup removes tampered code and dependencies)",
+                                "MDT: Model Deployment Tampering (cleanup removes deployment-level malicious modifications)",
+                                "IIC: Insecure Integrated Component (cleanup removes exploitable or malicious integrated components)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Algorithms 5.4: Malicious libraries",
+                                "Model 7.4: Source code control attack (cleanup removes tampered source code)",
+                                "Model 7.3: ML Supply chain vulnerabilities (cleanup removes compromised supply chain components)",
+                                "Agents — Tools MCP Server 13.18: Tool Poisoning (cleanup removes poisoned agent tools)",
+                                "Agents — Core 13.11: Unexpected RCE and Code Attacks (cleanup removes injected malicious code)"
                             ]
                         }
                     ],
@@ -863,8 +1021,8 @@ export const evictTactic = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0020 Poison Training Data",
-                                "AML.T0018 Manipulate AI Model",
-                                "AML.T0059 Erode Dataset Integrity"
+                                "AML.T0059 Erode Dataset Integrity",
+                                "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger"
                             ]
                         },
                         {
@@ -899,6 +1057,7 @@ export const evictTactic = {
                             "items": [
                                 "NISTAML.013 Data Poisoning",
                                 "NISTAML.023 Backdoor Poisoning",
+                                "NISTAML.021 Clean-label Backdoor",
                                 "NISTAML.024 Targeted Poisoning (eviction removes targeted poisoning nodes)"
                             ]
                         },
@@ -906,7 +1065,21 @@ export const evictTactic = {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
                                 "AITech-6.1 Training Data Poisoning",
-                                "AITech-9.1 Model or Agentic System Manipulation (node eviction removes manipulation artifacts)"
+                                "AITech-9.1 Model or Agentic System Manipulation (node eviction removes manipulation artifacts)",
+                                "AISubtech-9.2.2 Backdoors and Trojans"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "DP: Data Poisoning (node eviction removes poisoned graph data)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Datasets 3.1: Data poisoning (node eviction removes poisoned graph training data)",
+                                "Data Prep 2.4: Adversarial partitions (node eviction addresses adversarially manipulated graph partitions)"
                             ]
                         }
                     ]
@@ -940,7 +1113,8 @@ export const evictTactic = {
                         "AML.T0105 Escape to Host",
                         "AML.T0106 Exploitation for Credential Access",
                         "AML.T0107 Exploitation for Defense Evasion",
-                        "AML.T0010.004 AI Supply Chain Compromise: Container Registry (patching secures compromised container registries)"
+                        "AML.T0010.004 AI Supply Chain Compromise: Container Registry (patching secures compromised container registries)",
+                        "AML.T0081 Modify AI Agent Configuration (post-eviction hardening closes exploited configuration vectors)"
                     ]
                 },
                 {
@@ -956,8 +1130,7 @@ export const evictTactic = {
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
-                        "LLM03:2025 Supply Chain (patching vulnerable component)",
-                        "LLM05:2025 Improper Output Handling (patching downstream component)"
+                        "LLM03:2025 Supply Chain (patching vulnerable component)"
                     ]
                 },
                 {
@@ -971,14 +1144,14 @@ export const evictTactic = {
                     "items": [
                         "ASI04:2026 Agentic Supply Chain Vulnerabilities (patching compromised dependencies)",
                         "ASI05:2026 Unexpected Code Execution (RCE) (patching code execution vulnerabilities)",
-                        "ASI02:2026 Tool Misuse and Exploitation (patching hardens against tool exploitation)"
+                        "ASI02:2026 Tool Misuse and Exploitation (patching hardens against tool exploitation)",
+                        "ASI03:2026 Identity and Privilege Abuse"
                     ]
                 },
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
-                        "NISTAML.051 Model Poisoning (Supply Chain)",
-                        "NISTAML.039 Compromising connected resources (patching secures connected resources post-eviction)"
+                        "NISTAML.051 Model Poisoning (Supply Chain)"
                     ]
                 },
                 {
@@ -987,7 +1160,27 @@ export const evictTactic = {
                         "AITech-9.3 Dependency / Plugin Compromise",
                         "AITech-5.2 Configuration Persistence (hardening configurations post-eviction)",
                         "AISubtech-9.1.1 Code Execution (patching removes exploitable code execution vectors)",
-                        "AISubtech-9.3.1 Malicious Package / Tool Injection (patching removes injected malicious packages)"
+                        "AISubtech-9.3.1 Malicious Package / Tool Injection (patching removes injected malicious packages)",
+                        "AITech-14.1 Unauthorized Access"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "MST: Model Source Tampering (patching secures model source and dependencies against re-exploitation)",
+                        "MDT: Model Deployment Tampering (patching hardens deployment infrastructure post-eviction)",
+                        "IIC: Insecure Integrated Component (patching fixes vulnerabilities in integrated components)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Platform 12.1: Lack of vulnerability management (post-eviction patching addresses exploited vulnerabilities)",
+                        "Algorithms 5.4: Malicious libraries (patching remediates exploited library vulnerabilities)",
+                        "Model 7.3: ML Supply chain vulnerabilities (patching secures supply chain entry points)",
+                        "Agents — Tools MCP Server 13.20: Insecure Server Configuration (patching hardens server configurations)",
+                        "Agents — Tools MCP Server 13.21: Supply Chain Attacks (patching secures compromised MCP dependencies)",
+                        "Agents — Core 13.3: Privilege Compromise"
                     ]
                 }
             ],
@@ -1047,7 +1240,7 @@ export const evictTactic = {
                         "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
                         "AML.T0108 AI Agent (C2)",
                         "AML.T0098 AI Agent Tool Credential Harvesting (session purge invalidates harvested credentials)",
-                        "AML.T0072 Reverse Shell (session termination closes reverse shell connections)"
+                        "AML.T0092 Manipulate User LLM Chat History (session purge clears manipulated chat history)"
                     ]
                 },
                 {
@@ -1069,8 +1262,7 @@ export const evictTactic = {
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "ML05:2023 Model Theft (terminating active model theft sessions)",
-                        "ML01:2023 Input Manipulation Attack (purging adversarial session state)"
+                        "ML05:2023 Model Theft (terminating active model theft sessions)"
                     ]
                 },
                 {
@@ -1100,7 +1292,32 @@ export const evictTactic = {
                         "AITech-14.1 Unauthorized Access",
                         "AITech-4.2 Context Boundary Attacks (terminating cross-context attacks)",
                         "AISubtech-14.1.1 Credential Theft (state purging invalidates stolen in-session credentials)",
-                        "AITech-7.2 Memory System Corruption (state purging clears corrupted memory)"
+                        "AITech-7.2 Memory System Corruption (state purging clears corrupted memory)",
+                        "AITech-14.2 Abuse of Delegated Authority",
+                        "AISubtech-4.2.2 Session Boundary Violation (session termination addresses session boundary violations)",
+                        "AITech-12.1 Tool Exploitation (state purging dismantles tool-based footholds)"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "PIJ: Prompt Injection (session termination and state purging removes injected session state)",
+                        "SDD: Sensitive Data Disclosure (session termination stops ongoing data leakage)",
+                        "RA: Rogue Actions (state purging removes poisoned agent memory enabling rogue actions)",
+                        "IIC: Insecure Integrated Component (dismantling malicious webhooks and tool registrations)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Agents — Core 13.1: Memory Poisoning (state purging removes poisoned agent memory)",
+                        "Agents — Core 13.2: Tool Misuse (state purging removes rogue tool registrations)",
+                        "Agents — Core 13.6: Intent Breaking & Goal Manipulation (session termination stops goal-hijacked agents)",
+                        "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems (session termination stops rogue agents)",
+                        "Agents — Tools MCP Server 13.19: Credential and Token Exposure (session purge invalidates exposed tokens)",
+                        "Agents — Core 13.12: Agent Communication Poisoning (state purging clears poisoned inter-agent communication)",
+                        "Agents — Core 13.3: Privilege Compromise",
+                        "Agents — Tools MCP Client 13.34: Session and State Management Failures (session termination remediates session/state management failures)"
                     ]
                 }
             ],
@@ -1168,7 +1385,8 @@ export const evictTactic = {
                     "items": [
                         "NISTAML.031 Model Extraction",
                         "NISTAML.033 Membership Inference",
-                        "NISTAML.032 Reconstruction"
+                        "NISTAML.032 Reconstruction",
+                        "NISTAML.038 Data Extraction"
                     ]
                 },
                 {
@@ -1177,6 +1395,23 @@ export const evictTactic = {
                         "AITech-10.1 Model Extraction",
                         "AITech-8.1 Membership Inference",
                         "AITech-8.2 Data Exfiltration / Exposure"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "MXF: Model Exfiltration (secure decommissioning prevents exfiltration of retired models)",
+                        "SDD: Sensitive Data Disclosure (proper disposal prevents disclosure of training data or model internals)",
+                        "EDH: Excessive Data Handling (EOL procedures enforce data lifecycle and retention policies)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Model Management 8.2: Model theft (secure decommissioning prevents theft of retired models)",
+                        "Model Management 8.4: Model inversion (secure disposal prevents inversion attacks on retired models)",
+                        "Raw Data 1.4: Ineffective storage and encryption (EOL erasure addresses insecure storage of retired data)",
+                        "Model Serving — Inference requests 9.5: Infer training data membership (disposal prevents membership inference on retired models)"
                     ]
                 }
             ],
@@ -1199,8 +1434,7 @@ export const evictTactic = {
                             "framework": "MAESTRO",
                             "items": [
                                 "Data Exfiltration (L2)",
-                                "Model Stealing (L1)",
-                                "Membership Inference Attacks (L1)"
+                                "Model Stealing (L1)"
                             ]
                         },
                         {
@@ -1236,8 +1470,22 @@ export const evictTactic = {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
                                 "AITech-10.1 Model Extraction",
-                                "AITech-8.2 Data Exfiltration / Exposure",
-                                "AISubtech-10.2.1 Model Inversion"
+                                "AITech-8.2 Data Exfiltration / Exposure"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "MXF: Model Exfiltration (cryptographic erasure renders exfiltrated media unrecoverable)",
+                                "SDD: Sensitive Data Disclosure (media sanitization prevents disclosure from decommissioned storage)",
+                                "EDH: Excessive Data Handling"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Raw Data 1.4: Ineffective storage and encryption (cryptographic erasure addresses insecure storage at EOL)",
+                                "Model Management 8.2: Model theft (media sanitization prevents theft from decommissioned media)"
                             ]
                         }
                     ],
@@ -1301,7 +1549,7 @@ export const evictTactic = {
                         {
                             "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
-                                "ASI04:2026 Agentic Supply Chain Vulnerabilities (integrity during asset transfer)"
+                                "N/A"
                             ]
                         },
                         {
@@ -1315,8 +1563,23 @@ export const evictTactic = {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
                                 "AITech-10.1 Model Extraction",
-                                "AITech-8.2 Data Exfiltration / Exposure",
-                                "AITech-9.3 Dependency / Plugin Compromise (transfer integrity)"
+                                "AITech-8.2 Data Exfiltration / Exposure"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "MXF: Model Exfiltration (secure transfer with post-transfer erasure prevents residual exfiltration)",
+                                "MST: Model Source Tampering (cryptographic signing ensures transfer integrity)",
+                                "SDD: Sensitive Data Disclosure (post-transfer erasure prevents disclosure from stale copies)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Model Management 8.2: Model theft (secure transfer with erasure prevents theft of original copies)",
+                                "Model Management 8.1: Model attribution (secure transfer documents ownership and intended use)",
+                                "Model 7.3: ML Supply chain vulnerabilities (cryptographic verification ensures supply chain integrity during transfer)"
                             ]
                         }
                     ],
