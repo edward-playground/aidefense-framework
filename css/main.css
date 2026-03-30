@@ -225,6 +225,8 @@ body.modal-open {
 
 .technique-item-content {
     flex-grow: 1;
+    overflow: hidden;
+    min-width: 0;
 }
 
 .technique-item:hover {
@@ -414,14 +416,14 @@ body.modal-open {
 .atlas-scroll-hint {
     position: absolute; z-index: 11;
     top: 300px; /* JS overrides this to stay in visible viewport */
-    width: 36px; height: 36px; border-radius: 50%;
+    width: 44px; height: 44px; border-radius: 50%;
     background: var(--column-bg); border: 1px solid var(--column-border);
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; opacity: 0; pointer-events: none;
     transition: opacity 0.35s ease, background-color 0.2s ease, box-shadow 0.2s ease;
     box-shadow: 0 2px 8px rgba(0,0,0,0.25);
 }
-.atlas-scroll-hint svg { width: 18px; height: 18px; stroke: var(--text-secondary-color); stroke-width: 2.5; fill: none; }
+.atlas-scroll-hint svg { width: 20px; height: 20px; stroke: var(--text-secondary-color); stroke-width: 2.5; fill: none; }
 .atlas-scroll-hint:hover { background: var(--technique-item-hover-bg); box-shadow: 0 3px 12px rgba(0,0,0,0.35); }
 .atlas-scroll-hint:hover svg { stroke: var(--text-color); }
 .atlas-scroll-hint:active { transform: scale(0.92); }
@@ -440,8 +442,8 @@ body.modal-open {
 .atlas-scroll-wrapper.has-offscreen-matches::after { opacity: 0; }
 @media (max-width: 768px) {
     .atlas-scroll-wrapper::before, .atlas-scroll-wrapper::after { width: 32px; }
-    .atlas-scroll-hint { width: 44px; height: 44px; }
-    .atlas-scroll-hint svg { width: 20px; height: 20px; }
+    .atlas-scroll-hint { width: 38px; height: 38px; }
+    .atlas-scroll-hint svg { width: 18px; height: 18px; }
     .atlas-scroll-hint.hint-left { left: 4px; }
     .atlas-scroll-hint.hint-right { right: 4px; }
 }
@@ -595,6 +597,30 @@ body.modal-open {
     transform: scale(1);
 }
 
+/* Slide transitions for sibling navigation */
+.modal-content.slide-in-left {
+    animation: slideInLeft 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+.modal-content.slide-in-right {
+    animation: slideInRight 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+/* Gentle crossfade for rapid navigation (held key) */
+.modal-content.crossfade {
+    animation: crossfade 0.15s ease-out forwards;
+}
+@keyframes slideInLeft {
+    0%   { transform: translateX(40%); opacity: 0.3; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+@keyframes slideInRight {
+    0%   { transform: translateX(-40%); opacity: 0.3; }
+    100% { transform: translateX(0); opacity: 1; }
+}
+@keyframes crossfade {
+    0%   { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
 .modal-content h2.modal-main-title {
     font-size: 1.75rem;
     font-weight: 500;
@@ -696,21 +722,28 @@ body.modal-open {
 }
 
 .modal-close-button {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    background: none;
+    position: relative;
+    background: transparent;
     border: none;
-    font-size: 1.75rem;
-    color: var(--modal-close-btn-text);
+    font-size: 1.1rem;
+    color: var(--text-secondary-color);
     cursor: pointer;
     line-height: 1;
-    transition: color 0.3s ease;
-    padding: 0.25rem;
+    transition: opacity 0.2s ease, color 0.2s ease, background-color 0.15s ease;
+    padding: 0;
+    width: 1.75rem;
+    height: 1.75rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.35rem;
+    opacity: 0.4;
 }
 
 .modal-close-button:hover {
-    color: var(--modal-close-btn-hover-text);
+    opacity: 1;
+    color: var(--search-focus-ring);
+    background-color: var(--view-switcher-bg);
 }
 
 @media (max-width: 480px) {
@@ -718,9 +751,9 @@ body.modal-open {
         padding: 1.25rem 1rem;
     }
     .modal-close-button {
-        top: 0.6rem;
-        right: 0.6rem;
-        font-size: 1.5rem;
+        width: 1.75rem;
+        height: 1.75rem;
+        font-size: 1.1rem;
     }
     .modal-content h2 {
         font-size: 1.2rem;
@@ -730,15 +763,20 @@ body.modal-open {
     }
 }
 
-/* --- Modal header action buttons (copy, link — near close btn) --- */
-.modal-header-actions {
+/* --- Modal header bar (copy, link, close — unified row) --- */
+.modal-header-bar {
     position: absolute;
-    top: 1.15rem;
-    right: 3.2rem;
+    top: 0.75rem;
+    right: 0.75rem;
     display: flex;
-    gap: 0.15rem;
     align-items: center;
-    z-index: 1;
+    gap: 0.15rem;
+    z-index: 2;
+}
+.modal-header-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.15rem;
 }
 .modal-header-actions:empty {
     display: none;
@@ -773,9 +811,9 @@ body.modal-open {
     color: #4caf50;
 }
 @media (max-width: 480px) {
-    .modal-header-actions {
-        top: 0.65rem;
-        right: 2.4rem;
+    .modal-header-bar {
+        top: 0.5rem;
+        right: 0.5rem;
     }
     .copy-btn, .link-btn {
         width: 1.5rem;
@@ -1027,6 +1065,43 @@ body.modal-open {
     display: inline-flex;
     align-items: center;
 }
+
+@media (max-width: 400px) {
+    .search-container {
+        min-width: 100% !important;
+    }
+}
+
+/* Narrow screen: split view switcher into two rows */
+@media (max-width: 440px) {
+    .view-switcher-container {
+        width: 100%;
+    }
+    /* Hide the original unified pill bar */
+    .view-switcher {
+        display: none;
+    }
+    /* Show the narrow-screen version (injected by JS) */
+    .view-switcher-narrow {
+        display: flex !important;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.3rem;
+    }
+    .view-switcher-narrow .vsn-row {
+        background-color: var(--view-switcher-bg);
+        border-radius: 0.5rem;
+        padding: 0.25rem;
+        display: inline-flex;
+        align-items: center;
+    }
+}
+@media (min-width: 441px) {
+    .view-switcher-narrow {
+        display: none !important;
+    }
+}
+
 
 .view-switcher-btn {
     padding: 0.5rem 1rem;
@@ -1692,4 +1767,62 @@ body.modal-open {
 }
 @keyframes skeletonSpin {
     to { transform: rotate(360deg); }
+}
+
+/* ─── Feature: Column Scroll Navigation Buttons ─── */
+.column-nav-btn {
+    position: fixed;
+    right: 1.5rem;
+    z-index: 900;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 1px solid var(--border-color);
+    background: var(--column-bg);
+    color: var(--text-color);
+    cursor: pointer;
+    display: none; /* hidden by default, shown via JS */
+    align-items: center;
+    justify-content: center;
+    opacity: 0.35;
+    transition: opacity 0.3s ease, transform 0.15s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+    pointer-events: auto;
+}
+.column-nav-btn.visible {
+    display: flex;
+}
+.column-nav-btn:hover {
+    opacity: 0.9;
+    transform: scale(1.1);
+}
+.column-nav-btn.up { bottom: 6.5rem; }
+.column-nav-btn.down { bottom: 3rem; }
+.column-nav-btn svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+@keyframes navPulse {
+    0%, 100% { box-shadow: 0 2px 8px rgba(0,0,0,0.25); }
+    50% { box-shadow: 0 0 14px 3px var(--search-focus-ring); }
+}
+.column-nav-btn.pulse {
+    animation: navPulse 1.5s ease-in-out infinite;
+    animation-name: navPulse;
+}
+
+@media (max-width: 768px) {
+    .column-nav-btn { width: 38px; height: 38px; right: 0.75rem; }
+    .column-nav-btn.up { bottom: 5.5rem; }
+    .column-nav-btn.down { bottom: 2.5rem; }
+}
+@media (max-width: 480px) {
+    .column-nav-btn { width: 34px; height: 34px; right: 0.5rem; }
+    .column-nav-btn.up { bottom: 5rem; }
+    .column-nav-btn.down { bottom: 2rem; }
 }

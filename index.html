@@ -117,6 +117,17 @@
                             <button class="view-switcher-btn" data-view="phase">Phases</button>
                             <button class="view-switcher-btn" data-view="framework">Frameworks</button>
                         </div>
+                        <!-- Narrow screen: two-row version (hidden by default, shown via CSS @media) -->
+                        <div class="view-switcher-narrow" style="display:none">
+                            <div class="vsn-row">
+                                <button class="view-switcher-btn active" data-view="tactic">Tactics</button>
+                                <button class="view-switcher-btn" data-view="pillar">Pillars</button>
+                                <button class="view-switcher-btn" data-view="phase">Phases</button>
+                            </div>
+                            <div class="vsn-row">
+                                <button class="view-switcher-btn" data-view="framework">Frameworks</button>
+                            </div>
+                        </div>
                         <div id="framework-selector" class="framework-selector" style="display:none;">
                             <select id="framework-dropdown">
                                 <option value="atlas-matrix">MITRE ATLAS™ - Matrix</option>
@@ -165,11 +176,20 @@
             </noscript>
         </div>
     </div>
+    <!-- Column scroll navigation buttons -->
+    <button id="colNavUp" class="column-nav-btn up" aria-label="Scroll to previous section">
+        <svg viewBox="0 0 24 24"><polyline points="18 15 12 9 6 15"/></svg>
+    </button>
+    <button id="colNavDown" class="column-nav-btn down" aria-label="Scroll to next section">
+        <svg viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+    </button>
     <div id="infoModal" class="modal-overlay">
         <div id="modalBackdrop" class="absolute inset-0"></div>
         <div class="modal-content elevation-8">
-            <div class="modal-header-actions" id="modalActions"></div>
-            <button id="modalClose" class="modal-close-button">&times;</button>
+            <div class="modal-header-bar">
+                <div class="modal-header-actions" id="modalActions"></div>
+                <button id="modalClose" class="modal-close-button">&times;</button>
+            </div>
             <div id="modalBody"></div>
         </div>
     </div>
@@ -2417,23 +2437,33 @@
                 const frameworkSelector = document.getElementById('framework-selector');
                 const frameworkDropdown = document.getElementById('framework-dropdown');
 
-                elements.viewSwitcher.addEventListener('click', (e) => {
-                    if (e.target.tagName === 'BUTTON') {
-                        const newView = e.target.dataset.view;
-                        if (newView !== currentView) {
-                            document.querySelector('.view-switcher-btn.active')?.classList.remove('active');
-                            e.target.classList.add('active');
-                            currentView = newView;
-                            // Show/hide framework selector
-                            frameworkSelector.style.display = newView === 'framework' ? 'inline-flex' : 'none';
-                            if (_fullDataReady) {
-                                renderMainGrid();
-                            } else if (_skeletonData) {
-                                renderSkeletonFromIndex(_skeletonData);
-                            }
-                            updateContentPadding();
-                        }
+                function switchView(newView) {
+                    if (newView === currentView) return;
+                    // Sync active state across both switchers
+                    document.querySelectorAll('.view-switcher-btn').forEach(btn => {
+                        btn.classList.toggle('active', btn.dataset.view === newView);
+                    });
+                    currentView = newView;
+                    frameworkSelector.style.display = newView === 'framework' ? 'inline-flex' : 'none';
+                    if (newView === 'framework') {
+                        frameworkDropdown.value = currentFramework;
                     }
+                    window.scrollTo({ top: 0, behavior: 'instant' });
+                    if (_fullDataReady) {
+                        renderMainGrid();
+                    } else if (_skeletonData) {
+                        renderSkeletonFromIndex(_skeletonData);
+                    }
+                    updateContentPadding();
+                }
+                // Handle clicks on both the normal and narrow switchers
+                document.querySelectorAll('.view-switcher, .view-switcher-narrow').forEach(container => {
+                    container.addEventListener('click', (e) => {
+                        const btn = e.target.closest('.view-switcher-btn');
+                        if (btn && btn.dataset.view) {
+                            switchView(btn.dataset.view);
+                        }
+                    });
                 });
 
                 frameworkDropdown.addEventListener('change', (e) => {
@@ -2521,6 +2551,277 @@
                     }
                 });
             }
+            // ─── Placeholder rotation for narrow screens ───
+            (function initPlaceholderRotation() {
+                const input = document.getElementById('search-bar');
+                if (!input) return;
+                const fullText = input.placeholder;
+                const phrases = [
+                    'Search keywords, techniques...',
+                    'Try: prompt injection, AID-H-001...',
+                    'Try: ATLAS T0051, OWASP LLM01...',
+                    'Try: sandboxing, agent, RAG...',
+                    'Try: Cisco, NIST, MAESTRO...',
+                ];
+                let phraseIdx = 0;
+                let isNarrow = window.innerWidth <= 500;
+
+                function update() {
+                    const nowNarrow = window.innerWidth <= 500;
+                    if (nowNarrow && !isNarrow) {
+                        // Entered narrow mode — start rotation
+                        phraseIdx = 0;
+                        input.placeholder = phrases[0];
+                    } else if (!nowNarrow && isNarrow) {
+                        // Left narrow mode — restore full text
+                        input.placeholder = fullText;
+                    }
+                    isNarrow = nowNarrow;
+                }
+
+                setInterval(() => {
+                    if (!isNarrow || document.activeElement === input) return;
+                    phraseIdx = (phraseIdx + 1) % phrases.length;
+                    input.style.transition = 'opacity 0.3s ease';
+                    input.style.opacity = '0.3';
+                    setTimeout(() => {
+                        input.placeholder = phrases[phraseIdx];
+                        input.style.opacity = '1';
+                    }, 300);
+                }, 4000);
+
+                window.addEventListener('resize', update);
+                update();
+            })();
+
+            // ─── Feature 1: Column Scroll Navigation ───
+            (function initColumnScrollNav() {
+                const btnUp = document.getElementById('colNavUp');
+                const btnDown = document.getElementById('colNavDown');
+                if (!btnUp || !btnDown) return;
+
+                let columns = [];  // sorted by vertical position
+                let currentColIdx = -1;
+
+                function getHeaderOffset() {
+                    const header = document.querySelector('header');
+                    return header ? header.offsetHeight + 16 : 200;
+                }
+
+                function rebuildColumns() {
+                    // Hide in framework view
+                    if (currentView === 'framework') { hide(); columns = []; return; }
+                    const cols = Array.from(document.querySelectorAll('.matrix-column'));
+                    if (cols.length === 0) { hide(); return; }
+                    // Get unique top positions (columns on the same row share a top)
+                    // We want one entry per visual "row" of columns
+                    const rows = [];
+                    const seen = new Set();
+                    cols.forEach(col => {
+                        const top = Math.round(col.getBoundingClientRect().top + window.scrollY);
+                        // Group columns within 10px of each other as same row
+                        const rowKey = Math.round(top / 10) * 10;
+                        if (!seen.has(rowKey)) {
+                            seen.add(rowKey);
+                            rows.push({ el: col, absTop: top });
+                        }
+                    });
+                    rows.sort((a, b) => a.absTop - b.absTop);
+                    columns = rows;
+                    updateState();
+                }
+
+                function findCurrentIndex() {
+                    if (columns.length === 0) return -1;
+                    const scrollTop = window.scrollY + getHeaderOffset();
+                    // Find which column row the user is currently viewing
+                    let idx = 0;
+                    for (let i = columns.length - 1; i >= 0; i--) {
+                        if (columns[i].absTop <= scrollTop + 30) { idx = i; break; }
+                    }
+                    return idx;
+                }
+
+                function updateState() {
+                    if (columns.length <= 1) { hide(); return; }
+                    currentColIdx = findCurrentIndex();
+                    const scrollY = window.scrollY;
+                    const showUp = scrollY > 50; // any scroll down = show up button
+                    const showDown = currentColIdx < columns.length - 1;
+                    const wasUpVisible = btnUp.classList.contains('visible');
+                    const wasDownVisible = btnDown.classList.contains('visible');
+                    btnUp.classList.toggle('visible', showUp);
+                    btnDown.classList.toggle('visible', showDown);
+                    btnUp.classList.toggle('pulse', showUp);
+                    btnDown.classList.toggle('pulse', showDown);
+                    // Sync pulse: if both just became visible, restart animation together
+                    if (showUp && showDown && (!wasUpVisible || !wasDownVisible)) {
+                        btnUp.style.animation = 'none';
+                        btnDown.style.animation = 'none';
+                        void btnUp.offsetWidth; // force reflow
+                        btnUp.style.animation = '';
+                        btnDown.style.animation = '';
+                    }
+                }
+
+                function hide() {
+                    btnUp.classList.remove('visible');
+                    btnDown.classList.remove('visible');
+                }
+
+                function scrollTo(direction) {
+                    const offset = getHeaderOffset();
+                    if (direction === 'up') {
+                        if (currentColIdx <= 0) {
+                            // At or above first column → scroll to page top
+                            window.scrollTo({ top: 0, behavior: 'smooth' });
+                            return;
+                        }
+                        // Check if user has scrolled past the current column's head
+                        const currentTop = columns[currentColIdx].absTop - offset;
+                        const scrollY = window.scrollY;
+                        if (scrollY > currentTop + 30) {
+                            // Scrolled past current column head → go back to current column head
+                            window.scrollTo({ top: Math.max(0, currentTop), behavior: 'smooth' });
+                        } else {
+                            // At current column head → go to previous column head
+                            const targetTop = columns[currentColIdx - 1].absTop - offset;
+                            window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+                        }
+                    } else {
+                        const targetIdx = currentColIdx + 1;
+                        if (targetIdx >= columns.length) return;
+                        // Check if user has scrolled above the current column's head
+                        const currentTop = columns[currentColIdx].absTop - offset;
+                        const scrollY = window.scrollY;
+                        if (scrollY < currentTop - 30) {
+                            // Scrolled above current column head → go to current column head first
+                            window.scrollTo({ top: Math.max(0, currentTop), behavior: 'smooth' });
+                        } else {
+                            // At current column head → go to next column head
+                            const targetTop = columns[targetIdx].absTop - offset;
+                            window.scrollTo({ top: Math.max(0, targetTop), behavior: 'smooth' });
+                        }
+                    }
+                }
+
+                btnUp.addEventListener('click', () => scrollTo('up'));
+                btnDown.addEventListener('click', () => scrollTo('down'));
+
+                // Throttled scroll listener
+                let ticking = false;
+                window.addEventListener('scroll', () => {
+                    if (!ticking) {
+                        requestAnimationFrame(() => { updateState(); ticking = false; });
+                        ticking = true;
+                    }
+                }, { passive: true });
+
+                window.addEventListener('resize', () => setTimeout(rebuildColumns, 150));
+
+                // Re-build when view changes
+                const observer = new MutationObserver(() => setTimeout(rebuildColumns, 150));
+                const mainEl = document.getElementById('main-content');
+                if (mainEl) observer.observe(mainEl, { childList: true, subtree: false });
+
+                // Initial build
+                setTimeout(rebuildColumns, 800);
+            })();
+
+            // ─── Feature 2: Modal Sibling Navigation (Tactics View — hidden/implicit) ───
+            (function initModalSiblingNav() {
+                let siblings = [];
+                let sibIdx = -1;
+                let sibGroupName = '';
+
+                function buildSiblings(technique, groupName) {
+                    sibGroupName = groupName;
+                    let parent = null;
+                    for (const tactic of aidefendData.tactics) {
+                        for (const tech of (tactic.techniques || [])) {
+                            if (tech.id === technique.id) { parent = tech; break; }
+                            if (tech.subTechniques) {
+                                for (const sub of tech.subTechniques) {
+                                    if (sub.id === technique.id) { parent = tech; break; }
+                                }
+                            }
+                            if (parent) break;
+                        }
+                        if (parent) break;
+                    }
+                    if (!parent || !parent.subTechniques || parent.subTechniques.length === 0) {
+                        siblings = []; sibIdx = -1; return;
+                    }
+                    siblings = [parent, ...parent.subTechniques];
+                    sibIdx = siblings.findIndex(t => t.id === technique.id);
+                }
+
+                let lastNavTime = 0;
+                function navigate(dir) {
+                    const next = sibIdx + dir;
+                    if (next < 0 || next >= siblings.length) return;
+                    sibIdx = next;
+                    const content = document.querySelector('.modal-content');
+                    if (!content) { showTechniqueModal(siblings[next], sibGroupName); return; }
+                    // Cancel any in-progress animation
+                    content.getAnimations().forEach(a => a.cancel());
+                    content.classList.remove('slide-in-left', 'slide-in-right', 'crossfade');
+                    // Load content
+                    showTechniqueModal(siblings[next], sibGroupName);
+                    content.scrollTop = 0;
+                    // Choose animation: full slide for single press, gentle crossfade for rapid/held key
+                    const now = Date.now();
+                    const isRapid = (now - lastNavTime) < 300;
+                    lastNavTime = now;
+                    const animClass = isRapid ? 'crossfade' : (dir > 0 ? 'slide-in-left' : 'slide-in-right');
+                    void content.offsetWidth; // force reflow before adding class
+                    content.classList.add(animClass);
+                    content.addEventListener('animationend', () => {
+                        content.classList.remove(animClass);
+                    }, { once: true });
+                }
+
+                // Keyboard: left/right arrows
+                document.addEventListener('keydown', (e) => {
+                    const modal = document.getElementById('infoModal');
+                    if (!modal || !modal.classList.contains('active')) return;
+                    if (siblings.length === 0) return;
+                    if (e.key === 'ArrowLeft') { e.preventDefault(); navigate(-1); }
+                    if (e.key === 'ArrowRight') { e.preventDefault(); navigate(1); }
+                });
+
+                // Touch: swipe left/right
+                let tx = 0, ty = 0;
+                const modalEl = document.getElementById('infoModal');
+                if (modalEl) {
+                    modalEl.addEventListener('touchstart', (e) => {
+                        if (siblings.length === 0) return;
+                        tx = e.changedTouches[0].screenX;
+                        ty = e.changedTouches[0].screenY;
+                    }, { passive: true });
+                    modalEl.addEventListener('touchend', (e) => {
+                        if (siblings.length === 0) return;
+                        const dx = e.changedTouches[0].screenX - tx;
+                        const dy = e.changedTouches[0].screenY - ty;
+                        if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
+                            if (dx < 0) navigate(1);
+                            else navigate(-1);
+                        }
+                    }, { passive: true });
+                }
+
+                // Hook: build sibling list whenever a technique modal opens in tactic view
+                const _origShow = showTechniqueModal;
+                showTechniqueModal = function(technique, groupName) {
+                    _origShow(technique, groupName);
+                    if (currentView === 'tactic') {
+                        buildSiblings(technique, groupName);
+                    } else {
+                        siblings = []; sibIdx = -1;
+                    }
+                };
+            })();
+
             function prepareDataForViews() {
                 eligibleTechniques = [];
                 pillars = {
