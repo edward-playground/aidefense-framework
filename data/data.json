@@ -1,8 +1,8 @@
 {
   "version": {
     "schemaVersion": "2.0",
-    "dataVersion": "2026.03.29",
-    "generatedAt": "2026-03-29T00:15:43.502Z",
+    "dataVersion": "2026.03.30",
+    "generatedAt": "2026-03-30T05:34:39.565Z",
     "source": "bundled",
     "keywordStructure": "categorized"
   },
@@ -3768,8 +3768,8 @@
         },
         {
           "id": "AID-M-009",
-          "name": "Agent Autonomy Level Governance",
-          "description": "Establish a dual-dimensional governance framework for AI agent operations.<ul><li><strong>Dimension 1 — Agent Ceiling:</strong> each agent deployment is assigned a maximum autonomy level (L0–L5, per CSA Agentic Trust Framework) that caps its operational authority.</li><li><strong>Dimension 2 — Action Minimum:</strong> each tool or action is classified by blast radius into a minimum required level (per NIST per-action authorization).</li><li><strong>Enforcement:</strong> if agent_ceiling &lt; action_minimum → DENY. The agent cannot self-escalate.</li><li><strong>Human-in-the-loop (HITL) requirements by level:</strong><ul><li>L0–L1 require HITL for every action</li><li>L2 requires HITL for plan approval</li><li>L3 requires HITL only when boundaries are exceeded</li><li>L4–L5 operate with monitoring-only oversight</li></ul></li></ul>This ensures granular governance — the same agent may be authorized for low-risk reads but denied destructive operations — rather than blanket agent-level permissions.",
+          "name": "Agent Autonomy & Authority Governance",
+          "description": "Establish a multi-dimensional governance framework for AI agent operations, replacing single-ladder autonomy models with five governance dimensions plus a dynamic runtime overlay. Synthesizes the AWS Agentic AI Security Scoping Matrix, CSA CBRA, NIST NCCoE agent identity/authorization principles, OWASP LLM06, and Parasuraman/Sheridan/Wickens (2000).<h5>Design-Time Profile — defined at deployment</h5><ul><li><strong>Operating Scope</strong> (AWS Scoping Matrix) — No Agency / Prescribed / Supervised / Full Agency. Core enforcement at Scope 2+.</li><li><strong>Functional Autonomy Profile</strong> (Parasuraman extended) — per-function-type autonomy: Observe, Analyze, Decide, Execute, Delegate, Persist — each set to Autonomous / Supervised / Forbidden.</li><li><strong>Authority Envelope</strong> (OWASP LLM06 triad) — hard boundaries: tool scope, data scope, environment scope, effect scope, resource budget, delegation scope, policy constraints.</li></ul><h5>Runtime Enforcement — evaluated per action</h5><ul><li><strong>Effective Action Risk</strong> — computed from base class (Read / Reversible / Boundary / Destructive) adjusted by context factors (external recipient, blast radius, PII, prod, irreversibility, criticality, monetary impact). Hard override combinations force Destructive.</li><li><strong>Oversight Mode</strong> — determined by scope + effective risk + runtime state → DENY / APPROVE / ESCALATE / NOTIFY / MONITOR. DENY includes emergency break-glass under separate privileged governance.</li><li><strong>Runtime Trust State</strong> — dynamic overlay: Normal → Elevated → Degraded → Restricted → Quarantined. Auto-demotion on anomaly; promotion requires human approval.</li></ul><h5>Accountability — identity and delegation</h5><ul><li><strong>Identity &amp; Delegation Lineage</strong> (NIST NCCoE) — cryptographic agent identity, owner/sponsor, delegation chain with authority attenuation (each hop narrows permissions), short-lived task-scoped credentials.</li></ul>Governance skeleton — requires linkage with AID-H-019.* (guardrails), AID-D-003.* (anomaly detection → Runtime Trust State), AID-D-011 (privilege escalation detection), and AID-I/E/R families.",
           "pillar": [
             "app",
             "infra"
@@ -3783,8 +3783,8 @@
               "framework": "MITRE ATLAS",
               "items": [
                 "AML.T0048 External Harms",
-                "AML.T0053 AI Agent Tool Invocation (by restricting which tools each autonomy tier can invoke via OPA policy enforcement)",
-                "AML.T0101 Data Destruction via AI Agent Tool Invocation (by blocking write/destructive tool access for lower autonomy tiers)",
+                "AML.T0053 AI Agent Tool Invocation (authority envelope restricts tool scope; functional autonomy profile gates invocation per function type)",
+                "AML.T0101 Data Destruction via AI Agent Tool Invocation (effective action risk computation escalates destructive actions to DENY or APPROVE)",
                 "AML.T0103 Deploy AI Agent",
                 "AML.T0085.001 Data from AI Services: AI Agent Tools"
               ]
@@ -3813,18 +3813,18 @@
             {
               "framework": "OWASP Agentic AI Top 10 2026",
               "items": [
-                "ASI02:2026 Tool Misuse and Exploitation (by enforcing per-tier tool restrictions that limit the tool misuse attack surface)",
-                "ASI01:2026 Agent Goal Hijack (autonomy level governance constrains scope of goal hijack impact)",
-                "ASI03:2026 Identity and Privilege Abuse (by defining explicit privilege boundaries per autonomy level, blocking scope escalation at admission)",
-                "ASI08:2026 Cascading Failures (by requiring mandatory HITL for lower tiers, breaking autonomous fault propagation chains)",
-                "ASI10:2026 Rogue Agents (autonomy governance constrains rogue agent impact)"
+                "ASI02:2026 Tool Misuse and Exploitation (authority envelope restricts tool scope; per-action risk gating limits misuse surface)",
+                "ASI01:2026 Agent Goal Hijack (functional autonomy profile constrains which function types the agent can perform autonomously)",
+                "ASI03:2026 Identity and Privilege Abuse (identity lineage with authority attenuation blocks privilege escalation across delegation chains)",
+                "ASI08:2026 Cascading Failures (oversight mode escalation and runtime trust state demotion break autonomous fault propagation)",
+                "ASI10:2026 Rogue Agents (runtime trust state enables automatic demotion to Restricted/Quarantined on anomaly detection)"
               ]
             },
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
                 "NISTAML.039 Compromising connected resources",
-                "NISTAML.018 Prompt Injection (misuse via safety bypass; autonomy governance constrains impact)"
+                "NISTAML.018 Prompt Injection (authority envelope and effective action risk gating constrain the impact of injection-induced actions)"
               ]
             },
             {
@@ -3832,22 +3832,22 @@
               "items": [
                 "AITech-14.2 Abuse of Delegated Authority",
                 "AISubtech-14.2.1 Permission Escalation via Delegation",
-                "AITech-12.1 Tool Exploitation (autonomy governance constrains tool scope/approval)",
-                "AISubtech-12.1.1 Parameter Manipulation (approval + tool restrictions reduce exploitability)",
-                "AISubtech-12.1.3 Unsafe System / Browser / File Execution (partial—high-risk actions gated by autonomy level)",
-                "AITech-1.3 Goal Manipulation (HITL/control bundles reduce goal hijack impact)",
+                "AITech-12.1 Tool Exploitation (authority envelope restricts tool scope; oversight mode gates approval)",
+                "AISubtech-12.1.1 Parameter Manipulation (per-action risk computation detects parameter-level escalation)",
+                "AISubtech-12.1.3 Unsafe System / Browser / File Execution (partial — effective action risk escalation gates high-risk execution)",
+                "AITech-1.3 Goal Manipulation (functional autonomy profile and oversight mode escalation reduce goal hijack impact)",
                 "AISubtech-1.3.1 Goal Manipulation (Models, Agents) (partial)"
               ]
             },
             {
               "framework": "Google Secure AI Framework 2.0 - Risks",
               "items": [
-                "RA: Rogue Actions (dual-dimensional governance with per-action authorization is the primary control against rogue agent actions)",
-                "IIC: Insecure Integrated Component (per-tier tool restrictions limit the blast radius of insecure integrated tools)",
-                "PIJ: Prompt Injection (autonomy governance constrains the impact of prompt injection by limiting what actions can be executed)",
-                "MXF: Model Exfiltration (lower autonomy tiers are denied data-moving/exfiltration tools)",
-                "EDH: Excessive Data Handling (autonomy levels restrict which agents can access/process which data categories)",
-                "SDD: Sensitive Data Disclosure (destructive/data-moving actions gated by autonomy level reduce disclosure risk)"
+                "RA: Rogue Actions (multi-dimensional governance with per-action risk computation and runtime trust state is the primary control against rogue agent actions)",
+                "IIC: Insecure Integrated Component (authority envelope tool scope restrictions limit the blast radius of insecure integrated tools)",
+                "PIJ: Prompt Injection (authority envelope and effective action risk gating constrain the impact of injection-induced actions)",
+                "MXF: Model Exfiltration (authority envelope data scope and effect scope deny data-moving/exfiltration tools)",
+                "EDH: Excessive Data Handling (authority envelope data scope restricts which agents can access/process which data categories)",
+                "SDD: Sensitive Data Disclosure (effective action risk escalation gates data-moving actions; PII in payload triggers mandatory risk adjustment)"
               ]
             },
             {
@@ -3868,49 +3868,56 @@
             }
           ],
           "implementationGuidance": [
-            "Implement dual-dimensional autonomy governance: agent ceiling (CSA L0–L5) × action minimum (per blast radius). Enforce with OPA."
+            "Implement multi-dimensional agent governance: Operating Scope (AWS) × Functional Autonomy Profile (per function type) × Authority Envelope (OWASP triad) × Oversight Mode × Identity & Delegation, with Dynamic Runtime Trust State overlay. Enforce with OPA/Cedar."
           ],
           "toolsOpenSource": [
             "Open Policy Agent (OPA)",
+            "Cedar (AWS policy language)",
             "Kyverno (for Kubernetes policy enforcement)",
-            "Rego (policy language)"
+            "SPIFFE/SPIRE (agent cryptographic identity)"
           ],
           "toolsCommercial": [
             "Styra DAS",
-            "OneTrust AI Governance"
+            "HashiCorp Vault (JIT credentials)",
+            "OneTrust AI Governance",
+            "Microsoft Entra Agent ID"
           ],
           "subTechniques": [],
           "url": "https://aidefend.net",
           "keywords": {
             "attack": [
               "privilege escalation",
+              "data poisoning",
+              "man in the middle",
               "unauthorized access",
-              "stealth attack",
-              "persistent threat",
-              "shadow ai",
-              "bypass",
-              "evasion",
-              "undetected",
-              "reconnaissance",
-              "misconfiguration",
-              "exposure"
+              "risk",
+              "context",
+              "state",
+              "degraded",
+              "credentials",
+              "tampering",
+              "manipulation",
+              "corruption",
+              "forgery",
+              "interception",
+              "bypass"
             ],
             "defense": [
+              "anomaly detection",
               "blast radius",
               "policy enforcement",
               "agent",
               "autonomy",
-              "level",
+              "authority",
               "governance",
               "authorization",
-              "human-in-the-loop",
-              "trust",
+              "guardrail",
+              "guardrails",
+              "scope",
               "enforcement",
-              "deny",
-              "authorized",
-              "denied",
-              "permissions",
-              "enforce"
+              "analyze",
+              "budget",
+              "policy"
             ]
           }
         }

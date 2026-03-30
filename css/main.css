@@ -638,7 +638,8 @@ body.modal-open {
     color: var(--text-color);
 }
 
-.modal-content p {
+.modal-content p,
+.modal-content .technique-description {
     font-size: 0.9375rem;
     line-height: 1.7;
     margin-bottom: 1rem;

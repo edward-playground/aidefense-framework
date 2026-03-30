@@ -2328,9 +2328,9 @@
                 elements.modalActions.appendChild(createLinkButton(technique));
                 // Title
                 elements.modalBody.appendChild(createElement('h2', { textContent: `${technique.id}: ${technique.name}` }));
-                const p = createElement('p', { className: 'mb-4 leading-relaxed text-sm' });
-                p.innerHTML = DOMPurify.sanitize(technique.description || 'No description available.');
-                elements.modalBody.appendChild(p);
+                const descEl = createElement('div', { className: 'technique-description mb-4 leading-relaxed text-sm' });
+                descEl.innerHTML = DOMPurify.sanitize(technique.description || 'No description available.');
+                elements.modalBody.appendChild(descEl);
                 if (technique.warning) {
                     const warningDiv = createElement('div', { className: 'warning-note' });
                     const warningP = createElement('p');
