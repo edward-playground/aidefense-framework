@@ -1060,7 +1060,7 @@ export const modelTactic = {
                 {
                     "id": "AID-M-003.002",
                     "name": "Performance & Operational Metric Baselining", "pillar": ["model"], "phase": ["validation", "operation"],
-                    "description": "Establishes a quantitative, empirical baseline of a model's expected behavior under normal conditions. This involves calculating and recording two types of metrics: 1) key performance indicators (e.g., accuracy, precision, F1-score) on a trusted, 'golden' dataset, and 2) operational metrics (e.g., inference latency, confidence scores, output distributions) derived from simulated or live traffic. This documented baseline serves as the ground truth for drift detection, anomaly detection, and ongoing performance monitoring.",
+                    "description": "Establishes a quantitative, empirical baseline of a model's expected behavior under normal conditions. This involves calculating and recording two types of metrics:<ul><li><strong>Key performance indicators</strong> (e.g., accuracy, precision, F1-score) on a trusted, 'golden' dataset.</li><li><strong>Operational metrics</strong> (e.g., inference latency, confidence scores, output distributions) derived from simulated or live traffic.</li></ul>This documented baseline serves as the ground truth for drift detection, anomaly detection, and ongoing performance monitoring.",
                     "implementationGuidance": [
                         {
                             "implementation": "Calculate and store key performance metrics on a trusted validation dataset.",
@@ -1618,7 +1618,7 @@ export const modelTactic = {
                 {
                     "id": "AID-M-003.007", "pillar": ["model"], "phase": ["validation"],
                     "name": "GNN Structural Baselining & Discrepancy Profiling",
-                    "description": "Employs self-supervised learning during the validation phase to generate baseline artifacts for Graph Neural Network (GNN) backdoor defense. Trains an auxiliary GNN model that learns intrinsic semantic information and attribute importance of nodes without using potentially poisoned labels, producing clean embedding distributions, drift profiles, and discrepancy statistics. These baseline artifacts are persisted for use by downstream detection techniques (see AID-D-012.001). This technique does not perform alerting; it generates and stores the trusted reference state.",
+                    "description": "Employs self-supervised learning during the validation phase to generate baseline artifacts for Graph Neural Network (GNN) backdoor defense.<br/><br/>Trains an auxiliary GNN model that learns intrinsic semantic information and attribute importance of nodes without using potentially poisoned labels, producing clean embedding distributions, drift profiles, and discrepancy statistics.<br/><br/>These baseline artifacts are persisted for use by downstream detection techniques (see AID-D-012.001). This technique does not perform alerting; it generates and stores the trusted reference state.",
                     "implementationGuidance": [
                         {
                             "implementation": "Train an auxiliary GNN model using a self-supervised task to learn clean node representations.",

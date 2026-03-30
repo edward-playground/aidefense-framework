@@ -1216,7 +1216,7 @@ export const evictTactic = {
             "name": "Compromised Session Termination & State Purging",
             "pillar": ["infra", "app"],
             "phase": ["response"],
-            "description": "When communication channels or user/agent sessions are suspected or confirmed compromised, immediately expel the adversary and remove residual application-layer footholds. This technique focuses on application state after active runtime containment (see AID-E-002): terminating active sessions, revoking or globally invalidating tokens, purging tainted conversational memory, and dismantling malicious webhooks, rogue tool registrations, queued jobs, or background workers. The goal is to prevent any residual access or auto-respawn path after the initial foothold has been killed.",
+            "description": "When communication channels or user/agent sessions are suspected or confirmed compromised, immediately expel the adversary and remove residual application-layer footholds. This technique focuses on application state after active runtime containment (see AID-E-002).<br/><br/><strong>Eviction Actions</strong><ul><li>Terminating active sessions</li><li>Revoking or globally invalidating tokens</li><li>Purging tainted conversational memory</li><li>Dismantling malicious webhooks, rogue tool registrations, queued jobs, or background workers</li></ul>The goal is to prevent any residual access or auto-respawn path after the initial foothold has been killed.",
             "toolsOpenSource": [
                 "Application server admin interfaces for session expiration",
                 "Custom scripts using JWT libraries or flushing session stores (Redis, Memcached)",

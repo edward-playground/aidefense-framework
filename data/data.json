@@ -2,7 +2,7 @@
   "version": {
     "schemaVersion": "2.0",
     "dataVersion": "2026.03.30",
-    "generatedAt": "2026-03-30T05:34:39.565Z",
+    "generatedAt": "2026-03-30T06:39:34.839Z",
     "source": "bundled",
     "keywordStructure": "categorized"
   },
@@ -1387,7 +1387,7 @@
             {
               "id": "AID-M-003.002",
               "name": "Performance & Operational Metric Baselining",
-              "description": "Establishes a quantitative, empirical baseline of a model's expected behavior under normal conditions. This involves calculating and recording two types of metrics: 1) key performance indicators (e.g., accuracy, precision, F1-score) on a trusted, 'golden' dataset, and 2) operational metrics (e.g., inference latency, confidence scores, output distributions) derived from simulated or live traffic. This documented baseline serves as the ground truth for drift detection, anomaly detection, and ongoing performance monitoring.",
+              "description": "Establishes a quantitative, empirical baseline of a model's expected behavior under normal conditions. This involves calculating and recording two types of metrics:<ul><li><strong>Key performance indicators</strong> (e.g., accuracy, precision, F1-score) on a trusted, 'golden' dataset.</li><li><strong>Operational metrics</strong> (e.g., inference latency, confidence scores, output distributions) derived from simulated or live traffic.</li></ul>This documented baseline serves as the ground truth for drift detection, anomaly detection, and ongoing performance monitoring.",
               "pillar": [
                 "model"
               ],
@@ -2079,7 +2079,7 @@
             {
               "id": "AID-M-003.007",
               "name": "GNN Structural Baselining & Discrepancy Profiling",
-              "description": "Employs self-supervised learning during the validation phase to generate baseline artifacts for Graph Neural Network (GNN) backdoor defense. Trains an auxiliary GNN model that learns intrinsic semantic information and attribute importance of nodes without using potentially poisoned labels, producing clean embedding distributions, drift profiles, and discrepancy statistics. These baseline artifacts are persisted for use by downstream detection techniques (see AID-D-012.001). This technique does not perform alerting; it generates and stores the trusted reference state.",
+              "description": "Employs self-supervised learning during the validation phase to generate baseline artifacts for Graph Neural Network (GNN) backdoor defense.<br/><br/>Trains an auxiliary GNN model that learns intrinsic semantic information and attribute importance of nodes without using potentially poisoned labels, producing clean embedding distributions, drift profiles, and discrepancy statistics.<br/><br/>These baseline artifacts are persisted for use by downstream detection techniques (see AID-D-012.001). This technique does not perform alerting; it generates and stores the trusted reference state.",
               "pillar": [
                 "model"
               ],
@@ -4054,7 +4054,7 @@
         {
           "id": "AID-H-002",
           "name": "AI-Contextualized Data Sanitization & Input Validation",
-          "description": "Implement rigorous validation, sanitization, and filtering mechanisms for all data fed into AI systems. This applies to training data, fine-tuning data, and live operational inputs (including user prompts for LLMs). The goal is to detect and remove or neutralize malicious content, anomalous data, out-of-distribution samples, or inputs structured to exploit vulnerabilities like prompt injection or data poisoning before they can adversely affect the model or downstream systems. For LLMs, this involves specific techniques like stripping or encoding control tokens and filtering for known injection patterns or harmful content. For multimodal systems, this includes validating and sanitizing inputs across all modalities (e.g., text, image, audio, video) and ensuring that inputs in one modality cannot be readily used to trigger vulnerabilities, bypass controls, or inject malicious content into another modality processing pathway.",
+          "description": "Implement rigorous validation, sanitization, and filtering mechanisms for all data fed into AI systems.<br/><br/><strong>Training & Fine-Tuning Data:</strong> This applies to training data, fine-tuning data, and live operational inputs (including user prompts for LLMs). The goal is to detect and remove or neutralize malicious content, anomalous data, out-of-distribution samples, or inputs structured to exploit vulnerabilities like prompt injection or data poisoning before they can adversely affect the model or downstream systems.<br/><br/><strong>LLM-Specific Controls:</strong> For LLMs, this involves specific techniques like stripping or encoding control tokens and filtering for known injection patterns or harmful content.<br/><br/><strong>Multimodal Systems:</strong> For multimodal systems, this includes validating and sanitizing inputs across all modalities (e.g., text, image, audio, video) and ensuring that inputs in one modality cannot be readily used to trigger vulnerabilities, bypass controls, or inject malicious content into another modality processing pathway.",
           "pillar": [
             "data",
             "app"
@@ -8517,7 +8517,7 @@
             {
               "id": "AID-H-007.004",
               "name": "Evaluation Data Integrity, Sufficiency Assurance & Promotion Governance",
-              "description": "Ensure the integrity, independence, and sufficiency of evaluation artifacts used in validation and promotion decisions. This includes evaluation datasets, holdout sets, benchmarks, safety test suites, and security regression corpora. Existing techniques already address training environment security, reproducibility, detector-specific evaluation, and benchmark execution, but this sub-technique provides a general-purpose evaluation security discipline that applies across model types and promotion workflows. Its threat model is simple but high impact: if an attacker can manipulate evaluation data or evaluation evidence, a compromised model can appear to pass all validation gates and be promoted as if it were safe.",
+              "description": "Ensure the integrity, independence, and sufficiency of evaluation artifacts used in validation and promotion decisions. This includes evaluation datasets, holdout sets, benchmarks, safety test suites, and security regression corpora.<br/><br/><strong>What this covers:</strong> Existing techniques already address training environment security, reproducibility, detector-specific evaluation, and benchmark execution, but this sub-technique provides a general-purpose evaluation security discipline that applies across model types and promotion workflows.<br/><br/><strong>Threat model:</strong> The threat model is simple but high impact: if an attacker can manipulate evaluation data or evaluation evidence, a compromised model can appear to pass all validation gates and be promoted as if it were safe.",
               "pillar": [
                 "data",
                 "app"
@@ -9892,7 +9892,7 @@
         {
           "id": "AID-H-011",
           "name": "Classifier-Free Guidance Hardening",
-          "description": "A set of techniques focused on hardening the Classifier-Free Guidance (CFG) mechanism in diffusion models. CFG is a core component that steers image generation towards a text prompt, but adversaries can exploit high guidance scale values to force the model to generate harmful, unsafe, or out-of-distribution content. These hardening techniques aim to control the CFG scale and its influence, preventing its misuse while preserving the model's creative capabilities. High CFG scales can overpower built-in safety conditioning and negative prompts, effectively steering the diffusion model toward disallowed or high-risk generations. This hardening treats CFG as a runtime safety-critical control surface, not just a creative knob, and enforces guardrails on how guidance is applied at inference time.",
+          "description": "A set of techniques focused on hardening the Classifier-Free Guidance (CFG) mechanism in diffusion models.<br/><br/><strong>What CFG does:</strong> CFG is a core component that steers image generation towards a text prompt, but adversaries can exploit high guidance scale values to force the model to generate harmful, unsafe, or out-of-distribution content.<br/><br/><strong>The threat:</strong> High CFG scales can overpower built-in safety conditioning and negative prompts, effectively steering the diffusion model toward disallowed or high-risk generations.<br/><br/><strong>Defense goal:</strong> These hardening techniques aim to control the CFG scale and its influence, preventing its misuse while preserving the model's creative capabilities. This hardening treats CFG as a runtime safety-critical control surface, not just a creative knob, and enforces guardrails on how guidance is applied at inference time.",
           "pillar": [
             "model"
           ],
@@ -9983,21 +9983,16 @@
           "url": "https://aidefend.net",
           "keywords": {
             "attack": [
-              "malicious input",
-              "invalid input",
               "apt",
               "prompt",
               "adversaries",
               "exploit",
               "harmful",
-              "misuse",
+              "threat",
               "prompts",
+              "misuse",
               "parameter",
-              "risk",
-              "injection",
-              "bypass",
-              "exploitation",
-              "vulnerability"
+              "risk"
             ],
             "defense": [
               "input validation",
@@ -10006,9 +10001,10 @@
               "hardening",
               "guardrail",
               "guardrails",
+              "safety",
+              "defense",
               "control",
               "preventing",
-              "safety",
               "validation",
               "analysis",
               "enforce",
@@ -12863,7 +12859,7 @@
             {
               "id": "AID-H-018.007",
               "name": "Dual-LLM Isolation Pattern",
-              "description": "Implement a Privileged-LLM (P-LLM) and Quarantined-LLM (Q-LLM) split to isolate untrusted data processing from privileged planning and tool execution. The Q-LLM is the only component allowed to directly read raw untrusted content (web pages, emails, retrieved documents, tool outputs). The P-LLM can plan and request tool actions, but it must never see raw untrusted content; it only consumes Q-LLM's structured, validated outputs. This pattern reduces the impact of indirect prompt injection: even if untrusted content contains malicious instructions, they are confined to the Q-LLM, which has no tool privileges. <p>This privileged/quarantined separation pattern is formally described as the CaMeL (CApabilities for MachinE Learning) architecture by Google DeepMind, utilizing a dedicated coding/parsing model to isolate control flow from untrusted data.</p>",
+              "description": "Implement a Privileged-LLM (P-LLM) and Quarantined-LLM (Q-LLM) split to isolate untrusted data processing from privileged planning and tool execution.<br/><br/><strong>Q-LLM (Quarantined):</strong> The only component allowed to directly read raw untrusted content (web pages, emails, retrieved documents, tool outputs).<br/><br/><strong>P-LLM (Privileged):</strong> Can plan and request tool actions, but it must never see raw untrusted content; it only consumes Q-LLM's structured, validated outputs.<br/><br/><strong>Why this works:</strong> This pattern reduces the impact of indirect prompt injection: even if untrusted content contains malicious instructions, they are confined to the Q-LLM, which has no tool privileges.<br/><br/>This privileged/quarantined separation pattern is formally described as the CaMeL (CApabilities for MachinE Learning) architecture by Google DeepMind, utilizing a dedicated coding/parsing model to isolate control flow from untrusted data.",
               "pillar": [
                 "app",
                 "infra",
@@ -12994,9 +12990,9 @@
                   "isolation",
                   "pattern",
                   "isolate",
+                  "quarantined",
                   "validated",
                   "privileges",
-                  "quarantined",
                   "control",
                   "enforce",
                   "trust"
@@ -13504,7 +13500,7 @@
             {
               "id": "AID-H-019.004",
               "name": "Intent-Based Dynamic Capability Scoping",
-              "description": "Dynamically restrict an agent's tool capabilities per request (or per session) based on the user's initial intent, instead of granting a broad, static role-based allowlist. The system derives a minimal set of allowed tools and action budgets before execution and enforces it in a tamper-proof way using a signed session scope. This prevents prompt injection from expanding an agent's effective privileges: even if the model \"decides\" to call a disallowed tool, the runtime enforcement layer blocks it. <p>This approach aligns with the capability-based defense strategy proposed in Google DeepMind's CaMeL (CApabilities for MachinE Learning), designed to prevent prompt injection from expanding runtime privileges.</p>",
+              "description": "Dynamically restrict an agent's tool capabilities per request (or per session) based on the user's initial intent, instead of granting a broad, static role-based allowlist.<br/><br/><strong>How it works:</strong> The system derives a minimal set of allowed tools and action budgets before execution and enforces it in a tamper-proof way using a signed session scope.<br/><br/><strong>Enforcement guarantee:</strong> This prevents prompt injection from expanding an agent's effective privileges: even if the model \"decides\" to call a disallowed tool, the runtime enforcement layer blocks it.<br/><br/>This approach aligns with the capability-based defense strategy proposed in Google DeepMind's CaMeL (CApabilities for MachinE Learning), designed to prevent prompt injection from expanding runtime privileges.",
               "pillar": [
                 "app",
                 "infra"
@@ -13632,8 +13628,8 @@
                   "budgets",
                   "signed",
                   "scope",
-                  "privileges",
                   "enforcement",
+                  "privileges",
                   "defense",
                   "prevent",
                   "trusted"
@@ -13643,7 +13639,7 @@
             {
               "id": "AID-H-019.005",
               "name": "Value-Level Capability Metadata & Data Flow Sink Enforcement",
-              "description": "Enforce data-flow safety for agentic systems by tracking the provenance and sensitivity of runtime values (e.g., tool outputs, RAG chunks, web content) and blocking unsafe transfers into sensitive sinks (e.g., outbound email, external HTTP requests, database writes). This closes a critical 'data flow diversion' gap: even if an attacker cannot change which tool is called, they may still manipulate tool parameters (e.g., recipients, URLs, file targets) to exfiltrate data. This sub-technique complements role-based allowlists and parameter schema validation by answering a different question: not only 'Is this parameter well-formed?' but also 'Should this value be allowed to flow to this destination?'.",
+              "description": "Enforce data-flow safety for agentic systems by tracking the provenance and sensitivity of runtime values (e.g., tool outputs, RAG chunks, web content) and blocking unsafe transfers into sensitive sinks (e.g., outbound email, external HTTP requests, database writes).<br/><br/><strong>The gap this closes:</strong> Even if an attacker cannot change which tool is called, they may still manipulate tool parameters (e.g., recipients, URLs, file targets) to exfiltrate data. This is the critical 'data flow diversion' gap.<br/><br/><strong>How it complements other controls:</strong> This sub-technique complements role-based allowlists and parameter schema validation by answering a different question: not only 'Is this parameter well-formed?' but also 'Should this value be allowed to flow to this destination?'.",
               "pillar": [
                 "app",
                 "data",
@@ -14666,7 +14662,7 @@
         {
           "id": "AID-H-022",
           "name": "AI Agent Configuration Integrity & Hardening",
-          "description": "This technique establishes and enforces the integrity and security of an AI agent's instructional configurations (e.g., system prompts, operational parameters, external configuration files like `CLAUDE.md`). It employs a defense-in-depth strategy, combining client-side controls to prevent the creation of insecure configurations in development environments with cryptographic verification at runtime to ensure the agent only operates based on a trusted, untampered directive. **Crucially, this technique mandates the use of structured, non-executable formats (e.g., schema-validated JSON, YAML) for configurations, prohibiting the use of formats that could be interpreted as executable code.** This directly counters attacks where adversaries manipulate an agent's behavior by injecting malicious instructions through external or modified configuration files.",
+          "description": "This technique establishes and enforces the integrity and security of an AI agent's instructional configurations (e.g., system prompts, operational parameters, external configuration files like <code>CLAUDE.md</code>).<br/><br/><strong>Defense-in-Depth Strategy:</strong> It combines client-side controls to prevent the creation of insecure configurations in development environments with cryptographic verification at runtime to ensure the agent only operates based on a trusted, untampered directive.<br/><br/><strong>Structured Format Mandate:</strong> Crucially, this technique mandates the use of structured, non-executable formats (e.g., schema-validated JSON, YAML) for configurations, prohibiting the use of formats that could be interpreted as executable code.<br/><br/>This directly counters attacks where adversaries manipulate an agent's behavior by injecting malicious instructions through external or modified configuration files.",
           "pillar": [
             "infra",
             "app"
@@ -17058,7 +17054,7 @@
         {
           "id": "AID-H-028",
           "name": "Inference Cache Integrity, Isolation & Poisoning Prevention",
-          "description": "Protect inference-time caches against poisoning, cross-tenant contamination, and unsafe reuse. This technique covers both semantic or prompt-response caches (application layer) and serving-state caches such as prefix or KV caches (infrastructure layer). It enforces strict cache-key binding, tenant/session isolation, freshness and TTL controls, invalidation on model or policy change, provenance logging, and fail-closed reuse policies when authorization, system prompt, or execution context changes. Scope boundary: AID-H-009.004 handles GPU VRAM physical residue hygiene (hardware layer); AID-H-009.005 handles confidential inference via TEE (confidentiality). This technique handles cache logical integrity and isolation (application/serving layer).",
+          "description": "Protect inference-time caches against poisoning, cross-tenant contamination, and unsafe reuse.<br/><br/><strong>Coverage:</strong> This technique covers both semantic or prompt-response caches (application layer) and serving-state caches such as prefix or KV caches (infrastructure layer).<br/><br/><strong>Controls enforced:</strong> Strict cache-key binding, tenant/session isolation, freshness and TTL controls, invalidation on model or policy change, provenance logging, and fail-closed reuse policies when authorization, system prompt, or execution context changes.<br/><br/><strong>Scope boundary:</strong> AID-H-009.004 handles GPU VRAM physical residue hygiene (hardware layer); AID-H-009.005 handles confidential inference via TEE (confidentiality). This technique handles cache logical integrity and isolation (application/serving layer).",
           "pillar": [
             "app",
             "infra"
@@ -17190,19 +17186,19 @@
               "prevention",
               "authorization",
               "protect",
+              "enforced",
               "session",
               "policy",
               "provenance",
               "logging",
-              "policies",
-              "scope"
+              "policies"
             ]
           }
         },
         {
           "id": "AID-H-029",
           "name": "MCP & Tool Client Security Hardening",
-          "description": "Harden the MCP or tool client itself — the local runtime, SDK, IDE extension, CLI client, or desktop application that initiates connections to remote MCP servers, stores credentials, caches server responses, and mediates user permissions. While AID-H-025 secures tool and descriptor resolution from the orchestrator or server side, this technique treats the client application as its own trust boundary and attack surface. Coverage includes: (1) validating the authenticity of the remote MCP server before session establishment, (2) protecting locally stored credentials and tokens from extraction, (3) preventing sensitive data from leaking through client-managed logs, caches, temporary files, or crash artifacts, (4) preventing malicious server responses from triggering client-side code execution or unsafe rendering behavior, (5) enforcing secure client session and state lifecycle controls, and (6) verifying the integrity of the client binary, plugins, and update channel. This technique is especially relevant as the MCP ecosystem expands across desktop apps, IDE plugins, browser-based clients, CLI tools, and custom local orchestrators.",
+          "description": "Harden the MCP or tool client itself — the local runtime, SDK, IDE extension, CLI client, or desktop application that initiates connections to remote MCP servers, stores credentials, caches server responses, and mediates user permissions. While AID-H-025 secures tool and descriptor resolution from the orchestrator or server side, this technique treats the client application as its own trust boundary and attack surface.<br/><br/><strong>Coverage includes:</strong><ul><li>Validating the authenticity of the remote MCP server before session establishment.</li><li>Protecting locally stored credentials and tokens from extraction.</li><li>Preventing sensitive data from leaking through client-managed logs, caches, temporary files, or crash artifacts.</li><li>Preventing malicious server responses from triggering client-side code execution or unsafe rendering behavior.</li><li>Enforcing secure client session and state lifecycle controls.</li><li>Verifying the integrity of the client binary, plugins, and update channel.</li></ul>This technique is especially relevant as the MCP ecosystem expands across desktop apps, IDE plugins, browser-based clients, CLI tools, and custom local orchestrators.",
           "pillar": [
             "infra",
             "app",
@@ -17313,7 +17309,7 @@
             {
               "id": "AID-H-029.001",
               "name": "MCP Server Authenticity Validation & Connection Pinning",
-              "description": "Before establishing a session with any MCP server, the client must verify the server's identity beyond ordinary endpoint discovery. This sub-technique implements server allowlisting, transport identity verification, and optional connection pinning (for example SPKI pinning, certificate fingerprint pinning, or SPIFFE identity validation) with fail-closed behavior when the remote identity cannot be trusted. This prevents connection to spoofed, typosquatted, or redirected MCP servers and reduces the risk of man-in-the-middle attacks or registry manipulation. Scope boundary: AID-H-025 handles tool and descriptor resolution integrity; this sub-technique handles the client's own connection-level trust decision.",
+              "description": "Before establishing a session with any MCP server, the client must verify the server's identity beyond ordinary endpoint discovery.<br/><br/><strong>Verification methods:</strong> This sub-technique implements server allowlisting, transport identity verification, and optional connection pinning (for example SPKI pinning, certificate fingerprint pinning, or SPIFFE identity validation) with fail-closed behavior when the remote identity cannot be trusted.<br/><br/><strong>Threats addressed:</strong> This prevents connection to spoofed, typosquatted, or redirected MCP servers and reduces the risk of man-in-the-middle attacks or registry manipulation.<br/><br/><strong>Scope boundary:</strong> AID-H-025 handles tool and descriptor resolution integrity; this sub-technique handles the client's own connection-level trust decision.",
               "pillar": [
                 "infra",
                 "app"
@@ -18081,7 +18077,7 @@
             {
               "id": "AID-H-029.007",
               "name": "Server-Initiated Sampling Request Validation & Sandboxing",
-              "description": "Validate, constrain, and sandbox MCP bidirectional sampling requests in which a server sends a sampling/createMessage call to prompt the client's LLM. Unlike ordinary tool responses handled by AID-H-029.004, sampling gives the server direct control over what the client's LLM generates, including the ability to supply a system prompt, specify model preferences, and request tool-use within the completion. Known attack vectors include resource theft through hidden token consumption, conversation hijacking through persistent instruction injection into the LLM context, and covert tool invocation where the server crafts a sampling prompt that causes the LLM to call tools without the user's knowledge. This sub-technique enforces schema validation and token budget limits on incoming sampling requests, scans server-supplied prompts for injection markers and encoding bypasses, isolates sampling context from the user's primary conversation to prevent cross-contamination, and enforces iteration limits on tool-use loops triggered within sampling completions.",
+              "description": "Validate, constrain, and sandbox MCP bidirectional sampling requests in which a server sends a sampling/createMessage call to prompt the client's LLM. Unlike ordinary tool responses handled by AID-H-029.004, sampling gives the server direct control over what the client's LLM generates, including the ability to supply a system prompt, specify model preferences, and request tool-use within the completion.<br/><br/><strong>Known attack vectors:</strong><ul><li>Resource theft through hidden token consumption.</li><li>Conversation hijacking through persistent instruction injection into the LLM context.</li><li>Covert tool invocation where the server crafts a sampling prompt that causes the LLM to call tools without the user's knowledge.</li></ul><strong>Defense measures:</strong> This sub-technique enforces schema validation and token budget limits on incoming sampling requests, scans server-supplied prompts for injection markers and encoding bypasses, isolates sampling context from the user's primary conversation to prevent cross-contamination, and enforces iteration limits on tool-use loops triggered within sampling completions.",
               "pillar": [
                 "app"
               ],
@@ -18200,11 +18196,11 @@
                   "sandbox",
                   "control",
                   "token",
+                  "defense",
                   "budget",
                   "limits",
                   "prevent",
-                  "enforce",
-                  "reject"
+                  "enforce"
                 ]
               }
             }
@@ -18245,7 +18241,7 @@
         {
           "id": "AID-H-030",
           "name": "AI Data-Use Authorization & Lifecycle-Stage Boundary Enforcement",
-          "description": "Enforce purpose-bound, lifecycle-stage-aware authorization controls on data consumed by or generated within AI systems. While AID-M-002 tracks provenance and lineage, AID-H-019.005 controls runtime data-flow sinks, and AID-I-004.005 enforces retention and forgetting policies, this technique addresses a distinct enforcement primitive: whether a given data asset is authorized for use in a specific AI lifecycle stage such as training, fine-tuning, evaluation, RAG indexing, inference context assembly, logging, memory retention, or retraining corpus construction. This goes beyond 'where data flows' and enforces 'what the data is allowed to be used for'. The technique operationalizes consent scope, contractual purpose limitations, jurisdictional restrictions, and internal data classification policies into machine-enforceable gates at each lifecycle-stage boundary. Examples include customer service transcripts authorized for real-time support but prohibited from fine-tuning, legal documents authorized for RAG retrieval but prohibited from long-term memory, and HR data authorized for summarization but prohibited from shared indexes or retraining corpora. Google SAIF risk categories EDH (Excessive Data Handling) and UTD (Unauthorized Training Data) map directly to this technique's scope.",
+          "description": "Enforce purpose-bound, lifecycle-stage-aware authorization controls on data consumed by or generated within AI systems.<br/><br/><strong>Scope & Distinction:</strong> While AID-M-002 tracks provenance and lineage, AID-H-019.005 controls runtime data-flow sinks, and AID-I-004.005 enforces retention and forgetting policies, this technique addresses a distinct enforcement primitive: whether a given data asset is authorized for use in a specific AI lifecycle stage such as training, fine-tuning, evaluation, RAG indexing, inference context assembly, logging, memory retention, or retraining corpus construction. This goes beyond 'where data flows' and enforces 'what the data is allowed to be used for'.<br/><br/><strong>Operationalization:</strong> The technique operationalizes consent scope, contractual purpose limitations, jurisdictional restrictions, and internal data classification policies into machine-enforceable gates at each lifecycle-stage boundary.<br/><br/><strong>Examples:</strong><ul><li>Customer service transcripts authorized for real-time support but prohibited from fine-tuning.</li><li>Legal documents authorized for RAG retrieval but prohibited from long-term memory.</li><li>HR data authorized for summarization but prohibited from shared indexes or retraining corpora.</li></ul>Google SAIF risk categories EDH (Excessive Data Handling) and UTD (Unauthorized Training Data) map directly to this technique's scope.",
           "pillar": [
             "data",
             "app"
@@ -18737,13 +18733,13 @@
               "boundary",
               "enforcement",
               "enforce",
+              "scope",
               "provenance",
               "lineage",
               "policies",
               "authorized",
               "evaluation",
-              "logging",
-              "scope"
+              "logging"
             ]
           }
         }
@@ -18859,7 +18855,7 @@
             {
               "id": "AID-D-001.001",
               "name": "Per-Prompt Content & Obfuscation Analysis",
-              "description": "Performs real-time analysis on individual prompts to detect malicious content, prompt injection, and jailbreaking attempts. This sub-technique combines two key functions: 1) identifying known malicious patterns and harmful intent using heuristics, regex, and specialized guardrail models, and 2) detecting attempts to hide or obscure these attacks through obfuscation techniques like character encoding (e.g., Base64), homoglyphs, or high-entropy strings. It acts as a primary, synchronous guardrail at the input layer.",
+              "description": "Performs real-time analysis on individual prompts to detect malicious content, prompt injection, and jailbreaking attempts. This sub-technique combines two key functions:<ul><li><strong>Pattern & Intent Detection:</strong> Identifying known malicious patterns and harmful intent using heuristics, regex, and specialized guardrail models.</li><li><strong>Obfuscation Detection:</strong> Detecting attempts to hide or obscure attacks through obfuscation techniques like character encoding (e.g., Base64), homoglyphs, or high-entropy strings.</li></ul>It acts as a primary, synchronous guardrail at the input layer.",
               "pillar": [
                 "app"
               ],
@@ -18969,7 +18965,6 @@
                 "attack": [
                   "prompt injection",
                   "harmful output",
-                  "policy violation",
                   "prompts",
                   "malicious",
                   "prompt",
@@ -18977,8 +18972,12 @@
                   "jailbreaking",
                   "key",
                   "harmful",
-                  "jailbreak",
-                  "bypass"
+                  "evasion",
+                  "bypass",
+                  "stealth",
+                  "obfuscation",
+                  "hiding",
+                  "jailbreak"
                 ],
                 "defense": [
                   "per-prompt",
@@ -18988,6 +18987,7 @@
                   "guardrail",
                   "detect",
                   "key",
+                  "detection",
                   "detecting",
                   "inspect",
                   "policy",
@@ -19537,7 +19537,7 @@
             {
               "id": "AID-D-001.006",
               "name": "Recalled Memory Pre-Rehydration Scanning",
-              "description": "Treat every memory entry recalled from persistent storage (session memory, vector databases, serialized conversation history) as untrusted input and scan it for adversarial content before it enters final prompt assembly. This sub-technique addresses a gap that cryptographic memory integrity controls (e.g., AID-I-004.003 Signed Write/Verify Read) do not cover: a memory entry can be legitimately written, properly signed, and cryptographically intact, yet still contain a latent injection payload that was not detected at original write time. Attackers exploiting Logic-layer Prompt Control Injection (LPCI) deliberately embed encoded, obfuscated, or conditionally triggered payloads into memory stores, relying on the fact that most systems only scan at ingress (user input time) and implicitly trust recalled memory during session rehydration. This sub-technique breaks that implicit trust by inserting a recall gate between the memory loader and the prompt builder. The gate re-applies the same safety scanners used for live user input (reusing AID-D-001.001 / AID-H-002.002 detection logic) plus recall-specific checks: role/authority assertion patterns, function-like trigger markers, encoded payload fragments, and previously quarantined content fingerprints. High-risk entries are degraded, quarantined, or routed to human review before they can influence LLM reasoning. This is the detection-side complement to AID-I-004.003 (integrity verification) and AID-I-004.004 (promotion gates): those controls ensure memory was not tampered with after write; this control ensures memory content is safe to re-enter context regardless of how or when it was written.",
+              "description": "Treat every memory entry recalled from persistent storage (session memory, vector databases, serialized conversation history) as <strong>untrusted input</strong> and scan it for adversarial content before it enters final prompt assembly.<br/><br/><strong>The gap this addresses:</strong> Cryptographic memory integrity controls (e.g., AID-I-004.003 Signed Write/Verify Read) verify that memory was not tampered with after write — but a memory entry can be legitimately written, properly signed, and cryptographically intact, yet still contain a latent injection payload that was not detected at original write time.<br/><br/><strong>Attack pattern:</strong> Attackers exploiting Logic-layer Prompt Control Injection (LPCI) deliberately embed encoded, obfuscated, or conditionally triggered payloads into memory stores, relying on the fact that most systems only scan at ingress (user input time) and implicitly trust recalled memory during session rehydration.<br/><br/><strong>How it works:</strong> Insert a <em>recall gate</em> between the memory loader and the prompt builder. The gate re-applies the same safety scanners used for live user input (reusing AID-D-001.001 / AID-H-002.002 detection logic) plus recall-specific checks:<ul><li>Role/authority assertion patterns</li><li>Function-like trigger markers</li><li>Encoded payload fragments</li><li>Previously quarantined content fingerprints</li></ul>High-risk entries are degraded, quarantined, or routed to human review before they can influence LLM reasoning.<br/><br/><strong>Relationship to other controls:</strong> Detection-side complement to AID-I-004.003 (integrity verification) and AID-I-004.004 (promotion gates) — those ensure memory was not tampered with after write; this ensures memory content is <em>safe to re-enter context</em> regardless of how or when it was written.",
               "pillar": [
                 "app",
                 "data"
@@ -19655,12 +19655,12 @@
                   "adversarial",
                   "prompt",
                   "gap",
+                  "tampered",
                   "injection",
+                  "attack",
                   "exploiting",
                   "degraded",
-                  "tampered",
-                  "context",
-                  "malicious"
+                  "context"
                 ],
                 "defense": [
                   "integrity verification",
@@ -20577,7 +20577,7 @@
             {
               "id": "AID-D-003.005",
               "name": "Stateful Session Monitoring: Intent Drift + Safety Invariants",
-              "description": "Attackers can split one malicious goal into many small, individually normal requests. Stateful monitoring reconnects those steps into one picture. This is to detect multi-step, stateful attacks that bypass single-turn guardrails by maintaining session memory and enforcing session-level safety invariants. <p>The monitor tracks (1) intent drift over time (e.g., a conversation slowly shifting from 'summarize emails' to 'forward confidential content externally'), and (2) invariant violations (e.g., 'sensitive data read in this session must never be sent to external recipients').</p> <p>When thresholds are exceeded, the system blocks execution, escalates to human-in-the-loop (HITL), or triggers incident response.",
+              "description": "Attackers can split one malicious goal into many small, individually normal requests. Stateful monitoring reconnects those steps into one picture. This is to detect multi-step, stateful attacks that bypass single-turn guardrails by maintaining session memory and enforcing session-level safety invariants.<br/><br/><strong>The monitor tracks:</strong><ul><li><strong>Intent drift over time</strong> — e.g., a conversation slowly shifting from 'summarize emails' to 'forward confidential content externally'</li><li><strong>Invariant violations</strong> — e.g., 'sensitive data read in this session must never be sent to external recipients'</li></ul>When thresholds are exceeded, the system blocks execution, escalates to human-in-the-loop (HITL), or triggers incident response.",
               "pillar": [
                 "app",
                 "infra"
@@ -20737,7 +20737,7 @@
             {
               "id": "AID-D-003.006",
               "name": "Memory Write-Abuse & Drift Monitoring",
-              "description": "Detect and respond to runtime memory poisoning and persistence abuse by monitoring abnormal memory write patterns (rate spikes, repeated content fingerprints, cross-namespace writes) and read-path integrity failures (signature/HMAC verification failures, quarantine hit-rate anomalies). This sub-technique produces SIEM-grade signals and triggers policy-driven containment actions (write throttling/blocks, quarantine routing, privilege step-down, or session quarantine) while preserving auditability and minimizing false positives. This complements cryptographic integrity controls (e.g., signed writes / verified reads) by turning integrity and lifecycle signals into actionable detections and response playbooks.",
+              "description": "<strong>Detection:</strong> Detect runtime memory poisoning and persistence abuse by monitoring abnormal memory write patterns (rate spikes, repeated content fingerprints, cross-namespace writes) and read-path integrity failures (signature/HMAC verification failures, quarantine hit-rate anomalies).<br/><br/><strong>Response:</strong> Produces SIEM-grade signals and triggers policy-driven containment actions (write throttling/blocks, quarantine routing, privilege step-down, or session quarantine) while minimizing false positives.<br/><br/><strong>Auditability:</strong> Preserves full audit trails and complements cryptographic integrity controls (e.g., signed writes / verified reads) by turning integrity and lifecycle signals into actionable detections and response playbooks.",
               "pillar": [
                 "app",
                 "data"
@@ -20869,10 +20869,12 @@
                   "interception"
                 ],
                 "defense": [
+                  "audit trail",
                   "memory",
                   "write-abuse",
                   "drift",
                   "monitoring",
+                  "detection",
                   "detect",
                   "integrity",
                   "signature",
@@ -20881,16 +20883,14 @@
                   "quarantine",
                   "containment",
                   "privilege",
-                  "session",
-                  "cryptographic",
-                  "signed"
+                  "session"
                 ]
               }
             },
             {
               "id": "AID-D-003.007",
               "name": "Sensitive Attribute Inference Detection & Suppression",
-              "description": "Detect and suppress model outputs that derive or infer protected sensitive attributes (for example political affiliation, religious beliefs, sexual orientation, gender identity, health conditions, disability status, genetic information, trade union membership, ethnic origin, or immigration status) from combinations of non-sensitive or semi-sensitive signals. This sub-technique complements AID-D-003.002: D-003.002 catches explicit leakage such as PII, secrets, or memorized training data, while this sub-technique catches inferential reasoning that produces sensitive attribute conclusions from otherwise non-sensitive premises. Example failure modes include inferring political affiliation from purchasing patterns and zip code, inferring health conditions from exercise and medication questions, or inferring pregnancy from shopping and health-query patterns. These inferences may be accurate, which makes the privacy and discrimination risk worse rather than better. Coverage includes: (1) protected-attribute inference testing before deployment, (2) runtime inference detection and output suppression, (3) multi-turn context-combination risk scoring, and (4) tool/plugin combination guardrails that prevent cross-source attribute derivation.",
+              "description": "Detect and suppress model outputs that derive or infer protected sensitive attributes (for example political affiliation, religious beliefs, sexual orientation, gender identity, health conditions, disability status, genetic information, trade union membership, ethnic origin, or immigration status) from combinations of non-sensitive or semi-sensitive signals.<br/><br/>This sub-technique complements AID-D-003.002: D-003.002 catches explicit leakage such as PII, secrets, or memorized training data, while this sub-technique catches inferential reasoning that produces sensitive attribute conclusions from otherwise non-sensitive premises. Example failure modes include inferring political affiliation from purchasing patterns and zip code, inferring health conditions from exercise and medication questions, or inferring pregnancy from shopping and health-query patterns. These inferences may be accurate, which makes the privacy and discrimination risk worse rather than better.<br/><br/><strong>Coverage includes:</strong><ul><li>Protected-attribute inference testing before deployment</li><li>Runtime inference detection and output suppression</li><li>Multi-turn context-combination risk scoring</li><li>Tool/plugin combination guardrails that prevent cross-source attribute derivation</li></ul>",
               "pillar": [
                 "data",
                 "app"
@@ -25018,7 +25018,7 @@
         {
           "id": "AID-D-014",
           "name": "RAG Content & Relevance Monitoring",
-          "description": "This technique involves the real-time monitoring of a Retrieval-Augmented Generation (RAG) system's behavior at inference time. It focuses on two key checks: 1) Content Analysis, where retrieved document chunks are scanned for harmful content or malicious payloads before being passed to the LLM, and 2) Relevance Analysis, which verifies that the retrieved documents are semantically relevant to the user's original query. A significant mismatch in relevance can indicate a vector manipulation or poisoning attack designed to force the model to use unintended context.",
+          "description": "This technique involves the real-time monitoring of a Retrieval-Augmented Generation (RAG) system's behavior at inference time. It focuses on two key checks:<ul><li><strong>Content Analysis:</strong> Retrieved document chunks are scanned for harmful content or malicious payloads before being passed to the LLM.</li><li><strong>Relevance Analysis:</strong> Verifies that the retrieved documents are semantically relevant to the user's original query. A significant mismatch in relevance can indicate a vector manipulation or poisoning attack designed to force the model to use unintended context.</li></ul>",
           "pillar": [
             "data"
           ],
@@ -27208,7 +27208,7 @@
             {
               "id": "AID-I-002.001",
               "name": "Internal AI Network Segmentation",
-              "description": "Implement network segmentation and microsegmentation strategies to isolate AI systems and their *internal* components (e.g., training environments, model serving endpoints, data stores, agent control planes) from general corporate networks and other critical IT/OT systems. Enforces strict internal communication rules through firewalls, security groups, and network policies to limit lateral movement and reduce the internal blast radius of a compromise. This also isolates high-privilege agent backends (e.g. orchestration layers with access to credentials, vector DBs, or model registries) from lower-trust, user-facing inference frontends, so that a compromised public-facing agent cannot laterally move into data-rich components.",
+              "description": "Implement network segmentation and microsegmentation strategies to isolate AI systems and their <em>internal</em> components (e.g., training environments, model serving endpoints, data stores, agent control planes) from general corporate networks and other critical IT/OT systems.<br/><br/><strong>Internal Communication Controls</strong><br/>Enforces strict internal communication rules through firewalls, security groups, and network policies to limit lateral movement and reduce the internal blast radius of a compromise.<br/><br/><strong>Agent Backend Isolation</strong><br/>This also isolates high-privilege agent backends (e.g. orchestration layers with access to credentials, vector DBs, or model registries) from lower-trust, user-facing inference frontends, so that a compromised public-facing agent cannot laterally move into data-rich components.",
               "pillar": [
                 "infra"
               ],
@@ -27312,11 +27312,14 @@
               "keywords": {
                 "attack": [
                   "lateral movement",
+                  "privilege escalation",
+                  "containment escape",
                   "forensic evasion",
                   "compromise",
                   "credentials",
                   "vector",
                   "compromised",
+                  "breakout",
                   "repudiation",
                   "tampering",
                   "unauthorized"
@@ -27334,9 +27337,9 @@
                   "firewalls",
                   "policies",
                   "limit",
+                  "isolation",
                   "credentials",
-                  "registries",
-                  "privilege"
+                  "registries"
                 ]
               }
             },
@@ -27523,7 +27526,7 @@
         {
           "id": "AID-I-003",
           "name": "Quarantine & Throttling of AI Interactions",
-          "description": "Implement mechanisms to automatically or manually isolate, rate-limit, or place into a restricted \\\"safe mode\\\" specific AI system interactions when suspicious activity is detected. This could apply to individual user sessions, API keys, IP addresses, or even entire AI agent instances. The objective is to prevent potential attacks from fully executing, spreading, or causing significant harm by quickly containing or degrading the capabilities of the suspicious entity. This is an active response measure triggered by detection systems. This can be applied pre-emptively (automatic) or under human approval (SOAR analyst click-to-quarantine) depending on confidence score, and all actions must be logged/auditable for compliance and forensic review.",
+          "description": "Implement mechanisms to automatically or manually isolate, rate-limit, or place into a restricted \\\"safe mode\\\" specific AI system interactions when suspicious activity is detected. This could apply to individual user sessions, API keys, IP addresses, or even entire AI agent instances.<br/><br/><strong>Objective</strong><br/>Prevent potential attacks from fully executing, spreading, or causing significant harm by quickly containing or degrading the capabilities of the suspicious entity. This is an active response measure triggered by detection systems.<br/><br/><strong>Trigger Modes &amp; Audit</strong><br/>This can be applied pre-emptively (automatic) or under human approval (SOAR analyst click-to-quarantine) depending on confidence score. All actions must be logged/auditable for compliance and forensic review.",
           "pillar": [
             "infra",
             "app"
@@ -27679,14 +27682,14 @@
               "prevent",
               "containing",
               "detection",
-              "soar"
+              "audit"
             ]
           }
         },
         {
           "id": "AID-I-004",
           "name": "Agent Memory & State Isolation",
-          "description": "Manage the lifecycle, integrity, and isolation of agent memory in agentic AI systems. Agent memory (runtime context, tool traces, and persistent vector/RAG stores) is uniquely susceptible to (1) prompt injection persistence, (2) memory/KB poisoning, and (3) cross-session or cross-tenant contamination. This technique family enforces isolation across four layers: Runtime Hygiene (App), Persistent Partitioning (Data), Cryptographic Integrity (Security), and Transactional Promotion Gates (Ops/Governance).",
+          "description": "Manage the lifecycle, integrity, and isolation of agent memory in agentic AI systems. Agent memory (runtime context, tool traces, and persistent vector/RAG stores) is uniquely susceptible to:<ul><li>Prompt injection persistence</li><li>Memory/KB poisoning</li><li>Cross-session or cross-tenant contamination</li></ul><strong>Four Isolation Layers</strong><br/>This technique family enforces isolation across:<ul><li><strong>Runtime Hygiene</strong> (App)</li><li><strong>Persistent Partitioning</strong> (Data)</li><li><strong>Cryptographic Integrity</strong> (Security)</li><li><strong>Transactional Promotion Gates</strong> (Ops/Governance)</li></ul>",
           "pillar": [
             "app",
             "data"
@@ -28928,7 +28931,7 @@
         {
           "id": "AID-DV-001",
           "name": "Honeypot AI Services & Decoy Models/APIs",
-          "description": "Deploy decoy AI systems, such as fake LLM APIs, ML model endpoints serving synthetic or non-sensitive data, or imitation agent services, that are designed to appear valuable, vulnerable, or legitimate to potential attackers. These honeypots are instrumented for intensive monitoring to log all interactions, capture attacker TTPs (Tactics, Techniques, and Procedures), and gather threat intelligence without exposing real production systems or data. They can also be used to slow down attackers or waste their resources. All honeypot services must be logically isolated from production networks, run with read-only/non-destructive behaviors, and be instrumented for forensic retention (full request capture, replayable context).",
+          "description": "Deploy decoy AI systems — such as fake LLM APIs, ML model endpoints serving synthetic or non-sensitive data, or imitation agent services — that are designed to appear valuable, vulnerable, or legitimate to potential attackers.<br/><br/><strong>Intelligence Collection</strong><br/>These honeypots are instrumented for intensive monitoring to log all interactions, capture attacker TTPs (Tactics, Techniques, and Procedures), and gather threat intelligence without exposing real production systems or data. They can also be used to slow down attackers or waste their resources.<br/><br/><strong>Operational Requirements</strong><br/>All honeypot services must be logically isolated from production networks, run with read-only/non-destructive behaviors, and be instrumented for forensic retention (full request capture, replayable context).",
           "pillar": [
             "infra",
             "model",
@@ -29365,7 +29368,7 @@
         {
           "id": "AID-DV-004",
           "name": "AI Output Watermarking & Telemetry Traps",
-          "description": "Embed imperceptible or hard-to-remove watermarks, unique identifiers, or telemetry \\\"beacons\\\" into the outputs generated by AI models (e.g., text, images, code). If these outputs are found externally (e.g., on the internet, in a competitor's product, in leaked documents), the watermark or beacon can help trace the output back to the originating AI system, potentially identifying model theft, misuse, or data leakage. Telemetry traps involve designing the AI to produce specific, unique (but benign) outputs for certain rare or crafted inputs, which, if observed externally, indicate that the model or its specific knowledge has been compromised or replicated. These watermarks and telemetry markers act as high-fidelity leak detectors: if they are observed outside trusted runtime or appear in external systems, that is treated as a security incident signal (possible model theft, supply chain compromise, or enterprise data exfiltration), not just IP branding.",
+          "description": "<strong>Watermarking</strong><br/>Embed imperceptible or hard-to-remove watermarks, unique identifiers, or telemetry \\\"beacons\\\" into the outputs generated by AI models (e.g., text, images, code). If these outputs are found externally (e.g., on the internet, in a competitor's product, in leaked documents), the watermark or beacon can help trace the output back to the originating AI system, potentially identifying model theft, misuse, or data leakage.<br/><br/><strong>Telemetry Traps</strong><br/>Telemetry traps involve designing the AI to produce specific, unique (but benign) outputs for certain rare or crafted inputs, which, if observed externally, indicate that the model or its specific knowledge has been compromised or replicated.<br/><br/><strong>Leak Detection Signal</strong><br/>These watermarks and telemetry markers act as high-fidelity leak detectors: if they are observed outside trusted runtime or appear in external systems, that is treated as a security incident signal (possible model theft, supply chain compromise, or enterprise data exfiltration), not just IP branding.",
           "pillar": [
             "data",
             "model",
@@ -29490,6 +29493,7 @@
               "traps",
               "trap",
               "trace",
+              "detection",
               "trusted",
               "token",
               "robust",
@@ -29883,7 +29887,7 @@
         {
           "id": "AID-DV-008",
           "name": "Poisoning Detection Canaries & Decoy Data",
-          "description": "This technique involves proactively embedding synthetic 'canary' or 'sentinel' data points into a training set to deceive and detect data poisoning attacks, as well as to detect training data theft and exfiltration. For poisoning detection, canaries are specifically crafted to be easily learned by the model under normal conditions; during training, the model's behavior on these specific points is monitored, and anomalous reactions (e.g., a sudden spike in loss, a change in prediction) trigger a high-fidelity alert revealing the attack. For provenance and theft detection, unique fictional facts are embedded in training data; if an external model later demonstrates knowledge of these facts, it is strong evidence that the training data was stolen or used without authorization.",
+          "description": "Proactively embed synthetic 'canary' or 'sentinel' data points into a training set to deceive and detect data poisoning attacks, as well as to detect training data theft and exfiltration.<br/><br/><strong>Poisoning Detection</strong><br/>Canaries are specifically crafted to be easily learned by the model under normal conditions. During training, the model's behavior on these specific points is monitored, and anomalous reactions (e.g., a sudden spike in loss, a change in prediction) trigger a high-fidelity alert revealing the attack.<br/><br/><strong>Provenance &amp; Theft Detection</strong><br/>Unique fictional facts are embedded in training data. If an external model later demonstrates knowledge of these facts, it is strong evidence that the training data was stolen or used without authorization.",
           "pillar": [
             "data"
           ],
@@ -29999,7 +30003,6 @@
               "data theft",
               "training data",
               "poisoning",
-              "embedding",
               "theft",
               "exfiltration",
               "anomalous",
@@ -31557,7 +31560,7 @@
         {
           "id": "AID-E-005",
           "name": "Compromised Session Termination & State Purging",
-          "description": "When communication channels or user/agent sessions are suspected or confirmed compromised, immediately expel the adversary and remove residual application-layer footholds. This technique focuses on application state after active runtime containment (see AID-E-002): terminating active sessions, revoking or globally invalidating tokens, purging tainted conversational memory, and dismantling malicious webhooks, rogue tool registrations, queued jobs, or background workers. The goal is to prevent any residual access or auto-respawn path after the initial foothold has been killed.",
+          "description": "When communication channels or user/agent sessions are suspected or confirmed compromised, immediately expel the adversary and remove residual application-layer footholds. This technique focuses on application state after active runtime containment (see AID-E-002).<br/><br/><strong>Eviction Actions</strong><ul><li>Terminating active sessions</li><li>Revoking or globally invalidating tokens</li><li>Purging tainted conversational memory</li><li>Dismantling malicious webhooks, rogue tool registrations, queued jobs, or background workers</li></ul>The goal is to prevent any residual access or auto-respawn path after the initial foothold has been killed.",
           "pillar": [
             "infra",
             "app"
@@ -32803,7 +32806,7 @@
         {
           "id": "AID-R-004",
           "name": "Post-Incident Hardening, Verification & Institutionalization",
-          "description": "Following containment, recovery, and immediate tactical patching, convert the incident into durable security improvements over the following days to weeks. This includes: (1) producing a formal, version-controlled Post-Incident Review (PIR) that documents root cause and precise TTPs; (2) updating threat models and risk scores based on real evidence; (3) enforcing fixes through engineering tickets with measurable acceptance tests; (4) validating fixes via targeted security testing and storing proof; (5) updating policy-as-code, IaC modules, shared security libraries, and CI/CD lint rules so that the same class of failure cannot silently recur; and (6) generating auditable communication/notification artifacts for legal, compliance, and (if needed) customers without leaking exploit detail.",
+          "description": "Following containment, recovery, and immediate tactical patching, convert the incident into durable security improvements over the following days to weeks.<br/><br/><strong>Post-Incident Steps</strong><ol><li>Produce a formal, version-controlled Post-Incident Review (PIR) that documents root cause and precise TTPs</li><li>Update threat models and risk scores based on real evidence</li><li>Enforce fixes through engineering tickets with measurable acceptance tests</li><li>Validate fixes via targeted security testing and store proof</li><li>Update policy-as-code, IaC modules, shared security libraries, and CI/CD lint rules so that the same class of failure cannot silently recur</li><li>Generate auditable communication/notification artifacts for legal, compliance, and (if needed) customers without leaking exploit detail</li></ol>",
           "pillar": [
             "data",
             "infra",
@@ -32952,9 +32955,9 @@
               "containment",
               "recovery",
               "patching",
-              "updating",
-              "enforcing",
-              "validating",
+              "update",
+              "enforce",
+              "validate",
               "rules",
               "compliance",
               "analysis"
@@ -32964,7 +32967,7 @@
         {
           "id": "AID-R-005",
           "name": "Rapid Vector Index Rollback & Quarantine",
-          "description": "Provide fast, controlled recovery for Retrieval-Augmented Generation (RAG) pipelines after index poisoning or malicious content injection is detected. The vector index is treated as an immutable, versioned artifact. Recovery happens in three stages: (1) atomically roll back to a last known-good snapshot, (2) quarantine and preserve suspicious chunks for forensics while removing them from production retrieval, and (3) rebuild and re-promote a clean index that enforces provenance, policy, and security approvals. Goal: restore trustworthy retrieval quality quickly while preventing re-serving tainted data.",
+          "description": "Provide fast, controlled recovery for Retrieval-Augmented Generation (RAG) pipelines after index poisoning or malicious content injection is detected. The vector index is treated as an immutable, versioned artifact.<br/><br/><strong>Three-Stage Recovery</strong><ol><li><strong>Rollback</strong> — Atomically roll back to a last known-good snapshot</li><li><strong>Quarantine</strong> — Quarantine and preserve suspicious chunks for forensics while removing them from production retrieval</li><li><strong>Rebuild</strong> — Rebuild and re-promote a clean index that enforces provenance, policy, and security approvals</li></ol><strong>Goal:</strong> Restore trustworthy retrieval quality quickly while preventing re-serving tainted data.",
           "pillar": [
             "data"
           ],
