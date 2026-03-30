@@ -304,6 +304,110 @@ export const modelTactic = {
                             ]
                         }
                     ]
+                },
+                {
+                    id: "AID-M-001.003",
+                    name: "Agentic Skill Asset Inventory & Lifecycle Governance",
+                    pillar: ["infra", "app"],
+                    phase: ["scoping", "operation", "improvement"],
+                    description:
+                        "Systematically catalog, govern, and manage the lifecycle of all agentic AI skills installed across an organization's agent platforms (e.g., OpenClaw <code>SKILL.md</code>, Claude Code <code>skill.json</code>, Cursor <code>manifest.json</code>, and similar platform-specific skill/plugin artifacts).<br/><br/><strong>Why skills need dedicated inventory:</strong> Skills are reusable behavioral packages that encode multi-step workflows including tool orchestration, file-system and network access, and persistent memory writes. Unlike traditional software packages or individual AI tools, skills operate as autonomous behavioral units that can execute with broad contextual access within their host agent unless bounded by manifest and runtime controls — making each installed skill an independent attack surface with its own blast radius.<br/><br/><strong>What this establishes:</strong><ul><li>Centralized visibility across all agent platforms</li><li>Approval-gated installation workflows</li><li>Event-driven lifecycle management (ownership transfer, dormancy detection, incident-triggered disable)</li><li>Orphaned-skill detection and remediation</li></ul>Without a comprehensive skill inventory, downstream technical controls — permission manifest enforcement (<code>AID-H-019.007</code>), admission scanning (<code>AID-H-031</code>), identity-file protection (<code>AID-I-004.006</code>) — lack the foundational data layer needed to operate at enterprise scale.<br/><br/><strong>Scope boundary with siblings:</strong><ul><li><strong>vs AID-M-001.001</strong> — M-001.001 catalogs static infrastructure assets (models, datasets, hardware). This sub-technique catalogs dynamic behavioral assets (skills) with independent permission scopes, supply-chain origins, and persistent-state modification capabilities.</li><li><strong>vs AID-H-004 / AID-E-001</strong> — Credential issuance, rotation, and revocation mechanics are owned by those families; this sub-technique provides the inventory data and lifecycle triggers they consume.</li><li><strong>vs AID-D-005.004</strong> — Audit log structure and collection are owned by D-005.004; this sub-technique defines the correlation key (skill ID/version) that enables log-to-inventory joins.</li></ul>",
+                    toolsOpenSource: [
+                        "MLflow / Kubeflow (AI asset inventory, extensible to skill assets)",
+                        "Snipe-IT (general-purpose IT asset management)",
+                        "SPIFFE / SPIRE (workload identity for per-skill NHI assignment)",
+                        "OpenTelemetry (structured audit log correlation)",
+                        "HashiCorp Vault OSS (NHI credential lifecycle for per-skill token management)",
+                    ],
+                    toolsCommercial: [
+                        "AI-SPM platforms (Wiz AI-SPM, Prisma Cloud — AI asset discovery and posture)",
+                        "ServiceNow / Jira (ITSM approval workflow integration)",
+                        "HashiCorp Vault Enterprise (per-skill NHI credential lifecycle with namespaces and audit logging)",
+                        "Splunk / Microsoft Sentinel / Datadog (SIEM integration for skill behavioral log correlation)",
+                    ],
+                    defendsAgainst: [
+                        {
+                            framework: "MITRE ATLAS",
+                            items: [
+                                "AML.T0010 AI Supply Chain Compromise (skill inventory enables tracking of supply-chain origin and publisher for every installed skill)",
+                                "AML.T0104 Publish Poisoned AI Agent Tool (inventory-driven approval workflow gates poisoned skill installation)",
+                            ],
+                        },
+                        {
+                            framework: "MAESTRO",
+                            items: [
+                                "Compromised Agent Registry (L7) (inventory tracks source registry and publisher for every skill)",
+                                "Supply Chain Attacks (Cross-Layer) (skill lifecycle governance enables rapid identification and revocation of compromised skills)",
+                            ],
+                        },
+                        {
+                            framework: "OWASP LLM Top 10 2025",
+                            items: [
+                                "LLM03:2025 Supply Chain (skill inventory provides the visibility layer for supply-chain governance of skill artifacts)",
+                                "LLM06:2025 Excessive Agency (approval workflow prevents installation of skills with excessive scope)",
+                            ],
+                        },
+                        {
+                            framework: "OWASP ML Top 10 2023",
+                            items: [
+                                "ML06:2023 AI Supply Chain Attacks (skill inventory extends supply-chain governance to the skill artifact layer)",
+                            ],
+                        },
+                        {
+                            framework: "OWASP Agentic AI Top 10 2026",
+                            items: [
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities (skill inventory enables enterprise-wide supply-chain tracking for agentic skills)",
+                            ],
+                        },
+                        {
+                            framework: "NIST Adversarial Machine Learning 2025",
+                            items: [
+                                "NISTAML.051 Model Poisoning (Supply Chain) (skill inventory enables tracking and rapid revocation of supply-chain-compromised skill artifacts)",
+                            ],
+                        },
+                        {
+                            framework: "Cisco Integrated AI Security and Safety Framework",
+                            items: [
+                                "AITech-9.3 Dependency / Plugin Compromise (skill inventory tracks every installed skill as a dependency asset)",
+                                "AISubtech-9.3.1 Malicious Package / Tool Injection (approval workflow gates malicious skill installation)",
+                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull (lifecycle governance detects unauthorized skill replacements)",
+                            ],
+                        },
+                        {
+                            framework: "Google Secure AI Framework 2.0 - Risks",
+                            items: [
+                                "IIC: Insecure Integrated Component (skill inventory identifies all integrated skill components for security assessment)",
+                            ],
+                        },
+                        {
+                            framework: "Databricks AI Security Framework 3.0",
+                            items: [
+                                "Governance 4.1: Lack of traceability and transparency of model assets (skill inventory provides traceability for skill assets)",
+                                "Agents — Tools MCP Server 13.21: Supply Chain Attacks (lifecycle governance enables rapid response to supply-chain compromises)",
+                                "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems (orphaned-skill detection identifies skills that may become rogue vectors)",
+                            ],
+                        },
+                    ],
+                    implementationGuidance: [
+                        {
+                            implementation:
+                                "Establish a central skill inventory with mandatory registration for all installed skills.",
+                            howTo:
+                                "<h5>Concept:</h5><p>Every installed skill must be registered in a central inventory, regardless of agent platform. The inventory records: skill name, version, content hash (SHA-256), source registry (e.g., ClawHub, skills.sh, internal mirror), publisher/signer identity, install date, installer's enterprise identity (employee ID or service account), current owner / business owner, permission manifest summary (if present), last security scan status and date, and approval/exception status.</p><h5>Automated Registration via CLI Hook</h5><pre><code># File: skill_governance/install_hook.py\nimport subprocess, hashlib, json, datetime, requests\n\nINVENTORY_API = \"https://skill-inventory.internal.corp/api/v1/skills\"\n\ndef register_skill(skill_name: str, version: str, skill_path: str, installer: str, source: str):\n    content_hash = hashlib.sha256(open(skill_path, \"rb\").read()).hexdigest()\n    payload = {\n        \"name\": skill_name,\n        \"version\": version,\n        \"content_hash\": f\"sha256:{content_hash}\",\n        \"source_registry\": source,\n        \"install_date\": datetime.datetime.utcnow().isoformat(),\n        \"installer_identity\": installer,\n        \"current_owner\": installer,\n        \"business_owner\": None,\n        \"scan_status\": \"pending\",\n        \"approval_status\": \"pending_review\",\n    }\n    resp = requests.post(INVENTORY_API, json=payload, timeout=10)\n    resp.raise_for_status()\n    return resp.json()\n</code></pre><p><strong>Action:</strong> Hook this registration into every agent platform's install/update/remove CLI or API. For brownfield environments, run a one-time reconciliation scan comparing platform-local skill lists against the central inventory to identify unregistered skills.</p>",
+                        },
+                        {
+                            implementation:
+                                "Implement an approval workflow for all skill installations; prohibit unmanaged installs from external registries.",
+                            howTo:
+                                "<h5>Concept:</h5><p>Direct installation of skills from public registries without review must be blocked in enterprise environments. All external skill install requests flow through an approval workflow (integrated with ServiceNow, Jira, or equivalent ITSM).</p><h5>Approval checkpoints:</h5><ol><li>Is the source registry on the allowed list?</li><li>Does the skill have a valid permission manifest?</li><li>Is the publisher in the trusted-publisher allowlist?</li><li>Has the skill passed the admission scanning pipeline (<code>AID-H-031</code>)?</li><li>Is the permission scope proportionate to the business need?</li></ol><p>Internal skills may follow a lighter process, but they are not exempt: they must still be registered in inventory, pass admission scanning and manifest validation, and receive an explicit approval state before installation.</p><p><strong>Action:</strong> Configure agent platform CLIs to require a pre-approval token before installation. The token is issued by the approval workflow system after all checks pass. Unauthorized install attempts without a token are logged and blocked.</p>",
+                        },
+                        {
+                            implementation:
+                                "Detect orphaned skills and enforce event-driven lifecycle transitions.",
+                            howTo:
+                                "<h5>Concept:</h5><p>Skills outlive the people who installed or previously owned them. A monthly automated reconciliation compares the skill inventory against the HR/IAM system to identify:</p><ol><li><strong>Orphaned skills</strong> — installer or current owner has left the organization or transferred teams, but the skill remains active without reassignment of ownership or associated identities/credentials.</li><li><strong>Dormant skills</strong> — not invoked in the past N days and not referenced by any active workflow.</li><li><strong>Scan-gap skills</strong> — not re-scanned in the past N days, indicating scanner coverage drift.</li></ol><h5>Event-driven lifecycle triggers:</h5><ul><li><strong>Installer/owner departure</strong> → auto-flag as orphaned → ownership transfer request → disable after grace period if unclaimed</li><li><strong>Publisher compromised</strong> → auto-flag all skills from that publisher → trigger re-scan and elevated review</li><li><strong>CVE match</strong> → auto-alert skill owners → trigger re-validation</li><li><strong>Incident response</strong> → immediate disable and credential revocation (revocation execution via <code>AID-E-001</code>)</li></ul><p><strong>Action:</strong> Build a scheduled job that joins skill-inventory data with HR/IAM feeds. Orphaned skills without a new owner within 14 days are automatically disabled. All lifecycle transitions are logged to the audit trail.</p>",
+                        },
+                    ],
                 }
             ]
         },

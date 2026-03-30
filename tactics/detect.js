@@ -1571,14 +1571,6 @@ export const detectTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
-                            "items": [
-                                "LLM01:2025 Prompt Injection",
-                                "LLM06:2025 Excessive Agency",
-                                "LLM02:2025 Sensitive Information Disclosure"
-                            ]
-                        },
-                        {
                             "framework": "MAESTRO",
                             "items": [
                                 "Evasion of Detection (L5)",
@@ -1586,6 +1578,14 @@ export const detectTactic = {
                                 "Privilege Escalation (Cross-Layer)",
                                 "Data Leakage (Cross-Layer)",
                                 "Agent Goal Manipulation (L7) (session monitoring detects goal drift over conversation turns)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM01:2025 Prompt Injection",
+                                "LLM06:2025 Excessive Agency",
+                                "LLM02:2025 Sensitive Information Disclosure"
                             ]
                         },
                         {

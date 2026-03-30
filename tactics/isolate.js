@@ -1656,6 +1656,128 @@ export const isolateTactic = {
                         "level": "Medium on Recall Quality & Personalization",
                         "description": "<p>Aggressive TTL and forgetting policies can reduce long-term personalization, task continuity, and retrieval hit rate. Tune retention windows by memory class rather than applying one global policy, and require explicit justification for exceptions that keep sensitive or high-impact memory beyond standard windows.</p>"
                     }
+                },
+                {
+                    id: "AID-I-004.006",
+                    name: "Agent Identity & Persistent State File Write Protection",
+                    pillar: ["app", "infra"],
+                    phase: ["operation", "response"],
+                    description:
+                        "Enforce strict write-protection controls on high-trust, file-backed persistent identity and state surfaces used by agent platforms — such as reserved logical resources like <code>agent.identity.soul</code>, <code>agent.memory.primary</code>, and <code>agent.identity.agents_config</code>, which are commonly backed by files like <code>SOUL.md</code>, <code>MEMORY.md</code>, and <code>AGENTS.md</code> — to prevent malicious or compromised skills from establishing persistent backdoors that survive skill uninstallation, session restart, or agent redeployment.<br/><br/><strong>Scope:</strong> This sub-technique focuses on file-backed persistent identity/state surfaces whose modification can influence agent behavior across future sessions. It does not cover every database-backed or vector-backed memory system; those broader persistent-memory controls are owned by the rest of the AID-I-004 family.<br/><br/><strong>Controls enforced:</strong> OS-level immutability, controlled-writer gates, baseline verification, diff checks, rollback, and tamper-audit.<br/><br/><strong>Distinction from related techniques:</strong><ul><li><strong>vs AID-I-004.003</strong> (Cryptographic Memory Integrity): I-004.003 protects integrity <em>after</em> content is written; this sub-technique controls <em>who may write</em> to these surfaces, under what conditions, and how unauthorized changes are prevented, detected, and recovered.</li><li><strong>vs AID-H-019.007</strong> (Skill Permission Manifest): H-019.007 determines whether a skill is <em>authorized to request access</em> to a protected resource in its manifest; this sub-technique protects the <em>persistence surface itself</em>. H-019.007 is the skill capability boundary; I-004.006 is the file-backed persistence surface control.</li></ul>",
+                    toolsOpenSource: [
+                        "AIDE / Tripwire / OSSEC (file integrity monitoring for baseline verification and diff check)",
+                        "Falco / Cilium Tetragon (runtime file access monitoring and blocking)",
+                        "Git (identity file versioning for rollback — treating identity/state files as versioned artifacts)",
+                        "gVisor / seccomp-bpf (OS-level enforcement of read-only filesystem)",
+                        "HashiCorp Vault OSS (baseline hash storage and secret management)",
+                    ],
+                    toolsCommercial: [
+                        "CrowdStrike Falcon / SentinelOne / Microsoft Defender (EDR with file integrity monitoring and real-time block)",
+                        "Aqua Security / Prisma Cloud (container runtime protection with read-only enforcement)",
+                        "HashiCorp Vault Enterprise (KMS-protected baseline hash storage with audit logging and namespaces)",
+                    ],
+                    defendsAgainst: [
+                        {
+                            framework: "MITRE ATLAS",
+                            items: [
+                                "AML.T0081 Modify AI Agent Configuration",
+                                "AML.T0084 Discover AI Agent Configuration",
+                                "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
+                                "AML.T0104 Publish Poisoned AI Agent Tool",
+                            ],
+                        },
+                        {
+                            framework: "MAESTRO",
+                            items: [
+                                "Agent Goal Manipulation (L7)",
+                                "Agent Identity Attack (L7)",
+                                "Backdoor Attacks (L3)",
+                            ],
+                        },
+                        {
+                            framework: "OWASP LLM Top 10 2025",
+                            items: [
+                                "LLM01:2025 Prompt Injection",
+                                "LLM06:2025 Excessive Agency",
+                            ],
+                        },
+                        {
+                            framework: "OWASP ML Top 10 2023",
+                            items: ["N/A"],
+                        },
+                        {
+                            framework: "OWASP Agentic AI Top 10 2026",
+                            items: [
+                                "ASI01:2026 Agent Goal Hijack",
+                                "ASI06:2026 Memory & Context Poisoning",
+                                "ASI10:2026 Rogue Agents",
+                            ],
+                        },
+                        {
+                            framework: "NIST Adversarial Machine Learning 2025",
+                            items: [
+                                "NISTAML.018 Prompt Injection",
+                                "NISTAML.039 Compromising connected resources (tampered agent identity/config files can redirect agent to compromise connected resources)",
+                            ],
+                        },
+                        {
+                            framework: "Cisco Integrated AI Security and Safety Framework",
+                            items: [
+                                "AITech-5.2 Configuration Persistence",
+                                "AISubtech-5.2.1 Agent Profile Tampering",
+                                "AITech-1.3 Goal Manipulation",
+                            ],
+                        },
+                        {
+                            framework: "Google Secure AI Framework 2.0 - Risks",
+                            items: ["RA: Rogue Actions (write protection on persistent identity/state files prevents persistent backdoors that enable rogue actions)"],
+                        },
+                        {
+                            framework: "Databricks AI Security Framework 3.0",
+                            items: [
+                                "Agents — Core 13.1: Memory Poisoning",
+                                "Agents — Core 13.6: Intent Breaking & Goal Manipulation",
+                            ],
+                        },
+                    ],
+                    implementationGuidance: [
+                        {
+                            implementation:
+                                "Default-deny writes to protected file-backed identity/state surfaces, and enforce updates through a controlled writer plus OS-level immutability.",
+                            howTo:
+                                "<h5>Concept</h5><p>This sub-technique protects <strong>file-backed</strong> high-trust persistent identity/state surfaces, not every possible memory backend. Use reserved logical resource IDs as the canonical policy layer, and treat concrete files only as platform-specific backing implementations.</p><p><em>Note: The logical resource IDs and backing filenames below are representative examples. Different agent platforms will use different concrete files (e.g., persona configs, agent manifests, persistent instruction files). The principle — protect high-trust persistent identity/state surfaces — applies regardless of platform.</em></p><pre><code class=\"language-yaml\">protected_resources:\n  - agent.identity.soul           # commonly backed by SOUL.md or equivalent\n  - agent.memory.primary          # commonly backed by MEMORY.md or equivalent\n  - agent.identity.agents_config  # commonly backed by AGENTS.md or equivalent\n</code></pre><p><strong>Boundary with AID-H-019.007:</strong> a manifest may declare whether a skill is authorized to request protected-resource writes, but that manifest declaration alone must never be the write path. This sub-technique owns the persistence surface protection itself: immutable mounts, controlled-writer gates, baseline verification, diff checks, rollback, and tamper-audit.</p><h5>Deployment Pattern A — Immutable baseline mode</h5><p>Use this when the protected surface should almost never change in production.</p><ul><li>Store the backing files on a read-only mount or immutable path.</li><li>Use a signed / approved baseline artifact for deployment.</li><li>Changes happen only through formal rollout / replacement, not in-place writes.</li></ul><h5>Deployment Pattern B — Controlled mutable mode</h5><p>Use this only when a protected file-backed surface truly requires approved updates.</p><ul><li>Do not allow direct skill file writes.</li><li>Expose a dedicated controlled-writer API / service as the only legal update path.</li><li>Require authenticated caller identity, authorization policy, audit logging, and pre-write snapshotting.</li></ul><h5>OS-level enforcement guidance</h5><p>Linux-hosted VM / bare-metal environments may use <code>chattr +i</code> or equivalent immutable flag where supported. Containerized / orchestrated environments should instead rely primarily on read-only mounts, dedicated protected volumes, runtime file-write interception, and signed baseline artifacts. Do not assume <code>chattr +i</code> works uniformly across all container runtimes, overlay filesystems, or non-Linux platforms.</p><h5>Controlled writer requirements</h5><ul><li><strong>Single responsibility:</strong> only updates protected identity/state resources.</li><li><strong>Strong authentication:</strong> accepts requests only from trusted workload identities.</li><li><strong>Strong authorization:</strong> requires approved policy / ticket / review context.</li><li><strong>Auditable:</strong> records requester, diff summary, signer / approver, and target logical resource.</li><li><strong>Recoverable:</strong> stores last-known-good snapshot before commit.</li></ul><p><strong>Action:</strong> Deny direct write syscalls to protected backing files by default. Use reserved logical resource IDs for policy, and map them to concrete backing files only inside the controlled-writer / enforcement layer.</p>",
+                        },
+                        {
+                            implementation:
+                                "Verify baseline integrity of protected logical resources at startup before loading any file-backed identity/state content.",
+                            howTo:
+                                "<h5>Concept</h5><p>Every agent startup must verify that each protected logical resource still matches a known-good approved baseline before the agent loads it into runtime state. This protects against out-of-band tampering that occurred while the agent was offline.</p><h5>Recommended model</h5><pre><code class=\"language-yaml\">protected_resource_map:\n  agent.identity.soul:\n    backing_paths:\n      - /var/lib/agent/SOUL.md\n    approved_sha256: \"...\"\n  agent.memory.primary:\n    backing_paths:\n      - /var/lib/agent/MEMORY.md\n    approved_sha256: \"...\"\n  agent.identity.agents_config:\n    backing_paths:\n      - /var/lib/agent/AGENTS.md\n    approved_sha256: \"...\"\n</code></pre><h5>Startup logic</h5><ol><li>Resolve each logical resource to its platform-specific backing path.</li><li>Canonicalize the path and read the file in read-only mode.</li><li>Compute SHA-256.</li><li>Compare against the approved baseline hash stored in a secure metadata store or KMS-protected record.</li><li>Any mismatch should fail closed: refuse startup of the affected agent instance and emit a structured tamper event.</li></ol><p>This complements <code>AID-I-004.003</code>: that sibling verifies signed entries / content integrity; this step verifies the whole protected file-backed surface against a known-good baseline state.</p><p><strong>Action:</strong> Treat startup baseline verification as a mandatory boot gate for any agent using file-backed identity/state resources.</p>",
+                        },
+                        {
+                            implementation:
+                                "Run diff checks on protected logical resources after skill install / update / uninstall, but only accept changes that originate from approved change context.",
+                            howTo:
+                                "<h5>Concept</h5><p>Skill lifecycle events are observation points, not automatic justification for protected-surface changes. By default, skill install / update / uninstall should <strong>not</strong> modify protected identity/state resources. Any post-event diff must therefore be treated as suspicious unless it matches an independently approved change set.</p><h5>Expected-change rule</h5><p><code>expected_changes</code> must come only from an approved change context — such as a change ticket, signed git commit, PR review approval, controlled-writer output, or signed recovery / rollback action — never from the skill lifecycle event itself.</p><pre><code class=\"language-python\"># File: controls/protected_surface_diff_check.py\n\ndef evaluate_post_event_diff(change_ticket_id, observed_changes):\n    expected_changes = load_expected_changes_from_ticket(change_ticket_id)\n    # expected_changes must be derived from approved change context,\n    # controlled-writer output, or signed recovery action.\n    # Skill install/update/uninstall events themselves never authorize writes.\n    if observed_changes != expected_changes:\n        emit_tamper_event()\n        quarantine_and_rollback()\n</code></pre><p><strong>Examples of legitimate expected changes:</strong></p><ul><li>Admin-approved profile update through the controlled writer</li><li>Approved memory promotion workflow</li><li>Signed incident-response recovery action</li></ul><p><strong>Examples of illegitimate change sources:</strong></p><ul><li>Skill installer modifying a backing file directly</li><li>Skill uninstall leaving residual directives in a protected file</li><li>Any write with no approved ticket / signer / controlled-writer provenance</li></ul><p><strong>Action:</strong> Always run a protected-surface diff after skill lifecycle events, but treat the lifecycle event only as a trigger to inspect, not as evidence that the change is allowed.</p>",
+                        },
+                        {
+                            implementation:
+                                "Safety-scan content before any controlled write to a protected logical resource, reusing the AID-D-001.006 scanner family while keeping write-time approval as a separate workflow.",
+                            howTo:
+                                "<h5>Concept</h5><p>Write-time protection must not rely only on authorization. Even an approved caller may attempt to write malicious instructions into a protected file-backed surface. Before commit, scan the proposed content for latent injection or behavioral redirection payloads.</p><p><strong>Important boundary:</strong> this sub-technique may <strong>reuse the scanner family / detection logic</strong> from <code>AID-D-001.006 Recalled Memory Pre-Rehydration Scanning</code> — for example authority-override phrases, encoded payload fragments, trigger markers, and suspicious control patterns — but the <strong>write-time identity/state file gate is its own workflow</strong>. Rehydration scanning and protected-surface write approval are related, but not the same control point.</p><h5>Recommended checks</h5><ul><li>Authority / role override phrases (e.g. attempts to redefine agent identity or instruction precedence)</li><li>Known injection / trigger templates</li><li>Encoded or obfuscated payload fragments</li><li>Unexpected external references or retrieval directives</li><li>Unsafe behavioral persistence markers intended to survive future sessions</li></ul><p><strong>Action:</strong> Reject any proposed write that fails the safety scanner, even if the caller is otherwise authorized to request the write.</p>",
+                        },
+                        {
+                            implementation:
+                                "Maintain fast local rollback to the last known-good approved version of each protected logical resource, and keep rollback scoped to that protected surface.",
+                            howTo:
+                                "<h5>Concept</h5><p>This rollback is a <strong>local recovery path for protected file-backed identity/state resources</strong>, not a full-system restoration workflow. Its job is to rapidly restore the last approved version of the affected protected surface after unauthorized change, failed baseline verification, or incident-confirmed compromise.</p><h5>Rollback triggers</h5><ul><li>Startup baseline verification failure</li><li>Unexpected diff after install / update / uninstall</li><li>Confirmed compromise of a protected backing file</li></ul><h5>Rollback model</h5><ol><li>Maintain versioned snapshots of each protected logical resource.</li><li>Tag each snapshot with approval metadata and baseline hash.</li><li>On trigger, restore the last known-good approved version for the affected resource only.</li><li>Re-run baseline verification before allowing the agent to resume normal operation.</li></ol><p>In immutable baseline mode, recovery may mean redeploying the known-good signed artifact / image. In controlled mutable mode, recovery may mean restoring the last approved snapshot through the controlled writer and then re-locking the backing path.</p><p><strong>Action:</strong> Keep rollback narrowly scoped to the affected protected resource and its backing file(s); do not use this sub-technique to replace broader Restore tactic workflows.</p>",
+                        },
+                        {
+                            implementation:
+                                "Emit structured tamper / write-attempt audit events for every protected-resource modification attempt, and correlate them to ticket, writer, and rollback context.",
+                            howTo:
+                                "<h5>Concept</h5><p>Every attempted modification of a protected logical resource — whether allowed or blocked — must produce SIEM-grade structured telemetry. This is necessary for incident response, timeline reconstruction, and proving that only approved change paths were used.</p><h5>Recommended event fields</h5><pre><code class=\"language-json\">{\n  \"agent_id\": \"agent-123\",\n  \"skill_id\": \"skill-456\",\n  \"protected_resource_id\": \"agent.identity.soul\",\n  \"backing_path\": \"/var/lib/agent/SOUL.md\",\n  \"operation\": \"write\",\n  \"decision\": \"blocked\",\n  \"reason\": \"no_approved_change_context\",\n  \"writer_identity\": \"spiffe://corp/agent-writer\",\n  \"approval_context\": \"CHG-2026-00421\",\n  \"baseline_hash\": \"...\",\n  \"observed_hash\": \"...\",\n  \"rollback_candidate\": true,\n  \"timestamp\": \"2026-03-30T12:00:00Z\"\n}\n</code></pre><p><strong>Minimum audit requirements:</strong></p><ul><li>logical protected resource ID and concrete backing path</li><li>requesting skill / writer identity</li><li>operation type and decision</li><li>approval / ticket context</li><li>hash context before and after, when applicable</li><li>rollback eligibility or recovery action if triggered</li></ul><p><strong>Action:</strong> Push these events to SIEM / SOAR and correlate them with controlled-writer logs, startup verification results, and rollback actions for end-to-end protected-surface forensics.</p>",
+                        },
+                    ],
                 }
             ]
         },
