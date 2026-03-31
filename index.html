@@ -79,11 +79,14 @@
             <div class="mx-auto" style="max-width: 1600px; position: relative; z-index: 1;">
                 <div class="flex flex-col md:flex-row justify-between items-center mb-3">
                     <div class="text-center md:text-left mb-3 md:mb-0">
-                        <h1 class="header-title">
-                            <a href="https://edward-playground.github.io/aidefense-framework/" class="no-underline">
-                                AIDEFEND
-                            </a>
-                        </h1>
+                        <div class="title-theme-row">
+                            <h1 class="header-title">
+                                <a href="https://edward-playground.github.io/aidefense-framework/" class="no-underline">
+                                    AIDEFEND
+                                </a>
+                            </h1>
+                            <button id="themeToggleBtnNarrow" class="header-button theme-btn-narrow" title="Toggle Theme"></button>
+                        </div>
                         <p class="header-subtitle">A Practical Knowledge Base for AI Security Defenses</p>
                         <p class="text-xs mt-0.5 header-version-text" id="framework-version">Version</p>
                     </div>
@@ -107,7 +110,7 @@
                         </button>
                     </div>
                 </div>
-                <div class="flex flex-wrap justify-between items-center gap-2">
+                <div id="header-controls" class="flex flex-wrap justify-between items-center gap-2">
                     <div id="view-switcher-container" class="view-switcher-container">
                         <button id="viewInfoBtn"
                             class="font-semibold text-sm mr-2 shrink-0 view-by-label cursor-pointer">View by:</button>
@@ -923,9 +926,13 @@
 
             function applyTheme(theme) {
                 document.documentElement.setAttribute('data-theme', theme);
-                elements.themeToggleBtn.innerHTML = themeIcons[theme] || themeIcons.light;
+                const icon = themeIcons[theme] || themeIcons.light;
                 const themeNames = { dark: 'Dark', light: 'Light', highcontrast: 'High Contrast', retro: 'The Matrix' };
-                elements.themeToggleBtn.title = themeNames[theme] || theme;
+                const name = themeNames[theme] || theme;
+                elements.themeToggleBtn.innerHTML = icon;
+                elements.themeToggleBtn.title = name;
+                const narrow = document.getElementById('themeToggleBtnNarrow');
+                if (narrow) { narrow.innerHTML = icon; narrow.title = name; }
                 // Toggle Matrix rain
                 if (theme === 'retro') {
                     matrixRain.start();
@@ -2432,6 +2439,8 @@
                 window.addEventListener('resize', updateContentPadding);
                 window.addEventListener('load', updateContentPadding);
                 elements.themeToggleBtn.addEventListener('click', toggleTheme);
+                const narrowTheme = document.getElementById('themeToggleBtnNarrow');
+                if (narrowTheme) narrowTheme.addEventListener('click', toggleTheme);
                 elements.aboutBtn.addEventListener('click', showIntroductionModal);
                 elements.viewInfoBtn.addEventListener('click', showViewInfoModal);
                 const frameworkSelector = document.getElementById('framework-selector');

@@ -128,6 +128,27 @@ body.modal-open {
     height: 1.25rem;
 }
 
+.title-theme-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+@media (min-width: 768px) {
+    .title-theme-row { justify-content: flex-start; }
+}
+.theme-btn-narrow {
+    display: none !important;
+}
+@media (max-width: 830px) {
+    .theme-btn-narrow {
+        display: flex !important;
+    }
+    #themeToggleBtn {
+        display: none !important;
+    }
+}
+
 .header-button {
     background-color: transparent;
     color: var(--icon-fill);
@@ -1064,6 +1085,16 @@ body.modal-open {
     padding: 0.25rem;
     display: inline-flex;
     align-items: center;
+}
+
+@media (max-width: 768px) {
+    #header-controls {
+        justify-content: center;
+    }
+    #view-switcher-container {
+        width: 100%;
+        justify-content: center;
+    }
 }
 
 @media (max-width: 400px) {
