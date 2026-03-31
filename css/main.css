@@ -1651,7 +1651,9 @@ body.modal-open {
         transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out, transform 0.2s ease,
                     box-shadow 0.2s ease;
     }
-    .technique-item:hover {
+    .technique-item:hover,
+    .header-button:hover,
+    .view-switcher-btn:not(.active):hover {
         box-shadow: 0 0 8px 1.5px var(--search-focus-ring);
     }
     .technique-item.highlight-exact,
@@ -1731,17 +1733,10 @@ body.modal-open {
         transition: background-color 0.2s ease, color 0.2s ease,
                     box-shadow 0.2s ease;
     }
-    .header-button:hover {
-        box-shadow: 0 0 8px 1.5px var(--search-focus-ring);
-    }
-
     /* View switcher buttons: instant glow on hover */
     .view-switcher-btn {
         transition: background-color 0.2s ease, color 0.2s ease,
                     box-shadow 0.2s ease;
-    }
-    .view-switcher-btn:not(.active):hover {
-        box-shadow: 0 0 8px 1.5px var(--search-focus-ring);
     }
 }
 
