@@ -10,6 +10,8 @@ LOCAL_AUDIT_README.md
 *.tmp
 _debug*
 .vscode/
+kids/
+kids.html
 
 # Dev tools (local only)
 devtools/
