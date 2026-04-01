@@ -134,7 +134,13 @@ body.modal-open {
     justify-content: center;
     gap: 0.5rem;
 }
-@media (min-width: 768px) {
+@media (max-width: 830px) {
+    .title-theme-row::before {
+        content: '';
+        width: 2.75rem;
+    }
+}
+@media (min-width: 831px) {
     .title-theme-row { justify-content: flex-start; }
 }
 .theme-btn-narrow {
@@ -146,6 +152,17 @@ body.modal-open {
     }
     #themeToggleBtn {
         display: none !important;
+    }
+    /* Override Tailwind md:flex-row — stay stacked/centered at 768-830px */
+    #header-top-row {
+        flex-direction: column !important;
+    }
+    .header-title-block {
+        text-align: center !important;
+        margin-bottom: 0.75rem !important;
+    }
+    .header-nav-row {
+        justify-content: center !important;
     }
 }
 
@@ -1118,6 +1135,7 @@ body.modal-open {
         flex-direction: column;
         align-items: center;
         gap: 0.3rem;
+        width: 100%;
     }
     .view-switcher-narrow .vsn-row {
         background-color: var(--view-switcher-bg);

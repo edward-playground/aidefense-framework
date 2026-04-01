@@ -20,7 +20,7 @@ export const hardenTactic = {
       toolsCommercial: [
         "AI security platforms (Cisco AI Defense (formerly Robust Intelligence), HiddenLayer, Protect AI, Adversa.AI)",
         "MLOps platforms (Amazon SageMaker, Google Vertex AI, Databricks, Azure ML)",
-        "RL Platforms (Microsoft Bonsai, AnyLogic)",
+        "RL Platforms (AnyLogic)",
       ],
       defendsAgainst: [
         {
@@ -384,7 +384,7 @@ export const hardenTactic = {
             "Focuses on real-time defense against malicious inputs at the point of inference, such as prompt injection, jailbreaking attempts, or other input-based evasions. This technique acts as a guardrail for the live, operational model.",
           toolsOpenSource: [
             "NVIDIA NeMo Guardrails",
-            "Rebuff",
+            "LLM Guard (Protect AI)",
             "LangChain Guardrails",
             "Llama Guard (Meta)",
             "Pydantic (for structured input validation)",
@@ -551,7 +551,7 @@ export const hardenTactic = {
               implementation:
                 "Validate and sanitize external/RAG sources before embedding or retrieval.",
               howTo:
-                '<h5>Concept:</h5><p>Strictly sanitize fetched HTML, enforce domain allowlists, and strip active content before embedding or retrieval.</p><pre><code># File: rag_guards/html_clean.py\nfrom __future__ import annotations\nimport bleach\nfrom urllib.parse import urlparse\n\nALLOWED_TAGS = bleach.sanitizer.ALLOWED_TAGS.union({"p","pre","code","ul","ol","li","blockquote","strong","em"})\nALLOWED_ATTRS = {"a": ["href","title","rel"], "img": ["alt"]}\nALLOWED_SCHEMES = {"http","https"}\n\nALLOWED_DOMAINS = {"docs.mycorp.com","kb.mycorp.com"}  # policy-driven allowlist\n\ndef clean_html(raw: str) -> str:\n    return bleach.clean(raw, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRS, strip=True)\n\ndef url_allowed(url: str) -> bool:\n    u = urlparse(url)\n    return (u.scheme in ALLOWED_SCHEMES) and (u.hostname in ALLOWED_DOMAINS)\n</code></pre><p><strong>Action:</strong> Enforce allowlists before fetch; sanitize after fetch; cache & hash content for provenance.</p>',
+                '<h5>Concept:</h5><p>Strictly sanitize fetched HTML, enforce domain allowlists, and strip active content before embedding or retrieval.</p><pre><code># File: rag_guards/html_clean.py\nfrom __future__ import annotations\nimport nh3\nfrom urllib.parse import urlparse\n\nALLOWED_TAGS = {"p","pre","code","ul","ol","li","blockquote","strong","em","a","img"}\nALLOWED_ATTRS = {"a": {"href","title","rel"}, "img": {"alt"}}\n\nALLOWED_DOMAINS = {"docs.mycorp.com","kb.mycorp.com"}  # policy-driven allowlist\n\ndef clean_html(raw: str) -> str:\n    return nh3.clean(raw, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRS)\n\ndef url_allowed(url: str) -> bool:\n    u = urlparse(url)\n    return (u.scheme in {"http","https"}) and (u.hostname in ALLOWED_DOMAINS)\n</code></pre><p><strong>Action:</strong> Enforce allowlists before fetch; sanitize after fetch; cache & hash content for provenance.</p>',
             },
           ],
         },
@@ -798,7 +798,6 @@ export const hardenTactic = {
           "description": "Protect the integrity of labels used for supervised training, evaluation, fine-tuning, and preference-learning pipelines. Label flipping and label noise injection are common poisoning variants because the raw data itself can look completely normal while only the supervisory signal is corrupted. This sub-technique enforces label provenance tracking, label change auditing, automated label-noise detection, annotator quality monitoring, and preference-data consistency checks for RLHF or similar workflows.",
           "toolsOpenSource": [
             "Label Studio (annotation platform with audit trails)",
-            "Prodigy (annotation workflow tooling)",
             "Cleanlab (label issue detection and confident learning)",
             "Argilla (annotation workflows and agreement review)",
             "Snorkel (weak supervision and labeling-function analysis)",
@@ -810,7 +809,8 @@ export const hardenTactic = {
             "Labelbox (annotation platform with review workflows)",
             "Amazon SageMaker Ground Truth (managed labeling and worker tracking)",
             "Appen (managed annotation operations)",
-            "Surge AI (managed RLHF or preference labeling)"
+            "Surge AI (managed RLHF or preference labeling)",
+            "Prodigy (Explosion AI, annotation workflow tooling)"
           ],
           "defendsAgainst": [
             {
@@ -1597,7 +1597,7 @@ export const hardenTactic = {
             "gitleaks",
             "Open Policy Agent (OPA)",
           ],
-          toolsCommercial: ["Snyk IaC", "Prisma Cloud", "Wiz", "Tenable.cs"],
+          toolsCommercial: ["Snyk IaC", "Prisma Cloud", "Wiz", "Tenable Cloud Security"],
           defendsAgainst: [
             {
               framework: "MITRE ATLAS",
@@ -2307,8 +2307,7 @@ export const hardenTactic = {
             "Cloudflare Zero Trust",
             "Kong Gateway",
             "Apigee AI Gateway",
-            "Entitle AI (emerging market for agent governance)",
-          ],
+                      ],
           defendsAgainst: [
             {
               framework: "MITRE ATLAS",
@@ -2884,7 +2883,7 @@ export const hardenTactic = {
             "MLflow (for tracking experiments and model performance)",
           ],
           toolsCommercial: [
-            "Privacy-enhancing technology platforms (Gretel.ai, Tonic.ai, SarUS, Immuta)",
+            "Privacy-enhancing technology platforms (Gretel.ai, Tonic.ai, Sarus, Immuta)",
             "AI Security platforms (Protect AI, HiddenLayer, Cisco AI Defense (formerly Robust Intelligence), Weights & Biases)",
             "MLOps Platforms for custom training (Amazon SageMaker, Google Vertex AI, Databricks, Azure ML)",
           ],
@@ -3378,7 +3377,7 @@ def is_url_safe(url: str):
           ],
           toolsOpenSource: [
             "Python's `html` and `shlex` libraries",
-            "bleach (for HTML sanitization)",
+            "nh3 (for HTML sanitization)",
             "sqlparse (for SQL validation)",
             "Python `ast` module (for code analysis)",
             "OWASP Java Encoder Project",
@@ -3391,7 +3390,7 @@ def is_url_safe(url: str):
             "Azure Content Safety",
             "Google Cloud DLP API",
             "Cloud WAFs (AWS WAF, Azure WAF, Cloudflare WAF, Akamai)",
-            "API Security platforms (Noname Security, Salt Security)",
+            "API Security platforms (Akamai API Security, Salt Security)",
           ],
           defendsAgainst: [
             {
@@ -4704,7 +4703,7 @@ sudo apt-get install --only-upgrade cuda-drivers
               implementation:
                 "Maintain current drivers/firmware via automated audits against vendor bulletins.",
               howTo:
-                "<h5>Concept:</h5><p>Vulnerabilities like LeftoverLocals (CVE-2023-4969) exist in specific versions of GPU drivers. Keeping the underlying software stack updated is the most critical way to patch these known vulnerabilities.</p><h5>Automate Driver Audits</h5><pre><code># File: security_audits/check_driver_versions.py\nimport subprocess\n\nMINIMUM_NVIDIA_DRIVER_VERSION = \"535.161.08\"\n\ndef audit_gpu_driver():\n    try:\n        result = subprocess.check_output(['nvidia-smi', '--query-gpu=driver_version', '--format=csv,noheader'])\n        current_version = result.decode('utf-8').strip()\n        if current_version < MINIMUM_NVIDIA_DRIVER_VERSION:\n            send_alert(f\"Outdated NVIDIA driver detected: {current_version}\")\n    except Exception as e:\n        log_error(f\"Could not check driver version: {e}\")\n</code></pre><p><strong>Action:</strong> Incorporate GPU driver and firmware updates into your regular server patching cycle. Create an automated script to periodically audit the driver versions of all your AI servers and alert on any outdated versions found.</p>",
+                "<h5>Concept:</h5><p>Vulnerabilities like LeftoverLocals (CVE-2023-4969) exist in specific versions of GPU drivers. Keeping the underlying software stack updated is the most critical way to patch these known vulnerabilities.</p><h5>Automate Driver Audits</h5><pre><code># File: security_audits/check_driver_versions.py\nimport subprocess\nfrom packaging.version import Version\n\nMINIMUM_NVIDIA_DRIVER_VERSION = Version(\"535.161.08\")\n\ndef audit_gpu_driver():\n    try:\n        result = subprocess.check_output(['nvidia-smi', '--query-gpu=driver_version', '--format=csv,noheader'])\n        current_version = Version(result.decode('utf-8').strip())\n        if current_version &lt; MINIMUM_NVIDIA_DRIVER_VERSION:\n            print(f\"ALERT: Outdated NVIDIA driver detected: {current_version}\")\n    except Exception as e:\n        print(f\"ERROR: Could not check driver version: {e}\")\n</code></pre><p><strong>Action:</strong> Incorporate GPU driver and firmware updates into your regular server patching cycle. Create an automated script to periodically audit the driver versions of all your AI servers and alert on any outdated versions found.</p>",
             },
             {
               implementation:
@@ -4837,9 +4836,9 @@ ScanPolicy:
             },
           ],
           toolsOpenSource: [
-            "NIST SP 800-161 (Supply Chain Risk Management Framework)",
-            "Hardware analysis tools (e.g., for examining firmware)",
-            "Vendor-specific verification tools",
+            "CHIPSEC (Intel platform security assessment)",
+            "binwalk (firmware analysis and extraction)",
+            "FACT (Firmware Analysis and Comparison Tool)",
           ],
           toolsCommercial: [
             "Vendor Risk Management (VRM) Platforms (SecurityScorecard, BitSight, UpGuard)",
@@ -5083,8 +5082,9 @@ ScanPolicy:
         "Research code from academic papers on Transformer security.",
       ],
       toolsCommercial: [
-        "AI security platforms offering model-specific vulnerability scanning.",
-        "Adversarial attack simulation tools with profiles for Transformer models.",
+        "HiddenLayer AISec Platform (model vulnerability scanning)",
+        "Cisco AI Defense (adversarial robustness testing)",
+        "Mindgard (AI red teaming and security testing)",
       ],
       defendsAgainst: [
         {
@@ -5630,7 +5630,7 @@ def regularized_training_step(data):
                 "Train a GNN using a certification-friendly method like Randomized Smoothing.",
               howTo: `<h5>Concept:</h5><p>Standard GNNs are difficult to certify. To enable certification, the model must be trained to be robust to random noise. For graphs, Randomized Smoothing involves training the GNN not on one static graph, but on many slightly different versions of it, where edges are randomly added or removed in each training step. This forces the model to learn predictions that are stable under structural perturbations.</p><h5>Step 1: Implement a Noisy Graph Data Loader</h5><p>Create a custom data loader or transformation that, for each training epoch, provides a new version of the graph with some edges randomly 'flipped' (added or removed).</p><pre><code># File: gnn_defense/smoothed_training.py
 import torch
-from torch_geometric.utils import to_dense_adj, to_edge_index
+from torch_geometric.utils import to_dense_adj, dense_to_sparse
 
 def get_randomly_perturbed_edges(edge_index, num_nodes, flip_probability=0.01):
     \"\"\"Randomly adds or removes edges from the graph.\"\"\"
@@ -5643,7 +5643,7 @@ def get_randomly_perturbed_edges(edge_index, num_nodes, flip_probability=0.01):
     perturbed_adj = adj.clone()
     perturbed_adj[flip_mask] = 1 - perturbed_adj[flip_mask]
     
-    return to_edge_index(perturbed_adj)[0]
+    return dense_to_sparse(perturbed_adj)[0]
 
 # --- In your training loop ---
 # for epoch in range(num_epochs):
@@ -5698,8 +5698,8 @@ class GraphRobustnessVerifier:
             "Research libraries for certified robustness (e.g., code accompanying papers on Randomized Smoothing for GNNs, auto-LiRPA)",
           ],
           toolsCommercial: [
-            "AI Security validation platforms (some emerging startups in this space)",
-            "Formal verification services",
+            "HiddenLayer AISec Platform",
+            "Mindgard (AI robustness testing)",
           ],
           defendsAgainst: [
             {
@@ -5862,7 +5862,7 @@ class GraphRobustnessVerifier:
             "NumPy / Pandas for reward telemetry analysis",
           ],
           toolsCommercial: [
-            "Enterprise RL platforms (AnyLogic, Microsoft Bonsai)",
+            "Enterprise RL platforms (AnyLogic)",
             "Simulation platforms for robotics and autonomous systems",
           ],
           defendsAgainst: [
@@ -5949,7 +5949,7 @@ class GraphRobustnessVerifier:
             "Data labeling tools (Label Studio)",
           ],
           toolsCommercial: [
-            "Enterprise RL platforms (Microsoft Bonsai)",
+            "Enterprise RL platforms (AnyLogic)",
             "Human data labeling services (Scale AI, Appen)",
           ],
           defendsAgainst: [
@@ -6041,7 +6041,7 @@ class GraphRobustnessVerifier:
             "NumPy",
           ],
           toolsCommercial: [
-            "Enterprise RL platforms (AnyLogic, Microsoft Bonsai)",
+            "Enterprise RL platforms (AnyLogic)",
             "MATLAB Reinforcement Learning Toolbox",
           ],
           defendsAgainst: [
@@ -6119,7 +6119,7 @@ class GraphRobustnessVerifier:
             "Gymnasium wrappers for episode logging and video capture",
           ],
           toolsCommercial: [
-            "Enterprise RL platforms (AnyLogic, Microsoft Bonsai)",
+            "Enterprise RL platforms (AnyLogic)",
             "AI Observability platforms (Arize AI, Fiddler, WhyLabs) for behavior analytics dashboards",
           ],
           defendsAgainst: [
@@ -6715,7 +6715,6 @@ class GraphRobustnessVerifier:
             "AML.T0015 Evade AI Model",
             "AML.T0043 Craft Adversarial Data",
             "AML.T0031 Erode AI Model Integrity",
-            "AML.T0041 Physical Environment Access (certified defenses provide formal robustness against physical perturbations)",
           ],
         },
         {
@@ -8723,7 +8722,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
           ],
           toolsOpenSource: ["requests", "urllib.parse", "ipaddress"],
           toolsCommercial: [
-            "Noname Security (API Security Platform)",
+            "Akamai API Security",
             "Salt Security (API Security Platform)",
             "Zscaler (Secure Web Gateway)",
             "Netskope (Secure Web Gateway)",
@@ -8760,7 +8759,7 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
             },
             {
               framework: "OWASP ML Top 10 2023",
-              items: ["ML01:2023 Input Manipulation Attack"],
+              items: ["N/A"],
             },
             {
               framework: "OWASP Agentic AI Top 10 2026",
@@ -8802,10 +8801,10 @@ def execute_tool_with_jit_auth(pdp_url: str, ctx: dict, tool_name: str, tool_par
               implementation:
                 "Sanitize and convert HTML to text using hardened libraries and/or CDR/browser isolation.",
               howTo:
-                "<h5>Concept:</h5><p>An LLM only needs the textual content of a webpage. Passing full HTML creates a significant security risk. A safe pipeline first aggressively sanitizes the HTML and then extracts only the plain text content. For complex formats like PDF or SVG, convert them to plain text server-side or route them through a Content Disarm and Reconstruction (CDR) service to neutralize potential embedded threats.</p><h5>Pipeline:</h5><p>Use Bleach to remove dangerous tags and attributes, then parse the result with BeautifulSoup to safely extract the text for the LLM.</p><pre><code># File: agent/content_sanitizer.py\nimport bleach\nfrom bs4 import BeautifulSoup\n\ndef sanitize_html_content(html_content: str) -> str:\n    # 1. Use bleach to remove all known dangerous elements like &lt;script&gt; and &lt;style&gt;\n    cleaned_html = bleach.clean(html_content, tags=[], strip=True)\n\n    # 2. Use BeautifulSoup to parse the now-safer HTML and extract only the text content.\n    soup = BeautifulSoup(cleaned_html, 'html.parser')\n    text_content = soup.get_text(separator='\\n', strip=True)\n    \n    return text_content\n</code></pre><p><strong>Action:</strong> In your <code>safe_fetch</code> tool, for any response with a <code>text/html</code> content type, enforce passage through a sanitization function using <code>bleach</code> and <code>BeautifulSoup</code> to ensure it is converted to plain text before being passed to an LLM. Do not ever pass raw HTML/JS to the LLM as 'system' or 'policy' context; always inject it into an isolated &lt;external_data&gt; or &lt;untrusted_content&gt; namespace so the model is reminded that it is untrusted reference text only, not instructions.</p>",
+                "<h5>Concept:</h5><p>An LLM only needs the textual content of a webpage. Passing full HTML creates a significant security risk. A safe pipeline first aggressively sanitizes the HTML and then extracts only the plain text content. For complex formats like PDF or SVG, convert them to plain text server-side or route them through a Content Disarm and Reconstruction (CDR) service to neutralize potential embedded threats.</p><h5>Pipeline:</h5><p>Use nh3 to remove dangerous tags and attributes, then parse the result with BeautifulSoup to safely extract the text for the LLM.</p><pre><code># File: agent/content_sanitizer.py\nimport nh3\nfrom bs4 import BeautifulSoup\n\ndef sanitize_html_content(html_content: str) -> str:\n    # 1. Use nh3 to remove all known dangerous elements like &lt;script&gt; and &lt;style&gt;\n    cleaned_html = nh3.clean(html_content, tags=set())  # strip all tags\n\n    # 2. Use BeautifulSoup to parse the now-safer HTML and extract only the text content.\n    soup = BeautifulSoup(cleaned_html, 'html.parser')\n    text_content = soup.get_text(separator='\\n', strip=True)\n    \n    return text_content\n</code></pre><p><strong>Action:</strong> In your <code>safe_fetch</code> tool, for any response with a <code>text/html</code> content type, enforce passage through a sanitization function using <code>nh3</code> and <code>BeautifulSoup</code> to ensure it is converted to plain text before being passed to an LLM. Do not ever pass raw HTML/JS to the LLM as 'system' or 'policy' context; always inject it into an isolated &lt;external_data&gt; or &lt;untrusted_content&gt; namespace so the model is reminded that it is untrusted reference text only, not instructions.</p>",
             },
           ],
-          toolsOpenSource: ["bleach", "BeautifulSoup4", "html5lib"],
+          toolsOpenSource: ["nh3", "BeautifulSoup4", "html5lib"],
           toolsCommercial: [
             "Votiro (CDR)",
             "OPSWAT MetaDefender (CDR)",
@@ -10152,8 +10151,36 @@ def verify_descriptor_hash(tool_id: str, descriptor: dict, expected_hash: str) -
   <li><b>Typosquat guard</b>: compare requested name to allowlisted tool IDs; block if too similar but not exact.</li>
   <li><b>Operate safely</b>: return a disambiguation error that lists only safe identifiers.</li>
 </ol>
+<h5>Example: Typosquat Detection with RapidFuzz</h5>
+<pre><code># File: tool_resolution/typosquat_guard.py
+from rapidfuzz import fuzz
 
-<p><b>Tip:</b> Start with <i>log-only</i> to tune the similarity threshold, then switch to <i>block</i> for high-confidence cases.</p>`,
+ALLOWLISTED_TOOLS = ["search_kb", "create_ticket", "send_email", "execute_sql"]
+SIMILARITY_THRESHOLD = 85  # percent — tune based on your tool naming patterns
+
+def resolve_tool(requested_name: str) -> str:
+    # Exact match — proceed
+    if requested_name in ALLOWLISTED_TOOLS:
+        return requested_name
+
+    # Check for near-misses (typosquats)
+    near_matches = []
+    for tool in ALLOWLISTED_TOOLS:
+        score = fuzz.ratio(requested_name.lower(), tool.lower())
+        if score >= SIMILARITY_THRESHOLD:
+            near_matches.append((tool, score))
+
+    if near_matches:
+        names = ", ".join(f"{t} ({s}%)" for t, s in near_matches)
+        raise ValueError(
+            f"BLOCKED: '{requested_name}' is not an exact match. "
+            f"Similar tools found: {names}. "
+            f"Use the exact tool name to proceed."
+        )
+
+    raise ValueError(f"BLOCKED: '{requested_name}' not found in tool registry.")
+</code></pre>
+<p><b>Tip:</b> Start with <i>log-only</i> mode to tune the similarity threshold, then switch to <i>block</i> for high-confidence cases.</p>`,
             },
           ],
         },
@@ -10382,7 +10409,7 @@ def scan_python(code: str):
             "When dynamic evaluation is required, force safe/restricted interpreters inside the execution boundary so code cannot access filesystem, network, or privileged APIs by design. For interactive “vibe coding”, run evaluation only inside ephemeral sandboxes.",
           toolsOpenSource: [
             "RestrictedPython (Python)",
-            "vm2 / isolated-vm (JavaScript sandbox runtimes)",
+            "isolated-vm (JavaScript sandbox runtime)",
             "Docker / Podman (ephemeral sandboxes)",
             "gVisor / Firecracker (optional hardened sandbox layers)",
             "wasmtime / wasmer (WASM runtimes)",
@@ -10859,7 +10886,7 @@ def retrain_detector(
         per_device_train_batch_size=16,
         learning_rate=2e-5,
         weight_decay=0.01,
-        evaluation_strategy="epoch",
+        eval_strategy="epoch",
         save_strategy="epoch",
         load_best_model_at_end=True,
     )
@@ -11849,7 +11876,7 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
           "description": "Ensure that credentials used by the MCP client to authenticate with remote servers (API keys, OAuth tokens, refresh tokens, client certificates, session tokens) are stored using platform-native secure storage mechanisms such as OS keychains, encrypted secret stores, or hardware-backed keystores rather than plaintext configuration files. This sub-technique also covers credential lifecycle management: rotation, expiry enforcement, revocation propagation, logout cleanup, and client deauthorization. This directly addresses one of the most common weaknesses in current MCP client implementations: credentials stored in readable local JSON or text configuration files.",
           "toolsOpenSource": [
             "Python keyring (cross-platform OS keychain access)",
-            "Node.js keytar (native OS credential storage)",
+            "keyring-node (native OS credential storage)",
             "SOPS (encrypted file-based secret storage when keychains are unavailable)",
             "age / GnuPG (back-end encryption for secret files)",
             "pass (GPG-backed password store)"
@@ -12055,7 +12082,7 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
             "DOMPurify (HTML and markdown sanitization for browser or Electron clients)",
             "Ajv / Zod / Pydantic (strict message schema validation)",
             "Electron security configuration and CSP (renderer hardening)",
-            "Bleach (Python HTML sanitization for non-browser renderers)"
+            "nh3 (Python HTML sanitization for non-browser renderers)"
           ],
           "toolsCommercial": [
             "Electron Fuses (Electron runtime hardening)",

@@ -1,8 +1,8 @@
 {
   "version": {
     "schemaVersion": "2.0",
-    "dataVersion": "2026.03.30",
-    "generatedAt": "2026-03-30T12:33:17.887Z",
+    "dataVersion": "2026.04.01",
+    "generatedAt": "2026-04-01T15:39:22.454Z",
     "source": "bundled",
     "keywordStructure": "categorized"
   },
@@ -2855,7 +2855,7 @@
                 "Snyk IaC",
                 "Prisma Cloud (by Palo Alto Networks)",
                 "Wiz",
-                "Tenable.cs"
+                "Tenable Cloud Security"
               ],
               "defendsAgainst": [
                 {
@@ -3043,7 +3043,7 @@
             {
               "framework": "OWASP LLM Top 10 2025",
               "items": [
-                "LLM06:2025 Excessive Agency (by providing a defined mechanism for human control over agent actions and decisions, acting as a crucial backstop).",
+                "LLM06:2025 Excessive Agency (by providing a defined mechanism for human control over agent actions and decisions, acting as a crucial backstop)",
                 "LLM09:2025 Misinformation"
               ]
             },
@@ -3926,7 +3926,8 @@
                 "Integration Risks (L7)",
                 "Agent Goal Manipulation (L7)",
                 "Agent Tool Misuse (L7)",
-                "Privilege Escalation (Cross-Layer)"
+                "Privilege Escalation (Cross-Layer)",
+                "Regulatory Non-Compliance by AI Security Agents (L6)"
               ]
             },
             {
@@ -3993,6 +3994,7 @@
                 "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems",
                 "Model Management 8.3: Model lifecycle without HITL (human-in-the-loop)",
                 "Platform 12.4: Unauthorized privileged access",
+                "Agents — Core 13.8: Repudiation & Untraceability",
                 "Agents — Tools MCP Server 13.22: Excessive Permissions and Scope Creep",
                 "Agents — Tools MCP Client 13.31: Excessive Permission Granting"
               ]
@@ -4151,7 +4153,7 @@
           "toolsCommercial": [
             "AI security platforms (Cisco AI Defense (formerly Robust Intelligence), HiddenLayer, Protect AI, Adversa.AI)",
             "MLOps platforms (Amazon SageMaker, Google Vertex AI, Databricks, Azure ML)",
-            "RL Platforms (Microsoft Bonsai, AnyLogic)"
+            "RL Platforms (AnyLogic)"
           ],
           "subTechniques": [],
           "url": "https://aidefend.net",
@@ -4481,7 +4483,7 @@
               ],
               "toolsOpenSource": [
                 "NVIDIA NeMo Guardrails",
-                "Rebuff",
+                "LLM Guard (Protect AI)",
                 "LangChain Guardrails",
                 "Llama Guard (Meta)",
                 "Pydantic (for structured input validation)"
@@ -4906,7 +4908,6 @@
               ],
               "toolsOpenSource": [
                 "Label Studio (annotation platform with audit trails)",
-                "Prodigy (annotation workflow tooling)",
                 "Cleanlab (label issue detection and confident learning)",
                 "Argilla (annotation workflows and agreement review)",
                 "Snorkel (weak supervision and labeling-function analysis)",
@@ -4918,7 +4919,8 @@
                 "Labelbox (annotation platform with review workflows)",
                 "Amazon SageMaker Ground Truth (managed labeling and worker tracking)",
                 "Appen (managed annotation operations)",
-                "Surge AI (managed RLHF or preference labeling)"
+                "Surge AI (managed RLHF or preference labeling)",
+                "Prodigy (Explosion AI, annotation workflow tooling)"
               ],
               "defendsAgainst": [
                 {
@@ -5873,7 +5875,7 @@
                 "Snyk IaC",
                 "Prisma Cloud",
                 "Wiz",
-                "Tenable.cs"
+                "Tenable Cloud Security"
               ],
               "defendsAgainst": [
                 {
@@ -6693,8 +6695,7 @@
                 "API Gateway / Service Gateway products (policy + schema validation + mTLS)",
                 "Cloudflare Zero Trust",
                 "Kong Gateway",
-                "Apigee AI Gateway",
-                "Entitle AI (emerging market for agent governance)"
+                "Apigee AI Gateway"
               ],
               "defendsAgainst": [
                 {
@@ -7359,7 +7360,7 @@
                 "MLflow (for tracking experiments and model performance)"
               ],
               "toolsCommercial": [
-                "Privacy-enhancing technology platforms (Gretel.ai, Tonic.ai, SarUS, Immuta)",
+                "Privacy-enhancing technology platforms (Gretel.ai, Tonic.ai, Sarus, Immuta)",
                 "AI Security platforms (Protect AI, HiddenLayer, Cisco AI Defense (formerly Robust Intelligence), Weights & Biases)",
                 "MLOps Platforms for custom training (Amazon SageMaker, Google Vertex AI, Databricks, Azure ML)"
               ],
@@ -7870,7 +7871,7 @@
               ],
               "toolsOpenSource": [
                 "Python's `html` and `shlex` libraries",
-                "bleach (for HTML sanitization)",
+                "nh3 (for HTML sanitization)",
                 "sqlparse (for SQL validation)",
                 "Python `ast` module (for code analysis)",
                 "OWASP Java Encoder Project",
@@ -7883,7 +7884,7 @@
                 "Azure Content Safety",
                 "Google Cloud DLP API",
                 "Cloud WAFs (AWS WAF, Azure WAF, Cloudflare WAF, Akamai)",
-                "API Security platforms (Noname Security, Salt Security)"
+                "API Security platforms (Akamai API Security, Salt Security)"
               ],
               "defendsAgainst": [
                 {
@@ -9536,9 +9537,9 @@
                 "Include specific security requirements, such as side-channel resistance, in procurement contracts."
               ],
               "toolsOpenSource": [
-                "NIST SP 800-161 (Supply Chain Risk Management Framework)",
-                "Hardware analysis tools (e.g., for examining firmware)",
-                "Vendor-specific verification tools"
+                "CHIPSEC (Intel platform security assessment)",
+                "binwalk (firmware analysis and extraction)",
+                "FACT (Firmware Analysis and Comparison Tool)"
               ],
               "toolsCommercial": [
                 "Vendor Risk Management (VRM) Platforms (SecurityScorecard, BitSight, UpGuard)",
@@ -9984,8 +9985,9 @@
             "Research code from academic papers on Transformer security."
           ],
           "toolsCommercial": [
-            "AI security platforms offering model-specific vulnerability scanning.",
-            "Adversarial attack simulation tools with profiles for Transformer models."
+            "HiddenLayer AISec Platform (model vulnerability scanning)",
+            "Cisco AI Defense (adversarial robustness testing)",
+            "Mindgard (AI red teaming and security testing)"
           ],
           "subTechniques": [],
           "url": "https://aidefend.net",
@@ -10493,8 +10495,8 @@
                 "Research libraries for certified robustness (e.g., code accompanying papers on Randomized Smoothing for GNNs, auto-LiRPA)"
               ],
               "toolsCommercial": [
-                "AI Security validation platforms (some emerging startups in this space)",
-                "Formal verification services"
+                "HiddenLayer AISec Platform",
+                "Mindgard (AI robustness testing)"
               ],
               "defendsAgainst": [
                 {
@@ -10730,7 +10732,7 @@
                 "NumPy / Pandas for reward telemetry analysis"
               ],
               "toolsCommercial": [
-                "Enterprise RL platforms (AnyLogic, Microsoft Bonsai)",
+                "Enterprise RL platforms (AnyLogic)",
                 "Simulation platforms for robotics and autonomous systems"
               ],
               "defendsAgainst": [
@@ -10845,7 +10847,7 @@
                 "Data labeling tools (Label Studio)"
               ],
               "toolsCommercial": [
-                "Enterprise RL platforms (Microsoft Bonsai)",
+                "Enterprise RL platforms (AnyLogic)",
                 "Human data labeling services (Scale AI, Appen)"
               ],
               "defendsAgainst": [
@@ -10955,7 +10957,7 @@
                 "NumPy"
               ],
               "toolsCommercial": [
-                "Enterprise RL platforms (AnyLogic, Microsoft Bonsai)",
+                "Enterprise RL platforms (AnyLogic)",
                 "MATLAB Reinforcement Learning Toolbox"
               ],
               "defendsAgainst": [
@@ -11063,7 +11065,7 @@
                 "Gymnasium wrappers for episode logging and video capture"
               ],
               "toolsCommercial": [
-                "Enterprise RL platforms (AnyLogic, Microsoft Bonsai)",
+                "Enterprise RL platforms (AnyLogic)",
                 "AI Observability platforms (Arize AI, Fiddler, WhyLabs) for behavior analytics dashboards"
               ],
               "defendsAgainst": [
@@ -11838,8 +11840,7 @@
               "items": [
                 "AML.T0015 Evade AI Model",
                 "AML.T0043 Craft Adversarial Data",
-                "AML.T0031 Erode AI Model Integrity",
-                "AML.T0041 Physical Environment Access (certified defenses provide formal robustness against physical perturbations)"
+                "AML.T0031 Erode AI Model Integrity"
               ]
             },
             {
@@ -14325,7 +14326,7 @@
                 "ipaddress"
               ],
               "toolsCommercial": [
-                "Noname Security (API Security Platform)",
+                "Akamai API Security",
                 "Salt Security (API Security Platform)",
                 "Zscaler (Secure Web Gateway)",
                 "Netskope (Secure Web Gateway)"
@@ -14435,7 +14436,7 @@
                 "Sanitize and convert HTML to text using hardened libraries and/or CDR/browser isolation."
               ],
               "toolsOpenSource": [
-                "bleach",
+                "nh3",
                 "BeautifulSoup4",
                 "html5lib"
               ],
@@ -14471,7 +14472,7 @@
                 {
                   "framework": "OWASP ML Top 10 2023",
                   "items": [
-                    "ML01:2023 Input Manipulation Attack"
+                    "N/A"
                   ]
                 },
                 {
@@ -16540,7 +16541,7 @@
               ],
               "toolsOpenSource": [
                 "RestrictedPython (Python)",
-                "vm2 / isolated-vm (JavaScript sandbox runtimes)",
+                "isolated-vm (JavaScript sandbox runtime)",
                 "Docker / Podman (ephemeral sandboxes)",
                 "gVisor / Firecracker (optional hardened sandbox layers)",
                 "wasmtime / wasmer (WASM runtimes)"
@@ -17727,7 +17728,7 @@
               ],
               "toolsOpenSource": [
                 "Python keyring (cross-platform OS keychain access)",
-                "Node.js keytar (native OS credential storage)",
+                "keyring-node (native OS credential storage)",
                 "SOPS (encrypted file-based secret storage when keychains are unavailable)",
                 "age / GnuPG (back-end encryption for secret files)",
                 "pass (GPG-backed password store)"
@@ -17983,7 +17984,7 @@
                 "DOMPurify (HTML and markdown sanitization for browser or Electron clients)",
                 "Ajv / Zod / Pydantic (strict message schema validation)",
                 "Electron security configuration and CSP (renderer hardening)",
-                "Bleach (Python HTML sanitization for non-browser renderers)"
+                "nh3 (Python HTML sanitization for non-browser renderers)"
               ],
               "toolsCommercial": [
                 "Electron Fuses (Electron runtime hardening)",
@@ -19862,7 +19863,7 @@
               ],
               "toolsOpenSource": [
                 "NVIDIA NeMo Guardrails",
-                "Rebuff.ai",
+                "LLM Guard (Protect AI)",
                 "Llama Guard (Meta)",
                 "LangChain Guardrails",
                 "Python `re` and `collections` modules"
@@ -24671,7 +24672,7 @@
           ],
           "toolsCommercial": [
             "Google Knowledge Graph API for external fact verification",
-            "Microsoft Cognitive Services for content verification",
+            "Azure AI Services for content verification",
             "Palantir Foundry for large-scale data consistency and verification",
             "Databricks with MLflow for distributed ML-based fact verification",
             "Neo4j Enterprise for enterprise-grade knowledge graph verification"
@@ -24876,7 +24877,8 @@
             "infra"
           ],
           "phase": [
-            "operation"
+            "operation",
+            "response"
           ],
           "defendsAgainst": [
             {
@@ -25240,7 +25242,8 @@
                 "app"
               ],
               "phase": [
-                "operation"
+                "operation",
+                "response"
               ],
               "implementationGuidance": [
                 "Create agent quarantine mechanisms that automatically isolate agents exhibiting rogue behavior pending investigation"
@@ -25398,6 +25401,7 @@
           ],
           "phase": [
             "validation",
+            "building",
             "operation"
           ],
           "defendsAgainst": [
@@ -25602,7 +25606,8 @@
                 "model"
               ],
               "phase": [
-                "operation"
+                "building",
+                "validation"
               ],
               "implementationGuidance": [
                 "Compute feature similarity scores for all connected nodes in the graph.",
@@ -25772,7 +25777,7 @@
                 {
                   "framework": "OWASP Agentic AI Top 10 2026",
                   "items": [
-                    "ASI04:2026 Agentic Supply Chain Vulnerabilities (structural anomalies may indicate supply chain compromise)"
+                    "N/A"
                   ]
                 },
                 {
@@ -25970,7 +25975,7 @@
             "XAI libraries adaptable for policy analysis (SHAP, Captum)"
           ],
           "toolsCommercial": [
-            "Enterprise RL platforms (Microsoft Bonsai, AnyLogic)",
+            "Enterprise RL platforms (AnyLogic)",
             "AI Observability Platforms (Datadog, Arize AI, Fiddler)",
             "Simulation platforms (NVIDIA Isaac Sim)"
           ],
@@ -26351,7 +26356,7 @@
               ],
               "toolsOpenSource": [
                 "pandas",
-                "collections"
+                "Python standard library (collections.Counter)"
               ],
               "toolsCommercial": [
                 "Datadog",
@@ -27403,10 +27408,9 @@
                 "Cilium (for Network Policies and eBPF)"
               ],
               "toolsCommercial": [
-                "Docker Enterprise",
+                "Mirantis Kubernetes Engine / Mirantis Container Runtime",
                 "Red Hat OpenShift Container Platform",
                 "Aqua Security",
-                "Twistlock (Palo Alto Networks)",
                 "Prisma Cloud (Palo Alto Networks)",
                 "Microsoft Azure Kubernetes Service (AKS)",
                 "Google Kubernetes Engine (GKE)",
@@ -27554,7 +27558,7 @@
                 "Google Cloud Run (uses gVisor)",
                 "Azure Container Instances (ACI) with confidential computing options",
                 "Red Hat OpenShift Virtualization (for Kata Containers management)",
-                "WebAssembly-as-a-Service platforms"
+                "Managed WebAssembly execution platforms (Fastly Compute, Fermyon Cloud)"
               ],
               "defendsAgainst": [
                 {
@@ -27954,8 +27958,7 @@
               "toolsCommercial": [
                 "Joe Sandbox",
                 "ANY.RUN",
-                "EDR/XDR platforms with sandboxing features",
-                "Execution Platforms (Note: AWS Lambda/Fargate are execution platforms that use microVMs; they can host a sandboxing service but do not provide behavioral analysis out-of-the-box.)"
+                "Behavioral analysis / malware detonation sandboxes (CrowdStrike Falcon Sandbox, Palo Alto WildFire)"
               ],
               "defendsAgainst": [
                 {
@@ -28636,7 +28639,6 @@
           ],
           "toolsCommercial": [
             "API Security and Bot Management solutions (Cloudflare, Akamai, Imperva)",
-            "ThreatWarrior (automated detection/response)",
             "SIEM/SOAR platforms (Splunk SOAR, Palo Alto XSOAR, IBM QRadar SOAR)",
             "WAFs with advanced rate limiting"
           ],
@@ -29866,7 +29868,7 @@
             "SPIFFE/SPIRE (for workload identity attestation and signed workload identities)"
           ],
           "toolsCommercial": [
-            "Enterprise Federated Learning Platforms (Owkin, Substra Foundation, IBM)",
+            "Enterprise Federated Learning Platforms (Owkin, Substra, IBM)",
             "MLOps Platforms with Federated Learning capabilities (Amazon SageMaker)",
             "AI Security Platforms (Protect AI, HiddenLayer)"
           ],
@@ -30006,7 +30008,7 @@
           ],
           "toolsOpenSource": [
             "WebAssembly runtimes (Wasmtime, Wasmer, browser WebAssembly runtime)",
-            "TensorFlow.js, ONNX.js",
+            "TensorFlow.js, ONNX Runtime Web",
             "Web Workers (Browser API)",
             "Browser postMessage() channel (structured clone IPC for sandboxed components)",
             "Sandboxed iframes (HTML5 iframe with sandbox attribute)",
@@ -30168,7 +30170,7 @@
             "Reverse proxy / API gateway with custom middleware (Kong / Nginx / Envoy) for deception routing and request capture"
           ],
           "toolsCommercial": [
-            "Deception technology platforms (TrapX, SentinelOne ShadowPlex, Illusive, Acalvio)",
+            "Deception technology platforms (Commvault ThreatWise (formerly TrapX), SentinelOne Singularity Identity (deception capabilities), Proofpoint Identity Threat Defense (previously Illusive), Acalvio ShadowPlex)",
             "Specialized AI security vendors with AI honeypot capabilities"
           ],
           "subTechniques": [],
@@ -30313,7 +30315,8 @@
           ],
           "toolsCommercial": [
             "Thinkst Canary (commercial platform)",
-            "Deception platforms (Illusive, Acalvio, SentinelOne) with data decoy capabilities",
+            "Deception platforms (Proofpoint Identity Threat Defense, Acalvio ShadowPlex, SentinelOne Singularity Identity) with data decoy capabilities",
+            "Thinkst Canary",
             "Some DLP solutions adaptable for honey data"
           ],
           "subTechniques": [],
@@ -30363,6 +30366,7 @@
             "app"
           ],
           "phase": [
+            "operation",
             "response"
           ],
           "defendsAgainst": [
@@ -30409,8 +30413,7 @@
               "items": [
                 "NISTAML.031 Model Extraction (noisy responses degrade extraction quality)",
                 "NISTAML.018 Prompt Injection (deceptive responses make injection unreliable)",
-                "NISTAML.032 Reconstruction (deceptive outputs prevent training data reconstruction)",
-                "NISTAML.025 Black-box Evasion"
+                "NISTAML.032 Reconstruction (deceptive outputs prevent training data reconstruction)"
               ]
             },
             {
@@ -30427,8 +30430,7 @@
               "items": [
                 "MRE: Model Reverse Engineering (deceptive outputs degrade reverse engineering quality)",
                 "MXF: Model Exfiltration (noisy responses make extracted model data unusable)",
-                "PIJ: Prompt Injection (deceptive responses make injection results unreliable for attacker)",
-                "MEV: Model Evasion"
+                "PIJ: Prompt Injection (deceptive responses make injection results unreliable for attacker)"
               ]
             },
             {
@@ -30438,7 +30440,6 @@
                 "Model Serving — Inference requests 9.2: Model inversion (deceptive outputs prevent model inversion)",
                 "Model Serving — Inference requests 9.1: Prompt inject (deceptive responses frustrate prompt injection)",
                 "Model Serving — Inference requests 9.12: LLM Jailbreak (feigned compliance captures jailbreak intent)",
-                "Model Serving — Inference response 10.5: Black-box attacks (inconsistent deceptive outputs frustrate black-box attacks)",
                 "Agents — Core 13.6: Intent Breaking & Goal Manipulation",
                 "Agents — Core 13.2: Tool Misuse (deceptive no-ops expose tool misuse attempts)"
               ]
@@ -30594,7 +30595,7 @@
           ],
           "toolsCommercial": [
             "Verance Watermarking (AI content)",
-            "Sensity AI (deepfake detection/watermarking)",
+            "Sensity AI (deepfake / synthetic media detection and forensic analysis)",
             "Commercial digital watermarking solutions",
             "Content authenticity platforms"
           ],
@@ -30861,8 +30862,8 @@
             "Custom code in application logic to handle specific queries."
           ],
           "toolsCommercial": [
-            "Deception technology platforms.",
-            "API management and security solutions."
+            "Deception technology platforms (Acalvio ShadowPlex, Commvault ThreatWise)",
+            "API management and security solutions (Akamai API Security, Cloudflare)"
           ],
           "subTechniques": [],
           "url": "https://aidefend.net",
@@ -30984,7 +30985,7 @@
             "NumPy"
           ],
           "toolsCommercial": [
-            "Privacy-Enhancing Technology Platforms (Gretel.ai, Tonic.ai, SarUS, Immuta)",
+            "Privacy-Enhancing Technology Platforms (Gretel.ai, Tonic.ai, Sarus, Immuta)",
             "AI Security Platforms (Protect AI, HiddenLayer, Cisco AI Defense (formerly Robust Intelligence))",
             "MLOps Platforms (Amazon SageMaker, Google Vertex AI, Databricks)"
           ],
@@ -32947,7 +32948,7 @@
                 "Cryptsetup (for LUKS key management and destruction on Linux systems)"
               ],
               "toolsCommercial": [
-                "Cloud Provider KMS (AWS KMS, Azure Key Vault, GCP Secret Manager)",
+                "Cloud Provider KMS (AWS KMS, Azure Key Vault, Google Cloud KMS)",
                 "Hardware Security Modules (HSMs)",
                 "Enterprise data destruction software and services (Blancco, KillDisk)"
               ],
@@ -33037,7 +33038,6 @@
                   "sqli"
                 ],
                 "defense": [
-                  "secret management",
                   "key management",
                   "cryptographic",
                   "erasure",

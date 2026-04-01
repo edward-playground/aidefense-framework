@@ -13,7 +13,7 @@ export const deceiveTactic = {
                 "Reverse proxy / API gateway with custom middleware (Kong / Nginx / Envoy) for deception routing and request capture"
             ],
             "toolsCommercial": [
-                "Deception technology platforms (TrapX, SentinelOne ShadowPlex, Illusive, Acalvio)",
+                "Deception technology platforms (Commvault ThreatWise (formerly TrapX), SentinelOne Singularity Identity (deception capabilities), Proofpoint Identity Threat Defense (previously Illusive), Acalvio ShadowPlex)",
                 "Specialized AI security vendors with AI honeypot capabilities"
             ],
             "defendsAgainst": [
@@ -112,7 +112,7 @@ export const deceiveTactic = {
                 },
                 {
                     "implementation": "Return believable but resource-draining responses (latency, jitter, soft failures).",
-                    "howTo": "<h5>Concept:</h5><p>If the honeypot always replies instantly and cleanly, advanced scanners will classify it as fake. Add realistic friction. Delay responses with jitter. Occasionally return transient 5xx errors. This both increases realism and slows automated recon / model extraction tooling, forcing attackers to waste time and compute against something that is not real.</p><h5>Add Latency and Jitter to API Responses</h5><p>Before sending a response from a honeypot endpoint, sleep for a random time window, and sometimes emit a generic service error. This simulates load and instability.</p><pre><code># File: honeypot/main.py (continued)\nimport random\nimport time\nfrom fastapi import HTTPException, Request\n\n@app.post(\"/v1/chat/completions\")\nasync def chat_completion(request: Request):\n    # 1. Add realistic latency / jitter\n    latency = random.uniform(0.5, 2.5)  # 0.5s to 2.5s delay\n    time.sleep(latency)\n\n    # 2. ~5% chance: pretend the system is overloaded\n    if random.random() < 0.05:\n        raise HTTPException(status_code=503, detail=\"Service temporarily unavailable. Please try again.\")\n\n    # 3. Return a canned plausible response\n    return {\n        \"id\": \"chatcmpl-honeypot-123\",\n        \"object\": \"chat.completion\",\n        \"choices\": [\n            {\n                \"index\": 0,\n                \"message\": {\n                    \"role\": \"assistant\",\n                    \"content\": \"Sure, I can help with that.\"\n                }\n            }\n        ]\n    }\n</code></pre><p><strong>Action:</strong> In honeypot endpoints that simulate inference or agent behavior, inject jitter, occasional 503s, and generic-but-plausible responses. This wastes automated adversary cycles and keeps scanners engaged without revealing real logic.</p>"
+                    "howTo": "<h5>Concept:</h5><p>If the honeypot always replies instantly and cleanly, advanced scanners will classify it as fake. Add realistic friction. Delay responses with jitter. Occasionally return transient 5xx errors. This both increases realism and slows automated recon / model extraction tooling, forcing attackers to waste time and compute against something that is not real.</p><h5>Add Latency and Jitter to API Responses</h5><p>Before sending a response from a honeypot endpoint, sleep for a random time window, and sometimes emit a generic service error. This simulates load and instability.</p><pre><code># File: honeypot/main.py (continued)\nimport random\nimport asyncio\nfrom fastapi import HTTPException, Request\n\n@app.post(\"/v1/chat/completions\")\nasync def chat_completion(request: Request):\n    # 1. Add realistic latency / jitter\n    latency = random.uniform(0.5, 2.5)  # 0.5s to 2.5s delay\n    await asyncio.sleep(latency)\n\n    # 2. ~5% chance: pretend the system is overloaded\n    if random.random() < 0.05:\n        raise HTTPException(status_code=503, detail=\"Service temporarily unavailable. Please try again.\")\n\n    # 3. Return a canned plausible response\n    return {\n        \"id\": \"chatcmpl-honeypot-123\",\n        \"object\": \"chat.completion\",\n        \"choices\": [\n            {\n                \"index\": 0,\n                \"message\": {\n                    \"role\": \"assistant\",\n                    \"content\": \"Sure, I can help with that.\"\n                }\n            }\n        ]\n    }\n</code></pre><p><strong>Action:</strong> In honeypot endpoints that simulate inference or agent behavior, inject jitter, occasional 503s, and generic-but-plausible responses. This wastes automated adversary cycles and keeps scanners engaged without revealing real logic.</p>"
                 },
                 {
                     "implementation": "Integrate honeypot telemetry with central security monitoring (SIEM/SOC).",
@@ -139,7 +139,8 @@ export const deceiveTactic = {
             ],
             "toolsCommercial": [
                 "Thinkst Canary (commercial platform)",
-                "Deception platforms (Illusive, Acalvio, SentinelOne) with data decoy capabilities",
+                "Deception platforms (Proofpoint Identity Threat Defense, Acalvio ShadowPlex, SentinelOne Singularity Identity) with data decoy capabilities",
+                "Thinkst Canary",
                 "Some DLP solutions adaptable for honey data"
             ],
             "defendsAgainst": [
@@ -252,7 +253,7 @@ export const deceiveTactic = {
         },
         {
             "id": "AID-DV-003",
-            "name": "Dynamic Response Manipulation for AI Interactions", "pillar": ["app"], "phase": ["response"],
+            "name": "Dynamic Response Manipulation for AI Interactions", "pillar": ["app"], "phase": ["operation", "response"],
             "description": "Implement mechanisms where the AI system, upon detecting suspicious or confirmed adversarial interaction patterns (e.g., repeated prompt injection attempts, queries indicative of model extraction), deliberately alters its responses to be misleading, unhelpful, or subtly incorrect to the adversary. This aims to frustrate the attacker's efforts, waste their resources, make automated attacks less reliable, and potentially gather more intelligence on their TTPs without revealing the deception. The AI might simultaneously alert defenders to the ongoing deceptive engagement.",
             "toolsOpenSource": [
                 "LangChain (custom router / tool interception logic for suspicious sessions)",
@@ -307,8 +308,7 @@ export const deceiveTactic = {
                     "items": [
                         "NISTAML.031 Model Extraction (noisy responses degrade extraction quality)",
                         "NISTAML.018 Prompt Injection (deceptive responses make injection unreliable)",
-                        "NISTAML.032 Reconstruction (deceptive outputs prevent training data reconstruction)",
-                        "NISTAML.025 Black-box Evasion"
+                        "NISTAML.032 Reconstruction (deceptive outputs prevent training data reconstruction)"
                     ]
                 },
                 {
@@ -325,8 +325,7 @@ export const deceiveTactic = {
                     "items": [
                         "MRE: Model Reverse Engineering (deceptive outputs degrade reverse engineering quality)",
                         "MXF: Model Exfiltration (noisy responses make extracted model data unusable)",
-                        "PIJ: Prompt Injection (deceptive responses make injection results unreliable for attacker)",
-                        "MEV: Model Evasion"
+                        "PIJ: Prompt Injection (deceptive responses make injection results unreliable for attacker)"
                     ]
                 },
                 {
@@ -336,7 +335,6 @@ export const deceiveTactic = {
                         "Model Serving — Inference requests 9.2: Model inversion (deceptive outputs prevent model inversion)",
                         "Model Serving — Inference requests 9.1: Prompt inject (deceptive responses frustrate prompt injection)",
                         "Model Serving — Inference requests 9.12: LLM Jailbreak (feigned compliance captures jailbreak intent)",
-                        "Model Serving — Inference response 10.5: Black-box attacks (inconsistent deceptive outputs frustrate black-box attacks)",
                         "Agents — Core 13.6: Intent Breaking & Goal Manipulation",
                         "Agents — Core 13.2: Tool Misuse (deceptive no-ops expose tool misuse attempts)"
                     ]
@@ -377,7 +375,7 @@ export const deceiveTactic = {
             ],
             "toolsCommercial": [
                 "Verance Watermarking (AI content)",
-                "Sensity AI (deepfake detection/watermarking)",
+                "Sensity AI (deepfake / synthetic media detection and forensic analysis)",
                 "Commercial digital watermarking solutions",
                 "Content authenticity platforms"
             ],
@@ -600,8 +598,8 @@ export const deceiveTactic = {
                 "Custom code in application logic to handle specific queries."
             ],
             "toolsCommercial": [
-                "Deception technology platforms.",
-                "API management and security solutions."
+                "Deception technology platforms (Acalvio ShadowPlex, Commvault ThreatWise)",
+                "API management and security solutions (Akamai API Security, Cloudflare)"
             ],
             "defendsAgainst": [
                 {
@@ -723,7 +721,7 @@ export const deceiveTactic = {
                 "NumPy"
             ],
             "toolsCommercial": [
-                "Privacy-Enhancing Technology Platforms (Gretel.ai, Tonic.ai, SarUS, Immuta)",
+                "Privacy-Enhancing Technology Platforms (Gretel.ai, Tonic.ai, Sarus, Immuta)",
                 "AI Security Platforms (Protect AI, HiddenLayer, Cisco AI Defense (formerly Robust Intelligence))",
                 "MLOps Platforms (Amazon SageMaker, Google Vertex AI, Databricks)"
             ],

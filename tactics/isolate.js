@@ -117,10 +117,9 @@ export const isolateTactic = {
                         "Cilium (for Network Policies and eBPF)"
                     ],
                     "toolsCommercial": [
-                        "Docker Enterprise",
+                        "Mirantis Kubernetes Engine / Mirantis Container Runtime",
                         "Red Hat OpenShift Container Platform",
                         "Aqua Security",
-                        "Twistlock (Palo Alto Networks)",
                         "Prisma Cloud (Palo Alto Networks)",
                         "Microsoft Azure Kubernetes Service (AKS)",
                         "Google Kubernetes Engine (GKE)",
@@ -256,7 +255,7 @@ export const isolateTactic = {
                         "Google Cloud Run (uses gVisor)",
                         "Azure Container Instances (ACI) with confidential computing options",
                         "Red Hat OpenShift Virtualization (for Kata Containers management)",
-                        "WebAssembly-as-a-Service platforms"
+                        "Managed WebAssembly execution platforms (Fastly Compute, Fermyon Cloud)"
                     ],
                     "defendsAgainst": [
                         {
@@ -471,8 +470,7 @@ export const isolateTactic = {
                     "toolsCommercial": [
                         "Joe Sandbox",
                         "ANY.RUN",
-                        "EDR/XDR platforms with sandboxing features",
-                        "Execution Platforms (Note: AWS Lambda/Fargate are execution platforms that use microVMs; they can host a sandboxing service but do not provide behavioral analysis out-of-the-box.)"
+                        "Behavioral analysis / malware detonation sandboxes (CrowdStrike Falcon Sandbox, Palo Alto WildFire)"
                     ],
                     "defendsAgainst": [
                         {
@@ -917,7 +915,6 @@ export const isolateTactic = {
             ],
             "toolsCommercial": [
                 "API Security and Bot Management solutions (Cloudflare, Akamai, Imperva)",
-                "ThreatWarrior (automated detection/response)",
                 "SIEM/SOAR platforms (Splunk SOAR, Palo Alto XSOAR, IBM QRadar SOAR)",
                 "WAFs with advanced rate limiting"
             ],
@@ -1953,7 +1950,7 @@ export const isolateTactic = {
                 "SPIFFE/SPIRE (for workload identity attestation and signed workload identities)"
             ],
             "toolsCommercial": [
-                "Enterprise Federated Learning Platforms (Owkin, Substra Foundation, IBM)",
+                "Enterprise Federated Learning Platforms (Owkin, Substra, IBM)",
                 "MLOps Platforms with Federated Learning capabilities (Amazon SageMaker)",
                 "AI Security Platforms (Protect AI, HiddenLayer)"
             ],
@@ -2037,7 +2034,7 @@ export const isolateTactic = {
             "description": "This technique focuses on containing a compromised or malicious client-side model, preventing it from accessing sensitive data from other browser tabs, local application context, or the operating system. It addresses the security challenges of AI models that execute in untrusted environments like a user's web browser, Electron shell, hybrid mobile app, or native mobile runtime. This assumes the model or model runtime may already be tampered with or coerced (e.g. prompt-injected, modified weights, wrapped with hostile JS). The goal is not to \"fix\" the model but to strictly confine its blast radius using sandboxing, least capability, and controlled IPC.",
             "toolsOpenSource": [
                 "WebAssembly runtimes (Wasmtime, Wasmer, browser WebAssembly runtime)",
-                "TensorFlow.js, ONNX.js",
+                "TensorFlow.js, ONNX Runtime Web",
                 "Web Workers (Browser API)",
                 "Browser postMessage() channel (structured clone IPC for sandboxed components)",
                 "Sandboxed iframes (HTML5 iframe with sandbox attribute)",
