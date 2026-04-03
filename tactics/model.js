@@ -957,8 +957,128 @@ export const modelTactic = {
                             "howTo": "<h5>Concept:</h5><p>Terminate mTLS at a write-gate, verify caller identity, require <code>evidenceRefs[]</code> and a validator report, then route to <code>trusted</code>/<code>probation</code>/<code>quarantined</code> namespaces based on policy.</p><h5>Python (FastAPI) gate:</h5><pre><code class=\"language-python\"># write_gate.py\nfrom fastapi import FastAPI, Request, HTTPException\nimport requests, pinecone, os\nfrom pydantic import BaseModel, conlist\n\nclass Write(BaseModel):\n  claims: list\n  evidenceRefs: conlist(str, min_items=1)\n  validatorReport: dict\n  riskTier: str\n  signer: str\n\napp = FastAPI()\nOPA_URL = os.getenv(\"OPA_URL\")\nPINECONE_ENV = os.getenv(\"PINECONE_ENV\")\nINDEX = os.getenv(\"INDEX\", \"kb\")\n\npinecone.init(api_key=os.getenv(\"PINECONE_API_KEY\"), environment=PINECONE_ENV)\nindex = pinecone.Index(INDEX)\n\n@app.post(\"/kb/write\")\nasync def write(req: Write, request: Request):\n  # verify caller identity (e.g., SPIFFE/JWT in header)\n  idhdr = request.headers.get(\"X-Workload-Identity\")\n  if not idhdr:\n    raise HTTPException(401, detail=\"missing_identity\")\n  # policy decision\n  pd = requests.post(OPA_URL, json={\"input\": req.dict()}).json()\n  tier = pd.get(\"result\", {}).get(\"tier\", \"quarantined\")\n  # route to namespace\n  ns = {\"trusted\": \"trusted\", \"probation\": \"probation\", \"quarantined\": \"quarantined\"}[tier]\n  vectors = [(c.get(\"id\"), c.get(\"embedding\"), {\"evidence\": \";\".join(req.evidenceRefs)}) for c in req.claims]\n  index.upsert(vectors=vectors, namespace=ns)\n  return {\"namespace\": ns}\n</code></pre><h5>OPA routing (Rego):</h5><pre><code class=\"language-rego\">package kbwrite\n\n# default to quarantine\ntier := \"quarantined\"\n\n# trusted if enough evidence and validator confidence high\ntier := \"trusted\" {\n  count(input.evidenceRefs) >= 2\n  input.validatorReport.confidence >= 0.8\n}\n\n# probation when partial\ntier := \"probation\" {\n  count(input.evidenceRefs) == 1\n  input.validatorReport.confidence >= 0.6\n}\n</code></pre>"
                         }
                     ]
+                },
+                {
+                    "id": "AID-M-002.005",
+                    "name": "Quantum-Resilient Integrity & Provenance for Long-Lived AI Assets",
+                    "pillar": [
+                        "data",
+                        "model",
+                        "infra"
+                    ],
+                    "phase": [
+                        "validation",
+                        "operation",
+                        "response"
+                    ],
+                    "description": "Preserve the integrity and provenance of <strong>long-lived AI assets</strong>—such as model weights, training and evaluation datasets, checkpoints, signed evidence bundles, manifests, and restore artifacts—so they remain verifiable and trustworthy across years of storage, trust-anchor rotation, algorithm deprecation, and archive/restore cycles. This sub-technique governs the <strong>long-term trust continuity</strong> of AI assets: scheduled re-verification, provenance rollover, trust-chain refresh, re-signing or re-attestation when policy requires it, and restore-time policy checks before an old artifact is returned to active use.<br/><br/><strong>Distinct from AID-M-002.002</strong>, which establishes whole-artifact cryptographic hashing and signing at creation time. This sub-technique governs the long-term lifecycle of those integrity controls: re-verification schedules, trust-chain refresh, provenance rollover, and restore-time policy checks for assets that must remain trustworthy across years.<br/><br/><strong>Distinct from AID-H-003.008</strong>, which governs crypto-agile signing for the active build-to-distribution pipeline, including CI signing, dual-sign migration, and verifier-policy updates at promotion time. This sub-technique governs the archived and long-lived end of the asset lifecycle, ensuring that stored models, datasets, and evidence bundles can be re-verified, re-signed, and restored when their original trust anchors have rotated or their signing algorithms have been superseded.",
+                    "toolsOpenSource": [
+                        "Sigstore / cosign",
+                        "in-toto / SLSA provenance tooling",
+                        "The Update Framework (TUF)",
+                        "immudb",
+                        "OpenTimestamps"
+                    ],
+                    "toolsCommercial": [
+                        "DigiCert ONE",
+                        "Keyfactor Command",
+                        "JFrog Artifactory",
+                        "AWS S3 Object Lock / Glacier Vault Lock",
+                        "Azure Immutable Blob Storage"
+                    ],
+                    "warning": {
+                        "level": "Medium on archival overhead and restore complexity",
+                        "description": "<p>Long-term trust continuity introduces operational overhead: archived assets need scheduled re-verification, policy review, and in some cases re-signing or provenance rollover before they can be safely restored. This can increase storage, metadata-management, and incident-recovery complexity.</p><p><strong>Guidance:</strong> apply the strongest long-lived integrity controls to high-value assets that must remain trustworthy across years, such as production model versions, regulated datasets, audit evidence bundles, and last-known-good rollback packages.</p>"
+                    },
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0010.002 AI Supply Chain Compromise: Data",
+                                "AML.T0010.003 AI Supply Chain Compromise: Model",
+                                "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
+                                "AML.T0058 Publish Poisoned Models",
+                                "AML.T0059 Erode Dataset Integrity",
+                                "AML.T0076 Corrupt AI Model"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Data Tampering (L2)",
+                                "Supply Chain Attacks (Cross-Layer)",
+                                "Compromised Container Images (L4)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM03:2025 Supply Chain",
+                                "LLM04:2025 Data and Model Poisoning"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML02:2023 Data Poisoning Attack",
+                                "ML06:2023 AI Supply Chain Attacks",
+                                "ML10:2023 Model Poisoning"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.013 Data Poisoning",
+                                "NISTAML.023 Backdoor Poisoning",
+                                "NISTAML.037 Training Data Attacks",
+                                "NISTAML.051 Model Poisoning (Supply Chain)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-6.1 Training Data Poisoning",
+                                "AITech-9.1 Model or Agentic System Manipulation",
+                                "AITech-9.3 Dependency / Plugin Compromise",
+                                "AISubtech-9.2.2 Backdoors and Trojans",
+                                "AISubtech-7.3.1 Corrupted Third-Party Data"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "DP: Data Poisoning",
+                                "MST: Model Source Tampering",
+                                "MDT: Model Deployment Tampering"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Raw Data 1.6: Insufficient data lineage",
+                                "Raw Data 1.7: Lack of data trustworthiness",
+                                "Governance 4.1: Lack of traceability and transparency of model assets",
+                                "Model 7.3: ML Supply chain vulnerabilities"
+                            ]
+                        }
+                    ],
+                    "implementationGuidance": [
+                        {
+                            "implementation": "Establish a re-verification and provenance-rollover schedule for long-lived archived AI assets instead of assuming their original signatures remain sufficient forever.",
+                            "howTo": "<h5>Concept:</h5><p>Archival integrity is not a one-time event. A model, dataset, or evidence bundle that was trustworthy when first signed may become difficult to verify years later because trust anchors rotate, accepted algorithms change, or verifier policy evolves. Long-lived assets therefore need scheduled re-verification and, when required, a provenance rollover that preserves continuity rather than replacing history.</p><h5>Step 1: Register long-lived assets with review metadata</h5><pre><code># file: archive_manifest.json\n{\n  \"asset_id\": \"model-credit-risk-v12\",\n  \"artifact_sha256\": \"9f2a...\",\n  \"artifact_type\": \"model_checkpoint\",\n  \"created_at\": \"2026-04-01T10:00:00Z\",\n  \"current_signature_profile\": [\"ed25519\"],\n  \"current_trust_anchor\": \"fulcio-root-2026\",\n  \"reverify_every_days\": 180,\n  \"requires_rollover_if_policy_changes\": true,\n  \"provenance_bundle\": \"attestations/model-credit-risk-v12.intoto.jsonl\"\n}\n</code></pre><h5>Step 2: Periodically re-verify against current policy</h5><pre><code># file: archive/reverify_asset.py\nimport json\n\nmanifest = json.load(open('archive_manifest.json'))\ncurrent_policy = json.load(open('verifier_policy.json'))\n\n# pseudo-logic\nif manifest['current_signature_profile'][0] not in current_policy['accepted_signatures']:\n    print('Asset requires provenance rollover or re-signing review')\nelse:\n    print('Asset still satisfies current verifier policy')\n</code></pre><h5>Step 3: Preserve history during provenance rollover</h5><p>When policy changes, do not discard the old attestation bundle. Append a new signed rollover record that links the old digest, old trust anchor, new trust anchor, policy version, and reviewer approval.</p><pre><code>{\n  \"asset_id\": \"model-credit-risk-v12\",\n  \"old_trust_anchor\": \"fulcio-root-2026\",\n  \"new_trust_anchor\": \"enterprise-root-2028\",\n  \"old_signature_profile\": [\"ed25519\"],\n  \"new_signature_profile\": [\"ml-dsa\"],\n  \"policy_version\": \"2028.01\",\n  \"rollover_reason\": \"legacy signing profile deprecated\",\n  \"approved_by\": \"ml-sec-arch-04\"\n}\n</code></pre><p><strong>Action:</strong> keep old and new provenance bundles linked, signed, and queryable. The goal is trust continuity, not historical erasure.</p>"
+                        },
+                        {
+                            "implementation": "Require restore-time trust re-establishment before any archived model, dataset, or evidence bundle can return to production use.",
+                            "howTo": "<h5>Concept:</h5><p>Restoring a years-old artifact is not the same as trusting it. Before an archived asset is reused in production, the platform should verify that the artifact digest still matches, the provenance bundle is intact, and the asset still satisfies the <strong>current</strong> verifier policy. If original trust anchors have rotated or old algorithms are no longer acceptable, restore must pause until a reviewed rollover or re-attestation path is completed.</p><h5>Step 1: Verify current trust prerequisites before restore</h5><pre><code># file: restore/verify_restore_candidate.py\nimport json\n\nasset = json.load(open('archive_manifest.json'))\npolicy = json.load(open('verifier_policy.json'))\nrestore_plan = json.load(open('restore_plan.json'))\n\nif asset['artifact_sha256'] != restore_plan['expected_sha256']:\n    raise SystemExit('Restore blocked: artifact digest mismatch')\n\naccepted = set(policy['accepted_signatures'])\nasset_profiles = set(asset['current_signature_profile'])\nif accepted.isdisjoint(asset_profiles):\n    raise SystemExit('Restore blocked: archived signing profile no longer accepted')\n\nprint('Restore candidate satisfies current policy prerequisites')\n</code></pre><h5>Step 2: Require rollover evidence when anchors or algorithms changed</h5><pre><code># file: restore/check_rollover_record.py\nimport json\n\nasset = json.load(open('archive_manifest.json'))\nrollover = json.load(open('rollover_record.json'))\n\nif asset['current_trust_anchor'] != rollover['old_trust_anchor']:\n    raise SystemExit('Restore blocked: rollover does not match archived trust anchor')\nif not rollover.get('approved_by'):\n    raise SystemExit('Restore blocked: rollover record lacks approval')\n</code></pre><h5>Step 3: Re-attest the restore package, not just the original artifact</h5><p>If the restored package is rewrapped, mirrored, or combined with newer deployment metadata, sign and attest the restore package itself so downstream systems can distinguish the original archived artifact from the newly restored deployment-ready bundle.</p><h5>Operational checklist</h5><ul><li>Verify artifact digest against archive manifest.</li><li>Verify provenance bundle integrity and signer lineage.</li><li>Compare archived signature profile against the current verifier policy.</li><li>Require approved rollover or re-attestation if trust anchors or algorithms changed.</li><li>Fail closed if evidence bundles are missing, incomplete, or unverifiable.</li></ul><p><strong>Action:</strong> never allow emergency restore pressure to bypass trust re-establishment. A last-known-good artifact that cannot be re-verified under current policy is not yet safe to redeploy.</p>"
+                        }
+                    ]
                 }
-
             ]
         },
         {

@@ -1,6 +1,7 @@
 CLAUDE.md
 AGENTS.md
 data-schema.md
+data/data-cache.json
 
 node_modules/
 package.json

@@ -5,9 +5,7 @@
  * Reads tactic JS files from tactics/ directory and generates:
  * - data/data.json - Complete dataset with techniques, strategies, and tools
  *
- * Keywords are structured into two categories:
- * - attack: Attack vectors, surfaces, indicators, outcomes, threat scenarios
- * - defense: Defense mechanisms, techniques, controls implemented
+ * Keywords: Defense mechanism and method terms (flat array) for search and classification
  *
  * Usage: node scripts/generate-dataset.js
  */
@@ -177,136 +175,7 @@ const EXCLUDE_GENERIC = new Set([
 ]);
 
 // ============================================================================
-// ATTACK KEYWORDS - What attacks/threats this technique addresses
-// ============================================================================
-
-/**
- * Attack-related multi-word phrases
- * These describe attack vectors, surfaces, indicators, outcomes, threat scenarios
- */
-const ATTACK_PHRASES = [
-  // Attack types/techniques (comprehensive)
-  'prompt injection', 'indirect prompt injection', 'direct prompt injection',
-  'jailbreak attack', 'jailbreak attempt', 'data poisoning', 'training data poisoning',
-  'model extraction', 'model theft', 'model stealing', 'weight extraction',
-  'model inversion', 'membership inference', 'attribute inference',
-  'adversarial attack', 'adversarial example', 'adversarial perturbation',
-  'backdoor attack', 'trojan attack', 'neural trojan', 'sleeper agent',
-  'evasion attack', 'replay attack', 'gradient attack', 'inference attack',
-  'man in the middle', 'mitm attack', 'interception attack',
-  'denial of service', 'resource exhaustion', 'compute exhaustion',
-  'sponge attack', 'slowloris attack', 'token exhaustion',
-  // Supply chain & dependency attacks
-  'supply chain attack', 'supply chain compromise', 'dependency confusion',
-  'typosquatting', 'package hijacking', 'malicious package',
-  'compromised dependency', 'vulnerable dependency', 'outdated dependency',
-  'model hub attack', 'pretrained model attack', 'fine-tuning attack',
-  // Attack vectors (HOW attacks reach the system)
-  'malicious input', 'crafted input', 'adversarial input', 'untrusted data',
-  'external content', 'user input', 'unvalidated input', 'unsanitized input',
-  'api abuse', 'api exploitation', 'tool abuse', 'tool misuse',
-  'plugin abuse', 'extension abuse', 'third party risk', 'vendor risk',
-  'social engineering', 'phishing', 'spear phishing', 'credential theft',
-  'session hijacking', 'token theft', 'api key theft',
-  // Attack surfaces (WHAT parts are vulnerable)
-  'training pipeline', 'data pipeline', 'inference endpoint', 'model endpoint',
-  'model weights', 'model parameters', 'model architecture', 'hyperparameters',
-  'embedding store', 'vector database', 'vector store', 'knowledge base',
-  'rag pipeline', 'retrieval pipeline', 'indexing pipeline',
-  'agent tools', 'agent actions', 'function calling', 'tool execution',
-  'code execution', 'arbitrary code', 'remote code execution',
-  'system prompt', 'system instruction', 'context window', 'token limit',
-  'memory buffer', 'conversation history', 'chat history',
-  // Data & privacy attacks
-  'data exfiltration', 'data theft', 'data leakage', 'data breach',
-  'information disclosure', 'sensitive data exposure', 'pii exposure', 'pii leakage',
-  'training data extraction', 'memorization attack', 'regurgitation attack',
-  'privacy violation', 'confidentiality breach',
-  // Access & privilege attacks
-  'privilege escalation', 'unauthorized access', 'access violation',
-  'lateral movement', 'pivoting', 'persistence', 'foothold',
-  'account takeover', 'identity theft', 'impersonation attack',
-  // Model integrity attacks
-  'model corruption', 'model degradation', 'model drift',
-  'output manipulation', 'response manipulation', 'bias injection',
-  'fairness attack', 'discrimination attack',
-  // Business/operational attacks
-  'intellectual property theft', 'ip theft', 'competitive intelligence',
-  'business logic abuse', 'fraud', 'financial fraud',
-  'reputation damage', 'brand damage', 'misinformation', 'disinformation',
-  // Threat actors & scenarios
-  'insider threat', 'malicious insider', 'external attacker', 'external threat',
-  'nation state', 'apt', 'advanced persistent threat',
-  'automated attack', 'bot attack', 'coordinated attack', 'targeted attack',
-  'opportunistic attack', 'mass attack', 'spray attack',
-  // Attack indicators
-  'anomalous queries', 'anomalous behavior', 'unusual patterns', 'suspicious activity',
-  'repeated failures', 'brute force', 'high volume', 'rate abuse',
-  'out of distribution', 'distribution shift', 'unexpected behavior',
-  'performance degradation', 'accuracy degradation', 'quality degradation',
-];
-
-/**
- * Attack-related single keywords
- */
-const ATTACK_KEYWORDS = new Set([
-  // Attack actions (verbs)
-  'injection', 'inject', 'jailbreak', 'jailbreaking', 'jailbroken',
-  'poisoning', 'poisoned', 'poison', 'contaminate', 'contaminated',
-  'backdoor', 'backdoored', 'trojan', 'trojaned',
-  'evasion', 'evade', 'evading', 'bypass', 'bypassing', 'circumvent',
-  'exploit', 'exploiting', 'exploitation', 'exploited',
-  'abuse', 'abusing', 'abused', 'misuse', 'misusing',
-  'extraction', 'extract', 'extracting', 'exfiltration', 'exfiltrate',
-  'leakage', 'leak', 'leaking', 'disclosure', 'disclose',
-  'exposure', 'expose', 'exposing', 'exposed',
-  'stealing', 'steal', 'theft', 'stolen',
-  'breach', 'breached', 'breaching',
-  'compromise', 'compromised', 'compromising',
-  'manipulation', 'manipulate', 'manipulating', 'manipulated',
-  'tampering', 'tamper', 'tampered',
-  'corruption', 'corrupt', 'corrupted', 'corrupting',
-  'degradation', 'degrade', 'degraded', 'degrading',
-  'impersonation', 'impersonate', 'impersonating',
-  'spoofing', 'spoof', 'spoofed',
-  'forgery', 'forge', 'forged',
-  'hijacking', 'hijack', 'hijacked',
-  'takeover', 'overtake',
-  'attack', 'attacker', 'attacking', 'attacked',
-  'threat', 'threaten', 'threatening',
-  'intrusion', 'intrude', 'intruder',
-  'penetration', 'penetrate',
-  'subvert', 'subversion', 'subverted',
-  'undermine', 'undermining',
-  // Attack characteristics (adjectives)
-  'malicious', 'maliciously', 'malware',
-  'adversarial', 'adversary', 'adversaries',
-  'hostile', 'untrusted', 'untrustworthy',
-  'rogue', 'unauthorized', 'illegitimate',
-  'fraudulent', 'fraud', 'deceptive', 'deception',
-  'harmful', 'dangerous', 'risky',
-  'suspicious', 'anomalous', 'abnormal',
-  // Attack targets (nouns)
-  'weights', 'weight', 'parameters', 'parameter',
-  'gradients', 'gradient', 'embeddings', 'embedding',
-  'vectors', 'vector', 'representations',
-  'prompts', 'prompt', 'tokens', 'token',
-  'context', 'memory', 'state', 'cache',
-  'credentials', 'credential', 'secrets', 'secret',
-  'keys', 'key', 'certificates', 'certificate',
-  'assets', 'artifact', 'artifacts',
-  // Vulnerability indicators
-  'vulnerable', 'vulnerability', 'vulnerabilities',
-  'weakness', 'weaknesses', 'flaw', 'flaws',
-  'gap', 'gaps', 'hole', 'holes',
-  'exposed', 'unprotected', 'unsecured',
-  'misconfigured', 'misconfiguration',
-  'insecure', 'insecurity',
-  'risk', 'risks', 'risky',
-]);
-
-// ============================================================================
-// DEFENSE KEYWORDS - What defense mechanisms this technique implements
+// KEYWORDS - Defense mechanism terms for search and classification
 // ============================================================================
 
 /**
@@ -510,166 +379,6 @@ const DEFENSE_KEYWORDS = new Set([
 ]);
 
 /**
- * Infer attack keywords based on defense technique type/context
- * Maps defense concepts to attacks they protect against
- */
-const DEFENSE_TO_ATTACK_MAP = {
-  // Defense concepts -> Related attacks
-  'inventory': ['unauthorized access', 'asset discovery', 'reconnaissance', 'shadow ai'],
-  'mapping': ['lateral movement', 'reconnaissance', 'attack surface', 'exposure'],
-  'dependency': ['supply chain attack', 'dependency confusion', 'vulnerable dependency', 'compromised'],
-  'provenance': ['data poisoning', 'tampering', 'supply chain attack', 'untrusted data'],
-  'lineage': ['data poisoning', 'tampering', 'manipulation', 'corruption'],
-  'versioning': ['rollback attack', 'tampering', 'corruption', 'unauthorized modification'],
-  'integrity': ['tampering', 'corruption', 'manipulation', 'forgery', 'unauthorized modification'],
-  'cryptographic': ['tampering', 'forgery', 'man in the middle', 'interception'],
-  'vetting': ['supply chain attack', 'malicious', 'untrusted', 'compromised', 'backdoor'],
-  'baseline': ['drift', 'anomalous behavior', 'deviation', 'degradation', 'manipulation'],
-  'documentation': ['misconfiguration', 'misuse', 'unauthorized', 'compliance violation'],
-  'explainability': ['bias injection', 'manipulation', 'deception', 'hidden behavior'],
-  'sanitization': ['injection', 'malicious input', 'poisoning', 'exploit', 'xss', 'sqli'],
-  'validation': ['injection', 'malicious input', 'bypass', 'exploit', 'invalid input'],
-  'filtering': ['injection', 'malicious content', 'harmful output', 'data exfiltration'],
-  'rate limiting': ['denial of service', 'resource exhaustion', 'brute force', 'abuse'],
-  'throttling': ['denial of service', 'resource exhaustion', 'abuse', 'flooding'],
-  'access control': ['unauthorized access', 'privilege escalation', 'lateral movement'],
-  'authentication': ['impersonation', 'credential theft', 'unauthorized access', 'spoofing'],
-  'authorization': ['privilege escalation', 'unauthorized access', 'bypass'],
-  'encryption': ['data exfiltration', 'interception', 'man in the middle', 'eavesdropping'],
-  'isolation': ['lateral movement', 'privilege escalation', 'containment escape', 'breakout'],
-  'sandboxing': ['code execution', 'escape', 'breakout', 'privilege escalation'],
-  'monitoring': ['evasion', 'stealth attack', 'persistent threat', 'undetected'],
-  'detection': ['evasion', 'bypass', 'stealth', 'obfuscation', 'hiding'],
-  'anomaly': ['zero-day', 'novel attack', 'unknown threat', 'evasion'],
-  'audit': ['repudiation', 'tampering', 'unauthorized', 'forensic evasion'],
-  'logging': ['repudiation', 'tampering', 'cover tracks', 'log injection'],
-  'backup': ['ransomware', 'data destruction', 'corruption', 'availability attack'],
-  'recovery': ['ransomware', 'data destruction', 'denial of service', 'corruption'],
-  'rollback': ['corruption', 'poisoning', 'tampering', 'malicious update'],
-  'hardening': ['exploitation', 'vulnerability', 'misconfiguration', 'attack surface'],
-  'guardrail': ['jailbreak', 'bypass', 'harmful output', 'policy violation'],
-  'moderation': ['harmful content', 'toxic output', 'policy violation', 'abuse'],
-  'federated': ['poisoning', 'model corruption', 'byzantine attack', 'malicious participant'],
-  'differential privacy': ['membership inference', 'data extraction', 'privacy attack'],
-  'watermarking': ['model theft', 'model extraction', 'ip theft', 'unauthorized use'],
-  'fingerprinting': ['model theft', 'unauthorized distribution', 'ip theft'],
-  'deception': ['reconnaissance', 'attacker', 'intrusion', 'probing'],
-  'honeypot': ['attacker', 'intrusion', 'reconnaissance', 'lateral movement'],
-  'decoy': ['attacker', 'misdirection', 'reconnaissance'],
-};
-
-/**
- * Extract ATTACK keywords from technique
- * Sources: description, implementation strategies (threat context mentioned)
- * NOT from defendsAgainst (that's already structured data)
- */
-function extractAttackKeywords(technique) {
-  const keywords = new Set();
-
-  const name = (technique.name || '').toLowerCase();
-  const description = (technique.description || '').toLowerCase();
-
-  // Combine text sources (excluding defendsAgainst per user request)
-  const strategies = (technique.implementationGuidance || [])
-    .map(s => typeof s === 'string' ? s : s.implementation || s.name || '')
-    .join(' ')
-    .toLowerCase();
-
-  const allText = `${name} ${description} ${strategies}`;
-
-  // 1. Extract attack phrases (multi-word)
-  for (const phrase of ATTACK_PHRASES) {
-    if (allText.includes(phrase)) {
-      keywords.add(phrase);
-    }
-  }
-
-  // 2. Extract attack single keywords
-  const words = allText.replace(/[^a-z0-9\s-]/g, ' ').split(/\s+/);
-  for (const word of words) {
-    if (word.length > 2 && ATTACK_KEYWORDS.has(word) && !STOPWORDS.has(word)) {
-      keywords.add(word);
-    }
-  }
-
-  // 3. Extract contextual attack terms from description patterns
-  const attackPatterns = [
-    /against\s+(\w+(?:\s+\w+)?)\s*(?:attacks?)?/gi,
-    /prevent(?:s|ing)?\s+(\w+(?:\s+\w+)?)/gi,
-    /protect(?:s|ing)?\s+(?:against\s+)?(\w+(?:\s+\w+)?)/gi,
-    /mitigat(?:e|es|ing)\s+(\w+(?:\s+\w+)?)/gi,
-    /defend(?:s|ing)?\s+against\s+(\w+(?:\s+\w+)?)/gi,
-    /vulnerab(?:le|ility)\s+to\s+(\w+(?:\s+\w+)?)/gi,
-    /risk\s+of\s+(\w+(?:\s+\w+)?)/gi,
-    /threat\s+of\s+(\w+(?:\s+\w+)?)/gi,
-    /detect(?:s|ing)?\s+(\w+(?:\s+\w+)?)\s*(?:attacks?|attempts?)?/gi,
-    /block(?:s|ing)?\s+(\w+(?:\s+\w+)?)/gi,
-  ];
-
-  for (const pattern of attackPatterns) {
-    let match;
-    const textCopy = allText; // Reset for each pattern
-    pattern.lastIndex = 0;
-    while ((match = pattern.exec(textCopy)) !== null) {
-      const term = match[1].trim().toLowerCase();
-      if (term.length > 2 && !STOPWORDS.has(term) && !EXCLUDE_GENERIC.has(term)) {
-        // Check if it's a known attack term or phrase
-        if (ATTACK_KEYWORDS.has(term) || ATTACK_PHRASES.some(p => p.includes(term))) {
-          keywords.add(term);
-        }
-      }
-    }
-  }
-
-  // 4. FALLBACK: Infer attack keywords from defense concepts in technique name/description
-  if (keywords.size < 10) {
-    for (const [defenseConcept, attackTerms] of Object.entries(DEFENSE_TO_ATTACK_MAP)) {
-      if (allText.includes(defenseConcept)) {
-        for (const attackTerm of attackTerms) {
-          keywords.add(attackTerm);
-          if (keywords.size >= 15) break;
-        }
-      }
-      if (keywords.size >= 15) break;
-    }
-  }
-
-  // 5. FALLBACK: Add generic attack terms based on technique category
-  if (keywords.size < 8) {
-    // Check what kind of technique this is based on ID prefix
-    const id = technique.id || '';
-    if (id.includes('-M-')) {
-      // Model/visibility techniques
-      ['reconnaissance', 'shadow ai', 'unauthorized access', 'misconfiguration', 'exposure'].forEach(t => keywords.add(t));
-    } else if (id.includes('-H-')) {
-      // Hardening techniques
-      ['exploitation', 'vulnerability', 'attack surface', 'misconfiguration', 'bypass'].forEach(t => keywords.add(t));
-    } else if (id.includes('-D-')) {
-      // Detection techniques
-      ['evasion', 'stealth attack', 'obfuscation', 'anomalous behavior', 'intrusion'].forEach(t => keywords.add(t));
-    } else if (id.includes('-I-')) {
-      // Isolation techniques
-      ['lateral movement', 'privilege escalation', 'breakout', 'escape', 'containment bypass'].forEach(t => keywords.add(t));
-    } else if (id.includes('-DV-')) {
-      // Deception techniques
-      ['reconnaissance', 'attacker', 'intrusion', 'probing', 'enumeration'].forEach(t => keywords.add(t));
-    } else if (id.includes('-E-')) {
-      // Eviction techniques
-      ['persistence', 'backdoor', 'malware', 'compromise', 'intrusion'].forEach(t => keywords.add(t));
-    } else if (id.includes('-R-')) {
-      // Restore techniques
-      ['corruption', 'data destruction', 'ransomware', 'availability attack', 'integrity attack'].forEach(t => keywords.add(t));
-    }
-  }
-
-  // Return up to 15 keywords, sorted by relevance (phrases first, then single words)
-  const phrases = Array.from(keywords).filter(k => k.includes(' '));
-  const singles = Array.from(keywords).filter(k => !k.includes(' '));
-
-  return [...phrases, ...singles].slice(0, 15);
-}
-
-/**
  * Tactic-to-defense concept mapping
  * Used as fallback to ensure sufficient defense keywords
  */
@@ -813,28 +522,84 @@ function extractDefenseKeywords(technique) {
     }
   }
 
-  // 7. FALLBACK: Add generic defense properties if still too few
-  if (keywords.size < 8) {
-    ['security', 'protection', 'control', 'management', 'governance', 'policy', 'compliance'].forEach(term => {
-      keywords.add(term);
-    });
+  // Low-signal defense terms that appear in >25% of techniques
+  const DEFENSE_LOW_SIGNAL = new Set([
+    'secure', 'hardening', 'detection', 'robust', 'prevention',
+    'resilient', 'protection', 'control', 'defense', 'enforce',
+    'mitigation', 'prevent',
+  ]);
+
+  // Filter: remove low-signal keywords if we have enough high-signal ones
+  let result = Array.from(keywords);
+  if (result.length > 8) {
+    const highSignal = result.filter(k => !DEFENSE_LOW_SIGNAL.has(k));
+    if (highSignal.length >= 8) {
+      result = highSignal;
+    }
   }
 
-  // Return up to 15 keywords, sorted by relevance (phrases first, then single words)
-  const phrases = Array.from(keywords).filter(k => k.includes(' '));
-  const singles = Array.from(keywords).filter(k => !k.includes(' '));
+  // Sort: phrases first (higher signal), then single words
+  const phrases = result.filter(k => k.includes(' '));
+  const singles = result.filter(k => !k.includes(' '));
 
   return [...phrases, ...singles].slice(0, 15);
 }
 
 /**
- * Extract structured keywords (attack + defense categories)
+ * Extract keywords — defense mechanism and method terms (flat array).
  */
 function extractKeywords(technique) {
-  return {
-    attack: extractAttackKeywords(technique),
-    defense: extractDefenseKeywords(technique),
-  };
+  return extractDefenseKeywords(technique);
+}
+
+/**
+ * Compute a content hash for a technique based on its semantic content.
+ * Used for cache invalidation: if the hash changes, keywords should be regenerated.
+ */
+function computeContentHash(tech) {
+  const content = JSON.stringify({
+    description: tech.description || '',
+    implementationGuidance: (tech.implementationGuidance || []).map(g =>
+      typeof g === 'object' ? (g.implementation || '') : g
+    ),
+    defendsAgainst: tech.defendsAgainst || [],
+    toolsOpenSource: tech.toolsOpenSource || [],
+    toolsCommercial: tech.toolsCommercial || [],
+  });
+  return createHash('sha256').update(content).digest('hex').substring(0, 16);
+}
+
+/**
+ * Keyword cache: stores curated keywords keyed by technique ID + content hash.
+ * If a technique's content hasn't changed, cached keywords are reused.
+ */
+let keywordCache = {};
+const CACHE_PATH = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'data', 'data-cache.json');
+try {
+  keywordCache = JSON.parse(fs.readFileSync(CACHE_PATH, 'utf8'));
+} catch (e) {
+  // No cache — all keywords will be generated from the deterministic pipeline
+}
+
+/**
+ * Get keywords for a technique: use cache if content hash matches, otherwise generate.
+ */
+function getKeywords(technique, contentHash) {
+  const cached = keywordCache[technique.id];
+  if (cached && cached.keywords && cached.contentHash === contentHash) {
+    // Support both legacy {attack, defense} and current flat array format
+    if (cached.keywords.defense && Array.isArray(cached.keywords.defense)) {
+      return cached.keywords.defense;
+    }
+    if (Array.isArray(cached.keywords)) {
+      return cached.keywords;
+    }
+    return cached.keywords;
+  }
+  if (cached && cached.contentHash !== contentHash) {
+    console.warn(`  ⚠️  ${technique.id}: content changed — keywords need regeneration`);
+  }
+  return extractKeywords(technique);
 }
 
 /**
@@ -855,8 +620,9 @@ function transformSubTechnique(subTech) {
     toolsCommercial: subTech.toolsCommercial || [],
     defendsAgainst: subTech.defendsAgainst || [],
   };
-  // Extract structured keywords
-  transformed.keywords = extractKeywords(transformed);
+  // Content hash and keywords
+  transformed.contentHash = computeContentHash(subTech);
+  transformed.keywords = getKeywords(transformed, transformed.contentHash);
   return transformed;
 }
 
@@ -919,8 +685,9 @@ function transformTechnique(tech, tacticId) {
     subTechniques: (tech.subTechniques || []).map(transformSubTechnique),
     url: 'https://aidefend.net',
   };
-  // Extract structured keywords
-  transformed.keywords = extractKeywords(transformed);
+  // Content hash and keywords
+  transformed.contentHash = computeContentHash(tech);
+  transformed.keywords = getKeywords(transformed, transformed.contentHash);
   return transformed;
 }
 
@@ -953,7 +720,7 @@ function transformTactic(tacticData, tacticId) {
  * Calculate SHA256 checksum
  */
 function sha256(content) {
-  return createHash('sha256').update(content).digest('hex');
+  return createHash('sha256').update(content).digest('hex').substring(0, 16);
 }
 
 /**
@@ -962,7 +729,7 @@ function sha256(content) {
 async function main() {
   console.log('AIDEFEND Dataset Generator v2.0');
   console.log('================================');
-  console.log('Keywords: Structured (attack/defense categories)\n');
+  console.log('Keywords: Defense mechanisms (flat)\n');
 
   // Ensure output directory exists
   if (!fs.existsSync(OUTPUT_DIR)) {
@@ -973,8 +740,7 @@ async function main() {
   let totalTechniques = 0;
   let totalSubTechniques = 0;
   let totalStrategies = 0;
-  let totalAttackKeywords = 0;
-  let totalDefenseKeywords = 0;
+  let totalKeywords = 0;
 
   // Process each tactic file
   for (const { file, id, exportName } of TACTIC_FILES) {
@@ -1002,26 +768,20 @@ async function main() {
         0
       );
 
-      // Count keywords
-      const attackKwCount = transformed.techniques.reduce(
-        (sum, t) => sum + t.keywords.attack.length +
-          t.subTechniques.reduce((s, sub) => s + sub.keywords.attack.length, 0),
-        0
-      );
-      const defenseKwCount = transformed.techniques.reduce(
-        (sum, t) => sum + t.keywords.defense.length +
-          t.subTechniques.reduce((s, sub) => s + sub.keywords.defense.length, 0),
+      // Count keywords (flat array)
+      const kwCount = transformed.techniques.reduce(
+        (sum, t) => sum + (Array.isArray(t.keywords) ? t.keywords.length : 0) +
+          t.subTechniques.reduce((s, sub) => s + (Array.isArray(sub.keywords) ? sub.keywords.length : 0), 0),
         0
       );
 
       totalTechniques += techCount;
       totalSubTechniques += subCount;
       totalStrategies += stratCount;
-      totalAttackKeywords += attackKwCount;
-      totalDefenseKeywords += defenseKwCount;
+      totalKeywords += kwCount;
 
       console.log(`  -> ${transformed.name}: ${techCount} techniques, ${subCount} sub-techniques`);
-      console.log(`     Keywords: ${attackKwCount} attack, ${defenseKwCount} defense`);
+      console.log(`     Keywords: ${kwCount}`);
     } catch (e) {
       console.error(`Error processing ${file}: ${e.message}`);
     }
@@ -1035,13 +795,14 @@ async function main() {
       dataVersion: now.split('T')[0].replace(/-/g, '.'),
       generatedAt: now,
       source: 'bundled',
-      keywordStructure: 'categorized',
+      keywordStructure: 'flat',
     },
     tactics,
   };
 
   // Serialize
-  const content = JSON.stringify(dataset, null, 2);
+  // Pretty-print with one attribute per line but no leading indentation
+  const content = JSON.stringify(dataset, null, 2).replace(/^[ \t]+/gm, '');
   const checksum = sha256(content);
 
   // Write data.json
@@ -1089,9 +850,7 @@ async function main() {
   console.log(`Sub-techniques: ${totalSubTechniques}`);
   console.log(`Implementation guidance: ${totalStrategies}`);
   console.log(`\nKeywords:`);
-  console.log(`  Attack keywords: ${totalAttackKeywords}`);
-  console.log(`  Defense keywords: ${totalDefenseKeywords}`);
-  console.log(`  Total: ${totalAttackKeywords + totalDefenseKeywords}`);
+  console.log(`  Keywords: ${totalKeywords}`);
   console.log(`\nOutput: ${dataPath}`);
   console.log(`Size: ${(content.length / 1024).toFixed(1)} KB`);
   console.log(`Checksum: ${checksum.slice(0, 16)}...`);

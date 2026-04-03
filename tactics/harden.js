@@ -1962,6 +1962,107 @@ export const hardenTactic = {
             description:
               "<p>Strict adapter provenance checks and behavioral validation add friction to rapid experimentation and hot-swaps. This is usually acceptable for production or shared enterprise registries, but teams should define separate pathways for sandbox experimentation versus promotion into trusted environments.</p>"
           }
+        },
+        {
+          "id": "AID-H-003.008",
+          "name": "Crypto-Agile Artifact Signing & Distribution (PQC-Ready)",
+          "pillar": [
+            "infra",
+            "model"
+          ],
+          "phase": [
+            "building",
+            "validation",
+            "operation"
+          ],
+          "description": "Design AI artifact signing and distribution workflows so they can change cryptographic algorithms, verifier policy, and signature requirements over time without breaking release governance. This sub-technique focuses on the <strong>active build-to-distribution path</strong>: model files, checkpoints, adapters, containers, manifests, and attestations should support algorithm agility, staged dual-sign or hybrid-sign migration, and verifier policy updates that can be enforced before promotion or consumption. The intent is to make the trust chain resilient to future cryptographic migration requirements, including PQC-ready transitions, rather than locking the pipeline to a single legacy signing scheme.<br/><br/><strong>Distinct from AID-H-003.002</strong>, which defines the promotion gate and mandatory acceptance criteria for model artifacts using the currently approved signing scheme. This sub-technique ensures that the signing scheme itself can evolve—through algorithm migration, dual-sign periods, and verifier-policy updates—without breaking release governance.<br/><br/><strong>Distinct from AID-H-003.006</strong>, which defines the model SBOM content structure and binds that content to a specific artifact digest via provenance attestation. This sub-technique governs the signing infrastructure&apos;s ability to change algorithms, add secondary signatures, and update verifier policy over time without invalidating release controls.",
+          "toolsOpenSource": [
+            "Sigstore / cosign",
+            "in-toto / SLSA provenance tooling",
+            "The Update Framework (TUF)",
+            "liboqs / oqs-provider"
+          ],
+          "toolsCommercial": [
+            "DigiCert ONE",
+            "Venafi CodeSign Protect",
+            "JFrog Artifactory",
+            "Keyfactor Command"
+          ],
+          "defendsAgainst": [
+            {
+              "framework": "MITRE ATLAS",
+              "items": [
+                "AML.T0010 AI Supply Chain Compromise",
+                "AML.T0010.003 AI Supply Chain Compromise: Model",
+                "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
+                "AML.T0058 Publish Poisoned Models"
+              ]
+            },
+            {
+              "framework": "MAESTRO",
+              "items": [
+                "Supply Chain Attacks (Cross-Layer)",
+                "Supply Chain Attacks (L3)",
+                "Compromised Container Images (L4)"
+              ]
+            },
+            {
+              "framework": "OWASP LLM Top 10 2025",
+              "items": [
+                "LLM03:2025 Supply Chain"
+              ]
+            },
+            {
+              "framework": "OWASP ML Top 10 2023",
+              "items": [
+                "ML06:2023 AI Supply Chain Attacks"
+              ]
+            },
+            {
+              "framework": "OWASP Agentic AI Top 10 2026",
+              "items": [
+                "ASI04:2026 Agentic Supply Chain Vulnerabilities"
+              ]
+            },
+            {
+              "framework": "NIST Adversarial Machine Learning 2025",
+              "items": [
+                "NISTAML.051 Model Poisoning (Supply Chain)"
+              ]
+            },
+            {
+              "framework": "Cisco Integrated AI Security and Safety Framework",
+              "items": [
+                "AITech-9.3 Dependency / Plugin Compromise",
+                "AITech-9.1 Model or Agentic System Manipulation"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "MST: Model Source Tampering",
+                "MDT: Model Deployment Tampering"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Model 7.3: ML Supply chain vulnerabilities",
+                "Governance 4.1: Lack of traceability and transparency of model assets",
+                "Platform 12.5: Poor security in the software development lifecycle"
+              ]
+            }
+          ],
+          "implementationGuidance": [
+            {
+              "implementation": "Version signing policy separately from the artifact so verifier requirements can evolve without rebuilding the entire workflow.",
+              "howTo": "<h5>Concept:</h5><p>Crypto agility fails if verifiers are hard-coded to accept exactly one legacy algorithm forever. Separate the artifact from the verification policy and require consumers to evaluate the current policy before accepting the artifact. Promotion policy should evaluate both <strong>(1)</strong> the artifact&apos;s content attestation and release-gate requirements under <strong>AID-H-003.002</strong> and <strong>AID-H-003.006</strong>, and <strong>(2)</strong> the current verifier policy and accepted signature set under this sub-technique.</p><h5>Example: signer policy document</h5><pre><code>{\n  \"policy_version\": \"2026.04\",\n  \"accepted_signatures\": [\n    {\"type\": \"ed25519\", \"required\": true},\n    {\"type\": \"ml-dsa\", \"required\": false}\n  ],\n  \"minimum_signers\": 2,\n  \"migration_state\": \"dual-sign-window\"\n}\n</code></pre><h5>Action checklist</h5><ul><li>Sign the artifact, the provenance/SBOM attestation, and the verifier-policy bundle as separate but linked objects.</li><li>Require the release gate to verify both content integrity requirements and the currently approved signature policy.</li><li>Version the verifier policy independently so consumers can adopt new algorithms without redefining artifact content semantics.</li><li>Fail closed if the verifier policy is missing, unsigned, or older than the minimum policy version required by the promotion environment.</li></ul><p><strong>Action:</strong> have CI sign both the artifact and the policy bundle used at promotion time. Consumers should verify the artifact against the signed policy instead of assuming a fixed algorithm forever.</p>"
+            },
+            {
+              "implementation": "Use staged dual-sign or hybrid-sign promotion during migration periods and reject artifacts that lose required signatures in transit or redistribution.",
+              "howTo": "<h5>Concept:</h5><p>Algorithm migration should be gradual, observable, and reversible. During the transition window, emit both legacy and next-generation signatures, record the exact signature set that was present at promotion time, and continuously verify that downstream replication, mirroring, and registry workflows do not strip required signatures.</p><h5>Example: migration policy</h5><pre><code>{\n  \"migration_window\": {\n    \"from\": \"ed25519\",\n    \"to\": \"ml-dsa\",\n    \"start\": \"2026-04-01T00:00:00Z\",\n    \"end\": \"2026-10-01T00:00:00Z\"\n  },\n  \"required_signatures_during_migration\": [\"ed25519\", \"ml-dsa\"],\n  \"post_migration_required_signatures\": [\"ml-dsa\"]\n}\n</code></pre><h5>Action checklist</h5><ul><li>Emit multiple signatures during the migration window.</li><li>Record which signatures were present when the artifact was promoted.</li><li>Re-verify signatures after registry replication, air-gap transfer, or redistribution.</li><li>Fail promotion if an artifact arrives with fewer required signatures than the policy states.</li><li>Re-run verification whenever the artifact is re-packaged, mirrored, or wrapped in another distribution format.</li></ul><p><strong>Action:</strong> treat missing or stripped secondary signatures as a release integrity failure, not a warning. Migration safety depends on preserving the signature set across every handoff in the distribution path.</p>"
+            }
+          ]
         }
       ],
     },
@@ -2307,7 +2408,7 @@ export const hardenTactic = {
             "Cloudflare Zero Trust",
             "Kong Gateway",
             "Apigee AI Gateway",
-                      ],
+          ],
           defendsAgainst: [
             {
               framework: "MITRE ATLAS",
@@ -10184,6 +10285,112 @@ def resolve_tool(requested_name: str) -> str:
             },
           ],
         },
+        {
+          "id": "AID-H-025.004",
+          "name": "Approved Tool Contract Semantics & Invariant Enforcement",
+          "pillar": [
+            "app"
+          ],
+          "phase": [
+            "building",
+            "operation"
+          ],
+          "description": "Require MCP tool descriptors, tool schemas, and action contracts to satisfy approved <strong>semantic invariants</strong> before an agent may rely on them. This sub-technique goes beyond syntactic integrity checks and asks whether the approved contract's <strong>meaning</strong> remains inside expected safety boundaries: for example, ensuring that an operation named <code>archive</code> does not map to irreversible deletion without explicit destructive approval, that a contract declared as <code>read_only</code> cannot mutate remote state, and that scope-expanding or privilege-amplifying behaviors are not silently hidden inside seemingly ordinary actions.<br/><br/><strong>Distinct from AID-H-025.002</strong>, which pins approved MCP/tool descriptor bytes and fails closed on hash drift. This sub-technique assumes the descriptor may still be byte-stable and cryptographically pinned, and asks a different question: whether the approved contract semantics remain within the expected safety boundary. In other words, <strong>AID-H-025.002 validates descriptor integrity; this sub-technique validates descriptor meaning</strong>.<br/><br/><strong>Distinct from AID-H-019.001</strong>, which validates parameters at dispatch time for each individual tool invocation. This sub-technique validates the approved tool contract itself—typically at onboarding, approval, or schema-change time—to ensure that the operation's declared meaning, side effects, and privilege assumptions remain inside an approved semantic boundary. It may also re-check contract-to-invocation consistency for high-risk tools, but it is <em>not</em> a per-call parameter type checker.",
+          "toolsOpenSource": [
+            "Open Policy Agent (OPA)",
+            "Conftest",
+            "JSON Schema",
+            "Sigstore / cosign",
+            "OpenTelemetry"
+          ],
+          "toolsCommercial": [
+            "Kong Gateway / Kong Enterprise",
+            "Apigee API Management",
+            "Datadog",
+            "Splunk"
+          ],
+          "defendsAgainst": [
+            {
+              "framework": "MITRE ATLAS",
+              "items": [
+                "AML.T0010.001 AI Supply Chain Compromise: AI Software",
+                "AML.T0074 Masquerading",
+                "AML.T0104 Publish Poisoned AI Agent Tool",
+                "AML.T0011.002 User Execution: Poisoned AI Agent Tool"
+              ]
+            },
+            {
+              "framework": "MAESTRO",
+              "items": [
+                "Compromised Agent Registry (L7)",
+                "Agent Impersonation (L7)",
+                "Inaccurate Agent Capability Description (L7)",
+                "Supply Chain Attacks (Cross-Layer)"
+              ]
+            },
+            {
+              "framework": "OWASP LLM Top 10 2025",
+              "items": [
+                "LLM03:2025 Supply Chain",
+                "LLM06:2025 Excessive Agency"
+              ]
+            },
+            {
+              "framework": "OWASP ML Top 10 2023",
+              "items": [
+                "ML06:2023 AI Supply Chain Attacks"
+              ]
+            },
+            {
+              "framework": "OWASP Agentic AI Top 10 2026",
+              "items": [
+                "ASI02:2026 Tool Misuse and Exploitation",
+                "ASI04:2026 Agentic Supply Chain Vulnerabilities"
+              ]
+            },
+            {
+              "framework": "NIST Adversarial Machine Learning 2025",
+              "items": [
+                "NISTAML.039 Compromising connected resources"
+              ]
+            },
+            {
+              "framework": "Cisco Integrated AI Security and Safety Framework",
+              "items": [
+                "AITech-12.1 Tool Exploitation",
+                "AISubtech-12.1.2 Tool Poisoning",
+                "AISubtech-12.1.4 Tool Shadowing",
+                "AITech-4.3 Protocol Manipulation"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "IIC: Insecure Integrated Component",
+                "RA: Rogue Actions"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Agents — Tools MCP Server 13.18: Tool Poisoning",
+                "Agents — Core 13.2: Tool Misuse",
+                "Agents — Tools MCP Server 13.22: Excessive Permissions and Scope Creep",
+                "Agents — Tools MCP Client 13.29: Insufficient Server Validation"
+              ]
+            }
+          ],
+          "implementationGuidance": [
+            {
+              "implementation": "Encode semantic invariants as policy-as-code checks and block tool onboarding or schema changes that violate approved action meaning.",
+              "howTo": "<h5>Concept:</h5><p>A syntactically valid and hash-stable descriptor can still be dangerous if its semantics violate the safety assumptions that reviewers and agents rely on. Treat semantic invariants as an approval-time policy layer that runs before a tool is onboarded and again whenever the contract changes.</p><h5>Step 1: Define invariant classes</h5><ul><li><strong>Name-to-action truthfulness:</strong> operations such as <code>read</code>, <code>list</code>, <code>preview</code>, or <code>archive</code> must not hide destructive behavior.</li><li><strong>Declared side-effect truthfulness:</strong> contracts marked <code>read_only</code> or <code>no_side_effects</code> must not mutate remote state.</li><li><strong>Privilege-bound semantics:</strong> scope-expanding parameters, destructive flags, or cross-tenant targets must be explicit and approval-gated.</li><li><strong>Protocol meaning consistency:</strong> transport verbs and endpoint patterns must align with the declared action category.</li></ul><h5>Step 2: Enforce invariants in CI</h5><pre><code># file: policy/tool_contract_invariants.rego\npackage aidefend.tool_contract\n\ndefault deny = []\n\ndeny[msg] if {\n  input.operation_name == \"archive\"\n  lower(input.http_method) == \"delete\"\n  not input.explicit_destructive_approval\n  msg := \"archive may not map to DELETE without explicit destructive approval\"\n}\n\ndeny[msg] if {\n  input.declared_mode == \"read_only\"\n  input.side_effects.mutates_remote_state\n  msg := \"read_only action cannot mutate remote state\"\n}\n\ndeny[msg] if {\n  input.scope.can_target_other_tenants\n  not input.scope.cross_tenant_approval_required\n  msg := \"cross-tenant target scope requires explicit approval semantics\"\n}\n\ndeny[msg] if {\n  input.operation_name == \"list\"\n  input.side_effects.mutates_remote_state\n  msg := \"list operation may not have state-mutating side effects\"\n}\n</code></pre><h5>Step 3: Fail closed on approval</h5><pre><code># file: ci/check_tool_contract.sh\nset -euo pipefail\nconftest test descriptor.json --policy policy/\n</code></pre><p><strong>Action:</strong> make the policy bundle versioned and signed. A tool contract that fails semantic invariants must never be auto-approved simply because its JSON schema validates or its descriptor hash matches a pinned artifact.</p>"
+            },
+            {
+              "implementation": "Bind approved contract hashes to explicit approval records and require re-approval when semantic meaning, side effects, or privilege assumptions change.",
+              "howTo": "<h5>Concept:</h5><p>Approval must be tied not just to descriptor bytes, but to a reviewer-accepted interpretation of the tool's semantics. Re-approval is required when the tool's meaning changes, even if the contract still looks superficially similar.</p><h5>Step 1: Store approval metadata</h5><pre><code>{\n  \"tool_id\": \"acme/archive_record@1.4.2\",\n  \"descriptor_sha256\": \"4a3c...\",\n  \"policy_bundle_version\": \"2026.04.01\",\n  \"approved_semantic_profile\": {\n    \"operation_category\": \"archive_non_destructive\",\n    \"declared_mode\": \"read_write\",\n    \"cross_tenant_allowed\": false,\n    \"explicit_destructive_approval_required\": true\n  },\n  \"approved_by\": \"sec-arch-12\",\n  \"approved_at\": \"2026-04-01T22:18:00Z\"\n}\n</code></pre><h5>Step 2: Trigger re-approval on semantic drift</h5><ul><li>Operation names or categories change.</li><li>HTTP verbs, transport verbs, or action classes change.</li><li>Declared side effects change.</li><li>Scope expands to new tenants, projects, or destructive targets.</li><li>Previously optional destructive flags become implicit.</li></ul><h5>Step 3: Re-check contract-to-invocation consistency for high-risk tools</h5><pre><code># file: runtime/contract_consistency.py\ndef ensure_consistent(contract, invocation):\n    if contract[\"approved_semantic_profile\"][\"cross_tenant_allowed\"] is False:\n        if invocation.get(\"target_tenant\") not in (None, invocation.get(\"caller_tenant\")):\n            raise ValueError(\"cross-tenant invocation violates approved tool semantics\")\n\n    if contract[\"approved_semantic_profile\"][\"operation_category\"] == \"archive_non_destructive\":\n        if invocation.get(\"destructive\") is True:\n            raise ValueError(\"destructive invocation exceeds approved archive semantics\")\n</code></pre><p><strong>Action:</strong> if the running agent sees a new descriptor hash, a new semantic profile, or an invocation that exceeds the approved semantic boundary, fail closed and require operator confirmation. Do not rely on runtime parameter validation alone to recover from an unsafe contract definition.</p>"
+            }
+          ]
+        }
       ],
     },
     {
@@ -10399,7 +10606,6 @@ def scan_python(code: str):
             },
           ],
         },
-
         {
           id: "AID-H-026.002",
           name: "Safe Interpreter Enforcement",
@@ -10605,6 +10811,7 @@ def run_semgrep(path: str) -&gt; None:
             },
           ],
         },
+
       ],
     },
     {
@@ -13407,6 +13614,991 @@ def debug_miss(model, tokenizer, text: str, target_label: int = 1):
           ],
         },
       ],
+    },
+    {
+      "id": "AID-H-032",
+      "name": "AI-Generated Code Admission Control & Safe Promotion",
+      "description": "Establish a dedicated admission-and-promotion control plane for <strong>AI-generated or AI-materially-modified development artifacts</strong> before they are merged, built, released, or deployed. This family technique treats generated source code, infrastructure-as-code, workflow definitions, dependency changes, deployment manifests, installer or build scripts, repository automation code, and agent-authored patches as high-risk artifacts that require provenance labeling, policy evaluation, exploitability-oriented validation, and evidence-bound promotion decisions.<br/><br/><strong>Why this exists:</strong> classic secure SDLC controls usually assume that a human authored the change and that reviewers can reason about intent line-by-line. AI-assisted development breaks that assumption: defenders need machine-enforced gates that can keep pace with rapid generation while still requiring higher-friction review for privileged or destructive paths.<br/><br/><strong>Scope boundary:</strong> this technique governs whether <em>AI-generated development artifacts inside the SDLC</em> may advance to the next stage. It does <em>not</em> replace secure build environments, generic dependency security, or general-purpose execution sandboxes; instead it orchestrates them into a fail-closed promotion workflow specifically for AI-generated changes. <strong>Distinct from AID-H-031</strong>, which governs admission of third-party or externally sourced agentic skill artifacts, this technique governs internally generated or AI-materially-modified development changes that are proposed, reviewed, built, and promoted through the organization's own SDLC.",
+      "defendsAgainst": [
+        {
+          "framework": "MITRE ATLAS",
+          "items": [
+            "AML.T0010 AI Supply Chain Compromise",
+            "AML.T0010.001 AI Supply Chain Compromise: AI Software",
+            "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
+            "AML.T0011 User Execution",
+            "AML.T0011.000 User Execution: Unsafe AI Artifacts",
+            "AML.T0011.001 User Execution: Malicious Package",
+            "AML.T0060 Publish Hallucinated Entities"
+          ]
+        },
+        {
+          "framework": "MAESTRO",
+          "items": [
+            "Supply Chain Attacks (Cross-Layer)",
+            "Supply Chain Attacks (L3)",
+            "Infrastructure-as-Code (IaC) Manipulation (L4)",
+            "Compromised Framework Components (L3)",
+            "Compromised Container Images (L4)"
+          ]
+        },
+        {
+          "framework": "OWASP LLM Top 10 2025",
+          "items": [
+            "LLM03:2025 Supply Chain",
+            "LLM05:2025 Improper Output Handling",
+            "LLM06:2025 Excessive Agency"
+          ]
+        },
+        {
+          "framework": "OWASP ML Top 10 2023",
+          "items": [
+            "ML06:2023 AI Supply Chain Attacks"
+          ]
+        },
+        {
+          "framework": "OWASP Agentic AI Top 10 2026",
+          "items": [
+            "ASI04:2026 Agentic Supply Chain Vulnerabilities",
+            "ASI05:2026 Unexpected Code Execution (RCE)"
+          ]
+        },
+        {
+          "framework": "NIST Adversarial Machine Learning 2025",
+          "items": [
+            "NISTAML.039 Compromising connected resources",
+            "NISTAML.051 Model Poisoning (Supply Chain)"
+          ]
+        },
+        {
+          "framework": "Cisco Integrated AI Security and Safety Framework",
+          "items": [
+            "AITech-9.3 Dependency / Plugin Compromise",
+            "AISubtech-9.3.1 Malicious Package / Tool Injection",
+            "AISubtech-12.2.1 Code Detection / Malicious Code Output"
+          ]
+        },
+        {
+          "framework": "Google Secure AI Framework 2.0 - Risks",
+          "items": [
+            "MST: Model Source Tampering",
+            "MDT: Model Deployment Tampering",
+            "IIC: Insecure Integrated Component",
+            "RA: Rogue Actions"
+          ]
+        },
+        {
+          "framework": "Databricks AI Security Framework 3.0",
+          "items": [
+            "Model 7.3: ML Supply chain vulnerabilities",
+            "Model 7.4: Source code control attack",
+            "Platform 12.5: Poor security in the software development lifecycle",
+            "Agents — Core 13.11: Unexpected RCE and Code Attacks"
+          ]
+        }
+      ],
+      "warning": {
+        "level": "Medium on CI/CD Latency and Review Friction",
+        "description": "<p>Proper admission control adds validation stages before merge or promotion. Expect higher pipeline latency for repositories that allow AI-authored changes, especially when dynamic validation or named approval is required.</p><p><strong>Guidance:</strong> use tiered policies. Low-risk documentation or test-only changes can pass lighter gates, while secrets handling, identity, infrastructure, deployment, payment, and data-destruction paths should require the strictest review.</p>"
+      },
+      "subTechniques": [
+        {
+          "id": "AID-H-032.001",
+          "name": "AI-Generated Change Provenance & Risk Labeling",
+          "description": "Attach durable provenance and risk metadata to every AI-generated or AI-materially-modified artifact so downstream policy engines, reviewers, and promotion gates can treat those artifacts differently from purely human-authored changes. Labels should record <strong>who initiated the generation, which model or agent produced it, what repository or ticket context it used, the confidence or validation status, and whether the change touches privileged paths</strong> such as identity, secrets, infrastructure, deployment, payment, or destructive operations.",
+          "pillar": [
+            "infra",
+            "app"
+          ],
+          "phase": [
+            "building",
+            "validation"
+          ],
+          "defendsAgainst": [
+            {
+              "framework": "MITRE ATLAS",
+              "items": [
+                "AML.T0010 AI Supply Chain Compromise",
+                "AML.T0010.001 AI Supply Chain Compromise: AI Software",
+                "AML.T0011.000 User Execution: Unsafe AI Artifacts",
+                "AML.T0060 Publish Hallucinated Entities"
+              ]
+            },
+            {
+              "framework": "MAESTRO",
+              "items": [
+                "Supply Chain Attacks (Cross-Layer)",
+                "Supply Chain Attacks (L3)",
+                "Infrastructure-as-Code (IaC) Manipulation (L4)",
+                "Compromised Framework Components (L3)"
+              ]
+            },
+            {
+              "framework": "OWASP LLM Top 10 2025",
+              "items": [
+                "LLM03:2025 Supply Chain"
+              ]
+            },
+            {
+              "framework": "OWASP ML Top 10 2023",
+              "items": [
+                "ML06:2023 AI Supply Chain Attacks"
+              ]
+            },
+            {
+              "framework": "OWASP Agentic AI Top 10 2026",
+              "items": [
+                "ASI04:2026 Agentic Supply Chain Vulnerabilities"
+              ]
+            },
+            {
+              "framework": "NIST Adversarial Machine Learning 2025",
+              "items": [
+                "NISTAML.051 Model Poisoning (Supply Chain)"
+              ]
+            },
+            {
+              "framework": "Cisco Integrated AI Security and Safety Framework",
+              "items": [
+                "AITech-9.3 Dependency / Plugin Compromise",
+                "AISubtech-9.3.1 Malicious Package / Tool Injection"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "MST: Model Source Tampering",
+                "MDT: Model Deployment Tampering",
+                "IIC: Insecure Integrated Component"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Algorithms 5.1: Lack of tracking and reproducibility of experiments",
+                "Governance 4.1: Lack of traceability and transparency of model assets",
+                "Model 7.3: ML Supply chain vulnerabilities",
+                "Model 7.4: Source code control attack"
+              ]
+            }
+          ],
+          "toolsOpenSource": [
+            "Open Policy Agent (OPA)",
+            "OpenTelemetry",
+            "Git",
+            "in-toto / SLSA provenance tooling",
+            "MLflow"
+          ],
+          "toolsCommercial": [
+            "GitHub Enterprise / GitHub Advanced Security",
+            "GitLab Ultimate",
+            "JFrog Artifactory / Xray",
+            "Harness STO"
+          ],
+          "implementationGuidance": [
+            {
+              "implementation": "Stamp AI-generated changes with signed provenance metadata and route them into risk-tiered policy evaluation before merge or build.",
+              "howTo": "<h5>Concept:</h5><p>If the platform cannot reliably tell whether a change came from a human, an agent, or a mixed workflow, then later gates cannot apply stronger controls to AI-authored artifacts. The provenance record should therefore be created <strong>at generation time</strong>, travel with the change, and be verifiable by CI.</p><h5>Step 1: Define required provenance fields</h5><pre><code># file: policy/generated_change_schema.yaml\nrequired_fields:\n  generated_by: [human, ai_assist, autonomous_agent, mixed]\n  generator_id: string\n  model_name: string\n  model_version: string\n  source_repo: string\n  source_commit: string\n  ticket_id: string\n  touched_risk_paths: [identity, secrets, infra, deploy, payments, destructive_ops]\n  validation_state: [unvalidated, static_passed, dynamic_passed, approved]\n  artifact_sha256: string\n</code></pre><h5>Step 2: Fail CI if required provenance is missing</h5><pre><code># file: ci/check_generated_change.py\nimport json, pathlib\n\nmeta = json.loads(pathlib.Path('.aidefend/generated-change.json').read_text())\nrequired = ['generated_by','generator_id','model_name','model_version','source_repo','source_commit','validation_state','artifact_sha256']\nmissing = [k for k in required if not meta.get(k)]\nif missing:\n    raise SystemExit(f'Missing generated-change metadata: {missing}')\n\nif meta['generated_by'] in {'ai_assist','autonomous_agent','mixed'}:\n    print('AI-generated change detected; route to stricter promotion policy.')\n</code></pre><p><strong>Action:</strong> make the metadata file content-addressed and immutable once a pull request or build starts. If an AI-generated change lacks provenance, the pipeline must fail closed rather than silently downgrading it to a normal human-authored change.</p>"
+            }
+          ]
+        },
+        {
+          "id": "AID-H-032.002",
+          "name": "Static Admission Gates for AI-Generated Artifacts",
+          "description": "Apply stricter static policy checks to AI-generated code, infrastructure-as-code, workflow files, dependency manifests, deployment definitions, and repository automation before they can be merged or built. These gates should check for dangerous constructs, unsafe sinks, secrets exposure, dependency hallucination or typosquatting, privileged path modification, insecure default configuration, and policy violations specific to generated artifacts.<br/><br/><strong>Scope boundary:</strong> this sub-technique may invoke <strong>AID-H-026.003 Pre-Execution Static Scan</strong> as one component of its static pipeline, but extends it with provenance-aware routing, AI-generated artifact classification, dependency-hallucination detection, privileged-path escalation, and promotion-time policy decisions for generated development changes.",
+          "pillar": [
+            "infra",
+            "app"
+          ],
+          "phase": [
+            "building",
+            "validation"
+          ],
+          "defendsAgainst": [
+            {
+              "framework": "MITRE ATLAS",
+              "items": [
+                "AML.T0010.001 AI Supply Chain Compromise: AI Software",
+                "AML.T0011.001 User Execution: Malicious Package",
+                "AML.T0011.000 User Execution: Unsafe AI Artifacts",
+                "AML.T0060 Publish Hallucinated Entities"
+              ]
+            },
+            {
+              "framework": "MAESTRO",
+              "items": [
+                "Supply Chain Attacks (Cross-Layer)",
+                "Compromised Framework Components (L3)",
+                "Compromised Container Images (L4)",
+                "Infrastructure-as-Code (IaC) Manipulation (L4)"
+              ]
+            },
+            {
+              "framework": "OWASP LLM Top 10 2025",
+              "items": [
+                "LLM03:2025 Supply Chain",
+                "LLM05:2025 Improper Output Handling"
+              ]
+            },
+            {
+              "framework": "OWASP ML Top 10 2023",
+              "items": [
+                "ML06:2023 AI Supply Chain Attacks"
+              ]
+            },
+            {
+              "framework": "OWASP Agentic AI Top 10 2026",
+              "items": [
+                "ASI04:2026 Agentic Supply Chain Vulnerabilities",
+                "ASI05:2026 Unexpected Code Execution (RCE)"
+              ]
+            },
+            {
+              "framework": "NIST Adversarial Machine Learning 2025",
+              "items": [
+                "NISTAML.039 Compromising connected resources",
+                "NISTAML.051 Model Poisoning (Supply Chain)"
+              ]
+            },
+            {
+              "framework": "Cisco Integrated AI Security and Safety Framework",
+              "items": [
+                "AITech-9.3 Dependency / Plugin Compromise",
+                "AISubtech-9.3.1 Malicious Package / Tool Injection",
+                "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
+                "AISubtech-12.2.1 Code Detection / Malicious Code Output"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "IMO: Insecure Model Output",
+                "IIC: Insecure Integrated Component",
+                "RA: Rogue Actions"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Model 7.3: ML Supply chain vulnerabilities",
+                "Model 7.4: Source code control attack",
+                "Platform 12.5: Poor security in the software development lifecycle",
+                "Agents — Core 13.11: Unexpected RCE and Code Attacks"
+              ]
+            }
+          ],
+          "toolsOpenSource": [
+            "Semgrep",
+            "CodeQL",
+            "Trivy",
+            "Syft / Grype",
+            "Conftest / OPA",
+            "gitleaks"
+          ],
+          "toolsCommercial": [
+            "GitHub Advanced Security",
+            "Snyk Code",
+            "Veracode",
+            "Checkmarx One"
+          ],
+          "implementationGuidance": [
+            {
+              "implementation": "Apply provenance-aware static policy gates to AI-generated changes and fail closed when high-risk patterns or unapproved dependencies are detected.",
+              "howTo": "<h5>Concept:</h5><p>Generated changes deserve stricter static review because they can introduce plausible-looking but unsafe code, insecure infrastructure definitions, or hallucinated dependencies at machine speed. The gate should combine conventional SAST with generated-artifact-specific checks such as privilege-path escalation, dependency existence verification, and repository policy enforcement.</p><h5>Step 1: Classify the change</h5><p>Use provenance metadata from <strong>AID-H-032.001</strong> to decide whether the artifact is AI-authored and whether it touches sensitive paths such as deployment, identity, secrets, or destructive workflows.</p><h5>Step 2: Run layered static checks</h5><pre><code># file: ci/generated_artifact_gate.sh\nset -euo pipefail\n\npython ci/check_generated_change.py\nsemgrep --config p/security-audit src/\ngitleaks detect --source . --no-git\ntrivy config infra/\npython ci/verify_dependencies_exist.py requirements.txt package-lock.json\npython ci/check_sensitive_paths.py\n</code></pre><h5>Step 3: Escalate on privileged file classes</h5><pre><code># file: ci/check_sensitive_paths.py\nfrom pathlib import Path\n\nSENSITIVE = [\n    'infra/',\n    '.github/workflows/',\n    'deploy/',\n    'terraform/',\n    'helm/',\n    'auth/',\n    'secrets/'\n]\nchanged = Path('changed_files.txt').read_text().splitlines()\nif any(any(f.startswith(prefix) for prefix in SENSITIVE) for f in changed):\n    print('High-risk file class changed; require stricter policy tier.')\n</code></pre><p><strong>Action:</strong> do not treat static scanning as a generic best-effort review. If the artifact is AI-generated and the check set cannot be completed, fail closed and block promotion.</p>"
+            }
+          ]
+        },
+        {
+          "id": "AID-H-032.003",
+          "name": "Dynamic Promotion Validation with Ephemeral Sandboxes",
+          "description": "Run high-risk AI-generated development artifacts through <strong>promotion-oriented dynamic validation</strong> inside disposable sandboxes before merge, build, or deployment. This sub-technique uses ephemeral environments to observe runtime behavior, but its purpose is not to define the sandbox substrate itself; its purpose is to decide whether a generated change may advance in the promotion workflow.<br/><br/><strong>Scope boundary:</strong> <strong>AID-I-001.005 Pre-Execution Behavioral Analysis in Ephemeral Sandboxes</strong> provides the general sandbox execution substrate and behavioral-analysis capability. This sub-technique owns <em>how that capability is invoked inside the AI-generated code promotion workflow</em>, including provenance-aware routing, risk-tiered validation depth, promotion evidence binding, and escalation logic for privileged or destructive artifact classes. It applies to generated scripts, migrations, CI jobs, deployment definitions, infrastructure templates, installer or build scripts, and other SDLC artifacts that could reach sensitive systems.",
+          "pillar": [
+            "infra",
+            "app"
+          ],
+          "phase": [
+            "validation"
+          ],
+          "defendsAgainst": [
+            {
+              "framework": "MITRE ATLAS",
+              "items": [
+                "AML.T0011.000 User Execution: Unsafe AI Artifacts",
+                "AML.T0011.001 User Execution: Malicious Package",
+                "AML.T0010.001 AI Supply Chain Compromise: AI Software"
+              ]
+            },
+            {
+              "framework": "MAESTRO",
+              "items": [
+                "Supply Chain Attacks (Cross-Layer)",
+                "Infrastructure-as-Code (IaC) Manipulation (L4)",
+                "Resource Hijacking (L4)"
+              ]
+            },
+            {
+              "framework": "OWASP LLM Top 10 2025",
+              "items": [
+                "LLM05:2025 Improper Output Handling",
+                "LLM06:2025 Excessive Agency"
+              ]
+            },
+            {
+              "framework": "OWASP ML Top 10 2023",
+              "items": [
+                "ML06:2023 AI Supply Chain Attacks"
+              ]
+            },
+            {
+              "framework": "OWASP Agentic AI Top 10 2026",
+              "items": [
+                "ASI05:2026 Unexpected Code Execution (RCE)",
+                "ASI04:2026 Agentic Supply Chain Vulnerabilities"
+              ]
+            },
+            {
+              "framework": "NIST Adversarial Machine Learning 2025",
+              "items": [
+                "NISTAML.039 Compromising connected resources"
+              ]
+            },
+            {
+              "framework": "Cisco Integrated AI Security and Safety Framework",
+              "items": [
+                "AITech-12.2 Insecure Output Handling",
+                "AISubtech-9.1.1 Code Execution",
+                "AISubtech-12.2.1 Code Detection / Malicious Code Output"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "IMO: Insecure Model Output",
+                "RA: Rogue Actions",
+                "IIC: Insecure Integrated Component"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Agents — Core 13.11: Unexpected RCE and Code Attacks",
+                "Platform 12.5: Poor security in the software development lifecycle"
+              ]
+            }
+          ],
+          "toolsOpenSource": [
+            "Firecracker",
+            "gVisor",
+            "Kata Containers",
+            "Podman / Docker",
+            "Cilium Tetragon",
+            "Falco",
+            "OpenTelemetry"
+          ],
+          "toolsCommercial": [
+            "Wiz",
+            "Isovalent Cilium Enterprise",
+            "Aqua Security",
+            "Sysdig Secure"
+          ],
+          "implementationGuidance": [
+            {
+              "implementation": "Route high-risk generated artifacts into risk-tiered dynamic promotion validation and fail closed when observed behavior exceeds policy.",
+              "howTo": "<h5>Concept:</h5><p>Dynamic promotion validation should behave like a cautious release engineer: execute the artifact in isolation, constrain impact, and record what it actually attempts to do before allowing the change to advance. This catches risks that static analysis misses, such as unexpected network egress, shell invocation, unsafe package download, privileged file access, or side effects hidden inside build or migration scripts.</p><h5>Step 1: Route only the right artifacts</h5><p>Use provenance and file-class signals from <strong>AID-H-032.001</strong> and <strong>AID-H-032.002</strong> to decide which artifacts require dynamic validation depth. Not every generated documentation change needs a sandbox; deployment scripts, migrations, repository automation, and infrastructure definitions often do.</p><h5>Step 2: Execute inside an isolated validator</h5><pre><code># file: validation/policy.yaml\nnetwork:\n  default: deny\n  allow_domains:\n    - pypi.org\n    - files.pythonhosted.org\nfilesystem:\n  writable_paths:\n    - /tmp\n  forbidden_paths:\n    - /root\n    - /etc/ssh\nprocess:\n  forbidden_exec:\n    - /bin/sh\n    - /bin/bash\n    - /usr/bin/curl\n    - /usr/bin/wget\nsecrets:\n  expose_runtime_secrets: false\n</code></pre><h5>Step 3: Bind the result to promotion</h5><pre><code># file: validation/evaluate.py\nimport json\nreport = json.load(open('sandbox-report.json'))\nviolations = report.get('violations', [])\nif violations:\n    raise SystemExit(f'Promotion blocked: {violations}')\nprint('Dynamic promotion validation passed.')\n</code></pre><p><strong>Action:</strong> keep the validator environment disposable and stateless. Never run generated artifacts against production credentials or production datasets. The validator should only produce a signed evidence bundle and a pass/fail decision that feeds the promotion workflow.</p>"
+            }
+          ]
+        },
+        {
+          "id": "AID-H-032.004",
+          "name": "Evidence-Bound Promotion & High-Risk Human Approval",
+          "description": "Require promotion decisions for AI-generated development artifacts to be explicitly bound to the evidence that justified them, and force higher-friction human approval when generated changes touch privileged, destructive, or production-critical paths. Evidence should include provenance, static results, dynamic validation output, policy decision version, approver identity, and the exact artifact digest that was promoted. Human approval is not a cosmetic checkbox: it is a security boundary for high-consequence paths.<br/><br/><strong>Scope boundary:</strong> distinct from <strong>AID-H-003.002</strong>, which gates model artifacts and deployment-bound model packages, this sub-technique binds promotion evidence and named approval to AI-generated development artifacts such as source code, infrastructure-as-code, workflow definitions, deployment changes, build scripts, and repository automation.",
+          "pillar": [
+            "infra",
+            "app"
+          ],
+          "phase": [
+            "validation",
+            "operation"
+          ],
+          "defendsAgainst": [
+            {
+              "framework": "MITRE ATLAS",
+              "items": [
+                "AML.T0010 AI Supply Chain Compromise",
+                "AML.T0011.000 User Execution: Unsafe AI Artifacts"
+              ]
+            },
+            {
+              "framework": "MAESTRO",
+              "items": [
+                "Supply Chain Attacks (Cross-Layer)",
+                "Infrastructure-as-Code (IaC) Manipulation (L4)",
+                "Privilege Escalation (Cross-Layer)"
+              ]
+            },
+            {
+              "framework": "OWASP LLM Top 10 2025",
+              "items": [
+                "LLM03:2025 Supply Chain",
+                "LLM06:2025 Excessive Agency"
+              ]
+            },
+            {
+              "framework": "OWASP ML Top 10 2023",
+              "items": [
+                "ML06:2023 AI Supply Chain Attacks"
+              ]
+            },
+            {
+              "framework": "OWASP Agentic AI Top 10 2026",
+              "items": [
+                "ASI03:2026 Identity and Privilege Abuse",
+                "ASI04:2026 Agentic Supply Chain Vulnerabilities",
+                "ASI05:2026 Unexpected Code Execution (RCE)"
+              ]
+            },
+            {
+              "framework": "NIST Adversarial Machine Learning 2025",
+              "items": [
+                "NISTAML.039 Compromising connected resources"
+              ]
+            },
+            {
+              "framework": "Cisco Integrated AI Security and Safety Framework",
+              "items": [
+                "AITech-9.3 Dependency / Plugin Compromise",
+                "AITech-3.1 Masquerading / Obfuscation / Impersonation (named approval and evidence binding reduce the risk of impersonated, misattributed, or unverified promotion decisions)",
+                "AISubtech-12.2.1 Code Detection / Malicious Code Output"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "MDT: Model Deployment Tampering",
+                "RA: Rogue Actions",
+                "IIC: Insecure Integrated Component"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Model Management 8.3: Model lifecycle without HITL (human-in-the-loop)",
+                "Platform 12.4: Unauthorized privileged access",
+                "Platform 12.5: Poor security in the software development lifecycle"
+              ]
+            }
+          ],
+          "toolsOpenSource": [
+            "Sigstore / cosign",
+            "in-toto / SLSA provenance tooling",
+            "Open Policy Agent (OPA)",
+            "OpenTelemetry"
+          ],
+          "toolsCommercial": [
+            "GitHub Enterprise",
+            "GitLab Ultimate",
+            "JFrog Artifactory",
+            "ServiceNow"
+          ],
+          "implementationGuidance": [
+            {
+              "implementation": "Bind the promotion decision to immutable evidence and require named approvers for high-risk AI-generated changes.",
+              "howTo": "<h5>Concept:</h5><p>If the pipeline stores only a generic &quot;passed&quot; result, defenders cannot later prove what was actually reviewed or promoted. The promotion record must therefore bind together the artifact digest, policy version, validator outputs, approver identity, and timestamp.</p><h5>Example: promotion record</h5><pre><code>{\n  \"artifact_sha256\": \"b9e1...\",\n  \"generated_by\": \"autonomous_agent\",\n  \"policy_bundle_version\": \"2026.04.01\",\n  \"static_report_sha256\": \"0a4c...\",\n  \"dynamic_report_sha256\": \"d931...\",\n  \"manual_approval_required\": true,\n  \"approved_by\": \"sec-lead-17\",\n  \"approved_at\": \"2026-04-01T23:10:00Z\"\n}\n</code></pre><h5>Step 1: Define approval tiers</h5><p>Not every generated change deserves the same friction. Require stronger approval for deployment logic, identity paths, secret handling, infrastructure changes, payment flows, destructive operations, and repository automation that can affect future builds.</p><h5>Step 2: Require stronger review for high-consequence changes</h5><pre><code># file: policy/approval_tiers.yaml\nlow_risk:\n  reviewers_required: 1\n  named_approver_role: engineering-maintainer\nhigh_risk:\n  reviewers_required: 2\n  named_approver_role: security-or-platform-owner\n  dual_approval_paths:\n    - infra/\n    - deploy/\n    - auth/\n    - secrets/\n    - .github/workflows/\n</code></pre><h5>Step 3: Re-check evidence at deployment time</h5><pre><code># file: deploy/verify_promotion_record.py\nimport json\nrecord = json.load(open('promotion-record.json'))\ncurrent_sha = open('artifact.sha256').read().strip()\nif record['artifact_sha256'] != current_sha:\n    raise SystemExit('Digest mismatch: deployment blocked')\nif not record.get('approved_by'):\n    raise SystemExit('Missing named approver: deployment blocked')\n</code></pre><p><strong>Action:</strong> store the promotion record in an append-only system and verify the artifact digest again at deployment time. If the digest, evidence bundle, policy version, or approver binding does not match, the deployment must fail closed.</p>"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AID-H-033",
+      "name": "Multi-Tenant Inference Isolation & Leakage Prevention",
+      "description": "Reduce cross-tenant leakage risk in shared AI inference infrastructure and third-party AI SaaS by enforcing tenancy-aware isolation for compute, serving state, cache layers, telemetry, and vendor trust assertions. This family technique addresses the reality that shared LLM or model-serving environments can expose prompts, context, outputs, model internals, or request patterns through <strong>state reuse, side channels, insufficient cache isolation, profiling surfaces, or weak vendor controls</strong>.<br/><br/><strong>Why this exists:</strong> accelerator hygiene and confidential computing are necessary but not sufficient. Enterprises increasingly consume inference as a service; they therefore need controls that govern which workloads may run on shared serving pools, what tenancy guarantees the provider must prove, and how serving-state leakage is prevented at runtime.<br/><br/><strong>Scope boundary:</strong> this technique focuses on <strong>shared inference architecture and service-tenancy leakage</strong>. <strong>Distinct from AID-H-009.004</strong>, which governs hardware-layer accelerator residue hygiene and low-level compute isolation, and from <strong>AID-H-028</strong>, which governs cache-layer integrity and poisoning prevention. This technique governs the broader shared-serving isolation problem for multi-tenant inference services. It does not replace hardware root of trust, generic external-service connectivity, or general model-output filtering.",
+      "defendsAgainst": [
+        {
+          "framework": "MITRE ATLAS",
+          "items": [
+            "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model",
+            "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model",
+            "AML.T0025 Exfiltration via Cyber Means"
+          ]
+        },
+        {
+          "framework": "MAESTRO",
+          "items": [
+            "Data Leakage (Cross-Layer)",
+            "Data Leakage through Observability (L5)",
+            "Resource Hijacking (L4)"
+          ]
+        },
+        {
+          "framework": "OWASP LLM Top 10 2025",
+          "items": [
+            "LLM02:2025 Sensitive Information Disclosure"
+          ]
+        },
+        {
+          "framework": "OWASP ML Top 10 2023",
+          "items": [
+            "ML03:2023 Model Inversion Attack",
+            "ML04:2023 Membership Inference Attack",
+            "ML05:2023 Model Theft"
+          ]
+        },
+        {
+          "framework": "OWASP Agentic AI Top 10 2026",
+          "items": [
+            "N/A (primarily a shared inference service isolation concern rather than an agent-specific runtime control)"
+          ]
+        },
+        {
+          "framework": "NIST Adversarial Machine Learning 2025",
+          "items": [
+            "NISTAML.031 Model Extraction",
+            "NISTAML.032 Reconstruction",
+            "NISTAML.033 Membership Inference",
+            "NISTAML.036 Leaking information from user interactions"
+          ]
+        },
+        {
+          "framework": "Cisco Integrated AI Security and Safety Framework",
+          "items": [
+            "AITech-8.1 Membership Inference",
+            "AITech-8.2 Data Exfiltration / Exposure",
+            "AITech-10.1 Model Extraction",
+            "AITech-10.2 Model Inversion"
+          ]
+        },
+        {
+          "framework": "Google Secure AI Framework 2.0 - Risks",
+          "items": [
+            "MXF: Model Exfiltration",
+            "MRE: Model Reverse Engineering",
+            "SDD: Sensitive Data Disclosure",
+            "ISD: Inferred Sensitive Data"
+          ]
+        },
+        {
+          "framework": "Databricks AI Security Framework 3.0",
+          "items": [
+            "Model 7.2: Model assets leak",
+            "Model Serving — Inference requests 9.2: Model inversion",
+            "Model Serving — Inference requests 9.5: Infer training data membership",
+            "Model Serving — Inference requests 9.10: Accidental exposure of unauthorized data to models",
+            "Model Serving — Inference response 10.6: Sensitive data output from a model"
+          ]
+        }
+      ],
+      "warning": {
+        "level": "Medium to High on Cost, Capacity Planning, and Provider Choice",
+        "description": "<p>Stronger isolation for high-sensitivity inference may require dedicated capacity, provider-specific features, or reduced observability. These controls can increase cost and limit scheduling flexibility.</p><p><strong>Guidance:</strong> classify workloads by confidentiality and business impact. Use the strongest isolation only where shared inference creates unacceptable disclosure risk, rather than mandating dedicated capacity for every use case.</p>"
+      },
+      "subTechniques": [
+        {
+          "id": "AID-H-033.001",
+          "name": "Dedicated Capacity for High-Sensitivity Inference",
+          "pillar": [
+            "infra",
+            "model",
+            "app"
+          ],
+          "phase": [
+            "scoping",
+            "operation",
+            "building"
+          ],
+          "description": "Route high-sensitivity AI workloads to dedicated or reserved inference capacity instead of shared multi-tenant serving pools. This control is appropriate when prompts, retrieved data, outputs, or model IP would create unacceptable harm if leaked through co-tenant state reuse, side-channel observation, or provider telemetry. The design objective is not merely better performance; it is reduced blast radius and stronger confidentiality assumptions.",
+          "toolsOpenSource": [
+            "Kubernetes",
+            "KServe",
+            "vLLM",
+            "Open Policy Agent (OPA)"
+          ],
+          "toolsCommercial": [
+            "Red Hat OpenShift AI",
+            "NVIDIA DGX Cloud",
+            "Amazon Bedrock Provisioned Throughput",
+            "Vertex AI Provisioned Throughput"
+          ],
+          "defendsAgainst": [
+            {
+              "framework": "MITRE ATLAS",
+              "items": [
+                "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model",
+                "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model",
+                "AML.T0025 Exfiltration via Cyber Means"
+              ]
+            },
+            {
+              "framework": "MAESTRO",
+              "items": [
+                "Data Leakage (Cross-Layer)",
+                "Resource Hijacking (L4)"
+              ]
+            },
+            {
+              "framework": "OWASP LLM Top 10 2025",
+              "items": [
+                "LLM02:2025 Sensitive Information Disclosure"
+              ]
+            },
+            {
+              "framework": "OWASP ML Top 10 2023",
+              "items": [
+                "ML03:2023 Model Inversion Attack",
+                "ML04:2023 Membership Inference Attack",
+                "ML05:2023 Model Theft"
+              ]
+            },
+            {
+              "framework": "OWASP Agentic AI Top 10 2026",
+              "items": [
+                "N/A (dedicated capacity is not primarily an agent-specific control)"
+              ]
+            },
+            {
+              "framework": "NIST Adversarial Machine Learning 2025",
+              "items": [
+                "NISTAML.031 Model Extraction",
+                "NISTAML.032 Reconstruction",
+                "NISTAML.033 Membership Inference"
+              ]
+            },
+            {
+              "framework": "Cisco Integrated AI Security and Safety Framework",
+              "items": [
+                "AITech-8.1 Membership Inference",
+                "AITech-10.1 Model Extraction",
+                "AITech-10.2 Model Inversion"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "MXF: Model Exfiltration",
+                "MRE: Model Reverse Engineering",
+                "ISD: Inferred Sensitive Data"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Model 7.2: Model assets leak",
+                "Model Serving — Inference requests 9.2: Model inversion",
+                "Model Serving — Inference requests 9.5: Infer training data membership"
+              ]
+            }
+          ],
+          "implementationGuidance": [
+            {
+              "implementation": "Classify workloads and enforce a policy that forbids shared serving pools for high-sensitivity prompts, retrieved data, or proprietary models.",
+              "howTo": "<h5>Concept:</h5><p>Do not treat dedicated capacity as a generic performance upgrade. Treat it as a security requirement for workloads whose confidentiality cannot tolerate co-tenant leakage risk.</p><h5>Example: workload placement policy</h5><pre><code># file: placement_policy.yaml\nworkload_classes:\n  - name: public_chat\n    sensitivity: low\n    serving_tier: shared\n  - name: internal_copilot\n    sensitivity: medium\n    serving_tier: shared_hardened\n  - name: m_and_a_assistant\n    sensitivity: critical\n    serving_tier: dedicated\n  - name: source_code_ip_model\n    sensitivity: critical\n    serving_tier: dedicated\n</code></pre><p><strong>Action:</strong> enforce the placement rule at deployment admission time. If a critical workload requests a shared serving tier, reject the deployment rather than silently accepting weaker isolation.</p>"
+            }
+          ]
+        },
+        {
+          "id": "AID-H-033.002",
+          "name": "Cross-Tenant Serving-State Isolation",
+          "pillar": [
+            "infra",
+            "model",
+            "app"
+          ],
+          "phase": [
+            "building",
+            "operation"
+          ],
+          "description": "Prevent one tenant's requests from influencing or exposing another tenant's inference state by isolating request queues, prefix caches, KV caches, batching groups, session state, warm-worker state, failover state, and memory pools. This control should explicitly govern how the serving stack handles prompt-prefix reuse, request coalescing, warm caches, worker reuse, and restart/failover behavior, because these performance features are common leakage pathways in shared inference systems.<br/><br/><strong>Scope boundary with AID-H-028:</strong> <strong>AID-H-028</strong> governs cache-layer integrity and poisoning prevention, including TTL enforcement, invalidation on model or policy change, provenance logging for cached responses, and fail-closed reuse when authorization or execution context changes. This sub-technique governs the broader serving-state isolation boundary: request queues, batching groups, prefix-cache reuse, warm-state handling, session namespacing, worker reuse, and failover state reuse across tenants. Where both techniques touch cache-key binding, <strong>AID-H-028</strong> ensures the key is integrity-correct; this sub-technique ensures it is tenant-isolated.<br/><br/><strong>Distinct from AID-H-009.004</strong>, which handles GPU VRAM and accelerator-residue hygiene at the hardware layer. This sub-technique handles logical serving-state isolation at the application and serving-architecture layer.",
+          "toolsOpenSource": [
+            "vLLM",
+            "KServe",
+            "Envoy",
+            "Istio"
+          ],
+          "toolsCommercial": [
+            "F5 Distributed Cloud",
+            "Kong Enterprise",
+            "NGINX Plus"
+          ],
+          "defendsAgainst": [
+            {
+              "framework": "MITRE ATLAS",
+              "items": [
+                "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model",
+                "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model",
+                "AML.T0025 Exfiltration via Cyber Means"
+              ]
+            },
+            {
+              "framework": "MAESTRO",
+              "items": [
+                "Data Leakage (Cross-Layer)",
+                "Data Leakage through Observability (L5)"
+              ]
+            },
+            {
+              "framework": "OWASP LLM Top 10 2025",
+              "items": [
+                "LLM02:2025 Sensitive Information Disclosure"
+              ]
+            },
+            {
+              "framework": "OWASP ML Top 10 2023",
+              "items": [
+                "ML03:2023 Model Inversion Attack",
+                "ML04:2023 Membership Inference Attack",
+                "ML05:2023 Model Theft"
+              ]
+            },
+            {
+              "framework": "OWASP Agentic AI Top 10 2026",
+              "items": [
+                "N/A"
+              ]
+            },
+            {
+              "framework": "NIST Adversarial Machine Learning 2025",
+              "items": [
+                "NISTAML.031 Model Extraction",
+                "NISTAML.032 Reconstruction",
+                "NISTAML.033 Membership Inference",
+                "NISTAML.036 Leaking information from user interactions"
+              ]
+            },
+            {
+              "framework": "Cisco Integrated AI Security and Safety Framework",
+              "items": [
+                "AITech-8.1 Membership Inference",
+                "AITech-8.2 Data Exfiltration / Exposure",
+                "AITech-10.1 Model Extraction",
+                "AITech-10.2 Model Inversion"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "MXF: Model Exfiltration",
+                "MRE: Model Reverse Engineering",
+                "SDD: Sensitive Data Disclosure",
+                "ISD: Inferred Sensitive Data"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Model 7.2: Model assets leak",
+                "Model Serving — Inference requests 9.2: Model inversion",
+                "Model Serving — Inference requests 9.5: Infer training data membership",
+                "Model Serving — Inference requests 9.10: Accidental exposure of unauthorized data to models"
+              ]
+            }
+          ],
+          "implementationGuidance": [
+            {
+              "implementation": "Partition serving state by tenant and disable cross-tenant prefix, queue, batch, warm-state, or failover reuse unless a provider can prove strong isolation.",
+              "howTo": "<h5>Concept:</h5><p>Shared-state optimizations are attractive because they reduce latency and cost, but they can also create covert channels. The isolation design should start from a simple rule: caches, queues, batching groups, worker state, and failover state are tenant-scoped unless there is explicit evidence that stronger sharing is safe.</p><h5>Example: tenant-scoped serving boundaries</h5><pre><code># pseudo-config for a serving gateway\ncache_key = sha256(tenant_id + model_id + prompt_prefix_hash)\nbatching_group = tenant_id + ':' + model_id\nqueue_partition = tenant_id + ':' + model_id\nsession_namespace = tenant_id + ':' + session_id\nwarm_worker_pool = tenant_id + ':' + model_family\n</code></pre><h5>Additional serving-state checklist</h5><ul><li>Do not co-batch requests from different tenants into the same optimization group unless the provider can prove tenant-safe batching semantics.</li><li>Do not reuse warm workers, prefix-prefill state, or speculative execution state across tenants without explicit isolation guarantees.</li><li>On restart or failover, require fresh tenant rebinds before any cached state, worker context, or scheduler state is reused.</li><li>Treat undocumented scheduler, queue, or cache behavior as shared-without-proof and keep sensitive workloads off that tier.</li></ul><p><strong>Action:</strong> require the serving platform to document how cache keys, batching groups, queue partitions, warm-worker pools, and failover state boundaries are derived. If tenant identity is not part of those boundaries, treat the platform as shared-without-proof and keep sensitive workloads off it.</p>"
+            }
+          ]
+        },
+        {
+          "id": "AID-H-033.003",
+          "name": "Inference Telemetry & Debug Surface Restriction",
+          "pillar": [
+            "infra",
+            "app"
+          ],
+          "phase": [
+            "building",
+            "operation"
+          ],
+          "description": "Limit profiling, debugging, and observability surfaces that can expose sensitive inference metadata, request characteristics, model behavior, or cross-tenant state. Telemetry must be designed for operational assurance without creating a new leakage path through performance counters, raw traces, developer diagnostics, prompt logging, or overly detailed error reporting.",
+          "toolsOpenSource": [
+            "OpenTelemetry",
+            "Prometheus",
+            "Grafana",
+            "Falco"
+          ],
+          "toolsCommercial": [
+            "Datadog",
+            "Splunk",
+            "New Relic"
+          ],
+          "defendsAgainst": [
+            {
+              "framework": "MITRE ATLAS",
+              "items": [
+                "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model",
+                "AML.T0025 Exfiltration via Cyber Means"
+              ]
+            },
+            {
+              "framework": "MAESTRO",
+              "items": [
+                "Data Leakage through Observability (L5)",
+                "Data Leakage (Cross-Layer)"
+              ]
+            },
+            {
+              "framework": "OWASP LLM Top 10 2025",
+              "items": [
+                "LLM02:2025 Sensitive Information Disclosure"
+              ]
+            },
+            {
+              "framework": "OWASP ML Top 10 2023",
+              "items": [
+                "ML05:2023 Model Theft"
+              ]
+            },
+            {
+              "framework": "OWASP Agentic AI Top 10 2026",
+              "items": [
+                "N/A"
+              ]
+            },
+            {
+              "framework": "NIST Adversarial Machine Learning 2025",
+              "items": [
+                "NISTAML.031 Model Extraction",
+                "NISTAML.036 Leaking information from user interactions"
+              ]
+            },
+            {
+              "framework": "Cisco Integrated AI Security and Safety Framework",
+              "items": [
+                "AITech-8.2 Data Exfiltration / Exposure",
+                "AITech-10.1 Model Extraction",
+                "AISubtech-8.3.2 System Information Leakage"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "MXF: Model Exfiltration",
+                "SDD: Sensitive Data Disclosure",
+                "MRE: Model Reverse Engineering"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Model 7.2: Model assets leak",
+                "Model Serving — Inference response 10.6: Sensitive data output from a model",
+                "Agents — Tools MCP Client 13.30: Client-Side Data Leakage"
+              ]
+            }
+          ],
+          "implementationGuidance": [
+            {
+              "implementation": "Run production inference in restricted observability mode and redact prompts, tokens, and model-sensitive metadata before traces or logs are emitted.",
+              "howTo": "<h5>Concept:</h5><p>Production inference needs enough telemetry to prove health and support incident response, but it rarely needs raw prompts, full outputs, low-level developer profiling, or verbose debug traces. The goal is to preserve operational visibility while removing telemetry paths that can leak customer data, model behavior, or cross-tenant state.</p><h5>Step 1: Separate production-safe telemetry from developer diagnostics</h5><p>Define at least two telemetry modes: <code>prod-restricted</code> and <code>dev-diagnostics</code>. Sensitive production workloads must always run in <code>prod-restricted</code>. Developer-only profiling, verbose traces, prompt dumps, and token-level debugging must be disabled by default in production.</p><pre><code># file: telemetry_mode.yaml\nmode: prod-restricted\nlogging:\n  log_raw_prompts: false\n  log_raw_outputs: false\n  log_token_stream: false\n  include_stack_traces: false\ntracing:\n  export_request_body: false\n  export_response_body: false\n  export_model_metadata: limited\nprofiling:\n  enable_debug_profiler: false\n  enable_perf_counters: false\n  enable_developer_diagnostics: false\n</code></pre><h5>Step 2: Redact sensitive fields before export</h5><p>Redaction must happen <strong>before</strong> logs, traces, or metrics leave the inference service. Do not rely on downstream SIEM rules as the first line of defense.</p><pre><code># file: observability/redact_trace.py\nimport re\n\ndef redact(text: str) -&gt; str:\n    text = re.sub(r'(?i)(api[_-]?key|token|secret|password)\\s*[:=]\\s*\\S+', r'\\1=[REDACTED]', text)\n    text = re.sub(r'Bearer\\s+[A-Za-z0-9._-]+', 'Bearer [REDACTED]', text)\n    return text\n\ndef sanitize_event(event: dict) -&gt; dict:\n    for key in ['prompt', 'response', 'system_prompt', 'retrieved_context', 'tool_arguments']:\n        if key in event and isinstance(event[key], str):\n            event[key] = redact(event[key])\n    return event\n</code></pre><h5>Step 3: Emit aggregates instead of raw content where possible</h5><p>Use aggregate metrics such as latency, error rate, token counts, cache hit rate, and refusal rate instead of raw request or response bodies. This preserves operational visibility without creating a content leakage path.</p><pre><code># file: observability/allowed_metrics.yaml\nallowed_metrics:\n  - request_count\n  - error_count\n  - p50_latency_ms\n  - p95_latency_ms\n  - input_token_count\n  - output_token_count\n  - cache_hit_rate\n  - refusal_rate\nforbidden_fields:\n  - raw_prompt\n  - raw_response\n  - system_prompt\n  - retrieved_context\n  - tool_arguments_raw\n</code></pre><h5>Step 4: Restrict access to low-level inference telemetry</h5><p>Only a small operational group should have access to restricted traces or runtime diagnostics. Use RBAC and approval workflows for temporary access escalation.</p><pre><code># file: observability/access_policy.rego\npackage aidefend.telemetry\n\ndefault allow = false\n\nallow if {\n  input.role == \"ai-platform-ops\"\n  input.mode == \"prod-restricted\"\n}\n\nallow if {\n  input.role == \"security-incident-response\"\n  input.break_glass == true\n  input.ticket_id != \"\"\n}\n</code></pre><h5>Step 5: Fail closed on unsafe telemetry modes in production</h5><p>Production deployment should be blocked if a sensitive workload attempts to run with developer diagnostics, raw prompt logging, or unrestricted profiling enabled.</p><pre><code># file: ci/check_telemetry_mode.py\nimport yaml\ncfg = yaml.safe_load(open('telemetry_mode.yaml'))\nif cfg['mode'] != 'prod-restricted':\n    raise SystemExit('Blocked: production inference must use prod-restricted telemetry mode')\nif cfg['logging']['log_raw_prompts'] or cfg['logging']['log_raw_outputs']:\n    raise SystemExit('Blocked: raw prompt/response logging is forbidden in production')\nif cfg['profiling']['enable_debug_profiler'] or cfg['profiling']['enable_developer_diagnostics']:\n    raise SystemExit('Blocked: developer diagnostics are forbidden in production')\n</code></pre><p><strong>Action:</strong> publish an explicit production observability baseline and treat telemetry safety as an admission requirement. If the platform cannot prove that prompts, outputs, secrets, and low-level debug surfaces are restricted before export, the inference service should not be approved for sensitive workloads.</p>"
+            }
+          ]
+        },
+        {
+          "id": "AID-H-033.004",
+          "name": "Confidential Inference Attestation & Vendor Isolation Assurance",
+          "pillar": [
+            "infra",
+            "model",
+            "app"
+          ],
+          "phase": [
+            "scoping",
+            "building",
+            "operation"
+          ],
+          "description": "Require verifiable isolation assurances for high-sensitivity inference workloads, including confidential computing features where available, attestation evidence for the runtime stack, and provider documentation or contractual commitments covering tenancy isolation, state handling, debug surface restrictions, and incident blast-radius controls. This sub-technique recognizes that many enterprises consume inference from external providers and therefore need both <strong>technical proof</strong> and <strong>vendor governance proof</strong>.<br/><br/><strong>Distinct from AID-H-009.005</strong>, which provides the foundational confidential-computing runtime and remote attestation protocol. This sub-technique extends beyond TEE verification to encompass vendor governance, contractual isolation commitments, compensating controls, and provider tiering for organizations consuming inference as a service.",
+          "toolsOpenSource": [
+            "Keylime",
+            "SPIRE",
+            "Kata Containers"
+          ],
+          "toolsCommercial": [
+            "NVIDIA Confidential Computing",
+            "Azure Confidential VMs",
+            "Google Cloud Confidential VM",
+            "Anjuna Security"
+          ],
+          "defendsAgainst": [
+            {
+              "framework": "MITRE ATLAS",
+              "items": [
+                "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model",
+                "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model",
+                "AML.T0025 Exfiltration via Cyber Means"
+              ]
+            },
+            {
+              "framework": "MAESTRO",
+              "items": [
+                "Data Leakage (Cross-Layer)",
+                "Resource Hijacking (L4)"
+              ]
+            },
+            {
+              "framework": "OWASP LLM Top 10 2025",
+              "items": [
+                "LLM02:2025 Sensitive Information Disclosure"
+              ]
+            },
+            {
+              "framework": "OWASP ML Top 10 2023",
+              "items": [
+                "ML03:2023 Model Inversion Attack",
+                "ML04:2023 Membership Inference Attack",
+                "ML05:2023 Model Theft"
+              ]
+            },
+            {
+              "framework": "OWASP Agentic AI Top 10 2026",
+              "items": [
+                "N/A"
+              ]
+            },
+            {
+              "framework": "NIST Adversarial Machine Learning 2025",
+              "items": [
+                "NISTAML.031 Model Extraction",
+                "NISTAML.032 Reconstruction",
+                "NISTAML.033 Membership Inference"
+              ]
+            },
+            {
+              "framework": "Cisco Integrated AI Security and Safety Framework",
+              "items": [
+                "AITech-8.1 Membership Inference",
+                "AITech-8.2 Data Exfiltration / Exposure",
+                "AITech-10.1 Model Extraction",
+                "AITech-10.2 Model Inversion"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "MXF: Model Exfiltration",
+                "MRE: Model Reverse Engineering",
+                "SDD: Sensitive Data Disclosure",
+                "ISD: Inferred Sensitive Data"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Model 7.2: Model assets leak",
+                "Model Serving — Inference requests 9.2: Model inversion",
+                "Model Serving — Inference requests 9.5: Infer training data membership",
+                "Platform 12.4: Unauthorized privileged access"
+              ]
+            }
+          ],
+          "implementationGuidance": [
+            {
+              "implementation": "Define a vendor control baseline that requires attestation-capable runtimes or documented compensating controls before sensitive workloads may use a provider's shared inference service.",
+              "howTo": "<h5>Concept:</h5><p>Vendor claims about isolation are not enough on their own. For higher-risk workloads, require technical evidence where possible and governance evidence everywhere else.</p><h5>Minimum vendor questionnaire</h5><ul><li>How are caches, queues, worker pools, and memory pools isolated between tenants?</li><li>Which profiling, performance-counter, and debug surfaces are disabled in production?</li><li>Can the provider supply runtime attestation or equivalent integrity evidence?</li><li>How are prompts, outputs, and traces logged, redacted, retained, and deleted?</li><li>What is the blast radius if a node, cache, queue, or worker pool is compromised?</li></ul><p><strong>Action:</strong> classify providers into approved tiers. If a provider cannot answer the baseline or cannot supply compensating controls, restrict them to low-sensitivity workloads only.</p>"
+            }
+          ]
+        }
+      ]
     }
   ],
 };

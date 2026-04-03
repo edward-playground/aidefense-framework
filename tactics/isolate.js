@@ -1775,6 +1775,120 @@ export const isolateTactic = {
                                 "<h5>Concept</h5><p>Every attempted modification of a protected logical resource — whether allowed or blocked — must produce SIEM-grade structured telemetry. This is necessary for incident response, timeline reconstruction, and proving that only approved change paths were used.</p><h5>Recommended event fields</h5><pre><code class=\"language-json\">{\n  \"agent_id\": \"agent-123\",\n  \"skill_id\": \"skill-456\",\n  \"protected_resource_id\": \"agent.identity.soul\",\n  \"backing_path\": \"/var/lib/agent/SOUL.md\",\n  \"operation\": \"write\",\n  \"decision\": \"blocked\",\n  \"reason\": \"no_approved_change_context\",\n  \"writer_identity\": \"spiffe://corp/agent-writer\",\n  \"approval_context\": \"CHG-2026-00421\",\n  \"baseline_hash\": \"...\",\n  \"observed_hash\": \"...\",\n  \"rollback_candidate\": true,\n  \"timestamp\": \"2026-03-30T12:00:00Z\"\n}\n</code></pre><p><strong>Minimum audit requirements:</strong></p><ul><li>logical protected resource ID and concrete backing path</li><li>requesting skill / writer identity</li><li>operation type and decision</li><li>approval / ticket context</li><li>hash context before and after, when applicable</li><li>rollback eligibility or recovery action if triggered</li></ul><p><strong>Action:</strong> Push these events to SIEM / SOAR and correlate them with controlled-writer logs, startup verification results, and rollback actions for end-to-end protected-surface forensics.</p>",
                         },
                     ],
+                },
+                {
+                    "id": "AID-I-004.007",
+                    "name": "Task-Bounded Context Segmentation & Secret Demotion",
+                    "pillar": [
+                        "app"
+                    ],
+                    "phase": [
+                        "operation"
+                    ],
+                    "description": "Dynamically segment active agent context by <strong>task phase</strong> within a live session and demote sensitive content when the agent moves from one phase of work to another. Instead of allowing raw secrets, system prompts, privileged intermediate results, temporary credentials, or internal-only instructions to persist indefinitely in the agent's active context, this sub-technique converts them into <strong>short-lived scoped handles, redacted summaries, or non-retrievable references</strong> once the original task phase has completed. The goal is to reduce cross-phase secret bleed, late-stage jailbreak leverage, privilege carryover, and persistence of mission-sensitive context that no longer needs to remain visible to the agent.<br/><br/><strong>Scope boundary within the AID-I-004 family:</strong> <strong>AID-I-004.001</strong> enforces session-level context isolation such as per-session keys, size ceilings, TTL, and cross-tenant bleed prevention. This sub-technique operates <em>within a session</em>, segmenting active context by task phase and demoting secrets at phase transitions. <strong>AID-I-004.005</strong> governs persistent memory lifecycle management, including staleness decay, re-validation, and forced forgetting for long-lived records. This sub-technique governs <em>active context demotion during a live task</em>, not persistent memory retention policy. <strong>AID-H-018.004</strong> establishes the architectural principle that agents should be stateless per session. This sub-technique operationalizes intra-session context hygiene at a finer granularity: <em>per-phase rather than per-session</em>.",
+                    "toolsOpenSource": [
+                        "Redis",
+                        "OpenTelemetry",
+                        "Open Policy Agent (OPA)",
+                        "Microsoft Presidio"
+                    ],
+                    "toolsCommercial": [
+                        "Redis Enterprise",
+                        "Nightfall DLP",
+                        "Akeyless"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0051 LLM Prompt Injection",
+                                "AML.T0080 AI Agent Context Poisoning",
+                                "AML.T0080.000 AI Agent Context Poisoning: Memory",
+                                "AML.T0080.001 AI Agent Context Poisoning: Thread",
+                                "AML.T0092 Manipulate User LLM Chat History"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Agent Goal Manipulation (L7)",
+                                "Data Leakage (Cross-Layer)",
+                                "Data Tampering (L2)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM01:2025 Prompt Injection",
+                                "LLM02:2025 Sensitive Information Disclosure",
+                                "LLM07:2025 System Prompt Leakage"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML09:2023 Output Integrity Attack"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI01:2026 Agent Goal Hijack",
+                                "ASI03:2026 Identity and Privilege Abuse",
+                                "ASI06:2026 Memory & Context Poisoning"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.015 Indirect Prompt Injection",
+                                "NISTAML.018 Prompt Injection",
+                                "NISTAML.036 Leaking information from user interactions"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-4.2 Context Boundary Attacks",
+                                "AISubtech-4.2.2 Session Boundary Violation",
+                                "AITech-5.1 Memory System Persistence",
+                                "AISubtech-5.1.1 Long-term / Short-term Memory Injection",
+                                "AISubtech-8.4.1 System LLM Prompt Leakage"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "PIJ: Prompt Injection",
+                                "SDD: Sensitive Data Disclosure",
+                                "RA: Rogue Actions"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Agents — Core 13.1: Memory Poisoning",
+                                "Agents — Core 13.6: Intent Breaking & Goal Manipulation",
+                                "Agents — Tools MCP Server 13.19: Credential and Token Exposure",
+                                "Agents — Tools MCP Server 13.24: Context Spoofing and Manipulation",
+                                "Agents — Tools MCP Client 13.34: Session and State Management Failures"
+                            ]
+                        }
+                    ],
+                    "implementationGuidance": [
+                        {
+                            "implementation": "Define task phases explicitly and trigger deterministic context pruning or demotion whenever the agent transitions into a new phase.",
+                            "howTo": "<h5>Concept:</h5><p>Agents often retain privileged context simply because the system never formally marks a task phase as complete. Treat phase transitions as first-class security events. The transition handler—not the model—should decide what stays visible, what is summarized, what becomes a handle, and what is removed entirely.</p><h5>Example: phase-transition policy</h5><pre><code># file: agent_context_policy.yaml\nphases:\n  - intake\n  - planning\n  - execution\n  - reporting\n\nphase_rules:\n  intake:\n    allow_tags: [user_request, session_metadata]\n  planning:\n    allow_tags: [user_request, task_constraints, approved_tools]\n    remove_context_tags: [temporary_token]\n  execution:\n    allow_tags: [approved_plan, tool_scope, opaque_secret_handle]\n    remove_context_tags: [customer_secret, system_prompt, internal_only]\n    demote_to_handle_tags: [db_credential, api_token]\n  reporting:\n    allow_tags: [task_outcome, audit_reference, redacted_summary]\n    remove_context_tags: [privileged_intermediate, tool_raw_output, opaque_secret_handle]\n</code></pre><h5>Example: transition hook</h5><pre><code># file: runtime/phase_transition.py\nfrom copy import deepcopy\n\ndef apply_phase_transition(context: list, next_phase: str, policy: dict):\n    rules = policy['phase_rules'][next_phase]\n    remove_tags = set(rules.get('remove_context_tags', []))\n    handle_tags = set(rules.get('demote_to_handle_tags', []))\n    allow_tags = set(rules.get('allow_tags', []))\n\n    new_context = []\n    for item in deepcopy(context):\n        tag = item.get('tag')\n\n        if tag in remove_tags:\n            continue\n\n        if tag in handle_tags:\n            item = {\n                'tag': 'opaque_secret_handle',\n                'content': {\n                    'handle_id': item['content']['handle_id'],\n                    'scope': item['content']['scope']\n                }\n            }\n\n        if tag in allow_tags or item.get('tag') == 'opaque_secret_handle':\n            new_context.append(item)\n\n    return new_context\n</code></pre><p><strong>Action:</strong> phase transitions must be triggered by deterministic orchestration logic, workflow state, or a signed task-state machine. Never rely on the model to decide what to forget when entering a new phase.</p>"
+                        },
+                        {
+                            "implementation": "Store high-sensitivity values outside conversational context and inject only short-lived opaque handles into active memory.",
+                            "howTo": "<h5>Concept:</h5><p>Secrets should not persist in the same memory lane as reasoning traces, user-visible summaries, or tool chatter. Store secrets in a dedicated secure store and expose only a scoped, short-lived handle inside active context. The handle should be useless outside its approved task phase.</p><h5>Example: secret-handle schema</h5><pre><code># file: memory/handles.py\nfrom dataclasses import dataclass\nfrom datetime import datetime, timedelta, timezone\n\n@dataclass\nclass SecretHandle:\n    handle_id: str\n    scope: str\n    phase_bound: str\n    expires_at: datetime\n\n\ndef mint_secret_handle(secret_id: str, scope: str, phase_bound: str) -> SecretHandle:\n    return SecretHandle(\n        handle_id=f\"hdl_{secret_id}\",\n        scope=scope,\n        phase_bound=phase_bound,\n        expires_at=datetime.now(timezone.utc) + timedelta(minutes=10)\n    )\n\n\ndef handle_is_valid(handle: SecretHandle, current_phase: str, now: datetime) -> bool:\n    return handle.phase_bound == current_phase and now &lt; handle.expires_at\n</code></pre><h5>Operational pattern</h5><ul><li>Store raw credentials, tokens, and system-only secrets in a separate secure store.</li><li>Place only the handle ID, phase scope, and expiry into active context.</li><li>Deny dereference when the handle is expired, out-of-phase, or the workflow has advanced.</li><li>Do not allow the model to mint, extend, or broaden secret handles on its own.</li></ul><p><strong>Action:</strong> if a workflow no longer requires a secret in the next phase, replace it with a non-retrievable audit reference or remove it entirely. Do not carry raw secret values forward out of convenience.</p>"
+                        },
+                        {
+                            "implementation": "Separate active context into distinct memory lanes so system-only, credential-bearing, and user-visible context cannot freely mix during a live session.",
+                            "howTo": "<h5>Concept:</h5><p>Many context leakage incidents happen because all session information is stored in one flat list of messages. Instead, split context into <strong>lanes</strong> with different read/write rules: user-visible context, system-only policy context, secret-handle context, and ephemeral tool-working context. Phase transitions should prune or recompose lanes independently.</p><h5>Example: lane model</h5><pre><code># file: memory/lanes.py\nLANES = {\n    'user_visible': {\n        'allowed_tags': ['user_request', 'task_outcome', 'redacted_summary']\n    },\n    'system_only': {\n        'allowed_tags': ['system_policy', 'safety_invariant'],\n        'model_visible': False\n    },\n    'secret_handles': {\n        'allowed_tags': ['opaque_secret_handle'],\n        'model_visible': True,\n        'raw_secret_visible': False\n    },\n    'tool_working': {\n        'allowed_tags': ['tool_result_temp', 'privileged_intermediate'],\n        'ttl_seconds': 300\n    }\n}\n</code></pre><h5>Example: lane-aware export control</h5><pre><code># file: memory/export_context.py\n\ndef export_for_model(lanes: dict):\n    exported = []\n    for lane_name, lane_items in lanes.items():\n        if lane_name == 'system_only':\n            continue\n        for item in lane_items:\n            exported.append(item)\n    return exported\n</code></pre><p><strong>Action:</strong> never store raw credentials, system prompts, and user-visible summaries in the same undifferentiated context object. Lane separation should be enforced by middleware, not by model instructions.</p>"
+                        }
+                    ]
                 }
             ]
         },
