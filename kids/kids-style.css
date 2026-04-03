@@ -1,0 +1,781 @@
+/* Custom CSS for kids version */
+:root {
+  --primary: #FF6B6B;
+  --secondary: #4ECDC4;
+  --accent: #FFE66D;
+  --background: #F7FFF7;
+  --text: #2F3542;
+  --card-bg: #FFFFFF;
+}
+
+body.kids-body {
+  font-family: 'Nunito', 'LXGW WenKai TC', 'M PLUS Rounded 1c', 'Comic Sans MS', sans-serif;
+  background-color: var(--background);
+  color: var(--text);
+  margin: 0;
+  padding: 0;
+  background-image: radial-gradient(#4ECDC4 2px, transparent 2px);
+  background-size: 40px 40px;
+}
+
+.kids-header {
+  position: relative;
+  background: linear-gradient(135deg, var(--primary), #FF8E8B);
+  color: white;
+  text-align: center;
+  padding: 3rem 1rem;
+  border-bottom-left-radius: 50%;
+  border-bottom-right-radius: 50%;
+  box-shadow: 0 10px 20px rgba(255,107,107,0.3);
+  margin-bottom: 3rem;
+  border-bottom: 10px solid var(--accent);
+}
+
+.lang-toggle-container {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.lang-btn {
+  background-color: var(--accent);
+  color: var(--text);
+  border: none;
+  border-radius: 20px;
+  padding: 10px 20px;
+  font-weight: 800;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.lang-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 10px rgba(0,0,0,0.15);
+}
+
+.kids-header h1 {
+  font-size: 3.5rem;
+  font-weight: 900;
+  margin: 0;
+  text-shadow: 3px 3px 0px rgba(0,0,0,0.2);
+  letter-spacing: 2px;
+}
+
+.kids-header p {
+  font-size: 1.5rem;
+  margin-top: 1rem;
+  font-weight: 700;
+}
+
+.intro-box {
+  background: white;
+  border-radius: 30px;
+  padding: 2.5rem;
+  margin: 0 auto 3rem auto;
+  max-width: 800px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  border: 5px solid var(--accent);
+  position: relative;
+  overflow: hidden;
+}
+
+.intro-box h2 {
+  font-size: 2.2rem;
+  color: var(--primary);
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+}
+
+.intro-box p {
+  font-size: 1.25rem;
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+.intro-box p strong {
+  color: var(--secondary);
+  font-weight: 900;
+  font-size: 1.35rem;
+}
+
+.tactic-section {
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 30px;
+  padding: 2.5rem;
+  margin-bottom: 3.5rem;
+  box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+  border: 4px dashed var(--secondary);
+}
+
+.tactic-header {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.tactic-icon {
+  font-size: 3.5rem;
+}
+
+.tactic-title {
+  font-size: 2.5rem;
+  font-weight: 900;
+  color: var(--primary);
+  margin: 0;
+}
+
+.tactic-desc {
+  font-size: 1.3rem;
+  color: #57606f;
+  margin-bottom: 2.5rem;
+  font-weight: 700;
+  background-color: #f1f2f6;
+  padding: 1rem 1.5rem;
+  border-radius: 15px;
+  border-left: 5px solid var(--primary);
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.kids-card {
+  background: var(--card-bg);
+  border-radius: 25px;
+  padding: 2rem;
+  box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s, border-color 0.3s, background 0.3s;
+  border: 4px solid #f1f2f6;
+  text-align: center;
+  position: relative;
+}
+
+.kids-card:hover {
+  transform: translateY(-12px) scale(1.05);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+  border-color: var(--accent);
+}
+
+.kids-card--done {
+  border-color: #2ecc71;
+  background: linear-gradient(160deg, #f0fff4, #ffffff);
+}
+
+.card-done-badge {
+  display: none;
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 24px;
+  height: 24px;
+  background: #2ecc71;
+  color: white;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 900;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(46,204,113,0.5);
+  border: 2px solid white;
+}
+
+.kids-card--done .card-done-badge {
+  display: flex;
+}
+
+.card-icon {
+  font-size: 5rem;
+  margin-bottom: 1.5rem;
+  display: block;
+}
+
+.card-title {
+  font-size: 1.6rem;
+  font-weight: 900;
+  color: var(--text);
+  margin: 0;
+}
+
+/* Modal */
+.kids-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.kids-modal-overlay.hidden {
+  display: none !important;
+}
+
+.kids-modal-content {
+  background: white;
+  width: 90%;
+  max-width: 650px;
+  max-height: 90vh;
+  overflow: visible;
+  border-radius: 30px;
+  position: relative;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  border: 8px solid var(--secondary);
+  animation: bounceIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* Fade hint at bottom to show there's more content */
+.kids-modal-content::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: linear-gradient(to bottom, transparent, rgba(255,255,255,0.95));
+  border-radius: 0 0 22px 22px;
+  pointer-events: none;
+  z-index: 1;
+}
+
+.modal-body-container {
+  max-height: calc(90vh - 16px);
+  overflow-y: auto;
+  padding: 2.5rem;
+  /* Hide native scrollbar completely */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.modal-body-container::-webkit-scrollbar {
+  display: none;
+}
+
+@keyframes bounceIn {
+  0% { transform: scale(0.5); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.kids-close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: #ff4757;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 45px;
+  height: 45px;
+  font-size: 1.5rem;
+  cursor: pointer;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+  transition: transform 0.2s;
+}
+
+.kids-close-btn:hover {
+  transform: scale(1.15) rotate(90deg);
+}
+
+/* ── Modal Navigation Buttons ── */
+.modal-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  background: rgba(255, 255, 255, 0.45);
+  backdrop-filter: blur(4px);
+  border: 3px solid rgba(78, 205, 196, 0.5);
+  border-radius: 50%;
+  width: 42px;
+  height: 42px;
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--secondary);
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s, opacity 0.3s;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.modal-nav-btn:hover {
+  background: rgba(78, 205, 196, 0.7);
+  color: white;
+  transform: translateY(-50%) scale(1.12);
+}
+
+.modal-nav-left { left: -21px; }
+.modal-nav-right { right: -21px; }
+
+.modal-nav-btn.hidden {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ── Modal Scroll Hint ── */
+.modal-scroll-hint {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  pointer-events: none;
+  transition: opacity 0.3s;
+}
+
+.modal-scroll-hint.hidden {
+  opacity: 0;
+}
+
+.scroll-hint-arrow {
+  font-size: 1.1rem;
+  color: var(--secondary);
+  animation: bounce-hint 1.2s ease-in-out infinite;
+  display: block;
+  text-align: center;
+}
+
+@keyframes bounce-hint {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(5px); }
+}
+
+.modal-header-icon {
+  font-size: 5rem;
+  text-align: center;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.modal-title {
+  font-size: 2.5rem;
+  text-align: center;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+  font-weight: 900;
+}
+
+.modal-text {
+  font-size: 1.3rem;
+  line-height: 1.7;
+  color: var(--text);
+  white-space: pre-line;
+}
+
+.modal-text strong {
+  color: var(--secondary);
+  font-size: 1.4rem;
+  background-color: #f1f2f6;
+  padding: 0 10px;
+  border-radius: 10px;
+  display: inline-block;
+  margin-bottom: 5px;
+}
+
+/* Parent Note Section */
+.parent-note {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 20px;
+  border-left: 6px solid #6c5ce7;
+}
+
+.parent-note-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #6c5ce7;
+  margin-bottom: 0.5rem;
+}
+
+.parent-note-id {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #636e72;
+  margin-bottom: 0.5rem;
+  font-family: 'Nunito', monospace;
+}
+
+.parent-note-text {
+  font-size: 1.05rem;
+  line-height: 1.7;
+  color: #2d3436;
+  margin-bottom: 0.8rem;
+}
+
+.parent-note-link {
+  display: inline-block;
+  font-size: 1rem;
+  font-weight: 700;
+  color: #6c5ce7;
+  text-decoration: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 12px;
+  background: rgba(108, 92, 231, 0.1);
+  transition: background 0.2s, transform 0.2s;
+}
+
+.parent-note-link:hover {
+  background: rgba(108, 92, 231, 0.2);
+  transform: translateX(4px);
+}
+
+/* ── Progress Bar ── */
+.progress-bar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 16px 12px;
+  background: rgba(255,255,255,0.92);
+  backdrop-filter: blur(10px);
+  border-top: 3px solid var(--secondary);
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.1);
+}
+
+.progress-tactics {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.progress-tactic-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  gap: 0;
+}
+
+.progress-tactic-wrapper:hover .progress-tactic {
+  transform: scale(1.15);
+  border-color: var(--accent);
+}
+
+.progress-tactic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #f0f0f0;
+  border: 3px solid #ddd;
+  font-size: 1.4rem;
+  position: relative;
+  transition: transform 0.3s, border-color 0.3s, background 0.3s;
+  pointer-events: none;
+}
+
+.progress-tactic:not(.progress-tactic--done) {
+  animation: tactic-glow-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes tactic-glow-pulse {
+  0%, 100% { box-shadow: 0 0 4px 1px rgba(255, 107, 107, 0.2); border-color: #ffb3b3; }
+  50%       { box-shadow: 0 0 10px 5px rgba(255, 107, 107, 0.6); border-color: #FF6B6B; }
+}
+
+.progress-tactic--done {
+  background: linear-gradient(135deg, #4ECDC4, #FFE66D);
+  border-color: #4ECDC4;
+  transform: scale(1.1);
+  animation: none;
+}
+
+.progress-check {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  width: 18px;
+  height: 18px;
+  background: #2ecc71;
+  border-radius: 50%;
+  font-size: 0.6rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 900;
+  border: 2px solid white;
+}
+
+.progress-dots {
+  display: flex;
+  gap: 4px;
+  margin-top: -6px;
+  z-index: 1;
+}
+
+.progress-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #ddd;
+  border: 2px solid white;
+  transition: background 0.3s, box-shadow 0.3s;
+}
+
+.progress-dot--done {
+  background: #2ecc71;
+  box-shadow: 0 0 5px rgba(46, 204, 113, 0.7);
+}
+
+.claim-badge-btn {
+  font-size: 1.8rem;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  flex-shrink: 0;
+  transition: transform 0.2s, opacity 0.3s;
+}
+
+.claim-badge-btn:disabled {
+  background: #c8d6e5;
+  box-shadow: none;
+  cursor: not-allowed;
+  opacity: 0.55;
+  filter: grayscale(1);
+  animation: none;
+}
+
+.claim-badge-btn:not(:disabled) {
+  background: linear-gradient(135deg, #FFE66D, #FF6B6B);
+  cursor: pointer;
+  box-shadow: 0 4px 20px rgba(255, 107, 107, 0.6);
+  animation: badge-flash 0.75s ease-in-out infinite alternate;
+}
+
+.claim-badge-btn:not(:disabled):hover {
+  transform: scale(1.18) !important;
+}
+
+@keyframes badge-flash {
+  0%   { transform: scale(1);    box-shadow: 0 4px 15px rgba(255,107,107,0.4); }
+  100% { transform: scale(1.14); box-shadow: 0 6px 28px rgba(255,107,107,0.9), 0 0 22px rgba(255,230,109,0.7); }
+}
+
+/* Add padding to body so content isn't hidden behind progress bar */
+body.kids-body {
+  padding-bottom: 80px;
+}
+
+/* ── Badge Overlay ── */
+.badge-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.badge-overlay.hidden {
+  display: none !important;
+}
+
+#fireworksCanvas {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+#celebrationCanvas {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 998;
+}
+
+.badge-content {
+  position: relative;
+  z-index: 1;
+  text-align: center;
+  max-width: 420px;
+  width: 90%;
+  animation: badgePop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.badge-image {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+}
+
+@keyframes badgePop {
+  0% { transform: scale(0.3) rotate(-10deg); opacity: 0; }
+  100% { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.close-badge-btn {
+  background: #dfe6e9;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1rem;
+  cursor: pointer;
+  color: #636e72;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.close-badge-btn:hover {
+  background: #b2bec3;
+  transform: scale(1.1);
+}
+
+/* ── Badge Actions ── */
+.badge-actions {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.download-badge-btn {
+  background: linear-gradient(135deg, #4ECDC4, #45B7D1);
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+  box-shadow: 0 2px 8px rgba(78, 205, 196, 0.4);
+}
+
+.download-badge-btn:hover {
+  background: linear-gradient(135deg, #45B7D1, #4ECDC4);
+  transform: scale(1.1);
+}
+
+/* ── Responsive Design ── */
+@media (max-width: 640px) {
+  .lang-toggle-container {
+    top: 10px;
+    right: 10px;
+  }
+  .lang-btn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+
+  .kids-header h1 {
+    font-size: 2.2rem;
+  }
+  .kids-header p {
+    font-size: 1.1rem;
+  }
+
+  .tactic-title {
+    font-size: 1.8rem;
+  }
+  .tactic-desc {
+    font-size: 1.1rem;
+  }
+
+  .grid-container {
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 1rem;
+  }
+  .kids-card {
+    padding: 1.2rem 0.8rem;
+  }
+  .card-icon {
+    font-size: 3rem;
+    margin-bottom: 0.75rem;
+  }
+  .card-title {
+    font-size: 1.1rem;
+  }
+
+  /* Progress bar: compact on mobile */
+  .progress-bar {
+    padding: 8px 8px 10px;
+    gap: 6px;
+  }
+  .progress-tactics {
+    gap: 4px;
+  }
+  .progress-tactic {
+    width: 38px;
+    height: 38px;
+    font-size: 1.1rem;
+  }
+  .progress-dot {
+    width: 9px;
+    height: 9px;
+  }
+  .claim-badge-btn {
+    width: 46px;
+    height: 46px;
+    font-size: 1.4rem;
+  }
+  body.kids-body {
+    padding-bottom: 72px;
+  }
+
+  /* Badge overlay: fits small screens */
+  .badge-content {
+    max-width: 92vw;
+  }
+
+  /* Modal: full-screen friendly */
+  .kids-modal-content {
+    width: 96%;
+    max-height: 92vh;
+    border-width: 5px;
+  }
+  .modal-nav-btn {
+    width: 34px;
+    height: 34px;
+    font-size: 1rem;
+    border-width: 2px;
+  }
+  .modal-nav-left { left: -17px; }
+  .modal-nav-right { right: -17px; }
+  .modal-body-container {
+    max-height: calc(92vh - 14px);
+    padding: 1.5rem;
+  }
+  .modal-title {
+    font-size: 1.8rem;
+  }
+  .modal-text {
+    font-size: 1.1rem;
+  }
+}
+
+@media (max-width: 400px) {
+  .progress-tactic {
+    width: 32px;
+    height: 32px;
+    font-size: 0.95rem;
+  }
+  .progress-dot {
+    width: 8px;
+    height: 8px;
+  }
+  .progress-tactics {
+    gap: 3px;
+  }
+}

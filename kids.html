@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AIDEFEND for Kids 🛡️🎈</title>
+    <script src="./kids/tailwindcss.js"></script>
+    <script src="./kids/purify.min.js"></script>
+    <link rel="stylesheet" href="./kids/kids-style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&family=M+PLUS+Rounded+1c:wght@700&family=LXGW+WenKai+TC:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="kids-body">
+    <header class="kids-header">
+        <div class="lang-toggle-container">
+            <button id="langToggleBtn" class="lang-btn">切換至中文</button>
+        </div>
+        <h1 id="pageTitle">🎈 AIDEFEND for Kids 🛡️</h1>
+        <p id="pageSubtitle">Join us to protect our AI friends!</p>
+    </header>
+
+    <main class="container mx-auto px-4 py-8">
+        <section class="intro-box">
+            <h2 id="introTitle">🌍 Why do we need to protect computers?</h2>
+            <div id="introText">
+                <p><strong>Hello, future Cyber Defender!</strong></p>
+                <p>AI (Artificial Intelligence) is like a super-smart robot brain we invented. It can chat with us, help us draw, and even help doctors heal people or astronauts fly rockets!</p>
+                <p>But out in the internet wild, there are sneaky <strong>"Computer Monsters"</strong> and thieves who want to trick the AI, steal secrets from grown-ups, or break our AI friend to do bad things.</p>
+                <p>That is why we need <strong>"Cyber Heroes (That's YOU!)"</strong> to step up! Cybersecurity is all about learning how to use the strongest magical shields to protect our glowing screens from bullies.</p>
+                <p>Are you ready to learn the magic of defense? Let's see the 7 ultimate moves the world's best experts use! 👇</p>
+            </div>
+        </section>
+
+        <!-- content injected here -->
+        <div id="kids-main"></div>
+    </main>
+
+    <!-- Modal Base -->
+    <div id="kidsModal" class="kids-modal-overlay hidden">
+        <div class="kids-modal-content">
+            <button id="closeModal" class="kids-close-btn">✖️</button>
+            <button id="modalNavLeft" class="modal-nav-btn modal-nav-left">❮</button>
+            <button id="modalNavRight" class="modal-nav-btn modal-nav-right">❯</button>
+            <div id="modalBody" class="modal-body-container">
+                <!-- Data goes here -->
+            </div>
+            <div id="modalScrollHint" class="modal-scroll-hint">
+                <span class="scroll-hint-arrow">▼</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Progress Bar -->
+    <div id="progressBar" class="progress-bar">
+        <div id="progressTactics" class="progress-tactics"></div>
+        <button id="claimBadgeBtn" class="claim-badge-btn" disabled>🏆</button>
+    </div>
+
+    <!-- Badge Overlay -->
+    <div id="badgeOverlay" class="badge-overlay hidden">
+        <canvas id="fireworksCanvas"></canvas>
+        <div class="badge-content">
+            <img src="./kids/badge.png" alt="AIDEFEND Cyber Hero Badge" class="badge-image">
+            <div class="badge-actions">
+                <button id="downloadBadgeBtn" class="download-badge-btn" title="Download Badge">📥</button>
+                <button id="closeBadgeBtn" class="close-badge-btn">✕</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Celebration fireworks canvas (modal close + tactic complete) -->
+    <canvas id="celebrationCanvas"></canvas>
+
+    <script type="module" src="./kids/kids-main.js"></script>
+</body>
+</html>
