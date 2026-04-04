@@ -1,9 +1,9 @@
-# 🛡️ AIDEFEND: An AI Defense Framework
+# 🛡️ AIDEFEND™: An AI Defense Framework
 
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg?style=for-the-badge)](https://creativecommons.org/licenses/by/4.0/)
 [![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge)](https://aidefend.net)
 
-> AIDEFEND (Artificial Intelligence Defense Framework) is an open, AI-focused knowledge base of defensive countermeasures designed to help security professionals protect AI/ML systems from emerging threats.
+> AIDEFEND™ (Artificial Intelligence Defense Framework) is an open, AI-focused knowledge base of defensive countermeasures designed to help security professionals protect AI/ML systems from emerging threats.
 
 ---
 

@@ -2,7 +2,7 @@ import { kidsDataEn, kidsDataZh } from './kids-data.js';
 
 const translations = {
     en: {
-        pageTitle: "🎈 AIDEFEND for Kids 🛡️",
+        pageTitle: "🎈 AIDEFEND™ for Kids 🛡️",
         pageSubtitle: "Join us to protect our AI friends!",
         introTitle: "🌍 Why do we need to protect AI friends?",
         introText: `
@@ -11,12 +11,12 @@ const translations = {
             <p>But sneaky <strong>"Computer Bad Guys"</strong> are out there trying to trick AI and do bad things — so we need YOU, the <strong>Cyber Hero!</strong> Let's learn the 7 magic shield moves the world's best defenders use! 👇</p>
         `,
         toggleBtn: "中文",
-        badgeTitle: "AIDEFEND Cyber Hero",
+        badgeTitle: "AIDEFEND™ Cyber Hero",
         badgeSubtitle: "Congratulations! You've mastered all 7 defensive moves!",
         claimBadge: "🏆"
     },
     zh: {
-        pageTitle: "🎈 AIDEFEND for Kids 🛡️",
+        pageTitle: "🎈 AIDEFEND™ for Kids 🛡️",
         pageSubtitle: "跟我們一起保護 AI 夥伴的安全！",
         introTitle: "🌍 為什麼我們需要保護 AI 夥伴？",
         introText: `
@@ -25,7 +25,7 @@ const translations = {
             <p>但網路上有調皮的<strong>「電腦壞人」</strong>想破壞 AI，所以我們需要你——<strong>「AI 安全小英雄！」</strong>快來學世界上最厲害的 7 招安全魔法吧！👇</p>
         `,
         toggleBtn: "English",
-        badgeTitle: "AIDEFEND 資安小英雄",
+        badgeTitle: "AIDEFEND™ 資安小英雄",
         badgeSubtitle: "恭喜！你已經學會全部 7 種AI安全絕招！",
         claimBadge: "🏆"
     }

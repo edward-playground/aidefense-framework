@@ -1,10 +1,10 @@
 export const aidefendIntroduction = {
-    "mainTitle": "About AIDEFEND: An AI Defense Framework",
+    "mainTitle": "About AIDEFEND™: An AI Defense Framework",
     "sections": [
         {
-            "title": "What is AIDEFEND?",
+            "title": "What is AIDEFEND™?",
             "paragraphs": [
-                "AIDEFEND (Artificial Intelligence Defense Framework) is a knowledge base of defensive countermeasures designed to protect AI/ML systems. Inspired by cybersecurity frameworks like MITRE D3FEND, MITRE ATT&CK®, and MITRE ATLAS®, AIDEFEND complements MITRE ATLAS® by focusing on AI defense.<br><br><strong>Please note: <u>This work is a personal initiative.</u></strong> It was inspired by resources including MITRE's frameworks (D3FEND, ATT&CK, ATLAS), the MAESTRO Threat Modeling framework by Ken Huang (Cloud Security Alliance Research Fellow), Google's Secure AI Framework (SAIF), the OWASP's Top 10 Lists (LLM Applications 2025, ML Security 2023, Agentic Applications 2026), Cisco Integrated AI Security and Safety Framework, NIST Adversarial Machine Learning 2025, and Databricks AI Security Framework (DASF) 3.0. However, <u><strong>this work is not affiliated with, endorsed by, or otherwise connected to the MITRE Corporation, the creator of the MAESTRO framework (Ken Huang), Google, OWASP, Cisco, NIST, or Databricks.</u></strong>"
+                "AIDEFEND™ (Artificial Intelligence Defense Framework) is a knowledge base of defensive countermeasures designed to protect AI/ML systems. Inspired by cybersecurity frameworks like MITRE D3FEND, MITRE ATT&CK®, and MITRE ATLAS®, AIDEFEND complements MITRE ATLAS® by focusing on AI defense.<br><br><strong>Please note: <u>This work is a personal initiative.</u></strong> It was inspired by resources including MITRE's frameworks (D3FEND, ATT&CK, ATLAS), the MAESTRO Threat Modeling framework by Ken Huang (Cloud Security Alliance Research Fellow), Google's Secure AI Framework (SAIF), the OWASP's Top 10 Lists (LLM Applications 2025, ML Security 2023, Agentic Applications 2026), Cisco Integrated AI Security and Safety Framework, NIST Adversarial Machine Learning 2025, and Databricks AI Security Framework (DASF) 3.0. However, <u><strong>this work is not affiliated with, endorsed by, or otherwise connected to the MITRE Corporation, the creator of the MAESTRO framework (Ken Huang), Google, OWASP, Cisco, NIST, or Databricks.</u></strong>"
             ]
         },
         {
