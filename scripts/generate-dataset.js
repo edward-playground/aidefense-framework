@@ -7,7 +7,11 @@
  *
  * Keywords: Defense mechanism and method terms (flat array) for search and classification
  *
- * Usage: node scripts/generate-dataset.js
+ * Usage:
+ *   node scripts/generate-dataset.js                  # Generate data.json (read-only cache)
+ *   node scripts/generate-dataset.js --refresh-cache  # Also persist fresh keyword cache entries
+ *                                                     # for any technique whose content hash
+ *                                                     # changed or that is missing from cache.
  */
 
 import fs from 'fs';
@@ -20,6 +24,9 @@ const __dirname = path.dirname(__filename);
 
 const TACTICS_DIR = path.join(__dirname, '..', 'tactics');
 const OUTPUT_DIR = path.join(__dirname, '..', 'data');
+
+const REFRESH_CACHE = process.argv.includes('--refresh-cache');
+const cacheUpdates = {};
 
 // Tactic file mapping (filename -> tactic ID)
 const TACTIC_FILES = [
@@ -596,10 +603,18 @@ function getKeywords(technique, contentHash) {
     }
     return cached.keywords;
   }
-  if (cached && cached.contentHash !== contentHash) {
+
+  // Cache miss or stale hash — generate fresh from the deterministic pipeline
+  const freshKeywords = extractKeywords(technique);
+
+  if (REFRESH_CACHE) {
+    // --refresh-cache mode: persist fresh entry (flat array format) and suppress warning
+    cacheUpdates[technique.id] = { contentHash, keywords: freshKeywords };
+  } else if (cached && cached.contentHash !== contentHash) {
     console.warn(`  ⚠️  ${technique.id}: content changed — keywords need regeneration`);
   }
-  return extractKeywords(technique);
+
+  return freshKeywords;
 }
 
 /**
@@ -843,8 +858,20 @@ async function main() {
   const indexPath = path.join(OUTPUT_DIR, 'tactics-index.json');
   fs.writeFileSync(indexPath, indexContent);
 
+  // --refresh-cache: persist updated keyword cache entries (flat array format)
+  // for every technique whose content hash changed or that was missing from the cache.
+  let cacheRefreshCount = 0;
+  if (REFRESH_CACHE) {
+    const mergedCache = { ...keywordCache, ...cacheUpdates };
+    fs.writeFileSync(CACHE_PATH, JSON.stringify(mergedCache, null, 2));
+    cacheRefreshCount = Object.keys(cacheUpdates).length;
+  }
+
   console.log('\n================================');
   console.log('Generation complete!\n');
+  if (REFRESH_CACHE) {
+    console.log(`Keyword cache: refreshed ${cacheRefreshCount} entries → ${CACHE_PATH}`);
+  }
   console.log(`Tactics: ${tactics.length}`);
   console.log(`Techniques: ${totalTechniques}`);
   console.log(`Sub-techniques: ${totalSubTechniques}`);

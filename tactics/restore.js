@@ -107,16 +107,86 @@ export const restoreTactic = {
                             "howTo": "<h5>Concept:</h5><p>You cannot restore what you cannot trust. Every model promoted to production must be snapshotted into an append-only / versioned / access-restricted backup location (e.g. an S3 bucket with Object Versioning and Object Lock, writeable only by CI/CD). For each snapshot you must store: (1) the model artifact, (2) its cryptographic hash, (3) its build/signing attestation (supply-chain provenance), and (4) deployment metadata (who approved promotion).</p><h5>Configure a Versioned Backup Store</h5><p>Use Infrastructure as Code to provision a dedicated bucket with versioning enabled. Enable policies so runtime services cannot retroactively overwrite past versions.</p><pre><code># File: infrastructure/model_backups.tf (Terraform)\n\nresource \"aws_s3_bucket\" \"model_backups\" {\n  bucket = \"aidefend-prod-model-backups\"\n}\n\nresource \"aws_s3_bucket_versioning\" \"model_backups_versioning\" {\n  bucket = aws_s3_bucket.model_backups.id\n  versioning_configuration {\n    status = \"Enabled\"\n  }\n}\n\n# (Recommended) Also configure Object Lock / retention to prevent tampering.\n</code></pre><p><strong>Action:</strong> As the final step of each production promotion pipeline, push the model artifact into this versioned store, record its SHA-256 (and, if available, its cryptographic signature / attestation) in the model registry, and mark it as restore-capable.</p>"
                         },
                         {
-                            "implementation": "Identify the last known-good model version that predates the incident window.",
-                            "howTo": "<h5>Concept:</h5><p>During incident response, you must figure out which model version last ran correctly before compromise. This requires an auditable model registry with timestamps, promotion history, and security status flags (e.g. 'passed security validation', 'no anomaly reports').</p><h5>Query the Registry by Timestamp</h5><p>Use your model registry (MLflow, SageMaker Model Registry, etc.) to locate the most recent version <em>created and promoted before</em> the incident start timestamp, and which still has a valid attestation/hash recorded.</p><pre><code># File: restore/find_good_version.py\nimport sys\nfrom mlflow.tracking import MlflowClient\n\nMODEL_NAME = \"My-Production-Model\"\nINCIDENT_START_TIMESTAMP = 1711900800000  # epoch ms — set to incident start time\n\nclient = MlflowClient()\nversions = client.search_model_versions(f\"name='{MODEL_NAME}'\")\n\nknown_good_version = None\nfor v in sorted(versions, key=lambda x: x.creation_timestamp, reverse=True):\n    if v.creation_timestamp &lt; INCIDENT_START_TIMESTAMP and \\\n       v.tags.get(\"security_status\") == \"clean\" and \\\n       \"sha256_hash\" in v.tags:\n        known_good_version = v\n        break\n\nif known_good_version:\n    print(f\"Last known-good version: {known_good_version.version}\")\n    print(f\"  Created: {known_good_version.creation_timestamp}\")\n    print(f\"  Hash:    {known_good_version.tags['sha256_hash']}\")\nelse:\n    print(\"ERROR: No trusted pre-incident version found!\")\n    sys.exit(1)</code></pre><p><strong>Action:</strong> Your IR runbook must explicitly include 'Identify last known-good version' as a step. The definition of 'known-good' must include both timeline (<em>before</em> compromise) and trust evidence (hash/signature, no prior anomaly flags).</p>"
-                        },
-                        {
-                            "implementation": "Verify the integrity and provenance of the backup artifact before redeployment.",
-                            "howTo": "<h5>Concept:</h5><p>Never blindly restore. Before you redeploy a rollback model, you must cryptographically prove that the artifact you're about to deploy is byte-for-byte identical to the trusted snapshot you approved earlier. This usually means verifying both the stored hash and any build/signing attestation (e.g. GPG signature, cosign/SLSA provenance).</p><h5>Integrity Check in the Rollback Script</h5><pre><code># File: restore/verify_and_restore.py\nimport hashlib\nimport sys\nfrom mlflow.tracking import MlflowClient\n\ndef get_sha256_hash(filepath: str) -&gt; str:\n    h = hashlib.sha256()\n    with open(filepath, \"rb\") as f:\n        for chunk in iter(lambda: f.read(8192), b\"\"):\n            h.update(chunk)\n    return h.hexdigest()\n\n# Configuration — set these from find_good_version.py output\nMODEL_NAME = \"My-Production-Model\"\nVERSION_TO_RESTORE = \"3\"  # known-good version number\n\nclient = MlflowClient()\nversion = client.get_model_version(MODEL_NAME, VERSION_TO_RESTORE)\n\n# 1. Pull the trusted hash from registry tags\nauthorized_hash = version.tags.get(\"sha256_hash\")\nif not authorized_hash:\n    print(\"ERROR: No sha256_hash tag on this version. Cannot verify.\")\n    sys.exit(1)\n\n# 2. Download the backup artifact\nlocal_path = client.download_artifacts(version.run_id, \"model\")\nartifact_file = local_path + \"/model.pkl\"  # adjust to your artifact name\n\n# 3. Verify hash\nactual_hash = get_sha256_hash(artifact_file)\nif actual_hash != authorized_hash:\n    print(f\"CRITICAL: Hash mismatch!\")\n    print(f\"  Expected: {authorized_hash}\")\n    print(f\"  Actual:   {actual_hash}\")\n    sys.exit(1)\n\nprint(f\"Backup integrity verified for version {VERSION_TO_RESTORE}.\")\nprint(\"Safe to proceed with redeployment.\")</code></pre><p><strong>Action:</strong> Treat signature/hash verification as a <em>blocking</em> gate in the rollback pipeline. If verification fails, you do <em>not</em> restore that artifact into production.</p>"
-                        },
-                        {
-                            "implementation": "Use an audited, parameterized rollback pipeline to redeploy the known-good model and its serving environment.",
-                            "howTo": "<h5>Concept:</h5><p>Restoring a clean model isn't enough if the runtime stack (container image, inference server, plugin/tool stack) is still compromised. The rollback deployment must (1) take the vetted model artifact, (2) pair it with a trusted serving image or container digest from before the incident, and (3) promote that pair through a controlled, auditable pipeline (GitOps/CI/CD) instead of manual copy.</p><h5>Trigger a Controlled Rollback Workflow</h5><pre><code># Conceptual GitHub Actions workflow (workflow_dispatch)\n# name: Rollback Production Model\n# on:\n#   workflow_dispatch:\n#     inputs:\n#       model_name:\n#         description: 'Model to roll back'\n#         required: true\n#       version_to_restore:\n#         description: 'Known-good model version'\n#         required: true\n#       serving_image_digest:\n#         description: 'Trusted serving container digest to deploy'\n#         required: true\n# jobs:\n#   rollback:\n#     runs-on: ubuntu-latest\n#     steps:\n#       - name: Verify Artifact Integrity\n#         run: python restore/verify_and_restore.py \\\n#              --model ${{ github.event.inputs.model_name }} \\\n#              --version ${{ github.event.inputs.version_to_restore }}\n#       - name: Deploy Known-Good Stack\n#         run: |\n#           ./deploy_inference_service.sh \\\n#             --model_version ${{ github.event.inputs.version_to_restore }} \\\n#             --image_digest  ${{ github.event.inputs.serving_image_digest }}\n</code></pre><p><strong>Action:</strong> Your rollback pipeline must also restore (or verify) the serving runtime/container image, not just the model weights. The entire inference stack should match a previously trusted state. The pipeline run itself is now an auditable artifact for incident closure.</p>"
+                            "implementation": "Run an audited rollback procedure to identify the last known-good model version, verify its integrity, and redeploy the trusted model and serving stack.",
+                            "howTo": `<h5>Concept:</h5><p>Rollback is one operational runbook, not three independent controls. The recovery team must identify the last known-good model version, cryptographically verify the backup artifact, and redeploy the trusted model together with a verified serving image or runtime package through one audited workflow.</p><h5>Step 1: Identify the last known-good model version</h5><pre><code># File: restore/find_good_version.py
+import sys
+from mlflow.tracking import MlflowClient
+
+MODEL_NAME = "My-Production-Model"
+INCIDENT_START_TIMESTAMP = 1711900800000
+
+client = MlflowClient()
+versions = client.search_model_versions(f"name='{MODEL_NAME}'")
+
+known_good_version = None
+for version in sorted(versions, key=lambda item: item.creation_timestamp, reverse=True):
+    if (
+        version.creation_timestamp < INCIDENT_START_TIMESTAMP
+        and version.tags.get("security_status") == "clean"
+        and "sha256_hash" in version.tags
+    ):
+        known_good_version = version
+        break
+
+if not known_good_version:
+    print("ERROR: No trusted pre-incident version found!")
+    sys.exit(1)
+
+print(f"Last known-good version: {known_good_version.version}")
+print(f"Expected hash: {known_good_version.tags['sha256_hash']}")</code></pre><h5>Step 2: Verify the artifact before deployment</h5><pre><code># File: restore/verify_artifact.py
+import hashlib
+import sys
+from mlflow.tracking import MlflowClient
+
+
+def get_sha256_hash(filepath: str) -> str:
+    digest = hashlib.sha256()
+    with open(filepath, "rb") as handle:
+        for chunk in iter(lambda: handle.read(8192), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+client = MlflowClient()
+version = client.get_model_version("My-Production-Model", "3")
+authorized_hash = version.tags.get("sha256_hash")
+
+if not authorized_hash:
+    print("ERROR: trusted hash missing")
+    sys.exit(1)
+
+local_path = client.download_artifacts(version.run_id, "model")
+artifact_file = local_path + "/model.pkl"
+actual_hash = get_sha256_hash(artifact_file)
+
+if actual_hash != authorized_hash:
+    print("CRITICAL: Hash mismatch")
+    sys.exit(1)
+
+print("Backup integrity verified")</code></pre><h5>Step 3: Redeploy the trusted model and serving stack through a controlled workflow</h5><pre><code># File: .github/workflows/rollback_production_model.yml
+name: Rollback Production Model
+
+on:
+  workflow_dispatch:
+    inputs:
+      model_name:
+        required: true
+      version_to_restore:
+        required: true
+      serving_image_digest:
+        required: true
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify artifact integrity
+        run: python restore/verify_artifact.py
+      - name: Deploy known-good stack
+        run: |
+          ./deploy_inference_service.sh \
+            --model_version \${{ github.event.inputs.version_to_restore }} \
+            --image_digest \${{ github.event.inputs.serving_image_digest }}</code></pre><p><strong>Action:</strong> Treat the registry query, artifact-verification log, and rollback workflow run as one evidence bundle for this guidance. Rollback is complete only when the trusted model <em>and</em> its serving runtime are restored together through the audited runbook.</p>`
                         }
                     ],
                     "toolsOpenSource": [
@@ -215,7 +285,7 @@ export const restoreTactic = {
                 {
                     "id": "AID-R-001.002",
                     "name": "Model Retraining for Remediation", "pillar": ["model"], "phase": ["improvement"],
-                    "description": "This sub-technique covers the restoration workflow for when a model's integrity has been compromised by its training data (e.g., via data poisoning or backdoor attacks). It involves a multi-stage process: first, identifying and removing the malicious data or client influence; second, retraining a new model from scratch using only the resulting sanitized dataset; and third, validating that the new model is both secure and performant. This approach is more comprehensive than a simple rollback and is necessary when no trusted model backup exists.",
+                    "description": "This sub-technique covers restoration when the compromised model cannot simply be rolled back to a trusted prior version. It focuses on building sanitized recovery-training inputs, launching a fresh retraining or recovery-learning workflow, and proving the remediated model is safe enough to return to service.",
                     "toolsOpenSource": [
                         "MLOps platforms (MLflow, Kubeflow Pipelines, DVC)",
                         "Federated Learning frameworks (TensorFlow Federated, Flower, PySyft)",
@@ -312,12 +382,55 @@ export const restoreTactic = {
                     ],
                     "implementationGuidance": [
                         {
-                            "implementation": "Identify and evict malicious data points, poisoned graph nodes, or compromised federated clients before retraining.",
-                            "howTo": "<h5>Concept:</h5><p>Before you retrain a \"clean\" model, you must build a sanitized dataset. That means removing the exact samples, graph nodes/edges, or client contributions that introduced the backdoor, skew, or bias. This step uses outputs from detection / eviction techniques (e.g. AID-D-012 for graph anomaly detection, AID-E-003.002 for poisoned data cleansing, or federated client trust scoring).</p><h5>Automated Cleansing Script</h5><pre><code># File: remediation/cleanse_data.py\n# full_dataset: pandas DataFrame or similar\n# malicious_indices: list of row indices flagged as poisoned or malicious\n\ndef create_clean_dataset(full_dataset, malicious_indices):\n    print(f\"Original dataset size: {len(full_dataset)}\")\n    clean_dataset = full_dataset.drop(index=malicious_indices)\n    print(f\"Removed {len(malicious_indices)} malicious data points.\")\n    print(f\"Cleansed dataset size: {len(clean_dataset)}\")\n    return clean_dataset\n\n# Graph case: remove malicious nodes/edges (see AID-E-003.004)\n# Federated case: exclude updates from all clients flagged as malicious.\n</code></pre><p><strong>Action:</strong> Build a repeatable cleansing step that (1) takes the list of malicious artifacts (indices, node IDs, client IDs), (2) produces a \"cleansed\" dataset or graph snapshot, and (3) logs exactly what was removed (who/what/when) into your incident record for audit and accountability.</p>"
-                        },
-                        {
-                            "implementation": "Trigger a secure, isolated full retraining job using only the cleansed dataset.",
-                            "howTo": "<h5>Concept:</h5><p>If the model itself is already compromised (e.g. embedded backdoor neurons, heavily poisoned fine-tune), fine-tuning is often not enough. The most reliable remediation is to train a fresh model from scratch using only the sanitized data. This must happen in a hardened, controlled environment so you don't reintroduce the same exploit via tampered training code or dependencies.</p><h5>Launch a Controlled Retraining Pipeline</h5><pre><code># 1. Version-control the cleansed dataset (e.g. with DVC or object storage + hash)\n# > dvc add data/cleansed_dataset_v2.csv\n# > git commit -m \"feat: sanitized dataset for post-incident retraining\"\n\n# 2. Kick off a secure training pipeline\n# > ./trigger_training_pipeline.sh \\\n#      --dataset_uri s3://secure-bucket/cleansed_dataset_v2.csv \\\n#      --model_name \"my-model-remediated-v1\" \\\n#      --training_image_digest sha256:trusted_image_digest_here\n\n# 3. Ensure the training code instantiates a NEW model object\n#    (do NOT continue fine-tuning the compromised weights)\n\ndef train_new_model(clean_data):\n    model = MyModelArchitecture(...)  # fresh weights every time\n    optimizer = Adam(model.parameters())\n    # ... standard training loop on clean_data ...\n    return model\n</code></pre><p><strong>Action:</strong> The remediation playbook must require: (a) training starts from fresh weights, (b) training runs in a hardened/attested container image that has already been patched per AID-E-004, and (c) all hyperparameters, code commits, container digests, and dataset hashes are logged for audit and reproducibility.</p>"
+                            "implementation": "Retrain from sanitized recovery inputs by first removing compromised training artifacts and then launching a fresh, isolated recovery-training job.",
+                            "howTo": `<h5>Concept:</h5><p>For retraining-led recovery, dataset cleansing and fresh retraining form one operational unit. The recovery team first prepares a sanitized training input set that excludes the malicious influence, then launches a new training run from fresh weights in a hardened environment. Count this as one guidance because neither half has recovery value without the other.</p><h5>Step 1: Produce a sanitized recovery-training input set</h5><p>Select the cleansing variant that matches the affected training substrate, and preserve the exact removal manifest as incident evidence.</p><pre><code># File: remediation/prepare_retraining_inputs.py
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import pandas as pd
+import networkx as nx
+
+
+def cleanse_tabular_dataset(dataset_path: str, removal_manifest_path: str, output_path: str) -> dict:
+    df = pd.read_csv(dataset_path)
+    manifest = json.loads(Path(removal_manifest_path).read_text(encoding="utf-8"))
+    remove_rows = manifest["remove_row_ids"]
+    cleansed = df[~df["row_id"].isin(remove_rows)].copy()
+    cleansed.to_csv(output_path, index=False)
+    return {"removed_rows": len(remove_rows), "output_path": output_path}
+
+
+def cleanse_graph_dataset(graph_path: str, removal_manifest_path: str, output_path: str) -> dict:
+    graph = nx.read_gpickle(graph_path)
+    manifest = json.loads(Path(removal_manifest_path).read_text(encoding="utf-8"))
+    graph.remove_nodes_from(manifest.get("remove_nodes", []))
+    graph.remove_edges_from([tuple(edge) for edge in manifest.get("remove_edges", [])])
+    nx.write_gpickle(graph, output_path)
+    return {
+        "removed_nodes": len(manifest.get("remove_nodes", [])),
+        "removed_edges": len(manifest.get("remove_edges", [])),
+        "output_path": output_path,
+    }
+
+
+def filter_federated_clients(update_records: list[dict], blocked_client_ids: list[str]) -> list[dict]:
+    blocked = set(blocked_client_ids)
+    return [record for record in update_records if record["client_id"] not in blocked]</code></pre><p><strong>Variant notes:</strong> Use the row-level removal path when the incident output comes from <code>AID-E-003.002</code>, the graph-removal path when the incident produced a graph-manifest from <code>AID-E-003.004</code>, and the federated exclusion path when the malicious influence came from compromised client updates.</p><h5>Step 2: Launch a fresh recovery-training run</h5><pre><code># File: remediation/run_recovery_retraining.sh
+#!/usr/bin/env bash
+set -euo pipefail
+
+SANITIZED_DATASET_URI="$1"
+MODEL_NAME="$2"
+TRAINING_IMAGE_DIGEST="$3"
+
+./trigger_training_pipeline.sh \
+  --dataset_uri "\${SANITIZED_DATASET_URI}" \
+  --model_name "\${MODEL_NAME}" \
+  --training_image_digest "\${TRAINING_IMAGE_DIGEST}" \
+  --start_from_fresh_weights true \
+  --incident_mode recovery</code></pre><p><strong>Action:</strong> Treat the sanitized input manifest, the hardened training-run record, and the resulting remediated model version as one evidence bundle. Recovery retraining is not complete until the malicious input has been excluded <em>and</em> a fresh model has been produced from that sanitized input set.</p>`
                         },
                         {
                             "implementation": "Apply approximate unlearning for Federated Learning or large-scale distributed models when full retraining is prohibitively expensive.",
@@ -421,7 +534,7 @@ export const restoreTactic = {
                         "Datasets 3.1: Data poisoning (data recovery restores poisoned training datasets)",
                         "Raw Data 1.7: Lack of data trustworthiness (recovery restores data trustworthiness through validation)",
                         "Raw Data 1.11: Compromised 3rd-party datasets (recovery removes compromised third-party data)",
-                        "Agents — Core 13.1: Memory Poisoning (recovery restores poisoned RAG/vector data)"
+                        "Agents - Core 13.1: Memory Poisoning (recovery restores poisoned RAG/vector data)"
                     ]
                 }
             ],
@@ -539,22 +652,30 @@ export const restoreTactic = {
                     "framework": "Databricks AI Security Framework 3.0",
                     "items": [
                         "Platform 12.4: Unauthorized privileged access (re-auth with MFA prevents continued unauthorized access)",
-                        "Agents — Core 13.9: Identity Spoofing & Impersonation (clean identity re-establishment prevents continued impersonation)",
-                        "Agents — Core 13.3: Privilege Compromise (re-auth with proper scoping prevents privilege re-abuse)",
-                        "Agents — Tools MCP Server 13.19: Credential and Token Exposure (re-establishment replaces exposed credentials with fresh tokens)",
-                        "Agents — Core 13.1: Memory Poisoning",
-                        "Agents — Tools MCP Client 13.34: Session and State Management Failures (clean re-establishment addresses session/state management failures)"
+                        "Agents - Core 13.9: Identity Spoofing & Impersonation (clean identity re-establishment prevents continued impersonation)",
+                        "Agents - Core 13.3: Privilege Compromise (re-auth with proper scoping prevents privilege re-abuse)",
+                        "Agents - Tools MCP Server 13.19: Credential and Token Exposure (re-establishment replaces exposed credentials with fresh tokens)",
+                        "Agents - Core 13.1: Memory Poisoning",
+                        "Agents - Tools MCP Client 13.34: Session and State Management Failures (clean re-establishment addresses session/state management failures)"
                     ]
                 }
             ],
             "implementationGuidance": [
                 {
-                    "implementation": "Ensure re-established sessions use strong authentication (MFA / step-up) and hardened transport (TLS/HSTS).",
-                    "howTo": "<h5>Concept:</h5><p>After a global eviction (AID-E-005), you cannot let everyone just log back in with the same habits. All new sessions must go through stronger identity proof (e.g. MFA or step-up auth), and all network channels must be hardened to prevent attackers from hijacking re-onboarding traffic. You also temporarily run in a \"high scrutiny\" mode: shorter token lifetimes, forced refresh, no remembered-trust cookies.</p><h5>Step 1: Enforce Modern TLS Only and Enable HSTS</h5><pre><code># Example hardened Nginx/TLS config for post-incident window\nserver {\n    listen 443 ssl http2;\n    ssl_protocols TLSv1.2 TLSv1.3;           # Drop TLSv1.0/1.1\n    ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';\n    ssl_prefer_server_ciphers on;\n    add_header Strict-Transport-Security \"max-age=63072000; includeSubDomains\" always;\n    # ... rest of config ...\n}\n</code></pre><h5>Step 2: Require Step-Up / MFA for All Re-Logins After Eviction</h5><pre><code># Conceptual IdP policy (Okta/Keycloak-like pseudo-logic)\nIF user.session.was_globally_revoked == true\nAND user.auth_method == 'password_only'\nTHEN REQUIRE additional_factor IN ['push_notification','totp_code']\nELSE ALLOW access\n</code></pre><h5>Step 3: Short-Lived Tokens During Observation Window</h5><p>For the first N hours after eviction, issue only short-lived access tokens and rotate refresh tokens on every successful re-auth. High-risk API calls (like ones that let an agent write to external systems, invoke tools with side effects, or access sensitive data) should require a \"fresh\" token (recent MFA).</p><p><strong>Action:</strong> Immediately after eviction, force all users/agents to sign in again over TLS 1.2+/HSTS, require MFA or step-up auth for that first login, and temporarily shorten session/token TTL. Treat this as a temporary \"post-incident hardened mode\" with elevated requirements until monitoring (see below) shows no signs of re-compromise.</p>"
+                    "implementation": "Require MFA or step-up authentication for all restored sessions.",
+                    "howTo": "<h5>Concept:</h5><p>After global session eviction, identity proof must get stronger before any user or agent regains access. This is an identity-layer control with its own owner, evidence, and rollout path. The restore workflow should force a fresh sign-in, require MFA for all restored sessions, and demand a recent step-up event before sensitive actions proceed.</p><h5>Enforce Fresh MFA at the Session Boundary</h5><pre><code># File: app/security/session_reauth.py\nfrom time import time\n\nMAX_FRESH_AUTH_AGE_SECONDS = 10 * 60\n\n\ndef require_recent_mfa(jwt_claims: dict, require_fresh_auth: bool = True) -> None:\n    auth_methods = set(jwt_claims.get(\"amr\", []))\n    auth_time = int(jwt_claims.get(\"auth_time\", 0))\n\n    if \"mfa\" not in auth_methods:\n        raise PermissionError(\"MFA is required during the post-incident recovery window.\")\n\n    if require_fresh_auth and (time() - auth_time) > MAX_FRESH_AUTH_AGE_SECONDS:\n        raise PermissionError(\"Fresh step-up authentication is required for this operation.\")\n\n# Call require_recent_mfa(claims) on session re-establishment and before high-risk actions.\n</code></pre><p><strong>Action:</strong> Pair the application-side enforcement above with an IdP policy that disables remembered-device trust, shortens token TTL, and forces step-up for high-risk routes until the observation window closes. Store evidence of the activated policy, the TTL change, and the approval that authorized returning to normal authentication posture.</p>"
                 },
                 {
-                    "implementation": "Restore clean conversational / agent state cautiously and progressively re-enable capabilities.",
-                    "howTo": "<h5>Concept:</h5><p>During eviction (AID-E-005), you purged suspicious session state, cached prompts, tool bindings, and conversational memory to kick out the attacker and erase poisoned context. Now you need to rebuild trust for legitimate users and agents. You do <em>not</em> just reload the exact same state from before; you restore only vetted, known-good baseline state and you reintroduce capability in controlled stages.</p><h5>Step 1: Rehydrate from Trusted Snapshots</h5><p>For each agent/user, load a minimal baseline context from an auditable, integrity-checked snapshot (e.g. a signed/hashed backup taken before the compromise window). Do not restore any state captured during the suspected compromise period.</p><h5>Step 2: Stage Capability Re-Enablement</h5><p>Start the agent in a reduced-permission mode: read-only tools first, no write/execution, no external system modification. Only after a short observation period (and no suspicious activity) do you re-enable higher-privilege tools.</p><p>Each privilege escalation step (e.g. re-allowing code execution, financial transactions, production config changes) should be logged and ideally require human approval or change-control style signoff.</p><p><strong>Action:</strong> Define, in your recovery runbook, exactly: (1) which snapshot is considered trustworthy for restoring memory/context and how its integrity is verified, and (2) the staged sequence for re-granting tool capabilities. Record each capability re-enable event (who approved, timestamp) for audit and for post-incident review.</p>"
+                    "implementation": "Enforce hardened transport requirements for all restored sessions.",
+                    "howTo": "<h5>Concept:</h5><p>Transport hardening is separate from MFA. Even if identity proof is strong, restored sessions can still be exposed if re-onboarding traffic falls back to weak TLS, missing HSTS, or insecure cookies. Treat the post-incident session path as an edge-security change owned by the platform or SRE team.</p><h5>Apply a Hardened TLS and Cookie Baseline at the Edge</h5><pre><code># Example Nginx config for restored session traffic\nserver {\n    listen 443 ssl http2;\n    ssl_protocols TLSv1.2 TLSv1.3;\n    ssl_ciphers TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256;\n    ssl_session_tickets off;\n    ssl_prefer_server_ciphers off;\n\n    add_header Strict-Transport-Security \"max-age=63072000; includeSubDomains\" always;\n    add_header X-Content-Type-Options \"nosniff\" always;\n\n    proxy_cookie_path / \"/; Secure; HttpOnly; SameSite=Lax\";\n\n    location / {\n        proxy_pass http://session_backend;\n    }\n}\n</code></pre><p><strong>Action:</strong> Apply the hardened transport profile to every restored login, callback, and token-refresh endpoint before reopening access. Validate the deployment with your TLS scanner of record, archive the scan result with the incident evidence, and do not treat this transport proof as a substitute for MFA enforcement evidence.</p>"
+                },
+                {
+                    "implementation": "Restore trusted conversational or agent state from verified pre-incident snapshots.",
+                    "howTo": "<h5>Concept:</h5><p>State restoration is a data-trust problem. Only reload conversational memory, agent scratchpads, cached tool bindings, or other working state from snapshots that were captured before the compromise window and that still pass integrity verification. Do not combine this step with privilege restoration; first rehydrate trusted state, then evaluate whether higher-risk capabilities should come back later.</p><h5>Rehydrate Only Verified Pre-Incident State</h5><pre><code># File: remediation/restore_agent_state.py\nimport hashlib\nimport json\nfrom pathlib import Path\n\n\ndef sha256_text(path: Path) -> str:\n    return hashlib.sha256(path.read_bytes()).hexdigest()\n\n\ndef restore_verified_state(snapshot_path: str, manifest_path: str) -> dict:\n    snapshot = Path(snapshot_path)\n    manifest = json.loads(Path(manifest_path).read_text(encoding=\"utf-8\"))\n\n    if manifest[\"captured_at\"] >= manifest[\"compromise_window_start\"]:\n        raise RuntimeError(\"Snapshot was captured inside the compromise window.\")\n\n    observed_hash = sha256_text(snapshot)\n    if observed_hash != manifest[\"snapshot_sha256\"]:\n        raise RuntimeError(\"Snapshot integrity verification failed.\")\n\n    restored_state = json.loads(snapshot.read_text(encoding=\"utf-8\"))\n    return {\n        \"agent_id\": manifest[\"agent_id\"],\n        \"restored_state\": restored_state,\n        \"snapshot_sha256\": observed_hash,\n        \"snapshot_version\": manifest[\"snapshot_version\"],\n    }\n</code></pre><p><strong>Action:</strong> Keep a clear record of which snapshot version was restored, who approved it, and why it was considered trustworthy. If any user or agent lacks a verified pre-incident snapshot, restore only a minimal default baseline instead of copying forward untrusted state from the compromised period.</p>"
+                },
+                {
+                    "implementation": "Re-enable tools and privileges progressively after post-restore verification.",
+                    "howTo": "<h5>Concept:</h5><p>Privilege restoration is a separate recovery control. Once trusted state is back, the service should restart in a reduced-permission mode and regain higher-risk tools in stages. This lets you observe behavior at each stage and prevents one bad restore from instantly reopening write paths, external actions, or production-side effects.</p><h5>Stage Capability Re-Enablement with an Explicit Recovery Profile</h5><pre><code># File: config/recovery_profiles.yaml\nprofiles:\n  quarantine:\n    allowed_tools: [\"search_docs\", \"read_ticket\"]\n  limited:\n    allowed_tools: [\"search_docs\", \"read_ticket\", \"create_draft\"]\n  full:\n    allowed_tools: [\"search_docs\", \"read_ticket\", \"create_draft\", \"write_ticket\", \"run_approved_tool\"]\n</code></pre><pre><code># File: app/security/capability_gate.py\nimport yaml\n\nwith open(\"config/recovery_profiles.yaml\", \"r\", encoding=\"utf-8\") as handle:\n    RECOVERY_PROFILES = yaml.safe_load(handle)[\"profiles\"]\n\n\ndef tool_allowed(profile_name: str, tool_name: str) -> bool:\n    allowed_tools = set(RECOVERY_PROFILES[profile_name][\"allowed_tools\"])\n    return tool_name in allowed_tools\n</code></pre><p><strong>Action:</strong> Promote identities or agents from `quarantine` to `limited` to `full` only after the defined observation checks pass and the required approver signs off. Log every promotion event with the profile change, approver, and timestamp so post-incident review can prove exactly when sensitive capabilities were restored.</p>"
                 },
                 {
                     "implementation": "Communicate the session reset and new login requirements clearly to legitimate users.",
@@ -571,7 +692,7 @@ export const restoreTactic = {
             "name": "Post-Incident Hardening, Verification & Institutionalization",
             "pillar": ["data", "infra", "model", "app"],
             "phase": ["improvement"],
-            "description": "Following containment, recovery, and immediate tactical patching, convert the incident into durable security improvements over the following days to weeks.<br/><br/><strong>Post-Incident Steps</strong><ol><li>Produce a formal, version-controlled Post-Incident Review (PIR) that documents root cause and precise TTPs</li><li>Update threat models and risk scores based on real evidence</li><li>Enforce fixes through engineering tickets with measurable acceptance tests</li><li>Validate fixes via targeted security testing and store proof</li><li>Update policy-as-code, IaC modules, shared security libraries, and CI/CD lint rules so that the same class of failure cannot silently recur</li><li>Generate auditable communication/notification artifacts for legal, compliance, and (if needed) customers without leaking exploit detail</li></ol>",
+            "description": "Following containment, recovery, and immediate tactical patching, convert the incident into durable security improvements over the following days to weeks.<br/><br/><strong>Post-Incident Steps</strong><ol><li>Produce a formal, version-controlled Post-Incident Review (PIR) that documents root cause and precise TTPs</li><li>Update threat models and risk scores based on real evidence</li><li>Enforce fixes through engineering tickets with measurable acceptance tests</li><li>Validate fixes via targeted security testing and store proof</li><li>Update policy-as-code, IaC modules, shared security libraries, and CI/CD lint rules so that the same class of failure cannot silently recur</li><li>Generate auditable communication/notification artifacts for legal, compliance, and (if needed) customers without leaking exploit detail</li></ol><br/><br/><strong>Scoring boundary:</strong> The implementations in this family are intentionally separate because each produces a different owner workflow, evidence artifact, placement target, and maturity signal even when the underlying engineering pattern overlaps with Harden, Detect, or GRC programs.",
             "toolsOpenSource": [
                 "MITRE ATLAS Navigator (to map observed TTPs)",
                 "AI red teaming / LLM security testing frameworks (garak, Counterfit, vigil-llm)",
@@ -663,7 +784,7 @@ export const restoreTactic = {
                     "framework": "Databricks AI Security Framework 3.0",
                     "items": [
                         "Platform 12.3: Lack of incident response (PIR and hardening strengthen incident response capabilities)",
-                        "Operations 11.1: Lack of MLOps — repeatable enforced standards (hardening codifies security into MLOps standards)",
+                        "Operations 11.1: Lack of MLOps - repeatable enforced standards (hardening codifies security into MLOps standards)",
                         "Governance 4.2: Lack of end-to-end ML lifecycle (hardening improves ML lifecycle security controls)",
                         "Model 7.3: ML Supply chain vulnerabilities (hardening updates supply chain security policies)",
                         "Platform 12.2: Lack of penetration testing, red teaming and bug bounty (BAS/TTP replay validates fixes through targeted security testing)"
@@ -680,16 +801,37 @@ export const restoreTactic = {
                     "howTo": "<h5>Concept:</h5><p>Who gets notified, how fast, and with what structured data cannot be improvised. You maintain a machine-readable escalation/notification matrix that your SOAR or incident tooling can parse. It encodes severity levels, required stakeholders (CISO, ML Infra Lead, Legal, Privacy, Customer Trust), and whether regulatory/customer notice is required.</p><h5>Communication Matrix (YAML)</h5><pre><code># File: docs/incident_response/AI_COMMS_PLAN.yaml\nseverity_levels:\n  SEV-1:\n    notify:\n      - role: \"CISO\"\n      - role: \"AI Security Lead\"\n      - role: \"Legal Counsel\"\n      - role: \"Privacy Officer\"\n      - role: \"Public Status Page Owner\"\n    external_notice_required: true\n    regulatory_timer_start: true\n    customer_comm_channel: \"status_page,broadcast_email\"\n  SEV-2:\n    notify:\n      - role: \"CISO\"\n      - role: \"AI Security Lead\"\n      - role: \"Legal Counsel\"\n    external_notice_required: conditional\n    regulatory_timer_start: conditional\n  SEV-3:\n    notify:\n      - role: \"AI Security Lead\"\n    external_notice_required: false\n    regulatory_timer_start: false</code></pre><p><strong>Action:</strong> Store this matrix in version control. Your SOAR/IR runbooks should ingest it automatically to (a) page Legal/Privacy, (b) mark when regulatory clocks start, and (c) generate initial customer/regulator notification drafts. This makes escalation repeatable, auditable, and technically enforced instead of ad hoc email chains.</p>"
                 },
                 {
-                    "implementation": "Produce two reports per incident: an internal forensic report (full TTP, hashes, affected assets) and an external/regulator-safe summary (impact + remediation, no exploit PoC).",
-                    "howTo": "<h5>Concept:</h5><p>Internal teams need exact IOCs, exploited code paths, failed controls, and affected model/data artifacts. Regulators/customers need factual impact, mitigation status, and assurance — but not operational secrets or weaponizable exploit detail. Both are generated as structured artifacts tied to the incident ID.</p><h5>External / Regulator-Facing Summary Template</h5><pre><code>Title: Service Security Event on 2025-06-08\nImpact Window: 10:00–11:30 UTC\nSummary:\n  Our automated monitoring detected anomalous AI assistant responses.\n  We contained the issue and restored normal service.\nData Exposure:\n  We have no evidence of unauthorized account access.\nRemediation:\n  We deployed stricter input validation and additional output filtering.\n  We added continuous monitoring rules to detect similar attempts.\nNext Steps:\n  We are validating the fix in a controlled environment.\n</code></pre><p><strong>Action:</strong> Store (1) the internal forensic report in a restricted incident repo (including hashes of impacted model artifacts, dataset URIs, infra version IDs, SIEM gaps found); and (2) the sanitized summary as an immutable evidence item. This proves both due diligence and non-disclosure of exploit-enabling details.</p>"
+                    "implementation": "Produce a restricted internal forensic incident report.",
+                    "howTo": "<h5>Concept:</h5><p>The internal report is the full-fidelity engineering and forensic record for the incident. It should include exact TTPs, affected model or data artifact identifiers, compromised infrastructure versions, failed controls, and the evidence chain that supports root-cause analysis. This artifact belongs in a restricted repository or case-management system with explicit access control.</p><h5>Internal Forensic Report Template</h5><pre><code># File: post_mortems/INC-2026-041/internal_forensic_report.md\n# Incident: INC-2026-041\n\n## Executive Timeline\n- First confirmed malicious event:\n- Containment completed:\n- Recovery completed:\n\n## Technical Root Cause\n- Initial access vector:\n- Failed safeguard(s):\n- Affected service / model / dataset versions:\n\n## Evidence Inventory\n- Model artifact digests:\n- Dataset URIs and hashes:\n- Container image digests:\n- Relevant SIEM detection IDs:\n\n## Remediation Performed\n- Eviction actions:\n- Recovery actions:\n- Validation evidence:\n\n## Follow-up Engineering Work\n- Required tickets:\n- Owners and due dates:\n</code></pre><p><strong>Action:</strong> Store the internal report in the restricted incident repository, link every quoted digest or artifact ID back to its evidence source, and keep change history in version control. This report is the canonical engineering record used for post-incident validation, audit, and future threat-model updates.</p>"
+                },
+                {
+                    "implementation": "Produce a sanitized external or regulator-safe incident summary.",
+                    "howTo": "<h5>Concept:</h5><p>The external or regulator-safe summary has a different audience and evidence threshold. It must state what happened, what was impacted, what remediation was taken, and what obligations are still open, but it must not disclose exploit chains, live indicators, internal hostnames, or code-level details that would help an attacker reproduce the incident.</p><h5>External / Regulator-Safe Summary Template</h5><pre><code>Title: Security Event Affecting AI Service on 2026-04-08\nImpact Window: 10:00-11:30 UTC\nSummary:\n  We detected and contained a security event affecting an AI-enabled service.\nScope:\n  Impacted functionality:\n  Data categories involved:\n  Jurisdictions affected:\nRemediation:\n  Sessions were revoked, affected artifacts were restored, and additional safeguards were deployed.\nCustomer / Regulator Guidance:\n  Users should re-authenticate and follow any posted recovery instructions.\nNext Steps:\n  We are completing post-incident validation and any required notifications.\n</code></pre><p><strong>Action:</strong> Generate the sanitized summary from an approved template, require review by Legal or the incident communications owner before release, and store the signed-off version as immutable incident evidence. Treat this as a separate deliverable from the forensic report, not a redacted copy of the same document.</p>"
                 },
                 {
                     "implementation": "Trigger regulatory / legal notification workflow when regulated data or protected jurisdictions are implicated, and generate an auditable evidence bundle.",
                     "howTo": "<h5>Concept:</h5><p>Certain incidents (PII leakage, PHI exposure, payment data misuse, biometric inference) start a legal reporting clock (e.g. 72 hours). You need a repeatable workflow. The workflow gathers data category, affected jurisdictions, timeline timestamps, and containment steps into a structured bundle for Legal/Privacy.</p><h5>Breach Triage Checklist</h5><pre><code># File: incident_response/breach_triage_checklist.md\n- [ ] Incident ID assigned, severity level set\n- [ ] Legal + Privacy paged via SOAR\n- [ ] Affected data classes enumerated (PII, PHI, payment, biometric)\n- [ ] User geography mapped (EU, CA, US-CA, etc.)\n- [ ] Regulatory notification matrix consulted\n- [ ] T0 timestamp (breach confirmed) recorded to start regulatory SLA clock\n- [ ] Evidence bundle started:\n      - forensic summary (timeline, root cause)\n      - impacted systems/datasets/model versions\n      - containment and hardening actions already executed</code></pre><p><strong>Action:</strong> Implement an automated step in the incident runbook that, upon classification as SEV-1 or any PII/PHI event, (1) pages Legal/Privacy, (2) records the clock start timestamp, and (3) assembles this evidence bundle. This turns regulatory response into an operational control instead of a last-minute scramble.</p>"
                 },
                 {
-                    "implementation": "Update threat models, risk scoring, and AIDEFEND control prioritization based on real incident evidence, and commit those changes to version control.",
-                    "howTo": "<h5>Concept:</h5><p>After an incident, theoretical threats become proven threats. You must raise their likelihood, update impact assessments, and link them to the incident's PIR. This also drives prioritization of which AIDEFEND techniques/subtechniques become mandatory (baseline vs advanced vs highly specialized) for specific services going forward.</p><h5>Threat Model Diff</h5><pre><code># File: docs/THREAT_MODEL.md (Git diff)\n### Component: User Prompt API Endpoint\n- Likelihood: Medium\n+ Likelihood: High  (Observed in INC-2025-021 via Base64+homoglyph prompt injection)\nImpact: High (PII disclosure vector identified)\nMitigations:\n  - AID-H-002.001 hardened to recursively decode and detect homoglyphs\n  - AID-D-003.002 PII redaction enforced pre-response\n  - SOAR kill-switch automation (AID-I-005) now mandatory for this service\nAudit:\n  - PIR: post_mortems/2025-06-08-Prompt-Injection.md\n  - Owner: @security_lead</code></pre><p><strong>Action:</strong> Every PIR must result in a Git commit to the threat model and risk metadata. The commit must reference the incident ID and explicitly adjust likelihood/impact. This creates an auditable chain from real-world exploit → updated risk model → mandated controls.</p>"
+                    "implementation": "Update threat models and risk scores based on real incident evidence, and commit those changes to version control.",
+                    "howTo": `<h5>Concept:</h5><p>After an incident, theoretical threats become observed threats. This guidance is specifically about updating the threat-model artifact and the system's recorded likelihood or impact scores. Keep remediation-ticket creation and broader control rollout decisions in their sibling governance guidance so the evidence for this item stays a clean threat-model diff.</p><h5>Step 1: Record the incident-driven threat-model change in version control</h5><pre><code># File: docs/THREAT_MODEL.md (Git diff)
+### Component: User Prompt API Endpoint
+- Likelihood: Medium
++ Likelihood: High  (Observed in INC-2025-021 via Base64+homoglyph prompt injection)
+Impact: High (PII disclosure vector identified)
+Mitigations:
+  - AID-H-002.001 hardened to recursively decode and detect homoglyphs
+  - AID-D-003.002 PII redaction enforced pre-response
+Audit:
+  - PIR: post_mortems/2025-06-08-Prompt-Injection.md
+  - Owner: @security_lead</code></pre><h5>Step 2: Update the machine-readable risk register</h5><pre><code># File: threat_model/risk_register.yaml
+threats:
+  - threat_id: THR-PI-001
+    title: prompt injection with encoded override payloads
+    likelihood: high
+    impact: high
+    incident_reference: INC-2025-021
+    last_revalidated_at: "2026-04-09T18:42:00Z"</code></pre><p><strong>Action:</strong> Every PIR should produce a committed diff that references the incident ID and explicitly shows which likelihood or impact values changed. The evidence for this guidance is the merged threat-model change, not the downstream prioritization or ticketing workflow.</p>`
                 },
                 {
                     "implementation": "Translate PIR action items into enforceable engineering tickets with mapped AIDEFEND techniques, SLAs, owners, and machine-checkable acceptance tests.",
@@ -700,8 +842,77 @@ export const restoreTactic = {
                     "howTo": "<h5>Concept:</h5><p>After applying mitigations, you must prove they work. Replay attacker TTPs (prompt injection strings, model backdoor triggers, poisoned samples) against a staging copy. Record success/fail metrics and store them alongside the PIR.</p><h5>Targeted Regression Test Example</h5><pre><code># Run garak prompt-injection probes against the patched staging endpoint\npython -m garak --model_type rest --model_name staging-ai-bot \\\n  --probes promptinject \\\n  --report_prefix output/INC-2025-021/garak_regression\n\n# Expectation:\n#   - 0 successful prompt injection exploits\n#   - PII redaction triggered before response when sensitive entities are present\n\n# garak auto-generates results under the report_prefix directory.\n# Archive these under: post_mortems/INC-2025-021/regression_tests/</code></pre><p><strong>Action:</strong> For each high-severity incident, run focused red-team style regression tests (prompt injection scanners, BAS scenarios, poisoning replay) in staging. Store the report (JSON, CSV, etc.) under the incident’s evidence directory. This becomes audit-grade proof that the fix is effective and continuously testable.</p>"
                 },
                 {
-                    "implementation": "Institutionalize the lessons: update policy-as-code, shared security libraries, IaC modules, and CI/CD lint rules so that the fixed control becomes the new default.",
-                    "howTo": "<h5>Concept:</h5><p>Instead of relying on 'tribal knowledge' or one-time slide decks, you permanently bake the defense into code. That means updating reusable Terraform modules, baseline Kubernetes policies, input sanitization libraries, output redaction middleware, and CI/CD lint rules so future services cannot ship without the new guardrail.</p><h5>Example: Hardened Shared Sanitizer Library</h5><pre><code># File: libs/security/input_sanitizer.py  (updated post-incident)\n\ndef sanitize_user_prompt(raw_input: str) -> str:\n    # 1. Recursively decode Base64 layers\n    # 2. Detect homoglyph / mixed-script anomalies\n    # 3. Block tool-escalation or data-exfil instructions\n    # Returns a cleaned/safe prompt required by all AI-facing services\n    pass\n\n# Enforced via CI:\n# - Lint rule fails build if a public AI endpoint does NOT call sanitize_user_prompt()\n# - Terraform/Kubernetes baseline modules require output PII redaction middleware for certain services</code></pre><p><strong>Action:</strong> After each major AI security incident, update shared libraries, IaC baselines, runtime policies, and CI/CD enforcement rules to require the new mitigation. This turns one incident’s lesson into an organization-wide default hardening control, preventing silent regression in future services.</p>"
+                    "implementation": "Institutionalize the mitigation in shared security libraries and reusable runtime policy baselines so future services inherit the fixed control by default.",
+                    "howTo": `<h5>Concept:</h5><p>This guidance turns an incident-specific mitigation into a <strong>reusable runtime artifact</strong>. The artifact can be a shared middleware package, policy bundle, prompt-sanitization library, output-redaction component, or signed runtime-policy release that downstream services import directly. Keep this scope focused on reusable runtime dependencies and their release evidence; do not mix it with IaC rollout or CI gate enforcement.</p><h5>Step 1: Publish the fixed control as a versioned shared artifact</h5><pre><code># File: libs/security_guardrails/manifest.yaml
+artifact_name: security-guardrails
+artifact_version: 2.4.0
+incident_reference: INC-2026-041
+controls_included:
+  - control_id: AID-H-002.001
+    capability: recursive_prompt_decoding_and_homoglyph_detection
+    minimum_runtime_config:
+      decode_layers: 3
+      block_mixed_script_override: true
+  - control_id: AID-D-003.002
+    capability: output_pii_redaction
+    minimum_runtime_config:
+      redact_before_delivery: true
+release_owner: security-platform
+approval:
+  security_signoff: approved
+  qa_regression_suite: passed</code></pre><h5>Step 2: Ship a regression-backed shared implementation</h5><pre><code># File: libs/security_guardrails/input_sanitizer.py
+def sanitize_user_prompt(raw_input: str) -> str:
+    decoded = recursively_decode_base64(raw_input, max_layers=3)
+    decoded = normalize_homoglyphs(decoded)
+    assert_no_tool_escalation_instruction(decoded)
+    return decoded
+
+
+# File: libs/security_guardrails/tests/test_inc_2026_041.py
+def test_nested_base64_homoglyph_override_is_blocked():
+    payload = 'SWdub3JlIGFsbCDinaEg4oCcZ3VhcmRyb2FpbHPigJ0='
+    blocked = sanitize_user_prompt(payload)
+    assert 'ignore all' not in blocked.lower()</code></pre><p><strong>Action:</strong> Release the fixed mitigation as a versioned shared artifact with an incident reference, explicit control IDs, and regression evidence. The evidence for this guidance should be the artifact manifest, release notes, versioned package or policy bundle, and regression-test results.</p>`
+                },
+                {
+                    "implementation": "Enforce organization-wide adoption of the institutionalized mitigation through IaC baselines and CI/CD policy gates.",
+                    "howTo": `<h5>Concept:</h5><p>This guidance is the <strong>delivery enforcement</strong> companion to the shared-library update. Its job is to make sure new or changed services cannot bypass the institutionalized safeguard. Evidence here is not the runtime library release itself; it is the baseline module update, CI policy, and build or deployment gate that proves adoption is mandatory.</p><h5>Step 1: Encode the control requirement in reusable deployment baselines</h5><pre><code># File: terraform/modules/ai_service/main.tf
+variable "require_security_guardrails_version" {
+  type    = string
+  default = "2.4.0"
+}
+
+resource "kubernetes_config_map" "ai_security_defaults" {
+  metadata {
+    name      = "ai-security-defaults"
+    namespace = var.namespace
+  }
+
+  data = {
+    SECURITY_GUARDRAILS_VERSION = var.require_security_guardrails_version
+    REQUIRE_PROMPT_SANITIZER    = "true"
+    REQUIRE_OUTPUT_REDACTION    = "true"
+  }
+}</code></pre><h5>Step 2: Fail CI when a service does not adopt the required baseline</h5><pre><code># File: policy/check_ai_service_baseline.py
+import pathlib
+import sys
+import yaml
+
+service_config = yaml.safe_load(pathlib.Path('service.yaml').read_text())
+required_version = '2.4.0'
+
+errors = []
+if service_config.get('security_guardrails_version') != required_version:
+    errors.append(f'missing required security_guardrails_version={required_version}')
+if service_config.get('prompt_sanitizer_enabled') is not True:
+    errors.append('prompt sanitizer must be enabled')
+if service_config.get('output_redaction_enabled') is not True:
+    errors.append('output redaction must be enabled')
+
+if errors:
+    for error in errors:
+        print(f'POLICY_ERROR: {error}')
+    sys.exit(1)</code></pre><p><strong>Action:</strong> Update the reusable IaC baseline and CI policy so services cannot deploy without the required institutionalized control version. The evidence for this guidance should be the baseline-module PR, the policy-gate code, and successful CI or deployment records showing the mandate is enforced.</p>`
                 },
                 {
                     "implementation": "Share sanitized TTPs and mitigations with trusted intelligence channels (e.g. ISAC, MISP) without exposing proprietary details.",
@@ -790,10 +1001,10 @@ export const restoreTactic = {
                         "Datasets 3.1: Data poisoning (rollback removes poisoned embeddings from vector index)",
                         "Raw Data 1.7: Lack of data trustworthiness (rollback restores trustworthy vector index state)",
                         "Raw Data 1.11: Compromised 3rd-party datasets (rollback removes compromised third-party RAG content)",
-                        "Agents — Core 13.1: Memory Poisoning (rollback removes poisoned RAG content from agent retrieval)",
-                        "Agents — Core 13.12: Agent Communication Poisoning (rollback removes poisoned content propagated through RAG)",
-                        "Agents — Core 13.5: Cascading Hallucination Attacks",
-                        "Agents — Tools MCP Server 13.24: Context Spoofing and Manipulation (rollback removes spoofed/manipulated context from retrieval index)"
+                        "Agents - Core 13.1: Memory Poisoning (rollback removes poisoned RAG content from agent retrieval)",
+                        "Agents - Core 13.12: Agent Communication Poisoning (rollback removes poisoned content propagated through RAG)",
+                        "Agents - Core 13.5: Cascading Hallucination Attacks",
+                        "Agents - Tools MCP Server 13.24: Context Spoofing and Manipulation (rollback removes spoofed/manipulated context from retrieval index)"
                     ]
                 }
             ],
@@ -811,8 +1022,12 @@ export const restoreTactic = {
                     "howTo": "<h5>Concept:</h5><p>After rollback, you're running on an older snapshot. You still need a new 'good' index to go forward. That rebuild pipeline must enforce provenance and content policy before anything is eligible for production. Steps:</p><ol><li>Enumerate only allowlisted sources (approved repos, curated knowledge base, compliance-approved docs).</li><li>Verify each document's hash matches an expected value or signed attestation. Reject modified or unverified sources.</li><li>Run automated content/policy scans to block high-risk chunks (PII leakage, self-referential jailbreak instructions, 'ignore safety and do X', 'dump secrets', etc.).</li><li>Embed and index only the chunks that pass.</li><li>Generate a new manifest (index_version, per-chunk hash, scan results, embedding model hash, build timestamp).</li><li>Open a change request that requires explicit AI security / platform security approval before alias cutover.</li></ol><h5>Example (conceptual pipeline snippet):</h5><pre><code># Pseudocode for secure rebuild\nfor doc in approved_content_inventory:\n    if !verify_source_hash(doc):\n        continue  # reject untrusted/altered sources\n    if !passes_policy_scan(doc):\n        continue  # reject exfil/jailbreak/secret-leak patterns\n\n    embedding = embed(doc.text, model=\"text-embedding-3-large\")\n    record = {\n        \"vector\": embedding,\n        \"text\": doc.text,\n        \"source_uri\": doc.uri,\n        \"provenance_hash\": doc.sha256,\n        \"ingested_at\": now(),\n        \"policy_scan_pass\": true\n    }\n    add_to_index_build(\"rag_index_v43_candidate\", record)\n\n# produce signed manifest, then request security approval to promote\ncreate_change_request(\n    candidate_index=\"rag_index_v43_candidate\",\n    risk_summary=\"all quarantined content excluded; policy scans passed\",\n    approver_role=\"AI_Security_Oncall\"\n)</code></pre><p><h5>Promotion control / auditability:</h5><p>The alias (e.g. <code>rag_prod</code>) must <strong>not</strong> point to the new index until AI Security (or equivalent risk owner) signs off. That approval event, plus the manifest signature, becomes auditable evidence of due diligence. This mirrors model rollback / restore controls in <code>AID-R-001</code>.</p>"
                 },
                 {
-                    "implementation": "Continuously monitor retrieval context for high-risk patterns and auto-trigger rollback/quarantine.",
-                    "howTo": "<h5>Concept:</h5><p>Recovery only works if you know you’re poisoned. Add runtime detectors that watch the <em>retrieved context chunks</em> (not just final LLM answer) for indicators such as:</p><ul><li>Explicit instructions to bypass safety policies (\"ignore previous rules\", \"return secrets\").</li><li>Credential-like strings (API keys, tokens, secrets).</li><li>High similarity to previously quarantined malicious payloads.</li><li>Adversarial prompt scaffolding that forces tool invocation or data exfil.</li></ul><p>When a detector fires above threshold, trigger an automatic workflow:<br>1. mark the current index version as tainted in its manifest,<br>2. quarantine those chunks (see previous strategy),<br>3. cut the alias back to last known-good snapshot immediately.</p><p>These detectors can run in the retrieval layer or as middleware in the agent pipeline before the LLM sees the context. This reduces time-to-containment for RAG poisoning attacks from hours to seconds.</p>"
+                    "implementation": "Continuously monitor retrieved context for high-risk injection or poisoning patterns.",
+                    "howTo": "<h5>Concept:</h5><p>Detection must happen on the retrieved chunks themselves, not only on the final model response. This control should inspect retrieved context for jailbreak instructions, secrets, policy-bypass phrases, or similarity to previously quarantined malicious content, then emit a structured risk finding. Do not bundle rollback logic into the detector; the detector's job is to score and report.</p><h5>Score Retrieved Chunks Before They Reach the Model</h5><pre><code># File: rag/retrieval_risk_detector.py\nimport re\nfrom dataclasses import dataclass\n\nHIGH_RISK_PATTERNS = [\n    re.compile(r\"ignore (all|previous) instructions\", re.IGNORECASE),\n    re.compile(r\"(api[_-]?key|access[_-]?token|secret)\", re.IGNORECASE),\n    re.compile(r\"exfiltrat(e|ion)|send .* to http\", re.IGNORECASE),\n]\n\n\n@dataclass\nclass RetrievalFinding:\n    chunk_id: str\n    risk_score: int\n    reason: str\n\n\ndef score_chunk(chunk_id: str, text: str) -> RetrievalFinding | None:\n    for pattern in HIGH_RISK_PATTERNS:\n        if pattern.search(text):\n            return RetrievalFinding(chunk_id=chunk_id, risk_score=90, reason=pattern.pattern)\n    return None\n</code></pre><p><strong>Action:</strong> Run this detector in the retrieval service or pre-generation middleware, send every finding to your SIEM or incident event stream, and attach the detector version, index version, and chunk IDs to the event. This evidence belongs to the monitoring side of recovery and should stay independent from the response automation that may follow.</p>"
+                },
+                {
+                    "implementation": "Trigger automated rollback or quarantine workflows when retrieval-risk thresholds are crossed.",
+                    "howTo": "<h5>Concept:</h5><p>Response automation belongs after detection. Once retrieval-risk findings cross a defined threshold, the platform should mark the active index as tainted, quarantine the implicated chunks, and cut traffic back to a trusted alias or snapshot. This workflow may run fully automatically or behind an approval gate, but it should consume structured detector output rather than re-scanning content itself.</p><h5>Consume Detector Findings and Execute the Recovery Workflow</h5><pre><code># File: rag/retrieval_response.py\n\ndef handle_retrieval_risk_event(event: dict, index_registry, alias_manager, quarantine_store) -> str:\n    if event[\"risk_score\"] &lt; 80:\n        return \"monitor_only\"\n\n    index_registry.mark_tainted(\n        index_name=event[\"active_index\"],\n        reason=\"retrieval-risk-threshold-crossed\",\n        incident_id=event[\"incident_id\"],\n    )\n\n    quarantine_store.quarantine_chunks(\n        chunk_ids=event[\"chunk_ids\"],\n        incident_id=event[\"incident_id\"],\n        source_index=event[\"active_index\"],\n    )\n\n    alias_manager.point_alias(\n        alias_name=event[\"serving_alias\"],\n        target_index=event[\"last_known_good_index\"],\n    )\n    return \"rollback_executed\"\n</code></pre><p><strong>Action:</strong> Define the exact risk threshold, approval mode, and fallback index selection in the recovery runbook. Archive the triggering detector event, the alias change, and the quarantine manifest together so the rollback can be justified and replayed during post-incident review.</p>"
                 }
             ],
             "toolsOpenSource": [

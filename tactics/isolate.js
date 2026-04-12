@@ -89,11 +89,11 @@ export const isolateTactic = {
                 {
                     "framework": "Databricks AI Security Framework 3.0",
                     "items": [
-                        "Agents — Core 13.2: Tool Misuse (sandboxing contains tool misuse impact)",
-                        "Agents — Core 13.11: Unexpected RCE and Code Attacks",
-                        "Agents — Core 13.4: Resource Overload (resource limits prevent overload)",
-                        "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems (sandbox isolation contains rogue agents)",
-                        "Model Serving — Inference requests 9.3: Model breakout (sandboxing prevents model breakout)",
+                        "Agents - Core 13.2: Tool Misuse (sandboxing contains tool misuse impact)",
+                        "Agents - Core 13.11: Unexpected RCE and Code Attacks",
+                        "Agents - Core 13.4: Resource Overload (resource limits prevent overload)",
+                        "Agents - Core 13.13: Rogue Agents in Multi-Agent Systems (sandbox isolation contains rogue agents)",
+                        "Model Serving - Inference requests 9.3: Model breakout (sandboxing prevents model breakout)",
                         "Model 7.3: ML Supply chain vulnerabilities (sandboxing contains compromised supply chain components)",
                         "Algorithms 5.4: Malicious libraries (sandboxing contains impact of malicious libraries)",
                         "Platform 12.4: Unauthorized privileged access"
@@ -200,11 +200,11 @@ export const isolateTactic = {
                         {
                             "framework": "Databricks AI Security Framework 3.0",
                             "items": [
-                                "Agents — Core 13.11: Unexpected RCE and Code Attacks",
-                                "Agents — Core 13.4: Resource Overload (container resource limits prevent overload)",
+                                "Agents - Core 13.11: Unexpected RCE and Code Attacks",
+                                "Agents - Core 13.4: Resource Overload (container resource limits prevent overload)",
                                 "Model 7.3: ML Supply chain vulnerabilities (hardened containers limit supply chain compromise)",
                                 "Algorithms 5.4: Malicious libraries (container isolation contains malicious library impact)",
-                                "Model Serving — Inference requests 9.7: Denial of Service (DoS) (resource quotas prevent DoS)",
+                                "Model Serving - Inference requests 9.7: Denial of Service (DoS) (resource quotas prevent DoS)",
                                 "Platform 12.4: Unauthorized privileged access"
                             ]
                         }
@@ -339,9 +339,9 @@ export const isolateTactic = {
                         {
                             "framework": "Databricks AI Security Framework 3.0",
                             "items": [
-                                "Agents — Core 13.11: Unexpected RCE and Code Attacks",
-                                "Agents — Core 13.4: Resource Overload (microVM resource limits prevent overload)",
-                                "Model Serving — Inference requests 9.3: Model breakout (microVM prevents model breakout to host)",
+                                "Agents - Core 13.11: Unexpected RCE and Code Attacks",
+                                "Agents - Core 13.4: Resource Overload (microVM resource limits prevent overload)",
+                                "Model Serving - Inference requests 9.3: Model breakout (microVM prevents model breakout to host)",
                                 "Model 7.3: ML Supply chain vulnerabilities (hardware-level isolation for compromised components)",
                                 "Algorithms 5.4: Malicious libraries (microVM isolation contains malicious library execution)",
                                 "Platform 12.4: Unauthorized privileged access"
@@ -350,12 +350,8 @@ export const isolateTactic = {
                     ],
                     "implementationGuidance": [
                         {
-                            "implementation": "Use lightweight VMs like Firecracker or Kata Containers for strong hardware-virtualized isolation.",
-                            "howTo": "<h5>Concept:</h5><p>When you need to run highly untrusted code, such as a code interpreter tool for an AI agent, standard container isolation may not be sufficient. MicroVMs like Kata Containers provide a full, lightweight hardware-virtualized environment for each pod, giving it its own kernel and isolating it from the host kernel. This provides a much stronger security boundary.</p><h5>Step 1: Define a Kata `RuntimeClass` in Kubernetes</h5><p>First, your cluster administrator must install the Kata Containers runtime. Then, they create a `RuntimeClass` object that makes this runtime available for pods to request.</p><pre><code># File: k8s/runtimeclass-kata.yaml\\napiVersion: node.k8s.io/v1\\nkind: RuntimeClass\\nmetadata:\\n  name: kata-qemu # Name of the runtime class\\n# The handler name must match how it was configured in the CRI-O/containerd node setup\\nhandler: kata-qemu</code></pre><h5>Step 2: Request the Kata Runtime in Your Pod Spec</h5><p>In the Pod specification for your untrusted workload, you specify the `runtimeClassName` to instruct Kubernetes to run this pod inside a Kata MicroVM.</p><pre><code># File: k8s/kata-pod.yaml\\napiVersion: v1\\nkind: Pod\\nmetadata:\\n  name: untrusted-code-interpreter\\nspec:\\n  # This line tells Kubernetes to use the Kata Containers runtime\\n  runtimeClassName: kata-qemu\\n  containers:\\n  - name: code-runner\\n    image: my-secure-code-runner:latest\\n    # This container will now run in its own lightweight VM</code></pre><p><strong>Action:</strong> For workloads that execute arbitrary code from untrusted sources (e.g., an agentic 'code interpreter' tool), deploy them as pods that explicitly request a hardware-virtualized runtime like Kata Containers via a `RuntimeClass`.</p>"
-                        },
-                        {
-                            "implementation": "Apply OS-level sandboxing with tools like gVisor to intercept and filter system calls.",
-                            "howTo": "<h5>Concept:</h5><p>gVisor provides a strong isolation boundary without the overhead of a full VM. It acts as an intermediary 'guest kernel' written in a memory-safe language (Go), intercepting system calls from the sandboxed application and handling them safely in user space. This dramatically reduces the attack surface exposed to the application, as it can no longer directly interact with the host's real Linux kernel.</p><h5>Step 1: Define a gVisor `RuntimeClass`</h5><p>Similar to Kata Containers, your cluster administrator must first install gVisor (using the `runsc` runtime) on the cluster nodes and create a `RuntimeClass` to expose it.</p><pre><code># File: k8s/runtimeclass-gvisor.yaml\\napiVersion: node.k8s.io/v1\\nkind: RuntimeClass\\nmetadata:\\n  name: gvisor\\nhandler: runsc # The gVisor runtime handler</code></pre><h5>Step 2: Request the gVisor Runtime in Your Pod Spec</h5><p>In the pod manifest for the workload you want to sandbox, set the `runtimeClassName` to `gvisor`.</p><pre><code># File: k8s/gvisor-pod.yaml\\napiVersion: v1\\nkind: Pod\\nmetadata:\\n  name: sandboxed-data-parser\\nspec:\\n  # This pod will be sandboxed with gVisor\\n  runtimeClassName: gvisor\\n  containers:\\n  - name: parser\\n    image: my-data-parser:latest\\n    # This container's syscalls will be intercepted by gVisor</code></pre><p><strong>Action:</strong> Use gVisor for applications that process complex, potentially malicious file formats or handle untrusted data where the primary risk is exploiting a vulnerability in the host OS kernel's system call interface.</p>"
+                            "implementation": "Use a stronger-than-container sandbox runtime for high-risk untrusted workloads, selecting either a hardware-virtualized microVM runtime or a userspace-kernel sandbox.",
+                            "howTo": "<h5>Concept:</h5><p>When an AI workflow executes highly untrusted code, parses attacker-controlled files, or runs agent tools with meaningful blast radius, a standard shared-kernel container is often not a strong enough boundary. Use a sandbox runtime that inserts an additional isolation layer between the workload and the host kernel. In practice, most teams choose one of two runtime families: a hardware-virtualized microVM runtime such as Kata Containers, or a userspace-kernel sandbox such as gVisor.</p><h5>Variant A: Hardware-Virtualized MicroVM Runtime</h5><p>Choose a microVM runtime when you want each high-risk pod to run with its own lightweight VM boundary and guest kernel. This is the strongest isolation option for workloads such as agent code interpreters, document converters, and malware-analysis sandboxes.</p><pre><code># File: k8s/runtimeclass-kata.yaml\\napiVersion: node.k8s.io/v1\\nkind: RuntimeClass\\nmetadata:\\n  name: kata-qemu\\nhandler: kata-qemu</code></pre><pre><code># File: k8s/pods/untrusted-code-runner.yaml\\napiVersion: v1\\nkind: Pod\\nmetadata:\\n  name: untrusted-code-runner\\n  namespace: ai-sandbox\\nspec:\\n  runtimeClassName: kata-qemu\\n  containers:\\n  - name: runner\\n    image: registry.example.com/ai/code-runner:2026.04.08\\n    securityContext:\\n      allowPrivilegeEscalation: false\\n      capabilities:\\n        drop: [\\\"ALL\\\"]\\n      readOnlyRootFilesystem: true</code></pre><h5>Variant B: Userspace-Kernel Sandbox</h5><p>Choose a userspace-kernel sandbox such as gVisor when you want stronger syscall mediation than a default container runtime without paying the full overhead of a VM per workload. This is a good fit for data parsers, OCR workers, or retrieval pre-processors that handle complex and potentially malicious inputs.</p><pre><code># File: k8s/runtimeclass-gvisor.yaml\\napiVersion: node.k8s.io/v1\\nkind: RuntimeClass\\nmetadata:\\n  name: gvisor\\nhandler: runsc</code></pre><pre><code># File: k8s/pods/sandboxed-parser.yaml\\napiVersion: v1\\nkind: Pod\\nmetadata:\\n  name: sandboxed-parser\\n  namespace: ai-sandbox\\nspec:\\n  runtimeClassName: gvisor\\n  containers:\\n  - name: parser\\n    image: registry.example.com/ai/parser:2026.04.08\\n    securityContext:\\n      allowPrivilegeEscalation: false\\n      capabilities:\\n        drop: [\\\"ALL\\\"]\\n      readOnlyRootFilesystem: true</code></pre><h5>Runtime Selection Rule</h5><p>Do not score both runtime families as separate isolation recommendations for the same workload unless you genuinely operate both patterns in different contexts. Pick the runtime family that matches the workload risk and performance profile, codify that choice in Kubernetes `RuntimeClass` policy, and require high-risk pods to request that runtime explicitly.</p><p><strong>Action:</strong> Classify AI workloads that execute untrusted logic or parse attacker-controlled content as <code>sandbox-required</code>, then bind them to an approved hardened runtime family such as Kata Containers or gVisor through `RuntimeClass` admission policy and workload manifests.</p>"
                         },
                         {
                             "implementation": "Define strict seccomp-bpf profiles to whitelist only necessary system calls for model inference.",
@@ -392,9 +388,9 @@ export const isolateTactic = {
                         {
                             "framework": "Databricks AI Security Framework 3.0",
                             "items": [
-                                "Agents — Core 13.2: Tool Misuse (ephemeral teardown prevents tool misuse persistence)",
-                                "Agents — Core 13.11: Unexpected RCE and Code Attacks",
-                                "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems (ephemeral sandboxes prevent rogue agent persistence)"
+                                "Agents - Core 13.2: Tool Misuse (ephemeral teardown prevents tool misuse persistence)",
+                                "Agents - Core 13.11: Unexpected RCE and Code Attacks",
+                                "Agents - Core 13.13: Rogue Agents in Multi-Agent Systems (ephemeral sandboxes prevent rogue agent persistence)"
                             ]
                         }
                     ],
@@ -409,45 +405,42 @@ export const isolateTactic = {
                 },
                 {
                     "id": "AID-I-001.004",
-                    "name": "Seccomp-bpf & Network Egress Restrictions",
+                    "name": "Sandbox Network Egress Restrictions",
                     "pillar": ["infra"],
                     "phase": ["operation"],
-                    "description": "Minimize kernel/system call surface and restrict outbound network destinations for sandboxed executions to reduce post-exploitation blast radius.",
+                    "description": "Restrict outbound network destinations for sandboxed executions with default-deny egress policy and narrow allowlists to reduce exfiltration, callback traffic, and lateral movement after code execution.",
                     "defendsAgainst": [
-                        { "framework": "MITRE ATLAS", "items": ["AML.T0072 Reverse Shell", "AML.T0025 Exfiltration via Cyber Means", "AML.T0050 Command and Scripting Interpreter", "AML.T0089 Process Discovery (syscall filtering blocks process enumeration)", "AML.T0102 Generate Malicious Commands (seccomp restrictions limit execution of generated malicious commands)", "AML.T0105 Escape to Host", "AML.T0106 Exploitation for Credential Access"] },
-                        { "framework": "MAESTRO", "items": ["Lateral Movement (Cross-Layer)", "Privilege Escalation (Cross-Layer)", "Data Leakage (Cross-Layer) (egress restrictions prevent data exfiltration)", "Orchestration Attacks (L4)"] },
+                        { "framework": "MITRE ATLAS", "items": ["AML.T0072 Reverse Shell", "AML.T0025 Exfiltration via Cyber Means", "AML.T0050 Command and Scripting Interpreter"] },
+                        { "framework": "MAESTRO", "items": ["Lateral Movement (Cross-Layer)", "Data Leakage (Cross-Layer) (egress restrictions prevent data exfiltration)", "Orchestration Attacks (L4)"] },
                         { "framework": "OWASP LLM Top 10 2025", "items": ["LLM06:2025 Excessive Agency", "LLM02:2025 Sensitive Information Disclosure (egress restrictions block exfiltration)"] },
                         { "framework": "OWASP ML Top 10 2023", "items": ["ML05:2023 Model Theft (network restrictions prevent model exfiltration)"] },
-                        { "framework": "OWASP Agentic AI Top 10 2026", "items": ["ASI02:2026 Tool Misuse and Exploitation", "ASI05:2026 Unexpected Code Execution (RCE)"] },
+                        { "framework": "OWASP Agentic AI Top 10 2026", "items": ["ASI02:2026 Tool Misuse and Exploitation"] },
                         { "framework": "NIST Adversarial Machine Learning 2025", "items": ["NISTAML.039 Compromising connected resources", "NISTAML.031 Model Extraction (network restrictions block extraction)"] },
-                        { "framework": "Cisco Integrated AI Security and Safety Framework", "items": ["AISubtech-9.1.1 Code Execution", "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access", "AITech-8.2 Data Exfiltration / Exposure", "AITech-14.1 Unauthorized Access"] },
+                        { "framework": "Cisco Integrated AI Security and Safety Framework", "items": ["AISubtech-9.1.3 Unauthorized or Unsolicited Network Access", "AITech-8.2 Data Exfiltration / Exposure"] },
                         {
                             "framework": "Google Secure AI Framework 2.0 - Risks",
                             "items": [
                                 "MXF: Model Exfiltration (network egress restrictions block model exfiltration)",
                                 "SDD: Sensitive Data Disclosure (egress restrictions prevent data exfiltration)",
-                                "RA: Rogue Actions (syscall filtering and egress restrictions limit rogue action capabilities)",
-                                "IIC: Insecure Integrated Component (seccomp profiles restrict compromised component capabilities)"
+                                "RA: Rogue Actions (egress restrictions limit post-compromise outbound actions)"
                             ]
                         },
                         {
                             "framework": "Databricks AI Security Framework 3.0",
                             "items": [
                                 "Model 7.2: Model assets leak (egress restrictions block model asset exfiltration)",
-                                "Agents — Core 13.11: Unexpected RCE and Code Attacks",
-                                "Agents — Tools MCP Server 13.23: Data Exfiltration (network egress restrictions block data exfiltration)",
-                                "Model Serving — Inference requests 9.3: Model breakout (seccomp restrictions prevent breakout)",
-                                "Platform 12.4: Unauthorized privileged access"
+                                "Agents - Core 13.11: Unexpected RCE and Code Attacks",
+                                "Agents - Tools MCP Server 13.23: Data Exfiltration (network egress restrictions block data exfiltration)"
                             ]
                         }
                     ],
                     "implementationGuidance": [
                         {
-                            "implementation": "Apply minimal seccomp profiles and enforce egress-allowlist NetworkPolicies.",
-                            "howTo": "<h5>Concept:</h5><p>This control locks down two of the most critical breakout vectors after code execution inside a sandbox: 1) kernel/syscall abuse and 2) uncontrolled outbound network access (exfiltration, reverse shells, C2 beacons). We do this in two layers: (a) a seccomp-bpf profile that only allows the small set of syscalls the workload truly needs, and (b) a Kubernetes NetworkPolicy that denies all egress by default and explicitly allows traffic only to known-safe internal services or addresses.</p><h5>Part 1: Minimal Seccomp Profile</h5><p>Generate (or handcraft) a seccomp profile that whitelists only the syscalls required for model inference or tool logic. Everything else is blocked with <code>SCMP_ACT_ERRNO</code>. Then attach that profile via <code>securityContext.seccompProfile</code> in the Pod spec.</p><pre><code># File: /var/lib/kubelet/seccomp/profiles/tool-sandbox.json\n{\n  \"defaultAction\": \"SCMP_ACT_ERRNO\",\n  \"architectures\": [\"SCMP_ARCH_X86_64\"],\n  \"syscalls\": [\n    {\n      \"names\": [\n        \"accept4\", \"bind\", \"brk\", \"close\", \"epoll_wait\",\n        \"futex\", \"mmap\", \"mprotect\", \"munmap\",\n        \"read\", \"recvfrom\", \"sendto\", \"socket\", \"write\"\n      ],\n      \"action\": \"SCMP_ACT_ALLOW\"\n    }\n  ]\n}</code></pre><pre><code># In your Pod/Deployment spec (excerpt)\nspec:\n  containers:\n  - name: my-tool-container\n    image: my-secure-runner:latest\n    securityContext:\n      allowPrivilegeEscalation: false\n      readOnlyRootFilesystem: true\n      capabilities:\n        drop: [\"ALL\"]\n      seccompProfile:\n        type: Localhost\n        localhostProfile: \"profiles/tool-sandbox.json\"</code></pre><p><strong>Effect:</strong> Even if an attacker achieves arbitrary code execution inside this container/pod, many dangerous syscalls (e.g. <code>ptrace</code>, <code>mount</code>, <code>reboot</code>, <code>clone3</code> variants used for container escapes) are simply not available. This sharply limits kernel exploitation and privilege escalation paths.</p><h5>Part 2: Default-Deny Egress with Explicit Allowlist</h5><p>By default, Kubernetes lets pods call out to anything on the network. That makes data exfiltration and reverse shells trivial. You must apply a NetworkPolicy that denies egress unless it matches an explicit allow rule. Then you selectively allow only the destinations this sandbox truly needs (for example, an internal inference API or a metadata service proxy).</p><pre><code># File: k8s/policies/default-deny-egress.yaml\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: default-deny-all-egress\n  namespace: ai-sandbox\nspec:\n  podSelector: {}\n  policyTypes:\n  - Egress\n  egress: []  # No egress allowed by default</code></pre><pre><code># File: k8s/policies/allow-egress-to-internal-api.yaml\napiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: allow-sandbox-to-internal-api\n  namespace: ai-sandbox\nspec:\n  podSelector:\n    matchLabels:\n      role: sandboxed-tool\n  policyTypes:\n  - Egress\n  egress:\n  - to:\n    - namespaceSelector:\n        matchLabels:\n          name: ai-core-services\n      podSelector:\n        matchLabels:\n          app: inference-gateway\n    ports:\n    - protocol: TCP\n      port: 8443</code></pre><p><strong>Effect:</strong> The sandboxed pod can only talk to the explicitly approved service(s) on approved ports. Any attempt to open an arbitrary reverse shell to the internet, beacon to an attacker C2 host, or exfiltrate secrets to an external address will be blocked at the cluster network layer.</p><p><strong>Action:</strong> For every high-risk AI runtime (agent tool runner, model inference worker handling untrusted input, code-execution sandbox), attach: (1) a tight seccomp profile via <code>securityContext</code> to remove dangerous syscalls, and (2) a default-deny egress NetworkPolicy plus narrow allowlists. Together, these two controls drastically reduce the blast radius of post-exploitation activity, lateral movement, and data exfiltration.</p>"
+                            "implementation": "Enforce default-deny outbound egress allowlists for sandboxed runtimes.",
+                            "howTo": "<h5>Concept:</h5><p>Once an attacker gains code execution inside a sandbox, the next move is often outbound communication: reverse shells, data exfiltration, credential harvesting, or callback traffic to a command-and-control endpoint. Treat outbound connectivity as an explicit privilege. Sandboxed runtimes should start from <code>deny all egress</code> and then receive narrowly reviewed allow rules only for the internal services they genuinely need.</p><h5>Step 1: Establish a Default-Deny Egress Baseline</h5><p>Apply a namespace-level egress-deny policy so newly created sandbox pods cannot initiate outbound connections unless a more specific allow rule exists.</p><pre><code># File: k8s/policies/default-deny-egress.yaml\\napiVersion: networking.k8s.io/v1\\nkind: NetworkPolicy\\nmetadata:\\n  name: default-deny-all-egress\\n  namespace: ai-sandbox\\nspec:\\n  podSelector: {}\\n  policyTypes:\\n  - Egress\\n  egress: []</code></pre><h5>Step 2: Add Narrow Allow Rules for Required Internal Dependencies</h5><p>Grant outbound access only to explicitly approved destinations such as an internal inference gateway, artifact proxy, or logging endpoint. Scope the rule by pod label, destination label, protocol, and port.</p><pre><code># File: k8s/policies/allow-egress-to-internal-api.yaml\\napiVersion: networking.k8s.io/v1\\nkind: NetworkPolicy\\nmetadata:\\n  name: allow-sandbox-to-internal-api\\n  namespace: ai-sandbox\\nspec:\\n  podSelector:\\n    matchLabels:\\n      role: sandboxed-tool\\n  policyTypes:\\n  - Egress\\n  egress:\\n  - to:\\n    - namespaceSelector:\\n        matchLabels:\\n          name: ai-core-services\\n      podSelector:\\n        matchLabels:\\n          app: inference-gateway\\n    ports:\\n    - protocol: TCP\\n      port: 8443</code></pre><h5>Step 3: Route Reviewed Exceptions Through a Controlled Egress Path</h5><p>If a sandboxed workload must reach an external dependency, do not open arbitrary internet access. Route the request through a reviewed egress gateway or outbound proxy where destinations, DNS names, and TLS policy can be centrally logged and constrained.</p><p><strong>Action:</strong> Apply default-deny egress to every namespace or workload class that hosts sandboxed AI runtimes, then grant only the minimum reviewed outbound paths required for business function. Keep outbound rules as specific as inbound firewall rules: named owner, approved destination, explicit port list, and regular review cadence.</p>"
                         }
                     ],
-                    "toolsOpenSource": ["seccomp-bpf", "Kubernetes NetworkPolicy"],
+                    "toolsOpenSource": ["Kubernetes NetworkPolicy", "Cilium", "Project Calico"],
                     "toolsCommercial": ["Calico Enterprise", "Cilium Enterprise"]
                 },
                 {
@@ -544,7 +537,7 @@ export const isolateTactic = {
                                 "Model 7.1: Backdoor machine learning / Trojaned model (behavioral analysis detects trojaned models)",
                                 "Model 7.3: ML Supply chain vulnerabilities (pre-execution analysis vets supply chain artifacts)",
                                 "Algorithms 5.4: Malicious libraries (behavioral analysis detects malicious library behavior)",
-                                "Agents — Core 13.11: Unexpected RCE and Code Attacks"
+                                "Agents - Core 13.11: Unexpected RCE and Code Attacks"
                             ]
                         }
                     ],
@@ -651,11 +644,11 @@ export const isolateTactic = {
                     "framework": "Databricks AI Security Framework 3.0",
                     "items": [
                         "Model 7.2: Model assets leak (network segmentation limits exfiltration paths)",
-                        "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems (network isolation contains rogue agents)",
-                        "Agents — Tools MCP Server 13.23: Data Exfiltration (network segmentation blocks data exfiltration paths)",
+                        "Agents - Core 13.13: Rogue Agents in Multi-Agent Systems (network isolation contains rogue agents)",
+                        "Agents - Tools MCP Server 13.23: Data Exfiltration (network segmentation blocks data exfiltration paths)",
                         "Platform 12.4: Unauthorized privileged access (network segmentation enforces access boundaries)",
                         "Platform 12.7: Initial Access (segmentation limits initial access scope)",
-                        "Agents — Tools MCP Server 13.25: Insecure Communication"
+                        "Agents - Tools MCP Server 13.25: Insecure Communication"
                     ]
                 }
             ],
@@ -769,8 +762,8 @@ export const isolateTactic = {
                             "items": [
                                 "Model 7.2: Model assets leak (internal segmentation restricts access to model assets)",
                                 "Platform 12.4: Unauthorized privileged access (internal segmentation enforces privilege boundaries)",
-                                "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems (internal segmentation contains rogue agents)",
-                                "Agents — Core 13.3: Privilege Compromise (segmentation limits privilege escalation scope)"
+                                "Agents - Core 13.13: Rogue Agents in Multi-Agent Systems (internal segmentation contains rogue agents)",
+                                "Agents - Core 13.3: Privilege Compromise (segmentation limits privilege escalation scope)"
                             ]
                         }
                     ]
@@ -893,9 +886,9 @@ export const isolateTactic = {
                         {
                             "framework": "Databricks AI Security Framework 3.0",
                             "items": [
-                                "Agents — Tools MCP Server 13.23: Data Exfiltration (egress controls block exfiltration via external services)",
-                                "Agents — Tools MCP Server 13.25: Insecure Communication (mTLS and certificate pinning secure external channels)",
-                                "Model Serving — Inference response 10.2: Output manipulation (transport security prevents MitM on external connections)",
+                                "Agents - Tools MCP Server 13.23: Data Exfiltration (egress controls block exfiltration via external services)",
+                                "Agents - Tools MCP Server 13.25: Insecure Communication (mTLS and certificate pinning secure external channels)",
+                                "Model Serving - Inference response 10.2: Output manipulation (transport security prevents MitM on external connections)",
                                 "Model 7.3: ML Supply chain vulnerabilities (securing external model and API dependencies)"
                             ]
                         }
@@ -997,14 +990,14 @@ export const isolateTactic = {
                 {
                     "framework": "Databricks AI Security Framework 3.0",
                     "items": [
-                        "Model Serving — Inference requests 9.7: Denial of Service (DoS)",
+                        "Model Serving - Inference requests 9.7: Denial of Service (DoS)",
                         "Model Management 8.2: Model theft (throttling slows model theft via API queries)",
-                        "Agents — Core 13.4: Resource Overload (throttling prevents resource overload)",
-                        "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems (quarantine isolates rogue agents)",
-                        "Model Serving — Inference requests 9.11: Model Inference API Access (rate limiting restricts unauthorized API access)",
-                        "Model Serving — Inference response 10.5: Black-box attacks (rate limiting slows black-box attack queries)",
-                        "Agents — Core 13.3: Privilege Compromise",
-                        "Agents — Core 13.2: Tool Misuse (quarantine contains suspicious tool-calling behavior)"
+                        "Agents - Core 13.4: Resource Overload (throttling prevents resource overload)",
+                        "Agents - Core 13.13: Rogue Agents in Multi-Agent Systems (quarantine isolates rogue agents)",
+                        "Model Serving - Inference requests 9.11: Model Inference API Access (rate limiting restricts unauthorized API access)",
+                        "Model Serving - Inference response 10.5: Black-box attacks (rate limiting slows black-box attack queries)",
+                        "Agents - Core 13.3: Privilege Compromise",
+                        "Agents - Core 13.2: Tool Misuse (quarantine contains suspicious tool-calling behavior)"
                     ]
                 }
             ],
@@ -1030,8 +1023,81 @@ export const isolateTactic = {
                     "howTo": "<h5>Concept:</h5><p>A SOAR (Security Orchestration, Automation, and Response) platform is your incident-response brain. It ingests high-confidence alerts (model extraction attempt, abnormal egress, mass prompt injection) and executes a playbook: block IPs, suspend sessions, lower rate limits, move a tenant into 'safe mode', and open an investigation ticket. For high-value users or production tenants, require a human approval step before final lockout to avoid accidental mass-customer impact.</p><h5>Automated Response Playbook (Conceptual YAML)</h5><pre><code>name: \"Automated AI User Quarantine Playbook\"\ntrigger:\n  siem_alert_name: \"AI_Model_Extraction_Attempt_Detected\"\n\nsteps:\n- name: Enrich Data\n  actions:\n  - command: get_ip_from_alert\n    output: ip_address\n  - command: get_user_id_from_alert\n    output: user_id\n\n- name: Get User Reputation\n  actions:\n  - service: trust_score_api\n    command: get_score\n    inputs: { \"agent_id\": \"{{user_id}}\" }\n    output: user_trust_score\n\n- name: Conditional Quarantine\n  condition: \"{{user_trust_score}} < 0.3\"\n  actions:\n  - service: aws_waf\n    command: block_ip\n    inputs: { \"ip\": \"{{ip_address}}\" }\n  - service: okta\n    command: suspend_user_session\n    inputs: { \"user_id\": \"{{user_id}}\" }\n  - service: jira\n    command: create_ticket\n    inputs:\n      project: \"SOC\"\n      title: \"User {{user_id}} quarantined for suspected AI abuse\"\n      assignee: \"security_on_call\"\n</code></pre><p><strong>Action:</strong> Integrate AI abuse detection signals into SOAR. The playbook should (a) enrich context (who is this?), (b) score trust/risk, (c) automatically quarantine low-trust entities, and (d) open a ticket with full telemetry. For privileged / high-value tenants, require an analyst approval gate in the SOAR workflow before suspension. All actions, including who approved, become part of the audit trail.</p>"
                 },
                 {
-                    "implementation": "Hallucination Circuit Breaker & Degrade Modes.",
-                    "howTo": "<h5>Concept:</h5><p>Continuously compute safety/quality metrics for each AI agent or session, such as <code>consensus_score</code> (agreement across validators), <code>evidence_coverage</code> (ratio of claims backed by retrieved sources), <code>contradiction_rate</code> (self-inconsistency), <code>schema_error_rate</code> (output violates required schema), and <code>unknown_tool_calls</code> (attempts to invoke tools outside policy). If those metrics cross thresholds, immediately trip a circuit breaker. The breaker forces the agent/session into a containment posture: read-only, safe-tools-only, human-in-the-loop required for writes, or full quarantine. This limits downstream blast radius (data corruption, unwanted tool calls, money spend) from a compromised or drifting agent.</p><h5>Express / Node.js Middleware Example</h5><pre><code>// File: breaker.js\nexport function breaker(req, res, next) {\n  const m = req.app.locals.metrics;\n  const tripped = (\n    (m.consensus < 0.6) ||\n    (m.evidence_coverage < 0.5) ||\n    (m.contradiction_rate > 0.2) ||\n    (m.schema_error_rate > 0.1) ||\n    (m.unknown_tool_calls > 0)\n  );\n\n  if (tripped) {\n    req.app.locals.mode = \"safe_tools_only\"; // degraded mode\n    // Emit a structured security event for SIEM/SOAR\n    console.log(JSON.stringify({\n      event: \"BREAKER_TRIPPED\",\n      mode: req.app.locals.mode,\n      ts: Date.now()\n    }));\n  } else {\n    req.app.locals.mode = \"normal\";\n  }\n\n  res.set(\"X-Agent-Mode\", req.app.locals.mode);\n  next();\n}\n</code></pre><h5>FastAPI Middleware + Write Gate Example</h5><pre><code># File: app.py\nfrom fastapi import FastAPI, Request\n\napp = FastAPI()\napp.state.metrics = {\n    'consensus': 1.0,\n    'evidence_coverage': 1.0,\n    'contradiction_rate': 0.0\n}\nstate = {\"mode\": \"normal\"}\n\n@app.middleware(\"http\")\nasync def breaker_mw(req: Request, call_next):\n    m = req.app.state.metrics\n    tripped = (\n        (m['consensus'] < 0.6) or\n        (m['evidence_coverage'] < 0.5) or\n        (m['contradiction_rate'] > 0.2)\n    )\n    if tripped:\n        state[\"mode\"] = \"read_only\"\n        # Emit security/IR signal: system entered containment mode\n        print({\n            'event': 'BREAKER_TRIPPED',\n            'new_mode': state[\"mode\"],\n            'ts': 'now()'\n        })\n    else:\n        state[\"mode\"] = \"normal\"\n\n    resp = await call_next(req)\n    resp.headers[\"X-Agent-Mode\"] = state[\"mode\"]\n    return resp\n\n@app.post(\"/kb/write\")\nasync def write_kb(item: dict):\n    # Block destructive side effects if we're in degraded/containment mode\n    if state[\"mode\"] in (\"read_only\", \"safe_tools_only\"):\n        return {\"status\": \"quarantined\"}\n    # Normal write path would go here\n    return {\"status\": \"ok\"}\n</code></pre><p><strong>Action:</strong> Run breaker logic at the orchestration / API boundary (gateway, middleware, controller), not inside the agent's own prompt, so a compromised agent cannot silently bypass it. When the breaker trips, immediately (1) downgrade capabilities (read-only, safe-tools-only, HITL-required), (2) stop dangerous tool use and KB writes, and (3) emit a SIEM/SOAR event so SecOps/SRE know the system is now in containment mode. Treat this as part of incident response.</p>"
+                    "implementation": "Trip a hallucination or safety circuit breaker into a degraded operating mode when upstream health signals cross containment thresholds.",
+                    "howTo": `<h5>Concept:</h5><p>This is an <strong>enforcement / containment</strong> control. It should consume already-computed health or safety signals from detect or validation systems, such as consensus scores, evidence coverage, contradiction rate, schema error rate, or tool-policy violations. The breaker does not compute those signals itself. Its job is to translate trusted upstream signals into an operational mode such as <code>normal</code>, <code>safe_tools_only</code>, <code>read_only</code>, or <code>quarantine</code>.</p><h5>Step 1: Define a containment policy contract for upstream signals</h5><pre><code># File: isolate/breaker_policy.py
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class SafetySignalSnapshot:
+    consensus_score: float
+    evidence_coverage: float
+    contradiction_rate: float
+    schema_error_rate: float
+    unknown_tool_calls: int
+
+
+@dataclass(frozen=True)
+class BreakerDecision:
+    mode: str
+    reason: str
+
+
+def select_mode(snapshot: SafetySignalSnapshot) -> BreakerDecision:
+    if snapshot.unknown_tool_calls > 0 or snapshot.schema_error_rate >= 0.20:
+        return BreakerDecision(mode='quarantine', reason='unsafe_tool_or_schema_breach')
+    if snapshot.contradiction_rate > 0.20 or snapshot.evidence_coverage < 0.40:
+        return BreakerDecision(mode='read_only', reason='high_hallucination_risk')
+    if snapshot.consensus_score < 0.60 or snapshot.evidence_coverage < 0.55:
+        return BreakerDecision(mode='safe_tools_only', reason='quality_degradation')
+    return BreakerDecision(mode='normal', reason='within_threshold')</code></pre><h5>Step 2: Enforce the mode at the orchestration boundary</h5><pre><code># File: app.py
+from fastapi import FastAPI, Request
+from isolate.breaker_policy import BreakerDecision, SafetySignalSnapshot, select_mode
+
+app = FastAPI()
+app.state.latest_safety_signal = SafetySignalSnapshot(
+    consensus_score=1.0,
+    evidence_coverage=1.0,
+    contradiction_rate=0.0,
+    schema_error_rate=0.0,
+    unknown_tool_calls=0,
+)
+app.state.agent_mode = 'normal'
+
+
+@app.middleware('http')
+async def breaker_middleware(request: Request, call_next):
+    snapshot = request.app.state.latest_safety_signal
+    decision: BreakerDecision = select_mode(snapshot)
+    request.app.state.agent_mode = decision.mode
+
+    if decision.mode != 'normal':
+        print({
+            'event': 'BREAKER_MODE_CHANGED',
+            'mode': decision.mode,
+            'reason': decision.reason,
+        })
+
+    response = await call_next(request)
+    response.headers['X-Agent-Mode'] = decision.mode
+    return response</code></pre><h5>Step 3: Gate side effects based on the enforced mode</h5><pre><code># File: app.py
+from fastapi import HTTPException
+
+
+@app.post('/kb/write')
+async def write_kb(item: dict):
+    if app.state.agent_mode in {'read_only', 'safe_tools_only', 'quarantine'}:
+        raise HTTPException(status_code=423, detail='write path disabled while breaker is active')
+    return {'status': 'ok'}
+
+
+@app.post('/tool/execute')
+async def execute_tool(request: dict):
+    if app.state.agent_mode in {'safe_tools_only', 'quarantine'} and request.get('tool_name') not in {'search_docs', 'read_ticket'}:
+        raise HTTPException(status_code=423, detail='tool disabled by containment policy')
+    return {'status': 'accepted'}</code></pre><p><strong>Action:</strong> Place the breaker at the orchestration or API boundary, feed it only trusted upstream safety signals, and emit an auditable mode-change event whenever containment is entered or cleared. This keeps the guidance atomic for AIDEFEND productization: the evidence proves you can <em>enforce degraded modes</em> independently from the separate controls that <em>measure</em> hallucination or safety quality.</p>`
                 },
                 {
                     "implementation": "Throttle GPU/CPU for a suspicious tenant namespace in Kubernetes.",
@@ -1134,10 +1200,10 @@ export const isolateTactic = {
                 {
                     "framework": "Databricks AI Security Framework 3.0",
                     "items": [
-                        "Agents — Core 13.1: Memory Poisoning",
-                        "Agents — Core 13.6: Intent Breaking & Goal Manipulation (memory isolation prevents persistent goal manipulation)",
-                        "Agents — Core 13.12: Agent Communication Poisoning (memory isolation prevents cross-agent contamination)",
-                        "Agents — Tools MCP Server 13.24: Context Spoofing and Manipulation",
+                        "Agents - Core 13.1: Memory Poisoning",
+                        "Agents - Core 13.6: Intent Breaking & Goal Manipulation (memory isolation prevents persistent goal manipulation)",
+                        "Agents - Core 13.12: Agent Communication Poisoning (memory isolation prevents cross-agent contamination)",
+                        "Agents - Tools MCP Server 13.24: Context Spoofing and Manipulation",
                         "Datasets 3.1: Data poisoning (memory and KB treated as data vulnerable to poisoning)"
                     ]
                 }
@@ -1230,10 +1296,10 @@ export const isolateTactic = {
                         {
                             "framework": "Databricks AI Security Framework 3.0",
                             "items": [
-                                "Agents — Core 13.1: Memory Poisoning (runtime context hygiene limits memory poisoning persistence)",
-                                "Agents — Core 13.4: Resource Overload (context size limits prevent resource exhaustion)",
-                                "Agents — Tools MCP Server 13.24: Context Spoofing and Manipulation",
-                                "Model Serving — Inference requests 9.4: Looped input (context windowing prevents harmful feedback loops)"
+                                "Agents - Core 13.1: Memory Poisoning (runtime context hygiene limits memory poisoning persistence)",
+                                "Agents - Core 13.4: Resource Overload (context size limits prevent resource exhaustion)",
+                                "Agents - Tools MCP Server 13.24: Context Spoofing and Manipulation",
+                                "Model Serving - Inference requests 9.4: Looped input (context windowing prevents harmful feedback loops)"
                             ]
                         }
                     ],
@@ -1329,9 +1395,9 @@ export const isolateTactic = {
                         {
                             "framework": "Databricks AI Security Framework 3.0",
                             "items": [
-                                "Agents — Core 13.1: Memory Poisoning (partitioning limits memory poisoning to single tenant)",
-                                "Agents — Core 13.3: Privilege Compromise (authorization-gated retrieval prevents unauthorized access)",
-                                "Agents — Tools MCP Server 13.24: Context Spoofing and Manipulation (partitioning prevents cross-tenant context manipulation)",
+                                "Agents - Core 13.1: Memory Poisoning (partitioning limits memory poisoning to single tenant)",
+                                "Agents - Core 13.3: Privilege Compromise (authorization-gated retrieval prevents unauthorized access)",
+                                "Agents - Tools MCP Server 13.24: Context Spoofing and Manipulation (partitioning prevents cross-tenant context manipulation)",
                                 "Raw Data 1.1: Insufficient access controls (policy-gated retrieval enforces access controls on memory)"
                             ]
                         }
@@ -1422,8 +1488,8 @@ export const isolateTactic = {
                         {
                             "framework": "Databricks AI Security Framework 3.0",
                             "items": [
-                                "Agents — Core 13.1: Memory Poisoning (cryptographic integrity detects and prevents memory poisoning)",
-                                "Agents — Tools MCP Server 13.18: Tool Poisoning (integrity verification detects tool-sourced poisoned data)",
+                                "Agents - Core 13.1: Memory Poisoning (cryptographic integrity detects and prevents memory poisoning)",
+                                "Agents - Tools MCP Server 13.18: Tool Poisoning (integrity verification detects tool-sourced poisoned data)",
                                 "Raw Data 1.7: Lack of data trustworthiness (signed records ensure data trustworthiness)"
                             ]
                         }
@@ -1520,10 +1586,10 @@ export const isolateTactic = {
                         {
                             "framework": "Databricks AI Security Framework 3.0",
                             "items": [
-                                "Agents — Core 13.1: Memory Poisoning (promotion gates quarantine poisoned memory until reviewed)",
-                                "Agents — Core 13.10: Overwhelming Human in the Loop (structured promotion workflow prevents approval fatigue bypass)",
+                                "Agents - Core 13.1: Memory Poisoning (promotion gates quarantine poisoned memory until reviewed)",
+                                "Agents - Core 13.10: Overwhelming Human in the Loop (structured promotion workflow prevents approval fatigue bypass)",
                                 "Datasets 3.1: Data poisoning (quarantine gate prevents poisoned data from entering trusted stores)",
-                                "Agents — Core 13.6: Intent Breaking & Goal Manipulation (promotion gates prevent poisoned state from redirecting agent intent)"
+                                "Agents - Core 13.6: Intent Breaking & Goal Manipulation (promotion gates prevent poisoned state from redirecting agent intent)"
                             ]
                         }
                     ],
@@ -1625,8 +1691,8 @@ export const isolateTactic = {
                         {
                             "framework": "Databricks AI Security Framework 3.0",
                             "items": [
-                                "Agents — Core 13.1: Memory Poisoning (TTL limits temporal persistence of poisoned memory)",
-                                "Agents — Core 13.6: Intent Breaking & Goal Manipulation (staleness decay removes outdated manipulated goals)",
+                                "Agents - Core 13.1: Memory Poisoning (TTL limits temporal persistence of poisoned memory)",
+                                "Agents - Core 13.6: Intent Breaking & Goal Manipulation (staleness decay removes outdated manipulated goals)",
                                 "Raw Data 1.9: Stale data (TTL and freshness metadata address stale memory risks)"
                             ]
                         }
@@ -1732,8 +1798,8 @@ export const isolateTactic = {
                         {
                             framework: "Databricks AI Security Framework 3.0",
                             items: [
-                                "Agents — Core 13.1: Memory Poisoning",
-                                "Agents — Core 13.6: Intent Breaking & Goal Manipulation",
+                                "Agents - Core 13.1: Memory Poisoning",
+                                "Agents - Core 13.6: Intent Breaking & Goal Manipulation",
                             ],
                         },
                     ],
@@ -1867,11 +1933,11 @@ export const isolateTactic = {
                         {
                             "framework": "Databricks AI Security Framework 3.0",
                             "items": [
-                                "Agents — Core 13.1: Memory Poisoning",
-                                "Agents — Core 13.6: Intent Breaking & Goal Manipulation",
-                                "Agents — Tools MCP Server 13.19: Credential and Token Exposure",
-                                "Agents — Tools MCP Server 13.24: Context Spoofing and Manipulation",
-                                "Agents — Tools MCP Client 13.34: Session and State Management Failures"
+                                "Agents - Core 13.1: Memory Poisoning",
+                                "Agents - Core 13.6: Intent Breaking & Goal Manipulation",
+                                "Agents - Tools MCP Server 13.19: Credential and Token Exposure",
+                                "Agents - Tools MCP Server 13.24: Context Spoofing and Manipulation",
+                                "Agents - Tools MCP Client 13.34: Session and State Management Failures"
                             ]
                         }
                     ],
@@ -1980,13 +2046,13 @@ export const isolateTactic = {
                 {
                     "framework": "Databricks AI Security Framework 3.0",
                     "items": [
-                        "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems (kill-switch terminates rogue agents)",
-                        "Agents — Core 13.4: Resource Overload (kill-switch stops runaway resource consumption)",
-                        "Agents — Core 13.7: Misaligned & Deceptive Behaviors (kill-switch halts misaligned agent behavior)",
-                        "Model Serving — Inference requests 9.13: Excessive agency (kill-switch enforces operational boundaries)",
-                        "Model Serving — Inference requests 9.7: Denial of Service (DoS) (kill-switch stops ongoing DoS)",
-                        "Agents — Core 13.3: Privilege Compromise",
-                        "Agents — Core 13.11: Unexpected RCE and Code Attacks (kill-switch halts runaway code execution)"
+                        "Agents - Core 13.13: Rogue Agents in Multi-Agent Systems (kill-switch terminates rogue agents)",
+                        "Agents - Core 13.4: Resource Overload (kill-switch stops runaway resource consumption)",
+                        "Agents - Core 13.7: Misaligned & Deceptive Behaviors (kill-switch halts misaligned agent behavior)",
+                        "Model Serving - Inference requests 9.13: Excessive agency (kill-switch enforces operational boundaries)",
+                        "Model Serving - Inference requests 9.7: Denial of Service (DoS) (kill-switch stops ongoing DoS)",
+                        "Agents - Core 13.3: Privilege Compromise",
+                        "Agents - Core 13.11: Unexpected RCE and Code Attacks (kill-switch halts runaway code execution)"
                     ]
                 }
             ],
@@ -2229,10 +2295,10 @@ export const isolateTactic = {
                     "framework": "Databricks AI Security Framework 3.0",
                     "items": [
                         "Model 7.2: Model assets leak (client-side isolation prevents on-device model asset leakage)",
-                        "Agents — Core 13.11: Unexpected RCE and Code Attacks (client-side sandboxing prevents code execution on host)",
-                        "Agents — Tools MCP Server 13.23: Data Exfiltration (CSP and sandbox restrictions block client-side exfiltration)",
-                        "Agents — Tools MCP Client 13.32: Client-Side Code Execution",
-                        "Agents — Tools MCP Client 13.30: Client-Side Data Leakage (client-side isolation prevents local data leakage)"
+                        "Agents - Core 13.11: Unexpected RCE and Code Attacks (client-side sandboxing prevents code execution on host)",
+                        "Agents - Tools MCP Server 13.23: Data Exfiltration (CSP and sandbox restrictions block client-side exfiltration)",
+                        "Agents - Tools MCP Client 13.32: Client-Side Code Execution",
+                        "Agents - Tools MCP Client 13.30: Client-Side Data Leakage (client-side isolation prevents local data leakage)"
                     ]
                 }
             ],
@@ -2256,6 +2322,366 @@ export const isolateTactic = {
                 {
                     "implementation": "Enforce a minimal, allowlisted native bridge between the AI runtime and device/system capabilities (mobile, Electron, hybrid apps).",
                     "howTo": "<h5>Concept:</h5><p>On mobile and hybrid desktop apps (React Native, Capacitor, Electron, etc.), the AI model often runs in a JS or WASM sandbox but can still reach powerful native APIs through a bridge layer (filesystem, microphone, corporate tokens, VPN configs, clipboard). A malicious or hijacked model could try to call those bridge APIs to exfiltrate data or escalate privileges. The defense is to force all privileged actions through a single, allowlisted gateway module and refuse anything else by default.</p><h5>Example: restricted bridge in an Electron-style preload</h5><pre><code>// File: preload.js (runs in isolated context)\nconst { contextBridge, ipcRenderer } = require('electron');\n\n// Only expose a very small, audited surface to the AI runtime.\ncontextBridge.exposeInMainWorld('secureBridge', {\n  getRedactedScreenshot: async () => {\n    // Ask main process for a redacted screenshot instead of raw screen pixels.\n    return ipcRenderer.invoke('get-redacted-screenshot');\n  },\n  sendTelemetry: async (msg) => {\n    // Allowlisted telemetry path, can be rate-limited and logged in main.\n    if (typeof msg !== 'string' || msg.length > 2000) {\n      throw new Error('Telemetry message rejected');\n    }\n    return ipcRenderer.invoke('send-telemetry', msg);\n  }\n});\n</code></pre><h5>Usage in untrusted AI code</h5><pre><code>// File: ai_runtime.js (untrusted / model-controlled layer)\n\nasync function tryExfiltrateSensitiveData() {\n  // The model CANNOT just read files or system secrets directly.\n  // It only sees window.secureBridge, which is minimal and audited.\n  const screenshot = await window.secureBridge.getRedactedScreenshot();\n  await window.secureBridge.sendTelemetry('[summary only]\\n' + screenshot.summary);\n}\n</code></pre><p><strong>Action:</strong> In mobile / Electron / hybrid apps, do NOT let the AI runtime call arbitrary native APIs. Instead, expose a narrowly scoped, audited bridge object with an allowlist of safe functions. Enforce input validation, redaction, and rate limiting at that bridge boundary. Treat anything not on the allowlist as denied by default (fail-closed).</p>"
+                }
+            ]
+        },
+        {
+            "id": "AID-I-008",
+            "name": "Task-Scoped Browser Session & Origin Isolation for Agents",
+            "description": "Isolate browser-using agents at the session, profile, and origin boundary so malicious web content, injected workflows, and stateful browsing artifacts cannot persist across tasks or trust zones. This technique covers browser contexts, profiles, cookies, local storage, IndexedDB, cache, history, downloads, clipboard, and other browser-managed state surfaces that agentic browsing can accidentally reuse across unrelated tasks.<br/><br/><strong>Coverage includes:</strong><ul><li>Ephemeral browser context lifecycle and storage partitioning per task or trust zone.</li><li>Cross-origin read/write segmentation with step-up confirmation for sensitive actions.</li><li>Quarantine of downloads, clipboard transfers, and magic-link style authentication flows.</li></ul><strong>Scope boundary clarifications:</strong><ul><li><strong>vs AID-H-020:</strong> AID-H-020's current sub-techniques secure the fetch path and content-demotion path: which URLs may be requested, and how fetched HTML is sanitized before reaching the LLM. This technique secures the browser session and state surfaces themselves \u2014 profiles, contexts, cookies, storage, and history \u2014 which AID-H-020 does not cover.</li><li><strong>vs AID-I-001.003:</strong> AID-I-001.003 governs sandbox-level isolation for tool execution environments such as microVMs or gVisor-backed workloads. This technique governs browser-context-level isolation inside whatever sandbox or container the browser runs in, because browser engines manage their own cookies, storage, cache, and history surfaces that sandbox isolation alone does not partition.</li><li><strong>vs AID-I-004 family:</strong> AID-I-004 governs agent memory and conversational state such as in-memory context, Redis-backed session state, vector memory, and file-backed identity state. This technique governs browser-managed state surfaces such as BrowserContext, cookies, localStorage, IndexedDB, downloads, and history. Both use task-bounded segmentation patterns, but they protect different artifacts owned by different runtime subsystems.</li></ul>",
+            "defendsAgainst": [
+                {
+                    "framework": "MITRE ATLAS",
+                    "items": [
+                        "AML.T0051.001 LLM Prompt Injection: Indirect",
+                        "AML.T0080 AI Agent Context Poisoning",
+                        "AML.T0100 AI Agent Clickbait"
+                    ]
+                },
+                {
+                    "framework": "MAESTRO",
+                    "items": [
+                        "Integration Risks (L7)",
+                        "Data Exfiltration (L2)",
+                        "Agent Tool Misuse (L7)",
+                        "Compromised Agents (L7)"
+                    ]
+                },
+                {
+                    "framework": "OWASP LLM Top 10 2025",
+                    "items": [
+                        "LLM01:2025 Prompt Injection",
+                        "LLM02:2025 Sensitive Information Disclosure",
+                        "LLM06:2025 Excessive Agency"
+                    ]
+                },
+                {
+                    "framework": "OWASP ML Top 10 2023",
+                    "items": ["N/A"]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI01:2026 Agent Goal Hijack",
+                        "ASI03:2026 Identity and Privilege Abuse",
+                        "ASI06:2026 Memory & Context Poisoning",
+                        "ASI10:2026 Rogue Agents"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.015 Indirect Prompt Injection",
+                        "NISTAML.018 Prompt Injection",
+                        "NISTAML.036 Leaking information from user interactions",
+                        "NISTAML.039 Compromising connected resources"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-1.2 Indirect Prompt Injection",
+                        "AITech-4.2 Context Boundary Attacks",
+                        "AISubtech-4.2.2 Session Boundary Violation",
+                        "AITech-8.2 Data Exfiltration / Exposure",
+                        "AITech-12.1 Tool Exploitation"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "PIJ: Prompt Injection",
+                        "SDD: Sensitive Data Disclosure",
+                        "IIC: Insecure Integrated Component",
+                        "RA: Rogue Actions"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Agents - Core 13.2: Tool Misuse",
+                        "Agents - Core 13.3: Privilege Compromise",
+                        "Agents - Tools MCP Client 13.34: Session and State Management Failures"
+                    ]
+                }
+            ],
+            "subTechniques": [
+                {
+                    "id": "AID-I-008.001",
+                    "name": "Ephemeral Browser Context Lifecycle & Storage Partitioning",
+                    "pillar": ["app", "infra", "data"],
+                    "phase": ["building", "operation"],
+                    "description": "Launch a fresh browser context for each task or trust zone, partition all browser-managed state surfaces (cookies, localStorage, IndexedDB, cache, history) by origin and trust set, and destroy the context deterministically when the task ends. This prevents browsing residue, authenticated sessions, and cached resources from leaking across tasks or being reused by unrelated origins.<br/><br/><strong>Scope boundary clarifications:</strong><ul><li><strong>vs AID-H-018.004:</strong> AID-H-018.004 makes agent short-term memory (prompt state, Redis session context) ephemeral per session or task. This sub-technique applies the same ephemeral-per-task principle to browser profile state managed by the browser engine itself.</li><li><strong>vs AID-I-004.001:</strong> AID-I-004.001 isolates volatile agent runtime context such as in-memory prompt state or Redis-backed session context. This sub-technique isolates browser-managed state surfaces owned by the browser engine: cookies, localStorage, IndexedDB, cache, downloads, and navigation history.</li></ul>",
+                    "toolsOpenSource": [
+                        "Playwright",
+                        "Chromium",
+                        "Browserless",
+                        "Firefox Multi-Account Containers"
+                    ],
+                    "toolsCommercial": [
+                        "Browserbase",
+                        "Cloudflare Browser Isolation",
+                        "Menlo Security"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0100 AI Agent Clickbait",
+                                "AML.T0080 AI Agent Context Poisoning",
+                                "AML.T0086 Exfiltration via AI Agent Tool Invocation"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Compromised Agents (L7)",
+                                "Data Exfiltration (L2)",
+                                "Integration Risks (L7)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM01:2025 Prompt Injection",
+                                "LLM02:2025 Sensitive Information Disclosure"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": ["N/A"]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI03:2026 Identity and Privilege Abuse",
+                                "ASI06:2026 Memory & Context Poisoning"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.036 Leaking information from user interactions",
+                                "NISTAML.038 Data Extraction"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-4.2 Context Boundary Attacks",
+                                "AISubtech-4.2.2 Session Boundary Violation",
+                                "AITech-8.2 Data Exfiltration / Exposure"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "SDD: Sensitive Data Disclosure",
+                                "RA: Rogue Actions"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Agents - Tools MCP Client 13.30: Client-Side Data Leakage",
+                                "Agents - Tools MCP Client 13.34: Session and State Management Failures"
+                            ]
+                        }
+                    ],
+                    "implementationGuidance": [
+                        {
+                            "implementation": "Create a fresh browser context for every agent task or trust-zone transition, bind it to a task ID, and destroy it deterministically on task completion with residue verification.",
+                            "howTo": "<h5>Concept:</h5><p>A browser-using agent must never attach to the user's long-lived daily profile or a shared team profile. Every task gets a fresh <code>BrowserContext</code> that is destroyed when the task ends. This is the single most impactful browser-isolation control because Playwright's <code>BrowserContext</code> already partitions cookies, localStorage, IndexedDB, cache, and service workers automatically &mdash; if you get the lifecycle right, origin-level partitioning comes for free.</p><h5>Step 1: Create a fresh context per task and bind it to the task ID</h5><p>At the start of every agent task, create a new <code>BrowserContext</code> with no inherited state. Tag it with the task ID and trust-zone label so audit logs can correlate every network request back to a specific task.</p><pre><code>// File: browser/ephemeral_context.js\nimport { chromium } from 'playwright';\n\nexport async function createTaskContext(browser, { taskId, trustZone }) {\n  const context = await browser.newContext({\n    storageState: undefined,       // no inherited cookies or localStorage\n    serviceWorkers: 'block',       // block SW persistence across tasks\n    permissions: [],                // start with no granted permissions\n    userAgent: `AIDefendAgent/${taskId}`,\n  });\n\n  // Tag the context for audit correlation.\n  context._taskId = taskId;\n  context._trustZone = trustZone;\n  context._createdAt = Date.now();\n\n  return context;\n}\n</code></pre><h5>Step 2: Destroy the context deterministically on task end</h5><p>Whether the task succeeds, fails, or is escalated, the context must be closed. Use a <code>try/finally</code> pattern so a thrown exception cannot leave a context alive. After closing, verify no cookies or storage keys survived by attempting to re-read from the closed context (Playwright will throw, confirming disposal).</p><pre><code>// File: browser/task_runner.js\nimport { createTaskContext } from './ephemeral_context.js';\n\nexport async function runBrowserTask(browser, taskId, trustZone, taskFn) {\n  const context = await createTaskContext(browser, { taskId, trustZone });\n  try {\n    const page = await context.newPage();\n    return await taskFn(page, context);\n  } finally {\n    await context.close();\n    // Residue verification: confirm the context is truly gone.\n    try {\n      await context.cookies();\n      throw new Error(`Context for task ${taskId} survived close()`);\n    } catch (e) {\n      if (!e.message.includes('has been closed')) throw e;\n      // Expected: context is disposed.\n    }\n  }\n}\n</code></pre><h5>Step 3: Integration test &mdash; prove no state leaks between tasks</h5><p>Ship a test that runs two sequential tasks, sets a cookie in the first, and asserts the second task's context cannot see it. This test should run in CI so regressions are caught before deployment.</p><pre><code>// File: test/ephemeral_context.test.js\nimport { chromium } from 'playwright';\nimport { runBrowserTask } from '../browser/task_runner.js';\nimport assert from 'node:assert/strict';\n\nconst browser = await chromium.launch();\n\n// Task 1: set a cookie.\nawait runBrowserTask(browser, 'task-1', 'zone-a', async (page) =&gt; {\n  await page.goto('https://httpbin.org/cookies/set/secret/hunter2');\n});\n\n// Task 2: verify the cookie is NOT visible.\nawait runBrowserTask(browser, 'task-2', 'zone-a', async (page) =&gt; {\n  await page.goto('https://httpbin.org/cookies');\n  const body = await page.textContent('body');\n  assert.ok(!body.includes('hunter2'), 'Cookie from task-1 must not leak to task-2');\n});\n\nawait browser.close();\nconsole.log('PASS: no state leakage between ephemeral contexts');\n</code></pre><p><strong>Action:</strong> Wrap every browser task in a <code>createTaskContext</code> / <code>try-finally-close</code> lifecycle. Ship the residue verification test to CI. After this is in place, an auditor can confirm (a) every task correlates to a unique context ID in the audit log, (b) no context outlives its task, and (c) the CI test proves no cross-task state leakage.</p>"
+                        },
+                        {
+                            "implementation": "Define trust-set boundaries for origins and enforce state clearing or context rotation whenever a task crosses from one trust set to another.",
+                            "howTo": "<h5>Concept:</h5><p>Even within a single task, a browser agent may visit origins belonging to different trust sets (e.g., an internal wiki and a public vendor site). If both origins share the same <code>BrowserContext</code>, cookies set by the vendor site are visible when the agent navigates back to the internal wiki. The fix is either one context per trust set (preferred) or explicit state clearing on trust-boundary crossings.</p><h5>Step 1: Declare a trust-set manifest that maps origins to trust zones</h5><p>Maintain a versioned manifest (JSON or YAML) that groups origins into trust sets. This manifest is consumed by the context launcher (see the first guidance) and by the routing guard in AID-I-008.002 if both sub-techniques are deployed together.</p><pre><code>// File: policy/trust_set_manifest.json\n{\n  \"version\": \"2026.04\",\n  \"trustSets\": {\n    \"internal\": [\n      \"https://wiki.internal.corp\",\n      \"https://tickets.internal.corp\",\n      \"https://git.internal.corp\"\n    ],\n    \"vendor\": [\n      \"https://console.aws.amazon.com\",\n      \"https://portal.azure.com\"\n    ],\n    \"public\": [\n      \"*\"\n    ]\n  },\n  \"defaultTrustSet\": \"public\"\n}\n</code></pre><h5>Step 2: Create or switch <code>BrowserContext</code> on trust-boundary crossing</h5><p>When the agent's next navigation targets an origin in a different trust set than the current context, do NOT reuse the context. Either create a new context for the new trust set (and close the old one), or &mdash; if the task requires returning to the previous trust set &mdash; park the old context and resume it later without carrying state from the new trust set.</p><pre><code>// File: browser/trust_set_router.js\nimport fs from 'node:fs';\nimport { createTaskContext } from './ephemeral_context.js';\n\nconst manifest = JSON.parse(fs.readFileSync('./policy/trust_set_manifest.json', 'utf8'));\n\nfunction classifyOrigin(origin) {\n  for (const [zone, origins] of Object.entries(manifest.trustSets)) {\n    if (origins.includes(origin) || origins.includes('*')) return zone;\n  }\n  return manifest.defaultTrustSet;\n}\n\nexport async function getContextForOrigin(browser, taskId, targetOrigin, contextPool) {\n  const trustSet = classifyOrigin(targetOrigin);\n\n  if (contextPool.has(trustSet)) {\n    return { context: contextPool.get(trustSet), trustSet, reused: true };\n  }\n\n  const context = await createTaskContext(browser, { taskId, trustZone: trustSet });\n  contextPool.set(trustSet, context);\n  return { context, trustSet, reused: false };\n}\n\nexport async function closeAllContexts(contextPool) {\n  for (const [zone, ctx] of contextPool) {\n    await ctx.close();\n  }\n  contextPool.clear();\n}\n</code></pre><h5>Step 3: Log every trust-boundary crossing for audit</h5><p>Whenever the router creates a new context or switches between pooled contexts, emit a structured log entry so auditors can verify that no cross-trust-set state reuse occurred.</p><pre><code>// File: browser/trust_boundary_audit.js\nexport function logTrustBoundaryCrossing({\n  taskId,\n  previousTrustSet,\n  newTrustSet,\n  targetOrigin,\n  contextReused\n}) {\n  const entry = {\n    event: 'trust_boundary_crossing',\n    taskId,\n    previousTrustSet,\n    newTrustSet,\n    targetOrigin,\n    contextReused,\n    timestamp: new Date().toISOString()\n  };\n  // Append to structured audit log (same log sink as AID-I-008.002 step-up audit).\n  process.stdout.write(JSON.stringify(entry) + '\\n');\n}\n</code></pre><p><strong>Action:</strong> Load the trust-set manifest at agent startup, route every navigation through <code>getContextForOrigin</code>, and emit a crossing log on every trust-set transition. After this is in place, an auditor can independently (a) review the trust-set manifest, (b) verify no context was reused across trust sets by replaying the crossing log, and (c) confirm all contexts were closed at task end via the lifecycle audit from the first guidance.</p>"
+                        }
+                    ]
+                },
+                {
+                    "id": "AID-I-008.002",
+                    "name": "Cross-Origin Read/Write Segmentation with Step-Up Confirmation",
+                    "pillar": ["app"],
+                    "phase": ["building", "operation"],
+                    "description": "Separate browsing permissions by origin and effect type. Read-only origins may be inspected without authorization, but state-changing actions on sensitive or previously unseen origins must trigger explicit step-up confirmation before execution.<br/><br/><strong>Distinct from AID-D-015.002</strong>, which defines the general step-up or out-of-band confirmation mechanism for high-risk actions such as fund transfers, IAM changes, deletions, or sensitive exports. This sub-technique applies that same mechanism with browser-specific trigger conditions: cross-origin transitions, previously unseen origins, and state-changing actions on sensitive web targets.",
+                    "toolsOpenSource": [
+                        "Playwright",
+                        "Envoy (ext_authz for broker-agnostic suspension)",
+                        "Slack Bolt SDK",
+                        "Redis (for distributed pending-approvals broker)",
+                        "Open Policy Agent (OPA)"
+                    ],
+                    "toolsCommercial": [
+                        "Browserbase",
+                        "Auth0 (step-up MFA for approver identity)",
+                        "PagerDuty (alternate approval / escalation channel)"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0051.001 LLM Prompt Injection: Indirect",
+                                "AML.T0101 Data Destruction via AI Agent Tool Invocation"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Agent Tool Misuse (L7)",
+                                "Integration Risks (L7)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM06:2025 Excessive Agency"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": ["N/A"]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI01:2026 Agent Goal Hijack",
+                                "ASI02:2026 Tool Misuse and Exploitation",
+                                "ASI09:2026 Human-Agent Trust Exploitation (step-up confirmation forces user verification before agent commits to a manipulated cross-origin action)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.039 Compromising connected resources"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-12.1 Tool Exploitation",
+                                "AITech-14.2 Abuse of Delegated Authority"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "RA: Rogue Actions",
+                                "IIC: Insecure Integrated Component"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Agents - Core 13.2: Tool Misuse",
+                                "Agents - Core 13.6: Intent Breaking & Goal Manipulation"
+                            ]
+                        }
+                    ],
+                    "implementationGuidance": [
+                        {
+                            "implementation": "Classify origins into read-only and read-write trust sets, and intercept all state-changing requests with a Playwright route handler that blocks cross-origin writes until a step-up confirmation clears them.",
+                            "howTo": "<h5>Concept:</h5><p>The browser agent must not autonomously move from reading one origin to mutating another just because a page suggested it. The enforcement point is the network layer: every outbound request is classified by (origin, HTTP method, target), and any cross-origin state-changing call (POST/PUT/PATCH/DELETE) on a read-only or previously-unseen origin is paused until a broker records an explicit approval.</p><h5>Step 1: Declare an origin policy manifest</h5><p>Keep the trust-set classification in a versioned JSON manifest that ships alongside the agent runtime. Read-only origins can be inspected freely; read-write origins accept writes for the same task; sensitive origins always require step-up regardless of prior activity.</p><pre><code>// File: policy/origin_manifest.json\n{\n  \"version\": \"2026.04.09\",\n  \"readOnly\": [\n    \"https://docs.internal.corp\",\n    \"https://wiki.internal.corp\",\n    \"https://status.vendor.com\"\n  ],\n  \"readWrite\": [\n    \"https://tickets.internal.corp\"\n  ],\n  \"sensitive\": [\n    \"https://admin.internal.corp\",\n    \"https://payments.vendor.com\",\n    \"https://console.aws.amazon.com\"\n  ],\n  \"defaultAction\": \"require_stepup\"\n}\n</code></pre><h5>Step 2: Install a Playwright route() handler that classifies every request</h5><p>Use <code>page.route()</code> to intercept outbound traffic. Safe verbs (GET/HEAD/OPTIONS) on read-only origins pass through. Any state-changing verb, or any request targeting a sensitive origin, is suspended and handed to the step-up broker. A denied or timed-out approval aborts the request with a normalized error so the agent can decide whether to retry under a different plan.</p><pre><code>// File: browser/install_origin_guard.js\nimport fs from 'node:fs';\nimport { URL } from 'node:url';\n\nconst WRITE_METHODS = new Set(['POST', 'PUT', 'PATCH', 'DELETE']);\nconst manifest = JSON.parse(fs.readFileSync('./policy/origin_manifest.json', 'utf8'));\n\nfunction classifyOrigin(targetOrigin) {\n  if (manifest.sensitive.includes(targetOrigin)) return 'sensitive';\n  if (manifest.readWrite.includes(targetOrigin)) return 'read_write';\n  if (manifest.readOnly.includes(targetOrigin)) return 'read_only';\n  return 'unseen';\n}\n\nexport async function installOriginGuard(page, {\n  taskId,\n  sourceOrigin,\n  requestStepUp,\n  audit\n}) {\n  await page.route('**/*', async (route) =&gt; {\n    const request = route.request();\n    const targetOrigin = new URL(request.url()).origin;\n    const method = request.method().toUpperCase();\n    const classification = classifyOrigin(targetOrigin);\n    const isWrite = WRITE_METHODS.has(method);\n    const crossOrigin = targetOrigin !== sourceOrigin;\n\n    // Safe path: same-origin reads, or cross-origin reads on explicitly read-only targets.\n    if (!isWrite &amp;&amp; (classification === 'read_only' || !crossOrigin)) {\n      return route.continue();\n    }\n\n    // Writes to a known read-write target that the task already started on.\n    if (isWrite &amp;&amp; classification === 'read_write' &amp;&amp; !crossOrigin) {\n      audit({ taskId, targetOrigin, method, decision: 'same_origin_write' });\n      return route.continue();\n    }\n\n    // Anything else (cross-origin write, sensitive target, unseen origin) is suspended.\n    const decision = await requestStepUp({\n      taskId,\n      sourceOrigin,\n      targetOrigin,\n      method,\n      url: request.url(),\n      classification,\n      postData: request.postData()?.slice(0, 512) ?? null\n    });\n\n    audit({ taskId, targetOrigin, method, classification, decision: decision.verdict });\n\n    if (decision.verdict === 'approve') {\n      return route.continue();\n    }\n    return route.abort('blockedbyclient');\n  });\n}\n</code></pre><h5>Step 3: Wire the broker into the agent runner</h5><p>The agent controller owns <code>requestStepUp</code>. Its job is to normalize the request into a human-reviewable card (method, source origin, target origin, truncated body preview) and call out to either an automated policy engine (see the second implementation guidance below) or a human confirmation channel. Never auto-approve cross-origin writes inside the agent loop.</p><p><strong>Action:</strong> Load the origin manifest at context creation, install the route guard before any navigation, and forward every classified write to the step-up broker. Record each decision for audit.</p>"
+                        },
+                        {
+                            "implementation": "Normalize every suspended write into a standard confirmation card and resolve it through an asynchronous approval broker with timeout-default-deny, idempotent resume, and a tamper-evident audit chain.",
+                            "howTo": "<h5>Scope:</h5><p>This guidance is broker-agnostic. It applies to any enforcement layer that can produce a request-fact payload and block while waiting for a decision &mdash; the Playwright route guard from the first guidance, an Envoy <code>ext_authz</code> filter, a tool-call gate inside an agent runtime, or any custom interceptor. The independently provable outcome is: every suspended write becomes a normalized card with a bounded lifetime, every decision carries a recorded approver identity, and every record is chained so silent tampering is detectable.</p><h5>Concept:</h5><p>Once a write is suspended, three things must be true before it is allowed to resume: (1) a human (or automated decision layer &mdash; see the next implementation guidance) has seen the same normalized view of the action regardless of where the suspension came from, (2) the broker defaults to <em>deny</em> if no decision arrives within the configured window so a forgotten approval cannot silently auto-approve, and (3) a retry or double-click cannot commit the same action twice because resume is keyed on a stable <code>requestId</code>. All three are broker-level properties and do not depend on any specific interception mechanism.</p><h5>Step 1: Define the normalized confirmation card schema</h5><p>Every suspended write is normalized into a single shape so humans, automated policy engines, and downstream audit systems all see the same fields regardless of the suspension source. The card MUST carry an idempotency <code>requestId</code>, explicit <code>expiresAt</code> for default-deny on timeout, source and target origin, HTTP method, truncated URL, and a redacted body preview. Redaction happens at card construction time, not at display time, so the raw secret is never handed to an approval channel.</p><pre><code>// File: broker/confirmation_card.js\nexport function buildConfirmationCard({\n  requestId,\n  taskId,\n  agentId,\n  sourceOrigin,\n  targetOrigin,\n  method,\n  url,\n  postData,\n  timeoutMs = 120000\n}) {\n  const now = Date.now();\n  return {\n    schemaVersion: '2026.04',\n    requestId,\n    taskId,\n    agentId,\n    sourceOrigin,\n    targetOrigin,\n    method,\n    url: url.length &gt; 400 ? url.slice(0, 397) + '...' : url,\n    bodyPreview: redactSensitive(postData).slice(0, 512),\n    createdAt: new Date(now).toISOString(),\n    expiresAt: new Date(now + timeoutMs).toISOString()\n  };\n}\n\nfunction redactSensitive(text) {\n  if (!text) return '';\n  return text\n    .replace(/(password|token|authorization|secret|api[_-]?key)\\s*[:=]\\s*\"?[^\"\\s,}]+/gi, '$1=[REDACTED]')\n    .replace(/\\beyJ[A-Za-z0-9._-]+\\b/g, '[REDACTED_JWT]')\n    .replace(/\\b\\d{13,19}\\b/g, '[REDACTED_LONG_NUMBER]');\n}\n</code></pre><h5>Step 2: Implement the async broker with timeout default-deny and idempotent resume</h5><p>The broker keeps a map of pending approvals keyed by <code>requestId</code>. When a suspension arrives, the broker records the resolver and starts a timer. If the timer fires first, the promise resolves as <code>deny</code> with reason <code>timeout</code> &mdash; never silently approve on timeout, because a forgotten approval must fail closed. If a reviewer responds, the matching resolver fires once and the entry is removed; any subsequent resume call with the same <code>requestId</code> is a no-op, so retries, double-clicks, and replayed webhooks cannot commit the same write twice.</p><pre><code>// File: broker/approval_broker.js\nconst pending = new Map();\n\nexport function suspendForApproval(card) {\n  return new Promise((resolve) =&gt; {\n    const timer = setTimeout(() =&gt; {\n      if (pending.has(card.requestId)) {\n        pending.delete(card.requestId);\n        resolve({ verdict: 'deny', reason: 'timeout', approverId: null });\n      }\n    }, new Date(card.expiresAt).getTime() - Date.now());\n\n    pending.set(card.requestId, { resolve, timer, card });\n  });\n}\n\nexport function resumeApproval(requestId, verdict, approverId, reason) {\n  const entry = pending.get(requestId);\n  if (!entry) {\n    // Idempotent: a second resume (retry, double-click, replayed webhook) is a no-op.\n    return { accepted: false, reason: 'not_pending' };\n  }\n  clearTimeout(entry.timer);\n  pending.delete(requestId);\n  entry.resolve({ verdict, reason, approverId });\n  return { accepted: true };\n}\n\nexport function listPending() {\n  return Array.from(pending.values()).map((e) =&gt; e.card);\n}\n</code></pre><p>For multi-instance deployments, back <code>pending</code> with Redis so any broker replica can resume an approval, and use a Redis <code>SET NX</code> on the <code>requestId</code> inside <code>resumeApproval</code> to keep the idempotency guarantee across replicas.</p><h5>Step 3: Surface the card on a Slack approval channel</h5><p>Post each card as a Slack Block Kit message with explicit Approve and Deny buttons. The button action payload MUST carry the <code>requestId</code> so the webhook handler can call <code>resumeApproval</code> idempotently. Capture the Slack user ID as the <code>approverId</code> for the audit record. Never approve via free-text messages &mdash; only the signed button actions count as a decision, and the Slack signing secret verification is what binds the approver's identity to the recorded verdict.</p><pre><code>// File: channel/slack_approval.js\nimport { App } from '@slack/bolt';\nimport { resumeApproval } from '../broker/approval_broker.js';\nimport { appendAuditEntry } from './audit_log.js';\n\nconst app = new App({\n  token: process.env.SLACK_BOT_TOKEN,\n  signingSecret: process.env.SLACK_SIGNING_SECRET\n});\n\nexport async function postCardToSlack(channelId, card) {\n  await app.client.chat.postMessage({\n    channel: channelId,\n    text: `Agent step-up required: ${card.method} ${card.targetOrigin}`,\n    blocks: [\n      { type: 'header', text: { type: 'plain_text', text: 'Agent step-up confirmation' } },\n      {\n        type: 'section',\n        fields: [\n          { type: 'mrkdwn', text: `*Request ID:*\\n${card.requestId}` },\n          { type: 'mrkdwn', text: `*Agent:*\\n${card.agentId}` },\n          { type: 'mrkdwn', text: `*Method:*\\n${card.method}` },\n          { type: 'mrkdwn', text: `*Source origin:*\\n${card.sourceOrigin}` },\n          { type: 'mrkdwn', text: `*Target origin:*\\n${card.targetOrigin}` },\n          { type: 'mrkdwn', text: `*Expires at:*\\n${card.expiresAt}` }\n        ]\n      },\n      {\n        type: 'section',\n        text: { type: 'mrkdwn', text: `*URL:* \\`${card.url}\\`\\n*Body preview:* \\`${card.bodyPreview}\\`` }\n      },\n      {\n        type: 'actions',\n        block_id: `stepup-${card.requestId}`,\n        elements: [\n          { type: 'button', style: 'primary', text: { type: 'plain_text', text: 'Approve' }, action_id: 'stepup_approve', value: card.requestId },\n          { type: 'button', style: 'danger',  text: { type: 'plain_text', text: 'Deny'    }, action_id: 'stepup_deny',    value: card.requestId }\n        ]\n      }\n    ]\n  });\n}\n\napp.action('stepup_approve', async ({ ack, body, action }) =&gt; {\n  await ack();\n  const outcome = resumeApproval(action.value, 'approve', body.user.id, 'human_approved');\n  await appendAuditEntry({ requestId: action.value, approverId: body.user.id, verdict: 'approve', reason: 'human_approved', accepted: outcome.accepted });\n});\n\napp.action('stepup_deny', async ({ ack, body, action }) =&gt; {\n  await ack();\n  const outcome = resumeApproval(action.value, 'deny', body.user.id, 'human_denied');\n  await appendAuditEntry({ requestId: action.value, approverId: body.user.id, verdict: 'deny', reason: 'human_denied', accepted: outcome.accepted });\n});\n</code></pre><h5>Step 4: Append every decision to a tamper-evident audit chain</h5><p>The audit log is the primary evidence that a step-up actually happened. Store each entry append-only, keyed by <code>requestId</code>, with the approver identity and decision reason. Chain each entry with an HMAC over the previous entry's hash so a later reviewer can detect silent tampering: any deleted or modified row breaks the chain. Keep the chain secret in a secrets manager, never in the log file itself.</p><pre><code>// File: channel/audit_log.js\nimport fs from 'node:fs/promises';\nimport crypto from 'node:crypto';\n\nconst AUDIT_PATH = '/srv/aidefend/audit/stepup.log';\nconst AUDIT_SECRET = process.env.STEPUP_AUDIT_SECRET;\nlet lastChainHash = null;\n\nasync function loadLastChainHash() {\n  try {\n    const raw = await fs.readFile(AUDIT_PATH, 'utf8');\n    const lines = raw.trim().split('\\n').filter(Boolean);\n    if (lines.length === 0) return null;\n    return JSON.parse(lines[lines.length - 1]).chainHash;\n  } catch {\n    return null;\n  }\n}\n\nexport async function appendAuditEntry(entry) {\n  if (lastChainHash === null) {\n    lastChainHash = await loadLastChainHash();\n  }\n  const payload = {\n    ...entry,\n    loggedAt: new Date().toISOString(),\n    previousChainHash: lastChainHash\n  };\n  const chainHash = crypto\n    .createHmac('sha256', AUDIT_SECRET)\n    .update(JSON.stringify(payload))\n    .digest('hex');\n  const line = JSON.stringify({ ...payload, chainHash }) + '\\n';\n  await fs.appendFile(AUDIT_PATH, line, { mode: 0o640 });\n  lastChainHash = chainHash;\n}\n</code></pre><p><strong>Action:</strong> Normalize every suspended write into the confirmation card schema, hand it to the async broker with an explicit <code>expiresAt</code>, surface it on a signed Slack (or equivalent button-driven) channel, and record every decision on the chained audit log. After this is in place, an auditor can independently (a) diff the card schema against live traffic, (b) replay the Slack archive to confirm every approval came from a signed button action, (c) verify the audit chain HMAC end-to-end, and (d) count pending approvals at any time &mdash; without reading the enforcement layer's source code.</p>"
+                        },
+                        {
+                            "implementation": "Externalize the step-up decision to an Open Policy Agent (OPA) Rego bundle so any broker can evaluate each suspended write against a versioned, unit-tested policy independently of the agent and broker source.",
+                            "howTo": "<h5>Scope:</h5><p>This guidance is an optional automation layer that sits <em>inside</em> the step-up broker from the previous guidance. A minimal broker always asks a human; adding OPA lets you pre-classify the easy cases &mdash; auto-approve same-origin writes, auto-deny attempts against read-only targets &mdash; so human reviewers only see genuinely ambiguous requests. Because the policy lives outside the agent runtime and outside the broker itself, it can be reviewed, versioned, unit-tested, and rolled back as an independent policy-as-code artifact. Any step-up broker that can POST request facts to an HTTP endpoint can adopt this bundle without changing its interception mechanism.</p><h5>Concept:</h5><p>Hard-coding cross-origin confirmation logic inside the broker is brittle and hard to audit. Externalize the decision to OPA: the broker captures the request facts, posts them to OPA, and OPA returns whether the action should auto-approve, require human step-up, or be denied outright. OPA gives you a versioned, testable, policy-as-code artifact that security can review, approve, and roll back independently of the broker and agent code.</p><h5>Step 1: Write the Rego policy</h5><p>The policy takes the origin classification and HTTP method as input and returns a verdict plus a reason. Same-origin writes to a read-write target auto-approve; cross-origin writes to a sensitive or unseen origin always require human step-up; writes targeting a read-only origin are an explicit policy violation and are denied outright. The default verdict is <code>deny</code> so any input shape the policy did not anticipate fails closed.</p><pre><code># File: policy/cross_origin_stepup.rego\npackage aidefend.browser.stepup\n\nimport future.keywords.if\nimport future.keywords.in\n\ndefault verdict := {\"decision\": \"deny\", \"reason\": \"default_deny\"}\n\nwrite_methods := {\"POST\", \"PUT\", \"PATCH\", \"DELETE\"}\n\nverdict := {\"decision\": \"allow\", \"reason\": \"same_origin_write\"} if {\n    input.method in write_methods\n    input.classification == \"read_write\"\n    input.source_origin == input.target_origin\n}\n\nverdict := {\"decision\": \"stepup\", \"reason\": \"cross_origin_sensitive\"} if {\n    input.method in write_methods\n    input.classification == \"sensitive\"\n}\n\nverdict := {\"decision\": \"stepup\", \"reason\": \"unseen_origin_write\"} if {\n    input.method in write_methods\n    input.classification == \"unseen\"\n}\n\nverdict := {\"decision\": \"stepup\", \"reason\": \"cross_origin_write\"} if {\n    input.method in write_methods\n    input.classification == \"read_write\"\n    input.source_origin != input.target_origin\n}\n\nverdict := {\"decision\": \"deny\", \"reason\": \"readonly_target_write_attempt\"} if {\n    input.method in write_methods\n    input.classification == \"read_only\"\n}\n</code></pre><h5>Step 2: Run OPA as a sidecar and call it from the broker</h5><p>Start OPA in server mode with the policy bundle loaded, then have the broker POST each suspended request to <code>/v1/data/aidefend/browser/stepup/verdict</code>. When OPA returns <code>allow</code> or <code>deny</code>, the broker resolves immediately; when OPA returns <code>stepup</code>, the broker hands off to its human confirmation channel (see the previous implementation guidance for a Slack-based channel). The broker never synthesizes its own decision &mdash; it either echoes OPA or waits for a human.</p><pre><code># Run OPA as a local decision service\nopa run --server --addr :8181 policy/cross_origin_stepup.rego\n</code></pre><pre><code>// File: broker/opa_decision.js\nimport fetch from 'node-fetch';\n\nconst OPA_URL = 'http://127.0.0.1:8181/v1/data/aidefend/browser/stepup/verdict';\n\nexport function makeOpaDecider({ humanConfirm, audit }) {\n  return async function decide(requestFacts) {\n    const opaResponse = await fetch(OPA_URL, {\n      method: 'POST',\n      headers: { 'content-type': 'application/json' },\n      body: JSON.stringify({ input: requestFacts })\n    });\n    const { result } = await opaResponse.json();\n    audit({ stage: 'opa', requestFacts, verdict: result });\n\n    if (result.decision === 'allow') {\n      return { verdict: 'approve', reason: result.reason, approverId: 'opa_bundle' };\n    }\n    if (result.decision === 'deny') {\n      return { verdict: 'deny', reason: result.reason, approverId: 'opa_bundle' };\n    }\n    // stepup: hand off to the broker's human confirmation channel.\n    return humanConfirm(requestFacts, result.reason);\n  };\n}\n</code></pre><h5>Step 3: Unit-test the policy with <code>opa test</code> and gate deploys on it</h5><p>Ship Rego unit tests alongside the policy so a change to the step-up rules cannot land without CI verifying the decision table. The same inputs the broker sends in production should be covered, and the CI job for the policy repository must fail the build on any <code>opa test</code> failure. Rollback is a git revert of the bundle &mdash; not a code change to the broker.</p><pre><code># File: policy/cross_origin_stepup_test.rego\npackage aidefend.browser.stepup\n\ntest_same_origin_rw_allows if {\n    verdict.decision == \"allow\" with input as {\n        \"method\": \"POST\",\n        \"classification\": \"read_write\",\n        \"source_origin\": \"https://tickets.internal.corp\",\n        \"target_origin\": \"https://tickets.internal.corp\"\n    }\n}\n\ntest_cross_origin_sensitive_requires_stepup if {\n    verdict.decision == \"stepup\" with input as {\n        \"method\": \"POST\",\n        \"classification\": \"sensitive\",\n        \"source_origin\": \"https://docs.internal.corp\",\n        \"target_origin\": \"https://admin.internal.corp\"\n    }\n}\n\ntest_readonly_target_write_denied if {\n    verdict.decision == \"deny\" with input as {\n        \"method\": \"PUT\",\n        \"classification\": \"read_only\",\n        \"source_origin\": \"https://tickets.internal.corp\",\n        \"target_origin\": \"https://wiki.internal.corp\"\n    }\n}\n\ntest_unknown_classification_defaults_deny if {\n    verdict.decision == \"deny\" with input as {\n        \"method\": \"POST\",\n        \"classification\": \"bogus\",\n        \"source_origin\": \"https://a\",\n        \"target_origin\": \"https://b\"\n    }\n}\n</code></pre><p><strong>Action:</strong> Externalize every cross-origin step-up decision to a versioned OPA policy bundle, gate deploys on <code>opa test</code>, enable OPA decision logging, and only escalate to the human channel when the policy explicitly returns <code>stepup</code>. After this is in place, an auditor can independently (a) read the Rego policy as a single source of truth for automated decisions, (b) replay OPA decision logs against the current bundle version, (c) prove policy tests pass in CI, and (d) verify that the broker code contains no decision logic of its own &mdash; all without reading any enforcement-layer source.</p>"
+                        }
+                    ]
+                },
+                {
+                    "id": "AID-I-008.003",
+                    "name": "Download / Clipboard / Magic-Link Quarantine",
+                    "pillar": ["app", "data"],
+                    "phase": ["building", "operation"],
+                    "description": "Treat downloads, clipboard operations, and magic-link style authentication flows as quarantine-required state transitions. These channels should not be auto-opened, auto-pasted, or auto-followed inside a privileged browser task without explicit policy and cleanup.",
+                    "toolsOpenSource": [
+                        "Playwright",
+                        "ClamAV",
+                        "YARA"
+                    ],
+                    "toolsCommercial": [
+                        "Cloudflare Browser Isolation",
+                        "VirusTotal Enterprise"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0011.003 User Execution: Malicious Link",
+                                "AML.T0100 AI Agent Clickbait"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Data Exfiltration (L2)",
+                                "Integration Risks (L7)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM05:2025 Improper Output Handling"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": ["N/A"]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI02:2026 Tool Misuse and Exploitation",
+                                "ASI03:2026 Identity and Privilege Abuse"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.039 Compromising connected resources"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AISubtech-12.1.3 Unsafe System / Browser / File Execution"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "SDD: Sensitive Data Disclosure",
+                                "RA: Rogue Actions"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Agents - Tools MCP Client 13.28: UI/UX Deception",
+                                "Agents - Tools MCP Client 13.30: Client-Side Data Leakage"
+                            ]
+                        }
+                    ],
+                    "implementationGuidance": [
+                        {
+                            "implementation": "Quarantine browser downloads until they are scanned, approved, and reopened in a clean context.",
+                            "howTo": "<h5>Concept:</h5><p>A browser-using agent should never auto-open a downloaded file inside the same privileged task context that requested it. Downloads are an out-of-band execution and exfiltration path, so every file should land in a quarantine location first, be scanned, and only then be released into a separate approved area.</p><h5>Step 1: Force downloads into a quarantine directory</h5><p>Create the browser context with downloads enabled, but point all saved files at a server-side quarantine path. Do not hand the agent a direct OS-level \"open\" action for newly downloaded content.</p><pre><code>// File: browser/download_quarantine.js\nimport fs from 'node:fs/promises';\nimport path from 'node:path';\nimport { mkdirSync } from 'node:fs';\nimport { spawnSync } from 'node:child_process';\n\nconst QUARANTINE_DIR = '/srv/agent-download-quarantine';\nconst RELEASE_DIR = '/srv/agent-approved-downloads';\nconst YARA_RULESET = '/etc/yara/downloads.yar';\n\nmkdirSync(QUARANTINE_DIR, { recursive: true });\nmkdirSync(RELEASE_DIR, { recursive: true });\n\nfunction scanWithClamAV(filePath) {\n  const result = spawnSync('clamscan', ['--no-summary', filePath], { encoding: 'utf8' });\n  return result.status === 0;\n}\n\nfunction scanWithYara(filePath) {\n  const result = spawnSync('yara', ['-r', YARA_RULESET, filePath], { encoding: 'utf8' });\n  if (result.error) {\n    throw result.error;\n  }\n  return result.stdout.trim() === '';\n}\n\nexport async function quarantineDownload(download, taskId) {\n  const safeName = `${taskId}-${download.suggestedFilename().replace(/[^a-zA-Z0-9._-]/g, '_')}`;\n  const quarantinePath = path.join(QUARANTINE_DIR, safeName);\n\n  await download.saveAs(quarantinePath);\n\n  const clean = scanWithClamAV(quarantinePath) && scanWithYara(quarantinePath);\n  if (!clean) {\n    return { status: 'blocked', quarantinePath };\n  }\n\n  const releasePath = path.join(RELEASE_DIR, safeName);\n  await fs.rename(quarantinePath, releasePath);\n  return { status: 'approved', releasePath };\n}\n</code></pre><h5>Step 2: Release only after scan and policy approval</h5><p>Wire the quarantine handler into the automation layer so the file is never auto-opened after download. Only return a release path after malware scanning, content-type checks, and any task-specific policy review have passed.</p><p><strong>Action:</strong> Treat every browser download as untrusted until proven clean. Save it to quarantine, scan it, record the scan result, and only reopen it from a clean location or a fresh browser context after explicit approval.</p>"
+                        },
+                        {
+                            "implementation": "Block silent clipboard reuse across tasks and require approval before cross-origin paste or clipboard import.",
+                            "howTo": "<h5>Concept:</h5><p>The system clipboard is a hidden cross-task transport. If a browser agent can silently reuse clipboard data across sites or tasks, it can leak credentials, session tokens, or sensitive customer data without needing a visible navigation. The safe pattern is to replace implicit clipboard reuse with a task-scoped clipboard broker that requires approval for cross-origin import.</p><h5>Step 1: Keep clipboard data in a task-scoped broker, not the global OS clipboard</h5><p>Record copied data as task metadata and attach source origin information. Deny direct reuse when the paste target belongs to another task or origin unless a policy or human explicitly approves it.</p><pre><code>// File: browser/clipboard_policy.js\nconst clipboardStore = new Map();\n\nexport function recordClipboardCopy({ taskId, origin, text }) {\n  clipboardStore.set(taskId, {\n    origin,\n    text,\n    createdAt: Date.now()\n  });\n}\n\nexport async function requestClipboardImport({\n  sourceTaskId,\n  targetTaskId,\n  targetOrigin,\n  approveTransfer\n}) {\n  const entry = clipboardStore.get(sourceTaskId);\n  if (!entry) {\n    throw new Error('No clipboard payload recorded for source task');\n  }\n\n  const sameTask = sourceTaskId === targetTaskId;\n  const sameOrigin = entry.origin === targetOrigin;\n\n  if (!sameTask || !sameOrigin) {\n    const approved = await approveTransfer({\n      sourceTaskId,\n      targetTaskId,\n      sourceOrigin: entry.origin,\n      targetOrigin,\n      preview: entry.text.slice(0, 120)\n    });\n\n    if (!approved) {\n      throw new Error('Clipboard import denied by policy');\n    }\n  }\n\n  return entry.text;\n}\n</code></pre><h5>Step 2: Intercept paste and materialize only approved content</h5><p>Do not let the browser task read from the global clipboard directly. Instead, intercept paste events and resolve them through the policy broker so cross-origin or cross-task transfers can be reviewed.</p><pre><code>// File: browser/install_clipboard_guard.js\nimport { requestClipboardImport } from './clipboard_policy.js';\n\nexport async function installClipboardGuard(page, taskId, pageOrigin, approveTransfer) {\n  await page.exposeBinding('requestApprovedClipboardImport', async () =&gt; {\n    return requestClipboardImport({\n      sourceTaskId: taskId,\n      targetTaskId: taskId,\n      targetOrigin: pageOrigin,\n      approveTransfer\n    });\n  });\n\n  await page.addInitScript(() =&gt; {\n    window.addEventListener('paste', (event) =&gt; {\n      event.preventDefault();\n      window.requestApprovedClipboardImport().then((approvedText) =&gt; {\n        const target = event.target;\n        if (target &amp;&amp; typeof target.setRangeText === 'function') {\n          const start = target.selectionStart ?? 0;\n          const end = target.selectionEnd ?? start;\n          target.setRangeText(approvedText, start, end, 'end');\n        }\n      }).catch(() =&gt; {\n        // Intentionally drop denied clipboard imports.\n      });\n    });\n  });\n}\n</code></pre><p><strong>Action:</strong> Replace implicit clipboard reuse with a task-aware clipboard broker. Same-task, same-origin paste can stay fast; any cross-origin or cross-task clipboard import must be denied by default unless policy or a human explicitly approves it.</p>"
+                        },
+                        {
+                            "implementation": "Treat magic-link and auth-bearing link flows as approval-required authentication transitions in a dedicated browser context.",
+                            "howTo": "<h5>Concept:</h5><p>Magic links, OAuth callbacks, password-reset URLs, and token-bearing invite flows often carry authority in the URL itself. If a browser agent auto-follows them inside a privileged task, it can accidentally complete authentication, leak a token to another origin, or bind the session to the wrong task. Handle these links as explicit authentication transitions, not ordinary clicks.</p><h5>Step 1: Classify token-bearing or auth-completing links before navigation</h5><p>Before the browser task follows a link, inspect the destination. Treat links containing auth callback paths or security-sensitive query keys as approval-required.</p><pre><code>// File: browser/auth_link_gate.js\nconst AUTH_QUERY_KEYS = ['token', 'code', 'id_token', 'access_token', 'magic', 'invite'];\nconst AUTH_PATH_PATTERN = /magic|verify|signin|login|oauth|callback|reset-password/i;\n\nexport function isApprovalRequiredAuthLink(rawUrl) {\n  const url = new URL(rawUrl);\n  return AUTH_QUERY_KEYS.some((key) =&gt; url.searchParams.has(key)) || AUTH_PATH_PATTERN.test(url.pathname);\n}\n</code></pre><h5>Step 2: Open approved auth links in a dedicated browser context</h5><p>If policy allows the transition, complete it in a fresh browser context that is separate from the current task's normal browsing state. This prevents the task from silently reusing an already-privileged session and keeps auth state from bleeding across unrelated work.</p><pre><code>// File: browser/open_auth_link.js\nimport { isApprovalRequiredAuthLink } from './auth_link_gate.js';\n\nexport async function openApprovedAuthLink(browser, rawUrl, requestApproval) {\n  if (!isApprovalRequiredAuthLink(rawUrl)) {\n    throw new Error('Link is not classified as an approval-required auth transition');\n  }\n\n  const approved = await requestApproval({\n    url: rawUrl,\n    reason: 'Token-bearing or magic-link authentication flow detected'\n  });\n\n  if (!approved) {\n    throw new Error('Authentication transition denied');\n  }\n\n  const authContext = await browser.newContext({\n    storageState: undefined,\n    serviceWorkers: 'block',\n    permissions: []\n  });\n\n  const authPage = await authContext.newPage();\n  await authPage.goto(rawUrl, { waitUntil: 'domcontentloaded' });\n  return { authContext, authPage };\n}\n</code></pre><p><strong>Action:</strong> Never let a browser agent auto-follow magic links or token-bearing redirects in its existing privileged task context. Classify them first, require explicit approval, and complete the transition only inside a dedicated browser context with separate state.</p>"
+                        }
+                    ]
                 }
             ]
         }

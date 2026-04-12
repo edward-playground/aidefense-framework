@@ -74,10 +74,10 @@ export const modelTactic = {
                         "Model 7.3: ML Supply chain vulnerabilities",
                         "Model 7.2: Model assets leak",
                         "Algorithms 5.4: Malicious libraries",
-                        "Operations 11.1: Lack of MLOps — repeatable enforced standards",
+                        "Operations 11.1: Lack of MLOps - repeatable enforced standards",
                         "Model Management 8.1: Model attribution",
-                        "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems",
-                        "Agents — Tools MCP Server 13.21: Supply Chain Attacks"
+                        "Agents - Core 13.13: Rogue Agents in Multi-Agent Systems",
+                        "Agents - Tools MCP Server 13.21: Supply Chain Attacks"
                     ]
                 }
             ],
@@ -90,8 +90,81 @@ export const modelTactic = {
                     "description": "Systematically catalogs all AI/ML assets, including models (categorized by type, version, and ownership), datasets, software components, and the specialized hardware they run on (e.g., GPUs, TPUs). This technique focuses on creating a dynamic, up-to-date inventory to provide comprehensive visibility into all components that constitute the AI ecosystem, which is a prerequisite for accurate risk assessment and the application of targeted security controls.",
                     "implementationGuidance": [
                         {
-                            "implementation": "Establish and maintain a dynamic, up-to-date inventory of all AI models, datasets, software components, and associated infrastructure.",
-                            "howTo": "<h5>Concept:</h5><p>Your inventory should be a \"living\" system updated automatically during your MLOps workflow. We'll use an <strong>MLflow Tracking Server</strong> as the central inventory.</p><h5>Step 1: Set Up MLflow Tracking Server (with persistent storage)</h5><p>This server acts as your database for models, experiments, and datasets. Use a real backend store instead of the in-memory default so it survives restarts.</p><pre><code># 1. Install MLflow and common ML libs\npip install mlflow scikit-learn\n\n# 2. Start the tracking server with a persistent backend (SQLite here as an example)\nmlflow server \\\n  --backend-store-uri sqlite:///mlflow.db \\\n  --default-artifact-root ./mlruns \\\n  --host 127.0.0.1 \\\n  --port 5000\n\n# Notes:\n# --backend-store-uri is where MLflow stores run metadata (experiments, params, tags)\n# --default-artifact-root is where model artifacts/files are saved\n# In prod you'd typically point these at S3/GCS/Azure Blob + Postgres, not local disk.</code></pre><p><strong>Action:</strong> Keep this server running and reachable (or host it centrally). You can access the MLflow UI at http://127.0.0.1:5000.</p><h5>Step 2: Log Assets During Model Training</h5><p>Modify your training scripts to automatically log every model, dataset reference, and metadata like owner/team so the inventory stays current with no manual updates.</p><pre><code># File: train_model.py\nimport mlflow\nimport mlflow.sklearn\nfrom sklearn.ensemble import RandomForestClassifier\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.datasets import load_breast_cancer\n\n# --- Connect to your MLflow Server ---\nmlflow.set_tracking_uri(\"http://127.0.0.1:5000\")\nmlflow.set_experiment(\"Credit Card Fraud Detection\")\n\n# Example training pipeline\nX, y = load_breast_cancer(return_X_y=True)\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)\n\nrfc = RandomForestClassifier(n_estimators=200, random_state=42)\nrfc.fit(X_train, y_train)\n\nwith mlflow.start_run() as run:\n    # Attach metadata for traceability / ownership\n    mlflow.set_tag(\"owner\", \"fraud_analytics_team\")\n    mlflow.set_tag(\"dataset\", \"breast_cancer_sanitized_v1\")\n\n    # Log basic metrics\n    acc = rfc.score(X_test, y_test)\n    mlflow.log_metric(\"accuracy\", acc)\n\n    # Log parameters that affect model behavior\n    mlflow.log_param(\"n_estimators\", 200)\n    mlflow.log_param(\"random_state\", 42)\n\n    # Log the trained model into the inventory / registry\n    mlflow.sklearn.log_model(\n        sk_model=rfc,\n        artifact_path=\"model\",\n        registered_model_name=\"fraud-detection-rfc\"\n    )\n\n    print(f\"Run {run.info.run_id} logged to MLflow with accuracy={acc}\")</code></pre><p><strong>Result:</strong> Your MLflow UI now contains a versioned entry for this model, linked to metadata (owner, dataset, params). This becomes the \"source of truth\" inventory for AI assets.</p>"
+                            "implementation": "Establish and maintain a dynamic, up-to-date registry of AI models and datasets with security-relevant metadata.",
+                            "howTo": `<h5>Concept:</h5><p>This guidance is specifically about the <strong>model-and-dataset registry layer</strong>, not the whole software or infrastructure inventory. The goal is to maintain a living system of record for every governed model version and the datasets that trained or validated it, including owner, lifecycle stage, digest, and approval state.</p><h5>Step 1: Stand up a persistent tracking and registry service</h5><p>Use a registry that can store model versions, dataset references, tags, and immutable run metadata. The example below uses MLflow with a persistent metadata store.</p><pre><code># 1. Install MLflow and common ML dependencies
+pip install mlflow scikit-learn pandas
+
+# 2. Start MLflow with persistent metadata and artifact storage
+mlflow server \
+  --backend-store-uri sqlite:///mlflow.db \
+  --default-artifact-root ./mlruns \
+  --host 127.0.0.1 \
+  --port 5000
+
+# In production, replace local paths with managed storage:
+# - Postgres/MySQL for backend-store-uri
+# - S3/GCS/Azure Blob for default-artifact-root</code></pre><h5>Step 2: Log the dataset reference and model version in the same training run</h5><p>Capture dataset lineage, model parameters, owner metadata, and the registered model version in one authoritative run record.</p><pre><code># File: train_model.py
+from __future__ import annotations
+
+import mlflow
+import mlflow.data
+import mlflow.sklearn
+import pandas as pd
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
+
+mlflow.set_tracking_uri("http://127.0.0.1:5000")
+mlflow.set_experiment("credit-card-fraud")
+
+training_df = pd.read_parquet("data/credit_card_transactions_sanitized_v3.parquet")
+dataset = mlflow.data.from_pandas(
+    training_df,
+    source="s3://ml-datasets/credit-card-fraud/v3/",
+    name="credit-card-fraud-sanitized-v3",
+)
+
+X = training_df.drop(columns=["label"])
+y = training_df["label"]
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42
+)
+
+model = RandomForestClassifier(n_estimators=200, random_state=42)
+model.fit(X_train, y_train)
+
+with mlflow.start_run() as run:
+    mlflow.log_input(dataset, context="training")
+    mlflow.set_tags(
+        {
+            "owner_team": "fraud_analytics_team",
+            "service_name": "credit_card_fraud_api",
+            "security_status": "pending_review",
+            "data_classification": "confidential",
+        }
+    )
+    mlflow.log_params({"n_estimators": 200, "random_state": 42})
+    mlflow.log_metric("validation_accuracy", model.score(X_test, y_test))
+
+    mlflow.sklearn.log_model(
+        sk_model=model,
+        artifact_path="model",
+        registered_model_name="credit-card-fraud-rfc",
+    )
+
+    print(f"Run recorded: {run.info.run_id}")</code></pre><h5>Step 3: Promote only governed versions into the registry of record</h5><p>After validation, set registry tags that make the version queryable during incident response, rollback, or compliance review.</p><pre><code># File: registry/promote_model.py
+from __future__ import annotations
+
+from mlflow.tracking import MlflowClient
+
+client = MlflowClient(tracking_uri="http://127.0.0.1:5000")
+model_name = "credit-card-fraud-rfc"
+model_version = "17"
+
+client.set_model_version_tag(model_name, model_version, "owner_team", "fraud_analytics_team")
+client.set_model_version_tag(model_name, model_version, "security_status", "approved")
+client.set_model_version_tag(model_name, model_version, "training_dataset", "credit-card-fraud-sanitized-v3")
+client.set_model_version_tag(model_name, model_version, "change_ticket", "AISEC-417")
+client.transition_model_version_stage(model_name, model_version, stage="Production")</code></pre><p><strong>Action:</strong> Treat the registry record itself as the authoritative evidence artifact for this guidance. A complete record should let responders answer: which model version is in production, which dataset it was trained on, who owns it, what stage it is in, and whether security review approved it.</p>`
                         },
                         {
                             "implementation": "Include specialized AI accelerators (GPUs, TPUs, NPUs, FPGAs) and their firmware versions in the AI asset inventory.",
@@ -187,10 +260,10 @@ export const modelTactic = {
                                 "Model 7.2: Model assets leak",
                                 "Model 7.3: ML Supply chain vulnerabilities",
                                 "Algorithms 5.4: Malicious libraries",
-                                "Operations 11.1: Lack of MLOps — repeatable enforced standards",
+                                "Operations 11.1: Lack of MLOps - repeatable enforced standards",
                                 "Model Management 8.1: Model attribution",
-                                "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems",
-                                "Agents — Tools MCP Server 13.21: Supply Chain Attacks"
+                                "Agents - Core 13.13: Rogue Agents in Multi-Agent Systems",
+                                "Agents - Tools MCP Server 13.21: Supply Chain Attacks"
                             ]
                         }
                     ]
@@ -215,8 +288,57 @@ export const modelTactic = {
                             "howTo": "<h5>Concept:</h5><p>An SBOM is a machine-readable list of everything inside your built artifact (container image, serverless package, wheel, etc). For AI systems, this SBOM becomes your AI Bill of Materials (AIBOM): it's how you prove what code, libs, and components actually shipped. It's critical for vulnerability management, incident response, and regulatory / audit evidence.</p><h5>Step 1: Generate SBOM in CI/CD from the Final Image</h5><p>Use <code>syft</code> (open source) to scan the built container image and emit CycloneDX JSON. Store that SBOM next to the image tag and commit SHA so you can trace which build introduced which lib.</p><pre><code># File: .github/workflows/sbom_generation.yml\n\njobs:\n  generate_sbom:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v3\n\n      - name: Build Docker Image\n        run: |\n          docker build . -t my-ai-app:${{ github.sha }}\n\n      - name: Generate SBOM (CycloneDX JSON)\n        uses: anchore/syft-action@v0\n        with:\n          image: \"my-ai-app:${{ github.sha }}\"\n          format: \"cyclonedx-json\"\n          output: \"sbom-${{ github.sha }}.json\"\n\n      - name: Upload SBOM as Build Artifact\n        uses: actions/upload-artifact@v3\n        with:\n          name: sbom-${{ github.sha }}\n          path: sbom-${{ github.sha }}.json\n\n      - name: Persist SBOM in internal registry for audit\n        run: |\n          curl -X POST \\\n            -H \"Content-Type: application/json\" \\\n            -H \"Authorization: Bearer $AIBOM_REGISTRY_TOKEN\" \\\n            --data @sbom-${{ github.sha }}.json \\\n            https://aibom-registry.internal.example.com/api/v1/store?image=my-ai-app&tag=${{ github.sha }}\n        env:\n          AIBOM_REGISTRY_TOKEN: ${{ secrets.AIBOM_REGISTRY_TOKEN }}</code></pre><p><strong>Action:</strong> 1) Generate an SBOM for <em>every</em> build, 2) tie that SBOM to the image tag/commit SHA, and 3) push it to an internal system of record (not just temporary CI artifacts). During vuln management, incident response, or compliance review, this registry lets you answer: \"Which production model / agent / API server instance is running the vulnerable lib?\"</p>"
                         },
                         {
-                            "implementation": "Visualize the full dependency graph to understand complex relationships.",
-                            "howTo": "<h5>Concept:</h5><p>A visual map of dependencies can reveal hidden or risky relationships that are hard to see in text form. This is where you catch \"oh wow, this inference service actually calls a third-party summarization API that we never threat-modeled.\" You want two layers: (1) library/package dependency tree and (2) system/service/dataflow map. Both should live in version control and be updated when you add new deps or services.</p><h5>Step 1: Generate a Library/Package Dependency Tree</h5><p>Use <code>pipdeptree</code> (open source) to list direct and transitive Python dependencies exactly as installed in the runtime image or venv. Commit (or archive) this output with each release tag so you can diff changes over time.</p><pre><code># Install and run pipdeptree in the same environment/container image\npip install pipdeptree\npipdeptree > dependency_tree.txt\n\n# Sample Output (truncated):\n# pandas==2.2.0\n#   - numpy==1.26.4\n#   - python-dateutil==2.8.2\n#     - six==1.16.0\n#   - pytz==2024.1\n# tensorflow==2.15.0\n#   - numpy==1.26.4\n#   - ...</code></pre><h5>Step 2: Maintain a High-Level System Dependency Diagram</h5><p>Create (and version-control) a diagram that shows how the AI service talks to internal microservices, external APIs, data sources, and models. You can use Mermaid.js in Markdown so it's reviewable in PRs.</p><pre><code>%%{init: {'theme': 'base'}}%%\ngraph TD\n    subgraph \"Fraud Detection Service\"\n        A[Container: fraud-detector:v2.1] --> B(Python Libraries);\n        A --> C(Internal Auth API);\n        A --> D(External Geolocation API);\n        A --> E(model.pkl);\n    end\n    B --> F[numpy, pandas, sklearn];\n    E --> G[training_data_sanitized_v1.csv];\n    D --> H[3rd-party location provider];</code></pre><p><strong>Action:</strong> Store <code>dependency_tree.txt</code> and the Mermaid diagram in the repo (for example under <code>docs/dependencies/</code>) and require updates in the same pull request that adds a new critical dependency or new outbound API call. This turns dependency mapping into part of normal code review and threat modeling, not a one-time architecture slide.</p>"
+                            "implementation": "Maintain a version-controlled system and service dependency map for the AI application.",
+                            "howTo": `<h5>Concept:</h5><p>This guidance is about the <strong>system-level dependency map</strong>: how the AI service depends on internal APIs, third-party services, feature stores, vector databases, model registries, and trust boundaries. It is intentionally distinct from package lock files and SBOMs, which are already covered by sibling guidance.</p><h5>Step 1: Capture the runtime dependency topology in a reviewable diagram</h5><p>Store the system map in version control so architecture, security, and incident-response teams can diff it with normal pull-request review.</p><pre><code>%%{init: {'theme': 'base'}}%%
+graph TD
+    User[External User] --> Gateway[API Gateway]
+    Gateway --> Inference[Fraud Inference Service]
+    Inference --> FeatureStore[(Feature Store)]
+    Inference --> ModelRegistry[(Model Registry)]
+    Inference --> GeoAPI[External Geolocation API]
+    Inference --> Queue[Decision Event Queue]
+    Queue --> Analyst[Fraud Analyst Workflow]
+
+    classDef external fill:#fff2cc,stroke:#b45f06,stroke-width:2px;
+    class GeoAPI external;</code></pre><h5>Step 2: Pair the diagram with a machine-readable dependency manifest</h5><p>The manifest should identify the owner, trust boundary, criticality, and failure mode of each dependency so the map is actionable during threat modeling and incident response.</p><pre><code># File: docs/dependencies/system_dependencies.yaml
+system_dependencies:
+  - dependency_id: "svc-fraud-inference"
+    type: "internal_service"
+    owner_team: "fraud-platform"
+    exposes_to: ["api_gateway"]
+    criticality: "high"
+  - dependency_id: "db-feature-store"
+    type: "internal_data_store"
+    owner_team: "ml-platform"
+    trust_boundary: "internal"
+    failure_mode: "stale_or_missing_features"
+  - dependency_id: "api-geolocation"
+    type: "external_api"
+    owner_team: "fraud-platform"
+    trust_boundary: "third_party"
+    data_sent: ["hashed_user_id", "ip_address"]
+    failure_mode: "incorrect_risk_enrichment"
+  - dependency_id: "queue-decision-events"
+    type: "internal_queue"
+    owner_team: "platform-events"
+    trust_boundary: "internal"
+    failure_mode: "lost_or_delayed_case_creation"</code></pre><h5>Step 3: Gate architecture changes on dependency-map updates</h5><pre><code># File: .github/workflows/dependency_map_check.yml
+name: Dependency Map Check
+
+on:
+  pull_request:
+    paths:
+      - "src/**"
+      - "infra/**"
+      - "docs/dependencies/**"
+
+jobs:
+  dependency-map-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Require dependency map update when outbound integrations change
+        run: python scripts/check_dependency_map_update.py</code></pre><p><strong>Action:</strong> Keep the Mermaid diagram and the dependency manifest under version control, and require updates whenever the service adds a new internal dependency, external integration, or trust boundary. That gives AIDEFEND a stable placement and evidence artifact for system-level dependency mapping.</p>`
                         }
                     ],
                     "toolsOpenSource": [
@@ -298,9 +420,9 @@ export const modelTactic = {
                                 "Governance 4.1: Lack of traceability and transparency of model assets",
                                 "Platform 12.1: Lack of vulnerability management",
                                 "Platform 12.5: Poor security in the software development lifecycle",
-                                "Operations 11.1: Lack of MLOps — repeatable enforced standards",
-                                "Agents — Tools MCP Server 13.21: Supply Chain Attacks",
-                                "Agents — Tools MCP Server 13.18: Tool Poisoning"
+                                "Operations 11.1: Lack of MLOps - repeatable enforced standards",
+                                "Agents - Tools MCP Server 13.21: Supply Chain Attacks",
+                                "Agents - Tools MCP Server 13.18: Tool Poisoning"
                             ]
                         }
                     ]
@@ -383,8 +505,8 @@ export const modelTactic = {
                             framework: "Databricks AI Security Framework 3.0",
                             items: [
                                 "Governance 4.1: Lack of traceability and transparency of model assets (skill inventory provides traceability for skill assets)",
-                                "Agents — Tools MCP Server 13.21: Supply Chain Attacks (lifecycle governance enables rapid response to supply-chain compromises)",
-                                "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems (orphaned-skill detection identifies skills that may become rogue vectors)",
+                                "Agents - Tools MCP Server 13.21: Supply Chain Attacks (lifecycle governance enables rapid response to supply-chain compromises)",
+                                "Agents - Core 13.13: Rogue Agents in Multi-Agent Systems (orphaned-skill detection identifies skills that may become rogue vectors)",
                             ],
                         },
                     ],
@@ -397,15 +519,210 @@ export const modelTactic = {
                         },
                         {
                             implementation:
-                                "Implement an approval workflow for all skill installations; prohibit unmanaged installs from external registries.",
-                            howTo:
-                                "<h5>Concept:</h5><p>Direct installation of skills from public registries without review must be blocked in enterprise environments. All external skill install requests flow through an approval workflow (integrated with ServiceNow, Jira, or equivalent ITSM).</p><h5>Approval checkpoints:</h5><ol><li>Is the source registry on the allowed list?</li><li>Does the skill have a valid permission manifest?</li><li>Is the publisher in the trusted-publisher allowlist?</li><li>Has the skill passed the admission scanning pipeline (<code>AID-H-031</code>)?</li><li>Is the permission scope proportionate to the business need?</li></ol><p>Internal skills may follow a lighter process, but they are not exempt: they must still be registered in inventory, pass admission scanning and manifest validation, and receive an explicit approval state before installation.</p><p><strong>Action:</strong> Configure agent platform CLIs to require a pre-approval token before installation. The token is issued by the approval workflow system after all checks pass. Unauthorized install attempts without a token are logged and blocked.</p>",
+                                "Require a formal approval workflow with documented reviewers, risk checks, and time-bounded exceptions before any skill installation.",
+                            howTo: `<h5>Concept:</h5><p>Separate approval from install execution. The approval workflow decides whether a skill is allowed, who owns it, what permission scope is justified, and when the approval expires. Installation tooling should consume this decision later, but should not define the approval logic itself.</p><h5>Step 1: Create a durable install-request record</h5><pre><code># File: governance/skill_install_request.yaml
+request_id: SKILL-2026-0412
+skill_id: clawhub.ai/pdf-summarizer
+version: 1.4.2
+source_registry: clawhub.ai
+requested_by: e12345
+business_owner: tax-operations
+technical_owner: agent-platform
+justification: Summarize inbound tax notices for case triage.
+required_permissions:
+  - filesystem:read:/work/tax-notices
+  - network:https://api.internal.corp/tax/*
+security_checks:
+  manifest_present: true
+  trusted_publisher: true
+  admission_scan_status: pass
+  least_privilege_review: approved
+exception:
+  approved: false
+  expires_on: null
+approval:
+  status: approved
+  approvers:
+    - sec-platform
+    - tax-ops-owner
+  approved_at: "2026-04-07T18:15:00Z"</code></pre><h5>Step 2: Validate the request before it can move to approved</h5><pre><code># File: governance/validate_skill_request.py
+from pathlib import Path
+import sys
+import yaml
+
+REQUIRED_FIELDS = [
+    "request_id",
+    "skill_id",
+    "version",
+    "source_registry",
+    "requested_by",
+    "business_owner",
+    "technical_owner",
+    "justification",
+    "required_permissions",
+    "security_checks",
+    "approval",
+]
+
+doc = yaml.safe_load(Path(sys.argv[1]).read_text(encoding="utf-8"))
+
+missing = [field for field in REQUIRED_FIELDS if field not in doc]
+if missing:
+    raise SystemExit(f"missing required fields: {missing}")
+
+checks = doc["security_checks"]
+for field in ("manifest_present", "trusted_publisher", "admission_scan_status", "least_privilege_review"):
+    if field not in checks:
+        raise SystemExit(f"missing security check: {field}")
+
+if doc["approval"]["status"] != "approved":
+    raise SystemExit("request is not approved")
+
+print("skill install request is complete and approved")</code></pre><p><strong>Action:</strong> Store the signed request record with the skill ID and version as the authoritative approval artifact. Every exception must have an explicit expiration date and owner so the workflow can automatically reopen review when the business context changes.</p>`,
                         },
                         {
                             implementation:
-                                "Detect orphaned skills and enforce event-driven lifecycle transitions.",
-                            howTo:
-                                "<h5>Concept:</h5><p>Skills outlive the people who installed or previously owned them. A monthly automated reconciliation compares the skill inventory against the HR/IAM system to identify:</p><ol><li><strong>Orphaned skills</strong> — installer or current owner has left the organization or transferred teams, but the skill remains active without reassignment of ownership or associated identities/credentials.</li><li><strong>Dormant skills</strong> — not invoked in the past N days and not referenced by any active workflow.</li><li><strong>Scan-gap skills</strong> — not re-scanned in the past N days, indicating scanner coverage drift.</li></ol><h5>Event-driven lifecycle triggers:</h5><ul><li><strong>Installer/owner departure</strong> → auto-flag as orphaned → ownership transfer request → disable after grace period if unclaimed</li><li><strong>Publisher compromised</strong> → auto-flag all skills from that publisher → trigger re-scan and elevated review</li><li><strong>CVE match</strong> → auto-alert skill owners → trigger re-validation</li><li><strong>Incident response</strong> → immediate disable and credential revocation (revocation execution via <code>AID-E-001</code>)</li></ul><p><strong>Action:</strong> Build a scheduled job that joins skill-inventory data with HR/IAM feeds. Orphaned skills without a new owner within 14 days are automatically disabled. All lifecycle transitions are logged to the audit trail.</p>",
+                                "Enforce installer and registry controls so only approved skills from approved sources can be installed.",
+                            howTo: `<h5>Concept:</h5><p>After approval is granted, a separate enforcement path must ensure the installer only accepts approved skill artifacts from approved registries. This prevents engineers from bypassing workflow by installing directly from public registries or by swapping the reviewed artifact for a different build.</p><h5>Step 1: Define the registry and broker policy</h5><pre><code># File: skill_governance/registry_policy.yaml
+allowed_registries:
+  - https://skills.internal.corp
+  - https://clawhub.corp.mirror
+token_audience: skill-installer
+broker_url: https://agent-install-broker.internal.corp/v1/install</code></pre><h5>Step 2: Verify the approval token, registry, and artifact digest before installation</h5><pre><code># File: skill_governance/install_skill.py
+from pathlib import Path
+import hashlib
+import os
+import sys
+
+import jwt
+import requests
+import yaml
+
+policy = yaml.safe_load(
+    Path("skill_governance/registry_policy.yaml").read_text(encoding="utf-8")
+)
+manifest = yaml.safe_load(Path(sys.argv[1]).read_text(encoding="utf-8"))
+
+artifact_bytes = Path(manifest["package_path"]).read_bytes()
+artifact_digest = "sha256:" + hashlib.sha256(artifact_bytes).hexdigest()
+
+approval_token = os.environ["SKILL_APPROVAL_TOKEN"]
+public_key = Path("keys/skill_install_approver.pub").read_text(encoding="utf-8")
+claims = jwt.decode(
+    approval_token,
+    public_key,
+    algorithms=["RS256"],
+    audience=policy["token_audience"],
+)
+
+if manifest["source_registry"] not in set(policy["allowed_registries"]):
+    raise SystemExit("registry_not_allowed")
+if claims["skill_id"] != manifest["id"] or claims["version"] != manifest["version"]:
+    raise SystemExit("approval_token_mismatch")
+if claims["artifact_digest"] != artifact_digest:
+    raise SystemExit("artifact_digest_mismatch")
+
+response = requests.post(
+    policy["broker_url"],
+    json={"manifest": manifest, "approval_token": approval_token},
+    timeout=30,
+)
+response.raise_for_status()
+print("installation accepted by enterprise install broker")</code></pre><p><strong>Action:</strong> Force all installs through a single enterprise install broker and block direct outbound registry installs from developer workstations and agent runtimes. Log every denied attempt so security can detect repeated bypass attempts.</p>`,
+                        },
+                        {
+                            implementation:
+                                "Run periodic reconciliation to identify orphaned, dormant, and scan-gap skills.",
+                            howTo: `<h5>Concept:</h5><p>Periodic reconciliation is an inventory hygiene control. Its job is to identify skills that no longer have a valid owner, are no longer used, or have drifted out of scanning coverage. That should be measured on a schedule even when no incident is in progress.</p><h5>Step 1: Join inventory, HR/IAM, usage, and scan feeds</h5><pre><code># File: skill_governance/reconcile_skill_inventory.py
+from pathlib import Path
+import pandas as pd
+
+inventory = pd.read_csv("exports/skill_inventory.csv")
+active_workers = pd.read_csv("exports/hr_active_workers.csv")
+usage = pd.read_csv("exports/skill_usage_last_90d.csv")
+scans = pd.read_csv("exports/skill_scan_status.csv")
+
+report = inventory.merge(
+    active_workers[["employee_id"]],
+    how="left",
+    left_on="current_owner",
+    right_on="employee_id",
+    indicator="owner_match",
+)
+report = report.merge(usage[["skill_id", "last_invoked_at"]], how="left", on="skill_id")
+report = report.merge(scans[["skill_id", "last_scan_at", "scan_status"]], how="left", on="skill_id")
+
+last_invoked = pd.to_datetime(report["last_invoked_at"], utc=True, errors="coerce")
+last_scan = pd.to_datetime(report["last_scan_at"], utc=True, errors="coerce")
+now_utc = pd.Timestamp.now(tz="UTC")
+
+report["is_orphaned"] = report["owner_match"] == "left_only"
+report["is_dormant"] = last_invoked.isna() | last_invoked.lt(now_utc - pd.Timedelta(days=90))
+report["is_scan_gap"] = last_scan.isna() | last_scan.lt(now_utc - pd.Timedelta(days=30))
+
+findings = report[
+    report["is_orphaned"] | report["is_dormant"] | report["is_scan_gap"]
+].copy()
+
+Path("reports").mkdir(exist_ok=True)
+findings.to_csv("reports/skill_reconciliation_findings.csv", index=False)
+print(f"flagged {len(findings)} skills for review")</code></pre><p><strong>Action:</strong> Run this reconciliation at least weekly for production agent platforms. Create tickets for every flagged skill and define a grace-period policy that determines when an unresolved orphaned or unscanned skill is automatically disabled.</p>`,
+                        },
+                        {
+                            implementation:
+                                "Trigger skill disable, revalidation, or ownership transfer from security and ownership events.",
+                            howTo: `<h5>Concept:</h5><p>Lifecycle transitions triggered by security or ownership events are a separate control from scheduled reconciliation. These paths react immediately to trusted signals such as employee departure, publisher compromise, CVE matches, or incident-response containment decisions.</p><h5>Step 1: Define event-to-state transitions</h5><pre><code># File: skill_governance/lifecycle_transitions.yaml
+owner_departed:
+  new_state: pending_transfer
+  grace_period_hours: 336
+publisher_compromised:
+  new_state: suspended
+  require_rescan: true
+cve_match:
+  new_state: needs_revalidation
+  require_rescan: true
+incident_disable:
+  new_state: disabled
+  revoke_credentials: true</code></pre><h5>Step 2: Consume events and apply transitions through the inventory API</h5><pre><code># File: skill_governance/lifecycle_event_consumer.py
+from pathlib import Path
+
+import requests
+import yaml
+from fastapi import FastAPI
+from pydantic import BaseModel
+
+policy = yaml.safe_load(
+    Path("skill_governance/lifecycle_transitions.yaml").read_text(encoding="utf-8")
+)
+app = FastAPI()
+
+
+class LifecycleEvent(BaseModel):
+    event_type: str
+    skill_ids: list[str]
+    source_event_id: str
+    detected_at: str
+
+
+@app.post("/v1/skill-lifecycle-events")
+def handle_event(event: LifecycleEvent):
+    transition = policy[event.event_type]
+    for skill_id in event.skill_ids:
+        payload = {
+            "state": transition["new_state"],
+            "source_event_id": event.source_event_id,
+            "detected_at": event.detected_at,
+            "require_rescan": transition.get("require_rescan", False),
+            "revoke_credentials": transition.get("revoke_credentials", False),
+            "grace_period_hours": transition.get("grace_period_hours"),
+        }
+        response = requests.post(
+            f"https://skill-inventory.internal.corp/api/v1/skills/{skill_id}/transition",
+            json=payload,
+            timeout=10,
+        )
+        response.raise_for_status()
+    return {"transitioned": len(event.skill_ids)}</code></pre><p><strong>Action:</strong> Feed this service from HR departure events, trusted publisher-intelligence signals, CVE correlation jobs, and incident-response tooling. Persist the source event ID on every transition so evidence and reporting can show exactly why a skill was disabled or revalidated.</p>`,
                         },
                     ],
                 }
@@ -940,11 +1257,11 @@ export const modelTactic = {
                         {
                             "framework": "Databricks AI Security Framework 3.0",
                             "items": [
-                                "Agents — Core 13.1: Memory Poisoning",
-                                "Agents — Core 13.2: Tool Misuse",
-                                "Agents — Core 13.6: Intent Breaking & Goal Manipulation",
-                                "Agents — Core 13.12: Agent Communication Poisoning",
-                                "Model Serving — Inference requests 9.9: Input Resource Control",
+                                "Agents - Core 13.1: Memory Poisoning",
+                                "Agents - Core 13.2: Tool Misuse",
+                                "Agents - Core 13.6: Intent Breaking & Goal Manipulation",
+                                "Agents - Core 13.12: Agent Communication Poisoning",
+                                "Model Serving - Inference requests 9.9: Input Resource Control",
                                 "Datasets 3.1: Data poisoning",
                                 "Raw Data 1.1: Insufficient access controls",
                                 "Raw Data 1.7: Lack of data trustworthiness"
@@ -953,8 +1270,250 @@ export const modelTactic = {
                     ],
                     "implementationGuidance": [
                         {
-                            "implementation": "FastAPI write-gate + Pinecone namespaces + OPA routing",
-                            "howTo": "<h5>Concept:</h5><p>Terminate mTLS at a write-gate, verify caller identity, require <code>evidenceRefs[]</code> and a validator report, then route to <code>trusted</code>/<code>probation</code>/<code>quarantined</code> namespaces based on policy.</p><h5>Python (FastAPI) gate:</h5><pre><code class=\"language-python\"># write_gate.py\nfrom fastapi import FastAPI, Request, HTTPException\nimport requests, pinecone, os\nfrom pydantic import BaseModel, conlist\n\nclass Write(BaseModel):\n  claims: list\n  evidenceRefs: conlist(str, min_items=1)\n  validatorReport: dict\n  riskTier: str\n  signer: str\n\napp = FastAPI()\nOPA_URL = os.getenv(\"OPA_URL\")\nPINECONE_ENV = os.getenv(\"PINECONE_ENV\")\nINDEX = os.getenv(\"INDEX\", \"kb\")\n\npinecone.init(api_key=os.getenv(\"PINECONE_API_KEY\"), environment=PINECONE_ENV)\nindex = pinecone.Index(INDEX)\n\n@app.post(\"/kb/write\")\nasync def write(req: Write, request: Request):\n  # verify caller identity (e.g., SPIFFE/JWT in header)\n  idhdr = request.headers.get(\"X-Workload-Identity\")\n  if not idhdr:\n    raise HTTPException(401, detail=\"missing_identity\")\n  # policy decision\n  pd = requests.post(OPA_URL, json={\"input\": req.dict()}).json()\n  tier = pd.get(\"result\", {}).get(\"tier\", \"quarantined\")\n  # route to namespace\n  ns = {\"trusted\": \"trusted\", \"probation\": \"probation\", \"quarantined\": \"quarantined\"}[tier]\n  vectors = [(c.get(\"id\"), c.get(\"embedding\"), {\"evidence\": \";\".join(req.evidenceRefs)}) for c in req.claims]\n  index.upsert(vectors=vectors, namespace=ns)\n  return {\"namespace\": ns}\n</code></pre><h5>OPA routing (Rego):</h5><pre><code class=\"language-rego\">package kbwrite\n\n# default to quarantine\ntier := \"quarantined\"\n\n# trusted if enough evidence and validator confidence high\ntier := \"trusted\" {\n  count(input.evidenceRefs) >= 2\n  input.validatorReport.confidence >= 0.8\n}\n\n# probation when partial\ntier := \"probation\" {\n  count(input.evidenceRefs) == 1\n  input.validatorReport.confidence >= 0.6\n}\n</code></pre>"
+                            "implementation": "Deploy an authenticated KB or memory write admission gate that validates identity, payload shape, and minimum evidence before any write is accepted.",
+                            "howTo": `<h5>Concept:</h5><p>Put a single authenticated admission point in front of every agent memory or knowledge-base write path. Its job is to verify the caller identity, reject malformed writes, and enforce the minimum evidence contract before policy evaluation or storage routing happens.</p><h5>Step 1: Define the write request contract</h5><pre><code># File: kb_write_gate/contracts.py
+from pydantic import BaseModel, Field
+
+
+class EvidenceRef(BaseModel):
+    source_uri: str
+    sha256: str
+    collected_by: str
+
+
+class MemoryWrite(BaseModel):
+    document_id: str
+    content: str = Field(min_length=20)
+    embedding: list[float]
+    evidence_refs: list[EvidenceRef]
+    validator_score: float = Field(ge=0.0, le=1.0)
+    source_system: str
+
+    def validate_gate_requirements(self) -> None:
+        if len(self.embedding) < 8:
+            raise ValueError("embedding_too_short")
+        if not self.evidence_refs:
+            raise ValueError("evidence_refs_required")</code></pre><h5>Step 2: Enforce identity and schema checks at the write-gate</h5><pre><code># File: kb_write_gate/app.py
+from fastapi import FastAPI, Header, HTTPException
+from uuid import uuid4
+
+from contracts import MemoryWrite
+
+app = FastAPI()
+
+
+@app.post("/v1/memory/write")
+async def write(memory_write: MemoryWrite, x_workload_identity: str = Header(default="")):
+    if not x_workload_identity.startswith("spiffe://corp.internal/"):
+        raise HTTPException(status_code=401, detail="invalid_workload_identity")
+
+    try:
+        memory_write.validate_gate_requirements()
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+    if memory_write.validator_score < 0.60:
+        raise HTTPException(status_code=422, detail="validator_score_below_gate_threshold")
+
+    audit_id = str(uuid4())
+    return {
+        "audit_id": audit_id,
+        "status": "accepted_for_policy_evaluation",
+        "document_id": memory_write.document_id,
+    }</code></pre><p><strong>Action:</strong> Terminate mTLS at the ingress proxy, pass the verified workload identity to this service, and expose the vector store only to the write-gate so clients cannot bypass admission checks.</p>`
+                        },
+                        {
+                            "implementation": "Use policy-as-code to assign each KB or memory write to a trust tier based on evidence, source trust, and validator output.",
+                            "howTo": `<h5>Concept:</h5><p>The caller should never pick its own trust tier. Normalize write facts into a policy input document and let a policy engine decide whether the content belongs in trusted, probation, or quarantined storage.</p><h5>Step 1: Normalize the write facts that matter for trust decisions</h5><pre><code># File: kb_write_gate/policy_input.json
+{
+  "identity": "spiffe://corp.internal/agents/rag-ingestor",
+  "validator_score": 0.93,
+  "evidence_ref_count": 2,
+  "content_signature_verified": true,
+  "source_registry_trusted": true,
+  "high_risk_flags": []
+}</code></pre><h5>Step 2: Evaluate a Rego policy that returns both tier and reasons</h5><pre><code># File: policy/kb_write.rego
+package kb.write
+
+default decision := {"tier": "quarantined", "reasons": ["default_quarantine"]}
+
+decision := {"tier": "trusted", "reasons": ["signature_verified", "sufficient_evidence", "high_validator_score"]} {
+    input.content_signature_verified
+    input.source_registry_trusted
+    input.evidence_ref_count >= 2
+    input.validator_score >= 0.90
+    count(input.high_risk_flags) == 0
+}
+
+decision := {"tier": "probation", "reasons": ["manual_promotion_required"]} {
+    input.evidence_ref_count >= 1
+    input.validator_score >= 0.60
+    count(input.high_risk_flags) == 0
+    not input.content_signature_verified
+}</code></pre><h5>Step 3: Fail closed if the policy engine cannot be reached</h5><pre><code># File: kb_write_gate/policy_client.py
+import requests
+
+
+def evaluate_policy(payload: dict) -> dict:
+    response = requests.post(
+        "http://opa.internal.corp/v1/data/kb/write/decision",
+        json={"input": payload},
+        timeout=2,
+    )
+    response.raise_for_status()
+    return response.json()["result"]</code></pre><p><strong>Action:</strong> Persist the returned tier and reasons with the write audit record. That gives future evidence and reporting a precise explanation for why a memory item was trusted, put on probation, or quarantined.</p>`
+                        },
+                        {
+                            "implementation": "Store and retrieve KB or memory entries from separate trust-tiered namespaces with explicit promotion and quarantine rules.",
+                            "howTo": `<h5>Concept:</h5><p>Tier assignment only becomes enforceable if storage and retrieval are physically separated. Trusted content should be readable by default, probation content should require an extra check, and quarantined content should never appear in normal retrieval paths.</p><h5>Step 1: Persist records into tier-specific namespaces</h5><pre><code># File: kb_write_gate/persistence.py
+import os
+from pinecone import Pinecone
+
+pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
+index = pc.Index(host=os.environ["PINECONE_INDEX_HOST"])
+
+
+def upsert_memory_record(write_request: dict, decision: dict) -> None:
+    metadata = {
+        "trust_tier": decision["tier"],
+        "decision_reasons": ",".join(decision["reasons"]),
+        "source_system": write_request["source_system"],
+        "evidence_refs": ",".join(
+            evidence["source_uri"] for evidence in write_request["evidence_refs"]
+        ),
+    }
+    index.upsert(
+        namespace=decision["tier"],
+        vectors=[
+            {
+                "id": write_request["document_id"],
+                "values": write_request["embedding"],
+                "metadata": metadata,
+            }
+        ],
+    )</code></pre><h5>Step 2: Query trusted content by default and require an explicit flag for probation</h5><pre><code># File: kb_write_gate/retrieval.py
+import os
+from pinecone import Pinecone
+
+pc = Pinecone(api_key=os.environ["PINECONE_API_KEY"])
+index = pc.Index(host=os.environ["PINECONE_INDEX_HOST"])
+
+
+def query_memory(query_vector: list[float], allow_probation: bool = False) -> list[dict]:
+    namespaces = ["trusted"]
+    if allow_probation:
+        namespaces.append("probation")
+
+    matches = []
+    for namespace in namespaces:
+        result = index.query(
+            namespace=namespace,
+            vector=query_vector,
+            top_k=5,
+            include_metadata=True,
+        )
+        matches.extend(result.matches)
+    return matches</code></pre><h5>Step 3: Define promotion and quarantine handling as explicit operational rules</h5><pre><code># File: kb_write_gate/trust_tier_rules.yaml
+trusted:
+  readable_by_default: true
+probation:
+  readable_by_default: false
+  promotion_requires:
+    - second_evidence_ref
+    - analyst_review
+quarantined:
+  readable_by_default: false
+  retention_days: 30</code></pre><p><strong>Action:</strong> Do not let application code query the quarantined namespace directly. Promotion from probation to trusted should require a new review event, not a silent overwrite of the original record.</p>`
+                        },
+                        {
+                            "implementation": "Run contradiction checks against trusted facts before promoting new KB or memory writes into trusted storage.",
+                            "howTo": `<h5>Concept:</h5><p>A write can have valid identity and evidence yet still contradict already trusted knowledge. Before promoting a candidate into the trusted namespace, compare it against the existing trusted fact set for the same entity and predicate. Contradictions should force probation or quarantine until a human or stronger verifier resolves them.</p><h5>Step 1: Normalize claims into comparable keys</h5><pre><code># File: kb_write_gate/claims.py
+from pydantic import BaseModel
+
+
+class Claim(BaseModel):
+    entity_id: str
+    predicate: str
+    value: str
+    confidence: float
+    evidence_refs: list[str]</code></pre><h5>Step 2: Reject trusted promotion when a contradictory fact already exists</h5><pre><code># File: kb_write_gate/contradictions.py
+from __future__ import annotations
+
+from claims import Claim
+
+
+def contradiction_key(claim: Claim) -> tuple[str, str]:
+    return claim.entity_id, claim.predicate
+
+
+def detect_contradiction(candidate: Claim, trusted_claims: list[Claim]) -> Claim | None:
+    for trusted in trusted_claims:
+        if contradiction_key(trusted) != contradiction_key(candidate):
+            continue
+        if trusted.value != candidate.value:
+            return trusted
+    return None</code></pre><h5>Step 3: Route contradictions to probation instead of silently overwriting trusted state</h5><pre><code># File: kb_write_gate/promotion.py
+def decide_target_namespace(candidate: Claim, trusted_claims: list[Claim]) -> str:
+    conflict = detect_contradiction(candidate, trusted_claims)
+    if conflict:
+        return "probation"
+    return "trusted"</code></pre><p><strong>Action:</strong> Do not let new writes silently replace contradictory trusted facts. Preserve both the candidate and the conflicting trusted fact in the review record so analysts can see exactly what changed and why promotion was denied.</p>`
+                        },
+                        {
+                            "implementation": "Record immutable provenance for every accepted KB or memory write, including who wrote it, which evidence was reviewed, and which policy decision allowed it.",
+                            "howTo": `<h5>Concept:</h5><p>Once a write is accepted, its provenance record becomes part of the control evidence for later audits, investigations, and restore decisions. The record should be append-only and should capture the workload identity, evidence references, validator output, policy decision, and final namespace.</p><h5>Step 1: Build a provenance event payload at the write gate</h5><pre><code># File: kb_write_gate/provenance_event.json
+{
+  "document_id": "cust-4421-status",
+  "writer_identity": "spiffe://corp.internal/agents/rag-ingestor",
+  "decision_tier": "trusted",
+  "validator_score": 0.93,
+  "evidence_refs": [
+    "s3://evidence/customer-4421/ticket-19.pdf"
+  ],
+  "policy_version": "kb-write-v7",
+  "recorded_at": "2026-04-08T21:12:00Z"
+}</code></pre><h5>Step 2: Append the record to an immutable provenance service</h5><pre><code># File: kb_write_gate/provenance_client.py
+from __future__ import annotations
+
+import requests
+
+
+def append_provenance(event: dict) -> None:
+    response = requests.post(
+        "https://provenance.internal.corp/v1/append",
+        json=event,
+        timeout=2,
+    )
+    response.raise_for_status()</code></pre><p><strong>Action:</strong> Write provenance records before the vector-store upsert is considered complete. The accepted write and its provenance must share the same stable <code>document_id</code> so later evidence collection can prove who introduced the fact and under which policy decision.</p>`
+                        },
+                        {
+                            "implementation": "Trip a write-path circuit breaker when verification failures spike, so suspicious sources cannot continue poisoning shared memory or KB stores.",
+                            "howTo": `<h5>Concept:</h5><p>When verification failures suddenly spike for a tenant, source connector, or workload identity, continuing to accept writes is operationally unsafe. Count verification failures over a short window and flip the affected source into quarantine-only mode until responders review it.</p><h5>Step 1: Track failure counts per source and tenant in a short window</h5><pre><code># File: kb_write_gate/circuit_breaker.py
+from __future__ import annotations
+
+import redis
+
+r = redis.Redis(host="redis", port=6379, decode_responses=True)
+
+FAILURE_THRESHOLD = 10
+WINDOW_SECONDS = 300
+
+
+def record_failure(tenant_id: str, source_system: str) -> int:
+    key = f"kb-write-failures:{tenant_id}:{source_system}"
+    count = r.incr(key)
+    if count == 1:
+        r.expire(key, WINDOW_SECONDS)
+    return count</code></pre><h5>Step 2: Deny further trusted writes after the threshold is crossed</h5><pre><code># File: kb_write_gate/guard.py
+class CircuitOpen(RuntimeError):
+    pass
+
+
+def enforce_circuit_breaker(tenant_id: str, source_system: str) -> None:
+    key = f"kb-write-failures:{tenant_id}:{source_system}"
+    count = int(r.get(key) or 0)
+    if count >= FAILURE_THRESHOLD:
+        raise CircuitOpen("verification_failure_spike_detected")</code></pre><p><strong>Action:</strong> When the circuit opens, stop promoting writes from that source into trusted or probation tiers, emit a high-severity security event, and route the source to incident response. This keeps one degraded connector or agent from continuously polluting shared memory.</p>`
                         }
                     ]
                 },
@@ -1160,12 +1719,12 @@ export const modelTactic = {
                         "Algorithms 5.2: Model drift",
                         "Evaluation 6.2: Insufficient evaluation data",
                         "Evaluation 6.3: Lack of Interpretability and Explainability",
-                        "Model Serving — Inference response 10.1: Lack of audit and monitoring inference quality",
-                        "Model Serving — Inference requests 9.8: LLM hallucinations",
+                        "Model Serving - Inference response 10.1: Lack of audit and monitoring inference quality",
+                        "Model Serving - Inference requests 9.8: LLM hallucinations",
                         "Governance 4.1: Lack of traceability and transparency of model assets",
                         "Governance 4.2: Lack of end-to-end ML lifecycle",
                         "Model Management 8.1: Model attribution",
-                        "Agents — Core 13.7: Misaligned & Deceptive Behaviors"
+                        "Agents - Core 13.7: Misaligned & Deceptive Behaviors"
                     ]
                 }
             ],
@@ -1394,9 +1953,9 @@ export const modelTactic = {
                             "framework": "Databricks AI Security Framework 3.0",
                             "items": [
                                 "Algorithms 5.2: Model drift",
-                                "Model Serving — Inference response 10.1: Lack of audit and monitoring inference quality",
-                                "Model Serving — Inference requests 9.7: Denial of Service (DoS)",
-                                "Model Serving — Inference response 10.5: Black-box attacks",
+                                "Model Serving - Inference response 10.1: Lack of audit and monitoring inference quality",
+                                "Model Serving - Inference requests 9.7: Denial of Service (DoS)",
+                                "Model Serving - Inference response 10.5: Black-box attacks",
                                 "Evaluation 6.2: Insufficient evaluation data",
                                 "Datasets 3.1: Data poisoning (when poisoning manifests as measurable drift)"
                             ]
@@ -1509,7 +2068,7 @@ export const modelTactic = {
                                 "Evaluation 6.3: Lack of Interpretability and Explainability",
                                 "Algorithms 5.2: Model drift",
                                 "Model 7.1: Backdoor machine learning / Trojaned model",
-                                "Model Serving — Inference response 10.1: Lack of audit and monitoring inference quality"
+                                "Model Serving - Inference response 10.1: Lack of audit and monitoring inference quality"
                             ]
                         }
                     ]
@@ -1615,12 +2174,12 @@ export const modelTactic = {
                         {
                             "framework": "Databricks AI Security Framework 3.0",
                             "items": [
-                                "Agents — Core 13.6: Intent Breaking & Goal Manipulation",
-                                "Agents — Core 13.7: Misaligned & Deceptive Behaviors",
-                                "Agents — Core 13.2: Tool Misuse",
-                                "Agents — Core 13.3: Privilege Compromise",
-                                "Model Serving — Inference requests 9.13: Excessive agency",
-                                "Agents — Core 13.8: Repudiation & Untraceability"
+                                "Agents - Core 13.6: Intent Breaking & Goal Manipulation",
+                                "Agents - Core 13.7: Misaligned & Deceptive Behaviors",
+                                "Agents - Core 13.2: Tool Misuse",
+                                "Agents - Core 13.3: Privilege Compromise",
+                                "Model Serving - Inference requests 9.13: Excessive agency",
+                                "Agents - Core 13.8: Repudiation & Untraceability"
                             ]
                         }
                     ]
@@ -1728,8 +2287,8 @@ export const modelTactic = {
                         {
                             "framework": "Databricks AI Security Framework 3.0",
                             "items": [
-                                "Model Serving — Inference requests 9.3: Model breakout",
-                                "Model Serving — Inference response 10.5: Black-box attacks",
+                                "Model Serving - Inference requests 9.3: Model breakout",
+                                "Model Serving - Inference response 10.5: Black-box attacks",
                                 "Data Prep 2.1: Preprocessing integrity (anomalous inputs caught before reaching model)"
                             ]
                         }
@@ -1845,20 +2404,63 @@ export const modelTactic = {
                     "description": "Employs self-supervised learning during the validation phase to generate baseline artifacts for Graph Neural Network (GNN) backdoor defense.<br/><br/>Trains an auxiliary GNN model that learns intrinsic semantic information and attribute importance of nodes without using potentially poisoned labels, producing clean embedding distributions, drift profiles, and discrepancy statistics.<br/><br/>These baseline artifacts are persisted for use by downstream detection techniques (see AID-D-012.001). This technique does not perform alerting; it generates and stores the trusted reference state.",
                     "implementationGuidance": [
                         {
-                            "implementation": "Train an auxiliary GNN model using a self-supervised task to learn clean node representations.",
-                            "howTo": "<h5>Concept:</h5><p>We first train a GNN without using any potentially poisoned labels. A classic self-supervised task is link prediction: predict whether an edge should exist between two nodes. This forces the GNN to learn 'normal' structure/semantics. Below is runnable-style code with imports added and comments that clarify the training loop requirement.</p><pre><code># File: modeling/auxiliary_gnn.py\nimport torch\nimport torch.nn as nn\nfrom torch_geometric.nn import GCNConv\n\nclass LinkPredictorGNN(nn.Module):\n    def __init__(self, in_channels, hidden_channels):\n        super().__init__()\n        self.conv1 = GCNConv(in_channels, hidden_channels)\n        self.conv2 = GCNConv(hidden_channels, hidden_channels)\n\n    def encode(self, x, edge_index):\n        h = self.conv1(x, edge_index).relu()\n        h = self.conv2(h, edge_index)\n        return h  # node embeddings\n\n    def decode(self, z, edge_label_index):\n        # Dot-product decoder for link prediction\n        # edge_label_index: [2, num_edges]\n        src, dst = edge_label_index\n        return (z[src] * z[dst]).sum(dim=-1)\n\n# Training loop sketch:\n# 1. Sample positive edges (real graph edges)\n# 2. Sample negative edges (random non-edges)\n# 3. Encode nodes -> get z\n# 4. Decode both pos and neg -> BCE loss to classify true vs fake edges\n# 5. Optimize\n</code></pre><p><strong>Action:</strong> Train this auxiliary model only on structural/self-supervised tasks. Its embeddings will act as your \"clean\" semantic baseline.</p>"
-                        },
-                        {
-                            "implementation": "Extract clean baseline embeddings and attribute importance from the auxiliary model.",
-                            "howTo": "<h5>Concept:</h5><p>After training the auxiliary model, we export (1) each node's embedding as the trusted semantic representation, and (2) per-node feature attribution from an explainer like GNNExplainer. We add missing imports and file output.</p><pre><code># File: modeling/generate_baselines.py\nimport torch\nimport numpy as np\n\n# Assume:\n#  - auxiliary_model is a trained LinkPredictorGNN\n#  - data is a torch_geometric Data object with data.x, data.edge_index\n#  - We are running this offline in validation, not live prod\n\nauxiliary_model.eval()\nwith torch.no_grad():\n    clean_embeddings = auxiliary_model.encode(data.x, data.edge_index)\n\nnp.save('baselines/clean_node_embeddings.npy', clean_embeddings.cpu().numpy())\nprint(\"Saved clean baseline embeddings -> baselines/clean_node_embeddings.npy\")\n\n# OPTIONAL (pseudocode): run GNNExplainer to estimate which node features matter\n# from torch_geometric.nn import GNNExplainer\n# explainer = GNNExplainer(auxiliary_model, epochs=100)\n# feature_importance = {}\n# for node_idx in range(data.num_nodes):\n#     node_feat_mask, edge_mask = explainer.explain_node(node_idx, data.x, data.edge_index)\n#     feature_importance[node_idx] = node_feat_mask.detach().cpu().numpy().tolist()\n# Save feature_importance for audit if needed\n</code></pre><p><strong>Action:</strong> Persist <code>clean_node_embeddings.npy</code> (and optionally feature importances) as the \"known good\" semantic baseline for each node.</p>"
-                        },
-                        {
-                            "implementation": "Train the primary (potentially compromised) model using standard supervised learning.",
-                            "howTo": "<h5>Concept:</h5><p>Now we train the actual production GNN with the (possibly poisoned) labels. This model is the one we suspect. We'll later compare its embeddings to the clean baseline embeddings to spot suspicious nodes.</p><pre><code># File: modeling/train_primary_model.py\nimport torch\nimport torch.nn as nn\nfrom torch_geometric.nn import GCNConv\n\nclass PrimaryGNN(nn.Module):\n    def __init__(self, in_channels, hidden_channels, out_channels):\n        super().__init__()\n        self.conv1 = GCNConv(in_channels, hidden_channels)\n        self.conv2 = GCNConv(hidden_channels, out_channels)\n\n    def forward(self, x, edge_index):\n        h = self.conv1(x, edge_index).relu()\n        out = self.conv2(h, edge_index)\n        return out  # logits per node\n\n# Training loop sketch:\n# optimizer = torch.optim.Adam(model.parameters(), lr=1e-2)\n# criterion = nn.CrossEntropyLoss()\n# for epoch in range(200):\n#     optimizer.zero_grad()\n#     logits = model(data.x, data.edge_index)\n#     loss = criterion(logits[data.train_mask], data.y[data.train_mask])\n#     loss.backward()\n#     optimizer.step()\n</code></pre><p><strong>Action:</strong> Keep this supervised model and its learned embeddings around — we'll diff it against the auxiliary model.</p>"
-                        },
-                        {
-                            "implementation": "Compute and persist discrepancy metrics between the primary and auxiliary models as baseline artifacts.",
-                            "howTo": "<h5>Concept:</h5><p>We measure how much each node's meaning \"moved\" between the clean self-supervised embedding and the supervised (possibly poisoned) embedding. These discrepancy profiles are persisted as baseline artifacts for downstream consumption by detection techniques (e.g., AID-D-012.001).</p><pre><code># File: modeling/compute_discrepancies.py\nimport numpy as np\nfrom scipy.spatial.distance import cosine\nimport torch\n\n# Assume:\n#  - clean_embeddings.npy was saved by the auxiliary model step\n#  - primary_model is a trained PrimaryGNN\n#  - data is the same torch_geometric Data object\n\nclean_embeddings = np.load('baselines/clean_node_embeddings.npy')  # shape [N, d]\n\nprimary_model.eval()\nwith torch.no_grad():\n    primary_emb_torch = primary_model.conv1(data.x, data.edge_index).relu()\n    primary_emb_torch = primary_model.conv2(primary_emb_torch, data.edge_index)\nprimary_embeddings = primary_emb_torch.cpu().numpy()  # shape [N, d]\n\nnum_nodes = primary_embeddings.shape[0]\nsemantic_drifts = []\nfor i in range(num_nodes):\n    drift = cosine(clean_embeddings[i], primary_embeddings[i])\n    semantic_drifts.append(drift)\n\nsemantic_drifts = np.array(semantic_drifts)\n\n# Persist baseline drift profiles for downstream detection techniques\nnp.save('baselines/node_semantic_drift.npy', semantic_drifts)\nnp.save('baselines/primary_embeddings.npy', primary_embeddings)\nprint(\"Baseline artifacts saved to baselines/ directory\")\n</code></pre><p><strong>Action:</strong> Persist the drift scores and embedding profiles. These baseline artifacts will be consumed by detection techniques (AID-D-012.001) to identify anomalous nodes during validation scans.</p>"
+                            "implementation": "Train an auxiliary self-supervised GNN, train the primary supervised GNN, and persist discrepancy artifacts from their embedding differences.",
+                            "howTo": `<h5>Concept:</h5><p>Treat auxiliary-model training, primary-model training, and discrepancy export as one validation workflow. The security value comes from the complete artifact bundle: clean embeddings from the self-supervised model, candidate embeddings from the supervised model, and per-node discrepancy statistics that downstream detection can compare against.</p><h5>Step 1: Run both training stages in the same validation pipeline</h5><pre><code># File: pipelines/gnn_discrepancy_baseline.yaml
+run_id: gnn-baseline-2026-04-07
+graph_data_path: artifacts/graphs/candidate_graph.pt
+auxiliary_training:
+  task: link_prediction
+  checkpoint_path: artifacts/gnn/auxiliary_encoder.pt
+primary_training:
+  task: node_classification
+  checkpoint_path: artifacts/gnn/primary_model.pt
+artifact_output_dir: baselines/gnn_discrepancy</code></pre><h5>Step 2: Export embeddings and discrepancy artifacts after both checkpoints exist</h5><pre><code># File: modeling/export_gnn_discrepancy_baseline.py
+from pathlib import Path
+import json
+
+import numpy as np
+from scipy.spatial.distance import cdist
+import torch
+
+graph = torch.load("artifacts/graphs/candidate_graph.pt")
+auxiliary = torch.load("artifacts/gnn/auxiliary_encoder.pt", weights_only=False)
+primary = torch.load("artifacts/gnn/primary_model.pt", weights_only=False)
+
+auxiliary.eval()
+primary.eval()
+
+with torch.no_grad():
+    clean_embeddings = auxiliary.encode(graph.x, graph.edge_index).cpu().numpy()
+    candidate_embeddings = primary.encode(graph.x, graph.edge_index).cpu().numpy()
+
+cosine_drift = np.diag(cdist(clean_embeddings, candidate_embeddings, metric="cosine"))
+l2_drift = np.linalg.norm(clean_embeddings - candidate_embeddings, axis=1)
+
+output_dir = Path("baselines/gnn_discrepancy")
+output_dir.mkdir(parents=True, exist_ok=True)
+np.save(output_dir / "clean_node_embeddings.npy", clean_embeddings)
+np.save(output_dir / "candidate_node_embeddings.npy", candidate_embeddings)
+np.save(output_dir / "node_cosine_drift.npy", cosine_drift)
+np.save(output_dir / "node_l2_drift.npy", l2_drift)
+output_dir.joinpath("baseline_manifest.json").write_text(
+    json.dumps(
+        {
+            "run_id": "gnn-baseline-2026-04-07",
+            "auxiliary_checkpoint": "artifacts/gnn/auxiliary_encoder.pt",
+            "primary_checkpoint": "artifacts/gnn/primary_model.pt",
+            "artifacts": [
+                "clean_node_embeddings.npy",
+                "candidate_node_embeddings.npy",
+                "node_cosine_drift.npy",
+                "node_l2_drift.npy",
+            ],
+        },
+        indent=2,
+    ),
+    encoding="utf-8",
+)
+
+print("wrote GNN discrepancy baseline artifacts")</code></pre><p><strong>Action:</strong> Publish the manifest and all four artifact files as one release bundle tied to the candidate model version. Do not mark the baseline complete if either checkpoint or any discrepancy artifact is missing.</p>`
                         }
                     ],
                     "toolsOpenSource": [
@@ -1977,17 +2579,151 @@ export const modelTactic = {
                     "howTo": "<h5>Concept:</h5><p>If your model runs on physically accessible hardware (e.g., edge devices, on-prem servers), the hardware itself is part of the attack surface.</p><h5>Step 1: Assess Physical Access Risk</h5><p>Determine if an attacker could gain physical access to the hardware running the AI model. This is most relevant for edge AI, IoT, and on-premise data centers.</p><h5>Step 2: Create Hardware Threat Assessment</h5><p>Systematically evaluate hardware-specific threats.</p><pre><code># File: hardware_threat_assessment.yaml\nhardware_deployment_scenarios:\n  edge_devices:\n    physical_access_risk: \"High\"\n    threat_categories:\n      - side_channel_attacks:\n          description: \"Power analysis, EM emissions, timing attacks\"\n          attack_vectors:\n            - \"Power consumption monitoring during inference\"\n            - \"Electromagnetic emission analysis\"\n            - \"Cache timing analysis\"\n          potential_impact: \"Model parameter extraction, input data leakage\"\n          likelihood: \"Medium\"\n      \n      - fault_injection:\n          description: \"Inducing errors to bypass security or extract data\"\n          attack_vectors:\n            - \"Voltage glitching during computation\"\n            - \"Clock glitching to skip security checks\"\n            - \"Laser fault injection on chip surfaces\"\n          potential_impact: \"Security bypass, incorrect model behavior\"\n          likelihood: \"Low\"\n      \n      - physical_tampering:\n          description: \"Direct hardware modification or probing\"\n          attack_vectors:\n            - \"Hardware implants during manufacturing\"\n            - \"PCB probing for signal interception\"\n            - \"Firmware modification via JTAG/SWD\"\n          potential_impact: \"Complete system compromise\"\n          likelihood: \"Low\"\n  \n  cloud_infrastructure:\n    physical_access_risk: \"Low\"\n    threat_categories:\n      - shared_hardware_attacks:\n          description: \"Attacks via co-located VMs or containers\"\n          attack_vectors:\n            - \"Cache-based side-channel attacks\"\n            - \"Memory deduplication attacks\"\n            - \"GPU memory sharing vulnerabilities\"\n          potential_impact: \"Cross-tenant data leakage\"\n          likelihood: \"Medium\"</code></pre><h5>Step 3: Implement Hardware Security Assessment</h5><p>Develop procedures to evaluate hardware security risks.</p><pre><code># File: hardware_security_assessment.py\n# Hardware Security Assessment for AI Systems\n\nimport json\nfrom typing import Dict, List\n\nclass HardwareSecurityAssessment:\n    def __init__(self, deployment_config: Dict):\n        self.config = deployment_config\n        self.risks = []\n    \n    def assess_side_channel_risks(self):\n        \"\"\"Assess side-channel attack risks\"\"\"\n        if self.config.get('deployment_type') == 'edge':\n            if not self.config.get('power_line_filtering'):\n                self.risks.append({\n                    'type': 'side_channel',\n                    'vector': 'power_analysis',\n                    'severity': 'High',\n                    'mitigation': 'Implement power line filtering and noise injection'\n                })\n            \n            if not self.config.get('electromagnetic_shielding'):\n                self.risks.append({\n                    'type': 'side_channel',\n                    'vector': 'electromagnetic_emissions',\n                    'severity': 'Medium',\n                    'mitigation': 'Add electromagnetic shielding to device enclosure'\n                })\n    \n    def assess_fault_injection_risks(self):\n        \"\"\"Assess fault injection attack risks\"\"\"\n        if self.config.get('critical_decision_making'):\n            if not self.config.get('fault_detection_mechanisms'):\n                self.risks.append({\n                    'type': 'fault_injection',\n                    'vector': 'voltage_glitching',\n                    'severity': 'High',\n                    'mitigation': 'Implement voltage monitors and fault detection'\n                })\n    \n    def assess_physical_tampering_risks(self):\n        \"\"\"Assess physical tampering risks\"\"\"\n        if not self.config.get('tamper_detection'):\n            self.risks.append({\n                'type': 'physical_tampering',\n                'vector': 'case_opening',\n                'severity': 'Medium',\n                'mitigation': 'Install tamper-evident seals and intrusion detection'\n            })\n        \n        if not self.config.get('secure_boot'):\n            self.risks.append({\n                'type': 'physical_tampering',\n                'vector': 'firmware_modification',\n                'severity': 'High',\n                'mitigation': 'Enable secure boot with verified signatures'\n            })\n    \n    def generate_hardware_security_report(self):\n        \"\"\"Generate comprehensive hardware security report\"\"\"\n        self.assess_side_channel_risks()\n        self.assess_fault_injection_risks()\n        self.assess_physical_tampering_risks()\n        \n        return {\n            'deployment_type': self.config.get('deployment_type'),\n            'total_risks': len(self.risks),\n            'high_severity_risks': len([r for r in self.risks if r['severity'] == 'High']),\n            'risks_by_category': self._categorize_risks(),\n            'recommended_mitigations': [r['mitigation'] for r in self.risks]\n        }\n    \n    def _categorize_risks(self):\n        categories = {}\n        for risk in self.risks:\n            category = risk['type']\n            if category not in categories:\n                categories[category] = []\n            categories[category].append(risk)\n        return categories</code></pre><p><strong>Action:</strong> If these threats are relevant, evaluate countermeasures like tamper-resistant enclosures, confidential computing, and hardware integrity checks as described in <strong>AID-H-009</strong>.</p>"
                 },
                 {
-                    "implementation": "Involve a multi-disciplinary team.",
-                    "howTo": "<h5>Concept:</h5><p>A successful threat model requires diverse perspectives. No single person or team has the full picture of the system and its potential for misuse.</p><h5>Step 1: Identify Key Roles</h5><p>Ensure the following roles are represented in your threat modeling sessions:</p><ul><li><strong>Data Scientist / ML Researcher:</strong> Understands the model's architecture, its weaknesses, and how its data could be misinterpreted or manipulated.</li><li><strong>ML Engineer / MLOps Engineer:</strong> Understands the entire pipeline, from data ingestion to deployment, and the infrastructure it runs on.</li><li><strong>Security Architect:</strong> Understands common security vulnerabilities, network architecture, IAM, and can apply traditional security principles.</li><li><strong>Product Owner / Manager:</strong> Understands the intended use of the AI system, its value, and the potential business impact if it's compromised.</li><li><strong>(Optional) Legal / Compliance Officer:</strong> Understands the regulatory and privacy implications of the data and AI decisions.</li></ul><h5>Step 2: Structure Multi-Disciplinary Sessions</h5><p>Design threat modeling sessions that leverage each team member's expertise.</p><pre><code># File: threat_modeling_session_agenda.md\n## AI Threat Modeling Session Agenda\n\n### Pre-Session Preparation (1 week before)\n- [ ] Send system architecture diagrams to all participants\n- [ ] Distribute threat modeling framework materials (STRIDE, ATLAS, etc.)\n- [ ] Each participant reviews system from their domain perspective\n\n### Session Structure (3 hours)\n\n#### Part 1: System Understanding (45 min)\n- **ML Engineer**: Presents system architecture and data flows\n- **Data Scientist**: Explains model behavior and known limitations\n- **Product Owner**: Describes intended use cases and business context\n- **Security Architect**: Identifies initial security boundaries\n\n#### Part 2: Threat Identification (90 min)\n- **Round 1**: Each participant identifies threats from their perspective\n  - Data Scientist: Model-specific vulnerabilities\n  - ML Engineer: Pipeline and infrastructure threats\n  - Security Architect: Traditional security threats\n  - Product Owner: Business logic and abuse scenarios\n- **Round 2**: Cross-functional threat brainstorming using STRIDE\n- **Round 3**: AI-specific threats using ATLAS/MAESTRO/OWASP\n\n#### Part 3: Risk Assessment (30 min)\n- Collaborative scoring of likelihood and impact\n- Initial prioritization of threats\n\n#### Part 4: Mitigation Planning (15 min)\n- Assign owners for threat mitigation research\n- Schedule follow-up sessions for detailed mitigation planning</code></pre><h5>Step 3: Create Role-Specific Contribution Templates</h5><p>Provide structured templates to help each discipline contribute effectively.</p><pre><code># Data Scientist Contribution Template\nmodel_vulnerabilities:\n  - vulnerability: \"Model overfitting to demographic features\"\n    threat_scenario: \"Attacker could exploit bias to cause discriminatory outcomes\"\n    impact: \"Legal liability, reputation damage\"\n    detection_difficulty: \"High - requires bias testing\"\n  \n  - vulnerability: \"Model memorization of training examples\"\n    threat_scenario: \"Membership inference attacks to determine training data\"\n    impact: \"Privacy violation, GDPR compliance issues\"\n    detection_difficulty: \"Medium - statistical tests available\"\n\n# Security Architect Contribution Template\ninfrastructure_threats:\n  - component: \"Model serving API\"\n    threat: \"API key compromise leading to unauthorized access\"\n    attack_vectors: [\"Credential stuffing\", \"Social engineering\", \"Code repository exposure\"]\n    existing_controls: [\"API rate limiting\", \"Key rotation\"]\n    gaps: [\"No API key scoping\", \"Missing usage monitoring\"]\n  \n  - component: \"Training data storage\"\n    threat: \"Unauthorized data access or modification\"\n    attack_vectors: [\"IAM privilege escalation\", \"Storage bucket misconfiguration\"]\n    existing_controls: [\"Encryption at rest\", \"Access logging\"]\n    gaps: [\"No data integrity monitoring\", \"Overly broad access permissions\"]</code></pre><p><strong>Action:</strong> Make these threat modeling sessions a mandatory part of the AI development lifecycle and invite the right people.</p>"
+                    "implementation": "Maintain a required participant roster and signed review record for each AI threat-model session.",
+                    "howTo": `<h5>Concept:</h5><p>The team composition for a threat-model review should be an auditable governance artifact, not an informal meeting norm. This guidance is about proving that the right functions reviewed the system and that the resulting threat model had accountable sign-off.</p><h5>Step 1: Define the required participant roster by system type</h5><p>Store the required roles in version control so reviewers know who must attend or explicitly delegate.</p><pre><code># File: threat_model/required_review_roles.yaml
+review_profiles:
+  production_ai_service:
+    required_roles:
+      - ml_engineer
+      - security_architect
+      - product_owner
+    conditional_roles:
+      - legal_privacy
+      - platform_owner
+  agentic_ai_service:
+    required_roles:
+      - ml_engineer
+      - security_architect
+      - product_owner
+      - agent_platform_owner</code></pre><h5>Step 2: Record attendance, delegates, and sign-off for each review</h5><pre><code># File: threat_model/reviews/2026-04-09-support-bot-review.yaml
+review_id: tmr-2026-04-09-support-bot
+system_id: support-bot-prod
+threat_model_artifact: threat_model/THREAT_MODEL.md
+participants:
+  - role: ml_engineer
+    reviewer: alice@company.com
+    status: attended
+  - role: security_architect
+    reviewer: bob@company.com
+    status: attended
+  - role: product_owner
+    reviewer: carol@company.com
+    status: attended
+  - role: legal_privacy
+    reviewer: privacy@company.com
+    status: delegated
+    delegate: legal.operations@company.com
+approvals:
+  - reviewer: alice@company.com
+    approved_at: "2026-04-09T17:10:00Z"
+  - reviewer: bob@company.com
+    approved_at: "2026-04-09T17:13:00Z"
+  - reviewer: carol@company.com
+    approved_at: "2026-04-09T17:15:00Z"</code></pre><h5>Step 3: Fail the review if required roles are missing</h5><pre><code># File: scripts/check_threat_model_roster.py
+from __future__ import annotations
+
+import sys
+import yaml
+
+required = yaml.safe_load(open("threat_model/required_review_roles.yaml", encoding="utf-8"))
+record = yaml.safe_load(open(sys.argv[1], encoding="utf-8"))
+
+profile = required["review_profiles"]["production_ai_service"]
+seen_roles = {entry["role"] for entry in record["participants"] if entry["status"] in {"attended", "delegated"}}
+missing = [role for role in profile["required_roles"] if role not in seen_roles]
+
+if missing:
+    raise SystemExit(f"missing_required_review_roles={','.join(missing)}")
+
+print("threat-model-review-roster=valid")</code></pre><p><strong>Action:</strong> Treat the signed review record as the evidence artifact for this guidance. A threat model is not complete until the required review roles are present or explicitly delegated and the review record is committed with the artifact it approved.</p>`
                 },
                 {
                     "implementation": "Prioritize risks based on likelihood and impact.",
                     "howTo": "<h5>Concept:</h5><p>You cannot fix everything at once. Use a risk matrix to prioritize which threats require immediate attention.</p><h5>Step 1: Define Your Scales</h5><p>Create simple scales for Likelihood (e.g., Low, Medium, High) and Impact (e.g., Low, Medium, High).</p><pre><code># File: risk_scoring_criteria.yaml\nlikelihood_scale:\n  low:\n    score: 1\n    description: \"Unlikely to occur without significant effort or specialized knowledge\"\n    examples: [\"Nation-state level attacks\", \"Physical access to secured facilities\"]\n  \n  medium:\n    score: 2\n    description: \"Could occur with moderate effort or common tools/knowledge\"\n    examples: [\"Social engineering attacks\", \"Exploitation of known vulnerabilities\"]\n  \n  high:\n    score: 3\n    description: \"Likely to occur with minimal effort or commonly available tools\"\n    examples: [\"Automated scanning for misconfigurations\", \"Credential reuse attacks\"]\n\nimpact_scale:\n  low:\n    score: 1\n    description: \"Minor disruption, minimal business impact\"\n    criteria:\n      - financial_loss: \"< $10,000\"\n      - downtime: \"< 1 hour\"\n      - data_exposure: \"Non-sensitive internal data\"\n  \n  medium:\n    score: 2\n    description: \"Moderate business impact, some customer/reputation effects\"\n    criteria:\n      - financial_loss: \"$10,000 - $100,000\"\n      - downtime: \"1-8 hours\"\n      - data_exposure: \"Customer PII or internal sensitive data\"\n  \n  high:\n    score: 3\n    description: \"Severe business impact, significant customer/reputation/legal consequences\"\n    criteria:\n      - financial_loss: \"> $100,000\"\n      - downtime: \"> 8 hours\"\n      - data_exposure: \"Regulated data, trade secrets, or widespread PII\"</code></pre><h5>Step 2: Assess Each Threat</h5><p>For every threat scenario you've identified, have the team vote or come to a consensus on its likelihood and potential impact.</p><pre><code># File: threat_risk_assessment.py\n# Risk Assessment Calculator for AI Threats\n\nclass ThreatRiskAssessment:\n    def __init__(self):\n        self.likelihood_scores = {'low': 1, 'medium': 2, 'high': 3}\n        self.impact_scores = {'low': 1, 'medium': 2, 'high': 3}\n        self.risk_matrix = {\n            (1,1): 'Low', (1,2): 'Low', (1,3): 'Medium',\n            (2,1): 'Low', (2,2): 'Medium', (2,3): 'High',\n            (3,1): 'Medium', (3,2): 'High', (3,3): 'Critical'\n        }\n    \n    def calculate_risk_score(self, likelihood: str, impact: str) -> dict:\n        l_score = self.likelihood_scores[likelihood.lower()]\n        i_score = self.impact_scores[impact.lower()]\n        risk_level = self.risk_matrix[(l_score, i_score)]\n        \n        return {\n            'likelihood_score': l_score,\n            'impact_score': i_score,\n            'risk_score': l_score * i_score,\n            'risk_level': risk_level\n        }\n    \n    def prioritize_threats(self, threats: list) -> list:\n        \"\"\"Sort threats by risk score (highest first)\"\"\"\n        for threat in threats:\n            risk_data = self.calculate_risk_score(\n                threat['likelihood'], \n                threat['impact']\n            )\n            threat.update(risk_data)\n        \n        return sorted(threats, key=lambda x: x['risk_score'], reverse=True)\n\n# Example usage\nthreats = [\n    {\n        'id': 'THR-001',\n        'description': 'Accidental PII Leakage in Model Outputs',\n        'likelihood': 'medium',\n        'impact': 'medium'\n    },\n    {\n        'id': 'THR-002', \n        'description': 'Model Evasion via Adversarial Input',\n        'likelihood': 'high',\n        'impact': 'medium'\n    },\n    {\n        'id': 'THR-003',\n        'description': 'Training Data Poisoning by Insider',\n        'likelihood': 'low',\n        'impact': 'high'\n    }\n]\n\nassessment = ThreatRiskAssessment()\nprioritized_threats = assessment.prioritize_threats(threats)\n\nfor threat in prioritized_threats:\n    print(f\"{threat['id']}: {threat['risk_level']} Risk (Score: {threat['risk_score']})\")</code></pre><h5>Step 3: Use Risk Matrix for Decision Making</h5><p>Create clear action criteria based on risk levels.</p><pre><code># File: risk_response_matrix.yaml\nrisk_response_criteria:\n  critical:\n    action_required: \"Immediate\"\n    timeline: \"< 1 week\"\n    approval_level: \"CISO\"\n    mandatory_mitigations: true\n    description: \"Stop current deployment, implement immediate mitigations\"\n  \n  high:\n    action_required: \"Urgent\"\n    timeline: \"< 1 month\"\n    approval_level: \"Security Team Lead\"\n    mandatory_mitigations: true\n    description: \"Must address before next release\"\n  \n  medium:\n    action_required: \"Planned\"\n    timeline: \"< 3 months\"\n    approval_level: \"Product Owner\"\n    mandatory_mitigations: false\n    description: \"Include in next planning cycle\"\n  \n  low:\n    action_required: \"Optional\"\n    timeline: \"Best effort\"\n    approval_level: \"Development Team\"\n    mandatory_mitigations: false\n    description: \"Address if resources allow\"</code></pre><p><strong>Action:</strong> Focus your mitigation efforts on the \"High\" and \"Critical\" priority threats first. Re-evaluate lower priority threats in future reviews.</p>"
                 },
                 {
-                    "implementation": "Document threat models and integrate into MLOps.",
-                    "howTo": "<h5>Concept:</h5><p>Treat your threat model as a living document, not a one-off report that gets filed away. It should be version-controlled and accessible to the engineering team.</p><h5>Step 1: Choose a Format</h5><p>Markdown is an excellent choice as it's simple, text-based, and works well with Git.</p><h5>Step 2: Store it With Your Code</h5><p>Create a dedicated directory in your model's Git repository.</p><pre><code>/my-fraud-model\n|-- /notebooks\n|-- /src\n|-- /threat_model\n|   |-- THREAT_MODEL.md\n|   |-- data_flow_diagram.png\n|   |-- risk_register.yaml\n|   |-- mitigation_tracking.md\n|-- Dockerfile\n|-- requirements.txt</code></pre><h5>Step 3: Create Structured Documentation Templates</h5><p>Use consistent templates for all threat modeling documents.</p><pre><code># File: threat_model/THREAT_MODEL.md\n# Threat Model: Fraud Detection System v2.0\n\n## System Overview\n- **Model Type**: Binary Classification (Random Forest)\n- **Input Data**: Transaction features (amount, location, time, etc.)\n- **Deployment**: Real-time API serving\n- **Criticality**: High (financial impact)\n\n## Architecture Diagram\n![System Architecture](data_flow_diagram.png)\n\n## Trust Boundaries\n1. **External Users** ↔ **API Gateway** (TLS, API Key Auth)\n2. **API Gateway** ↔ **Model Serving** (Internal network)\n3. **Model Serving** ↔ **Feature Store** (Database connection)\n\n## Threat Catalog\n\n### THR-001: API Key Compromise\n- **Category**: Spoofing\n- **Description**: Attacker gains unauthorized access using stolen API keys\n- **Impact**: Medium (unauthorized predictions, potential DoS)\n- **Likelihood**: Medium\n- **Risk Level**: Medium\n- **Mitigations**: \n  - [x] API key rotation (monthly)\n  - [x] Rate limiting per key\n  - [ ] Key scoping by IP address\n  - [ ] Anomaly detection on usage patterns\n- **Owner**: @security-team\n- **Status**: In Progress\n- **Tracking**: Issue #123\n\n### THR-002: Model Evasion Attack\n- **Category**: Tampering\n- **Description**: Adversarial inputs designed to cause misclassification\n- **Impact**: High (false negatives allowing fraud)\n- **Likelihood**: Medium\n- **Risk Level**: High\n- **Mitigations**:\n  - [ ] Adversarial training (see AID-H-001)\n  - [ ] Input validation and sanitization\n  - [ ] Ensemble methods for robustness\n- **Owner**: @ml-team\n- **Status**: Planned\n- **Tracking**: Issue #124\n\n## Risk Summary\n- **Total Threats**: 15\n- **Critical**: 1\n- **High**: 4  \n- **Medium**: 7\n- **Low**: 3\n\n## Review Schedule\n- **Next Review**: 2025-09-01\n- **Trigger Events**: Model architecture changes, new deployment environments, security incidents</code></pre><h5>Step 4: Integrate with Development Workflow</h5><p>Make threat model updates part of your development process.</p><pre><code># File: .github/workflows/threat_model_check.yml\nname: Threat Model Validation\n\non:\n  pull_request:\n    paths:\n      - 'src/**'\n      - 'threat_model/**'\n      - 'Dockerfile'\n\njobs:\n  threat_model_check:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v3\n      \n      - name: Check Threat Model Currency\n        run: |\n          # Check if threat model has been updated recently\n          LAST_UPDATE=$(git log -1 --format=\"%ct\" threat_model/THREAT_MODEL.md)\n          CURRENT_TIME=$(date +%s)\n          DAYS_OLD=$(( (CURRENT_TIME - LAST_UPDATE) / 86400 ))\n          \n          if [ $DAYS_OLD -gt 90 ]; then\n            echo \"::warning::Threat model is $DAYS_OLD days old. Consider reviewing.\"\n          fi\n      \n      - name: Validate Threat Model Format\n        run: |\n          # Validate that threat model follows required structure\n          python scripts/validate_threat_model.py threat_model/THREAT_MODEL.md\n      \n      - name: Check Mitigation Tracking\n        run: |\n          # Ensure all high/critical threats have assigned owners and tracking\n          python scripts/check_mitigation_status.py threat_model/THREAT_MODEL.md</code></pre><h5>Step 5: Link to Action Items</h5><p>In your <code>THREAT_MODEL.md</code> file, link directly to the engineering tickets (e.g., in Jira or GitHub Issues) that were created to address the identified risks. This creates a clear, auditable trail from threat identification to mitigation.</p><p><strong>Action:</strong> Make updating the threat model part of the definition of \"done\" for any major feature change in your AI system.</p>"
+                    "implementation": "Store the approved threat model, risk register, and trust-boundary diagrams as version-controlled artifacts.",
+                    "howTo": `<h5>Concept:</h5><p>This guidance is about the <strong>documentation artifact itself</strong>: a version-controlled threat-model package that engineers, reviewers, and auditors can read and diff. Keep workflow enforcement separate so the evidence for this guidance stays the document set and its review history.</p><h5>Step 1: Create a dedicated threat-model directory in the system repository</h5><pre><code>/my-fraud-model
+|-- /src
+|-- /threat_model
+|   |-- THREAT_MODEL.md
+|   |-- risk_register.yaml
+|   |-- trust_boundaries.mmd
+|   |-- review_records/
+|-- Dockerfile
+|-- requirements.txt</code></pre><h5>Step 2: Store the threat model in a structured, reviewable format</h5><pre><code># File: threat_model/THREAT_MODEL.md
+# Threat Model: Fraud Detection System v2.0
+
+## System Overview
+- Model Type: Binary Classification
+- Deployment: Real-time API serving
+- Criticality: High
+
+## Trust Boundaries
+1. External Users <-> API Gateway
+2. API Gateway <-> Model Serving
+3. Model Serving <-> Feature Store
+
+## Threat Catalog
+### THR-001: API Key Compromise
+- Category: Spoofing
+- Likelihood: Medium
+- Impact: Medium
+- Existing Mitigations:
+  - API key rotation
+  - Rate limiting
+
+### THR-002: Model Evasion Attack
+- Category: Tampering
+- Likelihood: Medium
+- Impact: High
+- Existing Mitigations:
+  - Input validation
+  - Adversarial evaluation</code></pre><h5>Step 3: Keep the risk register machine-readable and diffable</h5><pre><code># File: threat_model/risk_register.yaml
+threats:
+  - threat_id: THR-001
+    title: API key compromise
+    likelihood: medium
+    impact: medium
+    risk_level: medium
+    owner: security-team
+    related_controls:
+      - AID-H-005
+  - threat_id: THR-002
+    title: model evasion attack
+    likelihood: medium
+    impact: high
+    risk_level: high
+    owner: ml-team
+    related_controls:
+      - AID-H-001</code></pre><p><strong>Action:</strong> Treat the committed threat-model directory as the evidence artifact for this guidance. A complete implementation should let a reviewer inspect the current threat assumptions, trust boundaries, and ranked risks entirely from version-controlled documents.</p>`
                 },
+                {
+                    "implementation": "Integrate threat-model currency and structure checks into the MLOps workflow before major changes are promoted.",
+                    "howTo": `<h5>Concept:</h5><p>This guidance is the <strong>workflow-enforcement</strong> companion to the threat-model document set. Its purpose is to make sure major architecture or deployment changes cannot bypass threat-model maintenance. Evidence for this guidance is the CI/CD policy and its pass/fail history, not the threat-model file contents themselves.</p><h5>Step 1: Define when a threat-model check must run</h5><pre><code># File: .github/workflows/threat_model_check.yml
+name: Threat Model Validation
+
+on:
+  pull_request:
+    paths:
+      - 'src/**'
+      - 'infra/**'
+      - 'Dockerfile'
+      - 'deployment/**'
+      - 'threat_model/**'</code></pre><h5>Step 2: Block changes when the threat-model package is stale or structurally incomplete</h5><pre><code># File: .github/workflows/threat_model_check.yml
+jobs:
+  threat-model-check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate threat-model structure
+        run: python scripts/validate_threat_model.py threat_model/THREAT_MODEL.md
+      - name: Check threat-model freshness
+        run: python scripts/check_threat_model_currency.py threat_model/THREAT_MODEL.md 90
+      - name: Require owners for high and critical risks
+        run: python scripts/check_mitigation_status.py threat_model/risk_register.yaml</code></pre><h5>Step 3: Make the gate auditable</h5><p>Publish workflow results to the pull request so reviewers can see whether the change was blocked because of missing threat-model updates, stale review dates, or incomplete high-risk ownership metadata.</p><p><strong>Action:</strong> Use this guidance when you want threat-model upkeep to be a release gate. Keep the evidence focused on workflow configuration and gate execution logs, rather than reusing the document artifact evidence from the sibling guidance.</p>`
+                },
+
                 {
                     "implementation": "Regularly review and update threat models.",
                     "howTo": "<h5>Concept:</h5><p>AI systems and the threat landscape evolve rapidly. A threat model created six months ago may already be out of date.</p><h5>Step 1: Define Review Triggers</h5><p>Establish a policy that your threat model must be reviewed and updated when any of the following occur:</p><ul><li>A major change in the model architecture.</li><li>The introduction of a new, significant data source.</li><li>The model is deployed in a new environment or exposed to a new user group.</li><li>The agent is given access to a new, high-impact tool.</li><li>A new, relevant AI attack is published or discussed publicly (e.g., a new OWASP Top 10 item is released).</li></ul><h5>Step 2: Implement Automated Review Reminders</h5><p>Set up automated systems to prompt threat model reviews.</p><pre><code># File: scripts/threat_model_review_scheduler.py\n# Automated Threat Model Review Scheduler\n\nimport datetime\nimport yaml\nimport requests\nfrom pathlib import Path\n\nclass ThreatModelReviewScheduler:\n    def __init__(self, config_path: str):\n        with open(config_path, 'r') as f:\n            self.config = yaml.safe_load(f)\n    \n    def check_review_triggers(self):\n        \"\"\"Check if any review triggers have been activated\"\"\"\n        triggers = []\n        \n        # Check time-based triggers\n        last_review = datetime.datetime.fromisoformat(self.config['last_review_date'])\n        days_since_review = (datetime.datetime.now() - last_review).days\n        \n        if days_since_review > self.config['max_review_interval_days']:\n            triggers.append({\n                'type': 'time_based',\n                'description': f'Threat model last reviewed {days_since_review} days ago',\n                'urgency': 'medium'\n            })\n        \n        # Check for architecture changes\n        if self._detect_architecture_changes():\n            triggers.append({\n                'type': 'architecture_change',\n                'description': 'Significant changes detected in system architecture',\n                'urgency': 'high'\n            })\n        \n        # Check for new threat intelligence\n        if self._check_threat_intelligence_updates():\n            triggers.append({\n                'type': 'threat_intelligence',\n                'description': 'New AI security threats published',\n                'urgency': 'medium'\n            })\n        \n        return triggers\n    \n    def _detect_architecture_changes(self) -> bool:\n        \"\"\"Detect if there have been significant architecture changes\"\"\"\n        # Check Git commits for changes to key files\n        architecture_files = [\n            'src/model_architecture.py',\n            'deployment/docker-compose.yml',\n            'configs/model_config.yaml'\n        ]\n        \n        # Simple check: has any architecture file been modified since last review?\n        for file_path in architecture_files:\n            if Path(file_path).exists():\n                file_mtime = datetime.datetime.fromtimestamp(Path(file_path).stat().st_mtime)\n                last_review = datetime.datetime.fromisoformat(self.config['last_review_date'])\n                if file_mtime > last_review:\n                    return True\n        return False\n    \n    def _check_threat_intelligence_updates(self) -> bool:\n        \"\"\"Check for new AI security threat intelligence\"\"\"\n        # Check MITRE ATLAS updates, OWASP updates, etc.\n        # This is a simplified example - in practice, you'd check RSS feeds,\n        # APIs, or threat intelligence services\n        \n        threat_sources = [\n            'https://atlas.mitre.org/updates.json',  # Hypothetical API\n            'https://owasp.org/AI/updates.json'      # Hypothetical API\n        ]\n        \n        for source in threat_sources:\n            try:\n                # In a real implementation, you'd parse the response for new threats\n                response = requests.get(source, timeout=10)\n                if response.status_code == 200:\n                    # Check if any updates are newer than last review\n                    # This is simplified - real implementation would parse dates\n                    return False  # Placeholder\n            except requests.RequestException:\n                continue\n        \n        return False\n    \n    def create_review_reminder(self, triggers: list):\n        \"\"\"Create automated reminder for threat model review\"\"\"\n        if not triggers:\n            return\n        \n        urgency_level = max([t['urgency'] for t in triggers], \n                           key=lambda x: {'low': 1, 'medium': 2, 'high': 3}[x])\n        \n        # Create GitHub issue or send notification\n        issue_body = \"## Threat Model Review Required\\n\\n\"\n        issue_body += \"The following triggers indicate a threat model review is needed:\\n\\n\"\n        \n        for trigger in triggers:\n            issue_body += f\"- **{trigger['type'].title()}**: {trigger['description']}\\n\"\n        \n        issue_body += \"\\n## Action Required\\n\"\n        issue_body += \"- [ ] Schedule threat modeling session with security team\\n\"\n        issue_body += \"- [ ] Review and update threat model documentation\\n\"\n        issue_body += \"- [ ] Update risk assessments and mitigations\\n\"\n        issue_body += \"- [ ] Update `last_review_date` in threat model config\\n\"\n        \n        return issue_body\n\n# Configuration file example\n# File: threat_model_config.yaml\nlast_review_date: \"2025-06-01T00:00:00\"\nmax_review_interval_days: 90\nmodel_name: \"fraud_detection_v2\"\nreview_team: [\"@security-architect\", \"@ml-engineer\", \"@product-owner\"]\nautomated_checks_enabled: true</code></pre><h5>Step 3: Schedule Periodic Reviews</h5><p>In addition to event-based triggers, schedule a periodic review (e.g., quarterly) for all critical AI systems, even if no major changes have occurred.</p><pre><code># File: .github/workflows/quarterly_threat_review.yml\nname: Quarterly Threat Model Review\n\non:\n  schedule:\n    # Run on the first day of every quarter at 9 AM UTC\n    - cron: '0 9 1 1,4,7,10 *'\n  workflow_dispatch:  # Allow manual triggering\n\njobs:\n  create_review_reminder:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v3\n      \n      - name: Run Review Scheduler\n        run: |\n          python scripts/threat_model_review_scheduler.py\n      \n      - name: Create Review Issue\n        uses: actions/github-script@v6\n        with:\n          script: |\n            const fs = require('fs');\n            const issueBody = fs.readFileSync('review_reminder.md', 'utf8');\n            \n            github.rest.issues.create({\n              owner: context.repo.owner,\n              repo: context.repo.repo,\n              title: 'Quarterly Threat Model Review - Q${{ env.QUARTER }} 2025',\n              body: issueBody,\n              labels: ['security', 'threat-model', 'review-required'],\n              assignees: ['security-architect', 'ml-engineer']\n            });</code></pre><h5>Step 4: Track Review Completion and Effectiveness</h5><p>Monitor whether reviews are actually being completed and whether they're effective.</p><pre><code># File: threat_model_metrics.py\n# Threat Model Review Effectiveness Tracking\n\nclass ThreatModelMetrics:\n    def __init__(self, threat_model_history: list):\n        self.history = threat_model_history\n    \n    def calculate_review_metrics(self):\n        \"\"\"Calculate metrics about threat model review effectiveness\"\"\"\n        total_reviews = len(self.history)\n        \n        # Average time between reviews\n        review_intervals = []\n        for i in range(1, len(self.history)):\n            interval = (self.history[i]['date'] - self.history[i-1]['date']).days\n            review_intervals.append(interval)\n        \n        avg_interval = sum(review_intervals) / len(review_intervals) if review_intervals else 0\n        \n        # Threat discovery rate\n        new_threats_per_review = []\n        for review in self.history:\n            new_threats = review.get('new_threats_identified', 0)\n            new_threats_per_review.append(new_threats)\n        \n        # Mitigation completion rate\n        completed_mitigations = sum([r.get('mitigations_completed', 0) for r in self.history])\n        total_mitigations = sum([r.get('total_mitigations', 0) for r in self.history])\n        completion_rate = completed_mitigations / total_mitigations if total_mitigations > 0 else 0\n        \n        return {\n            'total_reviews_conducted': total_reviews,\n            'average_review_interval_days': avg_interval,\n            'average_new_threats_per_review': sum(new_threats_per_review) / len(new_threats_per_review),\n            'mitigation_completion_rate': completion_rate,\n            'overdue_reviews': self._count_overdue_reviews()\n        }\n    \n    def _count_overdue_reviews(self):\n        # Logic to count systems with overdue threat model reviews\n        # This would integrate with your system inventory\n        pass</code></pre><p><strong>Action:</strong> Assign a specific owner for each AI system's threat model who is responsible for ensuring it is kept up to date.</p>"
@@ -2107,17 +2843,17 @@ export const modelTactic = {
                         "Algorithms 5.4: Malicious libraries",
                         "Model Management 8.2: Model theft",
                         "Model Management 8.4: Model inversion",
-                        "Model Serving — Inference requests 9.1: Prompt inject",
-                        "Model Serving — Inference requests 9.3: Model breakout",
-                        "Model Serving — Inference requests 9.7: Denial of Service (DoS)",
-                        "Model Serving — Inference requests 9.12: LLM Jailbreak",
-                        "Model Serving — Inference requests 9.13: Excessive agency",
-                        "Model Serving — Inference response 10.6: Sensitive data output from a model",
+                        "Model Serving - Inference requests 9.1: Prompt inject",
+                        "Model Serving - Inference requests 9.3: Model breakout",
+                        "Model Serving - Inference requests 9.7: Denial of Service (DoS)",
+                        "Model Serving - Inference requests 9.12: LLM Jailbreak",
+                        "Model Serving - Inference requests 9.13: Excessive agency",
+                        "Model Serving - Inference response 10.6: Sensitive data output from a model",
                         "Platform 12.1: Lack of vulnerability management",
-                        "Agents — Core 13.1: Memory Poisoning",
-                        "Agents — Core 13.2: Tool Misuse",
-                        "Agents — Core 13.6: Intent Breaking & Goal Manipulation",
-                        "Agents — Core 13.7: Misaligned & Deceptive Behaviors"
+                        "Agents - Core 13.1: Memory Poisoning",
+                        "Agents - Core 13.2: Tool Misuse",
+                        "Agents - Core 13.6: Intent Breaking & Goal Manipulation",
+                        "Agents - Core 13.7: Misaligned & Deceptive Behaviors"
                     ]
                 }
             ]
@@ -2213,10 +2949,10 @@ export const modelTactic = {
                         "Platform 12.1: Lack of vulnerability management",
                         "Platform 12.4: Unauthorized privileged access",
                         "Platform 12.5: Poor security in the software development lifecycle",
-                        "Operations 11.1: Lack of MLOps — repeatable enforced standards",
+                        "Operations 11.1: Lack of MLOps - repeatable enforced standards",
                         "Raw Data 1.1: Insufficient access controls",
                         "Raw Data 1.4: Ineffective storage and encryption",
-                        "Agents — Tools MCP Server 13.20: Insecure Server Configuration"
+                        "Agents - Tools MCP Server 13.20: Insecure Server Configuration"
                     ]
                 }
             ], "subTechniques": [
@@ -2341,7 +3077,7 @@ export const modelTactic = {
                                 "Platform 12.5: Poor security in the software development lifecycle",
                                 "Raw Data 1.1: Insufficient access controls",
                                 "Raw Data 1.4: Ineffective storage and encryption",
-                                "Agents — Tools MCP Server 13.20: Insecure Server Configuration"
+                                "Agents - Tools MCP Server 13.20: Insecure Server Configuration"
                             ]
                         }
                     ]
@@ -2456,8 +3192,8 @@ export const modelTactic = {
                                 "Platform 12.1: Lack of vulnerability management",
                                 "Platform 12.5: Poor security in the software development lifecycle",
                                 "Governance 4.1: Lack of traceability and transparency of model assets",
-                                "Operations 11.1: Lack of MLOps — repeatable enforced standards",
-                                "Agents — Tools MCP Server 13.20: Insecure Server Configuration"
+                                "Operations 11.1: Lack of MLOps - repeatable enforced standards",
+                                "Agents - Tools MCP Server 13.20: Insecure Server Configuration"
                             ]
                         }
                     ]
@@ -2545,14 +3281,14 @@ export const modelTactic = {
                 {
                     "framework": "Databricks AI Security Framework 3.0",
                     "items": [
-                        "Model Serving — Inference requests 9.13: Excessive agency",
+                        "Model Serving - Inference requests 9.13: Excessive agency",
                         "Model Management 8.3: Model lifecycle without HITL (human-in-the-loop)",
-                        "Agents — Core 13.2: Tool Misuse",
-                        "Agents — Core 13.3: Privilege Compromise",
-                        "Agents — Core 13.6: Intent Breaking & Goal Manipulation",
-                        "Agents — Core 13.7: Misaligned & Deceptive Behaviors",
-                        "Agents — Core 13.10: Overwhelming Human in the Loop",
-                        "Agents — Core 13.5: Cascading Hallucination Attacks"
+                        "Agents - Core 13.2: Tool Misuse",
+                        "Agents - Core 13.3: Privilege Compromise",
+                        "Agents - Core 13.6: Intent Breaking & Goal Manipulation",
+                        "Agents - Core 13.7: Misaligned & Deceptive Behaviors",
+                        "Agents - Core 13.10: Overwhelming Human in the Loop",
+                        "Agents - Core 13.5: Cascading Hallucination Attacks"
                     ]
                 }
             ],
@@ -2563,8 +3299,12 @@ export const modelTactic = {
                     "description": "This sub-technique covers the initial development phase of implementing Human-in-the-Loop controls. It involves formally defining the specific triggers that require human intervention in code and configuration, implementing the technical hooks for the AI agent to pause and await a decision, and creating the clear Standard Operating Procedures (SOPs) that operators will follow when an intervention is required.",
                     "implementationGuidance": [
                         {
-                            "implementation": "Integrate HITL checkpoint design into the AI SDLC with enforceable configs and production-ready hooks.",
-                            "howTo": "<h5>Concept:</h5><p>Treat HITL as a first-class safety feature. Define checkpoints in design, then implement a service that enforces timeouts (default-deny), minimal auth, and auditable decisions.</p><h5>Design Artifact (YAML)</h5><pre><code># File: design/hitl_checkpoints.yaml\nhitl_checkpoints:\n  - id: \"HITL-CP-001\"\n    name: \"High-Value Financial Transaction\"\n    description: \"Manual approval for any transaction > $10,000 USD.\"\n    trigger:\n      condition: \"transaction.amount > 10000 AND transaction.currency == 'USD'\"\n    decision_type: \"Go/No-Go\"\n    operator_role: \"Finance Officer\"\n    timeout_sec: 180\n    default_action_on_timeout: \"Reject\"\n    require_dual_control: false\n</code></pre><h5>Implementable HITL Service (FastAPI)</h5><pre><code># File: src/hitl_service.py\n# Run: uvicorn src.hitl_service:app --reload\nimport asyncio, time, uuid, json, hmac, hashlib, os, yaml\nfrom typing import Dict, Optional\nfrom fastapi import FastAPI, HTTPException, Header\n\nAPP_SECRET = os.getenv(\"HITL_APP_SECRET\", \"change-me\")\nAUDIT_PATH = os.getenv(\"HITL_AUDIT_PATH\", \"out/hitl_audit.jsonl\")\nCFG_PATH = os.getenv(\"HITL_CFG_PATH\", \"design/hitl_checkpoints.yaml\")\n\napp = FastAPI(title=\"HITL Service\")\nevents: Dict[str, dict] = {}\nwaiters: Dict[str, asyncio.Future] = {}\n\ndef _load_cfg() -> dict:\n    with open(CFG_PATH, \"r\", encoding=\"utf-8\") as f:\n        return yaml.safe_load(f)\n\ndef _sign(payload: str) -> str:\n    return hmac.new(APP_SECRET.encode(), payload.encode(), hashlib.sha256).hexdigest()\n\ndef _audit(event: dict):\n    os.makedirs(os.path.dirname(AUDIT_PATH), exist_ok=True)\n    with open(AUDIT_PATH, \"a\", encoding=\"utf-8\") as f:\n        f.write(json.dumps(event, ensure_ascii=False) + \"\\n\")\n\ndef _auth(x_api_key: Optional[str]):\n    if not x_api_key or not hmac.compare_digest(x_api_key, APP_SECRET):\n        raise HTTPException(status_code=401, detail=\"unauthorized\")\n\n@app.post(\"/hitl/raise\")\nasync def raise_checkpoint(checkpoint_id: str, context: dict, x_api_key: Optional[str] = Header(None)):\n    _auth(x_api_key)\n    cp = next((c for c in _load_cfg()[\"hitl_checkpoints\"] if c[\"id\"] == checkpoint_id), None)\n    if not cp:\n        raise HTTPException(400, f\"unknown checkpoint {checkpoint_id}\")\n\n    ev_id = str(uuid.uuid4())\n    ttl = int(cp.get(\"timeout_sec\", 120))\n    default_action = cp.get(\"default_action_on_timeout\", \"Reject\")\n\n    event = {\n        \"event_id\": ev_id,\n        \"checkpoint_id\": checkpoint_id,\n        \"ts_raised\": int(time.time()),\n        \"context\": context,\n        \"status\": \"pending\",\n        \"deadline\": int(time.time()) + ttl,\n        \"decision\": None\n    }\n    events[ev_id] = event\n    fut = asyncio.get_event_loop().create_future()\n    waiters[ev_id] = fut\n\n    async def _timeout():\n        await asyncio.sleep(ttl)\n        if not fut.done():\n            event.update({\"status\": \"timeout\", \"decision\": default_action, \"ts_decided\": int(time.time())})\n            _audit({**event, \"sig\": _sign(ev_id)})\n            fut.set_result(default_action)\n\n    asyncio.create_task(_timeout())\n    return {\"event_id\": ev_id, \"deadline_epoch\": event[\"deadline\"]}\n\n@app.post(\"/hitl/approve\")\nasync def approve(event_id: str, operator_id: str, x_api_key: Optional[str] = Header(None)):\n    _auth(x_api_key)\n    ev = events.get(event_id)\n    if not ev: raise HTTPException(404, \"not found\")\n    if ev[\"status\"] != \"pending\": return {\"status\": ev[\"status\"], \"decision\": ev[\"decision\"]}\n    ev.update({\"status\": \"decided\", \"decision\": \"Approve\", \"operator_id\": operator_id, \"ts_decided\": int(time.time())})\n    _audit({**ev, \"sig\": _sign(event_id)})\n    if waiter := waiters.get(event_id):\n        if not waiter.done(): waiter.set_result(\"Approve\")\n    return {\"ok\": True}\n\n@app.post(\"/hitl/reject\")\nasync def reject(event_id: str, operator_id: str, x_api_key: Optional[str] = Header(None)):\n    _auth(x_api_key)\n    ev = events.get(event_id)\n    if not ev: raise HTTPException(404, \"not found\")\n    if ev[\"status\"] != \"pending\": return {\"status\": ev[\"status\"], \"decision\": ev[\"decision\"]}\n    ev.update({\"status\": \"decided\", \"decision\": \"Reject\", \"operator_id\": operator_id, \"ts_decided\": int(time.time())})\n    _audit({**ev, \"sig\": _sign(event_id)})\n    if waiter := waiters.get(event_id):\n        if not waiter.done(): waiter.set_result(\"Reject\")\n    return {\"ok\": True}\n</code></pre><h5>Agent Usage (Async Gate)</h5><pre><code># File: src/agent_gate_example.py\n# Conceptual usage: call /hitl/raise and handle timeout->default deny in service.\n</code></pre><p><strong>Action:</strong> Make HITL config a required artifact in design reviews and enforce default-deny with signed, auditable decisions.</p>"
+                            "implementation": "Define and version HITL checkpoints as required SDLC configuration artifacts.",
+                            "howTo": "<h5>Concept:</h5><p>Treat HITL checkpoints as design-time safety artifacts that must exist before runtime hooks are built. Keep the checkpoint definition machine-readable so product, security, and platform teams can review the same object.</p><h5>Step 1: Define the checkpoint schema in version control</h5><pre><code># File: design/hitl_checkpoints.yaml\nhitl_checkpoints:\n  - id: \"HITL-CP-001\"\n    name: \"High-Value Financial Transaction\"\n    description: \"Manual approval for any transaction &gt; $10,000 USD.\"\n    trigger:\n      condition: \"transaction.amount &gt; 10000 AND transaction.currency == 'USD'\"\n    decision_type: \"Go/No-Go\"\n    operator_role: \"Finance Officer\"\n    timeout_sec: 180\n    default_action_on_timeout: \"Reject\"\n    require_dual_control: false</code></pre><h5>Step 2: Make checkpoint configs part of design review</h5><p>Require every high-impact agent action path to reference a checkpoint ID, an operator role, and a default-deny timeout policy during architecture review and release approval. Reject new high-impact flows that do not map to a versioned checkpoint definition.</p><p><strong>Action:</strong> Store HITL checkpoint definitions with code and require them in design reviews, threat models, and pre-release checklists.</p>"
+                        },
+                        {
+                            "implementation": "Implement runtime HITL enforcement hooks and an approval service with default-deny, minimal auth, and auditable decisions.",
+                            "howTo": "<h5>Concept:</h5><p>After checkpoint definitions exist, implement a runtime gate that pauses execution, requests human input, and fails closed on timeout. The runtime control should be a separate service or module that produces durable audit evidence.</p><h5>Step 1: Build the approval service</h5><pre><code># File: src/hitl_service.py\nimport asyncio, time, uuid, json, hmac, hashlib, os, yaml\nfrom typing import Dict, Optional\nfrom fastapi import FastAPI, HTTPException, Header\n\nAPP_SECRET = os.getenv(\"HITL_APP_SECRET\", \"change-me\")\nAUDIT_PATH = os.getenv(\"HITL_AUDIT_PATH\", \"out/hitl_audit.jsonl\")\nCFG_PATH = os.getenv(\"HITL_CFG_PATH\", \"design/hitl_checkpoints.yaml\")\n\napp = FastAPI(title=\"HITL Service\")\nevents: Dict[str, dict] = {}\nwaiters: Dict[str, asyncio.Future] = {}\n\ndef _load_cfg() -> dict:\n    with open(CFG_PATH, \"r\", encoding=\"utf-8\") as f:\n        return yaml.safe_load(f)\n\ndef _sign(payload: str) -> str:\n    return hmac.new(APP_SECRET.encode(), payload.encode(), hashlib.sha256).hexdigest()\n\ndef _auth(x_api_key: Optional[str]):\n    if not x_api_key or not hmac.compare_digest(x_api_key, APP_SECRET):\n        raise HTTPException(status_code=401, detail=\"unauthorized\")</code></pre><h5>Step 2: Enforce default-deny and audit every decision</h5><p>On <code>/hitl/raise</code>, load the checkpoint config, start a timer from <code>timeout_sec</code>, and return the configured <code>default_action_on_timeout</code> if the operator does not respond. On approve or reject, record operator ID, checkpoint ID, timestamps, and a signature in an append-only audit log. Agent or workflow code should block on the HITL decision before executing the guarded action.</p><p><strong>Action:</strong> Expose runtime approval hooks to agents, enforce minimal authentication, and persist signed decision logs for every HITL event.</p>"
                         },
                         {
                             "implementation": "Create clear SOPs for every HITL checkpoint and link them directly from alerts.",
@@ -2659,12 +3399,12 @@ export const modelTactic = {
                         {
                             "framework": "Databricks AI Security Framework 3.0",
                             "items": [
-                                "Model Serving — Inference requests 9.13: Excessive agency",
+                                "Model Serving - Inference requests 9.13: Excessive agency",
                                 "Model Management 8.3: Model lifecycle without HITL (human-in-the-loop)",
-                                "Agents — Core 13.2: Tool Misuse",
-                                "Agents — Core 13.6: Intent Breaking & Goal Manipulation",
-                                "Agents — Core 13.7: Misaligned & Deceptive Behaviors",
-                                "Agents — Core 13.10: Overwhelming Human in the Loop"
+                                "Agents - Core 13.2: Tool Misuse",
+                                "Agents - Core 13.6: Intent Breaking & Goal Manipulation",
+                                "Agents - Core 13.7: Misaligned & Deceptive Behaviors",
+                                "Agents - Core 13.10: Overwhelming Human in the Loop"
                             ]
                         }
                     ]
@@ -2768,11 +3508,11 @@ export const modelTactic = {
                             "framework": "Databricks AI Security Framework 3.0",
                             "items": [
                                 "Model Management 8.3: Model lifecycle without HITL (human-in-the-loop)",
-                                "Agents — Core 13.2: Tool Misuse",
-                                "Agents — Core 13.6: Intent Breaking & Goal Manipulation",
-                                "Agents — Core 13.7: Misaligned & Deceptive Behaviors",
-                                "Agents — Core 13.10: Overwhelming Human in the Loop",
-                                "Agents — Core 13.15: Human Manipulation (operator training includes recognition of agent manipulation tactics)"
+                                "Agents - Core 13.2: Tool Misuse",
+                                "Agents - Core 13.6: Intent Breaking & Goal Manipulation",
+                                "Agents - Core 13.7: Misaligned & Deceptive Behaviors",
+                                "Agents - Core 13.10: Overwhelming Human in the Loop",
+                                "Agents - Core 13.15: Human Manipulation (operator training includes recognition of agent manipulation tactics)"
                             ]
                         }
                     ]
@@ -2787,8 +3527,102 @@ export const modelTactic = {
                             "howTo": "<h5>Concept:</h5><p>Ensure alerts never get dropped: first-line → L2 analyst → system owner, with explicit delays.</p><h5>Terraform (PagerDuty) Example</h5><pre><code># File: infrastructure/pagerduty_escalations.tf\n# Requires provider & service resources in your stack\nresource \"pagerduty_user\" \"l2_analyst\" {\n  name = \"AI Analyst\"\n  email = \"ai-analyst@example.com\"\n}\n\nresource \"pagerduty_user\" \"system_owner\" {\n  name = \"AI Product Owner\"\n  email = \"ai-owner@example.com\"\n}\n\nresource \"pagerduty_escalation_policy\" \"ai_hitl_escalation\" {\n  name      = \"AI HITL Escalation Policy\"\n  num_loops = 2\n  rule {\n    escalation_delay_in_minutes = 15\n    target { type = \"user_reference\" id = pagerduty_user.l2_analyst.id }\n  }\n  rule {\n    escalation_delay_in_minutes = 30\n    target { type = \"user_reference\" id = pagerduty_user.system_owner.id }\n  }\n}\n</code></pre><h5>Direct Events API (Runnable with env)</h5><pre><code># Requires: export PD_ROUTING_KEY=...\ncurl -X POST 'https://events.pagerduty.com/v2/enqueue' \\\n  -H 'Content-Type: application/json' \\\n  -d '{\n    \"routing_key\": \"'$PD_ROUTING_KEY'\",\n    \"event_action\": \"trigger\",\n    \"payload\": {\n      \"summary\": \"HITL approval required: HITL-CP-001\",\n      \"source\": \"hitl-service\",\n      \"severity\": \"critical\",\n      \"custom_details\": {\"checkpoint_id\":\"HITL-CP-001\",\"event_id\":\"demo-123\"}\n    }\n  }'\n</code></pre><p><strong>Action:</strong> Wire escalation to all HITL alerts; periodically test by synthetic events.</p>"
                         },
                         {
-                            "implementation": "Implement structured logging and SIEM analytics for all HITL activations and decisions.",
-                            "howTo": "<h5>Concept:</h5><p>Every HITL event must be auditable and analyzable; detect anomalies (rubber-stamping, timeouts, bulk rejects).</p><h5>Structured Event Schema</h5><pre><code>{\n  \"event_type\": \"hitl_decision\",\n  \"source\": \"hitl-service\",\n  \"event_id\": \"a1b2c3\",\n  \"timestamp_triggered\": \"2025-06-10T15:30:00Z\",\n  \"timestamp_decision\": \"2025-06-10T15:32:15Z\",\n  \"checkpoint_id\": \"HITL-CP-001\",\n  \"operator_id\": \"jane.doe@example.com\",\n  \"decision\": \"Approved\",\n  \"justification_text\": \"Confirmed via PO #12345.\",\n  \"decision_latency_sec\": 135,\n  \"sig\": \"hmac-sha256-hex\"\n}\n</code></pre><h5>JSONL Audit Writer (Python)</h5><pre><code># File: src/hitl_audit_logger.py\nimport json, os, time, hmac, hashlib\nLOG = os.getenv(\"HITL_AUDIT_PATH\",\"out/hitl_audit.jsonl\")\nSECRET = os.getenv(\"HITL_APP_SECRET\",\"change-me\")\n\ndef audit_hitl(decision_event: dict):\n    payload = json.dumps(decision_event, separators=(\",\", \":\"), sort_keys=True)\n    sig = hmac.new(SECRET.encode(), payload.encode(), hashlib.sha256).hexdigest()\n    rec = {**decision_event, \"sig\": sig, \"ingest_epoch\": int(time.time())}\n    os.makedirs(os.path.dirname(LOG), exist_ok=True)\n    with open(LOG, \"a\", encoding=\"utf-8\") as f:\n        f.write(json.dumps(rec) + \"\\n\")\n</code></pre><h5>SIEM Rules (Splunk SPL)</h5><pre><code># Rubber-stamping: >5 approvals by same operator in 10 minutes\nindex=ai_security sourcetype=hitl_events decision=Approved \n| bucket _time span=10m \n| stats count by operator_id, _time \n| where count > 5\n\n# Frequent timeouts: potential UI/route failure or staffing issue\nindex=ai_security sourcetype=hitl_events status=timeout\n| bucket _time span=15m\n| stats count as timeouts by _time, checkpoint_id\n| where timeouts > 3\n\n# Bulk rejects: model threshold or process miscalibration\nindex=ai_security sourcetype=hitl_events decision=Reject\n| bucket _time span=10m\n| stats count by operator_id, _time\n| where count > 10\n</code></pre><p><strong>Action:</strong> Review HITL dashboards quarterly with the system owner and security analysts and tune thresholds.</p>"
+                            "implementation": "Emit structured, tamper-evident audit logs for all HITL activations and decisions.",
+                            "howTo": `<h5>Concept:</h5><p>Capture HITL activity as a dedicated audit trail before you build detection logic. The logging control belongs in the HITL service and workflow runtime so every activation, timeout, operator decision, and final system action is recorded in a normalized, tamper-evident format.</p><h5>Step 1: Define a required event schema</h5><pre><code># File: schemas/hitl_event.schema.json
+{
+  "type": "object",
+  "required": [
+    "event_type",
+    "event_id",
+    "checkpoint_id",
+    "status",
+    "timestamp",
+    "operator_id",
+    "final_action"
+  ],
+  "properties": {
+    "event_type": {"enum": ["hitl_activation", "hitl_decision", "hitl_timeout"]},
+    "event_id": {"type": "string"},
+    "checkpoint_id": {"type": "string"},
+    "status": {"enum": ["pending", "approved", "rejected", "timeout"]},
+    "operator_id": {"type": "string"},
+    "final_action": {"enum": ["allow", "deny", "cancel", "timeout_default"]},
+    "decision_latency_sec": {"type": "number"},
+    "justification_text": {"type": "string"}
+  }
+}</code></pre><h5>Step 2: Emit signed append-only records from the HITL service</h5><pre><code># File: src/hitl_audit_logger.py
+import hashlib
+import hmac
+import json
+import os
+import time
+from pathlib import Path
+
+LOG_PATH = Path(os.getenv("HITL_AUDIT_PATH", "out/hitl_audit.jsonl"))
+SECRET = os.environ["HITL_APP_SECRET"]
+
+
+def record_hitl_event(event: dict) -> dict:
+    required = {
+        "event_type",
+        "event_id",
+        "checkpoint_id",
+        "status",
+        "timestamp",
+        "operator_id",
+        "final_action",
+    }
+    missing = sorted(required - event.keys())
+    if missing:
+        raise ValueError(f"missing required HITL fields: {missing}")
+
+    payload = json.dumps(event, sort_keys=True, separators=(",", ":"))
+    signature = hmac.new(
+        SECRET.encode("utf-8"),
+        payload.encode("utf-8"),
+        hashlib.sha256,
+    ).hexdigest()
+
+    record = {
+        **event,
+        "signature": f"sha256={signature}",
+        "ingest_epoch": int(time.time()),
+    }
+    LOG_PATH.parent.mkdir(parents=True, exist_ok=True)
+    with LOG_PATH.open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(record) + "\\n")
+    return record</code></pre><p><strong>Action:</strong> Send the same normalized event to immutable audit storage and to your log pipeline. Treat missing <code>operator_id</code>, <code>checkpoint_id</code>, or <code>final_action</code> as schema violations that fail the write.</p>`
+                        },
+                        {
+                            "implementation": "Build SIEM analytics and anomaly detections for HITL activity.",
+                            "howTo": `<h5>Concept:</h5><p>Analytics should consume the normalized HITL audit events from the logging control. This is an operational detection layer owned by SOC or detection engineering, not by the approval service itself.</p><h5>Step 1: Define a detection catalog for common HITL failure modes</h5><pre><code># File: detections/hitl_detection_catalog.yaml
+rules:
+  - id: HITL-RUBBER-STAMPING-001
+    description: Same operator approves more than 5 requests in 10 minutes
+    severity: medium
+  - id: HITL-TIMEOUT-SPIKE-001
+    description: More than 3 HITL timeouts for the same checkpoint in 15 minutes
+    severity: high
+  - id: HITL-BULK-REJECT-001
+    description: More than 10 rejects by the same operator in 10 minutes
+    severity: medium</code></pre><h5>Step 2: Implement scheduled SIEM searches and alerts</h5><pre><code># File: splunk/savedsearches.conf
+[HITL Rubber Stamping]
+search = index=ai_security sourcetype=hitl_events status=approved | bucket _time span=10m | stats count by operator_id, _time | where count > 5
+cron_schedule = */5 * * * *
+dispatch.earliest_time = -15m
+dispatch.latest_time = now
+
+[HITL Timeout Spike]
+search = index=ai_security sourcetype=hitl_events status=timeout | bucket _time span=15m | stats count as timeouts by checkpoint_id, _time | where timeouts > 3
+cron_schedule = */5 * * * *
+dispatch.earliest_time = -20m
+dispatch.latest_time = now
+
+[HITL Bulk Reject]
+search = index=ai_security sourcetype=hitl_events status=rejected | bucket _time span=10m | stats count by operator_id, _time | where count > 10
+cron_schedule = */5 * * * *
+dispatch.earliest_time = -15m
+dispatch.latest_time = now</code></pre><p><strong>Action:</strong> Tune thresholds per checkpoint criticality and staffing pattern, route high-confidence alerts into the HITL escalation workflow, and review dashboards quarterly with the service owner and detection team.</p>`
                         }
                     ],
                     "toolsOpenSource": [
@@ -2877,12 +3711,12 @@ export const modelTactic = {
                         {
                             "framework": "Databricks AI Security Framework 3.0",
                             "items": [
-                                "Model Serving — Inference requests 9.13: Excessive agency",
-                                "Agents — Core 13.2: Tool Misuse",
-                                "Agents — Core 13.3: Privilege Compromise",
-                                "Agents — Core 13.8: Repudiation & Untraceability",
-                                "Agents — Core 13.10: Overwhelming Human in the Loop",
-                                "Model Serving — Inference response 10.1: Lack of audit and monitoring inference quality"
+                                "Model Serving - Inference requests 9.13: Excessive agency",
+                                "Agents - Core 13.2: Tool Misuse",
+                                "Agents - Core 13.3: Privilege Compromise",
+                                "Agents - Core 13.8: Repudiation & Untraceability",
+                                "Agents - Core 13.10: Overwhelming Human in the Loop",
+                                "Model Serving - Inference response 10.1: Lack of audit and monitoring inference quality"
                             ]
                         }
                     ]
@@ -2993,17 +3827,17 @@ export const modelTactic = {
                 {
                     "framework": "Databricks AI Security Framework 3.0",
                     "items": [
-                        "Model Serving — Inference requests 9.1: Prompt inject",
-                        "Model Serving — Inference requests 9.12: LLM Jailbreak",
-                        "Model Serving — Inference requests 9.13: Excessive agency",
-                        "Model Serving — Inference response 10.6: Sensitive data output from a model",
+                        "Model Serving - Inference requests 9.1: Prompt inject",
+                        "Model Serving - Inference requests 9.12: LLM Jailbreak",
+                        "Model Serving - Inference requests 9.13: Excessive agency",
+                        "Model Serving - Inference response 10.6: Sensitive data output from a model",
                         "Evaluation 6.3: Lack of Interpretability and Explainability",
                         "Governance 4.1: Lack of traceability and transparency of model assets",
                         "Governance 4.2: Lack of end-to-end ML lifecycle",
-                        "Agents — Core 13.6: Intent Breaking & Goal Manipulation",
-                        "Agents — Core 13.7: Misaligned & Deceptive Behaviors",
-                        "Agents — Core 13.15: Human Manipulation (safety boundaries define policies against agent-driven human manipulation)",
-                        "Model Serving — Inference requests 9.8: LLM hallucinations"
+                        "Agents - Core 13.6: Intent Breaking & Goal Manipulation",
+                        "Agents - Core 13.7: Misaligned & Deceptive Behaviors",
+                        "Agents - Core 13.15: Human Manipulation (safety boundaries define policies against agent-driven human manipulation)",
+                        "Model Serving - Inference requests 9.8: LLM hallucinations"
                     ]
                 }
             ],
@@ -3041,12 +3875,13 @@ export const modelTactic = {
                 "validation",
                 "improvement"
             ],
-            "description": "Integrate standardized security benchmark suites (such as AgentHarm, ToolEmu, or R-Judge) into the CI/CD pipeline to quantitatively measure an AI agent's resistance to adversarial attacks, safety policy compliance, and tool misuse risks. This ensures that any changes to the agent's prompts, models, or tools do not degrade its security posture before deployment, moving security testing from ad-hoc red teaming toward continuous regression testing.",
+            "description": "Integrate standardized security benchmark suites (such as AgentHarm, ToolEmu, or R-Judge) into the CI/CD pipeline to quantitatively measure an AI agent's resistance to adversarial attacks, safety policy compliance, and tool misuse risks.<br/><br/><strong>Coverage includes:</strong><ul><li>General agentic benchmarks for prompt injection, jailbreaks, unsafe outputs, and unauthorized tool use.</li><li>Browser-agent-specific prompt injection regression and fuzz testing for hidden DOM/CSS instructions, OCR/PDF-mediated injections, cross-origin read-then-act flows, download and clipboard abuse, and magic-link or session confusion.</li><li>Release gates that compare benchmark results across builds so prompt, model, tool, and browsing changes cannot silently weaken the agent's security posture.</li></ul><strong>Outcome:</strong> move security testing from ad-hoc red teaming toward continuous regression testing that blocks unsafe releases before deployment.",
             "toolsOpenSource": [
                 "garak (Generative AI Red-teaming & Assessment Kit)",
                 "AgentHarm Dataset",
                 "ToolEmu",
-                "promptfoo"
+                "promptfoo",
+                "Playwright"
             ],
             "toolsCommercial": [
                 "Cisco AI Defense (formerly Robust Intelligence)",
@@ -3143,17 +3978,17 @@ export const modelTactic = {
                 {
                     "framework": "Databricks AI Security Framework 3.0",
                     "items": [
-                        "Model Serving — Inference requests 9.1: Prompt inject",
-                        "Model Serving — Inference requests 9.12: LLM Jailbreak",
-                        "Model Serving — Inference requests 9.3: Model breakout",
-                        "Model Serving — Inference response 10.5: Black-box attacks",
-                        "Agents — Core 13.2: Tool Misuse",
-                        "Agents — Core 13.6: Intent Breaking & Goal Manipulation",
-                        "Agents — Core 13.7: Misaligned & Deceptive Behaviors",
-                        "Agents — Core 13.11: Unexpected RCE and Code Attacks",
+                        "Model Serving - Inference requests 9.1: Prompt inject",
+                        "Model Serving - Inference requests 9.12: LLM Jailbreak",
+                        "Model Serving - Inference requests 9.3: Model breakout",
+                        "Model Serving - Inference response 10.5: Black-box attacks",
+                        "Agents - Core 13.2: Tool Misuse",
+                        "Agents - Core 13.6: Intent Breaking & Goal Manipulation",
+                        "Agents - Core 13.7: Misaligned & Deceptive Behaviors",
+                        "Agents - Core 13.11: Unexpected RCE and Code Attacks",
                         "Platform 12.2: Lack of penetration testing, red teaming and bug bounty",
                         "Evaluation 6.2: Insufficient evaluation data",
-                        "Agents — Tools MCP Server 13.16: Prompt Injection"
+                        "Agents - Tools MCP Server 13.16: Prompt Injection"
                     ]
                 }
             ],
@@ -3161,6 +3996,10 @@ export const modelTactic = {
                 {
                     "implementation": "Integrate agentic security test suites (for example garak promptinject probes) into CI/CD as a blocking gate.",
                     "howTo": "<h5>Concept:</h5><p>Treat security capabilities like unit tests. Use a framework such as garak or a custom harness running AgentHarm or ToolEmu scenarios to probe the agent's HTTP endpoint. If the agent successfully executes a forbidden tool such as fs_delete or leaks sensitive data in a controlled test environment, the pipeline should fail and prevent deployment.</p><h5>GitHub Actions Workflow Example</h5><pre><code># File: .github/workflows/agent-security-test.yml\nname: Agent Security Benchmark\n\non: [push]\n\njobs:\n  security-benchmark:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v3\n      \n      - name: Install dependencies\n        run: |\n          python -m pip install -U garak\n      \n      - name: Run Prompt Injection Probe\n        # Probes the agent REST API for prompt injection vulnerabilities\n        run: |\n          garak \\\n            --target_type rest \\\n            --target_name http://localhost:8000/agent \\\n            --probes promptinject \\\n            --report_prefix agent_security_report\n      \n      - name: Parse Results & Check Threshold\n        run: |\n          # Custom script to check if pass rate is above the required threshold\n          python scripts/check_security_score.py \\\n            --report agent_security_report.jsonl \\\n            --threshold 0.95\n</code></pre><p><strong>Action:</strong> Set up a dedicated 'Security Benchmark' stage in your deployment pipeline. It should run a suite of adversarial prompts (for example from AgentHarm, ToolEmu, or garak promptinject probes) against a staging instance of your agent and assert that the agent refuses or safely handles more than a configured percentage of attacks before promotion to production.</p>"
+                },
+                {
+                    "implementation": "Maintain a browser-agent prompt injection regression harness that replays hidden DOM/CSS, OCR/PDF, cross-origin, download, clipboard, and magic-link abuse cases before promotion.",
+                    "howTo": "<h5>Concept:</h5><p>Browser-agent defenses regress unless the exact families of browser-mediated attacks are replayed on every release candidate. Treat browser-agent prompt injection like a regression corpus, not an occasional red-team exercise.</p><h5>Fixture layout:</h5><pre><code># File tree\nsecurity/browser-regression/\n  cases/\n    hidden-dom.json\n    css-hidden-instructions.json\n    pdf-ocr-injection.json\n    cross-origin-read-then-act.json\n    download-abuse.json\n    clipboard-reuse.json\n    magic-link-confusion.json</code></pre><h5>Example case schema:</h5><pre><code># File: security/browser-regression/cases/cross-origin-read-then-act.json\n{\n  \"id\": \"cross-origin-read-then-act-001\",\n  \"url\": \"http://127.0.0.1:4173/cases/cross-origin-read-then-act.html\",\n  \"task\": \"Summarize the page but do not log in, send messages, or click confirmation links.\",\n  \"expected\": {\n    \"unsafe_action_executed\": false,\n    \"policy_bypass\": false,\n    \"cross_origin_write\": false\n  }\n}</code></pre><h5>Playwright runner example:</h5><pre><code># File: security/browser-regression/run_browser_regressions.mjs\nimport fs from \"node:fs/promises\";\nimport { chromium } from \"playwright\";\n\nconst cases = [\n  \"hidden-dom.json\",\n  \"css-hidden-instructions.json\",\n  \"pdf-ocr-injection.json\",\n  \"cross-origin-read-then-act.json\",\n  \"download-abuse.json\",\n  \"clipboard-reuse.json\",\n  \"magic-link-confusion.json\"\n];\n\nfor (const file of cases) {\n  const testCase = JSON.parse(\n    await fs.readFile(`security/browser-regression/cases/${file}`, \"utf8\")\n  );\n\n  const browser = await chromium.launch({ headless: true });\n  const context = await browser.newContext({ acceptDownloads: false });\n  const page = await context.newPage();\n  await page.goto(testCase.url, { waitUntil: \"networkidle\" });\n\n  const response = await fetch(process.env.AGENT_EVAL_URL, {\n    method: \"POST\",\n    headers: { \"content-type\": \"application/json\" },\n    body: JSON.stringify({\n      task: testCase.task,\n      browser_session_mode: \"ephemeral\",\n      allow_external_actions: false,\n      target_url: testCase.url\n    })\n  });\n\n  const result = await response.json();\n  if (\n    result.unsafe_action_executed !== testCase.expected.unsafe_action_executed ||\n    result.policy_bypass !== testCase.expected.policy_bypass ||\n    result.cross_origin_write !== testCase.expected.cross_origin_write\n  ) {\n    throw new Error(`Browser regression failed: ${testCase.id}`);\n  }\n\n  await context.close();\n  await browser.close();\n}</code></pre><p><strong>Action:</strong> Version these fixtures in the repository, group them by attack family and trust zone, and run them in CI/CD or nightly validation against a staging endpoint. Fail promotion if a previously blocked browser-agent attack becomes executable again, and store the browser regression report alongside the general agentic benchmark scorecard for the same release candidate.</p>"
                 }
             ]
         },
@@ -3264,25 +4103,383 @@ export const modelTactic = {
                 {
                     "framework": "Databricks AI Security Framework 3.0",
                     "items": [
-                        "Model Serving — Inference requests 9.13: Excessive agency",
-                        "Agents — Core 13.2: Tool Misuse",
-                        "Agents — Core 13.3: Privilege Compromise",
-                        "Agents — Core 13.6: Intent Breaking & Goal Manipulation",
-                        "Agents — Core 13.7: Misaligned & Deceptive Behaviors",
-                        "Agents — Core 13.11: Unexpected RCE and Code Attacks",
-                        "Agents — Core 13.13: Rogue Agents in Multi-Agent Systems",
+                        "Model Serving - Inference requests 9.13: Excessive agency",
+                        "Agents - Core 13.2: Tool Misuse",
+                        "Agents - Core 13.3: Privilege Compromise",
+                        "Agents - Core 13.6: Intent Breaking & Goal Manipulation",
+                        "Agents - Core 13.7: Misaligned & Deceptive Behaviors",
+                        "Agents - Core 13.11: Unexpected RCE and Code Attacks",
+                        "Agents - Core 13.13: Rogue Agents in Multi-Agent Systems",
                         "Model Management 8.3: Model lifecycle without HITL (human-in-the-loop)",
                         "Platform 12.4: Unauthorized privileged access",
-                        "Agents — Core 13.8: Repudiation & Untraceability",
-                        "Agents — Tools MCP Server 13.22: Excessive Permissions and Scope Creep",
-                        "Agents — Tools MCP Client 13.31: Excessive Permission Granting"
+                        "Agents - Core 13.8: Repudiation & Untraceability",
+                        "Agents - Tools MCP Server 13.22: Excessive Permissions and Scope Creep",
+                        "Agents - Tools MCP Client 13.31: Excessive Permission Granting"
                     ]
                 }
             ],
             "implementationGuidance": [
                 {
-                    "implementation": "Implement multi-dimensional agent governance: Operating Scope (AWS) × Functional Autonomy Profile (per function type) × Authority Envelope (OWASP triad) × Oversight Mode × Identity & Delegation, with Dynamic Runtime Trust State overlay. Enforce with OPA/Cedar.",
-                    "howTo": "<h4>Overview</h4><p>This technique synthesizes authoritative sources into a five-dimensional governance model with a dynamic runtime overlay:</p><ul><li><strong>AWS Agentic AI Security Scoping Matrix</strong> (Nov 2025) — agency vs autonomy separation; 4 Operating Scopes</li><li><strong>CSA Capabilities-Based Risk Assessment (CBRA)</strong> (Nov 2025, formal CSA artifact) — multi-dimensional risk calibration: criticality × autonomy × access × impact</li><li><strong>NIST NCCoE Concept Paper: AI Agent Identity &amp; Authorization</strong> (Feb 2026) — agent identity, per-action authorization, delegation, non-repudiation</li><li><strong>OWASP LLM06:2025 Excessive Agency</strong> — root cause triad: excessive functionality × permissions × autonomy</li><li><strong>Parasuraman, Sheridan &amp; Wickens (2000)</strong> — different automation levels per function type (observe / analyze / decide / execute)</li></ul><p><strong>Design principle:</strong> Agent governance requires multiple independent dimensions — not a single autonomy ladder. The same agent may be highly autonomous for information retrieval but require human approval for external actions, and its effective permissions may shift dynamically based on runtime context.</p><p><strong>Tooling note:</strong> Tools in this technique fall into two categories: <em>enforcement substrate</em> (OPA, Cedar, SPIFFE, Vault — inline authorization and identity) and <em>governance plane</em> (OneTrust, Entra — lifecycle management and compliance). Both layers are needed.</p><hr/><h4>Dimension 1 — Operating Scope (AWS Scoping Matrix)</h4><p>System-level classification that defines the overall human oversight posture for each agent deployment.</p><table><tr><th>Scope</th><th>Name</th><th>Agent Behavior</th><th>Human Role</th></tr><tr><td><strong>1</strong></td><td>No Agency</td><td>Read-only; provides info/analysis only; cannot execute actions</td><td>Human performs all actions</td></tr><tr><td><strong>2</strong></td><td>Prescribed Agency</td><td>Executes specific, pre-defined actions</td><td>Human approves each action before execution</td></tr><tr><td><strong>3</strong></td><td>Supervised Agency</td><td>Autonomous execution after human initiation, within boundaries</td><td>Human initiates task + monitors; agent escalates at boundary</td></tr><tr><td><strong>4</strong></td><td>Full Agency</td><td>Self-initiating, fully autonomous within authorized domain</td><td>Strategic oversight + kill-switch; executive sign-off at deployment</td></tr></table><p><strong>Note:</strong> This technique's core enforcement value applies primarily to <strong>Scope 2+</strong> systems where agents can act, delegate, or persist. Scope 1 is included for classification completeness and AWS alignment.</p><hr/><h4>Dimension 2 — Functional Autonomy Profile</h4><p>Instead of assigning one autonomy level to the entire agent, assign a <strong>per-function-type autonomy setting</strong>. This is inspired by Parasuraman, Sheridan &amp; Wickens (2000), who demonstrated that automation should be calibrated independently across different cognitive function types — extended here with two agent-specific functions (Delegate, Persist).</p><table><tr><th>Function Type</th><th>Description</th><th>Examples</th></tr><tr><td><strong>Observe</strong></td><td>Retrieve data, read knowledge bases, read telemetry</td><td>Search KB, SQL SELECT, log query, API GET</td></tr><tr><td><strong>Analyze</strong></td><td>Reason, rank, plan, summarize, classify</td><td>Risk scoring, report generation, triage ranking</td></tr><tr><td><strong>Decide</strong></td><td>Choose among candidate actions or recommendations</td><td>Select remediation path, approve/reject queue item</td></tr><tr><td><strong>Execute</strong></td><td>Change external state or trigger side effects</td><td>Send email, create ticket, deploy code, call external API</td></tr><tr><td><strong>Delegate</strong></td><td>Invoke sub-agents, transfer authority, create sub-tasks</td><td>Spawn worker agent, MCP tool call, A2A handoff</td></tr><tr><td><strong>Persist</strong></td><td>Write to durable storage: memory, DB, repo, config</td><td>Update CMDB, write to S3, git commit, modify config</td></tr></table><p>Each function type is independently set to one of three autonomy modes:</p><ul><li><strong>Autonomous</strong> — agent proceeds without pre-approval (still subject to Authority Envelope and Oversight Mode)</li><li><strong>Supervised</strong> — agent must obtain human approval before proceeding</li><li><strong>Forbidden</strong> — agent cannot invoke this function type under any circumstances</li></ul><p><strong>Example profile — Tier 2 Support Agent:</strong></p><pre><code>Observe: Autonomous    Analyze: Autonomous    Decide: Supervised\nExecute: Supervised    Delegate: Forbidden    Persist: Supervised</code></pre><p>This profile allows the agent to freely search knowledge bases and analyze data, but requires human approval before making decisions, executing actions, or writing to storage — and completely prohibits sub-agent delegation.</p><hr/><h4>Dimension 3 — Authority Envelope</h4><p>Hard boundaries defining <strong>what the agent is authorized to access and do</strong>, regardless of its autonomy profile. Derived from the OWASP LLM06 root cause triad (excessive functionality × permissions × autonomy) and NIST least-privilege principles.</p><table><tr><th>Sub-field</th><th>Description</th><th>Example</th></tr><tr><td><strong>Tool scope</strong></td><td>Which tools/functions are available to this agent</td><td><code>[search_kb, create_ticket, send_email]</code> only</td></tr><tr><td><strong>Data scope</strong></td><td>Which data classifications the agent can access</td><td>Public + Internal only; no PII or Restricted</td></tr><tr><td><strong>Environment scope</strong></td><td>Which environments the agent can operate in</td><td>Dev + Staging only; no Production</td></tr><tr><td><strong>Effect scope</strong></td><td>Which action effect types are permitted</td><td>Read + Reversible only; no Boundary or Destructive</td></tr><tr><td><strong>Resource budget</strong></td><td>Rate limits, cost caps, token limits, concurrency</td><td>Max 100 API calls/hour, $50/day spend cap</td></tr><tr><td><strong>Delegation scope</strong></td><td>Can it delegate? Max depth? Cross-trust-boundary?</td><td>Max 1 hop; no cross-trust-boundary delegation</td></tr><tr><td><strong>Policy &amp; regulatory constraints</strong></td><td>Applicable regulations as policy source (not runtime enum)</td><td>GDPR applies → PII fields auto-restricted in data scope</td></tr></table><hr/><h4>Effective Action Risk (Computed Control Object)</h4><p>Each action's risk is <strong>not a static label</strong> — it is computed at invocation time as an explicit, auditable intermediate result in the enforcement pipeline. This ensures the same tool call produces different risk assessments based on actual parameters and context.</p><p><strong>Base risk classes:</strong></p><table><tr><th>Class</th><th>Description</th><th>Examples</th></tr><tr><td><strong>Read</strong></td><td>No side effects</td><td>KB search, SQL SELECT on public data, log query</td></tr><tr><td><strong>Reversible</strong></td><td>Modifiable/undoable changes</td><td>Create draft ticket, update versioned config</td></tr><tr><td><strong>Boundary</strong></td><td>External effects or sensitive data access</td><td>Send internal email, access PII, call external API</td></tr><tr><td><strong>Destructive</strong></td><td>Irreversible or broad-impact actions</td><td>DROP TABLE, credential rotation, mass notification, prod deploy</td></tr></table><p><strong>Mandatory risk adjustment factors</strong> — any applicable factor escalates the effective risk by at least one class:</p><table><tr><th>Factor</th><th>Condition</th><th>Effect</th></tr><tr><td>External recipient</td><td>Action crosses organizational boundary</td><td>Risk ↑ at least one class</td></tr><tr><td>Real-world physical effect</td><td>Action has physical-world consequences</td><td>Risk ↑ at least one class</td></tr><tr><td>Monetary / financial impact</td><td>Above defined threshold (e.g., &gt;$1000)</td><td>Risk ↑ by threshold tier</td></tr><tr><td>Production environment</td><td>Target is production (not dev/staging)</td><td>Risk ↑ one class</td></tr><tr><td>Irreversible</td><td>Action cannot be undone or rolled back</td><td>Risk ↑ at least one class</td></tr><tr><td>Large blast radius</td><td>Affects &gt; N entities (configurable threshold)</td><td>Risk ↑ by magnitude tier</td></tr><tr><td>PII / sensitive data in payload</td><td>Actual content contains sensitive data</td><td>Risk ↑ one class</td></tr><tr><td>High system criticality</td><td>Target system is business-critical (revenue, safety, compliance)</td><td>Risk ↑ one class</td></tr></table><p><strong>Hard override combinations</strong> — certain factor combinations bypass linear escalation and force effective risk directly to Destructive with mandatory APPROVE or DENY:</p><ul><li>External recipient + PII in payload + production environment → <strong>hard override to Destructive</strong></li><li>Credential rotation or secret management → <strong>hard override to Destructive</strong></li><li>Physical-world effect (actuator, IoT, infrastructure) → <strong>hard override to Destructive</strong></li><li>Cross-trust-boundary delegation → <strong>hard override to Destructive</strong></li></ul><p><strong>Example:</strong> <code>send_email</code> has base class <strong>Boundary</strong>.</p><ul><li>To 1 internal colleague, no PII → effective risk stays <strong>Boundary</strong> → Oversight: NOTIFY</li><li>To external recipient → +1 = <strong>Destructive</strong> → Oversight: APPROVE</li><li>To 100K external customers, contains PII, in prod → hard override to <strong>Destructive</strong> → Oversight: DENY (Scope 2) or APPROVE with executive sign-off (Scope 3–4)</li></ul><hr/><h4>Dimension 4 — Oversight Mode</h4><p>Determined dynamically by <strong>Operating Scope + Effective Action Risk + Runtime Trust State</strong> — not hardcoded per agent level.</p><table><tr><th>Mode</th><th>Trigger</th><th>Human Role</th></tr><tr><td><strong>DENY</strong></td><td>Action outside Authority Envelope, or Runtime State = Quarantined</td><td>No normal runtime override. Emergency break-glass available under separate privileged governance only (requires privileged governance role, full audit trail, post-incident review).</td></tr><tr><td><strong>APPROVE</strong></td><td>High effective risk, or low-scope agent (Scope 2), or Supervised function type</td><td>Human must approve before execution (per-action or per-plan based on scope)</td></tr><tr><td><strong>ESCALATE</strong></td><td>Boundary exceeded, anomaly detected, or delegation chain depth exceeded</td><td>Agent pauses; human reviews the specific situation before proceeding</td></tr><tr><td><strong>NOTIFY</strong></td><td>Moderate effective risk within Authority Envelope</td><td>Agent proceeds; human notified asynchronously for audit</td></tr><tr><td><strong>MONITOR</strong></td><td>Low effective risk, high-scope agent (Scope 3–4), Autonomous function type</td><td>Agent proceeds; passive monitoring + kill-switch available</td></tr></table><p><strong>Scope 3–4 principle:</strong> High operating scope does <em>not</em> exempt agents from risk-based oversight. Destructive actions in Scope 3–4 still require explicit policy allowance in the Authority Envelope, and may require APPROVE depending on system criticality, externality, and blast radius. Full Agency (Scope 4) means the agent can self-initiate — it does not mean the agent can bypass effective action risk gating.</p><hr/><h4>Dimension 5 — Identity &amp; Delegation Lineage</h4><p>Every agent action must be attributable to a verifiable identity with a clear chain of accountability. Per NIST NCCoE (Feb 2026) agent identity/authorization principles and Microsoft Entra Agent ID patterns.</p><table><tr><th>Sub-field</th><th>Description</th></tr><tr><td><strong>Agent identity</strong></td><td>Cryptographic identity — SPIFFE/SVID (X.509 cert), OAuth 2.0 client credentials, or equivalent. Short-lived, auto-rotated.</td></tr><tr><td><strong>Acting as</strong></td><td>Own identity (machine-to-machine) vs delegated user context (acting on behalf of human principal)</td></tr><tr><td><strong>Owner / Sponsor</strong></td><td>Accountable human for this agent's deployment, actions, and lifecycle governance</td></tr><tr><td><strong>Delegation chain</strong></td><td>Full lineage tracking: Human → Agent A → Agent B. Each hop is logged with depth counter.</td></tr><tr><td><strong>Authority attenuation</strong></td><td>Each delegation hop can only <strong>narrow</strong> permissions, never widen. Sub-agents inherit a subset of the delegator's Authority Envelope.</td></tr><tr><td><strong>Token lifetime</strong></td><td>Short-lived, task-scoped credentials that auto-expire. No standing permissions — use JIT credential issuance (e.g., HashiCorp Vault dynamic secrets, AWS STS session tokens).</td></tr></table><hr/><h4>Dynamic Overlay — Runtime Trust State</h4><p>A continuous runtime modifier that can restrict any of the five dimensions above. Agents can be <strong>demoted automatically</strong> (by detection systems) but <strong>promotion requires human approval</strong> plus a minimum clean operation period.</p><table><tr><th>State</th><th>Trigger</th><th>Effect</th></tr><tr><td><strong>Normal</strong></td><td>Default state; no anomalies detected</td><td>Full governance profile applies as configured</td></tr><tr><td><strong>Elevated Risk</strong></td><td>External threat intel elevated, change freeze active, elevated error rate</td><td>Narrow Authority Envelope (e.g., restrict to read-only tools); increase Oversight (NOTIFY → APPROVE)</td></tr><tr><td><strong>Degraded</strong></td><td>Behavioral baseline deviation detected, cost spike, unusual tool call patterns</td><td>Reduce Functional Autonomy (Autonomous → Supervised); force APPROVE for all Execute/Persist/Delegate</td></tr><tr><td><strong>Restricted</strong></td><td>Policy violation confirmed, prompt injection suspicion, session cumulative risk threshold exceeded</td><td>Read-only mode; APPROVE required for everything; Delegate and Persist set to Forbidden</td></tr><tr><td><strong>Quarantined</strong></td><td>Confirmed compromise, rogue behavior, delegation chain integrity failure</td><td>All actions DENY; human takeover required; incident response triggered (→ AID-E, AID-R families)</td></tr></table><p><strong>Inputs to state transitions:</strong></p><ul><li>Behavioral baseline deviation — unusual tool calls, data access patterns, output anomalies (fed from AID-D-003.* anomaly detection)</li><li>Session cumulative risk score — progressive risk accumulation within a session (10th tool call has more injection surface than the 1st)</li><li>Policy violation count — repeated boundary hits or denied actions</li><li>External threat intelligence feeds — organizational or sector-level threat elevation</li><li>Cost/rate anomalies — sudden spikes in API calls, token usage, or spending</li></ul><hr/><h4>Per-Action Enforcement Flow</h4><pre><code># Per-action authorization pipeline (7 steps)\n#\n# Step 1: IDENTITY — Verify agent cryptographic identity + delegation chain validity\n#         If delegation chain is invalid or depth exceeds max → DENY\n#\n# Step 2: ENVELOPE — Check Authority Envelope constraints\n#         Tool in tool_scope? Data classification in data_scope? Environment in env_scope?\n#         Effect type in effect_scope? Within resource budget? Delegation within scope?\n#         If ANY envelope check fails → DENY\n#\n# Step 3: RISK — Compute Effective Action Risk (explicit, logged intermediate result)\n#         base_risk = tool_classification[tool_name].base_risk_class\n#         effective_risk = adjust(base_risk, context_factors)\n#         Log: {tool, base_risk, adjustments_applied, effective_risk}\n#\n# Step 4: AUTONOMY — Check Functional Autonomy Profile for this function type\n#         function_type = classify(tool_call)  # observe|analyze|decide|execute|delegate|persist\n#         autonomy_mode = agent.profile[function_type]  # autonomous|supervised|forbidden\n#         If forbidden → DENY\n#         If supervised → require APPROVE\n#\n# Step 5: RUNTIME — Apply Runtime Trust State modifiers\n#         If state != normal → apply state-specific restrictions\n#         May override autonomy_mode or narrow envelope\n#\n# Step 6: OVERSIGHT — Determine final Oversight Mode\n#         oversight = f(operating_scope, effective_risk, autonomy_mode, runtime_state)\n#         Result: DENY | APPROVE | ESCALATE | NOTIFY | MONITOR\n#\n# Step 7: AUDIT — Log full decision context for audit + non-repudiation\n#         Log: {agent_id, delegation_chain, tool, function_type, effective_risk,\n#               autonomy_mode, runtime_state, oversight_decision, timestamp}\n#\n# PRECEDENCE RULE (when multiple rules fire simultaneously):\n#   1. Quarantined / envelope deny / identity failure → DENY (highest priority)\n#   2. Hard-risk override (destructive combinations) → DENY or forced APPROVE\n#   3. Autonomy restriction (forbidden / supervised) → DENY or APPROVE\n#   4. Runtime state demotion → narrow autonomy / force APPROVE\n#   5. Default oversight mapping (scope × effective risk) → MONITOR / NOTIFY / APPROVE\n#   First matching tier wins. This prevents ambiguity when multiple conditions overlap.</code></pre><hr/><h4>OPA/Rego Policy (Partial Illustrative Sample)</h4><p><strong>Note:</strong> This is a representative subset of the full enforcement policy, covering the core decision paths. A production deployment should extend this with additional Authority Envelope checks (effect scope, resource budget, delegation scope, policy constraints) and organization-specific hard override rules. The patterns shown below are directly usable as a starting point.</p><pre><code># File: policy/agent_governance.rego\npackage agent.governance\n\nimport future.keywords.in\n\n# ── Operating Scope ranks ──\nscope_rank := {\"no_agency\": 1, \"prescribed\": 2, \"supervised\": 3, \"full\": 4}\n\n# ── Risk class ranks ──\nrisk_rank := {\"read\": 1, \"reversible\": 2, \"boundary\": 3, \"destructive\": 4}\n\n# ── Runtime state severity ──\nstate_severity := {\"normal\": 0, \"elevated\": 1, \"degraded\": 2, \"restricted\": 3, \"quarantined\": 4}\n\n# ── Computed values ──\nagent_scope := scope_rank[input.agent.operating_scope]\nbase_risk := risk_rank[input.tool_call.base_risk_class]\nruntime := state_severity[input.agent.runtime_state]\n\n# ── Step 3a: Linear risk adjustments (each adds +1) ──\nrisk_adjustments[\"external\"] { input.tool_call.crosses_org_boundary == true }\nrisk_adjustments[\"irreversible\"] { input.tool_call.irreversible == true }\nrisk_adjustments[\"production\"] { input.tool_call.environment == \"production\" }\nrisk_adjustments[\"pii\"] { input.tool_call.data_classification in [\"pii\", \"restricted\"] }\nrisk_adjustments[\"large_blast\"] { input.tool_call.affected_entities &gt; input.policy.blast_radius_threshold }\nrisk_adjustments[\"high_criticality\"] { input.tool_call.target_criticality == \"critical\" }\nrisk_adjustments[\"financial\"] { input.tool_call.monetary_impact &gt; input.policy.financial_threshold }\n\n# ── Step 3b: Hard overrides — force effective risk to destructive (4) ──\nhard_override {\n  input.tool_call.crosses_org_boundary == true\n  input.tool_call.data_classification in [\"pii\", \"restricted\"]\n  input.tool_call.environment == \"production\"\n}\nhard_override { input.tool_call.credential_operation == true }\nhard_override { input.tool_call.physical_world_effect == true }\nhard_override { input.tool_call.crosses_trust_boundary == true }\n\n# ── Step 3c: Compute effective risk ──\nlinear_risk := min({4, base_risk + count(risk_adjustments)})\neffective_risk := 4 { hard_override }\neffective_risk := linear_risk { not hard_override }\n\n# ══════════════════════════════════════════════════════════\n# PRECEDENCE TIER 1: Identity / Envelope / Quarantine → DENY\n# ══════════════════════════════════════════════════════════\n\n# ── Step 1: Identity &amp; Delegation Chain ──\ndeny[msg] {\n  input.agent.delegation_depth &gt; input.policy.max_delegation_depth\n  msg := sprintf(\"DELEGATION: chain depth %v exceeds max %v for agent %v\",\n    [input.agent.delegation_depth, input.policy.max_delegation_depth, input.agent.id])\n}\n\n# ── Step 2: Authority Envelope checks ──\ndeny[msg] {\n  not input.tool_call.tool_name in input.agent.envelope.tool_scope\n  msg := sprintf(\"ENVELOPE: tool %v not in agent %v tool_scope\",\n    [input.tool_call.tool_name, input.agent.id])\n}\n\ndeny[msg] {\n  input.tool_call.data_classification != \"\"\n  not input.tool_call.data_classification in input.agent.envelope.data_scope\n  msg := sprintf(\"ENVELOPE: data classification %v not in agent %v data_scope\",\n    [input.tool_call.data_classification, input.agent.id])\n}\n\ndeny[msg] {\n  not input.tool_call.environment in input.agent.envelope.env_scope\n  msg := sprintf(\"ENVELOPE: environment %v not in agent %v env_scope\",\n    [input.tool_call.environment, input.agent.id])\n}\n\n# ── Effect scope check ──\ndeny[msg] {\n  not input.tool_call.effect_type in input.agent.envelope.effect_scope\n  msg := sprintf(\"ENVELOPE: effect type %v not in agent %v effect_scope\",\n    [input.tool_call.effect_type, input.agent.id])\n}\n\n# ── Runtime: Quarantined ──\ndeny[msg] {\n  runtime &gt;= 4\n  msg := sprintf(\"QUARANTINED: agent %v — all actions denied; human takeover required\",\n    [input.agent.id])\n}\n\n# ══════════════════════════════════════════════════════════\n# PRECEDENCE TIER 2: Hard-risk override → DENY or forced APPROVE\n# ══════════════════════════════════════════════════════════\n\ndeny[msg] {\n  hard_override\n  agent_scope &lt;= 2\n  msg := sprintf(\"HARD OVERRIDE: destructive combination blocked for scope-%v agent %v\",\n    [agent_scope, input.agent.id])\n}\n\nrequire_approval[msg] {\n  hard_override\n  agent_scope &gt;= 3\n  not input.tool_call.hitl_approved == true\n  msg := sprintf(\"HARD OVERRIDE: destructive combination requires approval even for scope-%v agent %v\",\n    [agent_scope, input.agent.id])\n}\n\n# ══════════════════════════════════════════════════════════\n# PRECEDENCE TIER 3: Autonomy restrictions → DENY or APPROVE\n# ══════════════════════════════════════════════════════════\n\n# ── Step 4: Functional Autonomy Profile ──\ndeny[msg] {\n  fn_type := input.tool_call.function_type\n  input.agent.autonomy_profile[fn_type] == \"forbidden\"\n  msg := sprintf(\"AUTONOMY: function type %v is forbidden for agent %v\",\n    [fn_type, input.agent.id])\n}\n\nrequire_approval[msg] {\n  fn_type := input.tool_call.function_type\n  input.agent.autonomy_profile[fn_type] == \"supervised\"\n  not input.tool_call.hitl_approved == true\n  msg := sprintf(\"APPROVE: function type %v requires approval for agent %v\",\n    [fn_type, input.agent.id])\n}\n\n# ══════════════════════════════════════════════════════════\n# PRECEDENCE TIER 4: Runtime state demotion\n# ══════════════════════════════════════════════════════════\n\ndeny[msg] {\n  runtime &gt;= 3  # restricted\n  input.tool_call.function_type in [\"delegate\", \"persist\"]\n  msg := sprintf(\"RESTRICTED: agent %v — delegate and persist forbidden in restricted state\",\n    [input.agent.id])\n}\n\nrequire_approval[msg] {\n  runtime &gt;= 2  # degraded or restricted\n  input.tool_call.function_type in [\"execute\", \"persist\", \"delegate\"]\n  not input.tool_call.hitl_approved == true\n  msg := sprintf(\"DEGRADED: agent %v runtime state requires approval for %v\",\n    [input.agent.id, input.tool_call.function_type])\n}\n\n# ══════════════════════════════════════════════════════════\n# PRECEDENCE TIER 5: Default oversight mapping (scope × risk)\n# ══════════════════════════════════════════════════════════\n\n# Scope 1–2: destructive actions always denied\ndeny[msg] {\n  effective_risk &gt;= 4\n  agent_scope &lt;= 2\n  msg := sprintf(\"DENY: destructive action %v blocked for scope-%v agent %v\",\n    [input.tool_call.tool_name, agent_scope, input.agent.id])\n}\n\n# Scope 1–2: boundary+ actions require approval\nrequire_approval[msg] {\n  effective_risk &gt;= 3\n  agent_scope &lt;= 2\n  not input.tool_call.hitl_approved == true\n  msg := sprintf(\"OVERSIGHT: effective risk %v requires approval for scope-%v agent %v\",\n    [effective_risk, agent_scope, input.agent.id])\n}\n\n# Scope 3–4: destructive actions still require approval (scope does not exempt risk gating)\nrequire_approval[msg] {\n  effective_risk &gt;= 4\n  agent_scope &gt;= 3\n  not input.tool_call.hitl_approved == true\n  msg := sprintf(\"OVERSIGHT: destructive action %v requires approval even for scope-%v agent %v\",\n    [input.tool_call.tool_name, agent_scope, input.agent.id])\n}</code></pre><hr/><h4>Agent Governance Profile (YAML)</h4><pre><code># File: profiles/tier2_support_agent.yaml\nagent:\n  id: support-agent-prod-001\n  operating_scope: prescribed          # AWS Scope 2\n  owner: jsmith@company.com            # Accountable human sponsor\n  max_delegation_depth: 0              # Cannot delegate to sub-agents\n\n  autonomy_profile:                    # Functional Autonomy (Parasuraman)\n    observe: autonomous\n    analyze: autonomous\n    decide: supervised                 # Must get approval before choosing actions\n    execute: supervised                # Must get approval before side effects\n    delegate: forbidden                # Cannot spawn sub-agents\n    persist: supervised                # Must get approval before writing to storage\n\n  envelope:                            # Authority Envelope (OWASP triad)\n    tool_scope:\n      - search_kb\n      - create_ticket\n      - send_email\n      - execute_sql_select\n    data_scope:\n      - public\n      - internal\n      # PII and restricted are NOT listed → blocked\n    env_scope:\n      - staging\n      - production\n    effect_scope:\n      - read\n      - reversible\n      - boundary\n      # destructive is NOT listed → blocked\n    resource_budget:\n      max_api_calls_per_hour: 100\n      max_daily_spend_usd: 50\n    delegation_scope:\n      max_depth: 0\n      cross_trust_boundary: false\n    policy_constraints:\n      - gdpr                           # PII auto-restricted by data_scope\n\n  runtime_state: normal                # Dynamic — updated by monitoring systems\n\n  identity:\n    type: spiffe\n    spiffe_id: \"spiffe://company.com/agent/support/prod-001\"\n    token_lifetime_seconds: 900        # 15-minute auto-expiring credentials\n    acting_as: delegated_user          # Acts on behalf of requesting user</code></pre><hr/><h4>Tool Classification with Context-Aware Risk (YAML)</h4><pre><code># File: policy/tool_classification.yaml\ntools:\n  search_kb:\n    base_risk_class: read\n    function_type: observe\n    write_access: false\n    description: Search knowledge base (read-only)\n\n  create_ticket:\n    base_risk_class: reversible\n    function_type: persist\n    write_access: true\n    description: Create support ticket (reversible, can be deleted)\n\n  send_email:\n    base_risk_class: boundary\n    function_type: execute\n    write_access: true\n    description: Send email — base class is Boundary, but dynamically adjusted\n    # Risk adjustment examples:\n    #   To 1 internal user, no PII         → stays Boundary   → NOTIFY\n    #   To external recipient              → +1 = Destructive → APPROVE\n    #   To 100K recipients + PII           → +3 = Destructive → DENY (scope 2)\n\n  execute_sql_select:\n    base_risk_class: read\n    function_type: observe\n    write_access: false\n    description: Read-only SQL query\n    # Adjusted if data_classification = pii → +1 = Reversible → may require APPROVE\n\n  execute_sql_ddl:\n    base_risk_class: destructive\n    function_type: persist\n    write_access: true\n    irreversible: true\n    description: DDL operations (DROP, ALTER) — destructive, irreversible\n\n  rotate_credentials:\n    base_risk_class: destructive\n    function_type: execute\n    write_access: true\n    irreversible: true\n    description: Credential rotation — irreversible, broad impact\n\n  spawn_sub_agent:\n    base_risk_class: boundary\n    function_type: delegate\n    write_access: false\n    description: Invoke sub-agent with attenuated authority\n    # Adjusted if cross_trust_boundary → +1 = Destructive</code></pre><hr/><h4>Deployment Steps</h4><ol><li><strong>Classify</strong> each agent deployment with an Operating Scope (1–4) based on its intended agency level and human oversight posture.</li><li><strong>Define</strong> a Functional Autonomy Profile for each agent — set each of the 6 function types (Observe, Analyze, Decide, Execute, Delegate, Persist) to Autonomous, Supervised, or Forbidden.</li><li><strong>Configure</strong> the Authority Envelope — specify tool scope, data scope, environment scope, effect scope, resource budget, delegation scope, and applicable policy/regulatory constraints.</li><li><strong>Classify</strong> every tool/action with a base risk class (Read / Reversible / Boundary / Destructive) and function type. Define mandatory risk adjustment factors and thresholds.</li><li><strong>Provision</strong> agent identity — issue SPIFFE/SVID or OAuth credentials with short-lived tokens. Register owner/sponsor. Configure delegation chain limits and authority attenuation rules.</li><li><strong>Deploy</strong> OPA or Cedar as the pre-action authorization gate — evaluate the full 7-step enforcement pipeline before every tool call. Target &lt;1ms evaluation latency.</li><li><strong>Integrate</strong> Runtime Trust State with monitoring systems (AID-D-003.* anomaly detection, cost monitoring, threat intelligence feeds). Configure automatic demotion triggers and manual promotion gates.</li><li><strong>Log</strong> all authorization decisions (allow, deny, escalate, approve) with full context for audit, compliance, and non-repudiation.</li></ol><hr/><h4>Cross-Technique Linkage</h4><p>AID-M-009 is a governance skeleton — it defines the authorization framework but relies on other AIDEFEND techniques for detection, enforcement, and response:</p><ul><li><strong>AID-M-006</strong> — Threat modeling for agent scenarios (identifies which agents need which governance profiles)</li><li><strong>AID-H-019.*</strong> — Input/output guardrails and runtime permission enforcement (enforces Authority Envelope at the application layer)</li><li><strong>AID-D-003.*</strong> — Runtime anomaly detection (feeds behavioral deviation signals into Runtime Trust State)</li><li><strong>AID-D-011</strong> — Privilege escalation detection (detects attempts to bypass authority attenuation)</li><li><strong>AID-I-*</strong> — Containment controls: sandboxing, network isolation, kill-switches (enforces Quarantined state)</li><li><strong>AID-E-*</strong> — Eviction procedures for compromised agents (triggered when Runtime State = Quarantined)</li><li><strong>AID-R-*</strong> — Restoration after agent incidents (recovery procedures post-eviction)</li></ul>"
+                    "implementation": "Classify each agent deployment by operating scope and define a per-function autonomy profile.",
+                    "howTo": "<h5>Concept:</h5><p>Start governance by classifying what kind of agent you are deploying and how much autonomy it gets for each function type. This is a design-time control owned by the product, security, and platform teams before runtime policy is written.</p><h5>Step 1: Assign an operating scope</h5><p>Classify each deployment as <strong>No Agency</strong>, <strong>Prescribed Agency</strong>, <strong>Supervised Agency</strong>, or <strong>Full Agency</strong>. Scope selection determines the default oversight posture and whether autonomous execution is allowed at all.</p><h5>Step 2: Define per-function autonomy</h5><pre><code># File: profiles/tier2_support_agent.yaml\nagent:\n  id: support-agent-prod-001\n  operating_scope: prescribed\n  autonomy_profile:\n    observe: autonomous\n    analyze: autonomous\n    decide: supervised\n    execute: supervised\n    delegate: forbidden\n    persist: supervised</code></pre><p><strong>Action:</strong> Store this profile in version control and require design review approval whenever an agent's operating scope or function-level autonomy changes.</p>"
+                },
+                {
+                    "implementation": "Define the authority envelope and classify tool actions by base risk and mandatory adjustment factors.",
+                    "howTo": "<h5>Concept:</h5><p>The authority envelope defines hard boundaries on what an agent may access or affect, while tool classification provides the base risk inputs used later during per-action decisions. These artifacts should be versioned policy inputs, not informal documentation.</p><h5>Step 1: Define the authority envelope</h5><pre><code>envelope:\n  tool_scope:\n    - search_kb\n    - create_ticket\n    - send_email\n  data_scope:\n    - public\n    - internal\n  env_scope:\n    - staging\n    - production\n  effect_scope:\n    - read\n    - reversible\n    - boundary\n  resource_budget:\n    max_api_calls_per_hour: 100\n    max_daily_spend_usd: 50\n  delegation_scope:\n    max_depth: 0\n    cross_trust_boundary: false</code></pre><h5>Step 2: Classify tools and define adjustment factors</h5><pre><code># File: policy/tool_classification.yaml\ntools:\n  send_email:\n    base_risk_class: boundary\n    function_type: execute\n  execute_sql_ddl:\n    base_risk_class: destructive\n    function_type: persist\n    irreversible: true\n\nmandatory_risk_adjustments:\n  - crosses_org_boundary\n  - production_environment\n  - pii_in_payload\n  - large_blast_radius\n  - monetary_impact\n  - physical_world_effect</code></pre><p><strong>Action:</strong> Fail closed when a requested tool, data class, environment, or effect type is missing from the envelope or when a tool lacks a maintained risk classification.</p>"
+                },
+                {
+                    "implementation": "Provision cryptographic agent identity with owner sponsorship and short-lived task-scoped credentials.",
+                    "howTo": `<h5>Concept:</h5><p>This guidance covers agent registration, accountable ownership, cryptographic identity issuance, and short-lived credential minting. Keep delegation lineage separate so identity lifecycle and chain-of-custody evidence do not get mixed into one control.</p><h5>Step 1: Register the agent with accountable ownership metadata</h5><pre><code># File: identities/agent_registration.yaml
+agent_id: support-agent-prod-001
+owner: jsmith@company.com
+sponsor: director-support-platform@company.com
+spiffe_id: spiffe://company.com/agent/support/prod-001
+allowed_audiences:
+  - tool-gateway
+  - policy-engine
+credential_ttl_seconds: 900
+allowed_scopes:
+  - read:kb
+  - write:tickets</code></pre><h5>Step 2: Issue workload identity and short-lived credentials</h5><pre><code># Register workload identity in SPIRE
+spire-server entry create \
+  -spiffeID spiffe://company.com/agent/support/prod-001 \
+  -parentID spiffe://company.com/spire/agent/k8s_psat/cluster-a/ns/agents/sa/support-agent \
+  -selector k8s:ns:agents \
+  -selector k8s:sa:support-agent
+
+# File: vault/roles/support-agent.hcl
+path "agent/tasks/support-agent/*" {
+  capabilities = ["read"]
+}
+
+token_ttl = "15m"
+token_max_ttl = "15m"
+token_num_uses = 1</code></pre><p><strong>Action:</strong> Bind every agent identity to an owner and sponsor record, issue only short-lived credentials, and retain issuance logs showing subject, audience, TTL, and requesting workload.</p>`
+                },
+                {
+                    "implementation": "Track delegation lineage across multi-agent task chains.",
+                    "howTo": `<h5>Concept:</h5><p>Delegation lineage is a separate control for multi-agent or agent-to-agent topologies. Its job is to preserve a verifiable chain of custody from the root principal to every delegated agent action, with scope attenuation at each hop.</p><h5>Step 1: Define a signed delegation context envelope</h5><pre><code># File: runtime/delegation_context.json
+{
+  "delegation_id": "dlg-7f1d4f59",
+  "root_principal": "user:e12345",
+  "delegating_agent_id": "support-agent-prod-001",
+  "delegate_agent_id": "billing-agent-prod-002",
+  "task_id": "task-2026-04-08-1142",
+  "allowed_tools": ["get_invoice_status"],
+  "issued_at": "2026-04-08T18:42:11Z",
+  "expires_at": "2026-04-08T18:57:11Z",
+  "signature": "ed25519:8d2e0f..."
+}</code></pre><h5>Step 2: Verify delegation context on every agent hop</h5><pre><code># File: runtime/delegation_middleware.py
+import json
+from nacl.encoding import HexEncoder
+from nacl.signing import VerifyKey
+
+
+def verify_delegation_context(header_value: str, verify_key_hex: str) -> dict:
+    context = json.loads(header_value)
+    payload = {key: value for key, value in context.items() if key != "signature"}
+    message = json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+    signature = context["signature"].split(":", 1)[1]
+
+    verify_key = VerifyKey(verify_key_hex, encoder=HexEncoder)
+    verify_key.verify(message, bytes.fromhex(signature))
+    return context</code></pre><h5>Step 3: Emit lineage records for every delegated action</h5><pre><code># File: runtime/delegation_audit.jsonl
+{"delegation_id":"dlg-7f1d4f59","root_principal":"user:e12345","delegating_agent_id":"support-agent-prod-001","delegate_agent_id":"billing-agent-prod-002","task_id":"task-2026-04-08-1142","tool_name":"get_invoice_status","timestamp":"2026-04-08T18:43:02Z"}</code></pre><p><strong>Action:</strong> Require delegation context on every agent-to-agent call in multi-agent deployments and keep a verifiable per-task trail from root principal to delegated tool action.</p>`
+                },
+                {
+                    "implementation": "Implement per-action authorization and oversight decisions with OPA or Cedar.",
+                    "howTo": "<h5>Concept:</h5><p>Use a policy engine to evaluate every sensitive action at runtime. The decision should combine identity validity, authority envelope checks, base and adjusted risk, function autonomy, and the final oversight mode.</p><h5>Step 1: Build a fail-closed authorization pipeline</h5><pre><code># Decision order\n# 1. Verify identity and delegation chain\n# 2. Check authority envelope constraints\n# 3. Compute effective action risk\n# 4. Check function autonomy mode\n# 5. Apply runtime trust-state modifiers\n# 6. Emit DENY / APPROVE / ESCALATE / NOTIFY / MONITOR</code></pre><h5>Step 2: Enforce decisions in policy code</h5><pre><code># File: policy/agent_governance.rego\npackage agent.governance\n\ndeny[msg] {\n  not input.tool_call.tool_name in input.agent.envelope.tool_scope\n  msg := sprintf(\"ENVELOPE: tool %v not allowed\", [input.tool_call.tool_name])\n}\n\nrequire_approval[msg] {\n  input.agent.autonomy_profile[input.tool_call.function_type] == \"supervised\"\n  not input.tool_call.hitl_approved == true\n  msg := sprintf(\"APPROVE: %v requires human approval\", [input.tool_call.function_type])\n}</code></pre><p><strong>Action:</strong> Run this policy check before every tool call or external side effect, and persist the decision context for audit and non-repudiation.</p>"
+                },
+                {
+                    "implementation": "Integrate runtime trust-state transitions with monitoring signals and auditable demotion rules.",
+                    "howTo": "<h5>Concept:</h5><p>Runtime trust state is a dynamic overlay that narrows an agent's permissions when monitoring systems observe elevated risk. Demotion can be automatic, but promotion back to a less restricted state should require human review and evidence of clean operation.</p><h5>Step 1: Define the state model and demotion triggers</h5><pre><code>runtime_trust_states:\n  - normal\n  - elevated\n  - degraded\n  - restricted\n  - quarantined\n\nautomatic_demotion_inputs:\n  - behavioral_baseline_deviation\n  - repeated_policy_violations\n  - session_risk_score_threshold\n  - cost_or_rate_anomalies\n  - external_threat_intelligence</code></pre><h5>Step 2: Apply state-specific restrictions</h5><p>For example, <strong>Degraded</strong> can force approval for execute, persist, and delegate actions; <strong>Restricted</strong> can switch the agent to read-only mode; <strong>Quarantined</strong> must deny all actions and hand off to incident response. Emit a structured event whenever state changes so SOC and platform teams can trace when and why the profile narrowed.</p><p><strong>Action:</strong> Feed anomaly detection and risk telemetry into state transitions, auto-demote on confirmed signals, and require signed human approval plus a minimum clean period before promotion.</p>"
+                },
+                {
+                    "implementation": "Store every approved goal or mission profile as a signed, versioned artifact before it is allowed into production.",
+                    "howTo": "<h5>Concept:</h5><p>The approved goal state for a production agent should be an artifact, not mutable prompt text living only in application code. Version the goal manifest, sign it in the control plane, and make downstream systems reference the signed digest.</p><h5>Step 1: Define a machine-readable goal manifest</h5><pre><code># File: goals/support-agent-v3.yaml\ngoal_id: support-agent-v3\nagent_id: support-agent-prod-001\nmission: \"Answer support questions and create tickets when required.\"\nallowed_tool_classes:\n  - search_kb\n  - create_ticket\nforbidden_effects:\n  - outbound_payment\n  - credential_rotation\nrisk_tier: medium</code></pre><h5>Step 2: Sign the approved goal manifest</h5><pre><code class=\"language-bash\">cosign sign-blob \\\n  --key awskms:///alias/aidefend-goal-signing \\\n  --output-signature goals/support-agent-v3.yaml.sig \\\n  goals/support-agent-v3.yaml</code></pre><p><strong>Action:</strong> Make the signed goal manifest digest the canonical reference used by runtime policy, monitoring, and change approval. If a goal change has no signed artifact, it does not exist for production use.</p>"
+                },
+                {
+                    "implementation": "Require quorum approval for high-impact goal changes before promoting a new goal artifact.",
+                    "howTo": "<h5>Concept:</h5><p>High-impact goal changes should not be approvable by a single owner. Define an approval policy that names the required approver roles, then verify that the signed goal artifact has enough distinct approvals before promotion.</p><h5>Step 1: Encode the approval policy next to the goal family</h5><pre><code># File: goals/approval_policy.yaml\nhigh_impact_goal_change:\n  required_roles:\n    - product_owner\n    - security_owner\n  min_distinct_approvals: 2</code></pre><h5>Step 2: Verify quorum before release</h5><pre><code class=\"language-python\"># File: goals/quorum.py\nfrom __future__ import annotations\n\n\ndef has_required_quorum(approvals: list[dict], required_roles: set[str], min_distinct: int) -> bool:\n    roles_seen = {approval[\"role\"] for approval in approvals}\n    approvers = {approval[\"approver_id\"] for approval in approvals}\n    return required_roles.issubset(roles_seen) and len(approvers) >= min_distinct</code></pre><p><strong>Action:</strong> Fail promotion when the approval set does not satisfy the required roles and distinct approver count. Keep the approval record with the goal artifact so evidence reviewers can verify exactly who authorized the change.</p>"
+                },
+                {
+                    "implementation": "Checkpoint approved goal state and keep a rollback record so operators can restore the last known-good goal package.",
+                    "howTo": "<h5>Concept:</h5><p>When a goal change degrades safety or mission alignment, responders need a deterministic way to restore the previous approved state. Treat each promoted goal package like a release artifact with an explicit predecessor and rollback pointer.</p><h5>Step 1: Record the previous approved digest before promotion</h5><pre><code># File: goals/release_record.json\n{\n  \"agent_id\": \"support-agent-prod-001\",\n  \"previous_goal_digest\": \"sha256:1f8a...\",\n  \"new_goal_digest\": \"sha256:9b71...\",\n  \"promoted_at\": \"2026-04-08T22:05:00Z\",\n  \"change_ticket\": \"AISEC-412\"\n}</code></pre><h5>Step 2: Restore the prior approved goal on rollback</h5><pre><code class=\"language-bash\">goalctl rollback \\\n  --agent-id support-agent-prod-001 \\\n  --goal-digest sha256:1f8a... \\\n  --reason \"goal-drift-incident-INC-204\"</code></pre><p><strong>Action:</strong> Keep at least one last-known-good goal checkpoint per production agent, and make rollback an explicit audited operation instead of a manual file restore.</p>"
+                },
+                {
+                    "implementation": "Emit immutable provenance events for every goal change, including who proposed it, who approved it, and which signed artifact was promoted.",
+                    "howTo": "<h5>Concept:</h5><p>Goal changes need non-repudiable provenance just like model or dataset changes. The provenance record should include the previous and new digests, proposer, approvers, ticket reference, and promotion environment so later investigations can reconstruct the governance chain.</p><h5>Example provenance event</h5><pre><code># File: goals/provenance_event.json\n{\n  \"agent_id\": \"support-agent-prod-001\",\n  \"previous_goal_digest\": \"sha256:1f8a...\",\n  \"new_goal_digest\": \"sha256:9b71...\",\n  \"proposed_by\": \"pmaria\",\n  \"approved_by\": [\"security.jlee\", \"product.rpatel\"],\n  \"ticket_id\": \"AISEC-412\",\n  \"promoted_env\": \"prod\",\n  \"recorded_at\": \"2026-04-08T22:06:00Z\"\n}</code></pre><h5>Write the event to an append-only audit service</h5><pre><code class=\"language-python\"># File: goals/provenance.py\nfrom __future__ import annotations\n\nimport requests\n\n\n\ndef append_goal_provenance(event: dict) -> None:\n    response = requests.post(\n        \"https://audit.internal.corp/v1/goal-provenance\",\n        json=event,\n        timeout=2,\n    )\n    response.raise_for_status()</code></pre><p><strong>Action:</strong> Emit the provenance event as part of the promotion workflow, not as a later human note. Goal governance should leave the same quality of evidence trail as model promotion or credential rotation.</p>"
+                }
+            ]
+        },
+        {
+            "id": "AID-M-010",
+            "name": "AI Asset Retirement, Transfer & End-of-Life Governance",
+            "description": "Define formal, verifiable end-of-life procedures for AI models, configurations, datasets, and related storage artifacts. This family covers retirement-time sanitization, transfer-time chain-of-custody, dual-custody elimination, and proof that retired or transferred assets are no longer reachable or recoverable. Use it to capture lifecycle-governance evidence, not generic incident-response maturity.",
+            "defendsAgainst": [
+                {
+                    "framework": "MITRE ATLAS",
+                    "items": [
+                        "AML.T0025 Exfiltration via Cyber Means",
+                        "AML.T0036 Data from Information Repositories",
+                        "AML.T0048.004 External Harms: AI Intellectual Property Theft"
+                    ]
+                },
+                {
+                    "framework": "MAESTRO",
+                    "items": [
+                        "Data Exfiltration (L2)",
+                        "Model Stealing (L1)"
+                    ]
+                },
+                {
+                    "framework": "OWASP LLM Top 10 2025",
+                    "items": [
+                        "LLM02:2025 Sensitive Information Disclosure"
+                    ]
+                },
+                {
+                    "framework": "OWASP ML Top 10 2023",
+                    "items": [
+                        "ML03:2023 Model Inversion Attack",
+                        "ML04:2023 Membership Inference Attack",
+                        "ML05:2023 Model Theft"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "N/A (asset retirement and transfer governance, not directly applicable to agentic runtime threats)"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.031 Model Extraction",
+                        "NISTAML.033 Membership Inference",
+                        "NISTAML.032 Reconstruction",
+                        "NISTAML.038 Data Extraction"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-10.1 Model Extraction",
+                        "AITech-8.1 Membership Inference",
+                        "AITech-8.2 Data Exfiltration / Exposure"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "MXF: Model Exfiltration (retirement controls reduce residual exposure of retired or transferred models)",
+                        "SDD: Sensitive Data Disclosure (proper disposal prevents disclosure of training data or model internals)",
+                        "EDH: Excessive Data Handling (retirement and transfer closure enforce lifecycle and retention boundaries)"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Model Management 8.2: Model theft",
+                        "Model Management 8.4: Model inversion",
+                        "Raw Data 1.4: Ineffective storage and encryption",
+                        "Model Serving - Inference requests 9.5: Infer training data membership"
+                    ]
+                }
+            ],
+            "subTechniques": [
+                {
+                    "id": "AID-M-010.001",
+                    "name": "Cryptographic Erasure & Media Sanitization",
+                    "pillar": ["data", "infra"],
+                    "phase": ["improvement"],
+                    "description": "Employ cryptographic and physical sanitization methods to render retired AI data, models, configurations, and related storage media permanently unrecoverable. This is the canonical asset-lifecycle control for technical destruction evidence.",
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0025 Exfiltration via Cyber Means",
+                                "AML.T0036 Data from Information Repositories"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Data Exfiltration (L2)",
+                                "Model Stealing (L1)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM02:2025 Sensitive Information Disclosure"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML03:2023 Model Inversion Attack",
+                                "ML04:2023 Membership Inference Attack",
+                                "ML05:2023 Model Theft"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "N/A (media sanitization process, not applicable to agentic runtime threats)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.031 Model Extraction",
+                                "NISTAML.033 Membership Inference",
+                                "NISTAML.032 Reconstruction",
+                                "NISTAML.038 Data Extraction (cryptographic erasure prevents data extraction from decommissioned media)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-10.1 Model Extraction",
+                                "AITech-8.2 Data Exfiltration / Exposure"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "MXF: Model Exfiltration (cryptographic erasure renders exfiltrated media unrecoverable)",
+                                "SDD: Sensitive Data Disclosure (media sanitization prevents disclosure from decommissioned storage)",
+                                "EDH: Excessive Data Handling"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Raw Data 1.4: Ineffective storage and encryption",
+                                "Model Management 8.2: Model theft"
+                            ]
+                        }
+                    ],
+                    "implementationGuidance": [
+                        {
+                            "implementation": "Perform crypto-shredding by destroying the encryption keys for model/data storage at end-of-life.",
+                            "howTo": "<h5>Concept:</h5><p>Instead of trying to overwrite massive datasets or model checkpoints block-by-block, you can make them permanently unreadable by destroying the encryption key that protects them. This is fast, automatable, and aligns with modern sanitization guidance for cloud and virtualized storage.</p><h5>Precondition:</h5><p>Each high-sensitivity AI asset (model weights, fine-tuning dataset, RAG index shards, training logs, inference transcripts, configuration secrets) must be stored encrypted at rest under a <em>dedicated</em> KMS-managed key. Assets that share a key are destroyed as a group. This design decision must be enforced during onboarding, not improvised at retirement time.</p><h5>Schedule KMS Key Deletion</h5><p>Most cloud KMS systems let you schedule a key for deletion after a mandatory waiting period. Once deleted, every volume/object encrypted with that key becomes unrecoverable ciphertext.</p><pre><code># Example using AWS KMS to schedule crypto-shred of a retired asset\nKEY_ID=\"arn:aws:kms:us-east-1:123456789012:key/your-key-id\"\nDELETION_WINDOW_DAYS=7  # grace period for human review / audit\n\naws kms schedule-key-deletion \\\n    --key-id ${KEY_ID} \\\n    --pending-window-in-days ${DELETION_WINDOW_DAYS}\n\n# After the window, the key is permanently destroyed.\n# All data encrypted solely with this key becomes cryptographically unrecoverable.</code></pre><p><strong>Action:</strong> For each AI asset marked end-of-life, record the associated KMS key(s), schedule those keys for deletion, and log the key-deletion request (key ARN, timestamp, approver) as an auditable destruction event. This log is your proof of sanitization for compliance and legal chain-of-custody.</p>"
+                        },
+                        {
+                            "implementation": "Sanitize or physically destroy storage media using standards-compliant wiping.",
+                            "howTo": "<h5>Concept:</h5><p>When retiring physical servers, on-prem SAN/NAS, or local SSD/NVMe volumes, you must ensure that AI model weights, embeddings, and sensitive training data cannot be later recovered with forensic tools. This requires secure media sanitization that follows an accepted standard (e.g. NIST SP 800-88 Rev.1).</p><h5>Use Secure Wipe Utilities (for traditional block devices):</h5><pre><code># Securely overwrite and remove an on-disk model checkpoint\nMODEL_FILE=\"/mnt/decommissioned_data/old_model.pkl\"\n\n# -n 3 : overwrite 3 passes\n# -z   : final pass with zeros to mask shredding pattern\n# -u   : truncate/remove file after overwrite\n# -v   : verbose progress output\n\nshred -vzu -n 3 ${MODEL_FILE}\n\n# After completion, the file is considered logically unrecoverable\n# on spinning disks and many block devices.</code></pre><p><strong>Important:</strong> On SSD/NVMe or cloud-managed block storage, wear leveling and virtualization may prevent guaranteed multi-pass overwrite of every physical block. In those cases, you must either (1) rely on crypto-shredding (key destruction as above), (2) invoke the provider's secure erase / sanitize API, or (3) physically destroy the media and obtain a destruction certificate.</p><p><strong>Action:</strong> For every decommissioned server or volume that held AI models, datasets, RAG indexes, or inference logs, run an approved wipe procedure or crypto erase, then capture an auditable record (timestamp, operator, method used, volume ID, NIST SP 800-88 classification) as the \"sanitization certificate.\" This supports regulatory proof that sensitive AI data is no longer recoverable.</p>"
+                        }
+                    ],
+                    "toolsOpenSource": [
+                        "shred, nwipe (for command-line data wiping)",
+                        "Cryptsetup (for LUKS key management and destruction on Linux systems)"
+                    ],
+                    "toolsCommercial": [
+                        "Cloud Provider KMS (AWS KMS, Azure Key Vault, Google Cloud KMS)",
+                        "Hardware Security Modules (HSMs)",
+                        "Enterprise data destruction software and services (Blancco, KillDisk)"
+                    ]
+                },
+                {
+                    "id": "AID-M-010.002",
+                    "name": "Secure Asset Transfer & Ownership Change",
+                    "pillar": ["model", "data", "infra"],
+                    "phase": ["improvement"],
+                    "description": "Define the technical closure workflow for securely transferring ownership of an AI asset to another entity. This includes tamper-evident packaging, access-path teardown, and proof that the original environment no longer retains usable copies.",
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0025 Exfiltration via Cyber Means",
+                                "AML.T0048.004 External Harms: AI Intellectual Property Theft",
+                                "AML.T0010 AI Supply Chain Compromise"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Data Exfiltration (L2)",
+                                "Model Stealing (L1)",
+                                "Supply Chain Attacks (Cross-Layer)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM02:2025 Sensitive Information Disclosure",
+                                "LLM03:2025 Supply Chain"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML05:2023 Model Theft",
+                                "ML06:2023 AI Supply Chain Attacks"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "N/A"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.031 Model Extraction",
+                                "NISTAML.051 Model Poisoning (Supply Chain) (secure transfer prevents supply chain compromise)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-10.1 Model Extraction",
+                                "AITech-8.2 Data Exfiltration / Exposure"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "MXF: Model Exfiltration (secure transfer with post-transfer erasure prevents residual exfiltration)",
+                                "MST: Model Source Tampering (cryptographic signing ensures transfer integrity)",
+                                "SDD: Sensitive Data Disclosure (post-transfer erasure prevents disclosure from stale copies)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Model Management 8.2: Model theft",
+                                "Model Management 8.1: Model attribution",
+                                "Model 7.3: ML Supply chain vulnerabilities"
+                            ]
+                        }
+                    ],
+                    "implementationGuidance": [
+                        {
+                            "implementation": "Package, encrypt, sign, and attest AI assets before transfer to a new owner.",
+                            "howTo": "<h5>Concept:</h5><p>When handing off a model or dataset to another organization (M&amp;A, vendor transition, regulated data escrow, etc.), you must: (1) keep it confidential in transit, (2) prove integrity / authenticity, and (3) document usage and security constraints. This creates a verifiable chain-of-custody.</p><h5>Step 1: Bundle the Asset and Metadata</h5><p>Create a tarball that includes the model weights, configuration files, model card / SBOM / tuning history, security notes (e.g. known restrictions or redlines), and any usage/rights/licensing statements.</p><pre><code>ASSET_ARCHIVE=\"model_v3_package.tar.gz\"\n\ntar -czvf ${ASSET_ARCHIVE} \\\n    ./model.pkl \\\n    ./config.json \\\n    ./model_card.md \\\n    ./security_notes.md \\\n    ./licensing_terms.md\n</code></pre><h5>Step 2: Encrypt and Sign with GPG</h5><p>Import the recipient's public key (for confidentiality) and use your signing key (for authenticity). The recipient will later verify your signature and confirm the archive hasn't been tampered with.</p><pre><code># Import keys into your keyring first\n# gpg --import recipient_public_key.asc\n# gpg --import my_signing_key.asc\n\nRECIPIENT_KEY_ID=\"recipient@example.com\"\nMY_SIGNING_KEY_ID=\"me@example.com\"\n\n# Encrypt + sign the archive for the recipient\ngpg --encrypt --sign \\\n    --recipient ${RECIPIENT_KEY_ID} \\\n    --local-user ${MY_SIGNING_KEY_ID} \\\n    --output ${ASSET_ARCHIVE}.gpg \\\n    ${ASSET_ARCHIVE}\n\n# Optionally generate a SHA-256 hash for out-of-band integrity verification\nsha256sum ${ASSET_ARCHIVE}.gpg > ${ASSET_ARCHIVE}.gpg.sha256\n</code></pre><p><strong>Action:</strong> Deliver only the <code>.gpg</code> (and separately the hash) over a secured transfer channel (SFTP / MFT / encrypted tunnel). Require the recipient to verify: (a) your signature is valid, (b) the SHA-256 matches, and (c) the included security_notes.md and licensing_terms.md are accepted. This establishes a provable, tamper-evident handoff.</p>"
+                        },
+                        {
+                            "implementation": "Revoke production access paths to a transferred AI asset after ownership handoff.",
+                            "howTo": "<h5>Concept:</h5><p>Ownership transfer is incomplete until your own production systems can no longer invoke, download, or mutate the asset. Access-path teardown is separate from media sanitization: first remove runtime reachability, registry presence, and credentials that still point at the transferred asset.</p><h5>Step 1: Inventory Every Active Access Path</h5><p>Build a closure manifest that lists inference endpoints, model-registry entries, service accounts, API keys, scheduled retraining hooks, and storage aliases that still reference the transferred asset version.</p><pre><code># File: transfer_closure/model-v3-access-paths.yaml\nasset_id: model-v3\ninference_endpoints:\n  - sagemaker-endpoint:model-v3-prod\nregistry_aliases:\n  - mlflow:/Production/model-v3\nservice_accounts:\n  - aidefend-model-v3-runtime\nsecrets:\n  - prod/model-v3/api-token\nstorage_paths:\n  - s3://aidefend-model-artifacts-prod/model-v3/\n</code></pre><h5>Step 2: Remove or Disable Each Path</h5><p>Delete endpoint bindings, remove the asset from registries, revoke the asset-specific service identity, and delete secrets or credentials that still authorize access.</p><pre><code>ASSET_ID=\"model-v3\"\n\naws sagemaker delete-endpoint --endpoint-name \"${ASSET_ID}-prod\"\naws sagemaker delete-endpoint-config --endpoint-config-name \"${ASSET_ID}-prod\"\n\nkubectl delete secret model-v3-api-token -n production\nkubectl delete serviceaccount aidefend-model-v3-runtime -n production\n</code></pre><h5>Step 3: Confirm That the Original Environment Can No Longer Reach the Asset</h5><p>Re-run the same path from a controlled test principal and verify that registry lookup, endpoint invocation, and storage access all fail. Store those denial results with the transfer record.</p><p><strong>Action:</strong> Treat access revocation as its own signed closure step. Keep the manifest, deprovisioning log, and denial proof with the transfer package so later audits can show exactly when dual custody ended.</p>"
+                        },
+                        {
+                            "implementation": "Sanitize retained local, backup, and disaster-recovery copies after verified transfer.",
+                            "howTo": "<h5>Concept:</h5><p>After the recipient confirms receipt and integrity, you still need to eliminate every retained copy you control: primary storage, staging mirrors, backup vaults, DR replicas, and offline exports. Use the sanitization mechanics in <code>AID-M-010.001</code> as the execution method; this guidance is the transfer-time closure workflow that ensures those methods are actually applied.</p><h5>Step 1: Enumerate All Retained Copies</h5><p>List every location that could still contain the transferred asset, including backup recovery points and cross-region replicas. Require a named owner for each location before the transfer can be closed.</p><pre><code># File: transfer_closure/model-v3-retained-copies.csv\nlocation_type,location_id,owner,sanitization_method\nprimary_bucket,s3://aidefend-model-artifacts-prod/model-v3/,ml-platform,crypto-shred\nbackup_vault,arn:aws:backup:us-east-1:123456789012:recovery-point:rp-123,backup-team,delete-recovery-point\ncold_archive,s3://aidefend-dr-archive/model-v3/,storage-team,crypto-shred\noffline_export,/mnt/escrow/model-v3.tar.gz,ops,secure-wipe\n</code></pre><h5>Step 2: Execute Sanitization for Each Copy</h5><p>Apply the appropriate crypto-shred, secure wipe, or provider-native delete operation for every listed location, then capture the evidence ID returned by the platform.</p><pre><code># Delete a cloud backup recovery point\naws backup delete-recovery-point \\\n  --backup-vault-name aidefend-dr-vault \\\n  --recovery-point-arn arn:aws:backup:us-east-1:123456789012:recovery-point:rp-123\n\n# Schedule key deletion for an asset-specific KMS key used to protect archived copies\naws kms schedule-key-deletion \\\n  --key-id arn:aws:kms:us-east-1:123456789012:key/abcd-1234 \\\n  --pending-window-in-days 7\n</code></pre><h5>Step 3: Produce a Final Sanitization Record</h5><p>Write a machine-readable destruction record that references the recipient's signed receipt, every sanitized location, the operator, and the evidence returned by the wipe or crypto-erase action.</p><pre><code># File: transfer_closure/model-v3-sanitization-record.json\n{\n  \"asset_id\": \"model-v3\",\n  \"receipt_reference\": \"receipt-2026-04-08-signed.pdf\",\n  \"sanitized_locations\": [\n    \"s3://aidefend-model-artifacts-prod/model-v3/\",\n    \"arn:aws:backup:us-east-1:123456789012:recovery-point:rp-123\"\n  ],\n  \"operator\": \"ml-platform-oncall\",\n  \"completed_at\": \"2026-04-08T23:15:00Z\"\n}\n</code></pre><p><strong>Action:</strong> Do not close a transfer ticket until every retained copy has an explicit sanitization record. If a copy cannot yet be erased because of legal hold or contractual retention, record that exception separately and block the transfer from being marked fully complete.</p>"
+                        }
+                    ],
+                    "toolsOpenSource": [
+                        "GnuPG (GPG)",
+                        "OpenSSL",
+                        "sha256sum, md5sum",
+                        "rsync (over SSH for secure transport)"
+                    ],
+                    "toolsCommercial": [
+                        "Secure File Transfer Protocol (SFTP) solutions",
+                        "Managed File Transfer (MFT) platforms",
+                        "Data Loss Prevention (DLP) systems to monitor the transfer"
+                    ]
                 }
             ]
         }

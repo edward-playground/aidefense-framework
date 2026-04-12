@@ -1,4 +1,4 @@
-# 🛡️ AIDEFEND™: An AI Defense Framework
+# AIDEFEND™ - An AI Defense Framework
 
 [![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg?style=for-the-badge)](https://creativecommons.org/licenses/by/4.0/)
 [![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge)](https://aidefend.net)
@@ -7,13 +7,13 @@
 
 ---
 
-### 🚀 Framework Website
+### Framework Website
 
 **[Go to the AIDEFEND framework site](https://aidefend.net)**
 
 ---
 
-### 💡 Key Features
+### Key Features
 
 * **Four Strategic Views**: Organize and explore defenses from multiple perspectives to suit different roles and use cases:
     * **Tactics View**: Aligned with the seven high-level tactics of MITRE D3FEND.
@@ -22,13 +22,13 @@
     * **Frameworks View**: Browse defenses mapped to specific threat frameworks (OWASP LLM/ML/Agentic Top 10, MAESTRO, MITRE ATLAS, NIST AML, Cisco AI Security, Google SAIF 2.0, Databricks DASF 3.0).
 * **Comprehensive Technique Details**: Each defensive technique includes a detailed description, implementation strategies with code examples, and lists of relevant open-source and commercial tools.
 * **Threat Mapping**: Techniques are explicitly mapped to known threats from 9 established frameworks: **MITRE ATLAS**, **MAESTRO**, the **OWASP Top 10** for LLMs, ML, and Agentic Applications, **Cisco Integrated AI Security and Safety Framework**, **NIST Adversarial Machine Learning 2025**, **Google Secure AI Framework (SAIF) 2.0**, and **Databricks AI Security Framework (DASF) 3.0**.
-* **WebMCP Support**: With a [WebMCP](https://webmachinelearning.github.io/webmcp/)-capable browser, AI agents can browse and query AIDEFEND's defense knowledge base directly — just ask questions in any language and get answers.
+* **WebMCP Support**: With a [WebMCP](https://webmachinelearning.github.io/webmcp/)-capable browser, AI agents can browse and query AIDEFEND's defense knowledge base directly - just ask questions in any language and get answers.
 * **Interactive Interface**: A clean, responsive UI with powerful search functionality to quickly find relevant techniques and threats.
-* **Four Themes**: Dark, Light, High Contrast, and The Matrix — a comfortable viewing experience for any environment.
+* **Four Themes**: Dark, Light, High Contrast, and The Matrix - a comfortable viewing experience for any environment.
 
 ---
 
-### 🏛️ The Framework Views
+### The Framework Views
 
 AIDEFEND allows you to view the defensive landscape through four distinct lenses, helping you answer key strategic questions.
 
@@ -50,24 +50,24 @@ This view organizes defenses by the development stage where they are most releva
 #### **4. Frameworks View**
 > **Question:** *What known threats from established frameworks does this defense address?*
 
-This view lets you browse defenses mapped to specific threat frameworks — **OWASP Top 10 for LLM Applications (2025)**, **OWASP ML Top 10 (2023)**, **OWASP Agentic AI Top 10 (2026)**, **MAESTRO**, **MITRE ATLAS**, **NIST Adversarial Machine Learning (2025)**, **Cisco AI Security**, **Google Secure AI Framework (SAIF) 2.0**, and **Databricks AI Security Framework (DASF) 3.0**. Each framework page includes a brief description, a link to the official source, and an organized breakdown of its threat categories with corresponding AIDEFEND defensive techniques.
+This view lets you browse defenses mapped to specific threat frameworks - **OWASP Top 10 for LLM Applications (2025)**, **OWASP ML Top 10 (2023)**, **OWASP Agentic AI Top 10 (2026)**, **MAESTRO**, **MITRE ATLAS**, **NIST Adversarial Machine Learning (2025)**, **Cisco AI Security**, **Google Secure AI Framework (SAIF) 2.0**, and **Databricks AI Security Framework (DASF) 3.0**. Each framework page includes a brief description, a link to the official source, and an organized breakdown of its threat categories with corresponding AIDEFEND defensive techniques.
 
 ---
 
-### ⚙️ How to Use This Tool
+### How to Use This Tool
 
-1.  **Select a View**: Use the "View by:" switcher at the top of the page to choose between Tactics, Pillars, Phases, or Frameworks.
-2.  **Explore Techniques**: Click on any column header to learn more about that tactic, pillar, or phase. Click on any individual defensive technique to open a detailed modal view. In Frameworks view, use the dropdown to switch between threat frameworks.
-3.  **Search Everything**: Use the search bar to filter all content by keywords, technique IDs, or threat mappings (e.g., "Prompt Injection", "AID-H-002", "MAESTRO", "LLM01").
-
-4.  **AIDEFEND MCP/REST API Service**: Now available! A 100% Local, private RAG system for the AIDEFEND framework. [Try it now](https://github.com/edward-playground/aidefend-mcp).
-5.  **Ask AI Agents (WebMCP)**: Use a WebMCP-capable browser to let AI agents query the framework for you:
-    1. Open [aidefend.net](https://aidefend.net) in a WebMCP-capable browser (e.g., Chrome 146+ with WebMCP flag enabled, or Microsoft Edge with upcoming WebMCP support). **Keep the tab open** — the AI agent can only access AIDEFEND tools while the page is active.
-    2. Ask your AI agent (e.g., Gemini, ChatGPT, Claude) a question in any language — e.g., "What defenses exist for prompt injection?" or "如何防禦模型投毒？"
+1. **Select a View**: Use the "View by:" switcher at the top of the page to choose between Tactics, Pillars, Phases, or Frameworks.
+2. **Explore Techniques**: Click on any column header to learn more about that tactic, pillar, or phase. Click on any individual defensive technique to open a detailed modal view. In Frameworks view, use the dropdown to switch between threat frameworks.
+3. **Search Everything**: Use the search bar to filter all content by keywords, technique IDs, or threat mappings (e.g., "Prompt Injection", "AID-H-002", "MAESTRO", "LLM01").
+4. **AIDEFEND MCP/REST API Service**: Now available. A 100% local, private RAG system for the AIDEFEND framework. [Try it now](https://github.com/edward-playground/aidefend-mcp).
+5. **Ask AI Agents (WebMCP)**: Use a WebMCP-capable browser to let AI agents query the framework for you:
+    1. Open [aidefend.net](https://aidefend.net) in a WebMCP-capable browser (e.g., Chrome 146+ with WebMCP flag enabled, or Microsoft Edge with upcoming WebMCP support). **Keep the tab open** - the AI agent can only access AIDEFEND tools while the page is active.
+    2. Ask your AI agent (e.g., Gemini, ChatGPT, Claude) a question in any language - for example, "What defenses exist for prompt injection?" or "Show me techniques for secure model rollback."
     3. The AI agent searches the framework, retrieves matching techniques, and returns implementation guidance.
+
 ---
 
-### 📚 Acknowledgments & Disclaimer
+### Acknowledgments & Disclaimer
 
 This work is a personal initiative led by Edward Lee. It is intended for informational and educational purposes only.
 
@@ -88,10 +88,10 @@ The framework synthesizes concepts and knowledge from the following foundational
 
 ---
 
-### 📬 Contact
+### Contact
 
 This work is led by **Edward Lee**. You can [connect with me on LinkedIn](https://www.linkedin.com/in/go-edwardlee/).
 
-### 📜 License
+### License
 
 This work is licensed under a [Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/).
