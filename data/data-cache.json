@@ -1,0 +1,5511 @@
+{
+  "AID-M-001": {
+    "contentHash": "49d3c0c56f125e5e",
+    "keywords": [
+      "ai asset inventory",
+      "ml component cataloging",
+      "model registry",
+      "data flow mapping",
+      "dependency discovery",
+      "asset visibility",
+      "ecosystem mapping",
+      "ai-spm",
+      "asset ownership tracking",
+      "configuration mapping",
+      "aibom",
+      "third-party api cataloging",
+      "ai supply chain visibility",
+      "model attribution"
+    ]
+  },
+  "AID-M-001.001": {
+    "contentHash": "93ba23062546f7e8",
+    "keywords": [
+      "ai component inventory",
+      "infrastructure cataloging",
+      "accelerator firmware tracking",
+      "gpu tpu inventory",
+      "model registry",
+      "dataset cataloging",
+      "cmdb integration",
+      "asset ownership",
+      "mlflow registry",
+      "kubeflow inventory",
+      "ai-spm platform",
+      "dynamic asset discovery",
+      "unity catalog",
+      "hardware baseline"
+    ]
+  },
+  "AID-M-001.002": {
+    "contentHash": "c809e3b54d3a2811",
+    "keywords": [
+      "dependency mapping",
+      "sbom generation",
+      "aibom",
+      "dependency pinning",
+      "software composition analysis",
+      "transitive dependency tracking",
+      "version-controlled manifest",
+      "third-party api mapping",
+      "syft grype trivy",
+      "pip-audit",
+      "dependency-check",
+      "attack surface enumeration",
+      "service dependency graph",
+      "library provenance"
+    ]
+  },
+  "AID-M-001.003": {
+    "contentHash": "aa6118a078ebba43",
+    "keywords": [
+      "skill inventory",
+      "skill lifecycle governance",
+      "agentic skill registry",
+      "approval-gated installation",
+      "skill manifest tracking",
+      "orphaned skill detection",
+      "per-skill nhi credential",
+      "skill provenance",
+      "dormancy detection",
+      "event-driven lifecycle",
+      "skill admission workflow",
+      "spiffe spire workload identity",
+      "skill ownership transfer",
+      "skill revocation"
+    ]
+  },
+  "AID-M-002": {
+    "contentHash": "1bfdb67eebeafa3a",
+    "keywords": [
+      "data provenance",
+      "data lineage tracking",
+      "dataset signing",
+      "checksumming datasets",
+      "model lifecycle audit",
+      "training data history",
+      "cryptographic provenance",
+      "tamper-evident chain of custody",
+      "dataset versioning",
+      "lineage verification",
+      "data trustworthiness",
+      "provenance records",
+      "lifecycle auditing",
+      "ml lineage"
+    ]
+  },
+  "AID-M-002.001": {
+    "contentHash": "936e6052470fdb26",
+    "keywords": [
+      "data versioning",
+      "dvc versioning",
+      "artifact versioning",
+      "git-lfs tracking",
+      "lakefs versioning",
+      "pachyderm pipelines",
+      "delta lake time travel",
+      "reproducibility control",
+      "rollback to known-good",
+      "mlflow artifact logging",
+      "version-controlled manifest",
+      "dataset rollback",
+      "pipeline snapshot",
+      "immutable data history"
+    ]
+  },
+  "AID-M-002.002": {
+    "contentHash": "0f9f787e9fe19e70",
+    "keywords": [
+      "cryptographic integrity verification",
+      "sha-256 checksums",
+      "digital signature verification",
+      "sigstore cosign signing",
+      "artifact signing",
+      "whole-artifact hashing",
+      "gpg signing",
+      "tamper-evident artifacts",
+      "kms signing operations",
+      "model weight integrity",
+      "container image signing",
+      "manifest verification",
+      "signed provenance",
+      "hash-based verification"
+    ]
+  },
+  "AID-M-002.003": {
+    "contentHash": "e394e4dda4318fdf",
+    "keywords": [
+      "third-party data vetting",
+      "pii scanning",
+      "dataset profiling",
+      "presidio redaction",
+      "trufflehog secrets scan",
+      "onboarding checklist",
+      "source reputation review",
+      "statistical profiling",
+      "sleeper-agent scan",
+      "ydata-profiling",
+      "great expectations validation",
+      "dataset onboarding gate",
+      "licensing review",
+      "external data quarantine"
+    ]
+  },
+  "AID-M-002.004": {
+    "contentHash": "8412f0e7cd7da9bb",
+    "keywords": [
+      "trust-tiered namespace",
+      "write-gate admission",
+      "memory write-gate",
+      "knowledge base admission control",
+      "policy-as-code write",
+      "quarantined namespace",
+      "vector store namespace isolation",
+      "provenance-logged writes",
+      "write-path circuit breaker",
+      "contradiction check gate",
+      "promotion policy",
+      "rag write validation",
+      "opa write policy",
+      "immutable write provenance"
+    ]
+  },
+  "AID-M-002.005": {
+    "contentHash": "e4e5222553d14976",
+    "keywords": [
+      "quantum-resilient provenance",
+      "long-term integrity re-verification",
+      "trust anchor rotation",
+      "re-signing workflow",
+      "crypto-agile archive",
+      "tuf update framework",
+      "slsa provenance",
+      "openpipe timestamps",
+      "immutable object lock",
+      "restore-time policy check",
+      "provenance rollover",
+      "in-toto attestation",
+      "algorithm deprecation handling",
+      "archived artifact re-attestation"
+    ]
+  },
+  "AID-M-003": {
+    "contentHash": "cc29e731e3fd1c4d",
+    "keywords": [
+      "model behavior baseline",
+      "model cards",
+      "performance baselining",
+      "output distribution baseline",
+      "behavioral reference baseline",
+      "drift reference state",
+      "model documentation",
+      "confidence score baseline",
+      "latency baseline",
+      "model governance documentation",
+      "expected behavior profile",
+      "accuracy baseline",
+      "intended purpose documentation",
+      "model behavior reference"
+    ]
+  },
+  "AID-M-003.001": {
+    "contentHash": "5351a4c73485a701",
+    "keywords": [
+      "model card generation",
+      "datasheets for datasets",
+      "model card toolkit",
+      "standardized model documentation",
+      "data provenance documentation",
+      "fairness documentation",
+      "ci/cd documentation gate",
+      "model registry documentation",
+      "responsible ai governance",
+      "audit documentation",
+      "model card publishing",
+      "metadata capture",
+      "hugging face model cards",
+      "ai governance platforms"
+    ]
+  },
+  "AID-M-003.002": {
+    "contentHash": "29296ded905bcb88",
+    "keywords": [
+      "performance baselining",
+      "operational metric baseline",
+      "golden dataset evaluation",
+      "output distribution profiling",
+      "drift detection baseline",
+      "latency baseline",
+      "throughput baseline",
+      "f1-score baseline",
+      "load-test baselining",
+      "evidently ai drift",
+      "nannyml baseline",
+      "prometheus baseline",
+      "model monitor baseline",
+      "fuzzy-trigger profiling"
+    ]
+  },
+  "AID-M-003.003": {
+    "contentHash": "7d56eb1d91cefd6f",
+    "keywords": [
+      "xai baseline",
+      "explainability baseline",
+      "feature attribution baseline",
+      "shap reference",
+      "lime baseline",
+      "captum attribution",
+      "explanation stability profiling",
+      "interpretml baseline",
+      "explanation drift detection",
+      "attribution perturbation baseline",
+      "versioned xai artifacts",
+      "decision rule baselining",
+      "integrated gradients reference",
+      "xai reference profile"
+    ]
+  },
+  "AID-M-003.004": {
+    "contentHash": "8019039eb20bfb41",
+    "keywords": [
+      "agent goal baselining",
+      "signed mission directive",
+      "cryptographic goal signing",
+      "machine-readable mission",
+      "goal hierarchy documentation",
+      "mission baseline verification",
+      "tamper-evident goal artifact",
+      "kms goal signing",
+      "agent card metadata",
+      "goal integrity check",
+      "signed operational constraints",
+      "runtime mission verification",
+      "gpg goal signing",
+      "mission manifest"
+    ]
+  },
+  "AID-M-003.005": {
+    "contentHash": "546bdd3adc9153f6",
+    "keywords": [
+      "generative inversion pre-screening",
+      "reconstruction error baselining",
+      "latent anomaly detection",
+      "model inversion risk indicators",
+      "outlier prompt prefiltering",
+      "representation-space anomaly scoring",
+      "pre-ingestion threat triage",
+      "synthetic abuse signal detection",
+      "inversion-driven risk gates",
+      "baseline drift for inversion metrics",
+      "high-risk sample quarantine",
+      "model abuse early warning",
+      "inversion telemetry monitoring",
+      "pre-screen incident escalation"
+    ]
+  },
+  "AID-M-003.006": {
+    "contentHash": "f9cff641883962e3",
+    "keywords": [
+      "graph energy baselining",
+      "gnn robustness metric",
+      "adjacency matrix energy",
+      "structural robustness profiling",
+      "graph spectral baseline",
+      "topology perturbation defense",
+      "pytorch geometric baselining",
+      "dgl robustness",
+      "energy regularization training",
+      "graph structure baseline",
+      "eigenvalue analysis",
+      "structural drift monitoring",
+      "networkx baseline",
+      "graph energy threshold"
+    ]
+  },
+  "AID-M-003.007": {
+    "contentHash": "e23b5e1b6f81db97",
+    "keywords": [
+      "gnn structural baseline",
+      "self-supervised gnn baseline",
+      "embedding discrepancy profiling",
+      "clean embedding reference",
+      "auxiliary model baseline",
+      "backdoor discrepancy artifact",
+      "label-free pretraining",
+      "embedding drift profile",
+      "graph discrepancy statistics",
+      "gnn validation baseline",
+      "dgl discrepancy tracking",
+      "self-supervised reference",
+      "embedding distribution baseline",
+      "trusted reference state"
+    ]
+  },
+  "AID-M-004": {
+    "contentHash": "c8e5e1da2e54313d",
+    "keywords": [
+      "ai threat modeling",
+      "stride methodology",
+      "pasta methodology",
+      "octave analysis",
+      "risk assessment",
+      "trust-boundary diagrams",
+      "risk register",
+      "atlas navigator",
+      "owasp threat dragon",
+      "microsoft threat modeling tool",
+      "nist ai rmf",
+      "mlops pipeline threat modeling",
+      "federated learning threat modeling",
+      "agentic threat modeling",
+      "threat model review"
+    ]
+  },
+  "AID-M-005": {
+    "contentHash": "1ef77da32deec171",
+    "keywords": [
+      "secure configuration baselines",
+      "cis benchmarks",
+      "configuration hardening",
+      "nist ssdf",
+      "ai configuration auditing",
+      "cspm posture",
+      "secure defaults",
+      "hardened runtime configuration",
+      "iac benchmarking",
+      "mlops policy baselines",
+      "llm function access hardening",
+      "least-privilege baseline",
+      "misconfiguration remediation",
+      "platform hardening"
+    ]
+  },
+  "AID-M-005.001": {
+    "contentHash": "11fa23e4984749ed",
+    "keywords": [
+      "secure baseline design",
+      "hardened base images",
+      "golden image templates",
+      "iac terraform baseline",
+      "ansible hardening",
+      "cis-hardened jupyter",
+      "minimal-footprint container",
+      "secure-by-default iac",
+      "openscap compliance",
+      "cloudformation baseline",
+      "pulumi hardening",
+      "pre-secured image distribution",
+      "ssdf alignment",
+      "infrastructure hardening templates"
+    ]
+  },
+  "AID-M-005.002": {
+    "contentHash": "d61e2a0d1fe47aaa",
+    "keywords": [
+      "policy-as-code baseline",
+      "posture slo definition",
+      "signed baseline manifest",
+      "checkov iac scanning",
+      "terrascan policy",
+      "tfsec scanning",
+      "kics policy gate",
+      "opa release gate",
+      "ci posture gate",
+      "baseline scoring rules",
+      "bridgecrew iac",
+      "posture sli metrics",
+      "versioned baseline",
+      "promotion verification gate"
+    ]
+  },
+  "AID-M-006": {
+    "contentHash": "fa425f428c620ae6",
+    "keywords": [
+      "human-in-the-loop mapping",
+      "hitl control points",
+      "human oversight design",
+      "emergency halt procedures",
+      "approval gate workflow",
+      "operator override authority",
+      "human intervention triggers",
+      "stop-the-line backstop",
+      "default-deny approval",
+      "hitl escalation procedures",
+      "human control validation",
+      "agentic hitl",
+      "tool invocation approval gate",
+      "autonomous action oversight"
+    ]
+  },
+  "AID-M-006.001": {
+    "contentHash": "377870608334c8d9",
+    "keywords": [
+      "hitl checkpoint design",
+      "approval service implementation",
+      "default-deny timeouts",
+      "hitl runtime hooks",
+      "sop documentation",
+      "auditable approval decisions",
+      "codified intervention triggers",
+      "versioned checkpoint artifacts",
+      "camunda bpmn design",
+      "pagerduty approval routing",
+      "xsoar playbook gate",
+      "agent pause hook",
+      "checkpoint configuration",
+      "langchain hitl integration"
+    ]
+  },
+  "AID-M-006.002": {
+    "contentHash": "3ad67a3bc8cd21f9",
+    "keywords": [
+      "operator training program",
+      "hitl fire drills",
+      "readiness testing",
+      "simulated emergency scenarios",
+      "operator preparedness",
+      "end-to-end hitl validation",
+      "training simulator",
+      "decision quality measurement",
+      "fire-drill automation",
+      "operator proficiency testing",
+      "hitl tabletop exercises",
+      "immersive labs training",
+      "incident response drill",
+      "operator certification"
+    ]
+  },
+  "AID-M-006.003": {
+    "contentHash": "8c9516dd742906ee",
+    "keywords": [
+      "hitl escalation monitoring",
+      "tamper-evident audit logs",
+      "hitl activity siem",
+      "operator decision telemetry",
+      "escalation path enforcement",
+      "siem anomaly detection",
+      "sigma rule detection",
+      "operator behavior analytics",
+      "hitl forensic trail",
+      "structured decision logging",
+      "opensearch logging",
+      "approval anomaly detection",
+      "escalation timeout handling",
+      "audit trail integrity"
+    ]
+  },
+  "AID-M-007": {
+    "contentHash": "01edbb3dcfe6a198",
+    "keywords": [
+      "safety boundary modeling",
+      "use-case policy-as-code",
+      "fairness testing",
+      "bias assessment",
+      "red-team test suites",
+      "refusal policy codification",
+      "ci safety gate",
+      "policy conformance tests",
+      "fairlearn testing",
+      "ai fairness 360",
+      "opa policy gate",
+      "guardrail codification",
+      "forbidden intents policy",
+      "safety boundary validation"
+    ]
+  },
+  "AID-M-008": {
+    "contentHash": "fd702182f16631c0",
+    "keywords": [
+      "agentic security benchmarking",
+      "agentharm regression",
+      "toolemu benchmarks",
+      "r-judge benchmarking",
+      "garak probe suite",
+      "ci/cd security gates",
+      "promptinject regression",
+      "browser-agent fuzzing",
+      "jailbreak resistance testing",
+      "benchmark release gates",
+      "promptfoo testing",
+      "playwright regression",
+      "tool misuse benchmark",
+      "policy compliance benchmark"
+    ]
+  },
+  "AID-M-009": {
+    "contentHash": "e575994159355e85",
+    "keywords": [
+      "agent autonomy governance",
+      "authority envelope",
+      "functional autonomy profile",
+      "operating scope classification",
+      "effective action risk scoring",
+      "runtime trust state",
+      "oversight mode enforcement",
+      "delegation lineage tracking",
+      "cryptographic agent identity",
+      "short-lived task-scoped credentials",
+      "per-action authorization",
+      "cedar policy enforcement",
+      "opa policy-as-code",
+      "quarantined trust state"
+    ]
+  },
+  "AID-H-001": {
+    "contentHash": "1e5791dbdcdfb360",
+    "keywords": [
+      "adversarial training",
+      "certified robustness",
+      "randomized smoothing",
+      "pgd training",
+      "free adversarial training",
+      "trades",
+      "robust optimization",
+      "patch adversarial training",
+      "rarl",
+      "madry defense",
+      "robust features",
+      "occlusion augmentation",
+      "vision model hardening",
+      "adversarial robustness toolbox"
+    ]
+  },
+  "AID-H-002": {
+    "contentHash": "01041a09f7db67a9",
+    "keywords": [
+      "input sanitization",
+      "prompt hardening",
+      "content filtering",
+      "schema validation",
+      "guardrails",
+      "input validation",
+      "pii redaction",
+      "multimodal sanitization",
+      "control token stripping",
+      "llm firewall",
+      "prompt injection defense",
+      "data poisoning prevention",
+      "rag input validation",
+      "canonicalization"
+    ]
+  },
+  "AID-H-002.001": {
+    "contentHash": "ddcfe74cd9f93cdb",
+    "keywords": [
+      "training data sanitization",
+      "poisoned sample removal",
+      "outlier detection",
+      "pii anonymization",
+      "data quality validation",
+      "exploratory data analysis",
+      "clean-label detection",
+      "schema validation",
+      "dataset hashing",
+      "cleanlab",
+      "great expectations",
+      "label noise detection",
+      "data provenance checks",
+      "policy-as-code validation"
+    ]
+  },
+  "AID-H-002.002": {
+    "contentHash": "ede7d4ee1e605a41",
+    "keywords": [
+      "prompt gate",
+      "inference-time validation",
+      "jailbreak filtering",
+      "unicode normalization",
+      "prompt injection defense",
+      "llm guardrails",
+      "rule-pack signing",
+      "content moderation api",
+      "safe prompt templating",
+      "llm guard",
+      "nemo guardrails",
+      "llama guard",
+      "rag source validation",
+      "synchronous prompt gate"
+    ]
+  },
+  "AID-H-002.003": {
+    "contentHash": "a95aa6a207d56a79",
+    "keywords": [
+      "multimodal sanitization",
+      "image purification",
+      "metadata stripping",
+      "pixel rebuilding",
+      "audio re-encoding",
+      "diffusion purification",
+      "cross-modal consistency",
+      "stego detection",
+      "file-type gating",
+      "content safety gate",
+      "image denoising defense",
+      "adversarial patch removal",
+      "exif stripping",
+      "multimodal prompt injection defense"
+    ]
+  },
+  "AID-H-002.004": {
+    "contentHash": "e91a3b9006d187ce",
+    "keywords": [
+      "feature pipeline integrity",
+      "training-serving skew detection",
+      "feature lineage",
+      "feature store governance",
+      "version-controlled transformations",
+      "signed commits",
+      "pandera schema validation",
+      "feature drift detection",
+      "dbt tests",
+      "feast feature store",
+      "transformation audit",
+      "reproducible pipelines",
+      "feature monitoring",
+      "protected branches"
+    ]
+  },
+  "AID-H-002.005": {
+    "contentHash": "c37740ddcc68800a",
+    "keywords": [
+      "label provenance",
+      "label flipping detection",
+      "annotator agreement",
+      "append-only label log",
+      "gold-sample monitoring",
+      "rlhf preference validation",
+      "label noise detection",
+      "confident learning",
+      "cleanlab",
+      "label tamper detection",
+      "supervisory integrity",
+      "annotator quality tracking",
+      "label change audit",
+      "preference data consistency"
+    ]
+  },
+  "AID-H-002.006": {
+    "contentHash": "697b79a7dff22958",
+    "keywords": [
+      "dataset split integrity",
+      "deterministic splitting",
+      "train-test leakage detection",
+      "near-duplicate detection",
+      "minhash lsh",
+      "split hashing",
+      "stratification checks",
+      "partition governance",
+      "split access control",
+      "holdout isolation",
+      "temporal integrity",
+      "reproducible splits",
+      "split artifact versioning",
+      "class balance validation"
+    ]
+  },
+  "AID-H-003": {
+    "contentHash": "e2d719ab225af2de",
+    "keywords": [
+      "ml supply chain security",
+      "sbom attestation",
+      "cosign signing",
+      "sigstore",
+      "slsa provenance",
+      "in-toto",
+      "model signing",
+      "dependency verification",
+      "artifact integrity",
+      "secure build pipeline",
+      "supply chain hardening",
+      "signed artifacts",
+      "container image verification",
+      "trusted registries"
+    ]
+  },
+  "AID-H-003.001": {
+    "contentHash": "b3215a6a045b87ba",
+    "keywords": [
+      "software composition analysis",
+      "dependency scanning",
+      "version pinning",
+      "lockfile hashing",
+      "sigstore cosign",
+      "in-toto attestation",
+      "cve scanning",
+      "package signing",
+      "trivy",
+      "grype",
+      "syft",
+      "typosquat detection",
+      "sbom generation",
+      "pip-audit"
+    ]
+  },
+  "AID-H-003.002": {
+    "contentHash": "920aa6dfd9ec2e1e",
+    "keywords": [
+      "model signing",
+      "release gating",
+      "artifact digest pinning",
+      "admission policy",
+      "rekor transparency log",
+      "internal model registry",
+      "cosign verification",
+      "safetensors",
+      "in-toto attestation",
+      "opa policy",
+      "kyverno",
+      "model promotion gate",
+      "safe deserialization",
+      "runtime hash verification"
+    ]
+  },
+  "AID-H-003.003": {
+    "contentHash": "3fc5ca0d3105c19c",
+    "keywords": [
+      "dataset authentication",
+      "dataset hashing",
+      "datasheets for datasets",
+      "dvc versioning",
+      "lakefs",
+      "dataset license check",
+      "per-file checksums",
+      "dataset provenance",
+      "pii scanning",
+      "trusted dataset registry",
+      "dataset supply chain validation",
+      "signed dataset metadata",
+      "dataset admission control",
+      "hash drift detection"
+    ]
+  },
+  "AID-H-003.004": {
+    "contentHash": "65f5f5a84d1fb84e",
+    "keywords": [
+      "secure boot",
+      "tpm attestation",
+      "firmware integrity",
+      "hardware attestation",
+      "confidential computing",
+      "nvidia confidential computing",
+      "uefi verification",
+      "side-channel self-test",
+      "firmware version monitoring",
+      "hardware root of trust",
+      "hsm protection",
+      "genuine component verification",
+      "enclave attestation",
+      "bios integrity"
+    ]
+  },
+  "AID-H-003.005": {
+    "contentHash": "8d4e54dadf323de9",
+    "keywords": [
+      "iac scanning",
+      "shift-left security",
+      "terraform scanning",
+      "checkov",
+      "tfsec",
+      "kubernetes policy scanning",
+      "secrets detection",
+      "trufflehog",
+      "gitleaks",
+      "merge gate",
+      "opa rego",
+      "cspm",
+      "infrastructure misconfiguration detection",
+      "network policy validation"
+    ]
+  },
+  "AID-H-003.006": {
+    "contentHash": "d3971a2c64785966",
+    "keywords": [
+      "model sbom",
+      "provenance attestation",
+      "in-toto slsa",
+      "cosign signing",
+      "rekor inclusion",
+      "digest binding",
+      "oci artifact",
+      "safetensors",
+      "tombstone revocation",
+      "format allow-list",
+      "runtime hash verification",
+      "unsafe deserialization ban",
+      "model content contract",
+      "tamper-evident attestation"
+    ]
+  },
+  "AID-H-003.007": {
+    "contentHash": "670b3f2ba5c0944e",
+    "keywords": [
+      "peft verification",
+      "lora attestation",
+      "adapter signing",
+      "base model binding",
+      "adapter registry allowlist",
+      "behavioral validation",
+      "golden task regression",
+      "safety canaries",
+      "adapter compatibility manifest",
+      "publisher trust policy",
+      "adapter revocation",
+      "trojan adapter detection",
+      "provenance for adapters",
+      "hot-swap verification"
+    ]
+  },
+  "AID-H-003.008": {
+    "contentHash": "ed89cf66fa55226f",
+    "keywords": [
+      "crypto-agility",
+      "pqc-ready signing",
+      "hybrid signatures",
+      "dual-sign migration",
+      "verifier policy versioning",
+      "liboqs",
+      "oqs-provider",
+      "tuf update framework",
+      "algorithm agility",
+      "post-quantum signing",
+      "staged signature migration",
+      "crypto migration governance",
+      "signing infrastructure evolution",
+      "versioned signing policy"
+    ]
+  },
+  "AID-H-004": {
+    "contentHash": "f925eb0307ba9e0b",
+    "keywords": [
+      "identity access management",
+      "rbac",
+      "abac",
+      "least privilege",
+      "mfa enforcement",
+      "privileged access management",
+      "short-lived tokens",
+      "mtls",
+      "oauth2",
+      "spiffe spire",
+      "service account hardening",
+      "agent identity verification",
+      "pam solutions",
+      "credential rotation"
+    ]
+  },
+  "AID-H-004.001": {
+    "contentHash": "bb14d8461978d27c",
+    "keywords": [
+      "user access management",
+      "multi-factor authentication",
+      "rbac",
+      "privileged access management",
+      "access recertification",
+      "pam",
+      "stale account deprovisioning",
+      "keycloak",
+      "okta idaas",
+      "cyberark",
+      "beyondtrust",
+      "role-based permissions",
+      "mfa enforcement",
+      "privilege audit"
+    ]
+  },
+  "AID-H-004.002": {
+    "contentHash": "153aab095b52f525",
+    "keywords": [
+      "service authentication",
+      "mtls",
+      "oauth2 client credentials",
+      "short-lived api keys",
+      "spiffe spire",
+      "iam roles for service accounts",
+      "istio",
+      "linkerd",
+      "api gateway auth",
+      "service mesh identity",
+      "workload identity",
+      "api key rotation",
+      "machine-to-machine auth",
+      "secrets manager"
+    ]
+  },
+  "AID-H-004.003": {
+    "contentHash": "d8032a0c0a5e1a19",
+    "keywords": [
+      "agent identity",
+      "spiffe spire",
+      "mtls inter-agent",
+      "message signing",
+      "anti-replay protection",
+      "payload-level signing",
+      "protocol pinning",
+      "schema validation",
+      "jwt signing",
+      "paseto tokens",
+      "envoy proxy mtls",
+      "agent-to-agent authentication",
+      "non-repudiation",
+      "contract validation"
+    ]
+  },
+  "AID-H-004.004": {
+    "contentHash": "9d43ff632d0002de",
+    "keywords": [
+      "agent name service",
+      "ans verified discovery",
+      "crl ocsp revocation",
+      "agent identity attestation",
+      "capability pinning",
+      "manifest hash binding",
+      "ttl revalidation",
+      "signed discovery responses",
+      "verified agent registry",
+      "rogue agent prevention",
+      "trusted agent directory",
+      "step-ca",
+      "agent certificate lifecycle",
+      "identity revocation checks"
+    ]
+  },
+  "AID-H-005": {
+    "contentHash": "6d4d8692c3c0309a",
+    "keywords": [
+      "privacy-preserving ml",
+      "differential privacy",
+      "homomorphic encryption",
+      "secure multi-party computation",
+      "federated learning privacy",
+      "dp-sgd",
+      "membership inference defense",
+      "privacy budget management",
+      "calibrated noise",
+      "model inversion defense",
+      "ppml techniques",
+      "private training",
+      "privacy guarantees",
+      "cryptographic privacy"
+    ]
+  },
+  "AID-H-005.001": {
+    "contentHash": "d8a3423920e05f1c",
+    "keywords": [
+      "differential privacy",
+      "dp-sgd",
+      "privacy budget",
+      "epsilon delta tuning",
+      "gradient clipping",
+      "output perturbation",
+      "calibrated noise",
+      "local differential privacy",
+      "opacus",
+      "tensorflow privacy",
+      "opendp",
+      "membership inference defense",
+      "private training",
+      "noise addition"
+    ]
+  },
+  "AID-H-005.002": {
+    "contentHash": "c1350ed6b8bc0258",
+    "keywords": [
+      "homomorphic encryption",
+      "microsoft seal",
+      "helib",
+      "openfhe",
+      "encrypted inference",
+      "partially homomorphic encryption",
+      "encrypted computation",
+      "he parameter tuning",
+      "ckks bfv schemes",
+      "privacy-preserving computation",
+      "encrypted training",
+      "he-enclave hybrid",
+      "depth budgeting",
+      "secure inference"
+    ]
+  },
+  "AID-H-005.003": {
+    "contentHash": "4cf999aba76d00b8",
+    "keywords": [
+      "mixup augmentation",
+      "adaptive augmentation",
+      "membership inference defense",
+      "generalization hardening",
+      "interpolated samples",
+      "label mixing",
+      "decaying mixup schedule",
+      "mia resistance testing",
+      "regularization via mixup",
+      "albumentations",
+      "attack model evaluation",
+      "augmentation defense",
+      "decision boundary smoothing",
+      "overfitting reduction"
+    ]
+  },
+  "AID-H-005.004": {
+    "contentHash": "034fed22b1ccde3e",
+    "keywords": [
+      "training data deduplication",
+      "minhash lsh",
+      "exact sequence dedup",
+      "memorization prevention",
+      "canary phrase testing",
+      "near-duplicate removal",
+      "llm memorization defense",
+      "hash-based dedup",
+      "verbatim leakage defense",
+      "datasketch",
+      "corpus dedup",
+      "distributed dedup",
+      "privacy-preserving dedup",
+      "training corpus hygiene"
+    ]
+  },
+  "AID-H-006": {
+    "contentHash": "799945abf2a1f2f9",
+    "keywords": [
+      "output sanitization",
+      "output hardening",
+      "structured output enforcement",
+      "output schema validation",
+      "pii redaction",
+      "response filtering",
+      "url safety checking",
+      "output escaping",
+      "content moderation",
+      "output guardrails",
+      "safe output rendering",
+      "downstream injection prevention",
+      "output-level dlp",
+      "llm response sanitization"
+    ]
+  },
+  "AID-H-006.001": {
+    "contentHash": "f0d50b124c7030ae",
+    "keywords": [
+      "structured output enforcement",
+      "json schema output",
+      "pydantic validation",
+      "function calling",
+      "tool use schema",
+      "instructor library",
+      "guardrails ai",
+      "jsonformer",
+      "outlines",
+      "response model wrapper",
+      "typechat",
+      "schema-bound outputs",
+      "constrained decoding",
+      "output parser"
+    ]
+  },
+  "AID-H-006.002": {
+    "contentHash": "b2b60e5e1741fe5a",
+    "keywords": [
+      "output content sanitization",
+      "html escaping",
+      "dompurify",
+      "url blocklist validation",
+      "safe browsing api",
+      "waf llm rules",
+      "xss prevention",
+      "shell injection prevention",
+      "nh3 sanitization",
+      "output encoding",
+      "modsecurity",
+      "google safe browsing",
+      "azure content safety",
+      "output dlp redaction"
+    ]
+  },
+  "AID-H-006.003": {
+    "contentHash": "dd538b27503c6996",
+    "keywords": [
+      "output obfuscation",
+      "confidence binning",
+      "logit noise",
+      "quantized outputs",
+      "top-k only",
+      "rounded predictions",
+      "reduced fidelity output",
+      "model extraction defense",
+      "api response transformation",
+      "score bucketing",
+      "inversion resistance",
+      "passive obfuscation",
+      "output precision reduction",
+      "black-box defense"
+    ]
+  },
+  "AID-H-007": {
+    "contentHash": "4a8f6c3d8ff27b65",
+    "keywords": [
+      "secure training process",
+      "training environment hardening",
+      "training job monitoring",
+      "reproducible training",
+      "confidential training",
+      "training audit trail",
+      "training infrastructure isolation",
+      "secure enclaves for training",
+      "training metric anomaly detection",
+      "protected training pipeline",
+      "mlops hardening",
+      "training code integrity",
+      "gradient monitoring",
+      "training reproducibility"
+    ]
+  },
+  "AID-H-007.001": {
+    "contentHash": "c84c433e28b1b496",
+    "keywords": [
+      "isolated training environment",
+      "least privilege iam",
+      "confidential computing training",
+      "secure enclaves",
+      "nitro enclaves",
+      "hardened network boundary",
+      "training iac",
+      "dedicated training vpc",
+      "terraform training infra",
+      "cspm auditing",
+      "training environment isolation",
+      "sgx training",
+      "hardened base image",
+      "training vpc egress controls"
+    ]
+  },
+  "AID-H-007.002": {
+    "contentHash": "53bfdd38bc258a2c",
+    "keywords": [
+      "training job monitoring",
+      "loss anomaly detection",
+      "gradient norm monitoring",
+      "training kill switch",
+      "runtime stability checks",
+      "audit trail training",
+      "mlflow tracking",
+      "wandb experiment tracking",
+      "gradient clipping",
+      "training metric alerting",
+      "training job auditing",
+      "poisoning detection via metrics",
+      "reproducible audit logs",
+      "training observability"
+    ]
+  },
+  "AID-H-007.003": {
+    "contentHash": "795e224bd772ff8e",
+    "keywords": [
+      "deterministic training pipelines",
+      "seed control enforcement",
+      "artifact version pinning",
+      "environment reproducibility manifests",
+      "reproducible experiment tracking",
+      "dataset snapshot locking",
+      "dependency lockfile governance",
+      "training run provenance capture",
+      "model build determinism checks",
+      "replayable training workflows",
+      "reproducibility audit evidence",
+      "cross-environment parity validation",
+      "immutable training inputs",
+      "retrain verification gating"
+    ]
+  },
+  "AID-H-007.004": {
+    "contentHash": "927e40a6294f6b03",
+    "keywords": [
+      "evaluation integrity",
+      "holdout hashing",
+      "signed promotion evidence",
+      "benchmark freshness tracking",
+      "security regression corpus",
+      "eval-train separation",
+      "train-eval overlap detection",
+      "signed eval metadata",
+      "evaluation data governance",
+      "promotion gate",
+      "eval pipeline provenance",
+      "kolena testing",
+      "patronus evaluation",
+      "inspect_ai harness"
+    ]
+  },
+  "AID-H-008": {
+    "contentHash": "88e97f6657be999b",
+    "keywords": [
+      "robust federated aggregation",
+      "secure aggregation",
+      "byzantine-robust aggregation",
+      "krum",
+      "trimmed mean",
+      "federated learning defense",
+      "malicious client filtering",
+      "fedavg hardening",
+      "client update validation",
+      "fl poisoning defense",
+      "cryptographic fl protocols",
+      "client reputation scoring",
+      "bounded client influence",
+      "privacy-preserving aggregation"
+    ]
+  },
+  "AID-H-008.001": {
+    "contentHash": "0a7229fe716806d2",
+    "keywords": [
+      "secure aggregation protocol",
+      "additively homomorphic encryption",
+      "secure multi-party computation",
+      "masked aggregation",
+      "client dropout tolerance",
+      "tensorflow federated",
+      "flower fl framework",
+      "pysyft",
+      "smc aggregation",
+      "private fl gradients",
+      "cryptographic client masking",
+      "privacy-preserving aggregation",
+      "encrypted client updates",
+      "fl server privacy"
+    ]
+  },
+  "AID-H-008.002": {
+    "contentHash": "5254114babce7b7c",
+    "keywords": [
+      "byzantine-robust aggregation",
+      "krum aggregator",
+      "multi-krum",
+      "trimmed mean",
+      "median aggregation",
+      "distance-based scoring",
+      "malicious update filtering",
+      "client reputation weighting",
+      "statistical aggregation rules",
+      "anomalous update detection",
+      "outlier client downweighting",
+      "bulyan aggregator",
+      "robust fedavg",
+      "fl poisoning defense"
+    ]
+  },
+  "AID-H-009": {
+    "contentHash": "af6103ff73a1a8e9",
+    "keywords": [
+      "accelerator integrity",
+      "gpu hardware security",
+      "secure enclaves",
+      "side-channel resistance",
+      "tpm attestation",
+      "confidential computing",
+      "tamper-evident hardware",
+      "fault injection defense",
+      "hardware trojan detection",
+      "vram isolation",
+      "co-tenancy hardening",
+      "firmware integrity",
+      "hardware supply chain",
+      "shielded accelerators"
+    ]
+  },
+  "AID-H-009.001": {
+    "contentHash": "d717d69870c01fd7",
+    "keywords": [
+      "secure boot",
+      "hardware root of trust",
+      "uefi verification",
+      "tpm remote attestation",
+      "shielded vm",
+      "trusted launch",
+      "signed kernel drivers",
+      "measured boot",
+      "keylime attestation",
+      "boot chain verification",
+      "intel boot guard",
+      "amd secure processor",
+      "signed firmware",
+      "nitro attestation"
+    ]
+  },
+  "AID-H-009.002": {
+    "contentHash": "65718c0626a2a6ae",
+    "keywords": [
+      "firmware patch management",
+      "gpu driver updates",
+      "out-of-band firmware update",
+      "vulnerability scanning",
+      "nvidia-smi monitoring",
+      "rocm-smi",
+      "leftoverlocals mitigation",
+      "patch automation",
+      "accelerator driver hardening",
+      "firmware advisory monitoring",
+      "tenable nessus",
+      "ipmi management",
+      "openvas scanning",
+      "driver cve patching"
+    ]
+  },
+  "AID-H-009.003": {
+    "contentHash": "ac987a703f57c33a",
+    "keywords": [
+      "hardware supply chain",
+      "trusted suppliers",
+      "component authenticity verification",
+      "anti-counterfeit hardware",
+      "chain of custody",
+      "side-channel procurement requirements",
+      "chipsec",
+      "binwalk firmware analysis",
+      "fact firmware comparison",
+      "vendor risk management",
+      "securityscorecard",
+      "bitsight",
+      "hardware backdoor detection",
+      "supplier attestation"
+    ]
+  },
+  "AID-H-009.004": {
+    "contentHash": "57184609ddfb3a06",
+    "keywords": [
+      "vram hygiene",
+      "kv-cache clearing",
+      "accelerator partitioning",
+      "nvidia mig",
+      "tenant isolation gpu",
+      "leftoverlocals defense",
+      "vram zeroing",
+      "exclusive gpu allocation",
+      "cross-tenant leakage defense",
+      "gpu residue clearing",
+      "accelerator isolation",
+      "dcgm monitoring",
+      "shared gpu hardening",
+      "weight reconstruction defense"
+    ]
+  },
+  "AID-H-009.005": {
+    "contentHash": "8e42eb0c1a950aa1",
+    "keywords": [
+      "confidential inference",
+      "tee inference",
+      "remote attestation",
+      "encrypted memory",
+      "nvidia confidential computing",
+      "intel sgx",
+      "open enclave sdk",
+      "azure attestation",
+      "confidential vm",
+      "kv-cache protection",
+      "client-side attestation verification",
+      "enclave model protection",
+      "hardware-encrypted inference",
+      "trusted execution environment"
+    ]
+  },
+  "AID-H-010": {
+    "contentHash": "5bc9fadaf5dbfd49",
+    "keywords": [
+      "attention robustness hardening",
+      "transformer adversarial defenses",
+      "sequence perturbation resilience",
+      "token-level perturbation mitigation",
+      "robust attention masking",
+      "layer-wise anomaly resistance",
+      "safe decoding constraints",
+      "context-window attack mitigation",
+      "gradient-based attack hardening",
+      "transformer stability regularization",
+      "architecture-level defense tuning",
+      "robustness evaluation suites",
+      "adversarial prompt resilience",
+      "model architecture threat mitigation"
+    ]
+  },
+  "AID-H-011": {
+    "contentHash": "dbdf9f6044912a34",
+    "keywords": [
+      "cfg hardening",
+      "classifier-free guidance control",
+      "guidance scale clipping",
+      "adaptive guidance scaling",
+      "diffusion model safety",
+      "negative prompt enforcement",
+      "server-side parameter validation",
+      "safety conditioning",
+      "dynamic cfg",
+      "decaying guidance",
+      "pydantic input validation",
+      "runtime guardrails",
+      "inference-time safety",
+      "prompt risk analysis",
+      "image generation guardrails"
+    ]
+  },
+  "AID-H-012": {
+    "contentHash": "734cd8b78401c573",
+    "keywords": [
+      "gnn poisoning defense",
+      "graph neural network hardening",
+      "graph integrity verification",
+      "node feature sanitization",
+      "edge pruning",
+      "robust graph aggregation",
+      "graph structure validation",
+      "graph provenance tracking",
+      "adversarial graph defense",
+      "subgraph anomaly detection",
+      "backdoor trigger defense",
+      "graph data governance",
+      "trusted graph sources",
+      "label flip mitigation"
+    ]
+  },
+  "AID-H-012.001": {
+    "contentHash": "045fdf4f68a41223",
+    "keywords": [
+      "graph data sanitization",
+      "graph provenance tracking",
+      "node anomaly detection",
+      "edge filtering",
+      "suspicious subgraph removal",
+      "trust scoring",
+      "data lineage graph",
+      "source reputation weighting",
+      "pre-training graph cleaning",
+      "networkx analysis",
+      "graph preprocessing integrity",
+      "dgl sanitization",
+      "untrusted node down-weighting",
+      "structural outlier detection"
+    ]
+  },
+  "AID-H-012.002": {
+    "contentHash": "71155b0e68dc7a18",
+    "keywords": [
+      "robust gnn training",
+      "robust aggregation functions",
+      "graph attention network",
+      "gat attention suppression",
+      "regularization gnn",
+      "similarity-based edge pruning",
+      "message passing hardening",
+      "outlier-resistant aggregation",
+      "edge weighting defense",
+      "gnn architecture hardening",
+      "adversarial graph training",
+      "neighbor influence limiting",
+      "pytorch geometric",
+      "model-centric graph defense"
+    ]
+  },
+  "AID-H-012.003": {
+    "contentHash": "0046a5dce59c3f58",
+    "keywords": [
+      "certified gnn robustness",
+      "randomized smoothing",
+      "formal verification",
+      "certified radius",
+      "robustness certification",
+      "structural perturbation bounds",
+      "provable robustness",
+      "auto-lirpa",
+      "node prediction stability",
+      "certification algorithm",
+      "mathematical robustness guarantees",
+      "edge perturbation bounds",
+      "certified defense"
+    ]
+  },
+  "AID-H-013": {
+    "contentHash": "58b2c09403a880fc",
+    "keywords": [
+      "reward hacking prevention",
+      "rl safety",
+      "reward function hardening",
+      "policy alignment",
+      "reward signal integrity",
+      "safe reinforcement learning",
+      "reward shaping safeguards",
+      "constrained rl",
+      "reward tamper resistance",
+      "reward specification",
+      "goal alignment",
+      "reward anti-exploitation",
+      "rl guardrails",
+      "behavior constraints"
+    ]
+  },
+  "AID-H-013.001": {
+    "contentHash": "9825cc99011a4ea5",
+    "keywords": [
+      "robust reward engineering",
+      "multi-objective reward",
+      "reward shaping",
+      "penalty-based reward",
+      "safe objective design",
+      "reward constraint enforcement",
+      "shaped objective function",
+      "reward hardening",
+      "explicit safety penalties",
+      "negative penalty design",
+      "reward surface engineering",
+      "forbidden behavior penalties",
+      "stable baselines3"
+    ]
+  },
+  "AID-H-013.002": {
+    "contentHash": "b6b26b727c873979",
+    "keywords": [
+      "human-in-the-loop reward",
+      "preference-based learning",
+      "inverse reinforcement learning",
+      "irl",
+      "rlhf",
+      "human preference modeling",
+      "hitl oversight",
+      "imitation learning",
+      "trajectory preference comparison",
+      "expert demonstration learning",
+      "human feedback alignment",
+      "preference dataset labeling",
+      "reward model learning"
+    ]
+  },
+  "AID-H-013.003": {
+    "contentHash": "b6853d2883d2038b",
+    "keywords": [
+      "potential-based reward shaping",
+      "pbrs",
+      "policy-invariant shaping",
+      "shaping function",
+      "potential function phi",
+      "optimal policy preservation",
+      "safe reward shaping",
+      "dense reward design",
+      "exploration guidance",
+      "gamma discounted shaping",
+      "mathematically safe shaping",
+      "reward hacking prevention",
+      "advantage-based shaping signal",
+      "stable baselines3 pbrs wrapper"
+    ]
+  },
+  "AID-H-013.004": {
+    "contentHash": "f4f86551c3b5c69c",
+    "keywords": [
+      "behavioral audit",
+      "sandbox evaluation",
+      "pre-deployment rl testing",
+      "policy behavior analysis",
+      "reward correlation monitoring",
+      "episode logging",
+      "creative exploit detection",
+      "policy validation gate",
+      "behavioral telemetry",
+      "structured metric logging",
+      "video capture replay",
+      "experiment tracking",
+      "mlflow logging",
+      "wandb observability"
+    ]
+  },
+  "AID-H-013.005": {
+    "contentHash": "2c454058beaa67ad",
+    "keywords": [
+      "mtls reward channel",
+      "reward signal integrity",
+      "signed reward payload",
+      "per-service identity",
+      "mutual tls authentication",
+      "spiffe spire",
+      "workload identity",
+      "signed telemetry",
+      "cryptographic reward verification",
+      "authenticated transport",
+      "zero trust workload",
+      "service mesh istio",
+      "hmac reward signing",
+      "reward channel hardening"
+    ]
+  },
+  "AID-H-014": {
+    "contentHash": "64da86072dc0c363",
+    "keywords": [
+      "data watermarking",
+      "proactive perturbation",
+      "content provenance",
+      "digital watermarking",
+      "adversarial cloaking",
+      "data tracing",
+      "model theft deterrent",
+      "provenance signal embedding",
+      "imperceptible watermarks",
+      "content authenticity",
+      "model inversion disruption",
+      "training data protection",
+      "misuse traceability",
+      "deepfake deterrent"
+    ]
+  },
+  "AID-H-014.001": {
+    "contentHash": "01b01436529b2165",
+    "keywords": [
+      "digital watermarking",
+      "frequency domain watermarking",
+      "content watermarking",
+      "synthid",
+      "markllm",
+      "steganography embedding",
+      "text token watermarking",
+      "image watermarking",
+      "audio watermarking",
+      "robust imperceptible signals",
+      "ai content tracing",
+      "provenance signal",
+      "c2pa content authenticity",
+      "truepic verification"
+    ]
+  },
+  "AID-H-014.002": {
+    "contentHash": "45a5de9ea32e7a97",
+    "keywords": [
+      "adversarial data cloaking",
+      "anti-scraping perturbation techniques",
+      "model training data obfuscation",
+      "content extraction resistance",
+      "cloaked sample generation",
+      "perceptual-preserving perturbations",
+      "unauthorized model training deterrence",
+      "dataset theft friction controls",
+      "cloaking robustness testing",
+      "attack-cost amplification",
+      "defensive data transformation",
+      "cloaking policy governance",
+      "sensitivity-aware cloaking rollout",
+      "data misuse signal monitoring"
+    ]
+  },
+  "AID-H-015": {
+    "contentHash": "2d762924ae8aa3d5",
+    "keywords": [
+      "ensemble robustness strategy",
+      "model voting defenses",
+      "stacked model hardening",
+      "diversity-driven error reduction",
+      "adversarial transfer resistance",
+      "consensus prediction gating",
+      "ensemble uncertainty calibration",
+      "bagging-based robustness",
+      "defense-in-depth model composition",
+      "failure-mode diversification",
+      "ensemble drift monitoring",
+      "high-risk prediction abstention",
+      "cross-model disagreement signals",
+      "robust inference aggregation"
+    ]
+  },
+  "AID-H-016": {
+    "contentHash": "b41e0b8b586da261",
+    "keywords": [
+      "certified robustness guarantees",
+      "formal robustness bounds",
+      "randomized smoothing certification",
+      "provable adversarial resilience",
+      "verification-backed defense claims",
+      "robustness certificate management",
+      "attack-radius guarantees",
+      "certification-aware model selection",
+      "bound-tightness evaluation",
+      "certified defense regression tests",
+      "assurance evidence packaging",
+      "formal verification integration",
+      "safety-critical robustness proofs",
+      "certified model release gating"
+    ]
+  },
+  "AID-H-017": {
+    "contentHash": "7ee2471ca26a9594",
+    "keywords": [
+      "system prompt hardening",
+      "instruction hierarchy",
+      "prompt namespacing",
+      "delimiter enforcement",
+      "quarantined content blocks",
+      "policy precedence",
+      "prompt injection defense",
+      "version-pinned policy",
+      "prompt template validation",
+      "data-only block quarantine",
+      "system prompt protection",
+      "instruction precedence rules",
+      "jailbreak resistance",
+      "feature flag policy",
+      "opa policy validation"
+    ]
+  },
+  "AID-H-018": {
+    "contentHash": "33c39de8c3a43ee5",
+    "keywords": [
+      "secure agent architecture",
+      "agent hardening",
+      "secure-by-design agents",
+      "reasoning loop protection",
+      "tool interface security",
+      "agent state isolation",
+      "action dispatcher validation",
+      "agent auditability",
+      "agent guardrails",
+      "capability scoping",
+      "agent threat modeling",
+      "reasoning observability",
+      "least privilege agent design",
+      "structured tool contracts"
+    ]
+  },
+  "AID-H-018.001": {
+    "contentHash": "5f243e626377b90c",
+    "keywords": [
+      "interruptible reasoning loop",
+      "auditable agent loop",
+      "step-wise execution",
+      "circuit breaker",
+      "fail-closed agent",
+      "human approval gate",
+      "runaway execution detection",
+      "loop state machine",
+      "breaker event logging",
+      "agent orchestrator",
+      "yield control pattern",
+      "agent forensics",
+      "workflow orchestrator",
+      "execution traceability"
+    ]
+  },
+  "AID-H-018.002": {
+    "contentHash": "d51dd24d3b26be33",
+    "keywords": [
+      "least privilege tools",
+      "single-purpose tool design",
+      "typed tool parameters",
+      "tool capability scoping",
+      "granular tool architecture",
+      "pydantic tool schemas",
+      "json schema tool parameters",
+      "strongly-typed interfaces",
+      "deny-by-default tools",
+      "tool attack surface reduction",
+      "capability minimization",
+      "semantic kernel",
+      "api gateway tool routing"
+    ]
+  },
+  "AID-H-018.003": {
+    "contentHash": "9181ba9414a1dbb6",
+    "keywords": [
+      "plan-then-execute",
+      "decoupled planning",
+      "action selector middleware",
+      "structured plan output",
+      "plan validation",
+      "deterministic orchestrator",
+      "tool dispatcher",
+      "plan schema enforcement",
+      "non-side-effecting reasoning",
+      "opa action policy",
+      "langgraph planning",
+      "plan hash binding",
+      "allowlist dispatch",
+      "planning execution separation"
+    ]
+  },
+  "AID-H-018.004": {
+    "contentHash": "d943071f6593850d",
+    "keywords": [
+      "ephemeral agent memory",
+      "stateless agent design",
+      "session isolation",
+      "transient state",
+      "per-session memory",
+      "signed mission reload",
+      "memory poisoning defense",
+      "clean session boundaries",
+      "short-term memory isolation",
+      "conversation buffer window",
+      "redis session cache",
+      "context persistence prevention",
+      "cross-session injection defense"
+    ]
+  },
+  "AID-H-018.005": {
+    "contentHash": "d303483fde2f719b",
+    "keywords": [
+      "behavior certificate",
+      "signed capability manifest",
+      "runtime enforcement gate",
+      "deny-by-default middleware",
+      "agent behavior contract",
+      "capability signing",
+      "action interception",
+      "manifest-based authorization",
+      "signed behavior attestation",
+      "gpg signing manifest",
+      "opa enforcement",
+      "kms signing",
+      "verifiable agent contract"
+    ]
+  },
+  "AID-H-018.006": {
+    "contentHash": "ce8618376787cf47",
+    "keywords": [
+      "capability discovery",
+      "delegation control",
+      "signed capability manifest",
+      "jwt-svid",
+      "hop limit enforcement",
+      "trace id propagation",
+      "inter-agent trust",
+      "spiffe spire identity",
+      "capability manifest validation",
+      "delegation chain audit",
+      "recursive delegation prevention",
+      "multi-agent authorization",
+      "mcp capability verification",
+      "loop detection delegation",
+      "grpc interceptor"
+    ]
+  },
+  "AID-H-018.007": {
+    "contentHash": "5ee9d61a50f7d346",
+    "keywords": [
+      "dual-llm isolation",
+      "privileged llm",
+      "quarantined llm",
+      "camel architecture",
+      "p-llm q-llm split",
+      "trust boundary enforcement",
+      "indirect injection defense",
+      "structured output validation",
+      "planning execution separation",
+      "untrusted content isolation",
+      "llm privilege separation",
+      "tool access confinement",
+      "pydantic structured output",
+      "envoy llm gateway"
+    ]
+  },
+  "AID-H-019": {
+    "contentHash": "ceda06ee75b5dc33",
+    "keywords": [
+      "tool authorization",
+      "capability scoping",
+      "tool allowlisting",
+      "parameter boundaries",
+      "structured tool schemas",
+      "least privilege tools",
+      "tool access control",
+      "typed parameter validation",
+      "agent authorization",
+      "tool invocation gating",
+      "deny-by-default tool access",
+      "privilege limitation",
+      "tool policy enforcement",
+      "capability limits"
+    ]
+  },
+  "AID-H-019.001": {
+    "contentHash": "da51a27fad8284bf",
+    "keywords": [
+      "tool parameter validation",
+      "schema validation",
+      "pydantic schemas",
+      "json schema enforcement",
+      "typed parameters",
+      "parameter constraint enforcement",
+      "input validation",
+      "command injection defense",
+      "path traversal defense",
+      "enum range validation",
+      "instructor schema",
+      "typechat validation",
+      "parameter boundary checks",
+      "dispatch-time validation"
+    ]
+  },
+  "AID-H-019.002": {
+    "contentHash": "c93a7699cdf66c46",
+    "keywords": [
+      "policy-based access control",
+      "open policy agent",
+      "opa",
+      "rego policy",
+      "casbin authorization",
+      "externalized authorization",
+      "context-aware policy",
+      "policy as code",
+      "stateful authorization rules",
+      "tool call policy",
+      "styra das",
+      "permit.io",
+      "decoupled policy engine",
+      "rbac abac"
+    ]
+  },
+  "AID-H-019.003": {
+    "contentHash": "185a8be04a876f96",
+    "keywords": [
+      "two-channel validation",
+      "independent validator",
+      "dual approval",
+      "signed validator decision",
+      "high-impact action gating",
+      "plan hash binding",
+      "step-up authentication",
+      "second-channel check",
+      "validator confidence threshold",
+      "auto-degrade policy",
+      "kyverno policy",
+      "bedrock guardrails",
+      "vertex ai safety",
+      "immutable plan hash"
+    ]
+  },
+  "AID-H-019.004": {
+    "contentHash": "817c149dba5bb66a",
+    "keywords": [
+      "intent-based scoping",
+      "dynamic capability scoping",
+      "per-request authorization",
+      "signed session scope",
+      "camel capabilities",
+      "runtime enforcement layer",
+      "deny-by-default dispatch",
+      "minimal tool scope",
+      "jws signed scope",
+      "cedar policy",
+      "prompt injection defense",
+      "session-scoped privileges",
+      "tamper-proof scope enforcement",
+      "action budget limits",
+      "privilege expansion prevention"
+    ]
+  },
+  "AID-H-019.005": {
+    "contentHash": "4f3a1bb6eed5e6ff",
+    "keywords": [
+      "data flow sink enforcement",
+      "taint tracking",
+      "value-level metadata",
+      "egress filtering",
+      "sensitive sink control",
+      "provenance tagging",
+      "outbound exfiltration defense",
+      "data flow diversion defense",
+      "cilium ebpf policy",
+      "kubernetes networkpolicy",
+      "istio egress gateway",
+      "value provenance tracking",
+      "default-deny egress",
+      "sensitive data sink blocking"
+    ]
+  },
+  "AID-H-019.006": {
+    "contentHash": "93fb2687dc3046ca",
+    "keywords": [
+      "continuous authorization",
+      "anti-toctou",
+      "execution-time authorization",
+      "jit policy check",
+      "decision ttl",
+      "re-verification",
+      "immutable execution context",
+      "policy decision point",
+      "fail-closed context check",
+      "authorization freshness",
+      "openfga relationship auth",
+      "cedar policy",
+      "stale decision invalidation",
+      "session invariant check"
+    ]
+  },
+  "AID-H-019.007": {
+    "contentHash": "4959db207b392b01",
+    "keywords": [
+      "skill permission manifest",
+      "skill-level authorization",
+      "manifest validation",
+      "install-time validation",
+      "runtime manifest enforcement",
+      "per-skill scoped credentials",
+      "short-lived tokens",
+      "file scope declaration",
+      "network allowlist",
+      "protected identity resources",
+      "scope composition defense",
+      "falco tetragon enforcement",
+      "spiffe per-skill identity",
+      "hashicorp vault tokens",
+      "deny-write-by-default"
+    ]
+  },
+  "AID-H-020": {
+    "contentHash": "c52cb174385b5cba",
+    "keywords": [
+      "safe fetch wrapper",
+      "browser sandbox",
+      "ssrf prevention",
+      "url allowlisting",
+      "content demotion",
+      "agent web browsing security",
+      "outbound request hardening",
+      "untrusted content sanitization",
+      "internal recon prevention",
+      "web content isolation",
+      "fetch gatekeeping",
+      "browser isolation",
+      "indirect injection defense"
+    ]
+  },
+  "AID-H-020.001": {
+    "contentHash": "97c6e19f884d405a",
+    "keywords": [
+      "exact url verification",
+      "canonical url normalization",
+      "redirect re-validation",
+      "redirect target public ip check",
+      "public url inventory",
+      "background fetch gating",
+      "quiet exfiltration defense",
+      "scheme allowlist",
+      "domain allowlist",
+      "private ip blocking",
+      "dns rebinding defense",
+      "final fetch public ip recheck",
+      "ssrf prevention",
+      "url query token suppression",
+      "auditable fetch denial"
+    ]
+  },
+  "AID-H-020.002": {
+    "contentHash": "146e8894d6cdd7c6",
+    "keywords": [
+      "html sanitization",
+      "content demotion",
+      "script stripping",
+      "iframe removal",
+      "nh3 sanitizer",
+      "beautifulsoup parsing",
+      "plain text extraction",
+      "cdr content disarm",
+      "browser isolation",
+      "menlo isolation",
+      "stored xss defense",
+      "indirect injection defense",
+      "secure html rendering",
+      "active content removal"
+    ]
+  },
+  "AID-H-021": {
+    "contentHash": "d7c3998243b3fd67",
+    "keywords": [
+      "rag index hygiene",
+      "chunk signing",
+      "embedding integrity",
+      "rag provenance",
+      "source trust weighting",
+      "retrieval verification",
+      "knowledge base hardening",
+      "indirect injection defense",
+      "vector index integrity",
+      "rag data governance",
+      "index poisoning defense",
+      "cryptographic chunk signing",
+      "retrieval content validation"
+    ]
+  },
+  "AID-H-021.001": {
+    "contentHash": "40f67e7934f5b187",
+    "keywords": [
+      "chunk-level signing",
+      "cryptographic chunk hashing",
+      "ingestion-time hashing",
+      "verify-on-retrieval",
+      "per-chunk integrity",
+      "chunk metadata hashing",
+      "hashlib signing",
+      "kms chunk signing",
+      "vector index integrity",
+      "retrieval tamper detection",
+      "rag chunk provenance",
+      "gnupg signing",
+      "chunk digest verification gate",
+      "embedding integrity attestation"
+    ]
+  },
+  "AID-H-021.002": {
+    "contentHash": "f28159441044cbcc",
+    "keywords": [
+      "source reputation weighting",
+      "trust score retrieval",
+      "post-retrieval re-ranking",
+      "reputation-based ranking",
+      "rag source trust",
+      "similarity reputation hybrid",
+      "cohere rerank",
+      "trusted source bias",
+      "reputation lookup",
+      "source trust policy",
+      "langchain custom retriever",
+      "llamaindex postprocessor",
+      "untrusted source demotion",
+      "retrieval quality assurance"
+    ]
+  },
+  "AID-H-022": {
+    "contentHash": "a73ea2fab1b8de22",
+    "keywords": [
+      "configuration integrity",
+      "signed configurations",
+      "agent config hardening",
+      "context corpus governance",
+      "structured config format",
+      "schema-validated yaml",
+      "config tamper detection",
+      "non-executable configs",
+      "runtime config verification",
+      "configuration defense-in-depth",
+      "system prompt integrity",
+      "supply chain config defense",
+      "client-side config enforcement",
+      "retrieval-time context integrity"
+    ]
+  },
+  "AID-H-022.001": {
+    "contentHash": "d895aa7c611d839c",
+    "keywords": [
+      "client-side configuration enforcement",
+      "pre-commit hooks",
+      "shift-left config scanning",
+      "endpoint policy enforcement",
+      "edr custom rules",
+      "semgrep config scanning",
+      "opa conftest",
+      "git hook validation",
+      "signed commits",
+      "branch protection",
+      "code-owner approval",
+      "osquery policy",
+      "insecure config detection"
+    ]
+  },
+  "AID-H-022.002": {
+    "contentHash": "0d30df624ec877f0",
+    "keywords": [
+      "signed configuration",
+      "runtime integrity enforcement",
+      "cosign signing",
+      "sigstore attestation",
+      "in-toto attestation",
+      "config signature verification",
+      "fail-closed startup check",
+      "drift reconciliation",
+      "configuration signing keys",
+      "kms signing operations",
+      "spiffe workload identity",
+      "trust chain verification",
+      "supply chain attestation",
+      "signed tool manifests"
+    ]
+  },
+  "AID-H-022.003": {
+    "contentHash": "cc0bef569dfb8c02",
+    "keywords": [
+      "context corpus governance",
+      "retrieval-time integrity gate",
+      "document freshness sla",
+      "critical context signing",
+      "context manifest schema",
+      "runbook ownership metadata",
+      "policy claim conflict detection",
+      "deterministic precedence policy",
+      "code-doc drift gate",
+      "retrieval fail-closed",
+      "signed corpus digest",
+      "context trust tiering",
+      "stale context blocking",
+      "corpus provenance attestation"
+    ]
+  },
+  "AID-H-023": {
+    "contentHash": "5fb5f28dd721a47f",
+    "keywords": [
+      "secure build environment",
+      "sandboxed dependency install",
+      "shift-left dependency hardening",
+      "postinstall script defense",
+      "build isolation",
+      "ephemeral build container",
+      "ci/cd runner hardening",
+      "supply chain defense",
+      "package install sandbox",
+      "dependency vetting",
+      "malicious package containment",
+      "build environment isolation",
+      "lockfile enforcement"
+    ]
+  },
+  "AID-H-023.001": {
+    "contentHash": "015464bbeef40495",
+    "keywords": [
+      "sandboxed install",
+      "ephemeral container install",
+      "network-restricted build",
+      "frozen lockfile",
+      "lifecycle script disabled",
+      "npm ci enforcement",
+      "package mirror quarantine",
+      "internal registry hardening",
+      "postinstall script containment",
+      "docker podman build",
+      "pnpm yarn corepack",
+      "artifactory xray",
+      "sonatype nexus firewall"
+    ]
+  },
+  "AID-H-023.002": {
+    "contentHash": "9f80bbf311d18603",
+    "keywords": [
+      "proactive package vetting",
+      "package reputation analysis",
+      "openssf scorecard",
+      "dependency review",
+      "typosquatting detection",
+      "socket.dev analysis",
+      "pre-merge vetting",
+      "pull request security gate",
+      "behavioral package analysis",
+      "malicious library detection",
+      "snyk vetting",
+      "semgrep sast",
+      "hallucination squat defense"
+    ]
+  },
+  "AID-H-024": {
+    "contentHash": "5d2a93ab009506a6",
+    "keywords": [
+      "publisher integrity",
+      "trusted publishing",
+      "npm oidc publishing",
+      "short-lived tokens",
+      "provenance attestation",
+      "ci/cd-only publishing",
+      "workflow hardening",
+      "sigstore provenance",
+      "least privilege workflow",
+      "credential-less publishing",
+      "signed provenance",
+      "verifiable publisher identity",
+      "stolen credential defense",
+      "slsa provenance"
+    ]
+  },
+  "AID-H-025": {
+    "contentHash": "707b502081a9e8b6",
+    "keywords": [
+      "tool resolution integrity",
+      "mcp endpoint verification",
+      "deterministic resolution",
+      "fail-closed resolver",
+      "namespace pinning",
+      "typosquat prevention",
+      "descriptor binding",
+      "tool authorization",
+      "ambiguous match rejection",
+      "disambiguation gate",
+      "registry integrity",
+      "tool identity verification",
+      "supply chain hardening",
+      "approved tool allowlisting"
+    ]
+  },
+  "AID-H-025.001": {
+    "contentHash": "fd8deac6fb224c91",
+    "keywords": [
+      "fully qualified tool identifier",
+      "version pinning",
+      "semver enforcement",
+      "namespace pinning",
+      "bare name rejection",
+      "floating alias rejection",
+      "fail-closed resolver",
+      "descriptor schema validation",
+      "exact version binding",
+      "policy gate",
+      "resolver entry point",
+      "tool lockfile",
+      "reproducible resolution",
+      "pinned manifest"
+    ]
+  },
+  "AID-H-025.002": {
+    "contentHash": "35dd2a87395802b7",
+    "keywords": [
+      "descriptor hash binding",
+      "content hash pinning",
+      "sha-256 verification",
+      "drift detection",
+      "canonical json hashing",
+      "fail-closed reuse",
+      "descriptor integrity",
+      "tool manifest pinning",
+      "cosign signing",
+      "hash mismatch alerting",
+      "metadata tamper detection",
+      "integrity check tracing",
+      "pinned descriptor bytes",
+      "mcp descriptor verification"
+    ]
+  },
+  "AID-H-025.003": {
+    "contentHash": "8ca6f1bd294b3989",
+    "keywords": [
+      "fail-closed tool resolution",
+      "ambiguous identifier blocking",
+      "typosquat detection pipeline",
+      "resolver collision prevention",
+      "exact-match enforcement",
+      "tool namespace impersonation defense",
+      "similarity-threshold rejection",
+      "safe resolution fallback deny",
+      "resolver audit trail logging",
+      "lookup ambiguity alerting",
+      "approved identifier allowlisting",
+      "runtime typosquat telemetry",
+      "resolver policy-as-code checks",
+      "mcp resolution integrity guard"
+    ]
+  },
+  "AID-H-025.004": {
+    "contentHash": "34237074121b8891",
+    "keywords": [
+      "tool contract integrity",
+      "semantic invariant enforcement",
+      "policy-as-code",
+      "opa rego",
+      "approved contract hashing",
+      "read-only contract validation",
+      "destructive action approval",
+      "side-effect boundary",
+      "scope amplification block",
+      "tool onboarding gate",
+      "contract meaning validation",
+      "privilege assumption check",
+      "cedar policy",
+      "conftest validation"
+    ]
+  },
+  "AID-H-026": {
+    "contentHash": "8ac8407a3a2f95e7",
+    "keywords": [
+      "unsafe code execution prevention",
+      "rce prevention",
+      "dangerous construct blocking",
+      "safe interpreter enforcement",
+      "static analysis gate",
+      "pre-execution scan",
+      "eval exec block",
+      "ast-based scanning",
+      "fail-fast preventive layer",
+      "sast gate",
+      "restricted interpreter",
+      "execution gateway policy",
+      "agent code hardening",
+      "sandbox complement"
+    ]
+  },
+  "AID-H-026.001": {
+    "contentHash": "33295f73b89d6a76",
+    "keywords": [
+      "dangerous construct detection",
+      "ast-based scanning",
+      "semgrep rules",
+      "bandit python",
+      "unsafe deserialization block",
+      "eval exec blocking",
+      "shell injection pattern block",
+      "forbidden imports allowlist",
+      "codeql query",
+      "block warn log policy",
+      "code pattern scanning",
+      "malicious code output detection",
+      "eslint security plugin",
+      "construct allowlist"
+    ]
+  },
+  "AID-H-026.002": {
+    "contentHash": "8952287d5e3d8efa",
+    "keywords": [
+      "restricted interpreter",
+      "restrictedpython sandbox",
+      "isolated-vm",
+      "safe eval",
+      "filesystem isolation",
+      "network isolation",
+      "ephemeral sandbox",
+      "wasm runtime",
+      "execution gateway enforcement",
+      "interpreter allowlist",
+      "privileged api denial",
+      "gvisor firecracker",
+      "containerized eval",
+      "dynamic eval hardening"
+    ]
+  },
+  "AID-H-026.003": {
+    "contentHash": "4d3a1976427f380c",
+    "keywords": [
+      "pre-execution static scan",
+      "sast gate",
+      "semgrep ci gate",
+      "fail-fast analysis",
+      "scan evidence audit",
+      "bandit ci",
+      "codeql analysis",
+      "critical finding block",
+      "rules-based scanning",
+      "pre-run validation",
+      "static analysis pipeline",
+      "severity threshold gate",
+      "ci integration scan",
+      "analysis artifact retention"
+    ]
+  },
+  "AID-H-027": {
+    "contentHash": "54ad413f1d30708a",
+    "keywords": [
+      "closed-loop detector hardening",
+      "retrainable detector lifecycle",
+      "adversarial corpus generation",
+      "hard sample reinjection",
+      "out-of-loop evaluation",
+      "detector promotion gate",
+      "prompt injection defense",
+      "governed retraining pipeline",
+      "detector version validation",
+      "evasive variant hardening",
+      "mlops governance",
+      "continuous adversarial training",
+      "detector lifecycle hygiene",
+      "closed-loop governance"
+    ]
+  },
+  "AID-H-027.001": {
+    "contentHash": "6e5bc20ad670abd0",
+    "keywords": [
+      "hard-sample mining",
+      "false negative collection",
+      "false positive collection",
+      "governed retraining",
+      "promotion criteria gate",
+      "controlled detector replacement",
+      "hard sample repository",
+      "periodic retraining loop",
+      "decision boundary hardening",
+      "out-of-loop benchmark",
+      "candidate detector benchmarking",
+      "mlflow tracking",
+      "prompt injection defense",
+      "detector error sampling"
+    ]
+  },
+  "AID-H-027.002": {
+    "contentHash": "9938668117ae5d23",
+    "keywords": [
+      "adversarial prompt fuzzing",
+      "detector corpus expansion",
+      "semantic variant generation",
+      "format-preserving fuzzing",
+      "paraphrase augmentation",
+      "punctuation mutation",
+      "casing mutation",
+      "textattack fuzzing",
+      "garak fuzzing",
+      "nlpaug augmentation",
+      "detector overfitting mitigation",
+      "attack intent generalization",
+      "corpus balancing",
+      "quality gated fuzzing"
+    ]
+  },
+  "AID-H-027.003": {
+    "contentHash": "a8427abeb223a482",
+    "keywords": [
+      "taxonomy-stratified evaluation",
+      "coverage gap analysis",
+      "category-level metrics",
+      "detector blind spot analysis",
+      "role play category test",
+      "obfuscation category test",
+      "indirect injection category",
+      "immutable eval set",
+      "promotion gate metrics",
+      "attribution debugging",
+      "captum explanation",
+      "retraining backlog",
+      "stratified benchmarking",
+      "weak category prioritization"
+    ]
+  },
+  "AID-H-028": {
+    "contentHash": "ba1e41636d807edd",
+    "keywords": [
+      "inference cache integrity",
+      "cache isolation",
+      "cache poisoning prevention",
+      "cache key binding",
+      "tenant-scoped cache",
+      "session-bound cache",
+      "prefix cache isolation",
+      "kv cache isolation",
+      "semantic cache hardening",
+      "ttl invalidation",
+      "fail-closed cache reuse",
+      "cache provenance logging",
+      "policy-version invalidation",
+      "cross-tenant contamination prevention",
+      "gptcache guardrails"
+    ]
+  },
+  "AID-H-029": {
+    "contentHash": "18750aae257432aa",
+    "keywords": [
+      "mcp client hardening",
+      "tool client security",
+      "client trust boundary",
+      "credential protection",
+      "server authenticity validation",
+      "client response sanitization",
+      "client data hygiene",
+      "session lifecycle hardening",
+      "client binary verification",
+      "update channel integrity",
+      "local credential vault",
+      "plugin integrity check",
+      "ide extension hardening",
+      "client sandbox hardening"
+    ]
+  },
+  "AID-H-029.001": {
+    "contentHash": "98bc3d74bbf029e6",
+    "keywords": [
+      "server authenticity validation",
+      "connection pinning",
+      "spki pinning",
+      "certificate fingerprint pinning",
+      "spiffe identity validation",
+      "server allowlist",
+      "fail-closed connection",
+      "mtls verification",
+      "certificate transparency monitoring",
+      "mcp endpoint pinning",
+      "dns rebinding defense",
+      "transport identity verification",
+      "downgrade prevention",
+      "trusted endpoint enforcement"
+    ]
+  },
+  "AID-H-029.002": {
+    "contentHash": "6c0a431a7636e3a7",
+    "keywords": [
+      "secure credential storage",
+      "os keychain storage",
+      "hardware-backed keystore",
+      "encrypted secret store",
+      "token rotation",
+      "credential lifecycle management",
+      "ttl enforcement",
+      "plaintext config elimination",
+      "revocation propagation",
+      "logout cleanup",
+      "vault-backed secrets",
+      "hashicorp vault",
+      "keyring storage",
+      "refresh token hygiene"
+    ]
+  },
+  "AID-H-029.003": {
+    "contentHash": "dae9a5bae15bcb14",
+    "keywords": [
+      "client-side data hygiene",
+      "log redaction",
+      "pii scrubbing",
+      "cache encryption",
+      "bounded retention",
+      "crash report scrubbing",
+      "structured log redaction",
+      "temp file purge",
+      "sqlcipher encrypted cache",
+      "presidio redaction",
+      "data classification aware caching",
+      "debug log disablement",
+      "protocol trace redaction",
+      "client leakage prevention"
+    ]
+  },
+  "AID-H-029.004": {
+    "contentHash": "c3266b7adb911219",
+    "keywords": [
+      "response schema validation",
+      "payload size limiting",
+      "nesting depth limit",
+      "content sanitization",
+      "renderer isolation",
+      "dompurify sanitization",
+      "no implicit execution",
+      "explicit user confirmation",
+      "terminal escape filtering",
+      "markdown rendering hardening",
+      "electron csp",
+      "ajv schema validation",
+      "parser hardening",
+      "ui confirmation gate"
+    ]
+  },
+  "AID-H-029.005": {
+    "contentHash": "0440da5fd25149c6",
+    "keywords": [
+      "client session isolation",
+      "per-server state isolation",
+      "idle timeout enforcement",
+      "session teardown hygiene",
+      "channel-bound tokens",
+      "proof-of-possession tokens",
+      "dpop binding",
+      "replay resistance",
+      "session freshness",
+      "mutual authentication context",
+      "re-authentication gating",
+      "risk-tiered timeouts",
+      "cross-session state isolation",
+      "token replay prevention"
+    ]
+  },
+  "AID-H-029.006": {
+    "contentHash": "e180dde8a86cb6e9",
+    "keywords": [
+      "client binary signing",
+      "cosign verification",
+      "sigstore attestation",
+      "tuf update framework",
+      "rollback protection",
+      "plugin integrity verification",
+      "update channel pinning",
+      "slsa provenance",
+      "in-toto attestation",
+      "notarization check",
+      "authenticode validation",
+      "approved plugin allowlist",
+      "publisher constraint enforcement",
+      "signed update metadata"
+    ]
+  },
+  "AID-H-029.007": {
+    "contentHash": "4bf8c7e87c01db43",
+    "keywords": [
+      "sampling request validation",
+      "bidirectional sampling sandbox",
+      "token budget enforcement",
+      "sampling schema validation",
+      "per-server rate limiting",
+      "sampling context isolation",
+      "tool-use iteration limits",
+      "prompt injection scanning",
+      "presidio content detection",
+      "sampling telemetry",
+      "createmessage validation",
+      "server prompt scanning",
+      "llm resource quota",
+      "sampling confirmation surface"
+    ]
+  },
+  "AID-H-030": {
+    "contentHash": "70dbaeecbe760191",
+    "keywords": [
+      "purpose-bound authorization",
+      "lifecycle-stage boundary enforcement",
+      "data use authorization",
+      "consent scope enforcement",
+      "jurisdictional restriction",
+      "machine-enforceable gate",
+      "training data authorization",
+      "rag indexing authorization",
+      "retention policy enforcement",
+      "purpose limitation",
+      "data classification gating",
+      "fine-tuning admission gate",
+      "memory write authorization",
+      "stage ingress control"
+    ]
+  },
+  "AID-H-030.001": {
+    "contentHash": "05201f4282cc0cde",
+    "keywords": [
+      "data use tagging",
+      "machine-readable policy schema",
+      "consent metadata",
+      "classification tier tagging",
+      "purpose limitation metadata",
+      "jurisdictional tag",
+      "versioned schema",
+      "data lineage tags",
+      "metadata propagation",
+      "untagged asset rejection",
+      "openmetadata catalog",
+      "datahub governance",
+      "collibra tagging",
+      "great expectations validation"
+    ]
+  },
+  "AID-H-030.002": {
+    "contentHash": "28c04309bfa7a819",
+    "keywords": [
+      "lifecycle stage authorization gate",
+      "fail-closed stage gate",
+      "opa authorization check",
+      "cedar policy enforcement",
+      "stage ingress enforcement",
+      "audit event emission",
+      "allow deny decision log",
+      "cross-stage path audit",
+      "purpose-aware policy",
+      "training boundary gate",
+      "memory write gate",
+      "rag indexing gate",
+      "immuta enforcement",
+      "privacera gate"
+    ]
+  },
+  "AID-H-030.003": {
+    "contentHash": "ccf56feb1ad49179",
+    "keywords": [
+      "consent scope tracking",
+      "consent expiry enforcement",
+      "withdrawal response workflow",
+      "near real-time revocation",
+      "consent event propagation",
+      "source asset quarantine",
+      "derived artifact purge",
+      "embedding invalidation",
+      "model impact assessment",
+      "unlearning trigger",
+      "onetrust bigid",
+      "consent compliance reporting",
+      "temporal orchestration",
+      "kafka event propagation"
+    ]
+  },
+  "AID-H-031": {
+    "contentHash": "2c7cd21abc41301c",
+    "keywords": [
+      "skill admission pipeline",
+      "multi-stage security analysis",
+      "skill artifact scanning",
+      "hybrid artifact analysis",
+      "publish-time scanning",
+      "install-time scanning",
+      "skill registry governance",
+      "block review allow decision",
+      "skill procurement gate",
+      "semantic intent analysis",
+      "behavioral sandbox testing",
+      "metadata honesty validation",
+      "skill-specific parsing",
+      "toxicskills defense",
+      "continuous rescan governance"
+    ]
+  },
+  "AID-H-031.001": {
+    "contentHash": "4b9dc03362dc40d0",
+    "keywords": [
+      "metadata honesty validation",
+      "brand impersonation detection",
+      "typosquat detection",
+      "risk tier spoofing detection",
+      "permission understatement detection",
+      "steganographic content scanning",
+      "zero-width unicode detection",
+      "base64 smuggling detection",
+      "ascii control scanning",
+      "publisher identity validation",
+      "shannon entropy analysis",
+      "manifest scope cross-check",
+      "unicode normalization",
+      "rapidfuzz typosquat"
+    ]
+  },
+  "AID-H-031.002": {
+    "contentHash": "ee8979e67ec1847a",
+    "keywords": [
+      "instruction layer semantic analysis",
+      "skill intent classification",
+      "natural language intent scanning",
+      "llama guard classifier",
+      "prose directive scanning",
+      "pre-deployment intent analysis",
+      "skill prose analysis",
+      "fine-tuned intent classifier",
+      "guardrails validation",
+      "malicious directive detection",
+      "scope contradiction detection",
+      "skill admission scan",
+      "behavioral intent review",
+      "instruction prose vetting"
+    ]
+  },
+  "AID-H-031.003": {
+    "contentHash": "b10d1c16f0109a80",
+    "keywords": [
+      "manifest vs observed testing",
+      "behavioral sandbox verification",
+      "ephemeral sandbox execution",
+      "syscall tracing",
+      "file access observation",
+      "network egress observation",
+      "manifest compliance comparison",
+      "firecracker sandbox",
+      "falco runtime monitoring",
+      "tetragon observation",
+      "empirical verification layer",
+      "multi-condition testing",
+      "skill runtime observation",
+      "permission drift detection"
+    ]
+  },
+  "AID-H-031.004": {
+    "contentHash": "b24da17f7d1ece32",
+    "keywords": [
+      "safe skill parsing",
+      "loader hardening",
+      "safe yaml parsing",
+      "strict schema validation",
+      "bounded decoding",
+      "file-type allowlisting",
+      "loader isolation",
+      "recursive include limiting",
+      "zip bomb defense",
+      "pydantic validation",
+      "ruamel.yaml safe load",
+      "dependency enumeration",
+      "syft trivy",
+      "isolated loader stage"
+    ]
+  },
+  "AID-H-031.005": {
+    "contentHash": "8c16ab8d91ba1d11",
+    "keywords": [
+      "admission policy orchestration",
+      "continuous rescan governance",
+      "policy-driven decision fusion",
+      "stage result correlation",
+      "decision evidence persistence",
+      "scanner update rescan trigger",
+      "exception handling workflow",
+      "publisher intelligence rescan",
+      "opa decision engine",
+      "review queue workflow",
+      "block review allow policy",
+      "governance re-evaluation",
+      "skill trust lifecycle",
+      "admission telemetry"
+    ]
+  },
+  "AID-H-032": {
+    "contentHash": "9336da45513dc23e",
+    "keywords": [
+      "ai-generated code admission control",
+      "safe promotion control plane",
+      "ai artifact provenance",
+      "iac change gating",
+      "agent-authored patch gating",
+      "sdlc promotion gate",
+      "ai-generated change governance",
+      "privileged path review",
+      "fail-closed promotion",
+      "workflow definition gating",
+      "deployment manifest gate",
+      "dependency change review",
+      "generated artifact policy",
+      "machine-enforced gate"
+    ]
+  },
+  "AID-H-032.001": {
+    "contentHash": "5ab7e1331f4f6ee5",
+    "keywords": [
+      "ai-generated change provenance",
+      "risk labeling",
+      "generation metadata stamping",
+      "signed provenance",
+      "in-toto attestation",
+      "slsa provenance",
+      "privileged path labeling",
+      "ai author attribution",
+      "risk tier routing",
+      "immutable provenance record",
+      "model authorship record",
+      "confidence labeling",
+      "signed generation record",
+      "provenance-aware policy"
+    ]
+  },
+  "AID-H-032.002": {
+    "contentHash": "53cba99bd53a529c",
+    "keywords": [
+      "static admission gate",
+      "provenance-aware static scan",
+      "dependency hallucination detection",
+      "typosquat package detection",
+      "privileged path scanning",
+      "secrets exposure detection",
+      "iac policy scanning",
+      "generated artifact classification",
+      "gitleaks secret scan",
+      "trivy vulnerability scan",
+      "syft grype sbom",
+      "conftest policy",
+      "fail-closed merge gate",
+      "insecure default detection"
+    ]
+  },
+  "AID-H-032.003": {
+    "contentHash": "daa0bdd1b1547d6a",
+    "keywords": [
+      "dynamic promotion validation",
+      "ephemeral sandbox validation",
+      "promotion-oriented sandbox",
+      "risk-tiered validation",
+      "generated script sandboxing",
+      "migration sandbox execution",
+      "firecracker promotion sandbox",
+      "kata containers",
+      "behavioral validation gate",
+      "promotion evidence binding",
+      "privileged artifact escalation",
+      "iac dry run",
+      "falco behavioral monitoring",
+      "pre-merge sandbox"
+    ]
+  },
+  "AID-H-032.004": {
+    "contentHash": "718c27f60c0fb4a0",
+    "keywords": [
+      "evidence-bound promotion",
+      "high-risk human approval",
+      "dual approval gating",
+      "named approver requirement",
+      "immutable evidence record",
+      "artifact digest binding",
+      "policy version binding",
+      "sigstore cosign signing",
+      "approver identity audit",
+      "human-in-the-loop gate",
+      "promotion security boundary",
+      "destructive path approval",
+      "privileged change approval",
+      "evidence-backed merge"
+    ]
+  },
+  "AID-H-033": {
+    "contentHash": "e5e55acb0cdb5dc0",
+    "keywords": [
+      "multi-tenant inference isolation",
+      "cross-tenant leakage prevention",
+      "tenancy-aware isolation",
+      "serving state isolation",
+      "vendor trust assertion",
+      "shared inference hardening",
+      "side channel mitigation",
+      "provider tenancy governance",
+      "request profiling prevention",
+      "dedicated serving pool",
+      "inference leakage control",
+      "model inversion defense",
+      "membership inference mitigation",
+      "saas tenancy assurance"
+    ]
+  },
+  "AID-H-033.001": {
+    "contentHash": "891c4733a8115bfd",
+    "keywords": [
+      "dedicated inference capacity",
+      "reserved serving pool",
+      "high-sensitivity workload routing",
+      "blast radius reduction",
+      "provisioned throughput",
+      "dedicated endpoint enforcement",
+      "workload sensitivity classification",
+      "no shared pool policy",
+      "confidentiality assumption",
+      "bedrock provisioned throughput",
+      "kserve dedicated serving",
+      "vllm dedicated deployment",
+      "dgx cloud capacity",
+      "workload tenancy policy"
+    ]
+  },
+  "AID-H-033.002": {
+    "contentHash": "800b7478058a9f98",
+    "keywords": [
+      "cross-tenant serving-state isolation",
+      "request queue isolation",
+      "prefix cache isolation",
+      "kv cache partitioning",
+      "batching group isolation",
+      "warm worker isolation",
+      "failover state isolation",
+      "tenant-scoped memory pool",
+      "session namespacing",
+      "no cross-tenant prefix reuse",
+      "serving architecture isolation",
+      "vllm tenant isolation",
+      "envoy partitioning",
+      "istio tenant routing"
+    ]
+  },
+  "AID-H-033.003": {
+    "contentHash": "5626498065977347",
+    "keywords": [
+      "inference telemetry restriction",
+      "debug surface restriction",
+      "profiling surface limitation",
+      "trace redaction",
+      "restricted observability mode",
+      "prompt log redaction",
+      "rbac telemetry access",
+      "break-glass telemetry approval",
+      "performance counter hardening",
+      "observability scope limiting",
+      "error reporting redaction",
+      "developer diagnostic disablement",
+      "inference log hygiene",
+      "telemetry leakage prevention"
+    ]
+  },
+  "AID-H-033.004": {
+    "contentHash": "421aac3dfc673113",
+    "keywords": [
+      "confidential inference attestation",
+      "vendor isolation assurance",
+      "remote attestation evidence",
+      "tee attestation",
+      "vendor control baseline",
+      "contractual isolation commitment",
+      "compensating control documentation",
+      "keylime attestation",
+      "spire attestation",
+      "confidential vm verification",
+      "provider tiering",
+      "nvidia confidential computing",
+      "kata containers attestation",
+      "provider isolation proof"
+    ]
+  },
+  "AID-D-001": {
+    "contentHash": "a0449fe766a13cac",
+    "keywords": [
+      "adversarial input detection",
+      "prompt injection detection",
+      "jailbreak detection",
+      "input monitoring",
+      "out-of-distribution detection",
+      "malicious pattern scanning",
+      "hidden command detection",
+      "input sanitization alerting",
+      "guardrail telemetry",
+      "real-time input inspection",
+      "anomaly detection",
+      "llm input filter",
+      "obfuscation detection",
+      "adversarial ml detection"
+    ]
+  },
+  "AID-D-001.001": {
+    "contentHash": "1b4ab62e2a0c7687",
+    "keywords": [
+      "per-prompt scanning",
+      "obfuscation detection",
+      "guardrail model",
+      "regex pattern matching",
+      "base64 decoding analysis",
+      "homoglyph detection",
+      "entropy analysis",
+      "intent classification",
+      "inline prompt gate",
+      "jailbreak pattern detection",
+      "heuristic filtering",
+      "synchronous input inspection",
+      "harmful intent scoring",
+      "policy violation detection"
+    ]
+  },
+  "AID-D-001.002": {
+    "contentHash": "9826d9963305eb29",
+    "keywords": [
+      "deepfake detection",
+      "synthetic media forensics",
+      "image artifact analysis",
+      "audio-visual mismatch detection",
+      "liveness detection",
+      "speech biometric analysis",
+      "lip-sync anomaly detection",
+      "compression artifact scanning",
+      "steganography detection",
+      "hidden payload scanning",
+      "facial landmark analysis",
+      "acoustic artifact detection",
+      "media authenticity verification",
+      "multimodal forensics"
+    ]
+  },
+  "AID-D-001.003": {
+    "contentHash": "3b0a29e0bef1cada",
+    "keywords": [
+      "vector space anomaly detection",
+      "embedding outlier detection",
+      "semantic anomaly detection",
+      "centroid distance scoring",
+      "embedding clustering",
+      "nearest neighbor search",
+      "dbscan clustering",
+      "faiss similarity search",
+      "baseline embedding cluster",
+      "novel prompt detection",
+      "embedding drift",
+      "vector database anomaly",
+      "pca outlier analysis",
+      "semantic outlier scoring"
+    ]
+  },
+  "AID-D-001.004": {
+    "contentHash": "fb4a3079ac5ea12a",
+    "keywords": [
+      "llm guardrail",
+      "intent classification gate",
+      "privilege escalation detection",
+      "secondary classifier model",
+      "fail-closed gate",
+      "inline guardrail model",
+      "instruction bypass detection",
+      "llama guard",
+      "agent permission escalation detection",
+      "classifier prompt telemetry",
+      "excessive agency detection",
+      "intent-switch detection",
+      "guardrail scoring",
+      "prompt intent classification"
+    ]
+  },
+  "AID-D-001.005": {
+    "contentHash": "37a0300399b893c4",
+    "keywords": [
+      "canary token detection",
+      "prompt integrity check",
+      "honeytoken alert",
+      "system prompt integrity verification",
+      "active probing",
+      "known-answer challenge",
+      "session secret verification",
+      "prompt override detection",
+      "structured output verification",
+      "metadata tamper detection",
+      "dynamic secret injection",
+      "prompt leakage detection",
+      "active integrity monitoring",
+      "response metadata verification"
+    ]
+  },
+  "AID-D-001.006": {
+    "contentHash": "f0ee2089aba86c34",
+    "keywords": [
+      "recall path scanning",
+      "memory rehydration gate",
+      "recalled memory scanner",
+      "quarantine fingerprint store",
+      "persistent memory scan",
+      "session memory audit",
+      "vector store recall detection",
+      "memory replay detection",
+      "latent payload scanning",
+      "memory quarantine alerting",
+      "context rehydration inspection",
+      "stored prompt injection detection",
+      "persisted payload detection",
+      "pre-prompt-assembly scanning"
+    ]
+  },
+  "AID-D-002": {
+    "contentHash": "c4a73f1aa52b77eb",
+    "keywords": [
+      "model drift detection",
+      "performance drift monitoring",
+      "data drift detection",
+      "concept drift detection",
+      "distribution drift",
+      "anomaly detection",
+      "poisoning effect monitoring",
+      "backdoor activation detection",
+      "ml observability",
+      "baseline deviation alerting",
+      "model quality monitoring",
+      "output distribution monitoring",
+      "statistical drift analysis",
+      "inference telemetry"
+    ]
+  },
+  "AID-D-003": {
+    "contentHash": "5b996a60972ae0d2",
+    "keywords": [
+      "output monitoring",
+      "policy enforcement",
+      "response filtering",
+      "output guardrail",
+      "post-inference inspection",
+      "output sanitization",
+      "harmful output blocking",
+      "human approval gating",
+      "output policy violation alerting",
+      "real-time response scanning",
+      "tool call policy enforcement",
+      "data leakage detection",
+      "output safety classifier",
+      "llm response moderation"
+    ]
+  },
+  "AID-D-003.001": {
+    "contentHash": "905e3df4a4903b51",
+    "keywords": [
+      "harmful content filtering",
+      "toxicity detection",
+      "output moderation",
+      "content policy enforcement",
+      "toxicity classifier",
+      "hate speech detection",
+      "csam filter",
+      "output safety classifier",
+      "moderation api",
+      "perspective api",
+      "openai moderation",
+      "output policy violation alert",
+      "llama guard output filter",
+      "response content scanning"
+    ]
+  },
+  "AID-D-003.002": {
+    "contentHash": "29c0732925edbb58",
+    "keywords": [
+      "pii leakage detection",
+      "secret pattern matching",
+      "output dlp scanning",
+      "token redaction pipeline",
+      "api key exposure detection",
+      "prompt leak prevention",
+      "credential exfiltration alerting",
+      "privacy policy violation detection",
+      "entity-level pii masking",
+      "high-risk data egress monitoring",
+      "context window secret scrubbing",
+      "regulated data class detection",
+      "false-positive tuning workflow",
+      "siem leakage event correlation"
+    ]
+  },
+  "AID-D-003.003": {
+    "contentHash": "3569b5f3180602ab",
+    "keywords": [
+      "agent tool use monitoring",
+      "tool policy enforcement",
+      "tool invocation audit",
+      "tool parameter inspection",
+      "agent action policy monitoring",
+      "excessive agency detection",
+      "tool allowlist enforcement",
+      "action approval gating",
+      "tool side-effect monitoring",
+      "agent tool telemetry",
+      "mcp server audit logging",
+      "tool call policy engine",
+      "outbound action monitoring",
+      "permissioned tool gating"
+    ]
+  },
+  "AID-D-003.004": {
+    "contentHash": "bc0bf35cda8826a6",
+    "keywords": [
+      "tool call sequence anomaly",
+      "action sequence baselining",
+      "behavior graph analysis",
+      "agent workflow anomaly",
+      "sequential action monitoring",
+      "tool call pattern deviation",
+      "markov chain behavior modeling",
+      "sequence profiling",
+      "action chain anomaly detection",
+      "agentic trace analysis",
+      "tool call ordering analysis",
+      "rogue action sequence detection",
+      "agentic behavior baselining",
+      "invocation pattern drift"
+    ]
+  },
+  "AID-D-003.005": {
+    "contentHash": "5ebc008df48df187",
+    "keywords": [
+      "stateful session risk scoring",
+      "intent drift detection",
+      "conversation invariant checking",
+      "multi-turn policy violation tracking",
+      "session-level anomaly baseline",
+      "goal deviation alerting",
+      "cross-turn tool misuse correlation",
+      "memory abuse signal fusion",
+      "session timeline forensics",
+      "long-horizon behavior drift",
+      "step-up trigger orchestration",
+      "session replay investigation",
+      "agent objective consistency checks",
+      "runtime guardrail breach correlation"
+    ]
+  },
+  "AID-D-003.006": {
+    "contentHash": "d7a36068a7cff44d",
+    "keywords": [
+      "memory write monitoring",
+      "memory drift detection",
+      "memory abuse detection",
+      "write-rate anomaly",
+      "memory tampering alerting",
+      "long-term memory telemetry",
+      "memory poisoning detection",
+      "vector store write audit",
+      "session memory drift",
+      "persistent memory audit",
+      "memory write anomaly",
+      "memory entry fingerprinting",
+      "unauthorized memory mutation alert",
+      "memory write rate monitoring"
+    ]
+  },
+  "AID-D-003.007": {
+    "contentHash": "987624f79a71bccc",
+    "keywords": [
+      "attribute inference detection",
+      "sensitive attribute suppression",
+      "privacy leak detection",
+      "inference attack monitoring",
+      "demographic leakage detection",
+      "differential privacy alerting",
+      "protected attribute scanning",
+      "attribute disclosure detection",
+      "privacy violation alerting",
+      "inference-time pii detection",
+      "output attribute classifier",
+      "sensitive inference suppression",
+      "privacy-preserving output filter",
+      "sensitive attribute redaction"
+    ]
+  },
+  "AID-D-004": {
+    "contentHash": "d589f210fb326518",
+    "keywords": [
+      "model integrity monitoring",
+      "artifact tamper detection",
+      "model hash verification",
+      "signature verification",
+      "weight tamper alerting",
+      "model provenance audit",
+      "runtime attestation",
+      "configuration drift detection",
+      "supply chain monitoring",
+      "model file integrity",
+      "artifact audit logging",
+      "mlflow audit trail",
+      "hash mismatch alerting",
+      "sbom verification"
+    ]
+  },
+  "AID-D-004.001": {
+    "contentHash": "4d45955f3e2d740f",
+    "keywords": [
+      "artifact digest verification",
+      "signature validation pipeline",
+      "supply-chain integrity checks",
+      "detached signature enforcement",
+      "sha256 manifest comparison",
+      "tamper-evident build artifacts",
+      "provenance attestation verification",
+      "cosign verify-blob workflow",
+      "trust-anchor pinning",
+      "release artifact admission gate",
+      "signed model package validation",
+      "immutable artifact registry checks",
+      "offline integrity verification",
+      "signature failure incident alerting"
+    ]
+  },
+  "AID-D-004.002": {
+    "contentHash": "a638f854bb6761f4",
+    "keywords": [
+      "runtime attestation",
+      "memory integrity monitoring",
+      "tpm attestation",
+      "secure enclave attestation",
+      "loaded weight integrity",
+      "live memory hash verification",
+      "runtime tamper detection",
+      "ebpf memory monitoring",
+      "process memory attestation",
+      "integrity measurement architecture",
+      "ima verification",
+      "runtime model integrity",
+      "periodic memory hashing",
+      "loaded weight hash check"
+    ]
+  },
+  "AID-D-004.003": {
+    "contentHash": "818b090c4b325608",
+    "keywords": [
+      "runtime configuration drift detection",
+      "policy bundle drift monitoring",
+      "golden-config baseline comparison",
+      "unauthorized config mutation alerting",
+      "hot-reload policy integrity checks",
+      "environment parity verification",
+      "change-window anomaly detection",
+      "config rollback trigger rules",
+      "signed policy digest checks",
+      "drift evidence audit logging",
+      "control-plane mutation monitoring",
+      "runtime hardening state verification",
+      "detected drift containment playbook",
+      "configuration compliance posture tracking"
+    ]
+  },
+  "AID-D-004.004": {
+    "contentHash": "1f6a2854574ae322",
+    "keywords": [
+      "model source drift detection",
+      "namespace ownership monitoring",
+      "repository redirection checks",
+      "upstream identity continuity validation",
+      "model namespace takeover alerts",
+      "registry origin verification",
+      "source tombstone detection",
+      "unexpected provider switch alerts",
+      "model pull provenance checks",
+      "artifact namespace allowlisting",
+      "trust-domain boundary enforcement",
+      "source change approval gating",
+      "vendor endpoint drift monitoring",
+      "model supply-chain anomaly triage"
+    ]
+  },
+  "AID-D-004.005": {
+    "contentHash": "c1637e4ad07d0d0c",
+    "keywords": [
+      "runtime prompt integrity",
+      "system prompt verification",
+      "prompt fingerprint check",
+      "live prompt hash verification",
+      "system prompt tamper detection",
+      "prompt template verification",
+      "runtime prompt baseline comparison",
+      "prompt mutation alerting",
+      "system prompt audit",
+      "prompt drift detection",
+      "system prompt integrity monitoring",
+      "prompt checksum verification",
+      "live prompt diff",
+      "prompt tamper alerting"
+    ]
+  },
+  "AID-D-005": {
+    "contentHash": "838a4bda2d5fa5aa",
+    "keywords": [
+      "audit logging",
+      "ai activity monitoring",
+      "threat hunting",
+      "siem integration",
+      "log aggregation",
+      "llm telemetry collection",
+      "behavioral analytics",
+      "security event correlation",
+      "anomaly detection",
+      "proactive threat hunting",
+      "agent session logging",
+      "forensic log retention",
+      "soar playbook integration",
+      "ai observability"
+    ]
+  },
+  "AID-D-005.001": {
+    "contentHash": "354789b5da92bcea",
+    "keywords": [
+      "ai log generation",
+      "structured logging",
+      "llm audit logs",
+      "prompt response logging",
+      "elk stack ingestion",
+      "fluentd forwarding",
+      "opentelemetry tracing",
+      "log schema standardization",
+      "json log format",
+      "centralized log collection",
+      "tamper-resistant audit log",
+      "agent trace logging",
+      "session transcript logging",
+      "log retention policy"
+    ]
+  },
+  "AID-D-005.002": {
+    "contentHash": "4e15658d567cd3c7",
+    "keywords": [
+      "siem alerting",
+      "security monitoring",
+      "real-time alerting",
+      "splunk correlation",
+      "sentinel analytics",
+      "llm-specific detection rules",
+      "alert triage",
+      "correlation rule engine",
+      "threshold-based alerting",
+      "sigma rules",
+      "detection engineering",
+      "xdr integration",
+      "elastic security alerting",
+      "datadog alerting"
+    ]
+  },
+  "AID-D-005.003": {
+    "contentHash": "bb914f10ed6aec2c",
+    "keywords": [
+      "proactive threat hunting",
+      "hypothesis-driven hunting",
+      "jupyter hunting notebook",
+      "ai attack hunting",
+      "ttp-based hunting",
+      "log correlation queries",
+      "atlas ttp mapping",
+      "behavioral hunting queries",
+      "iocs threat hunting",
+      "threat hunting playbook",
+      "adversary emulation validation",
+      "kql threat hunting",
+      "splunk hunting",
+      "proactive ai search"
+    ]
+  },
+  "AID-D-005.004": {
+    "contentHash": "91fff95ef8592e88",
+    "keywords": [
+      "agent session logging",
+      "conversation trace logging",
+      "tool call audit",
+      "agent workflow logging",
+      "langsmith tracing",
+      "langfuse telemetry",
+      "agent reasoning log",
+      "agent action audit",
+      "session-level telemetry",
+      "agent trajectory logging",
+      "observability for agents",
+      "agent trace inspection",
+      "multi-step trace capture",
+      "agent decision log"
+    ]
+  },
+  "AID-D-005.005": {
+    "contentHash": "9e7587a65acb9a21",
+    "keywords": [
+      "gpu telemetry monitoring",
+      "accelerator anomaly detection",
+      "dcgm metrics",
+      "nvml telemetry",
+      "gpu utilization anomaly",
+      "tpu telemetry monitoring",
+      "accelerator fingerprint baseline",
+      "hardware counter anomaly",
+      "side-channel telemetry",
+      "power consumption anomaly",
+      "gpu workload drift",
+      "prometheus gpu metrics",
+      "accelerator performance baseline",
+      "device-level telemetry"
+    ]
+  },
+  "AID-D-005.006": {
+    "contentHash": "dc3d8928eb3e1003",
+    "keywords": [
+      "ans registry monitoring",
+      "dns resolution telemetry",
+      "agent name service audit",
+      "registry lookup anomaly",
+      "resolution telemetry baseline",
+      "ans query rate monitoring",
+      "unauthorized registry lookup alert",
+      "discovery service audit",
+      "agent registry drift",
+      "ans resolver telemetry",
+      "registry anomaly alerting",
+      "agent lookup telemetry",
+      "registry spoof detection",
+      "ans flow logging"
+    ]
+  },
+  "AID-D-005.007": {
+    "contentHash": "f65ab2961a7d5626",
+    "keywords": [
+      "token spike detection",
+      "cost spike alerting",
+      "tool use rate anomaly",
+      "request parameter anomaly",
+      "token consumption monitoring",
+      "billing anomaly detection",
+      "denial-of-wallet detection",
+      "rate limit alerting",
+      "cost threshold alerting",
+      "prompt flood detection",
+      "usage analytics",
+      "consumption anomaly",
+      "llm cost monitoring",
+      "tool invocation rate monitoring"
+    ]
+  },
+  "AID-D-006": {
+    "contentHash": "bb70f0048ff2c2e7",
+    "keywords": [
+      "explanation consistency checks",
+      "saliency map tamper detection",
+      "feature attribution drift analysis",
+      "xai integrity verification",
+      "counterfactual stability testing",
+      "manipulated rationale detection",
+      "attribution baseline comparison",
+      "model explanation anomaly scoring",
+      "explanation-output mismatch alerts",
+      "xai audit evidence capture",
+      "decision rationale spoofing detection",
+      "interpretability signal monitoring",
+      "adversarial explanation probing",
+      "explanation trustworthiness validation"
+    ]
+  },
+  "AID-D-007": {
+    "contentHash": "d1c0c944e5ebc9c2",
+    "keywords": [
+      "cross-modal consistency scoring",
+      "image-text contradiction detection",
+      "audio-text alignment checks",
+      "video-caption mismatch detection",
+      "multimodal semantic divergence alerts",
+      "sensor fusion integrity monitoring",
+      "cross-channel anomaly correlation",
+      "embedding-space modality checks",
+      "caption-grounding verification",
+      "frame-audio coherence analysis",
+      "multimodal spoofing detection",
+      "modality provenance mismatch alerts",
+      "retrieved-media consistency gating",
+      "high-risk multimodal escalation"
+    ]
+  },
+  "AID-D-008": {
+    "contentHash": "86ab3506d56d2852",
+    "keywords": [
+      "ai-based security analytics",
+      "ml-driven detection",
+      "behavioral analytics",
+      "uba for ai",
+      "unsupervised anomaly detection",
+      "autoencoder detection",
+      "isolation forest detection",
+      "clustering-based anomaly detection",
+      "ml-powered siem",
+      "event analytics pipeline",
+      "security data lake analytics",
+      "detection model ensemble",
+      "graph analytics detection",
+      "ai threat analytics"
+    ]
+  },
+  "AID-D-009": {
+    "contentHash": "44716da5f41b6a4f",
+    "keywords": [
+      "cross-agent fact consensus checks",
+      "hallucination cascade detection",
+      "claim-level evidence verification",
+      "multi-agent contradiction analysis",
+      "fact quorum validation",
+      "source-backed answer reconciliation",
+      "inter-agent citation consistency",
+      "disputed fact escalation workflow",
+      "truth-maintenance graph updates",
+      "high-impact claim verification gate",
+      "agent handoff fact integrity",
+      "consensus confidence scoring",
+      "verified knowledge propagation control",
+      "hallucination incident forensics"
+    ]
+  },
+  "AID-D-010": {
+    "contentHash": "d31840ac43ed43cb",
+    "keywords": [
+      "goal integrity monitoring",
+      "goal deviation detection",
+      "objective drift detection",
+      "agent goal baselining",
+      "goal policy verification",
+      "goal state monitoring",
+      "intent deviation alerting",
+      "goal invariant check",
+      "mission drift detection",
+      "agent objective audit",
+      "goal reasoning trace analysis",
+      "goal misalignment detection",
+      "planning trajectory audit",
+      "goal consistency check"
+    ]
+  },
+  "AID-D-011": {
+    "contentHash": "3da46dcaaa95ad0f",
+    "keywords": [
+      "agent behavioral attestation",
+      "rogue agent detection",
+      "agent fingerprinting",
+      "agent baseline profiling",
+      "behavioral anomaly detection",
+      "agent attestation telemetry",
+      "rogue instance alerting",
+      "agent posture monitoring",
+      "runtime agent verification",
+      "agent identity attestation",
+      "agent behavior baselining",
+      "malicious agent detection",
+      "behavioral integrity check",
+      "agent trust scoring"
+    ]
+  },
+  "AID-D-011.001": {
+    "contentHash": "f7c626a34739aef5",
+    "keywords": [
+      "agent behavioral analytics",
+      "user behavior analytics for agents",
+      "agent anomaly detection",
+      "agent action baselining",
+      "action frequency monitoring",
+      "behavioral drift alerting",
+      "peer group analysis",
+      "agent uba",
+      "statistical behavior profiling",
+      "machine-learning behavior detection",
+      "action outlier detection",
+      "agent behavior clustering",
+      "behavior time-series monitoring",
+      "agent telemetry analytics"
+    ]
+  },
+  "AID-D-011.002": {
+    "contentHash": "adf45af2782b5af7",
+    "keywords": [
+      "inter-agent trust signal monitoring",
+      "consensus protocol health checks",
+      "agent-to-agent auth telemetry",
+      "delegation chain anomaly detection",
+      "cross-agent policy agreement checks",
+      "quorum failure alerting",
+      "message integrity verification",
+      "federated agent behavior correlation",
+      "rogue peer influence detection",
+      "consensus drift investigation",
+      "signed inter-agent event logs",
+      "distributed decision audit trails",
+      "trust-graph deviation alerts",
+      "coordination channel abuse detection"
+    ]
+  },
+  "AID-D-011.003": {
+    "contentHash": "0ea9ab012991c4b0",
+    "keywords": [
+      "agent population drift",
+      "rogue instance escalation",
+      "population baseline monitoring",
+      "agent fleet drift detection",
+      "fleet-wide behavioral drift",
+      "population anomaly scoring",
+      "outlier agent detection",
+      "escalation signal correlation",
+      "agent fleet baselining",
+      "rogue detection playbook",
+      "population-level telemetry",
+      "cohort drift analysis",
+      "fleet anomaly alerting",
+      "agent population analytics"
+    ]
+  },
+  "AID-D-012": {
+    "contentHash": "06d155590410db20",
+    "keywords": [
+      "graph anomaly detection",
+      "gnn backdoor detection",
+      "graph structure anomaly",
+      "topological anomaly detection",
+      "graph node anomaly scoring",
+      "subgraph anomaly detection",
+      "graph embedding outlier",
+      "gnn attack detection",
+      "backdoor trigger scanning",
+      "graph drift detection",
+      "node feature anomaly",
+      "edge anomaly detection",
+      "graph-based detection",
+      "gnn integrity monitoring"
+    ]
+  },
+  "AID-D-012.001": {
+    "contentHash": "36255b8f990ce0c5",
+    "keywords": [
+      "gnn backdoor trigger scanning",
+      "baselined embedding profile checks",
+      "graph trigger activation testing",
+      "node-level anomaly fingerprinting",
+      "backdoor signature regression suite",
+      "poisoned subgraph detection",
+      "graph model integrity benchmarking",
+      "trigger sensitivity heatmap analysis",
+      "clean-vs-trigger output comparison",
+      "gnn backdoor confidence scoring",
+      "baseline deviation alerting",
+      "adversarial subgraph replay tests",
+      "model backdoor triage workflow",
+      "graph threat hunting telemetry"
+    ]
+  },
+  "AID-D-012.002": {
+    "contentHash": "80da166ebd741fec",
+    "keywords": [
+      "structure-feature relationship analysis",
+      "gnn feature consistency check",
+      "node feature correlation audit",
+      "graph structure coherence check",
+      "feature-edge correlation analysis",
+      "gnn consistency monitoring",
+      "feature-structure drift",
+      "homophily analysis",
+      "graph smoothness monitoring",
+      "feature-topology mismatch detection",
+      "gnn coherence scoring",
+      "structure-feature anomaly",
+      "gnn input verification",
+      "feature graph alignment"
+    ]
+  },
+  "AID-D-012.003": {
+    "contentHash": "05e497fcd3dc11e1",
+    "keywords": [
+      "graph topology anomaly detection",
+      "structural outlier scoring",
+      "edge-pattern deviation analysis",
+      "community structure drift monitoring",
+      "degree-distribution integrity checks",
+      "spectral anomaly detection",
+      "subgraph rarity detection",
+      "temporal topology change alerts",
+      "graph connectivity risk metrics",
+      "topological baseline comparison",
+      "malicious linkage discovery",
+      "graph integrity forensic tracing",
+      "structure-aware incident triage",
+      "network mutation monitoring"
+    ]
+  },
+  "AID-D-013": {
+    "contentHash": "3cc3cd3c2dbf2ecc",
+    "keywords": [
+      "rl reward manipulation detection",
+      "reward hacking detection",
+      "policy manipulation alerting",
+      "reward curve anomaly detection",
+      "rl telemetry monitoring",
+      "policy drift detection",
+      "reward signal audit",
+      "reward shaping anomaly",
+      "reinforcement learning anomaly",
+      "reward distribution monitoring",
+      "policy gradient anomaly",
+      "exploitation behavior detection",
+      "reward tampering detection",
+      "rl baseline comparison"
+    ]
+  },
+  "AID-D-014": {
+    "contentHash": "0a2cf94197d86d24",
+    "keywords": [
+      "rag content monitoring",
+      "retrieval relevance monitoring",
+      "retrieved chunk scanning",
+      "rag hallucination detection",
+      "context freshness monitoring",
+      "rag source audit",
+      "retrieval quality monitoring",
+      "retrieval provenance audit",
+      "retrieved content classifier",
+      "rag pipeline telemetry",
+      "context injection detection",
+      "retrieved document scanning",
+      "rag anomaly detection",
+      "retrieval drift detection"
+    ]
+  },
+  "AID-D-014.001": {
+    "contentHash": "1a8aa183eddb7f2f",
+    "keywords": [
+      "post-retrieval content sanitization",
+      "rag chunk malware scanning",
+      "retrieved prompt injection detection",
+      "malicious snippet quarantine",
+      "retrieval-layer policy filtering",
+      "unsafe instruction pattern checks",
+      "context contamination alerts",
+      "retrieved-content risk scoring",
+      "vector result safety gating",
+      "source-linked threat triage",
+      "high-risk chunk redaction",
+      "retrieval output security monitoring",
+      "content trust-tier enforcement",
+      "rag response preflight scanning"
+    ]
+  },
+  "AID-D-014.002": {
+    "contentHash": "2693ff88abd1b5ca",
+    "keywords": [
+      "query-document semantic relevance",
+      "retrieval relevance anomaly",
+      "cosine similarity scoring",
+      "semantic anomaly detection",
+      "off-topic retrieval detection",
+      "relevance score monitoring",
+      "query document alignment",
+      "retrieval quality scoring",
+      "retrieval drift detection",
+      "query-chunk similarity audit",
+      "low-relevance chunk alerting",
+      "semantic mismatch detection",
+      "retrieval ranking anomaly",
+      "retrieved chunk anomaly"
+    ]
+  },
+  "AID-D-014.003": {
+    "contentHash": "e08e81581fd3e4d8",
+    "keywords": [
+      "source concentration monitoring",
+      "retrieval source diversity",
+      "single-source bias detection",
+      "source dominance alerting",
+      "retrieval source entropy",
+      "corpus diversity metric",
+      "source-level anomaly detection",
+      "retrieval source audit",
+      "document source baselining",
+      "source-skew alerting",
+      "rag source distribution monitoring",
+      "retrieval concentration metric",
+      "poisoned source concentration detection",
+      "source hit-rate monitoring"
+    ]
+  },
+  "AID-D-015": {
+    "contentHash": "591c4c4dd48f1f33",
+    "keywords": [
+      "user trust calibration",
+      "high-risk action confirmation",
+      "confirmation bypass detection",
+      "human-in-the-loop monitoring",
+      "trust metadata display",
+      "action risk scoring",
+      "approval telemetry",
+      "user confirmation audit",
+      "ui-level trust indicator",
+      "dangerous action gating",
+      "confirmation gate telemetry",
+      "trust signal exposure",
+      "consent bypass alerting",
+      "high-risk confirmation audit"
+    ]
+  },
+  "AID-D-015.001": {
+    "contentHash": "1b23c37ee660e0a9",
+    "keywords": [
+      "trust metadata exposure",
+      "provenance signal display",
+      "verification badge exposure",
+      "source attribution signal",
+      "trust indicator ui",
+      "content credentials display",
+      "c2pa provenance",
+      "confidence score exposure",
+      "verification signal monitoring",
+      "provenance audit telemetry",
+      "trust metadata logging",
+      "trust signal completeness",
+      "source verification indicator",
+      "provenance display verification"
+    ]
+  },
+  "AID-D-015.002": {
+    "contentHash": "a9ac05b2c534c5fa",
+    "keywords": [
+      "high-risk action telemetry",
+      "confirmation bypass detection",
+      "approval event logging",
+      "consent gate telemetry",
+      "bypass attempt alerting",
+      "confirmation flow audit",
+      "high-risk action audit trail",
+      "dangerous action logging",
+      "bypass rate monitoring",
+      "approval gate metrics",
+      "confirmation latency monitoring",
+      "bypass anomaly detection",
+      "approval audit trail",
+      "high-risk gate telemetry"
+    ]
+  },
+  "AID-D-016": {
+    "contentHash": "5412c9fba0d46863",
+    "keywords": [
+      "rogue agent discovery",
+      "reputation scoring",
+      "quarantine pipeline",
+      "agent discovery baselining",
+      "agent reputation telemetry",
+      "containment escalation",
+      "agent quarantine signal",
+      "unauthorized agent detection",
+      "agent allowlist drift",
+      "reputation-based gating",
+      "rogue agent escalation",
+      "agent registry audit",
+      "agent containment workflow",
+      "rogue detection pipeline"
+    ]
+  },
+  "AID-D-016.001": {
+    "contentHash": "30346ab6e929de6a",
+    "keywords": [
+      "agent graph baseline",
+      "new agent discovery",
+      "agent topology baselining",
+      "unknown agent detection",
+      "agent relationship graph",
+      "first-seen agent alerting",
+      "agent mesh baselining",
+      "agent inventory diff",
+      "agent graph drift",
+      "unauthorized agent identification",
+      "agent discovery telemetry",
+      "new-node alerting",
+      "agent topology audit",
+      "agent graph anomaly"
+    ]
+  },
+  "AID-D-016.002": {
+    "contentHash": "d8274eb3868c7da9",
+    "keywords": [
+      "reputation scoring",
+      "containment escalation signals",
+      "agent reputation telemetry",
+      "reputation-based quarantine",
+      "trust score decay",
+      "reputation anomaly alerting",
+      "escalation trigger correlation",
+      "quarantine automation signal",
+      "reputation baseline deviation",
+      "soar quarantine playbook",
+      "reputation drift detection",
+      "containment decision signals",
+      "agent trust score monitoring",
+      "reputation-based escalation"
+    ]
+  },
+  "AID-I-001": {
+    "contentHash": "b8134db1b5c55ac6",
+    "keywords": [
+      "ai execution sandboxing",
+      "runtime isolation",
+      "sandbox execution",
+      "microvm isolation",
+      "container isolation",
+      "blast radius containment",
+      "resource limits",
+      "escape prevention",
+      "agent sandboxing",
+      "tool sandboxing",
+      "least-privilege runtime",
+      "hardened runtime",
+      "workload confinement",
+      "host protection",
+      "sandbox"
+    ]
+  },
+  "AID-I-001.001": {
+    "contentHash": "3046773941e0120f",
+    "keywords": [
+      "container isolation",
+      "kubernetes security context",
+      "pod security policy",
+      "network policy",
+      "runasnonroot",
+      "resource quota",
+      "read-only filesystem",
+      "hardened container image",
+      "namespace isolation",
+      "cni network policy",
+      "container hardening",
+      "docker",
+      "calico",
+      "cilium",
+      "least-privilege container"
+    ]
+  },
+  "AID-I-001.002": {
+    "contentHash": "237bf4b690b56fe5",
+    "keywords": [
+      "microvm isolation",
+      "firecracker vm",
+      "kata containers",
+      "gvisor sandbox",
+      "seccomp profile",
+      "seccomp-bpf",
+      "webassembly sandbox",
+      "wasm runtime",
+      "userspace kernel",
+      "hardware virtualization",
+      "kernel-level sandbox",
+      "kvm isolation",
+      "ebpf enforcement",
+      "strong isolation boundary"
+    ]
+  },
+  "AID-I-001.003": {
+    "contentHash": "c2fee20754a8236a",
+    "keywords": [
+      "ephemeral sandbox",
+      "single-use sandbox",
+      "per-invocation microvm",
+      "sandbox teardown",
+      "fresh sandbox per tool",
+      "ephemeral execution",
+      "destroy on completion",
+      "cross-session contamination prevention",
+      "persistence prevention",
+      "disposable runtime",
+      "tool invocation isolation",
+      "gvisor ephemeral",
+      "firecracker teardown",
+      "no state reuse"
+    ]
+  },
+  "AID-I-001.004": {
+    "contentHash": "56525feaf860cbb5",
+    "keywords": [
+      "sandbox egress restriction",
+      "default-deny egress",
+      "egress allowlist",
+      "outbound network policy",
+      "exfiltration prevention",
+      "callback blocking",
+      "network policy egress",
+      "cilium egress",
+      "calico egress",
+      "dns allowlist",
+      "narrow egress allowlist",
+      "sandbox network isolation",
+      "kubernetes networkpolicy",
+      "c2 containment"
+    ]
+  },
+  "AID-I-001.005": {
+    "contentHash": "e73ae08d79d5cf59",
+    "keywords": [
+      "pre-execution behavioral analysis",
+      "malware detonation sandbox",
+      "behavioral security policy",
+      "microvm detonation",
+      "ai-generated code vetting",
+      "ci/cd admission control",
+      "signed analysis report",
+      "sandbox evasion detection",
+      "artifact detonation",
+      "pre-deployment sandbox",
+      "ephemeral analysis environment",
+      "behavior profiling",
+      "anti-analysis detection",
+      "executable vetting"
+    ]
+  },
+  "AID-I-002": {
+    "contentHash": "4602363f3d0a9a0f",
+    "keywords": [
+      "network segmentation",
+      "micro-segmentation",
+      "zero trust segmentation",
+      "private endpoint",
+      "egress control",
+      "firewall policy",
+      "mtls egress",
+      "maas api isolation",
+      "ssrf prevention",
+      "least-privilege network",
+      "lateral movement prevention",
+      "api gateway mediation",
+      "transport layer security",
+      "dns allowlist",
+      "blast radius reduction"
+    ]
+  },
+  "AID-I-002.001": {
+    "contentHash": "bf00f207f138b8d3",
+    "keywords": [
+      "internal network segmentation",
+      "microsegmentation",
+      "vpc isolation",
+      "vlan segmentation",
+      "agent backend isolation",
+      "service mesh policy",
+      "istio authorization",
+      "east-west firewall",
+      "host-based firewall",
+      "training production separation",
+      "internal lateral movement prevention",
+      "namespace isolation",
+      "network policy",
+      "dev prod segregation"
+    ]
+  },
+  "AID-I-002.002": {
+    "contentHash": "e05e6c704dd1f9a1",
+    "keywords": [
+      "secure external connectivity",
+      "private link",
+      "mtls egress",
+      "certificate pinning",
+      "api gateway mediation",
+      "egress proxy",
+      "dns sni allowlist",
+      "sanctioned upstream allowlist",
+      "external api allowlist",
+      "maas api isolation",
+      "ssrf prevention",
+      "mitm prevention",
+      "governed egress path",
+      "private service connect",
+      "forward proxy"
+    ]
+  },
+  "AID-I-003": {
+    "contentHash": "2d7629b1687bc313",
+    "keywords": [
+      "quarantine",
+      "rate limiting",
+      "throttling",
+      "circuit breaker",
+      "safe mode degradation",
+      "soar click-to-quarantine",
+      "dynamic rate limiting",
+      "session quarantine",
+      "api key quarantine",
+      "budget-triggered throttling",
+      "token ceiling",
+      "tool-call ceiling",
+      "hallucination circuit breaker",
+      "soft throttling",
+      "hard containment"
+    ]
+  },
+  "AID-I-004": {
+    "contentHash": "5f07e46c60af202c",
+    "keywords": [
+      "agent memory isolation",
+      "state isolation",
+      "runtime context hygiene",
+      "persistent memory partitioning",
+      "cryptographic memory integrity",
+      "promotion gate",
+      "cross-session contamination prevention",
+      "cross-tenant isolation",
+      "rag memory isolation",
+      "memory poisoning containment",
+      "vector store partitioning",
+      "context bleed prevention",
+      "trust-tiered memory",
+      "memory lifecycle control"
+    ]
+  },
+  "AID-I-004.001": {
+    "contentHash": "f91e40284085fc92",
+    "keywords": [
+      "runtime context isolation",
+      "per-session ttl",
+      "context window limits",
+      "context size ceiling",
+      "session boundary enforcement",
+      "fail-closed serialization",
+      "context reset",
+      "instruction re-injection",
+      "context pinning",
+      "volatile memory hygiene",
+      "cross-tenant bleed prevention",
+      "redis ttl",
+      "per-session key scoping",
+      "token ceiling"
+    ]
+  },
+  "AID-I-004.002": {
+    "contentHash": "ee0bdf2fde8b78ae",
+    "keywords": [
+      "persistent memory partitioning",
+      "tenant isolation",
+      "vector db namespaces",
+      "collection partitioning",
+      "trust tier partitioning",
+      "rag multi-tenancy",
+      "retrieval authorization",
+      "policy-gated retrieval",
+      "entitlement service",
+      "opa rego policy",
+      "qdrant tenancy",
+      "pinecone namespace",
+      "weaviate multi-tenancy",
+      "cross-tenant prevention"
+    ]
+  },
+  "AID-I-004.003": {
+    "contentHash": "289ab1283ae865d3",
+    "keywords": [
+      "cryptographic memory integrity",
+      "signed write verify read",
+      "content-hash signing",
+      "detached signature",
+      "integrity-first loader",
+      "fail-closed verification",
+      "constant-time signature verify",
+      "memory provenance",
+      "workload identity signing",
+      "sigstore cosign",
+      "kms signing",
+      "hmac verification",
+      "signed memory record",
+      "tamper detection"
+    ]
+  },
+  "AID-I-004.004": {
+    "contentHash": "bfa3e2b2a4ffa744",
+    "keywords": [
+      "transactional promotion gate",
+      "quarantine-to-trusted workflow",
+      "memory write-gate",
+      "atomic promotion",
+      "trust-tiered write",
+      "human review gate",
+      "re-sign on promotion",
+      "state machine transition",
+      "quarantined memory",
+      "approval workflow",
+      "fail-closed promotion",
+      "opa approval policy",
+      "trusted probation quarantined",
+      "auditable promotion"
+    ]
+  },
+  "AID-I-004.005": {
+    "contentHash": "45206f8194804e0f",
+    "keywords": [
+      "memory ttl",
+      "staleness decay",
+      "forced forgetting",
+      "trust decay",
+      "freshness metadata",
+      "re-validation gate",
+      "retention window",
+      "memory lifecycle management",
+      "downgrade policy",
+      "derived artifact propagation",
+      "embedding deletion",
+      "scheduled decay",
+      "privacy-driven forgetting",
+      "stale memory quarantine"
+    ]
+  },
+  "AID-I-004.006": {
+    "contentHash": "fbe63c1b14ec866f",
+    "keywords": [
+      "agent identity file protection",
+      "persistent state write protection",
+      "os-level immutability",
+      "controlled writer gate",
+      "baseline integrity verification",
+      "file integrity monitoring",
+      "diff check",
+      "rollback to known-good",
+      "tamper audit",
+      "default-deny writes",
+      "aide tripwire",
+      "read-only filesystem enforcement",
+      "identity file versioning",
+      "skill persistence prevention"
+    ]
+  },
+  "AID-I-004.007": {
+    "contentHash": "0fa947a5a0fc0f2a",
+    "keywords": [
+      "task-bounded context segmentation",
+      "secret demotion",
+      "phase-based context pruning",
+      "opaque handle injection",
+      "context lane separation",
+      "intra-session hygiene",
+      "credential demotion",
+      "system prompt demotion",
+      "short-lived scoped handle",
+      "redacted summary",
+      "cross-phase bleed prevention",
+      "per-phase segmentation",
+      "presidio redaction",
+      "opa demotion policy"
+    ]
+  },
+  "AID-I-005": {
+    "contentHash": "d6c0cfbecf11ddab",
+    "keywords": [
+      "kill-switch",
+      "emergency halt",
+      "ai system halt",
+      "circuit breaker",
+      "watchdog thread",
+      "mfa-protected override",
+      "manual override",
+      "automated safety monitor",
+      "fail-closed halt flag",
+      "tenant halt flag",
+      "red button",
+      "rogue agent termination",
+      "cold start procedure",
+      "kill-switch sop",
+      "last-resort containment"
+    ]
+  },
+  "AID-I-006": {
+    "contentHash": "efa78f2f04eccccc",
+    "keywords": [
+      "malicious participant isolation",
+      "federated unlearning",
+      "federated learning defense",
+      "client reputation score",
+      "update clustering",
+      "byzantine client exclusion",
+      "signed client update",
+      "cryptographic attestation",
+      "real-time update filtering",
+      "fl blocklist",
+      "poisoned participant exclusion",
+      "retraining exclusion",
+      "krum aggregation",
+      "client blocklist enforcement"
+    ]
+  },
+  "AID-I-007": {
+    "contentHash": "c98bf3e9c40ed7da",
+    "keywords": [
+      "client-side sandboxing",
+      "web worker isolation",
+      "sandboxed iframe",
+      "content security policy",
+      "csp enforcement",
+      "webassembly sandbox",
+      "native bridge allowlist",
+      "browser sandbox",
+      "on-device model isolation",
+      "capabilities-based sandbox",
+      "postmessage ipc",
+      "mobile app sandbox",
+      "electron isolation",
+      "dom state isolation"
+    ]
+  },
+  "AID-DV-001": {
+    "contentHash": "76fea3c58343675e",
+    "keywords": [
+      "honeypot ai service",
+      "decoy model",
+      "decoy api endpoint",
+      "fake llm api",
+      "imitation agent service",
+      "deception technology",
+      "attacker ttp capture",
+      "honeypot isolation",
+      "forensic retention",
+      "threat intelligence collection",
+      "deception routing",
+      "honeypot telemetry",
+      "siem integration",
+      "tarpit",
+      "scripted fake compliance"
+    ]
+  },
+  "AID-DV-002": {
+    "contentHash": "740b2bb14978cb75",
+    "keywords": [
+      "canary credential placement",
+      "decoy dataset seeding",
+      "honey document instrumentation",
+      "deceptive artifact tracking",
+      "token-trigger alert pipeline",
+      "attacker interaction telemetry",
+      "decoy namespace isolation",
+      "honey asset registry governance",
+      "canary hit incident escalation",
+      "deception signal enrichment",
+      "fake secret lifecycle management",
+      "decoy provenance labeling",
+      "threat actor behavior observation",
+      "deception program effectiveness metrics"
+    ]
+  },
+  "AID-DV-003": {
+    "contentHash": "8326f50c2866370f",
+    "keywords": [
+      "deceptive response orchestration",
+      "adaptive decoy reply generation",
+      "attacker uncertainty injection",
+      "malicious session response shaping",
+      "safe-noop action emulation",
+      "deception branch decisioning",
+      "high-confidence threat diversion",
+      "response deception telemetry",
+      "controlled misinformation delivery",
+      "adversary dwell-time inflation",
+      "deception policy guardrails",
+      "incident-linked deception logging",
+      "interactive trap response flows",
+      "defender-visible deception markers"
+    ]
+  },
+  "AID-DV-004": {
+    "contentHash": "4a037dac98c48762",
+    "keywords": [
+      "ai output watermark embedding",
+      "watermark detector registry",
+      "modality-specific watermark verification",
+      "telemetry trap prompt markers",
+      "leak attribution fingerprinting",
+      "synthetic media provenance tagging",
+      "watermark survivability testing",
+      "external marker scanning",
+      "artifact leak forensics",
+      "watermark confidence scoring",
+      "response marker governance",
+      "detector version control",
+      "competitor model leakage triage",
+      "watermark evidence retention"
+    ]
+  },
+  "AID-DV-005": {
+    "contentHash": "f6ab8c7174b739e4",
+    "keywords": [
+      "canary task",
+      "decoy agent goal",
+      "decoy tool",
+      "canary subagent",
+      "shadow goal",
+      "watcher agent persona",
+      "decoy privileged capability",
+      "agent deception trap",
+      "canary tool invocation alert",
+      "memory poisoning canary",
+      "compromised agent detection",
+      "benign audit prompt",
+      "agent honeypot",
+      "high-fidelity canary alert",
+      "rogue agent trap"
+    ]
+  },
+  "AID-DV-006": {
+    "contentHash": "345eb91a7f6f9166",
+    "keywords": [
+      "deceptive banner hardening",
+      "honeypot system fingerprinting",
+      "controlled misinformation surfaces",
+      "attacker reconnaissance misdirection",
+      "decoy configuration exposure",
+      "fake topology disclosure controls",
+      "deception-safe logging",
+      "misleading metadata deployment",
+      "threat intel collection via deception",
+      "recon activity trap signals",
+      "decoy service presentation policy",
+      "deception consistency governance",
+      "false-surface risk isolation",
+      "recon-driven alert correlation"
+    ]
+  },
+  "AID-DV-008": {
+    "contentHash": "1d7f8f3e683755e2",
+    "keywords": [
+      "poisoning detection canary",
+      "sentinel data point",
+      "training data canary",
+      "gradient trap canary",
+      "canary loss spike alert",
+      "provenance canary",
+      "backdoor trigger detection",
+      "synthetic training sentinel",
+      "data theft tracer",
+      "clean-label poisoning canary",
+      "label flip detector",
+      "training set watermarking",
+      "unauthorized training data detection",
+      "fictional fact canary",
+      "dataset integrity canary"
+    ]
+  },
+  "AID-E-001": {
+    "contentHash": "f961820955472782",
+    "keywords": [
+      "credential revocation",
+      "credential rotation",
+      "token revocation",
+      "api key rotation",
+      "secret rotation",
+      "access revocation",
+      "compromised credential invalidation",
+      "password reset enforcement",
+      "service account rotation",
+      "certificate revocation",
+      "session revocation",
+      "stolen credential eviction",
+      "unauthorized access cutoff",
+      "post-compromise credential cleanup"
+    ]
+  },
+  "AID-E-001.001": {
+    "contentHash": "0a004d8844b68e5e",
+    "keywords": [
+      "foundational credential management",
+      "secret rotation",
+      "forced password reset",
+      "unauthorized account removal",
+      "service account credential rotation",
+      "database credential rotation",
+      "rapid secret rotation",
+      "credential lifecycle hygiene",
+      "pam rotation workflow",
+      "api key cleanup",
+      "vault-driven secret rotation",
+      "reactive credential reset",
+      "rogue account eviction",
+      "privileged access revocation"
+    ]
+  },
+  "AID-E-001.002": {
+    "contentHash": "e37d2251d725cb32",
+    "keywords": [
+      "automated credential invalidation",
+      "real-time token revocation",
+      "soar-driven credential eviction",
+      "jwt revocation propagation",
+      "stateless token invalidation",
+      "automated session termination",
+      "alert-triggered disablement",
+      "revocation list propagation",
+      "immediate token burn-down",
+      "edr automated response",
+      "api gateway token blocklist",
+      "automated access cutoff",
+      "session termination automation",
+      "active breach session kill"
+    ]
+  },
+  "AID-E-001.003": {
+    "contentHash": "0fe0d530a207f48b",
+    "keywords": [
+      "workload identity revocation",
+      "agent identity eviction",
+      "svid revocation",
+      "mtls certificate rotation",
+      "short-lived certificate expiry",
+      "iam role rotation",
+      "workload identity burn",
+      "agent credential burn-down",
+      "spiffe identity revocation",
+      "service mesh identity eviction",
+      "compromised agent eviction",
+      "cloud workload credential rotation",
+      "ephemeral identity revocation",
+      "trust domain eviction"
+    ]
+  },
+  "AID-E-002": {
+    "contentHash": "bfc1767d4488ecea",
+    "keywords": [
+      "process eviction",
+      "session eviction",
+      "compromised session termination",
+      "malicious process kill",
+      "pod quarantine and delete",
+      "forced container termination",
+      "agent runtime termination",
+      "hijacked session invalidation",
+      "inference process eviction",
+      "runtime foothold removal",
+      "workload eviction",
+      "memory and cache purge",
+      "kubernetes pod eviction",
+      "tamper-resistant eviction audit"
+    ]
+  },
+  "AID-E-003": {
+    "contentHash": "4f7f5edc2ae8f428",
+    "keywords": [
+      "malicious artifact removal",
+      "backdoor removal",
+      "poisoned data cleansing",
+      "trojan model eviction",
+      "compromised model eviction",
+      "rag poison cleanup",
+      "post-compromise artifact cleanup",
+      "persistence artifact removal",
+      "eradication phase",
+      "tainted artifact quarantine",
+      "supply chain artifact removal",
+      "memory poisoning cleanup",
+      "configuration tampering cleanup",
+      "threat eviction"
+    ]
+  },
+  "AID-E-003.001": {
+    "contentHash": "220d8d2d6406850d",
+    "keywords": [
+      "neural cleanse",
+      "backdoor trigger reverse engineering",
+      "activation clustering removal",
+      "fine-pruning defense",
+      "trojan neuron removal",
+      "clean-data remediation fine-tuning",
+      "differential model testing",
+      "backdoored weight neutralization",
+      "neural network backdoor eviction",
+      "trigger pattern removal",
+      "poisoned neuron pruning",
+      "golden baseline comparison",
+      "model integrity restoration",
+      "backdoor class detection"
+    ]
+  },
+  "AID-E-003.002": {
+    "contentHash": "229ef0f8d384f0f6",
+    "keywords": [
+      "poisoned sample detection",
+      "dataset contamination triage",
+      "data cleansing pipeline",
+      "label-noise remediation",
+      "outlier quarantine workflow",
+      "poison pattern clustering",
+      "suspect data lineage tracing",
+      "clean retraining set curation",
+      "poison source attribution",
+      "sanitized dataset rebuild",
+      "integrity revalidation checks",
+      "data purge evidence logging",
+      "post-cleanse regression testing",
+      "poison incident recovery playbook"
+    ]
+  },
+  "AID-E-003.003": {
+    "contentHash": "557f37cd99d65f54",
+    "keywords": [
+      "malicious code cleanup",
+      "file integrity monitoring",
+      "web shell removal",
+      "reverse shell cleanup",
+      "cron persistence eviction",
+      "unauthorized scheduled task removal",
+      "malicious loader removal",
+      "configuration reconciliation",
+      "yara-based artifact removal",
+      "tampered binary removal",
+      "persistence mechanism eviction",
+      "gitops drift remediation",
+      "unauthorized plugin removal",
+      "post-compromise cleanup"
+    ]
+  },
+  "AID-E-003.004": {
+    "contentHash": "925217eb42509497",
+    "keywords": [
+      "malicious node eviction",
+      "graph node removal",
+      "edge isolation",
+      "poisoned graph cleansing",
+      "gnn retraining pipeline",
+      "detect evict retrain loop",
+      "trigger node removal",
+      "graph dataset sanitization",
+      "backdoor node pruning",
+      "graph poisoning eviction",
+      "node-level poison eviction",
+      "cleansed graph revalidation",
+      "adversarial node removal",
+      "mlops eviction loop"
+    ]
+  },
+  "AID-E-004": {
+    "contentHash": "b005f10919ff494a",
+    "keywords": [
+      "post-eviction hardening",
+      "emergency patching",
+      "tactical cve patching",
+      "exploited path closure",
+      "configuration hardening",
+      "iam policy tightening",
+      "blast radius reduction",
+      "disable vulnerable services",
+      "ioc codification",
+      "detection rule uplift",
+      "security regression testing",
+      "post-incident hardening",
+      "exploit vector closure",
+      "incident response patching",
+      "tool capability lockdown"
+    ]
+  },
+  "AID-E-005": {
+    "contentHash": "4f3a581a895c0c04",
+    "keywords": [
+      "compromised session termination",
+      "state purging",
+      "global token invalidation",
+      "signing key rotation",
+      "tainted memory purge",
+      "conversational memory eviction",
+      "unauthorized webhook removal",
+      "tool registration cleanup",
+      "queued job cancellation",
+      "background worker eviction",
+      "respawn path removal",
+      "application foothold teardown",
+      "mass session invalidation",
+      "agent state eviction",
+      "cookie mass revocation"
+    ]
+  },
+  "AID-R-001": {
+    "contentHash": "6306ba69430c6cb9",
+    "keywords": [
+      "secure model restoration",
+      "post-incident retraining",
+      "model rollback",
+      "last known good",
+      "verified backup restore",
+      "clean-slate retraining",
+      "trusted model recovery",
+      "backdoor removal",
+      "poisoning remediation",
+      "known-good state",
+      "secure retraining",
+      "model integrity recovery",
+      "incident-driven retraining",
+      "pre-incident snapshot",
+      "model state recovery"
+    ]
+  },
+  "AID-R-001.001": {
+    "contentHash": "94672c2efc41e767",
+    "keywords": [
+      "versioned model rollback",
+      "mlflow registry restore",
+      "model version restore",
+      "audited rollback procedure",
+      "last known good model",
+      "immutable model backup",
+      "sha-256 verification",
+      "signed model attestation",
+      "artifact verification",
+      "model registry",
+      "dvc rollback",
+      "rollback runbook",
+      "blue-green rollback",
+      "verified redeploy",
+      "serving stack restore"
+    ]
+  },
+  "AID-R-001.002": {
+    "contentHash": "dd3f98bd80e2a4d9",
+    "keywords": [
+      "remediation retraining",
+      "clean-slate retraining",
+      "sanitized training data",
+      "recovery training job",
+      "approximate unlearning",
+      "federated unlearning",
+      "post-remediation validation",
+      "poisoned sample removal",
+      "isolated retraining pipeline",
+      "fresh retraining workflow",
+      "backdoor elimination",
+      "training artifact purge",
+      "kubeflow recovery pipeline",
+      "clean-label poisoning remediation",
+      "safety validation suite"
+    ]
+  },
+  "AID-R-002": {
+    "contentHash": "9399d381a59614a4",
+    "keywords": [
+      "data integrity recovery",
+      "dataset rollback",
+      "point-in-time recovery",
+      "golden dataset restore",
+      "snapshot restoration",
+      "vector store recovery",
+      "embedding store rollback",
+      "rag dataset recovery",
+      "data reconstruction",
+      "schema revalidation",
+      "great expectations validation",
+      "pre-incident snapshot",
+      "knowledge base restore",
+      "training data recovery",
+      "ingestion pipeline hardening"
+    ]
+  },
+  "AID-R-003": {
+    "contentHash": "02b897c4b1a062c8",
+    "keywords": [
+      "session re-establishment",
+      "step-up authentication",
+      "forced reauthentication",
+      "mfa enforcement",
+      "fresh token issuance",
+      "clean conversational context",
+      "trusted context restore",
+      "progressive capability re-enablement",
+      "hardened tls restore",
+      "credential invalidation",
+      "post-eviction re-onboarding",
+      "session boundary restoration",
+      "agent identity recovery",
+      "elevated monitoring",
+      "verified session rebuild"
+    ]
+  },
+  "AID-R-004": {
+    "contentHash": "2f5926909835ce39",
+    "keywords": [
+      "post-incident hardening",
+      "post-incident review",
+      "root cause analysis",
+      "regression validation",
+      "policy-as-code update",
+      "iac baseline enforcement",
+      "ci/cd policy gates",
+      "institutionalized mitigation",
+      "threat model update",
+      "breach and attack simulation",
+      "ttp replay",
+      "evidence bundle",
+      "lessons learned codification",
+      "misp sharing",
+      "acceptance test enforcement"
+    ]
+  },
+  "AID-R-005": {
+    "contentHash": "89a211c427089f0a",
+    "keywords": [
+      "vector index rollback",
+      "rag index recovery",
+      "immutable index version",
+      "atomic index cutover",
+      "alias-based rollback",
+      "chunk quarantine",
+      "forensic preservation",
+      "clean index rebuild",
+      "provenance scanning",
+      "approval-gated promotion",
+      "retrieval risk threshold",
+      "signed manifest verification",
+      "rapid rag recovery",
+      "worm forensic storage",
+      "poisoned embedding removal"
+    ]
+  },
+  "AID-M-010.001": {
+    "contentHash": "e598d21fd3efbaea",
+    "keywords": [
+      "cryptographic erasure",
+      "crypto-shredding",
+      "media sanitization",
+      "key destruction",
+      "nist 800-88 wiping",
+      "luks key destruction",
+      "secure data wiping",
+      "hsm key destruction",
+      "nwipe shred utilities",
+      "cryptsetup erasure",
+      "physical media destruction",
+      "blancco sanitization",
+      "verified erasure",
+      "decommission sanitization"
+    ]
+  },
+  "AID-M-010.002": {
+    "contentHash": "56eb722d272ead72",
+    "keywords": [
+      "secure asset transfer protocol",
+      "ownership handoff governance",
+      "cryptographic custody transfer",
+      "transfer attestation records",
+      "recipient trust validation",
+      "asset lineage continuity",
+      "signed transfer manifests",
+      "access revocation on transfer",
+      "post-transfer integrity checks",
+      "cross-tenant asset migration security",
+      "handoff approval workflow",
+      "transfer audit evidence",
+      "key rotation during ownership change",
+      "decommissioning source access"
+    ]
+  },
+  "AID-M-010": {
+    "contentHash": "e6199f80be017720",
+    "keywords": [
+      "asset retirement governance",
+      "end-of-life procedures",
+      "decommissioning workflow",
+      "chain-of-custody transfer",
+      "dual-custody elimination",
+      "lifecycle closure evidence",
+      "retired asset unreachability",
+      "asset disposal policy",
+      "retention boundary enforcement",
+      "retirement verification",
+      "transfer governance",
+      "post-retirement audit",
+      "asset eol attestation",
+      "disposal chain of custody"
+    ]
+  },
+  "AID-H-002.007": {
+    "contentHash": "8f57e2a383e44de0",
+    "keywords": [
+      "c2pa verification",
+      "content credentials",
+      "provenance attestation",
+      "inbound provenance checks",
+      "signed media manifest",
+      "rag media validation",
+      "ocr provenance preservation",
+      "content authenticity",
+      "publisher attestation",
+      "step-up review",
+      "external media verification",
+      "provenance verdict",
+      "c2patool",
+      "cryptographic media provenance"
+    ]
+  },
+  "AID-H-005.005": {
+    "contentHash": "a2bac191d8ea38b6",
+    "keywords": [
+      "label smoothing",
+      "confidence smoothing",
+      "training-time regularization",
+      "gaussian input noise",
+      "memorization reduction",
+      "over-confidence mitigation",
+      "inversion resistance",
+      "membership inference hardening",
+      "calibrated training noise",
+      "regularized cross-entropy",
+      "soft labels",
+      "lightweight privacy regularization",
+      "model calibration",
+      "record-level inference defense"
+    ]
+  },
+  "AID-H-034.001": {
+    "contentHash": "f82828552b94c235",
+    "keywords": [
+      "requested vs effective model binding",
+      "route decision record",
+      "structured binding audit",
+      "route substitution logging",
+      "alias expansion audit",
+      "provider translation audit",
+      "policy version tagging",
+      "litellm routing audit",
+      "envoy gateway logging",
+      "portkey audit",
+      "cloudflare ai gateway",
+      "route evidence retention",
+      "gateway-side telemetry",
+      "routing decision trace"
+    ]
+  },
+  "AID-H-034.002": {
+    "contentHash": "34bee6521db67a32",
+    "keywords": [
+      "policy-preserving failover",
+      "no silent safety downgrade",
+      "failover eligibility matrix",
+      "substitutability policy",
+      "fallback safety envelope",
+      "moderation constraint preservation",
+      "tool-use constraint preservation",
+      "approval envelope preservation",
+      "retention envelope matching",
+      "opa failover policy",
+      "cedar routing policy",
+      "compliance-preserving fallback",
+      "policy-layer substitution",
+      "capability parity check"
+    ]
+  },
+  "AID-H-034.003": {
+    "contentHash": "c6e96828333954b1",
+    "keywords": [
+      "residency-constrained routing",
+      "data zone routing",
+      "sovereignty enforcement",
+      "retention-aware endpoint selection",
+      "training-use tag routing",
+      "geographic eligibility gating",
+      "residency compatibility check",
+      "region-bound routing",
+      "legal jurisdiction routing",
+      "data zone labeling",
+      "routing-time endpoint selection",
+      "compliance routing gate",
+      "data handling policy binding",
+      "regional endpoint allowlist"
+    ]
+  },
+  "AID-H-034.004": {
+    "contentHash": "55ab6616da3bc425",
+    "keywords": [
+      "route policy bundle versioning",
+      "policy bundle approval",
+      "canary route rollout",
+      "route bundle rollback",
+      "signed route policy",
+      "staged routing rollout",
+      "policy-as-code routing",
+      "route bundle review",
+      "argo rollouts",
+      "launchdarkly canary",
+      "approved model subset versioning",
+      "fallback graph governance",
+      "route bundle ci/cd",
+      "immutable route artifact"
+    ]
+  },
+  "AID-H-034": {
+    "contentHash": "6b03785e71b25958",
+    "keywords": [
+      "ai gateway routing integrity",
+      "policy-preserving failover",
+      "model router control plane",
+      "requested vs effective binding",
+      "approved model allowlist",
+      "residency-constrained routing",
+      "route policy bundle",
+      "silent downgrade prevention",
+      "model binding record",
+      "provider allowlist enforcement",
+      "retention-aware routing",
+      "gateway security control",
+      "approved fallback path",
+      "route decision governance"
+    ]
+  },
+  "AID-D-001.007": {
+    "contentHash": "e87545f725f53c18",
+    "keywords": [
+      "prompt gate telemetry",
+      "verdict correlation",
+      "gate decision analytics",
+      "evasive probing detection",
+      "near-miss alerting",
+      "session correlation",
+      "cumulative risk scoring",
+      "siem integration",
+      "sliding-window correlation",
+      "kafka event ingestion",
+      "splunk correlation",
+      "identity-level correlation",
+      "gate event analytics",
+      "prompt gate siem"
+    ]
+  },
+  "AID-D-002.001": {
+    "contentHash": "cd70e0d7bce716a2",
+    "keywords": [
+      "input distribution drift",
+      "output distribution drift",
+      "feature drift monitoring",
+      "prediction drift monitoring",
+      "kl divergence",
+      "jensen-shannon divergence",
+      "chi-squared test",
+      "evidently ai",
+      "alibi detect",
+      "nannyml",
+      "reference baseline comparison",
+      "statistical distribution monitoring",
+      "live feature telemetry",
+      "psi drift metric"
+    ]
+  },
+  "AID-D-002.002": {
+    "contentHash": "05d462907d08e4dc",
+    "keywords": [
+      "labeled performance tracking",
+      "ground truth feedback loop",
+      "delayed label monitoring",
+      "live metric calculation",
+      "prediction label join",
+      "mlflow baseline tracking",
+      "f1 score monitoring",
+      "precision recall regression alerting",
+      "human adjudication feedback",
+      "quality regression detection",
+      "live accuracy monitoring",
+      "fraud confirmation feedback",
+      "model quality regression",
+      "validation baseline comparison"
+    ]
+  },
+  "AID-D-002.003": {
+    "contentHash": "b207e6f53b9081a3",
+    "keywords": [
+      "white-box telemetry",
+      "attention entropy analysis",
+      "transformer internal signals",
+      "attention concentration monitoring",
+      "entropy collapse detection",
+      "attention isolation detection",
+      "backdoor activation telemetry",
+      "logit anomaly detection",
+      "self-hosted model introspection",
+      "attention head monitoring",
+      "runtime tensor inspection",
+      "internal signal anomaly",
+      "attention pattern profiling",
+      "open-weight model telemetry"
+    ]
+  },
+  "AID-I-008.001": {
+    "contentHash": "b935594b1c475a87",
+    "keywords": [
+      "ephemeral browser context",
+      "per-task browser profile",
+      "browser context lifecycle management",
+      "storage partitioning by trust set",
+      "trust-set context routing",
+      "deterministic context teardown",
+      "residue verification test",
+      "playwright newcontext per task",
+      "cookie partitioning",
+      "localstorage isolation",
+      "indexeddb partitioning",
+      "trust boundary crossing audit",
+      "context pool per trust zone",
+      "task-id context binding",
+      "cross-task state leakage prevention"
+    ]
+  },
+  "AID-I-008.002": {
+    "contentHash": "e405fddb1529fcfc",
+    "keywords": [
+      "cross-origin read-write segmentation",
+      "step-up confirmation",
+      "playwright route interception",
+      "origin policy manifest",
+      "state-changing write suspension",
+      "normalized confirmation card",
+      "async approval broker",
+      "timeout default-deny",
+      "idempotent resume token",
+      "tamper-evident audit chain",
+      "opa rego policy for step-up",
+      "slack block kit approval channel",
+      "broker-agnostic suspension",
+      "envoy ext_authz integration",
+      "policy-as-code decision layer"
+    ]
+  },
+  "AID-I-008.003": {
+    "contentHash": "e8f00201c5d4d104",
+    "keywords": [
+      "download quarantine",
+      "clipboard approval broker",
+      "magic-link quarantine",
+      "quarantine-required state transition",
+      "clamav download scanning",
+      "yara ruleset scanning",
+      "auto-open prevention",
+      "task-scoped clipboard",
+      "cross-origin paste block",
+      "auth-link dedicated context",
+      "token-bearing url classification",
+      "clean-context file reopen",
+      "silent clipboard reuse block",
+      "download release after scan"
+    ]
+  },
+  "AID-I-008": {
+    "contentHash": "da611d8d48748b80",
+    "keywords": [
+      "task-scoped browser session",
+      "browser origin isolation",
+      "agent browser context management",
+      "ephemeral profile lifecycle",
+      "browser state surface partitioning",
+      "cross-origin segmentation",
+      "step-up confirmation for browser writes",
+      "download quarantine",
+      "clipboard broker",
+      "magic-link quarantine",
+      "session boundary enforcement",
+      "browsing residue prevention",
+      "trust-zone context routing",
+      "agentic browsing defense"
+    ]
+  },
+  "AID-I-004.008": {
+    "contentHash": "73466d20db387f50",
+    "keywords": [
+      "context compaction integrity",
+      "summary safety constraint retention",
+      "compaction poisoning defense",
+      "structured summary schema",
+      "post-compaction consistency check",
+      "safety invariant verification",
+      "secret leak prevention in summaries",
+      "pydantic compaction validator",
+      "presidio summary scan",
+      "truncation fallback on validation failure",
+      "compacted context provenance",
+      "context distillation control",
+      "literal true secret gate",
+      "cross-session secret carry-forward prevention",
+      "compaction invariant set registration"
+    ]
+  },
+  "AID-M-009.001": {
+    "contentHash": "b769c7345ea9276c",
+    "keywords": [
+      "operating scope definition",
+      "functional autonomy profile",
+      "mission boundary declaration",
+      "allowed behavior taxonomy",
+      "forbidden action catalog",
+      "approval-required action list",
+      "agent mission manifest",
+      "autonomy tier assignment",
+      "task scope constraint",
+      "tool permission baseline",
+      "side-effect action gating",
+      "customer support agent scope",
+      "parasuraman autonomy classification",
+      "ci autonomy profile lint"
+    ]
+  },
+  "AID-M-009.002": {
+    "contentHash": "a4b703b4fa877f9a",
+    "keywords": [
+      "authority envelope policy",
+      "action risk classification matrix",
+      "tool risk tiering",
+      "data sensitivity boundary",
+      "environment scope restriction",
+      "effect-based risk scoring",
+      "allow escalate deny decision",
+      "risk budget enforcement",
+      "high-impact action gating",
+      "outbound action approval",
+      "runtime policy evaluation",
+      "least privilege envelope",
+      "blast radius constraint",
+      "irreversibility risk factor"
+    ]
+  },
+  "AID-M-009.003": {
+    "contentHash": "02f26d8ea18c69df",
+    "keywords": [
+      "agent workload identity",
+      "delegation lineage tracking",
+      "signed delegation token",
+      "task-scoped credential issuance",
+      "short-lived credential rotation",
+      "agent owner sponsor binding",
+      "runtime authorization check",
+      "delegation chain verification",
+      "non-human identity governance",
+      "cryptographic request signing",
+      "agent session attestation",
+      "credential scope enforcement",
+      "spiffe spire workload identity",
+      "authority attenuation per hop"
+    ]
+  },
+  "AID-M-009.004": {
+    "contentHash": "6d67bb03953423e1",
+    "keywords": [
+      "runtime trust state model",
+      "automatic trust demotion",
+      "autonomy narrowing policy",
+      "read-only fallback mode",
+      "risk-triggered privilege reduction",
+      "behavioral anomaly demotion",
+      "dynamic action suppression",
+      "containment state transition",
+      "graduated response ladder",
+      "trust recovery criteria",
+      "incident-driven scope shrink",
+      "runtime safety override",
+      "clean-window evidence gate",
+      "trust state progression audit"
+    ]
+  },
+  "AID-M-009.005": {
+    "contentHash": "1bddf3c3a8ec7fa3",
+    "keywords": [
+      "goal manifest version control",
+      "signed manifest promotion",
+      "quorum approval workflow",
+      "immutable change provenance",
+      "mission change authorization",
+      "release digest attestation",
+      "rollback checkpoint registry",
+      "last known good rollback",
+      "two-person integrity control",
+      "change ticket linkage",
+      "manifest drift detection",
+      "safe mission reversion",
+      "cosign manifest signing",
+      "provenance event immutability"
+    ]
+  }
+}

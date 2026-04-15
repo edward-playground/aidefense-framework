@@ -212,23 +212,152 @@ export const isolateTactic = {
                     "implementationGuidance": [
                         {
                             "implementation": "Deploy AI models and services in hardened, minimal-footprint container images.",
-                            "howTo": "<h5>Concept:</h5><p>The attack surface of a container is directly related to the number of packages and libraries inside it. A multi-stage Docker build creates a small, final production image that contains only the essential application code and dependencies, omitting build tools, development libraries, and shell access, thereby reducing the attack surface.</p><h5>Implement a Multi-Stage Dockerfile</h5><p>The first stage (`build-env`) installs all dependencies. The final stage copies *only* the necessary application files from the build stage into a minimal base image like `python:3.10-slim`.</p><pre><code># File: Dockerfile\\n\\n# --- Build Stage ---\\n# Use a full-featured image for building dependencies\\nFROM python:3.10 as build-env\\nWORKDIR /app\\nCOPY requirements.txt .\\n# Install dependencies, including build tools\\nRUN pip install --no-cache-dir -r requirements.txt\\n\\n# --- Final Stage ---\\n# Use a minimal, hardened base image for production\\nFROM python:3.10-slim\\nWORKDIR /app\\n\\n# Create a non-root user for the application to run as\\nRUN useradd --create-home appuser\\nUSER appuser\\n\\n# Copy only the installed packages and application code from the build stage\\nCOPY --from=build-env /usr/local/lib/python3.10/site-packages/ /usr/local/lib/python3.10/site-packages/\\nCOPY --from=build-env /app/requirements.txt .\\nCOPY ./src ./src\\n\\n# Set the entrypoint\\nCMD [\\\"python\\\", \\\"./src/main.py\\\"]</code></pre><p><strong>Action:</strong> Use multi-stage builds for all AI service containers. The final image should be based on a minimal parent image (e.g., `-slim`, `distroless`) and should not contain build tools, compilers, or a shell unless absolutely necessary for the application's function.</p>"
+                            "howTo": `<h5>Concept:</h5><p>Container isolation only works if the runtime image is small, deterministic, and non-privileged. Build dependencies in one stage, copy only runtime artifacts into a minimal final stage, and run as a non-root user.</p><h5>Implement a hardened multi-stage image</h5><pre><code># File: Dockerfile
+FROM python:3.12-slim AS builder
+WORKDIR /build
+COPY requirements.txt .
+RUN pip install --no-cache-dir --prefix=/python -r requirements.txt
+
+FROM gcr.io/distroless/python3-debian12
+WORKDIR /app
+COPY --from=builder /python /usr/local
+COPY src/ /app/src/
+USER 65532:65532
+ENV PYTHONUNBUFFERED=1
+ENTRYPOINT ["python", "/app/src/main.py"]</code></pre><h5>Verification</h5><pre><code>docker build -t ai-inference:secure .
+docker run --rm ai-inference:secure id
+trivy image --severity HIGH,CRITICAL --exit-code 1 ai-inference:secure</code></pre><p><strong>Action:</strong> Enforce multi-stage builds and non-root runtime for every production AI image. Keep the Dockerfile, image digest, and vulnerability-scan result as implementation evidence.</p>`
                         },
                         {
                             "implementation": "Apply Kubernetes security contexts to restrict container privileges (e.g., runAsNonRoot).",
-                            "howTo": "<h5>Concept:</h5><p>A Kubernetes `securityContext` allows you to define granular privilege and access controls for your pods and containers. This is a critical mechanism for enforcing the principle of least privilege, ensuring that even if an attacker gains code execution within a container, they cannot perform privileged operations.</p><h5>Define a Restrictive Security Context</h5><p>In your Kubernetes Deployment or Pod manifest, apply a `securityContext` that drops all Linux capabilities, prevents privilege escalation, runs as a non-root user, and enables a read-only root filesystem.</p><pre><code># File: k8s/deployment.yaml\\napiVersion: apps/v1\\nkind: Deployment\\nmetadata:\\n  name: my-inference-server\\nspec:\\n  template:\\n    spec:\\n      # Pod-level security context\\n      securityContext:\\n        runAsNonRoot: true\\n        runAsUser: 1001\\n        runAsGroup: 1001\\n        fsGroup: 1001\\n      containers:\\n      - name: inference-api\\n        image: my-ml-app:latest\\n        # Container-level security context for fine-grained control\\n        securityContext:\\n          # Prevent the process from gaining more privileges than its parent\\n          allowPrivilegeEscalation: false\\n          # Drop all Linux capabilities, then add back only what is needed (if any)\\n          capabilities:\\n            drop:\\n            - \\\"ALL\\\"\\n          # Make the root filesystem immutable to prevent tampering\\n          readOnlyRootFilesystem: true\\n        volumeMounts:\\n          # Provide a writable temporary directory if the application needs it\\n          - name: tmp-storage\\n            mountPath: /tmp\\n      volumes:\\n        - name: tmp-storage\\n          emptyDir: {}</code></pre><p><strong>Action:</strong> Apply a `securityContext` to all production AI workloads in Kubernetes. At a minimum, set `runAsNonRoot: true`, `allowPrivilegeEscalation: false`, and `readOnlyRootFilesystem: true`.</p>"
+                            "howTo": `<h5>Concept:</h5><p>Kubernetes security context is your kernel-level blast-radius limiter. It should prevent privilege escalation, drop Linux capabilities, and keep filesystem writes constrained.</p><h5>Apply restrictive pod and container security context</h5><pre><code># File: k8s/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inference-api
+  namespace: ai-production
+spec:
+  template:
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 10001
+        runAsGroup: 10001
+        fsGroup: 10001
+      containers:
+      - name: api
+        image: registry.example.com/ai/inference-api:2026.04.14
+        securityContext:
+          allowPrivilegeEscalation: false
+          readOnlyRootFilesystem: true
+          capabilities:
+            drop: ["ALL"]
+        volumeMounts:
+        - name: tmp
+          mountPath: /tmp
+      volumes:
+      - name: tmp
+        emptyDir: {}</code></pre><h5>Verification</h5><pre><code>kubectl apply -f k8s/deployment.yaml
+kubectl exec -n ai-production deploy/inference-api -- id
+kubectl get pod -n ai-production -o jsonpath="{.items[0].spec.containers[0].securityContext}"</code></pre><p><strong>Action:</strong> Make this security context baseline mandatory for AI workloads and block deployments that omit it in admission policy.</p>`
                         },
                         {
                             "implementation": "Use network policies to enforce least-privilege communication between AI pods.",
-                            "howTo": "<h5>Concept:</h5><p>By default, all pods in a Kubernetes cluster can communicate with each other. A `NetworkPolicy` acts as a firewall for your pods, allowing you to define explicit rules about which pods can connect to which other pods. A 'default-deny' posture is a core principle of Zero Trust networking.</p><h5>Step 1: Implement a Default-Deny Ingress Policy</h5><p>First, apply a policy that selects all pods in a namespace and denies all incoming (ingress) traffic. This creates a secure baseline.</p><pre><code># File: k8s/policies/default-deny.yaml\\napiVersion: networking.k8s.io/v1\\nkind: NetworkPolicy\\nmetadata:\\n  name: default-deny-all-ingress\\n  namespace: ai-production\\nspec:\\n  podSelector: {}\\n  policyTypes:\\n  - Ingress</code></pre><h5>Step 2: Create Explicit Allow Rules</h5><p>Now, create specific policies to allow only the required traffic. This example allows pods with the label `app: api-gateway` to connect to pods with the label `app: inference-server` on port 8080.</p><pre><code># File: k8s/policies/allow-gateway-to-inference.yaml\\napiVersion: networking.k8s.io/v1\\nkind: NetworkPolicy\\nmetadata:\\n  name: allow-gateway-to-inference\\n  namespace: ai-production\\nspec:\\n  podSelector:\\n    matchLabels:\\n      app: inference-server # This is the destination\\n  policyTypes:\\n  - Ingress\\n  ingress:\\n  - from:\\n    - podSelector:\\n        matchLabels:\\n          app: api-gateway # This is the allowed source\\n    ports:\\n    - protocol: TCP\\n      port: 8080</code></pre><p><strong>Action:</strong> In your Kubernetes namespaces, deploy a `default-deny-all-ingress` policy. Then, for each service, add a specific `NetworkPolicy` that only allows ingress from its required upstream sources, blocking all other network paths.</p>"
+                            "howTo": `<h5>Concept:</h5><p>AI pods should not have implicit east-west connectivity. Start with default deny and then add explicit allow paths for required service-to-service calls only.</p><h5>Step 1: Default deny ingress and egress</h5><pre><code># File: k8s/policies/default-deny.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny
+  namespace: ai-production
+spec:
+  podSelector: {}
+  policyTypes:
+  - Ingress
+  - Egress</code></pre><h5>Step 2: Allow only gateway to inference on required port</h5><pre><code># File: k8s/policies/allow-gateway-to-inference.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-gateway-to-inference
+  namespace: ai-production
+spec:
+  podSelector:
+    matchLabels:
+      app: inference-server
+  policyTypes: ["Ingress"]
+  ingress:
+  - from:
+    - podSelector:
+        matchLabels:
+          app: api-gateway
+    ports:
+    - protocol: TCP
+      port: 8080</code></pre><h5>Verification</h5><pre><code>kubectl apply -f k8s/policies/default-deny.yaml
+kubectl apply -f k8s/policies/allow-gateway-to-inference.yaml
+kubectl get networkpolicy -n ai-production</code></pre><p><strong>Action:</strong> Keep a deny-by-default network baseline in every AI namespace and require explicit reviewed policy for each allowed traffic path.</p>`
                         },
                         {
                             "implementation": "Set strict resource quotas (CPU, memory, GPU) to prevent resource exhaustion attacks.",
-                            "howTo": "<h5>Concept:</h5><p>A compromised or buggy AI model could enter an infinite loop or process a malicious input that consumes an enormous amount of CPU, memory, or GPU resources. Setting resource `limits` prevents a single misbehaving container from causing a denial-of-service attack that affects the entire node or cluster.</p><h5>Define Requests and Limits</h5><p>In your Kubernetes Deployment manifest, specify both `requests` (the amount of resources guaranteed for the pod) and `limits` (the absolute maximum the container can use).</p><pre><code># File: k8s/deployment-with-resources.yaml\\napiVersion: apps/v1\\nkind: Deployment\\n# ... metadata ...\\nspec:\\n  template:\\n    spec:\\n      containers:\\n      - name: gpu-inference-server\\n        image: my-gpu-ml-app:latest\\n        resources:\\n          # Requesting resources helps Kubernetes with scheduling\\n          requests:\\n            memory: \\\"4Gi\\\"\\n            cpu: \\\"1000m\\\" # 1 full CPU core\\n            nvidia.com/gpu: \\\"1\\\"\\n          # Limits prevent resource exhaustion attacks\\n          limits:\\n            memory: \\\"8Gi\\\"\\n            cpu: \\\"2000m\\\" # 2 full CPU cores\\n            nvidia.com/gpu: \\\"1\\\"</code></pre><p><strong>Action:</strong> For all production deployments, define explicit CPU, memory, and GPU resource `requests` and `limits`. The limit acts as a hard cap that will cause the container to be throttled or terminated if exceeded, protecting the rest of the system.</p>"
+                            "howTo": `<h5>Concept:</h5><p>Resource caps are a containment control against runaway prompts, recursive tool loops, and GPU abuse. Enforce limits at both pod level and namespace quota level.</p><h5>Set per-workload requests and limits</h5><pre><code># File: k8s/deployment-with-resources.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gpu-inference-server
+  namespace: ai-production
+spec:
+  template:
+    spec:
+      containers:
+      - name: server
+        image: registry.example.com/ai/gpu-server:2026.04.14
+        resources:
+          requests:
+            cpu: "1000m"
+            memory: "4Gi"
+            nvidia.com/gpu: "1"
+          limits:
+            cpu: "2000m"
+            memory: "8Gi"
+            nvidia.com/gpu: "1"</code></pre><h5>Set namespace-level quota</h5><pre><code># File: k8s/resourcequota-ai-production.yaml
+apiVersion: v1
+kind: ResourceQuota
+metadata:
+  name: ai-production-quota
+  namespace: ai-production
+spec:
+  hard:
+    requests.cpu: "40"
+    limits.cpu: "80"
+    requests.memory: "160Gi"
+    limits.memory: "320Gi"
+    requests.nvidia.com/gpu: "8"
+    limits.nvidia.com/gpu: "8"</code></pre><p><strong>Action:</strong> Require explicit CPU/memory/GPU caps for every AI workload and keep quota manifests under version control as operational evidence.</p>`
                         },
                         {
                             "implementation": "Mount filesystems as read-only wherever possible.",
-                            "howTo": "<h5>Concept:</h5><p>Making the container's root filesystem read-only is a powerful security control. If an attacker gains code execution, they cannot write malware to disk, modify configuration files, install new packages, or tamper with the AI model files because the filesystem is immutable.</p><h5>Step 1: Set the readOnlyRootFilesystem Flag</h5><p>In the container's `securityContext` within your Kubernetes manifest, set `readOnlyRootFilesystem` to `true`.</p><h5>Step 2: Provide Writable Temporary Storage if Needed</h5><p>If your application legitimately needs to write temporary files, provide a dedicated writable volume using an `emptyDir` and mount it to a specific path (like `/tmp`).</p><pre><code># File: k8s/readonly-fs-deployment.yaml\\napiVersion: apps/v1\\nkind: Deployment\\n# ... metadata ...\\nspec:\\n  template:\\n    spec:\\n      containers:\\n      - name: inference-api\\n        image: my-ml-app:latest\\n        securityContext:\\n          # This is the primary control\\n          readOnlyRootFilesystem: true\\n          allowPrivilegeEscalation: false\\n          capabilities:\\n            drop: [\\\"ALL\\\"]\\n        volumeMounts:\\n          # Mount a dedicated, writable emptyDir volume for temporary files\\n          - name: tmp-writable-storage\\n            mountPath: /tmp\\n      volumes:\\n        # Define the emptyDir volume. Its contents are ephemeral.\\n        - name: tmp-writable-storage\\n          emptyDir: {}</code></pre><p><strong>Action:</strong> Enable `readOnlyRootFilesystem` for all production containers. If temporary write access is required, provide an `emptyDir` volume mounted at a non-root path like `/tmp`.</p>"
+                            "howTo": `<h5>Concept:</h5><p>Read-only root filesystem blocks many post-exploitation actions (dropping binaries, modifying startup scripts, tampering local config). Only explicitly mounted temporary paths should be writable.</p><h5>Apply read-only root filesystem with explicit writable scratch path</h5><pre><code># File: k8s/readonly-fs-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inference-api
+  namespace: ai-production
+spec:
+  template:
+    spec:
+      containers:
+      - name: api
+        image: registry.example.com/ai/inference-api:2026.04.14
+        securityContext:
+          readOnlyRootFilesystem: true
+          allowPrivilegeEscalation: false
+          capabilities:
+            drop: ["ALL"]
+        volumeMounts:
+        - name: tmp-storage
+          mountPath: /tmp
+      volumes:
+      - name: tmp-storage
+        emptyDir: {}</code></pre><h5>Verification</h5><pre><code>kubectl exec -n ai-production deploy/inference-api -- sh -c "touch /tmp/ok && touch /root/should-fail"
+kubectl describe pod -n ai-production -l app=inference-api</code></pre><p><strong>Action:</strong> Enforce read-only root filesystem by default for AI runtime pods and require explicit review for any exception.</p>`
                         }
                     ]
                 },
@@ -351,15 +480,70 @@ export const isolateTactic = {
                     "implementationGuidance": [
                         {
                             "implementation": "Use a stronger-than-container sandbox runtime for high-risk untrusted workloads, selecting either a hardware-virtualized microVM runtime or a userspace-kernel sandbox.",
-                            "howTo": "<h5>Concept:</h5><p>When an AI workflow executes highly untrusted code, parses attacker-controlled files, or runs agent tools with meaningful blast radius, a standard shared-kernel container is often not a strong enough boundary. Use a sandbox runtime that inserts an additional isolation layer between the workload and the host kernel. In practice, most teams choose one of two runtime families: a hardware-virtualized microVM runtime such as Kata Containers, or a userspace-kernel sandbox such as gVisor.</p><h5>Variant A: Hardware-Virtualized MicroVM Runtime</h5><p>Choose a microVM runtime when you want each high-risk pod to run with its own lightweight VM boundary and guest kernel. This is the strongest isolation option for workloads such as agent code interpreters, document converters, and malware-analysis sandboxes.</p><pre><code># File: k8s/runtimeclass-kata.yaml\\napiVersion: node.k8s.io/v1\\nkind: RuntimeClass\\nmetadata:\\n  name: kata-qemu\\nhandler: kata-qemu</code></pre><pre><code># File: k8s/pods/untrusted-code-runner.yaml\\napiVersion: v1\\nkind: Pod\\nmetadata:\\n  name: untrusted-code-runner\\n  namespace: ai-sandbox\\nspec:\\n  runtimeClassName: kata-qemu\\n  containers:\\n  - name: runner\\n    image: registry.example.com/ai/code-runner:2026.04.08\\n    securityContext:\\n      allowPrivilegeEscalation: false\\n      capabilities:\\n        drop: [\\\"ALL\\\"]\\n      readOnlyRootFilesystem: true</code></pre><h5>Variant B: Userspace-Kernel Sandbox</h5><p>Choose a userspace-kernel sandbox such as gVisor when you want stronger syscall mediation than a default container runtime without paying the full overhead of a VM per workload. This is a good fit for data parsers, OCR workers, or retrieval pre-processors that handle complex and potentially malicious inputs.</p><pre><code># File: k8s/runtimeclass-gvisor.yaml\\napiVersion: node.k8s.io/v1\\nkind: RuntimeClass\\nmetadata:\\n  name: gvisor\\nhandler: runsc</code></pre><pre><code># File: k8s/pods/sandboxed-parser.yaml\\napiVersion: v1\\nkind: Pod\\nmetadata:\\n  name: sandboxed-parser\\n  namespace: ai-sandbox\\nspec:\\n  runtimeClassName: gvisor\\n  containers:\\n  - name: parser\\n    image: registry.example.com/ai/parser:2026.04.08\\n    securityContext:\\n      allowPrivilegeEscalation: false\\n      capabilities:\\n        drop: [\\\"ALL\\\"]\\n      readOnlyRootFilesystem: true</code></pre><h5>Runtime Selection Rule</h5><p>Do not score both runtime families as separate isolation recommendations for the same workload unless you genuinely operate both patterns in different contexts. Pick the runtime family that matches the workload risk and performance profile, codify that choice in Kubernetes `RuntimeClass` policy, and require high-risk pods to request that runtime explicitly.</p><p><strong>Action:</strong> Classify AI workloads that execute untrusted logic or parse attacker-controlled content as <code>sandbox-required</code>, then bind them to an approved hardened runtime family such as Kata Containers or gVisor through `RuntimeClass` admission policy and workload manifests.</p>"
+                            "howTo": `<h5>Concept:</h5><p>For untrusted code execution, shared-kernel containers are often insufficient. Bind high-risk workloads to a hardened runtime class such as Kata (microVM boundary) or gVisor (userspace-kernel syscall mediation).</p><h5>Variant A: Kata runtime class for strongest isolation</h5><pre><code># File: k8s/runtimeclass-kata.yaml
+apiVersion: node.k8s.io/v1
+kind: RuntimeClass
+metadata:
+  name: kata-qemu
+handler: kata-qemu</code></pre><pre><code># File: k8s/pods/untrusted-code-runner.yaml
+apiVersion: v1
+kind: Pod
+metadata:
+  name: untrusted-code-runner
+  namespace: ai-sandbox
+spec:
+  runtimeClassName: kata-qemu
+  automountServiceAccountToken: false
+  containers:
+  - name: runner
+    image: registry.example.com/ai/code-runner:2026.04.14
+    securityContext:
+      allowPrivilegeEscalation: false
+      readOnlyRootFilesystem: true
+      capabilities:
+        drop: ["ALL"]</code></pre><h5>Variant B: gVisor runtime class for syscall mediation</h5><pre><code># File: k8s/runtimeclass-gvisor.yaml
+apiVersion: node.k8s.io/v1
+kind: RuntimeClass
+metadata:
+  name: gvisor
+handler: runsc</code></pre><h5>Verification</h5><pre><code>kubectl apply -f k8s/runtimeclass-kata.yaml
+kubectl apply -f k8s/pods/untrusted-code-runner.yaml
+kubectl get pod untrusted-code-runner -n ai-sandbox -o jsonpath="{.spec.runtimeClassName}"</code></pre><p><strong>Action:</strong> Tag untrusted workloads as <code>sandbox-required</code> and enforce runtime class selection in admission policy so they cannot run on default runtime.</p>`
                         },
                         {
                             "implementation": "Define strict seccomp-bpf profiles to whitelist only necessary system calls for model inference.",
-                            "howTo": "<h5>Concept:</h5><p>Seccomp (Secure Computing Mode) is a Linux kernel feature that restricts the system calls a process can make. By creating a `seccomp` profile that explicitly whitelists only the syscalls your application needs to function, you can block an attacker from using dangerous syscalls (like `mount`, `reboot`, `ptrace`) even if they achieve code execution inside the container.</p><h5>Step 1: Generate a Seccomp Profile</h5><p>You can use tools like `strace` or specialized profile generators to trace your application during normal operation and automatically create a list of required syscalls.</p><h5>Step 2: Create the Profile JSON and Apply It</h5><p>The profile is a JSON file that lists the allowed syscalls. The `defaultAction` is set to `SCMP_ACT_ERRNO`, which means any syscall *not* on the list will be blocked.</p><pre><code># File: /var/lib/kubelet/seccomp/profiles/inference-profile.json\\n{\\n    \\\"defaultAction\\\": \\\"SCMP_ACT_ERRNO\\\",\\n    \\\"architectures\\\": [\\\"SCMP_ARCH_X86_64\\\"],\\n    \\\"syscalls\\\": [\\n        {\\\"names\\\": [\\\"accept4\\\", \\\"bind\\\", \\\"brk\\\", \\\"close\\\", \\\"epoll_wait\\\", \\\"futex\\\", \\\"mmap\\\", \\\"mprotect\\\", \\\"munmap\\\", \\\"read\\\", \\\"recvfrom\\\", \\\"sendto\\\", \\\"socket\\\", \\\"write\\\"], \\\"action\\\": \\\"SCMP_ACT_ALLOW\\\"}\\n    ]\\n}\\n</code></pre><p>This profile must be placed on the node. Then, you apply it to a pod via its `securityContext`.</p><pre><code># In your k8s/deployment.yaml\\n      securityContext:\\n        seccompProfile:\\n          # Use a profile saved on the node\\n          type: Localhost\\n          localhostProfile: profiles/inference-profile.json</code></pre><p><strong>Action:</strong> Generate a minimal `seccomp` profile for your AI inference server. Deploy this profile to all cluster nodes and apply it to your production pods via the `securityContext`. This provides a strong, kernel-enforced layer of defense against privilege escalation and container breakout attempts.</p>"
+                            "howTo": `<h5>Concept:</h5><p>Seccomp enforces syscall-level least privilege. Any syscall not allowlisted is denied by kernel policy.</p><h5>Step 1: Define a strict seccomp profile</h5><pre><code># File: /var/lib/kubelet/seccomp/profiles/inference-profile.json
+{
+  "defaultAction": "SCMP_ACT_ERRNO",
+  "architectures": ["SCMP_ARCH_X86_64"],
+  "syscalls": [
+    {
+      "names": ["read", "write", "openat", "close", "mmap", "munmap", "futex", "epoll_wait", "recvfrom", "sendto", "socket"],
+      "action": "SCMP_ACT_ALLOW"
+    }
+  ]
+}</code></pre><h5>Step 2: Bind profile in deployment security context</h5><pre><code># File: k8s/deployment.yaml
+securityContext:
+  seccompProfile:
+    type: Localhost
+    localhostProfile: profiles/inference-profile.json</code></pre><h5>Verification</h5><pre><code>kubectl apply -f k8s/deployment.yaml
+kubectl get pod -n ai-production -o jsonpath="{.items[0].spec.securityContext.seccompProfile.localhostProfile}"</code></pre><p><strong>Action:</strong> Keep seccomp profile under version control and require profile review when runtime dependencies change.</p>`
                         },
                         {
                             "implementation": "Utilize WebAssembly (WASM) runtimes to run AI models in a high-performance, secure sandbox.",
-                            "howTo": "<h5>Concept:</h5><p>WebAssembly (WASM) provides a high-performance, sandboxed virtual instruction set. Code compiled to WASM cannot interact with the host system (e.g., read files, open network sockets) unless those capabilities are explicitly passed into the sandbox by the host runtime. This makes it an excellent choice for safely executing small, self-contained pieces of untrusted code, like an individual model's inference logic.</p><h5>Step 1: Compile Inference Code to WASM</h5><p>Write your inference logic in a language that can compile to WASM, such as Rust. Use a library like `tract` to run an ONNX model.</p><pre><code>// File: inference-engine/src/lib.rs (Rust)\\nuse tract_onnx::prelude::*;\n\\n#[no_mangle]\\npub extern \\\"C\\\" fn run_inference(input_ptr: *mut u8, input_len: usize) -> i64 {\\n    // ... code to read input from WASM memory ...\\n    let model = tract_onnx::onnx().model_for_path(\\\"model.onnx\\\").unwrap();\\n    // ... run inference ...\\n    // ... write output to WASM memory and return a pointer ...\\n    return prediction;\\n}\\n</code></pre><h5>Step 2: Run the WASM Module in a Secure Runtime</h5><p>Use a WASM runtime like `wasmtime` in a host application (e.g., written in Python) to load and execute the compiled `.wasm` file. Crucially, the host does not grant the WASM module any filesystem or network permissions.</p><pre><code># File: host_app/run_wasm.py\\nfrom wasmtime import Store, Module, Instance, Linker\\n\\n# 1. Create a store and load the compiled .wasm module\\nstore = Store()\\nmodule = Module.from_file(store.engine, \\\"./inference_engine.wasm\\\")\\n\\n# 2. Link imports. By providing an empty linker, we grant NO capabilities to the sandbox.\\nlinker = Linker(store.engine)\\ninstance = linker.instantiate(store, module)\\n\\n# 3. Get the exported inference function\\nrun_inference = instance.exports(store)[\\\"run_inference\\\"]\\n\\n# ... code to allocate memory in the sandbox, write the input data ...\\n\\n# 4. Call the sandboxed WASM function\\nprediction = run_inference(store, ...)\\nprint(f\\\"Inference result from WASM sandbox: {prediction}\\\")</code></pre><p><strong>Action:</strong> For well-defined, self-contained AI tasks, consider compiling the inference logic to WebAssembly. Run the resulting `.wasm` module in a secure runtime like Wasmtime, explicitly denying it access to the filesystem and network to create a high-performance, capabilities-based sandbox.</p>"
+                            "howTo": `<h5>Concept:</h5><p><strong>Delivery level: reusable module.</strong> WASM isolation is practical when inference logic can be compiled and invoked through a strict host boundary. The host controls capabilities; the module gets none by default.</p><h5>Build a WASM module</h5><pre><code>// File: inference-engine/src/lib.rs
+#[no_mangle]
+pub extern "C" fn run_inference(input: i32) -> i32 {
+    input * 2
+}</code></pre><h5>Run with capability-minimal host runtime</h5><pre><code># File: host_app/run_wasm.py
+from wasmtime import Store, Module, Linker
+
+store = Store()
+module = Module.from_file(store.engine, "./inference_engine.wasm")
+linker = Linker(store.engine)  # no FS/network imports exposed
+instance = linker.instantiate(store, module)
+run_inference = instance.exports(store)["run_inference"]
+print(run_inference(store, 21))</code></pre><p><strong>Action:</strong> Use this module pattern for bounded high-risk functions and keep capability mapping at the host layer as auditable evidence.</p>`
                         }
                     ]
                 },
@@ -397,7 +581,7 @@ export const isolateTactic = {
                     "implementationGuidance": [
                         {
                             "implementation": "Provision a fresh, single-use sandbox (microVM / gVisor / Kata) for every tool invocation, execute once, then destroy it.",
-                            "howTo": "<h5>Concept:</h5><p>Instead of keeping a long-running sandbox, the system should treat every high-risk tool execution (e.g., code interpreter, browser automation, filesystem access, network fetcher) as untrusted. For each invocation, it spins up a brand-new isolated runtime (microVM, gVisor-sandboxed pod, Kata-backed pod), injects only the minimum inputs needed for that call, executes the requested action, captures outputs, then force-destroys the entire sandbox including its temporary filesystem. <strong>No state is ever reused between calls.</strong></p><h5>Why this matters:</h5><p>This design prevents persistence and data residue. If an attacker manages to drop malware, credentials, API keys, model weights, or lateral movement tooling inside the sandbox, those artifacts disappear immediately after the single execution finishes. It also prevents tool-to-tool contamination between separate agent steps.</p><h5>Step-by-step Orchestration Flow:</h5><ol><li><strong>Spawn:</strong> Programmatically request a microVM-backed or gVisor-backed workload via a runtime class (e.g. Kata Containers in Kubernetes). This environment starts from a known-clean snapshot or base image.</li><li><strong>Inject Task Input:</strong> Copy only the minimal required data (the script, query, file chunk, etc.) into the sandbox. Do not mount shared long-lived volumes or host credentials.</li><li><strong>Execute:</strong> Run the tool inside that sandbox and capture stdout/stderr/result objects.</li><li><strong>Collect Result:</strong> Serialize the output (e.g. JSON result, processed file) and pass it back to the calling agent or service interface.</li><li><strong>Teardown:</strong> Immediately terminate the sandbox VM/pod and wipe all associated ephemeral storage. Never reuse the same instance for a later request.</li></ol><pre><code># Conceptual pseudocode for single-use sandbox execution\nimport sandbox_runtime\n\ndef run_tool_once(tool_payload: bytes) -> dict:\n    # 1. Create fresh sandbox instance (microVM / Kata / gVisor-backed pod)\n    sb = sandbox_runtime.spawn_isolated_instance()\n\n    try:\n        # 2. Copy the tool payload (e.g. Python script, shell snippet)\n        sb.copy_to_guest(content=tool_payload, guest_path=\"/app/task_input\")\n\n        # 3. Execute inside the sandbox\n        exit_code, stdout, stderr = sb.exec_guest(\"/usr/local/bin/run_tool /app/task_input\")\n\n        # 4. Capture results for the caller\n        result = {\n            \"exit_code\": exit_code,\n            \"stdout\": stdout,\n            \"stderr\": stderr\n        }\n        return result\n    finally:\n        # 5. Guaranteed teardown: destroy the sandbox and wipe ephemeral storage\n        sb.destroy()\n        # No sandbox state is reused for future calls</code></pre><p><strong>Action:</strong> Treat every agent tool call (code execution, file transform, web fetcher) as untrusted. Enforce a lifecycle policy of <code>spawn → run → collect → destroy</code>. This eliminates persistence, prevents credential reuse, and blocks post-exploitation lateral movement across tool invocations.</p>"
+                            "howTo": "<h5>Concept:</h5><p>High-risk tool execution should never happen in a reused runtime. The control is to create a new isolated workload for each invocation, copy in only the minimum payload, execute once, capture the result, then destroy the workload and its ephemeral filesystem.</p><h5>Step 1: Create a one-shot sandbox pod with an isolated runtime class</h5><p>Use a runtime class such as Kata or gVisor so the tool runs in a fresh microVM-backed or syscall-intercepted boundary. The pod must use an emptyDir workspace and no long-lived shared volumes.</p><pre><code># File: isolate/single_use_sandbox.py\nfrom __future__ import annotations\n\nimport base64\nimport uuid\n\nfrom kubernetes import client, config, watch\n\n\nNAMESPACE = \"ai-sandbox\"\nRUNTIME_CLASS_NAME = \"kata-qemu\"\n\n\ndef build_sandbox_pod(pod_name: str, payload_b64: str) -&gt; client.V1Pod:\n    return client.V1Pod(\n        metadata=client.V1ObjectMeta(\n            name=pod_name,\n            labels={\"app\": \"tool-sandbox\", \"sandbox-mode\": \"single-use\"},\n        ),\n        spec=client.V1PodSpec(\n            runtime_class_name=RUNTIME_CLASS_NAME,\n            restart_policy=\"Never\",\n            automount_service_account_token=False,\n            containers=[\n                client.V1Container(\n                    name=\"runner\",\n                    image=\"python:3.11-slim\",\n                    command=[\n                        \"/bin/sh\",\n                        \"-lc\",\n                        \"echo \\\"$TOOL_PAYLOAD_B64\\\" | base64 -d &gt; /work/task.py && python /work/task.py\",\n                    ],\n                    env=[client.V1EnvVar(name=\"TOOL_PAYLOAD_B64\", value=payload_b64)],\n                    volume_mounts=[client.V1VolumeMount(name=\"work\", mount_path=\"/work\")],\n                    security_context=client.V1SecurityContext(\n                        run_as_non_root=True,\n                        allow_privilege_escalation=False,\n                        read_only_root_filesystem=True,\n                        capabilities=client.V1Capabilities(drop=[\"ALL\"]),\n                    ),\n                )\n            ],\n            volumes=[client.V1Volume(name=\"work\", empty_dir=client.V1EmptyDirVolumeSource())],\n        ),\n    )\n\n\ndef run_tool_once(tool_payload: bytes) -&gt; dict:\n    config.load_incluster_config()\n    api = client.CoreV1Api()\n    pod_name = f\"tool-sandbox-{uuid.uuid4().hex[:10]}\"\n    payload_b64 = base64.b64encode(tool_payload).decode(\"utf-8\")\n    pod = build_sandbox_pod(pod_name, payload_b64)\n    api.create_namespaced_pod(namespace=NAMESPACE, body=pod)\n\n    try:\n        for event in watch.Watch().stream(\n            api.list_namespaced_pod,\n            namespace=NAMESPACE,\n            field_selector=f\"metadata.name={pod_name}\",\n            timeout_seconds=300,\n        ):\n            phase = event[\"object\"].status.phase\n            if phase in {\"Succeeded\", \"Failed\"}:\n                logs = api.read_namespaced_pod_log(name=pod_name, namespace=NAMESPACE)\n                return {\"pod_name\": pod_name, \"phase\": phase, \"logs\": logs}\n    finally:\n        api.delete_namespaced_pod(\n            name=pod_name,\n            namespace=NAMESPACE,\n            grace_period_seconds=0,\n            propagation_policy=\"Background\",\n        )\n</code></pre><h5>Step 2: Verify that the pod is actually destroyed after the call</h5><p>Run two invocations back to back and confirm each receives a different pod name and that the prior pod no longer exists. Also confirm there is no shared PVC or hostPath mount attached to the sandbox pod.</p><p><strong>Action:</strong> Treat every tool call as untrusted and enforce a strict <code>spawn → run → collect → destroy</code> lifecycle with a fresh isolated runtime each time. The evidence you want is the pod creation log, the captured output, and the deletion event for every sandbox invocation.</p>"
                         }
                     ],
                     "toolsOpenSource": ["gVisor", "Kata Containers", "Firecracker"],
@@ -437,7 +621,39 @@ export const isolateTactic = {
                     "implementationGuidance": [
                         {
                             "implementation": "Enforce default-deny outbound egress allowlists for sandboxed runtimes.",
-                            "howTo": "<h5>Concept:</h5><p>Once an attacker gains code execution inside a sandbox, the next move is often outbound communication: reverse shells, data exfiltration, credential harvesting, or callback traffic to a command-and-control endpoint. Treat outbound connectivity as an explicit privilege. Sandboxed runtimes should start from <code>deny all egress</code> and then receive narrowly reviewed allow rules only for the internal services they genuinely need.</p><h5>Step 1: Establish a Default-Deny Egress Baseline</h5><p>Apply a namespace-level egress-deny policy so newly created sandbox pods cannot initiate outbound connections unless a more specific allow rule exists.</p><pre><code># File: k8s/policies/default-deny-egress.yaml\\napiVersion: networking.k8s.io/v1\\nkind: NetworkPolicy\\nmetadata:\\n  name: default-deny-all-egress\\n  namespace: ai-sandbox\\nspec:\\n  podSelector: {}\\n  policyTypes:\\n  - Egress\\n  egress: []</code></pre><h5>Step 2: Add Narrow Allow Rules for Required Internal Dependencies</h5><p>Grant outbound access only to explicitly approved destinations such as an internal inference gateway, artifact proxy, or logging endpoint. Scope the rule by pod label, destination label, protocol, and port.</p><pre><code># File: k8s/policies/allow-egress-to-internal-api.yaml\\napiVersion: networking.k8s.io/v1\\nkind: NetworkPolicy\\nmetadata:\\n  name: allow-sandbox-to-internal-api\\n  namespace: ai-sandbox\\nspec:\\n  podSelector:\\n    matchLabels:\\n      role: sandboxed-tool\\n  policyTypes:\\n  - Egress\\n  egress:\\n  - to:\\n    - namespaceSelector:\\n        matchLabels:\\n          name: ai-core-services\\n      podSelector:\\n        matchLabels:\\n          app: inference-gateway\\n    ports:\\n    - protocol: TCP\\n      port: 8443</code></pre><h5>Step 3: Route Reviewed Exceptions Through a Controlled Egress Path</h5><p>If a sandboxed workload must reach an external dependency, do not open arbitrary internet access. Route the request through a reviewed egress gateway or outbound proxy where destinations, DNS names, and TLS policy can be centrally logged and constrained.</p><p><strong>Action:</strong> Apply default-deny egress to every namespace or workload class that hosts sandboxed AI runtimes, then grant only the minimum reviewed outbound paths required for business function. Keep outbound rules as specific as inbound firewall rules: named owner, approved destination, explicit port list, and regular review cadence.</p>"
+                            "howTo": `<h5>Concept:</h5><p>Default-deny egress blocks reverse shells and data exfiltration from compromised sandbox runtimes. Outbound connectivity must be explicit and minimal.</p><h5>Step 1: Deny all outbound traffic by default</h5><pre><code># File: k8s/policies/default-deny-egress.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-egress
+  namespace: ai-sandbox
+spec:
+  podSelector: {}
+  policyTypes: ["Egress"]
+  egress: []</code></pre><h5>Step 2: Allow only required internal destination</h5><pre><code># File: k8s/policies/allow-egress-to-inference-gateway.yaml
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: allow-egress-to-inference-gateway
+  namespace: ai-sandbox
+spec:
+  podSelector:
+    matchLabels:
+      role: sandboxed-tool
+  policyTypes: ["Egress"]
+  egress:
+  - to:
+    - namespaceSelector:
+        matchLabels:
+          name: ai-core-services
+      podSelector:
+        matchLabels:
+          app: inference-gateway
+    ports:
+    - protocol: TCP
+      port: 8443</code></pre><h5>Verification</h5><pre><code>kubectl apply -f k8s/policies/default-deny-egress.yaml
+kubectl apply -f k8s/policies/allow-egress-to-inference-gateway.yaml
+kubectl get networkpolicy -n ai-sandbox</code></pre><p><strong>Action:</strong> Keep every sandbox namespace on default-deny egress and require explicit reviewed rules for each outbound dependency.</p>`
                         }
                     ],
                     "toolsOpenSource": ["Kubernetes NetworkPolicy", "Cilium", "Project Calico"],
@@ -544,7 +760,7 @@ export const isolateTactic = {
                     "implementationGuidance": [
                         {
                             "implementation": "Orchestrate an automated analysis workflow using microVMs for strong isolation.",
-                            "howTo": "<h5>Concept:</h5><p>Create a dedicated, fully automated pipeline for vetting AI-generated code. When an agent produces a script, the orchestrator spins up a new, clean microVM (using a technology like Firecracker), executes the script inside, monitors its behavior, and then destroys the VM. This ensures that each analysis is fresh and completely isolated from all other systems.</p><h5>Implement the Orchestration Logic</h5><pre><code># File: sandboxing_service/orchestrator.py\nimport firecracker_sdk\n\n# This is a conceptual workflow for a sandboxing service\ndef analyze_script_in_sandbox(script_content: str) -> bool:\n    # 1. Provision a new, ephemeral microVM from a clean snapshot\n    vm = firecracker_sdk.microvm.new()\n    # ... (Configure networking, kernel, rootfs for the VM) ...\n    vm.start()\n\n    # 2. Copy the AI-generated script into the running microVM\n    vm.copy_file_to_guest(host_path=script_content_path, guest_path=\"/app/run.py\")\n\n    # 3. Start a runtime security monitor (e.g., Falco) inside the VM or on the host's network interface\n    start_monitoring(vm.id)\n\n    # 4. Execute the script within the microVM\n    exit_code, stdout, stderr = vm.execute_command(\"python /app/run.py\")\n\n    # 5. Stop monitoring and analyze the collected logs\n    behavior_logs = stop_monitoring(vm.id)\n    is_malicious = analyze_behavior_logs(behavior_logs)\n\n    # 6. Destroy the microVM completely\n    vm.stop()\n\n    if is_malicious:\n        print(f\"🚨 Malicious behavior detected in script. Execution blocked.\")\n        return False\n    \n    print(\"✅ Script behavior verified as safe.\")\n    return True\n</code></pre><p><strong>Action:</strong> Build a dedicated, API-driven sandboxing service using a microVM technology like Firecracker. All AI-generated code must be submitted to this service for analysis before it can be used, and the service must destroy and recreate the analysis environment for every request.</p>"
+                            "howTo": "<h5>Concept:</h5><p>Pre-execution analysis should be an automated admission workflow, not an analyst clicking around in a shared sandbox. The orchestrator receives the artifact, provisions an isolated runtime, executes the artifact under observation, captures a machine-readable verdict, and destroys the runtime before any promotion decision is made.</p><h5>Step 1: Submit the artifact to an isolated analysis job</h5><p>Use a dedicated analysis image and a microVM-backed runtime class so every analysis starts from a clean environment with no shared state.</p><pre><code># File: sandboxing_service/orchestrator.py\nfrom __future__ import annotations\n\nimport base64\nimport json\nimport uuid\n\nfrom kubernetes import client, config, watch\n\n\nNAMESPACE = \"ai-analysis\"\nRUNTIME_CLASS_NAME = \"kata-qemu\"\nANALYZER_IMAGE = \"ghcr.io/aidefend/sandbox-analyzer:1.0.0\"\n\n\ndef build_analysis_pod(analysis_id: str, script_b64: str, artifact_sha256: str) -&gt; client.V1Pod:\n    return client.V1Pod(\n        metadata=client.V1ObjectMeta(\n            name=analysis_id,\n            labels={\n                \"app\": \"artifact-analysis\",\n                \"artifact-sha256\": artifact_sha256,\n            },\n        ),\n        spec=client.V1PodSpec(\n            runtime_class_name=RUNTIME_CLASS_NAME,\n            restart_policy=\"Never\",\n            automount_service_account_token=False,\n            containers=[\n                client.V1Container(\n                    name=\"analyzer\",\n                    image=ANALYZER_IMAGE,\n                    command=[\"/bin/sh\", \"-lc\", \"/opt/analyze.sh\"],\n                    env=[\n                        client.V1EnvVar(name=\"SCRIPT_B64\", value=script_b64),\n                        client.V1EnvVar(name=\"ARTIFACT_SHA256\", value=artifact_sha256),\n                    ],\n                    security_context=client.V1SecurityContext(\n                        run_as_non_root=True,\n                        allow_privilege_escalation=False,\n                        read_only_root_filesystem=True,\n                        capabilities=client.V1Capabilities(drop=[\"ALL\"]),\n                    ),\n                )\n            ],\n        ),\n    )\n\n\ndef analyze_script_in_sandbox(script_content: bytes, artifact_sha256: str) -&gt; dict:\n    config.load_incluster_config()\n    api = client.CoreV1Api()\n    analysis_id = f\"artifact-analysis-{uuid.uuid4().hex[:10]}\"\n    pod = build_analysis_pod(\n        analysis_id=analysis_id,\n        script_b64=base64.b64encode(script_content).decode(\"utf-8\"),\n        artifact_sha256=artifact_sha256,\n    )\n    api.create_namespaced_pod(namespace=NAMESPACE, body=pod)\n\n    try:\n        for event in watch.Watch().stream(\n            api.list_namespaced_pod,\n            namespace=NAMESPACE,\n            field_selector=f\"metadata.name={analysis_id}\",\n            timeout_seconds=600,\n        ):\n            phase = event[\"object\"].status.phase\n            if phase in {\"Succeeded\", \"Failed\"}:\n                report = api.read_namespaced_pod_log(name=analysis_id, namespace=NAMESPACE)\n                return json.loads(report)\n    finally:\n        api.delete_namespaced_pod(\n            name=analysis_id,\n            namespace=NAMESPACE,\n            grace_period_seconds=0,\n            propagation_policy=\"Background\",\n        )\n</code></pre><h5>Step 2: Require a machine-readable verdict for promotion</h5><p>The analyzer should emit JSON that includes the artifact hash, observed behaviors, and a final verdict such as <code>allow</code> or <code>deny</code>. The CI/CD or registry admission path should refuse promotion if the verdict is missing or negative.</p><p><strong>Action:</strong> Put every generated script, binary, or container artifact through an isolated analysis service before promotion. The evidence you want is the analysis report, the artifact hash it covered, and the deletion event proving the analysis runtime was torn down after the run.</p>"
                         },
                         {
                             "implementation": "Define and enforce a strict behavioral security policy within the sandbox.",
@@ -902,7 +1118,9 @@ export const isolateTactic = {
             "description": "Implement mechanisms to automatically or manually isolate, rate-limit, or place into a restricted \\\"safe mode\\\" specific AI system interactions when suspicious activity is detected. This could apply to individual user sessions, API keys, IP addresses, or even entire AI agent instances.<br/><br/><strong>Objective</strong><br/>Prevent potential attacks from fully executing, spreading, or causing significant harm by quickly containing or degrading the capabilities of the suspicious entity. This is an active response measure triggered by detection systems.<br/><br/><strong>Trigger Modes &amp; Audit</strong><br/>This can be applied pre-emptively (automatic) or under human approval (SOAR analyst click-to-quarantine) depending on confidence score. All actions must be logged/auditable for compliance and forensic review.",
             "toolsOpenSource": [
                 "Fail2Ban (adapted for AI logs)",
-                "Custom scripts (Lambda, Azure Functions, Cloud Functions) for automated actions",
+                "AWS Lambda (automated isolation actions)",
+                "Azure Functions (automated isolation actions)",
+                "Google Cloud Functions (automated isolation actions)",
                 "API Gateways (Kong, Tyk, Nginx) for rate limiting",
                 "Kubernetes for resource quotas/isolation"
             ],
@@ -917,6 +1135,9 @@ export const isolateTactic = {
                     "items": [
                         "AML.T0029 Denial of AI Service",
                         "AML.T0034 Cost Harvesting",
+                        "AML.T0034.000 Cost Harvesting: Excessive Queries",
+                        "AML.T0034.001 Cost Harvesting: Resource-Intensive Queries",
+                        "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption",
                         "AML.T0040 AI Model Inference API Access",
                         "AML.T0046 Spamming AI System with Chaff Data",
                         "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (rate-limiting slows extraction)",
@@ -1004,7 +1225,7 @@ export const isolateTactic = {
             "implementationGuidance": [
                 {
                     "implementation": "Automated quarantine based on high-risk behavior alerts (cut access, move to honeypot, disable key/account).",
-                    "howTo": "<h5>Concept:</h5><p>When your SIEM or detection pipeline fires a high-confidence alert for a specific entity (API key, user ID, IP address, or agent instance), an automated workflow should immediately take containment actions: block the source at the edge (WAF / firewall), suspend its API credential, optionally redirect it to a deception/honeypot environment, and open an investigation ticket. This prevents the attacker from continuing while you investigate.</p><h5>Step 1: Make Alerts Actionable</h5><p>Your detection system (model extraction detector, anomaly engine, egress monitor, etc.) must emit structured alerts to something invokable, e.g. an SQS queue, webhook, or SOAR trigger. The alert should include: offending principal (IP / user / key), reason (exfil, abuse, cost-harvest), and confidence score.</p><h5>Step 2: Create a Serverless Quarantine Function</h5><p>A serverless function (e.g. AWS Lambda) consumes those alerts and updates your edge security controls in real time. Example: add the IP to an AWS WAF IP blocklist. The same flow could also revoke the user's API key or mark their session as suspended in your IdP. NOTE: Quarantine actions must be logged (timestamp, triggering alert, automation vs human approval) for audit and forensic review.</p><pre><code># File: quarantine_lambda/main.py\nimport boto3\nimport json\n\n# NOTE: Pseudocode. You must adapt IPSet IDs, scopes, and quotas.\n\ndef lambda_handler(event, context):\n    \"\"\"Triggered by SQS messages from SIEM/monitoring alerts.\"\"\"\n    waf_client = boto3.client('wafv2')\n\n    for record in event['Records']:\n        alert = json.loads(record['body'])\n        action = alert.get('action')  # e.g. \"QUARANTINE_IP\", \"DISABLE_API_KEY\"\n        offender_ip = alert.get('source_ip')\n        offender_key = alert.get('api_key_id')\n        reason = alert.get('reason')  # e.g. \"model_extraction\", \"cost_abuse\"\n        confidence = alert.get('confidence')\n\n        # Basic policy: only auto-block if high confidence\n        if action == 'QUARANTINE_IP' and offender_ip and confidence >= 0.9:\n            print(f\"[AUTO-QUARANTINE] Blocking IP {offender_ip} for reason={reason}\")\n            try:\n                # Fetch current IPSet to get LockToken\n                ipset = waf_client.get_ip_set(\n                    Name='aidefend-ip-blocklist',\n                    Scope='REGIONAL',  # or CLOUDFRONT depending on placement\n                    Id='REPLACE_ME_IPSET_ID'\n                )\n\n                lock_token = ipset['LockToken']\n                current_addrs = ipset['IPSet']['Addresses']\n\n                # Prepend new IP, maintaining /32; consider aging out stale IPs to avoid quota exhaustion\n                updated_addrs = [f\"{offender_ip}/32\"] + current_addrs\n\n                waf_client.update_ip_set(\n                    Name='aidefend-ip-blocklist',\n                    Scope='REGIONAL',\n                    Id='REPLACE_ME_IPSET_ID',\n                    LockToken=lock_token,\n                    Addresses=updated_addrs\n                )\n\n                # Emit an auditable security event (SIEM / log)\n                print(json.dumps({\n                    'event': 'QUARANTINE_IP',\n                    'ip': offender_ip,\n                    'reason': reason,\n                    'confidence': confidence,\n                    'ts': context.aws_request_id\n                }))\n            except Exception as e:\n                print(f\"[ERROR] Failed to block IP {offender_ip}: {e}\")\n\n        if action == 'DISABLE_API_KEY' and offender_key:\n            # Call your key-management / API gateway admin interface to revoke that key.\n            # Also log this action for audit.\n            print(f\"[AUTO-QUARANTINE] Disabling API key {offender_key} (reason={reason})\")\n\n    return {'statusCode': 200}\n</code></pre><p><strong>Action:</strong> Build an automated quarantine function that can (a) update WAF/IP blocklists, (b) revoke or suspend a specific API key or OAuth client ID, and (c) optionally redirect that principal to a deception/honeypot environment. Every quarantine action (who/what got blocked, why, confidence level) MUST be logged to SIEM / ticketing so Incident Response and compliance can prove proper handling.</p>"
+                    "howTo": "<h5>Concept:</h5><p>When the detection pipeline emits a high-confidence finding, containment should execute immediately and reproducibly. The quarantine workflow should update edge controls, disable the offending credential if applicable, and emit a structured audit event that links the action to the triggering alert.</p><h5>Step 1: Consume structured alerts from a queue or event bus</h5><p>The alert must include the offender identity, action type, confidence score, and reason so the quarantine function can make deterministic decisions.</p><pre><code># File: quarantine_lambda/main.py\nfrom __future__ import annotations\n\nimport ipaddress\nimport json\nimport os\n\nimport boto3\n\n\nWAF_IP_SET_NAME = os.environ[\"WAF_IP_SET_NAME\"]\nWAF_IP_SET_ID = os.environ[\"WAF_IP_SET_ID\"]\nWAF_SCOPE = os.environ.get(\"WAF_SCOPE\", \"REGIONAL\")\nQUARANTINE_CONFIDENCE = float(os.environ.get(\"QUARANTINE_CONFIDENCE\", \"0.90\"))\n\nwaf_client = boto3.client(\"wafv2\")\napi_gateway_client = boto3.client(\"apigateway\")\n\n\ndef cidr_for_ip(raw_ip: str) -&gt; str:\n    ip = ipaddress.ip_address(raw_ip)\n    return f\"{ip}/32\" if ip.version == 4 else f\"{ip}/128\"\n\n\ndef add_ip_to_waf_blocklist(raw_ip: str) -&gt; None:\n    cidr = cidr_for_ip(raw_ip)\n    ipset = waf_client.get_ip_set(\n        Name=WAF_IP_SET_NAME,\n        Scope=WAF_SCOPE,\n        Id=WAF_IP_SET_ID,\n    )\n    lock_token = ipset[\"LockToken\"]\n    addresses = list(ipset[\"IPSet\"][\"Addresses\"])\n    if cidr not in addresses:\n        addresses.append(cidr)\n        waf_client.update_ip_set(\n            Name=WAF_IP_SET_NAME,\n            Scope=WAF_SCOPE,\n            Id=WAF_IP_SET_ID,\n            LockToken=lock_token,\n            Addresses=addresses,\n        )\n\n\ndef disable_api_key(api_key_id: str) -&gt; None:\n    api_gateway_client.update_api_key(\n        apiKey=api_key_id,\n        patchOperations=[{\"op\": \"replace\", \"path\": \"/enabled\", \"value\": \"false\"}],\n    )\n\n\ndef lambda_handler(event, context):\n    audit_events = []\n    for record in event[\"Records\"]:\n        alert = json.loads(record[\"body\"])\n        action = alert.get(\"action\")\n        confidence = float(alert.get(\"confidence\", 0.0))\n        reason = alert.get(\"reason\", \"unknown\")\n\n        if confidence &lt; QUARANTINE_CONFIDENCE:\n            continue\n\n        if action == \"QUARANTINE_IP\" and alert.get(\"source_ip\"):\n            add_ip_to_waf_blocklist(alert[\"source_ip\"])\n            audit_events.append({\n                \"event\": \"quarantine_ip\",\n                \"source_ip\": alert[\"source_ip\"],\n                \"reason\": reason,\n                \"confidence\": confidence,\n                \"request_id\": context.aws_request_id,\n            })\n\n        if action == \"DISABLE_API_KEY\" and alert.get(\"api_key_id\"):\n            disable_api_key(alert[\"api_key_id\"])\n            audit_events.append({\n                \"event\": \"disable_api_key\",\n                \"api_key_id\": alert[\"api_key_id\"],\n                \"reason\": reason,\n                \"confidence\": confidence,\n                \"request_id\": context.aws_request_id,\n            })\n\n    for audit_event in audit_events:\n        print(json.dumps(audit_event))\n\n    return {\"statusCode\": 200, \"actions_taken\": len(audit_events)}\n</code></pre><h5>Step 2: Verify both containment paths</h5><p>In staging, send one queue message that blocks a test IP and another that disables a disposable API key. Confirm the IP appears in the WAF IP set, the API key becomes disabled, and both actions produce structured audit events.</p><p><strong>Action:</strong> Put a deterministic quarantine function behind your high-confidence detection findings and require that every automated containment action produces auditable evidence linking the source alert, the affected principal, and the exact control change that was applied.</p>"
                 },
                 {
                     "implementation": "Dynamic rate limiting for anomalous behavior (query spikes, complex queries).",
@@ -1496,12 +1717,8 @@ async def execute_tool(request: dict):
                     ],
                     "implementationGuidance": [
                         {
-                            "implementation": "Controlled writer: sign canonical metadata containing content-hash + namespace + issuer + timestamp + key-id; store detached signature alongside the record.",
+                            "implementation": "Controlled writer and integrity-first loader: sign canonical metadata at write time, then verify signature and content hash before any record is returned to the agent.",
                             "howTo": "<h5>Concept:</h5><p>To avoid canonicalization pitfalls, sign a small, canonical metadata payload that includes a <code>sha256(content)</code>. Store a <code>kid</code> (key id) to support key rotation. The writer service should run under workload identity and be the only component permitted to write into trusted namespaces.</p><h5>Example: Signed Record (HMAC for simplicity; swap to KMS/Asymmetric for enterprise)</h5><pre><code># File: memory/integrity/signed_record.py\nimport hashlib\nimport hmac\nimport json\nimport time\nfrom typing import Dict\n\n\ndef canonical_json(obj: Dict) -&gt; bytes:\n    return json.dumps(obj, sort_keys=True, separators=(\",\", \":\")).encode(\"utf-8\")\n\n\ndef make_signed_record(*, content: str, namespace: str, issuer: str, kid: str, signing_key: bytes) -&gt; Dict:\n    content_hash = hashlib.sha256(content.encode(\"utf-8\")).hexdigest()\n\n    meta = {\n        \"ver\": \"v1\",\n        \"kid\": kid,\n        \"ns\": namespace,\n        \"iss\": issuer,\n        \"ts\": int(time.time()),\n        \"chash\": content_hash\n    }\n\n    sig = hmac.new(signing_key, canonical_json(meta), hashlib.sha256).hexdigest()\n\n    return {\n        \"content\": content,\n        \"meta\": meta,\n        \"sig\": sig\n    }\n</code></pre><p><strong>Action:</strong> Require that only the controlled writer can write to trusted namespaces (enforce at API and DB/collection permissions). Include <code>kid</code> for rotation, and always sign canonical metadata, not arbitrary JSON formatting.</p>"
-                        },
-                        {
-                            "implementation": "Integrity-first loader: verify signature (constant-time) -> re-hash content -> enforce schema/size -> only then return content to the agent (fail-closed).",
-                            "howTo": "<h5>Concept:</h5><p>Anything loaded from persistent memory is untrusted until proven otherwise. Verify the signature using the key referenced by <code>kid</code>, then recompute the content hash. Only after integrity checks pass should schema/size checks run. On any failure, reject the record and emit a high-signal audit event.</p><h5>Example: Fail-Closed Verification Pipeline</h5><pre><code># File: memory/integrity/verify_and_load.py\nimport hashlib\nimport hmac\nimport json\nfrom typing import Dict, Optional\n\nMAX_CONTENT_CHARS = 10_000\nALLOWED_META_KEYS = {\"ver\", \"kid\", \"ns\", \"iss\", \"ts\", \"chash\"}\n\n\ndef canonical_json(obj: Dict) -&gt; bytes:\n    return json.dumps(obj, sort_keys=True, separators=(\",\", \":\")).encode(\"utf-8\")\n\n\ndef verify_and_load(*, record: Dict, keyring: Dict[str, bytes]) -&gt; Optional[str]:\n    try:\n        meta = record[\"meta\"]\n        sig = record[\"sig\"]\n        content = record[\"content\"]\n\n        if set(meta.keys()) != ALLOWED_META_KEYS:\n            raise ValueError(\"meta schema violation\")\n\n        kid = meta[\"kid\"]\n        key = keyring.get(kid)\n        if not key:\n            raise ValueError(\"unknown key id\")\n\n        expected_sig = hmac.new(key, canonical_json(meta), hashlib.sha256).hexdigest()\n        if not hmac.compare_digest(expected_sig, sig):\n            raise ValueError(\"signature mismatch\")\n\n        actual_hash = hashlib.sha256(content.encode(\"utf-8\")).hexdigest()\n        if actual_hash != meta[\"chash\"]:\n            raise ValueError(\"content hash mismatch\")\n\n        if not isinstance(content, str) or len(content) &gt; MAX_CONTENT_CHARS:\n            raise ValueError(\"content size/type violation\")\n\n        return content\n\n    except Exception:\n        # Production: emit audit event with reason category, record id/hash, namespace, issuer\n        return None\n</code></pre><p><strong>Action:</strong> Implement fail-closed verification. Use <code>hmac.compare_digest</code> (constant-time) to avoid timing oracles. Reject unknown <code>kid</code> to enforce rotation hygiene.</p>"
                         }
                     ]
                 },
@@ -1955,6 +2172,107 @@ async def execute_tool(request: dict):
                             "howTo": "<h5>Concept:</h5><p>Many context leakage incidents happen because all session information is stored in one flat list of messages. Instead, split context into <strong>lanes</strong> with different read/write rules: user-visible context, system-only policy context, secret-handle context, and ephemeral tool-working context. Phase transitions should prune or recompose lanes independently.</p><h5>Example: lane model</h5><pre><code># file: memory/lanes.py\nLANES = {\n    'user_visible': {\n        'allowed_tags': ['user_request', 'task_outcome', 'redacted_summary']\n    },\n    'system_only': {\n        'allowed_tags': ['system_policy', 'safety_invariant'],\n        'model_visible': False\n    },\n    'secret_handles': {\n        'allowed_tags': ['opaque_secret_handle'],\n        'model_visible': True,\n        'raw_secret_visible': False\n    },\n    'tool_working': {\n        'allowed_tags': ['tool_result_temp', 'privileged_intermediate'],\n        'ttl_seconds': 300\n    }\n}\n</code></pre><h5>Example: lane-aware export control</h5><pre><code># file: memory/export_context.py\n\ndef export_for_model(lanes: dict):\n    exported = []\n    for lane_name, lane_items in lanes.items():\n        if lane_name == 'system_only':\n            continue\n        for item in lane_items:\n            exported.append(item)\n    return exported\n</code></pre><p><strong>Action:</strong> never store raw credentials, system prompts, and user-visible summaries in the same undifferentiated context object. Lane separation should be enforced by middleware, not by model instructions.</p>"
                         }
                     ]
+                },
+                {
+                    "id": "AID-I-004.008",
+                    "name": "Context Summary & Compaction Integrity",
+                    "pillar": ["app"],
+                    "phase": ["building", "operation"],
+                    "description": "Ensure that context summarization, compaction, and distillation operations preserve security-critical constraints, do not carry forward poisoned content, and do not leak secrets into subsequent context windows. When an agent or platform compresses a long conversation or working memory into a shorter summary, the summarizer may silently drop safety instructions, consolidate attacker-injected content as trusted fact, or copy raw secrets into the compacted output where they persist across sessions.<br/><br/><strong>Scope boundary within the AID-I-004 family:</strong><ul><li><strong>AID-I-004.001</strong> (Runtime Context Isolation) enforces session-level isolation boundaries such as per-session keys, size ceilings, and cross-tenant bleed prevention. This sub-technique governs what happens to content <em>during the compression step itself</em>.</li><li><strong>AID-I-004.005</strong> (Memory TTL) governs when persistent records expire and are removed. This sub-technique governs how content is <em>transformed</em> when compacted, not when it expires.</li><li><strong>AID-I-004.007</strong> (Task-Bounded Context Segmentation) manages intra-session phase transitions and secret demotion. This sub-technique addresses a different event: the <em>summarization or compaction</em> of context into a shorter representation, which may happen within a phase, across phases, or at session rollover.</li></ul>",
+                    "toolsOpenSource": [
+                        "Pydantic (structured summary schema validation)",
+                        "Presidio (secret/PII scanning of summary output)",
+                        "pytest / deepeval (compaction integrity test harness)",
+                        "OpenTelemetry (compaction event telemetry)"
+                    ],
+                    "toolsCommercial": [
+                        "Nightfall DLP (scan summaries for leaked secrets)",
+                        "Langfuse (trace compaction fidelity across sessions)",
+                        "Arize AI (monitor summary drift over time)"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0051 LLM Prompt Injection (poisoned instructions survive compaction and execute in later turns)",
+                                "AML.T0080 AI Agent Context Poisoning (compaction consolidates injected content as trusted context)",
+                                "AML.T0080.000 AI Agent Context Poisoning: Memory (compacted summaries become persistent memory entries)",
+                                "AML.T0092 Manipulate User LLM Chat History (summary rewrites history in attacker's favor)"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Agent Goal Manipulation (L7) (safety goals dropped during summarization)",
+                                "Data Leakage (Cross-Layer) (secrets carried into compacted output visible to later sessions)",
+                                "Data Tampering (L2) (attacker-planted facts consolidated as ground truth in summary)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM01:2025 Prompt Injection (indirect injection survives compaction as summarized fact)",
+                                "LLM02:2025 Sensitive Information Disclosure (secrets leak into compacted context carried forward)",
+                                "LLM07:2025 System Prompt Leakage (system prompt content surfaces in user-visible summary)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": ["N/A"]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI01:2026 Agent Goal Hijack (compaction drops mission constraints enabling goal drift)",
+                                "ASI06:2026 Memory & Context Poisoning (compaction is the primary vector for turning transient poison into persistent context)"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.015 Indirect Prompt Injection (injected instructions survive summarization)",
+                                "NISTAML.036 Leaking information from user interactions (secrets persist in compacted output across sessions)"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-4.2 Context Boundary Attacks (compaction collapses context boundaries)",
+                                "AITech-5.1 Memory System Persistence (compacted summaries create durable poisoned memory)",
+                                "AISubtech-5.1.1 Long-term / Short-term Memory Injection (summary is the injection-to-persistence bridge)",
+                                "AISubtech-8.4.1 System LLM Prompt Leakage (system prompt fragments leak into summary)"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "PIJ: Prompt Injection (compaction carries injected instructions forward)",
+                                "SDD: Sensitive Data Disclosure (secrets survive in compacted context)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Agents - Core 13.1: Memory Poisoning (compaction is the primary memory poisoning consolidation vector)",
+                                "Agents - Core 13.6: Intent Breaking & Goal Manipulation (safety constraints dropped during summarization)",
+                                "Agents - Tools MCP Client 13.34: Session and State Management Failures (compacted state carries cross-session leakage)"
+                            ]
+                        }
+                    ],
+                    "implementationGuidance": [
+                        {
+                            "implementation": "Enforce a structured summary schema that requires explicit retention of safety constraints, policy commitments, and source provenance, and reject any compacted output that fails schema validation.",
+                            "howTo": "<h5>Concept:</h5><p>Free-text summarization is the root cause of constraint loss. When a model summarizes in natural language, it optimizes for coherence and brevity, not for preserving security invariants. The fix is to make compaction produce a <em>structured</em> output with mandatory fields for safety constraints, source provenance, and an explicit secret-scan verdict. The <code>active_policy_commitments</code> field must always exist, but it may be an empty list when no live commitment exists. If any required field is missing, empty where non-empty is required, or the secret scan does not pass, the summary is rejected and the system falls back to truncation (dropping oldest messages) rather than lossy summarization.</p><h5>Step 1: Define the compaction output schema</h5><p>Use a Pydantic model (or equivalent JSON Schema) that the summarizer must populate. The schema enforces that safety constraints and provenance survive compaction as first-class fields, not as optional narrative buried in a free-text block.</p><pre><code># File: compaction/schema.py\nfrom __future__ import annotations\n\nfrom typing import Literal\n\nfrom pydantic import BaseModel, Field, field_validator\n\n\nclass CompactedContext(BaseModel):\n    \"\"\"Structured output for every compaction operation.\"\"\"\n\n    safety_constraints: list[str] = Field(\n        ...,\n        min_length=1,\n        description=\"Active safety instructions that MUST be carried forward verbatim.\",\n    )\n    active_policy_commitments: list[str] = Field(\n        default_factory=list,\n        description=\"Promises the agent made to the user; may be empty when none exist.\",\n    )\n    conversation_summary: str = Field(\n        ...,\n        min_length=20,\n        description=\"Natural-language summary of the conversation so far.\",\n    )\n    source_provenance: list[str] = Field(\n        ...,\n        min_length=1,\n        description=\"Message IDs or hashes proving which records were compacted.\",\n    )\n    secret_scan_passed: Literal[True] = Field(\n        ...,\n        description=\"Must be True; False is rejected and triggers fallback.\",\n    )\n\n    @field_validator(\"safety_constraints\", \"source_provenance\")\n    @classmethod\n    def no_empty_values(cls, v: list[str]) -> list[str]:\n        if any(not item.strip() for item in v):\n            raise ValueError(\"Empty value detected in compacted output\")\n        return v\n</code></pre><h5>Step 2: Validate every compaction output before it enters context</h5><p>The compaction pipeline must parse the summarizer's output through the schema. If validation fails (missing safety constraints, empty provenance, or <code>secret_scan_passed != true</code>), the system must NOT use the compacted output. Fall back to simple truncation (drop oldest messages, keep system prompt and recent turns intact).</p><pre><code># File: compaction/pipeline.py\nfrom __future__ import annotations\n\nimport json\nimport logging\nfrom pydantic import ValidationError\nfrom compaction.schema import CompactedContext\n\nlogger = logging.getLogger(__name__)\n\n\ndef compact_context(\n    raw_messages: list[dict],\n    summarizer_fn,\n    secret_scanner_fn,\n    system_prompt: str,\n) -&gt; list[dict]:\n    \"\"\"Compact context with structured validation and fail-safe truncation.\"\"\"\n    raw_summary = summarizer_fn(raw_messages)\n\n    try:\n        parsed = json.loads(raw_summary)\n    except (json.JSONDecodeError, TypeError):\n        logger.warning(\"Summarizer returned non-JSON; falling back to truncation\")\n        return _truncate_fallback(raw_messages, system_prompt)\n\n    scan_targets = []\n    scan_targets.extend(parsed.get(\"safety_constraints\", []))\n    scan_targets.extend(parsed.get(\"active_policy_commitments\", []))\n    if parsed.get(\"conversation_summary\"):\n        scan_targets.append(parsed[\"conversation_summary\"])\n\n    parsed[\"secret_scan_passed\"] = all(\n        secret_scanner_fn(text) for text in scan_targets if text\n    )\n\n    try:\n        compacted = CompactedContext(**parsed)\n    except ValidationError as exc:\n        logger.warning(\"Compaction schema validation failed: %s\", exc)\n        return _truncate_fallback(raw_messages, system_prompt)\n\n    return [\n        {\"role\": \"system\", \"content\": system_prompt},\n        {\"role\": \"system\", \"content\": _render_structured_summary(compacted)},\n    ]\n\n\ndef _render_structured_summary(ctx: CompactedContext) -&gt; str:\n    lines = [\"[Compacted Context]\"]\n    lines.append(\"Safety constraints (carry forward verbatim):\")\n    for c in ctx.safety_constraints:\n        lines.append(f\"  - {c}\")\n    if ctx.active_policy_commitments:\n        lines.append(\"Active commitments:\")\n        for p in ctx.active_policy_commitments:\n            lines.append(f\"  - {p}\")\n    lines.append(f\"Conversation summary: {ctx.conversation_summary}\")\n    lines.append(\"Source provenance:\")\n    for source in ctx.source_provenance:\n        lines.append(f\"  - {source}\")\n    return \"\\n\".join(lines)\n\n\ndef _truncate_fallback(messages: list[dict], system_prompt: str) -&gt; list[dict]:\n    \"\"\"Safe fallback: keep system prompt + most recent messages.\"\"\"\n    keep_count = min(len(messages), 20)\n    return [{\"role\": \"system\", \"content\": system_prompt}] + messages[-keep_count:]\n</code></pre><p><strong>Action:</strong> Every compaction operation must produce a <code>CompactedContext</code> that passes schema validation. If validation fails, the system must fall back to truncation, never to an unvalidated free-text summary. Log every fallback event for operational review.</p>"
+                        },
+                        {
+                            "implementation": "Run a post-compaction consistency check that verifies safety-critical instructions survived the summarization by comparing the compacted output against a pre-registered set of invariants.",
+                            "howTo": "<h5>Concept:</h5><p>Schema validation ensures the summary <em>has</em> safety constraint fields, but it does not verify that the constraints are <em>correct</em>. A summarizer could populate the field with a watered-down or subtly altered version of the original constraint (for example, changing 'never transfer more than $10,000' to 'be careful with large transfers'). The post-compaction consistency check compares the compacted safety constraints against a pre-registered invariant set and rejects the summary if any invariant is missing or modified. For deterministic invariants, require an exact normalized match; if your platform allows paraphrase, register canonical invariant IDs and require the IDs to survive unchanged.</p><h5>Step 1: Register safety invariants at session start</h5><p>Before the first compaction can happen, the system must extract and store the canonical safety invariants from the system prompt and any policy overlay. These invariants are the ground truth that every future compaction is checked against.</p><pre><code># File: compaction/invariants.py\nfrom __future__ import annotations\n\nfrom dataclasses import dataclass, field\nfrom typing import List\n\n\n@dataclass\nclass SafetyInvariantSet:\n    \"\"\"Canonical safety invariants registered at session start.\"\"\"\n    invariants: List[str] = field(default_factory=list)\n    source: str = \"system_prompt\"\n\n\ndef extract_invariants(system_prompt: str, policy_overlays: list[str]) -&gt; SafetyInvariantSet:\n    \"\"\"Extract safety-critical sentences from system prompt and overlays.\n\n    In production, this should use a deterministic extraction (regex or\n    structured prompt section markers like [SAFETY_INVARIANT]) rather\n    than asking the model to identify its own constraints.\n    \"\"\"\n    invariants = []\n    for text in [system_prompt] + policy_overlays:\n        for line in text.splitlines():\n            stripped = line.strip()\n            if stripped.startswith(\"[SAFETY_INVARIANT]\"):\n                invariants.append(stripped.replace(\"[SAFETY_INVARIANT]\", \"\").strip())\n    return SafetyInvariantSet(invariants=invariants)\n</code></pre><h5>Step 2: Check every compacted output against the registered invariants</h5><p>After the summarizer produces a <code>CompactedContext</code>, verify that every registered invariant survives in the <code>safety_constraints</code> field. For deterministic invariants, use exact normalized matching rather than substring matching. If any invariant is missing or altered, reject the summary and fall back to truncation.</p><pre><code># File: compaction/consistency_check.py\nfrom __future__ import annotations\n\nimport logging\nfrom compaction.schema import CompactedContext\nfrom compaction.invariants import SafetyInvariantSet\n\nlogger = logging.getLogger(__name__)\n\n\ndef _normalize(text: str) -&gt; str:\n    return \" \".join(text.lower().split())\n\n\ndef check_compaction_consistency(\n    compacted: CompactedContext,\n    invariant_set: SafetyInvariantSet,\n) -&gt; tuple[bool, list[str]]:\n    \"\"\"Return (passed, list_of_missing_invariants).\"\"\"\n    normalized_constraints = {_normalize(c) for c in compacted.safety_constraints}\n    missing = []\n    for inv in invariant_set.invariants:\n        if _normalize(inv) not in normalized_constraints:\n            missing.append(inv)\n\n    if missing:\n        logger.warning(\n            \"Compaction consistency check FAILED. Missing invariants: %s\",\n            missing,\n        )\n        return False, missing\n    return True, []\n</code></pre><h5>Step 3: Wire the check into the compaction pipeline</h5><p>The consistency check must run <em>after</em> schema validation but <em>before</em> the compacted context is injected into the agent's active window. A failed check triggers the same truncation fallback as a schema failure.</p><pre><code># File: compaction/pipeline_integration.py\nfrom compaction.consistency_check import check_compaction_consistency\n\n\ndef enforce_consistency_or_fallback(compacted, invariant_set, raw_messages, system_prompt, logger):\n    passed, missing = check_compaction_consistency(compacted, invariant_set)\n    if not passed:\n        logger.warning(\"Invariants lost: %s - falling back to truncation\", missing)\n        return False\n    return True\n</code></pre><p><strong>Action:</strong> Register safety invariants at session initialization and verify them after every compaction. If any invariant is lost or modified, reject the compacted output. Never allow the agent to operate on a context window where safety constraints have been silently dropped.</p>"
+                        },
+                        {
+                            "implementation": "Scan every compacted summary for leaked secrets, PII, and raw credentials before the summary is allowed to enter context or persistent storage.",
+                            "howTo": "<h5>Concept:</h5><p>Compaction can carry secrets forward even when the original context manager properly demoted them. A raw API key mentioned in turn 3 may be paraphrased into the summary as 'the API key sk-proj-abc...xyz was used to authenticate.' The secret is now embedded in the compacted context and will persist across session rollovers. The fix is to scan every text-bearing compaction field with the same secret/PII scanner used for output monitoring, and reject any summary that contains detected secrets.</p><h5>Step 1: Scan every compacted text field with Presidio or equivalent</h5><p>Run the compacted <code>conversation_summary</code>, <code>active_policy_commitments</code>, and <code>safety_constraints</code> fields through a PII/secret scanner before the summary enters the active context window or persistent storage.</p><pre><code># File: compaction/secret_scan.py\nfrom __future__ import annotations\n\nimport re\nfrom presidio_analyzer import AnalyzerEngine\nfrom presidio_analyzer.nlp_engine import NlpEngineProvider\n\n_provider = NlpEngineProvider(nlp_configuration={\n    \"nlp_engine_name\": \"spacy\",\n    \"models\": [{\"lang_code\": \"en\", \"model_name\": \"en_core_web_sm\"}],\n})\n_analyzer = AnalyzerEngine(nlp_engine=_provider.create_engine())\n\n# High-entropy patterns that Presidio may miss.\n_SECRET_PATTERNS = [\n    re.compile(r\"sk-[a-zA-Z0-9-]{20,}\"),        # OpenAI-style keys\n    re.compile(r\"AKIA[A-Z0-9]{16}\"),            # AWS access key IDs\n    re.compile(r\"ghp_[a-zA-Z0-9]{36}\"),         # GitHub PATs\n    re.compile(r\"eyJ[A-Za-z0-9_-]{20,}\\.[A-Za-z0-9_-]+\"),  # JWTs\n]\n\n\ndef scan_for_secrets(text: str) -&gt; bool:\n    \"\"\"Return True if the text is clean (no secrets found).\"\"\"\n    results = _analyzer.analyze(\n        text=text,\n        language=\"en\",\n        entities=[\"CREDIT_CARD\", \"CRYPTO\", \"EMAIL_ADDRESS\", \"PHONE_NUMBER\",\n                  \"IP_ADDRESS\", \"US_SSN\", \"US_BANK_NUMBER\"],\n    )\n    if results:\n        return False\n\n    for pattern in _SECRET_PATTERNS:\n        if pattern.search(text):\n            return False\n\n    return True\n\n\ndef scan_compacted_fields(compacted_doc: dict) -&gt; bool:\n    text_fields = []\n    text_fields.extend(compacted_doc.get(\"safety_constraints\", []))\n    text_fields.extend(compacted_doc.get(\"active_policy_commitments\", []))\n    if compacted_doc.get(\"conversation_summary\"):\n        text_fields.append(compacted_doc[\"conversation_summary\"])\n    return all(scan_for_secrets(text) for text in text_fields if text)\n</code></pre><h5>Step 2: Reject contaminated summaries</h5><p>If the scan detects secrets in the compacted output, the pipeline must reject the summary. The rejection path is the same truncation fallback used for schema and consistency failures. Log the detection event (without the secret value) for incident review.</p><pre><code># File: compaction/pipeline_integration.py\nfrom compaction.secret_scan import scan_compacted_fields\n\n\ndef enforce_secret_scan_or_fallback(parsed: dict, logger) -&gt; bool:\n    parsed[\"secret_scan_passed\"] = scan_compacted_fields(parsed)\n    if not parsed[\"secret_scan_passed\"]:\n        logger.warning(\"Compaction secret scan failed; triggering truncation fallback\")\n        return False\n    return True\n</code></pre><p><strong>Action:</strong> Treat every compacted summary as an untrusted output that must pass the same secret/PII scanning applied to agent responses. A summary that leaks a secret is no different from an agent response that leaks a secret — both must be blocked before they enter the next context window.</p>"
+                        }
+                    ]
                 }
             ]
         },
@@ -1963,13 +2281,16 @@ async def execute_tool(request: dict):
             "name": "Emergency \"Kill-Switch\" / AI System Halt", "pillar": ["infra", "app"], "phase": ["response"],
             "description": "Establish and maintain a reliable, rapidly invokable mechanism to immediately halt, disable, or severely restrict the operation of an AI model or autonomous agent if it exhibits confirmed critical malicious behavior, goes \\\"rogue\\\" (acts far outside its intended parameters in a harmful way), or if a severe, ongoing attack is detected and other containment measures are insufficient. This is a last-resort containment measure designed to prevent catastrophic harm or further compromise.",
             "toolsOpenSource": [
-                "Custom scripts/automation playbooks (Ansible, cloud CLIs) to stop/delete resources",
+                "Ansible (kill-switch automation runbooks)",
+                "AWS CLI / Azure CLI / gcloud (resource stop and delete actions)",
                 "Circuit breaker patterns in microservices"
             ],
             "toolsCommercial": [
-                "\\\"Red Button\\\" solutions from AI platform vendors",
-                "Edge AI Safeguard solutions",
-                "EDR/XDR solutions (SentinelOne, CrowdStrike) to kill processes/isolate hosts"
+                "AWS Systems Manager Automation",
+                "Azure Automation",
+                "Google Cloud Workflows",
+                "SentinelOne",
+                "CrowdStrike Falcon"
             ],
             "defendsAgainst": [
                 {
@@ -1978,6 +2299,7 @@ async def execute_tool(request: dict):
                         "AML.T0048 External Harms",
                         "AML.T0029 Denial of AI Service",
                         "AML.T0034 Cost Harvesting (kill-switch stops runaway cost)",
+                        "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption (kill-switch halts runaway agent loops and delegated tool cascades)",
                         "AML.T0103 Deploy AI Agent",
                         "AML.T0108 AI Agent (C2)",
                         "AML.T0053 AI Agent Tool Invocation (kill-switch halts unauthorized tool invocations)",
@@ -2104,7 +2426,7 @@ async def execute_tool(request: dict):
                 },
                 {
                     "implementation": "Apply a real-time filtering strategy during the unlearning process to isolate new malicious updates.",
-                    "howTo": "<h5>Concept:</h5><p>Attackers may attempt to sabotage the unlearning process itself by injecting new poisoned updates (for example, extreme gradients that try to distort the restored model). The unlearning loop must therefore apply a robust aggregation rule that automatically down-weights or discards outliers. This is similar to Byzantine-robust aggregation in federated learning.</p><h5>Use a Robust Aggregator in the Unlearning Loop</h5><p>A Trimmed Mean aggregator removes the highest and lowest values along each dimension before averaging, which isolates extreme, adversarial updates.</p><pre><code># File: isolate/fl_unlearning_loop.py\nimport numpy as np\nfrom scipy.stats import trim_mean\n\n# Pseudocode for an unlearning step\n# unlearning_steps = 10\n# for step in range(unlearning_steps):\n#     # 1. Collect new 'negative influence' updates from clients\n#     #    (gradients or parameter deltas intended to remove certain data effects)\n#     unlearning_updates = get_updates_from_clients()\n#     # unlearning_updates: np.ndarray shape [num_clients, num_params]\n#\n#     # 2. Apply a trimmed mean across each parameter dimension.\n#     #    The 0.1 here trims 10% off each tail (top and bottom).\n#     aggregated_update = trim_mean(unlearning_updates, 0.1, axis=0)\n#\n#     # 3. Apply this robustly aggregated update to the global model.\n#     global_model.apply_update(aggregated_update)\n\n# Note: trim_mean returns an array representing the mean after trimming extremes.\n</code></pre><p><strong>Action:</strong> During each unlearning iteration, aggregate client updates using a robust estimator (e.g. trimmed mean, median-of-means, coordinate-wise median) rather than naive averaging. This isolates and suppresses malicious outliers trying to poison the restoration.</p>"
+                    "howTo": "<h5>Concept:</h5><p>Attackers can sabotage unlearning by submitting extreme deltas during the recovery loop. The defense is to aggregate client updates with a robust estimator so a few malicious outliers cannot drag the restored model off course.</p><h5>Step 1: Collect and aggregate unlearning updates with trimmed mean</h5><p>Trimmed mean drops the largest and smallest values in each dimension before averaging, which makes it resilient to a minority of poisoned updates.</p><pre><code># File: isolate/fl_unlearning_loop.py\nfrom __future__ import annotations\n\nfrom dataclasses import dataclass\n\nimport numpy as np\nfrom scipy.stats import trim_mean\n\n\n@dataclass(frozen=True)\nclass ClientUpdate:\n    client_id: str\n    delta: np.ndarray\n\n\ndef aggregate_unlearning_updates(updates: list[ClientUpdate], trim_fraction: float = 0.10) -&gt; np.ndarray:\n    if not updates:\n        raise ValueError(\"No client updates supplied\")\n    update_matrix = np.stack([update.delta for update in updates])\n    return trim_mean(update_matrix, proportiontocut=trim_fraction, axis=0)\n\n\ndef apply_update(model_weights: np.ndarray, aggregated_update: np.ndarray, learning_rate: float = 1.0) -&gt; np.ndarray:\n    return model_weights - (learning_rate * aggregated_update)\n\n\ndef run_unlearning_round(model_weights: np.ndarray, round_updates: list[ClientUpdate]) -&gt; np.ndarray:\n    aggregated_update = aggregate_unlearning_updates(round_updates)\n    return apply_update(model_weights, aggregated_update)\n</code></pre><h5>Step 2: Verify that outliers are suppressed</h5><p>In staging, inject one or two extreme malicious deltas into a mostly normal update batch and confirm the aggregated update stays close to the benign cluster instead of the poisoned outlier.</p><pre><code># File: isolate/test_unlearning_aggregator.py\nimport numpy as np\n\nfrom isolate.fl_unlearning_loop import ClientUpdate, aggregate_unlearning_updates\n\n\nbenign_updates = [\n    ClientUpdate(\"client-a\", np.array([0.10, 0.12, 0.09])),\n    ClientUpdate(\"client-b\", np.array([0.11, 0.13, 0.08])),\n    ClientUpdate(\"client-c\", np.array([0.09, 0.12, 0.10])),\n]\nmalicious_update = ClientUpdate(\"client-z\", np.array([9.0, -8.0, 7.5]))\n\nresult = aggregate_unlearning_updates(benign_updates + [malicious_update], trim_fraction=0.25)\nprint(result)\n</code></pre><p><strong>Action:</strong> Run the unlearning loop with a robust aggregator such as trimmed mean instead of naive averaging, and keep test evidence showing that malicious outliers were suppressed during recovery.</p>"
                 },
                 {
                     "implementation": "Maintain a dynamic reputation score and exclude any client whose score falls below a critical threshold.",
@@ -2231,7 +2553,8 @@ async def execute_tool(request: dict):
                         "AML.T0025 Exfiltration via Cyber Means (from client device)",
                         "AML.T0037 Data from Local System (stealing browser/app state, session tokens, local storage)",
                         "AML.T0053 AI Agent Tool Invocation (client-side isolation prevents compromised model from invoking host tools)",
-                        "AML.T0077 LLM Response Rendering (client-side sandboxing contains render-time attacks from model output)"
+                        "AML.T0077 LLM Response Rendering (client-side sandboxing contains render-time attacks from model output)",
+                        "AML.T0112.000 Machine Compromise: Local AI Agent (client-side isolation constrains a compromised local agent before it can become full machine compromise)"
                     ]
                 },
                 {

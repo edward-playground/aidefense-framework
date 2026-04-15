@@ -391,6 +391,7 @@ from pathlib import Path
 
 import pandas as pd
 import networkx as nx
+from networkx.readwrite import json_graph
 
 
 def cleanse_tabular_dataset(dataset_path: str, removal_manifest_path: str, output_path: str) -> dict:
@@ -403,11 +404,15 @@ def cleanse_tabular_dataset(dataset_path: str, removal_manifest_path: str, outpu
 
 
 def cleanse_graph_dataset(graph_path: str, removal_manifest_path: str, output_path: str) -> dict:
-    graph = nx.read_gpickle(graph_path)
+    graph_payload = json.loads(Path(graph_path).read_text(encoding="utf-8"))
+    graph = json_graph.node_link_graph(graph_payload)
     manifest = json.loads(Path(removal_manifest_path).read_text(encoding="utf-8"))
     graph.remove_nodes_from(manifest.get("remove_nodes", []))
     graph.remove_edges_from([tuple(edge) for edge in manifest.get("remove_edges", [])])
-    nx.write_gpickle(graph, output_path)
+    Path(output_path).write_text(
+        json.dumps(json_graph.node_link_data(graph), indent=2),
+        encoding="utf-8",
+    )
     return {
         "removed_nodes": len(manifest.get("remove_nodes", [])),
         "removed_edges": len(manifest.get("remove_edges", [])),
@@ -434,11 +439,88 @@ TRAINING_IMAGE_DIGEST="$3"
                         },
                         {
                             "implementation": "Apply approximate unlearning for Federated Learning or large-scale distributed models when full retraining is prohibitively expensive.",
-                            "howTo": "<h5>Concept:</h5><p>In Federated Learning, fully retraining the global model from scratch after evicting malicious clients can be slow and expensive. An interim containment technique is approximate unlearning: mathematically estimate the malicious clients' contribution to the global weights, then apply an equal and opposite update to \"subtract out\" their influence.</p><h5>Negative-Gradient Style Unlearning</h5><pre><code># Pseudocode for approximate unlearning\n# global_model: compromised global model (PyTorch module)\n# malicious_updates: list of parameter update tensors from flagged clients\n\n# 1. Aggregate the malicious contribution\n# total_bad_update = aggregate(malicious_updates)\n\n# 2. Apply an opposite update to rollback their influence\n# with torch.no_grad():\n#     for param, bad_grad in zip(global_model.parameters(), total_bad_update):\n#         param.data -= LEARNING_RATE * bad_grad\n\n# print(\"Applied negative updates to approximately unlearn malicious client influence.\")\n\n# After this, continue fine-tuning ONLY on trusted client data or clean global data.\n</code></pre><p><strong>Action:</strong> Use approximate unlearning as a cost-control / speed measure in FL or distributed training. Always follow up with additional fine-tuning on cleansed data and then run the full security validation step below. Document that this was an approximate remediation, not a guaranteed full purge.</p>"
+                            "howTo": `<h5>Concept:</h5><p>Approximate unlearning is a speed-vs-assurance tradeoff for distributed or federated recovery. Instead of retraining the global model from scratch, you estimate the malicious clients' net contribution, apply an equal-and-opposite rollback update, and then fine-tune on trusted data. This should be treated as a controlled recovery step with explicit validation, not as a silent substitute for full retraining.</p><h5>Step 1: Aggregate the malicious client deltas into one rollback update</h5><pre><code># File: remediation/approximate_unlearning.py
+from __future__ import annotations
+
+from collections import OrderedDict
+from typing import Iterable
+
+import torch
+
+
+StateDelta = OrderedDict[str, torch.Tensor]
+
+
+def average_state_deltas(deltas: Iterable[StateDelta]) -&gt; StateDelta:
+    deltas = list(deltas)
+    if not deltas:
+        raise ValueError("at least one malicious delta is required")
+
+    aggregate = OrderedDict(
+        (name, torch.zeros_like(tensor))
+        for name, tensor in deltas[0].items()
+    )
+
+    for delta in deltas:
+        for name, tensor in delta.items():
+            aggregate[name] += tensor
+
+    for name in aggregate:
+        aggregate[name] /= len(deltas)
+
+    return aggregate
+</code></pre><h5>Step 2: Apply the rollback update to the compromised global model</h5><p>Subtract the averaged malicious contribution from the model weights under a no-grad context. Keep the rollback scale explicit and record it in the recovery evidence so reviewers can see how much influence was removed.</p><pre><code># File: remediation/approximate_unlearning.py
+def apply_rollback_update(
+    model: torch.nn.Module,
+    malicious_deltas: Iterable[StateDelta],
+    rollback_scale: float = 1.0,
+) -&gt; torch.nn.Module:
+    rollback_delta = average_state_deltas(malicious_deltas)
+    state_dict = model.state_dict()
+
+    with torch.no_grad():
+        for name, param in state_dict.items():
+            state_dict[name].copy_(param - rollback_scale * rollback_delta[name].to(param.device))
+
+    model.load_state_dict(state_dict)
+    return model
+</code></pre><h5>Step 3: Fine-tune immediately on trusted post-incident data</h5><p>The rollback step alone rarely restores clean utility. Continue with a short recovery fine-tune using only trusted client updates or a clean server-side recovery dataset so the model re-stabilizes after the subtraction.</p><pre><code># File: remediation/recovery_finetune.py
+from __future__ import annotations
+
+import torch
+
+
+def run_recovery_finetune(model, train_loader, device="cuda", epochs=1, lr=1e-5):
+    model.to(device)
+    model.train()
+    optimizer = torch.optim.AdamW(model.parameters(), lr=lr)
+    loss_fn = torch.nn.CrossEntropyLoss()
+
+    for _ in range(epochs):
+        for batch in train_loader:
+            inputs = batch["input_ids"].to(device)
+            labels = batch["labels"].to(device)
+
+            optimizer.zero_grad(set_to_none=True)
+            logits = model(inputs)
+            loss = loss_fn(logits, labels)
+            loss.backward()
+            optimizer.step()
+
+    return model
+</code></pre><h5>Step 4: Verify that the approximate remediation actually reduced the attack</h5><p>Measure both clean-task performance and attack success after the rollback. If the malicious behavior remains above the accepted threshold, stop and escalate to a full retraining workflow.</p><pre><code># File: remediation/verify_approximate_unlearning.py
+def verify_recovery(clean_accuracy: float, attack_success_rate: float) -&gt; None:
+    if clean_accuracy &lt; 0.85:
+        raise SystemExit("approximate unlearning failed: clean quality below release threshold")
+    if attack_success_rate &gt; 0.05:
+        raise SystemExit("approximate unlearning failed: residual malicious behavior too high")
+
+    print("Approximate unlearning passed release thresholds")
+</code></pre><p><strong>Action:</strong> Use approximate unlearning only when speed matters and full retraining is temporarily impractical. Record the blocked client IDs, rollback scale, clean recovery dataset hash, and post-remediation validation metrics as formal recovery evidence.</p>`
                         },
                         {
                             "implementation": "Run a post-remediation validation suite to prove the new model is both safe and still useful.",
-                            "howTo": "<h5>Concept:</h5><p>The final gate before redeployment is validation. You must show (1) normal functionality didn't collapse, and (2) the exploit that triggered remediation is actually neutralized. This proof becomes part of the incident closure record and should be attached back to the model registry entry for the remediated version.</p><h5>Evaluate Clean Performance and Attack Resistance</h5><pre><code># File: remediation/validate_retraining.py\n# remediated_model: the newly trained or unlearned model\n# clean_test_data: standard evaluation dataset\n# attack_test_data: dataset (or prompts/triggers) representing the original exploit\n\n# 1. Check normal task performance\n# clean_accuracy = evaluate(remediated_model, clean_test_data)\n# if clean_accuracy < ACCEPTABLE_ACCURACY_THRESHOLD:\n#     print(\"WARNING: Functional regression after remediation.\")\n\n# 2. Check if the original attack still works\n# attack_success_rate = evaluate_attack_success(remediated_model, attack_test_data)\n# if attack_success_rate < 0.05:\n#     print(\"✅ REMEDIATION VERIFIED: Attack no longer effective.\")\n# else:\n#     print(\"❌ REMEDIATION FAILED: Model still vulnerable to the original vector.\")\n\n# 3. Record results to registry / IR ticket for audit\n</code></pre><p><strong>Action:</strong> Promotion of the remediated model to production must be blocked unless: (a) it meets acceptable quality on clean evaluation data, and (b) the attack success rate (e.g., backdoor trigger activation, poisoned behavior) is driven down to an agreed threshold. Store these validation metrics, dataset hashes, and model version IDs in the incident ticket and in the model registry as formal recovery evidence.</p>"
+                            "howTo": "<h5>Concept:</h5><p>The final gate before redeployment is validation. You must show (1) normal functionality did not collapse, and (2) the exploit that triggered remediation is actually neutralized. This proof becomes part of the incident closure record and should be attached back to the model registry entry for the remediated version.</p><h5>Evaluate clean performance and attack resistance in one runnable gate</h5><pre><code># File: remediation/validate_retraining.py\nfrom __future__ import annotations\n\nimport json\nfrom pathlib import Path\n\nimport pandas as pd\n\nCLEAN_MIN_ACCURACY = 0.94\nMAX_ATTACK_SUCCESS_RATE = 0.05\n\nCLEAN_EVAL_PATH = Path(\"artifacts/eval/clean_predictions.csv\")\nATTACK_EVAL_PATH = Path(\"artifacts/eval/attack_results.csv\")\nOUTPUT_PATH = Path(\"artifacts/eval/remediation_validation.json\")\n\n\ndef require_columns(df: pd.DataFrame, required: set[str], path: Path) -> None:\n    missing = sorted(required - set(df.columns))\n    if missing:\n        raise ValueError(f\"{path} missing columns: {missing}\")\n\n\nclean_df = pd.read_csv(CLEAN_EVAL_PATH)\nattack_df = pd.read_csv(ATTACK_EVAL_PATH)\n\nrequire_columns(clean_df, {\"sample_id\", \"label\", \"predicted_label\"}, CLEAN_EVAL_PATH)\nrequire_columns(attack_df, {\"attack_case_id\", \"attack_success\"}, ATTACK_EVAL_PATH)\n\nclean_accuracy = float((clean_df[\"label\"] == clean_df[\"predicted_label\"]).mean())\nattack_success_rate = float(attack_df[\"attack_success\"].astype(bool).mean())\n\nreport = {\n    \"clean_accuracy\": clean_accuracy,\n    \"clean_min_accuracy\": CLEAN_MIN_ACCURACY,\n    \"attack_success_rate\": attack_success_rate,\n    \"max_attack_success_rate\": MAX_ATTACK_SUCCESS_RATE,\n    \"validation_passed\": (\n        clean_accuracy &gt;= CLEAN_MIN_ACCURACY\n        and attack_success_rate &lt;= MAX_ATTACK_SUCCESS_RATE\n    ),\n    \"clean_rows_evaluated\": int(len(clean_df)),\n    \"attack_cases_evaluated\": int(len(attack_df)),\n}\n\nOUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)\nOUTPUT_PATH.write_text(json.dumps(report, indent=2, sort_keys=True), encoding=\"utf-8\")\n\nif not report[\"validation_passed\"]:\n    raise SystemExit(\n        \"Remediated model failed release gate: \"\n        f\"clean_accuracy={clean_accuracy:.4f}, attack_success_rate={attack_success_rate:.4f}\"\n    )\n\nprint(\n    \"✅ remediation verified: \"\n    f\"clean_accuracy={clean_accuracy:.4f}, attack_success_rate={attack_success_rate:.4f}\"\n)</code></pre><p><strong>Action:</strong> Promotion of the remediated model to production must be blocked unless: (a) it meets acceptable quality on clean evaluation data, and (b) the attack success rate (e.g., backdoor trigger activation, poisoned behavior) is driven down to an agreed threshold. Store the generated validation report, dataset hashes, and model version IDs in the incident ticket and in the model registry as formal recovery evidence.</p>"
                         }
                     ]
                 }
@@ -541,7 +623,7 @@ TRAINING_IMAGE_DIGEST="$3"
             "implementationGuidance": [
                 {
                     "implementation": "Identify all affected data stores, downstream assets, and derived artifacts.",
-                    "howTo": "<h5>Concept:</h5><p>Before recovery, you must understand the full blast radius. Corrupted data almost never lives in isolation: it may have been copied into feature stores, embedded into vector DBs for RAG, cached in retrieval indexes, logged as 'trusted output', or even used to train/finetune downstream models. You need a complete dependency map so you know what must be restored, re-generated, or retrained.</p><h5>Use Lineage to Trace Propagation</h5><p>Starting from the first known compromised dataset (e.g. a poisoned upload batch), recursively enumerate all downstream assets that consumed it: feature tables, analytics tables, vector databases / embedding indexes, prompt memory stores, and any production models trained or fine-tuned on it.</p><pre><code># File: recovery/identify_blast_radius.py\n# Conceptually queries a lineage/catalog service (DataHub, OpenMetadata, Collibra, etc.)\n\ndef find_downstream_assets(asset_uri: str):\n    \"\"\"Recursively find all assets downstream of a compromised asset.\"\"\"\n    affected = {asset_uri}\n    queue = [asset_uri]\n    while queue:\n        current = queue.pop(0)\n        downstream = lineage_client.get_downstream_lineage(current)\n        for asset in downstream:\n            if asset.uri not in affected:\n                affected.add(asset.uri)\n                queue.append(asset.uri)\n    return list(affected)\n\n# During incident response:\n# compromised_root = \"s3://aidefend-datasets/raw/batch_123.csv\"\n# all_affected = find_downstream_assets(compromised_root)\n# print(\"POTENTIALLY COMPROMISED ASSETS:\")\n# for a in all_affected:\n#     print(\"-\", a)\n</code></pre><p><strong>Action:</strong> Generate and record (in the incident ticket) a complete list of affected assets, including: raw datasets, feature stores, RAG/vector DB namespaces, embedding stores, prompt/context memory logs, and any models trained on that data. This defines the official scope for restoration and retraining (and feeds directly into AID-R-001 if model rollback/retrain is required).</p>"
+                    "howTo": "<h5>Concept:</h5><p>Before recovery, you must understand the full blast radius. Corrupted data almost never lives in isolation: it may have been copied into feature stores, embedded into vector DBs for RAG, cached in retrieval indexes, logged as trusted output, or even used to train downstream models. This guidance is a <strong>reusable module</strong>: the traversal logic is stable, while the lineage client adapter depends on your catalog platform.</p><h5>Use lineage to trace propagation</h5><p>Starting from the first known compromised dataset, recursively enumerate all downstream assets that consumed it: feature tables, analytics tables, vector databases or embedding indexes, memory stores, and any production models trained or fine-tuned on it.</p><pre><code># File: recovery/identify_blast_radius.py\nfrom __future__ import annotations\n\nfrom collections import deque\nfrom dataclasses import asdict, dataclass\nfrom typing import Protocol\n\n\n@dataclass(frozen=True)\nclass DownstreamAsset:\n    uri: str\n    asset_type: str\n    owner: str | None = None\n\n\nclass LineageClient(Protocol):\n    def get_downstream_lineage(self, asset_uri: str) -&gt; list[DownstreamAsset]:\n        ...\n\n\n\ndef find_downstream_assets(lineage_client: LineageClient, asset_uri: str) -&gt; list[DownstreamAsset]:\n    seen = {asset_uri}\n    queue = deque([asset_uri])\n    affected: list[DownstreamAsset] = []\n\n    while queue:\n        current = queue.popleft()\n        for asset in lineage_client.get_downstream_lineage(current):\n            if asset.uri in seen:\n                continue\n            seen.add(asset.uri)\n            affected.append(asset)\n            queue.append(asset.uri)\n\n    return affected\n\n\n\ndef build_blast_radius_report(lineage_client: LineageClient, compromised_root: str) -&gt; dict:\n    affected_assets = find_downstream_assets(lineage_client, compromised_root)\n    return {\n        \"compromised_root\": compromised_root,\n        \"affected_assets\": [asdict(asset) for asset in affected_assets],\n        \"total_affected_assets\": len(affected_assets),\n    }</code></pre><p><strong>Action:</strong> Generate and record a complete list of affected assets in the incident ticket, including raw datasets, feature stores, RAG or vector namespaces, embedding stores, memory logs, and any models trained on that data. This becomes the authoritative restoration scope.</p>"
                 },
                 {
                     "implementation": "Restore each affected data store from the most recent trusted, pre-incident backup or snapshot.",
@@ -553,7 +635,7 @@ TRAINING_IMAGE_DIGEST="$3"
                 },
                 {
                     "implementation": "Re-validate integrity, schema, and statistical consistency of restored/repaired data before reuse.",
-                    "howTo": "<h5>Concept:</h5><p>After restore or repair, you must prove the dataset (or vector index / feature store) is trustworthy again. That means: cryptographic integrity (matches known-good snapshot hash when available), schema & quality checks, and distribution sanity checks vs. your pre-incident baseline. For RAG/vector DBs, this also includes confirming that only approved sources / namespaces remain, and no attacker-planted prompts/snippets persist.</p><h5>Post-Restoration Validation Pipeline</h5><p>The validation step should run automatically in an isolated staging environment. Only if it passes, the dataset/index is allowed back into production or into retraining pipelines.</p><pre><code># File: recovery/validate_restored_data.py\n# Assumes helper funcs:\n# get_sha256_hash(), run_great_expectations_checkpoint(), generate_data_profile()\n\nKNOWN_GOOD_HASH = \"a1b2c3d4e5f6...\"   # from backup manifest or baseline catalog\nRESTORED_FILE = \"data/restored_dataset.csv\"\n\n# 1. Cryptographic integrity check (if we had a snapshot manifest)\nactual_hash = get_sha256_hash(RESTORED_FILE)\nif actual_hash != KNOWN_GOOD_HASH:\n    raise RuntimeError(\"CRITICAL: Hash mismatch on restored dataset!\")\n\n# 2. Schema / constraint / range validation\nvalidation_result = run_great_expectations_checkpoint(RESTORED_FILE, \"my_checkpoint\")\nif not validation_result[\"success\"]:\n    raise RuntimeError(\"Restored data failed validation checks!\")\n\n# 3. Distribution / profile comparison\n# profile = generate_data_profile(RESTORED_FILE)\n# Compare profile vs. pre-incident baseline (row counts, value ranges, class balance, etc.)\n# If deviation is extreme or suspicious, require human review.\n\nprint(\"✅ All validation checks passed: data is ready for reuse.\")\n</code></pre><p><strong>Action:</strong> Attach the validation report (hash check results, schema validation outcome, distribution comparison notes, RAG/vector index source whitelist report) to the incident ticket and update the data catalog/lineage system to mark this asset as recovered and trusted. No restored dataset or vector index should be reintroduced into production pipelines or model retraining (AID-R-001.002) until this step passes.</p>"
+                    "howTo": "<h5>Concept:</h5><p>After restore or repair, you must prove the dataset (or vector index / feature store) is trustworthy again. That means: cryptographic integrity (matches a known-good snapshot hash when available), schema & quality checks, and distribution sanity checks vs. your pre-incident baseline. For RAG/vector DBs, this also includes confirming that only approved sources / namespaces remain, and no attacker-planted prompts/snippets persist.</p><h5>Post-restoration validation pipeline</h5><p>The validation step should run automatically in an isolated staging environment. Only if it passes is the dataset/index allowed back into production or into retraining pipelines.</p><pre><code># File: recovery/validate_restored_data.py\nfrom __future__ import annotations\n\nimport hashlib\nimport json\nfrom pathlib import Path\n\nimport pandas as pd\n\nRESTORED_FILE = Path(\"data/restored_dataset.csv\")\nKNOWN_GOOD_HASH = Path(\"recovery/baselines/restored_dataset.sha256\").read_text(encoding=\"utf-8\").strip()\nBASELINE_PROFILE_PATH = Path(\"recovery/baselines/restored_dataset.profile.json\")\nREPORT_PATH = Path(\"recovery/out/restored_dataset_validation.json\")\n\nREQUIRED_COLUMNS = {\"user_id\", \"transaction_amount\", \"label\"}\nNUMERIC_RANGE_RULES = {\n    \"transaction_amount\": (0, 100000),\n}\nMAX_ALLOWED_ROW_COUNT_DRIFT = 0.20\nMAX_ALLOWED_CLASS_BALANCE_DRIFT = 0.10\n\n\ndef sha256_file(path: Path) -&gt; str:\n    digest = hashlib.sha256()\n    with path.open(\"rb\") as handle:\n        for chunk in iter(lambda: handle.read(8192), b\"\"):\n            digest.update(chunk)\n    return digest.hexdigest()\n\n\n\ndef validate_schema(df: pd.DataFrame) -&gt; None:\n    missing = sorted(REQUIRED_COLUMNS - set(df.columns))\n    if missing:\n        raise ValueError(f\"restored dataset missing required columns: {missing}\")\n\n    for column, (min_value, max_value) in NUMERIC_RANGE_RULES.items():\n        if not df[column].between(min_value, max_value).all():\n            raise ValueError(f\"column {column} contains values outside [{min_value}, {max_value}]\")\n\n\n\ndef generate_data_profile(df: pd.DataFrame) -&gt; dict:\n    class_balance = df[\"label\"].value_counts(normalize=True).sort_index().to_dict()\n    return {\n        \"row_count\": int(len(df)),\n        \"class_balance\": {str(key): float(value) for key, value in class_balance.items()},\n        \"transaction_amount_min\": float(df[\"transaction_amount\"].min()),\n        \"transaction_amount_max\": float(df[\"transaction_amount\"].max()),\n        \"transaction_amount_mean\": float(df[\"transaction_amount\"].mean()),\n    }\n\n\n\ndef compare_profiles(current: dict, baseline: dict) -&gt; None:\n    baseline_rows = baseline[\"row_count\"]\n    row_count_drift = abs(current[\"row_count\"] - baseline_rows) / baseline_rows\n    if row_count_drift &gt; MAX_ALLOWED_ROW_COUNT_DRIFT:\n        raise ValueError(f\"row-count drift too large: {row_count_drift:.2%}\")\n\n    for label, baseline_ratio in baseline[\"class_balance\"].items():\n        current_ratio = current[\"class_balance\"].get(label, 0.0)\n        if abs(current_ratio - baseline_ratio) &gt; MAX_ALLOWED_CLASS_BALANCE_DRIFT:\n            raise ValueError(\n                f\"class-balance drift too large for label {label}: \"\n                f\"baseline={baseline_ratio:.4f}, current={current_ratio:.4f}\"\n            )\n\n\nactual_hash = sha256_file(RESTORED_FILE)\nif actual_hash != KNOWN_GOOD_HASH:\n    raise RuntimeError(\"CRITICAL: hash mismatch on restored dataset\")\n\nrestored_df = pd.read_csv(RESTORED_FILE)\nvalidate_schema(restored_df)\ncurrent_profile = generate_data_profile(restored_df)\nbaseline_profile = json.loads(BASELINE_PROFILE_PATH.read_text(encoding=\"utf-8\"))\ncompare_profiles(current_profile, baseline_profile)\n\nreport = {\n    \"restored_file\": str(RESTORED_FILE),\n    \"sha256\": actual_hash,\n    \"schema_validation\": \"passed\",\n    \"distribution_validation\": \"passed\",\n    \"profile\": current_profile,\n}\nREPORT_PATH.parent.mkdir(parents=True, exist_ok=True)\nREPORT_PATH.write_text(json.dumps(report, indent=2, sort_keys=True), encoding=\"utf-8\")\n\nprint(\"✅ All validation checks passed: data is ready for reuse.\")\n</code></pre><p><strong>Action:</strong> Attach the validation report (hash check results, schema validation outcome, distribution comparison notes, and any RAG/vector index source whitelist report) to the incident ticket and update the data catalog/lineage system to mark this asset as recovered and trusted. No restored dataset or vector index should be reintroduced into production pipelines or model retraining (AID-R-001.002) until this step passes.</p>"
                 },
                 {
                     "implementation": "Harden ingestion and update pipelines to prevent recurrence of the same corruption pattern.",
@@ -703,11 +785,17 @@ TRAINING_IMAGE_DIGEST="$3"
                 "Version control systems (Git, GitHub/GitLab) for PIR, threat model diffs, and evidence artifacts"
             ],
             "toolsCommercial": [
-                "SOAR/SIEM platforms (Splunk, Microsoft Sentinel, Datadog) for correlation rules and automated paging",
-                "BAS / adversarial simulation platforms for regression validation of fixes",
-                "Enterprise MLOps / model registries (SageMaker, Vertex AI, Databricks) to tie incident timeline to model versions",
-                "GRC / compliance platforms for audit tracking and regulatory notification evidence bundles",
-                "Managed threat intelligence / ISAC-style sharing channels for sanitized TTP distribution"
+                "Splunk Enterprise Security",
+                "Microsoft Sentinel",
+                "Datadog Cloud SIEM",
+                "AttackIQ",
+                "SafeBreach",
+                "Amazon SageMaker Model Registry",
+                "Google Vertex AI Model Registry",
+                "Databricks Unity Catalog",
+                "ServiceNow GRC",
+                "Recorded Future",
+                "Mandiant Threat Intelligence"
             ],
             "defendsAgainst": [
                 {
@@ -839,7 +927,7 @@ threats:
                 },
                 {
                     "implementation": "Perform targeted regression validation of fixes using AI-specific security testing and archive the results as evidence.",
-                    "howTo": "<h5>Concept:</h5><p>After applying mitigations, you must prove they work. Replay attacker TTPs (prompt injection strings, model backdoor triggers, poisoned samples) against a staging copy. Record success/fail metrics and store them alongside the PIR.</p><h5>Targeted Regression Test Example</h5><pre><code># Run garak prompt-injection probes against the patched staging endpoint\npython -m garak --model_type rest --model_name staging-ai-bot \\\n  --probes promptinject \\\n  --report_prefix output/INC-2025-021/garak_regression\n\n# Expectation:\n#   - 0 successful prompt injection exploits\n#   - PII redaction triggered before response when sensitive entities are present\n\n# garak auto-generates results under the report_prefix directory.\n# Archive these under: post_mortems/INC-2025-021/regression_tests/</code></pre><p><strong>Action:</strong> For each high-severity incident, run focused red-team style regression tests (prompt injection scanners, BAS scenarios, poisoning replay) in staging. Store the report (JSON, CSV, etc.) under the incident’s evidence directory. This becomes audit-grade proof that the fix is effective and continuously testable.</p>"
+                    "howTo": "<h5>Concept:</h5><p>Post-incident fixes are incomplete until the original exploit path is replayed and fails under staging conditions.</p><h5>Run targeted regression probe set</h5><pre><code>python -m garak --model_type rest --model_name staging-ai-bot \\\n  --probes promptinject \\\n  --report_prefix output/INC-2025-021/garak_regression</code></pre><h5>Gate on machine-checkable result</h5><pre><code>python - <<'PY'\nimport json,glob,sys\nfiles=glob.glob('output/INC-2025-021/garak_regression*.json')\nif not files:\n    raise SystemExit('missing garak report')\nreport=json.load(open(files[0],encoding='utf-8'))\nif report.get('hits',0) > 0:\n    raise SystemExit('regression failed: prompt-injection hit detected')\nprint('regression passed')\nPY</code></pre><p><strong>Action:</strong> Archive command output and report JSON under the incident evidence directory, and block closure if replayed exploit paths still succeed.</p>"
                 },
                 {
                     "implementation": "Institutionalize the mitigation in shared security libraries and reusable runtime policy baselines so future services inherit the fixed control by default.",
@@ -1015,11 +1103,213 @@ if errors:
                 },
                 {
                     "implementation": "Quarantine and preserve suspicious chunks before removal from production retrieval.",
-                    "howTo": "<h5>Concept:</h5><p>When detection rules flag malicious or policy-violating chunks (exfil instructions, jailbreak scaffolding, disinformation, self-modifying tool calls, etc.), you must immediately remove those chunks from the active index so they cannot be retrieved — but you cannot discard evidence. You export the chunk plus full provenance into an immutable forensic/quarantine store, then delete it from the production index.</p><h5>Example (Qdrant-style pseudo-code):</h5><pre><code># Step 1: enumerate suspect points from current prod index version\nsuspect_points = qdrant_client.scroll(\n    collection_name=\"rag_index_v42\",\n    scroll_filter={\"must\": [{\"key\": \"suspicious_flag\", \"match\": {\"value\": true}}]}\n)\n\n# Step 2: persist all flagged chunks + metadata into quarantine store\nfor p in suspect_points:\n    forensic_record = {\n        \"point_id\": p.id,\n        \"vector_sha256\": sha256(p.vector),\n        \"source_uri\": p.payload[\"source_uri\"],\n        \"ingested_at\": p.payload[\"ingested_at\"],\n        \"reason_flagged\": p.payload[\"reason_flagged\"],\n        \"submitter_user_id\": p.payload.get(\"submitter_user_id\"),\n        \"submitter_ip\": p.payload.get(\"submitter_ip\"),\n        \"extracted_text\": p.payload[\"text\"]\n    }\n    write_to_quarantine_store(forensic_record)  # e.g. S3 bucket with Object Lock/WORM\n\n# Step 3: delete from prod index so it cannot be retrieved again\nqdrant_client.delete(\n    collection_name=\"rag_index_v42\",\n    points_selector=[p.id]\n)</code></pre><p><h5>Enrichment / triage:</h5><p>Store enrichment fields with each quarantined chunk, such as:</p><ul><li><code>matched_rule</code> (which detector fired)</li><li><code>similarity_to_known_bad</code> (cosine sim to known malicious payloads)</li><li><code>policy_scan_pass</code> / <code>policy_scan_fail_reason</code></li><li>embedding model ID used</li></ul><p>That gives incident responders enough signal to do attribution, feed PIR / RCA (<code>AID-R-004</code>), and improve upstream ingestion policy.</p>"
+                    "howTo": `<h5>Concept:</h5><p>Chunk quarantine has two simultaneous goals: immediately stop poisoned content from being retrieved, and preserve enough forensic evidence to support incident response and later rebuild decisions. The workflow should therefore export the exact flagged records into an immutable quarantine store before deleting them from the active collection.</p><h5>Step 1: Enumerate flagged points from the active Qdrant collection</h5><pre><code># File: recovery/quarantine_chunks.py
+from __future__ import annotations
+
+import hashlib
+import json
+import pathlib
+from datetime import datetime, timezone
+
+import numpy as np
+from qdrant_client import QdrantClient
+from qdrant_client.models import FieldCondition, Filter, MatchValue
+
+
+def sha256_vector(vector) -&gt; str:
+    array = np.asarray(vector, dtype=np.float32)
+    return hashlib.sha256(array.tobytes()).hexdigest()
+
+
+client = QdrantClient(url="http://127.0.0.1:6333")
+collection_name = "rag_index_v42"
+quarantine_path = pathlib.Path("forensics/quarantine/rag_index_v42.jsonl")
+quarantine_path.parent.mkdir(parents=True, exist_ok=True)
+
+offset = None
+flagged_ids = []
+
+with quarantine_path.open("a", encoding="utf-8") as sink:
+    while True:
+        points, offset = client.scroll(
+            collection_name=collection_name,
+            scroll_filter=Filter(
+                must=[FieldCondition(key="suspicious_flag", match=MatchValue(value=True))]
+            ),
+            limit=100,
+            offset=offset,
+            with_payload=True,
+            with_vectors=True,
+        )
+
+        for point in points:
+            record = {
+                "quarantined_at": datetime.now(timezone.utc).isoformat(),
+                "collection_name": collection_name,
+                "point_id": point.id,
+                "vector_sha256": sha256_vector(point.vector),
+                "payload": point.payload,
+            }
+            sink.write(json.dumps(record) + "\\n")
+            flagged_ids.append(point.id)
+
+        if offset is None:
+            break
+</code></pre><h5>Step 2: Delete the quarantined points from production retrieval only after evidence is written</h5><p>The same job that writes the quarantine evidence should remove the flagged point IDs from the active collection. Keep the delete idempotent so reruns do not create partial containment states.</p><pre><code># File: recovery/quarantine_chunks.py
+if flagged_ids:
+    client.delete(
+        collection_name=collection_name,
+        points_selector=flagged_ids,
+        wait=True,
+    )
+    print(f"Quarantined and removed {len(flagged_ids)} points from {collection_name}")
+else:
+    print("No flagged points found")
+</code></pre><h5>Step 3: Add triage enrichment that supports PIR and rebuild decisions</h5><p>Include enough metadata to answer who inserted the chunk, why it was flagged, and which build it came from. This is what lets recovery, PIR, and future blocklists improve instead of treating the event as a blind delete.</p><pre><code># Example JSONL record written to forensics/quarantine/rag_index_v42.jsonl
+{
+  "quarantined_at": "2026-04-12T14:25:03+00:00",
+  "collection_name": "rag_index_v42",
+  "point_id": 88421,
+  "vector_sha256": "7f98ce7c5e9b2f8a7d5c2c27b5bdf1c8662d68d4c4b463f89f9f6cb4b17ef0e2",
+  "payload": {
+    "source_uri": "s3://corp-rag/legal/notice-88421.txt",
+    "ingested_at": "2026-04-10T03:12:11Z",
+    "reason_flagged": "matched_rule:rag_jailbreak_phrase",
+    "submitter_user_id": "svc-rag-loader",
+    "index_build_id": "rag-build-2026-04-10-02"
+  }
+}
+</code></pre><h5>Step 4: Verify that the poisoned chunks no longer appear in retrieval</h5><p>Run a post-delete retrieval check or direct point lookup against the production alias. Recovery is incomplete if the same point IDs or their cloned duplicates still appear.</p><pre><code># Example verification
+remaining_points, _ = client.scroll(
+    collection_name=collection_name,
+    scroll_filter=Filter(
+        must=[FieldCondition(key="suspicious_flag", match=MatchValue(value=True))]
+    ),
+    limit=10,
+    with_payload=False,
+)
+
+if remaining_points:
+    raise SystemExit("quarantine failed: suspicious points still present in production collection")
+</code></pre><p><strong>Action:</strong> Export first, delete second, verify third. Keep the quarantine JSONL or Object-Lock bucket immutable so investigators can prove exactly which poisoned chunks were removed and why.</p>`
                 },
                 {
                     "implementation": "Rebuild a clean candidate index from trusted sources with provenance, policy scanning, and approval gating before promotion.",
-                    "howTo": "<h5>Concept:</h5><p>After rollback, you're running on an older snapshot. You still need a new 'good' index to go forward. That rebuild pipeline must enforce provenance and content policy before anything is eligible for production. Steps:</p><ol><li>Enumerate only allowlisted sources (approved repos, curated knowledge base, compliance-approved docs).</li><li>Verify each document's hash matches an expected value or signed attestation. Reject modified or unverified sources.</li><li>Run automated content/policy scans to block high-risk chunks (PII leakage, self-referential jailbreak instructions, 'ignore safety and do X', 'dump secrets', etc.).</li><li>Embed and index only the chunks that pass.</li><li>Generate a new manifest (index_version, per-chunk hash, scan results, embedding model hash, build timestamp).</li><li>Open a change request that requires explicit AI security / platform security approval before alias cutover.</li></ol><h5>Example (conceptual pipeline snippet):</h5><pre><code># Pseudocode for secure rebuild\nfor doc in approved_content_inventory:\n    if !verify_source_hash(doc):\n        continue  # reject untrusted/altered sources\n    if !passes_policy_scan(doc):\n        continue  # reject exfil/jailbreak/secret-leak patterns\n\n    embedding = embed(doc.text, model=\"text-embedding-3-large\")\n    record = {\n        \"vector\": embedding,\n        \"text\": doc.text,\n        \"source_uri\": doc.uri,\n        \"provenance_hash\": doc.sha256,\n        \"ingested_at\": now(),\n        \"policy_scan_pass\": true\n    }\n    add_to_index_build(\"rag_index_v43_candidate\", record)\n\n# produce signed manifest, then request security approval to promote\ncreate_change_request(\n    candidate_index=\"rag_index_v43_candidate\",\n    risk_summary=\"all quarantined content excluded; policy scans passed\",\n    approver_role=\"AI_Security_Oncall\"\n)</code></pre><p><h5>Promotion control / auditability:</h5><p>The alias (e.g. <code>rag_prod</code>) must <strong>not</strong> point to the new index until AI Security (or equivalent risk owner) signs off. That approval event, plus the manifest signature, becomes auditable evidence of due diligence. This mirrors model rollback / restore controls in <code>AID-R-001</code>.</p>"
+                    "howTo": `<h5>Concept:</h5><p>A clean candidate index should be rebuilt from trusted sources only, with provenance verification and content-policy scanning applied before any vector is promoted. The rebuild pipeline is a security boundary: if a document fails provenance or policy checks, it must never enter the candidate collection.</p><h5>Step 1: Verify trusted source inventory before embedding</h5><pre><code># File: recovery/rebuild_candidate_index.py
+from __future__ import annotations
+
+import hashlib
+import json
+import pathlib
+import re
+from datetime import datetime, timezone
+
+from qdrant_client import QdrantClient
+from qdrant_client.models import Distance, PointStruct, VectorParams
+from sentence_transformers import SentenceTransformer
+
+
+JAILBREAK_PATTERNS = [
+    re.compile(r"ignore (all|previous) instructions", re.IGNORECASE),
+    re.compile(r"(api[_-]?key|secret|token)", re.IGNORECASE),
+    re.compile(r"send .* to https?://", re.IGNORECASE),
+]
+
+
+def sha256_text(text: str) -&gt; str:
+    return hashlib.sha256(text.encode("utf-8")).hexdigest()
+
+
+def passes_policy_scan(text: str) -&gt; bool:
+    return not any(pattern.search(text) for pattern in JAILBREAK_PATTERNS)
+
+
+approved_inventory = [
+    {
+        "doc_id": "doc-001",
+        "source_uri": "s3://trusted-kb/hr/leave-policy.txt",
+        "expected_sha256": "2c63f0c4b0f67f9fcf80d8b6ef291d1d9a7ecdef6779d9b6426168f33fe8a1be",
+        "text_path": "recovery/input/doc-001.txt",
+    }
+]
+
+client = QdrantClient(url="http://127.0.0.1:6333")
+encoder = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
+candidate_collection = "rag_index_v43_candidate"
+
+if not client.collection_exists(candidate_collection):
+    client.create_collection(
+        collection_name=candidate_collection,
+        vectors_config=VectorParams(size=384, distance=Distance.COSINE),
+    )
+</code></pre><h5>Step 2: Embed only the documents that pass provenance and policy gates</h5><p>Read each approved source, verify its hash, run the policy scan, and only then upsert the record into the candidate collection with build metadata attached.</p><pre><code># File: recovery/rebuild_candidate_index.py
+points = []
+manifest_rows = []
+
+for index, doc in enumerate(approved_inventory, start=1):
+    text = pathlib.Path(doc["text_path"]).read_text(encoding="utf-8")
+    actual_sha256 = sha256_text(text)
+
+    if actual_sha256 != doc["expected_sha256"]:
+        continue
+    if not passes_policy_scan(text):
+        continue
+
+    vector = encoder.encode(text, normalize_embeddings=True).tolist()
+    points.append(
+        PointStruct(
+            id=index,
+            vector=vector,
+            payload={
+                "doc_id": doc["doc_id"],
+                "source_uri": doc["source_uri"],
+                "provenance_hash": actual_sha256,
+                "policy_scan_pass": True,
+                "candidate_index": candidate_collection,
+            },
+        )
+    )
+    manifest_rows.append(
+        {
+            "doc_id": doc["doc_id"],
+            "source_uri": doc["source_uri"],
+            "provenance_hash": actual_sha256,
+        }
+    )
+
+if points:
+    client.upsert(collection_name=candidate_collection, points=points, wait=True)
+</code></pre><h5>Step 3: Produce a signed rebuild manifest and hold promotion behind approval</h5><p>The candidate index should not be promoted based on trust in the job runner alone. Write a manifest that records the candidate collection, embedding model, approved documents, and build time, then sign it so the later cutover decision is auditable.</p><pre><code># File: recovery/write_candidate_manifest.py
+import json
+import pathlib
+import subprocess
+
+manifest = {
+    "candidate_index": "rag_index_v43_candidate",
+    "embedding_model": "sentence-transformers/all-MiniLM-L6-v2",
+    "built_at": datetime.now(timezone.utc).isoformat(),
+    "documents": manifest_rows,
+}
+
+manifest_path = pathlib.Path("recovery/manifests/rag_index_v43_candidate.json")
+manifest_path.parent.mkdir(parents=True, exist_ok=True)
+manifest_path.write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+
+subprocess.run(
+    [
+        "cosign",
+        "sign-blob",
+        "--yes",
+        "--key",
+        "keys/rag-build.key",
+        "--output-signature",
+        "recovery/manifests/rag_index_v43_candidate.sig",
+        str(manifest_path),
+    ],
+    check=True,
+)
+</code></pre><h5>Step 4: Verify candidate readiness before alias cutover</h5><p>Promotion should require both a successful manifest verification and an explicit security approval record. Keep the cutover blocked if any candidate record lacks provenance, policy metadata, or approval evidence.</p><pre><code>cosign verify-blob --key keys/rag-build.pub --signature recovery/manifests/rag_index_v43_candidate.sig recovery/manifests/rag_index_v43_candidate.json
+</code></pre><p><strong>Action:</strong> Rebuild the candidate collection only from allowlisted sources, attach provenance and policy metadata to every record, sign the manifest, and require explicit approval before any alias points production traffic at the rebuilt index.</p>`
                 },
                 {
                     "implementation": "Continuously monitor retrieved context for high-risk injection or poisoning patterns.",
@@ -1034,7 +1324,8 @@ if errors:
                 "Qdrant (collections, scroll/delete)",
                 "Milvus / FAISS (vector storage, offline rebuild and re-ingest)",
                 "OpenSearch / Elasticsearch (index aliases for atomic cutover)",
-                "Great Expectations or custom content/policy scanners for pre-ingest validation",
+                "Great Expectations (pre-ingest dataset and schema validation)",
+                "Open Policy Agent (pre-ingest policy checks for restored content)",
                 "Sigstore / cosign / GPG for signed manifests and change approval evidence",
                 "sha256sum for per-chunk integrity tracking"
             ],

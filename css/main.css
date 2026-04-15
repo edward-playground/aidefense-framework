@@ -722,6 +722,36 @@ body.modal-open {
     margin-bottom: 0.5rem;
 }
 
+.modal-content .technique-table-wrap {
+    overflow-x: auto;
+    margin: 0.75rem 0 1rem;
+}
+
+.modal-content .technique-inline-table {
+    width: 100%;
+    min-width: 640px;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    line-height: 1.55;
+}
+
+.modal-content .technique-inline-table th,
+.modal-content .technique-inline-table td {
+    border: 1px solid var(--search-border);
+    padding: 0.6rem 0.75rem;
+    text-align: left;
+    vertical-align: top;
+}
+
+.modal-content .technique-inline-table th {
+    background-color: var(--search-bg);
+    font-weight: 700;
+}
+
+.modal-content .technique-inline-table td strong {
+    color: var(--text-color);
+}
+
 /* Controls line spacing for list items including defendsAgainst items */
 .modal-content li {
     margin-bottom: 0.25rem;
@@ -883,8 +913,12 @@ body.modal-open {
     80% { opacity: 1; transform: translateX(-50%) translateY(0); }
     100% { opacity: 0; transform: translateX(-50%) translateY(-3px); }
 }
-.guidance-accordion-content-inner pre {
+.code-block-shell {
     position: relative;
+}
+.guidance-accordion-content-inner .code-block-shell pre {
+    margin: 0.5rem 0;
+    padding-right: 3rem;
 }
 .code-copy-btn {
     position: absolute;
@@ -902,8 +936,9 @@ body.modal-open {
     opacity: 0;
     transition: opacity 0.2s ease, background-color 0.15s ease, color 0.15s ease;
     z-index: 2;
+    pointer-events: auto;
 }
-.guidance-accordion-content-inner pre:hover .code-copy-btn {
+.guidance-accordion-content-inner .code-block-shell:hover .code-copy-btn {
     opacity: 0.85;
 }
 .code-copy-btn:hover {

@@ -8,10 +8,12 @@
  * Keywords: Defense mechanism and method terms (flat array) for search and classification
  *
  * Usage:
- *   node scripts/generate-dataset.js                  # Generate data.json (read-only cache)
- *   node scripts/generate-dataset.js --refresh-cache  # Also persist fresh keyword cache entries
- *                                                     # for any technique whose content hash
- *                                                     # changed or that is missing from cache.
+ *   node scripts/generate-dataset.js
+ *
+ * Fail-closed keyword policy:
+ * - Keywords must come from the tracked keyword lock file.
+ * - Missing/stale/low-quality keyword entries cause generation to fail.
+ * - No static fallback keyword generation is allowed in this pipeline.
  */
 
 import fs from 'fs';
@@ -25,8 +27,11 @@ const __dirname = path.dirname(__filename);
 const TACTICS_DIR = path.join(__dirname, '..', 'tactics');
 const OUTPUT_DIR = path.join(__dirname, '..', 'data');
 
-const REFRESH_CACHE = process.argv.includes('--refresh-cache');
-const cacheUpdates = {};
+if (process.argv.includes('--refresh-cache')) {
+  console.error('ERROR: --refresh-cache is disabled in fail-closed mode.');
+  console.error('Use devtools/import_llm_keywords.js to update the tracked keyword lock file intentionally.');
+  process.exit(1);
+}
 
 // Tactic file mapping (filename -> tactic ID)
 const TACTIC_FILES = [
@@ -577,68 +582,141 @@ function computeContentHash(tech) {
 }
 
 /**
- * Keyword cache: stores curated keywords keyed by technique ID + content hash.
- * If a technique's content hasn't changed, cached keywords are reused.
+ * Keyword lock file (tracked in git): curated keywords keyed by technique ID + content hash.
+ * Team policy: generation fails closed if lock entries are missing, stale, or low quality.
  */
-let keywordCache = {};
 const CACHE_PATH = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'data', 'data-cache.json');
+let keywordCache = {};
 try {
   keywordCache = JSON.parse(fs.readFileSync(CACHE_PATH, 'utf8'));
 } catch (e) {
-  // No cache — all keywords will be generated from the deterministic pipeline
+  console.error(`ERROR: keyword lock file missing or unreadable: ${CACHE_PATH}`);
+  console.error('This pipeline is fail-closed: dataset generation is blocked without a valid lock file.');
+  process.exit(1);
+}
+
+const keywordValidationErrors = [];
+const MIN_KEYWORDS = 10;
+const MAX_KEYWORDS = 15;
+const MIN_PHRASE_RATIO = 0.60;
+const LOW_SIGNAL_SINGLE_KEYWORDS = new Set([
+  'secure', 'hardening', 'detection', 'robust', 'prevention', 'resilient',
+  'protection', 'control', 'defense', 'enforce', 'mitigation', 'prevent',
+  'policy', 'monitoring', 'detect', 'analysis', 'validate', 'trust', 'key',
+]);
+
+function normalizeCachedKeywords(rawKeywords) {
+  // Support both legacy {attack, defense} and current flat array format.
+  if (rawKeywords && rawKeywords.defense && Array.isArray(rawKeywords.defense)) {
+    return rawKeywords.defense;
+  }
+  if (Array.isArray(rawKeywords)) {
+    return rawKeywords;
+  }
+  return [];
+}
+
+function validateKeywordQuality(id, keywords) {
+  const errors = [];
+
+  if (keywords.length < MIN_KEYWORDS || keywords.length > MAX_KEYWORDS) {
+    errors.push(`expected ${MIN_KEYWORDS}-${MAX_KEYWORDS} keywords but found ${keywords.length}`);
+  }
+
+  const phraseCount = keywords.filter(k => typeof k === 'string' && k.includes(' ')).length;
+  const phraseRatio = keywords.length > 0 ? phraseCount / keywords.length : 0;
+  if (phraseRatio < MIN_PHRASE_RATIO) {
+    errors.push(`phrase_ratio=${phraseRatio.toFixed(2)} below minimum ${MIN_PHRASE_RATIO.toFixed(2)}`);
+  }
+
+  const singleLowSignal = keywords.filter(k =>
+    typeof k === 'string' &&
+    !k.includes(' ') &&
+    LOW_SIGNAL_SINGLE_KEYWORDS.has(k.toLowerCase().trim())
+  ).length;
+  if (singleLowSignal > Math.floor(keywords.length * 0.4)) {
+    errors.push(`too many low-signal single keywords (${singleLowSignal}/${keywords.length})`);
+  }
+
+  const deduped = new Set(keywords.map(k => String(k).trim().toLowerCase()).filter(Boolean));
+  if (deduped.size !== keywords.length) {
+    errors.push('contains duplicate keywords');
+  }
+
+  if (errors.length > 0) {
+    keywordValidationErrors.push({
+      id,
+      errors,
+      sample: keywords.slice(0, 8),
+    });
+  }
 }
 
 /**
- * Get keywords for a technique: use cache if content hash matches, otherwise generate.
+ * Get keywords for a technique using tracked lock file only (fail-closed).
  */
 function getKeywords(technique, contentHash) {
   const cached = keywordCache[technique.id];
-  if (cached && cached.keywords && cached.contentHash === contentHash) {
-    // Support both legacy {attack, defense} and current flat array format
-    if (cached.keywords.defense && Array.isArray(cached.keywords.defense)) {
-      return cached.keywords.defense;
-    }
-    if (Array.isArray(cached.keywords)) {
-      return cached.keywords;
-    }
-    return cached.keywords;
+  if (!cached) {
+    keywordValidationErrors.push({
+      id: technique.id,
+      errors: ['missing keyword lock entry'],
+      sample: [],
+    });
+    return [];
   }
 
-  // Cache miss or stale hash — generate fresh from the deterministic pipeline
-  const freshKeywords = extractKeywords(technique);
-
-  if (REFRESH_CACHE) {
-    // --refresh-cache mode: persist fresh entry (flat array format) and suppress warning
-    cacheUpdates[technique.id] = { contentHash, keywords: freshKeywords };
-  } else if (cached && cached.contentHash !== contentHash) {
-    console.warn(`  ⚠️  ${technique.id}: content changed — keywords need regeneration`);
+  const keywords = normalizeCachedKeywords(cached.keywords);
+  if (cached.contentHash !== contentHash) {
+    keywordValidationErrors.push({
+      id: technique.id,
+      errors: [
+        `stale keyword lock contentHash=${cached.contentHash}, expected=${contentHash}`,
+      ],
+      sample: keywords.slice(0, 8),
+    });
+    return [];
   }
 
-  return freshKeywords;
+  validateKeywordQuality(technique.id, keywords);
+  return keywords;
 }
 
 /**
  * Transform a sub-technique from source format to target format
  */
 function transformSubTechnique(subTech) {
-  const transformed = {
+  const implGuidance = (subTech.implementationGuidance || []).map(
+    strat => strat.implementation || strat.name || ''
+  ).filter(Boolean);
+
+  // Compute content hash and keywords inline so they appear in
+  // natural reading order (after tools/defendsAgainst, before closing).
+  const contentHash = computeContentHash(subTech);
+  const partialForKeywords = {
+    id: subTech.id,
+    name: subTech.name,
+    description: subTech.description || '',
+    implementationGuidance: implGuidance,
+    defendsAgainst: subTech.defendsAgainst || [],
+    toolsOpenSource: subTech.toolsOpenSource || [],
+    toolsCommercial: subTech.toolsCommercial || [],
+  };
+  const keywords = getKeywords(partialForKeywords, contentHash);
+
+  return {
     id: subTech.id,
     name: subTech.name,
     description: subTech.description || '',
     pillar: Array.isArray(subTech.pillar) ? subTech.pillar : [subTech.pillar].filter(Boolean),
     phase: Array.isArray(subTech.phase) ? subTech.phase : [subTech.phase].filter(Boolean),
-    // Only include strategy names, not the full howTo content
-    implementationGuidance: (subTech.implementationGuidance || []).map(
-      strat => strat.implementation || strat.name || ''
-    ).filter(Boolean),
+    implementationGuidance: implGuidance,
     toolsOpenSource: subTech.toolsOpenSource || [],
     toolsCommercial: subTech.toolsCommercial || [],
     defendsAgainst: subTech.defendsAgainst || [],
+    contentHash,
+    keywords,
   };
-  // Content hash and keywords
-  transformed.contentHash = computeContentHash(subTech);
-  transformed.keywords = getKeywords(transformed, transformed.contentHash);
-  return transformed;
 }
 
 /**
@@ -687,6 +765,20 @@ function transformTechnique(tech, tacticId) {
     strat => strat.implementation || strat.name || ''
   ).filter(Boolean);
 
+  // Compute content hash and keywords before building the final object
+  // so they appear before subTechniques in JSON output for readability.
+  const contentHash = computeContentHash(tech);
+  const partialForKeywords = {
+    id: tech.id,
+    name: tech.name,
+    description: tech.description || '',
+    implementationGuidance: techStrategies,
+    defendsAgainst: tech.defendsAgainst || [],
+    toolsOpenSource: tech.toolsOpenSource || [],
+    toolsCommercial: tech.toolsCommercial || [],
+  };
+  const keywords = getKeywords(partialForKeywords, contentHash);
+
   const transformed = {
     id: tech.id,
     name: tech.name,
@@ -697,12 +789,11 @@ function transformTechnique(tech, tacticId) {
     implementationGuidance: techStrategies,
     toolsOpenSource: tech.toolsOpenSource || [],
     toolsCommercial: tech.toolsCommercial || [],
+    contentHash,
+    keywords,
     subTechniques: (tech.subTechniques || []).map(transformSubTechnique),
     url: 'https://aidefend.net',
   };
-  // Content hash and keywords
-  transformed.contentHash = computeContentHash(tech);
-  transformed.keywords = getKeywords(transformed, transformed.contentHash);
   return transformed;
 }
 
@@ -802,6 +893,25 @@ async function main() {
     }
   }
 
+  if (keywordValidationErrors.length > 0) {
+    console.error('\n================================');
+    console.error('Keyword Lock Validation Failed (fail-closed)');
+    console.error('================================\n');
+    console.error(`Found ${keywordValidationErrors.length} invalid keyword lock entries.`);
+    console.error('Examples:');
+    keywordValidationErrors.slice(0, 20).forEach(issue => {
+      console.error(`- ${issue.id}: ${issue.errors.join('; ')}`);
+    });
+    if (keywordValidationErrors.length > 20) {
+      console.error(`... and ${keywordValidationErrors.length - 20} more`);
+    }
+    console.error('\nFix path:');
+    console.error('1. Update the tracked keyword lock file via LLM curation workflow.');
+    console.error('2. Ensure contentHash and keyword quality constraints pass.');
+    console.error('3. Re-run node scripts/generate-dataset.js');
+    process.exit(1);
+  }
+
   // Create dataset
   const now = new Date().toISOString();
   const dataset = {
@@ -858,20 +968,9 @@ async function main() {
   const indexPath = path.join(OUTPUT_DIR, 'tactics-index.json');
   fs.writeFileSync(indexPath, indexContent);
 
-  // --refresh-cache: persist updated keyword cache entries (flat array format)
-  // for every technique whose content hash changed or that was missing from the cache.
-  let cacheRefreshCount = 0;
-  if (REFRESH_CACHE) {
-    const mergedCache = { ...keywordCache, ...cacheUpdates };
-    fs.writeFileSync(CACHE_PATH, JSON.stringify(mergedCache, null, 2));
-    cacheRefreshCount = Object.keys(cacheUpdates).length;
-  }
-
   console.log('\n================================');
   console.log('Generation complete!\n');
-  if (REFRESH_CACHE) {
-    console.log(`Keyword cache: refreshed ${cacheRefreshCount} entries → ${CACHE_PATH}`);
-  }
+  console.log(`Keyword lock: validated ${Object.keys(keywordCache).length} entries → ${CACHE_PATH}`);
   console.log(`Tactics: ${tactics.length}`);
   console.log(`Techniques: ${totalTechniques}`);
   console.log(`Sub-techniques: ${totalSubTechniques}`);
