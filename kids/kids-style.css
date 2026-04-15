@@ -751,13 +751,13 @@ body.kids-body {
     border-width: 5px;
   }
   .modal-nav-btn {
-    width: 34px;
-    height: 34px;
-    font-size: 1rem;
+    width: 44px;
+    height: 44px;
+    font-size: 1.1rem;
     border-width: 2px;
   }
-  .modal-nav-left { left: -17px; }
-  .modal-nav-right { right: -17px; }
+  .modal-nav-left { left: -22px; }
+  .modal-nav-right { right: -22px; }
   .modal-body-container {
     max-height: calc(92vh - 14px);
     padding: 1.5rem;

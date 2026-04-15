@@ -460,6 +460,44 @@ document.addEventListener('DOMContentLoaded', () => {
     modalNavRight.addEventListener('click', (e) => { e.stopPropagation(); navigateModal(1); });
     modalBody.addEventListener('scroll', updateScrollHint);
 
+    // ── Touch swipe navigation for mobile/tablet ──
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartTime = 0;
+    const SWIPE_MIN_DISTANCE = 50;   // minimum px to count as swipe
+    const SWIPE_MAX_TIME = 400;      // max ms for the gesture
+    const SWIPE_ANGLE_LIMIT = 30;    // max degrees from horizontal
+
+    const modalContent = modal.querySelector('.kids-modal-content');
+
+    modalContent.addEventListener('touchstart', (e) => {
+        if (e.touches.length !== 1) return;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchStartTime = Date.now();
+    }, { passive: true });
+
+    modalContent.addEventListener('touchend', (e) => {
+        if (e.changedTouches.length !== 1) return;
+        const dx = e.changedTouches[0].clientX - touchStartX;
+        const dy = e.changedTouches[0].clientY - touchStartY;
+        const elapsed = Date.now() - touchStartTime;
+        const absDx = Math.abs(dx);
+        const absDy = Math.abs(dy);
+
+        // Must be fast enough, far enough, and predominantly horizontal
+        if (elapsed > SWIPE_MAX_TIME) return;
+        if (absDx < SWIPE_MIN_DISTANCE) return;
+        const angle = Math.atan2(absDy, absDx) * (180 / Math.PI);
+        if (angle > SWIPE_ANGLE_LIMIT) return;
+
+        if (dx < 0) {
+            navigateModal(1);   // swipe left → next
+        } else {
+            navigateModal(-1);  // swipe right → prev
+        }
+    }, { passive: true });
+
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             closeModal();
