@@ -232,7 +232,6 @@
                 class="text-sky-600 dark:text-sky-400 hover:underline">Creative Commons Attribution 4.0 International
                 License (CC BY 4.0)</a></p>
     </footer>
-    <script type="module" src="./webmcp-tools.js"></script>
     <script type="module">
         // Two-phase rendering: load lightweight index first, then full data in background
         let aidefendData = null;
@@ -240,6 +239,23 @@
         let _fullDataReady = false;
         let _skeletonModalTechId = null; // track which technique is open in skeleton modal
         const _loadedTactics = new Map(); // tactic name → full tactic data (as each file loads)
+
+        let _webMcpToolsScheduled = false;
+
+        function scheduleWebMcpToolsLoad() {
+            if (_webMcpToolsScheduled) return;
+            _webMcpToolsScheduled = true;
+
+            const loadWebMcpTools = () => import('./webmcp-tools.js')
+                .catch((err) => console.warn('[AIDEFEND WebMCP] Background load failed.', err));
+
+            // Keep WebMCP's external dependency chain off the critical render path.
+            if ('requestIdleCallback' in window) {
+                requestIdleCallback(() => loadWebMcpTools(), { timeout: 4000 });
+            } else {
+                window.setTimeout(loadWebMcpTools, 2000);
+            }
+        }
 
         window.onload = async function () {
             const elements = {
@@ -3979,7 +3995,11 @@
                     elements.searchBar.classList.remove('search-loading');
                 }
             }
-            initializeApp();
+            try {
+                await initializeApp();
+            } finally {
+                scheduleWebMcpToolsLoad();
+            }
         };
     </script>
 </body>
