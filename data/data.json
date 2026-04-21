@@ -1,8 +1,8 @@
 {
 "version": {
 "schemaVersion": "2.0",
-"dataVersion": "2026.04.15",
-"generatedAt": "2026-04-15T15:36:55.890Z",
+"dataVersion": "2026.04.21",
+"generatedAt": "2026-04-21T08:58:46.139Z",
 "source": "bundled",
 "keywordStructure": "flat"
 },
@@ -5197,7 +5197,7 @@
 "operation"
 ],
 "implementationGuidance": [
-"Rebuild images from pixels and strip metadata; optionally re-encode to disrupt noise.",
+"Rebuild images from decoded pixels after byte-level admission checks, strip metadata, and re-encode to a safe baseline format.",
 "Purify images via a denoising diffusion step for high-security use cases.",
 "Re-encode audio to standardized lossy or PCM format to remove hidden commands.",
 "Cross-modal consistency checks to detect mismatched or stego-driven prompts.",
@@ -5281,7 +5281,7 @@
 ]
 }
 ],
-"contentHash": "a95aa6a207d56a79",
+"contentHash": "97c8c6c671deb233",
 "keywords": [
 "multimodal sanitization",
 "image purification",
@@ -8304,7 +8304,7 @@
 ],
 "implementationGuidance": [
 "Enforce schema-bound structured outputs using either native function-calling or response-model wrappers.",
-"High-impact JSON Schema + Pydantic enforcement profile"
+"High-impact JSON Schema + Pydantic enforcement profile with fail-closed validation, bounded normalization, and audit persistence."
 ],
 "toolsOpenSource": [
 "Instructor",
@@ -8394,7 +8394,7 @@
 ]
 }
 ],
-"contentHash": "f0d50b124c7030ae",
+"contentHash": "fae14859f320851e",
 "keywords": [
 "structured output enforcement",
 "json schema output",
@@ -13394,7 +13394,7 @@
 "operation"
 ],
 "implementationGuidance": [
-"Use Open Policy Agent (OPA) or Casbin to decide allow/deny for tool calls based on role, time, data sensitivity."
+"Use Open Policy Agent (OPA) or Casbin to make fail-closed allow/deny decisions for tool calls using verified identity, tool context, and resource attributes."
 ],
 "toolsOpenSource": [
 "Open Policy Agent (OPA)",
@@ -13471,7 +13471,7 @@
 ]
 }
 ],
-"contentHash": "c93a7699cdf66c46",
+"contentHash": "1d7f5d66ccaec2c7",
 "keywords": [
 "policy-based access control",
 "open policy agent",
@@ -15925,7 +15925,7 @@
 "operation"
 ],
 "implementationGuidance": [
-"Canonicalize descriptor JSON -> SHA-256 hash -> compare with pinned value; block on mismatch and alert."
+"Canonicalize descriptor JSON, compare it with a pinned manifest at install and resolution time, and fail closed with a structured drift event on mismatch."
 ],
 "toolsOpenSource": [
 "Sigstore Cosign",
@@ -16001,7 +16001,7 @@
 ]
 }
 ],
-"contentHash": "35dd2a87395802b7",
+"contentHash": "c710b1973ce34a47",
 "keywords": [
 "descriptor hash binding",
 "content hash pinning",
@@ -16138,7 +16138,7 @@
 "operation"
 ],
 "implementationGuidance": [
-"Encode semantic invariants as policy-as-code checks and block tool onboarding or schema changes that violate approved action meaning.",
+"Encode semantic invariants as policy-as-code checks over a normalized tool-contract profile and block onboarding or schema changes that violate approved action meaning.",
 "Bind approved contract hashes to explicit approval records and require re-approval when semantic meaning, side effects, or privilege assumptions change."
 ],
 "toolsOpenSource": [
@@ -16226,7 +16226,7 @@
 ]
 }
 ],
-"contentHash": "34237074121b8891",
+"contentHash": "ae1945760fdd1427",
 "keywords": [
 "tool contract integrity",
 "semantic invariant enforcement",
@@ -20670,7 +20670,7 @@
 "operation"
 ],
 "implementationGuidance": [
-"Define an explicit failover eligibility matrix and fail closed if no fallback preserves the original route's safety and compliance envelope."
+"Define an explicit failover eligibility matrix, evaluate candidates through a deterministic route-profile checker, and fail closed if no fallback preserves the original route's safety and compliance envelope."
 ],
 "toolsOpenSource": [
 "Open Policy Agent (OPA)",
@@ -20743,7 +20743,7 @@
 ]
 }
 ],
-"contentHash": "34bee6521db67a32",
+"contentHash": "111ff9ff6a587405",
 "keywords": [
 "policy-preserving failover",
 "no silent safety downgrade",

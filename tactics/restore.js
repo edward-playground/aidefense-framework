@@ -635,7 +635,122 @@ def verify_recovery(clean_accuracy: float, attack_success_rate: float) -&gt; Non
                 },
                 {
                     "implementation": "Re-validate integrity, schema, and statistical consistency of restored/repaired data before reuse.",
-                    "howTo": "<h5>Concept:</h5><p>After restore or repair, you must prove the dataset (or vector index / feature store) is trustworthy again. That means: cryptographic integrity (matches a known-good snapshot hash when available), schema & quality checks, and distribution sanity checks vs. your pre-incident baseline. For RAG/vector DBs, this also includes confirming that only approved sources / namespaces remain, and no attacker-planted prompts/snippets persist.</p><h5>Post-restoration validation pipeline</h5><p>The validation step should run automatically in an isolated staging environment. Only if it passes is the dataset/index allowed back into production or into retraining pipelines.</p><pre><code># File: recovery/validate_restored_data.py\nfrom __future__ import annotations\n\nimport hashlib\nimport json\nfrom pathlib import Path\n\nimport pandas as pd\n\nRESTORED_FILE = Path(\"data/restored_dataset.csv\")\nKNOWN_GOOD_HASH = Path(\"recovery/baselines/restored_dataset.sha256\").read_text(encoding=\"utf-8\").strip()\nBASELINE_PROFILE_PATH = Path(\"recovery/baselines/restored_dataset.profile.json\")\nREPORT_PATH = Path(\"recovery/out/restored_dataset_validation.json\")\n\nREQUIRED_COLUMNS = {\"user_id\", \"transaction_amount\", \"label\"}\nNUMERIC_RANGE_RULES = {\n    \"transaction_amount\": (0, 100000),\n}\nMAX_ALLOWED_ROW_COUNT_DRIFT = 0.20\nMAX_ALLOWED_CLASS_BALANCE_DRIFT = 0.10\n\n\ndef sha256_file(path: Path) -&gt; str:\n    digest = hashlib.sha256()\n    with path.open(\"rb\") as handle:\n        for chunk in iter(lambda: handle.read(8192), b\"\"):\n            digest.update(chunk)\n    return digest.hexdigest()\n\n\n\ndef validate_schema(df: pd.DataFrame) -&gt; None:\n    missing = sorted(REQUIRED_COLUMNS - set(df.columns))\n    if missing:\n        raise ValueError(f\"restored dataset missing required columns: {missing}\")\n\n    for column, (min_value, max_value) in NUMERIC_RANGE_RULES.items():\n        if not df[column].between(min_value, max_value).all():\n            raise ValueError(f\"column {column} contains values outside [{min_value}, {max_value}]\")\n\n\n\ndef generate_data_profile(df: pd.DataFrame) -&gt; dict:\n    class_balance = df[\"label\"].value_counts(normalize=True).sort_index().to_dict()\n    return {\n        \"row_count\": int(len(df)),\n        \"class_balance\": {str(key): float(value) for key, value in class_balance.items()},\n        \"transaction_amount_min\": float(df[\"transaction_amount\"].min()),\n        \"transaction_amount_max\": float(df[\"transaction_amount\"].max()),\n        \"transaction_amount_mean\": float(df[\"transaction_amount\"].mean()),\n    }\n\n\n\ndef compare_profiles(current: dict, baseline: dict) -&gt; None:\n    baseline_rows = baseline[\"row_count\"]\n    row_count_drift = abs(current[\"row_count\"] - baseline_rows) / baseline_rows\n    if row_count_drift &gt; MAX_ALLOWED_ROW_COUNT_DRIFT:\n        raise ValueError(f\"row-count drift too large: {row_count_drift:.2%}\")\n\n    for label, baseline_ratio in baseline[\"class_balance\"].items():\n        current_ratio = current[\"class_balance\"].get(label, 0.0)\n        if abs(current_ratio - baseline_ratio) &gt; MAX_ALLOWED_CLASS_BALANCE_DRIFT:\n            raise ValueError(\n                f\"class-balance drift too large for label {label}: \"\n                f\"baseline={baseline_ratio:.4f}, current={current_ratio:.4f}\"\n            )\n\n\nactual_hash = sha256_file(RESTORED_FILE)\nif actual_hash != KNOWN_GOOD_HASH:\n    raise RuntimeError(\"CRITICAL: hash mismatch on restored dataset\")\n\nrestored_df = pd.read_csv(RESTORED_FILE)\nvalidate_schema(restored_df)\ncurrent_profile = generate_data_profile(restored_df)\nbaseline_profile = json.loads(BASELINE_PROFILE_PATH.read_text(encoding=\"utf-8\"))\ncompare_profiles(current_profile, baseline_profile)\n\nreport = {\n    \"restored_file\": str(RESTORED_FILE),\n    \"sha256\": actual_hash,\n    \"schema_validation\": \"passed\",\n    \"distribution_validation\": \"passed\",\n    \"profile\": current_profile,\n}\nREPORT_PATH.parent.mkdir(parents=True, exist_ok=True)\nREPORT_PATH.write_text(json.dumps(report, indent=2, sort_keys=True), encoding=\"utf-8\")\n\nprint(\"✅ All validation checks passed: data is ready for reuse.\")\n</code></pre><p><strong>Action:</strong> Attach the validation report (hash check results, schema validation outcome, distribution comparison notes, and any RAG/vector index source whitelist report) to the incident ticket and update the data catalog/lineage system to mark this asset as recovered and trusted. No restored dataset or vector index should be reintroduced into production pipelines or model retraining (AID-R-001.002) until this step passes.</p>"
+                    "howTo": `<h5>Concept:</h5><p>After restore or repair, you must prove the dataset (or vector index / feature store) is trustworthy again. Run the validation in staging, emit a machine-readable report, and return a non-zero exit code on any integrity, schema, or profile mismatch so the asset cannot be promoted by accident.</p><h5>Step 1: Build a reusable restore validator</h5><pre><code># File: recovery/validate_restored_data.py
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+from pathlib import Path
+
+import pandas as pd
+
+REQUIRED_COLUMNS = {"user_id", "transaction_amount", "label"}
+NUMERIC_RANGE_RULES = {
+    "transaction_amount": (0, 100000),
+}
+MAX_ALLOWED_ROW_COUNT_DRIFT = 0.20
+MAX_ALLOWED_CLASS_BALANCE_DRIFT = 0.10
+
+
+
+def sha256_file(path: Path) -&gt; str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(8192), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
+
+
+
+def validate_schema(df: pd.DataFrame) -&gt; None:
+    missing = sorted(REQUIRED_COLUMNS - set(df.columns))
+    if missing:
+        raise ValueError(f"restored dataset missing required columns: {missing}")
+
+    for column, (min_value, max_value) in NUMERIC_RANGE_RULES.items():
+        if not df[column].between(min_value, max_value).all():
+            raise ValueError(f"column {column} contains values outside [{min_value}, {max_value}]")
+
+
+
+def generate_data_profile(df: pd.DataFrame) -&gt; dict:
+    class_balance = df["label"].value_counts(normalize=True).sort_index().to_dict()
+    return {
+        "row_count": int(len(df)),
+        "class_balance": {str(key): float(value) for key, value in class_balance.items()},
+        "transaction_amount_min": float(df["transaction_amount"].min()),
+        "transaction_amount_max": float(df["transaction_amount"].max()),
+        "transaction_amount_mean": float(df["transaction_amount"].mean()),
+    }
+
+
+
+def compare_profiles(current: dict, baseline: dict) -&gt; None:
+    baseline_rows = baseline["row_count"]
+    row_count_drift = abs(current["row_count"] - baseline_rows) / baseline_rows
+    if row_count_drift &gt; MAX_ALLOWED_ROW_COUNT_DRIFT:
+        raise ValueError(f"row-count drift too large: {row_count_drift:.2%}")
+
+    for label, baseline_ratio in baseline["class_balance"].items():
+        current_ratio = current["class_balance"].get(label, 0.0)
+        if abs(current_ratio - baseline_ratio) &gt; MAX_ALLOWED_CLASS_BALANCE_DRIFT:
+            raise ValueError(
+                f"class-balance drift too large for label {label}: "
+                f"baseline={baseline_ratio:.4f}, current={current_ratio:.4f}"
+            )
+
+
+
+def validate_restored_asset(restored_path: Path, hash_path: Path, baseline_path: Path) -&gt; dict:
+    expected_hash = hash_path.read_text(encoding="utf-8").strip()
+    actual_hash = sha256_file(restored_path)
+    if actual_hash != expected_hash:
+        raise RuntimeError("CRITICAL: hash mismatch on restored dataset")
+
+    restored_df = pd.read_csv(restored_path)
+    validate_schema(restored_df)
+    current_profile = generate_data_profile(restored_df)
+    baseline_profile = json.loads(baseline_path.read_text(encoding="utf-8"))
+    compare_profiles(current_profile, baseline_profile)
+
+    return {
+        "restored_file": str(restored_path),
+        "sha256": actual_hash,
+        "schema_validation": "passed",
+        "distribution_validation": "passed",
+        "profile": current_profile,
+    }
+
+
+
+def main() -&gt; int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--restored", required=True)
+    parser.add_argument("--known-good-hash", required=True)
+    parser.add_argument("--baseline-profile", required=True)
+    parser.add_argument("--report", required=True)
+    args = parser.parse_args()
+
+    report_path = Path(args.report)
+    try:
+        report = validate_restored_asset(
+            Path(args.restored),
+            Path(args.known_good_hash),
+            Path(args.baseline_profile),
+        )
+        report_path.parent.mkdir(parents=True, exist_ok=True)
+        report_path.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
+        print(json.dumps({"event": "RESTORE_VALIDATED", **report}))
+        return 0
+    except Exception as exc:
+        print(json.dumps({"event": "RESTORE_VALIDATION_FAILED", "reason": str(exc)}))
+        return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+</code></pre><p><strong>Action:</strong> Run the validator in the isolated staging environment and require a zero exit code before any restored dataset, vector namespace, or feature store is promoted back into production or retraining pipelines.</p>`
                 },
                 {
                     "implementation": "Harden ingestion and update pipelines to prevent recurrence of the same corruption pattern.",
@@ -753,7 +868,72 @@ def verify_recovery(clean_accuracy: float, attack_success_rate: float) -&gt; Non
                 },
                 {
                     "implementation": "Restore trusted conversational or agent state from verified pre-incident snapshots.",
-                    "howTo": "<h5>Concept:</h5><p>State restoration is a data-trust problem. Only reload conversational memory, agent scratchpads, cached tool bindings, or other working state from snapshots that were captured before the compromise window and that still pass integrity verification. Do not combine this step with privilege restoration; first rehydrate trusted state, then evaluate whether higher-risk capabilities should come back later.</p><h5>Rehydrate Only Verified Pre-Incident State</h5><pre><code># File: remediation/restore_agent_state.py\nimport hashlib\nimport json\nfrom pathlib import Path\n\n\ndef sha256_text(path: Path) -> str:\n    return hashlib.sha256(path.read_bytes()).hexdigest()\n\n\ndef restore_verified_state(snapshot_path: str, manifest_path: str) -> dict:\n    snapshot = Path(snapshot_path)\n    manifest = json.loads(Path(manifest_path).read_text(encoding=\"utf-8\"))\n\n    if manifest[\"captured_at\"] >= manifest[\"compromise_window_start\"]:\n        raise RuntimeError(\"Snapshot was captured inside the compromise window.\")\n\n    observed_hash = sha256_text(snapshot)\n    if observed_hash != manifest[\"snapshot_sha256\"]:\n        raise RuntimeError(\"Snapshot integrity verification failed.\")\n\n    restored_state = json.loads(snapshot.read_text(encoding=\"utf-8\"))\n    return {\n        \"agent_id\": manifest[\"agent_id\"],\n        \"restored_state\": restored_state,\n        \"snapshot_sha256\": observed_hash,\n        \"snapshot_version\": manifest[\"snapshot_version\"],\n    }\n</code></pre><p><strong>Action:</strong> Keep a clear record of which snapshot version was restored, who approved it, and why it was considered trustworthy. If any user or agent lacks a verified pre-incident snapshot, restore only a minimal default baseline instead of copying forward untrusted state from the compromised period.</p>"
+                    "howTo": `<h5>Concept:</h5><p>State restoration should be a bounded recovery module: verify the manifest, verify the snapshot hash, reject anything inside the compromise window, and only then hand the recovered state back to the runtime. The restore command should emit a machine-readable success or failure record so orchestration can block unsafe rehydration.</p><h5>Step 1: Verify and restore the snapshot</h5><pre><code># File: remediation/restore_agent_state.py
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+from pathlib import Path
+
+
+
+def sha256_text(path: Path) -&gt; str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+
+def restore_verified_state(snapshot_path: str, manifest_path: str) -&gt; dict:
+    snapshot = Path(snapshot_path)
+    manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+
+    if manifest["captured_at"] &gt;= manifest["compromise_window_start"]:
+        raise RuntimeError("Snapshot was captured inside the compromise window.")
+
+    observed_hash = sha256_text(snapshot)
+    if observed_hash != manifest["snapshot_sha256"]:
+        raise RuntimeError("Snapshot integrity verification failed.")
+
+    restored_state = json.loads(snapshot.read_text(encoding="utf-8"))
+    return {
+        "agent_id": manifest["agent_id"],
+        "restored_state": restored_state,
+        "snapshot_sha256": observed_hash,
+        "snapshot_version": manifest["snapshot_version"],
+        "captured_at": manifest["captured_at"],
+    }
+
+
+
+def main() -&gt; int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--snapshot", required=True)
+    parser.add_argument("--manifest", required=True)
+    args = parser.parse_args()
+
+    try:
+        restored = restore_verified_state(args.snapshot, args.manifest)
+        print(json.dumps({"event": "STATE_RESTORE_VERIFIED", **restored}))
+        return 0
+    except Exception as exc:
+        print(json.dumps({"event": "STATE_RESTORE_BLOCKED", "reason": str(exc)}))
+        return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
+</code></pre><h5>Step 2: Rehydrate only after verification succeeds</h5><pre><code># File: remediation/rehydrate_runtime.py
+from remediation.restore_agent_state import restore_verified_state
+
+
+def load_state_into_runtime(snapshot_path: str, manifest_path: str) -&gt; dict:
+    restored = restore_verified_state(snapshot_path, manifest_path)
+    runtime_memory_store.replace_agent_state(
+        restored["agent_id"],
+        restored["restored_state"],
+    )
+    return restored
+</code></pre><p><strong>Action:</strong> Restore only verified pre-incident snapshots and emit a structured failure when verification fails. If no trusted snapshot exists, fall back to a minimal baseline rather than carrying forward compromised state.</p>`
                 },
                 {
                     "implementation": "Re-enable tools and privileges progressively after post-restore verification.",
