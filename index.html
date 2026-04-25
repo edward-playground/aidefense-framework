@@ -3552,16 +3552,20 @@
                 });
 
                 // Touch: swipe left/right
-                let tx = 0, ty = 0;
+                let tx = 0, ty = 0, swipeBlocked = false;
                 const modalEl = document.getElementById('infoModal');
                 if (modalEl) {
                     modalEl.addEventListener('touchstart', (e) => {
                         if (siblings.length === 0) return;
+                        // Don't hijack horizontal swipes that start inside a code block —
+                        // the <pre> has its own overflow-x scroll for wide code samples.
+                        swipeBlocked = !!(e.target && e.target.closest && e.target.closest('pre, .code-block-shell'));
                         tx = e.changedTouches[0].screenX;
                         ty = e.changedTouches[0].screenY;
                     }, { passive: true });
                     modalEl.addEventListener('touchend', (e) => {
                         if (siblings.length === 0) return;
+                        if (swipeBlocked) { swipeBlocked = false; return; }
                         const dx = e.changedTouches[0].screenX - tx;
                         const dy = e.changedTouches[0].screenY - ty;
                         if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) {
