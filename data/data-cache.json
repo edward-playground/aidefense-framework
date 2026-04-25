@@ -628,7 +628,7 @@
     ]
   },
   "AID-H-002.003": {
-    "contentHash": "a95aa6a207d56a79",
+    "contentHash": "97c8c6c671deb233",
     "keywords": [
       "multimodal sanitization",
       "image purification",
@@ -1084,7 +1084,7 @@
     ]
   },
   "AID-H-006.001": {
-    "contentHash": "f0d50b124c7030ae",
+    "contentHash": "fae14859f320851e",
     "keywords": [
       "structured output enforcement",
       "json schema output",
@@ -1936,7 +1936,7 @@
     ]
   },
   "AID-H-019.002": {
-    "contentHash": "c93a7699cdf66c46",
+    "contentHash": "1d7f5d66ccaec2c7",
     "keywords": [
       "policy-based access control",
       "open policy agent",
@@ -2351,7 +2351,7 @@
     ]
   },
   "AID-H-025.002": {
-    "contentHash": "35dd2a87395802b7",
+    "contentHash": "c710b1973ce34a47",
     "keywords": [
       "descriptor hash binding",
       "content hash pinning",
@@ -2389,7 +2389,7 @@
     ]
   },
   "AID-H-025.004": {
-    "contentHash": "34237074121b8891",
+    "contentHash": "ae1945760fdd1427",
     "keywords": [
       "tool contract integrity",
       "semantic invariant enforcement",
@@ -5164,7 +5164,7 @@
     ]
   },
   "AID-H-034.002": {
-    "contentHash": "34bee6521db67a32",
+    "contentHash": "111ff9ff6a587405",
     "keywords": [
       "policy-preserving failover",
       "no silent safety downgrade",
