@@ -892,7 +892,7 @@ route_message(
             ]
         },
         {
-            "id": "AID-DV-008",
+            "id": "AID-DV-007",
             "name": "Poisoning Detection Canaries & Decoy Data", "pillar": ["data"], "phase": ["building", "improvement"],
             "description": "Proactively embed synthetic 'canary' or 'sentinel' data points into a training set to deceive and detect data poisoning attacks, as well as to detect training data theft and exfiltration.<br/><br/><strong>Poisoning Detection</strong><br/>Canaries are specifically crafted to be easily learned by the model under normal conditions. During training, the model's behavior on these specific points is monitored, and anomalous reactions (e.g., a sudden spike in loss, a change in prediction) trigger a high-fidelity alert revealing the attack.<br/><br/><strong>Provenance &amp; Theft Detection</strong><br/>Unique fictional facts are embedded in training data. If an external model later demonstrates knowledge of these facts, it is strong evidence that the training data was stolen or used without authorization.",
             "toolsOpenSource": [

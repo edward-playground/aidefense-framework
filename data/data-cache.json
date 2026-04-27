@@ -4659,7 +4659,7 @@
       "recon-driven alert correlation"
     ]
   },
-  "AID-DV-008": {
+  "AID-DV-007": {
     "contentHash": "1d7f8f3e683755e2",
     "keywords": [
       "poisoning detection canary",
