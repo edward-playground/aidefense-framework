@@ -1,8 +1,8 @@
 {
 "version": {
 "schemaVersion": "2.0",
-"dataVersion": "2026.04.27",
-"generatedAt": "2026-04-27T07:34:41.824Z",
+"dataVersion": "2026.05.18",
+"generatedAt": "2026-05-18T07:35:49.971Z",
 "source": "bundled",
 "keywordStructure": "flat"
 },
@@ -25557,7 +25557,7 @@
 }
 ],
 "implementationGuidance": [
-"Implement semantic consistency checks between information extracted from different modalities (e.g., verify alignment between text captions and image content; ensure audio commands do not contradict visual cues).",
+"Implement semantic consistency checks between information extracted from different modalities (e.g., compare text captions and image content; detect when audio commands contradict visual cues) and emit structured inconsistency findings for downstream admission, review, or hardening controls.",
 "Scan non-primary modalities for embedded instructions or payloads intended for other modalities (e.g., steganographically hidden text in images, QR codes containing malicious prompts, audio watermarks with commands).",
 "Record per-modality validation findings and cross-stream verdict mismatches before multimodal fusion.",
 "Monitor the AI model's internal attention mechanisms (if accessible and interpretable) for unusual or forced cross-modal attention patterns that might indicate manipulation.",
@@ -25583,7 +25583,7 @@
 "Google Cloud Vision API",
 "Sensity AI"
 ],
-"contentHash": "d1c0c944e5ebc9c2",
+"contentHash": "2f319e556eb68b4a",
 "keywords": [
 "cross-modal consistency scoring",
 "image-text contradiction detection",
