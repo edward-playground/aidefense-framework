@@ -151,12 +151,14 @@ export const deceiveTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
+                        "AML.T0002.002 Acquire Public AI Artifacts: AI Agent Configuration (canary config artifacts detect acquisition)",
                         "AML.T0025 Exfiltration via Cyber Means (honey data/canaries trigger alerts on exfiltration)",
                         "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (decoy model artifacts lure extraction)",
                         "AML.T0010 AI Supply Chain Compromise (decoy artifacts detect supply chain probing)",
                         "AML.T0057 LLM Data Leakage (canary tokens in training data detect leakage)",
                         "AML.T0035 AI Artifact Collection (decoy artifacts detect unauthorized artifact collection)",
-                        "AML.T0005.000 Create Proxy AI Model: Train Proxy via Gathered AI Artifacts (canaries in artifact stores detect gathering for proxy training)"
+                        "AML.T0005.000 Create Proxy AI Model: Train Proxy via Gathered AI Artifacts (canaries in artifact stores detect gathering for proxy training)",
+                        "AML.T0095.000 Search Open Websites/Domains: Code Repositories (repository canaries detect public-code reconnaissance)"
                     ]
                 },
                 {

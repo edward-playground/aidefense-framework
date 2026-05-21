@@ -362,7 +362,7 @@
     ]
   },
   "AID-M-005": {
-    "contentHash": "1ef77da32deec171",
+    "contentHash": "bef9db640e331fba",
     "keywords": [
       "secure configuration baselines",
       "cis benchmarks",
@@ -381,7 +381,7 @@
     ]
   },
   "AID-M-005.001": {
-    "contentHash": "11fa23e4984749ed",
+    "contentHash": "a9797f552fe98af6",
     "keywords": [
       "secure baseline design",
       "hardened base images",
@@ -400,7 +400,7 @@
     ]
   },
   "AID-M-005.002": {
-    "contentHash": "d61e2a0d1fe47aaa",
+    "contentHash": "648c688edf46d365",
     "keywords": [
       "policy-as-code baseline",
       "posture slo definition",
@@ -628,7 +628,7 @@
     ]
   },
   "AID-H-002.003": {
-    "contentHash": "97c8c6c671deb233",
+    "contentHash": "dc22b35bafaf7fb1",
     "keywords": [
       "multimodal sanitization",
       "image purification",
@@ -799,7 +799,7 @@
     ]
   },
   "AID-H-003.005": {
-    "contentHash": "8d4e54dadf323de9",
+    "contentHash": "f52863f7cdd3940a",
     "keywords": [
       "iac scanning",
       "shift-left security",
@@ -1955,7 +1955,7 @@
     ]
   },
   "AID-H-019.003": {
-    "contentHash": "185a8be04a876f96",
+    "contentHash": "4a54751c2b05d984",
     "keywords": [
       "two-channel validation",
       "independent validator",
@@ -2165,7 +2165,7 @@
     ]
   },
   "AID-H-022": {
-    "contentHash": "a73ea2fab1b8de22",
+    "contentHash": "15a955c6fbc48708",
     "keywords": [
       "configuration integrity",
       "signed configurations",
@@ -2184,7 +2184,7 @@
     ]
   },
   "AID-H-022.001": {
-    "contentHash": "d895aa7c611d839c",
+    "contentHash": "3bc33a2a642c29b1",
     "keywords": [
       "client-side configuration enforcement",
       "pre-commit hooks",
@@ -2580,7 +2580,7 @@
     ]
   },
   "AID-H-029": {
-    "contentHash": "18750aae257432aa",
+    "contentHash": "1915b70223729cfb",
     "keywords": [
       "mcp client hardening",
       "tool client security",
@@ -2618,7 +2618,7 @@
     ]
   },
   "AID-H-029.002": {
-    "contentHash": "6c0a431a7636e3a7",
+    "contentHash": "5906e035bfe564b6",
     "keywords": [
       "secure credential storage",
       "os keychain storage",
@@ -2923,7 +2923,7 @@
     ]
   },
   "AID-H-032": {
-    "contentHash": "9336da45513dc23e",
+    "contentHash": "404f21a332381845",
     "keywords": [
       "ai-generated code admission control",
       "safe promotion control plane",
@@ -2961,7 +2961,7 @@
     ]
   },
   "AID-H-032.002": {
-    "contentHash": "53cba99bd53a529c",
+    "contentHash": "636bbebc0c5189c9",
     "keywords": [
       "static admission gate",
       "provenance-aware static scan",
@@ -3151,7 +3151,7 @@
     ]
   },
   "AID-D-001.002": {
-    "contentHash": "9826d9963305eb29",
+    "contentHash": "9ca13218460c7625",
     "keywords": [
       "deepfake detection",
       "synthetic media forensics",
@@ -3265,7 +3265,7 @@
     ]
   },
   "AID-D-003": {
-    "contentHash": "5b996a60972ae0d2",
+    "contentHash": "84ae779770b6a0d6",
     "keywords": [
       "output monitoring",
       "policy enforcement",
@@ -3702,7 +3702,7 @@
     ]
   },
   "AID-D-007": {
-    "contentHash": "2f319e556eb68b4a",
+    "contentHash": "db0f90c53355f4ff",
     "keywords": [
       "cross-modal consistency scoring",
       "image-text contradiction detection",
@@ -4025,7 +4025,7 @@
     ]
   },
   "AID-D-015": {
-    "contentHash": "591c4c4dd48f1f33",
+    "contentHash": "09f077ff0ad2ce7d",
     "keywords": [
       "user trust calibration",
       "high-risk action confirmation",
@@ -4044,7 +4044,7 @@
     ]
   },
   "AID-D-015.001": {
-    "contentHash": "1b23c37ee660e0a9",
+    "contentHash": "1269c6bfe7dce1f3",
     "keywords": [
       "trust metadata exposure",
       "provenance signal display",
@@ -4063,7 +4063,7 @@
     ]
   },
   "AID-D-015.002": {
-    "contentHash": "a9ac05b2c534c5fa",
+    "contentHash": "e60480a1788039ff",
     "keywords": [
       "high-risk action telemetry",
       "confirmation bypass detection",
@@ -4564,7 +4564,7 @@
     ]
   },
   "AID-DV-002": {
-    "contentHash": "740b2bb14978cb75",
+    "contentHash": "4d3325e526d74b21",
     "keywords": [
       "canary credential placement",
       "decoy dataset seeding",
@@ -5107,7 +5107,7 @@
     ]
   },
   "AID-H-002.007": {
-    "contentHash": "8f57e2a383e44de0",
+    "contentHash": "b43c8acaf86de7a1",
     "keywords": [
       "c2pa verification",
       "content credentials",

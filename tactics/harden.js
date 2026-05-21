@@ -1216,6 +1216,7 @@ def prepare_upload(filename: str, blob: bytes) -&gt; tuple[bytes, dict]:
               items: [
                 "AML.T0043 Craft Adversarial Data",
                 "AML.T0015 Evade AI Model",
+                "AML.T0052.001 Phishing: Deepfake-Assisted Phishing (multimodal sanitization reduces trust in malicious synthetic media inputs)",
                 "AML.T0051 LLM Prompt Injection (multimodal inputs can carry injection payloads)",
               ],
             },
@@ -1702,6 +1703,7 @@ print("split_integrity_passed")
             {
               "framework": "MITRE ATLAS",
               "items": [
+                "AML.T0052.001 Phishing: Deepfake-Assisted Phishing (provenance checks downgrade unverified external media)",
                 "AML.T0051.001 LLM Prompt Injection: Indirect",
                 "AML.T0066 Retrieval Content Crafting",
                 "AML.T0070 RAG Poisoning",
@@ -2554,6 +2556,7 @@ kubectl drain ai-gpu-node-17 --ignore-daemonsets --delete-emptydir-data
                 "AML.T0010.001 AI Supply Chain Compromise: AI Software (IaC scanning detects insecure software deployment configs)",
                 "AML.T0010.004 AI Supply Chain Compromise: Container Registry (IaC scanning prevents misconfigured container registries)",
                 "AML.T0049 Exploit Public-Facing Application (IaC scanning detects exposed AI services)",
+                "AML.T0095.000 Search Open Websites/Domains: Code Repositories (IaC and secret scanning reduce repository exposure)",
               ],
             },
             {
@@ -10760,6 +10763,7 @@ def dispatch_tool(tool_name: str, args: dict, *, verified_user: dict, time_conte
                 "AML.T0053 AI Agent Tool Invocation",
                 "AML.T0048 External Harms (two-channel validation catches harmful actions before execution)",
                 "AML.T0051 LLM Prompt Injection (second channel independently validates injection attempts)",
+                "AML.T0052.001 Phishing: Deepfake-Assisted Phishing (independent validation blocks spoofed high-impact requests)",
               ],
             },
             {
@@ -12720,6 +12724,7 @@ def fetch_preview(raw_url: str, *, task_id: str, session_id: str) -> str:
         {
           framework: "MITRE ATLAS",
           items: [
+            "AML.T0002.002 Acquire Public AI Artifacts: AI Agent Configuration",
             "AML.T0051 LLM Prompt Injection",
             "AML.T0054 LLM Jailbreak",
             "AML.T0081 Modify AI Agent Configuration",
@@ -12801,9 +12806,11 @@ def fetch_preview(raw_url: str, *, task_id: str, session_id: str) -> str:
             {
               framework: "MITRE ATLAS",
               items: [
+                "AML.T0002.002 Acquire Public AI Artifacts: AI Agent Configuration",
                 "AML.T0051 LLM Prompt Injection",
                 "AML.T0054 LLM Jailbreak",
                 "AML.T0081 Modify AI Agent Configuration",
+                "AML.T0095.000 Search Open Websites/Domains: Code Repositories (pre-commit config checks prevent agent config exposure in repos)",
               ],
             },
             {
@@ -16458,6 +16465,7 @@ def load_cache_if_trustworthy(redis_client, full_key: str, expected: dict) -&gt;
         {
           "framework": "MITRE ATLAS",
           "items": [
+            "AML.T0002.002 Acquire Public AI Artifacts: AI Agent Configuration",
             "AML.T0010 AI Supply Chain Compromise (compromised MCP client binary, plugin, or dependency)",
             "AML.T0010.001 AI Supply Chain Compromise: AI Software (malicious MCP client SDK or library)",
             "AML.T0012 Valid Accounts (stolen client credentials enable unauthorized access)",
@@ -16679,6 +16687,7 @@ def load_cache_if_trustworthy(redis_client, full_key: str, expected: dict) -&gt;
             {
               "framework": "MITRE ATLAS",
               "items": [
+                "AML.T0002.002 Acquire Public AI Artifacts: AI Agent Configuration",
                 "AML.T0012 Valid Accounts (credential theft from insecure local storage)",
                 "AML.T0084 Discover AI Agent Configuration (credentials exposed in local config)",
                 "AML.T0098 AI Agent Tool Credential Harvesting (credential harvesting from client storage)"
@@ -18348,7 +18357,8 @@ def emit_sampling_event(
             "AML.T0011 User Execution",
             "AML.T0011.000 User Execution: Unsafe AI Artifacts",
             "AML.T0011.001 User Execution: Malicious Package",
-            "AML.T0060 Publish Hallucinated Entities"
+            "AML.T0060 Publish Hallucinated Entities",
+            "AML.T0095.000 Search Open Websites/Domains: Code Repositories (generated-code gates block secrets and unsafe repository automation)"
           ]
         },
         {
@@ -18548,7 +18558,8 @@ def emit_sampling_event(
                 "AML.T0010.001 AI Supply Chain Compromise: AI Software",
                 "AML.T0011.001 User Execution: Malicious Package",
                 "AML.T0011.000 User Execution: Unsafe AI Artifacts",
-                "AML.T0060 Publish Hallucinated Entities"
+                "AML.T0060 Publish Hallucinated Entities",
+                "AML.T0095.000 Search Open Websites/Domains: Code Repositories (static gates catch secrets and risky repository automation)"
               ]
             },
             {

@@ -276,6 +276,7 @@ export const detectTactic = {
                                 "AML.T0048.001 External Harms: Reputational Harm",
                                 "AML.T0048.002 External Harms: Societal Harm",
                                 "AML.T0048.003 External Harms: User Harm",
+                                "AML.T0052.001 Phishing: Deepfake-Assisted Phishing",
                                 "AML.T0073 Impersonation",
                                 "AML.T0088 Generate Deepfakes"
                             ]
@@ -1618,6 +1619,7 @@ if __name__ == "__main__":
                         "AML.T0057 LLM Data Leakage",
                         "AML.T0052 Phishing",
                         "AML.T0052.000 Phishing: Spearphishing via Social Engineering LLM",
+                        "AML.T0052.001 Phishing: Deepfake-Assisted Phishing (output policy monitoring catches deepfake phishing content)",
                         "AML.T0047 AI-Enabled Product or Service",
                         "AML.T0061 LLM Prompt Self-Replication",
                         "AML.T0053 AI Agent Tool Invocation",
@@ -5131,7 +5133,8 @@ def build_cost_abuse_timelines(cost_alert_events: list[dict], response_events: l
                         "AML.T0015 Evade AI Model (multimodal evasion)",
                         "AML.T0043 Craft Adversarial Data (multimodal adversarial examples)",
                         "AML.T0043.000 Craft Adversarial Data: White-Box Optimization",
-                        "AML.T0043.003 Craft Adversarial Data: Manual Modification"
+                        "AML.T0043.003 Craft Adversarial Data: Manual Modification",
+                        "AML.T0052.001 Phishing: Deepfake-Assisted Phishing (cross-modal inconsistency detection catches spoofed audio/video evidence)"
                     ]
                 },
                 {
@@ -7209,6 +7212,7 @@ def derive_verification_state(fact: dict) -> dict:
                     "framework": "MITRE ATLAS",
                     "items": [
                         "AML.T0052 Phishing",
+                        "AML.T0052.001 Phishing: Deepfake-Assisted Phishing (trust signals reduce blind acceptance of spoofed media or identity claims)",
                         "AML.T0048.002 External Harms: Societal Harm",
                         "AML.T0048.000 External Harms: Financial Harm",
                         "AML.T0067 LLM Trusted Output Components Manipulation",
@@ -7303,6 +7307,7 @@ def derive_verification_state(fact: dict) -> dict:
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0052 Phishing",
+                                "AML.T0052.001 Phishing: Deepfake-Assisted Phishing (provenance and verification metadata warn on spoofed media)",
                                 "AML.T0067 LLM Trusted Output Components Manipulation",
                                 "AML.T0067.000 LLM Trusted Output Components Manipulation: Citations"
                             ]
@@ -7397,7 +7402,8 @@ def derive_verification_state(fact: dict) -> dict:
                                 "AML.T0052 Phishing",
                                 "AML.T0053 AI Agent Tool Invocation (confirmation telemetry surfaces unapproved high-risk tool execution)",
                                 "AML.T0086 Exfiltration via AI Agent Tool Invocation (approval-bypass detection surfaces unconfirmed export attempts)",
-                                "AML.T0052.000 Phishing: Spearphishing via Social Engineering LLM (confirmation telemetry reveals socially engineered approval abuse)"
+                                "AML.T0052.000 Phishing: Spearphishing via Social Engineering LLM (confirmation telemetry reveals socially engineered approval abuse)",
+                                "AML.T0052.001 Phishing: Deepfake-Assisted Phishing (confirmation telemetry reveals spoofed-media approval abuse)"
                             ]
                         },
                         {

@@ -3776,6 +3776,7 @@ jobs:
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
+                        "AML.T0002.002 Acquire Public AI Artifacts: AI Agent Configuration",
                         "AML.T0010 AI Supply Chain Compromise",
                         "AML.T0055 Unsecured Credentials",
                         "AML.T0081 Modify AI Agent Configuration",
@@ -3907,6 +3908,7 @@ jobs:
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0002.002 Acquire Public AI Artifacts: AI Agent Configuration",
                                 "AML.T0010 AI Supply Chain Compromise",
                                 "AML.T0010.001 AI Supply Chain Compromise: AI Software",
                                 "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
@@ -4032,6 +4034,7 @@ jobs:
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0002.002 Acquire Public AI Artifacts: AI Agent Configuration",
                                 "AML.T0010 AI Supply Chain Compromise",
                                 "AML.T0010.001 AI Supply Chain Compromise: AI Software",
                                 "AML.T0010.004 AI Supply Chain Compromise: Container Registry",

@@ -1,8 +1,8 @@
 {
 "version": {
 "schemaVersion": "2.0",
-"dataVersion": "2026.05.18",
-"generatedAt": "2026-05-18T07:55:25.763Z",
+"dataVersion": "2026.05.21",
+"generatedAt": "2026-05-21T02:47:38.897Z",
 "source": "bundled",
 "keywordStructure": "flat"
 },
@@ -2439,6 +2439,7 @@
 {
 "framework": "MITRE ATLAS",
 "items": [
+"AML.T0002.002 Acquire Public AI Artifacts: AI Agent Configuration",
 "AML.T0010 AI Supply Chain Compromise",
 "AML.T0055 Unsecured Credentials",
 "AML.T0081 Modify AI Agent Configuration",
@@ -2532,7 +2533,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "1ef77da32deec171",
+"contentHash": "bef9db640e331fba",
 "keywords": [
 "secure configuration baselines",
 "cis benchmarks",
@@ -2585,6 +2586,7 @@
 {
 "framework": "MITRE ATLAS",
 "items": [
+"AML.T0002.002 Acquire Public AI Artifacts: AI Agent Configuration",
 "AML.T0010 AI Supply Chain Compromise",
 "AML.T0010.001 AI Supply Chain Compromise: AI Software",
 "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
@@ -2673,7 +2675,7 @@
 ]
 }
 ],
-"contentHash": "11fa23e4984749ed",
+"contentHash": "a9797f552fe98af6",
 "keywords": [
 "secure baseline design",
 "hardened base images",
@@ -2723,6 +2725,7 @@
 {
 "framework": "MITRE ATLAS",
 "items": [
+"AML.T0002.002 Acquire Public AI Artifacts: AI Agent Configuration",
 "AML.T0010 AI Supply Chain Compromise",
 "AML.T0010.001 AI Supply Chain Compromise: AI Software",
 "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
@@ -2802,7 +2805,7 @@
 ]
 }
 ],
-"contentHash": "d61e2a0d1fe47aaa",
+"contentHash": "648c688edf46d365",
 "keywords": [
 "policy-as-code baseline",
 "posture slo definition",
@@ -5221,6 +5224,7 @@
 "items": [
 "AML.T0043 Craft Adversarial Data",
 "AML.T0015 Evade AI Model",
+"AML.T0052.001 Phishing: Deepfake-Assisted Phishing (multimodal sanitization reduces trust in malicious synthetic media inputs)",
 "AML.T0051 LLM Prompt Injection (multimodal inputs can carry injection payloads)"
 ]
 },
@@ -5281,7 +5285,7 @@
 ]
 }
 ],
-"contentHash": "97c8c6c671deb233",
+"contentHash": "dc22b35bafaf7fb1",
 "keywords": [
 "multimodal sanitization",
 "image purification",
@@ -5681,6 +5685,7 @@
 {
 "framework": "MITRE ATLAS",
 "items": [
+"AML.T0052.001 Phishing: Deepfake-Assisted Phishing (provenance checks downgrade unverified external media)",
 "AML.T0051.001 LLM Prompt Injection: Indirect",
 "AML.T0066 Retrieval Content Crafting",
 "AML.T0070 RAG Poisoning",
@@ -5752,7 +5757,7 @@
 ]
 }
 ],
-"contentHash": "8f57e2a383e44de0",
+"contentHash": "b43c8acaf86de7a1",
 "keywords": [
 "c2pa verification",
 "content credentials",
@@ -6431,7 +6436,8 @@
 "AML.T0010 AI Supply Chain Compromise (IaC misconfigurations can compromise AI deployment infrastructure)",
 "AML.T0010.001 AI Supply Chain Compromise: AI Software (IaC scanning detects insecure software deployment configs)",
 "AML.T0010.004 AI Supply Chain Compromise: Container Registry (IaC scanning prevents misconfigured container registries)",
-"AML.T0049 Exploit Public-Facing Application (IaC scanning detects exposed AI services)"
+"AML.T0049 Exploit Public-Facing Application (IaC scanning detects exposed AI services)",
+"AML.T0095.000 Search Open Websites/Domains: Code Repositories (IaC and secret scanning reduce repository exposure)"
 ]
 },
 {
@@ -6493,7 +6499,7 @@
 ]
 }
 ],
-"contentHash": "8d4e54dadf323de9",
+"contentHash": "f52863f7cdd3940a",
 "keywords": [
 "iac scanning",
 "shift-left security",
@@ -13521,7 +13527,8 @@
 "items": [
 "AML.T0053 AI Agent Tool Invocation",
 "AML.T0048 External Harms (two-channel validation catches harmful actions before execution)",
-"AML.T0051 LLM Prompt Injection (second channel independently validates injection attempts)"
+"AML.T0051 LLM Prompt Injection (second channel independently validates injection attempts)",
+"AML.T0052.001 Phishing: Deepfake-Assisted Phishing (independent validation blocks spoofed high-impact requests)"
 ]
 },
 {
@@ -13590,7 +13597,7 @@
 ]
 }
 ],
-"contentHash": "185a8be04a876f96",
+"contentHash": "4a54751c2b05d984",
 "keywords": [
 "two-channel validation",
 "independent validator",
@@ -14783,6 +14790,7 @@
 {
 "framework": "MITRE ATLAS",
 "items": [
+"AML.T0002.002 Acquire Public AI Artifacts: AI Agent Configuration",
 "AML.T0051 LLM Prompt Injection",
 "AML.T0054 LLM Jailbreak",
 "AML.T0081 Modify AI Agent Configuration"
@@ -14855,7 +14863,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "a73ea2fab1b8de22",
+"contentHash": "15a955c6fbc48708",
 "keywords": [
 "configuration integrity",
 "signed configurations",
@@ -14906,9 +14914,11 @@
 {
 "framework": "MITRE ATLAS",
 "items": [
+"AML.T0002.002 Acquire Public AI Artifacts: AI Agent Configuration",
 "AML.T0051 LLM Prompt Injection",
 "AML.T0054 LLM Jailbreak",
-"AML.T0081 Modify AI Agent Configuration"
+"AML.T0081 Modify AI Agent Configuration",
+"AML.T0095.000 Search Open Websites/Domains: Code Repositories (pre-commit config checks prevent agent config exposure in repos)"
 ]
 },
 {
@@ -14970,7 +14980,7 @@
 ]
 }
 ],
-"contentHash": "d895aa7c611d839c",
+"contentHash": "3bc33a2a642c29b1",
 "keywords": [
 "client-side configuration enforcement",
 "pre-commit hooks",
@@ -17316,6 +17326,7 @@
 {
 "framework": "MITRE ATLAS",
 "items": [
+"AML.T0002.002 Acquire Public AI Artifacts: AI Agent Configuration",
 "AML.T0010 AI Supply Chain Compromise (compromised MCP client binary, plugin, or dependency)",
 "AML.T0010.001 AI Supply Chain Compromise: AI Software (malicious MCP client SDK or library)",
 "AML.T0012 Valid Accounts (stolen client credentials enable unauthorized access)",
@@ -17409,7 +17420,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "18750aae257432aa",
+"contentHash": "1915b70223729cfb",
 "keywords": [
 "mcp client hardening",
 "tool client security",
@@ -17570,6 +17581,7 @@
 {
 "framework": "MITRE ATLAS",
 "items": [
+"AML.T0002.002 Acquire Public AI Artifacts: AI Agent Configuration",
 "AML.T0012 Valid Accounts (credential theft from insecure local storage)",
 "AML.T0084 Discover AI Agent Configuration (credentials exposed in local config)",
 "AML.T0098 AI Agent Tool Credential Harvesting (credential harvesting from client storage)"
@@ -17631,7 +17643,7 @@
 ]
 }
 ],
-"contentHash": "6c0a431a7636e3a7",
+"contentHash": "5906e035bfe564b6",
 "keywords": [
 "secure credential storage",
 "os keychain storage",
@@ -19316,7 +19328,8 @@
 "AML.T0011 User Execution",
 "AML.T0011.000 User Execution: Unsafe AI Artifacts",
 "AML.T0011.001 User Execution: Malicious Package",
-"AML.T0060 Publish Hallucinated Entities"
+"AML.T0060 Publish Hallucinated Entities",
+"AML.T0095.000 Search Open Websites/Domains: Code Repositories (generated-code gates block secrets and unsafe repository automation)"
 ]
 },
 {
@@ -19387,7 +19400,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "9336da45513dc23e",
+"contentHash": "404f21a332381845",
 "keywords": [
 "ai-generated code admission control",
 "safe promotion control plane",
@@ -19557,7 +19570,8 @@
 "AML.T0010.001 AI Supply Chain Compromise: AI Software",
 "AML.T0011.001 User Execution: Malicious Package",
 "AML.T0011.000 User Execution: Unsafe AI Artifacts",
-"AML.T0060 Publish Hallucinated Entities"
+"AML.T0060 Publish Hallucinated Entities",
+"AML.T0095.000 Search Open Websites/Domains: Code Repositories (static gates catch secrets and risky repository automation)"
 ]
 },
 {
@@ -19623,7 +19637,7 @@
 ]
 }
 ],
-"contentHash": "53cba99bd53a529c",
+"contentHash": "636bbebc0c5189c9",
 "keywords": [
 "static admission gate",
 "provenance-aware static scan",
@@ -21265,6 +21279,7 @@
 "AML.T0048.001 External Harms: Reputational Harm",
 "AML.T0048.002 External Harms: Societal Harm",
 "AML.T0048.003 External Harms: User Harm",
+"AML.T0052.001 Phishing: Deepfake-Assisted Phishing",
 "AML.T0073 Impersonation",
 "AML.T0088 Generate Deepfakes"
 ]
@@ -21333,7 +21348,7 @@
 ]
 }
 ],
-"contentHash": "9826d9963305eb29",
+"contentHash": "9ca13218460c7625",
 "keywords": [
 "deepfake detection",
 "synthetic media forensics",
@@ -22455,6 +22470,7 @@
 "AML.T0057 LLM Data Leakage",
 "AML.T0052 Phishing",
 "AML.T0052.000 Phishing: Spearphishing via Social Engineering LLM",
+"AML.T0052.001 Phishing: Deepfake-Assisted Phishing (output policy monitoring catches deepfake phishing content)",
 "AML.T0047 AI-Enabled Product or Service",
 "AML.T0061 LLM Prompt Self-Replication",
 "AML.T0053 AI Agent Tool Invocation",
@@ -22551,7 +22567,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "5b996a60972ae0d2",
+"contentHash": "84ae779770b6a0d6",
 "keywords": [
 "output monitoring",
 "policy enforcement",
@@ -25490,7 +25506,8 @@
 "AML.T0015 Evade AI Model (multimodal evasion)",
 "AML.T0043 Craft Adversarial Data (multimodal adversarial examples)",
 "AML.T0043.000 Craft Adversarial Data: White-Box Optimization",
-"AML.T0043.003 Craft Adversarial Data: Manual Modification"
+"AML.T0043.003 Craft Adversarial Data: Manual Modification",
+"AML.T0052.001 Phishing: Deepfake-Assisted Phishing (cross-modal inconsistency detection catches spoofed audio/video evidence)"
 ]
 },
 {
@@ -25583,7 +25600,7 @@
 "Google Cloud Vision API",
 "Sensity AI"
 ],
-"contentHash": "2f319e556eb68b4a",
+"contentHash": "db0f90c53355f4ff",
 "keywords": [
 "cross-modal consistency scoring",
 "image-text contradiction detection",
@@ -27483,6 +27500,7 @@
 "framework": "MITRE ATLAS",
 "items": [
 "AML.T0052 Phishing",
+"AML.T0052.001 Phishing: Deepfake-Assisted Phishing (trust signals reduce blind acceptance of spoofed media or identity claims)",
 "AML.T0048.002 External Harms: Societal Harm",
 "AML.T0048.000 External Harms: Financial Harm",
 "AML.T0067 LLM Trusted Output Components Manipulation",
@@ -27554,7 +27572,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "591c4c4dd48f1f33",
+"contentHash": "09f077ff0ad2ce7d",
 "keywords": [
 "user trust calibration",
 "high-risk action confirmation",
@@ -27600,6 +27618,7 @@
 "framework": "MITRE ATLAS",
 "items": [
 "AML.T0052 Phishing",
+"AML.T0052.001 Phishing: Deepfake-Assisted Phishing (provenance and verification metadata warn on spoofed media)",
 "AML.T0067 LLM Trusted Output Components Manipulation",
 "AML.T0067.000 LLM Trusted Output Components Manipulation: Citations"
 ]
@@ -27657,7 +27676,7 @@
 ]
 }
 ],
-"contentHash": "1b23c37ee660e0a9",
+"contentHash": "1269c6bfe7dce1f3",
 "keywords": [
 "trust metadata exposure",
 "provenance signal display",
@@ -27708,7 +27727,8 @@
 "AML.T0052 Phishing",
 "AML.T0053 AI Agent Tool Invocation (confirmation telemetry surfaces unapproved high-risk tool execution)",
 "AML.T0086 Exfiltration via AI Agent Tool Invocation (approval-bypass detection surfaces unconfirmed export attempts)",
-"AML.T0052.000 Phishing: Spearphishing via Social Engineering LLM (confirmation telemetry reveals socially engineered approval abuse)"
+"AML.T0052.000 Phishing: Spearphishing via Social Engineering LLM (confirmation telemetry reveals socially engineered approval abuse)",
+"AML.T0052.001 Phishing: Deepfake-Assisted Phishing (confirmation telemetry reveals spoofed-media approval abuse)"
 ]
 },
 {
@@ -27774,7 +27794,7 @@
 ]
 }
 ],
-"contentHash": "a9ac05b2c534c5fa",
+"contentHash": "e60480a1788039ff",
 "keywords": [
 "high-risk action telemetry",
 "confirmation bypass detection",
@@ -31521,12 +31541,14 @@
 {
 "framework": "MITRE ATLAS",
 "items": [
+"AML.T0002.002 Acquire Public AI Artifacts: AI Agent Configuration (canary config artifacts detect acquisition)",
 "AML.T0025 Exfiltration via Cyber Means (honey data/canaries trigger alerts on exfiltration)",
 "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (decoy model artifacts lure extraction)",
 "AML.T0010 AI Supply Chain Compromise (decoy artifacts detect supply chain probing)",
 "AML.T0057 LLM Data Leakage (canary tokens in training data detect leakage)",
 "AML.T0035 AI Artifact Collection (decoy artifacts detect unauthorized artifact collection)",
-"AML.T0005.000 Create Proxy AI Model: Train Proxy via Gathered AI Artifacts (canaries in artifact stores detect gathering for proxy training)"
+"AML.T0005.000 Create Proxy AI Model: Train Proxy via Gathered AI Artifacts (canaries in artifact stores detect gathering for proxy training)",
+"AML.T0095.000 Search Open Websites/Domains: Code Repositories (repository canaries detect public-code reconnaissance)"
 ]
 },
 {
@@ -31613,7 +31635,7 @@
 "Acalvio ShadowPlex",
 "Proofpoint Identity Threat Defense"
 ],
-"contentHash": "740b2bb14978cb75",
+"contentHash": "4d3325e526d74b21",
 "keywords": [
 "canary credential placement",
 "decoy dataset seeding",
