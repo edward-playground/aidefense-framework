@@ -454,6 +454,7 @@ jobs:
                             items: [
                                 "AML.T0010 AI Supply Chain Compromise (skill inventory enables tracking of supply-chain origin and publisher for every installed skill)",
                                 "AML.T0104 Publish Poisoned AI Agent Tool (inventory-driven approval workflow gates poisoned skill installation)",
+                                "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
                             ],
                         },
                         {
@@ -744,7 +745,8 @@ def handle_event(event: LifecycleEvent):
                         "AML.T0018 Manipulate AI Model",
                         "AML.T0019 Publish Poisoned Datasets",
                         "AML.T0058 Publish Poisoned Models",
-                        "AML.T0059 Erode Dataset Integrity"
+                        "AML.T0059 Erode Dataset Integrity",
+                        "AML.T0112.001 Machine Compromise: AI Artifacts",
                     ]
                 },
                 {
@@ -964,7 +966,8 @@ def handle_event(event: LifecycleEvent):
                                 "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
                                 "AML.T0058 Publish Poisoned Models",
                                 "AML.T0059 Erode Dataset Integrity",
-                                "AML.T0076 Corrupt AI Model"
+                                "AML.T0076 Corrupt AI Model",
+                                "AML.T0112.001 Machine Compromise: AI Artifacts",
                             ]
                         },
                         {
@@ -1505,7 +1508,8 @@ if __name__ == "__main__":
                                 "AML.T0010.002 AI Supply Chain Compromise: Data",
                                 "AML.T0066 Retrieval Content Crafting (write-gate prevents crafted retrieval content from entering trusted KB namespace)",
                                 "AML.T0061 LLM Prompt Self-Replication (write-gate prevents self-replicating prompts from persisting into KB/memory)",
-                                "AML.T0092 Manipulate User LLM Chat History (write-gate controls writes to agent memory that includes chat history)"
+                                "AML.T0092 Manipulate User LLM Chat History (write-gate controls writes to agent memory that includes chat history)",
+                                "AML.T0099 AI Agent Tool Data Poisoning",
                             ]
                         },
                         {
@@ -1877,7 +1881,8 @@ def enforce_circuit_breaker(tenant_id: str, source_system: str) -> None:
                                 "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
                                 "AML.T0058 Publish Poisoned Models",
                                 "AML.T0059 Erode Dataset Integrity",
-                                "AML.T0076 Corrupt AI Model"
+                                "AML.T0076 Corrupt AI Model",
+                                "AML.T0112.001 Machine Compromise: AI Artifacts",
                             ]
                         },
                         {
@@ -4040,7 +4045,8 @@ jobs:
                                 "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
                                 "AML.T0011.001 User Execution: Malicious Package",
                                 "AML.T0055 Unsecured Credentials",
-                                "AML.T0081 Modify AI Agent Configuration"
+                                "AML.T0081 Modify AI Agent Configuration",
+                                "AML.T0083 Credentials from AI Agent Configuration",
                             ]
                         },
                         {
@@ -5211,7 +5217,9 @@ dispatch.latest_time = now</code></pre><p><strong>Action:</strong> Tune threshol
                                 "AML.T0053 AI Agent Tool Invocation",
                                 "AML.T0101 Data Destruction via AI Agent Tool Invocation",
                                 "AML.T0085.001 Data from AI Services: AI Agent Tools",
-                                "AML.T0086 Exfiltration via AI Agent Tool Invocation"
+                                "AML.T0086 Exfiltration via AI Agent Tool Invocation",
+                                "AML.T0108 AI Agent",
+                                "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption",
                             ]
                         },
                         {
@@ -5476,7 +5484,8 @@ def verify_delegation_context(header_value: str, verify_key_hex: str) -> dict:
                             "items": [
                                 "AML.T0048 External Harms",
                                 "AML.T0053 AI Agent Tool Invocation (trust-state demotion narrows permissions during anomalous behavior)",
-                                "AML.T0101 Data Destruction via AI Agent Tool Invocation"
+                                "AML.T0101 Data Destruction via AI Agent Tool Invocation",
+                                "AML.T0108 AI Agent",
                             ]
                         },
                         {

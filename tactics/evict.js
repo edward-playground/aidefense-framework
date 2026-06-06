@@ -15,7 +15,8 @@ export const evictTactic = {
                         "AML.T0090 OS Credential Dumping",
                         "AML.T0091 Use Alternate Authentication Material",
                         "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
-                        "AML.T0098 AI Agent Tool Credential Harvesting"
+                        "AML.T0098 AI Agent Tool Credential Harvesting",
+                        "AML.T0083 Credentials from AI Agent Configuration",
                     ]
                 },
                 {
@@ -524,7 +525,8 @@ export const evictTactic = {
                         "AML.T0070 RAG Poisoning",
                         "AML.T0071 False RAG Entry Injection",
                         "AML.T0104 Publish Poisoned AI Agent Tool",
-                        "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (removal targets inserted backdoor triggers)"
+                        "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (removal targets inserted backdoor triggers)",
+                        "AML.T0110 AI Agent Tool Poisoning",
                     ]
                 },
                 {
@@ -932,7 +934,8 @@ print(f"Small suspicious clusters: {small_clusters}")</code></pre><h5>Required e
                                 "AML.T0018.002 Manipulate AI Model: Embed Malware",
                                 "AML.T0072 Reverse Shell",
                                 "AML.T0104 Publish Poisoned AI Agent Tool (cleanup removes poisoned agent tools)",
-                                "AML.T0081 Modify AI Agent Configuration"
+                                "AML.T0081 Modify AI Agent Configuration",
+                                "AML.T0110 AI Agent Tool Poisoning",
                             ]
                         },
                         {

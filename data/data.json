@@ -1,8 +1,8 @@
 {
 "version": {
 "schemaVersion": "2.0",
-"dataVersion": "2026.05.21",
-"generatedAt": "2026-05-21T02:47:38.897Z",
+"dataVersion": "2026.06.06",
+"generatedAt": "2026-06-06T20:12:50.031Z",
 "source": "bundled",
 "keywordStructure": "flat"
 },
@@ -407,7 +407,8 @@
 "framework": "MITRE ATLAS",
 "items": [
 "AML.T0010 AI Supply Chain Compromise (skill inventory enables tracking of supply-chain origin and publisher for every installed skill)",
-"AML.T0104 Publish Poisoned AI Agent Tool (inventory-driven approval workflow gates poisoned skill installation)"
+"AML.T0104 Publish Poisoned AI Agent Tool (inventory-driven approval workflow gates poisoned skill installation)",
+"AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
 ]
 },
 {
@@ -465,7 +466,7 @@
 ]
 }
 ],
-"contentHash": "aa6118a078ebba43",
+"contentHash": "b5133bde441fc0f7",
 "keywords": [
 "skill inventory",
 "skill lifecycle governance",
@@ -514,7 +515,8 @@
 "AML.T0018 Manipulate AI Model",
 "AML.T0019 Publish Poisoned Datasets",
 "AML.T0058 Publish Poisoned Models",
-"AML.T0059 Erode Dataset Integrity"
+"AML.T0059 Erode Dataset Integrity",
+"AML.T0112.001 Machine Compromise: AI Artifacts"
 ]
 },
 {
@@ -597,7 +599,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "1bfdb67eebeafa3a",
+"contentHash": "f4e09c0d3ab38bbe",
 "keywords": [
 "data provenance",
 "data lineage tracking",
@@ -774,7 +776,8 @@
 "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
 "AML.T0058 Publish Poisoned Models",
 "AML.T0059 Erode Dataset Integrity",
-"AML.T0076 Corrupt AI Model"
+"AML.T0076 Corrupt AI Model",
+"AML.T0112.001 Machine Compromise: AI Artifacts"
 ]
 },
 {
@@ -847,7 +850,7 @@
 ]
 }
 ],
-"contentHash": "0f9f787e9fe19e70",
+"contentHash": "658755b0e799171b",
 "keywords": [
 "cryptographic integrity verification",
 "sha-256 checksums",
@@ -1046,7 +1049,8 @@
 "AML.T0010.002 AI Supply Chain Compromise: Data",
 "AML.T0066 Retrieval Content Crafting (write-gate prevents crafted retrieval content from entering trusted KB namespace)",
 "AML.T0061 LLM Prompt Self-Replication (write-gate prevents self-replicating prompts from persisting into KB/memory)",
-"AML.T0092 Manipulate User LLM Chat History (write-gate controls writes to agent memory that includes chat history)"
+"AML.T0092 Manipulate User LLM Chat History (write-gate controls writes to agent memory that includes chat history)",
+"AML.T0099 AI Agent Tool Data Poisoning"
 ]
 },
 {
@@ -1128,7 +1132,7 @@
 ]
 }
 ],
-"contentHash": "8412f0e7cd7da9bb",
+"contentHash": "c6a8926ae65630cb",
 "keywords": [
 "trust-tiered namespace",
 "write-gate admission",
@@ -1187,7 +1191,8 @@
 "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
 "AML.T0058 Publish Poisoned Models",
 "AML.T0059 Erode Dataset Integrity",
-"AML.T0076 Corrupt AI Model"
+"AML.T0076 Corrupt AI Model",
+"AML.T0112.001 Machine Compromise: AI Artifacts"
 ]
 },
 {
@@ -1256,7 +1261,7 @@
 ]
 }
 ],
-"contentHash": "e4e5222553d14976",
+"contentHash": "e71f11c0fa25c155",
 "keywords": [
 "quantum-resilient provenance",
 "long-term integrity re-verification",
@@ -2731,7 +2736,8 @@
 "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
 "AML.T0011.001 User Execution: Malicious Package",
 "AML.T0055 Unsecured Credentials",
-"AML.T0081 Modify AI Agent Configuration"
+"AML.T0081 Modify AI Agent Configuration",
+"AML.T0083 Credentials from AI Agent Configuration"
 ]
 },
 {
@@ -2805,7 +2811,7 @@
 ]
 }
 ],
-"contentHash": "648c688edf46d365",
+"contentHash": "a5b70a7e5e2a5f22",
 "keywords": [
 "policy-as-code baseline",
 "posture slo definition",
@@ -3903,7 +3909,9 @@
 "AML.T0053 AI Agent Tool Invocation",
 "AML.T0101 Data Destruction via AI Agent Tool Invocation",
 "AML.T0085.001 Data from AI Services: AI Agent Tools",
-"AML.T0086 Exfiltration via AI Agent Tool Invocation"
+"AML.T0086 Exfiltration via AI Agent Tool Invocation",
+"AML.T0108 AI Agent",
+"AML.T0034.002 Cost Harvesting: Agentic Resource Consumption"
 ]
 },
 {
@@ -3969,7 +3977,7 @@
 ]
 }
 ],
-"contentHash": "a4b703b4fa877f9a",
+"contentHash": "259acf014bdc8651",
 "keywords": [
 "authority envelope policy",
 "action risk classification matrix",
@@ -4129,7 +4137,8 @@
 "items": [
 "AML.T0048 External Harms",
 "AML.T0053 AI Agent Tool Invocation (trust-state demotion narrows permissions during anomalous behavior)",
-"AML.T0101 Data Destruction via AI Agent Tool Invocation"
+"AML.T0101 Data Destruction via AI Agent Tool Invocation",
+"AML.T0108 AI Agent"
 ]
 },
 {
@@ -4187,7 +4196,7 @@
 ]
 }
 ],
-"contentHash": "6d67bb03953423e1",
+"contentHash": "e29d07e7c9280438",
 "keywords": [
 "runtime trust state model",
 "automatic trust demotion",
@@ -4676,7 +4685,11 @@
 "items": [
 "AML.T0015 Evade AI Model",
 "AML.T0043 Craft Adversarial Data",
-"AML.T0107 Exploitation for Defense Evasion"
+"AML.T0107 Exploitation for Defense Evasion",
+"AML.T0043.000 Craft Adversarial Data: White-Box Optimization",
+"AML.T0043.001 Craft Adversarial Data: Black-Box Optimization",
+"AML.T0043.002 Craft Adversarial Data: Black-Box Transfer",
+"AML.T0043.003 Craft Adversarial Data: Manual Modification"
 ]
 },
 {
@@ -4752,7 +4765,7 @@
 "MLOps platforms (Amazon SageMaker, Google Vertex AI, Databricks, Azure ML)",
 "RL Platforms (AnyLogic)"
 ],
-"contentHash": "1e5791dbdcdfb360",
+"contentHash": "a16cbdd79bf3b5ed",
 "keywords": [
 "adversarial training",
 "certified robustness",
@@ -4805,7 +4818,8 @@
 "AML.T0051.000 LLM Prompt Injection: Direct",
 "AML.T0051.001 LLM Prompt Injection: Indirect",
 "AML.T0080 AI Agent Context Poisoning",
-"AML.T0080.000 AI Agent Context Poisoning: Memory"
+"AML.T0080.000 AI Agent Context Poisoning: Memory",
+"AML.T0051.002 LLM Prompt Injection: Triggered"
 ]
 },
 {
@@ -4895,7 +4909,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "01041a09f7db67a9",
+"contentHash": "9fc6a415d357de1a",
 "keywords": [
 "input sanitization",
 "prompt hardening",
@@ -5810,7 +5824,10 @@
 "AML.T0059 Erode Dataset Integrity",
 "AML.T0076 Corrupt AI Model",
 "AML.T0104 Publish Poisoned AI Agent Tool",
-"AML.T0011.002 User Execution: Poisoned AI Agent Tool"
+"AML.T0011.002 User Execution: Poisoned AI Agent Tool",
+"AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+"AML.T0109 AI Supply Chain Rug Pull",
+"AML.T0112.001 Machine Compromise: AI Artifacts"
 ]
 },
 {
@@ -5892,7 +5909,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "e2d719ab225af2de",
+"contentHash": "181ae0986cb08927",
 "keywords": [
 "ml supply chain security",
 "sbom attestation",
@@ -5953,7 +5970,9 @@
 "AML.T0074 Masquerading (malicious packages masquerading as legitimate)",
 "AML.T0060 Publish Hallucinated Entities (dependency scanning detects hallucination-squatted packages)",
 "AML.T0104 Publish Poisoned AI Agent Tool",
-"AML.T0011.002 User Execution: Poisoned AI Agent Tool"
+"AML.T0011.002 User Execution: Poisoned AI Agent Tool",
+"AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+"AML.T0109 AI Supply Chain Rug Pull"
 ]
 },
 {
@@ -6017,7 +6036,7 @@
 ]
 }
 ],
-"contentHash": "b3215a6a045b87ba",
+"contentHash": "c842ef1500337889",
 "keywords": [
 "software composition analysis",
 "dependency scanning",
@@ -6082,7 +6101,9 @@
 "AML.T0018 Manipulate AI Model (release gating detects model manipulation before deployment)",
 "AML.T0018.002 Manipulate AI Model: Embed Malware",
 "AML.T0104 Publish Poisoned AI Agent Tool",
-"AML.T0011.000 User Execution: Unsafe AI Artifacts"
+"AML.T0011.000 User Execution: Unsafe AI Artifacts",
+"AML.T0109 AI Supply Chain Rug Pull",
+"AML.T0112.001 Machine Compromise: AI Artifacts"
 ]
 },
 {
@@ -6150,7 +6171,7 @@
 ]
 }
 ],
-"contentHash": "920aa6dfd9ec2e1e",
+"contentHash": "0623553ba846cbbc",
 "keywords": [
 "model signing",
 "release gating",
@@ -6565,7 +6586,9 @@
 "AML.T0074 Masquerading",
 "AML.T0076 Corrupt AI Model",
 "AML.T0011 User Execution (SBOM trust_remote_code flag prevents unsafe execution)",
-"AML.T0011.000 User Execution: Unsafe AI Artifacts"
+"AML.T0011.000 User Execution: Unsafe AI Artifacts",
+"AML.T0109 AI Supply Chain Rug Pull",
+"AML.T0112.001 Machine Compromise: AI Artifacts"
 ]
 },
 {
@@ -6635,7 +6658,7 @@
 ]
 }
 ],
-"contentHash": "d3971a2c64785966",
+"contentHash": "d649f47145255bce",
 "keywords": [
 "model sbom",
 "provenance attestation",
@@ -6693,7 +6716,8 @@
 "AML.T0010 AI Supply Chain Compromise",
 "AML.T0010.003 AI Supply Chain Compromise: Model",
 "AML.T0011.000 User Execution: Unsafe AI Artifacts",
-"AML.T0058 Publish Poisoned Models"
+"AML.T0058 Publish Poisoned Models",
+"AML.T0109 AI Supply Chain Rug Pull"
 ]
 },
 {
@@ -6759,7 +6783,7 @@
 ]
 }
 ],
-"contentHash": "670b3f2ba5c0944e",
+"contentHash": "e6dac90d2bd86748",
 "keywords": [
 "peft verification",
 "lora attestation",
@@ -11842,7 +11866,11 @@
 "items": [
 "AML.T0015 Evade AI Model",
 "AML.T0043 Craft Adversarial Data",
-"AML.T0020 Poison Training Data (ensemble diversity limits impact of individual poisoned models)"
+"AML.T0020 Poison Training Data (ensemble diversity limits impact of individual poisoned models)",
+"AML.T0043.000 Craft Adversarial Data: White-Box Optimization",
+"AML.T0043.001 Craft Adversarial Data: Black-Box Optimization",
+"AML.T0043.002 Craft Adversarial Data: Black-Box Transfer",
+"AML.T0043.003 Craft Adversarial Data: Manual Modification"
 ]
 },
 {
@@ -11924,7 +11952,7 @@
 "DataRobot AutoML",
 "H2O Driverless AI"
 ],
-"contentHash": "2d762924ae8aa3d5",
+"contentHash": "4060c5e19b723ab9",
 "keywords": [
 "ensemble robustness strategy",
 "model voting defenses",
@@ -11961,7 +11989,11 @@
 "items": [
 "AML.T0015 Evade AI Model",
 "AML.T0043 Craft Adversarial Data",
-"AML.T0031 Erode AI Model Integrity"
+"AML.T0031 Erode AI Model Integrity",
+"AML.T0043.000 Craft Adversarial Data: White-Box Optimization",
+"AML.T0043.001 Craft Adversarial Data: Black-Box Optimization",
+"AML.T0043.002 Craft Adversarial Data: Black-Box Transfer",
+"AML.T0043.003 Craft Adversarial Data: Manual Modification"
 ]
 },
 {
@@ -12033,7 +12065,7 @@
 "Cisco AI Defense",
 "Ansys SCADE Suite"
 ],
-"contentHash": "b41e0b8b586da261",
+"contentHash": "2d7283c21018b0be",
 "keywords": [
 "certified robustness guarantees",
 "formal robustness bounds",
@@ -12470,7 +12502,8 @@
 "AML.T0053 AI Agent Tool Invocation",
 "AML.T0098 AI Agent Tool Credential Harvesting (least privilege limits credential exposure via tools)",
 "AML.T0086 Exfiltration via AI Agent Tool Invocation (least-privilege tools limit data exfiltration surface)",
-"AML.T0101 Data Destruction via AI Agent Tool Invocation (granular tools prevent destructive operations)"
+"AML.T0101 Data Destruction via AI Agent Tool Invocation (granular tools prevent destructive operations)",
+"AML.T0108 AI Agent"
 ]
 },
 {
@@ -12531,7 +12564,7 @@
 ]
 }
 ],
-"contentHash": "d51dd24d3b26be33",
+"contentHash": "d1b5360dc2aa1746",
 "keywords": [
 "least privilege tools",
 "single-purpose tool design",
@@ -12584,7 +12617,8 @@
 "AML.T0054 LLM Jailbreak",
 "AML.T0048 External Harms (plan validation prevents harmful tool execution)",
 "AML.T0100 AI Agent Clickbait (plan-execute separation prevents automatic navigation to malicious content)",
-"AML.T0102 Generate Malicious Commands (plan-execute separation prevents direct execution of generated commands)"
+"AML.T0102 Generate Malicious Commands (plan-execute separation prevents direct execution of generated commands)",
+"AML.T0051.002 LLM Prompt Injection: Triggered"
 ]
 },
 {
@@ -12661,7 +12695,7 @@
 ]
 }
 ],
-"contentHash": "9181ba9414a1dbb6",
+"contentHash": "42d96859957809ca",
 "keywords": [
 "plan-then-execute",
 "decoupled planning",
@@ -12939,7 +12973,8 @@
 "items": [
 "AML.T0073 Impersonation",
 "AML.T0029 Denial of AI Service",
-"AML.T0053 AI Agent Tool Invocation (delegation controls who can invoke which tools)"
+"AML.T0053 AI Agent Tool Invocation (delegation controls who can invoke which tools)",
+"AML.T0034.002 Cost Harvesting: Agentic Resource Consumption"
 ]
 },
 {
@@ -13012,7 +13047,7 @@
 ]
 }
 ],
-"contentHash": "ce8618376787cf47",
+"contentHash": "8972992210a83172",
 "keywords": [
 "capability discovery",
 "delegation control",
@@ -13070,7 +13105,8 @@
 "AML.T0050 Command and Scripting Interpreter (P-LLM only sees validated structures, not raw commands)",
 "AML.T0053 AI Agent Tool Invocation (tool access restricted to P-LLM which never sees untrusted content)",
 "AML.T0099 AI Agent Tool Data Poisoning (dual-LLM pattern isolates poisoned tool data from execution)",
-"AML.T0067 LLM Trusted Output Components Manipulation (dual-LLM isolation prevents Q-LLM output from being treated as trusted commands)"
+"AML.T0067 LLM Trusted Output Components Manipulation (dual-LLM isolation prevents Q-LLM output from being treated as trusted commands)",
+"AML.T0051.002 LLM Prompt Injection: Triggered"
 ]
 },
 {
@@ -13143,7 +13179,7 @@
 ]
 }
 ],
-"contentHash": "5ee9d61a50f7d346",
+"contentHash": "a643282816f73823",
 "keywords": [
 "dual-llm isolation",
 "privileged llm",
@@ -13659,7 +13695,9 @@
 "AML.T0054 LLM Jailbreak",
 "AML.T0098 AI Agent Tool Credential Harvesting (dynamic scoping limits credential exposure per session)",
 "AML.T0085 Data from AI Services (dynamic scoping restricts tools available for data collection)",
-"AML.T0085.001 Data from AI Services: AI Agent Tools (per-request scoping limits which agent tools can retrieve data)"
+"AML.T0085.001 Data from AI Services: AI Agent Tools (per-request scoping limits which agent tools can retrieve data)",
+"AML.T0108 AI Agent",
+"AML.T0034.002 Cost Harvesting: Agentic Resource Consumption"
 ]
 },
 {
@@ -13726,7 +13764,7 @@
 ]
 }
 ],
-"contentHash": "817c149dba5bb66a",
+"contentHash": "d9f727140fd56d6d",
 "keywords": [
 "intent-based scoping",
 "dynamic capability scoping",
@@ -14026,7 +14064,8 @@
 "AML.T0086 Exfiltration via AI Agent Tool Invocation (network allowlist enforcement blocks unauthorized exfiltration)",
 "AML.T0081 Modify AI Agent Configuration (deny-write-by-default on protected identity/state resources prevents skill-driven config tampering)",
 "AML.T0084 Discover AI Agent Configuration (file-read restrictions prevent skills from reading sensitive agent configuration outside declared scope)",
-"AML.T0098 AI Agent Tool Credential Harvesting (per-skill scoped credentials reduce value of shared-secret harvesting)"
+"AML.T0098 AI Agent Tool Credential Harvesting (per-skill scoped credentials reduce value of shared-secret harvesting)",
+"AML.T0108 AI Agent"
 ]
 },
 {
@@ -14093,7 +14132,7 @@
 ]
 }
 ],
-"contentHash": "4959db207b392b01",
+"contentHash": "fed0b972f05b40d2",
 "keywords": [
 "skill permission manifest",
 "skill-level authorization",
@@ -14136,7 +14175,8 @@
 "AML.T0100 AI Agent Clickbait (safe fetch prevents navigation to malicious content)",
 "AML.T0108 AI Agent (C2)",
 "AML.T0011.003 User Execution: Malicious Link",
-"AML.T0093 Prompt Infiltration via Public-Facing Application"
+"AML.T0093 Prompt Infiltration via Public-Facing Application",
+"AML.T0078 Drive-by Compromise"
 ]
 },
 {
@@ -14205,7 +14245,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "c52cb174385b5cba",
+"contentHash": "746b4919f58cc7c2",
 "keywords": [
 "safe fetch wrapper",
 "browser sandbox",
@@ -14364,7 +14404,8 @@
 "items": [
 "AML.T0051 LLM Prompt Injection",
 "AML.T0051.001 LLM Prompt Injection: Indirect",
-"AML.T0100 AI Agent Clickbait (secure rendering prevents exploitation from fetched malicious content)"
+"AML.T0100 AI Agent Clickbait (secure rendering prevents exploitation from fetched malicious content)",
+"AML.T0078 Drive-by Compromise"
 ]
 },
 {
@@ -14421,7 +14462,7 @@
 ]
 }
 ],
-"contentHash": "146e8894d6cdd7c6",
+"contentHash": "db1ff2be98b3893a",
 "keywords": [
 "html sanitization",
 "content demotion",
@@ -15726,7 +15767,8 @@
 "AML.T0104 Publish Poisoned AI Agent Tool",
 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
 "AML.T0010 AI Supply Chain Compromise",
-"AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
+"AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+"AML.T0109 AI Supply Chain Rug Pull"
 ]
 },
 {
@@ -15792,7 +15834,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "707b502081a9e8b6",
+"contentHash": "45a818950181146e",
 "keywords": [
 "tool resolution integrity",
 "mcp endpoint verification",
@@ -15845,7 +15887,8 @@
 "AML.T0104 Publish Poisoned AI Agent Tool",
 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
 "AML.T0060 Publish Hallucinated Entities (version pinning prevents resolution of hallucination-squatted tools)",
-"AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
+"AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+"AML.T0109 AI Supply Chain Rug Pull"
 ]
 },
 {
@@ -15904,7 +15947,7 @@
 ]
 }
 ],
-"contentHash": "fd8deac6fb224c91",
+"contentHash": "dda3ad1ca576cd49",
 "keywords": [
 "fully qualified tool identifier",
 "version pinning",
@@ -15955,7 +15998,9 @@
 "AML.T0010 AI Supply Chain Compromise (descriptor hash detects compromised tool metadata)",
 "AML.T0104 Publish Poisoned AI Agent Tool",
 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
-"AML.T0074 Masquerading (hash binding detects descriptor-level masquerading)"
+"AML.T0074 Masquerading (hash binding detects descriptor-level masquerading)",
+"AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+"AML.T0109 AI Supply Chain Rug Pull"
 ]
 },
 {
@@ -16011,7 +16056,7 @@
 ]
 }
 ],
-"contentHash": "c710b1973ce34a47",
+"contentHash": "7cac946930683522",
 "keywords": [
 "descriptor hash binding",
 "content hash pinning",
@@ -16172,7 +16217,9 @@
 "AML.T0074 Masquerading",
 "AML.T0104 Publish Poisoned AI Agent Tool",
 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
-"AML.T0110 AI Agent Tool Poisoning"
+"AML.T0110 AI Agent Tool Poisoning",
+"AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+"AML.T0109 AI Supply Chain Rug Pull"
 ]
 },
 {
@@ -16236,7 +16283,7 @@
 ]
 }
 ],
-"contentHash": "ae1945760fdd1427",
+"contentHash": "3215ec335585cf1a",
 "keywords": [
 "tool contract integrity",
 "semantic invariant enforcement",
@@ -16720,7 +16767,8 @@
 "AML.T0054 LLM Jailbreak",
 "AML.T0068 LLM Prompt Obfuscation",
 "AML.T0065 LLM Prompt Crafting",
-"AML.T0015 Evade AI Model (hardens the detector itself against evasive prompt variants)"
+"AML.T0015 Evade AI Model (hardens the detector itself against evasive prompt variants)",
+"AML.T0051.002 LLM Prompt Injection: Triggered"
 ]
 },
 {
@@ -16793,7 +16841,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "54ad413f1d30708a",
+"contentHash": "bc7743464a0fccfc",
 "keywords": [
 "closed-loop detector hardening",
 "retrainable detector lifecycle",
@@ -17335,7 +17383,8 @@
 "AML.T0085 Data from AI Services (client-side cache or log leakage of AI service data)",
 "AML.T0098 AI Agent Tool Credential Harvesting (credential theft from insecure local storage)",
 "AML.T0104 Publish Poisoned AI Agent Tool (client connects to spoofed or poisoned tool server)",
-"AML.T0105 Escape to Host (malicious content escapes client sandbox to host system)"
+"AML.T0105 Escape to Host (malicious content escapes client sandbox to host system)",
+"AML.T0077 LLM Response Rendering"
 ]
 },
 {
@@ -17420,7 +17469,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "1915b70223729cfb",
+"contentHash": "689c7846b177b303",
 "keywords": [
 "mcp client hardening",
 "tool client security",
@@ -17471,7 +17520,8 @@
 "items": [
 "AML.T0073 Impersonation (server identity spoofing)",
 "AML.T0078 Drive-by Compromise (preventing connection to malicious servers)",
-"AML.T0104 Publish Poisoned AI Agent Tool (verifying intended server identity before use)"
+"AML.T0104 Publish Poisoned AI Agent Tool (verifying intended server identity before use)",
+"AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
 ]
 },
 {
@@ -17529,7 +17579,7 @@
 ]
 }
 ],
-"contentHash": "98bc3d74bbf029e6",
+"contentHash": "e1cdef51898448c6",
 "keywords": [
 "server authenticity validation",
 "connection pinning",
@@ -17584,7 +17634,8 @@
 "AML.T0002.002 Acquire Public AI Artifacts: AI Agent Configuration",
 "AML.T0012 Valid Accounts (credential theft from insecure local storage)",
 "AML.T0084 Discover AI Agent Configuration (credentials exposed in local config)",
-"AML.T0098 AI Agent Tool Credential Harvesting (credential harvesting from client storage)"
+"AML.T0098 AI Agent Tool Credential Harvesting (credential harvesting from client storage)",
+"AML.T0083 Credentials from AI Agent Configuration"
 ]
 },
 {
@@ -17643,7 +17694,7 @@
 ]
 }
 ],
-"contentHash": "5906e035bfe564b6",
+"contentHash": "3e62f7c97400af5e",
 "keywords": [
 "secure credential storage",
 "os keychain storage",
@@ -17801,7 +17852,8 @@
 "items": [
 "AML.T0078 Drive-by Compromise (malicious server response used as delivery mechanism)",
 "AML.T0102 Generate Malicious Commands (server generates actions or payloads the client might execute)",
-"AML.T0105 Escape to Host (unsafe client handling allows escape to host context)"
+"AML.T0105 Escape to Host (unsafe client handling allows escape to host context)",
+"AML.T0077 LLM Response Rendering"
 ]
 },
 {
@@ -17861,7 +17913,7 @@
 ]
 }
 ],
-"contentHash": "c3266b7adb911219",
+"contentHash": "985ca30f166066b9",
 "keywords": [
 "response schema validation",
 "payload size limiting",
@@ -18022,7 +18074,8 @@
 "items": [
 "AML.T0010 AI Supply Chain Compromise (tampered client binary, plugin, or updater)",
 "AML.T0010.001 AI Supply Chain Compromise: AI Software (malicious client SDK or dependency)",
-"AML.T0074 Masquerading (malicious plugins masquerading as legitimate extensions)"
+"AML.T0074 Masquerading (malicious plugins masquerading as legitimate extensions)",
+"AML.T0109 AI Supply Chain Rug Pull"
 ]
 },
 {
@@ -18079,7 +18132,7 @@
 ]
 }
 ],
-"contentHash": "e180dde8a86cb6e9",
+"contentHash": "b86ccf4dfcfc5fd5",
 "keywords": [
 "client binary signing",
 "cosign verification",
@@ -18690,7 +18743,10 @@
 "AML.T0104 Publish Poisoned AI Agent Tool (admission pipeline rejects skills with malicious intent indicators)",
 "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool (admission pipeline treats skill and MCP artifacts as first-class supply-chain assets)",
 "AML.T0074 Masquerading (metadata honesty validation detects brand impersonation and typosquatting)",
-"AML.T0060 Publish Hallucinated Entities (typosquat detection in metadata validation catches hallucination-squatted skill names)"
+"AML.T0060 Publish Hallucinated Entities (typosquat detection in metadata validation catches hallucination-squatted skill names)",
+"AML.T0109 AI Supply Chain Rug Pull",
+"AML.T0111 AI Supply Chain Reputation Inflation",
+"AML.T0110 AI Agent Tool Poisoning"
 ]
 },
 {
@@ -18757,7 +18813,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "2c7cd21abc41301c",
+"contentHash": "6304f013f8cb70e1",
 "keywords": [
 "skill admission pipeline",
 "multi-stage security analysis",
@@ -21512,7 +21568,8 @@
 "AML.T0051.001 LLM Prompt Injection: Indirect",
 "AML.T0054 LLM Jailbreak",
 "AML.T0053 AI Agent Tool Invocation (guardrail detects privilege escalation via tool misuse)",
-"AML.T0068 LLM Prompt Obfuscation (guardrail detects obfuscated privilege escalation attempts)"
+"AML.T0068 LLM Prompt Obfuscation (guardrail detects obfuscated privilege escalation attempts)",
+"AML.T0051.002 LLM Prompt Injection: Triggered"
 ]
 },
 {
@@ -21582,7 +21639,7 @@
 ]
 }
 ],
-"contentHash": "fb4a3079ac5ea12a",
+"contentHash": "a0ab23b3ab97dfda",
 "keywords": [
 "llm guardrail",
 "intent classification gate",
@@ -22624,7 +22681,9 @@
 "AML.T0048.001 External Harms: Reputational Harm",
 "AML.T0048.002 External Harms: Societal Harm",
 "AML.T0048.003 External Harms: User Harm",
-"AML.T0054 LLM Jailbreak (filters catch jailbreak-induced harmful output)"
+"AML.T0054 LLM Jailbreak (filters catch jailbreak-induced harmful output)",
+"AML.T0052 Phishing",
+"AML.T0052.000 Phishing: Spearphishing via Social Engineering LLM"
 ]
 },
 {
@@ -22690,7 +22749,7 @@
 ]
 }
 ],
-"contentHash": "905e3df4a4903b51",
+"contentHash": "a2828bce784d05ee",
 "keywords": [
 "harmful content filtering",
 "toxicity detection",
@@ -23019,7 +23078,9 @@
 "AML.T0051 LLM Prompt Injection (anomalous tool sequences reveal injection-driven behavior)",
 "AML.T0051.001 LLM Prompt Injection: Indirect (indirect injections produce atypical tool chains)",
 "AML.T0051.002 LLM Prompt Injection: Triggered",
-"AML.T0086 Exfiltration via AI Agent Tool Invocation (unusual tool sequences signal exfiltration attempts)"
+"AML.T0086 Exfiltration via AI Agent Tool Invocation (unusual tool sequences signal exfiltration attempts)",
+"AML.T0051.000 LLM Prompt Injection: Direct",
+"AML.T0108 AI Agent"
 ]
 },
 {
@@ -23090,7 +23151,7 @@
 ]
 }
 ],
-"contentHash": "bc0bf35cda8826a6",
+"contentHash": "52c133eff65c579a",
 "keywords": [
 "tool call sequence anomaly",
 "action sequence baselining",
@@ -23540,7 +23601,8 @@
 "AML.T0074 Masquerading",
 "AML.T0104 Publish Poisoned AI Agent Tool",
 "AML.T0020 Poison Training Data (artifact integrity monitoring detects dataset tampering)",
-"AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (integrity monitoring detects backdoor insertion in datasets)"
+"AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (integrity monitoring detects backdoor insertion in datasets)",
+"AML.T0112.001 Machine Compromise: AI Artifacts"
 ]
 },
 {
@@ -23621,7 +23683,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "d589f210fb326518",
+"contentHash": "89f6eff0ea05c94b",
 "keywords": [
 "model integrity monitoring",
 "artifact tamper detection",
@@ -23691,7 +23753,8 @@
 "AML.T0010.003 AI Supply Chain Compromise: Model",
 "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
 "AML.T0074 Masquerading",
-"AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (hash verification detects backdoor-embedded artifacts)"
+"AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (hash verification detects backdoor-embedded artifacts)",
+"AML.T0112.001 Machine Compromise: AI Artifacts"
 ]
 },
 {
@@ -23768,7 +23831,7 @@
 ]
 }
 ],
-"contentHash": "4d45955f3e2d740f",
+"contentHash": "34bb731ee20aed14",
 "keywords": [
 "artifact digest verification",
 "signature validation pipeline",
@@ -24916,7 +24979,8 @@
 "AML.T0080 AI Agent Context Poisoning",
 "AML.T0080.000 AI Agent Context Poisoning: Memory",
 "AML.T0080.001 AI Agent Context Poisoning: Thread",
-"AML.T0081 Modify AI Agent Configuration"
+"AML.T0081 Modify AI Agent Configuration",
+"AML.T0108 AI Agent"
 ]
 },
 {
@@ -24991,7 +25055,7 @@
 ]
 }
 ],
-"contentHash": "91fff95ef8592e88",
+"contentHash": "e65f7ef9e6b11e79",
 "keywords": [
 "agent session logging",
 "conversation trace logging",
@@ -27075,7 +27139,8 @@
 "AML.T0071 False RAG Entry Injection",
 "AML.T0051 LLM Prompt Injection (if payload is in RAG source)",
 "AML.T0080 AI Agent Context Poisoning (RAG-poisoned content corrupts agent context)",
-"AML.T0080.000 AI Agent Context Poisoning: Memory (poisoned RAG entries persist in agent memory)"
+"AML.T0080.000 AI Agent Context Poisoning: Memory (poisoned RAG entries persist in agent memory)",
+"AML.T0051.001 LLM Prompt Injection: Indirect"
 ]
 },
 {
@@ -27144,7 +27209,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "0a2cf94197d86d24",
+"contentHash": "6d2171aeaa953a59",
 "keywords": [
 "rag content monitoring",
 "retrieval relevance monitoring",
@@ -27194,7 +27259,8 @@
 "AML.T0082 RAG Credential Harvesting (scanning detects credential harvesting payloads in retrieved chunks)",
 "AML.T0099 AI Agent Tool Data Poisoning (scanning detects poisoned tool data in RAG content)",
 "AML.T0066 Retrieval Content Crafting (scanning detects crafted retrieval content)",
-"AML.T0080 AI Agent Context Poisoning (scanning prevents poisoned content from entering agent context)"
+"AML.T0080 AI Agent Context Poisoning (scanning prevents poisoned content from entering agent context)",
+"AML.T0051.001 LLM Prompt Injection: Indirect"
 ]
 },
 {
@@ -27260,7 +27326,7 @@
 ]
 }
 ],
-"contentHash": "1a8aa183eddb7f2f",
+"contentHash": "d8d0d9584fb89b2c",
 "keywords": [
 "post-retrieval content sanitization",
 "rag chunk malware scanning",
@@ -28737,7 +28803,8 @@
 "items": [
 "AML.T0072 Reverse Shell",
 "AML.T0025 Exfiltration via Cyber Means",
-"AML.T0050 Command and Scripting Interpreter"
+"AML.T0050 Command and Scripting Interpreter",
+"AML.T0108 AI Agent"
 ]
 },
 {
@@ -28798,7 +28865,7 @@
 ]
 }
 ],
-"contentHash": "56525feaf860cbb5",
+"contentHash": "5594bda216c10c3e",
 "keywords": [
 "sandbox egress restriction",
 "default-deny egress",
@@ -30221,7 +30288,9 @@
 "AML.T0081 Modify AI Agent Configuration",
 "AML.T0084 Discover AI Agent Configuration",
 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
-"AML.T0104 Publish Poisoned AI Agent Tool"
+"AML.T0104 Publish Poisoned AI Agent Tool",
+"AML.T0080 AI Agent Context Poisoning",
+"AML.T0080.000 AI Agent Context Poisoning: Memory"
 ]
 },
 {
@@ -30282,7 +30351,7 @@
 ]
 }
 ],
-"contentHash": "fbe63c1b14ec866f",
+"contentHash": "37b161ff25221085",
 "keywords": [
 "agent identity file protection",
 "persistent state write protection",
@@ -30823,7 +30892,8 @@
 "AML.T0037 Data from Local System (stealing browser/app state, session tokens, local storage)",
 "AML.T0053 AI Agent Tool Invocation (client-side isolation prevents compromised model from invoking host tools)",
 "AML.T0077 LLM Response Rendering (client-side sandboxing contains render-time attacks from model output)",
-"AML.T0112.000 Machine Compromise: Local AI Agent (client-side isolation constrains a compromised local agent before it can become full machine compromise)"
+"AML.T0112.000 Machine Compromise: Local AI Agent (client-side isolation constrains a compromised local agent before it can become full machine compromise)",
+"AML.T0112 Machine Compromise"
 ]
 },
 {
@@ -30913,7 +30983,7 @@
 "Mobile OS sandboxing (iOS App Sandbox, Android Application Sandbox)",
 "Enterprise Mobile Device Management (MDM) solutions with app sandboxing / clipboard control / data loss prevention"
 ],
-"contentHash": "c98bf3e9c40ed7da",
+"contentHash": "789ce7909b553ff5",
 "keywords": [
 "client-side sandboxing",
 "web worker isolation",
@@ -30952,7 +31022,8 @@
 "items": [
 "AML.T0051.001 LLM Prompt Injection: Indirect",
 "AML.T0080 AI Agent Context Poisoning",
-"AML.T0100 AI Agent Clickbait"
+"AML.T0100 AI Agent Clickbait",
+"AML.T0078 Drive-by Compromise"
 ]
 },
 {
@@ -31027,7 +31098,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "da611d8d48748b80",
+"contentHash": "4d700fcc6edaae82",
 "keywords": [
 "task-scoped browser session",
 "browser origin isolation",
@@ -31548,7 +31619,9 @@
 "AML.T0057 LLM Data Leakage (canary tokens in training data detect leakage)",
 "AML.T0035 AI Artifact Collection (decoy artifacts detect unauthorized artifact collection)",
 "AML.T0005.000 Create Proxy AI Model: Train Proxy via Gathered AI Artifacts (canaries in artifact stores detect gathering for proxy training)",
-"AML.T0095.000 Search Open Websites/Domains: Code Repositories (repository canaries detect public-code reconnaissance)"
+"AML.T0095.000 Search Open Websites/Domains: Code Repositories (repository canaries detect public-code reconnaissance)",
+"AML.T0055 Unsecured Credentials",
+"AML.T0083 Credentials from AI Agent Configuration"
 ]
 },
 {
@@ -31635,7 +31708,7 @@
 "Acalvio ShadowPlex",
 "Proofpoint Identity Threat Defense"
 ],
-"contentHash": "4d3325e526d74b21",
+"contentHash": "b4d28b956ad7be60",
 "keywords": [
 "canary credential placement",
 "decoy dataset seeding",
@@ -32052,7 +32125,8 @@
 "AML.T0069.002 Discover LLM System Information: System Prompt (deceptive responses frustrate system prompt discovery)",
 "AML.T0075 Cloud Service Discovery (deceptive system info misleads cloud service enumeration)",
 "AML.T0005.002 Create Proxy AI Model: Use Pre-Trained Model (misleading model identity causes wrong proxy selection)",
-"AML.T0084.000 Discover AI Agent Configuration: Embedded Knowledge (deceptive responses frustrate knowledge source discovery)"
+"AML.T0084.000 Discover AI Agent Configuration: Embedded Knowledge (deceptive responses frustrate knowledge source discovery)",
+"AML.T0084.001 Discover AI Agent Configuration: Tool Definitions"
 ]
 },
 {
@@ -32127,7 +32201,7 @@
 "Deception technology platforms (Acalvio ShadowPlex, Commvault ThreatWise)",
 "API management and security solutions (Akamai API Security, Cloudflare)"
 ],
-"contentHash": "345eb91a7f6f9166",
+"contentHash": "48ce8df746b06392",
 "keywords": [
 "deceptive banner hardening",
 "honeypot system fingerprinting",
@@ -32304,7 +32378,8 @@
 "AML.T0090 OS Credential Dumping",
 "AML.T0091 Use Alternate Authentication Material",
 "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
-"AML.T0098 AI Agent Tool Credential Harvesting"
+"AML.T0098 AI Agent Tool Credential Harvesting",
+"AML.T0083 Credentials from AI Agent Configuration"
 ]
 },
 {
@@ -32372,7 +32447,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "f961820955472782",
+"contentHash": "4006f1cd7c304748",
 "keywords": [
 "credential revocation",
 "credential rotation",
@@ -32898,7 +32973,8 @@
 "AML.T0070 RAG Poisoning",
 "AML.T0071 False RAG Entry Injection",
 "AML.T0104 Publish Poisoned AI Agent Tool",
-"AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (removal targets inserted backdoor triggers)"
+"AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (removal targets inserted backdoor triggers)",
+"AML.T0110 AI Agent Tool Poisoning"
 ]
 },
 {
@@ -32982,7 +33058,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "4f7f5edc2ae8f428",
+"contentHash": "d4fa13e2c74da68e",
 "keywords": [
 "malicious artifact removal",
 "backdoor removal",
@@ -33305,7 +33381,8 @@
 "AML.T0018.002 Manipulate AI Model: Embed Malware",
 "AML.T0072 Reverse Shell",
 "AML.T0104 Publish Poisoned AI Agent Tool (cleanup removes poisoned agent tools)",
-"AML.T0081 Modify AI Agent Configuration"
+"AML.T0081 Modify AI Agent Configuration",
+"AML.T0110 AI Agent Tool Poisoning"
 ]
 },
 {
@@ -33375,7 +33452,7 @@
 ]
 }
 ],
-"contentHash": "557f37cd99d65f54",
+"contentHash": "a1f8a0fd396bd129",
 "keywords": [
 "malicious code cleanup",
 "file integrity monitoring",
@@ -33814,7 +33891,10 @@
 "AML.T0058 Publish Poisoned Models",
 "AML.T0076 Corrupt AI Model",
 "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (restoration removes backdoor triggers from training pipeline)",
-"AML.T0010 AI Supply Chain Compromise (restoration recovers from supply chain compromise)"
+"AML.T0010 AI Supply Chain Compromise (restoration recovers from supply chain compromise)",
+"AML.T0018.000 Manipulate AI Model: Poison AI Model",
+"AML.T0018.001 Manipulate AI Model: Modify AI Model Architecture",
+"AML.T0018.002 Manipulate AI Model: Embed Malware"
 ]
 },
 {
@@ -33896,7 +33976,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "6306ba69430c6cb9",
+"contentHash": "69df058dac8ca1cf",
 "keywords": [
 "secure model restoration",
 "post-incident retraining",
@@ -33948,7 +34028,10 @@
 "AML.T0058 Publish Poisoned Models",
 "AML.T0076 Corrupt AI Model",
 "AML.T0031 Erode AI Model Integrity (rollback restores model integrity)",
-"AML.T0020 Poison Training Data (rollback reverts to pre-poisoning model)"
+"AML.T0020 Poison Training Data (rollback reverts to pre-poisoning model)",
+"AML.T0018.000 Manipulate AI Model: Poison AI Model",
+"AML.T0018.001 Manipulate AI Model: Modify AI Model Architecture",
+"AML.T0018.002 Manipulate AI Model: Embed Malware"
 ]
 },
 {
@@ -34021,7 +34104,7 @@
 ]
 }
 ],
-"contentHash": "94672c2efc41e767",
+"contentHash": "a3d25f6cf525f996",
 "keywords": [
 "versioned model rollback",
 "mlflow registry restore",
@@ -34075,7 +34158,8 @@
 "AML.T0020 Poison Training Data",
 "AML.T0059 Erode Dataset Integrity",
 "AML.T0031 Erode AI Model Integrity (retraining restores model integrity)",
-"AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (retraining on clean data removes backdoor triggers)"
+"AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (retraining on clean data removes backdoor triggers)",
+"AML.T0018.000 Manipulate AI Model: Poison AI Model"
 ]
 },
 {
@@ -34149,7 +34233,7 @@
 ]
 }
 ],
-"contentHash": "dd3f98bd80e2a4d9",
+"contentHash": "d9d662efeb19ad83",
 "keywords": [
 "remediation retraining",
 "clean-slate retraining",
@@ -34190,7 +34274,9 @@
 "AML.T0059 Erode Dataset Integrity",
 "AML.T0070 RAG Poisoning",
 "AML.T0071 False RAG Entry Injection",
-"AML.T0080.000 AI Agent Context Poisoning: Memory (recovery restores poisoned agent memory-like stores)"
+"AML.T0080.000 AI Agent Context Poisoning: Memory (recovery restores poisoned agent memory-like stores)",
+"AML.T0066 Retrieval Content Crafting",
+"AML.T0099 AI Agent Tool Data Poisoning"
 ]
 },
 {
@@ -34277,7 +34363,7 @@
 "Data quality/integration platforms (Informatica, Talend)",
 "Cloud provider managed backup services (AWS Backup, Azure Backup)"
 ],
-"contentHash": "9399d381a59614a4",
+"contentHash": "4592a4c0d20b0e38",
 "keywords": [
 "data integrity recovery",
 "dataset rollback",
@@ -34601,7 +34687,9 @@
 "AML.T0070 RAG Poisoning",
 "AML.T0071 False RAG Entry Injection",
 "AML.T0051 LLM Prompt Injection (rollback removes injected content from vector index)",
-"AML.T0080.000 AI Agent Context Poisoning: Memory (rollback restores poisoned retrieval memory context)"
+"AML.T0080.000 AI Agent Context Poisoning: Memory (rollback restores poisoned retrieval memory context)",
+"AML.T0066 Retrieval Content Crafting",
+"AML.T0099 AI Agent Tool Data Poisoning"
 ]
 },
 {
@@ -34698,7 +34786,7 @@
 "Datadog / Splunk / Microsoft Sentinel for retrieval anomaly alerting and correlation",
 "Cloud object storage with Object Lock / WORM mode for forensic quarantine (e.g. S3 Object Lock)"
 ],
-"contentHash": "89a211c427089f0a",
+"contentHash": "0d3487c43bb545d9",
 "keywords": [
 "vector index rollback",
 "rag index recovery",

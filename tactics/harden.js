@@ -29,6 +29,10 @@ export const hardenTactic = {
             "AML.T0015 Evade AI Model",
             "AML.T0043 Craft Adversarial Data",
             "AML.T0107 Exploitation for Defense Evasion",
+            "AML.T0043.000 Craft Adversarial Data: White-Box Optimization",
+            "AML.T0043.001 Craft Adversarial Data: Black-Box Optimization",
+            "AML.T0043.002 Craft Adversarial Data: Black-Box Transfer",
+            "AML.T0043.003 Craft Adversarial Data: Manual Modification",
           ],
         },
         {
@@ -206,6 +210,7 @@ for data, target in dataloader:
             "AML.T0051.001 LLM Prompt Injection: Indirect",
             "AML.T0080 AI Agent Context Poisoning",
             "AML.T0080.000 AI Agent Context Poisoning: Memory",
+            "AML.T0051.002 LLM Prompt Injection: Triggered",
           ],
         },
         {
@@ -1812,6 +1817,9 @@ print("split_integrity_passed")
             "AML.T0076 Corrupt AI Model",
             "AML.T0104 Publish Poisoned AI Agent Tool",
             "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
+            "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+            "AML.T0109 AI Supply Chain Rug Pull",
+            "AML.T0112.001 Machine Compromise: AI Artifacts",
           ],
         },
         {
@@ -1926,6 +1934,8 @@ print("split_integrity_passed")
                 "AML.T0060 Publish Hallucinated Entities (dependency scanning detects hallucination-squatted packages)",
                 "AML.T0104 Publish Poisoned AI Agent Tool",
                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
+                "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+                "AML.T0109 AI Supply Chain Rug Pull",
               ],
             },
             {
@@ -2051,6 +2061,8 @@ print("split_integrity_passed")
                 "AML.T0018.002 Manipulate AI Model: Embed Malware",
                 "AML.T0104 Publish Poisoned AI Agent Tool",
                 "AML.T0011.000 User Execution: Unsafe AI Artifacts",
+                "AML.T0109 AI Supply Chain Rug Pull",
+                "AML.T0112.001 Machine Compromise: AI Artifacts",
               ],
             },
             {
@@ -2670,6 +2682,8 @@ kubectl drain ai-gpu-node-17 --ignore-daemonsets --delete-emptydir-data
                 "AML.T0076 Corrupt AI Model",
                 "AML.T0011 User Execution (SBOM trust_remote_code flag prevents unsafe execution)",
                 "AML.T0011.000 User Execution: Unsafe AI Artifacts",
+                "AML.T0109 AI Supply Chain Rug Pull",
+                "AML.T0112.001 Machine Compromise: AI Artifacts",
               ],
             },
             {
@@ -2944,7 +2958,8 @@ python runtime/verify_model_loader_policy.py
                 "AML.T0010 AI Supply Chain Compromise",
                 "AML.T0010.003 AI Supply Chain Compromise: Model",
                 "AML.T0011.000 User Execution: Unsafe AI Artifacts",
-                "AML.T0058 Publish Poisoned Models"
+                "AML.T0058 Publish Poisoned Models",
+                "AML.T0109 AI Supply Chain Rug Pull",
               ]
             },
             {
@@ -8623,6 +8638,10 @@ stacked.fit(X_train, y_train)</code></pre><h5>How to choose</h5><ul><li><strong>
             "AML.T0015 Evade AI Model",
             "AML.T0043 Craft Adversarial Data",
             "AML.T0020 Poison Training Data (ensemble diversity limits impact of individual poisoned models)",
+            "AML.T0043.000 Craft Adversarial Data: White-Box Optimization",
+            "AML.T0043.001 Craft Adversarial Data: Black-Box Optimization",
+            "AML.T0043.002 Craft Adversarial Data: Black-Box Transfer",
+            "AML.T0043.003 Craft Adversarial Data: Manual Modification",
           ],
         },
         {
@@ -8785,6 +8804,10 @@ PY</code></pre><p><strong>Action:</strong> Make the certification report a requi
             "AML.T0015 Evade AI Model",
             "AML.T0043 Craft Adversarial Data",
             "AML.T0031 Erode AI Model Integrity",
+            "AML.T0043.000 Craft Adversarial Data: White-Box Optimization",
+            "AML.T0043.001 Craft Adversarial Data: Black-Box Optimization",
+            "AML.T0043.002 Craft Adversarial Data: Black-Box Transfer",
+            "AML.T0043.003 Craft Adversarial Data: Manual Modification",
           ],
         },
         {
@@ -9487,6 +9510,7 @@ def emit_breaker_event(
                 "AML.T0098 AI Agent Tool Credential Harvesting (least privilege limits credential exposure via tools)",
                 "AML.T0086 Exfiltration via AI Agent Tool Invocation (least-privilege tools limit data exfiltration surface)",
                 "AML.T0101 Data Destruction via AI Agent Tool Invocation (granular tools prevent destructive operations)",
+                "AML.T0108 AI Agent",
               ],
             },
             {
@@ -9584,6 +9608,7 @@ def emit_breaker_event(
                 "AML.T0048 External Harms (plan validation prevents harmful tool execution)",
                 "AML.T0100 AI Agent Clickbait (plan-execute separation prevents automatic navigation to malicious content)",
                 "AML.T0102 Generate Malicious Commands (plan-execute separation prevents direct execution of generated commands)",
+                "AML.T0051.002 LLM Prompt Injection: Triggered",
               ],
             },
             {
@@ -9961,6 +9986,7 @@ python -c "from agent_arch.enforcement_gate import EnforcementGate; gate = Enfor
                 "AML.T0073 Impersonation",
                 "AML.T0029 Denial of AI Service",
                 "AML.T0053 AI Agent Tool Invocation (delegation controls who can invoke which tools)",
+                "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption",
               ],
             },
             {
@@ -10077,7 +10103,8 @@ python -c "from agent_arch.enforcement_gate import EnforcementGate; gate = Enfor
                 "AML.T0050 Command and Scripting Interpreter (P-LLM only sees validated structures, not raw commands)",
                 "AML.T0053 AI Agent Tool Invocation (tool access restricted to P-LLM which never sees untrusted content)",
                 "AML.T0099 AI Agent Tool Data Poisoning (dual-LLM pattern isolates poisoned tool data from execution)",
-                "AML.T0067 LLM Trusted Output Components Manipulation (dual-LLM isolation prevents Q-LLM output from being treated as trusted commands)"
+                "AML.T0067 LLM Trusted Output Components Manipulation (dual-LLM isolation prevents Q-LLM output from being treated as trusted commands)",
+                "AML.T0051.002 LLM Prompt Injection: Triggered",
               ]
             },
             {
@@ -11029,7 +11056,9 @@ def consume_approval(session_id: str, actor_id: str, plan_hash: str, required_as
                 "AML.T0054 LLM Jailbreak",
                 "AML.T0098 AI Agent Tool Credential Harvesting (dynamic scoping limits credential exposure per session)",
                 "AML.T0085 Data from AI Services (dynamic scoping restricts tools available for data collection)",
-                "AML.T0085.001 Data from AI Services: AI Agent Tools (per-request scoping limits which agent tools can retrieve data)"
+                "AML.T0085.001 Data from AI Services: AI Agent Tools (per-request scoping limits which agent tools can retrieve data)",
+                "AML.T0108 AI Agent",
+                "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption",
               ]
             },
             {
@@ -11885,6 +11914,7 @@ def guard_high_risk_step(approved_snapshot: dict, live_context: dict) -> None:
                 "AML.T0081 Modify AI Agent Configuration (deny-write-by-default on protected identity/state resources prevents skill-driven config tampering)",
                 "AML.T0084 Discover AI Agent Configuration (file-read restrictions prevent skills from reading sensitive agent configuration outside declared scope)",
                 "AML.T0098 AI Agent Tool Credential Harvesting (per-skill scoped credentials reduce value of shared-secret harvesting)",
+                "AML.T0108 AI Agent",
               ],
             },
             {
@@ -11988,6 +12018,7 @@ def guard_high_risk_step(approved_snapshot: dict, live_context: dict) -> None:
             "AML.T0108 AI Agent (C2)",
             "AML.T0011.003 User Execution: Malicious Link",
             "AML.T0093 Prompt Infiltration via Public-Facing Application",
+            "AML.T0078 Drive-by Compromise",
           ],
         },
         {
@@ -12390,6 +12421,7 @@ def fetch_preview(raw_url: str, *, task_id: str, session_id: str) -> str:
                 "AML.T0051 LLM Prompt Injection",
                 "AML.T0051.001 LLM Prompt Injection: Indirect",
                 "AML.T0100 AI Agent Clickbait (secure rendering prevents exploitation from fetched malicious content)",
+                "AML.T0078 Drive-by Compromise",
               ],
             },
             {
@@ -14149,6 +14181,7 @@ print("code-doc drift gate passed")</code></pre>
             "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
             "AML.T0010 AI Supply Chain Compromise",
             "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+            "AML.T0109 AI Supply Chain Rug Pull",
           ],
         },
         {
@@ -14237,6 +14270,7 @@ print("code-doc drift gate passed")</code></pre>
                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                 "AML.T0060 Publish Hallucinated Entities (version pinning prevents resolution of hallucination-squatted tools)",
                 "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+                "AML.T0109 AI Supply Chain Rug Pull",
               ],
             },
             {
@@ -14372,6 +14406,8 @@ def resolve_tool(tool_ref: str, allowlist: dict) -&gt; ToolRecord:
                 "AML.T0104 Publish Poisoned AI Agent Tool",
                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                 "AML.T0074 Masquerading (hash binding detects descriptor-level masquerading)",
+                "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+                "AML.T0109 AI Supply Chain Rug Pull",
               ],
             },
             {
@@ -14653,7 +14689,9 @@ def resolve_tool(requested_name: str) -> str:
                 "AML.T0074 Masquerading",
                 "AML.T0104 Publish Poisoned AI Agent Tool",
                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
-                "AML.T0110 AI Agent Tool Poisoning"
+                "AML.T0110 AI Agent Tool Poisoning",
+                "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+                "AML.T0109 AI Supply Chain Rug Pull",
               ]
             },
             {
@@ -15244,6 +15282,7 @@ def run_semgrep(path: str) -&gt; None:
             "AML.T0068 LLM Prompt Obfuscation",
             "AML.T0065 LLM Prompt Crafting",
             "AML.T0015 Evade AI Model (hardens the detector itself against evasive prompt variants)",
+            "AML.T0051.002 LLM Prompt Injection: Triggered",
           ],
         },
         {
@@ -16474,7 +16513,8 @@ def load_cache_if_trustworthy(redis_client, full_key: str, expected: dict) -&gt;
             "AML.T0085 Data from AI Services (client-side cache or log leakage of AI service data)",
             "AML.T0098 AI Agent Tool Credential Harvesting (credential theft from insecure local storage)",
             "AML.T0104 Publish Poisoned AI Agent Tool (client connects to spoofed or poisoned tool server)",
-            "AML.T0105 Escape to Host (malicious content escapes client sandbox to host system)"
+            "AML.T0105 Escape to Host (malicious content escapes client sandbox to host system)",
+            "AML.T0077 LLM Response Rendering",
           ]
         },
         {
@@ -16585,7 +16625,8 @@ def load_cache_if_trustworthy(redis_client, full_key: str, expected: dict) -&gt;
               "items": [
                 "AML.T0073 Impersonation (server identity spoofing)",
                 "AML.T0078 Drive-by Compromise (preventing connection to malicious servers)",
-                "AML.T0104 Publish Poisoned AI Agent Tool (verifying intended server identity before use)"
+                "AML.T0104 Publish Poisoned AI Agent Tool (verifying intended server identity before use)",
+                "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
               ]
             },
             {
@@ -16690,7 +16731,8 @@ def load_cache_if_trustworthy(redis_client, full_key: str, expected: dict) -&gt;
                 "AML.T0002.002 Acquire Public AI Artifacts: AI Agent Configuration",
                 "AML.T0012 Valid Accounts (credential theft from insecure local storage)",
                 "AML.T0084 Discover AI Agent Configuration (credentials exposed in local config)",
-                "AML.T0098 AI Agent Tool Credential Harvesting (credential harvesting from client storage)"
+                "AML.T0098 AI Agent Tool Credential Harvesting (credential harvesting from client storage)",
+                "AML.T0083 Credentials from AI Agent Configuration",
               ]
             },
             {
@@ -16891,7 +16933,8 @@ def load_cache_if_trustworthy(redis_client, full_key: str, expected: dict) -&gt;
               "items": [
                 "AML.T0078 Drive-by Compromise (malicious server response used as delivery mechanism)",
                 "AML.T0102 Generate Malicious Commands (server generates actions or payloads the client might execute)",
-                "AML.T0105 Escape to Host (unsafe client handling allows escape to host context)"
+                "AML.T0105 Escape to Host (unsafe client handling allows escape to host context)",
+                "AML.T0077 LLM Response Rendering",
               ]
             },
             {
@@ -17096,7 +17139,8 @@ def load_cache_if_trustworthy(redis_client, full_key: str, expected: dict) -&gt;
               "items": [
                 "AML.T0010 AI Supply Chain Compromise (tampered client binary, plugin, or updater)",
                 "AML.T0010.001 AI Supply Chain Compromise: AI Software (malicious client SDK or dependency)",
-                "AML.T0074 Masquerading (malicious plugins masquerading as legitimate extensions)"
+                "AML.T0074 Masquerading (malicious plugins masquerading as legitimate extensions)",
+                "AML.T0109 AI Supply Chain Rug Pull",
               ]
             },
             {
@@ -17818,6 +17862,9 @@ def emit_sampling_event(
             "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool (admission pipeline treats skill and MCP artifacts as first-class supply-chain assets)",
             "AML.T0074 Masquerading (metadata honesty validation detects brand impersonation and typosquatting)",
             "AML.T0060 Publish Hallucinated Entities (typosquat detection in metadata validation catches hallucination-squatted skill names)",
+            "AML.T0109 AI Supply Chain Rug Pull",
+            "AML.T0111 AI Supply Chain Reputation Inflation",
+            "AML.T0110 AI Agent Tool Poisoning",
           ],
         },
         {

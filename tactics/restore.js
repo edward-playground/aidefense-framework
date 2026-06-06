@@ -17,7 +17,10 @@ export const restoreTactic = {
                         "AML.T0058 Publish Poisoned Models",
                         "AML.T0076 Corrupt AI Model",
                         "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (restoration removes backdoor triggers from training pipeline)",
-                        "AML.T0010 AI Supply Chain Compromise (restoration recovers from supply chain compromise)"
+                        "AML.T0010 AI Supply Chain Compromise (restoration recovers from supply chain compromise)",
+                        "AML.T0018.000 Manipulate AI Model: Poison AI Model",
+                        "AML.T0018.001 Manipulate AI Model: Modify AI Model Architecture",
+                        "AML.T0018.002 Manipulate AI Model: Embed Malware",
                     ]
                 },
                 {
@@ -208,7 +211,10 @@ jobs:
                                 "AML.T0058 Publish Poisoned Models",
                                 "AML.T0076 Corrupt AI Model",
                                 "AML.T0031 Erode AI Model Integrity (rollback restores model integrity)",
-                                "AML.T0020 Poison Training Data (rollback reverts to pre-poisoning model)"
+                                "AML.T0020 Poison Training Data (rollback reverts to pre-poisoning model)",
+                                "AML.T0018.000 Manipulate AI Model: Poison AI Model",
+                                "AML.T0018.001 Manipulate AI Model: Modify AI Model Architecture",
+                                "AML.T0018.002 Manipulate AI Model: Embed Malware",
                             ]
                         },
                         {
@@ -306,7 +312,8 @@ jobs:
                                 "AML.T0020 Poison Training Data",
                                 "AML.T0059 Erode Dataset Integrity",
                                 "AML.T0031 Erode AI Model Integrity (retraining restores model integrity)",
-                                "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (retraining on clean data removes backdoor triggers)"
+                                "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (retraining on clean data removes backdoor triggers)",
+                                "AML.T0018.000 Manipulate AI Model: Poison AI Model",
                             ]
                         },
                         {
@@ -552,7 +559,9 @@ def verify_recovery(clean_accuracy: float, attack_success_rate: float) -&gt; Non
                         "AML.T0059 Erode Dataset Integrity",
                         "AML.T0070 RAG Poisoning",
                         "AML.T0071 False RAG Entry Injection",
-                        "AML.T0080.000 AI Agent Context Poisoning: Memory (recovery restores poisoned agent memory-like stores)"
+                        "AML.T0080.000 AI Agent Context Poisoning: Memory (recovery restores poisoned agent memory-like stores)",
+                        "AML.T0066 Retrieval Content Crafting",
+                        "AML.T0099 AI Agent Tool Data Poisoning",
                     ]
                 },
                 {
@@ -1202,7 +1211,9 @@ if errors:
                         "AML.T0070 RAG Poisoning",
                         "AML.T0071 False RAG Entry Injection",
                         "AML.T0051 LLM Prompt Injection (rollback removes injected content from vector index)",
-                        "AML.T0080.000 AI Agent Context Poisoning: Memory (rollback restores poisoned retrieval memory context)"
+                        "AML.T0080.000 AI Agent Context Poisoning: Memory (rollback restores poisoned retrieval memory context)",
+                        "AML.T0066 Retrieval Content Crafting",
+                        "AML.T0099 AI Agent Tool Data Poisoning",
                     ]
                 },
                 {

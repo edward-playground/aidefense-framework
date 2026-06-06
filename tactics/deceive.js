@@ -158,7 +158,9 @@ export const deceiveTactic = {
                         "AML.T0057 LLM Data Leakage (canary tokens in training data detect leakage)",
                         "AML.T0035 AI Artifact Collection (decoy artifacts detect unauthorized artifact collection)",
                         "AML.T0005.000 Create Proxy AI Model: Train Proxy via Gathered AI Artifacts (canaries in artifact stores detect gathering for proxy training)",
-                        "AML.T0095.000 Search Open Websites/Domains: Code Repositories (repository canaries detect public-code reconnaissance)"
+                        "AML.T0095.000 Search Open Websites/Domains: Code Repositories (repository canaries detect public-code reconnaissance)",
+                        "AML.T0055 Unsecured Credentials",
+                        "AML.T0083 Credentials from AI Agent Configuration",
                     ]
                 },
                 {
@@ -812,7 +814,8 @@ route_message(
                         "AML.T0069.002 Discover LLM System Information: System Prompt (deceptive responses frustrate system prompt discovery)",
                         "AML.T0075 Cloud Service Discovery (deceptive system info misleads cloud service enumeration)",
                         "AML.T0005.002 Create Proxy AI Model: Use Pre-Trained Model (misleading model identity causes wrong proxy selection)",
-                        "AML.T0084.000 Discover AI Agent Configuration: Embedded Knowledge (deceptive responses frustrate knowledge source discovery)"
+                        "AML.T0084.000 Discover AI Agent Configuration: Embedded Knowledge (deceptive responses frustrate knowledge source discovery)",
+                        "AML.T0084.001 Discover AI Agent Configuration: Tool Definitions",
                     ]
                 },
                 {

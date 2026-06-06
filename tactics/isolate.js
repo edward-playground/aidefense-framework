@@ -594,7 +594,12 @@ print(run_inference(store, 21))</code></pre><p><strong>Action:</strong> Use this
                     "phase": ["operation"],
                     "description": "Restrict outbound network destinations for sandboxed executions with default-deny egress policy and narrow allowlists to reduce exfiltration, callback traffic, and lateral movement after code execution.",
                     "defendsAgainst": [
-                        { "framework": "MITRE ATLAS", "items": ["AML.T0072 Reverse Shell", "AML.T0025 Exfiltration via Cyber Means", "AML.T0050 Command and Scripting Interpreter"] },
+                        { "framework": "MITRE ATLAS", "items": [
+                          "AML.T0072 Reverse Shell",
+                          "AML.T0025 Exfiltration via Cyber Means",
+                          "AML.T0050 Command and Scripting Interpreter",
+                          "AML.T0108 AI Agent",
+                        ] },
                         { "framework": "MAESTRO", "items": ["Lateral Movement (Cross-Layer)", "Data Leakage (Cross-Layer) (egress restrictions prevent data exfiltration)", "Orchestration Attacks (L4)"] },
                         { "framework": "OWASP LLM Top 10 2025", "items": ["LLM06:2025 Excessive Agency", "LLM02:2025 Sensitive Information Disclosure (egress restrictions block exfiltration)"] },
                         { "framework": "OWASP ML Top 10 2023", "items": ["ML05:2023 Model Theft (network restrictions prevent model exfiltration)"] },
@@ -1964,6 +1969,8 @@ async def execute_tool(request: dict):
                                 "AML.T0084 Discover AI Agent Configuration",
                                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                                 "AML.T0104 Publish Poisoned AI Agent Tool",
+                                "AML.T0080 AI Agent Context Poisoning",
+                                "AML.T0080.000 AI Agent Context Poisoning: Memory",
                             ],
                         },
                         {
@@ -2554,7 +2561,8 @@ async def execute_tool(request: dict):
                         "AML.T0037 Data from Local System (stealing browser/app state, session tokens, local storage)",
                         "AML.T0053 AI Agent Tool Invocation (client-side isolation prevents compromised model from invoking host tools)",
                         "AML.T0077 LLM Response Rendering (client-side sandboxing contains render-time attacks from model output)",
-                        "AML.T0112.000 Machine Compromise: Local AI Agent (client-side isolation constrains a compromised local agent before it can become full machine compromise)"
+                        "AML.T0112.000 Machine Compromise: Local AI Agent (client-side isolation constrains a compromised local agent before it can become full machine compromise)",
+                        "AML.T0112 Machine Compromise",
                     ]
                 },
                 {
@@ -2658,7 +2666,8 @@ async def execute_tool(request: dict):
                     "items": [
                         "AML.T0051.001 LLM Prompt Injection: Indirect",
                         "AML.T0080 AI Agent Context Poisoning",
-                        "AML.T0100 AI Agent Clickbait"
+                        "AML.T0100 AI Agent Clickbait",
+                        "AML.T0078 Drive-by Compromise",
                     ]
                 },
                 {

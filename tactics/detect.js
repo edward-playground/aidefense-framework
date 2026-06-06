@@ -469,7 +469,8 @@ export const detectTactic = {
                                 "AML.T0051.001 LLM Prompt Injection: Indirect",
                                 "AML.T0054 LLM Jailbreak",
                                 "AML.T0053 AI Agent Tool Invocation (guardrail detects privilege escalation via tool misuse)",
-                                "AML.T0068 LLM Prompt Obfuscation (guardrail detects obfuscated privilege escalation attempts)"
+                                "AML.T0068 LLM Prompt Obfuscation (guardrail detects obfuscated privilege escalation attempts)",
+                                "AML.T0051.002 LLM Prompt Injection: Triggered",
                             ]
                         },
                         {
@@ -1748,7 +1749,9 @@ if __name__ == "__main__":
                                 "AML.T0048.001 External Harms: Reputational Harm",
                                 "AML.T0048.002 External Harms: Societal Harm",
                                 "AML.T0048.003 External Harms: User Harm",
-                                "AML.T0054 LLM Jailbreak (filters catch jailbreak-induced harmful output)"
+                                "AML.T0054 LLM Jailbreak (filters catch jailbreak-induced harmful output)",
+                                "AML.T0052 Phishing",
+                                "AML.T0052.000 Phishing: Spearphishing via Social Engineering LLM",
                             ]
                         },
                         {
@@ -2121,7 +2124,9 @@ if __name__ == "__main__":
                                 "AML.T0051 LLM Prompt Injection (anomalous tool sequences reveal injection-driven behavior)",
                                 "AML.T0051.001 LLM Prompt Injection: Indirect (indirect injections produce atypical tool chains)",
                                 "AML.T0051.002 LLM Prompt Injection: Triggered",
-                                "AML.T0086 Exfiltration via AI Agent Tool Invocation (unusual tool sequences signal exfiltration attempts)"
+                                "AML.T0086 Exfiltration via AI Agent Tool Invocation (unusual tool sequences signal exfiltration attempts)",
+                                "AML.T0051.000 LLM Prompt Injection: Direct",
+                                "AML.T0108 AI Agent",
                             ]
                         },
                         {
@@ -2957,7 +2962,8 @@ def detect_cross_tool_inference(
                         "AML.T0074 Masquerading",
                         "AML.T0104 Publish Poisoned AI Agent Tool",
                         "AML.T0020 Poison Training Data (artifact integrity monitoring detects dataset tampering)",
-                        "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (integrity monitoring detects backdoor insertion in datasets)"
+                        "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (integrity monitoring detects backdoor insertion in datasets)",
+                        "AML.T0112.001 Machine Compromise: AI Artifacts",
                     ]
                 },
                 {
@@ -3084,7 +3090,8 @@ def detect_cross_tool_inference(
                                 "AML.T0010.003 AI Supply Chain Compromise: Model",
                                 "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
                                 "AML.T0074 Masquerading",
-                                "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (hash verification detects backdoor-embedded artifacts)"
+                                "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (hash verification detects backdoor-embedded artifacts)",
+                                "AML.T0112.001 Machine Compromise: AI Artifacts",
                             ]
                         },
                         {
@@ -4401,7 +4408,8 @@ compression = "gzip"</code></pre><p><strong>Action:</strong> Deploy a log shippe
                                 "AML.T0080 AI Agent Context Poisoning",
                                 "AML.T0080.000 AI Agent Context Poisoning: Memory",
                                 "AML.T0080.001 AI Agent Context Poisoning: Thread",
-                                "AML.T0081 Modify AI Agent Configuration"
+                                "AML.T0081 Modify AI Agent Configuration",
+                                "AML.T0108 AI Agent",
                             ]
                         },
                         {
@@ -6854,7 +6862,8 @@ def derive_verification_state(fact: dict) -> dict:
                         "AML.T0071 False RAG Entry Injection",
                         "AML.T0051 LLM Prompt Injection (if payload is in RAG source)",
                         "AML.T0080 AI Agent Context Poisoning (RAG-poisoned content corrupts agent context)",
-                        "AML.T0080.000 AI Agent Context Poisoning: Memory (poisoned RAG entries persist in agent memory)"
+                        "AML.T0080.000 AI Agent Context Poisoning: Memory (poisoned RAG entries persist in agent memory)",
+                        "AML.T0051.001 LLM Prompt Injection: Indirect",
                     ]
                 },
                 {
@@ -6940,7 +6949,8 @@ def derive_verification_state(fact: dict) -> dict:
                                 "AML.T0082 RAG Credential Harvesting (scanning detects credential harvesting payloads in retrieved chunks)",
                                 "AML.T0099 AI Agent Tool Data Poisoning (scanning detects poisoned tool data in RAG content)",
                                 "AML.T0066 Retrieval Content Crafting (scanning detects crafted retrieval content)",
-                                "AML.T0080 AI Agent Context Poisoning (scanning prevents poisoned content from entering agent context)"
+                                "AML.T0080 AI Agent Context Poisoning (scanning prevents poisoned content from entering agent context)",
+                                "AML.T0051.001 LLM Prompt Injection: Indirect",
                             ]
                         },
                         {
