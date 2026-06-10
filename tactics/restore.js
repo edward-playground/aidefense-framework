@@ -873,7 +873,7 @@ if __name__ == "__main__":
                 },
                 {
                     "implementation": "Enforce hardened transport requirements for all restored sessions.",
-                    "howTo": "<h5>Concept:</h5><p>Transport hardening is separate from MFA. Even if identity proof is strong, restored sessions can still be exposed if re-onboarding traffic falls back to weak TLS, missing HSTS, or insecure cookies. Treat the post-incident session path as an edge-security change owned by the platform or SRE team.</p><h5>Apply a Hardened TLS and Cookie Baseline at the Edge</h5><pre><code># Example Nginx config for restored session traffic\nserver {\n    listen 443 ssl http2;\n    ssl_protocols TLSv1.2 TLSv1.3;\n    ssl_ciphers TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256;\n    ssl_session_tickets off;\n    ssl_prefer_server_ciphers off;\n\n    add_header Strict-Transport-Security \"max-age=63072000; includeSubDomains\" always;\n    add_header X-Content-Type-Options \"nosniff\" always;\n\n    proxy_cookie_path / \"/; Secure; HttpOnly; SameSite=Lax\";\n\n    location / {\n        proxy_pass http://session_backend;\n    }\n}\n</code></pre><p><strong>Action:</strong> Apply the hardened transport profile to every restored login, callback, and token-refresh endpoint before reopening access. Validate the deployment with your TLS scanner of record, archive the scan result with the incident evidence, and do not treat this transport proof as a substitute for MFA enforcement evidence.</p>"
+                    "howTo": "<h5>Concept:</h5><p>Transport hardening is separate from MFA. Even if identity proof is strong, restored sessions can still be exposed if re-onboarding traffic falls back to weak TLS, missing HSTS, or insecure cookies. Treat the post-incident session path as an edge-security change owned by the platform or SRE team.</p><h5>Apply a Hardened TLS and Cookie Baseline at the Edge</h5><pre><code># Example Nginx config for restored session traffic\n# Requires Nginx 1.19.3+ for proxy_cookie_flags and 1.19.4+ for ssl_conf_command.\nserver {\n    listen 443 ssl http2;\n    ssl_protocols TLSv1.2 TLSv1.3;\n    ssl_ciphers ECDHE-ECDSA-AES256-GCM-SHA384:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-CHACHA20-POLY1305:ECDHE-RSA-CHACHA20-POLY1305:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES128-GCM-SHA256;\n    ssl_conf_command Ciphersuites TLS_AES_256_GCM_SHA384:TLS_CHACHA20_POLY1305_SHA256:TLS_AES_128_GCM_SHA256;\n    ssl_session_tickets off;\n    ssl_prefer_server_ciphers off;\n\n    add_header Strict-Transport-Security \"max-age=63072000; includeSubDomains\" always;\n    add_header X-Content-Type-Options \"nosniff\" always;\n\n    proxy_cookie_path / /;\n    proxy_cookie_flags ~ secure httponly samesite=lax;\n\n    location / {\n        proxy_pass http://session_backend;\n    }\n}\n</code></pre><p><strong>Action:</strong> Apply the hardened transport profile to every restored login, callback, and token-refresh endpoint before reopening access. Run <code>nginx -t</code>, validate the deployment with your TLS scanner of record, archive the scan result with the incident evidence, and do not treat this transport proof as a substitute for MFA enforcement evidence.</p>"
                 },
                 {
                     "implementation": "Restore trusted conversational or agent state from verified pre-incident snapshots.",
@@ -1303,7 +1303,7 @@ import pathlib
 from datetime import datetime, timezone
 
 import numpy as np
-from qdrant_client import QdrantClient
+from qdrant_client import QdrantClient, models
 from qdrant_client.models import FieldCondition, Filter, MatchValue
 
 
@@ -1350,7 +1350,7 @@ with quarantine_path.open("a", encoding="utf-8") as sink:
 if flagged_ids:
     client.delete(
         collection_name=collection_name,
-        points_selector=flagged_ids,
+        points_selector=models.PointIdsList(points=flagged_ids),
         wait=True,
     )
     print(f"Quarantined and removed {len(flagged_ids)} points from {collection_name}")
@@ -1522,7 +1522,7 @@ subprocess.run(
             ],
             "toolsCommercial": [
                 "Pinecone (namespaces / collection versions / delete-by-ID)",
-                "Weaviate Enterprise (schema hooks, metadata policies, ACLs)",
+                "Weaviate Cloud / Weaviate Enterprise (RBAC, audit logging, SSO/SAML, PrivateLink, collection schema controls)",
                 "Amazon OpenSearch Service (managed aliases, snapshots)",
                 "Datadog / Splunk / Microsoft Sentinel for retrieval anomaly alerting and correlation",
                 "Cloud object storage with Object Lock / WORM mode for forensic quarantine (e.g. S3 Object Lock)"

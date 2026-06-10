@@ -535,15 +535,53 @@ kubectl get pod -n ai-production -o jsonpath="{.items[0].spec.securityContext.se
 #[no_mangle]
 pub extern "C" fn run_inference(input: i32) -> i32 {
     input * 2
-}</code></pre><h5>Run with capability-minimal host runtime</h5><pre><code># File: host_app/run_wasm.py
-from wasmtime import Store, Module, Linker
+}</code></pre><h5>Run with a capability-minimal Wasmtime host</h5><p>The <code>Linker</code> is the capability boundary: the module only receives host functions, WASI handles, directories, environment variables, or stdio streams that you explicitly define. Validate requested imports before instantiation, enable fuel, and bound memory so a hostile module cannot silently gain filesystem/network access or consume unbounded resources.</p><pre><code># File: host_app/run_wasm.py
+from __future__ import annotations
 
-store = Store()
-module = Module.from_file(store.engine, "./inference_engine.wasm")
-linker = Linker(store.engine)  # no FS/network imports exposed
-instance = linker.instantiate(store, module)
-run_inference = instance.exports(store)["run_inference"]
-print(run_inference(store, 21))</code></pre><p><strong>Action:</strong> Use this module pattern for bounded high-risk functions and keep capability mapping at the host layer as auditable evidence.</p>`
+from wasmtime import Config, Engine, Linker, Module, Store, WasmtimeError
+
+
+MAX_FUEL = 5_000_000
+MAX_MEMORY_BYTES = 64 * 1024 * 1024
+ALLOWED_IMPORT_MODULES: set[str] = set()
+
+
+def assert_allowed_imports(module: Module) -> None:
+    requested_modules = {import_type.module for import_type in module.imports}
+    unexpected = requested_modules - ALLOWED_IMPORT_MODULES
+    if unexpected:
+        raise PermissionError(
+            f"WASM module requested forbidden imports: {sorted(unexpected)}"
+        )
+
+
+config = Config()
+config.consume_fuel = True
+engine = Engine(config)
+store = Store(engine)
+store.set_fuel(MAX_FUEL)
+store.set_limits(
+    memory_size=MAX_MEMORY_BYTES,
+    memories=1,
+    tables=1,
+    instances=1,
+)
+
+module = Module.from_file(engine, "./inference_engine.wasm")
+assert_allowed_imports(module)
+
+linker = Linker(engine)
+
+# If the module genuinely needs WASI, change ALLOWED_IMPORT_MODULES to
+# {"wasi_snapshot_preview1"} and define a WasiConfig with no inherited env,
+# stdio, or preopened directories unless each capability is explicitly approved.
+
+try:
+    instance = linker.instantiate(store, module)
+    run_inference = instance.exports(store)["run_inference"]
+    print(run_inference(store, 21))
+except WasmtimeError as exc:
+    raise RuntimeError(f"WASM execution blocked or failed: {exc}") from exc</code></pre><p><strong>Action:</strong> Use this module pattern for bounded high-risk functions. Keep the import allowlist, fuel limit, memory limit, and any intentionally granted WASI capabilities under review so the host-layer capability map is auditable evidence.</p>`
                         }
                     ]
                 },
@@ -581,7 +619,113 @@ print(run_inference(store, 21))</code></pre><p><strong>Action:</strong> Use this
                     "implementationGuidance": [
                         {
                             "implementation": "Provision a fresh, single-use sandbox (microVM / gVisor / Kata) for every tool invocation, execute once, then destroy it.",
-                            "howTo": "<h5>Concept:</h5><p>High-risk tool execution should never happen in a reused runtime. The control is to create a new isolated workload for each invocation, copy in only the minimum payload, execute once, capture the result, then destroy the workload and its ephemeral filesystem.</p><h5>Step 1: Create a one-shot sandbox pod with an isolated runtime class</h5><p>Use a runtime class such as Kata or gVisor so the tool runs in a fresh microVM-backed or syscall-intercepted boundary. The pod must use an emptyDir workspace and no long-lived shared volumes.</p><pre><code># File: isolate/single_use_sandbox.py\nfrom __future__ import annotations\n\nimport base64\nimport uuid\n\nfrom kubernetes import client, config, watch\n\n\nNAMESPACE = \"ai-sandbox\"\nRUNTIME_CLASS_NAME = \"kata-qemu\"\n\n\ndef build_sandbox_pod(pod_name: str, payload_b64: str) -&gt; client.V1Pod:\n    return client.V1Pod(\n        metadata=client.V1ObjectMeta(\n            name=pod_name,\n            labels={\"app\": \"tool-sandbox\", \"sandbox-mode\": \"single-use\"},\n        ),\n        spec=client.V1PodSpec(\n            runtime_class_name=RUNTIME_CLASS_NAME,\n            restart_policy=\"Never\",\n            automount_service_account_token=False,\n            containers=[\n                client.V1Container(\n                    name=\"runner\",\n                    image=\"python:3.11-slim\",\n                    command=[\n                        \"/bin/sh\",\n                        \"-lc\",\n                        \"echo \\\"$TOOL_PAYLOAD_B64\\\" | base64 -d &gt; /work/task.py && python /work/task.py\",\n                    ],\n                    env=[client.V1EnvVar(name=\"TOOL_PAYLOAD_B64\", value=payload_b64)],\n                    volume_mounts=[client.V1VolumeMount(name=\"work\", mount_path=\"/work\")],\n                    security_context=client.V1SecurityContext(\n                        run_as_non_root=True,\n                        allow_privilege_escalation=False,\n                        read_only_root_filesystem=True,\n                        capabilities=client.V1Capabilities(drop=[\"ALL\"]),\n                    ),\n                )\n            ],\n            volumes=[client.V1Volume(name=\"work\", empty_dir=client.V1EmptyDirVolumeSource())],\n        ),\n    )\n\n\ndef run_tool_once(tool_payload: bytes) -&gt; dict:\n    config.load_incluster_config()\n    api = client.CoreV1Api()\n    pod_name = f\"tool-sandbox-{uuid.uuid4().hex[:10]}\"\n    payload_b64 = base64.b64encode(tool_payload).decode(\"utf-8\")\n    pod = build_sandbox_pod(pod_name, payload_b64)\n    api.create_namespaced_pod(namespace=NAMESPACE, body=pod)\n\n    try:\n        for event in watch.Watch().stream(\n            api.list_namespaced_pod,\n            namespace=NAMESPACE,\n            field_selector=f\"metadata.name={pod_name}\",\n            timeout_seconds=300,\n        ):\n            phase = event[\"object\"].status.phase\n            if phase in {\"Succeeded\", \"Failed\"}:\n                logs = api.read_namespaced_pod_log(name=pod_name, namespace=NAMESPACE)\n                return {\"pod_name\": pod_name, \"phase\": phase, \"logs\": logs}\n    finally:\n        api.delete_namespaced_pod(\n            name=pod_name,\n            namespace=NAMESPACE,\n            grace_period_seconds=0,\n            propagation_policy=\"Background\",\n        )\n</code></pre><h5>Step 2: Verify that the pod is actually destroyed after the call</h5><p>Run two invocations back to back and confirm each receives a different pod name and that the prior pod no longer exists. Also confirm there is no shared PVC or hostPath mount attached to the sandbox pod.</p><p><strong>Action:</strong> Treat every tool call as untrusted and enforce a strict <code>spawn → run → collect → destroy</code> lifecycle with a fresh isolated runtime each time. The evidence you want is the pod creation log, the captured output, and the deletion event for every sandbox invocation.</p>"
+                            "howTo": `<h5>Concept:</h5><p>High-risk tool execution should never happen in a reused runtime. The control is to create a new isolated workload for each invocation, copy in only the minimum payload, execute once, capture the result, then destroy the workload and its ephemeral filesystem. The teardown path must run even when pod creation, execution, log collection, or watch streaming fails.</p><h5>Step 1: Create a one-shot sandbox pod with hard runtime limits</h5><p>Use a runtime class such as Kata or gVisor so the tool runs in a fresh microVM-backed or syscall-intercepted boundary. Add a Kubernetes <code>activeDeadlineSeconds</code> limit and a client-side timeout; one protects the cluster if the client dies, the other protects the caller if the pod never reaches a terminal phase.</p><pre><code># File: isolate/single_use_sandbox.py
+from __future__ import annotations
+
+import base64
+import logging
+import time
+import uuid
+
+from kubernetes import client, config, watch
+from kubernetes.client.exceptions import ApiException
+
+
+logger = logging.getLogger(__name__)
+
+NAMESPACE = "ai-sandbox"
+RUNTIME_CLASS_NAME = "kata-qemu"
+MAX_RUNTIME_SECONDS = 120
+POD_GRACE_SECONDS = 0
+
+
+def build_sandbox_pod(pod_name: str, payload_b64: str) -&gt; client.V1Pod:
+    return client.V1Pod(
+        metadata=client.V1ObjectMeta(
+            name=pod_name,
+            labels={"app": "tool-sandbox", "sandbox-mode": "single-use"},
+        ),
+        spec=client.V1PodSpec(
+            runtime_class_name=RUNTIME_CLASS_NAME,
+            restart_policy="Never",
+            active_deadline_seconds=MAX_RUNTIME_SECONDS,
+            termination_grace_period_seconds=POD_GRACE_SECONDS,
+            automount_service_account_token=False,
+            containers=[
+                client.V1Container(
+                    name="runner",
+                    image="python:3.11-slim",
+                    command=[
+                        "/bin/sh",
+                        "-lc",
+                        'printf "%s" "$TOOL_PAYLOAD_B64" | base64 -d &gt; /work/task.py && python /work/task.py',
+                    ],
+                    env=[client.V1EnvVar(name="TOOL_PAYLOAD_B64", value=payload_b64)],
+                    volume_mounts=[client.V1VolumeMount(name="work", mount_path="/work")],
+                    resources=client.V1ResourceRequirements(
+                        requests={"cpu": "100m", "memory": "128Mi"},
+                        limits={"cpu": "1", "memory": "512Mi"},
+                    ),
+                    security_context=client.V1SecurityContext(
+                        run_as_non_root=True,
+                        allow_privilege_escalation=False,
+                        read_only_root_filesystem=True,
+                        capabilities=client.V1Capabilities(drop=["ALL"]),
+                    ),
+                )
+            ],
+            volumes=[client.V1Volume(name="work", empty_dir=client.V1EmptyDirVolumeSource())],
+        ),
+    )
+
+
+def run_tool_once(tool_payload: bytes, timeout_seconds: int = MAX_RUNTIME_SECONDS) -&gt; dict:
+    if timeout_seconds &gt; MAX_RUNTIME_SECONDS:
+        raise ValueError("timeout_seconds cannot exceed pod active deadline")
+
+    config.load_incluster_config()
+    api = client.CoreV1Api()
+    pod_name = f"tool-sandbox-{uuid.uuid4().hex[:10]}"
+    payload_b64 = base64.b64encode(tool_payload).decode("utf-8")
+    pod = build_sandbox_pod(pod_name, payload_b64)
+    watcher = watch.Watch()
+    created = False
+    deadline = time.monotonic() + timeout_seconds
+
+    try:
+        api.create_namespaced_pod(namespace=NAMESPACE, body=pod)
+        created = True
+
+        for event in watcher.stream(
+            api.list_namespaced_pod,
+            namespace=NAMESPACE,
+            field_selector=f"metadata.name={pod_name}",
+            timeout_seconds=timeout_seconds,
+        ):
+            phase = event["object"].status.phase
+            if phase in {"Succeeded", "Failed"}:
+                logs = api.read_namespaced_pod_log(name=pod_name, namespace=NAMESPACE)
+                return {"pod_name": pod_name, "phase": phase, "logs": logs}
+            if time.monotonic() &gt;= deadline:
+                break
+
+        raise TimeoutError(f"sandbox pod {pod_name} did not finish within {timeout_seconds}s")
+    finally:
+        watcher.stop()
+        if created:
+            try:
+                api.delete_namespaced_pod(
+                    name=pod_name,
+                    namespace=NAMESPACE,
+                    grace_period_seconds=POD_GRACE_SECONDS,
+                    propagation_policy="Foreground",
+                )
+            except ApiException as exc:
+                if exc.status != 404:
+                    logger.exception("Failed to delete sandbox pod %s", pod_name)
+</code></pre><h5>Step 2: Verify that the pod is actually destroyed after the call</h5><p>Run two invocations back to back and confirm each receives a different pod name. Also verify deletion explicitly; a timeout should produce a failed test, not a silently orphaned pod.</p><pre><code>python -m isolate.single_use_sandbox
+kubectl wait --for=delete pod/&lt;returned-pod-name&gt; -n ai-sandbox --timeout=30s
+kubectl get pod -n ai-sandbox -l app=tool-sandbox,sandbox-mode=single-use</code></pre><p><strong>Action:</strong> Treat every tool call as untrusted and enforce a strict spawn-run-collect-destroy lifecycle with a fresh isolated runtime each time. The evidence you want is the pod creation log, terminal phase or timeout event, captured output, and confirmed deletion for every sandbox invocation.</p>`
                         }
                     ],
                     "toolsOpenSource": ["gVisor", "Kata Containers", "Firecracker"],
@@ -765,11 +909,11 @@ kubectl get networkpolicy -n ai-sandbox</code></pre><p><strong>Action:</strong> 
                     "implementationGuidance": [
                         {
                             "implementation": "Orchestrate an automated analysis workflow using microVMs for strong isolation.",
-                            "howTo": "<h5>Concept:</h5><p>Pre-execution analysis should be an automated admission workflow, not an analyst clicking around in a shared sandbox. The orchestrator receives the artifact, provisions an isolated runtime, executes the artifact under observation, captures a machine-readable verdict, and destroys the runtime before any promotion decision is made.</p><h5>Step 1: Submit the artifact to an isolated analysis job</h5><p>Use a dedicated analysis image and a microVM-backed runtime class so every analysis starts from a clean environment with no shared state.</p><pre><code># File: sandboxing_service/orchestrator.py\nfrom __future__ import annotations\n\nimport base64\nimport json\nimport uuid\n\nfrom kubernetes import client, config, watch\n\n\nNAMESPACE = \"ai-analysis\"\nRUNTIME_CLASS_NAME = \"kata-qemu\"\nANALYZER_IMAGE = \"ghcr.io/aidefend/sandbox-analyzer:1.0.0\"\n\n\ndef build_analysis_pod(analysis_id: str, script_b64: str, artifact_sha256: str) -&gt; client.V1Pod:\n    return client.V1Pod(\n        metadata=client.V1ObjectMeta(\n            name=analysis_id,\n            labels={\n                \"app\": \"artifact-analysis\",\n                \"artifact-sha256\": artifact_sha256,\n            },\n        ),\n        spec=client.V1PodSpec(\n            runtime_class_name=RUNTIME_CLASS_NAME,\n            restart_policy=\"Never\",\n            automount_service_account_token=False,\n            containers=[\n                client.V1Container(\n                    name=\"analyzer\",\n                    image=ANALYZER_IMAGE,\n                    command=[\"/bin/sh\", \"-lc\", \"/opt/analyze.sh\"],\n                    env=[\n                        client.V1EnvVar(name=\"SCRIPT_B64\", value=script_b64),\n                        client.V1EnvVar(name=\"ARTIFACT_SHA256\", value=artifact_sha256),\n                    ],\n                    security_context=client.V1SecurityContext(\n                        run_as_non_root=True,\n                        allow_privilege_escalation=False,\n                        read_only_root_filesystem=True,\n                        capabilities=client.V1Capabilities(drop=[\"ALL\"]),\n                    ),\n                )\n            ],\n        ),\n    )\n\n\ndef analyze_script_in_sandbox(script_content: bytes, artifact_sha256: str) -&gt; dict:\n    config.load_incluster_config()\n    api = client.CoreV1Api()\n    analysis_id = f\"artifact-analysis-{uuid.uuid4().hex[:10]}\"\n    pod = build_analysis_pod(\n        analysis_id=analysis_id,\n        script_b64=base64.b64encode(script_content).decode(\"utf-8\"),\n        artifact_sha256=artifact_sha256,\n    )\n    api.create_namespaced_pod(namespace=NAMESPACE, body=pod)\n\n    try:\n        for event in watch.Watch().stream(\n            api.list_namespaced_pod,\n            namespace=NAMESPACE,\n            field_selector=f\"metadata.name={analysis_id}\",\n            timeout_seconds=600,\n        ):\n            phase = event[\"object\"].status.phase\n            if phase in {\"Succeeded\", \"Failed\"}:\n                report = api.read_namespaced_pod_log(name=analysis_id, namespace=NAMESPACE)\n                return json.loads(report)\n    finally:\n        api.delete_namespaced_pod(\n            name=analysis_id,\n            namespace=NAMESPACE,\n            grace_period_seconds=0,\n            propagation_policy=\"Background\",\n        )\n</code></pre><h5>Step 2: Require a machine-readable verdict for promotion</h5><p>The analyzer should emit JSON that includes the artifact hash, observed behaviors, and a final verdict such as <code>allow</code> or <code>deny</code>. The CI/CD or registry admission path should refuse promotion if the verdict is missing or negative.</p><p><strong>Action:</strong> Put every generated script, binary, or container artifact through an isolated analysis service before promotion. The evidence you want is the analysis report, the artifact hash it covered, and the deletion event proving the analysis runtime was torn down after the run.</p>"
+                            "howTo": "<h5>Concept:</h5><p>Pre-execution analysis should be an automated admission workflow, not an analyst clicking around in a shared sandbox. The orchestrator receives the artifact, provisions an isolated runtime, executes the artifact under observation, captures a machine-readable verdict, and destroys the runtime before any promotion decision is made. The same sandbox service should support named analysis profiles. For model supply-chain exceptions, H-003.002 and H-003.006 should call a <code>model-loader-analysis</code> profile instead of creating a separate control.</p><h5>Step 1: Submit the artifact to an isolated analysis job</h5><p>Use a dedicated analysis image and a microVM-backed runtime class so every analysis starts from a clean environment with no shared state. For <code>model-loader-analysis</code>, the payload is the model artifact plus loader manifest; the analyzer performs first load/deserialization offline, with no secrets, no network, read-only artifact mounts, bounded CPU/GPU/memory/time, and <code>local_files_only=True</code>.</p><pre><code># File: sandboxing_service/orchestrator.py\nfrom __future__ import annotations\n\nimport base64\nimport json\nimport uuid\n\nfrom kubernetes import client, config, watch\n\n\nNAMESPACE = \"ai-analysis\"\nRUNTIME_CLASS_NAME = \"kata-qemu\"\nANALYZER_IMAGE = \"ghcr.io/aidefend/sandbox-analyzer:1.0.0\"\n\n\ndef build_analysis_pod(analysis_id: str, script_b64: str, artifact_sha256: str) -&gt; client.V1Pod:\n    return client.V1Pod(\n        metadata=client.V1ObjectMeta(\n            name=analysis_id,\n            labels={\n                \"app\": \"artifact-analysis\",\n                \"artifact-sha256\": artifact_sha256,\n            },\n        ),\n        spec=client.V1PodSpec(\n            runtime_class_name=RUNTIME_CLASS_NAME,\n            restart_policy=\"Never\",\n            automount_service_account_token=False,\n            containers=[\n                client.V1Container(\n                    name=\"analyzer\",\n                    image=ANALYZER_IMAGE,\n                    command=[\"/bin/sh\", \"-lc\", \"/opt/analyze.sh\"],\n                    env=[\n                        client.V1EnvVar(name=\"SCRIPT_B64\", value=script_b64),\n                        client.V1EnvVar(name=\"ARTIFACT_SHA256\", value=artifact_sha256),\n                    ],\n                    security_context=client.V1SecurityContext(\n                        run_as_non_root=True,\n                        allow_privilege_escalation=False,\n                        read_only_root_filesystem=True,\n                        capabilities=client.V1Capabilities(drop=[\"ALL\"]),\n                    ),\n                )\n            ],\n        ),\n    )\n\n\ndef analyze_script_in_sandbox(script_content: bytes, artifact_sha256: str) -&gt; dict:\n    config.load_incluster_config()\n    api = client.CoreV1Api()\n    analysis_id = f\"artifact-analysis-{uuid.uuid4().hex[:10]}\"\n    pod = build_analysis_pod(\n        analysis_id=analysis_id,\n        script_b64=base64.b64encode(script_content).decode(\"utf-8\"),\n        artifact_sha256=artifact_sha256,\n    )\n    api.create_namespaced_pod(namespace=NAMESPACE, body=pod)\n\n    try:\n        for event in watch.Watch().stream(\n            api.list_namespaced_pod,\n            namespace=NAMESPACE,\n            field_selector=f\"metadata.name={analysis_id}\",\n            timeout_seconds=600,\n        ):\n            phase = event[\"object\"].status.phase\n            if phase in {\"Succeeded\", \"Failed\"}:\n                report = api.read_namespaced_pod_log(name=analysis_id, namespace=NAMESPACE)\n                return json.loads(report)\n    finally:\n        api.delete_namespaced_pod(\n            name=analysis_id,\n            namespace=NAMESPACE,\n            grace_period_seconds=0,\n            propagation_policy=\"Background\",\n        )\n</code></pre><h5>Step 2: Require a machine-readable verdict for promotion</h5><p>The analyzer should emit JSON that includes the artifact hash, analysis profile, observed behaviors, and a final verdict such as <code>allow</code> or <code>deny</code>. The CI/CD or registry admission path should refuse promotion if the verdict is missing, negative, not bound to the artifact digest, or not from the expected profile.</p><p><strong>Action:</strong> Put every generated script, binary, container artifact, or high-risk model-loader exception through this isolated analysis service before promotion. The evidence you want is the analysis report, the artifact hash it covered, the profile name, and the deletion event proving the analysis runtime was torn down after the run.</p>"
                         },
                         {
                             "implementation": "Define and enforce a strict behavioral security policy within the sandbox.",
-                            "howTo": "<h5>Concept:</h5><p>The effectiveness of the sandbox depends on the rules used to judge behavior. A strict, default-deny policy should be created that defines what the generated code is allowed to do. Any action outside this narrow scope is considered malicious. All network egress should be forced through a monitored proxy.</p><h5>Implement a Falco Rule for a Code Interpreter</h5><p>Falco is a runtime security tool that can monitor kernel syscalls. This Falco rule defines the expected behavior for a sandboxed Python script. It allows file operations within `/tmp` but blocks network connections and file access elsewhere.</p><pre><code># File: sandbox_policies/falco_code_interpreter.yaml\n\n- rule: Disallowed Egress from AI-Sandbox\n  desc: Detects any outbound network connection from the sandboxed Python interpreter.\n  condition: >\n    evt.type = connect and evt.dir = > and proc.name = python3 and not proc.aname contains \"analysis_proxy\"\n  output: \"Disallowed network egress by AI-generated code (proc=%proc.name command=%proc.cmdline connection=%fd.name)\"\n  priority: CRITICAL\n  tags: [network, ai_sandbox]\n\n- rule: Disallowed File Write from AI-Sandbox\n  desc: Detects file writes outside of the /tmp directory by a sandboxed python process.\n  condition: >\n    (evt.type = openat or evt.type = open) and evt.dir = > and (fd.open_write=true) \n    and proc.name = python3 and not fd.name startswith /tmp/\n  output: \"Disallowed file write by AI-generated code (proc=%proc.name file=%fd.name)\"\n  priority: CRITICAL\n  tags: [filesystem, ai_sandbox]\n</code></pre><p><strong>Action:</strong> Define a strict behavioral policy for your pre-execution sandbox using a tool like Falco or Tetragon. The policy must deny all network egress by default (forcing traffic through a monitored proxy) and restrict file system writes to a designated temporary directory.</p>"
+                            "howTo": "<h5>Concept:</h5><p>The effectiveness of the sandbox depends on the rules used to judge behavior. A strict, default-deny policy should be created that defines what the generated code is allowed to do. Any action outside this narrow scope is considered malicious. All network egress should be forced through a monitored proxy. For the <code>model-loader-analysis</code> profile used by H-003.002 and H-003.006, the policy should be even narrower: no outbound network, no secret mounts, read-only model bytes, no writes outside scratch space, no shell-outs, and bounded first-load execution.</p><h5>Implement a Falco Rule for a Code Interpreter</h5><p>Falco is a runtime security tool that can monitor kernel syscalls. This Falco rule defines the expected behavior for a sandboxed Python script. It allows file operations within `/tmp` but blocks network connections and file access elsewhere.</p><pre><code># File: sandbox_policies/falco_code_interpreter.yaml\n\n- rule: Disallowed Egress from AI-Sandbox\n  desc: Detects any outbound network connection from the sandboxed Python interpreter.\n  condition: >\n    evt.type = connect and evt.dir = > and proc.name = python3 and not proc.aname contains \"analysis_proxy\"\n  output: \"Disallowed network egress by AI-generated code (proc=%proc.name command=%proc.cmdline connection=%fd.name)\"\n  priority: CRITICAL\n  tags: [network, ai_sandbox]\n\n- rule: Disallowed File Write from AI-Sandbox\n  desc: Detects file writes outside of the /tmp directory by a sandboxed python process.\n  condition: >\n    (evt.type = openat or evt.type = open) and evt.dir = > and (fd.open_write=true) \n    and proc.name = python3 and not fd.name startswith /tmp/\n  output: \"Disallowed file write by AI-generated code (proc=%proc.name file=%fd.name)\"\n  priority: CRITICAL\n  tags: [filesystem, ai_sandbox]\n</code></pre><p><strong>Action:</strong> Define a strict behavioral policy for your pre-execution sandbox using a tool like Falco or Tetragon. The policy must deny network egress by default, restrict file system writes to a designated temporary directory, and support profile-specific constraints such as <code>model-loader-analysis</code> for first-load/deserialization evidence.</p>"
                         },
                         {
                             "implementation": "Generate a signed, verifiable analysis report for CI/CD admission control.",
@@ -2269,7 +2413,117 @@ async def execute_tool(request: dict):
                     "implementationGuidance": [
                         {
                             "implementation": "Enforce a structured summary schema that requires explicit retention of safety constraints, policy commitments, and source provenance, and reject any compacted output that fails schema validation.",
-                            "howTo": "<h5>Concept:</h5><p>Free-text summarization is the root cause of constraint loss. When a model summarizes in natural language, it optimizes for coherence and brevity, not for preserving security invariants. The fix is to make compaction produce a <em>structured</em> output with mandatory fields for safety constraints, source provenance, and an explicit secret-scan verdict. The <code>active_policy_commitments</code> field must always exist, but it may be an empty list when no live commitment exists. If any required field is missing, empty where non-empty is required, or the secret scan does not pass, the summary is rejected and the system falls back to truncation (dropping oldest messages) rather than lossy summarization.</p><h5>Step 1: Define the compaction output schema</h5><p>Use a Pydantic model (or equivalent JSON Schema) that the summarizer must populate. The schema enforces that safety constraints and provenance survive compaction as first-class fields, not as optional narrative buried in a free-text block.</p><pre><code># File: compaction/schema.py\nfrom __future__ import annotations\n\nfrom typing import Literal\n\nfrom pydantic import BaseModel, Field, field_validator\n\n\nclass CompactedContext(BaseModel):\n    \"\"\"Structured output for every compaction operation.\"\"\"\n\n    safety_constraints: list[str] = Field(\n        ...,\n        min_length=1,\n        description=\"Active safety instructions that MUST be carried forward verbatim.\",\n    )\n    active_policy_commitments: list[str] = Field(\n        default_factory=list,\n        description=\"Promises the agent made to the user; may be empty when none exist.\",\n    )\n    conversation_summary: str = Field(\n        ...,\n        min_length=20,\n        description=\"Natural-language summary of the conversation so far.\",\n    )\n    source_provenance: list[str] = Field(\n        ...,\n        min_length=1,\n        description=\"Message IDs or hashes proving which records were compacted.\",\n    )\n    secret_scan_passed: Literal[True] = Field(\n        ...,\n        description=\"Must be True; False is rejected and triggers fallback.\",\n    )\n\n    @field_validator(\"safety_constraints\", \"source_provenance\")\n    @classmethod\n    def no_empty_values(cls, v: list[str]) -> list[str]:\n        if any(not item.strip() for item in v):\n            raise ValueError(\"Empty value detected in compacted output\")\n        return v\n</code></pre><h5>Step 2: Validate every compaction output before it enters context</h5><p>The compaction pipeline must parse the summarizer's output through the schema. If validation fails (missing safety constraints, empty provenance, or <code>secret_scan_passed != true</code>), the system must NOT use the compacted output. Fall back to simple truncation (drop oldest messages, keep system prompt and recent turns intact).</p><pre><code># File: compaction/pipeline.py\nfrom __future__ import annotations\n\nimport json\nimport logging\nfrom pydantic import ValidationError\nfrom compaction.schema import CompactedContext\n\nlogger = logging.getLogger(__name__)\n\n\ndef compact_context(\n    raw_messages: list[dict],\n    summarizer_fn,\n    secret_scanner_fn,\n    system_prompt: str,\n) -&gt; list[dict]:\n    \"\"\"Compact context with structured validation and fail-safe truncation.\"\"\"\n    raw_summary = summarizer_fn(raw_messages)\n\n    try:\n        parsed = json.loads(raw_summary)\n    except (json.JSONDecodeError, TypeError):\n        logger.warning(\"Summarizer returned non-JSON; falling back to truncation\")\n        return _truncate_fallback(raw_messages, system_prompt)\n\n    scan_targets = []\n    scan_targets.extend(parsed.get(\"safety_constraints\", []))\n    scan_targets.extend(parsed.get(\"active_policy_commitments\", []))\n    if parsed.get(\"conversation_summary\"):\n        scan_targets.append(parsed[\"conversation_summary\"])\n\n    parsed[\"secret_scan_passed\"] = all(\n        secret_scanner_fn(text) for text in scan_targets if text\n    )\n\n    try:\n        compacted = CompactedContext(**parsed)\n    except ValidationError as exc:\n        logger.warning(\"Compaction schema validation failed: %s\", exc)\n        return _truncate_fallback(raw_messages, system_prompt)\n\n    return [\n        {\"role\": \"system\", \"content\": system_prompt},\n        {\"role\": \"system\", \"content\": _render_structured_summary(compacted)},\n    ]\n\n\ndef _render_structured_summary(ctx: CompactedContext) -&gt; str:\n    lines = [\"[Compacted Context]\"]\n    lines.append(\"Safety constraints (carry forward verbatim):\")\n    for c in ctx.safety_constraints:\n        lines.append(f\"  - {c}\")\n    if ctx.active_policy_commitments:\n        lines.append(\"Active commitments:\")\n        for p in ctx.active_policy_commitments:\n            lines.append(f\"  - {p}\")\n    lines.append(f\"Conversation summary: {ctx.conversation_summary}\")\n    lines.append(\"Source provenance:\")\n    for source in ctx.source_provenance:\n        lines.append(f\"  - {source}\")\n    return \"\\n\".join(lines)\n\n\ndef _truncate_fallback(messages: list[dict], system_prompt: str) -&gt; list[dict]:\n    \"\"\"Safe fallback: keep system prompt + most recent messages.\"\"\"\n    keep_count = min(len(messages), 20)\n    return [{\"role\": \"system\", \"content\": system_prompt}] + messages[-keep_count:]\n</code></pre><p><strong>Action:</strong> Every compaction operation must produce a <code>CompactedContext</code> that passes schema validation. If validation fails, the system must fall back to truncation, never to an unvalidated free-text summary. Log every fallback event for operational review.</p>"
+                            "howTo": `<h5>Concept:</h5><p>Free-text summarization is the root cause of constraint loss. When a model summarizes in natural language, it optimizes for coherence and brevity, not for preserving security invariants. The fix is to make compaction produce a <em>structured</em> output with mandatory fields for safety constraints, source provenance, and an explicit secret-scan verdict. The <code>active_policy_commitments</code> field must always exist, but it may be an empty list when no live commitment exists. If any required field is missing, empty where non-empty is required, or the secret scan does not pass, the summary is rejected and the system falls back to truncation (dropping oldest messages) rather than lossy summarization.</p><h5>Step 1: Define the compaction output schema</h5><p><strong>Version requirement:</strong> This example uses Pydantic v2 (<code>pydantic&gt;=2,&lt;3</code>) because it relies on <code>field_validator</code>. Pin the dependency explicitly. For Pydantic v1, use the v1 <code>@validator</code> API or import from <code>pydantic.v1</code> intentionally.</p><p>Use a Pydantic model (or equivalent JSON Schema) that the summarizer must populate. The schema enforces that safety constraints and provenance survive compaction as first-class fields, not as optional narrative buried in a free-text block.</p><pre><code># File: compaction/schema.py
+# requirements.txt: pydantic&gt;=2,&lt;3
+from __future__ import annotations
+
+from typing import Literal
+
+from pydantic import BaseModel, Field, field_validator
+
+
+class CompactedContext(BaseModel):
+    """Structured output for every compaction operation."""
+
+    safety_constraints: list[str] = Field(
+        ...,
+        min_length=1,
+        description="Active safety instructions that MUST be carried forward verbatim.",
+    )
+    active_policy_commitments: list[str] = Field(
+        default_factory=list,
+        description="Promises the agent made to the user; may be empty when none exist.",
+    )
+    conversation_summary: str = Field(
+        ...,
+        min_length=20,
+        description="Natural-language summary of the conversation so far.",
+    )
+    source_provenance: list[str] = Field(
+        ...,
+        min_length=1,
+        description="Message IDs or hashes proving which records were compacted.",
+    )
+    secret_scan_passed: Literal[True] = Field(
+        ...,
+        description="Must be True; False is rejected and triggers fallback.",
+    )
+
+    @field_validator("safety_constraints", "source_provenance")
+    @classmethod
+    def no_empty_values(cls, v: list[str]) -> list[str]:
+        if any(not item.strip() for item in v):
+            raise ValueError("Empty value detected in compacted output")
+        return v
+</code></pre><h5>Step 2: Validate every compaction output before it enters context</h5><p>The compaction pipeline must parse the summarizer's output through the schema. If validation fails (missing safety constraints, empty provenance, or <code>secret_scan_passed != true</code>), the system must NOT use the compacted output. Fall back to simple truncation (drop oldest messages, keep system prompt and recent turns intact).</p><pre><code># File: compaction/pipeline.py
+from __future__ import annotations
+
+import json
+import logging
+from pydantic import ValidationError
+from compaction.schema import CompactedContext
+
+logger = logging.getLogger(__name__)
+
+
+def compact_context(
+    raw_messages: list[dict],
+    summarizer_fn,
+    secret_scanner_fn,
+    system_prompt: str,
+) -&gt; list[dict]:
+    """Compact context with structured validation and fail-safe truncation."""
+    raw_summary = summarizer_fn(raw_messages)
+
+    try:
+        parsed = json.loads(raw_summary)
+    except (json.JSONDecodeError, TypeError):
+        logger.warning("Summarizer returned non-JSON; falling back to truncation")
+        return _truncate_fallback(raw_messages, system_prompt)
+
+    scan_targets = []
+    scan_targets.extend(parsed.get("safety_constraints", []))
+    scan_targets.extend(parsed.get("active_policy_commitments", []))
+    if parsed.get("conversation_summary"):
+        scan_targets.append(parsed["conversation_summary"])
+
+    parsed["secret_scan_passed"] = all(
+        secret_scanner_fn(text) for text in scan_targets if text
+    )
+
+    try:
+        compacted = CompactedContext(**parsed)
+    except ValidationError as exc:
+        logger.warning("Compaction schema validation failed: %s", exc)
+        return _truncate_fallback(raw_messages, system_prompt)
+
+    return [
+        {"role": "system", "content": system_prompt},
+        {"role": "system", "content": _render_structured_summary(compacted)},
+    ]
+
+
+def _render_structured_summary(ctx: CompactedContext) -&gt; str:
+    lines = ["[Compacted Context]"]
+    lines.append("Safety constraints (carry forward verbatim):")
+    for c in ctx.safety_constraints:
+        lines.append(f"  - {c}")
+    if ctx.active_policy_commitments:
+        lines.append("Active commitments:")
+        for p in ctx.active_policy_commitments:
+            lines.append(f"  - {p}")
+    lines.append(f"Conversation summary: {ctx.conversation_summary}")
+    lines.append("Source provenance:")
+    for source in ctx.source_provenance:
+        lines.append(f"  - {source}")
+    return "\\n".join(lines)
+
+
+def _truncate_fallback(messages: list[dict], system_prompt: str) -&gt; list[dict]:
+    """Safe fallback: keep system prompt + most recent messages."""
+    keep_count = min(len(messages), 20)
+    return [{"role": "system", "content": system_prompt}] + messages[-keep_count:]
+</code></pre><p><strong>Action:</strong> Every compaction operation must produce a <code>CompactedContext</code> that passes schema validation. If validation fails, the system must fall back to truncation, never to an unvalidated free-text summary. Log every fallback event for operational review.</p>`
                         },
                         {
                             "implementation": "Run a post-compaction consistency check that verifies safety-critical instructions survived the summarization by comparing the compacted output against a pre-registered set of invariants.",
@@ -2290,7 +2544,8 @@ async def execute_tool(request: dict):
             "toolsOpenSource": [
                 "Ansible (kill-switch automation runbooks)",
                 "AWS CLI / Azure CLI / gcloud (resource stop and delete actions)",
-                "Circuit breaker patterns in microservices"
+                "Circuit breaker patterns in microservices",
+                "PyJWT"
             ],
             "toolsCommercial": [
                 "AWS Systems Manager Automation",
@@ -2388,11 +2643,265 @@ async def execute_tool(request: dict):
             "implementationGuidance": [
                 {
                     "implementation": "Automated safety monitors and triggers for critical deviations.",
-                    "howTo": "<h5>Concept:</h5><p>The kill-switch should not depend only on a human noticing a problem. An automated monitor can detect catastrophic runaway conditions (financial burn, mass failure, abusive behavior) and immediately trigger a halt. The halt is enforced globally and/or per-tenant by setting a shared halt flag that all inference and agent entrypoints must check (see Strategy 7).</p><h5>Step 1: Define Catastrophic Thresholds</h5><p>Define a very small set of metrics that mean \"this is absolutely not normal\" (e.g., hourly cost $>> expected, 90%+ error rate across requests, abnormally high volume of irreversible actions). These thresholds should be intentionally high, so they are only tripped under truly emergency conditions.</p><h5>Step 2: Automated Halt Monitor</h5><p>The monitor runs on a fast cadence (e.g., every minute as a cron job or serverless function), evaluates those metrics, and, if a threshold is breached, declares an emergency halt. That halt is recorded, auditable, and enforced by all traffic paths.</p><pre><code># File: safety_monitor/automated_halt.py\nimport time\nimport redis\nimport json\nimport datetime\n\n# These thresholds represent catastrophic conditions that should never\n# be hit during normal operation. If we hit them, we hard-stop.\nCATASTROPHIC_COST_THRESHOLD_USD = 1000      # per hour\nCATASTROPHIC_ERROR_RATE_PERCENT = 90        # 90%+ failures in last 5 min\n\n# Example: a multi-tenant service might have tenant-specific limits\nTENANT_COST_THRESHOLD_USD = 300             # per hour per tenant\n\n# Stubbed metric queries (replace with Prometheus/Datadog/etc.)\ndef get_estimated_cost_last_hour_global() -> float:\n    return 50.0\n\ndef get_estimated_cost_last_hour_by_tenant() -> dict:\n    # Return something like {\"tenantA\": 42.0, \"tenantB\": 1200.0}\n    return {\"tenantA\": 42.0, \"tenantB\": 1200.0}\n\ndef get_error_rate_last_5_minutes_global() -> float:\n    return 5.0\n\nr = redis.Redis()\n\ndef audit_halt_event(reason: str, scope: str, tenant_id: str = None):\n    \"\"\"Record halt trigger details for forensics and compliance.\"\"\"\n    event = {\n        \"timestamp\": datetime.datetime.utcnow().isoformat() + \"Z\",\n        \"scope\": scope,  # \"global\" or \"tenant\"\n        \"tenant_id\": tenant_id,\n        \"reason\": reason,\n        \"trigger_type\": \"automated\"\n    }\n    print(f\"HALT AUDIT: {json.dumps(event)}\")\n    # In production, also send to SIEM / incident channel.\n\n\ndef initiate_global_halt(reason: str):\n    r.set(\"SYSTEM_HALT_GLOBAL\", \"true\")\n    audit_halt_event(reason=reason, scope=\"global\")\n\n\ndef initiate_tenant_halt(tenant_id: str, reason: str):\n    r.set(f\"TENANT:{tenant_id}:HALT\", \"true\")\n    audit_halt_event(reason=reason, scope=\"tenant\", tenant_id=tenant_id)\n\n\ndef check_safety_metrics_once():\n    # 1. Global cost check\n    cost_global = get_estimated_cost_last_hour_global()\n    if cost_global > CATASTROPHIC_COST_THRESHOLD_USD:\n        initiate_global_halt(\n            reason=(\n                f\"Global hourly cost ${cost_global} exceeded \"\n                f\"threshold ${CATASTROPHIC_COST_THRESHOLD_USD}\"\n            )\n        )\n\n    # 2. Global error rate check\n    err_rate = get_error_rate_last_5_minutes_global()\n    if err_rate > CATASTROPHIC_ERROR_RATE_PERCENT:\n        initiate_global_halt(\n            reason=(\n                f\"Global error rate {err_rate}% exceeded \"\n                f\"threshold {CATASTROPHIC_ERROR_RATE_PERCENT}%\"\n            )\n        )\n\n    # 3. Per-tenant catastrophic spend check\n    tenant_costs = get_estimated_cost_last_hour_by_tenant()\n    for tenant_id, cost in tenant_costs.items():\n        if cost > TENANT_COST_THRESHOLD_USD:\n            initiate_tenant_halt(\n                tenant_id=tenant_id,\n                reason=(\n                    f\"Tenant {tenant_id} hourly cost ${cost} exceeded \"\n                    f\"threshold ${TENANT_COST_THRESHOLD_USD}\"\n                )\n            )\n\n# This function would be invoked by cron / scheduler every minute.\n</code></pre><p><strong>Action:</strong> Deploy an automated safety monitor that (1) evaluates catastrophic metrics, (2) sets either <code>SYSTEM_HALT_GLOBAL</code> or <code>TENANT:&lt;id&gt;:HALT</code> in a shared config/redis store, and (3) logs an auditable record including timestamp, trigger_type=\"automated\", and the justification. All inference/agent entrypoints MUST check these halt flags before doing work (see Strategy 7), so the stop is immediately enforced.</p>"
+                    "howTo": `<h5>Concept:</h5><p>The kill-switch should not depend only on a human noticing a problem. An automated monitor can detect catastrophic runaway conditions (financial burn, mass failure, abusive behavior) and immediately trigger a halt. The halt is enforced globally and/or per-tenant by setting a shared halt flag that all inference and agent entrypoints must check (see Strategy 7).</p><h5>Step 1: Define Catastrophic Thresholds</h5><p>Define a very small set of metrics that mean "this is absolutely not normal" (e.g., hourly cost $>> expected, 90%+ error rate across requests, abnormally high volume of irreversible actions). These thresholds should be intentionally high, so they are only tripped under truly emergency conditions.</p><h5>Step 2: Automated Halt Monitor</h5><p>The monitor runs on a fast cadence (e.g., every minute as a cron job or serverless function), evaluates those metrics, and, if a threshold is breached, declares an emergency halt. That halt is recorded, auditable, and enforced by all traffic paths.</p><pre><code># File: safety_monitor/automated_halt.py
+import time
+import redis
+import json
+import datetime
+
+# These thresholds represent catastrophic conditions that should never
+# be hit during normal operation. If we hit them, we hard-stop.
+CATASTROPHIC_COST_THRESHOLD_USD = 1000      # per hour
+CATASTROPHIC_ERROR_RATE_PERCENT = 90        # 90%+ failures in last 5 min
+
+# Example: a multi-tenant service might have tenant-specific limits
+TENANT_COST_THRESHOLD_USD = 300             # per hour per tenant
+
+# Stubbed metric queries (replace with Prometheus/Datadog/etc.)
+def get_estimated_cost_last_hour_global() -> float:
+    return 50.0
+
+def get_estimated_cost_last_hour_by_tenant() -> dict:
+    # Return something like {"tenantA": 42.0, "tenantB": 1200.0}
+    return {"tenantA": 42.0, "tenantB": 1200.0}
+
+def get_error_rate_last_5_minutes_global() -> float:
+    return 5.0
+
+r = redis.Redis()
+
+def audit_halt_event(reason: str, scope: str, tenant_id: str = None):
+    """Record halt trigger details for forensics and compliance."""
+    event = {
+        "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
+        "scope": scope,  # "global" or "tenant"
+        "tenant_id": tenant_id,
+        "reason": reason,
+        "trigger_type": "automated"
+    }
+    print(f"HALT AUDIT: {json.dumps(event)}")
+    # In production, also send to SIEM / incident channel.
+
+
+def initiate_global_halt(reason: str):
+    r.set("SYSTEM_HALT_GLOBAL", "true")
+    audit_halt_event(reason=reason, scope="global")
+
+
+def initiate_tenant_halt(tenant_id: str, reason: str):
+    r.set(f"TENANT:{tenant_id}:HALT", "true")
+    audit_halt_event(reason=reason, scope="tenant", tenant_id=tenant_id)
+
+
+def check_safety_metrics_once():
+    # 1. Global cost check
+    cost_global = get_estimated_cost_last_hour_global()
+    if cost_global > CATASTROPHIC_COST_THRESHOLD_USD:
+        initiate_global_halt(
+            reason=(
+                f"Global hourly cost \${cost_global} exceeded "
+                f"threshold \${CATASTROPHIC_COST_THRESHOLD_USD}"
+            )
+        )
+
+    # 2. Global error rate check
+    err_rate = get_error_rate_last_5_minutes_global()
+    if err_rate > CATASTROPHIC_ERROR_RATE_PERCENT:
+        initiate_global_halt(
+            reason=(
+                f"Global error rate {err_rate}% exceeded "
+                f"threshold {CATASTROPHIC_ERROR_RATE_PERCENT}%"
+            )
+        )
+
+    # 3. Per-tenant catastrophic spend check
+    tenant_costs = get_estimated_cost_last_hour_by_tenant()
+    for tenant_id, cost in tenant_costs.items():
+        if cost > TENANT_COST_THRESHOLD_USD:
+            initiate_tenant_halt(
+                tenant_id=tenant_id,
+                reason=(
+                    f"Tenant {tenant_id} hourly cost \${cost} exceeded "
+                    f"threshold \${TENANT_COST_THRESHOLD_USD}"
+                )
+            )
+
+# This function would be invoked by cron / scheduler every minute.
+</code></pre><p><strong>Action:</strong> Deploy an automated safety monitor that (1) evaluates catastrophic metrics, (2) sets either <code>SYSTEM_HALT_GLOBAL</code> or <code>TENANT:&lt;id&gt;:HALT</code> in a shared config/redis store, and (3) logs an auditable record including timestamp, trigger_type="automated", and the justification. All inference/agent entrypoints MUST check these halt flags before doing work (see Strategy 7), so the stop is immediately enforced.</p>`
                 },
                 {
                     "implementation": "Provide secure, MFA-protected manual override for human operators.",
-                    "howTo": "<h5>Concept:</h5><p>Security and SRE leadership need a \"red button\" to halt the AI system on demand. That button must be tightly controlled: MFA-protected, role-restricted, auditable, and ideally dual-control for high-value environments. When a human triggers it, we record who did it, why, and when. The manual trigger uses the same underlying halt flags as automated triggers, so enforcement is consistent.</p><h5>Hardened Admin Endpoint (FastAPI Example)</h5><p>This example shows an <code>/admin/emergency-halt</code> endpoint. It requires: (1) an admin role, (2) fresh MFA, (3) a justification string for audit. The handler sets the global halt flag and logs to SIEM. In production, you can also enforce dual-approval: two distinct admins must confirm within 60 seconds before the halt is finalized.</p><pre><code># File: api/admin_controls.py\nfrom fastapi import FastAPI, Request, Depends, HTTPException\nfrom pydantic import BaseModel\nimport redis\nimport datetime\nimport json\n\napp = FastAPI()\nr = redis.Redis()\n\nclass HaltRequest(BaseModel):\n    justification: str\n    scope: str = \"global\"        # \"global\" or \"tenant\"\n    tenant_id: str | None = None  # required if scope == \"tenant\"\n\nclass UserContext(BaseModel):\n    id: str\n    is_admin: bool\n    mfa_recent: bool\n    # You can also attach 'second_approver_confirmed' for dual-control flows.\n\n# Dependency to extract/validate the caller's identity and MFA status.\nasync def require_admin_user(request: Request) -> UserContext:\n    user = getattr(request.state, \"user\", None)\n    if user is None:\n        raise HTTPException(status_code=401, detail=\"Not authenticated\")\n    if not user.is_admin:\n        raise HTTPException(status_code=403, detail=\"Admin role required\")\n    if not user.mfa_recent:\n        raise HTTPException(status_code=403, detail=\"Fresh MFA required\")\n    return user\n\n# Simple audit helper\ndef audit_manual_halt(user: UserContext, scope: str, justification: str, tenant_id: str | None):\n    event = {\n        \"timestamp\": datetime.datetime.utcnow().isoformat() + \"Z\",\n        \"trigger_type\": \"manual\",\n        \"operator_id\": user.id,\n        \"scope\": scope,\n        \"tenant_id\": tenant_id,\n        \"justification\": justification\n    }\n    print(f\"HALT AUDIT: {json.dumps(event)}\")\n    # Also send to SIEM / paging channel / incident Slack.\n\n@app.post(\"/admin/emergency-halt\")\nasync def trigger_manual_halt(body: HaltRequest, user: UserContext = Depends(require_admin_user)):\n    # Optionally enforce dual-control here before proceeding.\n    if body.scope == \"global\":\n        r.set(\"SYSTEM_HALT_GLOBAL\", \"true\")\n    elif body.scope == \"tenant\":\n        if not body.tenant_id:\n            raise HTTPException(status_code=400, detail=\"tenant_id required for tenant halt\")\n        r.set(f\"TENANT:{body.tenant_id}:HALT\", \"true\")\n    else:\n        raise HTTPException(status_code=400, detail=\"Invalid scope\")\n\n    audit_manual_halt(\n        user=user,\n        scope=body.scope,\n        justification=body.justification,\n        tenant_id=body.tenant_id,\n    )\n\n    # Notify incident channel immediately (pager/slack/etc.)\n    # send_critical_alert(\"MANUAL KILL-SWITCH ACTIVATED\", event)\n\n    return {\"status\": \"halt_flag_set\", \"scope\": body.scope}\n</code></pre><p><strong>Action:</strong> Expose a protected admin-only kill-switch endpoint. Require admin role + fresh MFA each time. Log who triggered it, for what reason, at what time, and (optionally) who co-approved it. Setting the halt flag should immediately propagate to runtime enforcement (see Strategy 7), not rely on humans to manually scale services down.</p>"
+                    "howTo": `<h5>Concept:</h5><p>Security and SRE leadership need a "red button" to halt the AI system on demand. That button must be tightly controlled: MFA-protected, role-restricted, auditable, and ideally dual-control for high-value environments. Do not rely on a pre-populated <code>request.state.user</code> unless the authentication middleware is shown and mandatory. The endpoint itself must verify a trusted identity token or receive an already-verified principal from a hardened API gateway.</p><h5>Hardened Admin Endpoint (FastAPI + OIDC/JWT Example)</h5><p>This example protects <code>/admin/emergency-halt</code> with a bearer token issued by an OIDC identity provider. It requires: (1) an emergency-halt admin scope, (2) fresh MFA evidence, and (3) a justification string for audit. Configure the IdP to issue <code>scope</code> or <code>scp</code>, <code>amr</code> or <code>acr</code>, and <code>auth_time</code> claims for this admin action.</p><pre><code># File: api/admin_controls.py
+from __future__ import annotations
+
+import datetime
+import json
+import os
+import time
+from typing import Any, Literal
+
+import jwt
+import redis
+from fastapi import Depends, FastAPI, HTTPException, Security, status
+from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
+from jwt import PyJWKClient
+from jwt.exceptions import PyJWKClientError, PyJWTError
+from pydantic import BaseModel, Field
+
+# requirements.txt:
+# fastapi
+# redis
+# PyJWT[crypto]
+
+app = FastAPI()
+r = redis.Redis.from_url(
+    os.environ.get("REDIS_URL", "redis://localhost:6379/0"),
+    decode_responses=True,
+)
+bearer_auth = HTTPBearer(auto_error=True)
+
+OIDC_ISSUER = os.environ["OIDC_ISSUER"].rstrip("/")
+OIDC_AUDIENCE = os.environ["OIDC_AUDIENCE"]
+OIDC_JWKS_URL = os.environ["OIDC_JWKS_URL"]
+OIDC_ALLOWED_ALGS = [
+    alg.strip()
+    for alg in os.environ.get("OIDC_ALLOWED_ALGS", "RS256").split(",")
+    if alg.strip()
+]
+ADMIN_SCOPE = "ai:emergency-halt"
+MFA_MAX_AGE_SECONDS = 300
+ACCEPTED_MFA_ACR = {"urn:mfa", "phrh"}
+
+jwks_client = PyJWKClient(OIDC_JWKS_URL)
+
+
+class HaltRequest(BaseModel):
+    justification: str = Field(min_length=12, max_length=1000)
+    scope: Literal["global", "tenant"] = "global"
+    tenant_id: str | None = None
+
+
+class UserContext(BaseModel):
+    id: str
+    scopes: list[str]
+    mfa_recent: bool
+
+
+def _claim_values(value: Any) -&gt; set[str]:
+    if isinstance(value, str):
+        return {value}
+    if isinstance(value, list):
+        return {str(item) for item in value}
+    return set()
+
+
+def _scopes_from_claims(claims: dict[str, Any]) -&gt; set[str]:
+    scopes: set[str] = set()
+    scope_claim = claims.get("scope", "")
+    if isinstance(scope_claim, str):
+        scopes.update(scope_claim.split())
+    scopes.update(_claim_values(claims.get("scp", [])))
+    return scopes
+
+
+def decode_and_verify_token(token: str) -&gt; dict[str, Any]:
+    try:
+        signing_key = jwks_client.get_signing_key_from_jwt(token).key
+        return jwt.decode(
+            token,
+            signing_key,
+            algorithms=OIDC_ALLOWED_ALGS,
+            audience=OIDC_AUDIENCE,
+            issuer=OIDC_ISSUER,
+            options={"require": ["exp", "iat", "sub"]},
+        )
+    except (PyJWTError, PyJWKClientError) as exc:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid admin token",
+        ) from exc
+
+
+def require_fresh_mfa(claims: dict[str, Any]) -&gt; None:
+    amr = _claim_values(claims.get("amr", []))
+    acr = _claim_values(claims.get("acr", ""))
+    if "mfa" not in amr and not (acr & ACCEPTED_MFA_ACR):
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Fresh MFA claim required",
+        )
+
+    try:
+        auth_time = int(claims["auth_time"])
+    except (KeyError, TypeError, ValueError) as exc:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="auth_time claim required for emergency halt",
+        ) from exc
+
+    if int(time.time()) - auth_time &gt; MFA_MAX_AGE_SECONDS:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="MFA is too old; re-authenticate before halting",
+        )
+
+
+async def require_emergency_halt_admin(
+    credentials: HTTPAuthorizationCredentials = Security(bearer_auth),
+) -&gt; UserContext:
+    claims = decode_and_verify_token(credentials.credentials)
+    scopes = _scopes_from_claims(claims)
+    if ADMIN_SCOPE not in scopes:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Emergency halt admin scope required",
+        )
+    require_fresh_mfa(claims)
+    return UserContext(id=str(claims["sub"]), scopes=sorted(scopes), mfa_recent=True)
+
+
+def audit_manual_halt(
+    user: UserContext,
+    scope: str,
+    justification: str,
+    tenant_id: str | None,
+) -&gt; None:
+    event = {
+        "timestamp": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "trigger_type": "manual",
+        "operator_id": user.id,
+        "scope": scope,
+        "tenant_id": tenant_id,
+        "justification": justification,
+    }
+    print(f"HALT AUDIT: {json.dumps(event, sort_keys=True)}")
+    # Also send to SIEM / paging channel / incident Slack.
+
+
+@app.post("/admin/emergency-halt")
+async def trigger_manual_halt(
+    body: HaltRequest,
+    user: UserContext = Depends(require_emergency_halt_admin),
+):
+    # Optionally enforce dual-control here before proceeding.
+    if body.scope == "global":
+        r.set("SYSTEM_HALT_GLOBAL", "true")
+    elif body.scope == "tenant":
+        if not body.tenant_id:
+            raise HTTPException(status_code=400, detail="tenant_id required for tenant halt")
+        r.set(f"TENANT:{body.tenant_id}:HALT", "true")
+
+    audit_manual_halt(
+        user=user,
+        scope=body.scope,
+        justification=body.justification,
+        tenant_id=body.tenant_id,
+    )
+
+    # Notify incident channel immediately (pager/slack/etc.)
+    # send_critical_alert("MANUAL KILL-SWITCH ACTIVATED", event)
+
+    return {"status": "halt_flag_set", "scope": body.scope}</code></pre><p><strong>Deployment rule:</strong> Do not expose this route until JWT issuer, audience, JWKS URL, admin scope, MFA claim, and auth-time checks are configured and tested. Never trust caller-supplied headers for admin identity, and keep this route behind the same private admin network or API gateway used for other break-glass controls.</p><p><strong>Action:</strong> Expose a protected admin-only kill-switch endpoint. Require admin scope + fresh MFA each time. Log who triggered it, for what reason, at what time, and (optionally) who co-approved it. Setting the halt flag should immediately propagate to runtime enforcement (see Strategy 7), not rely on humans to manually scale services down.</p>`
                 },
                 {
                     "implementation": "Design agents with internal watchdog threads that terminate unresponsive or runaway behavior.",
@@ -2648,7 +3157,17 @@ async def execute_tool(request: dict):
                 },
                 {
                     "implementation": "Utilize Content Security Policy (CSP) to restrict model data exfiltration and script execution.",
-                    "howTo": "<h5>Concept:</h5><p>Content Security Policy (CSP) lets you define which network endpoints scripts in this page are allowed to talk to (<code>connect-src</code>), which scripts can run (<code>script-src</code>), and more. A strict CSP makes it much harder for a compromised in-browser model to exfiltrate sensitive data to an attacker-controlled domain, or to inject arbitrary remote scripts.</p><h5>Example CSP header</h5><pre><code>Content-Security-Policy: \n  default-src 'self'; \n  script-src 'self' https://cdn.jsdelivr.net; \n  connect-src 'self' https://api.my-trusted-domain.com; \n  img-src 'self' data:; \n  frame-ancestors 'none';\n</code></pre><p>This policy says:\n<ul>\n<li>Only load scripts from self and a known CDN.</li>\n<li>Only allow outbound fetch/WebSocket/XHR to <code>self</code> and your trusted API endpoint.</li>\n<li>Disallow being iframed elsewhere (<code>frame-ancestors 'none'</code>), which helps protect your privileged parent app from clickjacking or hostile embedding.</li>\n</ul><h5>Meta tag fallback (if you cannot set headers)</h5><pre><code>&lt;head&gt;\n  &lt;meta http-equiv=\"Content-Security-Policy\"\n        content=\"default-src 'self'; connect-src 'self' https://api.my-trusted-domain.com; script-src 'self' https://cdn.jsdelivr.net;\"&gt;\n&lt;/head&gt;\n</code></pre><p><strong>Detection tip:</strong> CSP can also emit violation reports (via <code>report-to</code> / <code>report-uri</code>). Treat repeated CSP violations from a given session as a potential sign of a compromised model trying to leak data.</p><p><strong>Action:</strong> Enforce CSP on any page that hosts a client-side model. Use <code>connect-src</code> as an allowlist of outbound egress targets. Monitor CSP violation reports to detect attempted exfiltration or unexpected script loads.</p>"
+                    "howTo": `<h5>Concept:</h5><p>Content Security Policy (CSP) lets you define which network endpoints scripts in this page are allowed to talk to (<code>connect-src</code>), which scripts can run (<code>script-src</code>), and more. A strict CSP makes it much harder for a compromised in-browser model to exfiltrate sensitive data to an attacker-controlled domain, or to inject arbitrary remote scripts.</p><h5>Example CSP header</h5><p><strong>Header format:</strong> Send this as one HTTP header field value. Do not copy folded or multiline formatting into the actual response.</p><pre><code>Content-Security-Policy: default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://api.my-trusted-domain.com; img-src 'self' data:; frame-ancestors 'none'; base-uri 'self'; object-src 'none';
+</code></pre><p>This policy says:
+<ul>
+<li>Only load scripts from self and a known CDN.</li>
+<li>Only allow outbound fetch/WebSocket/XHR to <code>self</code> and your trusted API endpoint.</li>
+<li>Disallow being iframed elsewhere (<code>frame-ancestors 'none'</code>), which helps protect your privileged parent app from clickjacking or hostile embedding.</li>
+</ul><h5>Meta tag fallback (if you cannot set headers)</h5><p>Prefer the HTTP header when possible. A meta-delivered policy cannot enforce directives such as <code>frame-ancestors</code>, so do not treat it as equivalent for clickjacking protection.</p><pre><code>&lt;head&gt;
+  &lt;meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; connect-src 'self' https://api.my-trusted-domain.com; script-src 'self' https://cdn.jsdelivr.net;"&gt;
+&lt;/head&gt;
+</code></pre><p><strong>Detection tip:</strong> CSP can also emit violation reports (via <code>report-to</code> / <code>report-uri</code>). Treat repeated CSP violations from a given session as a potential sign of a compromised model trying to leak data.</p><p><strong>Action:</strong> Enforce CSP on any page that hosts a client-side model. Use <code>connect-src</code> as an allowlist of outbound egress targets. Monitor CSP violation reports to detect attempted exfiltration or unexpected script loads.</p>`
                 },
                 {
                     "implementation": "Enforce a minimal, allowlisted native bridge between the AI runtime and device/system capabilities (mobile, Electron, hybrid apps).",

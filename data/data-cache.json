@@ -400,14 +400,14 @@
     ]
   },
   "AID-M-005.002": {
-    "contentHash": "a5b70a7e5e2a5f22",
+    "contentHash": "dff3ad234fbf205e",
     "keywords": [
       "policy-as-code baseline",
       "posture slo definition",
       "signed baseline manifest",
       "checkov iac scanning",
-      "terrascan policy",
-      "tfsec scanning",
+      "trivy iac scanning",
+      "conftest policy gate",
       "kics policy gate",
       "opa release gate",
       "ci posture gate",
@@ -514,7 +514,7 @@
     ]
   },
   "AID-M-008": {
-    "contentHash": "fd702182f16631c0",
+    "contentHash": "09775dc98a12db1b",
     "keywords": [
       "agentic security benchmarking",
       "agentharm regression",
@@ -1652,7 +1652,7 @@
     ]
   },
   "AID-H-014.001": {
-    "contentHash": "01b01436529b2165",
+    "contentHash": "96231e7c6a27d38c",
     "keywords": [
       "digital watermarking",
       "frequency domain watermarking",
@@ -1709,7 +1709,7 @@
     ]
   },
   "AID-H-016": {
-    "contentHash": "2d7283c21018b0be",
+    "contentHash": "6271c145e1fd9682",
     "keywords": [
       "certified robustness guarantees",
       "formal robustness bounds",
@@ -2070,7 +2070,7 @@
     ]
   },
   "AID-H-020.001": {
-    "contentHash": "97c6e19f884d405a",
+    "contentHash": "0dfa29e936aafc4b",
     "keywords": [
       "exact url verification",
       "canonical url normalization",
@@ -2294,7 +2294,7 @@
     ]
   },
   "AID-H-024": {
-    "contentHash": "5d2a93ab009506a6",
+    "contentHash": "2a31b16cdd075ad7",
     "keywords": [
       "publisher integrity",
       "trusted publishing",
@@ -2446,7 +2446,7 @@
     ]
   },
   "AID-H-026.002": {
-    "contentHash": "8952287d5e3d8efa",
+    "contentHash": "7e0d16dfa70fead3",
     "keywords": [
       "restricted interpreter",
       "restrictedpython sandbox",
@@ -2560,7 +2560,7 @@
     ]
   },
   "AID-H-028": {
-    "contentHash": "ba1e41636d807edd",
+    "contentHash": "2e9f8efaeb0445bf",
     "keywords": [
       "inference cache integrity",
       "cache isolation",
@@ -2770,7 +2770,7 @@
     ]
   },
   "AID-H-030.002": {
-    "contentHash": "28c04309bfa7a819",
+    "contentHash": "b6b2d919a1c6f573",
     "keywords": [
       "lifecycle stage authorization gate",
       "fail-closed stage gate",
@@ -2942,7 +2942,7 @@
     ]
   },
   "AID-H-032.001": {
-    "contentHash": "5ab7e1331f4f6ee5",
+    "contentHash": "66798a23e44c2377",
     "keywords": [
       "ai-generated change provenance",
       "risk labeling",
@@ -4486,7 +4486,7 @@
     ]
   },
   "AID-I-005": {
-    "contentHash": "d6c0cfbecf11ddab",
+    "contentHash": "c2bbd5b29f169b83",
     "keywords": [
       "kill-switch",
       "emergency halt",
@@ -5030,7 +5030,7 @@
     ]
   },
   "AID-R-005": {
-    "contentHash": "0d3487c43bb545d9",
+    "contentHash": "29e00e9369279ed2",
     "keywords": [
       "vector index rollback",
       "rag index recovery",
@@ -5506,6 +5506,139 @@
       "safe mission reversion",
       "cosign manifest signing",
       "provenance event immutability"
+    ]
+  },
+  "AID-H-035": {
+    "contentHash": "722978189f12786e",
+    "keywords": [
+      "mcp server hardening",
+      "tool exposure governance",
+      "mcp runtime boundary",
+      "server-side trust boundary",
+      "oauth resource boundary",
+      "token audience validation",
+      "tool descriptor governance",
+      "elicitation boundary controls",
+      "session isolation",
+      "server telemetry",
+      "per-principal budgets",
+      "disable hooks",
+      "dns rebinding defense",
+      "mcp server authz"
+    ]
+  },
+  "AID-H-035.001": {
+    "contentHash": "165009b2aabca1e4",
+    "keywords": [
+      "mcp deployment profile",
+      "streamable http hardening",
+      "origin header validation",
+      "dns rebinding prevention",
+      "localhost binding",
+      "tls mtls enforcement",
+      "container runtime hardening",
+      "non-root containers",
+      "read-only filesystem",
+      "coarse rate limiting",
+      "gateway exposure baseline",
+      "mcp transport security",
+      "process resource limits",
+      "waf baseline"
+    ]
+  },
+  "AID-H-035.002": {
+    "contentHash": "715db62dd744d6aa",
+    "keywords": [
+      "protected resource metadata",
+      "token audience validation",
+      "resource indicator validation",
+      "no token passthrough",
+      "oauth confused deputy",
+      "per-client consent",
+      "scope challenge",
+      "upstream token exchange",
+      "mcp oauth resource server",
+      "exact redirect uri",
+      "csrf state binding",
+      "tenant claim normalization",
+      "secure token storage",
+      "delegated credentials"
+    ]
+  },
+  "AID-H-035.003": {
+    "contentHash": "1e402b9012f6a5fe",
+    "keywords": [
+      "tool input validation",
+      "strict json schema",
+      "object-level authorization",
+      "tenant authorization",
+      "ssrf-safe fetch",
+      "egress allowlist",
+      "dns rebinding checks",
+      "command allowlisting",
+      "shell execution denial",
+      "sandboxed tool handlers",
+      "backend permission checks",
+      "parameter bounds checking",
+      "mcp tool call gate",
+      "unsafe code isolation"
+    ]
+  },
+  "AID-H-035.004": {
+    "contentHash": "07ebeecc2f0d4c80",
+    "keywords": [
+      "tool publication governance",
+      "mcp contract manifest",
+      "descriptor review",
+      "tool annotation honesty",
+      "list_changed auditing",
+      "semantic descriptor integrity",
+      "prompt publication control",
+      "resource template governance",
+      "signed tool contract",
+      "descriptor hash review",
+      "supply chain provenance",
+      "tool poisoning prevention",
+      "dynamic capability approval",
+      "rollbackable descriptor changes"
+    ]
+  },
+  "AID-H-035.005": {
+    "contentHash": "417ab5c06453ec25",
+    "keywords": [
+      "output boundary controls",
+      "tool output sanitization",
+      "resource uri validation",
+      "elicitation safety",
+      "url-mode elicitation",
+      "form-mode elicitation",
+      "third-party token storage",
+      "prompt output constraints",
+      "completion enumeration prevention",
+      "secret redaction",
+      "untrusted output labeling",
+      "path traversal prevention",
+      "server-side credential capture",
+      "mcp resource authorization"
+    ]
+  },
+  "AID-H-035.006": {
+    "contentHash": "c29c777e7d1c822c",
+    "keywords": [
+      "mcp session binding",
+      "task isolation",
+      "resumable stream partitioning",
+      "structured mcp telemetry",
+      "per-principal abuse budgets",
+      "cost budget enforcement",
+      "concurrency limits",
+      "recursion depth limits",
+      "disable hooks",
+      "tenant task partitioning",
+      "session id entropy",
+      "replay resistance",
+      "tool disablement",
+      "budget rejection events"
     ]
   }
 }

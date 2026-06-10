@@ -1,8 +1,8 @@
 {
 "version": {
 "schemaVersion": "2.0",
-"dataVersion": "2026.06.06",
-"generatedAt": "2026-06-06T20:12:50.031Z",
+"dataVersion": "2026.06.10",
+"generatedAt": "2026-06-10T14:48:09.213Z",
 "source": "bundled",
 "keywordStructure": "flat"
 },
@@ -2715,7 +2715,7 @@
 "Produce and sign a Baseline Manifest to ensure versioning and immutability."
 ],
 "toolsOpenSource": [
-"Checkov, Terrascan, tfsec, KICS (IaC security scanners)",
+"Checkov, Trivy, KICS, Conftest/OPA (IaC security scanners; use Trivy instead of legacy tfsec and archived Terrascan)",
 "TruffleHog, gitleaks, git-secrets (for secrets scanning)",
 "Open Policy Agent (OPA) (policy rules for baseline enforcement)"
 ],
@@ -2811,14 +2811,14 @@
 ]
 }
 ],
-"contentHash": "a5b70a7e5e2a5f22",
+"contentHash": "dff3ad234fbf205e",
 "keywords": [
 "policy-as-code baseline",
 "posture slo definition",
 "signed baseline manifest",
 "checkov iac scanning",
-"terrascan policy",
-"tfsec scanning",
+"trivy iac scanning",
+"conftest policy gate",
 "kics policy gate",
 "opa release gate",
 "ci posture gate",
@@ -3626,10 +3626,10 @@
 ],
 "toolsCommercial": [
 "Cisco AI Defense (formerly Robust Intelligence)",
-"Lakera Red",
+"Lakera Red (Check Point company / Check Point Lakera)",
 "Credo AI"
 ],
-"contentHash": "fd702182f16631c0",
+"contentHash": "09775dc98a12db1b",
 "keywords": [
 "agentic security benchmarking",
 "agentharm regression",
@@ -11638,7 +11638,8 @@
 "toolsOpenSource": [
 "OpenCV, Pillow (for images)",
 "Librosa, pydub (for audio)",
-"MarkLLM, SynthID (for text/images)",
+"MarkLLM (LLM watermarking research toolkit)",
+"SynthID Text reference implementation (text watermarking research)",
 "Steganography libraries"
 ],
 "toolsCommercial": [
@@ -11717,7 +11718,7 @@
 ]
 }
 ],
-"contentHash": "01b01436529b2165",
+"contentHash": "96231e7c6a27d38c",
 "keywords": [
 "digital watermarking",
 "frequency domain watermarking",
@@ -12056,6 +12057,7 @@
 ],
 "toolsOpenSource": [
 "auto_LiRPA",
+"alpha-beta-CROWN",
 "IBM Adversarial Robustness Toolbox (ART)",
 "Research / JAX-based robustness libraries",
 "PyTorch",
@@ -12063,9 +12065,9 @@
 ],
 "toolsCommercial": [
 "Cisco AI Defense",
-"Ansys SCADE Suite"
+"MATLAB Deep Learning Toolbox (verifyNetworkRobustness with alpha-beta-CROWN)"
 ],
-"contentHash": "2d7283c21018b0be",
+"contentHash": "6271c145e1fd9682",
 "keywords": [
 "certified robustness guarantees",
 "formal robustness bounds",
@@ -14278,7 +14280,7 @@
 "Verify the exact canonical URL before background fetch, re-validate every redirect hop, and default-deny or step up if the URL cannot be independently verified as an expected public resource."
 ],
 "toolsOpenSource": [
-"requests",
+"urllib3",
 "urllib.parse",
 "ipaddress",
 "url-normalize",
@@ -14353,7 +14355,7 @@
 ]
 }
 ],
-"contentHash": "97c6e19f884d405a",
+"contentHash": "0dfa29e936aafc4b",
 "keywords": [
 "exact url verification",
 "canonical url normalization",
@@ -15628,7 +15630,7 @@
 {
 "id": "AID-H-024",
 "name": "Publisher Integrity & Workflow Hardening",
-"description": "A critical supply chain defense that ensures software packages (e.g., NPM, PyPI) are published only from a secure, auditable, and authorized source. This technique breaks the attack chain where a stolen developer credential is used to publish a malicious version of a legitimate package. It achieves this by prohibiting publications from local developer machines and mandating that all releases originate from a hardened CI/CD pipeline that authenticates using short-lived, identity-based tokens and generates verifiable provenance attestations.",
+"description": "A critical supply chain defense that ensures software packages (e.g., NPM, PyPI) are published only from a secure, auditable, and authorized source. This technique reduces credential-only publishing attacks where a stolen developer credential is used to publish a malicious version of a legitimate package. It achieves this by prohibiting publications from local developer machines and mandating that all releases originate from a hardened CI/CD pipeline that authenticates using short-lived, identity-based tokens and generates verifiable provenance attestations. Provenance confirms the publisher and build path; it does not prove that the source code is safe or free of backdoors.",
 "pillar": [
 "infra"
 ],
@@ -15654,7 +15656,7 @@
 "items": [
 "Supply Chain Attacks (Cross-Layer)",
 "Compromised Framework Components (L3)",
-"Backdoor Attacks (L1) (verified provenance prevents publishing of backdoored models)"
+"Backdoor Attacks (L1) (verified provenance raises assurance about publisher and build path; it does not prove absence of backdoors)"
 ]
 },
 {
@@ -15725,7 +15727,7 @@
 "GitHub Advanced Security",
 "CI/CD security tools (e.g., Snyk, Socket.dev for workflow analysis)"
 ],
-"contentHash": "5d2a93ab009506a6",
+"contentHash": "2a31b16cdd075ad7",
 "keywords": [
 "publisher integrity",
 "trusted publishing",
@@ -16536,7 +16538,7 @@
 "Allowlist restricted interpreters and enforce interpreter selection via an execution gateway (policy), not via model output."
 ],
 "toolsOpenSource": [
-"RestrictedPython (Python)",
+"RestrictedPython 8.0+ (Python)",
 "isolated-vm (JavaScript sandbox runtime)",
 "Docker / Podman (ephemeral sandboxes)",
 "gVisor",
@@ -16611,7 +16613,7 @@
 ]
 }
 ],
-"contentHash": "8952287d5e3d8efa",
+"contentHash": "7e0d16dfa70fead3",
 "keywords": [
 "restricted interpreter",
 "restrictedpython sandbox",
@@ -17333,10 +17335,9 @@
 ],
 "toolsCommercial": [
 "Redis Enterprise (active-active with ACLs)",
-"Cloudflare API Gateway / WAF",
-"F5 Distributed Cloud API Security"
+"Amazon ElastiCache / Google Cloud Memorystore / Azure Cache for Redis (managed Redis isolation)"
 ],
-"contentHash": "ba1e41636d807edd",
+"contentHash": "2e9f8efaeb0445bf",
 "keywords": [
 "inference cache integrity",
 "cache isolation",
@@ -18513,7 +18514,7 @@
 "OpenTelemetry (decision tracing)"
 ],
 "toolsCommercial": [
-"Styra DAS (OPA policy management)",
+"Cerbos Hub (policy management)",
 "Immuta (purpose-aware policy enforcement)",
 "Privacera (governed data access enforcement)",
 "Collibra (policy and governance workflow integration)"
@@ -18587,7 +18588,7 @@
 ]
 }
 ],
-"contentHash": "28c04309bfa7a819",
+"contentHash": "b6b2d919a1c6f573",
 "keywords": [
 "lifecycle stage authorization gate",
 "fail-closed stage gate",
@@ -19496,12 +19497,15 @@
 "OpenTelemetry",
 "Git",
 "in-toto / SLSA provenance tooling",
-"MLflow"
+"Sigstore / cosign",
+"Kyverno / Gatekeeper (admission control)"
 ],
 "toolsCommercial": [
 "GitHub Enterprise / GitHub Advanced Security",
 "GitLab Ultimate",
 "JFrog Artifactory / Xray",
+"Sonatype Nexus Repository",
+"Amazon ECR (image signing and registry policy)",
 "Harness STO"
 ],
 "defendsAgainst": [
@@ -19572,7 +19576,7 @@
 ]
 }
 ],
-"contentHash": "5ab7e1331f4f6ee5",
+"contentHash": "66798a23e44c2377",
 "keywords": [
 "ai-generated change provenance",
 "risk labeling",
@@ -21034,6 +21038,897 @@
 "fallback graph governance",
 "route bundle ci/cd",
 "immutable route artifact"
+]
+}
+],
+"url": "https://aidefend.net"
+},
+{
+"id": "AID-H-035",
+"name": "MCP Server Runtime Boundary & Tool Exposure Governance",
+"description": "Harden the MCP server itself as an independent trust boundary that publishes tools, resources, prompts, elicitation requests, task streams, and backend integrations to MCP clients. This technique covers the server-side responsibilities that are not owned by AID-H-029, which focuses on MCP and tool clients.<br/><br/><strong>Coverage includes:</strong><ul><li>Server deployment profile, transport, Origin, DNS rebinding, TLS, runtime, and coarse abuse baseline.</li><li>OAuth protected-resource behavior, token audience validation, no token passthrough, and confused-deputy prevention for MCP proxy servers.</li><li>Server-side validation and authorization before tool handlers, resource reads, prompt rendering, backend calls, filesystem access, command execution, or network fetches.</li><li>Governance for the tool, resource, prompt, and descriptor surface the server publishes to clients.</li><li>Output, resource URI, and elicitation boundaries, including URL-mode third-party authorization handled by the server without leaking credentials through the MCP client.</li><li>Session, task, telemetry, per-principal budget, and disable-hook mechanisms that downstream Detect, Isolate, Evict, and Restore controls can consume.</li></ul><strong>Scope boundary:</strong> AID-H-035 is the server-side canonical home for MCP server hardening. It deliberately cross-references AID-H-019 for orchestrator capability policy, AID-H-025 for tool and descriptor resolution integrity, AID-H-029 for MCP client hardening, AID-I-001/AID-I-002 for sandboxing and network isolation, AID-D-005 for monitoring consumers, and AID-E/AID-I response techniques for revocation and disablement.",
+"pillar": [
+"infra",
+"app",
+"data"
+],
+"phase": [
+"scoping",
+"building",
+"operation",
+"response"
+],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0049 Exploit Public-Facing Application",
+"AML.T0051 LLM Prompt Injection",
+"AML.T0053 AI Agent Tool Invocation",
+"AML.T0086 Exfiltration via AI Agent Tool Invocation",
+"AML.T0098 AI Agent Tool Credential Harvesting",
+"AML.T0104 Publish Poisoned AI Agent Tool",
+"AML.T0105 Escape to Host",
+"AML.T0110 AI Agent Tool Poisoning",
+"AML.T0010 AI Supply Chain Compromise"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Agent Tool Misuse (L7)",
+"Agent Identity Attack (L7)",
+"Integration Risks (L7)",
+"Compromised Agent Registry (L7)",
+"Data Exfiltration (L2)",
+"Supply Chain Attacks (Cross-Layer)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2025",
+"items": [
+"LLM01:2025 Prompt Injection",
+"LLM02:2025 Sensitive Information Disclosure",
+"LLM03:2025 Supply Chain",
+"LLM05:2025 Improper Output Handling",
+"LLM06:2025 Excessive Agency"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"ML06:2023 AI Supply Chain Attacks"
+]
+},
+{
+"framework": "OWASP Agentic AI Top 10 2026",
+"items": [
+"ASI02:2026 Tool Misuse and Exploitation",
+"ASI03:2026 Identity and Privilege Abuse",
+"ASI04:2026 Agentic Supply Chain Vulnerabilities",
+"ASI05:2026 Unexpected Code Execution (RCE)",
+"ASI07:2026 Insecure Inter-Agent Communication",
+"ASI08:2026 Cascading Failures"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"NISTAML.015 Indirect Prompt Injection",
+"NISTAML.018 Prompt Injection",
+"NISTAML.036 Leaking information from user interactions",
+"NISTAML.038 Data Extraction",
+"NISTAML.039 Compromising connected resources",
+"NISTAML.051 Model Poisoning (Supply Chain)"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-8.2 Data Exfiltration / Exposure",
+"AITech-9.3 Dependency / Plugin Compromise",
+"AITech-12.1 Tool Exploitation",
+"AITech-14.1 Unauthorized Access",
+"AITech-14.2 Abuse of Delegated Authority",
+"AISubtech-4.3.3 Server Rebinding Attack",
+"AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
+"AISubtech-9.3.1 Malicious Package / Tool Injection",
+"AISubtech-12.1.2 Tool Poisoning"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"IIC: Insecure Integrated Component",
+"PIJ: Prompt Injection",
+"SDD: Sensitive Data Disclosure",
+"DMS: Denial of ML Service",
+"RA: Rogue Actions"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Agents - Tools MCP Server 13.16: Prompt Injection",
+"Agents - Tools MCP Server 13.17: Confused Deputy",
+"Agents - Tools MCP Server 13.18: Tool Poisoning",
+"Agents - Tools MCP Server 13.19: Credential and Token Exposure",
+"Agents - Tools MCP Server 13.20: Insecure Server Configuration",
+"Agents - Tools MCP Server 13.21: Supply Chain Attacks",
+"Agents - Tools MCP Server 13.22: Excessive Permissions and Scope Creep",
+"Agents - Tools MCP Server 13.23: Data Exfiltration",
+"Agents - Tools MCP Server 13.24: Context Spoofing and Manipulation",
+"Agents - Tools MCP Server 13.25: Insecure Communication"
+]
+}
+],
+"implementationGuidance": [],
+"toolsOpenSource": [],
+"toolsCommercial": [],
+"contentHash": "722978189f12786e",
+"keywords": [
+"mcp server hardening",
+"tool exposure governance",
+"mcp runtime boundary",
+"server-side trust boundary",
+"oauth resource boundary",
+"token audience validation",
+"tool descriptor governance",
+"elicitation boundary controls",
+"session isolation",
+"server telemetry",
+"per-principal budgets",
+"disable hooks",
+"dns rebinding defense",
+"mcp server authz"
+],
+"subTechniques": [
+{
+"id": "AID-H-035.001",
+"name": "MCP Server Deployment Profile, Transport & Exposure Baseline",
+"description": "Classify each MCP server by deployment profile and enforce the minimum server-side exposure baseline before it is reachable by clients. This sub-technique covers coarse infrastructure-layer controls: deployment profile evidence, Streamable HTTP Origin validation, local binding restrictions, TLS or mTLS, runtime hardening, and gateway or process-level denial-of-service limits.<br/><br/><strong>Scope boundary:</strong> This sub-technique owns the baseline exposure envelope for the MCP server. AID-H-035.006 owns fine-grained per-user, per-client, per-tenant, per-tool, and per-task budgets. AID-I-001 and AID-I-002 provide the sandbox and network isolation primitives referenced here.",
+"pillar": [
+"infra",
+"app"
+],
+"phase": [
+"scoping",
+"building",
+"operation"
+],
+"implementationGuidance": [
+"Classify every MCP server into a deployment profile and require profile-specific evidence before production exposure.",
+"For Streamable HTTP MCP servers, validate the Origin header, bind local servers to localhost, and require authentication on all non-local connections.",
+"Apply a hardened runtime baseline for production MCP servers, including non-root containers, read-only filesystems, dropped Linux capabilities, and process-level resource limits.",
+"Enforce coarse gateway or process-level denial-of-service limits for the MCP endpoint before applying fine-grained per-principal budgets."
+],
+"toolsOpenSource": [
+"MCP TypeScript SDK",
+"MCP Python SDK",
+"Envoy",
+"Open Policy Agent (OPA)",
+"Kubernetes NetworkPolicy",
+"Falco"
+],
+"toolsCommercial": [
+"Cloudflare WAF",
+"Akamai App & API Protector",
+"Kong Konnect",
+"Datadog Cloud SIEM"
+],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0049 Exploit Public-Facing Application",
+"AML.T0105 Escape to Host",
+"AML.T0034.002 Cost Harvesting: Agentic Resource Consumption"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Integration Risks (L7)",
+"Agent Tool Misuse (L7)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2025",
+"items": [
+"LLM06:2025 Excessive Agency"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"N/A"
+]
+},
+{
+"framework": "OWASP Agentic AI Top 10 2026",
+"items": [
+"ASI02:2026 Tool Misuse and Exploitation",
+"ASI07:2026 Insecure Inter-Agent Communication",
+"ASI08:2026 Cascading Failures"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"NISTAML.039 Compromising connected resources"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-13.1 Disruption of Availability",
+"AITech-13.2 Cost Harvesting / Repurposing",
+"AISubtech-4.3.3 Server Rebinding Attack",
+"AISubtech-13.1.4 Application Denial of Service"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"IIC: Insecure Integrated Component",
+"DMS: Denial of ML Service"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Agents - Tools MCP Server 13.20: Insecure Server Configuration",
+"Agents - Tools MCP Server 13.25: Insecure Communication"
+]
+}
+],
+"contentHash": "165009b2aabca1e4",
+"keywords": [
+"mcp deployment profile",
+"streamable http hardening",
+"origin header validation",
+"dns rebinding prevention",
+"localhost binding",
+"tls mtls enforcement",
+"container runtime hardening",
+"non-root containers",
+"read-only filesystem",
+"coarse rate limiting",
+"gateway exposure baseline",
+"mcp transport security",
+"process resource limits",
+"waf baseline"
+]
+},
+{
+"id": "AID-H-035.002",
+"name": "MCP Server OAuth Resource Boundary & Delegation Safety",
+"description": "Enforce the MCP server's role as an OAuth protected resource. The server must publish protected resource metadata where applicable, validate token issuer, audience, resource, scope, and expiry, reject tokens not issued for this MCP server, avoid token passthrough, and use separate delegated credentials for upstream services.<br/><br/><strong>Scope boundary:</strong> General IAM architecture remains in AID-H-004 and AID-H-019. This sub-technique is specific to MCP server authorization semantics, OAuth protected resource metadata, token audience or resource validation, no token passthrough, and the confused-deputy risks that arise when an MCP server also acts as an OAuth client or proxy to upstream APIs.",
+"pillar": [
+"app",
+"infra"
+],
+"phase": [
+"building",
+"operation"
+],
+"implementationGuidance": [
+"Publish OAuth protected resource metadata and return scope-aware WWW-Authenticate challenges for protected MCP servers.",
+"Validate issuer, audience, resource, expiry, and scope on every HTTP request, and reject tokens not issued for this MCP server.",
+"Ban token passthrough and require separate upstream credentials or token exchange when the MCP server calls backend APIs.",
+"If the MCP server acts as an OAuth proxy or OAuth client to a third-party API, enforce per-client consent, exact redirect URI validation, CSRF state, and consent cookies bound to client_id."
+],
+"toolsOpenSource": [
+"oauth2-proxy",
+"Keycloak",
+"ORY Hydra",
+"Open Policy Agent (OPA)",
+"SPIFFE / SPIRE"
+],
+"toolsCommercial": [
+"Okta",
+"Auth0",
+"Microsoft Entra ID",
+"Ping Identity",
+"HashiCorp Vault"
+],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0012 Valid Accounts",
+"AML.T0053 AI Agent Tool Invocation",
+"AML.T0086 Exfiltration via AI Agent Tool Invocation",
+"AML.T0098 AI Agent Tool Credential Harvesting"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Agent Identity Attack (L7)",
+"Agent Tool Misuse (L7)",
+"Data Exfiltration (L2)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2025",
+"items": [
+"LLM02:2025 Sensitive Information Disclosure",
+"LLM06:2025 Excessive Agency"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"N/A"
+]
+},
+{
+"framework": "OWASP Agentic AI Top 10 2026",
+"items": [
+"ASI03:2026 Identity and Privilege Abuse",
+"ASI02:2026 Tool Misuse and Exploitation"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"NISTAML.038 Data Extraction",
+"NISTAML.039 Compromising connected resources"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-14.1 Unauthorized Access",
+"AITech-14.2 Abuse of Delegated Authority",
+"AISubtech-14.1.1 Credential Theft",
+"AISubtech-14.2.1 Permission Escalation via Delegation"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"IIC: Insecure Integrated Component",
+"SDD: Sensitive Data Disclosure",
+"RA: Rogue Actions"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Agents - Tools MCP Server 13.17: Confused Deputy",
+"Agents - Tools MCP Server 13.19: Credential and Token Exposure",
+"Agents - Tools MCP Server 13.22: Excessive Permissions and Scope Creep",
+"Agents - Tools MCP Server 13.23: Data Exfiltration"
+]
+}
+],
+"contentHash": "715db62dd744d6aa",
+"keywords": [
+"protected resource metadata",
+"token audience validation",
+"resource indicator validation",
+"no token passthrough",
+"oauth confused deputy",
+"per-client consent",
+"scope challenge",
+"upstream token exchange",
+"mcp oauth resource server",
+"exact redirect uri",
+"csrf state binding",
+"tenant claim normalization",
+"secure token storage",
+"delegated credentials"
+]
+},
+{
+"id": "AID-H-035.003",
+"name": "Server-Side Tool Invocation Validation & Object-Level Authorization",
+"description": "Make the MCP server the final policy enforcement point for every tools/call request. The server must validate tool arguments against strict schemas, enforce object-level and tenant-level authorization inside the handler, protect URL-fetching tools from SSRF and unsafe redirects, and sandbox or deny command, code, browser, and filesystem execution paths.<br/><br/><strong>Scope boundary:</strong> AID-H-019 defines capability policy from the agent or orchestrator side. This sub-technique enforces server-side validation and backend authorization after a request has arrived at the MCP server. AID-I-002 and AID-H-020 provide network and safe-fetch patterns. AID-H-026 and AID-I-001 provide unsafe-code and sandboxing controls.",
+"pillar": [
+"app",
+"infra",
+"data"
+],
+"phase": [
+"building",
+"operation"
+],
+"implementationGuidance": [
+"Validate every tools/call argument with a strict server-side JSON Schema before invoking the handler.",
+"Bind each tool invocation to the authenticated principal, client, tenant, session, and backend object authorization before executing side effects.",
+"For tools that fetch URLs or resolve network targets, enforce SSRF-safe URL validation, redirect validation, DNS rebinding checks, and egress allowlists.",
+"For command, code, browser, and filesystem tools, deny shell execution by default and route high-risk handlers through sandboxed execution profiles."
+],
+"toolsOpenSource": [
+"Ajv",
+"Pydantic",
+"Open Policy Agent (OPA)",
+"Cedar",
+"gVisor",
+"Firecracker",
+"Semgrep"
+],
+"toolsCommercial": [
+"Snyk Code",
+"Checkmarx One",
+"Aqua Security",
+"Sysdig Secure"
+],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0053 AI Agent Tool Invocation",
+"AML.T0086 Exfiltration via AI Agent Tool Invocation",
+"AML.T0101 Data Destruction via AI Agent Tool Invocation",
+"AML.T0105 Escape to Host"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Agent Tool Misuse (L7)",
+"Integration Risks (L7)",
+"Data Exfiltration (L2)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2025",
+"items": [
+"LLM02:2025 Sensitive Information Disclosure",
+"LLM05:2025 Improper Output Handling",
+"LLM06:2025 Excessive Agency"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"N/A"
+]
+},
+{
+"framework": "OWASP Agentic AI Top 10 2026",
+"items": [
+"ASI02:2026 Tool Misuse and Exploitation",
+"ASI03:2026 Identity and Privilege Abuse",
+"ASI05:2026 Unexpected Code Execution (RCE)"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"NISTAML.038 Data Extraction",
+"NISTAML.039 Compromising connected resources"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-12.1 Tool Exploitation",
+"AITech-14.1 Unauthorized Access",
+"AITech-14.2 Abuse of Delegated Authority",
+"AISubtech-12.1.1 Parameter Manipulation",
+"AISubtech-12.1.3 Unsafe System / Browser / File Execution",
+"AISubtech-8.2.3 Data Exfiltration via Agent Tooling"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"IIC: Insecure Integrated Component",
+"SDD: Sensitive Data Disclosure",
+"RA: Rogue Actions"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Agents - Tools MCP Server 13.22: Excessive Permissions and Scope Creep",
+"Agents - Tools MCP Server 13.23: Data Exfiltration",
+"Agents - Tools MCP Server 13.20: Insecure Server Configuration"
+]
+}
+],
+"contentHash": "1e402b9012f6a5fe",
+"keywords": [
+"tool input validation",
+"strict json schema",
+"object-level authorization",
+"tenant authorization",
+"ssrf-safe fetch",
+"egress allowlist",
+"dns rebinding checks",
+"command allowlisting",
+"shell execution denial",
+"sandboxed tool handlers",
+"backend permission checks",
+"parameter bounds checking",
+"mcp tool call gate",
+"unsafe code isolation"
+]
+},
+{
+"id": "AID-H-035.004",
+"name": "MCP Tool, Resource & Prompt Publication Governance",
+"description": "Govern the server-published surface that MCP clients and models consume: tool definitions, resource templates, prompt templates, annotations, descriptions, schemas, and list_changed events. The server must publish only reviewed contracts, preserve semantic honesty in model-visible metadata, and make descriptor changes auditable and reversible.<br/><br/><strong>Scope boundary:</strong> AID-H-024 and AID-H-031 govern broader publisher and skill supply-chain controls. AID-H-025 validates tool and descriptor resolution from the consuming side. This sub-technique covers the MCP server's responsibility as the publisher of its own exposed tools, resources, prompts, and dynamic capability changes.",
+"pillar": [
+"app",
+"infra"
+],
+"phase": [
+"building",
+"operation"
+],
+"implementationGuidance": [
+"Maintain a signed, versioned contract manifest for every server-published tool, resource, and prompt.",
+"Review model-visible tool, resource, and prompt text for semantic honesty, hidden instructions, and privilege-inflating descriptions before publication.",
+"Govern dynamic tool, resource, and prompt list changes as approved releases, and emit auditable list_changed events."
+],
+"toolsOpenSource": [
+"Git",
+"Sigstore Cosign",
+"Open Policy Agent (OPA)",
+"Semgrep",
+"jsonschema"
+],
+"toolsCommercial": [
+"GitHub Enterprise",
+"GitLab Ultimate",
+"Snyk Code",
+"Checkmarx One"
+],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0104 Publish Poisoned AI Agent Tool",
+"AML.T0110 AI Agent Tool Poisoning",
+"AML.T0010 AI Supply Chain Compromise",
+"AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+"AML.T0084.001 Discover AI Agent Configuration: Tool Definitions"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Compromised Agent Registry (L7)",
+"Agent Tool Misuse (L7)",
+"Supply Chain Attacks (Cross-Layer)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2025",
+"items": [
+"LLM03:2025 Supply Chain",
+"LLM05:2025 Improper Output Handling"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"ML06:2023 AI Supply Chain Attacks"
+]
+},
+{
+"framework": "OWASP Agentic AI Top 10 2026",
+"items": [
+"ASI04:2026 Agentic Supply Chain Vulnerabilities",
+"ASI02:2026 Tool Misuse and Exploitation"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"NISTAML.051 Model Poisoning (Supply Chain)",
+"NISTAML.039 Compromising connected resources"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-9.3 Dependency / Plugin Compromise",
+"AITech-12.1 Tool Exploitation",
+"AISubtech-9.3.1 Malicious Package / Tool Injection",
+"AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
+"AISubtech-12.1.2 Tool Poisoning",
+"AISubtech-12.1.4 Tool Shadowing"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"IIC: Insecure Integrated Component",
+"MST: Model Source Tampering",
+"PIJ: Prompt Injection"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Agents - Tools MCP Server 13.18: Tool Poisoning",
+"Agents - Tools MCP Server 13.21: Supply Chain Attacks",
+"Agents - Tools MCP Server 13.24: Context Spoofing and Manipulation"
+]
+}
+],
+"contentHash": "07ebeecc2f0d4c80",
+"keywords": [
+"tool publication governance",
+"mcp contract manifest",
+"descriptor review",
+"tool annotation honesty",
+"list_changed auditing",
+"semantic descriptor integrity",
+"prompt publication control",
+"resource template governance",
+"signed tool contract",
+"descriptor hash review",
+"supply chain provenance",
+"tool poisoning prevention",
+"dynamic capability approval",
+"rollbackable descriptor changes"
+]
+},
+{
+"id": "AID-H-035.005",
+"name": "MCP Server Output, Resource URI & Elicitation Boundary Controls",
+"description": "Constrain the data and instructions that leave the MCP server. This includes validating and labeling tool outputs, enforcing resource URI and template boundaries, preventing prompt/resource output from smuggling privileged instructions, and handling elicitation securely from the server side.<br/><br/><strong>Scope boundary:</strong> Client-side elicitation UX rules, such as showing the full URL, avoiding prefetch, and requiring explicit navigation consent, belong to AID-H-029. This sub-technique only covers the server-side duties: request modes supported by the client, no sensitive data in form mode, safe URL generation, user binding, callback verification, and server-side storage of third-party credentials obtained through URL-mode elicitation.",
+"pillar": [
+"app",
+"data"
+],
+"phase": [
+"building",
+"operation"
+],
+"implementationGuidance": [
+"Validate, bound, label, and redact MCP tool outputs before returning them to the client or model context.",
+"Validate resource URIs and resource templates with canonicalization, scheme allowlists, path boundaries, and authorization checks before reading or returning data.",
+"Constrain server-generated prompts, prompt arguments, resource text, and completion inputs so they cannot smuggle privileged instructions or unauthorized values.",
+"For form-mode elicitation, never request sensitive information and validate returned data against the requested schema.",
+"For URL-mode elicitation, generate non-preauthenticated HTTPS URLs, bind state to the initiating user and client, verify callback identity, and store third-party credentials on the server."
+],
+"toolsOpenSource": [
+"Ajv",
+"Pydantic",
+"DOMPurify",
+"OpenTelemetry",
+"detect-secrets"
+],
+"toolsCommercial": [
+"GitGuardian",
+"Nightfall AI",
+"Microsoft Purview",
+"Datadog Sensitive Data Scanner"
+],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0051 LLM Prompt Injection",
+"AML.T0086 Exfiltration via AI Agent Tool Invocation",
+"AML.T0098 AI Agent Tool Credential Harvesting"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Agent Tool Misuse (L7)",
+"Data Exfiltration (L2)",
+"Integration Risks (L7)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2025",
+"items": [
+"LLM01:2025 Prompt Injection",
+"LLM02:2025 Sensitive Information Disclosure",
+"LLM05:2025 Improper Output Handling"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"ML09:2023 Output Integrity Attack"
+]
+},
+{
+"framework": "OWASP Agentic AI Top 10 2026",
+"items": [
+"ASI02:2026 Tool Misuse and Exploitation",
+"ASI03:2026 Identity and Privilege Abuse",
+"ASI07:2026 Insecure Inter-Agent Communication"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"NISTAML.015 Indirect Prompt Injection",
+"NISTAML.036 Leaking information from user interactions",
+"NISTAML.038 Data Extraction"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-8.2 Data Exfiltration / Exposure",
+"AITech-8.3 Information Disclosure",
+"AITech-12.2 Insecure Output Handling",
+"AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
+"AISubtech-8.3.1 Tool Metadata Exposure",
+"AISubtech-12.2.1 Code Detection / Malicious Code Output"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"PIJ: Prompt Injection",
+"SDD: Sensitive Data Disclosure",
+"EDH: Excessive Data Handling"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Agents - Tools MCP Server 13.16: Prompt Injection",
+"Agents - Tools MCP Server 13.19: Credential and Token Exposure",
+"Agents - Tools MCP Server 13.23: Data Exfiltration",
+"Agents - Tools MCP Server 13.24: Context Spoofing and Manipulation"
+]
+}
+],
+"contentHash": "417ab5c06453ec25",
+"keywords": [
+"output boundary controls",
+"tool output sanitization",
+"resource uri validation",
+"elicitation safety",
+"url-mode elicitation",
+"form-mode elicitation",
+"third-party token storage",
+"prompt output constraints",
+"completion enumeration prevention",
+"secret redaction",
+"untrusted output labeling",
+"path traversal prevention",
+"server-side credential capture",
+"mcp resource authorization"
+]
+},
+{
+"id": "AID-H-035.006",
+"name": "MCP Server Session, Task, Telemetry, Abuse Budgets & Disable Hooks",
+"description": "Provide the server-side lifecycle controls needed to operate MCP safely after deployment: secure session IDs, resumable stream binding, task isolation, structured telemetry, per-principal abuse budgets, and disable hooks for tools, clients, tenants, credentials, or server versions.<br/><br/><strong>Scope boundary:</strong> This sub-technique emits server-side mechanisms and events. AID-D-005 consumes telemetry for detection, AID-I-005 uses disable hooks for containment, and AID-E techniques handle credential and identity eviction. Coarse gateway and process limits belong in AID-H-035.001; fine-grained budgets belong here.",
+"pillar": [
+"app",
+"infra"
+],
+"phase": [
+"building",
+"operation",
+"response"
+],
+"implementationGuidance": [
+"Generate high-entropy MCP session IDs, bind them to authenticated identity and client context, and never treat the session ID as authentication by itself.",
+"Partition task queues, resumable streams, caches, and long-running jobs by principal, client, tenant, and tool.",
+"Emit structured MCP server security events for authorization decisions, tool calls, resource reads, prompt requests, elicitation flows, descriptor changes, upstream calls, and rejected inputs.",
+"Enforce fine-grained per-principal abuse budgets for cost, concurrency, recursion, request rate, stream lifetime, and tool-specific risk.",
+"Expose server-side disable hooks for server versions, tools, clients, tenants, credentials, and upstream integrations without embedding the response playbook in the server."
+],
+"toolsOpenSource": [
+"OpenTelemetry",
+"Prometheus",
+"Grafana",
+"Redis",
+"Open Policy Agent (OPA)"
+],
+"toolsCommercial": [
+"Datadog",
+"Splunk Enterprise Security",
+"Elastic Security",
+"Cloudflare Rate Limiting",
+"LaunchDarkly"
+],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0053 AI Agent Tool Invocation",
+"AML.T0086 Exfiltration via AI Agent Tool Invocation",
+"AML.T0034.002 Cost Harvesting: Agentic Resource Consumption",
+"AML.T0012 Valid Accounts"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Agent Identity Attack (L7)",
+"Agent Tool Misuse (L7)",
+"Integration Risks (L7)",
+"Data Exfiltration (L2)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2025",
+"items": [
+"LLM02:2025 Sensitive Information Disclosure",
+"LLM06:2025 Excessive Agency"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"N/A"
+]
+},
+{
+"framework": "OWASP Agentic AI Top 10 2026",
+"items": [
+"ASI02:2026 Tool Misuse and Exploitation",
+"ASI03:2026 Identity and Privilege Abuse",
+"ASI08:2026 Cascading Failures",
+"ASI10:2026 Rogue Agents"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"NISTAML.036 Leaking information from user interactions",
+"NISTAML.038 Data Extraction",
+"NISTAML.039 Compromising connected resources"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-8.2 Data Exfiltration / Exposure",
+"AITech-13.1 Disruption of Availability",
+"AITech-13.2 Cost Harvesting / Repurposing",
+"AITech-14.1 Unauthorized Access",
+"AISubtech-4.3.4 Replay Exploitation",
+"AISubtech-13.1.1 Compute Exhaustion",
+"AISubtech-13.1.2 Memory Flooding",
+"AISubtech-13.2.1 Service Misuse for Cost Inflation"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"IIC: Insecure Integrated Component",
+"DMS: Denial of ML Service",
+"SDD: Sensitive Data Disclosure",
+"RA: Rogue Actions"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Agents - Tools MCP Server 13.19: Credential and Token Exposure",
+"Agents - Tools MCP Server 13.20: Insecure Server Configuration",
+"Agents - Tools MCP Server 13.22: Excessive Permissions and Scope Creep",
+"Agents - Tools MCP Server 13.23: Data Exfiltration",
+"Agents - Tools MCP Server 13.24: Context Spoofing and Manipulation"
+]
+}
+],
+"contentHash": "c29c777e7d1c822c",
+"keywords": [
+"mcp session binding",
+"task isolation",
+"resumable stream partitioning",
+"structured mcp telemetry",
+"per-principal abuse budgets",
+"cost budget enforcement",
+"concurrency limits",
+"recursion depth limits",
+"disable hooks",
+"tenant task partitioning",
+"session id entropy",
+"replay resistance",
+"tool disablement",
+"budget rejection events"
 ]
 }
 ],
@@ -30720,7 +31615,8 @@
 "toolsOpenSource": [
 "Ansible (kill-switch automation runbooks)",
 "AWS CLI / Azure CLI / gcloud (resource stop and delete actions)",
-"Circuit breaker patterns in microservices"
+"Circuit breaker patterns in microservices",
+"PyJWT"
 ],
 "toolsCommercial": [
 "AWS Systems Manager Automation",
@@ -30729,7 +31625,7 @@
 "SentinelOne",
 "CrowdStrike Falcon"
 ],
-"contentHash": "d6c0cfbecf11ddab",
+"contentHash": "c2bbd5b29f169b83",
 "keywords": [
 "kill-switch",
 "emergency halt",
@@ -34781,12 +35677,12 @@
 ],
 "toolsCommercial": [
 "Pinecone (namespaces / collection versions / delete-by-ID)",
-"Weaviate Enterprise (schema hooks, metadata policies, ACLs)",
+"Weaviate Cloud / Weaviate Enterprise (RBAC, audit logging, SSO/SAML, PrivateLink, collection schema controls)",
 "Amazon OpenSearch Service (managed aliases, snapshots)",
 "Datadog / Splunk / Microsoft Sentinel for retrieval anomaly alerting and correlation",
 "Cloud object storage with Object Lock / WORM mode for forensic quarantine (e.g. S3 Object Lock)"
 ],
-"contentHash": "0d3487c43bb545d9",
+"contentHash": "29e00e9369279ed2",
 "keywords": [
 "vector index rollback",
 "rag index recovery",

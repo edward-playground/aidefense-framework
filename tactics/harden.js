@@ -95,17 +95,23 @@ export const hardenTactic = {
           implementation:
             "Implement general adversarial example training using a PGD-style, Friendly, or Free variant appropriate to the model and compute budget.",
           howTo:
-            `<h5>Concept:</h5><p>For standard classification or sequence models facing evasion attacks, teams usually choose <strong>one primary adversarial-example training variant</strong> rather than implementing several in parallel. PGD-style training, Friendly Adversarial Training, and Free Adversarial Training all serve the same control objective: expose the model to adversarially perturbed inputs during training so it learns decision boundaries that are harder to exploit.</p><h5>Choose a variant</h5><ul><li><strong>PGD-based training:</strong> strong default when robustness is the top priority and extra training cost is acceptable.</li><li><strong>Friendly Adversarial Training:</strong> use when you need a better balance between clean accuracy and adversarial robustness.</li><li><strong>Free Adversarial Training:</strong> use when compute budget is tight and you need a lower-cost approximation.</li></ul><h5>Variant A - PGD-based adversarial training</h5><p>Generate strong iterative adversarial examples inside an <code>Linf</code> ball and train directly on them.</p><pre><code># File: hardening/adversarial_training.py
+            `<h5>Concept:</h5><p>For standard classification or sequence models facing evasion attacks, teams usually choose <strong>one primary adversarial-example training variant</strong> rather than implementing several in parallel. PGD-style training, Friendly Adversarial Training, and Free Adversarial Training all serve the same control objective: expose the model to adversarially perturbed inputs during training so it learns decision boundaries that are harder to exploit.</p><h5>Choose a variant</h5><ul><li><strong>PGD-based training:</strong> strong default when robustness is the top priority and extra training cost is acceptable.</li><li><strong>Friendly Adversarial Training:</strong> use when you need a better balance between clean accuracy and adversarial robustness.</li><li><strong>Free Adversarial Training:</strong> use when compute budget is tight and you need a lower-cost approximation.</li></ul><h5>Variant A - PGD-based adversarial training</h5><p>Generate strong iterative adversarial examples inside an <code>Linf</code> ball and train directly on them. The optimizer is defined once and reused by both the ART wrapper and the PyTorch training loop so the example can run as written.</p><pre><code># File: hardening/adversarial_training.py
 import torch
+import torch.optim as optim
 from art.attacks.evasion import ProjectedGradientDescent
 from art.estimators.classification import PyTorchClassifier
+
+model = model.to(device)
+optimizer = optim.AdamW(model.parameters(), lr=1e-4, weight_decay=1e-4)
 
 art_classifier = PyTorchClassifier(
     model=model,
     loss=loss_fn,
+    optimizer=optimizer,
     input_shape=(1, 28, 28),  # adjust to your data
     nb_classes=class_count,
     clip_values=(0.0, 1.0),
+    device_type="gpu" if device.type == "cuda" else "cpu",
 )
 
 pgd_attack = ProjectedGradientDescent(
@@ -117,13 +123,14 @@ pgd_attack = ProjectedGradientDescent(
 )
 
 for data, target in train_loader:
+    model.train()
     data = data.to(device)
     target = target.to(device)
 
     adv_np = pgd_attack.generate(x=data.detach().cpu().numpy())
-    adv_tensor = torch.from_numpy(adv_np).to(device)
+    adv_tensor = torch.from_numpy(adv_np).to(device=device, dtype=data.dtype)
 
-    optimizer.zero_grad()
+    optimizer.zero_grad(set_to_none=True)
     logits = model(adv_tensor)
     loss = loss_fn(logits, target)
     loss.backward()
@@ -692,27 +699,26 @@ async def require_safe_prompt(prompt: str) -&gt; None:
 <h5>Step 1: Define the deterministic rule-pack and safe matching primitives</h5>
 <pre><code># File: llm_gate/rules.py
 from dataclasses import dataclass
-from typing import Pattern
 import ahocorasick
 import logging
-import re
 import regex
 
 logger = logging.getLogger("prompt_gate")
+REGEX_TIMEOUT_SECONDS = 0.025
 
 @dataclass(frozen=True)
 class Rule:
     code: str
     description: str
-    pattern: Pattern[str]
+    pattern: "SafePattern"
 
 class SafePattern:
-    def __init__(self, pattern: str, timeout_ms: int = 25):
+    def __init__(self, pattern: str, timeout_seconds: float = REGEX_TIMEOUT_SECONDS):
         self._rx = regex.compile(pattern, regex.IGNORECASE)
-        self._timeout_ms = timeout_ms
+        self._timeout_seconds = timeout_seconds
 
     def search(self, text: str) -> bool:
-        return bool(self._rx.search(text, timeout=self._timeout_ms))
+        return bool(self._rx.search(text, timeout=self._timeout_seconds))
 
 class KeywordAutomaton:
     def __init__(self, terms: list[str]):
@@ -726,8 +732,8 @@ class KeywordAutomaton:
         return next(self._automaton.iter(text), None) is not None
 
 DENY_RULES = (
-    Rule("PI-001", "Known DAN or developer-mode trigger", re.compile(r"\b(do anything now|DAN|developer mode)\b", re.I)),
-    Rule("PI-002", "Ignore or override instruction scaffold", re.compile(r"ignore (the )?(above|previous).*", re.I)),
+    Rule("PI-001", "Known DAN or developer-mode trigger", SafePattern(r"\b(do anything now|DAN|developer mode)\b")),
+    Rule("PI-002", "Ignore or override instruction scaffold", SafePattern(r"ignore (the )?(above|previous).*")),
 )
 HARD_KEYWORDS = KeywordAutomaton(["do anything now", "DAN", "developer mode"])
 
@@ -736,10 +742,13 @@ def prompt_gate(text: str) -> tuple[bool, str | None]:
         return False, "PI-KEYWORD"
 
     for rule in DENY_RULES:
-        safe = SafePattern(rule.pattern.pattern)
-        if safe.search(text):
-            logger.info("gate_deny policy=%s", rule.code)
-            return False, rule.code
+        try:
+            if rule.pattern.search(text):
+                logger.info("gate_deny policy=%s", rule.code)
+                return False, rule.code
+        except TimeoutError:
+            logger.warning("gate_deny reason=regex_timeout policy=%s", rule.code)
+            return False, "PI-REGEX-TIMEOUT"
 
     return True, None
 </code></pre>
@@ -2192,7 +2201,7 @@ if __name__ == "__main__":
               implementation:
                 "Enforce a mandatory acceptance criteria checklist for production promotion.",
               howTo:
-                "<h5>Acceptance Criteria (automated)</h5><ol>\n<li><b>Mirrored Only:</b> Artifact must originate from <i>internal</i> mirror/registry; prod pipelines are blocked from public hubs.</li>\n<li><b>Signature & Provenance:</b> Valid <b>cosign</b> signature bound to CI OIDC (<code>--certificate-identity</code>, <code>--certificate-oidc-issuer</code>) and present in <b>Rekor</b> transparency log; SLSA/in-toto provenance required.</li>\n<li><b><u>Model SBOM + Attestation present and verified (per AID-H-003.006)</u>:</b> Admission verifies issuer/subject, digest binding, and policy checks (format allow-list, <code>trust_remote_code</code> flag, license).</li>\n<li><b>Secure Loader Policy:</b> Enforce <code>trust_remote_code=false</code>; if exception is needed, deploy only into a pre-execution sandbox profile (see AID-I-001).</li>\n<li><b>Offline Loading:</b> Enforce offline model loading (e.g., <code>TRANSFORMERS_OFFLINE=1</code>, <code>local_files_only=True</code>).</li>\n<li><b>Content-Addressed:</b> Use immutable <code>sha256:</code> digests, never floating tags (e.g., <i>latest</i>/<i>main</i>).</li>\n<li><b>Curation Re-verification + Tombstones:</b> Mirror refresh re-verifies external namespace owner and redirect status; if deleted/owner-changed, mark source <i>tombstoned</i> and quarantine until re-onboarded.</li>\n</ol><h5>Admission Controllers</h5><p>Use <b>Kyverno</b> (verifyImages/verifyAttestations) or <b>Sigstore Policy Controller</b> to enforce signature and attestation policies cluster-wide.</p>",
+                "<h5>Acceptance Criteria (automated)</h5><ol>\n<li><b>Mirrored Only:</b> Artifact must originate from <i>internal</i> mirror/registry; prod pipelines are blocked from public hubs.</li>\n<li><b>Signature & Provenance:</b> Valid <b>cosign</b> signature bound to CI OIDC (<code>--certificate-identity</code>, <code>--certificate-oidc-issuer</code>) and present in <b>Rekor</b> transparency log; SLSA/in-toto provenance required.</li>\n<li><b><u>Model SBOM + Attestation present and verified (per AID-H-003.006)</u>:</b> Admission verifies issuer/subject, digest binding, format allow-list, unsafe deserialization ban, loader policy, <code>trust_remote_code</code> flag, and license.</li>\n<li><b>Secure Loader Policy:</b> Enforce <code>trust_remote_code=false</code>, offline loading, and approved model formats by default. Pickle/joblib/legacy <code>.ckpt</code>, TorchScript/mobile model files, custom loaders, custom operators, or any <code>trust_remote_code=true</code> exception require named risk approval and a signed <code>model-loader-analysis</code> sandbox verdict from AID-I-001.005 before promotion.</li>\n<li><b>Offline Loading:</b> Enforce offline model loading (e.g., <code>TRANSFORMERS_OFFLINE=1</code>, <code>local_files_only=True</code>).</li>\n<li><b>Content-Addressed:</b> Use immutable <code>sha256:</code> digests, never floating tags (e.g., <i>latest</i>/<i>main</i>).</li>\n<li><b>Curation Re-verification + Tombstones:</b> Mirror refresh re-verifies external namespace owner and redirect status; if deleted/owner-changed, mark source <i>tombstoned</i> and quarantine until re-onboarded.</li>\n</ol><h5>Admission Controllers</h5><p>Use <b>Kyverno</b> (verifyImages/verifyAttestations) or <b>Sigstore Policy Controller</b> to enforce signature and attestation policies cluster-wide.</p>",
             },
           ],
         },
@@ -2880,10 +2889,16 @@ if source_is_tombstoned(candidate_source):
               implementation:
                 "Format allow-list, unsafe deserialization ban, and model-loader policy scan",
               howTo:
-                `<h5>Concept</h5><p>Model admission should reject both unsafe serialization formats and loaders that reintroduce code execution risk. Enforce one allow-list for bytes on disk and a second allow-list for the loader flags the runtime is permitted to use.</p><h5>Step 1: Define the format and loader policy</h5><pre><code># File: policy/model_loader_policy.json
+                `<h5>Concept</h5><p>Model admission should reject both unsafe serialization formats and loaders that reintroduce code execution risk. Treat this as the canonical model-loader policy: the model registry decides which bytes may be promoted, while the sandbox service in AID-I-001.005 supplies evidence for rare loader exceptions. Prefer tensor-only formats such as <code>safetensors</code>. Treat pickle-derived formats, legacy checkpoints, TorchScript/mobile model files, custom operators, and custom loader code as executable-code risk unless an explicit exception has a signed <code>model-loader-analysis</code> verdict.</p><h5>Step 1: Define the format and loader policy</h5><pre><code># File: policy/model_loader_policy.json
 {
   "allowed_formats": ["safetensors", "onnx"],
-  "blocked_extensions": [".pkl", ".pickle", ".joblib", ".pt"],
+  "blocked_extensions": [".pkl", ".pickle", ".joblib", ".pt", ".pth", ".ckpt"],
+  "exception_requires_sandbox_verdict": ["torchscript", "custom_loader", "custom_operator", "trust_remote_code"],
+  "onnx_policy": {
+    "run_checker": true,
+    "allow_external_data": false,
+    "allow_custom_ops": false
+  },
   "required_loader_flags": {
     "transformers": {
       "trust_remote_code": false,
@@ -2895,38 +2910,99 @@ if source_is_tombstoned(candidate_source):
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 
 
 POLICY = json.loads(Path("policy/model_loader_policy.json").read_text(encoding="utf-8"))
 
 
-def verify_model_artifact(artifact_path: str, *, loader_name: str, loader_kwargs: dict) -> None:
+def normalized_format(artifact: Path) -> str:
+    suffix = artifact.suffix.lower()
+    if suffix == ".safetensors":
+        return "safetensors"
+    if suffix == ".onnx":
+        return "onnx"
+    if suffix in {".pt", ".pth", ".ckpt"}:
+        return "torch_pickle_or_checkpoint"
+    if suffix in {".pkl", ".pickle", ".joblib"}:
+        return "pickle"
+    return suffix.lstrip(".")
+
+
+def verify_onnx_policy(artifact: Path) -> None:
+    onnx_policy = POLICY["onnx_policy"]
+    if not onnx_policy["allow_external_data"]:
+        # In production, parse the ONNX protobuf and reject external_data entries.
+        # This conservative guard catches common sidecar layouts before checker execution.
+        sidecar_dir = artifact.with_suffix("")
+        if sidecar_dir.exists() or list(artifact.parent.glob(f"{artifact.stem}.*.data")):
+            raise SystemExit("ONNX external data sidecars require explicit approval")
+    if onnx_policy["allow_custom_ops"] is False and os.environ.get("ONNX_CUSTOM_OPS") == "true":
+        raise SystemExit("ONNX custom operators are not approved")
+
+
+def verify_sandbox_verdict(verdict_path: str | None, artifact_digest: str) -> None:
+    if not verdict_path:
+        raise SystemExit("loader exception requires signed model-loader-analysis verdict")
+    verdict = json.loads(Path(verdict_path).read_text(encoding="utf-8"))
+    if verdict.get("profile") != "model-loader-analysis":
+        raise SystemExit("sandbox verdict profile mismatch")
+    if verdict.get("artifact_digest") != artifact_digest:
+        raise SystemExit("sandbox verdict is not bound to this artifact digest")
+    if verdict.get("verdict") != "allow":
+        raise SystemExit("sandbox verdict did not allow model loader exception")
+
+
+def verify_model_artifact(
+    artifact_path: str,
+    *,
+    artifact_digest: str,
+    loader_name: str,
+    loader_kwargs: dict,
+    sandbox_verdict_path: str | None = None,
+) -> None:
     artifact = Path(artifact_path)
+    model_format = normalized_format(artifact)
     if artifact.suffix.lower() in POLICY["blocked_extensions"]:
         raise SystemExit(f"blocked model format: {artifact.suffix}")
 
     allowed_formats = set(POLICY["allowed_formats"])
-    normalized_suffix = artifact.suffix.lower().lstrip(".")
-    if normalized_suffix not in allowed_formats:
-        raise SystemExit(f"unapproved model format: {normalized_suffix}")
+    if model_format not in allowed_formats:
+        raise SystemExit(f"unapproved model format: {model_format}")
+
+    if model_format == "onnx":
+        verify_onnx_policy(artifact)
 
     required_flags = POLICY["required_loader_flags"].get(loader_name, {})
     for key, expected in required_flags.items():
         if loader_kwargs.get(key) != expected:
             raise SystemExit(f"loader flag violation: {key} must be {expected!r}")
 
+    exception_reasons = []
+    if loader_kwargs.get("trust_remote_code") is True:
+        exception_reasons.append("trust_remote_code")
+    if loader_name in {"torchscript", "custom_loader"}:
+        exception_reasons.append(loader_name)
+
+    if exception_reasons:
+        verify_sandbox_verdict(sandbox_verdict_path, artifact_digest)
+
 
 verify_model_artifact(
     "mirror/models/fraud-detector/model.safetensors",
+    artifact_digest="sha256:abc123...",
     loader_name="transformers",
     loader_kwargs={"trust_remote_code": False, "local_files_only": True},
 )
-</code></pre><h5>Step 3: Verify the admission gate</h5><pre><code># Good path
+</code></pre><h5>Step 3: Verify the admission gate</h5><pre><code># Good path: safetensors, offline load, no remote code
 python runtime/verify_model_loader_policy.py
 
-# Negative test: try the same gate against a pickle artifact or with trust_remote_code=True
-</code></pre><p><strong>Action:</strong> Make the model loader policy a mandatory admission check. If the format or loader flags violate policy, block promotion and runtime load.</p>`,
+# Negative tests:
+# - pickle/joblib/legacy ckpt artifact -> blocked
+# - trust_remote_code=True without signed model-loader-analysis verdict -> blocked
+# - ONNX with external data sidecars or custom operators -> blocked unless explicitly approved
+</code></pre><p><strong>Action:</strong> Make the model loader policy a mandatory admission check owned by the model registry or release gate. If the format, loader flags, or required sandbox verdict violate policy, block promotion and runtime load.</p>`,
             },
           ],
         },
@@ -5005,33 +5081,57 @@ def list_single_file_from_model(raw_argument: str) -&gt; str:
               howTo: `<h5>Concept:</h5><p>Any model response that contains outbound links is a delivery surface. Treat those links as untrusted until one output gate has normalized them, rejected internal or non-public destinations, and checked the canonical destination against a reputation service such as Google Safe Browsing. This is an enforcement point, not a best-effort warning.</p><h5>Step 1: Normalize and reputation-check every extracted URL</h5><p>Normalize before lookup so policy evaluates the canonical destination rather than a mixed-case, fragment-padded, or wrapper-decorated variant.</p><pre><code># File: output_guards/url_validator.py
 from __future__ import annotations
 
-import functools
+from enum import Enum
 import ipaddress
+import logging
 import os
 import re
 import socket
+import time
 from urllib.parse import urlsplit, urlunsplit
 
 import requests
 
 
 SAFE_BROWSING_API_KEY = os.environ["SAFE_BROWSING_API_KEY"]
-SAFE_BROWSING_ENDPOINT = "https://safebrowsing.googleapis.com/v4/threatMatches:find"
+SAFE_BROWSING_ENDPOINT = "https://safebrowsing.googleapis.com/v5/urls:search"
+DNS_CACHE_TTL_SECONDS = 300
+URL_VERDICT_FAILURE_TTL_SECONDS = 60
+URL_VERDICT_CACHE_MAX_SECONDS = 86400
 URL_PATTERN = re.compile(r'https?://[^\\s&lt;&gt;"\\]]+')
+HTTP = requests.Session()
+logger = logging.getLogger("url_validator")
+
+
+class UrlVerdict(str, Enum):
+    SAFE = "safe"
+    UNSAFE = "unsafe"
+    UNAVAILABLE = "unavailable"
+
+
+_dns_cache: dict[str, tuple[float, bool]] = {}
+_url_verdict_cache: dict[str, tuple[float, UrlVerdict]] = {}
 
 
 def extract_urls(text: str) -&gt; list[str]:
     return URL_PATTERN.findall(text)
 
 
-@functools.lru_cache(maxsize=2048)
 def hostname_is_public(hostname: str) -&gt; bool:
+    now = time.monotonic()
+    cached = _dns_cache.get(hostname)
+    if cached and cached[0] > now:
+        return cached[1]
+
     try:
         answers = {item[4][0] for item in socket.getaddrinfo(hostname, None, proto=socket.IPPROTO_TCP)}
     except socket.gaierror:
+        _dns_cache[hostname] = (now + DNS_CACHE_TTL_SECONDS, False)
         return False
 
-    return all(ipaddress.ip_address(answer).is_global for answer in answers)
+    is_public = bool(answers) and all(ipaddress.ip_address(answer).is_global for answer in answers)
+    _dns_cache[hostname] = (now + DNS_CACHE_TTL_SECONDS, is_public)
+    return is_public
 
 
 def normalize_url(raw_url: str) -&gt; str:
@@ -5051,28 +5151,48 @@ def normalize_url(raw_url: str) -&gt; str:
     return urlunsplit((parts.scheme.lower(), netloc, parts.path or "/", parts.query, ""))
 
 
-def is_url_safe(url: str) -&gt; bool:
-    payload = {
-        "client": {"clientId": "aidefend-output-gate", "clientVersion": "1.0.0"},
-        "threatInfo": {
-            "threatTypes": ["MALWARE", "SOCIAL_ENGINEERING", "UNWANTED_SOFTWARE"],
-            "platformTypes": ["ANY_PLATFORM"],
-            "threatEntryTypes": ["URL"],
-            "threatEntries": [{"url": url}],
-        },
-    }
-
+def _duration_to_seconds(value: str | None, default_seconds: int = 300) -&gt; float:
+    if not value or not value.endswith("s"):
+        return float(default_seconds)
     try:
-        response = requests.post(
-            f"{SAFE_BROWSING_ENDPOINT}?key={SAFE_BROWSING_API_KEY}",
-            json=payload,
-            timeout=5,
-        )
-        response.raise_for_status()
-    except requests.RequestException:
-        return False
+        return max(0.0, float(value[:-1]))
+    except ValueError:
+        return float(default_seconds)
 
-    return not response.json().get("matches")
+
+def safe_browsing_verdict(url: str) -&gt; UrlVerdict:
+    now = time.monotonic()
+    cached = _url_verdict_cache.get(url)
+    if cached and cached[0] > now:
+        return cached[1]
+
+    last_error: Exception | None = None
+    for attempt in range(3):
+        try:
+            response = HTTP.get(
+                SAFE_BROWSING_ENDPOINT,
+                params=[("key", SAFE_BROWSING_API_KEY), ("urls", url)],
+                timeout=5,
+            )
+            if response.status_code == 429 or response.status_code >= 500:
+                raise requests.HTTPError(f"transient_status={response.status_code}", response=response)
+            response.raise_for_status()
+            body = response.json()
+            verdict = UrlVerdict.UNSAFE if body.get("threats") else UrlVerdict.SAFE
+            ttl = min(
+                _duration_to_seconds(body.get("cacheDuration")),
+                URL_VERDICT_CACHE_MAX_SECONDS,
+            )
+            _url_verdict_cache[url] = (now + ttl, verdict)
+            return verdict
+        except requests.RequestException as exc:
+            last_error = exc
+            if attempt < 2:
+                time.sleep(0.2 * (2 ** attempt))
+
+    logger.warning("safe_browsing_unavailable url=%s error=%r", url, last_error)
+    _url_verdict_cache[url] = (now + URL_VERDICT_FAILURE_TTL_SECONDS, UrlVerdict.UNAVAILABLE)
+    return UrlVerdict.UNAVAILABLE
 
 
 def validate_output_urls(model_output: str) -&gt; list[str]:
@@ -5090,7 +5210,7 @@ def validate_output_urls(model_output: str) -&gt; list[str]:
             continue
         seen.add(normalized)
 
-        if not is_url_safe(normalized):
+        if safe_browsing_verdict(normalized) != UrlVerdict.SAFE:
             unsafe_urls.append(normalized)
 
     return unsafe_urls</code></pre><h5>Step 2: Fail closed before the response leaves the output boundary</h5><p>If any extracted URL is unsafe or cannot be verified, reject the entire response and emit a structured block event so analysts can correlate the model output with the session and response ID.</p><pre><code># File: output_guards/output_gate.py
@@ -5122,7 +5242,7 @@ def enforce_safe_links(request_id: str, response_id: str, model_output: str) -&g
                 "blocked_urls": unsafe_urls,
             },
         )
-    return model_output</code></pre><h5>Step 3: Verify with a known test URL</h5><p>In a non-production test environment, pass a response containing the published Safe Browsing test URL <code>https://testsafebrowsing.appspot.com/s/phishing.html</code>. Confirm the API rejects the response and records an auditable block event.</p><p><strong>Action:</strong> Put URL extraction and reputation validation directly in the model response path. Normalize first, reject non-public destinations, fail closed on lookup errors, and treat the block log as evidence that the output-delivery boundary is working.</p>`,
+    return model_output</code></pre><h5>Step 3: Verify with a known test URL</h5><p>In a non-production test environment, pass a response containing the published Safe Browsing test URL <code>https://testsafebrowsing.appspot.com/s/phishing.html</code>. Confirm the API rejects the response and records an auditable block event.</p><p><strong>Action:</strong> Put URL extraction and reputation validation directly in the model response path. Normalize first, reject non-public destinations, use the Safe Browsing v5 <code>urls.search</code> endpoint for non-commercial deployments, fail closed on lookup errors, and treat the block log as evidence that the output-delivery boundary is working. Use Google Web Risk rather than Safe Browsing when the deployment is commercial or requires enterprise support.</p>`,
             },
             {
               implementation:
@@ -6999,7 +7119,8 @@ security_requirements:
           implementation:
             "Harden the transformer attention mechanism against adversarial token steering using one or more architecture-appropriate robustness variants.",
           howTo:
-            `<h5>Concept:</h5><p>These methods all serve the same control objective: make it harder for an attacker to steer a Transformer by forcing one malicious token, phrase, or position to dominate attention. Most teams should pick <strong>one or two</strong> variants that fit the model architecture they already have, rather than trying to implement every research lineage at once.</p><h5>Choose an attention-hardening variant</h5><ul><li><strong>Noisy attention:</strong> good when you can fine-tune and want training-time stochastic hardening without changing the production architecture.</li><li><strong>Relative or rotary positional encoding:</strong> good when sequence-order manipulation and positional primacy are the main concern.</li><li><strong>Attention entropy regularization:</strong> good when you want to discourage overly spiky attention while preserving the existing attention stack.</li><li><strong>Gated or sparsified attention:</strong> good for high-assurance architectures where you are willing to change the block design itself.</li></ul><h5>Variant A - Noisy attention during training</h5><p>Inject controlled noise into attention scores during fine-tuning so the model learns not to rely on a single dominating token.</p><pre><code># File: arch/noisy_attention.py
+            `<h5>Concept:</h5><p>These methods all serve the same control objective: make it harder for an attacker to steer a Transformer by forcing one malicious token, phrase, or position to dominate attention. Most teams should pick <strong>one or two</strong> variants that fit the model architecture they already have, rather than trying to implement every research lineage at once. Treat noisy attention as a research or training-time hardening technique, not as a standalone production defense; validate it against current prompt-steering and attention-manipulation attacks before relying on it.</p><h5>Choose an attention-hardening variant</h5><ul><li><strong>Noisy attention:</strong> good when you can fine-tune and want training-time stochastic hardening without changing the production architecture.</li><li><strong>Relative or rotary positional encoding:</strong> good when sequence-order manipulation and positional primacy are the main concern.</li><li><strong>Attention entropy regularization:</strong> good when you want to discourage overly spiky attention while preserving the existing attention stack.</li><li><strong>Gated or sparsified attention:</strong> good for high-assurance architectures where you are willing to change the block design itself.</li></ul><h5>Variant A - Noisy attention during training</h5><p>Inject controlled noise into attention scores during fine-tuning so the model learns not to rely on a single dominating token. The noise must be applied before the attention softmax and the resulting weights must be used to compute the context output.</p><pre><code># File: arch/noisy_attention.py
+import math
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -7007,16 +7128,36 @@ import torch.nn.functional as F
 class NoisyMultiHeadAttention(nn.Module):
     def __init__(self, embed_dim, num_heads, noise_level=0.1):
         super().__init__()
-        self.attention = nn.MultiheadAttention(embed_dim, num_heads, batch_first=True)
+        if embed_dim % num_heads != 0:
+            raise ValueError("embed_dim must be divisible by num_heads")
+        self.embed_dim = embed_dim
+        self.num_heads = num_heads
+        self.head_dim = embed_dim // num_heads
         self.noise_level = noise_level
+        self.q_proj = nn.Linear(embed_dim, embed_dim)
+        self.k_proj = nn.Linear(embed_dim, embed_dim)
+        self.v_proj = nn.Linear(embed_dim, embed_dim)
+        self.out_proj = nn.Linear(embed_dim, embed_dim)
 
-    def forward(self, query, key, value, training=False):
-        attn_output, attn_weights = self.attention(query, key, value)
-        if training and self.noise_level > 0:
-            noise = torch.randn_like(attn_weights) * self.noise_level
-            noisy_weights = F.softmax(attn_weights + noise, dim=-1)
-            # In production, recompute the weighted sum from noisy_weights.
-        return attn_output</code></pre><h5>Variant B - Relative or rotary positional encoding</h5><p>Replace brittle absolute positions with relative position bias or RoPE so token insertion and reordering attacks have less leverage.</p><pre><code># File: arch/relative_position_bias.py
+    def _shape(self, tensor):
+        batch_size, seq_len, _ = tensor.shape
+        return tensor.view(batch_size, seq_len, self.num_heads, self.head_dim).transpose(1, 2)
+
+    def forward(self, query, key, value, attention_mask=None):
+        q = self._shape(self.q_proj(query))
+        k = self._shape(self.k_proj(key))
+        v = self._shape(self.v_proj(value))
+
+        scores = torch.matmul(q, k.transpose(-2, -1)) / math.sqrt(self.head_dim)
+        if attention_mask is not None:
+            scores = scores.masked_fill(attention_mask[:, None, None, :] == 0, float("-inf"))
+        if self.training and self.noise_level > 0:
+            scores = scores + torch.randn_like(scores) * self.noise_level
+
+        weights = F.softmax(scores, dim=-1)
+        context = torch.matmul(weights, v)
+        context = context.transpose(1, 2).contiguous().view(query.size(0), query.size(1), self.embed_dim)
+        return self.out_proj(context), weights</code></pre><h5>Variant B - Relative or rotary positional encoding</h5><p>Replace brittle absolute positions with relative position bias or RoPE so token insertion and reordering attacks have less leverage.</p><pre><code># File: arch/relative_position_bias.py
 import torch
 import torch.nn as nn
 
@@ -8347,6 +8488,11 @@ class PBRSWrapper(gym.Wrapper):
           phase: ["building"],
           description:
             "This subtechnique covers the methods for embedding robust, imperceptible signals into various data types (including images, audio, video, text, and code) for the purposes of tracing provenance, detecting misuse, or identifying AI-generated content. The watermark is designed to be resilient to common transformations, allowing an owner to prove that a piece of content originated from their system even after it has been distributed or modified.",
+          warning: {
+            level: "Watermark Robustness Is Limited",
+            description:
+              "<p>Invisible watermarks are provenance and misuse-tracing signals, not proof that an asset is authentic or impossible to alter. They can be stripped, weakened, copied, or forged under known attack patterns, including watermark-copying and diffusion-forging research. Pair watermarking with C2PA/content credentials, cryptographic signing, controlled key management, and forensic review for high-impact claims.</p>",
+          },
           implementationGuidance: [
             {
               implementation:
@@ -8364,7 +8510,8 @@ class PBRSWrapper(gym.Wrapper):
           toolsOpenSource: [
             "OpenCV, Pillow (for images)",
             "Librosa, pydub (for audio)",
-            "MarkLLM, SynthID (for text/images)",
+            "MarkLLM (LLM watermarking research toolkit)",
+            "SynthID Text reference implementation (text watermarking research)",
             "Steganography libraries",
           ],
           toolsCommercial: [
@@ -8449,12 +8596,60 @@ class PBRSWrapper(gym.Wrapper):
           phase: ["building"],
           description:
             "This subtechnique covers the approach of adding small, targeted, and often imperceptible perturbations to source data. Unlike watermarking, which aims for a signal to be robustly detected, cloaking aims to disrupt or 'cloak' the data from being effectively used by specific downstream AI models. This is a proactive defense to sabotage the utility of stolen data for malicious purposes like deepfake generation or unauthorized model training.",
+          warning: {
+            level: "Cloaking Raises Cost, Not Immunity",
+            description:
+              "<p>Adversarial cloaking is a cost-raising export control, not a guarantee that scraped media cannot be used. Denoising, purification, re-encoding, face restoration, or model-specific retraining can reduce cloak effectiveness. Verify each cloaking pipeline against holdout recognizers and revisit thresholds as public bypass techniques evolve.</p>",
+          },
           implementationGuidance: [
             {
               implementation:
                 "Generate cloaking perturbations against common recognition models and apply them before any public sharing or export.",
               howTo:
-                "<h5>Concept:</h5><p>Adversarial cloaking is only useful if it targets a real downstream recognizer. Use a public embedding model such as FaceNet, compute a small perturbation that moves the asset embedding toward a null or average identity, and export only the cloaked version to lower the value of scraped data.</p><h5>Step 1: Build a target embedding from a real recognition model</h5><p>Use the same feature extractor the attacker is likely to rely on, or at least a representative public surrogate. Keep the perturbation small enough to preserve human utility.</p><pre><code># File: data_defense/cloak_face.py\nfrom __future__ import annotations\n\nimport torch\nimport torch.nn.functional as F\nfrom facenet_pytorch import InceptionResnetV1\nfrom PIL import Image\nfrom torchvision import transforms\n\n\nDEVICE = \"cuda\" if torch.cuda.is_available() else \"cpu\"\nMODEL = InceptionResnetV1(pretrained=\"vggface2\").eval().to(DEVICE)\nPREPROCESS = transforms.Compose([\n    transforms.Resize((160, 160)),\n    transforms.ToTensor(),\n])\n\n\ndef load_image(path: str) -&gt; torch.Tensor:\n    image = Image.open(path).convert(\"RGB\")\n    return PREPROCESS(image).unsqueeze(0).to(DEVICE)\n\n\ndef build_null_embedding(reference_paths: list[str]) -&gt; torch.Tensor:\n    embeddings = []\n    with torch.no_grad():\n        for ref_path in reference_paths:\n            embeddings.append(MODEL(load_image(ref_path)).squeeze(0))\n    return torch.stack(embeddings).mean(dim=0)\n\n\ndef cloak_image(image_path: str, reference_paths: list[str], output_path: str, epsilon: float = 4 / 255) -&gt; float:\n    null_embedding = build_null_embedding(reference_paths)\n    source = load_image(image_path).requires_grad_(True)\n\n    embedding = MODEL(source).squeeze(0)\n    loss = F.mse_loss(embedding, null_embedding)\n    loss.backward()\n\n    perturbation = epsilon * source.grad.sign()\n    cloaked = torch.clamp(source + perturbation, 0.0, 1.0).detach().cpu().squeeze(0)\n    transforms.ToPILImage()(cloaked).save(output_path)\n    return float(loss.item())\n</code></pre><h5>Step 2: Verify the cloak changes machine identity without breaking human usability</h5><p>Measure embedding distance before and after cloaking, then run the cloaked image through the same recognition model or a holdout recognizer. The goal is lower match confidence for automated recognition while the image remains acceptable to humans.</p><pre><code># File: data_defense/verify_cloak.py\nimport torch\nimport torch.nn.functional as F\n\nfrom data_defense.cloak_face import MODEL, load_image\n\n\ndef cosine_similarity(image_a: str, image_b: str) -&gt; float:\n    with torch.no_grad():\n        emb_a = MODEL(load_image(image_a)).squeeze(0)\n        emb_b = MODEL(load_image(image_b)).squeeze(0)\n    return float(F.cosine_similarity(emb_a, emb_b, dim=0))\n</code></pre><h5>Step 3: Gate export on the verification result</h5><p>Only publish the cloaked asset if the automated match score drops below your policy threshold and visual QA still passes. Keep the original in a controlled internal repository; the shared copy should be the cloaked export.</p><p><strong>Action:</strong> Treat cloaking as an export-time transformation pipeline: generate the perturbation against a real surrogate recognizer, verify reduced embedding similarity, and publish only the cloaked copy that meets both machine-resistance and human-usability thresholds.</p>",
+                `<h5>Concept:</h5><p>Adversarial cloaking is only useful if it is generated and tested against recognizers that resemble the abuse path you are worried about. Use a maintained cloaking tool to create the protected export, then verify against a separate holdout recognizer so you do not mistake a tool-specific perturbation for durable protection.</p><h5>Step 1: Generate cloaked exports with Fawkes</h5><p>Run cloaking as an export-time batch job. Keep originals in a controlled internal repository and publish only the cloaked copies that pass machine-resistance and human-usability checks.</p><pre><code># File: data_defense/cloak_export.py
+from __future__ import annotations
+
+from pathlib import Path
+import subprocess
+
+
+def cloak_directory(input_dir: str, output_dir: str, mode: str = "high") -> None:
+    source = Path(input_dir).resolve()
+    target = Path(output_dir).resolve()
+    target.mkdir(parents=True, exist_ok=True)
+
+    subprocess.run(
+        [
+            "fawkes",
+            "--directory",
+            str(source),
+            "--output",
+            str(target),
+            "--mode",
+            mode,
+        ],
+        check=True,
+    )
+</code></pre><h5>Step 2: Verify against a holdout recognizer</h5><p>Use a recognizer that was not used to generate the cloak. The example below uses DeepFace with ArcFace, but the important control is the separation between generation and validation.</p><pre><code># File: data_defense/verify_cloak.py
+from __future__ import annotations
+
+from deepface import DeepFace
+
+
+def face_distance(original_path: str, cloaked_path: str, model_name: str = "ArcFace") -> float:
+    result = DeepFace.verify(
+        img1_path=original_path,
+        img2_path=cloaked_path,
+        model_name=model_name,
+        detector_backend="retinaface",
+        enforce_detection=True,
+    )
+    return float(result["distance"])
+
+
+def cloak_passes_policy(original_path: str, cloaked_path: str, min_distance: float) -> bool:
+    return face_distance(original_path, cloaked_path) >= min_distance
+</code></pre><h5>Step 3: Gate export on policy evidence</h5><p>Only publish a cloaked asset when the holdout recognizer distance crosses your threshold and visual QA still passes. Re-run this evidence when the cloaking tool, recognizer, export format, compression settings, or threat model changes.</p><p><strong>Action:</strong> Treat cloaking as a controlled export pipeline: generate with a maintained tool, validate against a holdout recognizer, record the threshold evidence, and never claim immunity from scraping or retraining.</p>`,
             },
           ],
           toolsOpenSource: [
@@ -8788,6 +8983,7 @@ PY</code></pre><p><strong>Action:</strong> Make the certification report a requi
       ],
           toolsOpenSource: [
         "auto_LiRPA",
+        "alpha-beta-CROWN",
         "IBM Adversarial Robustness Toolbox (ART)",
         "Research / JAX-based robustness libraries",
         "PyTorch",
@@ -8795,7 +8991,7 @@ PY</code></pre><p><strong>Action:</strong> Make the certification report a requi
       ],
       toolsCommercial: [
         "Cisco AI Defense",
-        "Ansys SCADE Suite",
+        "MATLAB Deep Learning Toolbox (verifyNetworkRobustness with alpha-beta-CROWN)",
       ],
       defendsAgainst: [
         {
@@ -10182,6 +10378,7 @@ python -c "from agent_arch.enforcement_gate import EnforcementGate; gate = Enfor
 
 import hashlib
 import json
+import hashlib
 import os
 from typing import Any, Dict, Literal, Optional
 from urllib.parse import urlparse
@@ -10192,8 +10389,9 @@ from pydantic import BaseModel, Field
 
 
 client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
-Q_LLM_MODEL = os.getenv("Q_LLM_MODEL", "gpt-4.1")
-P_LLM_MODEL = os.getenv("P_LLM_MODEL", "gpt-5.2")
+# Pin these in deployment config so stale in-code model defaults cannot silently drift.
+Q_LLM_MODEL = os.environ["Q_LLM_MODEL"]
+P_LLM_MODEL = os.environ["P_LLM_MODEL"]
 APPROVED_FETCH_HOSTS = {"docs.example.com", "status.example.com"}
 
 
@@ -12151,7 +12349,81 @@ def guard_high_risk_step(approved_snapshot: dict, live_context: dict) -> None:
               implementation:
                 'Build a "safe_fetch" abstraction to gatekeep all outbound requests.',
               howTo:
-                '<h5>Concept:</h5><p>Agents must never call HTTP clients directly. The wrapper performs scheme checks, allowlist matching, DNS resolution, RFC1918/localhost blocking, and disables auto-redirects. This creates a secure boundary between the agent\'s intent and the actual network request.</p><h5>Implement a `safe_fetch` Wrapper</h5><pre><code># File: agent/safe_fetcher.py\nimport requests\nimport socket\nfrom urllib.parse import urlparse\nimport ipaddress\n\nALLOWED_DOMAINS = [\'wikipedia.org\', \'api.weather.com\']\n\ndef safe_fetch(url: str, timeout=5):\n    try:\n        parsed_url = urlparse(url)\n        if parsed_url.scheme not in [\'http\', \'https\']: raise ValueError("Invalid URL scheme")\n        hostname = parsed_url.hostname\n        if not hostname: raise ValueError("Hostname could not be parsed")\n        if not any(hostname.endswith(d) for d in ALLOWED_DOMAINS): raise ValueError("Domain not allowed")\n        \n        ip_addr = ipaddress.ip_address(socket.gethostbyname(hostname))\n        if ip_addr.is_private or ip_addr.is_loopback: raise ValueError("Internal IP access forbidden")\n\n        response = requests.get(url, timeout=timeout, allow_redirects=False)\n        response.raise_for_status()\n        return response.text\n    except (ValueError, requests.RequestException, socket.gaierror) as e:\n        log_security_event(f"Blocked outbound request to \'{url}\': {e}")\n        return f"Error: Could not fetch content. Reason: {e}"</code></pre><p><strong>Action:</strong> Create a `safe_fetch` tool for your agent that includes strict checks for the URL scheme, a domain allowlist, and the resolved IP address to prevent SSRF and internal network reconnaissance.</p>',
+                `<h5>Concept:</h5><p>Agents must never call HTTP clients directly. The wrapper performs scheme checks, exact allowlist matching, DNS resolution for all returned addresses, public-IP validation, and fixed-IP connection with redirects disabled. This closes the common DNS-rebinding TOCTOU where code validates one DNS answer and the HTTP client performs a second resolution later.</p><h5>Implement a <code>safe_fetch</code> wrapper</h5><pre><code># File: agent/safe_fetcher.py
+from __future__ import annotations
+
+import ipaddress
+import logging
+import socket
+from urllib.parse import urlparse, urlunparse
+
+import urllib3
+
+
+ALLOWED_DOMAINS = {"wikipedia.org", "api.weather.com"}
+log = logging.getLogger("safe_fetcher")
+
+
+def domain_allowed(hostname: str) -> bool:
+    hostname = hostname.lower().rstrip(".")
+    return any(hostname == domain or hostname.endswith(f".{domain}") for domain in ALLOWED_DOMAINS)
+
+
+def resolve_public_ips(hostname: str) -> list[str]:
+    answers: set[str] = set()
+    for result in socket.getaddrinfo(hostname, None, type=socket.SOCK_STREAM):
+        candidate = result[4][0]
+        ip_addr = ipaddress.ip_address(candidate)
+        if not ip_addr.is_global:
+            raise ValueError(f"non_public_ip:{candidate}")
+        answers.add(str(ip_addr))
+    if not answers:
+        raise ValueError("no_dns_answers")
+    return sorted(answers)
+
+
+def fetch_resolved_once(parsed, ip_address: str, timeout: float) -> str:
+    port = parsed.port or (443 if parsed.scheme == "https" else 80)
+    target = urlunparse(("", "", parsed.path or "/", "", parsed.query, ""))
+    headers = {"Host": parsed.netloc, "User-Agent": "AIDEFEND-SafeFetcher/1.0"}
+
+    if parsed.scheme == "https":
+        pool = urllib3.HTTPSConnectionPool(
+            ip_address,
+            port=port,
+            server_hostname=parsed.hostname,
+            assert_hostname=parsed.hostname,
+            cert_reqs="CERT_REQUIRED",
+            timeout=timeout,
+            retries=False,
+        )
+    else:
+        pool = urllib3.HTTPConnectionPool(ip_address, port=port, timeout=timeout, retries=False)
+
+    response = pool.request("GET", target, headers=headers, redirect=False)
+    if response.status >= 400:
+        raise RuntimeError(f"http_status:{response.status}")
+    return response.data.decode("utf-8", errors="replace")
+
+
+def safe_fetch(url: str, timeout: float = 5) -> str:
+    try:
+        parsed_url = urlparse(url)
+        if parsed_url.scheme not in {"http", "https"}:
+            raise ValueError("invalid_url_scheme")
+        if not parsed_url.hostname:
+            raise ValueError("missing_hostname")
+        hostname = parsed_url.hostname.encode("idna").decode("ascii").lower()
+        if not domain_allowed(hostname):
+            raise ValueError("domain_not_allowed")
+
+        port_suffix = "" if parsed_url.port is None else f":{parsed_url.port}"
+        normalized_url = parsed_url._replace(netloc=f"{hostname}{port_suffix}")
+        ip_addresses = resolve_public_ips(hostname)
+        return fetch_resolved_once(normalized_url, ip_addresses[0], timeout)
+    except Exception as exc:
+        log.warning("blocked_outbound_request url=%s reason=%r", url, exc)
+        return f"Error: Could not fetch content. Reason: {exc}"</code></pre><p><strong>Action:</strong> Create a <code>safe_fetch</code> tool for your agent that validates the URL scheme, exact domain allowlist, and every resolved IP address, then connects to the validated IP literal while preserving the original Host/SNI identity.</p>`,
             },
             {
               implementation:
@@ -12183,8 +12455,8 @@ from urllib.parse import parse_qsl, urlencode, urljoin, urlsplit, urlunsplit
 
 import ipaddress
 import psycopg
-import requests
 import tldextract
+import urllib3
 from url_normalize import url_normalize
 
 
@@ -12240,17 +12512,47 @@ def registrable_domain(canonical_url: str) -> str:
     return f"{extracted.domain}.{extracted.suffix}".lower()
 
 
-def ensure_public_ip(hostname: str) -> None:
+def ensure_public_ip(hostname: str) -> list[str]:
+    public_ips: set[str] = set()
     for result in socket.getaddrinfo(hostname, None, type=socket.SOCK_STREAM):
         candidate = result[4][0]
         ip_addr = ipaddress.ip_address(candidate)
-        if (
-            ip_addr.is_private
-            or ip_addr.is_loopback
-            or ip_addr.is_link_local
-            or ip_addr.is_reserved
-        ):
+        if not ip_addr.is_global:
             raise ValueError("non_public_ip")
+        public_ips.add(str(ip_addr))
+    if not public_ips:
+        raise ValueError("no_dns_answers")
+    return sorted(public_ips)
+
+
+def fetch_public_url_once(
+    canonical_url: str,
+    *,
+    timeout: float = HTTP_TIMEOUT_SECONDS,
+    user_agent: str = "AIDEFEND-LinkVerifier/1.0",
+) -> urllib3.HTTPResponse:
+    parts = urlsplit(canonical_url)
+    if parts.scheme not in {"http", "https"} or not parts.hostname:
+        raise ValueError("invalid_fetch_url")
+
+    ips = ensure_public_ip(parts.hostname)
+    port = parts.port or (443 if parts.scheme == "https" else 80)
+    request_target = urlunsplit(("", "", parts.path or "/", parts.query, ""))
+    headers = {"Host": parts.netloc, "User-Agent": user_agent}
+
+    if parts.scheme == "https":
+        pool = urllib3.HTTPSConnectionPool(
+            ips[0],
+            port=port,
+            server_hostname=parts.hostname,
+            assert_hostname=parts.hostname,
+            cert_reqs="CERT_REQUIRED",
+            timeout=timeout,
+            retries=False,
+        )
+    else:
+        pool = urllib3.HTTPConnectionPool(ips[0], port=port, timeout=timeout, retries=False)
+    return pool.request("GET", request_target, headers=headers, redirect=False)
 
 
 class PublicUrlInventory:
@@ -12316,18 +12618,11 @@ def verify_for_background_fetch(
         _audit(decision, task_id=task_id, session_id=session_id)
         return decision
 
-    session = requests.Session()
-    session.trust_env = False
     current_url = canonical_url
 
     for _ in range(MAX_REDIRECTS + 1):
-        response = session.get(
-            current_url,
-            allow_redirects=False,
-            timeout=HTTP_TIMEOUT_SECONDS,
-            headers={"User-Agent": "AIDEFEND-LinkVerifier/1.0"},
-        )
-        if response.is_redirect and response.headers.get("Location"):
+        response = fetch_public_url_once(current_url, timeout=HTTP_TIMEOUT_SECONDS)
+        if response.status in {301, 302, 303, 307, 308} and response.headers.get("Location"):
             next_url = canonicalize_url(urljoin(current_url, response.headers["Location"]))
             next_domain = registrable_domain(next_url)
             if next_domain not in ALLOWED_REGISTRABLE_DOMAINS:
@@ -12356,9 +12651,7 @@ def verify_for_background_fetch(
 </code></pre><h5>Step 3: Block quiet fetches when verification fails</h5><p>Every background fetch path such as link preview, image probe, metadata expansion, OCR prefetch, or browser-agent side request must call the exact URL gate first. If the gate returns <code>deny</code> or <code>stepup</code>, do not send the background request from the privileged runtime. Route the request to an approval flow if your policy allows step-up, otherwise stop immediately.</p><pre><code class="language-python"># File: agent/background_preview.py
 import os
 
-import requests
-
-from agent.exact_url_gate import PublicUrlInventory, verify_for_background_fetch
+from agent.exact_url_gate import PublicUrlInventory, fetch_public_url_once, verify_for_background_fetch
 
 
 DB_DSN = os.environ["PUBLIC_URL_DB_DSN"]
@@ -12374,17 +12667,14 @@ def fetch_preview(raw_url: str, *, task_id: str, session_id: str) -> str:
     )
 
     if decision.verdict == "allow":
-        final_hostname = urlsplit(decision.final_url).hostname
-        if final_hostname is None:
+        if decision.final_url is None:
             raise PermissionError("background_fetch_missing_final_hostname")
-        ensure_public_ip(final_hostname)
-        session = requests.Session()
-        session.trust_env = False
-        return session.get(
+        response = fetch_public_url_once(
             decision.final_url,
             timeout=5,
-            headers={"User-Agent": "AIDEFEND-PreviewFetcher/1.0"},
-        ).text
+            user_agent="AIDEFEND-PreviewFetcher/1.0",
+        )
+        return response.data.decode("utf-8", errors="replace")
     if decision.verdict == "stepup":
         raise PermissionError("background_fetch_requires_stepup")
     raise PermissionError("background_fetch_denied")
@@ -12392,7 +12682,7 @@ def fetch_preview(raw_url: str, *, task_id: str, session_id: str) -> str:
             },
           ],
           toolsOpenSource: [
-            "requests",
+            "urllib3",
             "urllib.parse",
             "ipaddress",
             "url-normalize",
@@ -12651,7 +12941,57 @@ def fetch_preview(raw_url: str, *, task_id: str, session_id: str) -> str:
               implementation:
                 "Hash each chunk payload and metadata at ingestion; verify integrity at retrieval time before inclusion in LLM context.",
               howTo:
-                "<h5>Concept:</h5><p>This refines content integrity verification from the whole-file level down to the individual chunks that a RAG system actually uses. This prevents an attacker from directly tampering with individual chunk content within the index database. To sign embeddings, sign a stable serialization of metadata (chunk_hash, model_id, precision, timestamp) rather than the raw float array to avoid float drift issues.</p><h5>Step 1: Compute and Store Hashes During Ingestion</h5><pre><code># File: rag_pipeline/ingestion.py\nimport hashlib\nfrom langchain.text_splitter import RecursiveCharacterTextSplitter\n\ndef process_and_hash_document(document_text: str, source_uri: str):\n    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)\n    documents = text_splitter.create_documents([document_text])\n    \n    for doc in documents:\n        chunk_bytes = doc.page_content.encode('utf-8')\n        doc.metadata['sha256_hash'] = hashlib.sha256(chunk_bytes).hexdigest()\n        doc.metadata['source_uri'] = source_uri\n    return documents\n</code></pre><h5>Step 2: Verify at Retrieval Time</h5><pre><code># File: rag_pipeline/retrieval.py\ndef retrieve_and_verify(query: str):\n    retrieved_docs = vector_db.similarity_search(query)\n    verified_docs = []\n    for doc in retrieved_docs:\n        stored_hash = doc.metadata.get('sha256_hash')\n        if not stored_hash: continue\n        \n        current_hash = hashlib.sha256(doc.page_content.encode('utf-8')).hexdigest()\n        if current_hash == stored_hash:\n            verified_docs.append(doc)\n        else:\n            log_security_event(f\"TAMPERING DETECTED in chunk from {doc.metadata['source_uri']}\")\n    return verified_docs</code></pre><p><strong>Action:</strong> Modify your RAG ingestion pipeline to compute and store a SHA-256 hash for each document chunk. In the retrieval pipeline, add a verification step to ensure the returned content matches its stored hash, alerting on any mismatch.</p>",
+                `<h5>Concept:</h5><p>This refines content integrity verification from the whole-file level down to the individual chunks that a RAG system actually uses. This prevents an attacker from directly tampering with individual chunk content within the index database. To sign embeddings, sign a stable serialization of metadata (chunk_hash, model_id, precision, timestamp) rather than the raw float array to avoid float drift issues.</p><h5>Step 1: Compute and Store Hashes During Ingestion</h5><pre><code># File: rag_pipeline/ingestion.py
+import hashlib
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+
+def process_and_hash_document(document_text: str, source_uri: str):
+    text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=100)
+    documents = text_splitter.create_documents([document_text])
+
+    for doc in documents:
+        chunk_bytes = doc.page_content.encode("utf-8")
+        doc.metadata["sha256_hash"] = hashlib.sha256(chunk_bytes).hexdigest()
+        doc.metadata["source_uri"] = source_uri
+    return documents
+</code></pre><h5>Step 2: Verify at Retrieval Time</h5><pre><code># File: rag_pipeline/retrieval.py
+from __future__ import annotations
+
+import hashlib
+import hmac
+import logging
+from typing import Protocol
+
+
+logger = logging.getLogger("rag_integrity")
+
+
+class VectorStore(Protocol):
+    def similarity_search(self, query: str, k: int = 5):
+        ...
+
+
+def retrieve_and_verify(query: str, vector_db: VectorStore, *, k: int = 5):
+    try:
+        retrieved_docs = vector_db.similarity_search(query, k=k)
+    except Exception:
+        logger.exception("rag_retrieval_failed")
+        raise
+
+    verified_docs = []
+    for doc in retrieved_docs:
+        stored_hash = doc.metadata.get("sha256_hash")
+        source_uri = doc.metadata.get("source_uri", "unknown")
+        if not stored_hash:
+            logger.warning("rag_chunk_missing_hash source_uri=%s", source_uri)
+            continue
+
+        current_hash = hashlib.sha256(doc.page_content.encode("utf-8")).hexdigest()
+        if hmac.compare_digest(current_hash, stored_hash):
+            verified_docs.append(doc)
+        else:
+            logger.error("rag_chunk_tampering_detected source_uri=%s", source_uri)
+    return verified_docs</code></pre><p><strong>Action:</strong> Modify your RAG ingestion pipeline to compute and store a SHA-256 hash for each document chunk. In the retrieval pipeline, pass the vector database explicitly, verify each returned chunk before context assembly, and alert on missing or mismatched integrity metadata.</p>`,
             },
           ],
           toolsOpenSource: ["hashlib", "GnuPG"],
@@ -14065,7 +14405,7 @@ print("code-doc drift gate passed")</code></pre>
       pillar: ["infra"],
       phase: ["building", "validation"],
       description:
-        "A critical supply chain defense that ensures software packages (e.g., NPM, PyPI) are published only from a secure, auditable, and authorized source. This technique breaks the attack chain where a stolen developer credential is used to publish a malicious version of a legitimate package. It achieves this by prohibiting publications from local developer machines and mandating that all releases originate from a hardened CI/CD pipeline that authenticates using short-lived, identity-based tokens and generates verifiable provenance attestations.",
+        "A critical supply chain defense that ensures software packages (e.g., NPM, PyPI) are published only from a secure, auditable, and authorized source. This technique reduces credential-only publishing attacks where a stolen developer credential is used to publish a malicious version of a legitimate package. It achieves this by prohibiting publications from local developer machines and mandating that all releases originate from a hardened CI/CD pipeline that authenticates using short-lived, identity-based tokens and generates verifiable provenance attestations. Provenance confirms the publisher and build path; it does not prove that the source code is safe or free of backdoors.",
       toolsOpenSource: [
         "GitHub Actions, GitLab CI (with OIDC support)",
         "Sigstore (for signing and attestations)",
@@ -14096,7 +14436,7 @@ print("code-doc drift gate passed")</code></pre>
           items: [
             "Supply Chain Attacks (Cross-Layer)",
             "Compromised Framework Components (L3)",
-            "Backdoor Attacks (L1) (verified provenance prevents publishing of backdoored models)",
+            "Backdoor Attacks (L1) (verified provenance raises assurance about publisher and build path; it does not prove absence of backdoors)",
           ],
         },
         {
@@ -14149,7 +14489,28 @@ print("code-doc drift gate passed")</code></pre>
           implementation:
             "Mandate CI/CD-only publishing using npm Trusted Publishing (OIDC).",
           howTo:
-            "<h5>Concept:</h5><p>Use **npm Trusted Publishing** to configure the npm registry to trust your CI/CD provider (e.g., GitHub Actions) via OIDC. This allows the CI/CD job to authenticate with its own identity and get a short-lived token for each run. This eliminates the need for long-lived secrets and makes publishing from a developer machine impossible for that package, as the registry will reject it.</p><h5>Implement the Publishing Workflow</h5><pre><code># File: .github/workflows/publish.yml\n\nname: Publish Package to npm\non:\n  release:\n    types: [created]\n\njobs:\n  publish-npm:\n    runs-on: ubuntu-latest\n    permissions:\n      id-token: write # Grant the job permission to get an OIDC token\n      contents: read\n    environment: production # Use a protected environment\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with:\n          node-version: '20'\n          registry-url: 'https://registry.npmjs.org'\n      - run: npm ci\n      # Explicitly using --provenance is the safest approach, although it may be default in some OIDC contexts.\n      - run: npm publish --provenance</code></pre><p><strong>Action:</strong> Prohibit publishing from developer machines by configuring **npm Trusted Publishing** for your packages. This binds the package to a specific repository and CI/CD workflow, which becomes the sole authorized publisher.</p>",
+            `<h5>Concept:</h5><p>Use <strong>npm Trusted Publishing</strong> to configure the npm registry to trust your CI/CD provider via OIDC. This lets the CI/CD job authenticate with its own short-lived identity and removes long-lived publish tokens from developer machines and repository secrets. The resulting provenance is evidence of publisher identity and build workflow, not a proof that the released code is benign.</p><h5>Implement the Publishing Workflow</h5><pre><code># File: .github/workflows/publish.yml
+
+name: Publish Package to npm
+on:
+  release:
+    types: [created]
+
+jobs:
+  publish-npm:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Grant the job permission to get an OIDC token
+      contents: read
+    environment: production # Use a protected environment
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          registry-url: 'https://registry.npmjs.org'
+      - run: npm ci
+      - run: npm publish</code></pre><p>For supported public packages and repositories, Trusted Publishing generates provenance through the trusted publisher workflow. Treat the attestation as an admission signal: a compromised runner, malicious workflow change, or already-backdoored source tree can still produce valid provenance.</p><p><strong>Action:</strong> Prohibit publishing from developer machines by configuring <strong>npm Trusted Publishing</strong> for your packages. Bind publishing to a protected repository workflow, require review for workflow changes, and combine provenance verification with dependency review, malware scanning, and protected-environment approvals.</p>`,
         },
         {
           implementation:
@@ -15059,8 +15420,13 @@ def scan_python(code: str):
           phase: ["building", "operation"],
           description:
             "When dynamic evaluation is required, force safe/restricted interpreters inside the execution boundary so code cannot access filesystem, network, or privileged APIs by design. For interactive 'vibe coding' run evaluation only inside ephemeral sandboxes.",
+          warning: {
+            level: "Restricted Interpreter Is Not a Complete Sandbox",
+            description:
+              "<p>RestrictedPython and similar restricted interpreters reduce the language surface but must not be the only containment boundary. Pin RestrictedPython to 8.0+ because CVE-2025-22153 affected versions 6.0 through pre-8.0, and run dynamic code inside a short-lived OS/container/WASM sandbox with no network and minimal filesystem access.</p>",
+          },
           toolsOpenSource: [
-            "RestrictedPython (Python)",
+            "RestrictedPython 8.0+ (Python)",
             "isolated-vm (JavaScript sandbox runtime)",
             "Docker / Podman (ephemeral sandboxes)",
             "gVisor",
@@ -15133,18 +15499,23 @@ def scan_python(code: str):
                 "Allowlist restricted interpreters and enforce interpreter selection via an execution gateway (policy), not via model output.",
               howTo: `<h5>What to enforce</h5>
 <ul>
-  <li><b>Restricted interpreters only</b>: allowlist approved evaluators (literal-only, restricted subsets).</li>
+  <li><b>Restricted interpreters only</b>: allowlist approved evaluators (literal-only, restricted subsets) and pin RestrictedPython to 8.0 or newer.</li>
   <li><b>Ephemeral sandboxes</b>: for vibe coding, run code in short-lived containers/WASM runtimes and delete the environment after execution.</li>
   <li><b>Deny-by-default</b>: no outbound network, non-root, confined working directory.</li>
 </ul>
 
-<h5>Example code (Python) - restricted interpreter (conceptual)</h5>
-<pre><code>from RestrictedPython import compile_restricted
+<h5>Example code (Python) - restricted interpreter inside a sandbox</h5>
+<pre><code>from importlib.metadata import version
+
+from packaging.version import Version
+from RestrictedPython import compile_restricted
 from RestrictedPython import safe_globals
 
-# NOTE:
-# - This example demonstrates a restricted interpreter approach.
-# - You should still run it inside an ephemeral sandbox for defense-in-depth.
+if Version(version("RestrictedPython")) < Version("8.0"):
+    raise RuntimeError("RestrictedPython 8.0+ is required; older 6.x/7.x releases are not accepted")
+
+# This function must be invoked only inside a short-lived OS/container/WASM sandbox
+# with no outbound network, non-root execution, and a minimal writable filesystem.
 
 def run_restricted(code_str: str):
     byte_code = compile_restricted(code_str, "&lt;agent-code&gt;", "exec")
@@ -16266,8 +16637,7 @@ def explain_detector_miss(model, tokenizer, text: str, target_label: int) -&gt; 
       ],
       toolsCommercial: [
         "Redis Enterprise (active-active with ACLs)",
-        "Cloudflare API Gateway / WAF",
-        "F5 Distributed Cloud API Security"
+        "Amazon ElastiCache / Google Cloud Memorystore / Azure Cache for Redis (managed Redis isolation)"
       ],
       defendsAgainst: [
         {
@@ -16378,23 +16748,37 @@ class TenantPartitionedCache:
         self.redis_client.set(self.make_key(cache_key), value, ex=ttl_seconds)</code></pre>
 
 <h5>Step 2: Partition serving-state caches, not just response caches</h5>
-<p>Prefix caches, KV caches, batching pools, and warm-worker state should follow the same tenant boundary. If the serving stack cannot isolate prefix reuse by tenant or risk tier, route those workloads to separate instances.</p>
-<pre><code># File: serving/vllm_config.yaml
-engine:
-  enable_prefix_caching: true
-  prefix_cache_isolation: "per_tenant"
-  batch_grouping_key:
-    - tenant_id
-    - security_context
+<p>Prefix caches, KV caches, batching pools, and warm-worker state should follow the same tenant boundary. With vLLM, bind prefix-cache reuse to a per-request salt derived from tenant and security context. If the serving stack cannot isolate prefix reuse by tenant or risk tier, route those workloads to separate instances or disable prefix caching for high-risk contexts.</p>
+<pre><code># File: serving/vllm_cache_salt.py
+from __future__ import annotations
 
-routing:
-  dedicated_pools:
-    - match:
-        security_context: "regulated"
-      upstream: "vllm-regulated-pool"
-    - match:
-        security_context: "standard"
-      upstream: "vllm-standard-pool"</code></pre>
+import hashlib
+import hmac
+import os
+
+from openai import OpenAI
+
+
+client = OpenAI(
+    base_url=os.environ["VLLM_BASE_URL"],
+    api_key=os.environ["VLLM_API_KEY"],
+)
+CACHE_SALT_SECRET = os.environ["CACHE_SALT_SECRET"].encode("utf-8")
+
+
+def tenant_cache_salt(tenant_id: str, security_context: str) -> str:
+    material = f"{tenant_id}:{security_context}".encode("utf-8")
+    return hmac.new(CACHE_SALT_SECRET, material, hashlib.sha256).hexdigest()
+
+
+def generate_for_tenant(*, tenant_id: str, security_context: str, model: str, messages: list[dict]):
+    return client.chat.completions.create(
+        model=model,
+        messages=messages,
+        extra_body={
+            "cache_salt": tenant_cache_salt(tenant_id, security_context),
+        },
+    )</code></pre>
 
 <h5>Step 3: Make the partitioning policy explicit in deployment review</h5>
 <p>Record which cache layers are shared, which are tenant-isolated, and which workloads require dedicated serving pools. This gives reviewers a concrete artifact for placement and evidence checks.</p>
@@ -16687,7 +17071,7 @@ def load_cache_if_trustworthy(redis_client, full_key: str, expected: dict) -&gt;
           "implementationGuidance": [
             {
               "implementation": "Implement per-server allowlisting and optional SPKI or certificate-fingerprint pinning for configured MCP endpoints, with fail-closed behavior on identity mismatch.",
-              "howTo": "<h5>Concept:</h5><p>Store a small trust record for each allowed MCP server. At minimum include the server URL, the expected hostname, and either the expected certificate fingerprint or an SPKI hash. When the client connects, compare what the server presents to what you already trust. If it does not match, stop the connection and log the event.</p><h5>Example allowlist file</h5><pre><code>{\n  \"servers\": [\n    {\n      \"name\": \"finance-mcp\",\n      \"url\": \"https://mcp.finance.internal:8443\",\n      \"hostname\": \"mcp.finance.internal\",\n      \"spki_sha256\": \"BASE64_SPki_HASH_HERE\",\n      \"min_tls_version\": \"TLSv1.2\"\n    }\n  ]\n}\n</code></pre><h5>Example Node.js verification hook</h5><pre><code>import https from \"node:https\";\nimport tls from \"node:tls\";\nimport crypto from \"node:crypto\";\nimport fs from \"node:fs\";\n\nconst cfg = JSON.parse(fs.readFileSync(\"./mcp_allowlist.json\", \"utf8\"));\nconst allowed = new Map(cfg.servers.map(s =&gt; [s.url, s]));\n\nfunction spkiHash(cert) {\n  const pubkey = cert.pubkey || cert.raw;\n  return crypto.createHash(\"sha256\").update(pubkey).digest(\"base64\");\n}\n\nfunction connectPinned(serverUrl) {\n  const rule = allowed.get(serverUrl);\n  if (!rule) throw new Error(`Server not allowlisted: ${serverUrl}`);\n\n  const agent = new https.Agent({\n    minVersion: rule.min_tls_version,\n    checkServerIdentity: (host, cert) =&gt; {\n      const tlsErr = tls.checkServerIdentity(host, cert);\n      if (tlsErr) return tlsErr;\n      const got = spkiHash(cert);\n      if (got !== rule.spki_sha256) {\n        return new Error(`SPKI pin mismatch for ${host}`);\n      }\n      return undefined;\n    }\n  });\n\n  return agent;\n}\n</code></pre><p><strong>Operational notes:</strong> Keep a rotation runbook. During planned certificate rotation, update the pin in a reviewed config change before the new certificate goes live. Keep a short emergency allowlist override path, but require approval and log every use.</p>"
+              "howTo": "<h5>Concept:</h5><p>Store a small trust record for each allowed MCP server. At minimum include the server URL, the expected hostname, and either the expected certificate fingerprint or an SPKI hash. When the client connects, compare what the server presents to what you already trust. If it does not match, stop the connection and log the event.</p><h5>Example allowlist file</h5><pre><code>{\n  \"servers\": [\n    {\n      \"name\": \"finance-mcp\",\n      \"url\": \"https://mcp.finance.internal:8443\",\n      \"hostname\": \"mcp.finance.internal\",\n      \"spki_sha256\": \"BASE64_SPki_HASH_HERE\",\n      \"min_tls_version\": \"TLSv1.2\"\n    }\n  ]\n}\n</code></pre><h5>Example Node.js verification hook</h5><pre><code>import https from \"node:https\";\nimport tls from \"node:tls\";\nimport crypto from \"node:crypto\";\nimport fs from \"node:fs\";\n\nconst cfg = JSON.parse(fs.readFileSync(\"./mcp_allowlist.json\", \"utf8\"));\nconst allowed = new Map(cfg.servers.map(s =&gt; [s.url, s]));\n\nfunction spkiHash(cert) {\n  const x509 = new crypto.X509Certificate(cert.raw);\n  const spkiDer = x509.publicKey.export({ type: \"spki\", format: \"der\" });\n  return crypto.createHash(\"sha256\").update(spkiDer).digest(\"base64\");\n}\n\nfunction connectPinned(serverUrl) {\n  const rule = allowed.get(serverUrl);\n  if (!rule) throw new Error(`Server not allowlisted: ${serverUrl}`);\n\n  const agent = new https.Agent({\n    minVersion: rule.min_tls_version,\n    checkServerIdentity: (host, cert) =&gt; {\n      const tlsErr = tls.checkServerIdentity(host, cert);\n      if (tlsErr) return tlsErr;\n      const got = spkiHash(cert);\n      if (got !== rule.spki_sha256) {\n        return new Error(`SPKI pin mismatch for ${host}`);\n      }\n      return undefined;\n    }\n  });\n\n  return agent;\n}\n</code></pre><p><strong>Operational notes:</strong> Keep a rotation runbook. During planned certificate rotation, update the pin in a reviewed config change before the new certificate goes live. Keep a short emergency allowlist override path, but require approval and log every use.</p>"
             },
             {
               "implementation": "Validate server URI, expected identity, and minimum transport properties before session establishment, and reject unknown or downgraded connections.",
@@ -17648,7 +18032,7 @@ def emit_sampling_event(
             "OpenTelemetry (decision tracing)"
           ],
           "toolsCommercial": [
-            "Styra DAS (OPA policy management)",
+            "Cerbos Hub (policy management)",
             "Immuta (purpose-aware policy enforcement)",
             "Privacera (governed data access enforcement)",
             "Collibra (policy and governance workflow integration)"
@@ -18563,12 +18947,15 @@ def emit_sampling_event(
             "OpenTelemetry",
             "Git",
             "in-toto / SLSA provenance tooling",
-            "MLflow"
+            "Sigstore / cosign",
+            "Kyverno / Gatekeeper (admission control)"
           ],
           "toolsCommercial": [
             "GitHub Enterprise / GitHub Advanced Security",
             "GitLab Ultimate",
             "JFrog Artifactory / Xray",
+            "Sonatype Nexus Repository",
+            "Amazon ECR (image signing and registry policy)",
             "Harness STO"
           ],
           "implementationGuidance": [
@@ -19961,6 +20348,1644 @@ from pathlib import Path
 manifest = json.loads(Path("routing/route_bundle_manifest.json").read_text(encoding="utf-8"))
 print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["rollout_mode"], "status": "canary_started"})
 </code></pre><h5>Step 3: Roll back on safety or mismatch spikes</h5><p>Track route-decision mismatches, moderation regressions, or policy evaluation failures against the active bundle version. If those signals spike during canary, immediately restore the prior approved bundle version.</p><p><strong>Action:</strong> Keep route bundles in version control with explicit approval and rollback records. High-risk routing changes should never jump directly to full production rollout.</p>`
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "AID-H-035",
+      "name": "MCP Server Runtime Boundary & Tool Exposure Governance",
+      "description": "Harden the MCP server itself as an independent trust boundary that publishes tools, resources, prompts, elicitation requests, task streams, and backend integrations to MCP clients. This technique covers the server-side responsibilities that are not owned by AID-H-029, which focuses on MCP and tool clients.<br/><br/><strong>Coverage includes:</strong><ul><li>Server deployment profile, transport, Origin, DNS rebinding, TLS, runtime, and coarse abuse baseline.</li><li>OAuth protected-resource behavior, token audience validation, no token passthrough, and confused-deputy prevention for MCP proxy servers.</li><li>Server-side validation and authorization before tool handlers, resource reads, prompt rendering, backend calls, filesystem access, command execution, or network fetches.</li><li>Governance for the tool, resource, prompt, and descriptor surface the server publishes to clients.</li><li>Output, resource URI, and elicitation boundaries, including URL-mode third-party authorization handled by the server without leaking credentials through the MCP client.</li><li>Session, task, telemetry, per-principal budget, and disable-hook mechanisms that downstream Detect, Isolate, Evict, and Restore controls can consume.</li></ul><strong>Scope boundary:</strong> AID-H-035 is the server-side canonical home for MCP server hardening. It deliberately cross-references AID-H-019 for orchestrator capability policy, AID-H-025 for tool and descriptor resolution integrity, AID-H-029 for MCP client hardening, AID-I-001/AID-I-002 for sandboxing and network isolation, AID-D-005 for monitoring consumers, and AID-E/AID-I response techniques for revocation and disablement.",
+      "warning": {
+        "level": "Emerging MCP Server Attack Surface",
+        "description": "<p><strong>MCP server security is a rapidly evolving production risk area.</strong></p><ul><li><strong>Server and client duties are different:</strong> Do not move client-only URL-mode elicitation controls, local credential storage controls, or client UI controls into this technique. Those belong in AID-H-029.</li><li><strong>Generic web security is not enough:</strong> API gateways, WAFs, TLS, and container baselines help, but MCP servers also need protocol-specific controls for tool descriptors, scopes, elicitation, session IDs, task streams, resource URIs, and model-visible outputs.</li><li><strong>Server-side policy must be enforced even when the client looks trustworthy:</strong> Every tool call, resource request, prompt argument, and elicitation callback remains untrusted input until the server has validated identity, authorization, schema, bounds, and backend object access.</li></ul><p><strong>Recommended Defense-in-Depth Pairings:</strong></p><ul><li><strong>AID-H-029 (MCP &amp; Tool Client Security Hardening):</strong> Covers client-side connection validation, credential storage, response parsing, session lifecycle, update integrity, and server-initiated sampling controls.</li><li><strong>AID-H-019 (Tool Authorization &amp; Capability Scoping):</strong> Governs orchestrator or agent-side capability policy. AID-H-035.003 acts as the MCP server enforcement point after a request arrives.</li><li><strong>AID-H-025 (Tool &amp; MCP Resolution Integrity):</strong> Validates tool and descriptor resolution from the consuming side. AID-H-035.004 governs what the server itself publishes and changes.</li><li><strong>AID-I-001 and AID-I-002:</strong> Provide sandbox and network-isolation primitives for high-risk server handlers, fetchers, file tools, and code-execution tools.</li><li><strong>AID-D-005:</strong> Consumes the structured security events emitted by AID-H-035.006.</li></ul>"
+      },
+      "defendsAgainst": [
+        {
+          "framework": "MITRE ATLAS",
+          "items": [
+            "AML.T0049 Exploit Public-Facing Application",
+            "AML.T0051 LLM Prompt Injection",
+            "AML.T0053 AI Agent Tool Invocation",
+            "AML.T0086 Exfiltration via AI Agent Tool Invocation",
+            "AML.T0098 AI Agent Tool Credential Harvesting",
+            "AML.T0104 Publish Poisoned AI Agent Tool",
+            "AML.T0105 Escape to Host",
+            "AML.T0110 AI Agent Tool Poisoning",
+            "AML.T0010 AI Supply Chain Compromise"
+          ]
+        },
+        {
+          "framework": "MAESTRO",
+          "items": [
+            "Agent Tool Misuse (L7)",
+            "Agent Identity Attack (L7)",
+            "Integration Risks (L7)",
+            "Compromised Agent Registry (L7)",
+            "Data Exfiltration (L2)",
+            "Supply Chain Attacks (Cross-Layer)"
+          ]
+        },
+        {
+          "framework": "OWASP LLM Top 10 2025",
+          "items": [
+            "LLM01:2025 Prompt Injection",
+            "LLM02:2025 Sensitive Information Disclosure",
+            "LLM03:2025 Supply Chain",
+            "LLM05:2025 Improper Output Handling",
+            "LLM06:2025 Excessive Agency"
+          ]
+        },
+        {
+          "framework": "OWASP ML Top 10 2023",
+          "items": [
+            "ML06:2023 AI Supply Chain Attacks"
+          ]
+        },
+        {
+          "framework": "OWASP Agentic AI Top 10 2026",
+          "items": [
+            "ASI02:2026 Tool Misuse and Exploitation",
+            "ASI03:2026 Identity and Privilege Abuse",
+            "ASI04:2026 Agentic Supply Chain Vulnerabilities",
+            "ASI05:2026 Unexpected Code Execution (RCE)",
+            "ASI07:2026 Insecure Inter-Agent Communication",
+            "ASI08:2026 Cascading Failures"
+          ]
+        },
+        {
+          "framework": "NIST Adversarial Machine Learning 2025",
+          "items": [
+            "NISTAML.015 Indirect Prompt Injection",
+            "NISTAML.018 Prompt Injection",
+            "NISTAML.036 Leaking information from user interactions",
+            "NISTAML.038 Data Extraction",
+            "NISTAML.039 Compromising connected resources",
+            "NISTAML.051 Model Poisoning (Supply Chain)"
+          ]
+        },
+        {
+          "framework": "Cisco Integrated AI Security and Safety Framework",
+          "items": [
+            "AITech-8.2 Data Exfiltration / Exposure",
+            "AITech-9.3 Dependency / Plugin Compromise",
+            "AITech-12.1 Tool Exploitation",
+            "AITech-14.1 Unauthorized Access",
+            "AITech-14.2 Abuse of Delegated Authority",
+            "AISubtech-4.3.3 Server Rebinding Attack",
+            "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
+            "AISubtech-9.3.1 Malicious Package / Tool Injection",
+            "AISubtech-12.1.2 Tool Poisoning"
+          ]
+        },
+        {
+          "framework": "Google Secure AI Framework 2.0 - Risks",
+          "items": [
+            "IIC: Insecure Integrated Component",
+            "PIJ: Prompt Injection",
+            "SDD: Sensitive Data Disclosure",
+            "DMS: Denial of ML Service",
+            "RA: Rogue Actions"
+          ]
+        },
+        {
+          "framework": "Databricks AI Security Framework 3.0",
+          "items": [
+            "Agents - Tools MCP Server 13.16: Prompt Injection",
+            "Agents - Tools MCP Server 13.17: Confused Deputy",
+            "Agents - Tools MCP Server 13.18: Tool Poisoning",
+            "Agents - Tools MCP Server 13.19: Credential and Token Exposure",
+            "Agents - Tools MCP Server 13.20: Insecure Server Configuration",
+            "Agents - Tools MCP Server 13.21: Supply Chain Attacks",
+            "Agents - Tools MCP Server 13.22: Excessive Permissions and Scope Creep",
+            "Agents - Tools MCP Server 13.23: Data Exfiltration",
+            "Agents - Tools MCP Server 13.24: Context Spoofing and Manipulation",
+            "Agents - Tools MCP Server 13.25: Insecure Communication"
+          ]
+        }
+      ],
+      "subTechniques": [
+        {
+          "id": "AID-H-035.001",
+          "name": "MCP Server Deployment Profile, Transport & Exposure Baseline",
+          "pillar": [
+            "infra",
+            "app"
+          ],
+          "phase": [
+            "scoping",
+            "building",
+            "operation"
+          ],
+          "description": "Classify each MCP server by deployment profile and enforce the minimum server-side exposure baseline before it is reachable by clients. This sub-technique covers coarse infrastructure-layer controls: deployment profile evidence, Streamable HTTP Origin validation, local binding restrictions, TLS or mTLS, runtime hardening, and gateway or process-level denial-of-service limits.<br/><br/><strong>Scope boundary:</strong> This sub-technique owns the baseline exposure envelope for the MCP server. AID-H-035.006 owns fine-grained per-user, per-client, per-tenant, per-tool, and per-task budgets. AID-I-001 and AID-I-002 provide the sandbox and network isolation primitives referenced here.",
+          "toolsOpenSource": [
+            "MCP TypeScript SDK",
+            "MCP Python SDK",
+            "Envoy",
+            "Open Policy Agent (OPA)",
+            "Kubernetes NetworkPolicy",
+            "Falco"
+          ],
+          "toolsCommercial": [
+            "Cloudflare WAF",
+            "Akamai App & API Protector",
+            "Kong Konnect",
+            "Datadog Cloud SIEM"
+          ],
+          "defendsAgainst": [
+            {
+              "framework": "MITRE ATLAS",
+              "items": [
+                "AML.T0049 Exploit Public-Facing Application",
+                "AML.T0105 Escape to Host",
+                "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption"
+              ]
+            },
+            {
+              "framework": "MAESTRO",
+              "items": [
+                "Integration Risks (L7)",
+                "Agent Tool Misuse (L7)"
+              ]
+            },
+            {
+              "framework": "OWASP LLM Top 10 2025",
+              "items": [
+                "LLM06:2025 Excessive Agency"
+              ]
+            },
+            {
+              "framework": "OWASP ML Top 10 2023",
+              "items": [
+                "N/A"
+              ]
+            },
+            {
+              "framework": "OWASP Agentic AI Top 10 2026",
+              "items": [
+                "ASI02:2026 Tool Misuse and Exploitation",
+                "ASI07:2026 Insecure Inter-Agent Communication",
+                "ASI08:2026 Cascading Failures"
+              ]
+            },
+            {
+              "framework": "NIST Adversarial Machine Learning 2025",
+              "items": [
+                "NISTAML.039 Compromising connected resources"
+              ]
+            },
+            {
+              "framework": "Cisco Integrated AI Security and Safety Framework",
+              "items": [
+                "AITech-13.1 Disruption of Availability",
+                "AITech-13.2 Cost Harvesting / Repurposing",
+                "AISubtech-4.3.3 Server Rebinding Attack",
+                "AISubtech-13.1.4 Application Denial of Service"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "IIC: Insecure Integrated Component",
+                "DMS: Denial of ML Service"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Agents - Tools MCP Server 13.20: Insecure Server Configuration",
+                "Agents - Tools MCP Server 13.25: Insecure Communication"
+              ]
+            }
+          ],
+          "implementationGuidance": [
+            {
+              "implementation": "Classify every MCP server into a deployment profile and require profile-specific evidence before production exposure.",
+              "howTo": `<h5>Concept:</h5><p>An MCP server running as a local developer process, internal team service, internet-facing API, high-value tool server, research sandbox, or gateway has a different threat model. Make that profile explicit so release reviewers can verify the right baseline instead of applying one vague checklist to every server.</p><h5>Step 1: Store a profile manifest with each server</h5><pre><code>// file: mcp-server-profile.json
+    {
+      "server_id": "payments-mcp",
+      "owner": "platform-integrations",
+      "profile": "high-value-tool-server",
+      "transport": "streamable-http",
+      "exposure": "internal",
+      "privileged_tools": ["refund_payment", "read_customer_account"],
+      "required_controls": [
+        "origin_validation",
+        "authenticated_transport",
+        "tls_or_mtls",
+        "non_root_container",
+        "read_only_root_filesystem",
+        "coarse_gateway_rate_limit",
+        "audit_logging"
+      ],
+      "cross_references": [
+        "AID-I-001",
+        "AID-I-002",
+        "AID-D-005"
+      ]
+    }
+    </code></pre><h5>Step 2: Enforce the profile in CI</h5><pre><code>// file: validate-mcp-profile.mjs
+    import fs from "node:fs";
+    
+    const allowedProfiles = new Set([
+      "local-development",
+      "team-server",
+      "internet-facing-api",
+      "high-value-tool-server",
+      "research-sandbox",
+      "gateway-proxy"
+    ]);
+    
+    const profile = JSON.parse(fs.readFileSync("mcp-server-profile.json", "utf8"));
+    
+    if (!allowedProfiles.has(profile.profile)) {
+      throw new Error("Unknown MCP server profile: " + profile.profile);
+    }
+    
+    if (profile.exposure !== "local" && !profile.required_controls.includes("authenticated_transport")) {
+      throw new Error("Remote MCP servers require authenticated transport");
+    }
+    
+    if (profile.profile === "high-value-tool-server" && !profile.required_controls.includes("audit_logging")) {
+      throw new Error("High-value MCP tool servers require audit logging");
+    }
+    
+    console.log("MCP server profile accepted:", profile.server_id);
+    </code></pre><p><strong>Operational notes:</strong> Use this manifest as release evidence. It should point to the exact Kubernetes manifest, gateway route, IAM policy, logging sink, and sandbox profile that implement the selected controls.</p>`
+            },
+            {
+              "implementation": "For Streamable HTTP MCP servers, validate the Origin header, bind local servers to localhost, and require authentication on all non-local connections.",
+              "howTo": `<h5>Concept:</h5><p>Streamable HTTP MCP servers are reachable HTTP services. They need protocol-specific anti-DNS-rebinding controls in addition to ordinary API security. The server should reject invalid Origin headers, avoid binding local developer servers to all interfaces, and require authentication when the server is reachable beyond the local user boundary.</p><h5>Step 1: Add an Origin and Host gate</h5><pre><code>// file: src/http/originGate.js
+    const allowedOrigins = new Set([
+      "https://assistant.example.com",
+      "https://mcp-console.example.com"
+    ]);
+    
+    const allowedHosts = new Set([
+      "payments-mcp.internal.example.com",
+      "localhost:3000",
+      "127.0.0.1:3000"
+    ]);
+    
+    export function enforceMcpHttpBoundary(req, res, next) {
+      const origin = req.headers.origin;
+      const host = req.headers.host;
+    
+      if (host && !allowedHosts.has(host)) {
+        return res.status(400).json({
+          jsonrpc: "2.0",
+          error: { code: -32600, message: "Invalid host" }
+        });
+      }
+    
+      if (origin && !allowedOrigins.has(origin)) {
+        return res.status(403).json({
+          jsonrpc: "2.0",
+          error: { code: -32600, message: "Invalid origin" }
+        });
+      }
+    
+      return next();
+    }
+    </code></pre><h5>Step 2: Bind local development servers to loopback only</h5><pre><code>// file: src/server.js
+    import express from "express";
+    import { enforceMcpHttpBoundary } from "./http/originGate.js";
+    
+    const app = express();
+    app.use(enforceMcpHttpBoundary);
+    
+    const host = process.env.MCP_BIND_HOST || "127.0.0.1";
+    if (process.env.NODE_ENV !== "production" && host === "0.0.0.0") {
+      throw new Error("Local MCP servers must not bind to 0.0.0.0");
+    }
+    
+    app.listen(Number(process.env.PORT || 3000), host);
+    </code></pre><p><strong>Operational notes:</strong> These checks do not replace OAuth or mTLS. They reduce browser-origin and local-network abuse paths, especially for developer or localhost MCP servers.</p>`
+            },
+            {
+              "implementation": "Apply a hardened runtime baseline for production MCP servers, including non-root containers, read-only filesystems, dropped Linux capabilities, and process-level resource limits.",
+              "howTo": `<h5>Concept:</h5><p>Many MCP servers bridge directly to filesystems, APIs, databases, browsers, shell tools, or internal networks. A handler bug should not automatically become a host compromise. Put the server in a constrained runtime before exposing tools.</p><h5>Example Kubernetes security context</h5><pre><code># file: k8s/payments-mcp-deployment.yaml
+    apiVersion: apps/v1
+    kind: Deployment
+    metadata:
+      name: payments-mcp
+    spec:
+      replicas: 2
+      selector:
+        matchLabels:
+          app: payments-mcp
+      template:
+        metadata:
+          labels:
+            app: payments-mcp
+        spec:
+          automountServiceAccountToken: false
+          securityContext:
+            runAsNonRoot: true
+            seccompProfile:
+              type: RuntimeDefault
+          containers:
+            - name: server
+              image: registry.example.com/payments-mcp:2026.06.10
+              ports:
+                - containerPort: 3000
+              resources:
+                requests:
+                  cpu: "250m"
+                  memory: "256Mi"
+                limits:
+                  cpu: "1"
+                  memory: "512Mi"
+              securityContext:
+                allowPrivilegeEscalation: false
+                readOnlyRootFilesystem: true
+                capabilities:
+                  drop: ["ALL"]
+    </code></pre><p><strong>Operational notes:</strong> Keep this as the server baseline. For tools that execute untrusted code, launch browsers, run subprocesses, or inspect unknown artifacts, call AID-I-001 sandbox profiles instead of running inside the main server process.</p>`
+            },
+            {
+              "implementation": "Enforce coarse gateway or process-level denial-of-service limits for the MCP endpoint before applying fine-grained per-principal budgets.",
+              "howTo": `<h5>Concept:</h5><p>This control is the broad front-door safety net: request size, concurrent connections, stream lifetime, process CPU, process memory, and global request rate. Per-user, per-client, per-tenant, per-tool, and per-task cost budgets belong in AID-H-035.006.</p><h5>Example Envoy route limits</h5><pre><code># file: envoy/mcp-route.yaml
+    typed_per_filter_config:
+      envoy.filters.http.local_ratelimit:
+        "@type": type.googleapis.com/udpa.type.v1.TypedStruct
+        type_url: type.googleapis.com/envoy.extensions.filters.http.local_ratelimit.v3.LocalRateLimit
+        value:
+          stat_prefix: payments_mcp_local_rate_limit
+          token_bucket:
+            max_tokens: 300
+            tokens_per_fill: 300
+            fill_interval: 60s
+          filter_enabled:
+            runtime_key: local_rate_limit_enabled
+            default_value:
+              numerator: 100
+              denominator: HUNDRED
+          filter_enforced:
+            runtime_key: local_rate_limit_enforced
+            default_value:
+              numerator: 100
+              denominator: HUNDRED
+    </code></pre><p><strong>Operational notes:</strong> A WAF or API gateway is acceptable as one layer for internet-facing MCP servers, but it is not a substitute for protocol-aware authorization, tool validation, elicitation safety, and per-principal budgets inside the server.</p>`
+            }
+          ]
+        },
+        {
+          "id": "AID-H-035.002",
+          "name": "MCP Server OAuth Resource Boundary & Delegation Safety",
+          "pillar": [
+            "app",
+            "infra"
+          ],
+          "phase": [
+            "building",
+            "operation"
+          ],
+          "description": "Enforce the MCP server's role as an OAuth protected resource. The server must publish protected resource metadata where applicable, validate token issuer, audience, resource, scope, and expiry, reject tokens not issued for this MCP server, avoid token passthrough, and use separate delegated credentials for upstream services.<br/><br/><strong>Scope boundary:</strong> General IAM architecture remains in AID-H-004 and AID-H-019. This sub-technique is specific to MCP server authorization semantics, OAuth protected resource metadata, token audience or resource validation, no token passthrough, and the confused-deputy risks that arise when an MCP server also acts as an OAuth client or proxy to upstream APIs.",
+          "toolsOpenSource": [
+            "oauth2-proxy",
+            "Keycloak",
+            "ORY Hydra",
+            "Open Policy Agent (OPA)",
+            "SPIFFE / SPIRE"
+          ],
+          "toolsCommercial": [
+            "Okta",
+            "Auth0",
+            "Microsoft Entra ID",
+            "Ping Identity",
+            "HashiCorp Vault"
+          ],
+          "defendsAgainst": [
+            {
+              "framework": "MITRE ATLAS",
+              "items": [
+                "AML.T0012 Valid Accounts",
+                "AML.T0053 AI Agent Tool Invocation",
+                "AML.T0086 Exfiltration via AI Agent Tool Invocation",
+                "AML.T0098 AI Agent Tool Credential Harvesting"
+              ]
+            },
+            {
+              "framework": "MAESTRO",
+              "items": [
+                "Agent Identity Attack (L7)",
+                "Agent Tool Misuse (L7)",
+                "Data Exfiltration (L2)"
+              ]
+            },
+            {
+              "framework": "OWASP LLM Top 10 2025",
+              "items": [
+                "LLM02:2025 Sensitive Information Disclosure",
+                "LLM06:2025 Excessive Agency"
+              ]
+            },
+            {
+              "framework": "OWASP ML Top 10 2023",
+              "items": [
+                "N/A"
+              ]
+            },
+            {
+              "framework": "OWASP Agentic AI Top 10 2026",
+              "items": [
+                "ASI03:2026 Identity and Privilege Abuse",
+                "ASI02:2026 Tool Misuse and Exploitation"
+              ]
+            },
+            {
+              "framework": "NIST Adversarial Machine Learning 2025",
+              "items": [
+                "NISTAML.038 Data Extraction",
+                "NISTAML.039 Compromising connected resources"
+              ]
+            },
+            {
+              "framework": "Cisco Integrated AI Security and Safety Framework",
+              "items": [
+                "AITech-14.1 Unauthorized Access",
+                "AITech-14.2 Abuse of Delegated Authority",
+                "AISubtech-14.1.1 Credential Theft",
+                "AISubtech-14.2.1 Permission Escalation via Delegation"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "IIC: Insecure Integrated Component",
+                "SDD: Sensitive Data Disclosure",
+                "RA: Rogue Actions"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Agents - Tools MCP Server 13.17: Confused Deputy",
+                "Agents - Tools MCP Server 13.19: Credential and Token Exposure",
+                "Agents - Tools MCP Server 13.22: Excessive Permissions and Scope Creep",
+                "Agents - Tools MCP Server 13.23: Data Exfiltration"
+              ]
+            }
+          ],
+          "implementationGuidance": [
+            {
+              "implementation": "Publish OAuth protected resource metadata and return scope-aware WWW-Authenticate challenges for protected MCP servers.",
+              "howTo": `<h5>Concept:</h5><p>When an MCP server is protected by OAuth over HTTP transport, clients need a standard way to discover the resource server and the authorization server. The server should expose protected resource metadata and use WWW-Authenticate challenges to tell clients which resource and scope are required for the current operation.</p><h5>Example protected resource metadata</h5><pre><code>// file: src/oauth/resourceMetadata.js
+    export function protectedResourceMetadata(req, res) {
+      res.json({
+        resource: "https://payments-mcp.internal.example.com",
+        authorization_servers: [
+          "https://auth.internal.example.com"
+        ],
+        scopes_supported: [
+          "payments:read",
+          "payments:refund",
+          "customers:read"
+        ],
+        bearer_methods_supported: ["header"]
+      });
+    }
+    </code></pre><h5>Example scope challenge</h5><pre><code>// file: src/oauth/challenge.js
+    export function requireScope(requiredScope) {
+      return function scopeGate(req, res, next) {
+        if (!req.auth || !req.auth.scopes.includes(requiredScope)) {
+          res.setHeader(
+            "WWW-Authenticate",
+            'Bearer resource_metadata="https://payments-mcp.internal.example.com/.well-known/oauth-protected-resource", scope="' + requiredScope + '"'
+          );
+          return res.status(req.auth ? 403 : 401).json({
+            jsonrpc: "2.0",
+            error: { code: -32001, message: "Insufficient authorization scope" }
+          });
+        }
+        return next();
+      };
+    }
+    </code></pre><p><strong>Operational notes:</strong> Keep scopes operation-specific. Avoid advertising refresh-token scopes as a resource requirement unless the server is also acting as an authorization server and the design has been reviewed separately.</p>`
+            },
+            {
+              "implementation": "Validate issuer, audience, resource, expiry, and scope on every HTTP request, and reject tokens not issued for this MCP server.",
+              "howTo": `<h5>Concept:</h5><p>The MCP server is a protected resource. It must only accept tokens that were issued for this exact MCP server resource. A token meant for another API, another MCP server, or an upstream SaaS API must be rejected even if it is structurally valid.</p><h5>Example JWT validation middleware</h5><pre><code>// file: src/oauth/validateToken.js
+    import { createRemoteJWKSet, jwtVerify } from "jose";
+    
+    const issuer = "https://auth.internal.example.com";
+    const resource = "https://payments-mcp.internal.example.com";
+    const jwks = createRemoteJWKSet(new URL(issuer + "/.well-known/jwks.json"));
+    
+    function normalizeStringList(value) {
+      if (Array.isArray(value)) {
+        return value.map(String).filter(Boolean);
+      }
+      if (typeof value === "string") {
+        return value.split(/[ ,]+/).filter(Boolean);
+      }
+      if (value) {
+        return [String(value)];
+      }
+      return [];
+    }
+    
+    function tenantContextFromClaims(payload) {
+      const tenantIds = normalizeStringList(
+        payload.tenant_ids || payload.tenants || payload.tenant_id || payload.tid
+      );
+      const activeTenantId = String(
+        payload.active_tenant_id || payload.tenant_id || payload.tid || tenantIds[0] || ""
+      );
+    
+      if (activeTenantId && !tenantIds.includes(activeTenantId)) {
+        tenantIds.push(activeTenantId);
+      }
+    
+      return {
+        tenantIds,
+        activeTenantId: activeTenantId || null
+      };
+    }
+    
+    export async function validateMcpBearer(req, res, next) {
+      const header = req.headers.authorization || "";
+      const token = header.startsWith("Bearer ") ? header.slice("Bearer ".length) : null;
+      if (!token) {
+        return res.status(401).json({ jsonrpc: "2.0", error: { code: -32001, message: "Bearer token required" } });
+      }
+    
+      try {
+        const { payload } = await jwtVerify(token, jwks, {
+          issuer,
+          audience: resource
+        });
+    
+        if (payload.resource && payload.resource !== resource) {
+          throw new Error("Token resource mismatch");
+        }
+    
+        const tenantContext = tenantContextFromClaims(payload);
+    
+        req.auth = {
+          subject: payload.sub,
+          clientId: payload.client_id || payload.azp,
+          scopes: String(payload.scope || "").split(" ").filter(Boolean),
+          tenantIds: tenantContext.tenantIds,
+          activeTenantId: tenantContext.activeTenantId,
+          issuer: payload.iss,
+          audience: payload.aud
+        };
+        return next();
+      } catch {
+        return res.status(401).json({ jsonrpc: "2.0", error: { code: -32001, message: "Invalid token" } });
+      }
+    }
+    </code></pre><p><strong>Operational notes:</strong> Validate on every HTTP request, including stream initialization and resumed requests. Do not rely on a prior MCP-Session-Id as proof of authorization. If the server exposes tenant-scoped tools, normalize tenant claims into a consistent <code>tenantIds</code> and <code>activeTenantId</code> shape so downstream authorization, task isolation, and budget controls can fail closed instead of building keys with undefined tenant context.</p>`
+            },
+            {
+              "implementation": "Ban token passthrough and require separate upstream credentials or token exchange when the MCP server calls backend APIs.",
+              "howTo": `<h5>Concept:</h5><p>An MCP client token proves authorization to call the MCP server. It is not a general-purpose token to forward to upstream APIs. When the server integrates with GitHub, Google Drive, databases, ticketing systems, payment APIs, or cloud APIs, it must obtain a separate upstream credential for that user, service account, or delegated grant.</p><h5>Example upstream token guard</h5><pre><code>// file: src/oauth/upstreamTokenGuard.js
+    export function rejectClientTokenPassthrough({ inboundToken, upstreamToken, upstreamName }) {
+      if (!upstreamToken) {
+        throw new Error("Missing upstream token for " + upstreamName);
+      }
+      if (inboundToken === upstreamToken) {
+        throw new Error("Token passthrough is forbidden for " + upstreamName);
+      }
+    }
+    
+    export async function callUpstreamApi(req, upstreamClient, operation) {
+      const inboundToken = req.headers.authorization?.slice("Bearer ".length);
+      const upstreamToken = await upstreamClient.getDelegatedToken({
+        subject: req.auth.subject,
+        scopes: operation.requiredUpstreamScopes
+      });
+    
+      rejectClientTokenPassthrough({
+        inboundToken,
+        upstreamToken,
+        upstreamName: operation.service
+      });
+    
+      return upstreamClient.request(operation, upstreamToken);
+    }
+    </code></pre><p><strong>Operational notes:</strong> Store upstream credentials in a server-side secret store with user, tenant, client, scope, and expiry metadata. Never log inbound or upstream token values; log only hashes or token identifiers.</p>`
+            },
+            {
+              "implementation": "If the MCP server acts as an OAuth proxy or OAuth client to a third-party API, enforce per-client consent, exact redirect URI validation, CSRF state, and consent cookies bound to client_id.",
+              "howTo": `<h5>Concept:</h5><p>This control only applies when the MCP server also acts as an OAuth proxy or OAuth client for an upstream third-party service. It does not apply to a pure MCP protected resource that only validates bearer tokens. In proxy mode, the server must prevent a malicious MCP client from abusing static upstream OAuth consent to obtain authorization codes meant for another client.</p><h5>Example consent record</h5><pre><code>// file: src/oauth/proxyConsent.js
+    const approvedClientConsent = new Map();
+    
+    function consentKey({ userId, clientId, redirectUri, upstream }) {
+      return [userId, clientId, redirectUri, upstream].join("|");
+    }
+    
+    export function recordConsent({ userId, clientId, redirectUri, upstream, scopes }) {
+      approvedClientConsent.set(consentKey({ userId, clientId, redirectUri, upstream }), {
+        scopes: [...scopes].sort(),
+        approvedAt: new Date().toISOString()
+      });
+    }
+    
+    export function requireProxyConsent({ userId, clientId, redirectUri, upstream, scopes }) {
+      const record = approvedClientConsent.get(consentKey({ userId, clientId, redirectUri, upstream }));
+      if (!record) {
+        throw new Error("Per-client consent required before upstream OAuth flow");
+      }
+      for (const scope of scopes) {
+        if (!record.scopes.includes(scope)) {
+          throw new Error("Consent does not cover requested upstream scope: " + scope);
+        }
+      }
+    }
+    </code></pre><h5>Redirect and state requirements</h5><ul><li>Match redirect URIs by exact string comparison against registered client metadata.</li><li>Bind CSRF state to user ID, client ID, redirect URI, upstream service, requested scopes, and expiration.</li><li>If cookies track consent, use Secure, HttpOnly, SameSite=Lax or stricter attributes and bind the consent to the specific client_id, not just the user.</li></ul><p><strong>Operational notes:</strong> Keep this proxy-specific path separate from ordinary protected-resource token validation so operators do not assume every MCP server needs redirect handling.</p>`
+            }
+          ]
+        },
+        {
+          "id": "AID-H-035.003",
+          "name": "Server-Side Tool Invocation Validation & Object-Level Authorization",
+          "pillar": [
+            "app",
+            "infra",
+            "data"
+          ],
+          "phase": [
+            "building",
+            "operation"
+          ],
+          "description": "Make the MCP server the final policy enforcement point for every tools/call request. The server must validate tool arguments against strict schemas, enforce object-level and tenant-level authorization inside the handler, protect URL-fetching tools from SSRF and unsafe redirects, and sandbox or deny command, code, browser, and filesystem execution paths.<br/><br/><strong>Scope boundary:</strong> AID-H-019 defines capability policy from the agent or orchestrator side. This sub-technique enforces server-side validation and backend authorization after a request has arrived at the MCP server. AID-I-002 and AID-H-020 provide network and safe-fetch patterns. AID-H-026 and AID-I-001 provide unsafe-code and sandboxing controls.",
+          "toolsOpenSource": [
+            "Ajv",
+            "Pydantic",
+            "Open Policy Agent (OPA)",
+            "Cedar",
+            "gVisor",
+            "Firecracker",
+            "Semgrep"
+          ],
+          "toolsCommercial": [
+            "Snyk Code",
+            "Checkmarx One",
+            "Aqua Security",
+            "Sysdig Secure"
+          ],
+          "defendsAgainst": [
+            {
+              "framework": "MITRE ATLAS",
+              "items": [
+                "AML.T0053 AI Agent Tool Invocation",
+                "AML.T0086 Exfiltration via AI Agent Tool Invocation",
+                "AML.T0101 Data Destruction via AI Agent Tool Invocation",
+                "AML.T0105 Escape to Host"
+              ]
+            },
+            {
+              "framework": "MAESTRO",
+              "items": [
+                "Agent Tool Misuse (L7)",
+                "Integration Risks (L7)",
+                "Data Exfiltration (L2)"
+              ]
+            },
+            {
+              "framework": "OWASP LLM Top 10 2025",
+              "items": [
+                "LLM02:2025 Sensitive Information Disclosure",
+                "LLM05:2025 Improper Output Handling",
+                "LLM06:2025 Excessive Agency"
+              ]
+            },
+            {
+              "framework": "OWASP ML Top 10 2023",
+              "items": [
+                "N/A"
+              ]
+            },
+            {
+              "framework": "OWASP Agentic AI Top 10 2026",
+              "items": [
+                "ASI02:2026 Tool Misuse and Exploitation",
+                "ASI03:2026 Identity and Privilege Abuse",
+                "ASI05:2026 Unexpected Code Execution (RCE)"
+              ]
+            },
+            {
+              "framework": "NIST Adversarial Machine Learning 2025",
+              "items": [
+                "NISTAML.038 Data Extraction",
+                "NISTAML.039 Compromising connected resources"
+              ]
+            },
+            {
+              "framework": "Cisco Integrated AI Security and Safety Framework",
+              "items": [
+                "AITech-12.1 Tool Exploitation",
+                "AITech-14.1 Unauthorized Access",
+                "AITech-14.2 Abuse of Delegated Authority",
+                "AISubtech-12.1.1 Parameter Manipulation",
+                "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
+                "AISubtech-8.2.3 Data Exfiltration via Agent Tooling"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "IIC: Insecure Integrated Component",
+                "SDD: Sensitive Data Disclosure",
+                "RA: Rogue Actions"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Agents - Tools MCP Server 13.22: Excessive Permissions and Scope Creep",
+                "Agents - Tools MCP Server 13.23: Data Exfiltration",
+                "Agents - Tools MCP Server 13.20: Insecure Server Configuration"
+              ]
+            }
+          ],
+          "implementationGuidance": [
+            {
+              "implementation": "Validate every tools/call argument with a strict server-side JSON Schema before invoking the handler.",
+              "howTo": `<h5>Concept:</h5><p>Tool schemas are not just client hints. They are server-side contracts. The MCP server must reject unknown fields, wrong types, missing required values, oversized values, invalid enums, and unsafe string formats before the handler runs.</p><h5>Example strict schema validation with Ajv</h5><pre><code>// file: src/tools/schemaGate.js
+    import Ajv from "ajv";
+    import addFormats from "ajv-formats";
+    
+    const ajv = new Ajv({
+      allErrors: true,
+      strict: true,
+      removeAdditional: false
+    });
+    addFormats(ajv);
+    
+    const schemas = {
+      read_customer_account: {
+        type: "object",
+        additionalProperties: false,
+        required: ["customer_id"],
+        properties: {
+          customer_id: {
+            type: "string",
+            pattern: "^cus_[A-Za-z0-9]{12,32}$"
+          }
+        }
+      }
+    };
+    
+    const validators = Object.fromEntries(
+      Object.entries(schemas).map(([name, schema]) => [name, ajv.compile(schema)])
+    );
+    
+    export function validateToolArguments(toolName, args) {
+      const validate = validators[toolName];
+      if (!validate) {
+        throw new Error("Unknown tool: " + toolName);
+      }
+      if (!validate(args)) {
+        const detail = ajv.errorsText(validate.errors, { separator: "; " });
+        throw new Error("Invalid tool arguments: " + detail);
+      }
+      return args;
+    }
+    </code></pre><p><strong>Operational notes:</strong> Use explicit maximum lengths, numeric ranges, enum values, URL schemes, and file path formats. Do not use schema descriptions as enforcement; descriptions are model-visible documentation, not policy.</p>`
+            },
+            {
+              "implementation": "Bind each tool invocation to the authenticated principal, client, tenant, session, and backend object authorization before executing side effects.",
+              "howTo": `<h5>Concept:</h5><p>The server should not assume the client only calls tools it is allowed to use. The handler must verify that the authenticated user or workload can access the specific backend object or tenant being requested.</p><h5>Example object-level authorization check</h5><pre><code>// file: src/tools/customerAuthz.js
+    export async function requireCustomerAccess({ auth, customerId, db }) {
+      const tenantIds = Array.isArray(auth.tenantIds) ? auth.tenantIds : [];
+      const scopes = new Set(Array.isArray(auth.scopes) ? auth.scopes : []);
+      if (!auth.subject || tenantIds.length === 0) {
+        throw new Error("Missing authenticated tenant context");
+      }
+    
+      const row = await db.queryOne(
+        "select tenant_id from customers where customer_id = ?",
+        [customerId]
+      );
+    
+      if (!row) {
+        throw new Error("Customer not found");
+      }
+    
+      const allowed = tenantIds.includes(row.tenant_id) &&
+        scopes.has("customers:read");
+    
+      if (!allowed) {
+        throw new Error("Not authorized for customer");
+      }
+    
+      return row;
+    }
+    
+    export async function readCustomerAccountHandler({ auth, args, db }) {
+      await requireCustomerAccess({ auth, customerId: args.customer_id, db });
+      return db.queryOne(
+        "select customer_id, status, plan from customers where customer_id = ?",
+        [args.customer_id]
+      );
+    }
+    </code></pre><p><strong>Operational notes:</strong> Treat the MCP server as the final policy enforcement point. H-019 can prevent the agent from selecting a capability, but this server-side gate prevents direct API calls, compromised clients, stale client policy, or cross-tenant confusion from reaching backend data.</p>`
+            },
+            {
+              "implementation": "For tools that fetch URLs or resolve network targets, enforce SSRF-safe URL validation, redirect validation, DNS rebinding checks, and egress allowlists.",
+              "howTo": `<h5>Concept:</h5><p>URL-fetching MCP tools are high-risk because attackers can use them as server-side probes into internal networks, cloud metadata services, localhost admin panels, or private DNS names. This guidance references AID-I-002 for network segmentation and AID-H-020.001 for safe-fetch patterns.</p><h5>Example URL validation in Python</h5><pre><code># file: tools/safe_fetch_gate.py
+    from __future__ import annotations
+    
+    import ipaddress
+    import socket
+    from urllib.parse import urlparse
+    
+    BLOCKED_HOSTS = {"localhost"}
+    ALLOWED_SCHEMES = {"https"}
+    
+    
+    def _all_resolved_ips(hostname: str):
+        infos = socket.getaddrinfo(hostname, None, proto=socket.IPPROTO_TCP)
+        ips = []
+        for info in infos:
+            sockaddr = info[4]
+            ips.append(ipaddress.ip_address(sockaddr[0]))
+        return ips
+    
+    
+    def validate_fetch_url(url: str) -> str:
+        parsed = urlparse(url)
+        if parsed.scheme not in ALLOWED_SCHEMES:
+            raise ValueError("Only https URLs are allowed")
+        if not parsed.hostname:
+            raise ValueError("URL hostname is required")
+        if parsed.hostname.lower() in BLOCKED_HOSTS:
+            raise ValueError("Localhost is blocked")
+    
+        for ip in _all_resolved_ips(parsed.hostname):
+            if not ip.is_global:
+                raise ValueError(f"Blocked non-public address: {ip}")
+    
+        return url
+    </code></pre><h5>Operational requirements</h5><ul><li>Validate the initial URL and every redirect target.</li><li>Prefer egress allowlists for production tools that only need known APIs.</li><li>Block cloud metadata endpoints such as 169.254.169.254 and provider-specific metadata hostnames.</li><li>Pin the resolved address for the actual connection where the HTTP client allows it, or place the fetcher behind an egress proxy that enforces DNS and IP policy.</li></ul>`
+            },
+            {
+              "implementation": "For command, code, browser, and filesystem tools, deny shell execution by default and route high-risk handlers through sandboxed execution profiles.",
+              "howTo": `<h5>Concept:</h5><p>Some MCP tools intentionally run commands, evaluate code, automate browsers, read files, or write files. Those handlers should be rare, separately reviewed, and isolated from the main MCP server process. This guidance cross-references AID-H-026 for unsafe code execution prevention and AID-I-001 for sandboxing.</p><h5>Example command allowlist wrapper</h5><pre><code>// file: src/tools/commandRunner.js
+    import { spawn } from "node:child_process";
+    
+    const allowedCommands = new Map([
+      ["git_status", { cmd: "git", args: ["status", "--short"], timeoutMs: 5000 }],
+      ["npm_audit_json", { cmd: "npm", args: ["audit", "--json"], timeoutMs: 30000 }]
+    ]);
+    
+    export function runAllowedCommand(commandId, cwd) {
+      const rule = allowedCommands.get(commandId);
+      if (!rule) {
+        throw new Error("Command is not allowlisted");
+      }
+    
+      return new Promise((resolve, reject) => {
+        const child = spawn(rule.cmd, rule.args, {
+          cwd,
+          shell: false,
+          windowsHide: true,
+          stdio: ["ignore", "pipe", "pipe"]
+        });
+    
+        const timer = setTimeout(() => {
+          child.kill();
+          reject(new Error("Command timed out"));
+        }, rule.timeoutMs);
+    
+        let stdout = "";
+        let stderr = "";
+        child.stdout.on("data", chunk => { stdout += chunk; });
+        child.stderr.on("data", chunk => { stderr += chunk; });
+        child.on("close", code => {
+          clearTimeout(timer);
+          if (code !== 0) {
+            reject(new Error("Command failed: " + stderr.slice(0, 500)));
+          } else {
+            resolve(stdout);
+          }
+        });
+      });
+    }
+    </code></pre><p><strong>Operational notes:</strong> Do not pass model text, user text, or client-provided strings into a shell command. If dynamic arguments are unavoidable, validate them with strict schemas and pass them as argument arrays, not shell strings. Use disposable sandboxes for high-risk workloads.</p>`
+            }
+          ]
+        },
+        {
+          "id": "AID-H-035.004",
+          "name": "MCP Tool, Resource & Prompt Publication Governance",
+          "pillar": [
+            "app",
+            "infra"
+          ],
+          "phase": [
+            "building",
+            "operation"
+          ],
+          "description": "Govern the server-published surface that MCP clients and models consume: tool definitions, resource templates, prompt templates, annotations, descriptions, schemas, and list_changed events. The server must publish only reviewed contracts, preserve semantic honesty in model-visible metadata, and make descriptor changes auditable and reversible.<br/><br/><strong>Scope boundary:</strong> AID-H-024 and AID-H-031 govern broader publisher and skill supply-chain controls. AID-H-025 validates tool and descriptor resolution from the consuming side. This sub-technique covers the MCP server's responsibility as the publisher of its own exposed tools, resources, prompts, and dynamic capability changes.",
+          "toolsOpenSource": [
+            "Git",
+            "Sigstore Cosign",
+            "Open Policy Agent (OPA)",
+            "Semgrep",
+            "jsonschema"
+          ],
+          "toolsCommercial": [
+            "GitHub Enterprise",
+            "GitLab Ultimate",
+            "Snyk Code",
+            "Checkmarx One"
+          ],
+          "defendsAgainst": [
+            {
+              "framework": "MITRE ATLAS",
+              "items": [
+                "AML.T0104 Publish Poisoned AI Agent Tool",
+                "AML.T0110 AI Agent Tool Poisoning",
+                "AML.T0010 AI Supply Chain Compromise",
+                "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+                "AML.T0084.001 Discover AI Agent Configuration: Tool Definitions"
+              ]
+            },
+            {
+              "framework": "MAESTRO",
+              "items": [
+                "Compromised Agent Registry (L7)",
+                "Agent Tool Misuse (L7)",
+                "Supply Chain Attacks (Cross-Layer)"
+              ]
+            },
+            {
+              "framework": "OWASP LLM Top 10 2025",
+              "items": [
+                "LLM03:2025 Supply Chain",
+                "LLM05:2025 Improper Output Handling"
+              ]
+            },
+            {
+              "framework": "OWASP ML Top 10 2023",
+              "items": [
+                "ML06:2023 AI Supply Chain Attacks"
+              ]
+            },
+            {
+              "framework": "OWASP Agentic AI Top 10 2026",
+              "items": [
+                "ASI04:2026 Agentic Supply Chain Vulnerabilities",
+                "ASI02:2026 Tool Misuse and Exploitation"
+              ]
+            },
+            {
+              "framework": "NIST Adversarial Machine Learning 2025",
+              "items": [
+                "NISTAML.051 Model Poisoning (Supply Chain)",
+                "NISTAML.039 Compromising connected resources"
+              ]
+            },
+            {
+              "framework": "Cisco Integrated AI Security and Safety Framework",
+              "items": [
+                "AITech-9.3 Dependency / Plugin Compromise",
+                "AITech-12.1 Tool Exploitation",
+                "AISubtech-9.3.1 Malicious Package / Tool Injection",
+                "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
+                "AISubtech-12.1.2 Tool Poisoning",
+                "AISubtech-12.1.4 Tool Shadowing"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "IIC: Insecure Integrated Component",
+                "MST: Model Source Tampering",
+                "PIJ: Prompt Injection"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Agents - Tools MCP Server 13.18: Tool Poisoning",
+                "Agents - Tools MCP Server 13.21: Supply Chain Attacks",
+                "Agents - Tools MCP Server 13.24: Context Spoofing and Manipulation"
+              ]
+            }
+          ],
+          "implementationGuidance": [
+            {
+              "implementation": "Maintain a signed, versioned contract manifest for every server-published tool, resource, and prompt.",
+              "howTo": `<h5>Concept:</h5><p>The MCP server's published contract is a security artifact. It tells clients and models what actions exist, which arguments are accepted, which operations are read-only or destructive, and what side effects can occur. Keep this contract in version control and require review for changes.</p><h5>Example contract manifest</h5><pre><code>// file: mcp-contract-manifest.json
+    {
+      "server_id": "payments-mcp",
+      "contract_version": "2026.06.10-1",
+      "owner": "platform-integrations",
+      "tools": [
+        {
+          "name": "read_customer_account",
+          "risk_tier": "medium",
+          "side_effects": "none",
+          "read_only": true,
+          "destructive": false,
+          "schema_hash": "sha256:REPLACE_WITH_SCHEMA_HASH",
+          "handler_commit": "REPLACE_WITH_GIT_SHA"
+        },
+        {
+          "name": "refund_payment",
+          "risk_tier": "high",
+          "side_effects": "creates payment refund",
+          "read_only": false,
+          "destructive": true,
+          "requires_human_approval": true,
+          "schema_hash": "sha256:REPLACE_WITH_SCHEMA_HASH",
+          "handler_commit": "REPLACE_WITH_GIT_SHA"
+        }
+      ],
+      "resources": [],
+      "prompts": []
+    }
+    </code></pre><p><strong>Operational notes:</strong> If your SDK supports tool annotations such as read-only or destructive hints, treat them as security-relevant metadata. They must be accurate and reviewed, not generated casually from a function name.</p>`
+            },
+            {
+              "implementation": "Review model-visible tool, resource, and prompt text for semantic honesty, hidden instructions, and privilege-inflating descriptions before publication.",
+              "howTo": `<h5>Concept:</h5><p>Tool descriptions, parameter descriptions, prompt templates, and resource templates are read by models and sometimes users. A malicious or careless description can smuggle instructions, overstate authority, hide side effects, or make a destructive tool look read-only.</p><h5>Example descriptor review policy</h5><pre><code>// file: policies/mcp_descriptor_review.json
+    {
+      "required_checks": [
+        "description_matches_handler_behavior",
+        "no_hidden_instructions",
+        "no_claims_to_override_client_policy",
+        "no_instruction_to_exfiltrate_or_hide_data",
+        "side_effects_disclosed",
+        "read_only_and_destructive_annotations_match_behavior",
+        "schema_defaults_do_not_encode_behavioral_instructions"
+      ],
+      "blocked_phrases": [
+        "ignore previous instructions",
+        "do not tell the user",
+        "always call this tool",
+        "bypass approval",
+        "send secrets"
+      ]
+    }
+    </code></pre><h5>Example static check</h5><pre><code>// file: scripts/check-mcp-descriptors.mjs
+    import fs from "node:fs";
+    
+    const policy = JSON.parse(fs.readFileSync("policies/mcp_descriptor_review.json", "utf8"));
+    const manifest = JSON.parse(fs.readFileSync("mcp-contract-manifest.json", "utf8"));
+    const text = JSON.stringify(manifest).toLowerCase();
+    
+    for (const phrase of policy.blocked_phrases) {
+      if (text.includes(phrase)) {
+        throw new Error("Blocked descriptor phrase found: " + phrase);
+      }
+    }
+    
+    console.log("MCP descriptor text check passed");
+    </code></pre><p><strong>Operational notes:</strong> This static check is only a baseline. High-value tools should also receive human review because semantic deception is not always catchable by keyword scans.</p>`
+            },
+            {
+              "implementation": "Govern dynamic tool, resource, and prompt list changes as approved releases, and emit auditable list_changed events.",
+              "howTo": `<h5>Concept:</h5><p>The ability to change the published tool list at runtime is powerful. Treat list_changed events as security-relevant changes, especially if a client or model may automatically discover and use newly exposed capabilities.</p><h5>Example change gate</h5><pre><code>// file: src/publication/changeGate.js
+    import crypto from "node:crypto";
+    
+    let activeContractHash = null;
+    
+    export function activateContract(contract, { approvedBy, logger }) {
+      if (!approvedBy || approvedBy.length < 2) {
+        throw new Error("MCP contract activation requires two approvers");
+      }
+    
+      const hash = crypto
+        .createHash("sha256")
+        .update(JSON.stringify(contract))
+        .digest("hex");
+    
+      activeContractHash = hash;
+      logger.info({
+        event_type: "mcp_contract_activated",
+        contract_version: contract.contract_version,
+        contract_hash: hash,
+        approved_by: approvedBy,
+        tool_count: contract.tools.length
+      });
+    
+      return hash;
+    }
+    
+    export function getActiveContractHash() {
+      return activeContractHash;
+    }
+    </code></pre><p><strong>Operational notes:</strong> Do not let individual tool handlers mutate the server's public contract as a side effect of user input. Dynamic discovery should still be backed by an approved manifest, feature flag, or release artifact.</p>`
+            }
+          ]
+        },
+        {
+          "id": "AID-H-035.005",
+          "name": "MCP Server Output, Resource URI & Elicitation Boundary Controls",
+          "pillar": [
+            "app",
+            "data"
+          ],
+          "phase": [
+            "building",
+            "operation"
+          ],
+          "description": "Constrain the data and instructions that leave the MCP server. This includes validating and labeling tool outputs, enforcing resource URI and template boundaries, preventing prompt/resource output from smuggling privileged instructions, and handling elicitation securely from the server side.<br/><br/><strong>Scope boundary:</strong> Client-side elicitation UX rules, such as showing the full URL, avoiding prefetch, and requiring explicit navigation consent, belong to AID-H-029. This sub-technique only covers the server-side duties: request modes supported by the client, no sensitive data in form mode, safe URL generation, user binding, callback verification, and server-side storage of third-party credentials obtained through URL-mode elicitation.",
+          "toolsOpenSource": [
+            "Ajv",
+            "Pydantic",
+            "DOMPurify",
+            "OpenTelemetry",
+            "detect-secrets"
+          ],
+          "toolsCommercial": [
+            "GitGuardian",
+            "Nightfall AI",
+            "Microsoft Purview",
+            "Datadog Sensitive Data Scanner"
+          ],
+          "defendsAgainst": [
+            {
+              "framework": "MITRE ATLAS",
+              "items": [
+                "AML.T0051 LLM Prompt Injection",
+                "AML.T0086 Exfiltration via AI Agent Tool Invocation",
+                "AML.T0098 AI Agent Tool Credential Harvesting"
+              ]
+            },
+            {
+              "framework": "MAESTRO",
+              "items": [
+                "Agent Tool Misuse (L7)",
+                "Data Exfiltration (L2)",
+                "Integration Risks (L7)"
+              ]
+            },
+            {
+              "framework": "OWASP LLM Top 10 2025",
+              "items": [
+                "LLM01:2025 Prompt Injection",
+                "LLM02:2025 Sensitive Information Disclosure",
+                "LLM05:2025 Improper Output Handling"
+              ]
+            },
+            {
+              "framework": "OWASP ML Top 10 2023",
+              "items": [
+                "ML09:2023 Output Integrity Attack"
+              ]
+            },
+            {
+              "framework": "OWASP Agentic AI Top 10 2026",
+              "items": [
+                "ASI02:2026 Tool Misuse and Exploitation",
+                "ASI03:2026 Identity and Privilege Abuse",
+                "ASI07:2026 Insecure Inter-Agent Communication"
+              ]
+            },
+            {
+              "framework": "NIST Adversarial Machine Learning 2025",
+              "items": [
+                "NISTAML.015 Indirect Prompt Injection",
+                "NISTAML.036 Leaking information from user interactions",
+                "NISTAML.038 Data Extraction"
+              ]
+            },
+            {
+              "framework": "Cisco Integrated AI Security and Safety Framework",
+              "items": [
+                "AITech-8.2 Data Exfiltration / Exposure",
+                "AITech-8.3 Information Disclosure",
+                "AITech-12.2 Insecure Output Handling",
+                "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
+                "AISubtech-8.3.1 Tool Metadata Exposure",
+                "AISubtech-12.2.1 Code Detection / Malicious Code Output"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "PIJ: Prompt Injection",
+                "SDD: Sensitive Data Disclosure",
+                "EDH: Excessive Data Handling"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Agents - Tools MCP Server 13.16: Prompt Injection",
+                "Agents - Tools MCP Server 13.19: Credential and Token Exposure",
+                "Agents - Tools MCP Server 13.23: Data Exfiltration",
+                "Agents - Tools MCP Server 13.24: Context Spoofing and Manipulation"
+              ]
+            }
+          ],
+          "implementationGuidance": [
+            {
+              "implementation": "Validate, bound, label, and redact MCP tool outputs before returning them to the client or model context.",
+              "howTo": `<h5>Concept:</h5><p>Tool output is not automatically trustworthy. It may contain secrets, prompt injection text, hostile markup, oversized binary data, or content that looks like a system instruction. The server should enforce output schemas, size limits, MIME limits, redaction, and untrusted-content labels before sending the result.</p><h5>Example output guard</h5><pre><code>// file: src/output/toolOutputGuard.js
+    const MAX_TEXT_CHARS = 12000;
+    const secretPatterns = [
+      /sk-[A-Za-z0-9_-]{20,}/g,
+      /ghp_[A-Za-z0-9_]{20,}/g,
+      /-----BEGIN PRIVATE KEY-----[\\s\\S]+?-----END PRIVATE KEY-----/g
+    ];
+    
+    export function guardToolTextOutput({ toolName, text }) {
+      let safe = String(text || "").slice(0, MAX_TEXT_CHARS);
+    
+      for (const pattern of secretPatterns) {
+        safe = safe.replace(pattern, "[REDACTED_SECRET]");
+      }
+    
+      return {
+        type: "text",
+        text: "Untrusted tool output from " + toolName + ":\\n" + safe,
+        _meta: {
+          aidefend_untrusted_output: true,
+          output_guard: "h035_005",
+          truncated: String(text || "").length > MAX_TEXT_CHARS
+        }
+      };
+    }
+    </code></pre><p><strong>Operational notes:</strong> The client still needs its own parser and renderer protections in AID-H-029. This server-side guard reduces the chance that the server becomes a prompt-injection amplifier or secret-leak bridge.</p>`
+            },
+            {
+              "implementation": "Validate resource URIs and resource templates with canonicalization, scheme allowlists, path boundaries, and authorization checks before reading or returning data.",
+              "howTo": `<h5>Concept:</h5><p>MCP resources can expose files, database rows, generated documents, or application state. Treat every resource URI as untrusted input. Normalize it, restrict schemes, prevent path traversal, and authorize the concrete object before reading it.</p><h5>Example file resource boundary</h5><pre><code>// file: src/resources/fileResourceGate.js
+    import path from "node:path";
+    import fs from "node:fs/promises";
+    
+    const root = path.resolve("/srv/mcp-allowed-workspace");
+    
+    export async function readAllowedFileResource({ auth, uri }) {
+      const parsed = new URL(uri);
+      if (parsed.protocol !== "file:") {
+        throw new Error("Unsupported resource scheme");
+      }
+    
+      const requested = path.resolve(root, "." + parsed.pathname);
+      if (!requested.startsWith(root + path.sep)) {
+        throw new Error("Resource path escapes allowed workspace");
+      }
+    
+      if (!auth.scopes.includes("files:read")) {
+        throw new Error("Missing files:read scope");
+      }
+    
+      const data = await fs.readFile(requested, "utf8");
+      return {
+        uri,
+        mimeType: "text/plain",
+        text: data.slice(0, 50000)
+      };
+    }
+    </code></pre><p><strong>Operational notes:</strong> For externally fetched resources, apply the SSRF-safe fetch pattern in AID-H-035.003 and the network isolation in AID-I-002. Do not let a resource URI bypass tool-call authorization just because it is read-only.</p>`
+            },
+            {
+              "implementation": "Constrain server-generated prompts, prompt arguments, resource text, and completion inputs so they cannot smuggle privileged instructions or unauthorized values.",
+              "howTo": `<h5>Concept:</h5><p>Prompt and completion surfaces can carry model-visible instructions. The MCP server should validate prompt arguments, restrict completion choices to authorized values, and avoid embedding hidden policy overrides in generated prompt text.</p><h5>Example prompt argument validator</h5><pre><code>// file: src/prompts/promptGate.js
+    const allowedPromptNames = new Set(["summarize_ticket", "draft_customer_reply"]);
+    
+    export function validatePromptRequest({ auth, name, args }) {
+      if (!allowedPromptNames.has(name)) {
+        throw new Error("Unknown prompt");
+      }
+    
+      if (name === "summarize_ticket") {
+        if (!auth.scopes.includes("tickets:read")) {
+          throw new Error("Missing tickets:read scope");
+        }
+        if (!/^TICKET-[0-9]{5,12}$/.test(args.ticket_id)) {
+          throw new Error("Invalid ticket_id");
+        }
+      }
+    
+      return true;
+    }
+    </code></pre><p><strong>Operational notes:</strong> If the server supports completion or autocomplete flows for prompt arguments, only return values the current user may see. Do not use completion as an enumeration oracle for projects, tenants, customer names, files, or tickets.</p>`
+            },
+            {
+              "implementation": "For form-mode elicitation, never request sensitive information and validate returned data against the requested schema.",
+              "howTo": `<h5>Concept:</h5><p>Form-mode elicitation sends user-provided structured data through the MCP client. It is appropriate for non-secret data such as selecting an option, confirming a non-sensitive preference, or providing ordinary profile information. It must not be used for passwords, API keys, access tokens, payment credentials, or other secrets.</p><h5>Example form-mode guard</h5><pre><code>// file: src/elicitation/formModePolicy.js
+    const sensitiveTerms = [
+      "password",
+      "api_key",
+      "access_token",
+      "refresh_token",
+      "private_key",
+      "card_number",
+      "cvv"
+    ];
+    
+    export function validateFormElicitationRequest(request) {
+      if (request.mode && request.mode !== "form") {
+        throw new Error("Not a form-mode request");
+      }
+    
+      const serialized = JSON.stringify(request).toLowerCase();
+      for (const term of sensitiveTerms) {
+        if (serialized.includes(term)) {
+          throw new Error("Sensitive information must not be requested via form-mode elicitation");
+        }
+      }
+    
+      return true;
+    }
+    </code></pre><p><strong>Operational notes:</strong> The client may also validate elicitation responses, but the server should validate the returned data before using it. Do not treat user identity written into a form field as authoritative.</p>`
+            },
+            {
+              "implementation": "For URL-mode elicitation, generate non-preauthenticated HTTPS URLs, bind state to the initiating user and client, verify callback identity, and store third-party credentials on the server.",
+              "howTo": `<h5>Concept:</h5><p>URL-mode elicitation lets the MCP server ask the user to complete sensitive or third-party authorization outside the MCP client. The server is responsible for generating a safe URL, binding the elicitation to the current user, verifying that the same user completed the callback, and storing third-party credentials securely. The server must not transmit those credentials through the MCP client.</p><h5>Example state binding</h5><pre><code>// file: src/elicitation/urlModeState.js
+    import crypto from "node:crypto";
+    
+    const stateStore = new Map();
+    
+    export function createUrlElicitationState({ userId, clientId, mcpSessionId, redirectUri }) {
+      const state = crypto.randomBytes(32).toString("base64url");
+      stateStore.set(state, {
+        userId,
+        clientId,
+        mcpSessionId,
+        redirectUri,
+        expiresAt: Date.now() + 10 * 60 * 1000
+      });
+      return state;
+    }
+    
+    export function verifyUrlElicitationState({ state, userId, clientId, redirectUri }) {
+      const record = stateStore.get(state);
+      stateStore.delete(state);
+      if (!record || record.expiresAt < Date.now()) {
+        throw new Error("Expired or unknown elicitation state");
+      }
+      if (record.userId !== userId || record.clientId !== clientId || record.redirectUri !== redirectUri) {
+        throw new Error("Elicitation callback identity mismatch");
+      }
+      return record;
+    }
+    </code></pre><h5>Server-side requirements</h5><ul><li>Do not put sensitive information, PII, access tokens, or preauthenticated links in the URL sent to the client.</li><li>Use HTTPS URLs outside local development.</li><li>Verify that the user completing the browser callback is the same user who initiated the MCP request.</li><li>Store third-party tokens server-side, bound to user, tenant, client, upstream service, scopes, and expiry.</li><li>Never send third-party credentials obtained through URL-mode elicitation back to the MCP client.</li></ul>`
+            }
+          ]
+        },
+        {
+          "id": "AID-H-035.006",
+          "name": "MCP Server Session, Task, Telemetry, Abuse Budgets & Disable Hooks",
+          "pillar": [
+            "app",
+            "infra"
+          ],
+          "phase": [
+            "building",
+            "operation",
+            "response"
+          ],
+          "description": "Provide the server-side lifecycle controls needed to operate MCP safely after deployment: secure session IDs, resumable stream binding, task isolation, structured telemetry, per-principal abuse budgets, and disable hooks for tools, clients, tenants, credentials, or server versions.<br/><br/><strong>Scope boundary:</strong> This sub-technique emits server-side mechanisms and events. AID-D-005 consumes telemetry for detection, AID-I-005 uses disable hooks for containment, and AID-E techniques handle credential and identity eviction. Coarse gateway and process limits belong in AID-H-035.001; fine-grained budgets belong here.",
+          "toolsOpenSource": [
+            "OpenTelemetry",
+            "Prometheus",
+            "Grafana",
+            "Redis",
+            "Open Policy Agent (OPA)"
+          ],
+          "toolsCommercial": [
+            "Datadog",
+            "Splunk Enterprise Security",
+            "Elastic Security",
+            "Cloudflare Rate Limiting",
+            "LaunchDarkly"
+          ],
+          "defendsAgainst": [
+            {
+              "framework": "MITRE ATLAS",
+              "items": [
+                "AML.T0053 AI Agent Tool Invocation",
+                "AML.T0086 Exfiltration via AI Agent Tool Invocation",
+                "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption",
+                "AML.T0012 Valid Accounts"
+              ]
+            },
+            {
+              "framework": "MAESTRO",
+              "items": [
+                "Agent Identity Attack (L7)",
+                "Agent Tool Misuse (L7)",
+                "Integration Risks (L7)",
+                "Data Exfiltration (L2)"
+              ]
+            },
+            {
+              "framework": "OWASP LLM Top 10 2025",
+              "items": [
+                "LLM02:2025 Sensitive Information Disclosure",
+                "LLM06:2025 Excessive Agency"
+              ]
+            },
+            {
+              "framework": "OWASP ML Top 10 2023",
+              "items": [
+                "N/A"
+              ]
+            },
+            {
+              "framework": "OWASP Agentic AI Top 10 2026",
+              "items": [
+                "ASI02:2026 Tool Misuse and Exploitation",
+                "ASI03:2026 Identity and Privilege Abuse",
+                "ASI08:2026 Cascading Failures",
+                "ASI10:2026 Rogue Agents"
+              ]
+            },
+            {
+              "framework": "NIST Adversarial Machine Learning 2025",
+              "items": [
+                "NISTAML.036 Leaking information from user interactions",
+                "NISTAML.038 Data Extraction",
+                "NISTAML.039 Compromising connected resources"
+              ]
+            },
+            {
+              "framework": "Cisco Integrated AI Security and Safety Framework",
+              "items": [
+                "AITech-8.2 Data Exfiltration / Exposure",
+                "AITech-13.1 Disruption of Availability",
+                "AITech-13.2 Cost Harvesting / Repurposing",
+                "AITech-14.1 Unauthorized Access",
+                "AISubtech-4.3.4 Replay Exploitation",
+                "AISubtech-13.1.1 Compute Exhaustion",
+                "AISubtech-13.1.2 Memory Flooding",
+                "AISubtech-13.2.1 Service Misuse for Cost Inflation"
+              ]
+            },
+            {
+              "framework": "Google Secure AI Framework 2.0 - Risks",
+              "items": [
+                "IIC: Insecure Integrated Component",
+                "DMS: Denial of ML Service",
+                "SDD: Sensitive Data Disclosure",
+                "RA: Rogue Actions"
+              ]
+            },
+            {
+              "framework": "Databricks AI Security Framework 3.0",
+              "items": [
+                "Agents - Tools MCP Server 13.19: Credential and Token Exposure",
+                "Agents - Tools MCP Server 13.20: Insecure Server Configuration",
+                "Agents - Tools MCP Server 13.22: Excessive Permissions and Scope Creep",
+                "Agents - Tools MCP Server 13.23: Data Exfiltration",
+                "Agents - Tools MCP Server 13.24: Context Spoofing and Manipulation"
+              ]
+            }
+          ],
+          "implementationGuidance": [
+            {
+              "implementation": "Generate high-entropy MCP session IDs, bind them to authenticated identity and client context, and never treat the session ID as authentication by itself.",
+              "howTo": `<h5>Concept:</h5><p>Streamable HTTP MCP servers may issue MCP-Session-Id values for session management and resumability. A session ID is a correlation and state handle, not a replacement for bearer-token validation, mTLS, or backend authorization.</p><h5>Example session record</h5><pre><code>// file: src/session/sessionStore.js
+    import crypto from "node:crypto";
+    
+    const sessions = new Map();
+    
+    export function createMcpSession({ auth, clientId, protocolVersion }) {
+      const sessionId = crypto.randomUUID();
+      sessions.set(sessionId, {
+        subject: auth.subject,
+        clientId,
+        tenantIds: auth.tenantIds || [],
+        protocolVersion,
+        createdAt: Date.now(),
+        expiresAt: Date.now() + 60 * 60 * 1000
+      });
+      return sessionId;
+    }
+    
+    export function requireBoundSession({ sessionId, auth, clientId }) {
+      const record = sessions.get(sessionId);
+      if (!record || record.expiresAt < Date.now()) {
+        throw new Error("Invalid MCP session");
+      }
+      if (record.subject !== auth.subject || record.clientId !== clientId) {
+        throw new Error("MCP session identity mismatch");
+      }
+      return record;
+    }
+    </code></pre><p><strong>Operational notes:</strong> Continue validating the bearer token on each HTTP request. Rotate or expire sessions aggressively after credential revocation, privilege changes, suspicious activity, or protocol downgrade attempts.</p>`
+            },
+            {
+              "implementation": "Partition task queues, resumable streams, caches, and long-running jobs by principal, client, tenant, and tool.",
+              "howTo": `<h5>Concept:</h5><p>Task-augmented execution and resumable streams create durable state. Without partitioning, a task result, cached object, or stream replay can cross users, tenants, clients, or tools.</p><h5>Example task key construction</h5><pre><code>// file: src/tasks/taskKeys.js
+    import crypto from "node:crypto";
+    
+    export function taskPartitionKey({ auth, clientId, toolName }) {
+      if (!auth.subject || !auth.activeTenantId || !clientId || !toolName) {
+        throw new Error("Missing task partition context");
+      }
+    
+      return [
+        "mcp-task",
+        auth.subject,
+        clientId,
+        auth.activeTenantId,
+        toolName
+      ].join(":");
+    }
+    
+    export function createTaskId({ auth, clientId, toolName }) {
+      const nonce = crypto.randomBytes(16).toString("hex");
+      return taskPartitionKey({ auth, clientId, toolName }) + ":" + nonce;
+    }
+    
+    export function canReadTask({ taskId, auth, clientId, toolName }) {
+      return taskId.startsWith(taskPartitionKey({ auth, clientId, toolName }) + ":");
+    }
+    </code></pre><p><strong>Operational notes:</strong> Do not put raw user IDs or tenant names into externally visible task IDs if that leaks sensitive identity. Use an opaque ID externally and keep the partition metadata server-side where needed.</p>`
+            },
+            {
+              "implementation": "Emit structured MCP server security events for authorization decisions, tool calls, resource reads, prompt requests, elicitation flows, descriptor changes, upstream calls, and rejected inputs.",
+              "howTo": `<h5>Concept:</h5><p>Harden controls need telemetry that SOC and incident responders can consume. AID-H-035 emits the server-side events; AID-D-005 owns analytics, correlation, alerting, and escalation logic.</p><h5>Example event schema</h5><pre><code>// file: src/telemetry/mcpSecurityEvent.js
+    import crypto from "node:crypto";
+    
+    function hashArgs(args) {
+      return crypto.createHash("sha256").update(JSON.stringify(args || {})).digest("hex");
+    }
+    
+    export function emitMcpSecurityEvent(logger, event) {
+      logger.info({
+        schema_version: "aidefend.mcp_server.v1",
+        event_time: new Date().toISOString(),
+        event_type: event.event_type,
+        server_id: event.server_id,
+        mcp_session_id_hash: event.mcp_session_id
+          ? crypto.createHash("sha256").update(event.mcp_session_id).digest("hex")
+          : null,
+        user_id: event.user_id,
+        client_id: event.client_id,
+        tenant_id: event.tenant_id,
+        tool_name: event.tool_name || null,
+        resource_uri_hash: event.resource_uri
+          ? crypto.createHash("sha256").update(event.resource_uri).digest("hex")
+          : null,
+        args_hash: hashArgs(event.args),
+        decision: event.decision,
+        reason: event.reason,
+        trace_id: event.trace_id
+      });
+    }
+    </code></pre><h5>Minimum event types</h5><ul><li>mcp_authz_decision</li><li>mcp_tool_call_accepted</li><li>mcp_tool_call_rejected</li><li>mcp_resource_read</li><li>mcp_prompt_rendered</li><li>mcp_elicitation_created</li><li>mcp_elicitation_completed</li><li>mcp_descriptor_changed</li><li>mcp_upstream_call</li><li>mcp_budget_rejected</li></ul><p><strong>Operational notes:</strong> Redact or hash tool arguments and resource URIs by default. Preserve enough metadata to answer who accessed which tool or resource, through which client, at what time, under which server version.</p>`
+            },
+            {
+              "implementation": "Enforce fine-grained per-principal abuse budgets for cost, concurrency, recursion, request rate, stream lifetime, and tool-specific risk.",
+              "howTo": `<h5>Concept:</h5><p>This is the fine-grained budget layer. AID-H-035.001 limits the server or gateway globally; this guidance limits each user, client, tenant, tool, and task so one compromised principal cannot exhaust the entire server or silently trigger expensive delegated work.</p><h5>Example Redis-backed budget gate</h5><pre><code>// file: src/budget/budgetGate.js
+    export async function consumeBudget(redis, { auth, clientId, toolName, costUnits }) {
+      if (!auth.subject || !auth.activeTenantId || !clientId || !toolName) {
+        throw new Error("Missing budget identity context");
+      }
+    
+      const minute = Math.floor(Date.now() / 60000);
+      const key = [
+        "mcp-budget",
+        auth.activeTenantId,
+        auth.subject,
+        clientId,
+        toolName,
+        minute
+      ].join(":");
+    
+      const used = await redis.incrBy(key, costUnits);
+      if (used === costUnits) {
+        await redis.expire(key, 120);
+      }
+    
+      const limit = toolName.startsWith("search_") ? 200 : 50;
+      if (used > limit) {
+        throw new Error("MCP tool budget exceeded");
+      }
+    }
+    </code></pre><h5>Budget dimensions</h5><ul><li>Requests per minute by user, client, tenant, and tool.</li><li>Concurrent tasks and streams per principal.</li><li>Maximum recursion depth or delegated tool-call fan-out.</li><li>Maximum external API cost per task and per day.</li><li>Stricter limits for destructive, network-fetching, browser, file, shell, and code tools.</li></ul><p><strong>Operational notes:</strong> Fail closed if identity, tenant, or client context is missing. Missing quota context is a control failure, not a reason to run unmetered.</p>`
+            },
+            {
+              "implementation": "Expose server-side disable hooks for server versions, tools, clients, tenants, credentials, and upstream integrations without embedding the response playbook in the server.",
+              "howTo": `<h5>Concept:</h5><p>Incident response needs fast server-side levers. AID-H-035 provides the mechanism; AID-I and AID-E techniques decide when and how to use it during containment or eviction.</p><h5>Example disable registry</h5><pre><code>// file: src/disable/disableRegistry.js
+    const disabled = {
+      tools: new Set(),
+      clients: new Set(),
+      tenants: new Set(),
+      serverVersions: new Set(),
+      upstreams: new Set()
+    };
+    
+    export function disable(kind, value) {
+      if (!disabled[kind]) {
+        throw new Error("Unknown disable kind: " + kind);
+      }
+      disabled[kind].add(value);
+    }
+    
+    export function enforceDisableHooks({ toolName, clientId, tenantId, serverVersion, upstream }) {
+      if (disabled.tools.has(toolName)) throw new Error("Tool disabled");
+      if (disabled.clients.has(clientId)) throw new Error("Client disabled");
+      if (disabled.tenants.has(tenantId)) throw new Error("Tenant disabled");
+      if (disabled.serverVersions.has(serverVersion)) throw new Error("Server version disabled");
+      if (upstream && disabled.upstreams.has(upstream)) throw new Error("Upstream disabled");
+    }
+    </code></pre><p><strong>Operational notes:</strong> Store production disable state in a durable, audited control plane rather than an in-memory map. The in-memory example shows the enforcement shape only. Every disable and re-enable action should emit a security event and require an operator identity.</p>`
             }
           ]
         }
