@@ -154,7 +154,9 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
         'OWASP ML Top 10 2023',
         'OWASP Agentic AI Top 10 2026',
         'NIST Adversarial Machine Learning 2025',
-        'Cisco Integrated AI Security and Safety Framework'
+        'Cisco Integrated AI Security and Safety Framework',
+        'Google Secure AI Framework 2.0 - Risks',
+        'Databricks AI Security Framework 3.0'
     ];
 
     /** Flat array of all techniques, enriched with tacticName, _searchText, isLeaf */
@@ -232,7 +234,7 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
 
     safeRegisterTool({
         name: 'search_techniques',
-        description: "Search the AIDEFEND AI security defense framework by keyword. Searches across technique and sub-technique names and descriptions. Returns matching IDs, names, parent tactic, and sub-technique counts. Use this as the starting point to explore AIDEFEND's 200+ defensive techniques across 7 tactics (Model, Harden, Detect, Isolate, Deceive, Evict, Restore). Note: framework content is in English. If the user's query is in another language, translate it to English before calling this tool.",
+        description: "Search the AIDEFEND AI security defense framework by keyword. Searches across technique and sub-technique names and descriptions. Returns matching IDs, names, parent tactic, and sub-technique counts. Use this as the starting point to explore AIDEFEND's 296 defensive techniques/sub-techniques across 7 tactics (Model, Harden, Detect, Isolate, Deceive, Evict, Restore). Note: framework content is in English. If the user's query is in another language, translate it to English before calling this tool.",
         annotations: {
             readOnlyHint: true,
             idempotentHint: true
@@ -699,7 +701,7 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
                 }
 
                 const result = {
-                    frameworkVersion: 'AIDEFEND v1.0',
+                    frameworkVersion: 'AIDEFEND v1.20260610',
                     totalTactics: tacticNames.length,
                     tactics: tacticNames,
                     totalTechniques,
