@@ -1,8 +1,8 @@
 {
 "version": {
 "schemaVersion": "2.0",
-"dataVersion": "2026.06.11",
-"generatedAt": "2026-06-11T01:37:46.268Z",
+"dataVersion": "2026.06.22",
+"generatedAt": "2026-06-22T13:47:24.524Z",
 "source": "bundled",
 "keywordStructure": "flat"
 },
@@ -21046,7 +21046,7 @@
 {
 "id": "AID-H-035",
 "name": "MCP Server Runtime Boundary & Tool Exposure Governance",
-"description": "Harden the MCP server itself as an independent trust boundary that publishes tools, resources, prompts, elicitation requests, task streams, and backend integrations to MCP clients. This technique covers the server-side responsibilities that are not owned by AID-H-029, which focuses on MCP and tool clients.<br/><br/><strong>Coverage includes:</strong><ul><li>Server deployment profile, transport, Origin, DNS rebinding, TLS, runtime, and coarse abuse baseline.</li><li>OAuth protected-resource behavior, token audience validation, no token passthrough, and confused-deputy prevention for MCP proxy servers.</li><li>Server-side validation and authorization before tool handlers, resource reads, prompt rendering, backend calls, filesystem access, command execution, or network fetches.</li><li>Governance for the tool, resource, prompt, and descriptor surface the server publishes to clients.</li><li>Output, resource URI, and elicitation boundaries, including URL-mode third-party authorization handled by the server without leaking credentials through the MCP client.</li><li>Session, task, telemetry, per-principal budget, and disable-hook mechanisms that downstream Detect, Isolate, Evict, and Restore controls can consume.</li></ul><strong>Scope boundary:</strong> AID-H-035 is the server-side canonical home for MCP server hardening. It deliberately cross-references AID-H-019 for orchestrator capability policy, AID-H-025 for tool and descriptor resolution integrity, AID-H-029 for MCP client hardening, AID-I-001/AID-I-002 for sandboxing and network isolation, AID-D-005 for monitoring consumers, and AID-E/AID-I response techniques for revocation and disablement.",
+"description": "Harden the MCP server itself as an independent trust boundary that publishes tools, resources, prompts, elicitation requests, task streams, and backend integrations to MCP clients. This technique covers the server-side responsibilities that are not owned by AID-H-029, which focuses on MCP and tool clients.<br/><br/><strong>Coverage includes:</strong><ul><li>Server deployment profile, stdio and Streamable HTTP transport, Origin, DNS rebinding, protocol-version validation, TLS, runtime, and coarse abuse baseline.</li><li>OAuth protected-resource behavior, progressive scope minimization, token audience validation, no token passthrough, and confused-deputy prevention for MCP proxy servers.</li><li>Server-side validation and authorization before tool handlers, resource reads, prompt rendering, backend calls, filesystem access, command execution, database queries, or network fetches.</li><li>Signed or review-gated governance for the tool, resource, prompt, schema, annotation, and descriptor surface the server publishes to clients.</li><li>Output, structuredContent, resource URI, completion, subscription, and elicitation boundaries, including URL-mode third-party authorization handled by the server without leaking credentials through the MCP client.</li><li>Session, task, sampling-request, telemetry, per-principal budget, replay-resistant stream, and disable-hook mechanisms that downstream Detect, Isolate, Evict, and Restore controls can consume.</li></ul><strong>Scope boundary:</strong> AID-H-035 is the server-side canonical home for MCP server hardening. It deliberately cross-references AID-H-019 for orchestrator capability policy, AID-H-025 for tool and descriptor resolution integrity, AID-H-029 for MCP client hardening, AID-I-001/AID-I-002 for sandboxing and network isolation, AID-D-005 for monitoring consumers, and AID-E/AID-I response techniques for revocation and disablement.",
 "pillar": [
 "infra",
 "app",
@@ -21066,11 +21066,14 @@
 "AML.T0051 LLM Prompt Injection",
 "AML.T0053 AI Agent Tool Invocation",
 "AML.T0086 Exfiltration via AI Agent Tool Invocation",
+"AML.T0101 Data Destruction via AI Agent Tool Invocation",
 "AML.T0098 AI Agent Tool Credential Harvesting",
+"AML.T0012 Valid Accounts",
 "AML.T0104 Publish Poisoned AI Agent Tool",
 "AML.T0105 Escape to Host",
 "AML.T0110 AI Agent Tool Poisoning",
-"AML.T0010 AI Supply Chain Compromise"
+"AML.T0010 AI Supply Chain Compromise",
+"AML.T0034.002 Cost Harvesting: Agentic Resource Consumption"
 ]
 },
 {
@@ -21097,7 +21100,8 @@
 {
 "framework": "OWASP ML Top 10 2023",
 "items": [
-"ML06:2023 AI Supply Chain Attacks"
+"ML06:2023 AI Supply Chain Attacks",
+"ML09:2023 Output Integrity Attack"
 ]
 },
 {
@@ -21108,14 +21112,14 @@
 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
 "ASI05:2026 Unexpected Code Execution (RCE)",
 "ASI07:2026 Insecure Inter-Agent Communication",
-"ASI08:2026 Cascading Failures"
+"ASI08:2026 Cascading Failures",
+"ASI10:2026 Rogue Agents"
 ]
 },
 {
 "framework": "NIST Adversarial Machine Learning 2025",
 "items": [
 "NISTAML.015 Indirect Prompt Injection",
-"NISTAML.018 Prompt Injection",
 "NISTAML.036 Leaking information from user interactions",
 "NISTAML.038 Data Extraction",
 "NISTAML.039 Compromising connected resources",
@@ -21128,6 +21132,8 @@
 "AITech-8.2 Data Exfiltration / Exposure",
 "AITech-9.3 Dependency / Plugin Compromise",
 "AITech-12.1 Tool Exploitation",
+"AITech-13.1 Disruption of Availability",
+"AITech-13.2 Cost Harvesting / Repurposing",
 "AITech-14.1 Unauthorized Access",
 "AITech-14.2 Abuse of Delegated Authority",
 "AISubtech-4.3.3 Server Rebinding Attack",
@@ -21141,7 +21147,9 @@
 "items": [
 "IIC: Insecure Integrated Component",
 "PIJ: Prompt Injection",
+"MST: Model Source Tampering",
 "SDD: Sensitive Data Disclosure",
+"EDH: Excessive Data Handling",
 "DMS: Denial of ML Service",
 "RA: Rogue Actions"
 ]
@@ -21165,7 +21173,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "722978189f12786e",
+"contentHash": "122847b4adcab7ce",
 "keywords": [
 "mcp server hardening",
 "tool exposure governance",
@@ -21175,7 +21183,7 @@
 "token audience validation",
 "tool descriptor governance",
 "elicitation boundary controls",
-"session isolation",
+"sampling request governance",
 "server telemetry",
 "per-principal budgets",
 "disable hooks",
@@ -21186,7 +21194,7 @@
 {
 "id": "AID-H-035.001",
 "name": "MCP Server Deployment Profile, Transport & Exposure Baseline",
-"description": "Classify each MCP server by deployment profile and enforce the minimum server-side exposure baseline before it is reachable by clients. This sub-technique covers coarse infrastructure-layer controls: deployment profile evidence, Streamable HTTP Origin validation, local binding restrictions, TLS or mTLS, runtime hardening, and gateway or process-level denial-of-service limits.<br/><br/><strong>Scope boundary:</strong> This sub-technique owns the baseline exposure envelope for the MCP server. AID-H-035.006 owns fine-grained per-user, per-client, per-tenant, per-tool, and per-task budgets. AID-I-001 and AID-I-002 provide the sandbox and network isolation primitives referenced here.",
+"description": "Classify each MCP server by deployment profile and enforce the minimum server-side exposure baseline before it is reachable by clients. This sub-technique covers coarse infrastructure-layer controls: deployment profile evidence, stdio transport hygiene, Streamable HTTP Origin validation, local binding restrictions, MCP protocol-version validation, TLS or mTLS, runtime hardening, default-deny egress, and gateway or process-level denial-of-service limits.<br/><br/><strong>Scope boundary:</strong> This sub-technique owns the baseline exposure envelope for the MCP server. AID-H-035.006 owns fine-grained per-user, per-client, per-tenant, per-tool, task, subscription, and sampling budgets. AID-I-001 and AID-I-002 provide the sandbox and network isolation primitives referenced here.",
 "pillar": [
 "infra",
 "app"
@@ -21199,7 +21207,10 @@
 "implementationGuidance": [
 "Classify every MCP server into a deployment profile and require profile-specific evidence before production exposure.",
 "For Streamable HTTP MCP servers, validate the Origin header, bind local servers to localhost, and require authentication on all non-local connections.",
-"Apply a hardened runtime baseline for production MCP servers, including non-root containers, read-only filesystems, dropped Linux capabilities, and process-level resource limits.",
+"For stdio MCP servers, keep stdout protocol-pure, route logs to stderr, launch with a minimal environment, and avoid shell-mediated startup.",
+"Validate MCP protocol-version headers for Streamable HTTP requests and fail closed on invalid or unsupported versions.",
+"Require TLS for remote MCP servers and use mTLS for high-value internal tool servers or service-to-service MCP paths.",
+"Apply a hardened runtime baseline for production MCP servers, including non-root containers, read-only filesystems, dropped Linux capabilities, default-deny egress, and process-level resource limits.",
 "Enforce coarse gateway or process-level denial-of-service limits for the MCP endpoint before applying fine-grained per-principal budgets."
 ],
 "toolsOpenSource": [
@@ -21282,22 +21293,22 @@
 ]
 }
 ],
-"contentHash": "165009b2aabca1e4",
+"contentHash": "2a5a44994559d018",
 "keywords": [
 "mcp deployment profile",
 "streamable http hardening",
 "origin header validation",
 "dns rebinding prevention",
 "localhost binding",
-"tls mtls enforcement",
+"stdio transport hygiene",
 "container runtime hardening",
-"non-root containers",
+"tls mtls enforcement",
 "read-only filesystem",
 "coarse rate limiting",
 "gateway exposure baseline",
 "mcp transport security",
 "process resource limits",
-"waf baseline"
+"protocol version validation"
 ]
 },
 {
@@ -21314,8 +21325,9 @@
 ],
 "implementationGuidance": [
 "Publish OAuth protected resource metadata and return scope-aware WWW-Authenticate challenges for protected MCP servers.",
+"Use progressive least-privilege scope elevation and reject wildcard, omnibus, or cross-tool scopes that hide tool intent.",
 "Validate issuer, audience, resource, expiry, and scope on every HTTP request, and reject tokens not issued for this MCP server.",
-"Ban token passthrough and require separate upstream credentials or token exchange when the MCP server calls backend APIs.",
+"Ban token passthrough and require separate upstream credentials or standards-based token exchange when the MCP server calls backend APIs.",
 "If the MCP server acts as an OAuth proxy or OAuth client to a third-party API, enforce per-client consent, exact redirect URI validation, CSRF state, and consent cookies bound to client_id."
 ],
 "toolsOpenSource": [
@@ -21404,7 +21416,7 @@
 ]
 }
 ],
-"contentHash": "715db62dd744d6aa",
+"contentHash": "a07fea836a4eee6d",
 "keywords": [
 "protected resource metadata",
 "token audience validation",
@@ -21412,7 +21424,7 @@
 "no token passthrough",
 "oauth confused deputy",
 "per-client consent",
-"scope challenge",
+"progressive scope elevation",
 "upstream token exchange",
 "mcp oauth resource server",
 "exact redirect uri",
@@ -21425,7 +21437,7 @@
 {
 "id": "AID-H-035.003",
 "name": "Server-Side Tool Invocation Validation & Object-Level Authorization",
-"description": "Make the MCP server the final policy enforcement point for every tools/call request. The server must validate tool arguments against strict schemas, enforce object-level and tenant-level authorization inside the handler, protect URL-fetching tools from SSRF and unsafe redirects, and sandbox or deny command, code, browser, and filesystem execution paths.<br/><br/><strong>Scope boundary:</strong> AID-H-019 defines capability policy from the agent or orchestrator side. This sub-technique enforces server-side validation and backend authorization after a request has arrived at the MCP server. AID-I-002 and AID-H-020 provide network and safe-fetch patterns. AID-H-026 and AID-I-001 provide unsafe-code and sandboxing controls.",
+"description": "Make the MCP server the final policy enforcement point for every tools/call request. The server must validate tool arguments against strict schemas, enforce per-tool, object-level, and tenant-level authorization inside the handler, protect URL-fetching tools from SSRF and unsafe redirects, prevent SQL/NoSQL injection in backend calls, sanitize model-visible errors, and sandbox or deny command, code, browser, and filesystem execution paths.<br/><br/><strong>Scope boundary:</strong> AID-H-019 defines capability policy from the agent or orchestrator side. This sub-technique enforces server-side validation and backend authorization after a request has arrived at the MCP server. AID-I-002 and AID-H-020 provide network and safe-fetch patterns. AID-H-026 and AID-I-001 provide unsafe-code and sandboxing controls.",
 "pillar": [
 "app",
 "infra",
@@ -21438,6 +21450,7 @@
 "implementationGuidance": [
 "Validate every tools/call argument with a strict server-side JSON Schema before invoking the handler.",
 "Bind each tool invocation to the authenticated principal, client, tenant, session, and backend object authorization before executing side effects.",
+"Use parameterized SQL or NoSQL APIs and server-side identifier allowlists for every database-backed MCP tool.",
 "For tools that fetch URLs or resolve network targets, enforce SSRF-safe URL validation, redirect validation, DNS rebinding checks, and egress allowlists.",
 "For command, code, browser, and filesystem tools, deny shell execution by default and route high-risk handlers through sandboxed execution profiles."
 ],
@@ -21526,21 +21539,20 @@
 "framework": "Databricks AI Security Framework 3.0",
 "items": [
 "Agents - Tools MCP Server 13.22: Excessive Permissions and Scope Creep",
-"Agents - Tools MCP Server 13.23: Data Exfiltration",
-"Agents - Tools MCP Server 13.20: Insecure Server Configuration"
+"Agents - Tools MCP Server 13.23: Data Exfiltration"
 ]
 }
 ],
-"contentHash": "1e402b9012f6a5fe",
+"contentHash": "df48195098bca922",
 "keywords": [
 "tool input validation",
 "strict json schema",
 "object-level authorization",
 "tenant authorization",
-"ssrf-safe fetch",
+"pinned-ip safe fetch",
 "egress allowlist",
 "dns rebinding checks",
-"command allowlisting",
+"sql nosql injection prevention",
 "shell execution denial",
 "sandboxed tool handlers",
 "backend permission checks",
@@ -21552,7 +21564,7 @@
 {
 "id": "AID-H-035.004",
 "name": "MCP Tool, Resource & Prompt Publication Governance",
-"description": "Govern the server-published surface that MCP clients and models consume: tool definitions, resource templates, prompt templates, annotations, descriptions, schemas, and list_changed events. The server must publish only reviewed contracts, preserve semantic honesty in model-visible metadata, and make descriptor changes auditable and reversible.<br/><br/><strong>Scope boundary:</strong> AID-H-024 and AID-H-031 govern broader publisher and skill supply-chain controls. AID-H-025 validates tool and descriptor resolution from the consuming side. This sub-technique covers the MCP server's responsibility as the publisher of its own exposed tools, resources, prompts, and dynamic capability changes.",
+"description": "Govern the server-published surface that MCP clients and models consume: tool definitions, resource templates, prompt templates, annotations, descriptions, schemas, output schemas, and list_changed events. The server must publish only reviewed and signed or review-gated contracts, preserve semantic honesty in model-visible metadata, detect hidden Unicode or schema-level descriptor poisoning, and make descriptor changes auditable and reversible.<br/><br/><strong>Scope boundary:</strong> AID-H-024 and AID-H-031 govern broader publisher and skill supply-chain controls. AID-H-025 validates tool and descriptor resolution from the consuming side. This sub-technique covers the MCP server's responsibility as the publisher of its own exposed tools, resources, prompts, and dynamic capability changes.",
 "pillar": [
 "app",
 "infra"
@@ -21564,7 +21576,9 @@
 "implementationGuidance": [
 "Maintain a signed, versioned contract manifest for every server-published tool, resource, and prompt.",
 "Review model-visible tool, resource, and prompt text for semantic honesty, hidden instructions, and privilege-inflating descriptions before publication.",
-"Govern dynamic tool, resource, and prompt list changes as approved releases, and emit auditable list_changed events."
+"Govern dynamic tool, resource, and prompt list changes as approved releases, and emit auditable list_changed events.",
+"Verify the server's own published identity and registry namespace ownership, and review the server.json manifest before publication.",
+"If the server publishes MCP App UI (ui://) resources, predeclare them, pin their content, and declare truthful CSP, permissions, and tool visibility."
 ],
 "toolsOpenSource": [
 "Git",
@@ -21586,8 +21600,7 @@
 "AML.T0104 Publish Poisoned AI Agent Tool",
 "AML.T0110 AI Agent Tool Poisoning",
 "AML.T0010 AI Supply Chain Compromise",
-"AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
-"AML.T0084.001 Discover AI Agent Configuration: Tool Definitions"
+"AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
 ]
 },
 {
@@ -21621,8 +21634,7 @@
 {
 "framework": "NIST Adversarial Machine Learning 2025",
 "items": [
-"NISTAML.051 Model Poisoning (Supply Chain)",
-"NISTAML.039 Compromising connected resources"
+"NISTAML.051 Model Poisoning (Supply Chain)"
 ]
 },
 {
@@ -21653,28 +21665,28 @@
 ]
 }
 ],
-"contentHash": "07ebeecc2f0d4c80",
+"contentHash": "d8eb1e58e86f889d",
 "keywords": [
 "tool publication governance",
 "mcp contract manifest",
 "descriptor review",
 "tool annotation honesty",
-"list_changed auditing",
-"semantic descriptor integrity",
-"prompt publication control",
-"resource template governance",
 "signed tool contract",
-"descriptor hash review",
-"supply chain provenance",
+"sigstore descriptor signing",
+"publisher identity governance",
+"registry namespace ownership",
+"server.json review",
+"mcp app ui governance",
 "tool poisoning prevention",
+"supply chain provenance",
 "dynamic capability approval",
-"rollbackable descriptor changes"
+"list_changed auditing"
 ]
 },
 {
 "id": "AID-H-035.005",
 "name": "MCP Server Output, Resource URI & Elicitation Boundary Controls",
-"description": "Constrain the data and instructions that leave the MCP server. This includes validating and labeling tool outputs, enforcing resource URI and template boundaries, preventing prompt/resource output from smuggling privileged instructions, and handling elicitation securely from the server side.<br/><br/><strong>Scope boundary:</strong> Client-side elicitation UX rules, such as showing the full URL, avoiding prefetch, and requiring explicit navigation consent, belong to AID-H-029. This sub-technique only covers the server-side duties: request modes supported by the client, no sensitive data in form mode, safe URL generation, user binding, callback verification, and server-side storage of third-party credentials obtained through URL-mode elicitation.",
+"description": "Constrain the data and instructions that leave the MCP server. This includes validating, neutralizing, and labeling tool outputs, validating structuredContent against outputSchema, enforcing resource URI and template boundaries, preventing prompt/resource/completion output from smuggling privileged instructions, and handling elicitation securely from the server side.<br/><br/><strong>Scope boundary:</strong> Client-side elicitation UX rules, such as showing the full URL, avoiding prefetch, and requiring explicit navigation consent, belong to AID-H-029. This sub-technique only covers the server-side duties: request modes supported by the client, no sensitive data in form mode, safe URL generation, user binding from authenticated context, callback verification, and server-side storage of third-party credentials obtained through URL-mode elicitation.",
 "pillar": [
 "app",
 "data"
@@ -21685,6 +21697,7 @@
 ],
 "implementationGuidance": [
 "Validate, bound, label, and redact MCP tool outputs before returning them to the client or model context.",
+"Validate structuredContent against each tool's outputSchema, recursively bound and redact structured fields, and return sanitized tool-execution errors.",
 "Validate resource URIs and resource templates with canonicalization, scheme allowlists, path boundaries, and authorization checks before reading or returning data.",
 "Constrain server-generated prompts, prompt arguments, resource text, and completion inputs so they cannot smuggle privileged instructions or unauthorized values.",
 "For form-mode elicitation, never request sensitive information and validate returned data against the requested schema.",
@@ -21738,8 +21751,7 @@
 "framework": "OWASP Agentic AI Top 10 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
-"ASI03:2026 Identity and Privilege Abuse",
-"ASI07:2026 Insecure Inter-Agent Communication"
+"ASI03:2026 Identity and Privilege Abuse"
 ]
 },
 {
@@ -21779,11 +21791,11 @@
 ]
 }
 ],
-"contentHash": "417ab5c06453ec25",
+"contentHash": "7a439db2412bf92d",
 "keywords": [
 "output boundary controls",
 "tool output sanitization",
-"resource uri validation",
+"structuredContent validation",
 "elicitation safety",
 "url-mode elicitation",
 "form-mode elicitation",
@@ -21791,7 +21803,7 @@
 "prompt output constraints",
 "completion enumeration prevention",
 "secret redaction",
-"untrusted output labeling",
+"output schema enforcement",
 "path traversal prevention",
 "server-side credential capture",
 "mcp resource authorization"
@@ -21800,7 +21812,7 @@
 {
 "id": "AID-H-035.006",
 "name": "MCP Server Session, Task, Telemetry, Abuse Budgets & Disable Hooks",
-"description": "Provide the server-side lifecycle controls needed to operate MCP safely after deployment: secure session IDs, resumable stream binding, task isolation, structured telemetry, per-principal abuse budgets, and disable hooks for tools, clients, tenants, credentials, or server versions.<br/><br/><strong>Scope boundary:</strong> This sub-technique emits server-side mechanisms and events. AID-D-005 consumes telemetry for detection, AID-I-005 uses disable hooks for containment, and AID-E techniques handle credential and identity eviction. Coarse gateway and process limits belong in AID-H-035.001; fine-grained budgets belong here.",
+"description": "Provide the server-side lifecycle controls needed to operate MCP safely after deployment: secure session IDs, resumable stream binding, task isolation, resource subscription isolation, sampling-request budgets, structured telemetry, per-principal abuse budgets, replay-resistant event handling, and disable hooks for tools, clients, tenants, credentials, or server versions.<br/><br/><strong>Scope boundary:</strong> This sub-technique emits server-side mechanisms and events. AID-D-005 consumes telemetry for detection, AID-I-005 uses disable hooks for containment, and AID-E techniques handle credential and identity eviction. Coarse gateway and process limits belong in AID-H-035.001; fine-grained budgets belong here.",
 "pillar": [
 "app",
 "infra"
@@ -21813,9 +21825,12 @@
 "implementationGuidance": [
 "Generate high-entropy MCP session IDs, bind them to authenticated identity and client context, and never treat the session ID as authentication by itself.",
 "Partition task queues, resumable streams, caches, and long-running jobs by principal, client, tenant, and tool.",
+"Authorize resource subscriptions like resource reads, bind each subscription to principal, tenant, client, session, and URI, and re-check authorization before every update notification.",
 "Emit structured MCP server security events for authorization decisions, tool calls, resource reads, prompt requests, elicitation flows, descriptor changes, upstream calls, and rejected inputs.",
-"Enforce fine-grained per-principal abuse budgets for cost, concurrency, recursion, request rate, stream lifetime, and tool-specific risk.",
-"Expose server-side disable hooks for server versions, tools, clients, tenants, credentials, and upstream integrations without embedding the response playbook in the server."
+"Constrain server-originated sampling requests with declared client capabilities, tool-loop limits, token budgets, and default no-context behavior.",
+"Enforce fine-grained per-principal abuse budgets for cost, concurrency, recursion, request rate, stream lifetime, subscription count, sampling, and tool-specific risk.",
+"Expose server-side disable hooks for server versions, tools, clients, tenants, credentials, and upstream integrations without embedding the response playbook in the server.",
+"For high-value and gateway MCP profiles, add message-level integrity and replay protection on top of TLS."
 ],
 "toolsOpenSource": [
 "OpenTelemetry",
@@ -21876,7 +21891,6 @@
 "framework": "NIST Adversarial Machine Learning 2025",
 "items": [
 "NISTAML.036 Leaking information from user interactions",
-"NISTAML.038 Data Extraction",
 "NISTAML.039 Compromising connected resources"
 ]
 },
@@ -21913,20 +21927,20 @@
 ]
 }
 ],
-"contentHash": "c29c777e7d1c822c",
+"contentHash": "48587c8b6636674e",
 "keywords": [
 "mcp session binding",
-"task isolation",
+"resource subscription isolation",
 "resumable stream partitioning",
 "structured mcp telemetry",
 "per-principal abuse budgets",
 "cost budget enforcement",
 "concurrency limits",
-"recursion depth limits",
+"sampling budget enforcement",
 "disable hooks",
 "tenant task partitioning",
-"session id entropy",
-"replay resistance",
+"message-level integrity",
+"anti-replay nonce",
 "tool disablement",
 "budget rejection events"
 ]

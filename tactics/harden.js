@@ -20356,7 +20356,7 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
     {
       "id": "AID-H-035",
       "name": "MCP Server Runtime Boundary & Tool Exposure Governance",
-      "description": "Harden the MCP server itself as an independent trust boundary that publishes tools, resources, prompts, elicitation requests, task streams, and backend integrations to MCP clients. This technique covers the server-side responsibilities that are not owned by AID-H-029, which focuses on MCP and tool clients.<br/><br/><strong>Coverage includes:</strong><ul><li>Server deployment profile, transport, Origin, DNS rebinding, TLS, runtime, and coarse abuse baseline.</li><li>OAuth protected-resource behavior, token audience validation, no token passthrough, and confused-deputy prevention for MCP proxy servers.</li><li>Server-side validation and authorization before tool handlers, resource reads, prompt rendering, backend calls, filesystem access, command execution, or network fetches.</li><li>Governance for the tool, resource, prompt, and descriptor surface the server publishes to clients.</li><li>Output, resource URI, and elicitation boundaries, including URL-mode third-party authorization handled by the server without leaking credentials through the MCP client.</li><li>Session, task, telemetry, per-principal budget, and disable-hook mechanisms that downstream Detect, Isolate, Evict, and Restore controls can consume.</li></ul><strong>Scope boundary:</strong> AID-H-035 is the server-side canonical home for MCP server hardening. It deliberately cross-references AID-H-019 for orchestrator capability policy, AID-H-025 for tool and descriptor resolution integrity, AID-H-029 for MCP client hardening, AID-I-001/AID-I-002 for sandboxing and network isolation, AID-D-005 for monitoring consumers, and AID-E/AID-I response techniques for revocation and disablement.",
+      "description": "Harden the MCP server itself as an independent trust boundary that publishes tools, resources, prompts, elicitation requests, task streams, and backend integrations to MCP clients. This technique covers the server-side responsibilities that are not owned by AID-H-029, which focuses on MCP and tool clients.<br/><br/><strong>Coverage includes:</strong><ul><li>Server deployment profile, stdio and Streamable HTTP transport, Origin, DNS rebinding, protocol-version validation, TLS, runtime, and coarse abuse baseline.</li><li>OAuth protected-resource behavior, progressive scope minimization, token audience validation, no token passthrough, and confused-deputy prevention for MCP proxy servers.</li><li>Server-side validation and authorization before tool handlers, resource reads, prompt rendering, backend calls, filesystem access, command execution, database queries, or network fetches.</li><li>Signed or review-gated governance for the tool, resource, prompt, schema, annotation, and descriptor surface the server publishes to clients.</li><li>Output, structuredContent, resource URI, completion, subscription, and elicitation boundaries, including URL-mode third-party authorization handled by the server without leaking credentials through the MCP client.</li><li>Session, task, sampling-request, telemetry, per-principal budget, replay-resistant stream, and disable-hook mechanisms that downstream Detect, Isolate, Evict, and Restore controls can consume.</li></ul><strong>Scope boundary:</strong> AID-H-035 is the server-side canonical home for MCP server hardening. It deliberately cross-references AID-H-019 for orchestrator capability policy, AID-H-025 for tool and descriptor resolution integrity, AID-H-029 for MCP client hardening, AID-I-001/AID-I-002 for sandboxing and network isolation, AID-D-005 for monitoring consumers, and AID-E/AID-I response techniques for revocation and disablement.",
       "warning": {
         "level": "Emerging MCP Server Attack Surface",
         "description": "<p><strong>MCP server security is a rapidly evolving production risk area.</strong></p><ul><li><strong>Server and client duties are different:</strong> Do not move client-only URL-mode elicitation controls, local credential storage controls, or client UI controls into this technique. Those belong in AID-H-029.</li><li><strong>Generic web security is not enough:</strong> API gateways, WAFs, TLS, and container baselines help, but MCP servers also need protocol-specific controls for tool descriptors, scopes, elicitation, session IDs, task streams, resource URIs, and model-visible outputs.</li><li><strong>Server-side policy must be enforced even when the client looks trustworthy:</strong> Every tool call, resource request, prompt argument, and elicitation callback remains untrusted input until the server has validated identity, authorization, schema, bounds, and backend object access.</li></ul><p><strong>Recommended Defense-in-Depth Pairings:</strong></p><ul><li><strong>AID-H-029 (MCP &amp; Tool Client Security Hardening):</strong> Covers client-side connection validation, credential storage, response parsing, session lifecycle, update integrity, and server-initiated sampling controls.</li><li><strong>AID-H-019 (Tool Authorization &amp; Capability Scoping):</strong> Governs orchestrator or agent-side capability policy. AID-H-035.003 acts as the MCP server enforcement point after a request arrives.</li><li><strong>AID-H-025 (Tool &amp; MCP Resolution Integrity):</strong> Validates tool and descriptor resolution from the consuming side. AID-H-035.004 governs what the server itself publishes and changes.</li><li><strong>AID-I-001 and AID-I-002:</strong> Provide sandbox and network-isolation primitives for high-risk server handlers, fetchers, file tools, and code-execution tools.</li><li><strong>AID-D-005:</strong> Consumes the structured security events emitted by AID-H-035.006.</li></ul>"
@@ -20369,11 +20369,14 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
             "AML.T0051 LLM Prompt Injection",
             "AML.T0053 AI Agent Tool Invocation",
             "AML.T0086 Exfiltration via AI Agent Tool Invocation",
+            "AML.T0101 Data Destruction via AI Agent Tool Invocation",
             "AML.T0098 AI Agent Tool Credential Harvesting",
+            "AML.T0012 Valid Accounts",
             "AML.T0104 Publish Poisoned AI Agent Tool",
             "AML.T0105 Escape to Host",
             "AML.T0110 AI Agent Tool Poisoning",
-            "AML.T0010 AI Supply Chain Compromise"
+            "AML.T0010 AI Supply Chain Compromise",
+            "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption"
           ]
         },
         {
@@ -20400,7 +20403,8 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
         {
           "framework": "OWASP ML Top 10 2023",
           "items": [
-            "ML06:2023 AI Supply Chain Attacks"
+            "ML06:2023 AI Supply Chain Attacks",
+            "ML09:2023 Output Integrity Attack"
           ]
         },
         {
@@ -20411,14 +20415,14 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
             "ASI04:2026 Agentic Supply Chain Vulnerabilities",
             "ASI05:2026 Unexpected Code Execution (RCE)",
             "ASI07:2026 Insecure Inter-Agent Communication",
-            "ASI08:2026 Cascading Failures"
+            "ASI08:2026 Cascading Failures",
+            "ASI10:2026 Rogue Agents"
           ]
         },
         {
           "framework": "NIST Adversarial Machine Learning 2025",
           "items": [
             "NISTAML.015 Indirect Prompt Injection",
-            "NISTAML.018 Prompt Injection",
             "NISTAML.036 Leaking information from user interactions",
             "NISTAML.038 Data Extraction",
             "NISTAML.039 Compromising connected resources",
@@ -20431,6 +20435,8 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
             "AITech-8.2 Data Exfiltration / Exposure",
             "AITech-9.3 Dependency / Plugin Compromise",
             "AITech-12.1 Tool Exploitation",
+            "AITech-13.1 Disruption of Availability",
+            "AITech-13.2 Cost Harvesting / Repurposing",
             "AITech-14.1 Unauthorized Access",
             "AITech-14.2 Abuse of Delegated Authority",
             "AISubtech-4.3.3 Server Rebinding Attack",
@@ -20444,7 +20450,9 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
           "items": [
             "IIC: Insecure Integrated Component",
             "PIJ: Prompt Injection",
+            "MST: Model Source Tampering",
             "SDD: Sensitive Data Disclosure",
+            "EDH: Excessive Data Handling",
             "DMS: Denial of ML Service",
             "RA: Rogue Actions"
           ]
@@ -20478,7 +20486,7 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
             "building",
             "operation"
           ],
-          "description": "Classify each MCP server by deployment profile and enforce the minimum server-side exposure baseline before it is reachable by clients. This sub-technique covers coarse infrastructure-layer controls: deployment profile evidence, Streamable HTTP Origin validation, local binding restrictions, TLS or mTLS, runtime hardening, and gateway or process-level denial-of-service limits.<br/><br/><strong>Scope boundary:</strong> This sub-technique owns the baseline exposure envelope for the MCP server. AID-H-035.006 owns fine-grained per-user, per-client, per-tenant, per-tool, and per-task budgets. AID-I-001 and AID-I-002 provide the sandbox and network isolation primitives referenced here.",
+          "description": "Classify each MCP server by deployment profile and enforce the minimum server-side exposure baseline before it is reachable by clients. This sub-technique covers coarse infrastructure-layer controls: deployment profile evidence, stdio transport hygiene, Streamable HTTP Origin validation, local binding restrictions, MCP protocol-version validation, TLS or mTLS, runtime hardening, default-deny egress, and gateway or process-level denial-of-service limits.<br/><br/><strong>Scope boundary:</strong> This sub-technique owns the baseline exposure envelope for the MCP server. AID-H-035.006 owns fine-grained per-user, per-client, per-tenant, per-tool, task, subscription, and sampling budgets. AID-I-001 and AID-I-002 provide the sandbox and network isolation primitives referenced here.",
           "toolsOpenSource": [
             "MCP TypeScript SDK",
             "MCP Python SDK",
@@ -20576,6 +20584,7 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
         "tls_or_mtls",
         "non_root_container",
         "read_only_root_filesystem",
+        "default_deny_egress",
         "coarse_gateway_rate_limit",
         "audit_logging"
       ],
@@ -20603,10 +20612,24 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
       throw new Error("Unknown MCP server profile: " + profile.profile);
     }
     
+    const remoteProfiles = new Set([
+      "internet-facing-api",
+      "high-value-tool-server",
+      "gateway-proxy"
+    ]);
+
     if (profile.exposure !== "local" && !profile.required_controls.includes("authenticated_transport")) {
       throw new Error("Remote MCP servers require authenticated transport");
     }
-    
+
+    if (remoteProfiles.has(profile.profile) && !profile.required_controls.includes("tls_or_mtls")) {
+      throw new Error("Internet-facing, high-value, and gateway MCP servers require TLS or mTLS");
+    }
+
+    if (remoteProfiles.has(profile.profile) && !profile.required_controls.includes("default_deny_egress")) {
+      throw new Error("Internet-facing, high-value, and gateway MCP servers require default-deny egress");
+    }
+
     if (profile.profile === "high-value-tool-server" && !profile.required_controls.includes("audit_logging")) {
       throw new Error("High-value MCP tool servers require audit logging");
     }
@@ -20656,16 +20679,139 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
     app.use(enforceMcpHttpBoundary);
     
     const host = process.env.MCP_BIND_HOST || "127.0.0.1";
-    if (process.env.NODE_ENV !== "production" && host === "0.0.0.0") {
-      throw new Error("Local MCP servers must not bind to 0.0.0.0");
+    // Loopback by default. A broad 0.0.0.0 bind is refused in EVERY environment
+    // unless an audited opt-in is set AND authentication is mounted in front.
+    if (host === "0.0.0.0") {
+      if (process.env.MCP_ALLOW_PUBLIC_BIND !== "true") {
+        throw new Error("MCP servers must not bind to 0.0.0.0 without MCP_ALLOW_PUBLIC_BIND=true");
+      }
+      if (process.env.MCP_AUTH_ENABLED !== "true") {
+        throw new Error("A 0.0.0.0 bind requires authentication (MCP_AUTH_ENABLED=true)");
+      }
     }
-    
+
     app.listen(Number(process.env.PORT || 3000), host);
-    </code></pre><p><strong>Operational notes:</strong> These checks do not replace OAuth or mTLS. They reduce browser-origin and local-network abuse paths, especially for developer or localhost MCP servers.</p>`
+    </code></pre><p><strong>Operational notes:</strong> These checks do not replace OAuth or mTLS. They reduce browser-origin and local-network abuse paths, especially for developer or localhost MCP servers. The 0.0.0.0 bind is refused by default in every environment, not only outside production; a production server should bind broadly only inside a pod that already sits behind authentication (AID-H-035.002), network isolation (AID-I-002), and this Origin/Host gate.</p>`
             },
             {
-              "implementation": "Apply a hardened runtime baseline for production MCP servers, including non-root containers, read-only filesystems, dropped Linux capabilities, and process-level resource limits.",
-              "howTo": `<h5>Concept:</h5><p>Many MCP servers bridge directly to filesystems, APIs, databases, browsers, shell tools, or internal networks. A handler bug should not automatically become a host compromise. Put the server in a constrained runtime before exposing tools.</p><h5>Example Kubernetes security context</h5><pre><code># file: k8s/payments-mcp-deployment.yaml
+              "implementation": "For stdio MCP servers, keep stdout protocol-pure, route logs to stderr, launch with a minimal environment, and avoid shell-mediated startup.",
+              "howTo": `<h5>Concept:</h5><p>The MCP stdio transport uses stdout for JSON-RPC messages. Any banner, log line, progress message, or crash dump written to stdout corrupts the protocol and can become an injection surface for clients that parse mixed output. Treat the subprocess boundary as a privilege boundary: minimal environment, fixed executable path, no shell, and logs only on stderr.</p><h5>Example Node.js stdio server hygiene</h5><pre><code>// file: src/stdioServer.js
+    import { Server } from "@modelcontextprotocol/sdk/server/index.js";
+    import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js";
+
+    const originalLog = console.log;
+    console.log = (...args) => {
+      console.error(...args);
+    };
+
+    const server = new Server(
+      { name: "payments-mcp", version: "2026.06.19" },
+      { capabilities: { tools: {} } }
+    );
+
+    server.onerror = error => {
+      console.error("mcp_server_error", error.message);
+    };
+
+    const transport = new StdioServerTransport();
+    await server.connect(transport);
+
+    // Deliberately never call originalLog after connect; stdout is JSON-RPC only.
+    void originalLog;
+    </code></pre><h5>Example safe launcher</h5><pre><code>// file: launchLocalMcp.js
+    import { spawn } from "node:child_process";
+
+    const allowedEnv = {
+      PATH: "/usr/local/bin:/usr/bin:/bin",
+      HOME: "/var/empty",
+      NODE_ENV: "production"
+    };
+
+    const blockedEnv = [
+      "LD_PRELOAD",
+      "LD_LIBRARY_PATH",
+      "NODE_OPTIONS",
+      "PYTHONPATH",
+      "PYTHONSTARTUP"
+    ];
+
+    for (const name of blockedEnv) {
+      delete process.env[name];
+    }
+
+    const child = spawn("/opt/mcp/payments-server/bin/server.js", [], {
+      shell: false,
+      stdio: ["pipe", "pipe", "pipe"],
+      env: allowedEnv,
+      uid: 65534,
+      gid: 65534
+    });
+
+    child.stderr.on("data", chunk => {
+      process.stderr.write(chunk);
+    });
+    </code></pre><p><strong>Operational notes:</strong> Run local or stdio profiles as a non-privileged user. Do not inherit broad host environment variables or implicit credentials unless they are explicitly approved for that server profile.</p>`
+            },
+            {
+              "implementation": "Validate MCP protocol-version headers for Streamable HTTP requests and fail closed on invalid or unsupported versions.",
+              "howTo": `<h5>Concept:</h5><p>After initialization, HTTP clients send <code>MCP-Protocol-Version</code> so the server can enforce the negotiated protocol behavior. If this header is missing and the server has no stored negotiated version, fall back only to the protocol-defined compatibility behavior. If it is present but unsupported, return HTTP 400 instead of silently downgrading.</p><h5>Example protocol version gate</h5><pre><code>// file: src/http/protocolVersionGate.js
+    const supportedVersions = new Set(["2025-11-25"]);
+    const compatibilityDefault = "2025-03-26";
+
+    export function enforceProtocolVersion(req, res, next) {
+      const session = req.mcpSession || null;
+      const headerVersion = req.headers["mcp-protocol-version"];
+      const version = String(headerVersion || session?.protocolVersion || compatibilityDefault);
+
+      if (!supportedVersions.has(version) && version !== compatibilityDefault) {
+        return res.status(400).json({
+          jsonrpc: "2.0",
+          error: { code: -32600, message: "Unsupported MCP protocol version" }
+        });
+      }
+
+      req.mcpProtocolVersion = version;
+      return next();
+    }
+    </code></pre><p><strong>Operational notes:</strong> Emit telemetry on missing, invalid, or downgraded versions. Treat repeated downgrade attempts as suspicious session behavior and rotate the MCP session after re-authentication.</p>`
+            },
+            {
+              "implementation": "Require TLS for remote MCP servers and use mTLS for high-value internal tool servers or service-to-service MCP paths.",
+              "howTo": `<h5>Concept:</h5><p>Streamable HTTP MCP servers are ordinary HTTP services with unusual authority: they expose tools, resources, prompts, tasks, and server-to-client notifications. Use TLS for every remote deployment, and require mTLS when the server is reachable from internal service meshes, agent gateways, or high-value automation clients where client workload identity matters.</p><h5>Example Envoy TLS and client certificate requirement</h5><pre><code># file: envoy/mcp-listener-mtls.yaml
+    transport_socket:
+      name: envoy.transport_sockets.tls
+      typed_config:
+        "@type": type.googleapis.com/envoy.extensions.transport_sockets.tls.v3.DownstreamTlsContext
+        common_tls_context:
+          tls_params:
+            tls_minimum_protocol_version: TLSv1_2
+            tls_maximum_protocol_version: TLSv1_3
+          tls_certificates:
+            - certificate_chain:
+                filename: /etc/envoy/certs/server.crt
+              private_key:
+                filename: /etc/envoy/certs/server.key
+          validation_context:
+            trusted_ca:
+              filename: /etc/envoy/certs/client-ca.crt
+        require_client_certificate: true
+    </code></pre><h5>Server-side identity extraction</h5><pre><code>// file: src/http/clientCertIdentity.js
+    export function requireClientCertificateIdentity(req, res, next) {
+      const spiffeId = req.headers["x-forwarded-client-cert"];
+      if (!spiffeId) {
+        return res.status(401).json({
+          jsonrpc: "2.0",
+          error: { code: -32001, message: "Client certificate required" }
+        });
+      }
+      req.mcpClientWorkload = { certificateIdentity: String(spiffeId) };
+      return next();
+    }
+    </code></pre><p><strong>Operational notes:</strong> Enforce a TLS floor of 1.2 or higher (prefer 1.3) with a modern cipher allowlist; a Node server terminating TLS directly should set <code>https.createServer({ minVersion: "TLSv1.2", requestCert: true, rejectUnauthorized: true })</code>. TLS and mTLS authenticate the transport and workload channel; they do not replace OAuth token audience validation, per-tool authorization, or object-level access checks.</p>`
+            },
+            {
+              "implementation": "Apply a hardened runtime baseline for production MCP servers, including non-root containers, read-only filesystems, dropped Linux capabilities, default-deny egress, and process-level resource limits.",
+              "howTo": `<h5>Concept:</h5><p>Many MCP servers bridge directly to filesystems, APIs, databases, browsers, shell tools, or internal networks. A handler bug should not automatically become a host compromise. Put the server in a constrained runtime before exposing tools, and default-deny outbound network access except for explicitly required upstreams.</p><h5>Example Kubernetes security context</h5><pre><code># file: k8s/payments-mcp-deployment.yaml
     apiVersion: apps/v1
     kind: Deployment
     metadata:
@@ -20702,11 +20848,28 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
                 readOnlyRootFilesystem: true
                 capabilities:
                   drop: ["ALL"]
-    </code></pre><p><strong>Operational notes:</strong> Keep this as the server baseline. For tools that execute untrusted code, launch browsers, run subprocesses, or inspect unknown artifacts, call AID-I-001 sandbox profiles instead of running inside the main server process.</p>`
+    ---
+    apiVersion: networking.k8s.io/v1
+    kind: NetworkPolicy
+    metadata:
+      name: payments-mcp-default-deny-egress
+    spec:
+      podSelector:
+        matchLabels:
+          app: payments-mcp
+      policyTypes: ["Egress"]
+      egress: []
+    </code></pre><p><strong>Operational notes:</strong> Keep this as the server baseline. Add narrow egress policies only for approved upstream APIs. For tools that execute untrusted code, launch browsers, run subprocesses, or inspect unknown artifacts, call AID-I-001 sandbox profiles instead of running inside the main server process.</p>`
             },
             {
               "implementation": "Enforce coarse gateway or process-level denial-of-service limits for the MCP endpoint before applying fine-grained per-principal budgets.",
-              "howTo": `<h5>Concept:</h5><p>This control is the broad front-door safety net: request size, concurrent connections, stream lifetime, process CPU, process memory, and global request rate. Per-user, per-client, per-tenant, per-tool, and per-task cost budgets belong in AID-H-035.006.</p><h5>Example Envoy route limits</h5><pre><code># file: envoy/mcp-route.yaml
+              "howTo": `<h5>Concept:</h5><p>This control is the broad front-door safety net: request size, concurrent connections, stream lifetime, process CPU, process memory, and global request rate. Per-user, per-client, per-tenant, per-tool, per-subscription, per-sampling, and per-task cost budgets belong in AID-H-035.006.</p><h5>Example Envoy route limits</h5><pre><code># file: envoy/mcp-route.yaml
+    max_request_headers_kb: 32
+    common_http_protocol_options:
+      max_connection_duration: 3600s
+      idle_timeout: 300s
+    request_headers_timeout: 10s
+    stream_idle_timeout: 120s
     typed_per_filter_config:
       envoy.filters.http.local_ratelimit:
         "@type": type.googleapis.com/udpa.type.v1.TypedStruct
@@ -20727,6 +20890,11 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
             default_value:
               numerator: 100
               denominator: HUNDRED
+    </code></pre><h5>Example Express body cap</h5><pre><code>// file: src/server.js
+    import express from "express";
+
+    const app = express();
+    app.use(express.json({ limit: "1mb", strict: true }));
     </code></pre><p><strong>Operational notes:</strong> A WAF or API gateway is acceptable as one layer for internet-facing MCP servers, but it is not a substitute for protocol-aware authorization, tool validation, elicitation safety, and per-principal budgets inside the server.</p>`
             }
           ]
@@ -20832,7 +21000,7 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
           "implementationGuidance": [
             {
               "implementation": "Publish OAuth protected resource metadata and return scope-aware WWW-Authenticate challenges for protected MCP servers.",
-              "howTo": `<h5>Concept:</h5><p>When an MCP server is protected by OAuth over HTTP transport, clients need a standard way to discover the resource server and the authorization server. The server should expose protected resource metadata and use WWW-Authenticate challenges to tell clients which resource and scope are required for the current operation.</p><h5>Example protected resource metadata</h5><pre><code>// file: src/oauth/resourceMetadata.js
+              "howTo": `<h5>Concept:</h5><p>When an MCP server is protected by OAuth over HTTP transport, clients need a standard way to discover the resource server and the authorization server. The server should expose protected resource metadata and use precise WWW-Authenticate challenges to tell clients which resource and scope are required for the current operation. Do not publish a full privilege catalog or force clients to ask for broad scopes during first contact.</p><h5>Example protected resource metadata</h5><pre><code>// file: src/oauth/resourceMetadata.js
     export function protectedResourceMetadata(req, res) {
       res.json({
         resource: "https://payments-mcp.internal.example.com",
@@ -20840,9 +21008,8 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
           "https://auth.internal.example.com"
         ],
         scopes_supported: [
-          "payments:read",
-          "payments:refund",
-          "customers:read"
+          "mcp:tools-basic",
+          "payments:read"
         ],
         bearer_methods_supported: ["header"]
       });
@@ -20853,7 +21020,7 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
         if (!req.auth || !req.auth.scopes.includes(requiredScope)) {
           res.setHeader(
             "WWW-Authenticate",
-            'Bearer resource_metadata="https://payments-mcp.internal.example.com/.well-known/oauth-protected-resource", scope="' + requiredScope + '"'
+            'Bearer error="insufficient_scope", resource_metadata="https://payments-mcp.internal.example.com/.well-known/oauth-protected-resource", scope="' + requiredScope + '"'
           );
           return res.status(req.auth ? 403 : 401).json({
             jsonrpc: "2.0",
@@ -20863,17 +21030,59 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
         return next();
       };
     }
-    </code></pre><p><strong>Operational notes:</strong> Keep scopes operation-specific. Avoid advertising refresh-token scopes as a resource requirement unless the server is also acting as an authorization server and the design has been reviewed separately.</p>`
+    </code></pre><p><strong>Operational notes:</strong> Keep scopes operation-specific. Reject wildcard or omnibus scopes such as <code>*</code>, <code>all</code>, and <code>full-access</code>. Avoid advertising refresh-token scopes as a resource requirement unless the server is also acting as an authorization server and the design has been reviewed separately.</p>`
+            },
+            {
+              "implementation": "Use progressive least-privilege scope elevation and reject wildcard, omnibus, or cross-tool scopes that hide tool intent.",
+              "howTo": `<h5>Concept:</h5><p>MCP clients often do not know a server's domain-specific scope model before discovery. If the server publishes every possible scope or accepts broad scopes by default, one stolen token can call unrelated tools. Start with low-risk discovery/read scopes, then step up only when a privileged operation is attempted.</p><h5>Example per-tool scope policy</h5><pre><code>// file: src/oauth/toolScopePolicy.js
+    const toolScopes = {
+      list_accounts: ["payments:read"],
+      read_customer_account: ["customers:read"],
+      refund_payment: ["payments:refund"],
+      export_customer_data: ["customers:export"]
+    };
+
+    const forbiddenScopes = new Set(["*", "all", "full-access", "admin:*"]);
+
+    export function requiredScopesForTool(toolName) {
+      const scopes = toolScopes[toolName];
+      if (!scopes) {
+        throw new Error("Unknown tool scope policy: " + toolName);
+      }
+      return scopes;
+    }
+
+    export function validateScopeSet(scopes) {
+      for (const scope of scopes) {
+        if (forbiddenScopes.has(scope)) {
+          throw new Error("Wildcard or omnibus scopes are not accepted");
+        }
+      }
+    }
+
+    export function requireToolScopes({ auth, toolName }) {
+      const granted = new Set(auth.scopes || []);
+      validateScopeSet(granted);
+      const missing = requiredScopesForTool(toolName).filter(scope => !granted.has(scope));
+      if (missing.length > 0) {
+        return {
+          ok: false,
+          wwwAuthenticateScope: [...new Set([...(auth.scopes || []), ...missing])].join(" ")
+        };
+      }
+      return { ok: true };
+    }
+    </code></pre><p><strong>Operational notes:</strong> Log scope elevation prompts with user, client, tenant, tool, requested scope, granted subset, and correlation ID. Do not treat possession of a broad token as a substitute for handler-level authorization in AID-H-035.003.</p>`
             },
             {
               "implementation": "Validate issuer, audience, resource, expiry, and scope on every HTTP request, and reject tokens not issued for this MCP server.",
               "howTo": `<h5>Concept:</h5><p>The MCP server is a protected resource. It must only accept tokens that were issued for this exact MCP server resource. A token meant for another API, another MCP server, or an upstream SaaS API must be rejected even if it is structurally valid.</p><h5>Example JWT validation middleware</h5><pre><code>// file: src/oauth/validateToken.js
     import { createRemoteJWKSet, jwtVerify } from "jose";
-    
+
     const issuer = "https://auth.internal.example.com";
     const resource = "https://payments-mcp.internal.example.com";
     const jwks = createRemoteJWKSet(new URL(issuer + "/.well-known/jwks.json"));
-    
+
     function normalizeStringList(value) {
       if (Array.isArray(value)) {
         return value.map(String).filter(Boolean);
@@ -20886,7 +21095,7 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
       }
       return [];
     }
-    
+
     function tenantContextFromClaims(payload) {
       const tenantIds = normalizeStringList(
         payload.tenant_ids || payload.tenants || payload.tenant_id || payload.tid
@@ -20894,36 +21103,44 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
       const activeTenantId = String(
         payload.active_tenant_id || payload.tenant_id || payload.tid || tenantIds[0] || ""
       );
-    
+
       if (activeTenantId && !tenantIds.includes(activeTenantId)) {
         tenantIds.push(activeTenantId);
       }
-    
+
       return {
         tenantIds,
         activeTenantId: activeTenantId || null
       };
     }
-    
+
     export async function validateMcpBearer(req, res, next) {
       const header = req.headers.authorization || "";
       const token = header.startsWith("Bearer ") ? header.slice("Bearer ".length) : null;
       if (!token) {
         return res.status(401).json({ jsonrpc: "2.0", error: { code: -32001, message: "Bearer token required" } });
       }
-    
+
       try {
-        const { payload } = await jwtVerify(token, jwks, {
+        const { payload, protectedHeader } = await jwtVerify(token, jwks, {
           issuer,
-          audience: resource
+          audience: resource,
+          algorithms: ["RS256", "ES256"]
         });
-    
+
+        // RFC 8725: pin algorithms. RFC 9068: reject anything that is not an access
+        // token (for example an OIDC ID token replayed as a bearer token).
+        const typ = (protectedHeader.typ || "").toLowerCase();
+        if (typ && typ !== "at+jwt" && typ !== "application/at+jwt") {
+          throw new Error("Token is not an OAuth access token (at+jwt)");
+        }
+
         if (payload.resource && payload.resource !== resource) {
           throw new Error("Token resource mismatch");
         }
-    
+
         const tenantContext = tenantContextFromClaims(payload);
-    
+
         req.auth = {
           subject: payload.sub,
           clientId: payload.client_id || payload.azp,
@@ -20941,8 +21158,8 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
     </code></pre><p><strong>Operational notes:</strong> Validate on every HTTP request, including stream initialization and resumed requests. Do not rely on a prior MCP-Session-Id as proof of authorization. If the server exposes tenant-scoped tools, normalize tenant claims into a consistent <code>tenantIds</code> and <code>activeTenantId</code> shape so downstream authorization, task isolation, and budget controls can fail closed instead of building keys with undefined tenant context.</p>`
             },
             {
-              "implementation": "Ban token passthrough and require separate upstream credentials or token exchange when the MCP server calls backend APIs.",
-              "howTo": `<h5>Concept:</h5><p>An MCP client token proves authorization to call the MCP server. It is not a general-purpose token to forward to upstream APIs. When the server integrates with GitHub, Google Drive, databases, ticketing systems, payment APIs, or cloud APIs, it must obtain a separate upstream credential for that user, service account, or delegated grant.</p><h5>Example upstream token guard</h5><pre><code>// file: src/oauth/upstreamTokenGuard.js
+              "implementation": "Ban token passthrough and require separate upstream credentials or standards-based token exchange when the MCP server calls backend APIs.",
+              "howTo": `<h5>Concept:</h5><p>An MCP client token proves authorization to call the MCP server. It is not a general-purpose token to forward to upstream APIs. When the server integrates with GitHub, Google Drive, databases, ticketing systems, payment APIs, or cloud APIs, it must obtain a separate upstream credential for that user, service account, delegated grant, or OAuth 2.0 Token Exchange flow.</p><h5>Example upstream token guard</h5><pre><code>// file: src/oauth/upstreamTokenGuard.js
     export function rejectClientTokenPassthrough({ inboundToken, upstreamToken, upstreamName }) {
       if (!upstreamToken) {
         throw new Error("Missing upstream token for " + upstreamName);
@@ -20951,40 +21168,76 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
         throw new Error("Token passthrough is forbidden for " + upstreamName);
       }
     }
-    
+
     export async function callUpstreamApi(req, upstreamClient, operation) {
       const inboundToken = req.headers.authorization?.slice("Bearer ".length);
       const upstreamToken = await upstreamClient.getDelegatedToken({
         subject: req.auth.subject,
-        scopes: operation.requiredUpstreamScopes
+        scopes: operation.requiredUpstreamScopes,
+        audience: operation.upstreamAudience
       });
-    
+
       rejectClientTokenPassthrough({
         inboundToken,
         upstreamToken,
         upstreamName: operation.service
       });
-    
+
       return upstreamClient.request(operation, upstreamToken);
     }
-    </code></pre><p><strong>Operational notes:</strong> Store upstream credentials in a server-side secret store with user, tenant, client, scope, and expiry metadata. Never log inbound or upstream token values; log only hashes or token identifiers.</p>`
+    </code></pre><h5>Example RFC 8693 token exchange for getDelegatedToken</h5><pre><code>// file: src/oauth/tokenExchange.js
+    // Exchange the validated, MCP-audience inbound token for a downstream-audience
+    // token scoped to ONE upstream API. Never reuse the inbound token upstream.
+    export async function exchangeForUpstreamToken({ subjectToken, audience, scopes, cache }) {
+      const cacheKey = audience + "|" + scopes.slice().sort().join(" ");
+      const cached = cache.get(cacheKey);
+      if (cached && cached.expiresAt > Date.now()) return cached.token;
+
+      const body = new URLSearchParams({
+        grant_type: "urn:ietf:params:oauth:grant-type:token-exchange",
+        subject_token: subjectToken,
+        subject_token_type: "urn:ietf:params:oauth:token-type:access_token",
+        requested_token_type: "urn:ietf:params:oauth:token-type:access_token",
+        audience,
+        scope: scopes.join(" ")
+      });
+
+      const res = await fetch(process.env.STS_TOKEN_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "content-type": "application/x-www-form-urlencoded",
+          authorization: "Basic " + process.env.STS_CLIENT_BASIC
+        },
+        body
+      });
+      if (!res.ok) throw new Error("Token exchange failed: " + res.status);
+
+      const json = await res.json();
+      cache.set(cacheKey, { token: json.access_token, expiresAt: Date.now() + (json.expires_in - 30) * 1000 });
+      return json.access_token;
+    }
+    </code></pre><p><strong>Operational notes:</strong> Store upstream credentials in a server-side secret store with user, tenant, client, upstream audience, scope, and expiry metadata. Prefer RFC 8693 token exchange when the upstream authorization server supports it (cloud equivalents: Entra on-behalf-of, AWS STS AssumeRoleWithWebIdentity); otherwise use a separately consented upstream grant. Never cache the inbound MCP bearer token beyond the request it authorizes, and never log inbound or upstream token values; log only hashes or token identifiers.</p>`
             },
             {
               "implementation": "If the MCP server acts as an OAuth proxy or OAuth client to a third-party API, enforce per-client consent, exact redirect URI validation, CSRF state, and consent cookies bound to client_id.",
-              "howTo": `<h5>Concept:</h5><p>This control only applies when the MCP server also acts as an OAuth proxy or OAuth client for an upstream third-party service. It does not apply to a pure MCP protected resource that only validates bearer tokens. In proxy mode, the server must prevent a malicious MCP client from abusing static upstream OAuth consent to obtain authorization codes meant for another client.</p><h5>Example consent record</h5><pre><code>// file: src/oauth/proxyConsent.js
+              "howTo": `<h5>Concept:</h5><p>This control only applies when the MCP server also acts as an OAuth proxy or OAuth client for an upstream third-party service. It does not apply to a pure MCP protected resource that only validates bearer tokens. In proxy mode, the server must prevent a malicious MCP client from abusing static upstream OAuth consent to obtain authorization codes meant for another client. Consent must be recorded before issuing a one-time authorization state.</p><h5>Example consent record with one-time state</h5><pre><code>// file: src/oauth/proxyConsent.js
+    import crypto from "node:crypto";
+
+    // Use Redis, a database table, or another durable store in production.
     const approvedClientConsent = new Map();
-    
+    const pendingState = new Map();
+
     function consentKey({ userId, clientId, redirectUri, upstream }) {
       return [userId, clientId, redirectUri, upstream].join("|");
     }
-    
+
     export function recordConsent({ userId, clientId, redirectUri, upstream, scopes }) {
       approvedClientConsent.set(consentKey({ userId, clientId, redirectUri, upstream }), {
         scopes: [...scopes].sort(),
         approvedAt: new Date().toISOString()
       });
     }
-    
+
     export function requireProxyConsent({ userId, clientId, redirectUri, upstream, scopes }) {
       const record = approvedClientConsent.get(consentKey({ userId, clientId, redirectUri, upstream }));
       if (!record) {
@@ -20996,7 +21249,31 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
         }
       }
     }
-    </code></pre><h5>Redirect and state requirements</h5><ul><li>Match redirect URIs by exact string comparison against registered client metadata.</li><li>Bind CSRF state to user ID, client ID, redirect URI, upstream service, requested scopes, and expiration.</li><li>If cookies track consent, use Secure, HttpOnly, SameSite=Lax or stricter attributes and bind the consent to the specific client_id, not just the user.</li></ul><p><strong>Operational notes:</strong> Keep this proxy-specific path separate from ordinary protected-resource token validation so operators do not assume every MCP server needs redirect handling.</p>`
+
+    export function createOneTimeState({ userId, clientId, redirectUri, upstream, scopes }) {
+      requireProxyConsent({ userId, clientId, redirectUri, upstream, scopes });
+      const state = crypto.randomBytes(32).toString("base64url");
+      pendingState.set(state, {
+        userId,
+        clientId,
+        redirectUri,
+        upstream,
+        scopes: [...scopes].sort(),
+        expiresAt: Date.now() + 10 * 60 * 1000
+      });
+      return state;
+    }
+
+    export function consumeOneTimeState({ state, userId, clientId, redirectUri }) {
+      const record = pendingState.get(state);
+      pendingState.delete(state);
+      if (!record || record.expiresAt < Date.now()) throw new Error("Invalid OAuth state");
+      if (record.userId !== userId || record.clientId !== clientId || record.redirectUri !== redirectUri) {
+        throw new Error("OAuth state identity mismatch");
+      }
+      return record;
+    }
+    </code></pre><h5>Redirect, cookie, and UI requirements</h5><ul><li>Match redirect URIs by exact string comparison against registered client metadata.</li><li>Issue the CSRF state only after per-client consent exists; bind it to user ID, client ID, redirect URI, upstream service, requested scopes, and expiration; consume it once.</li><li>If cookies track consent, use a host-only cookie name with the <code>__Host-</code> prefix, <code>Secure</code>, <code>HttpOnly</code>, <code>Path=/</code>, and <code>SameSite=Lax</code>; bind consent to the specific <code>client_id</code>, not just the user.</li><li>Serve the consent page with <code>Content-Security-Policy: frame-ancestors 'none'</code> so a malicious client cannot clickjack consent.</li></ul><p><strong>Operational notes:</strong> Keep this proxy-specific path separate from ordinary protected-resource token validation so operators do not assume every MCP server needs redirect handling.</p>`
             }
           ]
         },
@@ -21012,7 +21289,7 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
             "building",
             "operation"
           ],
-          "description": "Make the MCP server the final policy enforcement point for every tools/call request. The server must validate tool arguments against strict schemas, enforce object-level and tenant-level authorization inside the handler, protect URL-fetching tools from SSRF and unsafe redirects, and sandbox or deny command, code, browser, and filesystem execution paths.<br/><br/><strong>Scope boundary:</strong> AID-H-019 defines capability policy from the agent or orchestrator side. This sub-technique enforces server-side validation and backend authorization after a request has arrived at the MCP server. AID-I-002 and AID-H-020 provide network and safe-fetch patterns. AID-H-026 and AID-I-001 provide unsafe-code and sandboxing controls.",
+          "description": "Make the MCP server the final policy enforcement point for every tools/call request. The server must validate tool arguments against strict schemas, enforce per-tool, object-level, and tenant-level authorization inside the handler, protect URL-fetching tools from SSRF and unsafe redirects, prevent SQL/NoSQL injection in backend calls, sanitize model-visible errors, and sandbox or deny command, code, browser, and filesystem execution paths.<br/><br/><strong>Scope boundary:</strong> AID-H-019 defines capability policy from the agent or orchestrator side. This sub-technique enforces server-side validation and backend authorization after a request has arrived at the MCP server. AID-I-002 and AID-H-020 provide network and safe-fetch patterns. AID-H-026 and AID-I-001 provide unsafe-code and sandboxing controls.",
           "toolsOpenSource": [
             "Ajv",
             "Pydantic",
@@ -21098,8 +21375,7 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
               "framework": "Databricks AI Security Framework 3.0",
               "items": [
                 "Agents - Tools MCP Server 13.22: Excessive Permissions and Scope Creep",
-                "Agents - Tools MCP Server 13.23: Data Exfiltration",
-                "Agents - Tools MCP Server 13.20: Insecure Server Configuration"
+                "Agents - Tools MCP Server 13.23: Data Exfiltration"
               ]
             }
           ],
@@ -21109,14 +21385,14 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
               "howTo": `<h5>Concept:</h5><p>Tool schemas are not just client hints. They are server-side contracts. The MCP server must reject unknown fields, wrong types, missing required values, oversized values, invalid enums, and unsafe string formats before the handler runs.</p><h5>Example strict schema validation with Ajv</h5><pre><code>// file: src/tools/schemaGate.js
     import Ajv from "ajv";
     import addFormats from "ajv-formats";
-    
+
     const ajv = new Ajv({
       allErrors: true,
       strict: true,
       removeAdditional: false
     });
     addFormats(ajv);
-    
+
     const schemas = {
       read_customer_account: {
         type: "object",
@@ -21130,23 +21406,26 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
         }
       }
     };
-    
+
     const validators = Object.fromEntries(
       Object.entries(schemas).map(([name, schema]) => [name, ajv.compile(schema)])
     );
-    
+
     export function validateToolArguments(toolName, args) {
       const validate = validators[toolName];
       if (!validate) {
         throw new Error("Unknown tool: " + toolName);
       }
       if (!validate(args)) {
-        const detail = ajv.errorsText(validate.errors, { separator: "; " });
-        throw new Error("Invalid tool arguments: " + detail);
+        const safeDetail = (validate.errors || []).map(error => ({
+          field: error.instancePath || "/",
+          constraint: error.keyword
+        }));
+        throw new Error("Invalid tool arguments: " + JSON.stringify(safeDetail));
       }
       return args;
     }
-    </code></pre><p><strong>Operational notes:</strong> Use explicit maximum lengths, numeric ranges, enum values, URL schemes, and file path formats. Do not use schema descriptions as enforcement; descriptions are model-visible documentation, not policy.</p>`
+    </code></pre><p><strong>Operational notes:</strong> Use explicit maximum lengths, numeric ranges, enum values, URL schemes, and file path formats. Do not use schema descriptions as enforcement; descriptions are model-visible documentation, not policy. Return field and constraint names only in validation errors; never echo raw argument values into model-visible tool errors.</p>`
             },
             {
               "implementation": "Bind each tool invocation to the authenticated principal, client, tenant, session, and backend object authorization before executing side effects.",
@@ -21157,26 +21436,26 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
       if (!auth.subject || tenantIds.length === 0) {
         throw new Error("Missing authenticated tenant context");
       }
-    
+
       const row = await db.queryOne(
         "select tenant_id from customers where customer_id = ?",
         [customerId]
       );
-    
+
       if (!row) {
         throw new Error("Customer not found");
       }
-    
+
       const allowed = tenantIds.includes(row.tenant_id) &&
         scopes.has("customers:read");
-    
+
       if (!allowed) {
         throw new Error("Not authorized for customer");
       }
-    
+
       return row;
     }
-    
+
     export async function readCustomerAccountHandler({ auth, args, db }) {
       await requireCustomerAccess({ auth, customerId: args.customer_id, db });
       return db.queryOne(
@@ -21187,59 +21466,173 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
     </code></pre><p><strong>Operational notes:</strong> Treat the MCP server as the final policy enforcement point. H-019 can prevent the agent from selecting a capability, but this server-side gate prevents direct API calls, compromised clients, stale client policy, or cross-tenant confusion from reaching backend data.</p>`
             },
             {
+              "implementation": "Use parameterized SQL or NoSQL APIs and server-side identifier allowlists for every database-backed MCP tool.",
+              "howTo": `<h5>Concept:</h5><p>JSON Schema validates shape; it does not make a database query safe. Tool arguments can be influenced by indirect prompt injection, malicious clients, or compromised sessions. Treat every argument as untrusted data and never concatenate it into SQL, MongoDB filters, sort clauses, collection names, table names, or projection expressions.</p><h5>Example SQL handler</h5><pre><code>// file: src/tools/customerSearchSql.js
+    const allowedSortColumns = {
+      created_at: "created_at",
+      customer_id: "customer_id"
+    };
+
+    export async function searchCustomers({ auth, args, db }) {
+      if (!auth.scopes.includes("customers:read")) {
+        throw new Error("Missing customers:read scope");
+      }
+
+      const sortColumn = allowedSortColumns[args.sort_by || "created_at"];
+      if (!sortColumn) {
+        throw new Error("Unsupported sort column");
+      }
+
+      return db.query(
+        "select customer_id, status, plan from customers where tenant_id = ? and email like ? order by " +
+          sortColumn +
+          " limit ?",
+        [auth.activeTenantId, "%" + args.email_fragment + "%", Math.min(args.limit || 25, 100)]
+      );
+    }
+    </code></pre><h5>Example MongoDB filter construction</h5><pre><code>// file: src/tools/customerSearchMongo.js
+    const allowedFields = new Set(["customer_id", "email", "status"]);
+
+    export async function findCustomerByField({ auth, args, collection }) {
+      if (!allowedFields.has(args.field)) {
+        throw new Error("Unsupported field");
+      }
+
+      return collection.findOne(
+        {
+          tenant_id: auth.activeTenantId,
+          [args.field]: String(args.value)
+        },
+        {
+          projection: { _id: 0, customer_id: 1, status: 1, plan: 1 }
+        }
+      );
+    }
+    </code></pre><p><strong>Operational notes:</strong> Give each MCP server or tool a least-privilege database identity, preferably read-only for read tools. Dynamic identifiers require server-owned enum allowlists; prepared statements only protect values, not table names, column names, collection names, or sort expressions.</p>`
+            },
+            {
               "implementation": "For tools that fetch URLs or resolve network targets, enforce SSRF-safe URL validation, redirect validation, DNS rebinding checks, and egress allowlists.",
               "howTo": `<h5>Concept:</h5><p>URL-fetching MCP tools are high-risk because attackers can use them as server-side probes into internal networks, cloud metadata services, localhost admin panels, or private DNS names. This guidance references AID-I-002 for network segmentation and AID-H-020.001 for safe-fetch patterns.</p><h5>Example URL validation in Python</h5><pre><code># file: tools/safe_fetch_gate.py
     from __future__ import annotations
-    
+
     import ipaddress
     import socket
     from urllib.parse import urlparse
-    
-    BLOCKED_HOSTS = {"localhost"}
+
+    import urllib3
+
+    BLOCKED_HOSTS = {"localhost", "metadata.google.internal"}
     ALLOWED_SCHEMES = {"https"}
-    
-    
+    ALLOWED_DOMAINS = {"api.github.com", "docs.example.com"}
+    METADATA_IPS = {
+        ipaddress.ip_network("169.254.169.254/32"),
+        ipaddress.ip_network("169.254.169.253/32"),
+        ipaddress.ip_network("100.100.100.200/32"),
+    }
+
+
+    def normalize_ip(ip):
+        if isinstance(ip, ipaddress.IPv6Address) and ip.ipv4_mapped:
+            return ip.ipv4_mapped
+        return ip
+
+
+    def is_blocked_ip(ip) -> bool:
+        normalized = normalize_ip(ip)
+        if not normalized.is_global:
+            return True
+        return any(normalized in network for network in METADATA_IPS)
+
+
+    def domain_allowed(hostname: str) -> bool:
+        return any(hostname == domain or hostname.endswith("." + domain) for domain in ALLOWED_DOMAINS)
+
+
     def _all_resolved_ips(hostname: str):
         infos = socket.getaddrinfo(hostname, None, proto=socket.IPPROTO_TCP)
         ips = []
         for info in infos:
             sockaddr = info[4]
-            ips.append(ipaddress.ip_address(sockaddr[0]))
+            candidate = normalize_ip(ipaddress.ip_address(sockaddr[0]))
+            if is_blocked_ip(candidate):
+                raise ValueError(f"Blocked non-public or metadata address: {candidate}")
+            ips.append(str(candidate))
         return ips
-    
-    
-    def validate_fetch_url(url: str) -> str:
+
+
+    def parse_and_pin_url(url: str):
         parsed = urlparse(url)
         if parsed.scheme not in ALLOWED_SCHEMES:
             raise ValueError("Only https URLs are allowed")
         if not parsed.hostname:
             raise ValueError("URL hostname is required")
-        if parsed.hostname.lower() in BLOCKED_HOSTS:
+
+        hostname = parsed.hostname.encode("idna").decode("ascii").lower().rstrip(".")
+        if hostname in BLOCKED_HOSTS:
             raise ValueError("Localhost is blocked")
-    
-        for ip in _all_resolved_ips(parsed.hostname):
-            if not ip.is_global:
-                raise ValueError(f"Blocked non-public address: {ip}")
-    
-        return url
-    </code></pre><h5>Operational requirements</h5><ul><li>Validate the initial URL and every redirect target.</li><li>Prefer egress allowlists for production tools that only need known APIs.</li><li>Block cloud metadata endpoints such as 169.254.169.254 and provider-specific metadata hostnames.</li><li>Pin the resolved address for the actual connection where the HTTP client allows it, or place the fetcher behind an egress proxy that enforces DNS and IP policy.</li></ul>`
+        if not domain_allowed(hostname):
+            raise ValueError("Domain is not on the fetch allowlist")
+
+        try:
+            literal = normalize_ip(ipaddress.ip_address(hostname))
+        except ValueError:
+            literal = None
+        if literal is not None:
+            if is_blocked_ip(literal):
+                raise ValueError("Blocked literal IP address")
+            raise ValueError("Use hostnames, not literal IP addresses, in MCP fetch tools")
+
+        ips = _all_resolved_ips(hostname)
+        if not ips:
+            raise ValueError("No DNS answers")
+        return parsed._replace(netloc=hostname), ips[0]
+
+
+    def fetch_resolved_once(url: str, timeout: float = 5.0) -> bytes:
+        parsed, ip_address = parse_and_pin_url(url)
+        port = parsed.port or 443
+        target = parsed.path or "/"
+        if parsed.query:
+            target += "?" + parsed.query
+
+        pool = urllib3.HTTPSConnectionPool(
+            ip_address,
+            port=port,
+            server_hostname=parsed.hostname,
+            assert_hostname=parsed.hostname,
+            cert_reqs="CERT_REQUIRED",
+            timeout=timeout,
+            retries=False,
+        )
+        response = pool.request(
+            "GET",
+            target,
+            headers={"Host": parsed.netloc, "User-Agent": "AIDEFEND-MCP-Fetcher/1.0"},
+            redirect=False,
+        )
+        if 300 <= response.status < 400:
+            raise ValueError("Redirects are disabled; validate each hop explicitly")
+        if response.status >= 400:
+            raise RuntimeError(f"Upstream fetch failed: {response.status}")
+        return response.data
+    </code></pre><h5>Operational requirements</h5><ul><li>Validate the initial URL and every redirect target; safest default is redirects disabled.</li><li>Prefer egress allowlists and production egress proxies such as Smokescreen for tools that fetch arbitrary URLs.</li><li>Block cloud metadata endpoints, link-local ranges, loopback, private ranges, IPv4-mapped IPv6 forms, and provider-specific metadata hostnames in code, not prose.</li><li>Pin the resolved address for the actual connection, preserving the original hostname for SNI and Host, or place the fetcher behind an egress proxy that enforces DNS and IP policy.</li></ul>`
             },
             {
               "implementation": "For command, code, browser, and filesystem tools, deny shell execution by default and route high-risk handlers through sandboxed execution profiles.",
               "howTo": `<h5>Concept:</h5><p>Some MCP tools intentionally run commands, evaluate code, automate browsers, read files, or write files. Those handlers should be rare, separately reviewed, and isolated from the main MCP server process. This guidance cross-references AID-H-026 for unsafe code execution prevention and AID-I-001 for sandboxing.</p><h5>Example command allowlist wrapper</h5><pre><code>// file: src/tools/commandRunner.js
     import { spawn } from "node:child_process";
-    
+
     const allowedCommands = new Map([
       ["git_status", { cmd: "git", args: ["status", "--short"], timeoutMs: 5000 }],
       ["npm_audit_json", { cmd: "npm", args: ["audit", "--json"], timeoutMs: 30000 }]
     ]);
-    
+
     export function runAllowedCommand(commandId, cwd) {
       const rule = allowedCommands.get(commandId);
       if (!rule) {
         throw new Error("Command is not allowlisted");
       }
-    
+
       return new Promise((resolve, reject) => {
         const child = spawn(rule.cmd, rule.args, {
           cwd,
@@ -21247,12 +21640,12 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
           windowsHide: true,
           stdio: ["ignore", "pipe", "pipe"]
         });
-    
+
         const timer = setTimeout(() => {
           child.kill();
           reject(new Error("Command timed out"));
         }, rule.timeoutMs);
-    
+
         let stdout = "";
         let stderr = "";
         child.stdout.on("data", chunk => { stdout += chunk; });
@@ -21282,7 +21675,7 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
             "building",
             "operation"
           ],
-          "description": "Govern the server-published surface that MCP clients and models consume: tool definitions, resource templates, prompt templates, annotations, descriptions, schemas, and list_changed events. The server must publish only reviewed contracts, preserve semantic honesty in model-visible metadata, and make descriptor changes auditable and reversible.<br/><br/><strong>Scope boundary:</strong> AID-H-024 and AID-H-031 govern broader publisher and skill supply-chain controls. AID-H-025 validates tool and descriptor resolution from the consuming side. This sub-technique covers the MCP server's responsibility as the publisher of its own exposed tools, resources, prompts, and dynamic capability changes.",
+          "description": "Govern the server-published surface that MCP clients and models consume: tool definitions, resource templates, prompt templates, annotations, descriptions, schemas, output schemas, and list_changed events. The server must publish only reviewed and signed or review-gated contracts, preserve semantic honesty in model-visible metadata, detect hidden Unicode or schema-level descriptor poisoning, and make descriptor changes auditable and reversible.<br/><br/><strong>Scope boundary:</strong> AID-H-024 and AID-H-031 govern broader publisher and skill supply-chain controls. AID-H-025 validates tool and descriptor resolution from the consuming side. This sub-technique covers the MCP server's responsibility as the publisher of its own exposed tools, resources, prompts, and dynamic capability changes.",
           "toolsOpenSource": [
             "Git",
             "Sigstore Cosign",
@@ -21303,8 +21696,7 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
                 "AML.T0104 Publish Poisoned AI Agent Tool",
                 "AML.T0110 AI Agent Tool Poisoning",
                 "AML.T0010 AI Supply Chain Compromise",
-                "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
-                "AML.T0084.001 Discover AI Agent Configuration: Tool Definitions"
+                "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
               ]
             },
             {
@@ -21338,8 +21730,7 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
             {
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
-                "NISTAML.051 Model Poisoning (Supply Chain)",
-                "NISTAML.039 Compromising connected resources"
+                "NISTAML.051 Model Poisoning (Supply Chain)"
               ]
             },
             {
@@ -21385,7 +21776,21 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
           "side_effects": "none",
           "read_only": true,
           "destructive": false,
-          "schema_hash": "sha256:REPLACE_WITH_SCHEMA_HASH",
+          "inputSchema": {
+            "type": "object",
+            "properties": { "customer_id": { "type": "string", "maxLength": 64 } },
+            "required": ["customer_id"],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object",
+            "properties": { "customer_id": { "type": "string" }, "status": { "type": "string" } },
+            "required": ["customer_id", "status"],
+            "additionalProperties": false
+          },
+          "annotations": { "readOnlyHint": true, "destructiveHint": false },
+          "model_visible_description": "Read the current account status for an authorized customer.",
+          "contract_hash": "sha256:REPLACE_WITH_CONTRACT_HASH",
           "handler_commit": "REPLACE_WITH_GIT_SHA"
         },
         {
@@ -21395,14 +21800,102 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
           "read_only": false,
           "destructive": true,
           "requires_human_approval": true,
-          "schema_hash": "sha256:REPLACE_WITH_SCHEMA_HASH",
+          "inputSchema": {
+            "type": "object",
+            "properties": {
+              "payment_id": { "type": "string", "maxLength": 64 },
+              "amount_cents": { "type": "integer", "minimum": 1, "maximum": 500000 }
+            },
+            "required": ["payment_id", "amount_cents"],
+            "additionalProperties": false
+          },
+          "outputSchema": {
+            "type": "object",
+            "properties": { "refund_id": { "type": "string" }, "status": { "type": "string" } },
+            "required": ["refund_id", "status"],
+            "additionalProperties": false
+          },
+          "annotations": { "readOnlyHint": false, "destructiveHint": true },
+          "model_visible_description": "Create a refund after policy and human approval.",
+          "contract_hash": "sha256:REPLACE_WITH_CONTRACT_HASH",
           "handler_commit": "REPLACE_WITH_GIT_SHA"
         }
       ],
       "resources": [],
       "prompts": []
     }
-    </code></pre><p><strong>Operational notes:</strong> If your SDK supports tool annotations such as read-only or destructive hints, treat them as security-relevant metadata. They must be accurate and reviewed, not generated casually from a function name.</p>`
+    </code></pre><h5>Compute per-tool schema hashes</h5><pre><code>// file: scripts/hash-mcp-contract.mjs
+    import fs from "node:fs";
+    import crypto from "node:crypto";
+
+    // Stable key order so the hash of a tool's contract entry is reproducible.
+    function canonicalize(value) {
+      if (Array.isArray(value)) return value.map(canonicalize);
+      if (value && typeof value === "object") {
+        return Object.fromEntries(
+          Object.keys(value).sort().map(key => [key, canonicalize(value[key])])
+        );
+      }
+      return value;
+    }
+
+    function toolContractBytes(tool) {
+      const contract = {
+        name: tool.name,
+        inputSchema: tool.inputSchema,
+        outputSchema: tool.outputSchema || null,
+        annotations: tool.annotations || {},
+        model_visible_description: tool.model_visible_description || "",
+        risk_tier: tool.risk_tier,
+        side_effects: tool.side_effects,
+        read_only: tool.read_only,
+        destructive: tool.destructive,
+        requires_human_approval: Boolean(tool.requires_human_approval)
+      };
+      return JSON.stringify(canonicalize(contract));
+    }
+
+    function contractHash(tool) {
+      const canonical = toolContractBytes(tool);
+      return "sha256:" + crypto.createHash("sha256").update(canonical).digest("hex");
+    }
+
+    const [manifestPath, mode, hashFile] = process.argv.slice(2);
+    const manifest = JSON.parse(fs.readFileSync(manifestPath, "utf8"));
+    const computed = Object.fromEntries(manifest.tools.map(tool => [tool.name, contractHash(tool)]));
+
+    if (mode === "--check") {
+      // Fail closed on drift between the manifest's recorded hashes and the schemas,
+      // and on tampering between the signed sidecar and the current manifest.
+      for (const tool of manifest.tools) {
+        if (tool.contract_hash !== computed[tool.name]) {
+          throw new Error("contract_hash mismatch for tool: " + tool.name);
+        }
+      }
+      const signed = JSON.parse(fs.readFileSync(hashFile, "utf8"));
+      if (JSON.stringify(signed) !== JSON.stringify(computed)) {
+        throw new Error("Per-tool schema hash set does not match " + hashFile);
+      }
+      console.log("Per-tool schema hashes verified");
+    } else {
+      process.stdout.write(JSON.stringify(computed, null, 2));
+    }
+    </code></pre><h5>Sign the reviewed contract</h5><pre><code># file: scripts/sign-mcp-contract.sh
+    set -euo pipefail
+    node scripts/hash-mcp-contract.mjs mcp-contract-manifest.json > mcp-contract-manifest.sha256
+    cosign sign-blob \
+      --yes \
+      --bundle mcp-contract-manifest.sigstore.json \
+      mcp-contract-manifest.json
+    </code></pre><h5>Verify before activation</h5><pre><code># file: scripts/verify-mcp-contract.sh
+    set -euo pipefail
+    cosign verify-blob \
+      --bundle mcp-contract-manifest.sigstore.json \
+      --certificate-identity-regexp '^https://github.com/example/payments-mcp/' \
+      --certificate-oidc-issuer https://token.actions.githubusercontent.com \
+      mcp-contract-manifest.json
+    node scripts/hash-mcp-contract.mjs mcp-contract-manifest.json --check mcp-contract-manifest.sha256
+    </code></pre><p><strong>Operational notes:</strong> Hash the contract fields that define model-visible meaning and execution safety: <code>inputSchema</code>, <code>outputSchema</code>, annotations, side-effect metadata, destructive/read-only flags, approval requirements, and model-visible descriptions. Keep <code>handler_commit</code> separate so operators can tell whether code changed, contract semantics changed, or both changed. If your SDK supports tool annotations such as read-only or destructive hints, treat them as security-relevant metadata. They must be accurate and reviewed, not generated casually from a function name. Do not commit placeholder hashes; compute hashes from canonicalized contract fields and verify the signature fail-closed before activation.</p>`
             },
             {
               "implementation": "Review model-visible tool, resource, and prompt text for semantic honesty, hidden instructions, and privilege-inflating descriptions before publication.",
@@ -21427,37 +21920,74 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
     }
     </code></pre><h5>Example static check</h5><pre><code>// file: scripts/check-mcp-descriptors.mjs
     import fs from "node:fs";
-    
+
     const policy = JSON.parse(fs.readFileSync("policies/mcp_descriptor_review.json", "utf8"));
     const manifest = JSON.parse(fs.readFileSync("mcp-contract-manifest.json", "utf8"));
-    const text = JSON.stringify(manifest).toLowerCase();
-    
+
+    const hiddenControls = /[\u200B-\u200D\uFEFF\u202A-\u202E\u2066-\u2069]/u;
+    const allowedDescriptorChars = /^[\u0009\u000A\u000D\u0020-\u007E]*$/u;
+
+    function canonicalizeDescriptorText(value) {
+      const normalized = String(value).normalize("NFKC");
+      if (hiddenControls.test(normalized)) {
+        throw new Error("Hidden Unicode control characters are not allowed in MCP descriptors");
+      }
+      if (!allowedDescriptorChars.test(normalized)) {
+        throw new Error("Descriptor contains characters outside the approved review alphabet");
+      }
+      return normalized.toLowerCase();
+    }
+
+    const text = canonicalizeDescriptorText(JSON.stringify(manifest));
+
     for (const phrase of policy.blocked_phrases) {
       if (text.includes(phrase)) {
         throw new Error("Blocked descriptor phrase found: " + phrase);
       }
     }
-    
+
     console.log("MCP descriptor text check passed");
-    </code></pre><p><strong>Operational notes:</strong> This static check is only a baseline. High-value tools should also receive human review because semantic deception is not always catchable by keyword scans.</p>`
+    </code></pre><p><strong>Operational notes:</strong> Run the check over the entire published contract, not only the human-facing description. Parameter names, enum values, defaults, annotations, custom fields, and output schemas can also carry poisoned instructions. This static check is only a baseline; high-value tools should also receive human review because semantic deception is not always catchable by keyword scans.</p>`
             },
             {
               "implementation": "Govern dynamic tool, resource, and prompt list changes as approved releases, and emit auditable list_changed events.",
               "howTo": `<h5>Concept:</h5><p>The ability to change the published tool list at runtime is powerful. Treat list_changed events as security-relevant changes, especially if a client or model may automatically discover and use newly exposed capabilities.</p><h5>Example change gate</h5><pre><code>// file: src/publication/changeGate.js
     import crypto from "node:crypto";
-    
+    import { execFileSync } from "node:child_process";
+
     let activeContractHash = null;
-    
-    export function activateContract(contract, { approvedBy, logger }) {
+
+    export function verifyContractArtifact({ manifestPath, bundlePath, hashPath }) {
+      execFileSync("node", ["scripts/check-mcp-descriptors.mjs"], { stdio: "inherit" });
+      // Fail closed if any per-tool contract hash drifted from the approved contract.
+      execFileSync("node", ["scripts/hash-mcp-contract.mjs", manifestPath, "--check", hashPath], { stdio: "inherit" });
+      execFileSync(
+        "cosign",
+        [
+          "verify-blob",
+          "--bundle",
+          bundlePath,
+          "--certificate-identity-regexp",
+          "^https://github.com/example/payments-mcp/",
+          "--certificate-oidc-issuer",
+          "https://token.actions.githubusercontent.com",
+          manifestPath
+        ],
+        { stdio: "inherit" }
+      );
+    }
+
+    export function activateContract(contract, { approvedBy, logger, manifestPath, bundlePath, hashPath }) {
       if (!approvedBy || approvedBy.length < 2) {
         throw new Error("MCP contract activation requires two approvers");
       }
-    
+      verifyContractArtifact({ manifestPath, bundlePath, hashPath });
+
       const hash = crypto
         .createHash("sha256")
         .update(JSON.stringify(contract))
         .digest("hex");
-    
+
       activeContractHash = hash;
       logger.info({
         event_type: "mcp_contract_activated",
@@ -21466,14 +21996,121 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
         approved_by: approvedBy,
         tool_count: contract.tools.length
       });
-    
+
       return hash;
     }
-    
+
     export function getActiveContractHash() {
       return activeContractHash;
     }
-    </code></pre><p><strong>Operational notes:</strong> Do not let individual tool handlers mutate the server's public contract as a side effect of user input. Dynamic discovery should still be backed by an approved manifest, feature flag, or release artifact.</p>`
+    </code></pre><p><strong>Operational notes:</strong> Do not let individual tool handlers mutate the server's public contract as a side effect of user input. Dynamic discovery should still be backed by an approved manifest, feature flag, or release artifact. Before emitting <code>notifications/tools/list_changed</code>, rerun descriptor scanning, compare every tool's contract hash against the approved contract, verify the manifest signature, and emit the new contract hash in telemetry.</p>`
+            },
+            {
+              "implementation": "Verify the server's own published identity and registry namespace ownership, and review the server.json manifest before publication.",
+              "howTo": `<h5>Concept:</h5><p>When you publish an MCP server to the official registry or any catalog, the server name and <code>server.json</code> manifest become attacker-influenceable trust signals. Prove namespace ownership before publishing, treat the manifest as a reviewed security artifact, and remember that registry presence proves namespace ownership only, not that the package is safe.</p><h5>Step 1: Prove namespace ownership in CI</h5><pre><code># Publish only from the owning repo or domain so a name cannot be squatted.
+    # io.github.&lt;org&gt;/* : publish from a workflow tied to the owning GitHub account or repo.
+    # com.example/*    : prove domain control with the registry-supported DNS/HTTP challenge.
+    # npm              : package.json mcpName must exactly match server.json name.
+    # pypi/nuget       : package metadata/README must carry the exact mcp-name value.
+    # oci              : image annotation io.modelcontextprotocol.server.name must match.
+    # Reject any server name whose namespace cannot be proven by the registry method.
+    </code></pre><h5>Step 2: Review and pin server.json</h5><pre><code>// file: scripts/check-server-json.mjs
+    import fs from "node:fs";
+
+    const manifest = JSON.parse(fs.readFileSync("server.json", "utf8"));
+    const NAME_OK = new RegExp("^[a-z0-9._/-]+$");
+    const PACKAGE_TYPES = new Set(["npm", "pypi", "nuget", "oci", "mcpb"]);
+    const SHELL_META = [";", "&amp;", "|", "$", "(", ")", "{", "}", "&lt;", "&gt;"];
+
+    if (!NAME_OK.test(manifest.name)) {
+      throw new Error("Invalid server name");
+    }
+    for (const pkg of manifest.packages || []) {
+      if (!PACKAGE_TYPES.has(pkg.registryType)) {
+        throw new Error("Unsupported MCP Registry package type: " + pkg.registryType);
+      }
+      if (!pkg.identifier || typeof pkg.identifier !== "string") {
+        throw new Error("Package identifier is required");
+      }
+      if (pkg.runtime_hint && SHELL_META.some(ch =&gt; pkg.runtime_hint.includes(ch))) {
+        throw new Error("Install command must not embed shell metacharacters");
+      }
+      if (!pkg.version || /latest/i.test(pkg.version)) {
+        throw new Error("Pin packages by exact version and digest, not 'latest'");
+      }
+      if (pkg.registryType === "mcpb" && !/^[a-f0-9]{64}$/i.test(pkg.fileSha256 || "")) {
+        throw new Error("MCPB packages require fileSha256");
+      }
+      if (pkg.registryType === "oci" && !/(@sha256:[a-f0-9]{64}|:[^/]+)$/i.test(pkg.identifier)) {
+        throw new Error("OCI identifiers must include an exact tag or digest");
+      }
+    }
+    console.log("server.json accepted");
+    </code></pre><p><strong>Operational notes:</strong> This script is an internal publisher review gate, not a replacement for the official <code>server.json</code> schema validator. Put the name, version, package and remote endpoints, install command, and declared environment variables under the same two-approver, contract-hash gate as your tools. Monitor for typo or affix squatting of your own server name. This is the publisher-side complement to AID-H-031.001 (consumer-side impersonation detection) and AID-H-025 (consumer resolution integrity).</p>`
+            },
+            {
+              "implementation": "If the server publishes MCP App UI (ui://) resources, predeclare them, pin their content, and declare truthful CSP, permissions, and tool visibility.",
+              "howTo": `<h5>Concept:</h5><p>MCP Apps let a server publish interactive HTML UI as <code>ui://</code> resources that the host renders in a sandboxed iframe. The server is the publisher of record for the UI resource's <code>_meta.ui.csp</code> and <code>_meta.ui.permissions</code>, and for the tool's <code>_meta.ui.resourceUri</code> and visibility metadata. A poisoned UI resource can exfiltrate via out-of-policy network calls or smuggle instructions, so govern it like any other published surface. If your server has no UI, do not declare this capability.</p><h5>Step 1: Declare ui:// resources in the internal contract manifest</h5><pre><code>// add to mcp-contract-manifest.json
+    "ui_resources": [
+      {
+        "uri": "ui://payments/refund-confirm",
+        "mime": "text/html;profile=mcp-app",
+        "content_hash": "sha256:REPLACE_WITH_HTML_HASH",
+        "linked_tools": ["refund_payment"],
+        "tool_meta": {
+          "_meta": {
+            "ui": {
+              "resourceUri": "ui://payments/refund-confirm",
+              "visibility": ["app"]
+            }
+          }
+        },
+        "resource_meta": {
+          "_meta": {
+            "ui": {
+              "csp": {
+                "connectDomains": ["https://api.example.com"],
+                "resourceDomains": [],
+                "frameDomains": []
+              },
+              "permissions": []
+            }
+          }
+        },
+        "human_approved_sensitive_permissions": false
+      }
+    ]
+    </code></pre><h5>Step 2: Enforce at publication</h5><pre><code>// file: scripts/check-ui-resources.mjs
+    const SENSITIVE = ["camera", "microphone", "geolocation", "clipboard-write"];
+    const VISIBILITY = new Set(["app", "model"]);
+
+    for (const ui of manifest.ui_resources || []) {
+      if (!ui.uri.startsWith("ui://")) throw new Error("UI resource URI must use ui://");
+      if (ui.tool_meta?._meta?.ui?.resourceUri !== ui.uri) {
+        throw new Error("Tool _meta.ui.resourceUri must point to the reviewed ui:// resource");
+      }
+      for (const value of ui.tool_meta?._meta?.ui?.visibility || []) {
+        if (!VISIBILITY.has(value)) throw new Error("Invalid tool visibility: " + value);
+      }
+      // Serve byte-identical content for resources/list and resources/read.
+      if (verifyHtmlHash(ui.uri) !== ui.content_hash) throw new Error("ui:// content drift");
+      // CSP and permissions belong on the UI resource metadata, not the tool.
+      const csp = ui.resource_meta?._meta?.ui?.csp || {};
+      const domains = [
+        ...(csp.connectDomains || []),
+        ...(csp.resourceDomains || []),
+        ...(csp.frameDomains || [])
+      ];
+      for (const dom of domains) {
+        if (dom.includes("*")) throw new Error("Wildcard CSP domain not allowed: " + dom);
+      }
+      for (const perm of ui.resource_meta?._meta?.ui?.permissions || []) {
+        if (SENSITIVE.includes(perm) && !ui.human_approved_sensitive_permissions) {
+          throw new Error("Sensitive UI permission requires human approval: " + perm);
+        }
+      }
+    }
+    </code></pre><p><strong>Operational notes:</strong> The <code>ui_resources</code> array above is an internal review manifest. The actual MCP Apps metadata is nested under <code>_meta.ui</code>: <code>resourceUri</code> and <code>visibility</code> belong on the tool, while <code>csp</code> and <code>permissions</code> belong on the UI resource returned by <code>resources/list</code> or <code>resources/read</code>. Extend the descriptor-honesty review to the served HTML (no hidden instructions, no out-of-CSP network or frame access, declared CSP and permissions match actual use). Treat <code>ui://</code> list changes as two-approver releases. The host (AID-H-029) enforces the iframe sandbox and CSP; the server only DECLARES them, so keep the server-declares / host-enforces split explicit.</p>`
             }
           ]
         },
@@ -21488,7 +22125,7 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
             "building",
             "operation"
           ],
-          "description": "Constrain the data and instructions that leave the MCP server. This includes validating and labeling tool outputs, enforcing resource URI and template boundaries, preventing prompt/resource output from smuggling privileged instructions, and handling elicitation securely from the server side.<br/><br/><strong>Scope boundary:</strong> Client-side elicitation UX rules, such as showing the full URL, avoiding prefetch, and requiring explicit navigation consent, belong to AID-H-029. This sub-technique only covers the server-side duties: request modes supported by the client, no sensitive data in form mode, safe URL generation, user binding, callback verification, and server-side storage of third-party credentials obtained through URL-mode elicitation.",
+          "description": "Constrain the data and instructions that leave the MCP server. This includes validating, neutralizing, and labeling tool outputs, validating structuredContent against outputSchema, enforcing resource URI and template boundaries, preventing prompt/resource/completion output from smuggling privileged instructions, and handling elicitation securely from the server side.<br/><br/><strong>Scope boundary:</strong> Client-side elicitation UX rules, such as showing the full URL, avoiding prefetch, and requiring explicit navigation consent, belong to AID-H-029. This sub-technique only covers the server-side duties: request modes supported by the client, no sensitive data in form mode, safe URL generation, user binding from authenticated context, callback verification, and server-side storage of third-party credentials obtained through URL-mode elicitation.",
           "toolsOpenSource": [
             "Ajv",
             "Pydantic",
@@ -21537,8 +22174,7 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
               "framework": "OWASP Agentic AI Top 10 2026",
               "items": [
                 "ASI02:2026 Tool Misuse and Exploitation",
-                "ASI03:2026 Identity and Privilege Abuse",
-                "ASI07:2026 Insecure Inter-Agent Communication"
+                "ASI03:2026 Identity and Privilege Abuse"
               ]
             },
             {
@@ -21583,19 +22219,25 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
               "implementation": "Validate, bound, label, and redact MCP tool outputs before returning them to the client or model context.",
               "howTo": `<h5>Concept:</h5><p>Tool output is not automatically trustworthy. It may contain secrets, prompt injection text, hostile markup, oversized binary data, or content that looks like a system instruction. The server should enforce output schemas, size limits, MIME limits, redaction, and untrusted-content labels before sending the result.</p><h5>Example output guard</h5><pre><code>// file: src/output/toolOutputGuard.js
     const MAX_TEXT_CHARS = 12000;
+    const CONTROL_CHARS = /[\u200B-\u200D\uFEFF\u202A-\u202E\u2066-\u2069]/g;
+    const PSEUDO_TAGS = /&lt;\/?(system|developer|instructions|tool|assistant|user|important)[^&gt;]*&gt;/gi;
     const secretPatterns = [
       /sk-[A-Za-z0-9_-]{20,}/g,
       /ghp_[A-Za-z0-9_]{20,}/g,
       /-----BEGIN PRIVATE KEY-----[\\s\\S]+?-----END PRIVATE KEY-----/g
     ];
-    
+
     export function guardToolTextOutput({ toolName, text }) {
-      let safe = String(text || "").slice(0, MAX_TEXT_CHARS);
-    
+      let safe = String(text || "")
+        .normalize("NFKC")
+        .replace(CONTROL_CHARS, "")
+        .replace(PSEUDO_TAGS, "[REMOVED_PSEUDO_INSTRUCTION_TAG]")
+        .slice(0, MAX_TEXT_CHARS);
+
       for (const pattern of secretPatterns) {
         safe = safe.replace(pattern, "[REDACTED_SECRET]");
       }
-    
+
       return {
         type: "text",
         text: "Untrusted tool output from " + toolName + ":\\n" + safe,
@@ -21606,32 +22248,96 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
         }
       };
     }
-    </code></pre><p><strong>Operational notes:</strong> The client still needs its own parser and renderer protections in AID-H-029. This server-side guard reduces the chance that the server becomes a prompt-injection amplifier or secret-leak bridge.</p>`
+    </code></pre><p><strong>Operational notes:</strong> Prefer output-schema projection that returns only the fields the model needs. Labels are auxiliary; normalization, redaction, tag neutralization, schema projection, and size bounds are the load-bearing controls. The client still needs its own parser and renderer protections in AID-H-029.</p>`
+            },
+            {
+              "implementation": "Validate structuredContent against each tool's outputSchema, recursively bound and redact structured fields, and return sanitized tool-execution errors.",
+              "howTo": `<h5>Concept:</h5><p>MCP tool results can contain both model-visible content and machine-readable <code>structuredContent</code>. If a tool declares an <code>outputSchema</code>, the server must provide structured results that conform to it. Treat structured output as untrusted until it is schema-validated, projected to allowed fields, size-bounded, and redacted. Tool execution errors should help model self-correction without echoing raw inputs, SQL errors, stack traces, stderr, tokens, or secrets.</p><h5>Example structured output gate</h5><pre><code>// file: src/output/structuredOutputGate.js
+    import Ajv2020 from "ajv/dist/2020.js";
+
+    const ajv = new Ajv2020({ allErrors: true, strict: true });
+    const MAX_STRING = 4000;
+    const secretPattern = /(sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9_]{20,})/g;
+
+    // Compile each tool's outputSchema once; recompiling per call wastes work and
+    // can throw on a duplicate $id under strict mode.
+    const validatorCache = new Map();
+    function getOutputValidator(toolName, outputSchema) {
+      let validate = validatorCache.get(toolName);
+      if (!validate) {
+        validate = ajv.compile(outputSchema);
+        validatorCache.set(toolName, validate);
+      }
+      return validate;
+    }
+
+    function scrub(value) {
+      if (typeof value === "string") {
+        return value.slice(0, MAX_STRING).replace(secretPattern, "[REDACTED_SECRET]");
+      }
+      if (Array.isArray(value)) {
+        return value.slice(0, 100).map(scrub);
+      }
+      if (value && typeof value === "object") {
+        return Object.fromEntries(
+          Object.entries(value).slice(0, 100).map(([key, nested]) => [key, scrub(nested)])
+        );
+      }
+      return value;
+    }
+
+    export function validateStructuredOutput({ toolName, outputSchema, structuredContent }) {
+      const validate = getOutputValidator(toolName, outputSchema);
+      const scrubbed = scrub(structuredContent);
+      if (!validate(scrubbed)) {
+        const safeErrors = (validate.errors || []).map(error => ({
+          field: error.instancePath || "/",
+          constraint: error.keyword
+        }));
+        return {
+          content: [{ type: "text", text: "Tool output failed schema validation." }],
+          structuredContent: { tool: toolName, validation_errors: safeErrors },
+          isError: true
+        };
+      }
+      return { structuredContent: scrubbed, isError: false };
+    }
+
+    export function safeToolExecutionError({ code, field, constraint }) {
+      return {
+        content: [{ type: "text", text: "Tool execution error: " + code }],
+        structuredContent: { code, field, constraint },
+        isError: true
+      };
+    }
+    </code></pre><p><strong>Operational notes:</strong> Use JSON Schema 2020-12 unless the tool explicitly declares a different supported dialect. Do not put raw database errors, backend stderr, stack traces, or rejected argument values into model-visible error text.</p>`
             },
             {
               "implementation": "Validate resource URIs and resource templates with canonicalization, scheme allowlists, path boundaries, and authorization checks before reading or returning data.",
               "howTo": `<h5>Concept:</h5><p>MCP resources can expose files, database rows, generated documents, or application state. Treat every resource URI as untrusted input. Normalize it, restrict schemes, prevent path traversal, and authorize the concrete object before reading it.</p><h5>Example file resource boundary</h5><pre><code>// file: src/resources/fileResourceGate.js
     import path from "node:path";
     import fs from "node:fs/promises";
-    
+
     const root = path.resolve("/srv/mcp-allowed-workspace");
-    
+
     export async function readAllowedFileResource({ auth, uri }) {
       const parsed = new URL(uri);
       if (parsed.protocol !== "file:") {
         throw new Error("Unsupported resource scheme");
       }
-    
+
       const requested = path.resolve(root, "." + parsed.pathname);
-      if (!requested.startsWith(root + path.sep)) {
+      const realRoot = await fs.realpath(root);
+      const realRequested = await fs.realpath(requested);
+      if (!realRequested.startsWith(realRoot + path.sep)) {
         throw new Error("Resource path escapes allowed workspace");
       }
-    
+
       if (!auth.scopes.includes("files:read")) {
         throw new Error("Missing files:read scope");
       }
-    
-      const data = await fs.readFile(requested, "utf8");
+
+      const data = await fs.readFile(realRequested, "utf8");
       return {
         uri,
         mimeType: "text/plain",
@@ -21644,12 +22350,12 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
               "implementation": "Constrain server-generated prompts, prompt arguments, resource text, and completion inputs so they cannot smuggle privileged instructions or unauthorized values.",
               "howTo": `<h5>Concept:</h5><p>Prompt and completion surfaces can carry model-visible instructions. The MCP server should validate prompt arguments, restrict completion choices to authorized values, and avoid embedding hidden policy overrides in generated prompt text.</p><h5>Example prompt argument validator</h5><pre><code>// file: src/prompts/promptGate.js
     const allowedPromptNames = new Set(["summarize_ticket", "draft_customer_reply"]);
-    
+
     export function validatePromptRequest({ auth, name, args }) {
       if (!allowedPromptNames.has(name)) {
         throw new Error("Unknown prompt");
       }
-    
+
       if (name === "summarize_ticket") {
         if (!auth.scopes.includes("tickets:read")) {
           throw new Error("Missing tickets:read scope");
@@ -21658,10 +22364,32 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
           throw new Error("Invalid ticket_id");
         }
       }
-    
+
       return true;
     }
-    </code></pre><p><strong>Operational notes:</strong> If the server supports completion or autocomplete flows for prompt arguments, only return values the current user may see. Do not use completion as an enumeration oracle for projects, tenants, customer names, files, or tickets.</p>`
+
+    export async function completeTicketArgument({ auth, argument, db, budget }) {
+      await budget.consume({
+        subject: auth.subject,
+        tenantId: auth.activeTenantId,
+        feature: "completion",
+        costUnits: 1
+      });
+
+      const rows = await db.query(
+        "select ticket_id from tickets where tenant_id = ? and ticket_id like ? order by updated_at desc limit 100",
+        [auth.activeTenantId, String(argument.value || "") + "%"]
+      );
+
+      return {
+        completion: {
+          values: rows.map(row => row.ticket_id).slice(0, 100),
+          total: Math.min(rows.length, 100),
+          hasMore: rows.length >= 100
+        }
+      };
+    }
+    </code></pre><p><strong>Operational notes:</strong> If the server supports completion or autocomplete flows for prompt arguments, only return values the current user may see, cap each response at 100 suggestions, and charge completion requests against per-principal budgets. Do not use completion as an enumeration oracle for projects, tenants, customer names, files, or tickets.</p>`
             },
             {
               "implementation": "For form-mode elicitation, never request sensitive information and validate returned data against the requested schema.",
@@ -21675,19 +22403,19 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
       "card_number",
       "cvv"
     ];
-    
+
     export function validateFormElicitationRequest(request) {
       if (request.mode && request.mode !== "form") {
         throw new Error("Not a form-mode request");
       }
-    
+
       const serialized = JSON.stringify(request).toLowerCase();
       for (const term of sensitiveTerms) {
         if (serialized.includes(term)) {
           throw new Error("Sensitive information must not be requested via form-mode elicitation");
         }
       }
-    
+
       return true;
     }
     </code></pre><p><strong>Operational notes:</strong> The client may also validate elicitation responses, but the server should validate the returned data before using it. Do not treat user identity written into a form field as authoritative.</p>`
@@ -21696,13 +22424,14 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
               "implementation": "For URL-mode elicitation, generate non-preauthenticated HTTPS URLs, bind state to the initiating user and client, verify callback identity, and store third-party credentials on the server.",
               "howTo": `<h5>Concept:</h5><p>URL-mode elicitation lets the MCP server ask the user to complete sensitive or third-party authorization outside the MCP client. The server is responsible for generating a safe URL, binding the elicitation to the current user, verifying that the same user completed the callback, and storing third-party credentials securely. The server must not transmit those credentials through the MCP client.</p><h5>Example state binding</h5><pre><code>// file: src/elicitation/urlModeState.js
     import crypto from "node:crypto";
-    
+
     const stateStore = new Map();
-    
-    export function createUrlElicitationState({ userId, clientId, mcpSessionId, redirectUri }) {
+
+    export function createUrlElicitationState({ auth, clientId, mcpSessionId, redirectUri }) {
       const state = crypto.randomBytes(32).toString("base64url");
       stateStore.set(state, {
-        userId,
+        userId: auth.subject,
+        tenantId: auth.activeTenantId,
         clientId,
         mcpSessionId,
         redirectUri,
@@ -21710,19 +22439,24 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
       });
       return state;
     }
-    
-    export function verifyUrlElicitationState({ state, userId, clientId, redirectUri }) {
+
+    export function verifyUrlElicitationState({ state, auth, clientId, redirectUri }) {
       const record = stateStore.get(state);
       stateStore.delete(state);
       if (!record || record.expiresAt < Date.now()) {
         throw new Error("Expired or unknown elicitation state");
       }
-      if (record.userId !== userId || record.clientId !== clientId || record.redirectUri !== redirectUri) {
+      if (
+        record.userId !== auth.subject ||
+        record.tenantId !== auth.activeTenantId ||
+        record.clientId !== clientId ||
+        record.redirectUri !== redirectUri
+      ) {
         throw new Error("Elicitation callback identity mismatch");
       }
       return record;
     }
-    </code></pre><h5>Server-side requirements</h5><ul><li>Do not put sensitive information, PII, access tokens, or preauthenticated links in the URL sent to the client.</li><li>Use HTTPS URLs outside local development.</li><li>Verify that the user completing the browser callback is the same user who initiated the MCP request.</li><li>Store third-party tokens server-side, bound to user, tenant, client, upstream service, scopes, and expiry.</li><li>Never send third-party credentials obtained through URL-mode elicitation back to the MCP client.</li></ul>`
+    </code></pre><h5>Server-side requirements</h5><ul><li>Do not put sensitive information, PII, access tokens, or preauthenticated links in the URL sent to the client.</li><li>Use HTTPS URLs outside local development.</li><li>Derive user and tenant identity from authenticated server context, not from caller-supplied URL or form fields.</li><li>Verify that the user completing the browser callback is the same user who initiated the MCP request.</li><li>Store third-party tokens server-side, bound to user, tenant, client, upstream service, scopes, and expiry.</li><li>Never send third-party credentials obtained through URL-mode elicitation back to the MCP client.</li></ul>`
             }
           ]
         },
@@ -21738,7 +22472,7 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
             "operation",
             "response"
           ],
-          "description": "Provide the server-side lifecycle controls needed to operate MCP safely after deployment: secure session IDs, resumable stream binding, task isolation, structured telemetry, per-principal abuse budgets, and disable hooks for tools, clients, tenants, credentials, or server versions.<br/><br/><strong>Scope boundary:</strong> This sub-technique emits server-side mechanisms and events. AID-D-005 consumes telemetry for detection, AID-I-005 uses disable hooks for containment, and AID-E techniques handle credential and identity eviction. Coarse gateway and process limits belong in AID-H-035.001; fine-grained budgets belong here.",
+          "description": "Provide the server-side lifecycle controls needed to operate MCP safely after deployment: secure session IDs, resumable stream binding, task isolation, resource subscription isolation, sampling-request budgets, structured telemetry, per-principal abuse budgets, replay-resistant event handling, and disable hooks for tools, clients, tenants, credentials, or server versions.<br/><br/><strong>Scope boundary:</strong> This sub-technique emits server-side mechanisms and events. AID-D-005 consumes telemetry for detection, AID-I-005 uses disable hooks for containment, and AID-E techniques handle credential and identity eviction. Coarse gateway and process limits belong in AID-H-035.001; fine-grained budgets belong here.",
           "toolsOpenSource": [
             "OpenTelemetry",
             "Prometheus",
@@ -21798,7 +22532,6 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
               "framework": "NIST Adversarial Machine Learning 2025",
               "items": [
                 "NISTAML.036 Leaking information from user interactions",
-                "NISTAML.038 Data Extraction",
                 "NISTAML.039 Compromising connected resources"
               ]
             },
@@ -21840,9 +22573,9 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
               "implementation": "Generate high-entropy MCP session IDs, bind them to authenticated identity and client context, and never treat the session ID as authentication by itself.",
               "howTo": `<h5>Concept:</h5><p>Streamable HTTP MCP servers may issue MCP-Session-Id values for session management and resumability. A session ID is a correlation and state handle, not a replacement for bearer-token validation, mTLS, or backend authorization.</p><h5>Example session record</h5><pre><code>// file: src/session/sessionStore.js
     import crypto from "node:crypto";
-    
+
     const sessions = new Map();
-    
+
     export function createMcpSession({ auth, clientId, protocolVersion }) {
       const sessionId = crypto.randomUUID();
       sessions.set(sessionId, {
@@ -21855,7 +22588,7 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
       });
       return sessionId;
     }
-    
+
     export function requireBoundSession({ sessionId, auth, clientId }) {
       const record = sessions.get(sessionId);
       if (!record || record.expiresAt < Date.now()) {
@@ -21866,18 +22599,18 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
       }
       return record;
     }
-    </code></pre><p><strong>Operational notes:</strong> Continue validating the bearer token on each HTTP request. Rotate or expire sessions aggressively after credential revocation, privilege changes, suspicious activity, or protocol downgrade attempts.</p>`
+    </code></pre><p><strong>Operational notes:</strong> Continue validating the bearer token on each HTTP request. Rotate or expire sessions aggressively after credential revocation, privilege changes, suspicious activity, or protocol downgrade attempts. Use unpredictable, collision-resistant SSE event IDs and bind resumable stream queues to subject, tenant, client, session, and stream ID so a guessed session ID cannot inject cross-user events. For high-risk distributed deployments, add time-bound message signatures, nonce, timestamp, and replay cache metadata around sensitive server-to-client events.</p>`
             },
             {
               "implementation": "Partition task queues, resumable streams, caches, and long-running jobs by principal, client, tenant, and tool.",
               "howTo": `<h5>Concept:</h5><p>Task-augmented execution and resumable streams create durable state. Without partitioning, a task result, cached object, or stream replay can cross users, tenants, clients, or tools.</p><h5>Example task key construction</h5><pre><code>// file: src/tasks/taskKeys.js
     import crypto from "node:crypto";
-    
+
     export function taskPartitionKey({ auth, clientId, toolName }) {
       if (!auth.subject || !auth.activeTenantId || !clientId || !toolName) {
         throw new Error("Missing task partition context");
       }
-    
+
       return [
         "mcp-task",
         auth.subject,
@@ -21886,26 +22619,90 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
         toolName
       ].join(":");
     }
-    
+
+    const taskMetadata = new Map();
+
     export function createTaskId({ auth, clientId, toolName }) {
       const nonce = crypto.randomBytes(16).toString("hex");
-      return taskPartitionKey({ auth, clientId, toolName }) + ":" + nonce;
+      const taskId = "task_" + nonce;
+      taskMetadata.set(taskId, {
+        partition: taskPartitionKey({ auth, clientId, toolName }),
+        subject: auth.subject,
+        tenantId: auth.activeTenantId,
+        clientId,
+        toolName,
+        expiresAt: Date.now() + 24 * 60 * 60 * 1000
+      });
+      return taskId;
     }
-    
+
     export function canReadTask({ taskId, auth, clientId, toolName }) {
-      return taskId.startsWith(taskPartitionKey({ auth, clientId, toolName }) + ":");
+      const record = taskMetadata.get(taskId);
+      if (!record || record.expiresAt < Date.now()) {
+        return false;
+      }
+      return record.partition === taskPartitionKey({ auth, clientId, toolName });
     }
-    </code></pre><p><strong>Operational notes:</strong> Do not put raw user IDs or tenant names into externally visible task IDs if that leaks sensitive identity. Use an opaque ID externally and keep the partition metadata server-side where needed.</p>`
+    </code></pre><p><strong>Operational notes:</strong> Do not put raw user IDs or tenant names into externally visible task IDs. Keep task owner metadata server-side, enforce owner scoping for <code>tasks/list</code>, <code>tasks/result</code>, and <code>tasks/cancel</code>, and expire completed task payloads on a short, documented TTL.</p>`
+            },
+            {
+              "implementation": "Authorize resource subscriptions like resource reads, bind each subscription to principal, tenant, client, session, and URI, and re-check authorization before every update notification.",
+              "howTo": `<h5>Concept:</h5><p><code>resources/subscribe</code> creates an ongoing update channel. A subscription is not safe just because the first read was authorized: sessions can be shared, credentials can be revoked, tenants can change, and backend object permissions can be removed. Treat every <code>notifications/resources/updated</code> as a fresh authorization decision.</p><h5>Example subscription registry</h5><pre><code>// file: src/resources/subscriptionRegistry.js
+    import crypto from "node:crypto";
+
+    const subscriptions = new Map();
+
+    function subscriptionKey({ auth, clientId, sessionId, uri }) {
+      return [
+        auth.subject,
+        auth.activeTenantId,
+        clientId,
+        sessionId,
+        crypto.createHash("sha256").update(uri).digest("hex")
+      ].join("|");
+    }
+
+    export async function subscribeResource({ auth, clientId, sessionId, uri, authorizeResourceRead }) {
+      await authorizeResourceRead({ auth, uri });
+      const key = subscriptionKey({ auth, clientId, sessionId, uri });
+      subscriptions.set(key, {
+        subject: auth.subject,
+        tenantId: auth.activeTenantId,
+        clientId,
+        sessionId,
+        uri,
+        createdAt: Date.now()
+      });
+      return key;
+    }
+
+    export async function notifyResourceUpdated({ subscriptionKey: key, auth, authorizeResourceRead, send }) {
+      const sub = subscriptions.get(key);
+      if (!sub) return;
+      if (sub.subject !== auth.subject || sub.tenantId !== auth.activeTenantId) {
+        subscriptions.delete(key);
+        return;
+      }
+      await authorizeResourceRead({ auth, uri: sub.uri });
+      send({ method: "notifications/resources/updated", params: { uri: sub.uri } });
+    }
+
+    export function revokeSubscriptionsForSession(sessionId) {
+      for (const [key, sub] of subscriptions) {
+        if (sub.sessionId === sessionId) subscriptions.delete(key);
+      }
+    }
+    </code></pre><p><strong>Operational notes:</strong> Count active subscriptions against per-principal budgets. Drop subscriptions on logout, token revocation, tenant switch, client disconnect, session expiry, or resource authorization failure.</p>`
             },
             {
               "implementation": "Emit structured MCP server security events for authorization decisions, tool calls, resource reads, prompt requests, elicitation flows, descriptor changes, upstream calls, and rejected inputs.",
               "howTo": `<h5>Concept:</h5><p>Harden controls need telemetry that SOC and incident responders can consume. AID-H-035 emits the server-side events; AID-D-005 owns analytics, correlation, alerting, and escalation logic.</p><h5>Example event schema</h5><pre><code>// file: src/telemetry/mcpSecurityEvent.js
     import crypto from "node:crypto";
-    
+
     function hashArgs(args) {
       return crypto.createHash("sha256").update(JSON.stringify(args || {})).digest("hex");
     }
-    
+
     export function emitMcpSecurityEvent(logger, event) {
       logger.info({
         schema_version: "aidefend.mcp_server.v1",
@@ -21928,16 +22725,49 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
         trace_id: event.trace_id
       });
     }
-    </code></pre><h5>Minimum event types</h5><ul><li>mcp_authz_decision</li><li>mcp_tool_call_accepted</li><li>mcp_tool_call_rejected</li><li>mcp_resource_read</li><li>mcp_prompt_rendered</li><li>mcp_elicitation_created</li><li>mcp_elicitation_completed</li><li>mcp_descriptor_changed</li><li>mcp_upstream_call</li><li>mcp_budget_rejected</li></ul><p><strong>Operational notes:</strong> Redact or hash tool arguments and resource URIs by default. Preserve enough metadata to answer who accessed which tool or resource, through which client, at what time, under which server version.</p>`
+    </code></pre><h5>Minimum event types</h5><ul><li>mcp_authz_decision</li><li>mcp_scope_elevation_challenged</li><li>mcp_tool_call_accepted</li><li>mcp_tool_call_rejected</li><li>mcp_resource_read</li><li>mcp_resource_subscribed</li><li>mcp_resource_update_sent</li><li>mcp_prompt_rendered</li><li>mcp_elicitation_created</li><li>mcp_elicitation_completed</li><li>mcp_sampling_requested</li><li>mcp_sampling_budget_rejected</li><li>mcp_descriptor_changed</li><li>mcp_upstream_call</li><li>mcp_budget_rejected</li></ul><p><strong>Operational notes:</strong> Redact or hash tool arguments and resource URIs by default. Preserve enough metadata to answer who accessed which tool or resource, through which client, at what time, under which server version, and under which scope or budget decision.</p>`
             },
             {
-              "implementation": "Enforce fine-grained per-principal abuse budgets for cost, concurrency, recursion, request rate, stream lifetime, and tool-specific risk.",
-              "howTo": `<h5>Concept:</h5><p>This is the fine-grained budget layer. AID-H-035.001 limits the server or gateway globally; this guidance limits each user, client, tenant, tool, and task so one compromised principal cannot exhaust the entire server or silently trigger expensive delegated work.</p><h5>Example Redis-backed budget gate</h5><pre><code>// file: src/budget/budgetGate.js
+              "implementation": "Constrain server-originated sampling requests with declared client capabilities, tool-loop limits, token budgets, and default no-context behavior.",
+              "howTo": `<h5>Concept:</h5><p>When an MCP server sends <code>sampling/createMessage</code>, it becomes the requester of model work. Client-side safeguards live in AID-H-029, but the server should still avoid creating unbounded loops, hidden cost harvesting, or context overreach. Only request tool-enabled sampling from clients that declared <code>sampling.tools</code>, keep <code>includeContext</code> omitted or <code>none</code> unless explicitly justified, and force the final iteration to use <code>toolChoice: { mode: "none" }</code>.</p><h5>Example sampling request gate</h5><pre><code>// file: src/sampling/samplingGate.js
+    const MAX_SAMPLING_TOKENS_PER_TASK = 1000;
+    const MAX_TOOL_LOOP_ITERATIONS = 3;
+
+    export async function buildSamplingRequest({ auth, clientId, clientCapabilities, messages, tools, iteration, budget }) {
+      if (tools?.length && !clientCapabilities?.sampling?.tools) {
+        throw new Error("Client did not declare sampling.tools");
+      }
+      if (iteration > MAX_TOOL_LOOP_ITERATIONS) {
+        throw new Error("Sampling tool loop limit exceeded");
+      }
+
+      // Charge the SAME per-principal gate used for tool calls (035.006 consumeBudget),
+      // debiting exactly the number of tokens the request is capped at.
+      await budget.consume({
+        auth,
+        clientId,
+        toolName: "sampling",
+        costUnits: MAX_SAMPLING_TOKENS_PER_TASK
+      });
+
+      return {
+        messages,
+        includeContext: "none",
+        tools: iteration < MAX_TOOL_LOOP_ITERATIONS ? tools : undefined,
+        toolChoice: iteration < MAX_TOOL_LOOP_ITERATIONS ? { mode: "auto" } : { mode: "none" },
+        maxTokens: MAX_SAMPLING_TOKENS_PER_TASK
+      };
+    }
+    </code></pre><p><strong>Operational notes:</strong> Count sampling tokens against user, tenant, client, server, and task budgets. Emit telemetry for sampling start, tool-use iteration, final no-tool iteration, user rejection, and budget rejection.</p>`
+            },
+            {
+              "implementation": "Enforce fine-grained per-principal abuse budgets for cost, concurrency, recursion, request rate, stream lifetime, subscription count, sampling, and tool-specific risk.",
+              "howTo": `<h5>Concept:</h5><p>This is the fine-grained budget layer. AID-H-035.001 limits the server or gateway globally; this guidance limits each user, client, tenant, tool, task, subscription, and sampling flow so one compromised principal cannot exhaust the entire server or silently trigger expensive delegated work.</p><h5>Example Redis-backed budget gate</h5><pre><code>// file: src/budget/budgetGate.js
     export async function consumeBudget(redis, { auth, clientId, toolName, costUnits }) {
       if (!auth.subject || !auth.activeTenantId || !clientId || !toolName) {
         throw new Error("Missing budget identity context");
       }
-    
+
       const minute = Math.floor(Date.now() / 60000);
       const key = [
         "mcp-budget",
@@ -21947,18 +22777,18 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
         toolName,
         minute
       ].join(":");
-    
+
       const used = await redis.incrBy(key, costUnits);
       if (used === costUnits) {
         await redis.expire(key, 120);
       }
-    
+
       const limit = toolName.startsWith("search_") ? 200 : 50;
       if (used > limit) {
         throw new Error("MCP tool budget exceeded");
       }
     }
-    </code></pre><h5>Budget dimensions</h5><ul><li>Requests per minute by user, client, tenant, and tool.</li><li>Concurrent tasks and streams per principal.</li><li>Maximum recursion depth or delegated tool-call fan-out.</li><li>Maximum external API cost per task and per day.</li><li>Stricter limits for destructive, network-fetching, browser, file, shell, and code tools.</li></ul><p><strong>Operational notes:</strong> Fail closed if identity, tenant, or client context is missing. Missing quota context is a control failure, not a reason to run unmetered.</p>`
+    </code></pre><h5>Budget dimensions</h5><ul><li>Requests per minute by user, client, tenant, and tool.</li><li>Concurrent tasks, subscriptions, and streams per principal.</li><li>Maximum recursion depth or delegated tool-call fan-out.</li><li>Maximum sampling tokens per task and per day.</li><li>Maximum external API cost per task and per day.</li><li>Stricter limits for destructive, network-fetching, browser, file, shell, code, sampling, and subscription-heavy tools.</li></ul><p><strong>Operational notes:</strong> Fail closed if identity, tenant, or client context is missing. Missing quota context is a control failure, not a reason to run unmetered.</p>`
             },
             {
               "implementation": "Expose server-side disable hooks for server versions, tools, clients, tenants, credentials, and upstream integrations without embedding the response playbook in the server.",
@@ -21970,14 +22800,14 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
       serverVersions: new Set(),
       upstreams: new Set()
     };
-    
+
     export function disable(kind, value) {
       if (!disabled[kind]) {
         throw new Error("Unknown disable kind: " + kind);
       }
       disabled[kind].add(value);
     }
-    
+
     export function enforceDisableHooks({ toolName, clientId, tenantId, serverVersion, upstream }) {
       if (disabled.tools.has(toolName)) throw new Error("Tool disabled");
       if (disabled.clients.has(clientId)) throw new Error("Client disabled");
@@ -21986,6 +22816,86 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
       if (upstream && disabled.upstreams.has(upstream)) throw new Error("Upstream disabled");
     }
     </code></pre><p><strong>Operational notes:</strong> Store production disable state in a durable, audited control plane rather than an in-memory map. The in-memory example shows the enforcement shape only. Every disable and re-enable action should emit a security event and require an operator identity.</p>`
+            },
+            {
+              "implementation": "For high-value and gateway MCP profiles, add message-level integrity and replay protection on top of TLS.",
+              "howTo": `<h5>Concept:</h5><p>TLS protects the transport, but it does not stop a replay of a captured JSON-RPC message into a resumable or queued stream, and it does not bind a message to a verified operator identity. For high-value-tool-server, gateway-proxy, and internet-facing profiles, add an OPTIONAL message-level integrity and anti-replay layer; both peers must opt in. Lower-risk profiles can rely on TLS alone.</p><h5>Example sign and verify with nonce, timestamp, and canonical JSON</h5><pre><code>// file: src/integrity/messageIntegrity.js
+    import crypto from "node:crypto";
+    import canonicalize from "canonicalize"; // RFC 8785 JSON Canonicalization Scheme
+
+    const seenNonces = new Map(); // production: Redis with TTL = clock-skew window
+    const SKEW_MS = 60000;
+    const ALG = "Ed25519";
+
+    function stripSecurity(message) {
+      const clone = { ...message };
+      delete clone._security;
+      return clone;
+    }
+
+    function contextEnvelope({ message, context, keyId, nonce, timestamp }) {
+      return {
+        protected: {
+          alg: ALG,
+          kid: keyId,
+          nonce,
+          ts: timestamp,
+          server_id: context.serverId,
+          client_id: context.clientId,
+          subject_hash: crypto.createHash("sha256").update(context.subject).digest("hex"),
+          contract_hash: context.contractHash,
+          handler_commit: context.handlerCommit
+        },
+        message: stripSecurity(message)
+      };
+    }
+
+    function signableBytes(envelope) {
+      const canonical = canonicalize(envelope);
+      if (!canonical) throw new Error("Message is not canonicalizable JSON");
+      return Buffer.from(canonical, "utf8");
+    }
+
+    export function signMessage(message, { privateKey, keyId, context }) {
+      const nonce = crypto.randomBytes(16).toString("hex");
+      const timestamp = Date.now();
+      const envelope = contextEnvelope({ message, context, keyId, nonce, timestamp });
+      const sig = crypto.sign(null, signableBytes(envelope), privateKey).toString("base64url");
+      return { ...message, _security: { ...envelope.protected, sig } };
+    }
+
+    export function verifyMessage(message, { publicKeyResolver, context }) {
+      const env = message._security;
+      if (!env) throw new Error("Missing message signature");
+      if (Math.abs(Date.now() - env.ts) &gt; SKEW_MS) throw new Error("Timestamp outside skew window");
+      if (env.alg !== ALG) throw new Error("Unexpected message signature algorithm");
+      if (env.client_id !== context.clientId || env.server_id !== context.serverId) {
+        throw new Error("Message signature context mismatch");
+      }
+      const subjectHash = crypto.createHash("sha256").update(context.subject).digest("hex");
+      if (
+        env.subject_hash !== subjectHash ||
+        env.contract_hash !== context.contractHash ||
+        env.handler_commit !== context.handlerCommit
+      ) {
+        throw new Error("Message signature identity or contract mismatch");
+      }
+      const replayKey = env.kid + ":" + env.nonce;
+      if (seenNonces.has(replayKey)) throw new Error("Replayed nonce");
+      const envelope = contextEnvelope({
+        message,
+        context,
+        keyId: env.kid,
+        nonce: env.nonce,
+        timestamp: env.ts
+      });
+      const publicKey = publicKeyResolver(env.kid);
+      const ok = crypto.verify(null, signableBytes(envelope), publicKey, Buffer.from(env.sig, "base64url"));
+      if (!ok) throw new Error("Invalid message signature");
+      seenNonces.set(replayKey, env.ts);
+      return true;
+    }
+    </code></pre><p><strong>Operational notes:</strong> Reject before the handler on a missing or invalid signature, a replayed nonce, or an out-of-window timestamp, and emit a <code>message_signature_rejected</code> event. Use a real replay cache such as Redis with TTL, not the in-memory map shown here. Bind the signing key ID to the verified operator or workload identity, use a defined algorithm such as Ed25519, and include the H-035.004 <code>contract_hash</code> and handler commit in the signed context so descriptor signatures tie to the reviewed contract. This defends the queued and resumable-stream replay class (CVE-2025-6515). Keep it explicitly optional and profile-gated; AID-H-029 covers the mutual client-side verification.</p>`
             }
           ]
         }

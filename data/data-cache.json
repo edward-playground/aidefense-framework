@@ -5509,7 +5509,7 @@
     ]
   },
   "AID-H-035": {
-    "contentHash": "722978189f12786e",
+    "contentHash": "122847b4adcab7ce",
     "keywords": [
       "mcp server hardening",
       "tool exposure governance",
@@ -5519,7 +5519,7 @@
       "token audience validation",
       "tool descriptor governance",
       "elicitation boundary controls",
-      "session isolation",
+      "sampling request governance",
       "server telemetry",
       "per-principal budgets",
       "disable hooks",
@@ -5528,26 +5528,26 @@
     ]
   },
   "AID-H-035.001": {
-    "contentHash": "165009b2aabca1e4",
+    "contentHash": "2a5a44994559d018",
     "keywords": [
       "mcp deployment profile",
       "streamable http hardening",
       "origin header validation",
       "dns rebinding prevention",
       "localhost binding",
-      "tls mtls enforcement",
+      "stdio transport hygiene",
       "container runtime hardening",
-      "non-root containers",
+      "tls mtls enforcement",
       "read-only filesystem",
       "coarse rate limiting",
       "gateway exposure baseline",
       "mcp transport security",
       "process resource limits",
-      "waf baseline"
+      "protocol version validation"
     ]
   },
   "AID-H-035.002": {
-    "contentHash": "715db62dd744d6aa",
+    "contentHash": "a07fea836a4eee6d",
     "keywords": [
       "protected resource metadata",
       "token audience validation",
@@ -5555,7 +5555,7 @@
       "no token passthrough",
       "oauth confused deputy",
       "per-client consent",
-      "scope challenge",
+      "progressive scope elevation",
       "upstream token exchange",
       "mcp oauth resource server",
       "exact redirect uri",
@@ -5566,16 +5566,16 @@
     ]
   },
   "AID-H-035.003": {
-    "contentHash": "1e402b9012f6a5fe",
+    "contentHash": "df48195098bca922",
     "keywords": [
       "tool input validation",
       "strict json schema",
       "object-level authorization",
       "tenant authorization",
-      "ssrf-safe fetch",
+      "pinned-ip safe fetch",
       "egress allowlist",
       "dns rebinding checks",
-      "command allowlisting",
+      "sql nosql injection prevention",
       "shell execution denial",
       "sandboxed tool handlers",
       "backend permission checks",
@@ -5585,30 +5585,30 @@
     ]
   },
   "AID-H-035.004": {
-    "contentHash": "07ebeecc2f0d4c80",
+    "contentHash": "d8eb1e58e86f889d",
     "keywords": [
       "tool publication governance",
       "mcp contract manifest",
       "descriptor review",
       "tool annotation honesty",
-      "list_changed auditing",
-      "semantic descriptor integrity",
-      "prompt publication control",
-      "resource template governance",
       "signed tool contract",
-      "descriptor hash review",
-      "supply chain provenance",
+      "sigstore descriptor signing",
+      "publisher identity governance",
+      "registry namespace ownership",
+      "server.json review",
+      "mcp app ui governance",
       "tool poisoning prevention",
+      "supply chain provenance",
       "dynamic capability approval",
-      "rollbackable descriptor changes"
+      "list_changed auditing"
     ]
   },
   "AID-H-035.005": {
-    "contentHash": "417ab5c06453ec25",
+    "contentHash": "7a439db2412bf92d",
     "keywords": [
       "output boundary controls",
       "tool output sanitization",
-      "resource uri validation",
+      "structuredContent validation",
       "elicitation safety",
       "url-mode elicitation",
       "form-mode elicitation",
@@ -5616,27 +5616,27 @@
       "prompt output constraints",
       "completion enumeration prevention",
       "secret redaction",
-      "untrusted output labeling",
+      "output schema enforcement",
       "path traversal prevention",
       "server-side credential capture",
       "mcp resource authorization"
     ]
   },
   "AID-H-035.006": {
-    "contentHash": "c29c777e7d1c822c",
+    "contentHash": "48587c8b6636674e",
     "keywords": [
       "mcp session binding",
-      "task isolation",
+      "resource subscription isolation",
       "resumable stream partitioning",
       "structured mcp telemetry",
       "per-principal abuse budgets",
       "cost budget enforcement",
       "concurrency limits",
-      "recursion depth limits",
+      "sampling budget enforcement",
       "disable hooks",
       "tenant task partitioning",
-      "session id entropy",
-      "replay resistance",
+      "message-level integrity",
+      "anti-replay nonce",
       "tool disablement",
       "budget rejection events"
     ]
