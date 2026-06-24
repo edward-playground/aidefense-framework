@@ -2284,7 +2284,7 @@ cosign verify-blob --key keys/archive-root-2028.pub --signature archive/rollover
                 {
                     "id": "AID-M-003.002",
                     "name": "Performance & Operational Metric Baselining", "pillar": ["model"], "phase": ["validation", "operation"],
-                    "description": "Establishes a quantitative, empirical baseline of a model's expected behavior under normal conditions. This involves calculating and recording two types of metrics:<ul><li><strong>Key performance indicators</strong> (e.g., accuracy, precision, F1-score) on a trusted, 'golden' dataset.</li><li><strong>Operational metrics</strong> (e.g., inference latency, confidence scores, output distributions) derived from simulated or live traffic.</li></ul>This documented baseline serves as the ground truth for drift detection, anomaly detection, and ongoing performance monitoring.",
+                    "description": "Establishes a quantitative, empirical baseline of a model's expected behavior under normal conditions. This involves calculating and recording two types of metrics:<ul><li><strong>Key performance indicators</strong> (e.g., accuracy, precision, F1-score) on a trusted, 'golden' dataset.</li><li><strong>Operational metrics</strong> (e.g., inference latency, confidence scores, output distributions) derived from simulated or live traffic.</li></ul>This documented baseline serves as the ground truth for drift detection, anomaly detection, and ongoing performance monitoring. This Model-side technique owns only the reference baseline and its periodic recalibration; the live drift, anomaly, and labeled-performance detection that consume this baseline belong to Detect-side monitoring (AID-D-002) because they are operational detection controls with separate alerting, tuning, and ownership.",
                     "implementationGuidance": [
                         {
                             "implementation": "Calculate and store key performance metrics on a trusted validation dataset.",
@@ -3877,7 +3877,7 @@ jobs:
                 {
                     "id": "AID-M-005.001",
                     "name": "Design - Secure Configuration Baseline Development", "pillar": ["infra"], "phase": ["scoping"],
-                    "description": "Covers the 'design' phase of creating and documenting secure, hardened templates and configurations for all AI system components, based on industry benchmarks. This proactive technique involves defining 'golden standard' configurations for infrastructure, containers, and AI platforms to ensure that systems are secure by default, systematically reducing the attack surface by eliminating common misconfigurations before deployment.",
+                    "description": "Covers the 'design' phase of creating and documenting secure, hardened templates and configurations for all AI system components, based on industry benchmarks. This proactive technique involves defining 'golden standard' configurations for infrastructure, containers, and AI platforms to ensure that systems are secure by default, systematically reducing the attack surface by eliminating common misconfigurations before deployment.<br/><br/><strong>Scope boundary:</strong> this sub-technique covers design-phase authoring of the golden-standard templates; turning those templates into enforceable, versioned, signed policy-as-code baselines with measurable posture SLOs at build and validation time is owned by AID-M-005.002.",
                     "implementationGuidance": [
                         {
                             "implementation": "Develop and enforce secure baseline configurations using Infrastructure as Code (IaC).",
@@ -4010,7 +4010,7 @@ jobs:
                     "name": "Configuration Baseline Definition & Posture SLOs (Service Level Objectives)",
                     "pillar": ["infra"],
                     "phase": ["building", "validation"],
-                    "description": "During build and validation, define security configuration baselines for AI infrastructure and services as policy-as-code, and establish measurable posture SLO/SLI and release gates. This technique focuses on producing versioned, signed baselines and scoring criteria as the single source of truth for subsequent deployments and audits; it does not include runtime CSPM or continuous monitoring (those belong under Detect).",
+                    "description": "During build and validation, define security configuration baselines for AI infrastructure and services as policy-as-code, and establish measurable posture SLO/SLI and release gates. This technique focuses on producing versioned, signed baselines and scoring criteria as the single source of truth for subsequent deployments and audits; it does not include runtime CSPM or continuous monitoring (those belong under Detect). It consumes the design-phase golden-standard templates authored in AID-M-005.001 and turns them into enforceable baselines and release gates.",
                     "implementationGuidance": [
                         {
                             "implementation": "Author security baselines as policy-as-code and wire them into CI gates.",

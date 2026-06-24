@@ -2,7 +2,7 @@
 "version": {
 "schemaVersion": "2.0",
 "dataVersion": "2026.06.24",
-"generatedAt": "2026-06-24T22:03:24.537Z",
+"generatedAt": "2026-06-24T22:39:03.883Z",
 "source": "bundled",
 "keywordStructure": "flat"
 },
@@ -1527,7 +1527,7 @@
 {
 "id": "AID-M-003.002",
 "name": "Performance & Operational Metric Baselining",
-"description": "Establishes a quantitative, empirical baseline of a model's expected behavior under normal conditions. This involves calculating and recording two types of metrics:<ul><li><strong>Key performance indicators</strong> (e.g., accuracy, precision, F1-score) on a trusted, 'golden' dataset.</li><li><strong>Operational metrics</strong> (e.g., inference latency, confidence scores, output distributions) derived from simulated or live traffic.</li></ul>This documented baseline serves as the ground truth for drift detection, anomaly detection, and ongoing performance monitoring.",
+"description": "Establishes a quantitative, empirical baseline of a model's expected behavior under normal conditions. This involves calculating and recording two types of metrics:<ul><li><strong>Key performance indicators</strong> (e.g., accuracy, precision, F1-score) on a trusted, 'golden' dataset.</li><li><strong>Operational metrics</strong> (e.g., inference latency, confidence scores, output distributions) derived from simulated or live traffic.</li></ul>This documented baseline serves as the ground truth for drift detection, anomaly detection, and ongoing performance monitoring. This Model-side technique owns only the reference baseline and its periodic recalibration; the live drift, anomaly, and labeled-performance detection that consume this baseline belong to Detect-side monitoring (AID-D-002) because they are operational detection controls with separate alerting, tuning, and ownership.",
 "pillar": [
 "model"
 ],
@@ -1637,7 +1637,7 @@
 ]
 }
 ],
-"contentHash": "29296ded905bcb88",
+"contentHash": "ab89ca153af7aa83",
 "keywords": [
 "performance baselining",
 "operational metric baseline",
@@ -2559,7 +2559,7 @@
 {
 "id": "AID-M-005.001",
 "name": "Design - Secure Configuration Baseline Development",
-"description": "Covers the 'design' phase of creating and documenting secure, hardened templates and configurations for all AI system components, based on industry benchmarks. This proactive technique involves defining 'golden standard' configurations for infrastructure, containers, and AI platforms to ensure that systems are secure by default, systematically reducing the attack surface by eliminating common misconfigurations before deployment.",
+"description": "Covers the 'design' phase of creating and documenting secure, hardened templates and configurations for all AI system components, based on industry benchmarks. This proactive technique involves defining 'golden standard' configurations for infrastructure, containers, and AI platforms to ensure that systems are secure by default, systematically reducing the attack surface by eliminating common misconfigurations before deployment.<br/><br/><strong>Scope boundary:</strong> this sub-technique covers design-phase authoring of the golden-standard templates; turning those templates into enforceable, versioned, signed policy-as-code baselines with measurable posture SLOs at build and validation time is owned by AID-M-005.002.",
 "pillar": [
 "infra"
 ],
@@ -2680,7 +2680,7 @@
 ]
 }
 ],
-"contentHash": "a9797f552fe98af6",
+"contentHash": "1b0f6ebb3782533a",
 "keywords": [
 "secure baseline design",
 "hardened base images",
@@ -2701,7 +2701,7 @@
 {
 "id": "AID-M-005.002",
 "name": "Configuration Baseline Definition & Posture SLOs (Service Level Objectives)",
-"description": "During build and validation, define security configuration baselines for AI infrastructure and services as policy-as-code, and establish measurable posture SLO/SLI and release gates. This technique focuses on producing versioned, signed baselines and scoring criteria as the single source of truth for subsequent deployments and audits; it does not include runtime CSPM or continuous monitoring (those belong under Detect).",
+"description": "During build and validation, define security configuration baselines for AI infrastructure and services as policy-as-code, and establish measurable posture SLO/SLI and release gates. This technique focuses on producing versioned, signed baselines and scoring criteria as the single source of truth for subsequent deployments and audits; it does not include runtime CSPM or continuous monitoring (those belong under Detect). It consumes the design-phase golden-standard templates authored in AID-M-005.001 and turns them into enforceable baselines and release gates.",
 "pillar": [
 "infra"
 ],
@@ -2811,7 +2811,7 @@
 ]
 }
 ],
-"contentHash": "dff3ad234fbf205e",
+"contentHash": "803f674331488a1d",
 "keywords": [
 "policy-as-code baseline",
 "posture slo definition",
@@ -18857,7 +18857,7 @@
 {
 "id": "AID-H-030.003",
 "name": "Consent Scope Tracking, Expiry Enforcement & Withdrawal Response",
-"description": "Track consent state through the AI lifecycle and enforce consent expiry and withdrawal events in near real time. Consent changes should trigger re-evaluation of every active stage where the data or its derived artifacts are present. This includes quarantining source data, removing it from indexes and memory, purging derived embeddings or cached contexts where feasible, and flagging trained-model impacts for remediation workflows. Scope boundary: this sub-technique handles consent-state propagation and operational response; model-level data influence removal is addressed by separate remediation or unlearning controls.",
+"description": "Track consent state through the AI lifecycle and enforce consent expiry and withdrawal events in near real time. Consent changes should trigger re-evaluation of every active stage where the data or its derived artifacts are present. This includes quarantining source data, removing it from indexes and memory, purging derived embeddings or cached contexts where feasible, and flagging trained-model impacts for remediation workflows.<br/><br/><strong>Scope boundary:</strong> this sub-technique handles consent-state propagation and operational response; model-level data influence removal (retraining and approximate unlearning) is owned by AID-R-001.002, while removal of poisoned data and backdoor artifacts from datasets and models is owned by AID-E-003.",
 "pillar": [
 "data"
 ],
@@ -18947,7 +18947,7 @@
 ]
 }
 ],
-"contentHash": "ccf56feb1ad49179",
+"contentHash": "ee21260d3a4953bb",
 "keywords": [
 "consent scope tracking",
 "consent expiry enforcement",
@@ -27263,7 +27263,7 @@
 {
 "id": "AID-D-011",
 "name": "Agent Behavioral Attestation & Rogue Detection",
-"description": "Implement continuous behavioral monitoring and attestation mechanisms to identify rogue or compromised agents in multi-agent systems. This technique uses behavioral fingerprinting, anomaly detection, and peer verification to detect agents that deviate from expected behavioral patterns or exhibit malicious characteristics.",
+"description": "Implement continuous behavioral monitoring and attestation mechanisms to identify rogue or compromised agents in multi-agent systems. This technique uses behavioral fingerprinting, anomaly detection, and peer verification to detect agents that deviate from expected behavioral patterns or exhibit malicious characteristics.<br/><br/><strong>Scope boundary:</strong> this technique answers whether a known agent is behaving like a rogue (behavioral fingerprinting, anomaly detection, peer attestation); discovering unknown or newly emergent agent identities, scoring their reputation, and driving the quarantine/eviction pipeline is owned by AID-D-016, whose reputation scoring is fed by the behavioral signals produced here.",
 "pillar": [
 "app",
 "infra"
@@ -27358,7 +27358,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "3da46dcaaa95ad0f",
+"contentHash": "e4bdc5014e5f552f",
 "keywords": [
 "agent behavioral attestation",
 "rogue agent detection",
@@ -29043,7 +29043,7 @@
 {
 "id": "AID-D-016",
 "name": "Rogue Agent Discovery, Reputation & Quarantine Pipeline",
-"description": "Establish continuous governance for agent identity, emergence, and behavior by building a discovery and reputation pipeline that detects unknown or compromised agents, scores risk, and automatically quarantines or evicts them. This creates a closed-loop: discover -> score -> restrict/quarantine -> investigate -> restore/evict, with full auditability.",
+"description": "Establish continuous governance for agent identity, emergence, and behavior by building a discovery and reputation pipeline that detects unknown or compromised agents, scores risk, and automatically quarantines or evicts them. This creates a closed-loop: discover -> score -> restrict/quarantine -> investigate -> restore/evict, with full auditability.<br/><br/><strong>Scope boundary:</strong> this technique owns agent-identity discovery (including unknown or newly emergent agents), reputation scoring, and the containment/quarantine pipeline; the per-agent behavioral fingerprinting and anomaly attestation that decide whether a known agent is acting rogue are owned by AID-D-011, whose signals feed this pipeline's reputation scoring.",
 "pillar": [
 "infra",
 "app",
@@ -29139,7 +29139,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "5412c9fba0d46863",
+"contentHash": "d4e36d2e0bc8a1ba",
 "keywords": [
 "rogue agent discovery",
 "reputation scoring",

@@ -6045,7 +6045,7 @@ def evaluate_consistency(goal: ApprovedGoal, observation: ActionObservation) -> 
         {
             "id": "AID-D-011",
             "name": "Agent Behavioral Attestation & Rogue Detection",
-            "description": "Implement continuous behavioral monitoring and attestation mechanisms to identify rogue or compromised agents in multi-agent systems. This technique uses behavioral fingerprinting, anomaly detection, and peer verification to detect agents that deviate from expected behavioral patterns or exhibit malicious characteristics.",
+            "description": "Implement continuous behavioral monitoring and attestation mechanisms to identify rogue or compromised agents in multi-agent systems. This technique uses behavioral fingerprinting, anomaly detection, and peer verification to detect agents that deviate from expected behavioral patterns or exhibit malicious characteristics.<br/><br/><strong>Scope boundary:</strong> this technique answers whether a known agent is behaving like a rogue (behavioral fingerprinting, anomaly detection, peer attestation); discovering unknown or newly emergent agent identities, scoring their reputation, and driving the quarantine/eviction pipeline is owned by AID-D-016, whose reputation scoring is fed by the behavioral signals produced here.",
             "defendsAgainst": [
                 {
                     "framework": "MITRE ATLAS",
@@ -7563,7 +7563,7 @@ def evaluate_consistency(goal: ApprovedGoal, observation: ActionObservation) -> 
         {
             "id": "AID-D-016",
             "name": "Rogue Agent Discovery, Reputation & Quarantine Pipeline",
-            "description": "Establish continuous governance for agent identity, emergence, and behavior by building a discovery and reputation pipeline that detects unknown or compromised agents, scores risk, and automatically quarantines or evicts them. This creates a closed-loop: discover -> score -> restrict/quarantine -> investigate -> restore/evict, with full auditability.",
+            "description": "Establish continuous governance for agent identity, emergence, and behavior by building a discovery and reputation pipeline that detects unknown or compromised agents, scores risk, and automatically quarantines or evicts them. This creates a closed-loop: discover -> score -> restrict/quarantine -> investigate -> restore/evict, with full auditability.<br/><br/><strong>Scope boundary:</strong> this technique owns agent-identity discovery (including unknown or newly emergent agents), reputation scoring, and the containment/quarantine pipeline; the per-agent behavioral fingerprinting and anomaly attestation that decide whether a known agent is acting rogue are owned by AID-D-011, whose signals feed this pipeline's reputation scoring.",
             "defendsAgainst": [
                 {
                     "framework": "MITRE ATLAS",

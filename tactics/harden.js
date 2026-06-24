@@ -18348,7 +18348,7 @@ def emit_sampling_event(
           "phase": [
             "operation"
           ],
-          "description": "Track consent state through the AI lifecycle and enforce consent expiry and withdrawal events in near real time. Consent changes should trigger re-evaluation of every active stage where the data or its derived artifacts are present. This includes quarantining source data, removing it from indexes and memory, purging derived embeddings or cached contexts where feasible, and flagging trained-model impacts for remediation workflows. Scope boundary: this sub-technique handles consent-state propagation and operational response; model-level data influence removal is addressed by separate remediation or unlearning controls.",
+          "description": "Track consent state through the AI lifecycle and enforce consent expiry and withdrawal events in near real time. Consent changes should trigger re-evaluation of every active stage where the data or its derived artifacts are present. This includes quarantining source data, removing it from indexes and memory, purging derived embeddings or cached contexts where feasible, and flagging trained-model impacts for remediation workflows.<br/><br/><strong>Scope boundary:</strong> this sub-technique handles consent-state propagation and operational response; model-level data influence removal (retraining and approximate unlearning) is owned by AID-R-001.002, while removal of poisoned data and backdoor artifacts from datasets and models is owned by AID-E-003.",
           "toolsOpenSource": [
             "Open Policy Agent (OPA)",
             "Apache Kafka / NATS (event propagation)",

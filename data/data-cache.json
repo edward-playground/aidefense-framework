@@ -228,7 +228,7 @@
     ]
   },
   "AID-M-003.002": {
-    "contentHash": "29296ded905bcb88",
+    "contentHash": "ab89ca153af7aa83",
     "keywords": [
       "performance baselining",
       "operational metric baseline",
@@ -381,7 +381,7 @@
     ]
   },
   "AID-M-005.001": {
-    "contentHash": "a9797f552fe98af6",
+    "contentHash": "1b0f6ebb3782533a",
     "keywords": [
       "secure baseline design",
       "hardened base images",
@@ -400,7 +400,7 @@
     ]
   },
   "AID-M-005.002": {
-    "contentHash": "dff3ad234fbf205e",
+    "contentHash": "803f674331488a1d",
     "keywords": [
       "policy-as-code baseline",
       "posture slo definition",
@@ -2789,7 +2789,7 @@
     ]
   },
   "AID-H-030.003": {
-    "contentHash": "ccf56feb1ad49179",
+    "contentHash": "ee21260d3a4953bb",
     "keywords": [
       "consent scope tracking",
       "consent expiry enforcement",
@@ -3778,7 +3778,7 @@
     ]
   },
   "AID-D-011": {
-    "contentHash": "3da46dcaaa95ad0f",
+    "contentHash": "e4bdc5014e5f552f",
     "keywords": [
       "agent behavioral attestation",
       "rogue agent detection",
@@ -4082,7 +4082,7 @@
     ]
   },
   "AID-D-016": {
-    "contentHash": "5412c9fba0d46863",
+    "contentHash": "d4e36d2e0bc8a1ba",
     "keywords": [
       "rogue agent discovery",
       "reputation scoring",
