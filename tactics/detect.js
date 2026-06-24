@@ -5967,6 +5967,78 @@ def derive_verification_state(fact: dict) -> dict:
                 {
                     "implementation": "Profile expected tool and workflow patterns for each goal class and flag statistically significant drift that suggests indirect goal manipulation.",
                     "howTo": "<h5>Concept:</h5><p>Attackers do not always rewrite the mission text. Often they steer the agent toward a different workflow while leaving the declared goal unchanged. Detect this by learning the normal tool-usage and workflow distribution for each goal class and comparing live behavior against that baseline.</p><h5>Step 1: Build per-goal behavioral baselines from trusted logs</h5><pre><code># File: monitoring/goal_behavior_profiles.py\nfrom __future__ import annotations\n\nfrom collections import Counter\n\n\ndef build_goal_profile(tool_sequences: list[list[str]]) -> dict[str, float]:\n    counts = Counter()\n    total = 0\n    for sequence in tool_sequences:\n        counts.update(sequence)\n        total += len(sequence)\n\n    if total == 0:\n        return {}\n\n    return {\n        tool_name: count / total\n        for tool_name, count in counts.items()\n    }\n</code></pre><h5>Step 2: Compare live behavior against the expected distribution</h5><pre><code># Continuing in monitoring/goal_behavior_profiles.py\nimport numpy as np\nfrom scipy.stats import chisquare\n\n\ndef detect_goal_behavior_drift(profile: dict[str, float], observed_counts: dict[str, int]) -> dict:\n    if not profile:\n        return {\"state\": \"insufficient_baseline\"}\n\n    total = max(sum(observed_counts.values()), 1)\n    tools = sorted(profile.keys())\n    expected = np.array([profile[tool] * total for tool in tools])\n    observed = np.array([observed_counts.get(tool, 0) for tool in tools])\n\n    _, p_value = chisquare(f_obs=observed, f_exp=expected)\n    return {\n        \"state\": \"goal_behavior_drift\" if p_value < 0.05 else \"within_profile\",\n        \"p_value\": round(float(p_value), 6),\n        \"observed_total\": int(total),\n    }\n</code></pre><p><strong>Action:</strong> Maintain a behavioral profile for each goal class and compare live tool usage against it over a sliding window. Emit a drift finding when the distribution shifts significantly, especially if the new behavior pattern correlates with exfiltration tools, IAM changes, or other workflows that do not normally belong to that goal.</p>"
+                },
+                {
+                    "implementation": "Implement Rationale-vs-Action Consistency Monitoring by comparing observable plan, rationale summary, proposed tool call, and approved goal state, then emit anomaly telemetry when the action does not match the stated intent.",
+                    "howTo": `<h5>Concept:</h5><p>This detector compares only <strong>observable</strong> runtime artifacts: the approved goal record, the agent's surfaced plan or rationale summary, and the proposed tool action. It must not require hidden chain-of-thought, must not treat chain-of-thought as a security boundary, and must not claim to detect scheming or hidden intent. The output is an anomaly signal that helps analysts and downstream containment controls decide whether a high-risk action needs step-up review, quarantine, or investigation.</p><h5>Step 1: Normalize observable action telemetry</h5><pre><code class="language-python"># File: monitoring/rationale_action_consistency.py
+from __future__ import annotations
+
+from dataclasses import dataclass
+from datetime import datetime, timezone
+
+from sentence_transformers import SentenceTransformer, util
+
+
+MODEL = SentenceTransformer("all-MiniLM-L6-v2")
+HIGH_RISK_CONSISTENCY_THRESHOLD = 0.35
+
+
+@dataclass(frozen=True)
+class ApprovedGoal:
+    goal_id: str
+    statement: str
+    forbidden_effects: tuple[str, ...]
+
+
+@dataclass(frozen=True)
+class ActionObservation:
+    request_id: str
+    agent_id: str
+    observable_plan: str
+    rationale_summary: str
+    tool_name: str
+    tool_effect: str
+    risk_class: str
+
+
+def semantic_similarity(left: str, right: str) -> float:
+    left_embedding = MODEL.encode(left)
+    right_embedding = MODEL.encode(right)
+    return float(util.cos_sim(left_embedding, right_embedding).item())</code></pre><h5>Step 2: Score plan-to-action and goal-to-action consistency</h5><pre><code class="language-python"># Continuing in monitoring/rationale_action_consistency.py
+def evaluate_consistency(goal: ApprovedGoal, observation: ActionObservation) -> dict:
+    action_text = f"{observation.tool_name}: {observation.tool_effect}"
+    plan_action_score = semantic_similarity(observation.observable_plan, action_text)
+    rationale_action_score = semantic_similarity(observation.rationale_summary, action_text)
+    goal_action_score = semantic_similarity(goal.statement, action_text)
+
+    forbidden_hit = any(
+        forbidden.lower() in observation.tool_effect.lower()
+        for forbidden in goal.forbidden_effects
+    )
+
+    state = "consistent"
+    reason = "within_threshold"
+    if forbidden_hit:
+        state = "inconsistent"
+        reason = "forbidden_effect_requested"
+    elif observation.risk_class in {"high", "destructive"} and min(plan_action_score, rationale_action_score, goal_action_score) < HIGH_RISK_CONSISTENCY_THRESHOLD:
+        state = "inconsistent"
+        reason = "high_risk_action_not_supported_by_observable_context"
+
+    return {
+        "event_type": "rationale_action_consistency_check",
+        "request_id": observation.request_id,
+        "agent_id": observation.agent_id,
+        "goal_id": goal.goal_id,
+        "tool_name": observation.tool_name,
+        "risk_class": observation.risk_class,
+        "plan_action_score": round(plan_action_score, 4),
+        "rationale_action_score": round(rationale_action_score, 4),
+        "goal_action_score": round(goal_action_score, 4),
+        "state": state,
+        "reason": reason,
+        "observed_at": datetime.now(timezone.utc).isoformat(),
+    }</code></pre><h5>Step 3: Route the event without enforcing inside the detector</h5><p>Send inconsistent high-risk events to SIEM, case management, or the containment policy that owns blocking. The detector should include enough evidence for reconstruction: request ID, agent ID, goal ID, tool name, risk class, scores, reason code, and the policy version used for thresholds. Do not log raw secrets or full user data in the event.</p><p><strong>Threshold calibration:</strong> Treat <code>HIGH_RISK_CONSISTENCY_THRESHOLD</code> as an environment-specific default, not a universal truth. Tune it with benign production traces, red-team traces, and per-tool false-positive review; record the threshold value and policy version in the emitted event or adjacent detector configuration.</p><p><strong>Action:</strong> Run this check before high-impact tool calls and planning milestones. Treat the result as telemetry and investigation evidence, not as proof of hidden intent.</p>`
                 }
             ]
         },

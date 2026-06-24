@@ -5664,6 +5664,293 @@ def verify_delegation_context(header_value: str, verify_key_hex: str) -> dict:
                             "howTo": "<h5>Concept:</h5><p>Goal changes need non-repudiable provenance just like model or dataset changes. The provenance record should include the previous and new digests, proposer, approvers, ticket reference, and promotion environment so later investigations can reconstruct the governance chain.</p><h5>Example provenance event</h5><pre><code># File: goals/provenance_event.json\n{\n  \"agent_id\": \"support-agent-prod-001\",\n  \"previous_goal_digest\": \"sha256:1f8a...\",\n  \"new_goal_digest\": \"sha256:9b71...\",\n  \"proposed_by\": \"pmaria\",\n  \"approved_by\": [\"security.jlee\", \"product.rpatel\"],\n  \"ticket_id\": \"AISEC-412\",\n  \"promoted_env\": \"prod\",\n  \"recorded_at\": \"2026-04-08T22:06:00Z\"\n}</code></pre><h5>Write the event to an append-only audit service</h5><pre><code class=\"language-python\"># File: goals/provenance.py\nfrom __future__ import annotations\n\nimport requests\n\n\n\ndef append_goal_provenance(event: dict) -> None:\n    response = requests.post(\n        \"https://audit.internal.corp/v1/goal-provenance\",\n        json=event,\n        timeout=2,\n    )\n    response.raise_for_status()</code></pre><p><strong>Action:</strong> Emit the provenance event as part of the promotion workflow, not as a later human note. Goal governance should leave the same quality of evidence trail as model promotion or credential rotation.</p>"
                         }
                     ]
+                },
+                {
+                    "id": "AID-M-009.006",
+                    "name": "Capability-Tier Control-Profile Binding & Assurance Gate",
+                    "pillar": [
+                        "app",
+                        "infra"
+                    ],
+                    "phase": [
+                        "scoping",
+                        "validation",
+                        "operation"
+                    ],
+                    "description": "Bind an agent's approved autonomy, authority envelope, and blast-radius tier to a mandatory control profile before the agent is promoted or allowed to retain elevated privileges.<br/><br/><strong>Scope boundary:</strong> this sub-technique does not define the agent's functional autonomy profile (<code>AID-M-009.001</code>), classify individual action risk (<code>AID-M-009.002</code>), establish runtime identity and delegation lineage (<code>AID-M-009.003</code>), demote live trust state (<code>AID-M-009.004</code>), or govern goal-manifest changes (<code>AID-M-009.005</code>). It owns the binding layer: given an already classified agent tier, which detective, preventive, containment, eviction, and recovery controls must be proven before promotion is allowed?",
+                    "toolsOpenSource": [
+                        "Open Policy Agent (OPA)",
+                        "Conftest",
+                        "Git",
+                        "OpenTelemetry"
+                    ],
+                    "toolsCommercial": [
+                        "Styra DAS",
+                        "GitHub Enterprise",
+                        "Splunk",
+                        "Datadog",
+                        "ServiceNow"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0048 External Harms",
+                                "AML.T0053 AI Agent Tool Invocation",
+                                "AML.T0101 Data Destruction via AI Agent Tool Invocation",
+                                "AML.T0103 Deploy AI Agent",
+                                "AML.T0108 AI Agent"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Agent Goal Manipulation (L7)",
+                                "Agent Tool Misuse (L7)",
+                                "Compromised Agents (L7)",
+                                "Integration Risks (L7)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM06:2025 Excessive Agency"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "N/A"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI01:2026 Agent Goal Hijack",
+                                "ASI02:2026 Tool Misuse and Exploitation",
+                                "ASI03:2026 Identity and Privilege Abuse",
+                                "ASI08:2026 Cascading Failures",
+                                "ASI10:2026 Rogue Agents"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.027 Misaligned Outputs",
+                                "NISTAML.039 Compromising connected resources"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-1.3 Goal Manipulation",
+                                "AITech-12.1 Tool Exploitation",
+                                "AITech-14.1 Unauthorized Access",
+                                "AITech-14.2 Abuse of Delegated Authority"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "RA: Rogue Actions",
+                                "IIC: Insecure Integrated Component"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Agents - Core 13.2: Tool Misuse",
+                                "Agents - Core 13.3: Privilege Compromise",
+                                "Agents - Core 13.4: Resource Overload",
+                                "Agents - Core 13.6: Intent Breaking & Goal Manipulation",
+                                "Agents - Core 13.13: Rogue Agents in Multi-Agent Systems"
+                            ]
+                        }
+                    ],
+                    "implementationGuidance": [
+                        {
+                            "implementation": "Maintain a control-profile binding matrix that maps each autonomy / authority / blast-radius tier to the minimum required AIDEFEND controls.",
+                            "howTo": `<h5>Concept:</h5><p>Do not approve an agent tier in isolation. A tier only means something if it automatically selects the controls that must be present before that tier is allowed in production. The binding matrix should be versioned, reviewed, and evaluated by policy-as-code so teams cannot promote a high-impact agent while quietly omitting monitoring, containment, kill-switch, eviction, or rollback controls.</p><h5>Step 1: Define a tier-to-control matrix</h5><pre><code># File: policy/agent_control_profiles.yaml
+profiles:
+  tier_0_assistive_read_only:
+    description: "No external side effects; can read approved context and draft responses."
+    required_controls:
+      - AID-M-009.001
+      - AID-D-005.004
+  tier_1_supervised_low_impact:
+    description: "May call approved low-risk tools, but material side effects require approval."
+    required_controls:
+      - AID-M-009.001
+      - AID-M-009.002
+      - AID-H-019
+      - AID-D-010
+      - AID-I-003
+  tier_2_autonomous_business_impact:
+    description: "May execute bounded business workflows with reversible side effects."
+    required_controls:
+      - AID-M-009.002
+      - AID-M-009.003
+      - AID-H-019
+      - AID-D-010
+      - AID-I-003
+      - AID-I-005
+      - AID-E-005
+      - AID-R-003
+  tier_3_high_impact_or_irreversible:
+    description: "Can affect money, credentials, production deployment, destructive operations, or regulated data."
+    required_controls:
+      - AID-M-009.003
+      - AID-M-009.004
+      - AID-H-019
+      - AID-H-022
+      - AID-D-010
+      - AID-D-016.001
+      - AID-I-003
+      - AID-I-005
+      - AID-E-002
+      - AID-E-005
+      - AID-R-001
+      - AID-R-003</code></pre><h5>Step 2: Evaluate the matrix against the system control inventory</h5><pre><code class="language-python"># File: policy/evaluate_control_profile.py
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+import yaml
+
+
+def load_yaml(path: str) -> dict:
+    return yaml.safe_load(Path(path).read_text(encoding="utf-8"))
+
+
+def required_controls_for(profile_id: str, profiles: dict) -> set[str]:
+    try:
+        return set(profiles["profiles"][profile_id]["required_controls"])
+    except KeyError as exc:
+        raise SystemExit(f"unknown control profile: {profile_id}") from exc
+
+
+def evaluate_profile(agent_record: dict, evidence_inventory: dict, profiles: dict) -> dict:
+    profile_id = agent_record["control_profile"]
+    required = required_controls_for(profile_id, profiles)
+    implemented = set(evidence_inventory.get(agent_record["agent_id"], []))
+    missing = sorted(required - implemented)
+    return {
+        "agent_id": agent_record["agent_id"],
+        "control_profile": profile_id,
+        "required_controls": sorted(required),
+        "implemented_controls": sorted(implemented),
+        "missing_controls": missing,
+        "status": "pass" if not missing else "fail",
+    }
+
+
+profiles = load_yaml("policy/agent_control_profiles.yaml")
+agent = load_yaml("agents/support-agent-prod.yaml")
+evidence = load_yaml("evidence/control_inventory.yaml")
+result = evaluate_profile(agent, evidence, profiles)
+Path("artifacts/control_profile_result.json").write_text(
+    json.dumps(result, indent=2, sort_keys=True),
+    encoding="utf-8",
+)
+if result["status"] != "pass":
+    raise SystemExit("control profile gate failed: missing " + ", ".join(result["missing_controls"]))</code></pre><h5>Step 3: Treat the profile decision as release evidence</h5><p>Persist the profile ID, policy version, required-control list, implemented-control list, and missing-control result with the agent release record. The release should point to this evidence rather than a verbal claim that controls exist.</p><p><strong>Action:</strong> Make the control-profile matrix a mandatory gate for every production agent tier. A high-authority agent that lacks the mapped monitoring, containment, kill-switch, eviction, or restore controls must not be promoted.</p>`
+                        },
+                        {
+                            "implementation": "Require an assurance evidence package before an agent can be promoted to a higher capability tier, and fail closed when required evidence is missing or stale.",
+                            "howTo": `<h5>Concept:</h5><p>Capability promotion is a security-sensitive change. Before an agent receives broader autonomy, stronger credentials, larger budgets, or access to irreversible action paths, the platform should verify concrete evidence: current monitoring coverage, high-risk action authorization, kill-switch test results, eviction / purge readiness, and rollback or restoration paths. The gate should fail closed if evidence is missing, expired, unsigned, or tied to an older agent version.</p><h5>Step 1: Define the promotion evidence contract</h5><pre><code class="language-json">{
+  "agent_id": "support-agent-prod",
+  "candidate_tier": "tier_2_autonomous_business_impact",
+  "agent_version": "2026.06.24.3",
+  "evidence": {
+    "goal_monitoring": {
+      "control": "AID-D-010",
+      "status": "pass",
+      "checked_at": "2026-06-24T12:00:00Z",
+      "artifact": "s3://evidence/support-agent/goal-monitoring.json"
+    },
+    "high_risk_action_gate": {
+      "control": "AID-H-019",
+      "status": "pass",
+      "checked_at": "2026-06-24T12:02:00Z",
+      "artifact": "s3://evidence/support-agent/action-gate.json"
+    },
+    "containment_path": {
+      "control": "AID-I-003",
+      "status": "pass",
+      "checked_at": "2026-06-24T12:05:00Z",
+      "artifact": "s3://evidence/support-agent/containment-drill.json"
+    },
+    "kill_switch_drill": {
+      "control": "AID-I-005",
+      "status": "pass",
+      "checked_at": "2026-06-24T12:08:00Z",
+      "artifact": "s3://evidence/support-agent/kill-switch-drill.json"
+    },
+    "eviction_and_state_purge": {
+      "control": "AID-E-005",
+      "status": "pass",
+      "checked_at": "2026-06-24T12:10:00Z",
+      "artifact": "s3://evidence/support-agent/eviction-purge.json"
+    },
+    "rollback_or_restore": {
+      "control": "AID-R-003",
+      "status": "pass",
+      "checked_at": "2026-06-24T12:13:00Z",
+      "artifact": "s3://evidence/support-agent/session-restore.json"
+    }
+  }
+}</code></pre><h5>Step 2: Enforce freshness and completeness</h5><pre><code class="language-python"># File: promotion/assurance_gate.py
+from __future__ import annotations
+
+from datetime import datetime, timedelta, timezone
+
+
+MAX_EVIDENCE_AGE = timedelta(days=30)
+REQUIRED_EVIDENCE = {
+    "goal_monitoring",
+    "high_risk_action_gate",
+    "containment_path",
+    "kill_switch_drill",
+    "eviction_and_state_purge",
+    "rollback_or_restore",
+}
+
+
+class PromotionDenied(RuntimeError):
+    pass
+
+
+def parse_ts(value: str) -> datetime:
+    return datetime.fromisoformat(value.replace("Z", "+00:00"))
+
+
+def validate_assurance_package(package: dict, now: datetime) -> None:
+    evidence = package.get("evidence", {})
+    missing = sorted(REQUIRED_EVIDENCE - set(evidence))
+    if missing:
+        raise PromotionDenied("missing evidence: " + ", ".join(missing))
+
+    for name, record in evidence.items():
+        if record.get("status") != "pass":
+            raise PromotionDenied(f"{name} did not pass")
+        checked_at = parse_ts(record["checked_at"])
+        if now - checked_at > MAX_EVIDENCE_AGE:
+            raise PromotionDenied(f"{name} evidence is stale")
+        if not record.get("artifact"):
+            raise PromotionDenied(f"{name} missing evidence artifact")
+
+
+def promotion_decision(package: dict) -> dict:
+    validate_assurance_package(package, datetime.now(timezone.utc))
+    return {
+        "agent_id": package["agent_id"],
+        "candidate_tier": package["candidate_tier"],
+        "decision": "approve",
+        "reason": "required assurance evidence present and fresh",
+    }</code></pre><h5>Step 3: Fail closed in the promotion workflow</h5><p>Run the assurance gate before granting broader credentials, expanding tool scope, raising budget ceilings, or enabling autonomous workflow execution. If the gate fails, keep the agent at its current tier and create remediation work items for the missing evidence.</p><p><strong>Action:</strong> Treat promotion to a higher autonomy or authority tier like a privileged production release. No fresh evidence means no promotion, even if the feature is otherwise ready.</p>`
+                        }
+                    ]
                 }
             ]
         },

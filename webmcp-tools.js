@@ -234,7 +234,7 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
 
     safeRegisterTool({
         name: 'search_techniques',
-        description: "Search the AIDEFEND AI security defense framework by keyword. Searches across technique and sub-technique names and descriptions. Returns matching IDs, names, parent tactic, and sub-technique counts. Use this as the starting point to explore AIDEFEND's 296 defensive techniques/sub-techniques across 7 tactics (Model, Harden, Detect, Isolate, Deceive, Evict, Restore). Note: framework content is in English. If the user's query is in another language, translate it to English before calling this tool.",
+        description: "Search the AIDEFEND AI security defense framework by keyword. Searches across technique and sub-technique names and descriptions. Returns matching IDs, names, parent tactic, and sub-technique counts. Use this as the starting point to explore AIDEFEND's 298 defensive techniques/sub-techniques across 7 tactics (Model, Harden, Detect, Isolate, Deceive, Evict, Restore). Note: framework content is in English. If the user's query is in another language, translate it to English before calling this tool.",
         annotations: {
             readOnlyHint: true,
             idempotentHint: true

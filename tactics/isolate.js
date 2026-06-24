@@ -1482,6 +1482,109 @@ async def execute_tool(request: dict):
                     "howTo": "<h5>Concept:</h5><p>An attacker who hits a token-count limit can shift to tool-call abuse. One who hits a tool-call limit can shift to sending fewer but longer prompts. Single-dimension quotas are trivially evadable. Multi-dimensional quotas enforce ceilings across <b>all</b> cost-linked dimensions simultaneously, so abuse must stay below every ceiling at once. The budget enforcement strategy described earlier in this technique already tracks multiple dimensions; this strategy emphasizes the policy design principle.</p><h5>Policy Design Principles</h5><pre><code># File: docs/budget_policy_design.md\n\n## Multi-Dimensional Budget Policy Design\n\n### Principle: Defense in Depth Across Cost Dimensions\n\nA well-designed budget policy enforces limits across ALL of these dimensions:\n\n| Dimension          | What It Caps                        | Why It Matters                     |\n|--------------------|-------------------------------------|------------------------------------|\n| Input tokens       | Total prompt tokens per session/hour | Prevents prompt stuffing           |\n| Output tokens      | Total generated tokens               | Prevents verbose output abuse      |\n| Tool calls         | Total tool invocations               | Prevents recursive loop burns      |\n| Estimated spend    | Dollar-equivalent cumulative cost    | Prevents cross-dimension evasion   |\n| Retry count        | Repeated identical/similar requests  | Prevents replay attacks            |\n| Concurrency        | Simultaneous active requests         | Prevents parallelized abuse        |\n\n### Anti-Evasion Rule:\nIf ANY dimension exceeds its ceiling, throttle.\nDo NOT allow a user to trade off one dimension for another.\n\n### Example: An attacker sends 10 requests, each with a 50K-token prompt\n- Token-only quota: catches it at 500K tokens\n- Request-rate limit: does NOT catch it (only 10 requests)\n- Multi-dimensional: catches it on BOTH token AND spend dimensions</code></pre><p><strong>Action:</strong> Review your budget policy to ensure it covers at minimum: input tokens, output tokens, tool calls, estimated spend, retry count, and concurrency. Test the policy against evasion scenarios: What happens if an attacker sends few requests but each is extremely expensive? What if they parallelize many cheap requests? The policy must catch both patterns.</p>"
                 },
                 {
+                    "implementation": "Contain each high-risk agent action before side effects occur by blocking it, forcing a safer re-plan, deferring to an approved route, or requiring human approval.",
+                    "howTo": `<h5>Concept:</h5><p>Quarantine does not have to wait until an entire session is bad. For high-risk actions, containment should happen at the action boundary before the side effect is committed. This guidance consumes upstream signals such as authorization decisions (<code>AID-H-019</code>), goal-consistency findings (<code>AID-D-010</code>), trust-state demotion (<code>AID-M-009.004</code>), and cost or anomaly alerts. It does not define those signals; it translates them into a fail-closed containment action.</p><h5>Step 1: Define containment outcomes</h5><pre><code class="language-yaml"># File: policies/per_action_containment.yaml
+outcomes:
+  allow:
+    meaning: "Proceed with the proposed action."
+  block:
+    meaning: "Reject the action before any side effect occurs."
+  resample:
+    meaning: "Ask the agent to propose a safer plan under stricter constraints."
+  defer:
+    meaning: "Route the request to a trusted workflow or lower-risk tool."
+  require_human_approval:
+    meaning: "Hold the action until a named approver approves the exact action."
+
+rules:
+  - id: destructive_without_approval
+    when:
+      risk_class: destructive
+      approval_present: false
+    outcome: require_human_approval
+  - id: forbidden_or_out_of_scope
+    when:
+      authorization_decision: deny
+    outcome: block
+  - id: goal_inconsistent_high_risk
+    when:
+      goal_consistency_state: inconsistent
+      risk_class: high
+    outcome: resample
+  - id: degraded_trust_state
+    when:
+      runtime_trust_state: restricted
+    outcome: defer
+  - id: quarantined_trust_state
+    when:
+      runtime_trust_state: quarantined
+    outcome: block</code></pre><h5>Step 2: Evaluate the proposed action before dispatch</h5><pre><code class="language-python"># File: isolate/per_action_containment.py
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Literal
+
+
+Outcome = Literal["allow", "block", "resample", "defer", "require_human_approval"]
+
+
+@dataclass(frozen=True)
+class ProposedAction:
+    action_id: str
+    agent_id: str
+    tool_name: str
+    risk_class: str
+    authorization_decision: str
+    goal_consistency_state: str
+    runtime_trust_state: str
+    approval_present: bool
+
+
+@dataclass(frozen=True)
+class ContainmentDecision:
+    outcome: Outcome
+    reason: str
+
+
+def decide_containment(action: ProposedAction) -> ContainmentDecision:
+    if action.runtime_trust_state == "quarantined":
+        return ContainmentDecision("block", "runtime_trust_state_quarantined")
+    if action.authorization_decision == "deny":
+        return ContainmentDecision("block", "authorization_denied")
+    if action.risk_class == "destructive" and not action.approval_present:
+        return ContainmentDecision("require_human_approval", "destructive_action_needs_approval")
+    if action.goal_consistency_state == "inconsistent" and action.risk_class in {"high", "destructive"}:
+        return ContainmentDecision("resample", "high_risk_goal_inconsistency")
+    if action.runtime_trust_state == "restricted":
+        return ContainmentDecision("defer", "restricted_trust_state")
+    return ContainmentDecision("allow", "within_policy")</code></pre><h5>Step 3: Enforce outcomes at the dispatcher</h5><pre><code class="language-python"># File: runtime/action_dispatcher.py
+from isolate.per_action_containment import ContainmentDecision, ProposedAction, decide_containment
+
+
+class ActionBlocked(RuntimeError):
+    pass
+
+
+def dispatch_action(action: ProposedAction, tool_request: dict) -> dict:
+    decision: ContainmentDecision = decide_containment(action)
+    emit_containment_event(action, decision)
+
+    if decision.outcome == "block":
+        raise ActionBlocked(decision.reason)
+    if decision.outcome == "require_human_approval":
+        return create_approval_request(action.action_id, tool_request, reason=decision.reason)
+    if decision.outcome == "resample":
+        return request_safer_plan(
+            action.agent_id,
+            original_action_id=action.action_id,
+            constraints=["no destructive tools", "no external writes", "use read-only route"],
+        )
+    if decision.outcome == "defer":
+        return route_to_trusted_workflow(tool_request)
+
+    return execute_tool_call(tool_request)</code></pre><h5>Step 4: Preserve evidence for reconstruction</h5><p>Every containment decision should log the action ID, agent ID, tool name, risk class, upstream signal versions, selected outcome, reason, and whether any side effect was committed. For <code>resample</code>, link the rejected action and the replacement plan so investigators can verify that the safer plan actually reduced risk.</p><p><strong>Action:</strong> Put per-action containment in the dispatcher or orchestration boundary immediately before tool execution. If the containment engine is unavailable, high-risk actions should fail closed instead of bypassing the gate.</p>`
+                },
+                {
                     "implementation": "Escalate from soft throttling to hard containment when budget exhaustion is paired with suspicious signals such as recursive tool loops, repeated retries, anomalous latency growth, or high-confidence abuse detections.",
                     "howTo": "<h5>Concept:</h5><p>Soft throttling (reducing rate limits) is appropriate for ambiguous situations where the user might be legitimate. But when budget breach coincides with other abuse indicators—recursive tool loops (AID-H-018.001), anomalous cost spikes (AID-D-005.007), or repeated failed retries—the system should escalate to hard containment: session quarantine, API key suspension, or full safe-mode lockdown.</p><h5>Escalation Matrix</h5><pre><code># File: policies/escalation_matrix.yaml\n\nescalation_rules:\n  # Level 1: Budget breach alone → soft throttle\n  - condition:\n      budget_breach: true\n      loop_detected: false\n      anomaly_score: \"< 0.7\"\n    action: \"soft_throttle\"\n    response: \"reduce RPM to 5, log warning\"\n\n  # Level 2: Budget breach + loop OR anomaly → hard throttle + alert\n  - condition:\n      budget_breach: true\n      loop_detected: true\n    action: \"hard_throttle\"\n    response: \"reduce RPM to 1, disable tool calls, alert SOC\"\n\n  # Level 3: Budget breach + loop + high anomaly → quarantine\n  - condition:\n      budget_breach: true\n      loop_detected: true\n      anomaly_score: \">= 0.7\"\n    action: \"quarantine\"\n    response: \"suspend session, block API key, open IR ticket\"\n\n  # Level 4: Spend > hard ceiling (any context) → emergency block\n  - condition:\n      spend_usd_exceeds_hard_ceiling: true\n    action: \"emergency_block\"\n    response: \"block all requests, page on-call, open P1 ticket\"</code></pre><h5>Escalation Logic</h5><pre><code># File: gateway/escalation_engine.py\n\n\ndef evaluate_escalation(\n    budget_result: dict,\n    loop_detection: dict,\n    anomaly_result: dict,\n    hard_spend_ceiling: float,\n    current_spend: float,\n) -> dict:\n    \"\"\"\n    Determine the appropriate containment level based on\n    correlated signals from budget, loop, and anomaly detectors.\n    \"\"\"\n    # Emergency: hard ceiling breach overrides everything\n    if current_spend >= hard_spend_ceiling:\n        return {\"level\": 4, \"action\": \"emergency_block\"}\n\n    budget_breached = not budget_result.get(\"allowed\", True)\n    loop_found = loop_detection.get(\"loop_detected\", False)\n    anomaly_score = anomaly_result.get(\"z_score\", 0)\n\n    if budget_breached and loop_found and anomaly_score >= 0.7:\n        return {\"level\": 3, \"action\": \"quarantine\"}\n    elif budget_breached and (loop_found or anomaly_score >= 0.5):\n        return {\"level\": 2, \"action\": \"hard_throttle\"}\n    elif budget_breached:\n        return {\"level\": 1, \"action\": \"soft_throttle\"}\n    else:\n        return {\"level\": 0, \"action\": \"allow\"}</code></pre><p><strong>Action:</strong> Build an escalation engine that correlates budget enforcement results (this technique) with loop detection (AID-H-018.001) and cost anomaly alerts (AID-D-005.007). The engine should apply proportional response: soft throttle for ambiguous breaches, hard containment for correlated multi-signal abuse. Every escalation action must be logged with incident correlation IDs for forensic reconstruction.</p>"
                 }
@@ -2918,6 +3021,93 @@ async def trigger_manual_halt(
                 {
                     "implementation": "Document and govern the kill-switch within Human-in-the-Loop (HITL) control mapping (AID-M-006).",
                     "howTo": "<h5>Concept:</h5><p>The emergency halt is not \"outside the system\" — it is actually the most extreme Human-in-the-Loop (HITL) checkpoint. You should represent it explicitly in your HITL registry (AID-M-006), just like any other high-risk approval step. That gives auditors and internal governance teams a single source of truth for all manual intervention points, including who can invoke them, expected response times, and what happens if nobody responds in time.</p><h5>HITL Checkpoint Definition</h5><pre><code># File: design/hitl_checkpoints.yaml (excerpt; see AID-M-006)\n\nhitl_checkpoints:\n  - id: \"HITL-CP-001\"\n    name: \"High-Value Financial Transaction Approval\"\n    # ...\n\n  # ... other checkpoints ...\n\n  - id: \"HITL-CP-999\"  # Special ultimate override\n    name: \"Emergency System Halt (Manual Kill-Switch)\"\n    description: \"A manual control to immediately halt all AI agent operations across the entire system or for a specific tenant.\"\n    component: \"system-wide\"\n    trigger:\n      type: \"Manual\"\n      condition: \"An authorized operator with MFA invokes /admin/emergency-halt or presses the physical red button UI in the admin console.\"\n    decision_type: \"Confirm Halt\"\n    required_data: [\n      \"operator_id\",\n      \"incident_ticket_id\",\n      \"justification_text\"\n    ]\n    operator_role: \"AI_System_Admin_L3\"\n    sla_seconds: 60  # Time allowed to complete the halt action\n    default_action_on_timeout: \"Halt\"  # Fail-safe: if approval flow times out, we halt\n    accountability:\n      on_call_role: \"SRE_OnCall_L3\"\n      security_role: \"Security_Duty_Officer\"\n      audit_log_target: \"SIEM+IncidentChannel\"\n    version_control:\n      governance: \"Changes to HITL-CP-999 require joint approval by Security and Engineering leadership.\"\n</code></pre><p><strong>Action:</strong> Add the emergency kill-switch as <code>HITL-CP-999</code> in your HITL registry. Define the authorized operator role, time-to-act SLA, fail-safe default (<code>default_action_on_timeout: Halt</code>), audit logging destination, and which on-call rotations are accountable. Require security+engineering leadership approval for any changes to this checkpoint so governance can prove that control of the kill-switch is tightly managed.</p>"
+                },
+                {
+                    "implementation": "Run recursive shutdown readiness drills that prove the kill-switch reaches the root agent, subagents, delegated jobs, queued tool calls, session tokens, background workers, scheduled tasks, and external callbacks.",
+                    "howTo": `<h5>Concept:</h5><p>A kill-switch that only stops the front-door API can leave delegated work running behind it. Agentic systems often spawn subagents, queue tool calls, start background workers, mint short-lived tokens, schedule jobs, or register outbound callbacks. A recursive shutdown drill proves that the emergency halt actually propagates across that execution graph and measures how long it takes to reach a safe stopped state. This guidance orchestrates shutdown readiness; process eviction details remain with <code>AID-E-002</code>, and token/session purge details remain with <code>AID-E-005</code>.</p><h5>Step 1: Build a shutdown target manifest from lineage and graph telemetry</h5><pre><code class="language-json">{
+  "drill_id": "shutdown-drill-2026-06-24-001",
+  "root_agent_id": "support-agent-prod",
+  "scope": "tenant",
+  "tenant_id": "tenant-123",
+  "lineage_source": "AID-M-009.003",
+  "graph_source": "AID-D-016.001",
+  "targets": {
+    "agent_instances": ["support-agent-prod-001", "support-agent-prod-002"],
+    "subagents": ["refund-worker-agent", "email-draft-agent"],
+    "delegated_jobs": ["job-9182", "job-9183"],
+    "queued_tool_calls": ["toolcall-771", "toolcall-772"],
+    "session_tokens": ["sess-abc", "sess-def"],
+    "background_workers": ["worker-support-17"],
+    "scheduled_tasks": ["cron-ticket-followup"],
+    "external_callbacks": ["callback-approval-webhook"]
+  },
+  "time_to_shutdown_slo_seconds": 120
+}</code></pre><h5>Step 2: Execute halt, eviction, purge, and callback disablement as one drill</h5><pre><code class="language-python"># File: drills/recursive_shutdown_drill.py
+from __future__ import annotations
+
+from dataclasses import dataclass
+from datetime import datetime, timezone
+from time import monotonic, sleep
+
+
+@dataclass(frozen=True)
+class ShutdownManifest:
+    drill_id: str
+    tenant_id: str
+    targets: dict
+    time_to_shutdown_slo_seconds: int
+
+
+def run_recursive_shutdown_drill(manifest: ShutdownManifest, clients: dict) -> dict:
+    started = monotonic()
+    started_at = datetime.now(timezone.utc).isoformat()
+
+    # I-005: set the halt flag first so no new work starts.
+    clients["halt_flags"].set_tenant_halt(manifest.tenant_id, reason=manifest.drill_id)
+
+    # E-002: terminate live runtime/process handles.
+    for agent_id in manifest.targets.get("agent_instances", []):
+        clients["runtime"].terminate_agent(agent_id)
+    for subagent_id in manifest.targets.get("subagents", []):
+        clients["runtime"].terminate_agent(subagent_id)
+
+    # E-005: invalidate sessions/tokens and cancel work that has not executed yet.
+    for token_id in manifest.targets.get("session_tokens", []):
+        clients["identity"].revoke_session_token(token_id)
+    for job_id in manifest.targets.get("delegated_jobs", []):
+        clients["jobs"].cancel(job_id)
+    for call_id in manifest.targets.get("queued_tool_calls", []):
+        clients["tool_queue"].cancel(call_id)
+
+    # Disable worker loops, scheduled tasks, and callback paths that can restart work.
+    for worker_id in manifest.targets.get("background_workers", []):
+        clients["workers"].disable(worker_id)
+    for task_id in manifest.targets.get("scheduled_tasks", []):
+        clients["scheduler"].pause(task_id)
+    for callback_id in manifest.targets.get("external_callbacks", []):
+        clients["callbacks"].disable(callback_id)
+
+    deadline = started + manifest.time_to_shutdown_slo_seconds
+    while monotonic() < deadline:
+        remaining = clients["graph"].remaining_active_targets(manifest.targets)
+        if not remaining:
+            elapsed = round(monotonic() - started, 3)
+            return {
+                "drill_id": manifest.drill_id,
+                "status": "pass",
+                "started_at": started_at,
+                "time_to_shutdown_seconds": elapsed,
+                "remaining_targets": [],
+            }
+        sleep(2)
+
+    return {
+        "drill_id": manifest.drill_id,
+        "status": "fail",
+        "started_at": started_at,
+        "time_to_shutdown_seconds": round(monotonic() - started, 3),
+        "remaining_targets": clients["graph"].remaining_active_targets(manifest.targets),
+    }</code></pre><h5>Step 3: Fail the readiness gate when the drill leaves residual work</h5><p>The evidence record should include the manifest version, graph snapshot, all action acknowledgements, time-to-shutdown, and any residual target that remained active. A failed drill means the agent tier should not be promoted or should be demoted until the orphaned worker, token, callback, or queue path is brought under shutdown control.</p><p><strong>Action:</strong> Schedule recursive shutdown drills for every high-authority agent and after any change to delegation, queueing, token minting, callback, or scheduler behavior. Track <code>time_to_shutdown_seconds</code> as a control SLO and preserve the drill report as evidence for <code>AID-M-009.006</code>.</p>`
                 },
                 {
                     "implementation": "Enforce global/tenant halt flags at every inference request path and agent loop (fail-closed).",

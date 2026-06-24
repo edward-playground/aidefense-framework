@@ -1,8 +1,8 @@
 {
 "version": {
 "schemaVersion": "2.0",
-"dataVersion": "2026.06.22",
-"generatedAt": "2026-06-22T13:47:24.524Z",
+"dataVersion": "2026.06.24",
+"generatedAt": "2026-06-24T22:03:24.537Z",
 "source": "bundled",
 "keywordStructure": "flat"
 },
@@ -3661,7 +3661,8 @@
 "scoping",
 "operation",
 "building",
-"response"
+"response",
+"validation"
 ],
 "defendsAgainst": [
 {
@@ -4326,6 +4327,130 @@
 "safe mission reversion",
 "cosign manifest signing",
 "provenance event immutability"
+]
+},
+{
+"id": "AID-M-009.006",
+"name": "Capability-Tier Control-Profile Binding & Assurance Gate",
+"description": "Bind an agent's approved autonomy, authority envelope, and blast-radius tier to a mandatory control profile before the agent is promoted or allowed to retain elevated privileges.<br/><br/><strong>Scope boundary:</strong> this sub-technique does not define the agent's functional autonomy profile (<code>AID-M-009.001</code>), classify individual action risk (<code>AID-M-009.002</code>), establish runtime identity and delegation lineage (<code>AID-M-009.003</code>), demote live trust state (<code>AID-M-009.004</code>), or govern goal-manifest changes (<code>AID-M-009.005</code>). It owns the binding layer: given an already classified agent tier, which detective, preventive, containment, eviction, and recovery controls must be proven before promotion is allowed?",
+"pillar": [
+"app",
+"infra"
+],
+"phase": [
+"scoping",
+"validation",
+"operation"
+],
+"implementationGuidance": [
+"Maintain a control-profile binding matrix that maps each autonomy / authority / blast-radius tier to the minimum required AIDEFEND controls.",
+"Require an assurance evidence package before an agent can be promoted to a higher capability tier, and fail closed when required evidence is missing or stale."
+],
+"toolsOpenSource": [
+"Open Policy Agent (OPA)",
+"Conftest",
+"Git",
+"OpenTelemetry"
+],
+"toolsCommercial": [
+"Styra DAS",
+"GitHub Enterprise",
+"Splunk",
+"Datadog",
+"ServiceNow"
+],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0048 External Harms",
+"AML.T0053 AI Agent Tool Invocation",
+"AML.T0101 Data Destruction via AI Agent Tool Invocation",
+"AML.T0103 Deploy AI Agent",
+"AML.T0108 AI Agent"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Agent Goal Manipulation (L7)",
+"Agent Tool Misuse (L7)",
+"Compromised Agents (L7)",
+"Integration Risks (L7)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2025",
+"items": [
+"LLM06:2025 Excessive Agency"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"N/A"
+]
+},
+{
+"framework": "OWASP Agentic AI Top 10 2026",
+"items": [
+"ASI01:2026 Agent Goal Hijack",
+"ASI02:2026 Tool Misuse and Exploitation",
+"ASI03:2026 Identity and Privilege Abuse",
+"ASI08:2026 Cascading Failures",
+"ASI10:2026 Rogue Agents"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"NISTAML.027 Misaligned Outputs",
+"NISTAML.039 Compromising connected resources"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-1.3 Goal Manipulation",
+"AITech-12.1 Tool Exploitation",
+"AITech-14.1 Unauthorized Access",
+"AITech-14.2 Abuse of Delegated Authority"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"RA: Rogue Actions",
+"IIC: Insecure Integrated Component"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Agents - Core 13.2: Tool Misuse",
+"Agents - Core 13.3: Privilege Compromise",
+"Agents - Core 13.4: Resource Overload",
+"Agents - Core 13.6: Intent Breaking & Goal Manipulation",
+"Agents - Core 13.13: Rogue Agents in Multi-Agent Systems"
+]
+}
+],
+"contentHash": "665673f5de3642e4",
+"keywords": [
+"capability tier binding",
+"control profile matrix",
+"autonomy authority blast radius",
+"assurance evidence gate",
+"fail-closed promotion",
+"agent control profile",
+"kill-switch evidence",
+"rollback evidence",
+"high-risk action gate",
+"monitoring coverage evidence",
+"tiered agent governance",
+"promotion evidence package",
+"least privilege tiering",
+"control inventory evidence"
 ]
 }
 ],
@@ -15298,6 +15423,129 @@
 "stale context blocking",
 "corpus provenance attestation"
 ]
+},
+{
+"id": "AID-H-022.004",
+"name": "Control-Plane & Oversight-Surface Isolation",
+"description": "Separate the agent runtime from the control plane that supervises it. A production agent must not be able to read, modify, disable, or bypass its own monitoring rules, policy bundles, sandbox settings, kill-switch controls, audit streams, canary definitions, or oversight thresholds.<br/><br/><strong>Scope boundary:</strong> <code>AID-H-022.002</code> verifies that approved configuration artifacts are signed and untampered. This sub-technique enforces a different boundary: even a correctly signed agent configuration must not grant the agent access to the oversight surfaces that decide whether the agent is safe. Put simply, the subject being supervised should not administer its own supervision.",
+"pillar": [
+"app",
+"infra"
+],
+"phase": [
+"building",
+"operation"
+],
+"implementationGuidance": [
+"Deny agent runtime identities from reading or changing their own monitoring, sandbox, policy, kill-switch, and audit control-plane resources.",
+"Silo oversight rules, thresholds, canary definitions, and detector internals from agent-readable retrieval corpora."
+],
+"toolsOpenSource": [
+"Open Policy Agent (OPA)",
+"Kubernetes RBAC",
+"SPIFFE/SPIRE",
+"OpenTelemetry",
+"Git"
+],
+"toolsCommercial": [
+"HashiCorp Vault",
+"AWS IAM",
+"Azure RBAC",
+"Google Cloud IAM",
+"Splunk",
+"Datadog"
+],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0081 Modify AI Agent Configuration",
+"AML.T0083 Credentials from AI Agent Configuration",
+"AML.T0084 Discover AI Agent Configuration"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Agent Goal Manipulation (L7)",
+"Agent Identity Attack (L7)",
+"Compromised Agents (L7)",
+"Evasion of Security AI Agents (L6)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2025",
+"items": [
+"LLM06:2025 Excessive Agency",
+"LLM07:2025 System Prompt Leakage"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"N/A"
+]
+},
+{
+"framework": "OWASP Agentic AI Top 10 2026",
+"items": [
+"ASI01:2026 Agent Goal Hijack",
+"ASI03:2026 Identity and Privilege Abuse",
+"ASI10:2026 Rogue Agents"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"NISTAML.035 Prompt Extraction",
+"NISTAML.039 Compromising connected resources"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-5.2 Configuration Persistence",
+"AITech-14.1 Unauthorized Access",
+"AITech-14.2 Abuse of Delegated Authority",
+"AITech-1.3 Goal Manipulation"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"MDT: Model Deployment Tampering",
+"PIJ: Prompt Injection",
+"RA: Rogue Actions",
+"IIC: Insecure Integrated Component"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Agents - Core 13.6: Intent Breaking & Goal Manipulation",
+"Agents - Core 13.13: Rogue Agents in Multi-Agent Systems",
+"Agents - Tools MCP Server 13.20: Insecure Server Configuration",
+"Agents - Tools MCP Client 13.27: Insecure Credential Storage"
+]
+}
+],
+"contentHash": "0b5a793b349463f0",
+"keywords": [
+"control-plane isolation",
+"oversight surface isolation",
+"agent runtime deny policy",
+"oversight retrieval silo",
+"policy bundle access control",
+"kill-switch administration boundary",
+"detector threshold secrecy",
+"audit sink protection",
+"sandbox profile protection",
+"agent self-management denial",
+"control-plane identity separation",
+"oversight internal corpus",
+"retrieval-time access gate",
+"canary definition isolation"
+]
 }
 ],
 "url": "https://aidefend.net"
@@ -19607,7 +19855,8 @@
 "validation"
 ],
 "implementationGuidance": [
-"Apply provenance-aware static policy gates to AI-generated changes and fail closed when high-risk patterns or unapproved dependencies are detected."
+"Apply provenance-aware static policy gates to AI-generated changes and fail closed when high-risk patterns or unapproved dependencies are detected.",
+"Add static gates for AI coding-agent sabotage patterns that weaken tests, CI, security checks, benchmarks, deployment approval, or privileged code paths."
 ],
 "toolsOpenSource": [
 "Semgrep",
@@ -19697,22 +19946,22 @@
 ]
 }
 ],
-"contentHash": "636bbebc0c5189c9",
+"contentHash": "d754e8d210fc6450",
 "keywords": [
 "static admission gate",
+"ai coding-agent sabotage",
+"test weakening detection",
+"ci security bypass detection",
+"benchmark manipulation detection",
+"backdoor pattern scanning",
+"permission expansion scan",
+"deployment approval bypass",
 "provenance-aware static scan",
-"dependency hallucination detection",
-"typosquat package detection",
 "privileged path scanning",
-"secrets exposure detection",
-"iac policy scanning",
 "generated artifact classification",
-"gitleaks secret scan",
-"trivy vulnerability scan",
-"syft grype sbom",
-"conftest policy",
 "fail-closed merge gate",
-"insecure default detection"
+"semgrep sabotage rules",
+"security review escalation"
 ]
 },
 {
@@ -26974,7 +27223,8 @@
 "implementationGuidance": [
 "Continuously score semantic alignment between the approved goal state and the agent's proposed actions or plans, and emit a structured finding when the score falls below the goal-specific threshold.",
 "Maintain a rolling goal-adherence score per agent so low-and-slow deviation trends trigger investigation before they become a full goal hijack incident.",
-"Profile expected tool and workflow patterns for each goal class and flag statistically significant drift that suggests indirect goal manipulation."
+"Profile expected tool and workflow patterns for each goal class and flag statistically significant drift that suggests indirect goal manipulation.",
+"Implement Rationale-vs-Action Consistency Monitoring by comparing observable plan, rationale summary, proposed tool call, and approved goal state, then emit anomaly telemetry when the action does not match the stated intent."
 ],
 "toolsOpenSource": [
 "Apache Kafka (goal-monitoring event streaming)",
@@ -26990,22 +27240,22 @@
 "Arize AI (behavioral drift monitoring)",
 "WhyLabs (distribution-drift monitoring)"
 ],
-"contentHash": "d31840ac43ed43cb",
+"contentHash": "d21e666d6e413522",
 "keywords": [
 "goal integrity monitoring",
+"rationale action consistency",
+"observable plan comparison",
+"tool-call consistency check",
+"approved goal alignment",
 "goal deviation detection",
-"objective drift detection",
-"agent goal baselining",
-"goal policy verification",
-"goal state monitoring",
-"intent deviation alerting",
-"goal invariant check",
-"mission drift detection",
+"observable telemetry anomaly",
+"plan-to-action scoring",
+"hidden cot exclusion",
+"chain-of-thought non-boundary",
+"high-risk action signal",
 "agent objective audit",
-"goal reasoning trace analysis",
-"goal misalignment detection",
-"planning trajectory audit",
-"goal consistency check"
+"mission drift detection",
+"consistency telemetry event"
 ],
 "subTechniques": [],
 "url": "https://aidefend.net"
@@ -30415,6 +30665,7 @@
 "Throttle GPU/CPU for a suspicious tenant namespace in Kubernetes.",
 "Enforce budget-triggered throttling and safe-mode downgrade when per-session, per-user, per-agent, or per-API-key token and spend thresholds are exceeded or when abnormal cost-abuse scores cross policy thresholds.",
 "Apply multi-dimensional quotas such as input-token ceilings, output-token ceilings, tool-call ceilings, and cumulative session budget ceilings so cost abuse cannot evade control by shifting from one resource dimension to another.",
+"Contain each high-risk agent action before side effects occur by blocking it, forcing a safer re-plan, deferring to an approved route, or requiring human approval.",
 "Escalate from soft throttling to hard containment when budget exhaustion is paired with suspicious signals such as recursive tool loops, repeated retries, anomalous latency growth, or high-confidence abuse detections."
 ],
 "toolsOpenSource": [
@@ -30430,23 +30681,22 @@
 "SIEM/SOAR platforms (Splunk SOAR, Palo Alto XSOAR, IBM QRadar SOAR)",
 "WAFs with advanced rate limiting"
 ],
-"contentHash": "2d7629b1687bc313",
+"contentHash": "de66636bc6d51417",
 "keywords": [
-"quarantine",
-"rate limiting",
-"throttling",
-"circuit breaker",
-"safe mode degradation",
-"soar click-to-quarantine",
-"dynamic rate limiting",
+"per-action containment",
+"high-risk action quarantine",
+"pre-dispatch action gate",
+"block resample defer",
+"fail-closed containment",
+"human approval escalation",
 "session quarantine",
 "api key quarantine",
+"dynamic rate limiting",
 "budget-triggered throttling",
-"token ceiling",
 "tool-call ceiling",
-"hallucination circuit breaker",
-"soft throttling",
-"hard containment"
+"safe mode degradation",
+"hard containment",
+"side-effect prevention"
 ],
 "subTechniques": [],
 "url": "https://aidefend.net"
@@ -31624,6 +31874,7 @@
 "Define and version-control a formal Kill-Switch Activation SOP.",
 "Develop a controlled post-halt restart and verification checklist (cold start procedure).",
 "Document and govern the kill-switch within Human-in-the-Loop (HITL) control mapping (AID-M-006).",
+"Run recursive shutdown readiness drills that prove the kill-switch reaches the root agent, subagents, delegated jobs, queued tool calls, session tokens, background workers, scheduled tasks, and external callbacks.",
 "Enforce global/tenant halt flags at every inference request path and agent loop (fail-closed)."
 ],
 "toolsOpenSource": [
@@ -31639,23 +31890,22 @@
 "SentinelOne",
 "CrowdStrike Falcon"
 ],
-"contentHash": "c2bbd5b29f169b83",
+"contentHash": "90fd7fdf3a922439",
 "keywords": [
-"kill-switch",
-"emergency halt",
-"ai system halt",
-"circuit breaker",
-"watchdog thread",
-"mfa-protected override",
-"manual override",
-"automated safety monitor",
-"fail-closed halt flag",
-"tenant halt flag",
-"red button",
+"recursive shutdown drill",
+"kill-switch coverage",
+"delegated job halt",
+"queued tool-call purge",
+"session token revocation",
+"background worker stop",
+"scheduled task disablement",
+"external callback disablement",
+"time-to-shutdown metric",
+"emergency halt flag",
+"fail-closed halt gate",
 "rogue agent termination",
-"cold start procedure",
-"kill-switch sop",
-"last-resort containment"
+"shutdown readiness evidence",
+"global tenant halt"
 ],
 "subTechniques": [],
 "url": "https://aidefend.net"

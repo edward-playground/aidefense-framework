@@ -2961,22 +2961,22 @@
     ]
   },
   "AID-H-032.002": {
-    "contentHash": "636bbebc0c5189c9",
+    "contentHash": "d754e8d210fc6450",
     "keywords": [
       "static admission gate",
+      "ai coding-agent sabotage",
+      "test weakening detection",
+      "ci security bypass detection",
+      "benchmark manipulation detection",
+      "backdoor pattern scanning",
+      "permission expansion scan",
+      "deployment approval bypass",
       "provenance-aware static scan",
-      "dependency hallucination detection",
-      "typosquat package detection",
       "privileged path scanning",
-      "secrets exposure detection",
-      "iac policy scanning",
       "generated artifact classification",
-      "gitleaks secret scan",
-      "trivy vulnerability scan",
-      "syft grype sbom",
-      "conftest policy",
       "fail-closed merge gate",
-      "insecure default detection"
+      "semgrep sabotage rules",
+      "security review escalation"
     ]
   },
   "AID-H-032.003": {
@@ -3759,22 +3759,22 @@
     ]
   },
   "AID-D-010": {
-    "contentHash": "d31840ac43ed43cb",
+    "contentHash": "d21e666d6e413522",
     "keywords": [
       "goal integrity monitoring",
+      "rationale action consistency",
+      "observable plan comparison",
+      "tool-call consistency check",
+      "approved goal alignment",
       "goal deviation detection",
-      "objective drift detection",
-      "agent goal baselining",
-      "goal policy verification",
-      "goal state monitoring",
-      "intent deviation alerting",
-      "goal invariant check",
-      "mission drift detection",
+      "observable telemetry anomaly",
+      "plan-to-action scoring",
+      "hidden cot exclusion",
+      "chain-of-thought non-boundary",
+      "high-risk action signal",
       "agent objective audit",
-      "goal reasoning trace analysis",
-      "goal misalignment detection",
-      "planning trajectory audit",
-      "goal consistency check"
+      "mission drift detection",
+      "consistency telemetry event"
     ]
   },
   "AID-D-011": {
@@ -4314,23 +4314,22 @@
     ]
   },
   "AID-I-003": {
-    "contentHash": "2d7629b1687bc313",
+    "contentHash": "de66636bc6d51417",
     "keywords": [
-      "quarantine",
-      "rate limiting",
-      "throttling",
-      "circuit breaker",
-      "safe mode degradation",
-      "soar click-to-quarantine",
-      "dynamic rate limiting",
+      "per-action containment",
+      "high-risk action quarantine",
+      "pre-dispatch action gate",
+      "block resample defer",
+      "fail-closed containment",
+      "human approval escalation",
       "session quarantine",
       "api key quarantine",
+      "dynamic rate limiting",
       "budget-triggered throttling",
-      "token ceiling",
       "tool-call ceiling",
-      "hallucination circuit breaker",
-      "soft throttling",
-      "hard containment"
+      "safe mode degradation",
+      "hard containment",
+      "side-effect prevention"
     ]
   },
   "AID-I-004": {
@@ -4486,23 +4485,22 @@
     ]
   },
   "AID-I-005": {
-    "contentHash": "c2bbd5b29f169b83",
+    "contentHash": "90fd7fdf3a922439",
     "keywords": [
-      "kill-switch",
-      "emergency halt",
-      "ai system halt",
-      "circuit breaker",
-      "watchdog thread",
-      "mfa-protected override",
-      "manual override",
-      "automated safety monitor",
-      "fail-closed halt flag",
-      "tenant halt flag",
-      "red button",
+      "recursive shutdown drill",
+      "kill-switch coverage",
+      "delegated job halt",
+      "queued tool-call purge",
+      "session token revocation",
+      "background worker stop",
+      "scheduled task disablement",
+      "external callback disablement",
+      "time-to-shutdown metric",
+      "emergency halt flag",
+      "fail-closed halt gate",
       "rogue agent termination",
-      "cold start procedure",
-      "kill-switch sop",
-      "last-resort containment"
+      "shutdown readiness evidence",
+      "global tenant halt"
     ]
   },
   "AID-I-006": {
@@ -5639,6 +5637,44 @@
       "anti-replay nonce",
       "tool disablement",
       "budget rejection events"
+    ]
+  },
+  "AID-M-009.006": {
+    "contentHash": "665673f5de3642e4",
+    "keywords": [
+      "capability tier binding",
+      "control profile matrix",
+      "autonomy authority blast radius",
+      "assurance evidence gate",
+      "fail-closed promotion",
+      "agent control profile",
+      "kill-switch evidence",
+      "rollback evidence",
+      "high-risk action gate",
+      "monitoring coverage evidence",
+      "tiered agent governance",
+      "promotion evidence package",
+      "least privilege tiering",
+      "control inventory evidence"
+    ]
+  },
+  "AID-H-022.004": {
+    "contentHash": "0b5a793b349463f0",
+    "keywords": [
+      "control-plane isolation",
+      "oversight surface isolation",
+      "agent runtime deny policy",
+      "oversight retrieval silo",
+      "policy bundle access control",
+      "kill-switch administration boundary",
+      "detector threshold secrecy",
+      "audit sink protection",
+      "sandbox profile protection",
+      "agent self-management denial",
+      "control-plane identity separation",
+      "oversight internal corpus",
+      "retrieval-time access gate",
+      "canary definition isolation"
     ]
   }
 }

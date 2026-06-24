@@ -14122,6 +14122,224 @@ print("code-doc drift gate passed")</code></pre>
             },
           ],
         },
+        {
+          id: "AID-H-022.004",
+          name: "Control-Plane & Oversight-Surface Isolation",
+          pillar: ["app", "infra"],
+          phase: ["building", "operation"],
+          description:
+            "Separate the agent runtime from the control plane that supervises it. A production agent must not be able to read, modify, disable, or bypass its own monitoring rules, policy bundles, sandbox settings, kill-switch controls, audit streams, canary definitions, or oversight thresholds.<br/><br/><strong>Scope boundary:</strong> <code>AID-H-022.002</code> verifies that approved configuration artifacts are signed and untampered. This sub-technique enforces a different boundary: even a correctly signed agent configuration must not grant the agent access to the oversight surfaces that decide whether the agent is safe. Put simply, the subject being supervised should not administer its own supervision.",
+          toolsOpenSource: [
+            "Open Policy Agent (OPA)",
+            "Kubernetes RBAC",
+            "SPIFFE/SPIRE",
+            "OpenTelemetry",
+            "Git"
+          ],
+          toolsCommercial: [
+            "HashiCorp Vault",
+            "AWS IAM",
+            "Azure RBAC",
+            "Google Cloud IAM",
+            "Splunk",
+            "Datadog"
+          ],
+          defendsAgainst: [
+            {
+              framework: "MITRE ATLAS",
+              items: [
+                "AML.T0081 Modify AI Agent Configuration",
+                "AML.T0083 Credentials from AI Agent Configuration",
+                "AML.T0084 Discover AI Agent Configuration"
+              ],
+            },
+            {
+              framework: "MAESTRO",
+              items: [
+                "Agent Goal Manipulation (L7)",
+                "Agent Identity Attack (L7)",
+                "Compromised Agents (L7)",
+                "Evasion of Security AI Agents (L6)"
+              ],
+            },
+            {
+              framework: "OWASP LLM Top 10 2025",
+              items: [
+                "LLM06:2025 Excessive Agency",
+                "LLM07:2025 System Prompt Leakage"
+              ],
+            },
+            {
+              framework: "OWASP ML Top 10 2023",
+              items: [
+                "N/A"
+              ],
+            },
+            {
+              framework: "OWASP Agentic AI Top 10 2026",
+              items: [
+                "ASI01:2026 Agent Goal Hijack",
+                "ASI03:2026 Identity and Privilege Abuse",
+                "ASI10:2026 Rogue Agents"
+              ],
+            },
+            {
+              framework: "NIST Adversarial Machine Learning 2025",
+              items: [
+                "NISTAML.035 Prompt Extraction",
+                "NISTAML.039 Compromising connected resources"
+              ],
+            },
+            {
+              framework: "Cisco Integrated AI Security and Safety Framework",
+              items: [
+                "AITech-5.2 Configuration Persistence",
+                "AITech-14.1 Unauthorized Access",
+                "AITech-14.2 Abuse of Delegated Authority",
+                "AITech-1.3 Goal Manipulation"
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "MDT: Model Deployment Tampering",
+                "PIJ: Prompt Injection",
+                "RA: Rogue Actions",
+                "IIC: Insecure Integrated Component"
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Agents - Core 13.6: Intent Breaking & Goal Manipulation",
+                "Agents - Core 13.13: Rogue Agents in Multi-Agent Systems",
+                "Agents - Tools MCP Server 13.20: Insecure Server Configuration",
+                "Agents - Tools MCP Client 13.27: Insecure Credential Storage"
+              ],
+            },
+          ],
+          implementationGuidance: [
+            {
+              implementation:
+                "Deny agent runtime identities from reading or changing their own monitoring, sandbox, policy, kill-switch, and audit control-plane resources.",
+              howTo: `<h5>Concept</h5>
+<p>Control-plane isolation is an access-control boundary, not a convention. The runtime identity used by the agent should have only the permissions required to perform approved business work. It should not be able to list policy bundles, read detector thresholds, update sandbox settings, disable kill-switch flags, alter audit sinks, or fetch canary definitions. Those resources should be reachable only by trusted control-plane identities such as deployment controllers, policy services, SOC automation, or break-glass operators.</p>
+<h5>Step 1: Separate runtime and control-plane identities</h5>
+<pre><code># File: identity/agent_identities.yaml
+identities:
+  agent_runtime:
+    spiffe_id: spiffe://corp.example/agents/support-agent
+    allowed_resource_classes:
+      - business_api.read
+      - ticket.create
+  ai_control_plane:
+    spiffe_id: spiffe://corp.example/platform/ai-control-plane
+    allowed_resource_classes:
+      - policy_bundle.read
+      - policy_bundle.write
+      - monitor_rule.write
+      - kill_switch.write
+      - audit_sink.admin</code></pre>
+<h5>Step 2: Enforce a deny policy at the control-plane API</h5>
+<pre><code class="language-rego"># File: policy/control_plane_access.rego
+package aidefend.control_plane
+
+import rego.v1
+
+default allow := false
+
+control_plane_resources := {
+  "policy_bundle",
+  "monitor_rule",
+  "sandbox_profile",
+  "kill_switch",
+  "audit_sink",
+  "canary_definition",
+  "oversight_threshold"
+}
+
+allow if {
+  input.principal.type == "control_plane_service"
+  input.resource.type in control_plane_resources
+  input.action in {"read", "write", "approve", "disable", "rollback"}
+}
+
+allow if {
+  input.principal.type == "break_glass_operator"
+  input.mfa_recent == true
+  input.ticket_id != ""
+  input.resource.type in control_plane_resources
+}
+
+deny contains msg if {
+  input.principal.type == "agent_runtime"
+  input.resource.type in control_plane_resources
+  msg := sprintf("agent runtime %v cannot access control-plane resource %v", [input.principal.id, input.resource.id])
+}</code></pre>
+<h5>Step 3: Keep Kubernetes and cloud IAM aligned with the same boundary</h5>
+<p>Do not mount policy bundles, detector configs, or kill-switch credentials into the agent runtime pod. In Kubernetes, the agent service account should not have verbs over namespaces that store monitoring, policy, or incident-response resources. In cloud IAM, the agent role should not read secrets, KMS keys, queues, or feature flags that can disable its own oversight.</p>
+<h5>Step 4: Log denied attempts as security events</h5>
+<p>Any agent attempt to access a control-plane resource should emit a high-signal finding with principal, workload identity, resource type, action, policy version, and request ID. Feed this signal to <code>AID-D-011</code> or <code>AID-D-016</code> for rogue-agent investigation.</p>
+<p><strong>Action:</strong> Put the deny policy in front of the control-plane API and mirror the same separation in Kubernetes RBAC, cloud IAM, and secret management. A production agent should be unable to administer, weaken, or inspect the controls that supervise it.</p>`,
+            },
+            {
+              implementation:
+                "Silo oversight rules, thresholds, canary definitions, and detector internals from agent-readable retrieval corpora.",
+              howTo: `<h5>Concept</h5>
+<p>Many agents can retrieve operational documents, runbooks, tool descriptions, or policy snippets. That does not mean they should retrieve their own oversight internals. If an agent can read exact detector thresholds, canary task definitions, sandbox escape tests, or kill-switch trigger logic, an attacker who hijacks the agent gains a map for evasion. Keep oversight material in a separate corpus that is readable by monitors and authorized responders, not by the agent being monitored.</p>
+<h5>Step 1: Mark oversight-only documents in the corpus manifest</h5>
+<pre><code class="language-yaml"># File: context/oversight-corpus-manifest.yaml
+documents:
+  - doc_id: DETECTOR-GOAL-THRESHOLDS
+    path: oversight/goal-monitor-thresholds.md
+    classification: oversight_internal
+    readable_by:
+      - control_plane_service
+      - security_operator
+  - doc_id: CANARY-TASK-DEFINITIONS
+    path: oversight/canary-tasks.md
+    classification: oversight_internal
+    readable_by:
+      - control_plane_service
+      - security_operator</code></pre>
+<h5>Step 2: Enforce retrieval-time access decisions</h5>
+<pre><code class="language-python"># File: retrieval/oversight_silo_gate.py
+from __future__ import annotations
+
+
+OVERSIGHT_CLASSES = {"oversight_internal", "canary_definition", "detector_threshold"}
+
+
+class RetrievalDenied(RuntimeError):
+    pass
+
+
+def assert_document_readable(principal: dict, document_meta: dict) -> None:
+    classification = document_meta.get("classification")
+    if classification in OVERSIGHT_CLASSES and principal.get("type") == "agent_runtime":
+        raise RetrievalDenied(
+            f"agent runtime cannot retrieve oversight-only document {document_meta.get('doc_id')}"
+        )
+
+    allowed = set(document_meta.get("readable_by", []))
+    if allowed and principal.get("type") not in allowed:
+        raise RetrievalDenied(
+            f"principal type {principal.get('type')} is not authorized for {document_meta.get('doc_id')}"
+        )
+
+
+def filter_retrieval_results(principal: dict, candidates: list[dict]) -> list[dict]:
+    allowed_docs: list[dict] = []
+    for candidate in candidates:
+        assert_document_readable(principal, candidate["metadata"])
+        allowed_docs.append(candidate)
+    return allowed_docs</code></pre>
+<h5>Step 3: Test that the agent cannot retrieve oversight internals</h5>
+<p>Add a regression case that asks the agent for detector thresholds, canary prompts, sandbox bypass tests, or the emergency halt trigger policy. The correct result is a denied retrieval event, not a paraphrased disclosure. Store the denial event as evidence for this control.</p>
+<p><strong>Action:</strong> Split agent-operational context from oversight-internal context, enforce the split inside retrieval middleware, and continuously test that runtime agents cannot retrieve their own monitoring logic or evasion-relevant control details.</p>`,
+            },
+          ],
+        },
       ],
     },
     {
@@ -19077,6 +19295,131 @@ def emit_sampling_event(
             {
               "implementation": "Apply provenance-aware static policy gates to AI-generated changes and fail closed when high-risk patterns or unapproved dependencies are detected.",
               "howTo": "<h5>Concept:</h5><p>Generated changes deserve stricter static review because they can introduce plausible-looking but unsafe code, insecure infrastructure definitions, or hallucinated dependencies at machine speed. The gate should combine conventional SAST with generated-artifact-specific checks such as privilege-path escalation, dependency existence verification, and repository policy enforcement.</p><h5>Step 1: Classify the change</h5><p>Use provenance metadata from <strong>AID-H-032.001</strong> to decide whether the artifact is AI-authored and whether it touches sensitive paths such as deployment, identity, secrets, or destructive workflows.</p><h5>Step 2: Run layered static checks</h5><pre><code># file: ci/generated_artifact_gate.sh\nset -euo pipefail\n\npython ci/check_generated_change.py\nsemgrep --config p/security-audit src/\ngitleaks detect --source . --no-git\ntrivy config infra/\npython ci/verify_dependencies_exist.py requirements.txt package-lock.json\npython ci/check_sensitive_paths.py\n</code></pre><h5>Step 3: Escalate on privileged file classes</h5><pre><code># file: ci/check_sensitive_paths.py\nfrom pathlib import Path\n\nSENSITIVE = [\n    'infra/',\n    '.github/workflows/',\n    'deploy/',\n    'terraform/',\n    'helm/',\n    'auth/',\n    'secrets/'\n]\nchanged = Path('changed_files.txt').read_text().splitlines()\nif any(any(f.startswith(prefix) for prefix in SENSITIVE) for f in changed):\n    print('High-risk file class changed; require stricter policy tier.')\n</code></pre><p><strong>Action:</strong> do not treat static scanning as a generic best-effort review. If the artifact is AI-generated and the check set cannot be completed, fail closed and block promotion.</p>"
+            },
+            {
+              "implementation": "Add static gates for AI coding-agent sabotage patterns that weaken tests, CI, security checks, benchmarks, deployment approval, or privileged code paths.",
+              "howTo": `<h5>Concept:</h5><p>AI coding agents can accidentally or maliciously produce changes that look like normal engineering work while reducing the organization's ability to detect or stop unsafe behavior. Static admission should flag sabotage-shaped diffs: deleting tests without replacement, disabling CI jobs, relaxing security policies, changing benchmark thresholds, adding backdoor-like access paths, or expanding deploy / IAM permissions. This is a P1 hardening gate for generated code promotion; it complements dynamic validation in <code>AID-H-032.003</code> and does not replace human review.</p><h5>Step 1: Define sabotage-sensitive file classes and diff patterns</h5><pre><code class="language-yaml"># File: policy/coding_agent_sabotage_patterns.yaml
+sensitive_paths:
+  - ".github/workflows/"
+  - ".gitlab-ci.yml"
+  - "security/"
+  - "policy/"
+  - "tests/"
+  - "test/"
+  - "benchmarks/"
+  - "infra/"
+  - "deploy/"
+  - "terraform/"
+  - "helm/"
+  - "auth/"
+
+high_risk_diff_terms:
+  test_weakening:
+    - "skip"
+    - "xfail"
+    - "todo"
+    - "only"
+    - "threshold"
+  ci_security_weakening:
+    - "continue-on-error: true"
+    - "allow_failure: true"
+    - "--no-verify"
+    - "ignore-failures"
+  permission_expansion:
+    - "AdministratorAccess"
+    - "Action: \"*\""
+    - "Resource: \"*\""
+    - "privileged: true"
+    - "allowPrivilegeEscalation: true"
+  deployment_bypass:
+    - "auto_approve"
+    - "-auto-approve"
+    - "required_approving_review_count: 0"</code></pre><h5>Step 2: Scan generated diffs for sabotage-shaped changes</h5><pre><code class="language-python"># File: ci/check_coding_agent_sabotage.py
+from __future__ import annotations
+
+import subprocess
+from pathlib import Path
+
+import yaml
+
+
+POLICY = yaml.safe_load(Path("policy/coding_agent_sabotage_patterns.yaml").read_text(encoding="utf-8"))
+
+
+def changed_files() -> list[str]:
+    output = subprocess.check_output(["git", "diff", "--name-only", "origin/main...HEAD"], text=True)
+    return [line.strip() for line in output.splitlines() if line.strip()]
+
+
+def diff_for(path: str) -> str:
+    return subprocess.check_output(["git", "diff", "origin/main...HEAD", "--", path], text=True, errors="replace")
+
+
+def touches_sensitive_path(path: str) -> bool:
+    return any(path.startswith(prefix) for prefix in POLICY["sensitive_paths"])
+
+
+def removed_test_lines(diff_text: str) -> int:
+    return sum(
+        1 for line in diff_text.splitlines()
+        if line.startswith("-") and ("assert " in line or "expect(" in line or "pytest" in line)
+    )
+
+
+def term_hits(diff_text: str) -> list[str]:
+    lowered = diff_text.lower()
+    hits: list[str] = []
+    for category, terms in POLICY["high_risk_diff_terms"].items():
+        for term in terms:
+            if term.lower() in lowered:
+                hits.append(f"{category}:{term}")
+    return hits
+
+
+def main() -> None:
+    findings: list[dict] = []
+    for path in changed_files():
+        if not touches_sensitive_path(path):
+            continue
+        diff_text = diff_for(path)
+        hits = term_hits(diff_text)
+        removed_assertions = removed_test_lines(diff_text)
+        if hits or removed_assertions >= 3:
+            findings.append({
+                "path": path,
+                "term_hits": hits,
+                "removed_test_assertions": removed_assertions,
+            })
+
+    if findings:
+        for finding in findings:
+            print(f"[coding-agent-sabotage] {finding}")
+        raise SystemExit("AI-generated change touches sabotage-sensitive patterns; require security review")
+
+
+if __name__ == "__main__":
+    main()</code></pre><h5>Step 3: Pair pattern scanning with Semgrep or CodeQL rules</h5><pre><code class="language-yaml"># File: semgrep/coding_agent_sabotage.yaml
+rules:
+  - id: hardcoded-admin-bypass
+    message: "Potential admin bypass introduced by generated code"
+    severity: ERROR
+    languages: [python]
+    patterns:
+      - pattern-either:
+          - pattern: |
+              if $USER == "admin":
+                  return True
+          - pattern: |
+              if $TOKEN == "...":
+                  return True
+
+  - id: dangerous-shell-execution
+    message: "Generated code added shell execution; require security review"
+    severity: ERROR
+    languages: [python]
+    pattern-either:
+      - pattern: subprocess.call($CMD, shell=True)
+      - pattern: subprocess.run($CMD, shell=True)</code></pre><h5>Step 4: Enforce as a P1 promotion gate</h5><p>Run this gate only when provenance labels show the change is AI-generated or AI-assisted, or when a generated change touches sensitive paths. A hit should block auto-merge and require named security approval, not automatically prove malice. Store the findings with the generated-change provenance bundle from <code>AID-H-032.001</code>.</p><p><strong>Action:</strong> Add sabotage-pattern scanning to the AI-generated artifact static gate. Treat test weakening, CI/security bypass, benchmark manipulation, backdoor-like code, and permission expansion as review-blocking signals for generated code.</p>`
             }
           ]
         },
