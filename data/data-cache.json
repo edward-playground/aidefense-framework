@@ -5676,5 +5676,64 @@
       "retrieval-time access gate",
       "canary definition isolation"
     ]
+  },
+  "AID-H-036": {
+    "contentHash": "25bcc7e72478411e",
+    "keywords": [
+      "defensive agent hardening",
+      "response automation guardrails",
+      "agentic soar control plane",
+      "defensive action policy gate",
+      "signed decision records",
+      "append-only defensive audit",
+      "tier-based response approval",
+      "rollback path enforcement",
+      "workload identity attestation",
+      "runtime integrity verification",
+      "read-only defensive agents",
+      "security evidence validation",
+      "defensive automation blast radius",
+      "containment approval gating",
+      "security agent data poisoning"
+    ]
+  },
+  "AID-D-005.008": {
+    "contentHash": "0c9b9c6b82b27b88",
+    "keywords": [
+      "read-only alert triage",
+      "agentic alert investigation",
+      "front-of-queue triage",
+      "structured triage disposition",
+      "siem query allowlist",
+      "read-only privilege attestation",
+      "shadow mode rollout",
+      "human agreement rate",
+      "missed-critical rate",
+      "progressive rule expansion",
+      "triage evidence enrichment",
+      "no containment authority",
+      "alert queue automation",
+      "bounded investigation tools",
+      "reviewer comparison window"
+    ]
+  },
+  "AID-D-017": {
+    "contentHash": "6e05b5915de81ee4",
+    "keywords": [
+      "detection slo measurement",
+      "alert coverage measurement",
+      "dwell time tracking",
+      "human awareness latency",
+      "triage time measurement",
+      "investigation coverage ratio",
+      "alert lifecycle schema",
+      "coverage evidence package",
+      "p95 dwell time",
+      "assurance metric gate",
+      "investigated alert ratio",
+      "detection speed assurance",
+      "operationalized controls evidence",
+      "alert queue coverage"
+    ]
   }
 }

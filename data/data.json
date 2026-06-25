@@ -1,8 +1,8 @@
 {
 "version": {
 "schemaVersion": "2.0",
-"dataVersion": "2026.06.24",
-"generatedAt": "2026-06-24T22:39:03.883Z",
+"dataVersion": "2026.06.25",
+"generatedAt": "2026-06-25T23:29:22.097Z",
 "source": "bundled",
 "keywordStructure": "flat"
 },
@@ -22196,6 +22196,152 @@
 }
 ],
 "url": "https://aidefend.net"
+},
+{
+"id": "AID-H-036",
+"name": "Defensive-Agent & Response-Automation Hardening",
+"description": "Apply Zero Trust controls to defensive AI agents, Agentic SOAR workflows, triage assistants, cloud-remediation agents, auto-containment jobs, and credential-revocation automation. These systems have unusually high blast radius because a compromised defensive agent can disable accounts, quarantine workloads, block network paths, modify incident state, rotate secrets, notify external parties, or suppress evidence.<br/><br/><strong>Control intent:</strong> defensive agents should default to read-only investigation, use workload identity and runtime attestation, require policy-gated escalation for write or containment actions, produce signed decision records, consume only validated evidence bundles, and preserve rollback paths for high-impact actions.<br/><br/><strong>Scope boundary:</strong> AID-H-022.004 protects an oversight surface from the agent being supervised. AID-H-036 protects the defensive agent and response-control plane itself. AID-D-005.008 covers read-only alert triage, AID-D-005.002 handles detection-side SOAR handoff, AID-D-008 covers broader AI analytics, AID-I-005 owns emergency halt primitives, and AID-E-001.003 owns credential/session eviction. This technique governs whether a defensive agent is allowed to invoke those response capabilities, not how the containment or eviction action itself works.",
+"pillar": [
+"infra",
+"app"
+],
+"phase": [
+"building",
+"validation",
+"operation",
+"response"
+],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0053 AI Agent Tool Invocation",
+"AML.T0101 Data Destruction via AI Agent Tool Invocation",
+"AML.T0081 Modify AI Agent Configuration",
+"AML.T0083 Credentials from AI Agent Configuration",
+"AML.T0055 Unsecured Credentials",
+"AML.T0099 AI Agent Tool Data Poisoning",
+"AML.T0108 AI Agent"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Compromised Security AI Agents (L6)",
+"Security Agent Data Poisoning (L6)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2025",
+"items": [
+"LLM06:2025 Excessive Agency",
+"LLM03:2025 Supply Chain",
+"LLM01:2025 Prompt Injection"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"ML06:2023 AI Supply Chain Attacks",
+"ML02:2023 Data Poisoning Attack"
+]
+},
+{
+"framework": "OWASP Agentic AI Top 10 2026",
+"items": [
+"ASI03:2026 Identity and Privilege Abuse",
+"ASI02:2026 Tool Misuse and Exploitation",
+"ASI10:2026 Rogue Agents",
+"ASI08:2026 Cascading Failures",
+"ASI04:2026 Agentic Supply Chain Vulnerabilities"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"NISTAML.039 Compromising connected resources",
+"NISTAML.018 Prompt Injection",
+"NISTAML.013 Data Poisoning"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-14.1 Unauthorized Access",
+"AISubtech-14.1.1 Credential Theft",
+"AISubtech-14.1.2 Insufficient Access Controls",
+"AITech-14.2 Abuse of Delegated Authority",
+"AITech-12.1 Tool Exploitation",
+"AITech-9.3 Dependency / Plugin Compromise",
+"AITech-5.2 Configuration Persistence"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"RA: Rogue Actions",
+"IIC: Insecure Integrated Component",
+"MDT: Model Deployment Tampering",
+"DP: Data Poisoning",
+"PIJ: Prompt Injection"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Agents - Core 13.2: Tool Misuse",
+"Agents - Core 13.3: Privilege Compromise",
+"Agents - Core 13.13: Rogue Agents in Multi-Agent Systems",
+"Agents - Core 13.8: Repudiation & Untraceability",
+"Platform 12.4: Unauthorized privileged access",
+"Platform 12.3: Lack of incident response"
+]
+}
+],
+"implementationGuidance": [
+"Default defensive agents to read-only investigation and require policy-gated approval, evidence, rollback, and signed decision verification before any write or containment action.",
+"Require a signed defensive-action decision record before executing high-impact response actions.",
+"Write signed decision records, policy-gate decisions, and executor outcomes to append-only audit storage controlled outside the defensive agent's identity.",
+"Verify defensive-agent runtime integrity with signed images, workload identity, restricted runtime policy, and immutable deployment inputs.",
+"Validate evidence bundles before a defensive agent may recommend or execute a high-impact response, so poisoned security-agent data cannot drive containment."
+],
+"toolsOpenSource": [
+"Open Policy Agent (OPA)",
+"SPIFFE/SPIRE",
+"Kubernetes RBAC",
+"Sigstore Cosign",
+"Kyverno",
+"OpenTelemetry",
+"Pydantic"
+],
+"toolsCommercial": [
+"Palo Alto Cortex XSOAR",
+"Splunk SOAR",
+"ServiceNow Security Operations",
+"Microsoft Sentinel",
+"HashiCorp Vault",
+"Datadog"
+],
+"contentHash": "25bcc7e72478411e",
+"keywords": [
+"defensive agent hardening",
+"response automation guardrails",
+"agentic soar control plane",
+"defensive action policy gate",
+"signed decision records",
+"append-only defensive audit",
+"tier-based response approval",
+"rollback path enforcement",
+"workload identity attestation",
+"runtime integrity verification",
+"read-only defensive agents",
+"security evidence validation",
+"defensive automation blast radius",
+"containment approval gating",
+"security agent data poisoning"
+],
+"subTechniques": [],
+"url": "https://aidefend.net"
 }
 ]
 },
@@ -26582,6 +26728,139 @@
 "llm cost monitoring",
 "tool invocation rate monitoring"
 ]
+},
+{
+"id": "AID-D-005.008",
+"name": "Read-only Agentic Alert Triage",
+"description": "Place a read-only triage agent at the front of the AI-security alert queue to perform bounded first-pass investigation before a human reviewer sees the alert. The agent may query allowlisted SIEM, EDR, cloud, identity, and agent-session logs, but it cannot write tickets as authoritative decisions, suppress rules, change severity, revoke credentials, quarantine workloads, or execute containment. Its output is a structured disposition with evidence, missing context, and a recommended human action.<br/><br/><strong>Rollout pattern:</strong> start with one noisy detection rule, run in shadow mode for a fixed review window, compare against human reviewers, and expand only when agreement, missed-critical, and time-saved thresholds are met.<br/><br/><strong>Scope boundary:</strong> this is a safe investigation and evidence-preparation pattern. AID-D-005.002 publishes normalized alerts to SOAR, AID-D-005.003 covers human-driven threat hunting, AID-D-008 covers broader AI analytics, AID-M-006 and AID-D-015 own human approval and HITL escalation patterns, and Isolate/Evict techniques own containment and credential revocation.",
+"pillar": [
+"infra",
+"app"
+],
+"phase": [
+"operation"
+],
+"implementationGuidance": [
+"Provision the triage agent with read-only identities and a query allowlist; do not give it write, suppression, ticket-closure, containment, or credential-management privileges.",
+"Run scheduled least-privilege attestation for the production triage identity and fail the gate if it can perform write, close, revoke, quarantine, or suppression actions.",
+"Require every triage result to satisfy a fixed disposition schema that separates evidence from recommendations and proves no containment was performed.",
+"Roll out one noisy rule at a time in shadow mode and require agreement, missed-critical, and time-saved gates before expanding to another rule family."
+],
+"toolsOpenSource": [
+"OpenSearch",
+"Wazuh",
+"TheHive",
+"LangGraph",
+"LiteLLM",
+"Pydantic",
+"OpenTelemetry"
+],
+"toolsCommercial": [
+"Splunk Enterprise Security",
+"Microsoft Sentinel",
+"Google Security Operations",
+"Palo Alto Cortex XSOAR",
+"ServiceNow Security Operations",
+"Datadog Cloud SIEM"
+],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0051 LLM Prompt Injection",
+"AML.T0053 AI Agent Tool Invocation",
+"AML.T0034 Cost Harvesting",
+"AML.T0029 Denial of AI Service",
+"AML.T0086 Exfiltration via AI Agent Tool Invocation"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Evasion of Detection (L5)",
+"Compromised Observability Tools (L5)",
+"Poisoning Observability Data (L5)",
+"Agent Tool Misuse (L7)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2025",
+"items": [
+"LLM01:2025 Prompt Injection",
+"LLM06:2025 Excessive Agency",
+"LLM10:2025 Unbounded Consumption"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"ML01:2023 Input Manipulation Attack (triage investigates alerts from adversarial inputs and abnormal inference behavior)"
+]
+},
+{
+"framework": "OWASP Agentic AI Top 10 2026",
+"items": [
+"ASI02:2026 Tool Misuse and Exploitation",
+"ASI08:2026 Cascading Failures",
+"ASI10:2026 Rogue Agents",
+"ASI01:2026 Agent Goal Hijack"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"NISTAML.018 Prompt Injection",
+"NISTAML.014 Energy-latency",
+"NISTAML.039 Compromising connected resources"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-1.1 Direct Prompt Injection",
+"AITech-12.1 Tool Exploitation",
+"AITech-13.1 Disruption of Availability",
+"AITech-13.2 Cost Harvesting / Repurposing",
+"AITech-14.1 Unauthorized Access"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"PIJ: Prompt Injection",
+"RA: Rogue Actions",
+"DMS: Denial of ML Service",
+"IIC: Insecure Integrated Component"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Platform 12.3: Lack of incident response",
+"Agents - Core 13.2: Tool Misuse",
+"Agents - Core 13.13: Rogue Agents in Multi-Agent Systems",
+"Model Serving - Inference requests 9.7: Denial of Service (DoS)"
+]
+}
+],
+"contentHash": "0c9b9c6b82b27b88",
+"keywords": [
+"read-only alert triage",
+"agentic alert investigation",
+"front-of-queue triage",
+"structured triage disposition",
+"siem query allowlist",
+"read-only privilege attestation",
+"shadow mode rollout",
+"human agreement rate",
+"missed-critical rate",
+"progressive rule expansion",
+"triage evidence enrichment",
+"no containment authority",
+"alert queue automation",
+"bounded investigation tools",
+"reviewer comparison window"
+]
 }
 ],
 "url": "https://aidefend.net"
@@ -29405,6 +29684,140 @@
 ]
 }
 ],
+"url": "https://aidefend.net"
+},
+{
+"id": "AID-D-017",
+"name": "AI Detection SLO & Alert-Coverage Measurement",
+"description": "Establish measurable detection service-level objectives for AI and agentic systems by tracking how quickly anomalies become human-visible and how much of the alert queue is actually investigated. This technique treats dwell time and alert-investigation coverage as first-class assurance evidence across agent sessions, tool calls, memory writes, retrieval events, inference gateways, and high-risk actions.<br/><br/><strong>Primary metrics:</strong> <code>dwell_time</code> measures anomaly observed to human acknowledged; <code>triage_time</code> measures alert created to triage completed; <code>coverage_ratio</code> measures investigated alerts divided by total eligible alerts.<br/><br/><strong>Scope boundary:</strong> AID-D-005 owns event collection, SIEM integration, handoff, and alert-specific detections. AID-D-008 owns analytics and ranking. AID-M-005.002 covers posture SLOs. This technique owns detection-speed and investigation-coverage measurement as operational assurance evidence.",
+"pillar": [
+"infra",
+"app"
+],
+"phase": [
+"operation",
+"validation",
+"improvement"
+],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0051 LLM Prompt Injection",
+"AML.T0053 AI Agent Tool Invocation",
+"AML.T0034 Cost Harvesting",
+"AML.T0029 Denial of AI Service",
+"AML.T0024 Exfiltration via AI Inference API"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Evasion of Detection (L5)",
+"Compromised Observability Tools (L5)",
+"Poisoning Observability Data (L5)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2025",
+"items": [
+"LLM01:2025 Prompt Injection",
+"LLM06:2025 Excessive Agency",
+"LLM10:2025 Unbounded Consumption"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"ML01:2023 Input Manipulation Attack",
+"ML05:2023 Model Theft"
+]
+},
+{
+"framework": "OWASP Agentic AI Top 10 2026",
+"items": [
+"ASI02:2026 Tool Misuse and Exploitation",
+"ASI08:2026 Cascading Failures",
+"ASI10:2026 Rogue Agents"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"NISTAML.018 Prompt Injection",
+"NISTAML.014 Energy-latency",
+"NISTAML.031 Model Extraction",
+"NISTAML.039 Compromising connected resources"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-1.1 Direct Prompt Injection",
+"AITech-10.1 Model Extraction",
+"AITech-12.1 Tool Exploitation",
+"AITech-13.1 Disruption of Availability",
+"AITech-14.1 Unauthorized Access"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"PIJ: Prompt Injection",
+"MXF: Model Exfiltration",
+"DMS: Denial of ML Service",
+"RA: Rogue Actions"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Platform 12.3: Lack of incident response",
+"Model Serving - Inference response 10.1: Lack of audit and monitoring inference quality",
+"Agents - Core 13.8: Repudiation & Untraceability",
+"Agents - Core 13.13: Rogue Agents in Multi-Agent Systems"
+]
+}
+],
+"implementationGuidance": [
+"Emit a required alert-lifecycle event schema for every AI-security anomaly so dwell time and coverage can be measured consistently across agents, tools, memory, and inference systems.",
+"Compute dwell-time, triage-time, and investigation-coverage metrics over fixed windows and publish p50/p95 values for operations and assurance gates.",
+"Emit an assurance evidence package that can gate rollout, promotion to broader automation, or executive reporting."
+],
+"toolsOpenSource": [
+"OpenTelemetry",
+"Prometheus",
+"Grafana",
+"OpenSearch",
+"ClickHouse",
+"Apache Kafka",
+"jsonschema"
+],
+"toolsCommercial": [
+"Splunk Enterprise Security",
+"Microsoft Sentinel",
+"Datadog",
+"Grafana Cloud",
+"ServiceNow Security Operations"
+],
+"contentHash": "6e05b5915de81ee4",
+"keywords": [
+"detection slo measurement",
+"alert coverage measurement",
+"dwell time tracking",
+"human awareness latency",
+"triage time measurement",
+"investigation coverage ratio",
+"alert lifecycle schema",
+"coverage evidence package",
+"p95 dwell time",
+"assurance metric gate",
+"investigated alert ratio",
+"detection speed assurance",
+"operationalized controls evidence",
+"alert queue coverage"
+],
+"subTechniques": [],
 "url": "https://aidefend.net"
 }
 ]

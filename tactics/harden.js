@@ -23243,6 +23243,508 @@ print({"bundle_version": manifest["bundle_version"], "rollout_mode": manifest["r
           ]
         }
       ]
+    },
+    {
+      "id": "AID-H-036",
+      "name": "Defensive-Agent & Response-Automation Hardening",
+      "description": "Apply Zero Trust controls to defensive AI agents, Agentic SOAR workflows, triage assistants, cloud-remediation agents, auto-containment jobs, and credential-revocation automation. These systems have unusually high blast radius because a compromised defensive agent can disable accounts, quarantine workloads, block network paths, modify incident state, rotate secrets, notify external parties, or suppress evidence.<br/><br/><strong>Control intent:</strong> defensive agents should default to read-only investigation, use workload identity and runtime attestation, require policy-gated escalation for write or containment actions, produce signed decision records, consume only validated evidence bundles, and preserve rollback paths for high-impact actions.<br/><br/><strong>Scope boundary:</strong> AID-H-022.004 protects an oversight surface from the agent being supervised. AID-H-036 protects the defensive agent and response-control plane itself. AID-D-005.008 covers read-only alert triage, AID-D-005.002 handles detection-side SOAR handoff, AID-D-008 covers broader AI analytics, AID-I-005 owns emergency halt primitives, and AID-E-001.003 owns credential/session eviction. This technique governs whether a defensive agent is allowed to invoke those response capabilities, not how the containment or eviction action itself works.",
+      "pillar": [
+        "infra",
+        "app"
+      ],
+      "phase": [
+        "building",
+        "validation",
+        "operation",
+        "response"
+      ],
+      "toolsOpenSource": [
+        "Open Policy Agent (OPA)",
+        "SPIFFE/SPIRE",
+        "Kubernetes RBAC",
+        "Sigstore Cosign",
+        "Kyverno",
+        "OpenTelemetry",
+        "Pydantic"
+      ],
+      "toolsCommercial": [
+        "Palo Alto Cortex XSOAR",
+        "Splunk SOAR",
+        "ServiceNow Security Operations",
+        "Microsoft Sentinel",
+        "HashiCorp Vault",
+        "Datadog"
+      ],
+      "defendsAgainst": [
+        {
+          "framework": "MITRE ATLAS",
+          "items": [
+            "AML.T0053 AI Agent Tool Invocation",
+            "AML.T0101 Data Destruction via AI Agent Tool Invocation",
+            "AML.T0081 Modify AI Agent Configuration",
+            "AML.T0083 Credentials from AI Agent Configuration",
+            "AML.T0055 Unsecured Credentials",
+            "AML.T0099 AI Agent Tool Data Poisoning",
+            "AML.T0108 AI Agent"
+          ]
+        },
+        {
+          "framework": "MAESTRO",
+          "items": [
+            "Compromised Security AI Agents (L6)",
+            "Security Agent Data Poisoning (L6)"
+          ]
+        },
+        {
+          "framework": "OWASP LLM Top 10 2025",
+          "items": [
+            "LLM06:2025 Excessive Agency",
+            "LLM03:2025 Supply Chain",
+            "LLM01:2025 Prompt Injection"
+          ]
+        },
+        {
+          "framework": "OWASP ML Top 10 2023",
+          "items": [
+            "ML06:2023 AI Supply Chain Attacks",
+            "ML02:2023 Data Poisoning Attack"
+          ]
+        },
+        {
+          "framework": "OWASP Agentic AI Top 10 2026",
+          "items": [
+            "ASI03:2026 Identity and Privilege Abuse",
+            "ASI02:2026 Tool Misuse and Exploitation",
+            "ASI10:2026 Rogue Agents",
+            "ASI08:2026 Cascading Failures",
+            "ASI04:2026 Agentic Supply Chain Vulnerabilities"
+          ]
+        },
+        {
+          "framework": "NIST Adversarial Machine Learning 2025",
+          "items": [
+            "NISTAML.039 Compromising connected resources",
+            "NISTAML.018 Prompt Injection",
+            "NISTAML.013 Data Poisoning"
+          ]
+        },
+        {
+          "framework": "Cisco Integrated AI Security and Safety Framework",
+          "items": [
+            "AITech-14.1 Unauthorized Access",
+            "AISubtech-14.1.1 Credential Theft",
+            "AISubtech-14.1.2 Insufficient Access Controls",
+            "AITech-14.2 Abuse of Delegated Authority",
+            "AITech-12.1 Tool Exploitation",
+            "AITech-9.3 Dependency / Plugin Compromise",
+            "AITech-5.2 Configuration Persistence"
+          ]
+        },
+        {
+          "framework": "Google Secure AI Framework 2.0 - Risks",
+          "items": [
+            "RA: Rogue Actions",
+            "IIC: Insecure Integrated Component",
+            "MDT: Model Deployment Tampering",
+            "DP: Data Poisoning",
+            "PIJ: Prompt Injection"
+          ]
+        },
+        {
+          "framework": "Databricks AI Security Framework 3.0",
+          "items": [
+            "Agents - Core 13.2: Tool Misuse",
+            "Agents - Core 13.3: Privilege Compromise",
+            "Agents - Core 13.13: Rogue Agents in Multi-Agent Systems",
+            "Agents - Core 13.8: Repudiation & Untraceability",
+            "Platform 12.4: Unauthorized privileged access",
+            "Platform 12.3: Lack of incident response"
+          ]
+        }
+      ],
+      "implementationGuidance": [
+        {
+          "implementation": "Default defensive agents to read-only investigation and require policy-gated approval, evidence, rollback, and signed decision verification before any write or containment action.",
+          "howTo": `<h5>Concept:</h5><p>A defensive agent should not directly decide to disable users, quarantine workloads, revoke credentials, suppress alerts, or change firewall policy. Put a deterministic policy gate between the agent's recommendation and the response executor. The model may collect evidence and propose an action; the policy gate decides whether execution is allowed.</p><h5>OPA policy for defensive action gating</h5><pre><code># file: policy/defensive_agent_action.rego
+package aidefend.defensive_agent
+
+import rego.v1
+
+default allow := false
+
+read_actions := {
+  "query_siem",
+  "query_edr",
+  "query_cloud_audit",
+  "read_case",
+  "draft_summary"
+}
+
+high_impact_actions := {
+  "disable_account",
+  "revoke_credential",
+  "quarantine_workload",
+  "block_network_path",
+  "rollback_deployment",
+  "close_incident",
+  "notify_customer",
+  "notify_regulator"
+}
+
+deterministic_tiers := {"medium", "low"}
+
+allow if {
+  input.agent.role == "defensive_agent"
+  input.action.type in read_actions
+  input.action.mode == "read"
+}
+
+valid_write_request if {
+  input.agent.role == "defensive_agent"
+  input.action.type in high_impact_actions
+  input.action.mode == "write"
+  input.approval.status == "approved"
+  input.approval.expires_at_ns &gt; time.now_ns()
+  count(input.evidence_refs) &gt; 0
+  input.rollback_ref != ""
+  input.decision_record.signature_verified == true
+  input.policy_version != ""
+}
+
+allow if {
+  valid_write_request
+  input.action.risk_tier == "critical"
+  input.approval.mode == "break_glass"
+  input.approval.break_glass_reason != ""
+  input.approval.second_approver_id != ""
+}
+
+allow if {
+  valid_write_request
+  input.action.risk_tier == "high"
+  input.approval.mode == "human"
+  input.approval.approver_id != ""
+}
+
+allow if {
+  valid_write_request
+  input.action.risk_tier in deterministic_tiers
+  input.approval.mode == "deterministic_policy"
+  input.policy_decision == "approved"
+  input.rollback_verified == true
+}
+
+deny contains msg if {
+  not allow
+  msg := sprintf("defensive action denied: agent=%v action=%v target=%v", [
+    input.agent.id,
+    input.action.type,
+    input.action.target
+  ])
+}
+</code></pre><h5>Required action facts</h5><ul><li><code>agent.id</code>, <code>agent.role</code>, <code>agent.workload_identity</code></li><li><code>action.type</code>, <code>action.mode</code>, <code>action.target</code>, <code>action.risk_tier</code></li><li><code>approval.id</code>, <code>approval.mode</code>, <code>approval.status</code>, <code>approval.expires_at_ns</code>, and the tier-specific approver or break-glass fields</li><li><code>evidence_refs</code>, <code>rollback_ref</code>, <code>rollback_verified</code>, <code>policy_version</code>, <code>policy_decision</code>, <code>decision_record.signature_verified</code></li></ul><p><strong>Action:</strong> Run this policy at the response-executor boundary, not inside the model prompt. The <code>action.risk_tier</code> value should come from the agent capability-tier profile defined in AID-M-009.006 or from an equivalent response-action risk registry. The executor must compute <code>decision_record.signature_verified</code> by locally calling <code>verify_decision()</code> against the signed decision record immediately before the OPA request; never accept a signature-verified boolean supplied by the model, queue, SOAR playbook, or upstream API. Denied actions should emit high-severity telemetry to AID-D-005 and AID-D-016 for investigation.</p>`
+        },
+        {
+          "implementation": "Require a signed defensive-action decision record before executing high-impact response actions.",
+          "howTo": `<h5>Concept:</h5><p>High-impact defensive actions need non-repudiation. A signed decision record binds the action, target, evidence, approver, rollback reference, and policy version before the executor runs. This prevents a compromised model or automation worker from silently changing the action after approval.</p><h5>Python Ed25519 decision record signing</h5><pre><code># file: response/decision_record.py
+from __future__ import annotations
+
+import base64
+import json
+from dataclasses import asdict, dataclass
+from datetime import datetime, timezone
+from typing import Any
+
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey, Ed25519PublicKey
+
+
+@dataclass(frozen=True)
+class DefensiveDecisionRecord:
+    decision_id: str
+    defensive_agent_id: str
+    workload_identity: str
+    action: str
+    target: str
+    evidence_refs: list[str]
+    approver_id: str
+    rollback_ref: str
+    expires_at: str
+    policy_version: str
+    created_at: str
+
+
+def canonical_bytes(record: DefensiveDecisionRecord | dict[str, Any]) -> bytes:
+    payload = asdict(record) if isinstance(record, DefensiveDecisionRecord) else record
+    return json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+
+
+def utc_now() -> str:
+    return datetime.now(timezone.utc).isoformat()
+
+
+def sign_decision(record: DefensiveDecisionRecord, private_key: Ed25519PrivateKey) -> dict[str, Any]:
+    signature = private_key.sign(canonical_bytes(record))
+    return {
+        "record": asdict(record),
+        "signature_alg": "Ed25519",
+        "signature_b64": base64.b64encode(signature).decode("ascii"),
+    }
+
+
+def verify_decision(signed_record: dict[str, Any], public_key: Ed25519PublicKey) -> bool:
+    if signed_record.get("signature_alg") != "Ed25519":
+        raise ValueError("Unexpected decision signature algorithm")
+    record = signed_record["record"]
+    signature = base64.b64decode(signed_record["signature_b64"])
+    public_key.verify(signature, canonical_bytes(record))
+    if not record.get("evidence_refs"):
+        raise ValueError("Decision record has no evidence references")
+    if not record.get("rollback_ref"):
+        raise ValueError("Decision record has no rollback reference")
+    expires_at = datetime.fromisoformat(record["expires_at"].replace("Z", "+00:00"))
+    if expires_at <= datetime.now(timezone.utc):
+        raise ValueError("Decision record is expired")
+    return True
+</code></pre><p><strong>Operational notes:</strong> Store signer public keys in a controlled key registry such as Vault, KMS, or SPIFFE-backed workload identity. The executor should verify the signature immediately before execution and reject expired, unsigned, or rollback-less records. The result of this local verification is the only acceptable source for <code>decision_record.signature_verified</code> in the OPA input.</p>`
+        },
+        {
+          "implementation": "Write signed decision records, policy-gate decisions, and executor outcomes to append-only audit storage controlled outside the defensive agent's identity.",
+          "howTo": `<h5>Concept:</h5><p>A compromised defensive agent should not be able to erase the record of what it approved, denied, or executed. Treat every signed decision record, OPA allow/deny result, and executor outcome as a control-plane audit event. Write it to an append-only store or external SIEM using credentials that the defensive agent cannot delete or overwrite.</p><h5>Append-only defensive-action audit writer</h5><pre><code># file: response/defensive_action_audit.py
+from __future__ import annotations
+
+import base64
+import hashlib
+import json
+import uuid
+from dataclasses import asdict, dataclass
+from datetime import datetime, timedelta, timezone
+from typing import Literal
+
+
+AuditEventType = Literal[
+    "decision_record_signed",
+    "policy_gate_allow",
+    "policy_gate_deny",
+    "executor_result",
+    "audit_integrity_violation",
+]
+
+
+@dataclass(frozen=True)
+class DefensiveActionAuditEvent:
+    event_id: str
+    event_type: AuditEventType
+    decision_id: str
+    defensive_agent_id: str
+    workload_identity: str
+    action: str
+    target: str
+    risk_tier: str
+    policy_version: str
+    allowed: bool
+    reason: str
+    evidence_refs: list[str]
+    rollback_ref: str
+    created_at: str
+
+
+def canonical_json_bytes(payload: dict) -> bytes:
+    return json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+
+
+def sha256_b64(data: bytes) -> str:
+    return base64.b64encode(hashlib.sha256(data).digest()).decode("ascii")
+
+
+def emit_audit_event(
+    event: DefensiveActionAuditEvent,
+    s3_client,
+    bucket: str,
+    retention_days: int = 365,
+) -> str:
+    body = canonical_json_bytes(asdict(event))
+    key = "defensive-actions/" + event.created_at[:10] + "/" + event.event_id + ".json"
+    s3_client.put_object(
+        Bucket=bucket,
+        Key=key,
+        Body=body,
+        ContentType="application/json",
+        ChecksumSHA256=sha256_b64(body),
+        ObjectLockMode="COMPLIANCE",
+        ObjectLockRetainUntilDate=datetime.now(timezone.utc) + timedelta(days=retention_days),
+    )
+    return "s3://" + bucket + "/" + key
+
+
+def build_gate_event(
+    decision_record: dict,
+    allowed: bool,
+    reason: str,
+    risk_tier: str,
+    policy_version: str,
+) -> DefensiveActionAuditEvent:
+    record = decision_record["record"]
+    return DefensiveActionAuditEvent(
+        event_id=str(uuid.uuid4()),
+        event_type="policy_gate_allow" if allowed else "policy_gate_deny",
+        decision_id=record["decision_id"],
+        defensive_agent_id=record["defensive_agent_id"],
+        workload_identity=record["workload_identity"],
+        action=record["action"],
+        target=record["target"],
+        risk_tier=risk_tier,
+        policy_version=policy_version,
+        allowed=allowed,
+        reason=reason,
+        evidence_refs=record["evidence_refs"],
+        rollback_ref=record["rollback_ref"],
+        created_at=datetime.now(timezone.utc).isoformat(),
+    )
+
+
+def assert_execution_has_audit_record(executed_action: dict, audit_lookup) -> None:
+    decision_id = executed_action["decision_id"]
+    if not audit_lookup(decision_id):
+        raise RuntimeError("High-impact defensive action executed without matching audit record: " + decision_id)
+</code></pre><p><strong>Action:</strong> Use WORM object storage, append-only SIEM indexes, or an audit service with credentials independent from the defensive agent. Set a retention period that matches incident-response and regulatory needs. A high-impact action that executed without a matching signed decision and gate record is itself an integrity violation; emit <code>audit_integrity_violation</code> to AID-D-016 or the equivalent rogue-agent investigation pipeline.</p>`
+        },
+        {
+          "implementation": "Verify defensive-agent runtime integrity with signed images, workload identity, restricted runtime policy, and immutable deployment inputs.",
+          "howTo": `<h5>Concept:</h5><p>Defensive agents should be treated like privileged control-plane components. Pin their image digests, verify signatures before admission, run with restricted Kubernetes security settings, and give each agent a workload identity that is distinct from ordinary application agents.</p><h5>Verify the signed image before promotion</h5><pre><code># file: release/verify-defensive-agent.sh
+set -eu
+
+IMAGE="registry.example.com/security/soar-agent@sha256:0123456789abcdef"
+IDENTITY="https://github.com/example/security-automation/.github/workflows/release.yml@refs/heads/main"
+
+cosign verify \
+  --certificate-identity "$IDENTITY" \
+  --certificate-oidc-issuer "https://token.actions.githubusercontent.com" \
+  "$IMAGE"
+</code></pre><h5>Restricted Kubernetes deployment baseline</h5><pre><code># file: k8s/defensive-agent-deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: defensive-soar-agent
+  namespace: security-automation
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: defensive-soar-agent
+  template:
+    metadata:
+      labels:
+        app: defensive-soar-agent
+    spec:
+      serviceAccountName: defensive-soar-agent
+      automountServiceAccountToken: false
+      containers:
+        - name: agent
+          image: registry.example.com/security/soar-agent@sha256:0123456789abcdef
+          securityContext:
+            runAsNonRoot: true
+            readOnlyRootFilesystem: true
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop: ["ALL"]
+          env:
+            - name: POLICY_BUNDLE_VERSION
+              value: "defensive-agent-v1"
+</code></pre><p><strong>Action:</strong> Enforce signed images with Kyverno or admission control, bind permissions to the service account or SPIFFE ID, and keep response credentials in short-lived secret brokers rather than inside the agent container.</p>`
+        },
+        {
+          "implementation": "Validate evidence bundles before a defensive agent may recommend or execute a high-impact response, so poisoned security-agent data cannot drive containment.",
+          "howTo": `<h5>Concept:</h5><p>Attackers can weaponize defensive automation by poisoning the evidence it consumes: forged SIEM events, tampered EDR findings, manipulated case comments, or prompt-injected investigation notes. Treat evidence as signed data with source identity, hash, detector version, and observation time. Model reasoning can reference evidence, but the executor should only trust verified evidence bundles.</p><h5>Evidence bundle verifier</h5><pre><code># file: response/evidence_bundle.py
+from __future__ import annotations
+
+import base64
+import hashlib
+import json
+import re
+import urllib.parse
+import urllib.request
+from datetime import datetime, timedelta, timezone
+
+from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey
+from pydantic import BaseModel, Field, field_validator
+
+
+class EvidenceBundle(BaseModel):
+    schema_version: str = "aidefend.evidence.v1"
+    evidence_id: str = Field(min_length=8)
+    source_id: str = Field(min_length=3)
+    evidence_uri: str = Field(min_length=8)
+    sha256: str
+    detector_version: str = Field(min_length=1)
+    observed_at: str
+    signed_by: str = Field(min_length=3)
+    signature_b64: str
+
+    @field_validator("sha256")
+    @classmethod
+    def sha256_must_be_hex(cls, value: str) -> str:
+        if not re.fullmatch(r"[a-fA-F0-9]{64}", value):
+            raise ValueError("sha256 must be a 64-character hex digest")
+        return value.lower()
+
+
+def canonical_evidence_bytes(bundle: EvidenceBundle) -> bytes:
+    payload = bundle.model_dump()
+    signature = payload.pop("signature_b64")
+    if not signature:
+        raise ValueError("Missing evidence signature")
+    return json.dumps(payload, sort_keys=True, separators=(",", ":")).encode("utf-8")
+
+
+def fetch_evidence_bytes(evidence_uri: str, allowed_hosts: set[str], max_bytes: int = 10_000_000) -> bytes:
+    parsed = urllib.parse.urlparse(evidence_uri)
+    if parsed.scheme != "https":
+        raise ValueError("Evidence URI must use https and be fetched through an approved evidence gateway")
+    if parsed.hostname not in allowed_hosts:
+        raise PermissionError("Evidence host is not allowlisted: " + str(parsed.hostname))
+
+    request = urllib.request.Request(evidence_uri, headers={"Accept": "application/octet-stream"})
+    with urllib.request.urlopen(request, timeout=10) as response:
+        body = response.read(max_bytes + 1)
+    if len(body) > max_bytes:
+        raise ValueError("Evidence object exceeds maximum verifier size")
+    return body
+
+
+def verify_evidence_bundle(
+    raw_bundle: dict,
+    trusted_public_keys: dict[str, Ed25519PublicKey],
+    allowed_evidence_hosts: set[str],
+    max_age_seconds: int = 86400,
+) -> EvidenceBundle:
+    bundle = EvidenceBundle.model_validate(raw_bundle)
+    public_key = trusted_public_keys.get(bundle.signed_by)
+    if public_key is None:
+        raise PermissionError("Evidence signer is not trusted: " + bundle.signed_by)
+
+    signature = base64.b64decode(bundle.signature_b64)
+    public_key.verify(signature, canonical_evidence_bytes(bundle))
+
+    observed = datetime.fromisoformat(bundle.observed_at.replace("Z", "+00:00"))
+    now = datetime.now(timezone.utc)
+    if observed &gt; now + timedelta(seconds=300):
+        raise ValueError("Evidence bundle timestamp is in the future")
+    age = (now - observed).total_seconds()
+    if age &gt; max_age_seconds:
+        raise ValueError("Evidence bundle is stale")
+
+    evidence_bytes = fetch_evidence_bytes(bundle.evidence_uri, allowed_evidence_hosts)
+    digest = hashlib.sha256(evidence_bytes).hexdigest()
+    if digest != bundle.sha256:
+        raise ValueError("Evidence content hash does not match signed bundle metadata")
+    return bundle
+</code></pre><p><strong>Action:</strong> Require every high-impact defensive action to reference verified evidence bundle IDs. Fetch evidence through an allowlisted evidence gateway, recompute SHA-256, and compare it with the signed bundle metadata before the response executor proceeds. Separate model-generated recommendations from enforceable facts: the recommendation can be useful context, but only signed evidence, verified content hashes, and policy decide whether the response executor proceeds.</p>`
+        }
+      ],
+      "warning": {
+        "level": "High on Defensive Automation Blast Radius",
+        "description": "<p>Do not treat this as permission to fully automate containment. The safer default is read-only investigation plus policy-gated execution. High-impact defensive actions should require human approval, break-glass approval, or a deterministic policy with rollback evidence depending on risk tier.</p>"
+      }
     }
   ],
 };

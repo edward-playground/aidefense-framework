@@ -4976,6 +4976,422 @@ def build_cost_abuse_timelines(cost_alert_events: list[dict], response_events: l
                         "level": "Low on Precision of Cost Estimation",
                         "description": "<p>Estimated spend signals may lag actual provider billing or differ by routing, cached responses, or vendor-specific pricing behavior. Treat this sub-technique as an early-warning and correlation layer, not as the sole source of financial truth. Calibrate alert thresholds against actual billing data monthly.</p>"
                     }
+                },
+                {
+                    "id": "AID-D-005.008",
+                    "name": "Read-only Agentic Alert Triage",
+                    "pillar": [
+                        "infra",
+                        "app"
+                    ],
+                    "phase": [
+                        "operation"
+                    ],
+                    "description": "Place a read-only triage agent at the front of the AI-security alert queue to perform bounded first-pass investigation before a human reviewer sees the alert. The agent may query allowlisted SIEM, EDR, cloud, identity, and agent-session logs, but it cannot write tickets as authoritative decisions, suppress rules, change severity, revoke credentials, quarantine workloads, or execute containment. Its output is a structured disposition with evidence, missing context, and a recommended human action.<br/><br/><strong>Rollout pattern:</strong> start with one noisy detection rule, run in shadow mode for a fixed review window, compare against human reviewers, and expand only when agreement, missed-critical, and time-saved thresholds are met.<br/><br/><strong>Scope boundary:</strong> this is a safe investigation and evidence-preparation pattern. AID-D-005.002 publishes normalized alerts to SOAR, AID-D-005.003 covers human-driven threat hunting, AID-D-008 covers broader AI analytics, AID-M-006 and AID-D-015 own human approval and HITL escalation patterns, and Isolate/Evict techniques own containment and credential revocation.",
+                    "toolsOpenSource": [
+                        "OpenSearch",
+                        "Wazuh",
+                        "TheHive",
+                        "LangGraph",
+                        "LiteLLM",
+                        "Pydantic",
+                        "OpenTelemetry"
+                    ],
+                    "toolsCommercial": [
+                        "Splunk Enterprise Security",
+                        "Microsoft Sentinel",
+                        "Google Security Operations",
+                        "Palo Alto Cortex XSOAR",
+                        "ServiceNow Security Operations",
+                        "Datadog Cloud SIEM"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0051 LLM Prompt Injection",
+                                "AML.T0053 AI Agent Tool Invocation",
+                                "AML.T0034 Cost Harvesting",
+                                "AML.T0029 Denial of AI Service",
+                                "AML.T0086 Exfiltration via AI Agent Tool Invocation"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Evasion of Detection (L5)",
+                                "Compromised Observability Tools (L5)",
+                                "Poisoning Observability Data (L5)",
+                                "Agent Tool Misuse (L7)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM01:2025 Prompt Injection",
+                                "LLM06:2025 Excessive Agency",
+                                "LLM10:2025 Unbounded Consumption"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML01:2023 Input Manipulation Attack (triage investigates alerts from adversarial inputs and abnormal inference behavior)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI02:2026 Tool Misuse and Exploitation",
+                                "ASI08:2026 Cascading Failures",
+                                "ASI10:2026 Rogue Agents",
+                                "ASI01:2026 Agent Goal Hijack"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.018 Prompt Injection",
+                                "NISTAML.014 Energy-latency",
+                                "NISTAML.039 Compromising connected resources"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-1.1 Direct Prompt Injection",
+                                "AITech-12.1 Tool Exploitation",
+                                "AITech-13.1 Disruption of Availability",
+                                "AITech-13.2 Cost Harvesting / Repurposing",
+                                "AITech-14.1 Unauthorized Access"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "PIJ: Prompt Injection",
+                                "RA: Rogue Actions",
+                                "DMS: Denial of ML Service",
+                                "IIC: Insecure Integrated Component"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Platform 12.3: Lack of incident response",
+                                "Agents - Core 13.2: Tool Misuse",
+                                "Agents - Core 13.13: Rogue Agents in Multi-Agent Systems",
+                                "Model Serving - Inference requests 9.7: Denial of Service (DoS)"
+                            ]
+                        }
+                    ],
+                    "implementationGuidance": [
+                        {
+                            "implementation": "Provision the triage agent with read-only identities and a query allowlist; do not give it write, suppression, ticket-closure, containment, or credential-management privileges.",
+                            "howTo": `<h5>Concept:</h5><p>The first-pass triage agent should enrich and summarize alerts, not become a response authority. Give it a distinct workload identity, read-only SIEM permissions, and a server-side query allowlist. If the model asks for a query outside the allowlist, the broker rejects the request before it reaches the SIEM.</p><h5>Example OpenSearch role</h5><pre><code># file: opensearch/roles/ai_triage_readonly.yml
+ai_triage_readonly:
+  cluster_permissions:
+    - cluster_composite_ops_ro
+  index_permissions:
+    - index_patterns:
+        - "security-alerts-*"
+        - "agent-session-*"
+        - "cloud-audit-*"
+        - "edr-events-*"
+      allowed_actions:
+        - read
+        - search
+        - indices:data/read/search
+        - indices:data/read/msearch
+</code></pre><h5>Example query broker</h5><pre><code># file: triage/query_broker.py
+from __future__ import annotations
+
+import re
+from copy import deepcopy
+from dataclasses import dataclass
+from typing import Any, Mapping
+
+PARAM_PATTERN = re.compile(r"^[A-Za-z0-9._:@/-]{1,256}$")
+
+
+@dataclass(frozen=True)
+class QueryTemplate:
+    name: str
+    index: str
+    body: dict
+
+
+QUERY_ALLOWLIST: Mapping[str, QueryTemplate] = {
+    "alert_context": QueryTemplate(
+        name="alert_context",
+        index="security-alerts-*",
+        body={"query": {"term": {"alert.id": "{{alert_id}}"}}},
+    ),
+    "recent_agent_session": QueryTemplate(
+        name="recent_agent_session",
+        index="agent-session-*",
+        body={"query": {"term": {"session.id": "{{session_id}}"}}},
+    ),
+}
+
+
+def validate_params(params: dict[str, str]) -> dict[str, str]:
+    for key, value in params.items():
+        if not PARAM_PATTERN.fullmatch(value):
+            raise ValueError("Invalid query parameter: " + key)
+    return params
+
+
+def render_value(value: Any, params: dict[str, str]) -> Any:
+    if isinstance(value, str):
+        rendered = value
+        for key, replacement in params.items():
+            rendered = rendered.replace("{{" + key + "}}", replacement)
+        if "{{" in rendered or "}}" in rendered:
+            raise ValueError("Template has unresolved parameters")
+        return rendered
+    if isinstance(value, list):
+        return [render_value(item, params) for item in value]
+    if isinstance(value, dict):
+        return {key: render_value(item, params) for key, item in value.items()}
+    return value
+
+
+def render_template(template: QueryTemplate, params: dict[str, str]) -> tuple[str, dict]:
+    if template.name not in QUERY_ALLOWLIST:
+        raise PermissionError("Query is not allowlisted")
+    params = validate_params(params)
+    return template.index, render_value(deepcopy(template.body), params)
+
+
+def execute_triage_query(opensearch_client, query_name: str, params: dict[str, str]) -> dict:
+    template = QUERY_ALLOWLIST.get(query_name)
+    if template is None:
+        raise PermissionError("Query is not allowlisted: " + query_name)
+    index, body = render_template(template, params)
+    return opensearch_client.search(index=index, body=body)
+</code></pre><p><strong>Operational notes:</strong> Keep the broker outside the model runtime, authenticate it with a workload identity, and log every rejected query with <code>alert_id</code>, <code>agent_id</code>, <code>query_name</code>, and <code>policy_version</code>. The renderer performs bounded recursive replacement and fails closed on unresolved parameters; do not allow model-authored raw SIEM queries to bypass this broker.</p>`
+                        },
+                        {
+                            "implementation": "Run scheduled least-privilege attestation for the production triage identity and fail the gate if it can perform write, close, revoke, quarantine, or suppression actions.",
+                            "howTo": `<h5>Concept:</h5><p>A read-only triage design should produce fresh evidence that the deployed identity is still read-only. Run a scheduled attestation job against cloud IAM and SIEM-native roles, write a dated artifact, and fail deployment or promotion when the identity can acquire response authority.</p><h5>Least-privilege attestation job</h5><pre><code># file: triage/read_only_attestation.py
+from __future__ import annotations
+
+import json
+import os
+import subprocess
+import urllib.request
+from datetime import datetime, timezone
+from pathlib import Path
+from typing import Any
+
+
+FORBIDDEN_AWS_ACTIONS = [
+    "iam:PassRole",
+    "iam:AttachRolePolicy",
+    "iam:UpdateAccessKey",
+    "iam:DeleteAccessKey",
+    "ec2:StopInstances",
+    "ec2:TerminateInstances",
+    "lambda:DeleteFunction",
+    "secretsmanager:DeleteSecret",
+    "secretsmanager:PutSecretValue",
+    "es:ESHttpPut",
+    "es:ESHttpDelete",
+]
+
+WRITE_ACTION_MARKERS = (
+    "indices:data/write",
+    "indices:admin/create",
+    "indices:admin/delete",
+    "indices:admin/close",
+    "cluster:admin",
+    "delete",
+    "write",
+)
+
+
+def run_json(command: list[str]) -> dict[str, Any]:
+    completed = subprocess.run(command, check=True, capture_output=True, text=True)
+    return json.loads(completed.stdout)
+
+
+def assert_aws_actions_denied(principal_arn: str) -> list[dict[str, str]]:
+    result = run_json([
+        "aws",
+        "iam",
+        "simulate-principal-policy",
+        "--policy-source-arn",
+        principal_arn,
+        "--action-names",
+        *FORBIDDEN_AWS_ACTIONS,
+        "--output",
+        "json",
+    ])
+    findings: list[dict[str, str]] = []
+    for item in result.get("EvaluationResults", []):
+        decision = item.get("EvalDecision", "unknown")
+        if decision not in {"explicitDeny", "implicitDeny"}:
+            findings.append({
+                "action": item.get("EvalActionName", "unknown"),
+                "decision": decision,
+            })
+    return findings
+
+
+def fetch_opensearch_role(base_url: str, role_name: str, token: str) -> dict[str, Any]:
+    request = urllib.request.Request(
+        base_url.rstrip("/") + "/_plugins/_security/api/roles/" + role_name,
+        headers={"Authorization": "Bearer " + token},
+        method="GET",
+    )
+    with urllib.request.urlopen(request, timeout=10) as response:
+        body = json.loads(response.read().decode("utf-8"))
+    return body.get(role_name, body)
+
+
+def assert_opensearch_role_readonly(role_doc: dict[str, Any]) -> list[str]:
+    actions: list[str] = []
+    for permission in role_doc.get("index_permissions", []):
+        actions.extend(permission.get("allowed_actions", []))
+    for permission in role_doc.get("cluster_permissions", []):
+        actions.append(permission)
+    return [
+        action for action in actions
+        if any(marker in action.lower() for marker in WRITE_ACTION_MARKERS)
+    ]
+
+
+def build_attestation() -> dict[str, Any]:
+    principal_arn = os.environ["TRIAGE_AWS_PRINCIPAL_ARN"]
+    opensearch_url = os.environ["OPENSEARCH_URL"]
+    opensearch_role = os.environ["OPENSEARCH_TRIAGE_ROLE"]
+    opensearch_token = os.environ["OPENSEARCH_API_TOKEN"]
+
+    aws_findings = assert_aws_actions_denied(principal_arn)
+    role_doc = fetch_opensearch_role(opensearch_url, opensearch_role, opensearch_token)
+    opensearch_write_actions = assert_opensearch_role_readonly(role_doc)
+    status = "pass" if not aws_findings and not opensearch_write_actions else "fail"
+
+    return {
+        "schema_version": "aidefend.triage_readonly_attestation.v1",
+        "generated_at": datetime.now(timezone.utc).isoformat(),
+        "principal_arn": principal_arn,
+        "opensearch_role": opensearch_role,
+        "status": status,
+        "aws_forbidden_actions_allowed": aws_findings,
+        "opensearch_write_actions_allowed": opensearch_write_actions,
+    }
+
+
+def main() -> None:
+    artifact = build_attestation()
+    Path("artifacts").mkdir(exist_ok=True)
+    output_path = Path("artifacts") / ("triage-readonly-attestation-" + artifact["generated_at"][:10] + ".json")
+    output_path.write_text(json.dumps(artifact, sort_keys=True, indent=2), encoding="utf-8")
+    if artifact["status"] != "pass":
+        raise SystemExit("Triage identity is not read-only; wrote " + str(output_path))
+
+
+if __name__ == "__main__":
+    main()
+</code></pre><p><strong>Action:</strong> Run this job daily and before expanding the triage agent to a new rule family. Store the JSON artifact with the rollout report. The attestation should fail closed if the identity can write indexes, close incidents, suppress detections, revoke credentials, mutate cloud resources, or invoke containment APIs.</p>`
+                        },
+                        {
+                            "implementation": "Require every triage result to satisfy a fixed disposition schema that separates evidence from recommendations and proves no containment was performed.",
+                            "howTo": `<h5>Concept:</h5><p>Free-form alert summaries are hard to review and easy to over-trust. Force the model output through a schema with explicit evidence, uncertainty, and next-human-action fields. The schema should make containment impossible by contract: <code>containment_performed</code> must be false, and no downstream system should treat <code>recommended_human_action</code> as an execution command.</p><h5>Pydantic disposition contract</h5><pre><code># file: triage/disposition_schema.py
+from __future__ import annotations
+
+from typing import Literal
+from pydantic import BaseModel, Field, field_validator
+
+
+class EvidenceItem(BaseModel):
+    source: str = Field(min_length=1, max_length=120)
+    query_name: str = Field(min_length=1, max_length=80)
+    observation: str = Field(min_length=1, max_length=1000)
+    event_time: str | None = None
+    trace_id: str | None = None
+
+
+class TriageDisposition(BaseModel):
+    schema_version: Literal["aidefend.triage.v1"] = "aidefend.triage.v1"
+    alert_id: str
+    rule_id: str
+    summary: str = Field(min_length=20, max_length=1200)
+    evidence: list[EvidenceItem] = Field(min_length=1, max_length=12)
+    source_consistency: Literal["consistent", "conflicting", "single_source", "unknown"]
+    likely_true_positive: Literal["yes", "no", "unknown"]
+    affected_assets: list[str] = Field(default_factory=list, max_length=25)
+    missing_context: list[str] = Field(default_factory=list, max_length=10)
+    recommended_human_action: str = Field(min_length=10, max_length=600)
+    confidence: float = Field(ge=0.0, le=1.0)
+    containment_performed: Literal[False] = False
+
+    @field_validator("recommended_human_action")
+    @classmethod
+    def reject_execution_language(cls, value: str) -> str:
+        blocked = ["I quarantined", "I disabled", "I revoked", "I deleted", "auto-containment complete"]
+        if any(term.lower() in value.lower() for term in blocked):
+            raise ValueError("Triage output must not claim response execution")
+        return value
+
+
+def validate_disposition(raw_json: str) -> TriageDisposition:
+    disposition = TriageDisposition.model_validate_json(raw_json)
+    if disposition.containment_performed is not False:
+        raise ValueError("Read-only triage must not perform containment")
+    return disposition
+</code></pre><p><strong>Operational notes:</strong> Persist both the raw model output and the validated disposition. Require the agent to mark <code>source_consistency</code> as <code>single_source</code> or <code>conflicting</code> when SIEM, EDR, cloud-audit, and agent-session evidence do not agree; this keeps observability poisoning or compromised logging tools visible to the human reviewer. The execution-language validator is only defense-in-depth because substring checks are easy to bypass; the real read-only guarantee comes from workload identity, the query broker, least-privilege attestation, and downstream systems treating <code>recommended_human_action</code> as non-executable text. Final disposition, severity changes, suppression, and response actions remain human or policy-gated decisions.</p>`
+                        },
+                        {
+                            "implementation": "Roll out one noisy rule at a time in shadow mode and require agreement, missed-critical, and time-saved gates before expanding to another rule family.",
+                            "howTo": `<h5>Concept:</h5><p>The safe deployment pattern is narrow and measurable: pick one high-volume rule, run the triage agent without automation authority, compare it to human reviewers for a fixed period, and expand only if quality gates pass. This avoids automating the whole queue before you know where the model is reliable.</p><h5>Two-week agreement gate</h5><pre><code># file: triage/shadow_rollout_gate.py
+from __future__ import annotations
+
+from dataclasses import dataclass
+
+
+@dataclass(frozen=True)
+class ReviewedAlert:
+    alert_id: str
+    rule_id: str
+    ai_disposition: str          # yes | no | unknown
+    human_disposition: str       # yes | no | unknown
+    human_marked_critical: bool
+    ai_marked_true_positive: bool
+    human_minutes_without_ai: float
+    human_minutes_with_ai: float
+
+
+def evaluate_rollout(alerts: list[ReviewedAlert]) -> dict:
+    if len(alerts) < 50:
+        return {"expand": False, "reason": "insufficient_shadow_volume"}
+
+    agreement = sum(a.ai_disposition == a.human_disposition for a in alerts) / len(alerts)
+    critical = [a for a in alerts if a.human_marked_critical]
+    missed_critical = sum(not a.ai_marked_true_positive for a in critical)
+    missed_critical_rate = missed_critical / max(len(critical), 1)
+
+    baseline_minutes = sum(a.human_minutes_without_ai for a in alerts)
+    assisted_minutes = sum(a.human_minutes_with_ai for a in alerts)
+    time_saved_ratio = max(baseline_minutes - assisted_minutes, 0) / max(baseline_minutes, 1.0)
+
+    expand = (
+        agreement >= 0.85
+        and missed_critical_rate <= 0.02
+        and time_saved_ratio >= 0.20
+    )
+    return {
+        "expand": expand,
+        "agreement_rate": round(agreement, 4),
+        "missed_critical_rate": round(missed_critical_rate, 4),
+        "time_saved_ratio": round(time_saved_ratio, 4),
+        "reviewed_alerts": len(alerts),
+    }
+</code></pre><p><strong>Action:</strong> Store the rollout report with the rule ID, review window, reviewer group, thresholds, and expansion decision. Do not enable autonomous containment as part of this gate; passing the gate only permits broader read-only triage coverage.</p>`
+                        }
+                    ]
                 }
             ]
         },
@@ -7867,6 +8283,331 @@ def evaluate_consistency(goal: ApprovedGoal, observation: ActionObservation) -> 
                             "howTo": "<h5>Concept:</h5><p>Production reputation scoring needs structured events (type, timestamp, source, confidence), time-window aggregation, de-duplication to prevent event storms, and decay so old incidents do not permanently poison the score. The Detect-side control should emit an immutable decision record and a recommended escalation state; downstream containment systems can consume that record without embedding isolation logic into the scoring service.</p><h5>Step 1: Normalize and retain security signals in a shared store</h5><p>Persist signals in a shared backend keyed by <code>agent_id</code> so scoring remains correct across replicas and orchestrators. Normalize event type, source, confidence, and dedupe key before the signal enters the scoring pipeline.</p><h5>Step 2: Calculate a decayed reputation score</h5><p>Apply a policy-controlled weight to each signal, ignore events outside the active window, and use exponential decay to reduce the effect of stale findings. This keeps the score auditable and tunable without hard-wiring one response action into the detector.</p><h5>Step 3: Emit decision records and escalation recommendations</h5><p>Every scoring cycle should produce an immutable decision record that includes the final score, the per-signal contributions, the policy version, and the recommended escalation state such as <code>OBSERVE</code>, <code>INVESTIGATE</code>, or <code>ESCALATE_CONTAINMENT</code>.</p><h5>Example: reputation monitor with escalation records</h5><pre><code># File: governance/reputation_monitor.py\nfrom __future__ import annotations\n\nimport json\nimport math\nimport os\nimport time\nimport logging\nfrom dataclasses import asdict, dataclass\nfrom typing import Dict, Iterable, List, Optional\n\nlogger = logging.getLogger('aidefend.reputation')\nlogger.setLevel(os.getenv('LOG_LEVEL', 'INFO'))\n\nWINDOW_SECONDS = int(os.getenv('REPUTATION_WINDOW_SECONDS', '1800'))\nINVESTIGATE_THRESHOLD = int(os.getenv('REPUTATION_INVESTIGATE_THRESHOLD', '40'))\nESCALATE_THRESHOLD = int(os.getenv('REPUTATION_ESCALATE_THRESHOLD', '70'))\nDECAY_HALF_LIFE_SECONDS = int(os.getenv('REPUTATION_DECAY_HALF_LIFE_SECONDS', '900'))\n\nWEIGHTS: Dict[str, int] = json.loads(os.getenv('REPUTATION_EVENT_WEIGHTS_JSON', json.dumps({\n    'UNKNOWN_AGENT_IDENTITY': 40,\n    'TOOL_SIGNATURE_VERIFY_FAIL': 40,\n    'EGRESS_ANOMALY': 20,\n    'ABNORMAL_FANOUT': 15,\n})))\n\n\n@dataclass(frozen=True)\nclass SecuritySignal:\n    event_type: str\n    observed_ts: int\n    source: str\n    confidence: float = 1.0\n    dedupe_key: Optional[str] = None\n\n\n@dataclass(frozen=True)\nclass DecisionRecord:\n    reputation_score: int\n    recommendation: str\n    policy_version: str\n    window_seconds: int\n    half_life_seconds: int\n    contributions: List[Dict]\n    observed_ts: int\n\n\ndef _decay_multiplier(age_seconds: int) -> float:\n    if age_seconds <= 0:\n        return 1.0\n    return math.pow(0.5, age_seconds / float(DECAY_HALF_LIFE_SECONDS))\n\n\ndef classify_recommendation(score: int) -> str:\n    if score >= ESCALATE_THRESHOLD:\n        return 'ESCALATE_CONTAINMENT'\n    if score >= INVESTIGATE_THRESHOLD:\n        return 'INVESTIGATE'\n    return 'OBSERVE'\n\n\ndef build_decision_record(now_ts: int, signals: Iterable[SecuritySignal]) -> DecisionRecord:\n    total = 0.0\n    contributions: List[Dict] = []\n\n    for signal in signals:\n        age = max(0, now_ts - signal.observed_ts)\n        if age > WINDOW_SECONDS:\n            continue\n\n        weight = float(WEIGHTS.get(signal.event_type, 0))\n        contribution = weight * _decay_multiplier(age) * float(signal.confidence)\n        if contribution <= 0:\n            continue\n\n        total += contribution\n        contributions.append({\n            'event_type': signal.event_type,\n            'source': signal.source,\n            'confidence': signal.confidence,\n            'age_seconds': age,\n            'contribution': round(contribution, 2),\n        })\n\n    reputation_score = int(round(total))\n    return DecisionRecord(\n        reputation_score=reputation_score,\n        recommendation=classify_recommendation(reputation_score),\n        policy_version='agent-reputation.v1',\n        window_seconds=WINDOW_SECONDS,\n        half_life_seconds=DECAY_HALF_LIFE_SECONDS,\n        contributions=contributions,\n        observed_ts=now_ts,\n    )\n\n\ndef emit_decision_record(record: DecisionRecord) -> None:\n    logger.warning(json.dumps(asdict(record), ensure_ascii=False))\n</code></pre><p><strong>Action:</strong> Store security signals in a shared backend, compute an auditable reputation score, and emit immutable decision records with escalation recommendations. Let downstream Isolate / Evict / Restore workflows subscribe to those records, but keep the scoring service itself limited to detection, scoring, and evidence emission.</p>"
                         },
                     ]
+                }
+            ]
+        },
+        {
+            "id": "AID-D-017",
+            "name": "AI Detection SLO & Alert-Coverage Measurement",
+            "description": "Establish measurable detection service-level objectives for AI and agentic systems by tracking how quickly anomalies become human-visible and how much of the alert queue is actually investigated. This technique treats dwell time and alert-investigation coverage as first-class assurance evidence across agent sessions, tool calls, memory writes, retrieval events, inference gateways, and high-risk actions.<br/><br/><strong>Primary metrics:</strong> <code>dwell_time</code> measures anomaly observed to human acknowledged; <code>triage_time</code> measures alert created to triage completed; <code>coverage_ratio</code> measures investigated alerts divided by total eligible alerts.<br/><br/><strong>Scope boundary:</strong> AID-D-005 owns event collection, SIEM integration, handoff, and alert-specific detections. AID-D-008 owns analytics and ranking. AID-M-005.002 covers posture SLOs. This technique owns detection-speed and investigation-coverage measurement as operational assurance evidence.",
+            "pillar": [
+                "infra",
+                "app"
+            ],
+            "phase": [
+                "operation",
+                "validation",
+                "improvement"
+            ],
+            "toolsOpenSource": [
+                "OpenTelemetry",
+                "Prometheus",
+                "Grafana",
+                "OpenSearch",
+                "ClickHouse",
+                "Apache Kafka",
+                "jsonschema"
+            ],
+            "toolsCommercial": [
+                "Splunk Enterprise Security",
+                "Microsoft Sentinel",
+                "Datadog",
+                "Grafana Cloud",
+                "ServiceNow Security Operations"
+            ],
+            "defendsAgainst": [
+                {
+                    "framework": "MITRE ATLAS",
+                    "items": [
+                        "AML.T0051 LLM Prompt Injection",
+                        "AML.T0053 AI Agent Tool Invocation",
+                        "AML.T0034 Cost Harvesting",
+                        "AML.T0029 Denial of AI Service",
+                        "AML.T0024 Exfiltration via AI Inference API"
+                    ]
+                },
+                {
+                    "framework": "MAESTRO",
+                    "items": [
+                        "Evasion of Detection (L5)",
+                        "Compromised Observability Tools (L5)",
+                        "Poisoning Observability Data (L5)"
+                    ]
+                },
+                {
+                    "framework": "OWASP LLM Top 10 2025",
+                    "items": [
+                        "LLM01:2025 Prompt Injection",
+                        "LLM06:2025 Excessive Agency",
+                        "LLM10:2025 Unbounded Consumption"
+                    ]
+                },
+                {
+                    "framework": "OWASP ML Top 10 2023",
+                    "items": [
+                        "ML01:2023 Input Manipulation Attack",
+                        "ML05:2023 Model Theft"
+                    ]
+                },
+                {
+                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "items": [
+                        "ASI02:2026 Tool Misuse and Exploitation",
+                        "ASI08:2026 Cascading Failures",
+                        "ASI10:2026 Rogue Agents"
+                    ]
+                },
+                {
+                    "framework": "NIST Adversarial Machine Learning 2025",
+                    "items": [
+                        "NISTAML.018 Prompt Injection",
+                        "NISTAML.014 Energy-latency",
+                        "NISTAML.031 Model Extraction",
+                        "NISTAML.039 Compromising connected resources"
+                    ]
+                },
+                {
+                    "framework": "Cisco Integrated AI Security and Safety Framework",
+                    "items": [
+                        "AITech-1.1 Direct Prompt Injection",
+                        "AITech-10.1 Model Extraction",
+                        "AITech-12.1 Tool Exploitation",
+                        "AITech-13.1 Disruption of Availability",
+                        "AITech-14.1 Unauthorized Access"
+                    ]
+                },
+                {
+                    "framework": "Google Secure AI Framework 2.0 - Risks",
+                    "items": [
+                        "PIJ: Prompt Injection",
+                        "MXF: Model Exfiltration",
+                        "DMS: Denial of ML Service",
+                        "RA: Rogue Actions"
+                    ]
+                },
+                {
+                    "framework": "Databricks AI Security Framework 3.0",
+                    "items": [
+                        "Platform 12.3: Lack of incident response",
+                        "Model Serving - Inference response 10.1: Lack of audit and monitoring inference quality",
+                        "Agents - Core 13.8: Repudiation & Untraceability",
+                        "Agents - Core 13.13: Rogue Agents in Multi-Agent Systems"
+                    ]
+                }
+            ],
+            "implementationGuidance": [
+                {
+                    "implementation": "Emit a required alert-lifecycle event schema for every AI-security anomaly so dwell time and coverage can be measured consistently across agents, tools, memory, and inference systems.",
+                    "howTo": `<h5>Concept:</h5><p>Detection SLOs fail when alerts only exist as loosely formatted SIEM records. Every anomaly needs stable timestamps and correlation keys from observation through triage completion. The schema below is intentionally simple enough to emit from gateways, agent runtimes, SIEM correlation rules, and SOAR handoff jobs.</p><h5>Alert lifecycle JSON Schema</h5><pre><code># file: schemas/ai_detection_lifecycle_event.schema.json
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AI Detection Lifecycle Event",
+  "type": "object",
+  "required": [
+    "event_id",
+    "alert_id",
+    "rule_id",
+    "anomaly_observed_at",
+    "alert_created_at",
+    "investigated",
+    "disposition"
+  ],
+  "properties": {
+    "event_id": { "type": "string", "minLength": 8 },
+    "alert_id": { "type": "string", "minLength": 1 },
+    "rule_id": { "type": "string", "minLength": 1 },
+    "agent_id": { "type": ["string", "null"] },
+    "tool_id": { "type": ["string", "null"] },
+    "session_id": { "type": ["string", "null"] },
+    "tenant_id": { "type": ["string", "null"] },
+    "anomaly_observed_at": { "type": "string", "format": "date-time" },
+    "alert_created_at": { "type": "string", "format": "date-time" },
+    "human_acknowledged_at": { "type": ["string", "null"], "format": "date-time" },
+    "triage_completed_at": { "type": ["string", "null"], "format": "date-time" },
+    "investigated": { "type": "boolean" },
+    "disposition": {
+      "type": "string",
+      "enum": ["true_positive", "false_positive", "benign", "unknown", "duplicate", "not_reviewed"]
+    },
+    "severity": {
+      "type": "string",
+      "enum": ["critical", "high", "medium", "low", "informational"]
+    }
+  },
+  "additionalProperties": false
+}
+</code></pre><h5>Python validation before ingestion</h5><pre><code># file: detection/validate_lifecycle_event.py
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from jsonschema import Draft202012Validator, FormatChecker
+
+
+SCHEMA = json.loads(Path("schemas/ai_detection_lifecycle_event.schema.json").read_text())
+VALIDATOR = Draft202012Validator(SCHEMA, format_checker=FormatChecker())
+
+
+def validate_lifecycle_event(event: dict) -> dict:
+    errors = sorted(VALIDATOR.iter_errors(event), key=lambda err: list(err.path))
+    if errors:
+        messages = [".".join(str(p) for p in err.path) + ": " + err.message for err in errors]
+        raise ValueError("Invalid lifecycle event: " + "; ".join(messages))
+    return event
+</code></pre><p><strong>Action:</strong> Reject or quarantine malformed lifecycle events before they enter the assurance metric pipeline. Missing timestamps are not harmless logging gaps; they make dwell-time and coverage evidence unprovable.</p>`
+                },
+                {
+                    "implementation": "Compute dwell-time, triage-time, and investigation-coverage metrics over fixed windows and publish p50/p95 values for operations and assurance gates.",
+                    "howTo": `<h5>Concept:</h5><p>The minimum useful measurement window should answer three questions: how long did anomalies wait before human awareness, how long did triage take after alert creation, and what fraction of eligible alerts were actually investigated. Compute the metrics from raw lifecycle events rather than dashboard screenshots so the evidence can be reproduced.</p><h5>Metrics calculator</h5><pre><code># file: detection/slo_metrics.py
+from __future__ import annotations
+
+from datetime import datetime
+from statistics import median
+
+
+def parse_ts(value: str | None) -> datetime | None:
+    if value is None:
+        return None
+    return datetime.fromisoformat(value.replace("Z", "+00:00"))
+
+
+def percentile(values: list[float], pct: float) -> float | None:
+    if not values:
+        return None
+    ordered = sorted(values)
+    index = min(len(ordered) - 1, max(0, round((pct / 100.0) * (len(ordered) - 1))))
+    return ordered[index]
+
+
+def seconds_between(start: str | None, end: str | None) -> float | None:
+    start_ts = parse_ts(start)
+    end_ts = parse_ts(end)
+    if start_ts is None or end_ts is None:
+        return None
+    return max((end_ts - start_ts).total_seconds(), 0.0)
+
+
+def compute_detection_slo(events: list[dict]) -> dict:
+    eligible = [event for event in events if event.get("disposition") != "duplicate"]
+    investigated = [event for event in eligible if event.get("investigated") is True]
+    acknowledged = [event for event in eligible if event.get("human_acknowledged_at")]
+    triaged = [event for event in investigated if event.get("triage_completed_at")]
+
+    uninvestigated = [event for event in eligible if event.get("investigated") is not True]
+    unacknowledged = [event for event in eligible if not event.get("human_acknowledged_at")]
+    untriaged = [event for event in investigated if not event.get("triage_completed_at")]
+
+    dwell_seconds = [
+        value for value in (
+            seconds_between(event.get("anomaly_observed_at"), event.get("human_acknowledged_at"))
+            for event in acknowledged
+        )
+        if value is not None
+    ]
+    triage_seconds = [
+        value for value in (
+            seconds_between(event.get("alert_created_at"), event.get("triage_completed_at"))
+            for event in triaged
+        )
+        if value is not None
+    ]
+
+    return {
+        "eligible_alerts": len(eligible),
+        "investigated_alerts": len(investigated),
+        "uninvestigated_eligible_alerts": len(uninvestigated),
+        "unacknowledged_eligible_alerts": len(unacknowledged),
+        "untriaged_investigated_alerts": len(untriaged),
+        "coverage_ratio": round(len(investigated) / max(len(eligible), 1), 4),
+        "dwell_sample_count": len(dwell_seconds),
+        "triage_sample_count": len(triage_seconds),
+        "p50_dwell_seconds": percentile(dwell_seconds, 50),
+        "p95_dwell_seconds": percentile(dwell_seconds, 95),
+        "p50_triage_seconds": percentile(triage_seconds, 50),
+        "p95_triage_seconds": percentile(triage_seconds, 95),
+        "median_dwell_seconds": median(dwell_seconds) if dwell_seconds else None,
+        "percentile_method": "nearest_index_round_inclusive",
+        "dwell_sample_basis": "eligible alerts with human_acknowledged_at populated",
+        "triage_sample_basis": "investigated alerts with triage_completed_at populated",
+        "censoring_note": "Unacknowledged eligible alerts are counted separately; do not interpret dwell p95 without unacknowledged_eligible_alerts and coverage_ratio.",
+    }
+</code></pre><p><strong>Operational notes:</strong> Break metrics down by <code>rule_id</code>, <code>severity</code>, <code>agent_id</code>, and <code>tenant_id</code>. A global coverage score can hide the exact rule family where alerts are being ignored. Treat <code>p95_dwell_seconds</code> as a conditional percentile over acknowledged eligible alerts; unacknowledged eligible alerts are right-censored operational evidence and must be reviewed beside the percentile. The <code>percentile_method</code> field is included so auditors can recompute the same p50/p95 values from raw lifecycle events.</p>`
+                },
+                {
+                    "implementation": "Emit an assurance evidence package that can gate rollout, promotion to broader automation, or executive reporting.",
+                    "howTo": `<h5>Concept:</h5><p>Detection SLOs become useful when they affect decisions. Promotion gates for new rules, triage agents, or higher-risk autonomy tiers should require a signed or immutable evidence package with the measurement window, thresholds, metric results, and pass/fail status.</p><h5>Evidence package builder</h5><pre><code># file: detection/slo_evidence_package.py
+from __future__ import annotations
+
+from dataclasses import asdict, dataclass
+from datetime import datetime, timezone
+import json
+import uuid
+
+
+@dataclass(frozen=True)
+class DetectionSloTarget:
+    min_coverage_ratio: float
+    max_p95_dwell_seconds: float
+
+
+@dataclass(frozen=True)
+class DetectionSloEvidence:
+    evidence_id: str
+    schema_version: str
+    window_start: str
+    window_end: str
+    metric_result: dict
+    target: DetectionSloTarget
+    status: str
+    status_reason: str
+    artifact_ref: str
+    generated_at: str
+
+
+def build_evidence_package(
+    metric_result: dict,
+    target: DetectionSloTarget,
+    window_start: str,
+    window_end: str,
+    artifact_ref: str,
+) -> DetectionSloEvidence:
+    eligible_alerts = metric_result.get("eligible_alerts", 0)
+    coverage_ratio = metric_result.get("coverage_ratio", 0.0)
+    coverage_ok = coverage_ratio >= target.min_coverage_ratio
+    dwell_value = metric_result.get("p95_dwell_seconds")
+    dwell_ok = dwell_value is not None and dwell_value <= target.max_p95_dwell_seconds
+    if eligible_alerts == 0:
+        status = "insufficient_data"
+        status_reason = "No eligible alerts were observed in the measurement window"
+    elif metric_result.get("dwell_sample_count", 0) == 0:
+        status = "fail"
+        status_reason = "Eligible alerts existed but none had human_acknowledged_at populated"
+    elif coverage_ok and dwell_ok:
+        status = "pass"
+        status_reason = "Coverage and p95 dwell targets were met"
+    else:
+        status = "fail"
+        status_reason = "Coverage or p95 dwell target was missed"
+
+    return DetectionSloEvidence(
+        evidence_id=str(uuid.uuid4()),
+        schema_version="aidefend.detection_slo.v1",
+        window_start=window_start,
+        window_end=window_end,
+        metric_result=metric_result,
+        target=target,
+        status=status,
+        status_reason=status_reason,
+        artifact_ref=artifact_ref,
+        generated_at=datetime.now(timezone.utc).isoformat(),
+    )
+
+
+def serialize_evidence(evidence: DetectionSloEvidence) -> str:
+    payload = asdict(evidence)
+    payload["target"] = asdict(evidence.target)
+    return json.dumps(payload, sort_keys=True, indent=2)
+</code></pre><p><strong>Action:</strong> Store the evidence package in immutable object storage or an audit log. Use the same package as input to AID-M-009.006 capability-tier gates when a higher-risk agent profile claims that detection and investigation coverage are operationally ready.</p>`
                 }
             ]
         }
