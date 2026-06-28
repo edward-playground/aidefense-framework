@@ -8610,6 +8610,49 @@ def serialize_evidence(evidence: DetectionSloEvidence) -> str:
 </code></pre><p><strong>Action:</strong> Store the evidence package in immutable object storage or an audit log. Use the same package as input to AID-M-009.006 capability-tier gates when a higher-risk agent profile claims that detection and investigation coverage are operationally ready.</p>`
                 }
             ]
+        },
+        {
+            "id": "AID-D-018",
+            "name": "Embedding Provenance Attestation for RAG",
+            "pillar": [
+                "model",
+                "app",
+                "data"
+            ],
+            "phase": [
+                "operation",
+                "validation"
+            ],
+            "description": "Adversarial embeddings injected into a Retrieval-Augmented Generation (RAG) corpus can silently steer downstream LLM behavior — an attack class that bypasses traditional input/output guardrails because the manipulation lives between embedding generation and response generation, not at the prompt boundary. This technique pairs cross-layer detection of anomalous embedding vectors at retrieval time with cryptographic provenance attestation that ties every retrieved chunk back to a signed, auditable source corpus and embedding pipeline (e.g., Sigstore / in-toto attestations covering chunker version, embedding-model version, and corpus snapshot hash). Each retrieval result is gated by an embedding-layer integrity check that verifies the attestation chain, rejects chunks whose embeddings did not originate from an approved pipeline, and flags vectors whose distributional properties diverge from the trusted corpus baseline. The control complements existing input-validation (AID-D-001) and output-monitoring layers by closing the embedding-layer blind spot, and is an operational requirement for any RAG system whose retrieval corpus is sourced from third parties, user uploads, or other partially trusted feeds.",
+            "toolsOpenSource": [
+                "EmbedGuard (https://github.com/neerazz/embedguard) — IJCESEN 2026 reference implementation; cross-layer detection + provenance attestation; MIT-licensed",
+                "Sigstore / in-toto attestation chain (for retrieval-corpus and embedding-pipeline provenance signing)",
+                "NeMo-Guardrails (input/output guardrails complementary to embedding-layer defense)"
+            ],
+            "toolsCommercial": [],
+            "defendsAgainst": [
+                {
+                    "framework": "MITRE ATLAS",
+                    "items": [
+                        "AML.T0051.000 LLM Prompt Injection: Indirect",
+                        "AML.T0057 LLM Data Leakage"
+                    ]
+                },
+                {
+                    "framework": "MAESTRO",
+                    "items": [
+                        "Indirect Prompt Injection (L3)",
+                        "Compromised RAG Corpus (L3)"
+                    ]
+                },
+                {
+                    "framework": "OWASP LLM Top 10 2025",
+                    "items": [
+                        "LLM01:2025 Prompt Injection",
+                        "LLM08:2025 Vector and Embedding Weaknesses"
+                    ]
+                }
+            ]
         }
     ]
 };
