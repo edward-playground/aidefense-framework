@@ -2024,7 +2024,6 @@ def dispatch_action(action: ProposedAction, tool_request: dict) -> dict:
                             "framework": "OWASP Agentic AI Top 10 2026",
                             "items": [
                                 "ASI06:2026 Memory & Context Poisoning",
-                                "ASI09:2026 Human-Agent Trust Exploitation (promotion gates enforce human review before trust elevation)",
                                 "ASI01:2026 Agent Goal Hijack (promotion gates prevent poisoned memory from hijacking agent goals)"
                             ]
                         },
@@ -2213,7 +2212,6 @@ def dispatch_action(action: ProposedAction, tool_request: dict) -> dict:
                             framework: "MITRE ATLAS",
                             items: [
                                 "AML.T0081 Modify AI Agent Configuration",
-                                "AML.T0084 Discover AI Agent Configuration",
                                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                                 "AML.T0104 Publish Poisoned AI Agent Tool",
                                 "AML.T0080 AI Agent Context Poisoning",
@@ -2264,7 +2262,10 @@ def dispatch_action(action: ProposedAction, tool_request: dict) -> dict:
                         },
                         {
                             framework: "Google Secure AI Framework 2.0 - Risks",
-                            items: ["RA: Rogue Actions (write protection on persistent identity/state files prevents persistent backdoors that enable rogue actions)"],
+                            items: [
+                                "RA: Rogue Actions (write protection on persistent identity/state files prevents persistent backdoors that enable rogue actions)",
+                                "PIJ: Prompt Injection (write protection prevents persistent injected instructions from entering identity/state files)",
+                            ],
                         },
                         {
                             framework: "Databricks AI Security Framework 3.0",
@@ -2701,7 +2702,8 @@ def _truncate_fallback(messages: list[dict], system_prompt: str) -&gt; list[dict
                         "ASI08:2026 Cascading Failures",
                         "ASI01:2026 Agent Goal Hijack",
                         "ASI02:2026 Tool Misuse and Exploitation",
-                        "ASI05:2026 Unexpected Code Execution (RCE) (kill-switch halts runaway code execution)"
+                        "ASI05:2026 Unexpected Code Execution (RCE) (kill-switch halts runaway code execution)",
+                        "ASI04:2026 Agentic Supply Chain Vulnerabilities (kill-switch contains compromised third-party agents or tools)"
                     ]
                 },
                 {
@@ -3012,7 +3014,7 @@ async def trigger_manual_halt(
                 },
                 {
                     "implementation": "Define and version-control a formal Kill-Switch Activation SOP.",
-                    "howTo": "<h5>Concept:</h5><p>Because a kill-switch has huge operational and business impact, you cannot improvise under stress. You need a written Standard Operating Procedure (SOP) that defines when, who, and how to activate the kill-switch. This reduces hesitation in real crises and prevents abuse during false alarms. The SOP must live in version control, and edits must require security/governance approval.</p><h5>Example SOP Structure</h5><pre><code># File: docs/sop/KILL_SWITCH_PROTOCOL.md\n\n# SOP: AI System Emergency Halt Protocol\n\n## 1. Activation Criteria (ANY of the following)\n- A. Confirmed Data Breach: Active, unauthorized exfiltration of sensitive data (PII, financial) via an AI component.\n- B. Confirmed Financial Loss: Uncontrolled agent behavior causing financial loss > $10,000 USD.\n- C. Critical System Manipulation: Core agent's signed goal (see AID-D-010) bypassed; agent performing ungoverned high-risk actions.\n- D. Catastrophic Resource Consumption: Automated alert (see AID-I-005.001) indicates runaway cost or failure state.\n\n## 2. Authorized Personnel (MFA required for each activation)\n- On-Call SRE Lead\n- Director of Security Operations\n- CISO\n\n## 3. Activation Procedure\n1. Open the Admin Control Panel.\n2. Complete MFA.\n3. Select Global Halt or Tenant-Specific Halt.\n4. Enter justification with incident ticket link.\n5. (If policy requires) obtain second approver confirmation within 60 seconds.\n6. Confirm to set the halt flag.\n\n## 4. Immediate Communication Protocol\n- Immediately notify #ai-incident-response (or equivalent) with @here.\n- Include justification, scope (global vs tenant), and timestamp.\n\n## 5. Governance Note\n- This SOP is stored in version control.\n- Any change requires signoff from Security + Engineering leadership.\n</code></pre><p><strong>Action:</strong> Write and maintain an Emergency Halt SOP in version control. Clearly define activation criteria, authorized roles, MFA/dual-control requirements, and notification steps. Treat SOP edits as controlled changes that require formal approval from Security and Engineering leadership, so auditors can verify that governance was followed.</p>"
+                    "howTo": "<h5>Concept:</h5><p>Because a kill-switch has huge operational and business impact, you cannot improvise under stress. You need a written Standard Operating Procedure (SOP) that defines when, who, and how to activate the kill-switch. This reduces hesitation in real crises and prevents abuse during false alarms. The SOP must live in version control, and edits must require security/governance approval.</p><h5>Example SOP Structure</h5><pre><code># File: docs/sop/KILL_SWITCH_PROTOCOL.md\n\n# SOP: AI System Emergency Halt Protocol\n\n## 1. Activation Criteria (ANY of the following)\n- A. Confirmed Data Breach: Active, unauthorized exfiltration of sensitive data (PII, financial) via an AI component.\n- B. Confirmed Financial Loss: Uncontrolled agent behavior causing financial loss > $10,000 USD.\n- C. Critical System Manipulation: Core agent's signed goal (see AID-D-010) bypassed; agent performing ungoverned high-risk actions.\n- D. Catastrophic Resource Consumption: Automated halt monitoring in AID-I-005 indicates runaway cost or failure state.\n\n## 2. Authorized Personnel (MFA required for each activation)\n- On-Call SRE Lead\n- Director of Security Operations\n- CISO\n\n## 3. Activation Procedure\n1. Open the Admin Control Panel.\n2. Complete MFA.\n3. Select Global Halt or Tenant-Specific Halt.\n4. Enter justification with incident ticket link.\n5. (If policy requires) obtain second approver confirmation within 60 seconds.\n6. Confirm to set the halt flag.\n\n## 4. Immediate Communication Protocol\n- Immediately notify #ai-incident-response (or equivalent) with @here.\n- Include justification, scope (global vs tenant), and timestamp.\n\n## 5. Governance Note\n- This SOP is stored in version control.\n- Any change requires signoff from Security + Engineering leadership.\n</code></pre><p><strong>Action:</strong> Write and maintain an Emergency Halt SOP in version control. Clearly define activation criteria, authorized roles, MFA/dual-control requirements, and notification steps. Treat SOP edits as controlled changes that require formal approval from Security and Engineering leadership, so auditors can verify that governance was followed.</p>"
                 },
                 {
                     "implementation": "Develop a controlled post-halt restart and verification checklist (cold start procedure).",
@@ -3404,6 +3406,7 @@ def run_recursive_shutdown_drill(manifest: ShutdownManifest, clients: dict) -> d
                     "framework": "OWASP Agentic AI Top 10 2026",
                     "items": [
                         "ASI01:2026 Agent Goal Hijack",
+                        "ASI02:2026 Tool Misuse and Exploitation",
                         "ASI03:2026 Identity and Privilege Abuse",
                         "ASI06:2026 Memory & Context Poisoning",
                         "ASI10:2026 Rogue Agents"
@@ -3667,7 +3670,8 @@ def run_recursive_shutdown_drill(manifest: ShutdownManifest, clients: dict) -> d
                         {
                             "framework": "OWASP LLM Top 10 2025",
                             "items": [
-                                "LLM05:2025 Improper Output Handling"
+                                "LLM05:2025 Improper Output Handling",
+                                "LLM02:2025 Sensitive Information Disclosure"
                             ]
                         },
                         {

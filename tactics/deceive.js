@@ -158,6 +158,7 @@ export const deceiveTactic = {
                         "AML.T0057 LLM Data Leakage (canary tokens in training data detect leakage)",
                         "AML.T0035 AI Artifact Collection (decoy artifacts detect unauthorized artifact collection)",
                         "AML.T0005.000 Create Proxy AI Model: Train Proxy via Gathered AI Artifacts (canaries in artifact stores detect gathering for proxy training)",
+                        "AML.T0064 Gather RAG-Indexed Targets",
                         "AML.T0095.000 Search Open Websites/Domains: Code Repositories (repository canaries detect public-code reconnaissance)",
                         "AML.T0055 Unsecured Credentials",
                         "AML.T0083 Credentials from AI Agent Configuration",
@@ -197,7 +198,6 @@ export const deceiveTactic = {
                         "NISTAML.031 Model Extraction (canary data traces stolen training data)",
                         "NISTAML.051 Model Poisoning (Supply Chain) (decoy artifacts detect supply chain compromise)",
                         "NISTAML.037 Training Data Attacks (canary tokens detect training data extraction)",
-                        "NISTAML.033 Membership Inference (canary data reveals unauthorized model training on stolen data)",
                         "NISTAML.038 Data Extraction (canary tokens detect data extraction)"
                     ]
                 },
@@ -828,7 +828,7 @@ route_message(
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
-                        "N/A"
+                        "LLM07:2025 System Prompt Leakage"
                     ]
                 },
                 {

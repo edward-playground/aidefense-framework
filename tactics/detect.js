@@ -285,7 +285,6 @@ export const detectTactic = {
                             "framework": "MAESTRO",
                             "items": [
                                 "Adversarial Examples (L1)",
-                                "Goal Misalignment Cascades (Cross-Layer) (misinformation from misaligned agent outputs)",
                                 "Framework Evasion (L3) (cross-modal attacks exploit framework input handling)",
                                 "Agent Impersonation (L7) (deepfakes enable agent/identity impersonation)"
                             ]
@@ -395,7 +394,6 @@ export const detectTactic = {
                             "items": [
                                 "Adversarial Examples (L1)",
                                 "Input Validation Attacks (L3)",
-                                "Goal Misalignment Cascades (Cross-Layer) (misinformation from misaligned agent outputs)"
                             ]
                         },
                         {
@@ -1634,7 +1632,6 @@ if __name__ == "__main__":
                 {
                     "framework": "MAESTRO",
                     "items": [
-                        "Inaccurate Agent Capability Description (L7)",
                         "Data Exfiltration (L2)",
                         "Data Leakage through Observability (L5)",
                         "Compromised Agents (L7) (output monitoring detects compromised agent behavior)"
@@ -2006,7 +2003,8 @@ if __name__ == "__main__":
                                 "AML.T0102 Generate Malicious Commands (action policy monitoring catches malicious command generation)",
                                 "AML.T0085 Data from AI Services (tool use monitoring detects unauthorized data collection via AI services)",
                                 "AML.T0085.001 Data from AI Services: AI Agent Tools (monitors agent tool invocations for unauthorized data access)",
-                                "AML.T0084.002 Discover AI Agent Configuration: Activation Triggers (policy monitoring detects probing of activation triggers)"
+                                "AML.T0084.002 Discover AI Agent Configuration: Activation Triggers (policy monitoring detects probing of activation triggers)",
+                                "AML.T0084.003 Discover AI Agent Configuration: Call Chains (runtime denies and schema failures can reveal call-chain probing)"
                             ]
                         },
                         {
@@ -3427,8 +3425,7 @@ while True:
                         {
                             "framework": "OWASP LLM Top 10 2025",
                             "items": [
-                                "LLM03:2025 Supply Chain",
-                                "LLM07:2025 System Prompt Leakage"
+                                "LLM03:2025 Supply Chain"
                             ]
                         },
                         {
@@ -3990,7 +3987,8 @@ def verify_context_chain(entries: Sequence[dict]) -> None:
                                 "Agent Tool Misuse (L7)",
                                 "Data Exfiltration (L2)",
                                 "Resource Hijacking (L4)",
-                                "Evasion of Detection (L5)"
+                                "Evasion of Detection (L5)",
+                                "Compromised Observability Tools (L5)"
                             ]
                         },
                         {
@@ -4098,6 +4096,121 @@ compression = "gzip"</code></pre><p><strong>Action:</strong> Deploy a log shippe
                         {
                             "implementation": "Ensure logs are timestamped, immutable, and stored in a tamper-evident archive.",
                             "howTo": "<h5>Concept:</h5><p>For investigations, compliance reviews, and legal defensibility, it must be possible to prove that historical logs were not altered. A Write-Once-Read-Many (WORM) storage target (for example, an S3 bucket with Object Lock in Compliance Mode) prevents even admins from silently deleting or rewriting logs during the retention window.</p><h5>Immutable Storage via S3 Object Lock (Terraform)</h5><pre><code># File: infrastructure/secure_log_storage.tf\n\nresource \"aws_s3_bucket\" \"secure_log_archive\" {\n  bucket = \"aidefend-secure-log-archive-2025\"\n  # Object Lock can only be enabled at bucket creation time\n  object_lock_enabled = true\n}\n\nresource \"aws_s3_bucket_object_lock_configuration\" \"log_retention\" {\n  bucket = aws_s3_bucket.secure_log_archive.id\n\n  rule {\n    default_retention {\n      # Logs cannot be modified or deleted for 365 days.\n      mode = \"COMPLIANCE\"\n      days = 365\n    }\n  }\n}\n</code></pre><p><strong>Action:</strong> Forward AI security logs into an immutable archive (for example, S3 with Object Lock Compliance Mode). This creates a tamper-evident audit trail that supports incident response, breach notification, and non-repudiation requirements.</p>"
+                        },
+                        {
+                            "implementation": "Emit evidence-ready AI security events with stable identifiers, evidence references, retention labels, legal-hold flags, and chain-of-custody linkage.",
+                            "howTo": `<h5>Concept:</h5><p>Basic logs are not always investigation-ready. An evidence-ready AI security event must carry stable identifiers that join model calls, agent sessions, tool calls, retrieved chunks, prompts, responses, and evidence objects without relying on fragile text search. This guidance is technical evidence schema design; legal reporting decisions remain outside this technique.</p><h5>Step 1: Define a strict event contract</h5><pre><code># File: ai_logging/ai_security_event_schema.py
+from __future__ import annotations
+
+from datetime import datetime, timezone
+from typing import Literal
+
+from pydantic import BaseModel, Field, field_validator
+
+
+Severity = Literal["low", "medium", "high", "critical"]
+
+
+class EvidenceReadyAiEvent(BaseModel):
+    schema_version: Literal["aidefend.ai_security_event.v1"] = "aidefend.ai_security_event.v1"
+    event_id: str = Field(min_length=8)
+    observed_at: datetime
+    event_type: str = Field(min_length=3, max_length=120)
+    severity: Severity
+    tenant_id: str
+    principal_id: str | None = None
+    session_id: str | None = None
+    trace_id: str
+    model_id: str | None = None
+    model_provider: str | None = None
+    tool_call_id: str | None = None
+    source_technique_id: str | None = None
+    evidence_refs: list[str] = Field(default_factory=list, max_length=25)
+    retention_class: Literal["standard", "security_1y", "security_7y", "legal_hold"]
+    legal_hold: bool = False
+    chain_of_custody_id: str | None = None
+    redaction_profile: str
+    policy_version: str
+
+    @field_validator("evidence_refs")
+    @classmethod
+    def require_uri_refs(cls, refs: list[str]) -> list[str]:
+        for ref in refs:
+            if "://" not in ref:
+                raise ValueError("evidence_refs must be URI-like references")
+        return refs
+
+
+def build_event(**kwargs) -> EvidenceReadyAiEvent:
+    kwargs.setdefault("observed_at", datetime.now(timezone.utc))
+    return EvidenceReadyAiEvent(**kwargs)
+</code></pre><h5>Step 2: Emit a validated event from the application</h5><pre><code># File: ai_logging/emit_ai_security_event.py
+from __future__ import annotations
+
+import json
+import sys
+
+from ai_logging.ai_security_event_schema import build_event
+
+
+def emit_event(event) -> None:
+    sys.stdout.write(event.model_dump_json() + "\\n")
+
+
+event = build_event(
+    event_id="evt-20260704-0001",
+    event_type="prompt_sink_policy_denied",
+    severity="high",
+    tenant_id="tenant-prod",
+    principal_id="user-123",
+    session_id="sess-abc",
+    trace_id="trace-abc",
+    model_id="gpt-example",
+    model_provider="approved-provider",
+    tool_call_id=None,
+    source_technique_id="AID-H-019.005",
+    evidence_refs=["s3://security-evidence/prompt-sink/evt-20260704-0001.json"],
+    retention_class="security_7y",
+    legal_hold=False,
+    chain_of_custody_id="coc-20260704-0001",
+    redaction_profile="prompt-body-hashed",
+    policy_version="2026.07.1",
+)
+emit_event(event)
+</code></pre><h5>Verification and evidence</h5><pre><code># File: ai_logging/verify_ai_security_events.py
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+from ai_logging.ai_security_event_schema import EvidenceReadyAiEvent
+
+
+events = []
+failures = []
+for line_no, line in enumerate(Path("out/ai_security_events.jsonl").read_text(encoding="utf-8").splitlines(), start=1):
+    try:
+        events.append(EvidenceReadyAiEvent.model_validate_json(line))
+    except Exception as exc:
+        failures.append({"line": line_no, "error": str(exc)})
+
+missing_coc = [event.event_id for event in events if event.retention_class in {"security_7y", "legal_hold"} and not event.chain_of_custody_id]
+artifact = {
+    "schema_version": "aidefend.ai_security_event.validation.v1",
+    "validated_event_count": len(events),
+    "schema_failure_count": len(failures),
+    "schema_failures": failures[:100],
+    "missing_chain_of_custody": missing_coc[:100],
+    "status": "pass" if events and not failures and not missing_coc else "fail",
+}
+Path("artifacts").mkdir(exist_ok=True)
+Path("artifacts/ai-security-event-schema-validation.json").write_text(
+    json.dumps(artifact, indent=2, sort_keys=True),
+    encoding="utf-8",
+)
+if artifact["status"] != "pass":
+    raise SystemExit("AI security event schema validation failed")
+</code></pre><p><strong>Action:</strong> Require security-relevant AI events to pass this schema before ingestion. The evidence artifact for this guidance is <code>artifacts/ai-security-event-schema-validation.json</code>, proving event count, schema validity, evidence references, retention class, and chain-of-custody completeness.</p>`
                         }
                     ]
                 },
@@ -4526,7 +4639,6 @@ compression = "gzip"</code></pre><p><strong>Action:</strong> Deploy a log shippe
                             "framework": "MAESTRO",
                             "items": [
                                 "Resource Hijacking (L4)",
-                                "Lateral Movement (L4) (anomalous resource patterns indicate lateral movement)",
                                 "Denial of Service (DoS) Attacks (L1) (DoS on foundation models manifests as GPU/TPU telemetry spikes)",
                                 "Denial of Service (DoS) Attacks (L4) (infrastructure-level DoS is directly detectable via accelerator telemetry)"
                             ]
@@ -4539,9 +4651,7 @@ compression = "gzip"</code></pre><p><strong>Action:</strong> Deploy a log shippe
                         },
                         {
                             "framework": "OWASP ML Top 10 2023",
-                            "items": [
-                                "ML01:2023 Input Manipulation Attack (request-parameter anomalies reveal adversarial control-surface abuse)"
-                            ]
+                            "items": ["N/A"]
                         },
                         {
                             "framework": "OWASP Agentic AI Top 10 2026",
@@ -5390,6 +5500,397 @@ def evaluate_rollout(alerts: list[ReviewedAlert]) -> dict:
         "reviewed_alerts": len(alerts),
     }
 </code></pre><p><strong>Action:</strong> Store the rollout report with the rule ID, review window, reviewer group, thresholds, and expansion decision. Do not enable autonomous containment as part of this gate; passing the gate only permits broader read-only triage coverage.</p>`
+                        }
+                    ]
+                },
+                {
+                    "id": "AID-D-005.009",
+                    "name": "AI-Service C2 & Abuse-Channel Detection",
+                    "pillar": [
+                        "app",
+                        "infra"
+                    ],
+                    "phase": [
+                        "operation"
+                    ],
+                    "description": "Detect suspicious use of AI service APIs, model-provider endpoints, SaaS AI apps, or agent/MCP service channels as command-and-control, staging, exfiltration, or abuse coordination channels. This sub-technique focuses on behavioral detection over AI-service traffic: beacon-like request cadence, encoded payload patterns, abnormal prompt/completion entropy, unusual API-key or principal usage, and correlations with endpoint, proxy, identity, and model-gateway telemetry.<br/><br/><strong>Scope boundary:</strong> <code>AID-D-005.002</code> owns general SIEM alerting for AI systems. <code>AID-D-005.007</code> owns token, parameter, and cost-abuse anomalies. <code>AID-M-001.004</code> owns AI-service discovery. This sub-technique owns the specific detective logic for AI services acting as attacker communication or abuse channels. Network-layer containment and allow/deny enforcement for external AI services belongs to <code>AID-I-002.002</code>; account disablement, grant revocation, or token eviction belongs to Evict controls.",
+                    "toolsOpenSource": [
+                        "OpenSearch / Elasticsearch",
+                        "Sigma",
+                        "Zeek",
+                        "Suricata",
+                        "OpenTelemetry",
+                        "Vector / Fluent Bit"
+                    ],
+                    "toolsCommercial": [
+                        "Splunk Enterprise Security",
+                        "Microsoft Sentinel",
+                        "Google Security Operations",
+                        "Datadog Cloud SIEM",
+                        "Palo Alto Cortex XDR / XSIAM",
+                        "Netskope / Zscaler AI traffic analytics"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0096 AI Service API",
+                                "AML.T0085 Data from AI Services",
+                                "AML.T0085.001 Data from AI Services: AI Agent Tools",
+                                "AML.T0086 Exfiltration via AI Agent Tool Invocation",
+                                "AML.T0025 Exfiltration via Cyber Means"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Data Exfiltration (L2)",
+                                "Evasion of Detection (L5)",
+                                "Integration Risks (L7)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM02:2025 Sensitive Information Disclosure",
+                                "LLM10:2025 Unbounded Consumption"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "N/A (AI-service C2 detection is primarily an operational monitoring control)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI02:2026 Tool Misuse and Exploitation",
+                                "ASI03:2026 Identity and Privilege Abuse",
+                                "ASI10:2026 Rogue Agents"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.039 Compromising connected resources",
+                                "NISTAML.038 Data Extraction",
+                                "NISTAML.036 Leaking information from user interactions"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AITech-14.1 Unauthorized Access",
+                                "AITech-12.1 Tool Exploitation",
+                                "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "SDD: Sensitive Data Disclosure",
+                                "IIC: Insecure Integrated Component",
+                                "RA: Rogue Actions"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Agents - Core 13.2: Tool Misuse",
+                                "Agents - Core 13.3: Privilege Compromise",
+                                "Agents - Core 13.13: Rogue Agents in Multi-Agent Systems",
+                                "Platform 12.3: Lack of incident response",
+                                "Raw Data 1.10: Lack of data access logs"
+                            ]
+                        }
+                    ],
+                    "implementationGuidance": [
+                        {
+                            "implementation": "Normalize AI-service traffic into a detector-ready schema with principal, provider, model, request cadence, byte counts, token counts, and payload-shape indicators.",
+                            "howTo": `<h5>Concept:</h5><p>AI-service C2 detection requires consistent fields across model gateways, proxy logs, CASB/SWG telemetry, and endpoint events. Do not store raw sensitive prompts by default; store hashes, sizes, entropy, token counts, provider identity, and stable trace IDs so detectors can reason about cadence and payload shape.</p><h5>Step 1: Define detector-ready telemetry</h5><pre><code># File: detection/ai_service_channel_event.py
+from __future__ import annotations
+
+import hashlib
+import math
+from dataclasses import asdict, dataclass
+from datetime import datetime, timezone
+
+
+def sha256_hex(value: str) -> str:
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def shannon_entropy(value: str) -> float:
+    if not value:
+        return 0.0
+    counts = {char: value.count(char) for char in set(value)}
+    return -sum((count / len(value)) * math.log2(count / len(value)) for count in counts.values())
+
+
+@dataclass(frozen=True)
+class AiServiceChannelEvent:
+    observed_at: str
+    provider: str
+    model_or_service: str
+    principal_id: str
+    api_key_id_hash: str | None
+    source_ip: str | None
+    user_agent: str | None
+    trace_id: str
+    request_bytes: int
+    response_bytes: int
+    prompt_sha256: str
+    prompt_entropy: float
+    completion_entropy: float
+    payload_shape_flags: list[str]
+    token_count: int | None
+    tool_call_count: int
+
+    @staticmethod
+    def now_iso() -> str:
+        return datetime.now(timezone.utc).isoformat()
+
+    def to_event(self) -> dict:
+        return {"event_type": "ai_service_channel", **asdict(self)}
+</code></pre><h5>Step 2: Convert gateway records into channel events</h5><pre><code># File: detection/normalize_model_gateway.py
+from __future__ import annotations
+
+import json
+import sys
+
+from detection.ai_service_channel_event import AiServiceChannelEvent, sha256_hex, shannon_entropy
+
+
+def normalize(record: dict) -> dict:
+    prompt = str(record.get("prompt_preview") or "")
+    completion = str(record.get("completion_preview") or "")
+    api_key_id = record.get("api_key_id")
+    payload_shape_flags = []
+    compact_prompt = "".join(prompt.split())
+    if len(compact_prompt) >= 80 and all(char.isalnum() or char in "+/=_-" for char in compact_prompt):
+        payload_shape_flags.append("base64_like_prompt")
+    if prompt.count("\\n") >= 20:
+        payload_shape_flags.append("many_short_lines")
+    event = AiServiceChannelEvent(
+        observed_at=record.get("timestamp") or AiServiceChannelEvent.now_iso(),
+        provider=record["provider"],
+        model_or_service=record.get("model", "unknown"),
+        principal_id=record["principal_id"],
+        api_key_id_hash=sha256_hex(api_key_id) if api_key_id else None,
+        source_ip=record.get("source_ip"),
+        user_agent=record.get("user_agent"),
+        trace_id=record["trace_id"],
+        request_bytes=int(record.get("request_bytes") or len(prompt.encode("utf-8"))),
+        response_bytes=int(record.get("response_bytes") or len(completion.encode("utf-8"))),
+        prompt_sha256=sha256_hex(prompt),
+        prompt_entropy=round(shannon_entropy(prompt), 4),
+        completion_entropy=round(shannon_entropy(completion), 4),
+        payload_shape_flags=payload_shape_flags,
+        token_count=record.get("token_count"),
+        tool_call_count=int(record.get("tool_call_count") or 0),
+    )
+    return event.to_event()
+
+
+for line in sys.stdin:
+    print(json.dumps(normalize(json.loads(line)), sort_keys=True))
+</code></pre><h5>Verification and evidence</h5><pre><code># File: detection/verify_ai_channel_schema.py
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+
+REQUIRED = {"provider", "principal_id", "trace_id", "request_bytes", "response_bytes", "prompt_sha256"}
+events = [json.loads(line) for line in Path("out/ai_service_channel_events.jsonl").read_text(encoding="utf-8").splitlines()]
+missing = [
+    {"trace_id": event.get("trace_id"), "missing": sorted(field for field in REQUIRED if event.get(field) in {None, ""})}
+    for event in events
+    if any(event.get(field) in {None, ""} for field in REQUIRED)
+]
+artifact = {
+    "schema_version": "aidefend.ai_service_channel.schema_check.v1",
+    "event_count": len(events),
+    "missing_required_field_count": len(missing),
+    "missing_required_fields": missing[:100],
+    "status": "pass" if events and not missing else "fail",
+}
+Path("artifacts").mkdir(exist_ok=True)
+Path("artifacts/ai-service-channel-schema-evidence.json").write_text(
+    json.dumps(artifact, indent=2, sort_keys=True),
+    encoding="utf-8",
+)
+if artifact["status"] != "pass":
+    raise SystemExit("AI service channel schema verification failed")
+</code></pre><p><strong>Action:</strong> Feed normalized AI-service channel events to your SIEM. The evidence artifact for this guidance is <code>artifacts/ai-service-channel-schema-evidence.json</code>, proving detector input completeness without storing raw prompt bodies.</p>`,
+                        },
+                        {
+                            "implementation": "Detect beacon-like cadence, encoded payload shape, and abnormal prompt/completion entropy in AI-service traffic.",
+                            "howTo": `<h5>Concept:</h5><p>AI-service C2 often looks like normal API use at the destination layer. Detection must inspect behavior: periodic request intervals, repeated payload sizes, high-entropy prompt fragments, base64-like payloads, and prompt/response pairs that look like command envelopes rather than user tasks.</p><h5>Step 1: Compute cadence and payload-shape signals</h5><pre><code># File: detection/ai_service_c2_detector.py
+from __future__ import annotations
+
+import json
+from collections import defaultdict
+from datetime import datetime
+from statistics import mean, pstdev
+
+
+def coefficient_of_variation(values: list[float]) -> float:
+    if len(values) < 2:
+        return 0.0
+    avg = mean(values)
+    return 0.0 if avg == 0 else pstdev(values) / avg
+
+
+def parse_observed_at(value: str) -> float | None:
+    if not value:
+        return None
+    try:
+        return datetime.fromisoformat(str(value).replace("Z", "+00:00")).timestamp()
+    except ValueError:
+        return None
+
+
+def inter_arrival_seconds(ordered_events: list[dict]) -> list[float]:
+    timestamps = [
+        ts for ts in (parse_observed_at(event.get("observed_at")) for event in ordered_events)
+        if ts is not None
+    ]
+    if len(timestamps) < 2:
+        return []
+    return [
+        later - earlier
+        for earlier, later in zip(timestamps, timestamps[1:])
+        if later >= earlier
+    ]
+
+
+def detect_c2_patterns(events: list[dict]) -> list[dict]:
+    grouped: dict[tuple[str, str], list[dict]] = defaultdict(list)
+    for event in events:
+        grouped[(event["principal_id"], event["provider"])].append(event)
+
+    findings = []
+    for (principal_id, provider), group in grouped.items():
+        ordered = sorted(group, key=lambda event: event["observed_at"])
+        request_sizes = [int(event["request_bytes"]) for event in ordered]
+        high_entropy = [event for event in ordered if float(event.get("prompt_entropy", 0)) >= 4.2]
+        base64ish = [event for event in ordered if "base64_like_prompt" in set(event.get("payload_shape_flags") or [])]
+        size_cv = coefficient_of_variation(request_sizes)
+        repeated_size_ratio = 1 - (len(set(request_sizes)) / max(len(request_sizes), 1))
+        intervals = inter_arrival_seconds(ordered)
+        interval_cv = coefficient_of_variation(intervals)
+        mean_interval = mean(intervals) if intervals else None
+
+        score = 0
+        reasons = []
+        if len(intervals) >= 10 and mean_interval is not None and 5 <= mean_interval <= 3600 and interval_cv <= 0.20:
+            score += 35
+            reasons.append("periodic_request_cadence")
+        if len(ordered) >= 20 and repeated_size_ratio >= 0.75:
+            score += 35
+            reasons.append("repeated_request_size")
+        if len(high_entropy) >= 10:
+            score += 35
+            reasons.append("high_entropy_prompts")
+        if len(base64ish) >= 5:
+            score += 30
+            reasons.append("base64_like_payloads")
+        if len(ordered) >= 20 and size_cv <= 0.15:
+            score += 15
+            reasons.append("low_size_variance")
+
+        if score >= 50:
+            findings.append({
+                "finding_type": "possible_ai_service_c2_channel",
+                "principal_id": principal_id,
+                "provider": provider,
+                "event_count": len(ordered),
+                "score": min(score, 100),
+                "reasons": reasons,
+                "mean_inter_arrival_seconds": round(mean_interval, 3) if mean_interval is not None else None,
+                "inter_arrival_cv": round(interval_cv, 4) if intervals else None,
+                "sample_trace_ids": [event["trace_id"] for event in ordered[:10]],
+            })
+    return findings
+</code></pre><h5>Step 2: Produce detector findings</h5><pre><code># File: detection/run_ai_service_c2_detector.py
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+from detection.ai_service_c2_detector import detect_c2_patterns
+
+
+events = [json.loads(line) for line in Path("out/ai_service_channel_events.jsonl").read_text(encoding="utf-8").splitlines()]
+findings = detect_c2_patterns(events)
+Path("artifacts").mkdir(exist_ok=True)
+Path("artifacts/ai-service-c2-findings.json").write_text(
+    json.dumps({"schema_version": "aidefend.ai_service_c2.findings.v1", "findings": findings}, indent=2, sort_keys=True),
+    encoding="utf-8",
+)
+</code></pre><h5>Verification and evidence</h5><p>Seed a staging dataset with one known benign user and one synthetic beacon-like AI-service flow. Run the detector and verify that only the beacon-like flow produces <code>possible_ai_service_c2_channel</code>. The evidence artifact is <code>artifacts/ai-service-c2-findings.json</code>, which stores score, reasons, principal/provider pair, event count, and trace IDs for analyst review.</p><p><strong>Action:</strong> Run this detector on normalized AI-service telemetry. Treat the result as a detection finding requiring investigation, not as automatic proof of compromise.</p>`,
+                        },
+                        {
+                            "implementation": "Correlate AI-service C2 findings with identity, endpoint, proxy, and API-key telemetry to create an investigation-ready alert.",
+                            "howTo": `<h5>Concept:</h5><p>A cadence or entropy signal alone can be noisy. Raise severity when the same principal, API key, device, or source IP also shows impossible travel, endpoint malware alerts, proxy anomalies, new OAuth grants, or abnormal model-provider spend. This guidance creates a correlated alert with evidence references; it does not perform response actions.</p><h5>Step 1: Join detector findings with security context</h5><pre><code># File: detection/correlate_ai_service_c2.py
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+
+def load_json_list(path: str) -> list[dict]:
+    candidate = Path(path)
+    if not candidate.exists():
+        return []
+    data = json.loads(candidate.read_text(encoding="utf-8"))
+    return data if isinstance(data, list) else data.get("alerts", [])
+
+
+def index_by(items: list[dict], key: str) -> dict[str, list[dict]]:
+    result: dict[str, list[dict]] = {}
+    for item in items:
+        result.setdefault(str(item.get(key)), []).append(item)
+    return result
+
+
+findings = json.loads(Path("artifacts/ai-service-c2-findings.json").read_text(encoding="utf-8"))["findings"]
+identity_alerts = index_by(load_json_list("out/identity_alerts.json"), "principal_id")
+endpoint_alerts = index_by(load_json_list("out/endpoint_alerts.json"), "principal_id")
+proxy_alerts = index_by(load_json_list("out/proxy_alerts.json"), "principal_id")
+api_key_alerts = index_by(load_json_list("out/api_key_alerts.json"), "principal_id")
+
+alerts = []
+for finding in findings:
+    principal_id = finding["principal_id"]
+    related = {
+        "identity": identity_alerts.get(principal_id, []),
+        "endpoint": endpoint_alerts.get(principal_id, []),
+        "proxy": proxy_alerts.get(principal_id, []),
+        "api_key": api_key_alerts.get(principal_id, []),
+    }
+    related_count = sum(len(values) for values in related.values())
+    severity = "critical" if finding["score"] >= 80 and related_count else "high" if related_count else "medium"
+    alerts.append({
+        "alert_type": "ai_service_c2_correlated",
+        "severity": severity,
+        "principal_id": principal_id,
+        "provider": finding["provider"],
+        "score": finding["score"],
+        "reasons": finding["reasons"],
+        "related_signal_count": related_count,
+        "sample_trace_ids": finding["sample_trace_ids"],
+        "recommended_response_controls": ["AID-I-002.002", "AID-E-001.004", "AID-E-005"],
+    })
+
+Path("artifacts/ai-service-c2-correlated-alerts.json").write_text(
+    json.dumps({"schema_version": "aidefend.ai_service_c2.correlated_alerts.v1", "alerts": alerts}, indent=2, sort_keys=True),
+    encoding="utf-8",
+)
+</code></pre><h5>Verification and evidence</h5><p>Review <code>artifacts/ai-service-c2-correlated-alerts.json</code> for every detector run. Each alert must preserve the detector score, reasons, trace IDs, related signal count, and recommended response controls. If related context is absent, the alert remains medium severity instead of pretending the detector alone proved compromise.</p><p><strong>Action:</strong> Publish correlated alerts into the same SOC handoff path used by <code>AID-D-005.002</code>. Keep response execution in the referenced Isolate/Evict controls.</p>`,
                         }
                     ]
                 }
@@ -6829,8 +7330,7 @@ def evaluate_consistency(goal: ApprovedGoal, observation: ActionObservation) -> 
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
-                                "NISTAML.051 Model Poisoning (Supply Chain) (population-drift monitoring detects unauthorized supply-chain agents)",
-                                "NISTAML.014 Energy-latency (population control prevents resource exhaustion from rogue agents)"
+                                "NISTAML.051 Model Poisoning (Supply Chain) (population-drift monitoring detects unauthorized supply-chain agents)"
                             ]
                         },
                         {
@@ -7731,7 +8231,6 @@ def evaluate_consistency(goal: ApprovedGoal, observation: ActionObservation) -> 
                     "items": [
                         "LLM09:2025 Misinformation",
                         "LLM06:2025 Excessive Agency",
-                        "LLM05:2025 Improper Output Handling",
                         "LLM02:2025 Sensitive Information Disclosure"
                     ]
                 },

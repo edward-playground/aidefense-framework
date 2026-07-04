@@ -1,8 +1,8 @@
 {
 "version": {
 "schemaVersion": "2.0",
-"dataVersion": "2026.06.25",
-"generatedAt": "2026-06-25T23:29:22.097Z",
+"dataVersion": "2026.07.04",
+"generatedAt": "2026-07-04T12:09:39.137Z",
 "source": "bundled",
 "keywordStructure": "flat"
 },
@@ -18,7 +18,8 @@
 "description": "Systematically catalog and map all AI/ML assets, including models (categorized by type, version, deployment location, and ownership), datasets (training, validation, testing, and operational), data pipelines, and APIs. This process includes mapping their configurations, data flows (sources, transformations, destinations), and interdependencies (e.g., reliance on third-party APIs, upstream data providers, or specific libraries). The goal is to achieve comprehensive visibility into all components that constitute the AI ecosystem and require protection. This technique is foundational as it underpins the ability to apply targeted security controls and assess risk accurately.",
 "pillar": [
 "infra",
-"app"
+"app",
+"data"
 ],
 "phase": [
 "scoping",
@@ -187,8 +188,7 @@
 {
 "framework": "OWASP Agentic AI Top 10 2026",
 "items": [
-"ASI04:2026 Agentic Supply Chain Vulnerabilities",
-"ASI10:2026 Rogue Agents"
+"ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
 },
 {
@@ -229,7 +229,7 @@
 ]
 }
 ],
-"contentHash": "93ba23062546f7e8",
+"contentHash": "6c293a381c4a231a",
 "keywords": [
 "ai component inventory",
 "infrastructure cataloging",
@@ -482,6 +482,126 @@
 "spiffe spire workload identity",
 "skill ownership transfer",
 "skill revocation"
+]
+},
+{
+"id": "AID-M-001.004",
+"name": "AI Service & Embedded SaaS AI Discovery",
+"description": "Continuously discover externally hosted AI services, embedded SaaS AI features, browser-accessed generative AI apps, model-provider APIs, and SaaS-hosted MCP or agent endpoints used by enterprise identities, workloads, or managed devices. The objective is technical visibility: identify AI processing paths that do not appear in the declared AI asset inventory, classify whether sensitive data may be flowing into them, and produce evidence that downstream allowlisting, DLP, and incident-response controls can act on.<br/><br/><strong>Scope boundary:</strong> <code>AID-M-001.001</code> catalogs owned AI components, infrastructure, and model/dataset assets. <code>AID-M-001.002</code> maps declared system dependencies and trust boundaries. <code>AID-M-001.003</code> inventories installed agentic skills. This sub-technique owns discovery of <em>externally hosted AI services and embedded SaaS AI capabilities</em> that are observed in enterprise telemetry but may not yet be represented in those inventories. <code>AID-D-004.004</code> owns runtime detection of production pods contacting public model hubs as a model-source / namespace drift signal; this sub-technique owns broader enterprise AI-service discovery and inventory reconciliation across identity, browser, SaaS, proxy, DNS, gateway, and model-provider telemetry. Enforcement, blocking, or prompt-body DLP belongs to controls such as <code>AID-I-002.002</code>, <code>AID-H-019.005</code>, and <code>AID-H-030</code>; this technique supplies the discovery and reconciliation evidence they consume.",
+"pillar": [
+"infra",
+"app",
+"data"
+],
+"phase": [
+"scoping",
+"operation",
+"improvement"
+],
+"implementationGuidance": [
+"Ingest AI-service discovery telemetry from identity, network, endpoint, browser, SaaS, and API-gateway logs into a normalized AI service observation schema.",
+"Classify observed AI services against a governed AI service catalog and assign sanctioned, restricted, unknown, or blocked status with technical evidence.",
+"Reconcile discovered AI services with declared AI asset and dependency inventories, then produce drift evidence for downstream controls."
+],
+"toolsOpenSource": [
+"OpenTelemetry (application and gateway telemetry)",
+"Zeek (network metadata analysis)",
+"OpenSearch / Elasticsearch (log analytics)",
+"Sigma (portable detection rules)",
+"YARA-L style detection logic in SIEM pipelines"
+],
+"toolsCommercial": [
+"Microsoft Purview and Microsoft Defender for Cloud Apps (AI app discovery and DLP telemetry)",
+"Microsoft Entra Global Secure Access (generative AI and SaaS MCP discovery)",
+"Netskope One AI Security",
+"Zscaler AI Visibility and Controls",
+"Palo Alto Networks Prisma Access / Enterprise DLP"
+],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0007 Discover AI Artifacts (enterprise defenders discover AI services before adversaries abuse unknown paths)",
+"AML.T0085 Data from AI Services (discovery identifies AI-service data paths and principals)",
+"AML.T0085.001 Data from AI Services: AI Agent Tools (MCP and agent-service discovery identifies tool-mediated data paths)",
+"AML.T0096 AI Service API (discovery of AI service API usage supports later C2 and abuse detection)"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Data Leakage (Cross-Layer) (visibility into unmanaged AI paths is prerequisite to leakage control)",
+"Integration Risks (L7) (embedded SaaS AI features are external integrations)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2025",
+"items": [
+"LLM02:2025 Sensitive Information Disclosure (discovery identifies AI services receiving sensitive prompts or uploads)",
+"LLM03:2025 Supply Chain (embedded SaaS AI and external model services are third-party AI dependencies)"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"ML06:2023 AI Supply Chain Attacks (external AI services and APIs are supply-chain dependencies)"
+]
+},
+{
+"framework": "OWASP Agentic AI Top 10 2026",
+"items": [
+"ASI04:2026 Agentic Supply Chain Vulnerabilities (discovers external agent/MCP services and embedded AI components)"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"NISTAML.039 Compromising connected resources (unknown AI integrations expand connected-resource exposure)",
+"NISTAML.036 Leaking information from user interactions (discovery surfaces user interactions with external AI services)",
+"NISTAML.051 Model Poisoning (Supply Chain) (external AI/model services are supply-chain inputs to governed systems)"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-8.2 Data Exfiltration / Exposure (shadow AI discovery surfaces potential exposure paths)",
+"AITech-9.3 Dependency / Plugin Compromise (embedded AI services are dependencies that require inventory)",
+"AITech-14.1 Unauthorized Access (unknown connected apps and AI services can expose unauthorized access paths)"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"IIC: Insecure Integrated Component (external AI services are integrated components requiring discovery)",
+"SDD: Sensitive Data Disclosure (AI-service discovery identifies disclosure paths)",
+"EDH: Excessive Data Handling (shadow AI paths may process data outside intended boundaries)"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Governance 4.1: Lack of traceability and transparency of model assets",
+"Governance 4.2: Lack of end-to-end ML lifecycle",
+"Platform 12.4: Unauthorized privileged access",
+"Agents - Tools MCP Client 13.26: Malicious Server Connection",
+"Agents - Tools MCP Server 13.21: Supply Chain Attacks"
+]
+}
+],
+"contentHash": "fe36f3e1a32878f3",
+"keywords": [
+"ai service discovery",
+"embedded saas ai discovery",
+"shadow ai visibility",
+"model provider inventory",
+"saas ai telemetry",
+"browser ai usage discovery",
+"ai service classification",
+"ai asset reconciliation",
+"mcp endpoint discovery",
+"external ai service catalog",
+"ai traffic inventory",
+"dlp control evidence"
 ]
 }
 ],
@@ -1965,7 +2085,6 @@
 {
 "framework": "OWASP Agentic AI Top 10 2026",
 "items": [
-"ASI02:2026 Tool Misuse and Exploitation",
 "ASI09:2026 Human-Agent Trust Exploitation (deepfake/synthetic content as deception vector)"
 ]
 },
@@ -2004,7 +2123,7 @@
 ]
 }
 ],
-"contentHash": "546bdd3adc9153f6",
+"contentHash": "f4faa51b68ef9759",
 "keywords": [
 "generative inversion pre-screening",
 "reconstruction error baselining",
@@ -3614,7 +3733,7 @@
 ],
 "implementationGuidance": [
 "Integrate agentic security test suites (for example garak promptinject probes) into CI/CD as a blocking gate.",
-"Collect de-identified production traces from live agent sessions, grade them for workflow-level security violations, convert near-misses and incidents into replayable test cases, and gate releases on trace-derived regression results.",
+"Collect approved, de-identified production traces, near-misses, incidents, red-team findings, and externally reported vulnerabilities, grade them for workflow-level security violations, convert them into replayable test cases, and gate releases on trace-derived regression results.",
 "Maintain a browser-agent prompt injection regression harness that replays hidden DOM/CSS, OCR/PDF, cross-origin, download, clipboard, and magic-link abuse cases before promotion."
 ],
 "toolsOpenSource": [
@@ -3629,7 +3748,7 @@
 "Lakera Red (Check Point company / Check Point Lakera)",
 "Credo AI"
 ],
-"contentHash": "09775dc98a12db1b",
+"contentHash": "f16e9e203203c313",
 "keywords": [
 "agentic security benchmarking",
 "agentharm regression",
@@ -5111,7 +5230,6 @@
 "framework": "OWASP ML Top 10 2023",
 "items": [
 "ML02:2023 Data Poisoning Attack",
-"ML10:2023 Model Poisoning",
 "ML08:2023 Model Skewing",
 "ML04:2023 Membership Inference Attack (removing sensitive records reduces inference risk)"
 ]
@@ -5165,7 +5283,7 @@
 ]
 }
 ],
-"contentHash": "ddcfe74cd9f93cdb",
+"contentHash": "809dd4ed97da028a",
 "keywords": [
 "training data sanitization",
 "poisoned sample removal",
@@ -7968,8 +8086,7 @@
 {
 "framework": "Google Secure AI Framework 2.0 - Risks",
 "items": [
-"SDD: Sensitive Data Disclosure (HE prevents data exposure during computation)",
-"MXF: Model Exfiltration (encrypted data remains protected even if exfiltrated)"
+"SDD: Sensitive Data Disclosure (HE prevents data exposure during computation)"
 ]
 },
 {
@@ -7980,7 +8097,7 @@
 ]
 }
 ],
-"contentHash": "c1350ed6b8bc0258",
+"contentHash": "867789594fb5f5cf",
 "keywords": [
 "homomorphic encryption",
 "microsoft seal",
@@ -8792,13 +8909,14 @@
 "items": [
 "Model Management 8.2: Model theft",
 "Model Management 8.4: Model inversion",
+"Algorithms 5.3: Hyperparameters stealing (reduced output fidelity weakens black-box hyperparameter inference)",
 "Model Serving - Inference requests 9.2: Model inversion (obfuscated outputs hinder inversion)",
 "Model Serving - Inference requests 9.5: Infer training data membership (reduced output precision hinders membership inference)",
 "Model Serving - Inference response 10.5: Black-box attacks (obfuscation reduces attacker feedback fidelity)"
 ]
 }
 ],
-"contentHash": "dd538b27503c6996",
+"contentHash": "7b0e9ffe8c9dd4b3",
 "keywords": [
 "output obfuscation",
 "confidence binning",
@@ -11357,8 +11475,7 @@
 {
 "framework": "MAESTRO",
 "items": [
-"Agent Goal Manipulation (L7)",
-"Manipulation of Evaluation Metrics (L5) (PBRS preserves optimal policy while shaping reward metrics)"
+"Agent Goal Manipulation (L7)"
 ]
 },
 {
@@ -11406,7 +11523,7 @@
 ]
 }
 ],
-"contentHash": "b6853d2883d2038b",
+"contentHash": "b3cb6f9c01adcd9b",
 "keywords": [
 "potential-based reward shaping",
 "pbrs",
@@ -12533,7 +12650,8 @@
 {
 "framework": "OWASP LLM Top 10 2025",
 "items": [
-"LLM06:2025 Excessive Agency"
+"LLM06:2025 Excessive Agency",
+"LLM10:2025 Unbounded Consumption"
 ]
 },
 {
@@ -12581,7 +12699,7 @@
 ]
 }
 ],
-"contentHash": "5f243e626377b90c",
+"contentHash": "f43d0beceede1be2",
 "keywords": [
 "interruptible reasoning loop",
 "auditable agent loop",
@@ -13111,13 +13229,15 @@
 "Agent Identity Attack (L7)",
 "Orchestration Attacks (L4)",
 "Agent Impersonation (L7)",
-"Compromised Agent Registry (L7) (signed manifests detect registry compromise)"
+"Compromised Agent Registry (L7) (signed manifests detect registry compromise)",
+"Denial of Service on Framework APIs (L3)"
 ]
 },
 {
 "framework": "OWASP LLM Top 10 2025",
 "items": [
-"LLM06:2025 Excessive Agency"
+"LLM06:2025 Excessive Agency",
+"LLM10:2025 Unbounded Consumption"
 ]
 },
 {
@@ -13174,7 +13294,7 @@
 ]
 }
 ],
-"contentHash": "8972992210a83172",
+"contentHash": "87e26bdaaba171f2",
 "keywords": [
 "capability discovery",
 "delegation control",
@@ -13485,7 +13605,8 @@
 {
 "framework": "OWASP LLM Top 10 2025",
 "items": [
-"LLM06:2025 Excessive Agency"
+"LLM06:2025 Excessive Agency",
+"LLM05:2025 Improper Output Handling"
 ]
 },
 {
@@ -13533,7 +13654,7 @@
 ]
 }
 ],
-"contentHash": "da51a27fad8284bf",
+"contentHash": "d40412048b5f6d22",
 "keywords": [
 "tool parameter validation",
 "schema validation",
@@ -13925,7 +14046,8 @@
 ],
 "implementationGuidance": [
 "Application-layer value tagging (taint) plus sensitive-sink checks in the tool dispatcher, backed by a versioned policy engine (OPA) and session-isolated metadata storage.",
-"Network-layer egress filtering (service mesh / firewall) to enforce outbound constraints even if application-layer checks fail, with default-deny posture and centrally managed allowlists."
+"Network-layer egress filtering (service mesh / firewall) to enforce outbound constraints even if application-layer checks fail, with default-deny posture and centrally managed allowlists.",
+"Enforce prompt-body and model-call sink policies before sensitive runtime values are sent to an LLM or external model provider."
 ],
 "toolsOpenSource": [
 "Open Policy Agent (OPA) / Rego (policy evaluation)",
@@ -14021,22 +14143,20 @@
 ]
 }
 ],
-"contentHash": "4f3a1bb6eed5e6ff",
+"contentHash": "032bbd578681c412",
 "keywords": [
-"data flow sink enforcement",
-"taint tracking",
-"value-level metadata",
-"egress filtering",
-"sensitive sink control",
-"provenance tagging",
-"outbound exfiltration defense",
-"data flow diversion defense",
-"cilium ebpf policy",
-"kubernetes networkpolicy",
-"istio egress gateway",
-"value provenance tracking",
-"default-deny egress",
-"sensitive data sink blocking"
+"value level capability metadata",
+"runtime data flow enforcement",
+"prompt sink policy",
+"model call sink enforcement",
+"taint label propagation",
+"sensitive runtime value control",
+"sink allowlist enforcement",
+"tool argument data flow",
+"llm gateway policy",
+"prompt body data protection",
+"data exfiltration prevention",
+"capability sink evidence"
 ]
 },
 {
@@ -14613,9 +14733,10 @@
 {
 "id": "AID-H-021",
 "name": "RAG Index Hygiene & Signing",
-"description": "Implement integrity and provenance controls during RAG indexing and maintenance. Cryptographically sign chunks/embeddings and weight content by source trust to prevent index poisoning and enable verification at retrieval time.",
+"description": "Implement integrity, provenance, source-trust, and retrieval-time authorization controls during RAG indexing and maintenance. Cryptographically sign chunks/embeddings, weight content by source trust, and enforce document/chunk-level access rights before retrieved content is assembled into model context.",
 "pillar": [
-"data"
+"data",
+"app"
 ],
 "phase": [
 "building",
@@ -14646,7 +14767,8 @@
 "items": [
 "LLM08:2025 Vector and Embedding Weaknesses",
 "LLM04:2025 Data and Model Poisoning",
-"LLM01:2025 Prompt Injection"
+"LLM01:2025 Prompt Injection",
+"LLM02:2025 Sensitive Information Disclosure"
 ]
 },
 {
@@ -14660,7 +14782,8 @@
 "items": [
 "ASI06:2026 Memory & Context Poisoning",
 "ASI01:2026 Agent Goal Hijack (poisoned RAG retrieval redirects agent decision pathways)",
-"ASI04:2026 Agentic Supply Chain Vulnerabilities (integrity controls on RAG data sources)"
+"ASI04:2026 Agentic Supply Chain Vulnerabilities (integrity controls on RAG data sources)",
+"ASI03:2026 Identity and Privilege Abuse (retrieval-time authorization checks document and chunk entitlements)"
 ]
 },
 {
@@ -14684,7 +14807,8 @@
 "items": [
 "DP: Data Poisoning (RAG index poisoning is a form of data poisoning that degrades retrieval quality)",
 "PIJ: Prompt Injection (poisoned RAG entries serve as indirect prompt injection vectors)",
-"IIC: Insecure Integrated Component (RAG pipelines are integrated components vulnerable to index manipulation)"
+"IIC: Insecure Integrated Component (RAG pipelines are integrated components vulnerable to index manipulation)",
+"SDD: Sensitive Data Disclosure (retrieval-time authorization prevents unauthorized chunks entering context)"
 ]
 },
 {
@@ -14702,21 +14826,20 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "d7c3998243b3fd67",
+"contentHash": "7694b4bc04f8be9d",
 "keywords": [
-"rag index hygiene",
+"rag index integrity",
+"retrieval authorization",
 "chunk signing",
-"embedding integrity",
-"rag provenance",
 "source trust weighting",
-"retrieval verification",
-"knowledge base hardening",
-"indirect injection defense",
-"vector index integrity",
-"rag data governance",
-"index poisoning defense",
-"cryptographic chunk signing",
-"retrieval content validation"
+"embedding provenance",
+"document permission enforcement",
+"rag source hygiene",
+"context assembly control",
+"vector index governance",
+"chunk level access control",
+"retrieval permission filtering",
+"rag poisoning prevention"
 ],
 "subTechniques": [
 {
@@ -14935,6 +15058,128 @@
 "llamaindex postprocessor",
 "untrusted source demotion",
 "retrieval quality assurance"
+]
+},
+{
+"id": "AID-H-021.003",
+"name": "Document/Chunk-Level Permission-Aware Retrieval",
+"description": "Enforce document- and chunk-level permissions at retrieval time so a RAG pipeline never assembles context from records the requesting principal is not entitled to read. The control mirrors source-system ACLs or relationship-based authorization metadata into chunk records during ingestion, evaluates those permissions on every query, and drops unauthorized chunks before context construction.<br/><br/><strong>Scope boundary:</strong> <code>AID-I-004.002</code> owns tenant, namespace, and persistent-memory partitioning. <code>AID-H-030</code> owns purpose-bound lifecycle authorization such as whether data may be used for training, memory, logging, or retraining. <code>AID-H-022.003</code> owns freshness and context-corpus governance. This sub-technique owns only document/chunk entitlement enforcement inside RAG retrieval.",
+"pillar": [
+"data",
+"app"
+],
+"phase": [
+"building",
+"operation"
+],
+"implementationGuidance": [
+"Mirror source-system ACLs or relationship tuples into chunk metadata at ingestion time, and fail ingestion when permission metadata is missing.",
+"Apply query-time entitlement filters before context assembly and deny when the retriever cannot prove the caller may read the chunk.",
+"Continuously test permission drift by replaying representative principals against the RAG index and comparing retrieval results with source-system access truth."
+],
+"toolsOpenSource": [
+"OpenFGA (relationship-based authorization)",
+"Open Policy Agent (OPA)",
+"Casbin",
+"PostgreSQL row-level security",
+"LangChain / LlamaIndex retriever hooks"
+],
+"toolsCommercial": [
+"Okta Fine-Grained Authorization",
+"Auth0 FGA",
+"Google Cloud IAM / Cloud Identity",
+"Microsoft Entra ID",
+"Pinecone / Weaviate / Elastic vector search with metadata filters"
+],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0085 Data from AI Services (retrieval authorization limits data returned by AI services)",
+"AML.T0085.001 Data from AI Services: AI Agent Tools (authorized retrieval constrains tool-mediated context access)",
+"AML.T0086 Exfiltration via AI Agent Tool Invocation (unauthorized chunks are removed before context assembly)",
+"AML.T0051.001 LLM Prompt Injection: Indirect (permission filters reduce retrieval of unauthorized poisoned context)"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Data Leakage (Cross-Layer)",
+"Compromised RAG Pipelines (L2)",
+"Privilege Escalation (Cross-Layer) (retrieval authorization prevents low-privilege principals receiving high-privilege chunks)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2025",
+"items": [
+"LLM02:2025 Sensitive Information Disclosure",
+"LLM08:2025 Vector and Embedding Weaknesses"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"N/A (retrieval-time authorization is primarily an LLM/RAG application control)"
+]
+},
+{
+"framework": "OWASP Agentic AI Top 10 2026",
+"items": [
+"ASI03:2026 Identity and Privilege Abuse (retrieval authorization checks principal entitlements)",
+"ASI06:2026 Memory & Context Poisoning (unauthorized context cannot enter agent memory/context)",
+"ASI02:2026 Tool Misuse and Exploitation (tool-driven retrieval cannot bypass ACLs)"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"NISTAML.036 Leaking information from user interactions",
+"NISTAML.038 Data Extraction",
+"NISTAML.039 Compromising connected resources (retrieval gate prevents unauthorized connected-resource reads)"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-8.2 Data Exfiltration / Exposure",
+"AITech-8.3 Information Disclosure",
+"AITech-14.1 Unauthorized Access",
+"AITech-12.1 Tool Exploitation (retrieval tool cannot return unauthorized chunks)"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"SDD: Sensitive Data Disclosure",
+"EDH: Excessive Data Handling",
+"IIC: Insecure Integrated Component (RAG retriever is an integrated component requiring authorization)"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Raw Data 1.1: Insufficient access controls",
+"Raw Data 1.10: Lack of data access logs",
+"Model Serving - Inference requests 9.9: Input Resource Control",
+"Agents - Core 13.3: Privilege Compromise",
+"Agents - Core 13.1: Memory Poisoning"
+]
+}
+],
+"contentHash": "79e882884e584f98",
+"keywords": [
+"document level authorization",
+"chunk level retrieval authorization",
+"rag permission filtering",
+"source acl mirroring",
+"retrieval entitlement enforcement",
+"permission aware rag",
+"acl metadata propagation",
+"context assembly authorization",
+"rag permission drift testing",
+"vector index access control",
+"chunk acl evidence",
+"tenant access filtering"
 ]
 }
 ],
@@ -15664,12 +15909,13 @@
 "implementationGuidance": [
 "Use ephemeral, network-restricted containers for all dependency installations.",
 "Enforce frozen lockfile-based installs and reject manifest-to-lockfile drift.",
-"Disable lifecycle install scripts by default and run approved exceptions as separate vetted steps.",
+"Disable dependency install-time code execution by default, including npm lifecycle scripts and Python source-distribution build backends, and run approved exceptions as separate vetted steps.",
 "Harden internal package mirrors with a quarantine-and-promote workflow."
 ],
 "toolsOpenSource": [
 "Docker, Podman (for containerized builds)",
-"npm, pnpm, yarn, Corepack (as the package managers to be controlled)"
+"npm, pnpm, yarn, Corepack (as the package managers to be controlled)",
+"pip, pip-tools, uv, PyPA build, twine (as Python/PyPI package managers and build tools to be controlled)"
 ],
 "toolsCommercial": [
 "JFrog Artifactory / Xray (as the secure internal mirror/proxy)",
@@ -15742,21 +15988,20 @@
 ]
 }
 ],
-"contentHash": "015464bbeef40495",
+"contentHash": "3b4d1f9a69eec37a",
 "keywords": [
-"sandboxed install",
-"ephemeral container install",
-"network-restricted build",
-"frozen lockfile",
-"lifecycle script disabled",
-"npm ci enforcement",
-"package mirror quarantine",
-"internal registry hardening",
-"postinstall script containment",
-"docker podman build",
-"pnpm yarn corepack",
-"artifactory xray",
-"sonatype nexus firewall"
+"sandboxed dependency installation",
+"network restricted builds",
+"offline wheelhouse install",
+"hashed python requirements",
+"immutable lockfile install",
+"package lifecycle script control",
+"python source build blocking",
+"internal package mirror",
+"quarantine promote workflow",
+"dependency install evidence",
+"supply chain build isolation",
+"package admission control"
 ]
 },
 {
@@ -15959,7 +16204,7 @@
 }
 ],
 "implementationGuidance": [
-"Mandate CI/CD-only publishing using npm Trusted Publishing (OIDC).",
+"Mandate CI/CD-only publishing using OIDC trusted publishing for npm and PyPI.",
 "Harden the CI/CD workflow definition to prevent tampering and enforce least privilege.",
 "Reject packages that lack valid provenance attestation from an approved publisher identity and CI workflow."
 ],
@@ -15967,7 +16212,8 @@
 "GitHub Actions, GitLab CI (with OIDC support)",
 "Sigstore (for signing and attestations)",
 "Open Policy Agent (OPA), Conftest (for policy checks on workflows)",
-"npm CLI"
+"npm CLI",
+"PyPA build, twine, pypa/gh-action-pypi-publish"
 ],
 "toolsCommercial": [
 "JFrog Artifactory, Sonatype Nexus (as secure internal registries/proxies)",
@@ -15975,22 +16221,20 @@
 "GitHub Advanced Security",
 "CI/CD security tools (e.g., Snyk, Socket.dev for workflow analysis)"
 ],
-"contentHash": "2a31b16cdd075ad7",
+"contentHash": "672ec769300b5203",
 "keywords": [
-"publisher integrity",
-"trusted publishing",
-"npm oidc publishing",
-"short-lived tokens",
-"provenance attestation",
-"ci/cd-only publishing",
-"workflow hardening",
-"sigstore provenance",
-"least privilege workflow",
-"credential-less publishing",
-"signed provenance",
-"verifiable publisher identity",
-"stolen credential defense",
-"slsa provenance"
+"trusted package publishing",
+"oidc publishing workflow",
+"npm provenance verification",
+"pypi trusted publishing",
+"publisher identity attestation",
+"ci only release",
+"protected release environment",
+"package provenance admission",
+"workflow identity verification",
+"pypi publish attestation",
+"supply chain provenance",
+"release artifact evidence"
 ],
 "subTechniques": [],
 "url": "https://aidefend.net"
@@ -17514,7 +17758,8 @@
 "framework": "OWASP LLM Top 10 2025",
 "items": [
 "LLM01:2025 Prompt Injection",
-"LLM04:2025 Data and Model Poisoning"
+"LLM04:2025 Data and Model Poisoning",
+"LLM02:2025 Sensitive Information Disclosure"
 ]
 },
 {
@@ -17585,7 +17830,7 @@
 "Redis Enterprise (active-active with ACLs)",
 "Amazon ElastiCache / Google Cloud Memorystore / Azure Cache for Redis (managed Redis isolation)"
 ],
-"contentHash": "2e9f8efaeb0445bf",
+"contentHash": "b0f4b1523e9c2c65",
 "keywords": [
 "inference cache integrity",
 "cache isolation",
@@ -18083,7 +18328,8 @@
 "implementationGuidance": [
 "Validate every incoming MCP message against a strict schema and enforce maximum payload size, nesting depth, and read timeout before parsing or rendering.",
 "Sanitize all rendered response content and harden the renderer so server-supplied markup, scripts, or terminal control sequences cannot execute or mislead the user.",
-"Require explicit user confirmation before executing any server-suggested action, and display the action, target, and parameters in a normalized read-only confirmation view."
+"Require explicit user confirmation before executing any server-suggested action, and display the action, target, and parameters in a normalized read-only confirmation view.",
+"Require explicit user confirmation before opening server-suggested URLs, and display the full normalized destination without prefetching or preauthenticated links."
 ],
 "toolsOpenSource": [
 "DOMPurify (HTML and markdown sanitization for browser or Electron clients)",
@@ -18115,7 +18361,8 @@
 {
 "framework": "OWASP LLM Top 10 2025",
 "items": [
-"LLM05:2025 Improper Output Handling (unsafe handling of server or model output)"
+"LLM05:2025 Improper Output Handling (unsafe handling of server or model output)",
+"LLM06:2025 Excessive Agency (explicit confirmation prevents implicit server-suggested actions)"
 ]
 },
 {
@@ -18162,22 +18409,20 @@
 ]
 }
 ],
-"contentHash": "985ca30f166066b9",
+"contentHash": "13087144df9306fb",
 "keywords": [
-"response schema validation",
-"payload size limiting",
-"nesting depth limit",
-"content sanitization",
-"renderer isolation",
-"dompurify sanitization",
-"no implicit execution",
+"mcp client response hardening",
+"strict message schema validation",
+"renderer sanitization",
+"server suggested action confirmation",
+"url elicitation consent",
+"preauthenticated url blocking",
+"normalized navigation display",
+"client execution surface control",
+"mcp response parsing limits",
+"malicious markup sanitization",
 "explicit user confirmation",
-"terminal escape filtering",
-"markdown rendering hardening",
-"electron csp",
-"ajv schema validation",
-"parser hardening",
-"ui confirmation gate"
+"client side evidence logging"
 ]
 },
 {
@@ -18195,7 +18440,8 @@
 "implementationGuidance": [
 "Isolate client session state per MCP server so tokens, context, and cached artifacts from one server cannot be reused with another.",
 "Apply idle timeout, re-authentication, and clean teardown rules based on server risk tier.",
-"Use channel-bound or proof-of-possession token mechanisms where supported to reduce replay risk from stolen client tokens."
+"Use channel-bound or proof-of-possession token mechanisms where supported to reduce replay risk from stolen client tokens.",
+"Use OAuth authorization-code flow with PKCE, state validation, protected-resource metadata, and resource-parameter binding for MCP server authorization."
 ],
 "toolsOpenSource": [
 "PyJWT / python-jose / jose (strict token validation libraries)",
@@ -18270,22 +18516,20 @@
 ]
 }
 ],
-"contentHash": "0440da5fd25149c6",
+"contentHash": "13d321c3c0e15f40",
 "keywords": [
-"client session isolation",
-"per-server state isolation",
-"idle timeout enforcement",
-"session teardown hygiene",
-"channel-bound tokens",
-"proof-of-possession tokens",
-"dpop binding",
-"replay resistance",
-"session freshness",
-"mutual authentication context",
-"re-authentication gating",
-"risk-tiered timeouts",
-"cross-session state isolation",
-"token replay prevention"
+"mcp client session isolation",
+"oauth pkce resource binding",
+"protected resource metadata",
+"authorization server metadata validation",
+"oauth state validation",
+"dpop token binding",
+"per server token isolation",
+"client session timeout",
+"proof of possession tokens",
+"mcp oauth evidence",
+"resource parameter enforcement",
+"session replay resistance"
 ]
 },
 {
@@ -18438,14 +18682,16 @@
 {
 "framework": "MAESTRO",
 "items": [
-"Integration Risks (L7) (sampling blurs trust boundary between server-originated and user-originated prompts)"
+"Integration Risks (L7) (sampling blurs trust boundary between server-originated and user-originated prompts)",
+"Denial of Service (DoS) Attacks (L1) (token and complexity limits prevent hidden sampling resource exhaustion)"
 ]
 },
 {
 "framework": "OWASP LLM Top 10 2025",
 "items": [
 "LLM01:2025 Prompt Injection (server-crafted sampling prompt injected into client LLM context)",
-"LLM06:2025 Excessive Agency (sampling triggers unintended tool invocations or actions)"
+"LLM06:2025 Excessive Agency (sampling triggers unintended tool invocations or actions)",
+"LLM10:2025 Unbounded Consumption (token budgets and rate limits constrain hidden sampling consumption)"
 ]
 },
 {
@@ -18497,7 +18743,7 @@
 ]
 }
 ],
-"contentHash": "4bf8c7e87c01db43",
+"contentHash": "ed2f06bf3806a78f",
 "keywords": [
 "sampling request validation",
 "bidirectional sampling sandbox",
@@ -18566,7 +18812,7 @@
 "framework": "OWASP Agentic AI Top 10 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning (unauthorized data enters persistent memory or context)",
-"ASI09:2026 Human-Agent Trust Exploitation (agent uses data beyond the user or enterprise authorization boundary)"
+"ASI03:2026 Identity and Privilege Abuse (agent uses data beyond the user or enterprise authorization boundary)"
 ]
 },
 {
@@ -18612,7 +18858,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "70dbaeecbe760191",
+"contentHash": "52cc850438912beb",
 "keywords": [
 "purpose-bound authorization",
 "lifecycle-stage boundary enforcement",
@@ -20627,12 +20873,11 @@
 "framework": "Databricks AI Security Framework 3.0",
 "items": [
 "Model 7.2: Model assets leak",
-"Model Serving - Inference response 10.6: Sensitive data output from a model",
-"Agents - Tools MCP Client 13.30: Client-Side Data Leakage"
+"Model Serving - Inference response 10.6: Sensitive data output from a model"
 ]
 }
 ],
-"contentHash": "5626498065977347",
+"contentHash": "5095a7d885244c6c",
 "keywords": [
 "inference telemetry restriction",
 "debug surface restriction",
@@ -22648,7 +22893,6 @@
 "framework": "MAESTRO",
 "items": [
 "Adversarial Examples (L1)",
-"Goal Misalignment Cascades (Cross-Layer) (misinformation from misaligned agent outputs)",
 "Framework Evasion (L3) (cross-modal attacks exploit framework input handling)",
 "Agent Impersonation (L7) (deepfakes enable agent/identity impersonation)"
 ]
@@ -22708,7 +22952,7 @@
 ]
 }
 ],
-"contentHash": "9ca13218460c7625",
+"contentHash": "cb16eb780fac1cd9",
 "keywords": [
 "deepfake detection",
 "synthetic media forensics",
@@ -22768,8 +23012,7 @@
 "framework": "MAESTRO",
 "items": [
 "Adversarial Examples (L1)",
-"Input Validation Attacks (L3)",
-"Goal Misalignment Cascades (Cross-Layer) (misinformation from misaligned agent outputs)"
+"Input Validation Attacks (L3)"
 ]
 },
 {
@@ -22823,7 +23066,7 @@
 ]
 }
 ],
-"contentHash": "3b0a29e0bef1cada",
+"contentHash": "1cc3697a180eca13",
 "keywords": [
 "vector space anomaly detection",
 "embedding outlier detection",
@@ -23845,7 +24088,6 @@
 {
 "framework": "MAESTRO",
 "items": [
-"Inaccurate Agent Capability Description (L7)",
 "Data Exfiltration (L2)",
 "Data Leakage through Observability (L5)",
 "Compromised Agents (L7) (output monitoring detects compromised agent behavior)"
@@ -23928,7 +24170,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "84ae779770b6a0d6",
+"contentHash": "9dc9026c393dd1a1",
 "keywords": [
 "output monitoring",
 "policy enforcement",
@@ -24254,7 +24496,8 @@
 "AML.T0102 Generate Malicious Commands (action policy monitoring catches malicious command generation)",
 "AML.T0085 Data from AI Services (tool use monitoring detects unauthorized data collection via AI services)",
 "AML.T0085.001 Data from AI Services: AI Agent Tools (monitors agent tool invocations for unauthorized data access)",
-"AML.T0084.002 Discover AI Agent Configuration: Activation Triggers (policy monitoring detects probing of activation triggers)"
+"AML.T0084.002 Discover AI Agent Configuration: Activation Triggers (policy monitoring detects probing of activation triggers)",
+"AML.T0084.003 Discover AI Agent Configuration: Call Chains (runtime denies and schema failures can reveal call-chain probing)"
 ]
 },
 {
@@ -24334,7 +24577,7 @@
 ]
 }
 ],
-"contentHash": "3569b5f3180602ab",
+"contentHash": "4b7b4b6022dd22fc",
 "keywords": [
 "agent tool use monitoring",
 "tool policy enforcement",
@@ -25342,8 +25585,7 @@
 {
 "framework": "OWASP LLM Top 10 2025",
 "items": [
-"LLM03:2025 Supply Chain",
-"LLM07:2025 System Prompt Leakage"
+"LLM03:2025 Supply Chain"
 ]
 },
 {
@@ -25397,7 +25639,7 @@
 ]
 }
 ],
-"contentHash": "818b090c4b325608",
+"contentHash": "97790db381dabc60",
 "keywords": [
 "runtime configuration drift detection",
 "policy bundle drift monitoring",
@@ -25828,7 +26070,8 @@
 "Implement structured, context-rich logging for all AI interactions.",
 "Ensure the logging pipeline supports structured agentic event schemas and correlation IDs.",
 "Use a dedicated log shipper for secure and reliable collection.",
-"Ensure logs are timestamped, immutable, and stored in a tamper-evident archive."
+"Ensure logs are timestamped, immutable, and stored in a tamper-evident archive.",
+"Emit evidence-ready AI security events with stable identifiers, evidence references, retention labels, legal-hold flags, and chain-of-custody linkage."
 ],
 "toolsOpenSource": [
 "logging (Python library), loguru, structlog",
@@ -25868,7 +26111,8 @@
 "Agent Tool Misuse (L7)",
 "Data Exfiltration (L2)",
 "Resource Hijacking (L4)",
-"Evasion of Detection (L5)"
+"Evasion of Detection (L5)",
+"Compromised Observability Tools (L5)"
 ]
 },
 {
@@ -25939,22 +26183,20 @@
 ]
 }
 ],
-"contentHash": "354789b5da92bcea",
+"contentHash": "52a2263aac314fce",
 "keywords": [
-"ai log generation",
-"structured logging",
-"llm audit logs",
-"prompt response logging",
-"elk stack ingestion",
-"fluentd forwarding",
-"opentelemetry tracing",
-"log schema standardization",
-"json log format",
-"centralized log collection",
-"tamper-resistant audit log",
-"agent trace logging",
-"session transcript logging",
-"log retention policy"
+"ai security event schema",
+"structured security logging",
+"evidence ready logging",
+"chain of custody linkage",
+"log retention labels",
+"legal hold flagging",
+"correlation identifier logging",
+"siem event normalization",
+"security event validation",
+"ai incident evidence",
+"audit log integrity",
+"telemetry schema enforcement"
 ]
 },
 {
@@ -26413,7 +26655,6 @@
 "framework": "MAESTRO",
 "items": [
 "Resource Hijacking (L4)",
-"Lateral Movement (L4) (anomalous resource patterns indicate lateral movement)",
 "Denial of Service (DoS) Attacks (L1) (DoS on foundation models manifests as GPU/TPU telemetry spikes)",
 "Denial of Service (DoS) Attacks (L4) (infrastructure-level DoS is directly detectable via accelerator telemetry)"
 ]
@@ -26427,7 +26668,7 @@
 {
 "framework": "OWASP ML Top 10 2023",
 "items": [
-"ML01:2023 Input Manipulation Attack (request-parameter anomalies reveal adversarial control-surface abuse)"
+"N/A"
 ]
 },
 {
@@ -26468,7 +26709,7 @@
 ]
 }
 ],
-"contentHash": "9e7587a65acb9a21",
+"contentHash": "61fd9d35be012e9c",
 "keywords": [
 "gpu telemetry monitoring",
 "accelerator anomaly detection",
@@ -26860,6 +27101,130 @@
 "alert queue automation",
 "bounded investigation tools",
 "reviewer comparison window"
+]
+},
+{
+"id": "AID-D-005.009",
+"name": "AI-Service C2 & Abuse-Channel Detection",
+"description": "Detect suspicious use of AI service APIs, model-provider endpoints, SaaS AI apps, or agent/MCP service channels as command-and-control, staging, exfiltration, or abuse coordination channels. This sub-technique focuses on behavioral detection over AI-service traffic: beacon-like request cadence, encoded payload patterns, abnormal prompt/completion entropy, unusual API-key or principal usage, and correlations with endpoint, proxy, identity, and model-gateway telemetry.<br/><br/><strong>Scope boundary:</strong> <code>AID-D-005.002</code> owns general SIEM alerting for AI systems. <code>AID-D-005.007</code> owns token, parameter, and cost-abuse anomalies. <code>AID-M-001.004</code> owns AI-service discovery. This sub-technique owns the specific detective logic for AI services acting as attacker communication or abuse channels. Network-layer containment and allow/deny enforcement for external AI services belongs to <code>AID-I-002.002</code>; account disablement, grant revocation, or token eviction belongs to Evict controls.",
+"pillar": [
+"app",
+"infra"
+],
+"phase": [
+"operation"
+],
+"implementationGuidance": [
+"Normalize AI-service traffic into a detector-ready schema with principal, provider, model, request cadence, byte counts, token counts, and payload-shape indicators.",
+"Detect beacon-like cadence, encoded payload shape, and abnormal prompt/completion entropy in AI-service traffic.",
+"Correlate AI-service C2 findings with identity, endpoint, proxy, and API-key telemetry to create an investigation-ready alert."
+],
+"toolsOpenSource": [
+"OpenSearch / Elasticsearch",
+"Sigma",
+"Zeek",
+"Suricata",
+"OpenTelemetry",
+"Vector / Fluent Bit"
+],
+"toolsCommercial": [
+"Splunk Enterprise Security",
+"Microsoft Sentinel",
+"Google Security Operations",
+"Datadog Cloud SIEM",
+"Palo Alto Cortex XDR / XSIAM",
+"Netskope / Zscaler AI traffic analytics"
+],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0096 AI Service API",
+"AML.T0085 Data from AI Services",
+"AML.T0085.001 Data from AI Services: AI Agent Tools",
+"AML.T0086 Exfiltration via AI Agent Tool Invocation",
+"AML.T0025 Exfiltration via Cyber Means"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Data Exfiltration (L2)",
+"Evasion of Detection (L5)",
+"Integration Risks (L7)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2025",
+"items": [
+"LLM02:2025 Sensitive Information Disclosure",
+"LLM10:2025 Unbounded Consumption"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"N/A (AI-service C2 detection is primarily an operational monitoring control)"
+]
+},
+{
+"framework": "OWASP Agentic AI Top 10 2026",
+"items": [
+"ASI02:2026 Tool Misuse and Exploitation",
+"ASI03:2026 Identity and Privilege Abuse",
+"ASI10:2026 Rogue Agents"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"NISTAML.039 Compromising connected resources",
+"NISTAML.038 Data Extraction",
+"NISTAML.036 Leaking information from user interactions"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-8.2 Data Exfiltration / Exposure",
+"AITech-14.1 Unauthorized Access",
+"AITech-12.1 Tool Exploitation",
+"AISubtech-9.1.3 Unauthorized or Unsolicited Network Access"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"SDD: Sensitive Data Disclosure",
+"IIC: Insecure Integrated Component",
+"RA: Rogue Actions"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Agents - Core 13.2: Tool Misuse",
+"Agents - Core 13.3: Privilege Compromise",
+"Agents - Core 13.13: Rogue Agents in Multi-Agent Systems",
+"Platform 12.3: Lack of incident response",
+"Raw Data 1.10: Lack of data access logs"
+]
+}
+],
+"contentHash": "ec752dca13320864",
+"keywords": [
+"ai service c2 detection",
+"ai service abuse channel",
+"model provider traffic monitoring",
+"beacon cadence detection",
+"encoded payload detection",
+"prompt entropy anomaly",
+"api key behavior correlation",
+"casb ai telemetry",
+"ai service channel schema",
+"rogue agent traffic detection",
+"mcp abuse detection",
+"ai exfiltration monitoring"
 ]
 }
 ],
@@ -27959,8 +28324,7 @@
 {
 "framework": "NIST Adversarial Machine Learning 2025",
 "items": [
-"NISTAML.051 Model Poisoning (Supply Chain) (population-drift monitoring detects unauthorized supply-chain agents)",
-"NISTAML.014 Energy-latency (population control prevents resource exhaustion from rogue agents)"
+"NISTAML.051 Model Poisoning (Supply Chain) (population-drift monitoring detects unauthorized supply-chain agents)"
 ]
 },
 {
@@ -27987,7 +28351,7 @@
 ]
 }
 ],
-"contentHash": "0ea9ab012991c4b0",
+"contentHash": "ab0d34836bdb012e",
 "keywords": [
 "agent population drift",
 "rogue instance escalation",
@@ -29025,7 +29389,6 @@
 "items": [
 "LLM09:2025 Misinformation",
 "LLM06:2025 Excessive Agency",
-"LLM05:2025 Improper Output Handling",
 "LLM02:2025 Sensitive Information Disclosure"
 ]
 },
@@ -29076,7 +29439,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "09f077ff0ad2ce7d",
+"contentHash": "a0b31d291dd66d9d",
 "keywords": [
 "user trust calibration",
 "high-risk action confirmation",
@@ -31639,7 +32002,6 @@
 "framework": "OWASP Agentic AI Top 10 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning",
-"ASI09:2026 Human-Agent Trust Exploitation (promotion gates enforce human review before trust elevation)",
 "ASI01:2026 Agent Goal Hijack (promotion gates prevent poisoned memory from hijacking agent goals)"
 ]
 },
@@ -31677,7 +32039,7 @@
 ]
 }
 ],
-"contentHash": "bfa3e2b2a4ffa744",
+"contentHash": "bf54c47ac64aa83e",
 "keywords": [
 "transactional promotion gate",
 "quarantine-to-trusted workflow",
@@ -31858,7 +32220,6 @@
 "framework": "MITRE ATLAS",
 "items": [
 "AML.T0081 Modify AI Agent Configuration",
-"AML.T0084 Discover AI Agent Configuration",
 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
 "AML.T0104 Publish Poisoned AI Agent Tool",
 "AML.T0080 AI Agent Context Poisoning",
@@ -31912,7 +32273,8 @@
 {
 "framework": "Google Secure AI Framework 2.0 - Risks",
 "items": [
-"RA: Rogue Actions (write protection on persistent identity/state files prevents persistent backdoors that enable rogue actions)"
+"RA: Rogue Actions (write protection on persistent identity/state files prevents persistent backdoors that enable rogue actions)",
+"PIJ: Prompt Injection (write protection prevents persistent injected instructions from entering identity/state files)"
 ]
 },
 {
@@ -31923,7 +32285,7 @@
 ]
 }
 ],
-"contentHash": "37b161ff25221085",
+"contentHash": "81696f0fd39aa48c",
 "keywords": [
 "agent identity file protection",
 "persistent state write protection",
@@ -32238,7 +32600,8 @@
 "ASI08:2026 Cascading Failures",
 "ASI01:2026 Agent Goal Hijack",
 "ASI02:2026 Tool Misuse and Exploitation",
-"ASI05:2026 Unexpected Code Execution (RCE) (kill-switch halts runaway code execution)"
+"ASI05:2026 Unexpected Code Execution (RCE) (kill-switch halts runaway code execution)",
+"ASI04:2026 Agentic Supply Chain Vulnerabilities (kill-switch contains compromised third-party agents or tools)"
 ]
 },
 {
@@ -32303,7 +32666,7 @@
 "SentinelOne",
 "CrowdStrike Falcon"
 ],
-"contentHash": "90fd7fdf3a922439",
+"contentHash": "d38a5dceab6a823b",
 "keywords": [
 "recursive shutdown drill",
 "kill-switch coverage",
@@ -32626,6 +32989,7 @@
 "framework": "OWASP Agentic AI Top 10 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
+"ASI02:2026 Tool Misuse and Exploitation",
 "ASI03:2026 Identity and Privilege Abuse",
 "ASI06:2026 Memory & Context Poisoning",
 "ASI10:2026 Rogue Agents"
@@ -32671,7 +33035,7 @@
 "implementationGuidance": [],
 "toolsOpenSource": [],
 "toolsCommercial": [],
-"contentHash": "4d700fcc6edaae82",
+"contentHash": "1b18d0743924e14f",
 "keywords": [
 "task-scoped browser session",
 "browser origin isolation",
@@ -32957,7 +33321,8 @@
 {
 "framework": "OWASP LLM Top 10 2025",
 "items": [
-"LLM05:2025 Improper Output Handling"
+"LLM05:2025 Improper Output Handling",
+"LLM02:2025 Sensitive Information Disclosure"
 ]
 },
 {
@@ -33001,7 +33366,7 @@
 ]
 }
 ],
-"contentHash": "e8f00201c5d4d104",
+"contentHash": "46319435de0de79a",
 "keywords": [
 "download quarantine",
 "clipboard approval broker",
@@ -33192,6 +33557,7 @@
 "AML.T0057 LLM Data Leakage (canary tokens in training data detect leakage)",
 "AML.T0035 AI Artifact Collection (decoy artifacts detect unauthorized artifact collection)",
 "AML.T0005.000 Create Proxy AI Model: Train Proxy via Gathered AI Artifacts (canaries in artifact stores detect gathering for proxy training)",
+"AML.T0064 Gather RAG-Indexed Targets",
 "AML.T0095.000 Search Open Websites/Domains: Code Repositories (repository canaries detect public-code reconnaissance)",
 "AML.T0055 Unsecured Credentials",
 "AML.T0083 Credentials from AI Agent Configuration"
@@ -33231,7 +33597,6 @@
 "NISTAML.031 Model Extraction (canary data traces stolen training data)",
 "NISTAML.051 Model Poisoning (Supply Chain) (decoy artifacts detect supply chain compromise)",
 "NISTAML.037 Training Data Attacks (canary tokens detect training data extraction)",
-"NISTAML.033 Membership Inference (canary data reveals unauthorized model training on stolen data)",
 "NISTAML.038 Data Extraction (canary tokens detect data extraction)"
 ]
 },
@@ -33281,7 +33646,7 @@
 "Acalvio ShadowPlex",
 "Proofpoint Identity Threat Defense"
 ],
-"contentHash": "b4d28b956ad7be60",
+"contentHash": "6bbb6684f40732bb",
 "keywords": [
 "canary credential placement",
 "decoy dataset seeding",
@@ -33712,7 +34077,7 @@
 {
 "framework": "OWASP LLM Top 10 2025",
 "items": [
-"N/A"
+"LLM07:2025 System Prompt Leakage"
 ]
 },
 {
@@ -33774,7 +34139,7 @@
 "Deception technology platforms (Acalvio ShadowPlex, Commvault ThreatWise)",
 "API management and security solutions (Akamai API Security, Cloudflare)"
 ],
-"contentHash": "48ce8df746b06392",
+"contentHash": "7240ff5c88e6435d",
 "keywords": [
 "deceptive banner hardening",
 "honeypot system fingerprinting",
@@ -34376,6 +34741,120 @@
 "ephemeral identity revocation",
 "trust domain eviction"
 ]
+},
+{
+"id": "AID-E-001.004",
+"name": "Delegated OAuth Grant & Connected-App Revocation",
+"description": "Revoke compromised or over-authorized delegated OAuth grants, connected-app consents, service-principal app-role assignments, and SaaS application grants that allow an attacker-controlled user, agent, or app to keep accessing AI services and enterprise data after ordinary token invalidation has occurred.<br/><br/><strong>Scope boundary:</strong> <code>AID-E-001.002</code> owns JWT/API-token revocation and denylist propagation. <code>AID-E-001.003</code> owns workload identity and agent cryptographic identity eviction. <code>AID-H-035.002</code> owns MCP server-side OAuth protected-resource boundaries, token audience/resource validation, and delegated grant safety before compromise. This sub-technique owns incident-time revocation of delegated grants and connected-app authorizations that can mint fresh tokens or continue SaaS access. Rogue webhook, scheduled job, and tool registration cleanup belongs to <code>AID-E-005</code> after grants are revoked.",
+"pillar": [
+"app",
+"infra"
+],
+"phase": [
+"response"
+],
+"implementationGuidance": [
+"Enumerate delegated OAuth grants, connected apps, app-role assignments, and SaaS consents tied to the compromised principal or agent.",
+"Revoke delegated OAuth grants, connected-app consents, refresh sessions, and app-role assignments that allow continued access after compromise.",
+"Verify grant-revocation propagation and monitor for attempted reuse of revoked connected-app access."
+],
+"toolsOpenSource": [
+"Microsoft Graph PowerShell SDK",
+"Google Workspace Admin SDK / GAMADV-XTD3",
+"Okta API / Okta Terraform Provider",
+"jq"
+],
+"toolsCommercial": [
+"Microsoft Entra ID",
+"Okta",
+"Google Workspace",
+"SaaS Security Posture Management (SSPM) platforms"
+],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0012 Valid Accounts",
+"AML.T0091 Use Alternate Authentication Material",
+"AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
+"AML.T0098 AI Agent Tool Credential Harvesting",
+"AML.T0083 Credentials from AI Agent Configuration"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Agent Identity Attack (L7)",
+"Privilege Escalation (Cross-Layer)",
+"Lateral Movement (Cross-Layer)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2025",
+"items": [
+"LLM06:2025 Excessive Agency"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"N/A"
+]
+},
+{
+"framework": "OWASP Agentic AI Top 10 2026",
+"items": [
+"ASI03:2026 Identity and Privilege Abuse",
+"ASI10:2026 Rogue Agents"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"NISTAML.039 Compromising connected resources"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-14.1 Unauthorized Access",
+"AITech-14.2 Abuse of Delegated Authority",
+"AISubtech-14.1.1 Credential Theft"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"RA: Rogue Actions (revoking delegated grants stops unauthorized connected-app actions)",
+"SDD: Sensitive Data Disclosure (grant revocation stops ongoing data access)",
+"MXF: Model Exfiltration (grant revocation stops model/data access through connected apps)"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Platform 12.4: Unauthorized privileged access",
+"Agents - Core 13.3: Privilege Compromise",
+"Agents - Tools MCP Server 13.19: Credential and Token Exposure",
+"Agents - Tools MCP Client 13.31: Excessive Permission Granting"
+]
+}
+],
+"contentHash": "4db101cfba62c9da",
+"keywords": [
+"delegated oauth revocation",
+"connected app revocation",
+"oauth grant inventory",
+"saas consent removal",
+"refresh session revocation",
+"app role assignment cleanup",
+"entra grant eviction",
+"connected app incident response",
+"oauth propagation verification",
+"revoked grant monitoring",
+"delegated authority eviction",
+"saas authorization cleanup"
+]
 }
 ],
 "url": "https://aidefend.net"
@@ -34419,7 +34898,8 @@
 {
 "framework": "OWASP LLM Top 10 2025",
 "items": [
-"LLM01:2025 Prompt Injection (ending manipulated session)"
+"LLM01:2025 Prompt Injection (ending manipulated session)",
+"LLM10:2025 Unbounded Consumption"
 ]
 },
 {
@@ -34500,7 +34980,7 @@
 "Cloud provider management consoles/APIs for instance termination",
 "APM tools with session management"
 ],
-"contentHash": "bfc1767d4488ecea",
+"contentHash": "ee0046fe085b9ac1",
 "keywords": [
 "process eviction",
 "session eviction",
@@ -35150,6 +35630,120 @@
 "cleansed graph revalidation",
 "adversarial node removal",
 "mlops eviction loop"
+]
+},
+{
+"id": "AID-E-003.005",
+"name": "LLM Adapter & Derivative Artifact Removal",
+"description": "Remove compromised LoRA, QLoRA, PEFT, prompt-tuning, or other adapter-style model artifacts from serving deployments, registries, caches, and derivative model lineage after compromise is confirmed. The objective is to stop the adapter from influencing inference or future model artifacts and to route irreducible derivatives to rollback or retraining workflows.<br/><br/><strong>Scope boundary:</strong> <code>AID-H-003.007</code> prevents unsafe adapters from loading by verifying provenance, binding, registry admission, and behavioral validation. <code>AID-R-001.001</code> owns whole-model rollback to a known-good model version. <code>AID-R-001.002</code> owns retraining, unlearning, or clean-data remediation when adapter influence cannot be detached cleanly. This sub-technique owns incident-time detachment, quarantine, tombstone propagation, and derivative-impact tracing for compromised adapter artifacts.",
+"pillar": [
+"model",
+"infra"
+],
+"phase": [
+"response",
+"improvement"
+],
+"implementationGuidance": [
+"Detach and quarantine compromised adapters from serving routes, model runtimes, and active deployment manifests.",
+"Propagate adapter tombstones from the trusted adapter registry into serving runtimes, cache layers, and promotion gates.",
+"Trace merged and derivative model artifacts influenced by the compromised adapter, then route irreducible impact to rollback or retraining."
+],
+"toolsOpenSource": [
+"Hugging Face PEFT",
+"safetensors",
+"MLflow Model Registry",
+"Kubernetes",
+"DVC"
+],
+"toolsCommercial": [
+"Amazon SageMaker Model Registry",
+"Google Vertex AI Model Registry",
+"Databricks Model Registry / Unity Catalog",
+"Weights & Biases Models"
+],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0018 Manipulate AI Model",
+"AML.T0018.002 Manipulate AI Model: Embed Malware",
+"AML.T0058 Publish Poisoned Models",
+"AML.T0010 AI Supply Chain Compromise"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Backdoor Attacks (L1)",
+"Supply Chain Attacks (Cross-Layer)",
+"Compromised Framework Components (L3)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2025",
+"items": [
+"LLM03:2025 Supply Chain",
+"LLM04:2025 Data and Model Poisoning"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"ML06:2023 AI Supply Chain Attacks",
+"ML10:2023 Model Poisoning"
+]
+},
+{
+"framework": "OWASP Agentic AI Top 10 2026",
+"items": [
+"ASI04:2026 Agentic Supply Chain Vulnerabilities"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"NISTAML.051 Model Poisoning (Supply Chain)",
+"NISTAML.023 Backdoor Poisoning"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-9.1 Model or Agentic System Manipulation",
+"AITech-9.3 Dependency / Plugin Compromise",
+"AISubtech-9.2.2 Backdoors and Trojans"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"MST: Model Source Tampering (removes tampered adapter artifacts)",
+"MDT: Model Deployment Tampering (removes compromised adapters from serving deployments)"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Model 7.1: Backdoor machine learning / Trojaned model",
+"Model 7.3: ML Supply chain vulnerabilities"
+]
+}
+],
+"contentHash": "44a5e2da777a0e15",
+"keywords": [
+"llm adapter removal",
+"lora adapter quarantine",
+"peft artifact eviction",
+"adapter tombstone propagation",
+"model adapter detachment",
+"derivative model tracing",
+"merged model impact routing",
+"adapter lineage evidence",
+"compromised adapter cleanup",
+"runtime adapter quarantine",
+"adapter registry tombstone",
+"model rollback routing"
 ]
 }
 ],

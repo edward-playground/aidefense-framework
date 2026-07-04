@@ -374,6 +374,109 @@ export const evictTactic = {
                             "howTo": "<h5>Concept:</h5><p>Traditional certificate revocation via Certificate Revocation Lists (CRLs) or OCSP can be slow and complex to manage. A more modern, robust pattern is to issue certificates with very short lifetimes (e.g., 5-15 minutes). With this approach, 'revocation' is simply the act of not issuing a new certificate. An evicted agent will have its current certificate expire within minutes, automatically losing its ability to authenticate.</p><h5>Step 1: Configure a Certificate Authority for Short Lifetimes</h5><p>In your PKI or service mesh's certificate authority (CA), configure a policy to issue certificates with a very short Time-To-Live (TTL).</p><pre><code># Conceptual configuration for a CA like cert-manager or Istio's CA\n\nca_policy:\n  # Set the default lifetime for all issued workload certificates to 10 minutes.\n  default_certificate_ttl: \"10m\"\n  # Set the maximum allowed TTL to 1 hour, preventing requests for long-lived certs.\n  max_certificate_ttl: \"1h\"\n</code></pre><h5>Step 2: Implement Logic to Deny Re-issuance</h5><p>The core of the eviction is to block the compromised agent from getting its *next* certificate. This is done by deleting its identity entry (as in the first strategy) or adding its ID to a blocklist checked by the CA during issuance requests.</p><pre><code># Conceptual logic in the CA's issuance process\n\ndef should_issue_certificate(agent_id, csr):\n    # Check a revocation blocklist (e.g., stored in Redis or a DB)\n    if is_agent_id_revoked(agent_id):\n        print(f\"Denying certificate renewal for revoked agent: {agent_id}\")\n        return False\n    \n    # If not revoked, proceed with issuance\n    return True</code></pre><p><strong>Action:</strong> Architect your mTLS infrastructure to issue very short-lived certificates (e.g., 15 minutes or less) to all AI workloads. Eviction is then achieved by preventing the compromised workload from being issued a new certificate, causing it to be automatically locked out upon the expiration of its current one.</p>"
                         }
                     ]
+                },
+                {
+                    "id": "AID-E-001.004",
+                    "name": "Delegated OAuth Grant & Connected-App Revocation",
+                    "pillar": ["app", "infra"],
+                    "phase": ["response"],
+                    "description": "Revoke compromised or over-authorized delegated OAuth grants, connected-app consents, service-principal app-role assignments, and SaaS application grants that allow an attacker-controlled user, agent, or app to keep accessing AI services and enterprise data after ordinary token invalidation has occurred.<br/><br/><strong>Scope boundary:</strong> <code>AID-E-001.002</code> owns JWT/API-token revocation and denylist propagation. <code>AID-E-001.003</code> owns workload identity and agent cryptographic identity eviction. <code>AID-H-035.002</code> owns MCP server-side OAuth protected-resource boundaries, token audience/resource validation, and delegated grant safety before compromise. This sub-technique owns incident-time revocation of delegated grants and connected-app authorizations that can mint fresh tokens or continue SaaS access. Rogue webhook, scheduled job, and tool registration cleanup belongs to <code>AID-E-005</code> after grants are revoked.",
+                    "toolsOpenSource": [
+                        "Microsoft Graph PowerShell SDK",
+                        "Google Workspace Admin SDK / GAMADV-XTD3",
+                        "Okta API / Okta Terraform Provider",
+                        "jq"
+                    ],
+                    "toolsCommercial": [
+                        "Microsoft Entra ID",
+                        "Okta",
+                        "Google Workspace",
+                        "SaaS Security Posture Management (SSPM) platforms"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0012 Valid Accounts",
+                                "AML.T0091 Use Alternate Authentication Material",
+                                "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
+                                "AML.T0098 AI Agent Tool Credential Harvesting",
+                                "AML.T0083 Credentials from AI Agent Configuration"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Agent Identity Attack (L7)",
+                                "Privilege Escalation (Cross-Layer)",
+                                "Lateral Movement (Cross-Layer)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM06:2025 Excessive Agency"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "N/A"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI03:2026 Identity and Privilege Abuse",
+                                "ASI10:2026 Rogue Agents"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.039 Compromising connected resources"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-14.1 Unauthorized Access",
+                                "AITech-14.2 Abuse of Delegated Authority",
+                                "AISubtech-14.1.1 Credential Theft"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "RA: Rogue Actions (revoking delegated grants stops unauthorized connected-app actions)",
+                                "SDD: Sensitive Data Disclosure (grant revocation stops ongoing data access)",
+                                "MXF: Model Exfiltration (grant revocation stops model/data access through connected apps)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Platform 12.4: Unauthorized privileged access",
+                                "Agents - Core 13.3: Privilege Compromise",
+                                "Agents - Tools MCP Server 13.19: Credential and Token Exposure",
+                                "Agents - Tools MCP Client 13.31: Excessive Permission Granting"
+                            ]
+                        }
+                    ],
+                    "implementationGuidance": [
+                        {
+                            "implementation": "Enumerate delegated OAuth grants, connected apps, app-role assignments, and SaaS consents tied to the compromised principal or agent.",
+                            "howTo": "<h5>Concept:</h5><p>Before revocation, responders need a complete grant inventory for the compromised principal. Do not only revoke the currently observed access token; OAuth consent and connected-app grants can mint new tokens after token invalidation. Export the grants first so the incident record proves what existed before eviction.</p><h5>Step 1: Export Entra delegated grants</h5><pre><code># File: incident_response/export_entra_oauth_grants.ps1\nparam(\n  [Parameter(Mandatory=$true)][string]$UserPrincipalName,\n  [Parameter(Mandatory=$true)][string]$IncidentId\n)\n\nConnect-MgGraph -Scopes \"Directory.Read.All\",\"Application.Read.All\",\"DelegatedPermissionGrant.ReadWrite.All\",\"AppRoleAssignment.ReadWrite.All\"\n$user = Get-MgUser -UserId $UserPrincipalName\n$delegated = Get-MgOauth2PermissionGrant -All -Filter \"principalId eq '$($user.Id)'\"\n$record = [ordered]@{\n  incident_id = $IncidentId\n  principal_id = $user.Id\n  user_principal_name = $UserPrincipalName\n  delegated_grants = $delegated | Select-Object Id, ClientId, ResourceId, Scope, ConsentType, PrincipalId\n  exported_at = (Get-Date).ToUniversalTime().ToString(\"o\")\n}\nNew-Item -ItemType Directory -Force -Path artifacts | Out-Null\n$record | ConvertTo-Json -Depth 8 | Set-Content -Encoding utf8 \"artifacts/oauth-grant-inventory-raw.json\"\n</code></pre><h5>Step 2: Normalize the grant inventory for the incident system</h5><pre><code># File: incident_response/normalize_oauth_grants.py\nfrom __future__ import annotations\n\nimport json\nfrom pathlib import Path\n\n\ndef normalize_grants(path: str) -> dict:\n    raw = json.loads(Path(path).read_text(encoding=\"utf-8\"))\n    grants = raw.get(\"delegated_grants\", [])\n    if isinstance(grants, dict):\n        grants = [grants]\n    evidence = {\n        \"incident_id\": raw[\"incident_id\"],\n        \"principal_id\": raw[\"principal_id\"],\n        \"user_principal_name\": raw[\"user_principal_name\"],\n        \"grant_count\": len(grants),\n        \"grants\": [\n            {\n                \"grant_id\": grant.get(\"Id\"),\n                \"client_id\": grant.get(\"ClientId\"),\n                \"resource_id\": grant.get(\"ResourceId\"),\n                \"scope\": grant.get(\"Scope\"),\n                \"consent_type\": grant.get(\"ConsentType\"),\n            }\n            for grant in grants\n        ],\n    }\n    return evidence\n\n\ndef main() -> None:\n    evidence = normalize_grants(\"artifacts/oauth-grant-inventory-raw.json\")\n    Path(\"artifacts/oauth-grant-inventory-evidence.json\").write_text(\n        json.dumps(evidence, indent=2, sort_keys=True) + \"\\n\",\n        encoding=\"utf-8\",\n    )\n\n\nif __name__ == \"__main__\":\n    main()\n</code></pre><p><strong>Action:</strong> For every compromised user, service account, or AI agent operator identity, export delegated grants and connected-app assignments before revocation, normalize them, and attach <code>artifacts/oauth-grant-inventory-evidence.json</code> to the incident.</p>"
+                        },
+                        {
+                            "implementation": "Revoke delegated OAuth grants, connected-app consents, refresh sessions, and app-role assignments that allow continued access after compromise.",
+                            "howTo": "<h5>Concept:</h5><p>Grant revocation must remove the authorization object, not just the current token. In Entra, remove matching <code>oauth2PermissionGrant</code> records and revoke user sign-in sessions so refresh tokens are invalidated. In other IdPs or SaaS platforms, perform the equivalent connected-app or admin-consent removal.</p><h5>Revocation runbook for Entra grants</h5><pre><code># File: incident_response/revoke_entra_oauth_grants.ps1\nparam(\n  [Parameter(Mandatory=$true)][string]$InventoryPath,\n  [Parameter(Mandatory=$true)][string]$ApprovedBy\n)\n\nConnect-MgGraph -Scopes \"Directory.ReadWrite.All\",\"DelegatedPermissionGrant.ReadWrite.All\",\"AppRoleAssignment.ReadWrite.All\",\"User.RevokeSessions.All\"\n$inventory = Get-Content $InventoryPath | ConvertFrom-Json\n$revoked = @()\n\nforeach ($grant in $inventory.grants) {\n  if ($null -ne $grant.grant_id -and $grant.grant_id -ne \"\") {\n    Remove-MgOauth2PermissionGrant -OAuth2PermissionGrantId $grant.grant_id -Confirm:$false\n    $revoked += [ordered]@{\n      grant_id = $grant.grant_id\n      client_id = $grant.client_id\n      resource_id = $grant.resource_id\n      scope = $grant.scope\n      action = \"Remove-MgOauth2PermissionGrant\"\n    }\n  }\n}\n\nRevoke-MgUserSignInSession -UserId $inventory.principal_id | Out-Null\n\n$evidence = [ordered]@{\n  incident_id = $inventory.incident_id\n  principal_id = $inventory.principal_id\n  approved_by = $ApprovedBy\n  revoked_count = $revoked.Count\n  revoked = $revoked\n  sessions_revoked = $true\n  revoked_at = (Get-Date).ToUniversalTime().ToString(\"o\")\n}\n$evidence | ConvertTo-Json -Depth 8 | Set-Content -Encoding utf8 \"artifacts/oauth-grant-revocation-evidence.json\"\n</code></pre><h5>Policy guardrail</h5><p>Do not run broad tenant-wide grant deletion from this playbook. Require a principal selector, incident ID, approval identity, and previously captured inventory. Route app-registration deletion, rogue webhook removal, or scheduled job cleanup to <code>AID-E-005</code> after grant revocation.</p><p><strong>Action:</strong> Delete the exact delegated grants and connected-app assignments identified in the inventory, revoke refresh sessions, and store <code>artifacts/oauth-grant-revocation-evidence.json</code> with the revoked grant IDs and approval identity.</p>"
+                        },
+                        {
+                            "implementation": "Verify grant-revocation propagation and monitor for attempted reuse of revoked connected-app access.",
+                            "howTo": "<h5>Concept:</h5><p>Revocation is not complete until the IdP and SaaS control planes no longer report the grant and new token issuance fails. Verification should be a separate evidence unit so responders can prove the grant was removed and detect reuse attempts from cached refresh tokens or replayed authorization material.</p><h5>Verification script</h5><pre><code># File: incident_response/verify_oauth_grant_revocation.py\nfrom __future__ import annotations\n\nimport json\nfrom pathlib import Path\n\n\ndef verify(before_path: str, after_path: str) -> dict:\n    before = json.loads(Path(before_path).read_text(encoding=\"utf-8\"))\n    after = json.loads(Path(after_path).read_text(encoding=\"utf-8\"))\n    before_ids = {grant[\"grant_id\"] for grant in before.get(\"grants\", []) if grant.get(\"grant_id\")}\n    after_ids = {grant[\"grant_id\"] for grant in after.get(\"grants\", []) if grant.get(\"grant_id\")}\n    remaining = sorted(before_ids & after_ids)\n    evidence = {\n        \"incident_id\": before[\"incident_id\"],\n        \"principal_id\": before[\"principal_id\"],\n        \"revoked_grants_checked\": sorted(before_ids),\n        \"remaining_grant_ids\": remaining,\n        \"passed\": len(remaining) == 0,\n    }\n    return evidence\n\n\ndef main() -> None:\n    evidence = verify(\n        \"artifacts/oauth-grant-inventory-evidence.json\",\n        \"artifacts/oauth-grant-inventory-after-revocation.json\",\n    )\n    Path(\"artifacts/oauth-grant-revocation-verification.json\").write_text(\n        json.dumps(evidence, indent=2, sort_keys=True) + \"\\n\",\n        encoding=\"utf-8\",\n    )\n    if not evidence[\"passed\"]:\n        raise SystemExit(\"oauth grant revocation did not fully propagate\")\n\n\nif __name__ == \"__main__\":\n    main()\n</code></pre><h5>Monitoring rule</h5><p>After verification, alert on token-refresh failures, app consent re-creation, admin-consent events, or SaaS API calls that reference the revoked client ID, user ID, or service principal. These attempts indicate cached authorization material or a secondary foothold that should be handled by the broader eviction workflow.</p><p><strong>Action:</strong> Re-enumerate grants after revocation, compare before/after grant IDs, fail if any revoked grant remains, and store <code>artifacts/oauth-grant-revocation-verification.json</code> as the closure evidence.</p>"
+                        }
+                    ]
                 }
             ]
         },
@@ -421,7 +524,8 @@ export const evictTactic = {
                 {
                     "framework": "OWASP LLM Top 10 2025",
                     "items": [
-                        "LLM01:2025 Prompt Injection (ending manipulated session)"
+                        "LLM01:2025 Prompt Injection (ending manipulated session)",
+                        "LLM10:2025 Unbounded Consumption"
                     ]
                 },
                 {
@@ -1104,6 +1208,274 @@ print(f"Small suspicious clusters: {small_clusters}")</code></pre><h5>Required e
                             ]
                         }
                     ]
+                },
+                {
+                    "id": "AID-E-003.005",
+                    "name": "LLM Adapter & Derivative Artifact Removal",
+                    "pillar": ["model", "infra"],
+                    "phase": ["response", "improvement"],
+                    "description": "Remove compromised LoRA, QLoRA, PEFT, prompt-tuning, or other adapter-style model artifacts from serving deployments, registries, caches, and derivative model lineage after compromise is confirmed. The objective is to stop the adapter from influencing inference or future model artifacts and to route irreducible derivatives to rollback or retraining workflows.<br/><br/><strong>Scope boundary:</strong> <code>AID-H-003.007</code> prevents unsafe adapters from loading by verifying provenance, binding, registry admission, and behavioral validation. <code>AID-R-001.001</code> owns whole-model rollback to a known-good model version. <code>AID-R-001.002</code> owns retraining, unlearning, or clean-data remediation when adapter influence cannot be detached cleanly. This sub-technique owns incident-time detachment, quarantine, tombstone propagation, and derivative-impact tracing for compromised adapter artifacts.",
+                    "toolsOpenSource": [
+                        "Hugging Face PEFT",
+                        "safetensors",
+                        "MLflow Model Registry",
+                        "Kubernetes",
+                        "DVC"
+                    ],
+                    "toolsCommercial": [
+                        "Amazon SageMaker Model Registry",
+                        "Google Vertex AI Model Registry",
+                        "Databricks Model Registry / Unity Catalog",
+                        "Weights & Biases Models"
+                    ],
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0018 Manipulate AI Model",
+                                "AML.T0018.002 Manipulate AI Model: Embed Malware",
+                                "AML.T0058 Publish Poisoned Models",
+                                "AML.T0010 AI Supply Chain Compromise"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Backdoor Attacks (L1)",
+                                "Supply Chain Attacks (Cross-Layer)",
+                                "Compromised Framework Components (L3)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2025",
+                            "items": [
+                                "LLM03:2025 Supply Chain",
+                                "LLM04:2025 Data and Model Poisoning"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "ML06:2023 AI Supply Chain Attacks",
+                                "ML10:2023 Model Poisoning"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "items": [
+                                "ASI04:2026 Agentic Supply Chain Vulnerabilities"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "NISTAML.051 Model Poisoning (Supply Chain)",
+                                "NISTAML.023 Backdoor Poisoning"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-9.1 Model or Agentic System Manipulation",
+                                "AITech-9.3 Dependency / Plugin Compromise",
+                                "AISubtech-9.2.2 Backdoors and Trojans"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "MST: Model Source Tampering (removes tampered adapter artifacts)",
+                                "MDT: Model Deployment Tampering (removes compromised adapters from serving deployments)"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Model 7.1: Backdoor machine learning / Trojaned model",
+                                "Model 7.3: ML Supply chain vulnerabilities"
+                            ]
+                        }
+                    ],
+                    "implementationGuidance": [
+                        {
+                            "implementation": "Detach and quarantine compromised adapters from serving routes, model runtimes, and active deployment manifests.",
+                            "howTo": `<h5>Concept:</h5><p>Once an adapter digest is confirmed compromised, remove it from every active route before doing slower registry cleanup. Do not rely on deleting a file from object storage alone; running model servers may keep an adapter mounted, cached, or hot-swapped into memory.</p><h5>Adapter route manifest</h5><pre><code class="language-json">{
+  "deployment": "llm-support-prod",
+  "adapters": [
+    {
+      "adapter_id": "support-lora-v2",
+      "adapter_digest": "sha256:badcafe",
+      "base_model_digest": "sha256:base111",
+      "status": "active",
+      "route": "/support"
+    }
+  ]
+}</code></pre><h5>Quarantine the compromised adapter</h5><pre><code># File: incident_response/quarantine_adapter_routes.py
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+
+def quarantine_adapter_routes(manifest_path: str, compromised_digest: str, incident_id: str) -> dict:
+    manifest = json.loads(Path(manifest_path).read_text(encoding="utf-8"))
+    quarantined = []
+    remaining = []
+
+    for adapter in manifest.get("adapters", []):
+        if adapter.get("adapter_digest") == compromised_digest:
+            adapter = {**adapter, "status": "quarantined", "incident_id": incident_id}
+            quarantined.append(adapter)
+        else:
+            remaining.append(adapter)
+
+    patched_manifest = {**manifest, "adapters": remaining, "quarantined_adapters": quarantined}
+    Path("serving/active_adapters.patched.json").write_text(
+        json.dumps(patched_manifest, indent=2, sort_keys=True) + "\\n",
+        encoding="utf-8",
+    )
+
+    evidence = {
+        "incident_id": incident_id,
+        "deployment": manifest["deployment"],
+        "compromised_digest": compromised_digest,
+        "detached_count": len(quarantined),
+        "quarantined_adapters": quarantined,
+        "patched_manifest": "serving/active_adapters.patched.json",
+    }
+    Path("artifacts").mkdir(exist_ok=True)
+    Path("artifacts/adapter-detachment-evidence.json").write_text(
+        json.dumps(evidence, indent=2, sort_keys=True) + "\\n",
+        encoding="utf-8",
+    )
+    if not quarantined:
+        raise SystemExit("compromised adapter digest was not present in active routes")
+    return evidence
+
+
+if __name__ == "__main__":
+    quarantine_adapter_routes("serving/active_adapters.json", "sha256:badcafe", "INC-2026-0704-002")
+</code></pre><p><strong>Action:</strong> Use the serving control plane or deployment manifest to detach the compromised adapter from active routes, restart or hot-reload affected model servers, and store <code>artifacts/adapter-detachment-evidence.json</code> with the exact digest and deployments touched.</p>`
+                        },
+                        {
+                            "implementation": "Propagate adapter tombstones from the trusted adapter registry into serving runtimes, cache layers, and promotion gates.",
+                            "howTo": `<h5>Concept:</h5><p>Adapter removal must survive retries, rollbacks, and cache repopulation. Treat a compromised adapter digest as tombstoned in the registry and make loaders, promotion jobs, and runtime cache warmers fail closed when they encounter it.</p><h5>Tombstone registry</h5><pre><code class="language-json">{
+  "tombstones": [
+    {
+      "adapter_id": "support-lora-v2",
+      "adapter_digest": "sha256:badcafe",
+      "reason": "backdoor trigger confirmed",
+      "incident_id": "INC-2026-0704-002",
+      "tombstoned_by": "security-duty-officer"
+    }
+  ]
+}</code></pre><h5>Loader and promotion enforcement</h5><pre><code># File: runtime/enforce_adapter_tombstones.py
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+
+class TombstonedAdapterError(RuntimeError):
+    pass
+
+
+def load_tombstones(path: str = "registry/adapter_tombstones.json") -> set[str]:
+    data = json.loads(Path(path).read_text(encoding="utf-8"))
+    return {entry["adapter_digest"] for entry in data.get("tombstones", [])}
+
+
+def enforce_not_tombstoned(adapter_digest: str, tombstone_path: str = "registry/adapter_tombstones.json") -> None:
+    tombstones = load_tombstones(tombstone_path)
+    if adapter_digest in tombstones:
+        raise TombstonedAdapterError(f"adapter_digest_tombstoned:{adapter_digest}")
+
+
+def write_tombstone_propagation_evidence(active_manifest: str) -> None:
+    active = json.loads(Path(active_manifest).read_text(encoding="utf-8"))
+    tombstones = load_tombstones()
+    blocked = [
+        adapter for adapter in active.get("adapters", [])
+        if adapter.get("adapter_digest") in tombstones
+    ]
+    evidence = {
+        "active_manifest": active_manifest,
+        "tombstone_count": len(tombstones),
+        "blocked_active_adapters": blocked,
+        "passed": len(blocked) == 0,
+    }
+    Path("artifacts").mkdir(exist_ok=True)
+    Path("artifacts/adapter-tombstone-propagation-evidence.json").write_text(
+        json.dumps(evidence, indent=2, sort_keys=True) + "\\n",
+        encoding="utf-8",
+    )
+    if blocked:
+        raise SystemExit("tombstoned adapter still present in active manifest")
+
+
+if __name__ == "__main__":
+    write_tombstone_propagation_evidence("serving/active_adapters.patched.json")
+</code></pre><p><strong>Action:</strong> Add the compromised adapter digest to the registry tombstone list, invalidate runtime and cache entries that hold the adapter, and require loaders and promotion jobs to emit <code>artifacts/adapter-tombstone-propagation-evidence.json</code> proving no tombstoned digest remains active.</p>`
+                        },
+                        {
+                            "implementation": "Trace merged and derivative model artifacts influenced by the compromised adapter, then route irreducible impact to rollback or retraining.",
+                            "howTo": `<h5>Concept:</h5><p>Some adapters are detachable at serving time. Others may have been merged into full model weights, distilled into another model, exported into a quantized artifact, or used in an evaluation/promotion path. Those derivatives cannot be cleaned by deleting the adapter alone; they need rollback or retraining.</p><h5>Derivative lineage manifest</h5><pre><code class="language-json">{
+  "derivatives": [
+    {
+      "adapter_digest": "sha256:badcafe",
+      "artifact_id": "support-llm-merged-v4",
+      "artifact_type": "merged_model",
+      "reversible": false,
+      "serving_deployment": "llm-support-prod"
+    },
+    {
+      "adapter_digest": "sha256:badcafe",
+      "artifact_id": "support-lora-v2-route",
+      "artifact_type": "runtime_adapter_route",
+      "reversible": true,
+      "serving_deployment": "llm-support-prod"
+    }
+  ]
+}</code></pre><h5>Impact routing script</h5><pre><code># File: incident_response/trace_adapter_derivatives.py
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+
+def route_derivatives(lineage_path: str, compromised_digest: str, incident_id: str) -> dict:
+    lineage = json.loads(Path(lineage_path).read_text(encoding="utf-8"))
+    affected = [
+        item for item in lineage.get("derivatives", [])
+        if item.get("adapter_digest") == compromised_digest
+    ]
+    routed = []
+    for item in affected:
+        route = "AID-E-003.005_detach_adapter" if item.get("reversible") else "AID-R-001.001_or_AID-R-001.002"
+        routed.append({**item, "incident_id": incident_id, "remediation_route": route})
+
+    evidence = {
+        "incident_id": incident_id,
+        "compromised_digest": compromised_digest,
+        "affected_artifact_count": len(affected),
+        "affected_artifacts": routed,
+        "requires_restore_workflow": any(not item.get("reversible") for item in affected),
+    }
+    Path("artifacts").mkdir(exist_ok=True)
+    Path("artifacts/adapter-derivative-impact-evidence.json").write_text(
+        json.dumps(evidence, indent=2, sort_keys=True) + "\\n",
+        encoding="utf-8",
+    )
+    if evidence["requires_restore_workflow"]:
+        print("Route non-reversible derivatives to AID-R-001.001 rollback or AID-R-001.002 retraining.")
+    return evidence
+
+
+if __name__ == "__main__":
+    route_derivatives("registry/adapter_derivative_lineage.json", "sha256:badcafe", "INC-2026-0704-002")
+</code></pre><p><strong>Action:</strong> Query lineage for every derivative artifact influenced by the compromised adapter. Detach reversible runtime adapter routes through this technique, and route merged or distilled model artifacts to <code>AID-R-001.001</code> rollback or <code>AID-R-001.002</code> retraining with <code>artifacts/adapter-derivative-impact-evidence.json</code>.</p>`
+                        }
+                    ]
                 }
             ]
         },
@@ -1363,7 +1735,7 @@ print(f"Small suspicious clusters: {small_clusters}")</code></pre><h5>Required e
                 },
                 {
                     "implementation": "Purge tainted conversational memory / agent state so the attacker’s injected goals cannot respawn.",
-                    "howTo": "<h5>Concept:</h5><p>Agentic systems and LLM-powered services often persist memory: conversation history, tool authorization context, scratchpads, chain-of-thought summaries, etc. If an attacker poisoned that memory (prompt injection, internal goal override, hidden tool calls), simply killing the running process (AID-E-002) is not enough. You must delete that persisted state so the next agent instance does not auto-load the compromised intent.</p><h5>Targeted State Purge</h5><pre><code># File: eviction_scripts/purge_agent_state.py\nimport redis\n\ndef purge_state_for_agents(agent_ids: list):\n    \"\"\"Delete cached state for specific agent IDs (chat history,\\n    working memory, tool auth context, etc.).\"\"\"\n    r = redis.Redis()\n    total_deleted = 0\n    for agent_id in agent_ids:\n        patterns = [\n            f\"session:{agent_id}:*\",\n            f\"chat_history:{agent_id}\",\n            f\"agent_state:{agent_id}\"\n        ]\n        for pattern in patterns:\n            for key in r.scan_iter(pattern):\n                total_deleted += r.delete(key)\n    print(f\"✅ Purged {total_deleted} keys across {len(agent_ids)} agents.\")\n</code></pre><p><strong>Action:</strong> As soon as you terminate a compromised agent session, run a purge against all state tied to that agent identity. This directly mitigates ongoing Prompt Injection (OWASP LLM01:2025) and prevents continued Sensitive Information Disclosure (LLM02:2025) through an already-hijacked memory channel.</p>"
+                    "howTo": "<h5>Concept:</h5><p>Agentic systems and LLM-powered services persist state across many backing stores: server-side sessions, conversation history, tool-authorization context, scratchpads, vector-memory namespaces, browser profiles, task queues, and object-store traces. If an attacker poisoned that state, killing the active process (<code>AID-E-002</code>) is not enough. Eviction must remove only the state tied to the compromised principal, session, run, or tenant so the next agent instance cannot reload the attacker-controlled goal.</p><h5>Step 1: Build a scoped purge manifest</h5><p>Do not bulk wipe an entire Redis database, vector collection, or object bucket. Start from incident evidence and list the exact selectors to purge. Keep the manifest with the incident record before executing deletion.</p><pre><code># File: incident_response/state_purge_manifest.json\n{\n  \"incident_id\": \"INC-2026-0704-001\",\n  \"approved_by\": \"security-duty-officer\",\n  \"selectors\": {\n    \"agent_ids\": [\"support-agent-prod\"],\n    \"agent_run_ids\": [\"run-7f42\"],\n    \"session_ids\": [\"sess-91ab\"],\n    \"tenant_ids\": [\"tenant-123\"]\n  },\n  \"stores\": [\n    {\"type\": \"redis\", \"name\": \"agent-cache\", \"scope\": \"agent_run\"},\n    {\"type\": \"postgres\", \"name\": \"agent_memory\", \"scope\": \"session\"},\n    {\"type\": \"vector\", \"name\": \"support-memory\", \"scope\": \"tenant_agent\"},\n    {\"type\": \"object_store\", \"name\": \"agent-trace-archive\", \"scope\": \"agent_run\"},\n    {\"type\": \"browser_profile\", \"name\": \"computer-use-profiles\", \"scope\": \"session\"}\n  ]\n}</code></pre><h5>Step 2: Execute purge through store adapters</h5><pre><code># File: incident_response/purge_compromised_state.py\nfrom __future__ import annotations\n\nfrom dataclasses import asdict, dataclass\nimport json\nfrom pathlib import Path\nfrom typing import Protocol\n\n\n@dataclass(frozen=True)\nclass PurgeFinding:\n    store_type: str\n    store_name: str\n    selector: str\n    records_matched: int\n    records_deleted: int\n\n\nclass StateStoreAdapter(Protocol):\n    store_type: str\n    store_name: str\n\n    def preview(self, selectors: dict) -> PurgeFinding:\n        ...\n\n    def purge(self, selectors: dict) -> PurgeFinding:\n        ...\n\n\ndef run_purge(\n    adapters: list[StateStoreAdapter],\n    selectors: dict,\n    evidence_path: Path,\n    dry_run: bool = True,\n) -> list[PurgeFinding]:\n    if not selectors.get(\"agent_ids\") and not selectors.get(\"agent_run_ids\") and not selectors.get(\"session_ids\"):\n        raise ValueError(\"Refuse broad purge: at least one agent_id, agent_run_id, or session_id selector is required\")\n\n    findings: list[PurgeFinding] = []\n    for adapter in adapters:\n        finding = adapter.preview(selectors) if dry_run else adapter.purge(selectors)\n        findings.append(finding)\n\n    evidence_path.parent.mkdir(parents=True, exist_ok=True)\n    evidence_path.write_text(\n        json.dumps([asdict(f) for f in findings], indent=2, sort_keys=True),\n        encoding=\"utf-8\",\n    )\n    return findings\n\n\nclass RedisAgentRunStateAdapter:\n    store_type = \"redis\"\n\n    def __init__(self, host: str = \"localhost\", port: int = 6379, db: int = 0) -> None:\n        import redis\n\n        self.store_name = f\"redis:{host}:{port}/{db}\"\n        self.client = redis.Redis(host=host, port=port, db=db, decode_responses=True)\n\n    def _patterns(self, selectors: dict) -> list[str]:\n        patterns = []\n        for run_id in selectors.get(\"agent_run_ids\", []):\n            patterns.extend([\n                f\"agent_run:{run_id}:messages:*\",\n                f\"agent_run:{run_id}:scratchpad\",\n                f\"agent_run:{run_id}:tool_context:*\",\n                f\"agent_run:{run_id}:memory:*\",\n            ])\n        for session_id in selectors.get(\"session_ids\", []):\n            patterns.extend([\n                f\"session:{session_id}:*\",\n                f\"conversation:{session_id}:*\",\n            ])\n        for agent_id in selectors.get(\"agent_ids\", []):\n            patterns.append(f\"agent:{agent_id}:active_session\")\n        return patterns\n\n    def _matching_keys(self, selectors: dict) -> list[str]:\n        keys: list[str] = []\n        for pattern in self._patterns(selectors):\n            keys.extend(self.client.scan_iter(pattern))\n        return sorted(set(keys))\n\n    def preview(self, selectors: dict) -> PurgeFinding:\n        keys = self._matching_keys(selectors)\n        return PurgeFinding(self.store_type, self.store_name, \"redis_agent_state\", len(keys), 0)\n\n    def purge(self, selectors: dict) -> PurgeFinding:\n        keys = self._matching_keys(selectors)\n        deleted = self.client.delete(*keys) if keys else 0\n        return PurgeFinding(self.store_type, self.store_name, \"redis_agent_state\", len(keys), int(deleted))\n</code></pre><h5>Adapter requirements</h5><ul><li><strong>Session stores:</strong> delete only keys or rows that match compromised session, user, agent, run, or tenant selectors.</li><li><strong>Vector and memory stores:</strong> delete by metadata filters such as <code>agent_id</code>, <code>run_id</code>, <code>session_id</code>, <code>tenant_id</code>, and <code>incident_id</code>; then rebuild affected indexes if the store requires compaction.</li><li><strong>Object stores and trace archives:</strong> quarantine or delete prefixes tied to compromised runs, preserving deletion evidence and legal-hold exceptions.</li><li><strong>Browser/computer-use profiles:</strong> destroy profile directories, cookies, local storage, extension state, downloads, clipboard staging, and magic-link cache tied to the session.</li></ul><p><strong>Action:</strong> Treat state purge as a scoped, evidence-producing incident-response step. Run a dry-run preview first, require approval for destructive purge, execute through adapters for every reachable state store, and attach the purge evidence to the incident ticket. If the affected state is training data, persistent KB content, or model artifact lineage rather than live session/agent state, route that cleanup to Restore/Data recovery controls instead of this eviction guidance.</p>"
                 },
                 {
                     "implementation": "Remove unauthorized webhook and tool registrations created during the compromise.",

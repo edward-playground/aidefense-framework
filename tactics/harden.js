@@ -354,7 +354,6 @@ for data, target in dataloader:
               framework: "OWASP ML Top 10 2023",
               items: [
                 "ML02:2023 Data Poisoning Attack",
-                "ML10:2023 Model Poisoning",
                 "ML08:2023 Model Skewing",
                 "ML04:2023 Membership Inference Attack (removing sensitive records reduces inference risk)",
               ],
@@ -4134,8 +4133,7 @@ exception_process: ACCESS-EXCEPTION
             {
               framework: "Google Secure AI Framework 2.0 - Risks",
               items: [
-                "SDD: Sensitive Data Disclosure (HE prevents data exposure during computation)",
-                "MXF: Model Exfiltration (encrypted data remains protected even if exfiltrated)"
+                "SDD: Sensitive Data Disclosure (HE prevents data exposure during computation)"
               ],
             },
             {
@@ -5443,6 +5441,7 @@ curl -i https://staging.example.com/v1/generate \
               items: [
                 "Model Management 8.2: Model theft",
                 "Model Management 8.4: Model inversion",
+                "Algorithms 5.3: Hyperparameters stealing (reduced output fidelity weakens black-box hyperparameter inference)",
                 "Model Serving - Inference requests 9.2: Model inversion (obfuscated outputs hinder inversion)",
                 "Model Serving - Inference requests 9.5: Infer training data membership (reduced output precision hinders membership inference)",
                 "Model Serving - Inference response 10.5: Black-box attacks (obfuscation reduces attacker feedback fidelity)"
@@ -8180,7 +8179,6 @@ class PBRSWrapper(gym.Wrapper):
               framework: "MAESTRO",
               items: [
                 "Agent Goal Manipulation (L7)",
-                "Manipulation of Evaluation Metrics (L5) (PBRS preserves optimal policy while shaping reward metrics)",
               ],
             },
             {
@@ -9473,7 +9471,10 @@ def build_prompt_with_feature_flags(user_query: str, user_context: dict) -> str:
             },
             {
               framework: "OWASP LLM Top 10 2025",
-              items: ["LLM06:2025 Excessive Agency"],
+              items: [
+                "LLM06:2025 Excessive Agency",
+                "LLM10:2025 Unbounded Consumption",
+              ],
             },
             {
               framework: "OWASP ML Top 10 2023",
@@ -10193,11 +10194,15 @@ python -c "from agent_arch.enforcement_gate import EnforcementGate; gate = Enfor
                 "Orchestration Attacks (L4)",
                 "Agent Impersonation (L7)",
                 "Compromised Agent Registry (L7) (signed manifests detect registry compromise)",
+                "Denial of Service on Framework APIs (L3)",
               ],
             },
             {
               framework: "OWASP LLM Top 10 2025",
-              items: ["LLM06:2025 Excessive Agency"],
+              items: [
+                "LLM06:2025 Excessive Agency",
+                "LLM10:2025 Unbounded Consumption",
+              ],
             },
             {
               framework: "OWASP ML Top 10 2023",
@@ -10632,6 +10637,7 @@ print(result)</code></pre><h5>Step 4: Verify the planner never sees raw content<
               framework: "OWASP LLM Top 10 2025",
               items: [
                 "LLM06:2025 Excessive Agency",
+                "LLM05:2025 Improper Output Handling",
               ],
             },
             {
@@ -11695,6 +11701,157 @@ tool_handlers = {
             {
               "implementation": "Network-layer egress filtering (service mesh / firewall) to enforce outbound constraints even if application-layer checks fail, with default-deny posture and centrally managed allowlists.",
               "howTo": "<h5>Concept</h5><p>Application-layer checks can fail due to bugs, alternative code paths, or compromised runtimes. High-assurance environments require an <strong>infrastructure-layer</strong> control that restricts where agent workloads can send traffic, regardless of what the LLM decides.</p><h5>Goals</h5><ul><li><strong>Default-deny</strong> outbound from agent workloads.</li><li><strong>Force all egress through a choke point</strong> (egress gateway / firewall / proxy) for allowlisting + logging.</li><li><strong>Block bypass paths</strong> (direct IP egress, raw SMTP, arbitrary DNS).</li><li><strong>Change-managed allowlists</strong> (GitOps / ticketed approvals), versioned and auditable.</li></ul><h5>Step-by-step</h5><ol><li><strong>Segment workloads</strong>: run agents in dedicated namespaces/workloads by risk (e.g., <code>agent-readonly</code>, <code>agent-highrisk</code>). Attach distinct egress policies.</li><li><strong>Enforce baseline default-deny</strong> with Kubernetes NetworkPolicy (or CiliumNetworkPolicy) so agent pods cannot talk to the Internet directly.</li><li><strong>Force egress via a gateway</strong>: allow only traffic to an Istio/Envoy egress gateway (or an enterprise firewall/proxy). Block all other external destinations.</li><li><strong>Allowlist destinations centrally</strong>: create explicit allowlists for required external SaaS endpoints using ServiceEntry (Istio) or firewall policy objects. Prefer allowlisting by domain + SNI where possible and pin to known IP ranges when feasible.</li><li><strong>Use an internal proxy pattern</strong>: tools should call an internal proxy service (\"tool proxy\") that validates destination + request schema. The proxy then makes outbound calls via the egress gateway.</li><li><strong>Logging + detection</strong>: export egress gateway logs (SNI/host/path/status) to SIEM and correlate with tool-call logs (same <code>request_id</code>/<code>trace_id</code>).</li></ol><h5>Kubernetes NetworkPolicy (default-deny + allow only egress gateway)</h5><pre><code class=\"language-yaml\">apiVersion: networking.k8s.io/v1\nkind: NetworkPolicy\nmetadata:\n  name: agent-egress-default-deny\n  namespace: agent\nspec:\n  podSelector: {}\n  policyTypes:\n  - Egress\n  egress:\n  # Allow DNS only to cluster DNS (adjust to your DNS setup)\n  - to:\n    - namespaceSelector:\n        matchLabels:\n          kubernetes.io/metadata.name: kube-system\n      podSelector:\n        matchLabels:\n          k8s-app: kube-dns\n    ports:\n    - protocol: UDP\n      port: 53\n    - protocol: TCP\n      port: 53\n  # Allow egress only to Istio egress gateway (or your proxy/firewall)\n  - to:\n    - namespaceSelector:\n        matchLabels:\n          kubernetes.io/metadata.name: istio-system\n      podSelector:\n        matchLabels:\n          istio: egressgateway\n    ports:\n    - protocol: TCP\n      port: 443\n</code></pre><h5>Istio: allowlisted external hosts via ServiceEntry + route through EgressGateway</h5><pre><code class=\"language-yaml\">apiVersion: networking.istio.io/v1beta1\nkind: ServiceEntry\nmetadata:\n  name: allow-approved-saas\n  namespace: agent\nspec:\n  hosts:\n  - api.approved-saas.com\n  - webhook.approved-saas.com\n  location: MESH_EXTERNAL\n  ports:\n  - number: 443\n    name: tls\n    protocol: TLS\n  resolution: DNS\n---\napiVersion: networking.istio.io/v1beta1\nkind: VirtualService\nmetadata:\n  name: route-egress-approved-saas\n  namespace: agent\nspec:\n  hosts:\n  - api.approved-saas.com\n  - webhook.approved-saas.com\n  gateways:\n  - mesh\n  - istio-system/istio-egressgateway\n  tls:\n  - match:\n    - gateways: [\"mesh\"]\n      sniHosts: [\"api.approved-saas.com\", \"webhook.approved-saas.com\"]\n    route:\n    - destination:\n        host: istio-egressgateway.istio-system.svc.cluster.local\n        port:\n          number: 443\n</code></pre><h5>Practical hardening tips</h5><ul><li><strong>Block raw SMTP</strong> from agent runtimes. Require a controlled email service that enforces approval gates, DLP checks, and audit logs.</li><li><strong>Prevent DNS bypass</strong>: consider DNS policy/allowlists and restrict egress by both domain and IP ranges. In high-assurance environments, disallow direct IP egress entirely.</li><li><strong>Use workload identity</strong>: bind egress permissions to workload identity (service account, SPIFFE/SPIRE) so only approved runtimes can reach the gateway.</li><li><strong>Centralize allowlist changes</strong>: manage allowlists via GitOps (pull requests + approvals) and tag with <code>policy_version</code> to align with app-layer logs.</li></ul><h5>What this does NOT replace</h5><p>Network-layer controls cannot determine whether the <em>content</em> contains secrets. They must be paired with Strategy 1 (value tagging + sink checks) to prevent exfiltration via allowed destinations (e.g., approved SaaS webhooks).</p>"
+            },
+            {
+              "implementation": "Enforce prompt-body and model-call sink policies before sensitive runtime values are sent to an LLM or external model provider.",
+              "howTo": `<h5>Concept:</h5><p>Tool sinks are not the only exfiltration path. The model call itself is a sink: confidential tool output, retrieved documents, customer data, secrets, or regulated fields can be copied into the prompt body and sent to an internal or external model provider. This guidance extends value-level taint enforcement to the <code>model.invoke()</code> boundary. It does not replace output redaction in <code>AID-D-003.002</code> or purpose/lifecycle authorization in <code>AID-H-030</code>.</p><h5>Step 1: Represent prompt parts as labeled values</h5><pre><code># File: llm_gateway/prompt_labels.py
+from __future__ import annotations
+
+from dataclasses import dataclass, asdict
+from typing import Literal
+
+
+Sensitivity = Literal["public", "internal", "confidential", "pii", "secret"]
+ProviderTrust = Literal["internal_model", "approved_external_model", "unapproved_external_model"]
+
+
+@dataclass(frozen=True)
+class PromptPart:
+    content_id: str
+    content: str
+    source: str
+    sensitivity: Sensitivity
+    allowed_model_providers: list[str]
+    purpose: str
+
+    def to_audit_safe(self) -> dict:
+        safe = asdict(self)
+        safe.pop("content", None)
+        safe["content_length"] = len(self.content)
+        return safe
+</code></pre><h5>Step 2: Enforce policy at the model gateway</h5><pre><code># File: llm_gateway/model_call_gate.py
+from __future__ import annotations
+
+import hashlib
+import json
+from dataclasses import dataclass
+from datetime import datetime, timezone
+from typing import Iterable
+
+from llm_gateway.prompt_labels import PromptPart, ProviderTrust
+
+
+class PromptSinkDenied(PermissionError):
+    pass
+
+
+@dataclass(frozen=True)
+class ModelTarget:
+    provider: str
+    model: str
+    trust: ProviderTrust
+    tenant_id: str
+
+
+def hash_content(value: str) -> str:
+    return hashlib.sha256(value.encode("utf-8")).hexdigest()
+
+
+def enforce_prompt_sink(parts: Iterable[PromptPart], target: ModelTarget, *, policy_version: str) -> dict:
+    decisions = []
+    denied_reasons = []
+
+    for part in parts:
+        if target.provider not in set(part.allowed_model_providers):
+            denied_reasons.append({
+                "content_id": part.content_id,
+                "reason": "provider_not_allowed_for_value",
+                "provider": target.provider,
+            })
+        if target.trust == "unapproved_external_model" and part.sensitivity in {"confidential", "pii", "secret"}:
+            denied_reasons.append({
+                "content_id": part.content_id,
+                "reason": "sensitive_value_to_unapproved_external_model",
+                "sensitivity": part.sensitivity,
+            })
+        decisions.append({
+            **part.to_audit_safe(),
+            "content_sha256": hash_content(part.content),
+        })
+
+    audit_event = {
+        "event_type": "prompt_sink_decision",
+        "observed_at": datetime.now(timezone.utc).isoformat(),
+        "target": target.__dict__,
+        "policy_version": policy_version,
+        "parts": decisions,
+        "decision": "deny" if denied_reasons else "allow",
+        "denied_reasons": denied_reasons,
+    }
+    print(json.dumps(audit_event, sort_keys=True))
+
+    if denied_reasons:
+        raise PromptSinkDenied("Prompt sink policy denied model call")
+    return audit_event
+</code></pre><h5>Step 3: Call the LLM only after the gate allows it</h5><pre><code># File: llm_gateway/safe_invoke.py
+from __future__ import annotations
+
+from llm_gateway.model_call_gate import ModelTarget, enforce_prompt_sink
+from llm_gateway.prompt_labels import PromptPart
+
+
+from typing import Protocol
+
+
+class ProviderClient(Protocol):
+    def invoke(self, provider: str, model: str, prompt: str) -> str:
+        ...
+
+
+class EvidenceWriter(Protocol):
+    def write(self, event: dict) -> None:
+        ...
+
+
+def safe_model_invoke(
+    parts: list[PromptPart],
+    target: ModelTarget,
+    *,
+    policy_version: str,
+    provider_client: ProviderClient,
+    evidence_writer: EvidenceWriter,
+) -> str:
+    evidence = enforce_prompt_sink(parts, target, policy_version=policy_version)
+    prompt = "\\n\\n".join(part.content for part in parts)
+    response = provider_client.invoke(target.provider, target.model, prompt)
+    evidence_writer.write(evidence)
+    return response
+</code></pre><h5>Verification and evidence</h5><pre><code># File: tests/test_prompt_sink_gate.py
+from llm_gateway.model_call_gate import ModelTarget, PromptSinkDenied, enforce_prompt_sink
+from llm_gateway.prompt_labels import PromptPart
+
+
+def test_confidential_value_denied_to_unapproved_external_model():
+    part = PromptPart(
+        content_id="ctx-1",
+        content="customer secret",
+        source="crm",
+        sensitivity="confidential",
+        allowed_model_providers=["internal-llm"],
+        purpose="support_summary",
+    )
+    target = ModelTarget(
+        provider="consumer-ai.example",
+        model="chat",
+        trust="unapproved_external_model",
+        tenant_id="prod",
+    )
+    try:
+        enforce_prompt_sink([part], target, policy_version="2026.07.1")
+    except PromptSinkDenied:
+        return
+    raise AssertionError("confidential prompt part was not denied")
+</code></pre><p><strong>Action:</strong> Put this gate immediately before every model provider call. The evidence artifact for each call is the <code>prompt_sink_decision</code> event containing content IDs, hashes, sensitivity labels, provider identity, policy version, and allow/deny outcome.</p>`
             }
           ]
         },
@@ -12429,7 +12586,7 @@ def safe_fetch(url: str, timeout: float = 5) -> str:
               implementation:
                 "Verify the exact canonical URL before background fetch, re-validate every redirect hop, and default-deny or step up if the URL cannot be independently verified as an expected public resource.",
               howTo:
-                `<h5>Concept:</h5><p>Domain allowlists are not enough for agent safety. An attacker can keep the host inside an allowed domain while hiding sensitive data in the path or query string, then rely on background fetch, link preview, image load, or metadata expansion to exfiltrate that data without an obvious user-visible action. The control objective is one complete chain: normalize the exact URL, verify it against a trusted public URL inventory <strong>before any network request is sent</strong>, re-check every redirect target, and fail closed for background fetches when verification does not pass.</p><h5>Step 1: Maintain an exact-match public URL inventory</h5><p>Store canonical URLs that are approved as expected public resources. This inventory can be fed from your own web crawl, a curated public-document registry, or another independently managed source of truth. The important part is that the inventory is exact-match, versioned, and queryable before the agent fetches the URL.</p><pre><code class="language-sql">-- File: sql/public_url_inventory.sql
+                `<h5>Concept:</h5><p>Domain allowlists are not enough for agent safety. An attacker can keep the host inside an allowed domain while hiding sensitive data in the path or query string, or wrap the real destination behind a first-party relay, redirector, translation proxy, image proxy, or URL shortener. The control objective is one complete chain: unwrap trusted relays, normalize the exact destination URL, verify it against a trusted public URL inventory <strong>before any network request is sent</strong>, re-check every redirect target, and fail closed for background fetches when verification does not pass.</p><h5>Step 1: Maintain an exact-match public URL inventory</h5><p>Store canonical URLs that are approved as expected public resources. This inventory can be fed from your own web crawl, a curated public-document registry, or another independently managed source of truth. The important part is that the inventory is exact-match, versioned, and queryable before the agent fetches the URL.</p><pre><code class="language-sql">-- File: sql/public_url_inventory.sql
 CREATE TABLE IF NOT EXISTS public_url_inventory (
     canonical_url TEXT PRIMARY KEY,
     registrable_domain TEXT NOT NULL,
@@ -12468,6 +12625,8 @@ UNVERIFIED_URL_MODE: Literal["deny", "stepup"] = os.environ.get(
     "stepup",
 )
 ALLOWED_REGISTRABLE_DOMAINS = {"example.com", "vendor.com"}
+TRUSTED_RELAY_HOSTS = {"redirect.example.com", "translate.example.com", "imgproxy.example.com"}
+RELAY_TARGET_PARAMS = {"url", "u", "target", "redirect", "next", "dest", "destination", "image", "img", "q"}
 
 audit_logger = logging.getLogger("safe_fetch_exact_url")
 
@@ -12479,6 +12638,7 @@ class UrlGateDecision:
     original_url: str
     canonical_url: str
     final_url: str | None
+    relay_unwrapped_from: str | None = None
 
 
 def canonicalize_url(raw_url: str) -> str:
@@ -12503,6 +12663,19 @@ def canonicalize_url(raw_url: str) -> str:
     query_pairs = sorted(parse_qsl(parts.query, keep_blank_values=True))
     query = urlencode(query_pairs, doseq=True)
     return urlunsplit((parts.scheme, netloc, path, query, ""))
+
+
+def unwrap_first_party_relay(raw_url: str) -> tuple[str, str | None]:
+    """Return the embedded destination when a trusted first-party relay wraps a URL."""
+    parts = urlsplit(url_normalize(raw_url, default_scheme="https"))
+    hostname = (parts.hostname or "").lower()
+    if hostname not in TRUSTED_RELAY_HOSTS:
+        return raw_url, None
+
+    for key, value in parse_qsl(parts.query, keep_blank_values=True):
+        if key.lower() in RELAY_TARGET_PARAMS and value.startswith(("http://", "https://")):
+            return value, raw_url
+    return raw_url, None
 
 
 def registrable_domain(canonical_url: str) -> str:
@@ -12586,6 +12759,7 @@ def _audit(decision: UrlGateDecision, *, task_id: str, session_id: str) -> None:
                 "original_url": decision.original_url,
                 "canonical_url": decision.canonical_url,
                 "final_url": decision.final_url,
+                "relay_unwrapped_from": decision.relay_unwrapped_from,
                 "background_fetch_suppressed": decision.verdict != "allow",
             },
             separators=(",", ":"),
@@ -12600,10 +12774,11 @@ def verify_for_background_fetch(
     task_id: str,
     inventory: PublicUrlInventory,
 ) -> UrlGateDecision:
-    canonical_url = canonicalize_url(raw_url)
+    candidate_url, relay_unwrapped_from = unwrap_first_party_relay(raw_url)
+    canonical_url = canonicalize_url(candidate_url)
     domain = registrable_domain(canonical_url)
     if domain not in ALLOWED_REGISTRABLE_DOMAINS:
-        decision = UrlGateDecision("deny", "domain_not_allowlisted", raw_url, canonical_url, None)
+        decision = UrlGateDecision("deny", "domain_not_allowlisted", raw_url, canonical_url, None, relay_unwrapped_from)
         _audit(decision, task_id=task_id, session_id=session_id)
         return decision
 
@@ -12614,7 +12789,7 @@ def verify_for_background_fetch(
 
     if not inventory.contains(canonical_url):
         verdict: Literal["deny", "stepup"] = "deny" if UNVERIFIED_URL_MODE == "deny" else "stepup"
-        decision = UrlGateDecision(verdict, "exact_url_not_verified_public", raw_url, canonical_url, None)
+        decision = UrlGateDecision(verdict, "exact_url_not_verified_public", raw_url, canonical_url, None, relay_unwrapped_from)
         _audit(decision, task_id=task_id, session_id=session_id)
         return decision
 
@@ -12626,7 +12801,7 @@ def verify_for_background_fetch(
             next_url = canonicalize_url(urljoin(current_url, response.headers["Location"]))
             next_domain = registrable_domain(next_url)
             if next_domain not in ALLOWED_REGISTRABLE_DOMAINS:
-                decision = UrlGateDecision("deny", "redirect_domain_not_allowlisted", raw_url, canonical_url, next_url)
+                decision = UrlGateDecision("deny", "redirect_domain_not_allowlisted", raw_url, canonical_url, next_url, relay_unwrapped_from)
                 _audit(decision, task_id=task_id, session_id=session_id)
                 return decision
             redirect_hostname = urlsplit(next_url).hostname
@@ -12635,17 +12810,17 @@ def verify_for_background_fetch(
             ensure_public_ip(redirect_hostname)
             if not inventory.contains(next_url):
                 verdict = "deny" if UNVERIFIED_URL_MODE == "deny" else "stepup"
-                decision = UrlGateDecision(verdict, "redirect_target_not_verified_public", raw_url, canonical_url, next_url)
+                decision = UrlGateDecision(verdict, "redirect_target_not_verified_public", raw_url, canonical_url, next_url, relay_unwrapped_from)
                 _audit(decision, task_id=task_id, session_id=session_id)
                 return decision
             current_url = next_url
             continue
 
-        decision = UrlGateDecision("allow", "verified_public_url", raw_url, canonical_url, current_url)
+        decision = UrlGateDecision("allow", "verified_public_url", raw_url, canonical_url, current_url, relay_unwrapped_from)
         _audit(decision, task_id=task_id, session_id=session_id)
         return decision
 
-    decision = UrlGateDecision("deny", "redirect_loop_or_depth_exceeded", raw_url, canonical_url, current_url)
+    decision = UrlGateDecision("deny", "redirect_loop_or_depth_exceeded", raw_url, canonical_url, current_url, relay_unwrapped_from)
     _audit(decision, task_id=task_id, session_id=session_id)
     return decision
 </code></pre><h5>Step 3: Block quiet fetches when verification fails</h5><p>Every background fetch path such as link preview, image probe, metadata expansion, OCR prefetch, or browser-agent side request must call the exact URL gate first. If the gate returns <code>deny</code> or <code>stepup</code>, do not send the background request from the privileged runtime. Route the request to an approval flow if your policy allows step-up, otherwise stop immediately.</p><pre><code class="language-python"># File: agent/background_preview.py
@@ -12789,7 +12964,7 @@ def fetch_preview(raw_url: str, *, task_id: str, session_id: str) -> str:
       id: "AID-H-021",
       name: "RAG Index Hygiene & Signing",
       description:
-        "Implement integrity and provenance controls during RAG indexing and maintenance. Cryptographically sign chunks/embeddings and weight content by source trust to prevent index poisoning and enable verification at retrieval time.",
+        "Implement integrity, provenance, source-trust, and retrieval-time authorization controls during RAG indexing and maintenance. Cryptographically sign chunks/embeddings, weight content by source trust, and enforce document/chunk-level access rights before retrieved content is assembled into model context.",
       defendsAgainst: [
         {
           framework: "MITRE ATLAS",
@@ -12816,6 +12991,7 @@ def fetch_preview(raw_url: str, *, task_id: str, session_id: str) -> str:
             "LLM08:2025 Vector and Embedding Weaknesses",
             "LLM04:2025 Data and Model Poisoning",
             "LLM01:2025 Prompt Injection",
+            "LLM02:2025 Sensitive Information Disclosure",
           ],
         },
         {
@@ -12828,6 +13004,7 @@ def fetch_preview(raw_url: str, *, task_id: str, session_id: str) -> str:
             "ASI06:2026 Memory & Context Poisoning",
             "ASI01:2026 Agent Goal Hijack (poisoned RAG retrieval redirects agent decision pathways)",
             "ASI04:2026 Agentic Supply Chain Vulnerabilities (integrity controls on RAG data sources)",
+            "ASI03:2026 Identity and Privilege Abuse (retrieval-time authorization checks document and chunk entitlements)",
           ],
         },
         {
@@ -12852,6 +13029,7 @@ def fetch_preview(raw_url: str, *, task_id: str, session_id: str) -> str:
             "DP: Data Poisoning (RAG index poisoning is a form of data poisoning that degrades retrieval quality)",
             "PIJ: Prompt Injection (poisoned RAG entries serve as indirect prompt injection vectors)",
             "IIC: Insecure Integrated Component (RAG pipelines are integrated components vulnerable to index manipulation)",
+            "SDD: Sensitive Data Disclosure (retrieval-time authorization prevents unauthorized chunks entering context)",
           ],
         },
         {
@@ -13084,6 +13262,459 @@ def retrieve_and_verify(query: str, vector_db: VectorStore, *, k: int = 5):
             "LlamaIndex (postprocessors)",
           ],
           toolsCommercial: ["Cohere Rerank", "Alation", "Collibra"],
+        },
+        {
+          id: "AID-H-021.003",
+          name: "Document/Chunk-Level Permission-Aware Retrieval",
+          pillar: ["data", "app"],
+          phase: ["building", "operation"],
+          description:
+            "Enforce document- and chunk-level permissions at retrieval time so a RAG pipeline never assembles context from records the requesting principal is not entitled to read. The control mirrors source-system ACLs or relationship-based authorization metadata into chunk records during ingestion, evaluates those permissions on every query, and drops unauthorized chunks before context construction.<br/><br/><strong>Scope boundary:</strong> <code>AID-I-004.002</code> owns tenant, namespace, and persistent-memory partitioning. <code>AID-H-030</code> owns purpose-bound lifecycle authorization such as whether data may be used for training, memory, logging, or retraining. <code>AID-H-022.003</code> owns freshness and context-corpus governance. This sub-technique owns only document/chunk entitlement enforcement inside RAG retrieval.",
+          toolsOpenSource: [
+            "OpenFGA (relationship-based authorization)",
+            "Open Policy Agent (OPA)",
+            "Casbin",
+            "PostgreSQL row-level security",
+            "LangChain / LlamaIndex retriever hooks",
+          ],
+          toolsCommercial: [
+            "Okta Fine-Grained Authorization",
+            "Auth0 FGA",
+            "Google Cloud IAM / Cloud Identity",
+            "Microsoft Entra ID",
+            "Pinecone / Weaviate / Elastic vector search with metadata filters",
+          ],
+          defendsAgainst: [
+            {
+              framework: "MITRE ATLAS",
+              items: [
+                "AML.T0085 Data from AI Services (retrieval authorization limits data returned by AI services)",
+                "AML.T0085.001 Data from AI Services: AI Agent Tools (authorized retrieval constrains tool-mediated context access)",
+                "AML.T0086 Exfiltration via AI Agent Tool Invocation (unauthorized chunks are removed before context assembly)",
+                "AML.T0051.001 LLM Prompt Injection: Indirect (permission filters reduce retrieval of unauthorized poisoned context)",
+              ],
+            },
+            {
+              framework: "MAESTRO",
+              items: [
+                "Data Leakage (Cross-Layer)",
+                "Compromised RAG Pipelines (L2)",
+                "Privilege Escalation (Cross-Layer) (retrieval authorization prevents low-privilege principals receiving high-privilege chunks)",
+              ],
+            },
+            {
+              framework: "OWASP LLM Top 10 2025",
+              items: [
+                "LLM02:2025 Sensitive Information Disclosure",
+                "LLM08:2025 Vector and Embedding Weaknesses",
+              ],
+            },
+            {
+              framework: "OWASP ML Top 10 2023",
+              items: [
+                "N/A (retrieval-time authorization is primarily an LLM/RAG application control)",
+              ],
+            },
+            {
+              framework: "OWASP Agentic AI Top 10 2026",
+              items: [
+                "ASI03:2026 Identity and Privilege Abuse (retrieval authorization checks principal entitlements)",
+                "ASI06:2026 Memory & Context Poisoning (unauthorized context cannot enter agent memory/context)",
+                "ASI02:2026 Tool Misuse and Exploitation (tool-driven retrieval cannot bypass ACLs)",
+              ],
+            },
+            {
+              framework: "NIST Adversarial Machine Learning 2025",
+              items: [
+                "NISTAML.036 Leaking information from user interactions",
+                "NISTAML.038 Data Extraction",
+                "NISTAML.039 Compromising connected resources (retrieval gate prevents unauthorized connected-resource reads)",
+              ],
+            },
+            {
+              framework: "Cisco Integrated AI Security and Safety Framework",
+              items: [
+                "AITech-8.2 Data Exfiltration / Exposure",
+                "AITech-8.3 Information Disclosure",
+                "AITech-14.1 Unauthorized Access",
+                "AITech-12.1 Tool Exploitation (retrieval tool cannot return unauthorized chunks)",
+              ],
+            },
+            {
+              framework: "Google Secure AI Framework 2.0 - Risks",
+              items: [
+                "SDD: Sensitive Data Disclosure",
+                "EDH: Excessive Data Handling",
+                "IIC: Insecure Integrated Component (RAG retriever is an integrated component requiring authorization)",
+              ],
+            },
+            {
+              framework: "Databricks AI Security Framework 3.0",
+              items: [
+                "Raw Data 1.1: Insufficient access controls",
+                "Raw Data 1.10: Lack of data access logs",
+                "Model Serving - Inference requests 9.9: Input Resource Control",
+                "Agents - Core 13.3: Privilege Compromise",
+                "Agents - Core 13.1: Memory Poisoning",
+              ],
+            },
+          ],
+          implementationGuidance: [
+            {
+              implementation:
+                "Mirror source-system ACLs or relationship tuples into chunk metadata at ingestion time, and fail ingestion when permission metadata is missing.",
+              howTo:
+                `<h5>Concept:</h5><p>A retriever cannot enforce permissions it never indexed. During ingestion, copy the source document ACL or relationship tuples into every chunk's metadata. Missing ACL metadata should fail closed instead of creating public chunks by accident.</p><h5>Step 1: Normalize document permissions</h5><pre><code># File: rag_authz/acl_ingestion.py
+from __future__ import annotations
+
+from dataclasses import dataclass, asdict
+from typing import Iterable
+
+
+@dataclass(frozen=True)
+class DocumentAcl:
+    source_doc_id: str
+    owner_id: str
+    allowed_principals: list[str]
+    allowed_groups: list[str]
+    acl_version: str
+
+
+class MissingAclError(ValueError):
+    pass
+
+
+def normalize_acl(raw_acl: dict) -> DocumentAcl:
+    required = ["source_doc_id", "owner_id", "allowed_principals", "allowed_groups", "acl_version"]
+    missing = [field for field in required if field not in raw_acl]
+    if missing:
+        raise MissingAclError("missing ACL fields: " + ",".join(missing))
+    return DocumentAcl(
+        source_doc_id=str(raw_acl["source_doc_id"]),
+        owner_id=str(raw_acl["owner_id"]),
+        allowed_principals=sorted(set(map(str, raw_acl["allowed_principals"]))),
+        allowed_groups=sorted(set(map(str, raw_acl["allowed_groups"]))),
+        acl_version=str(raw_acl["acl_version"]),
+    )
+
+
+def attach_acl_to_chunks(chunks: Iterable[dict], acl: DocumentAcl) -> list[dict]:
+    result = []
+    for chunk in chunks:
+        metadata = dict(chunk.get("metadata", {}))
+        metadata.update({
+            "source_doc_id": acl.source_doc_id,
+            "acl_owner_id": acl.owner_id,
+            "acl_allowed_principals": acl.allowed_principals,
+            "acl_allowed_groups": acl.allowed_groups,
+            "acl_version": acl.acl_version,
+        })
+        result.append({**chunk, "metadata": metadata})
+    return result
+</code></pre><h5>Step 2: Reject chunks with incomplete ACL metadata</h5><pre><code># File: rag_authz/verify_chunk_acl_metadata.py
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+
+REQUIRED_ACL_FIELDS = {
+    "source_doc_id",
+    "acl_owner_id",
+    "acl_allowed_principals",
+    "acl_allowed_groups",
+    "acl_version",
+}
+
+
+def verify_chunks(chunks: list[dict]) -> dict:
+    failures = []
+    for chunk in chunks:
+        metadata = chunk.get("metadata", {})
+        missing = sorted(field for field in REQUIRED_ACL_FIELDS if field not in metadata)
+        if missing:
+            failures.append({"chunk_id": chunk.get("id"), "missing": missing})
+    return {
+        "schema_version": "aidefend.rag_acl_ingestion.v1",
+        "chunk_count": len(chunks),
+        "failure_count": len(failures),
+        "failures": failures[:100],
+        "status": "pass" if not failures and chunks else "fail",
+    }
+
+
+chunks = json.loads(Path("out/rag_chunks_pending_index.json").read_text(encoding="utf-8"))
+artifact = verify_chunks(chunks)
+Path("artifacts").mkdir(exist_ok=True)
+Path("artifacts/rag-acl-ingestion-evidence.json").write_text(
+    json.dumps(artifact, indent=2, sort_keys=True),
+    encoding="utf-8",
+)
+if artifact["status"] != "pass":
+    raise SystemExit("RAG ACL metadata verification failed")
+</code></pre><p><strong>Action:</strong> Make ACL metadata a mandatory ingestion field for every indexed chunk. The evidence artifact for this guidance is <code>artifacts/rag-acl-ingestion-evidence.json</code>, proving that no chunk entered the index without entitlement metadata.</p>`,
+            },
+            {
+              implementation:
+                "Apply query-time entitlement filters before context assembly and deny when the retriever cannot prove the caller may read the chunk.",
+              howTo:
+                `<h5>Concept:</h5><p>Vector similarity is not authorization. Retrieve candidate chunks, then enforce document/chunk entitlements against the authenticated principal before any text reaches the model context. Fail closed on missing principal, missing ACL metadata, stale ACL version, or policy-engine errors.</p><h5>Step 1: Implement a permission filter</h5><pre><code># File: rag_authz/retrieval_filter.py
+from __future__ import annotations
+
+from dataclasses import dataclass
+from typing import Protocol
+
+
+@dataclass(frozen=True)
+class Principal:
+    principal_id: str
+    groups: set[str]
+
+
+class PolicyEngine(Protocol):
+    def allowed(self, *, principal_id: str, groups: set[str], source_doc_id: str, action: str) -> bool:
+        ...
+
+
+class RetrievalDenied(PermissionError):
+    pass
+
+
+def acl_is_fresh(metadata: dict, current_acl_versions: dict[str, str]) -> bool:
+    source_doc_id = metadata.get("source_doc_id")
+    acl_version = metadata.get("acl_version")
+    if not source_doc_id or not acl_version:
+        return False
+    return str(current_acl_versions.get(str(source_doc_id))) == str(acl_version)
+
+
+def principal_can_read(
+    metadata: dict,
+    principal: Principal,
+    current_acl_versions: dict[str, str],
+    policy_engine: PolicyEngine | None = None,
+) -> bool:
+    source_doc_id = metadata.get("source_doc_id")
+    if not source_doc_id or not acl_is_fresh(metadata, current_acl_versions):
+        return False
+
+    if policy_engine is not None:
+        try:
+            return bool(policy_engine.allowed(
+                principal_id=principal.principal_id,
+                groups=principal.groups,
+                source_doc_id=str(source_doc_id),
+                action="read",
+            ))
+        except Exception:
+            return False
+
+    allowed_principals = set(metadata.get("acl_allowed_principals") or [])
+    allowed_groups = set(metadata.get("acl_allowed_groups") or [])
+    owner_id = metadata.get("acl_owner_id")
+    if principal.principal_id == owner_id:
+        return True
+    if principal.principal_id in allowed_principals:
+        return True
+    if principal.groups.intersection(allowed_groups):
+        return True
+    return False
+
+
+def filter_authorized_chunks(
+    candidates: list[dict],
+    principal: Principal,
+    current_acl_versions: dict[str, str],
+    policy_engine: PolicyEngine | None = None,
+) -> tuple[list[dict], list[dict]]:
+    allowed = []
+    denied = []
+    for chunk in candidates:
+        metadata = chunk.get("metadata", {})
+        if principal_can_read(metadata, principal, current_acl_versions, policy_engine):
+            allowed.append(chunk)
+        else:
+            denied.append({
+                "chunk_id": chunk.get("id"),
+                "source_doc_id": metadata.get("source_doc_id"),
+                "reason": "principal_not_entitled_acl_missing_or_stale",
+            })
+    return allowed, denied
+</code></pre><h5>Step 2: Enforce before model context construction</h5><pre><code># File: rag_authz/secure_retriever.py
+from __future__ import annotations
+
+import json
+from datetime import datetime, timezone
+
+from rag_authz.retrieval_filter import PolicyEngine, Principal, filter_authorized_chunks
+
+
+def retrieve_authorized_context(
+    vector_store,
+    query: str,
+    principal: Principal,
+    current_acl_versions: dict[str, str],
+    policy_engine: PolicyEngine | None = None,
+    *,
+    k: int = 10,
+) -> list[dict]:
+    if not principal.principal_id:
+        raise PermissionError("missing_principal")
+
+    candidates = vector_store.similarity_search(query, k=k)
+    allowed, denied = filter_authorized_chunks(candidates, principal, current_acl_versions, policy_engine)
+    evidence = {
+        "event_type": "rag_retrieval_authz_decision",
+        "observed_at": datetime.now(timezone.utc).isoformat(),
+        "principal_id": principal.principal_id,
+        "candidate_count": len(candidates),
+        "allowed_count": len(allowed),
+        "denied_count": len(denied),
+        "acl_versions_checked": sorted(current_acl_versions),
+        "denied": denied[:50],
+    }
+    print(json.dumps(evidence, sort_keys=True))
+    return allowed
+</code></pre><h5>Verification and evidence</h5><pre><code># File: tests/test_rag_retrieval_filter.py
+from rag_authz.retrieval_filter import Principal, filter_authorized_chunks
+
+
+def test_unauthorized_chunk_is_removed():
+    principal = Principal(principal_id="user:alice", groups={"finance"})
+    current_acl_versions = {"legal-doc-1": "42", "finance-doc-1": "42"}
+    candidates = [
+        {"id": "chunk-1", "metadata": {"source_doc_id": "legal-doc-1", "acl_owner_id": "user:bob", "acl_allowed_principals": [], "acl_allowed_groups": ["legal"], "acl_version": "42"}},
+        {"id": "chunk-2", "metadata": {"source_doc_id": "finance-doc-1", "acl_owner_id": "user:bob", "acl_allowed_principals": [], "acl_allowed_groups": ["finance"], "acl_version": "42"}},
+    ]
+    allowed, denied = filter_authorized_chunks(candidates, principal, current_acl_versions)
+    assert [chunk["id"] for chunk in allowed] == ["chunk-2"]
+    assert denied[0]["chunk_id"] == "chunk-1"
+
+
+def test_stale_acl_version_is_removed():
+    principal = Principal(principal_id="user:alice", groups={"finance"})
+    candidates = [
+        {"id": "chunk-3", "metadata": {"source_doc_id": "finance-doc-2", "acl_owner_id": "user:bob", "acl_allowed_principals": [], "acl_allowed_groups": ["finance"], "acl_version": "old"}}
+    ]
+    allowed, denied = filter_authorized_chunks(candidates, principal, {"finance-doc-2": "new"})
+    assert allowed == []
+    assert denied[0]["reason"] == "principal_not_entitled_acl_missing_or_stale"
+</code></pre><p><strong>Action:</strong> Put this filter after candidate retrieval and before context assembly. The evidence artifact for each query is the <code>rag_retrieval_authz_decision</code> event with candidate, allowed, denied, principal, and reason-code fields.</p>`,
+            },
+            {
+              implementation:
+                "Continuously test permission drift by replaying representative principals against the RAG index and comparing retrieval results with source-system access truth.",
+              howTo:
+                `<h5>Concept:</h5><p>ACLs change after indexing. A user can leave a group, a document can become restricted, or a source system can revoke access while stale chunk metadata remains in the vector store. Run scheduled drift tests that compare the RAG index's stored ACL metadata with the source system's current authorization truth. Do not treat a static denylist as source truth; the replay job must call or import the current source authorization view for the tested documents.</p><h5>Step 1: Define drift test cases</h5><pre><code># File: rag_authz/drift_cases.json
+[
+  {
+    "case_id": "finance-user-cannot-read-legal-doc",
+    "principal_id": "user:alice",
+    "groups": ["finance"],
+    "query": "summarize acquisition legal strategy"
+  }
+]</code></pre><h5>Step 2: Export or query current source-system access truth</h5><pre><code># File: rag_authz/source_access_truth.json
+{
+  "legal-doc-2026-001": {
+    "acl_version": "2026-07-04T12:00:00Z",
+    "allowed_principals": ["user:bob"],
+    "allowed_groups": ["legal"]
+  },
+  "finance-doc-2026-002": {
+    "acl_version": "2026-07-04T12:00:00Z",
+    "allowed_principals": [],
+    "allowed_groups": ["finance"]
+  }
+}</code></pre><h5>Step 3: Execute replay checks against source truth</h5><pre><code># File: rag_authz/run_permission_drift_tests.py
+from __future__ import annotations
+
+import json
+from pathlib import Path
+from typing import Protocol
+
+from rag_authz.retrieval_filter import Principal, filter_authorized_chunks
+
+
+class SourceAuthorizationProvider(Protocol):
+    def current_acl_versions(self, source_doc_ids: set[str]) -> dict[str, str]:
+        ...
+
+    def can_read(self, principal: Principal, source_doc_id: str) -> bool:
+        ...
+
+
+class JsonSourceAuthorizationProvider:
+    def __init__(self, path: str = "rag_authz/source_access_truth.json") -> None:
+        self.truth = json.loads(Path(path).read_text(encoding="utf-8"))
+
+    def current_acl_versions(self, source_doc_ids: set[str]) -> dict[str, str]:
+        return {
+            doc_id: str(self.truth[doc_id]["acl_version"])
+            for doc_id in source_doc_ids
+            if doc_id in self.truth
+        }
+
+    def can_read(self, principal: Principal, source_doc_id: str) -> bool:
+        record = self.truth.get(source_doc_id)
+        if record is None:
+            return False
+        if principal.principal_id in set(record.get("allowed_principals") or []):
+            return True
+        if principal.groups.intersection(set(record.get("allowed_groups") or [])):
+            return True
+        return False
+
+
+def run_case(vector_store, source_authz: SourceAuthorizationProvider, case: dict) -> dict:
+    principal = Principal(case["principal_id"], set(case["groups"]))
+    candidates = vector_store.similarity_search(case["query"], k=20)
+    candidate_doc_ids = {
+        str(chunk.get("metadata", {}).get("source_doc_id"))
+        for chunk in candidates
+        if chunk.get("metadata", {}).get("source_doc_id")
+    }
+    current_acl_versions = source_authz.current_acl_versions(candidate_doc_ids)
+    allowed, denied = filter_authorized_chunks(candidates, principal, current_acl_versions)
+    violations = [
+        {
+            "chunk_id": chunk.get("id"),
+            "source_doc_id": chunk.get("metadata", {}).get("source_doc_id"),
+            "reason": "rag_returned_doc_not_allowed_by_source_truth",
+        }
+        for chunk in allowed
+        if not source_authz.can_read(principal, str(chunk.get("metadata", {}).get("source_doc_id")))
+    ]
+    return {
+        "case_id": case["case_id"],
+        "allowed_count": len(allowed),
+        "denied_count": len(denied),
+        "violations": violations,
+        "status": "pass" if not violations else "fail",
+    }
+
+
+def run_all(vector_store, source_authz: SourceAuthorizationProvider | None = None) -> dict:
+    source_authz = source_authz or JsonSourceAuthorizationProvider()
+    cases = json.loads(Path("rag_authz/drift_cases.json").read_text(encoding="utf-8"))
+    results = [run_case(vector_store, source_authz, case) for case in cases]
+    report = {
+        "schema_version": "aidefend.rag_permission_drift.v1",
+        "case_count": len(results),
+        "failures": [result for result in results if result["status"] != "pass"],
+        "results": results,
+        "status": "pass" if results and all(result["status"] == "pass" for result in results) else "fail",
+    }
+    Path("artifacts").mkdir(exist_ok=True)
+    Path("artifacts/rag-permission-drift-report.json").write_text(
+        json.dumps(report, indent=2, sort_keys=True) + "\\n",
+        encoding="utf-8",
+    )
+    if report["status"] != "pass":
+        raise SystemExit("RAG permission drift test failed")
+    return report
+</code></pre><h5>Step 4: Store a dated drift report</h5><p>Run the replay job after ACL-sync jobs, after source-system permission migrations, and before promoting a new RAG index. Store the report with the index version, ACL sync version, retriever version, case results, and source-truth comparison violations.</p><p><strong>Action:</strong> Treat permission drift testing as a release and operations gate. The evidence artifact for this guidance is <code>artifacts/rag-permission-drift-report.json</code>, showing which principals, queries, source-system truth records, and index versions were tested.</p>`,
+            },
+          ],
         },
       ],
     },
@@ -14425,6 +15056,7 @@ def filter_retrieval_results(principal: dict, candidates: list[dict]) -> list[di
           toolsOpenSource: [
             "Docker, Podman (for containerized builds)",
             "npm, pnpm, yarn, Corepack (as the package managers to be controlled)",
+            "pip, pip-tools, uv, PyPA build, twine (as Python/PyPI package managers and build tools to be controlled)",
           ],
           toolsCommercial: [
             "JFrog Artifactory / Xray (as the secure internal mirror/proxy)",
@@ -14498,25 +15130,330 @@ def filter_retrieval_results(principal: dict, candidates: list[dict]) -> list[di
               implementation:
                 "Use ephemeral, network-restricted containers for all dependency installations.",
               howTo:
-                "<h5>Concept:</h5><p>The core of this defense is to run package installation in a 'jail' where it cannot communicate with an attacker's server. To avoid failures from a cold cache, the best practice is to use an internal registry and restrict the build container's network access to only that registry.</p><h5>Implement in a CI/CD Pipeline (GitHub Actions)</h5><pre><code># File: .github/workflows/secure-build.yml\n\njobs:\n  build:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - name: Cache dependencies\n        # Cache key should be specific to avoid cross-poisoning\n        uses: actions/cache@v3\n        with:\n          path: ~/.npm\n          key: ${{ runner.os }}-node20-npm-${{ hashFiles('**/package-lock.json') }}\n\n      - name: Run install in a sandboxed container\n        # This step uses a separate Docker container with networking restricted to a trusted internal registry.\n        run: |\n          docker network create build_net || true\n          docker run --rm --network build_net \\\n            -e npm_config_registry=https://registry.internal.corp \\\n            -v $(pwd):/app -v ~/.npm:/root/.npm -w /app node:20 \\\n            npm ci --ignore-scripts --prefer-offline</code></pre><p><strong>Action:</strong> Use a multi-phase build process. First, populate a cache or internal mirror from a trusted network environment. Then, execute the dependency installation step (`npm ci`, `pnpm install`, etc.) in a sandboxed container with networking either disabled (using `--offline` flags) or restricted exclusively to your internal mirror.</p>",
+                `<h5>Concept:</h5><p>The core of this defense is to run package installation in an ephemeral build jail where dependency code cannot phone home, write to persistent host paths, or silently resolve unreviewed packages. Use one controlled population step to fill an internal cache or wheelhouse, then run the actual install with network disabled or restricted to the promoted internal mirror. The same control applies to npm and PyPI: installs must be deterministic, non-interactive, and evidence-producing.</p><h5>Node.js install in a sandboxed container</h5><pre><code># File: .github/workflows/secure-build.yml
+jobs:
+  node-build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.npm
+          key: \${{ runner.os }}-node20-npm-\${{ hashFiles('**/package-lock.json') }}
+      - name: Install from the promoted internal npm mirror
+        run: |
+          docker network create build_net || true
+          docker run --rm --network build_net \
+            -e npm_config_registry=https://registry.internal.corp/npm-promoted/ \
+            -v $(pwd):/app -v ~/.npm:/root/.npm -w /app node:20 \
+            npm ci --ignore-scripts --prefer-offline</code></pre><h5>Python install from an offline wheelhouse</h5><pre><code># File: scripts/build_python_wheelhouse.sh
+#!/usr/bin/env bash
+set -euo pipefail
+
+python -m pip install --upgrade pip
+python -m pip download \
+  --dest wheelhouse \
+  --require-hashes \
+  --requirement requirements.lock
+
+docker run --rm --network none \
+  -v "$PWD":/app -w /app python:3.12-slim \
+  python -m pip install \
+    --no-index \
+    --find-links /app/wheelhouse \
+    --require-hashes \
+    --requirement requirements.lock</code></pre><h5>Verification and evidence</h5><pre><code># File: scripts/write_dependency_install_evidence.py
+from __future__ import annotations
+
+import hashlib
+import json
+import subprocess
+from pathlib import Path
+
+
+def sha256_file(path: Path) -> str:
+    h = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def main() -> None:
+    wheelhouse = Path("wheelhouse")
+    evidence = {
+        "network_profile": "none_or_internal_mirror_only",
+        "npm_lockfile_sha256": sha256_file(Path("package-lock.json")) if Path("package-lock.json").exists() else None,
+        "python_lockfile_sha256": sha256_file(Path("requirements.lock")) if Path("requirements.lock").exists() else None,
+        "wheelhouse_files": [
+            {"path": str(path), "sha256": sha256_file(path)}
+            for path in sorted(wheelhouse.glob("*"))
+            if path.is_file()
+        ],
+        "pip_freeze": subprocess.check_output(["python", "-m", "pip", "freeze"], text=True).splitlines(),
+    }
+    Path("artifacts").mkdir(exist_ok=True)
+    Path("artifacts/dependency-install-evidence.json").write_text(
+        json.dumps(evidence, indent=2, sort_keys=True) + "\\n",
+        encoding="utf-8",
+    )
+
+
+if __name__ == "__main__":
+    main()
+</code></pre><p><strong>Action:</strong> Use a multi-phase build process. Populate the npm mirror or Python wheelhouse in a controlled network zone, then execute the install step in an ephemeral container with networking disabled or restricted exclusively to the promoted mirror. Store the lockfile digest, wheelhouse digests, installed package list, and network profile as <code>artifacts/dependency-install-evidence.json</code>.</p>`,
             },
             {
               implementation:
                 "Enforce frozen lockfile-based installs and reject manifest-to-lockfile drift.",
               howTo:
-                '<h5>Concept:</h5><p>Lock the dependency graph to reviewed versions so the build cannot silently resolve a new package tree. This defends against lockfile poisoning, transitive version drift, and accidental divergence between the manifest and the reviewed lockfile.</p><h5>Step 1: Pin the package manager and install immutably</h5><p>Pin the package manager version with `Corepack` and require immutable install commands in CI. The build must fail if the lockfile needs to be rewritten.</p><pre><code>// File: package.json\n{\n  "packageManager": "pnpm@10.1.0",\n  "scripts": {\n    "deps:ci": "pnpm install --frozen-lockfile --ignore-scripts"\n  }\n}\n\n# npm\nnpm ci --ignore-scripts\n\n# pnpm\npnpm install --frozen-lockfile --ignore-scripts\n\n# yarn\nyarn install --immutable --mode=skip-build</code></pre><h5>Step 2: Reject manifest-to-lockfile drift before merge</h5><p>Add a deterministic CI check that fails when `package.json`, workspace manifests, or registry settings change without a corresponding reviewed lockfile update.</p><pre><code># File: scripts/check-lockfile-drift.sh\n#!/usr/bin/env bash\nset -euo pipefail\n\nchanged_files=$(git diff --name-only origin/main...HEAD)\nmanifest_changed=$(printf "%s\\n" "$changed_files" | grep -E "(^|/)(package.json|pnpm-workspace.yaml|yarn.lock|pnpm-lock.yaml|package-lock.json)$" || true)\n\nif [[ -z "$manifest_changed" ]]; then\n  exit 0\nfi\n\npnpm install --frozen-lockfile --ignore-scripts >/dev/null\nif ! git diff --exit-code -- pnpm-lock.yaml; then\n  echo "Lockfile drift detected. Regenerate and commit the reviewed lockfile." >&2\n  exit 1\nfi</code></pre><h5>Step 3: Enforce the check in CI</h5><pre><code># File: .github/workflows/dependency-integrity.yml\nname: Dependency Integrity\non: [pull_request]\n\njobs:\n  lockfile-integrity:\n    runs-on: ubuntu-latest\n    steps:\n      - uses: actions/checkout@v4\n      - uses: actions/setup-node@v4\n        with:\n          node-version: "20"\n      - run: corepack enable\n      - run: bash scripts/check-lockfile-drift.sh</code></pre><p><strong>Action:</strong> Treat lockfile updates as reviewed supply-chain changes. Do not permit install commands that rewrite the lockfile during CI or production image builds.</p>',
+                `<h5>Concept:</h5><p>Lock the dependency graph to reviewed versions so the build cannot silently resolve a new package tree. For JavaScript this means immutable package-manager lockfiles. For Python this means a fully hashed <code>requirements.lock</code> consumed with <code>pip install --require-hashes</code>. The control must fail when manifests, resolver inputs, or registry settings drift without a reviewed lock update.</p><h5>Step 1: Pin package managers and install immutably</h5><pre><code>// File: package.json
+{
+  "packageManager": "pnpm@10.1.0",
+  "scripts": {
+    "deps:ci": "pnpm install --frozen-lockfile --ignore-scripts"
+  }
+}
+
+# npm
+npm ci --ignore-scripts
+
+# pnpm
+pnpm install --frozen-lockfile --ignore-scripts
+
+# yarn
+yarn install --immutable --mode=skip-build</code></pre><h5>Step 2: Generate a Python lockfile with hashes</h5><pre><code># File: scripts/compile_python_requirements.sh
+#!/usr/bin/env bash
+set -euo pipefail
+
+python -m pip install --upgrade pip-tools
+pip-compile \
+  --generate-hashes \
+  --resolver=backtracking \
+  --output-file requirements.lock \
+  pyproject.toml
+
+python -m pip install \
+  --require-hashes \
+  --requirement requirements.lock</code></pre><h5>Step 3: Reject manifest-to-lock drift before merge</h5><pre><code># File: scripts/check_dependency_lock_drift.sh
+#!/usr/bin/env bash
+set -euo pipefail
+
+changed_files=$(git diff --name-only origin/main...HEAD)
+node_inputs=$(printf "%s\\n" "$changed_files" | grep -E "(^|/)(package.json|pnpm-workspace.yaml|yarn.lock|pnpm-lock.yaml|package-lock.json)$" || true)
+python_inputs=$(printf "%s\\n" "$changed_files" | grep -E "(^|/)(pyproject.toml|setup.cfg|setup.py|requirements.in|requirements.lock)$" || true)
+
+if [[ -n "$node_inputs" ]]; then
+  corepack enable
+  pnpm install --frozen-lockfile --ignore-scripts >/dev/null
+  git diff --exit-code -- pnpm-lock.yaml package-lock.json yarn.lock
+fi
+
+if [[ -n "$python_inputs" ]]; then
+  bash scripts/compile_python_requirements.sh >/dev/null
+  git diff --exit-code -- requirements.lock
+fi</code></pre><h5>Step 4: Produce lock-integrity evidence</h5><pre><code># File: scripts/write_lock_integrity_evidence.py
+from __future__ import annotations
+
+import hashlib
+import json
+import subprocess
+from pathlib import Path
+
+
+LOCKFILES = ["package-lock.json", "pnpm-lock.yaml", "yarn.lock", "requirements.lock"]
+
+
+def sha256_file(path: Path) -> str | None:
+    if not path.exists():
+        return None
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def main() -> None:
+    diff = subprocess.run(
+        ["git", "diff", "--name-only", "--", *LOCKFILES],
+        text=True,
+        check=False,
+        capture_output=True,
+    )
+    evidence = {
+        "lockfiles": {name: sha256_file(Path(name)) for name in LOCKFILES},
+        "drift_files": [line for line in diff.stdout.splitlines() if line],
+        "passed": diff.stdout.strip() == "",
+    }
+    Path("artifacts").mkdir(exist_ok=True)
+    Path("artifacts/dependency-lock-integrity-evidence.json").write_text(
+        json.dumps(evidence, indent=2, sort_keys=True) + "\\n",
+        encoding="utf-8",
+    )
+    if not evidence["passed"]:
+        raise SystemExit("dependency lock drift detected")
+
+
+if __name__ == "__main__":
+    main()
+</code></pre><p><strong>Action:</strong> Treat every lockfile update as a reviewed supply-chain change. Require immutable Node installs and hashed Python installs, fail CI when a resolver input changes without a corresponding reviewed lock update, and store <code>artifacts/dependency-lock-integrity-evidence.json</code> with lockfile digests and drift status.</p>`,
             },
             {
               implementation:
-                "Disable lifecycle install scripts by default and run approved exceptions as separate vetted steps.",
+                "Disable dependency install-time code execution by default, including npm lifecycle scripts and Python source-distribution build backends, and run approved exceptions as separate vetted steps.",
               howTo:
-                '<h5>Concept:</h5><p>Most malicious JavaScript packages achieve code execution through lifecycle hooks such as `preinstall`, `install`, and `postinstall`. Deny this execution path by default, then handle legitimate exceptions in a separate, reviewable workflow.</p><h5>Step 1: Disable lifecycle scripts globally for normal installs</h5><p>Set the package manager configuration so dependency installation never executes package-provided scripts during the default path.</p><pre><code># File: .npmrc\nignore-scripts=true\nfund=false\naudit=false\n\n# CI install path\npnpm install --frozen-lockfile --ignore-scripts</code></pre><h5>Step 2: Maintain an explicit exception allowlist</h5><p>Track the few packages that genuinely require a build or native compilation step in a reviewed allowlist with an owner and justification.</p><pre><code>// File: security/approved-install-scripts.json\n{\n  "esbuild@0.25.0": {\n    "owner": "build-platform",\n    "reason": "downloads the platform-specific binary used by the bundler"\n  },\n  "sharp@0.33.5": {\n    "owner": "ml-platform",\n    "reason": "builds the image-processing native module"\n  }\n}</code></pre><h5>Step 3: Run approved exceptions as a separate vetted step</h5><p>Execute only the allowlisted packages in a dedicated job after the main install succeeds. Log the package, version, owner, and command used.</p><pre><code># File: scripts/run-approved-install-scripts.sh\n#!/usr/bin/env bash\nset -euo pipefail\n\njq -r "to_entries[] | @tsv" security/approved-install-scripts.json | while IFS=$\'\\t\' read -r package metadata; do\n  name=\"${package%@*}\"\n  version=\"${package##*@}\"\n  echo \"Running approved rebuild for ${name}@${version}\"\n  pnpm rebuild \"$name\"\ndone</code></pre><p><strong>Action:</strong> Keep the default install path non-executable. If a package cannot be used without its lifecycle script, require a named owner, a documented reason, and a separate reviewed execution step.</p>',
+                `<h5>Concept:</h5><p>Many malicious packages gain execution during installation. In npm this usually happens through lifecycle hooks such as <code>preinstall</code>, <code>install</code>, and <code>postinstall</code>. In Python it often happens when a source distribution invokes a PEP 517 build backend during install. Keep the default install path non-executable: use <code>--ignore-scripts</code> for JavaScript and prefer prebuilt wheels with <code>--only-binary=:all:</code> for Python. Any exception must be explicit, owned, reviewed, and separately logged.</p><h5>Step 1: Disable JavaScript lifecycle scripts</h5><pre><code># File: .npmrc
+ignore-scripts=true
+fund=false
+audit=false
+
+# CI install path
+pnpm install --frozen-lockfile --ignore-scripts</code></pre><h5>Step 2: Block Python source builds by default</h5><pre><code># File: scripts/install_python_binary_only.sh
+#!/usr/bin/env bash
+set -euo pipefail
+
+python -m pip install \
+  --require-hashes \
+  --only-binary=:all: \
+  --requirement requirements.lock</code></pre><h5>Step 3: Maintain explicit build exceptions</h5><pre><code>// File: security/approved-install-exceptions.json
+{
+  "npm": {
+    "esbuild@0.25.0": {
+      "owner": "build-platform",
+      "reason": "downloads the reviewed platform-specific binary used by the bundler"
+    }
+  },
+  "python": {
+    "example-native-extension==1.4.2": {
+      "owner": "ml-platform",
+      "reason": "no compatible wheel exists for linux/amd64; source build runs in isolated no-network builder",
+      "allowed_build_backend": "setuptools.build_meta"
+    }
+  }
+}</code></pre><h5>Step 4: Run approved exceptions as separate vetted jobs</h5><pre><code># File: scripts/run_approved_dependency_builds.py
+from __future__ import annotations
+
+import json
+import subprocess
+from pathlib import Path
+
+
+exceptions = json.loads(Path("security/approved-install-exceptions.json").read_text(encoding="utf-8"))
+evidence = {"npm_rebuilds": [], "python_source_builds": []}
+
+for package, metadata in exceptions.get("npm", {}).items():
+    name = package.rsplit("@", 1)[0]
+    subprocess.run(["pnpm", "rebuild", name], check=True)
+    evidence["npm_rebuilds"].append({"package": package, **metadata})
+
+for requirement, metadata in exceptions.get("python", {}).items():
+    subprocess.run(
+        [
+            "python",
+            "-m",
+            "pip",
+            "wheel",
+            "--no-deps",
+            "--wheel-dir",
+            "wheelhouse-exceptions",
+            requirement,
+        ],
+        check=True,
+    )
+    evidence["python_source_builds"].append({"requirement": requirement, **metadata})
+
+Path("artifacts").mkdir(exist_ok=True)
+Path("artifacts/dependency-build-exception-evidence.json").write_text(
+    json.dumps(evidence, indent=2, sort_keys=True) + "\\n",
+    encoding="utf-8",
+)</code></pre><p><strong>Action:</strong> Keep the normal dependency install path non-executable. If a package cannot be used without lifecycle scripts or a Python source build, require a named owner, documented reason, allowed build backend, isolated no-network builder, and <code>artifacts/dependency-build-exception-evidence.json</code> showing exactly which exception ran.</p>`,
         },
             {
               implementation:
                 "Harden internal package mirrors with a quarantine-and-promote workflow.",
               howTo:
-                "<h5>Concept:</h5><p>An internal registry should not be a blind mirror of public repositories. Treat it as an admission controller with explicit states such as <code>quarantine</code>, <code>promoted</code>, and <code>rejected</code>. New package versions land in quarantine, are scanned and policy-checked, and only then become visible to developer or CI install paths.</p><h5>Step 1: Separate quarantine from promoted repos</h5><p>Point mirroring jobs at a quarantine repository. Production builds must resolve packages only from the promoted repository.</p><pre><code># File: .npmrc\nregistry=https://registry.internal.corp/npm-promoted/\nalways-auth=true\nignore-scripts=true\nfund=false\naudit=false\n</code></pre><h5>Step 2: Validate the quarantined candidate</h5><p>Persist a machine-readable record for each mirrored tarball and block promotion if required checks fail.</p><pre><code class=\"language-json\">// File: package_admission/quarantine_record.json\n{\n  \"package_name\": \"left-pad\",\n  \"version\": \"1.3.0\",\n  \"source_registry\": \"https://registry.npmjs.org\",\n  \"tarball_sha256\": \"5d41402abc4b2a76b9719d911017c592\",\n  \"admission_state\": \"quarantine\",\n  \"scan_results\": {\n    \"malware\": \"clean\",\n    \"vulnerability_policy\": \"pass\"\n  },\n  \"manifest_checks\": {\n    \"has_git_dependency\": false,\n    \"has_workspace_range\": false,\n    \"has_lifecycle_scripts\": true\n  }\n}\n</code></pre><pre><code class=\"language-python\"># File: package_admission/promote_candidate.py\nfrom __future__ import annotations\n\nimport json\nfrom pathlib import Path\n\n\nclass PromotionBlocked(Exception):\n    pass\n\n\ndef validate_quarantine_record(record: dict) -> None:\n    if record[\"scan_results\"].get(\"malware\") != \"clean\":\n        raise PromotionBlocked(\"malware scan failed\")\n    if record[\"scan_results\"].get(\"vulnerability_policy\") != \"pass\":\n        raise PromotionBlocked(\"vulnerability policy failed\")\n    if record[\"manifest_checks\"].get(\"has_git_dependency\"):\n        raise PromotionBlocked(\"git URL dependencies are not allowed in promoted builds\")\n    if record[\"manifest_checks\"].get(\"has_workspace_range\"):\n        raise PromotionBlocked(\"workspace:* ranges are not allowed in promoted builds\")\n\n\ndef build_promotion_record(record: dict) -> dict:\n    return {\n        \"package_name\": record[\"package_name\"],\n        \"version\": record[\"version\"],\n        \"tarball_sha256\": record[\"tarball_sha256\"],\n        \"admission_state\": \"promoted\",\n        \"promotion_reason\": \"automated policy pass\",\n    }\n\n\ndef promote_candidate(record_path: str) -> dict:\n    record = json.loads(Path(record_path).read_text(encoding=\"utf-8\"))\n    validate_quarantine_record(record)\n    return build_promotion_record(record)\n</code></pre><h5>Step 3: Make the promoted mirror the only install source</h5><p>CI and developer workflows should never resolve directly from public registries. Promotion is the enforcement point; the mirror should not leak quarantined packages into normal install paths.</p><p><strong>Action:</strong> Mirror into quarantine, run deterministic malware / manifest / dependency-policy checks there, and promote only packages that pass. Production builds should consume the promoted mirror exclusively.</p>",
+                `<h5>Concept:</h5><p>An internal registry should not be a blind mirror of public repositories. Treat it as an admission controller with explicit states such as <code>quarantine</code>, <code>promoted</code>, and <code>rejected</code>. New npm tarballs, Python wheels, and Python source distributions land in quarantine, are scanned and policy-checked, and only then become visible to developer or CI install paths.</p><h5>Step 1: Separate quarantine from promoted repositories</h5><pre><code># File: .npmrc
+registry=https://registry.internal.corp/npm-promoted/
+always-auth=true
+ignore-scripts=true
+fund=false
+audit=false
+
+# File: pip.conf
+[global]
+index-url = https://registry.internal.corp/pypi-promoted/simple
+require-hashes = true
+no-build-isolation = false</code></pre><h5>Step 2: Store an ecosystem-aware quarantine record</h5><pre><code class="language-json">{
+  "ecosystem": "pypi",
+  "package_name": "example-native-extension",
+  "version": "1.4.2",
+  "artifact_type": "wheel",
+  "source_registry": "https://pypi.org/simple",
+  "artifact_sha256": "5d41402abc4b2a76b9719d911017c592",
+  "admission_state": "quarantine",
+  "scan_results": {
+    "malware": "clean",
+    "vulnerability_policy": "pass"
+  },
+  "manifest_checks": {
+    "has_direct_url_dependency": false,
+    "has_unpinned_dependency": false,
+    "requires_source_build": false
+  },
+  "provenance": {
+    "trusted_publishing_verified": true,
+    "attestation_verified": true
+  }
+}</code></pre><h5>Step 3: Block unsafe candidates and write promotion evidence</h5><pre><code class="language-python"># File: package_admission/promote_candidate.py
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+
+class PromotionBlocked(Exception):
+    pass
+
+
+def validate_quarantine_record(record: dict) -> None:
+    if record["scan_results"].get("malware") != "clean":
+        raise PromotionBlocked("malware scan failed")
+    if record["scan_results"].get("vulnerability_policy") != "pass":
+        raise PromotionBlocked("vulnerability policy failed")
+    if record["manifest_checks"].get("has_direct_url_dependency"):
+        raise PromotionBlocked("direct URL dependencies are not allowed")
+    if record["manifest_checks"].get("has_unpinned_dependency"):
+        raise PromotionBlocked("unpinned dependencies are not allowed")
+    if record["ecosystem"] == "pypi" and record["manifest_checks"].get("requires_source_build"):
+        if record["artifact_type"] != "sdist":
+            raise PromotionBlocked("invalid Python source-build record")
+        if not record.get("approved_source_build_exception"):
+            raise PromotionBlocked("Python source distributions require an approved build exception")
+    if not record.get("provenance", {}).get("trusted_publishing_verified", False):
+        raise PromotionBlocked("trusted publisher verification missing")
+
+
+def build_promotion_record(record: dict) -> dict:
+    return {
+        "ecosystem": record["ecosystem"],
+        "package_name": record["package_name"],
+        "version": record["version"],
+        "artifact_type": record["artifact_type"],
+        "artifact_sha256": record["artifact_sha256"],
+        "admission_state": "promoted",
+        "promotion_reason": "automated policy pass",
+    }
+
+
+def promote_candidate(record_path: str) -> dict:
+    record = json.loads(Path(record_path).read_text(encoding="utf-8"))
+    validate_quarantine_record(record)
+    promotion = build_promotion_record(record)
+    Path("artifacts").mkdir(exist_ok=True)
+    Path("artifacts/package-promotion-evidence.json").write_text(
+        json.dumps(promotion, indent=2, sort_keys=True) + "\\n",
+        encoding="utf-8",
+    )
+    return promotion
+</code></pre><h5>Step 4: Make promoted mirrors the only install source</h5><p>CI and developer workflows should never resolve directly from public registries. The promoted npm mirror and promoted PyPI index are the enforcement points; quarantine repositories must not leak candidates into normal install paths.</p><p><strong>Action:</strong> Mirror into quarantine, run deterministic malware, manifest, hash, and provenance checks there, and promote only artifacts that pass. Store the promotion decision in <code>artifacts/package-promotion-evidence.json</code> and require production builds to consume the promoted mirror exclusively.</p>`,
             },
           ],
         },
@@ -14629,6 +15566,7 @@ def filter_retrieval_results(principal: dict, candidates: list[dict]) -> list[di
         "Sigstore (for signing and attestations)",
         "Open Policy Agent (OPA), Conftest (for policy checks on workflows)",
         "npm CLI",
+        "PyPA build, twine, pypa/gh-action-pypi-publish",
       ],
       toolsCommercial: [
         "JFrog Artifactory, Sonatype Nexus (as secure internal registries/proxies)",
@@ -14705,9 +15643,9 @@ def filter_retrieval_results(principal: dict, candidates: list[dict]) -> list[di
       implementationGuidance: [
         {
           implementation:
-            "Mandate CI/CD-only publishing using npm Trusted Publishing (OIDC).",
+            "Mandate CI/CD-only publishing using OIDC trusted publishing for npm and PyPI.",
           howTo:
-            `<h5>Concept:</h5><p>Use <strong>npm Trusted Publishing</strong> to configure the npm registry to trust your CI/CD provider via OIDC. This lets the CI/CD job authenticate with its own short-lived identity and removes long-lived publish tokens from developer machines and repository secrets. The resulting provenance is evidence of publisher identity and build workflow, not a proof that the released code is benign.</p><h5>Implement the Publishing Workflow</h5><pre><code># File: .github/workflows/publish.yml
+            `<h5>Concept:</h5><p>Use registry trusted publishing so npm and PyPI trust a protected CI/CD workflow through OIDC instead of long-lived publish tokens. This removes developer-machine publishing from the normal path and makes release identity auditable. The resulting provenance or attestation is evidence of publisher identity and build workflow; it does not prove that the source code is benign.</p><h5>npm trusted publishing workflow</h5><pre><code># File: .github/workflows/publish-npm.yml
 
 name: Publish Package to npm
 on:
@@ -14728,7 +15666,64 @@ jobs:
           node-version: '20'
           registry-url: 'https://registry.npmjs.org'
       - run: npm ci
-      - run: npm publish</code></pre><p>For supported public packages and repositories, Trusted Publishing generates provenance through the trusted publisher workflow. Treat the attestation as an admission signal: a compromised runner, malicious workflow change, or already-backdoored source tree can still produce valid provenance.</p><p><strong>Action:</strong> Prohibit publishing from developer machines by configuring <strong>npm Trusted Publishing</strong> for your packages. Bind publishing to a protected repository workflow, require review for workflow changes, and combine provenance verification with dependency review, malware scanning, and protected-environment approvals.</p>`,
+      - run: npm publish --provenance</code></pre><h5>PyPI trusted publishing workflow</h5><pre><code># File: .github/workflows/publish-pypi.yml
+name: Publish Package to PyPI
+on:
+  release:
+    types: [created]
+
+jobs:
+  publish-pypi:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    environment: pypi-production
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: python -m pip install --upgrade build
+      - run: python -m build
+      - uses: pypa/gh-action-pypi-publish@release/v1</code></pre><h5>Release evidence</h5><pre><code># File: scripts/write_release_publisher_evidence.py
+from __future__ import annotations
+
+import hashlib
+import json
+import os
+from pathlib import Path
+
+
+def sha256_file(path: Path) -> str:
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def main() -> None:
+    dist_files = sorted(Path("dist").glob("*"))
+    evidence = {
+        "ci_provider": "github_actions",
+        "oidc_required": True,
+        "workflow": os.getenv("GITHUB_WORKFLOW"),
+        "repository": os.getenv("GITHUB_REPOSITORY"),
+        "ref": os.getenv("GITHUB_REF"),
+        "protected_environment": os.getenv("GITHUB_ENVIRONMENT", "configured-in-ci"),
+        "artifacts": [
+            {"path": str(path), "sha256": sha256_file(path)}
+            for path in dist_files
+            if path.is_file()
+        ],
+    }
+    Path("artifacts").mkdir(exist_ok=True)
+    Path("artifacts/publisher-integrity-release-evidence.json").write_text(
+        json.dumps(evidence, indent=2, sort_keys=True) + "\\n",
+        encoding="utf-8",
+    )
+
+
+if __name__ == "__main__":
+    main()
+</code></pre><p><strong>Action:</strong> Prohibit package publishing from developer machines. Bind npm and PyPI releases to protected CI workflows with OIDC trusted publishing, protected environments, reviewed workflow changes, artifact digests, and <code>artifacts/publisher-integrity-release-evidence.json</code>.</p>`,
         },
         {
           implementation:
@@ -14740,7 +15735,79 @@ jobs:
           implementation:
             "Reject packages that lack valid provenance attestation from an approved publisher identity and CI workflow.",
           howTo:
-            '<h5>Concept:</h5><p>Consumer-side publisher integrity should answer one question: was this package produced by a trusted publisher identity through an approved CI workflow? Enforce that check before the package is mirrored, promoted, or installed so stolen local credentials and untrusted build paths cannot introduce a malicious release.</p><h5>Step 1: Define the required publisher claims</h5><p>Document the exact issuer, repository, workflow, and subject claims that a package attestation must present.</p><pre><code>// File: security/approved-publishers.json\n{\n  "packages/frontend-app": {\n    "issuer": "https://token.actions.githubusercontent.com",\n    "repository": "acme/frontend-app",\n    "workflow": ".github/workflows/release.yml",\n    "subject_digest_source": "npm provenance"\n  }\n}</code></pre><h5>Step 2: Verify provenance before promotion or install</h5><p>Require the package digest and attestation to verify against the approved publisher identity before the package enters your internal registry or build graph.</p><pre><code># File: scripts/verify-package-provenance.sh\n#!/usr/bin/env bash\nset -euo pipefail\n\nPACKAGE_TGZ=\"$1\"\nPREDICATE=\"provenance.json\"\nIDENTITY=\"https://github.com/acme/frontend-app/.github/workflows/release.yml@refs/tags/v1.4.2\"\nISSUER=\"https://token.actions.githubusercontent.com\"\n\ncosign verify-blob-attestation \\\n  --new-bundle-format \\\n  --bundle \"${PACKAGE_TGZ}.bundle\" \\\n  --certificate-identity \"$IDENTITY\" \\\n  --certificate-oidc-issuer \"$ISSUER\" \\\n  --predicate-type slsaprovenance \"$PACKAGE_TGZ\" > \"$PREDICATE\"\n\njq -e ".predicate.buildDefinition.externalParameters.workflow.ref == \"refs/tags/v1.4.2\"" \"$PREDICATE\" >/dev/null</code></pre><h5>Step 3: Fail closed in the registry or admission policy</h5><p>Express the enforcement rule as policy so promotion jobs and internal registries block packages that lack valid provenance or come from an unapproved workflow.</p><pre><code># File: policy/package_publisher_integrity.rego\npackage package.publisher_integrity\n\ndefault allow = false\n\nallow if {\n  input.publisher_verified == true\n  input.issuer == "https://token.actions.githubusercontent.com"\n  input.repository == "acme/frontend-app"\n  input.workflow == ".github/workflows/release.yml"\n}</code></pre><p><strong>Action:</strong> Treat publisher provenance verification as a mandatory admission gate. If attestation verification fails, if the workflow identity is not approved, or if the claims do not match the expected package source, stop promotion and installation immediately.</p>',
+            `<h5>Concept:</h5><p>Consumer-side publisher integrity should answer one question: was this package produced by a trusted publisher identity through an approved CI workflow? Enforce that check before the package is mirrored, promoted, or installed so stolen local credentials and untrusted build paths cannot introduce a malicious release. This is an identity and workflow gate, not a malware verdict.</p><h5>Step 1: Define required publisher claims</h5><pre><code>// File: security/approved-publishers.json
+{
+  "npm:frontend-app": {
+    "issuer": "https://token.actions.githubusercontent.com",
+    "repository": "acme/frontend-app",
+    "workflow": ".github/workflows/publish-npm.yml"
+  },
+  "pypi:acme-python-lib": {
+    "issuer": "https://token.actions.githubusercontent.com",
+    "repository": "acme/acme-python-lib",
+    "workflow": ".github/workflows/publish-pypi.yml"
+  }
+}</code></pre><h5>Step 2: Verify npm provenance before promotion</h5><pre><code># File: scripts/verify_npm_provenance.sh
+#!/usr/bin/env bash
+set -euo pipefail
+
+PACKAGE_TGZ="$1"
+IDENTITY="https://github.com/acme/frontend-app/.github/workflows/publish-npm.yml@refs/tags/v1.4.2"
+ISSUER="https://token.actions.githubusercontent.com"
+
+mkdir -p artifacts
+cosign verify-blob-attestation \
+  --new-bundle-format \
+  --bundle "$PACKAGE_TGZ.bundle" \
+  --certificate-identity "$IDENTITY" \
+  --certificate-oidc-issuer "$ISSUER" \
+  --predicate-type slsaprovenance "$PACKAGE_TGZ" > artifacts/npm-provenance.json
+
+jq -e '.predicate.buildDefinition != null' artifacts/npm-provenance.json >/dev/null</code></pre><h5>Step 3: Verify PyPI publish attestations before promotion</h5><pre><code># File: scripts/verify_pypi_provenance.sh
+#!/usr/bin/env bash
+set -euo pipefail
+
+PYPI_ARTIFACT="$1"
+EXPECTED_REPOSITORY="https://github.com/acme/acme-python-lib"
+
+mkdir -p artifacts
+python -m pip install --upgrade pypi-attestations
+pypi-attestations verify pypi \
+  --repository "$EXPECTED_REPOSITORY" \
+  "$PYPI_ARTIFACT" > artifacts/pypi-provenance.txt
+</code></pre><h5>Step 4: Fail closed in the registry admission policy</h5><pre><code># File: policy/package_publisher_integrity.rego
+package package.publisher_integrity
+
+default allow = false
+
+allow if {
+  input.publisher_verified == true
+  input.issuer == "https://token.actions.githubusercontent.com"
+  input.repository == input.expected_repository
+  input.workflow == input.expected_workflow
+}</code></pre><h5>Verification and evidence</h5><pre><code># File: scripts/write_publisher_verification_evidence.py
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+
+def main() -> None:
+    evidence = {
+        "npm_provenance_present": Path("artifacts/npm-provenance.json").exists(),
+        "pypi_provenance_present": Path("artifacts/pypi-provenance.txt").exists(),
+        "publisher_verified": True,
+        "admission_decision": "allow",
+    }
+    Path("artifacts/package-publisher-verification-evidence.json").write_text(
+        json.dumps(evidence, indent=2, sort_keys=True) + "\\n",
+        encoding="utf-8",
+    )
+
+
+if __name__ == "__main__":
+    main()
+</code></pre><p><strong>Action:</strong> Treat publisher provenance verification as a mandatory admission gate. If npm provenance, PyPI publish attestation verification, workflow identity, repository identity, or expected issuer checks fail, stop promotion and installation immediately and store <code>artifacts/package-publisher-verification-evidence.json</code>.</p>`,
         },
       ],
     },
@@ -16879,7 +17946,8 @@ def explain_detector_miss(model, tokenizer, text: str, target_label: int) -&gt; 
           framework: "OWASP LLM Top 10 2025",
           items: [
             "LLM01:2025 Prompt Injection",
-            "LLM04:2025 Data and Model Poisoning"
+            "LLM04:2025 Data and Model Poisoning",
+            "LLM02:2025 Sensitive Information Disclosure"
           ]
         },
         {
@@ -17549,7 +18617,8 @@ def load_cache_if_trustworthy(redis_client, full_key: str, expected: dict) -&gt;
             {
               "framework": "OWASP LLM Top 10 2025",
               "items": [
-                "LLM05:2025 Improper Output Handling (unsafe handling of server or model output)"
+                "LLM05:2025 Improper Output Handling (unsafe handling of server or model output)",
+                "LLM06:2025 Excessive Agency (explicit confirmation prevents implicit server-suggested actions)"
               ]
             },
             {
@@ -17608,6 +18677,89 @@ def load_cache_if_trustworthy(redis_client, full_key: str, expected: dict) -&gt;
             {
               "implementation": "Require explicit user confirmation before executing any server-suggested action, and display the action, target, and parameters in a normalized read-only confirmation view.",
               "howTo": "<h5>Concept:</h5><p>The client should never silently execute a server-suggested action. Intercept suggested actions, convert them to a structured confirmation object, and show the user exactly what will happen.</p><h5>Example confirmation object</h5><pre><code>{\n  \"server\": \"finance-mcp\",\n  \"action\": \"create_ticket\",\n  \"target\": \"jira://SEC-1234\",\n  \"parameters\": {\n    \"priority\": \"high\",\n    \"summary\": \"Rotate exposed API key\"\n  },\n  \"risk_tier\": \"high\"\n}\n</code></pre><p><strong>Operational notes:</strong> Do not allow hidden parameters, free-form HTML in confirmations, or auto-approve for newly discovered servers. If you later add allowlists, keep them narrow and auditable.</p>"
+            },
+            {
+              "implementation": "Require explicit user confirmation before opening server-suggested URLs, and display the full normalized destination without prefetching or preauthenticated links.",
+              "howTo": `<h5>Concept:</h5><p>URL-mode elicitation is a special case of server-suggested action because navigation can leak tokens, open a phishing destination, trigger a magic link, or cause a browser-agent to perform a side effect. The client must not prefetch, auto-open, shorten, style-hide, or silently rewrite the destination. Show the full normalized URL in a read-only confirmation view, block preauthenticated URLs by default, and record the user's explicit consent before navigation. Browser/session isolation after consent belongs to <code>AID-I-008.003</code>.</p><h5>URL confirmation gate</h5><pre><code># File: mcp_client/url_elicitation_gate.py
+from __future__ import annotations
+
+import json
+import time
+from dataclasses import asdict, dataclass
+from pathlib import Path
+from urllib.parse import parse_qsl, urlencode, urlsplit, urlunsplit
+
+
+SENSITIVE_QUERY_KEYS = {"token", "code", "session", "auth", "signature", "sig", "key", "jwt", "sso"}
+
+
+@dataclass(frozen=True)
+class UrlConsentDecision:
+    server_id: str
+    normalized_url: str
+    verdict: str
+    reason: str
+    consent_id: str | None
+    decided_at: int
+
+
+def normalize_for_display(raw_url: str) -> str:
+    parts = urlsplit(raw_url.strip())
+    if parts.scheme not in {"https", "http"}:
+        raise ValueError("unsupported_navigation_scheme")
+    if not parts.hostname:
+        raise ValueError("missing_hostname")
+    netloc = parts.hostname.lower()
+    if parts.port:
+        netloc = f"{netloc}:{parts.port}"
+    query = urlencode(sorted(parse_qsl(parts.query, keep_blank_values=True)), doseq=True)
+    return urlunsplit((parts.scheme, netloc, parts.path or "/", query, ""))
+
+
+def contains_preauth_material(normalized_url: str) -> bool:
+    query_keys = {key.lower() for key, _ in parse_qsl(urlsplit(normalized_url).query, keep_blank_values=True)}
+    return bool(query_keys & SENSITIVE_QUERY_KEYS)
+
+
+def record_url_consent(decision: UrlConsentDecision, evidence_path: str = "artifacts/mcp-url-consent-events.jsonl") -> None:
+    Path("artifacts").mkdir(exist_ok=True)
+    with Path(evidence_path).open("a", encoding="utf-8") as handle:
+        handle.write(json.dumps(asdict(decision), sort_keys=True) + "\\n")
+
+
+def require_user_url_consent(server_id: str, raw_url: str, user_approved: bool, consent_id: str | None) -> UrlConsentDecision:
+    normalized = normalize_for_display(raw_url)
+    if contains_preauth_material(normalized):
+        decision = UrlConsentDecision(server_id, normalized, "deny", "preauthenticated_url_blocked", None, int(time.time()))
+        record_url_consent(decision)
+        return decision
+    if not user_approved or not consent_id:
+        decision = UrlConsentDecision(server_id, normalized, "deny", "explicit_consent_missing", None, int(time.time()))
+        record_url_consent(decision)
+        return decision
+    decision = UrlConsentDecision(server_id, normalized, "allow", "explicit_user_consent", consent_id, int(time.time()))
+    record_url_consent(decision)
+    return decision
+</code></pre><h5>Verification test</h5><pre><code># File: tests/test_url_elicitation_gate.py
+from mcp_client.url_elicitation_gate import require_user_url_consent
+
+
+def test_blocks_preauthenticated_url():
+    decision = require_user_url_consent("mcp-server-a", "https://example.com/login?token=abc", True, "consent-1")
+    assert decision.verdict == "deny"
+    assert decision.reason == "preauthenticated_url_blocked"
+
+
+def test_requires_explicit_consent():
+    decision = require_user_url_consent("mcp-server-a", "https://example.com/docs", False, None)
+    assert decision.verdict == "deny"
+
+
+def test_allows_normalized_url_after_consent():
+    decision = require_user_url_consent("mcp-server-a", "HTTPS://Example.com/docs?b=2&a=1", True, "consent-2")
+    assert decision.verdict == "allow"
+    assert decision.normalized_url == "https://example.com/docs?a=1&b=2"
+</code></pre><p><strong>Action:</strong> Route every server-suggested URL, link-opening request, and navigation elicitation through this gate before any prefetch or browser launch. Store <code>artifacts/mcp-url-consent-events.jsonl</code> as evidence and refuse preauthenticated URLs unless a separate break-glass workflow rewrites the destination into a non-secret approval link.</p>`
             }
           ]
         },
@@ -17708,6 +18860,163 @@ def load_cache_if_trustworthy(redis_client, full_key: str, expected: dict) -&gt;
             {
               "implementation": "Use channel-bound or proof-of-possession token mechanisms where supported to reduce replay risk from stolen client tokens.",
               "howTo": "<h5>Concept:</h5><p>Bearer tokens are replayable by anyone who steals them. Proof-of-possession mechanisms such as DPoP bind the token to a client-held key so the attacker also has to steal the private key, not just the token string.</p><h5>Step 1: Generate a DPoP key and proof JWT</h5><p>Use a client-held asymmetric key and send a signed proof on every token and resource request.</p><pre><code># File: mcp_client/dpop.py\nfrom __future__ import annotations\n\nimport time\nimport uuid\n\nfrom jwcrypto import jwk, jwt\n\n\nclient_key = jwk.JWK.generate(kty=\"EC\", crv=\"P-256\")\n\n\ndef build_dpop_proof(http_method: str, http_url: str, nonce: str | None = None) -&gt; str:\n    public_jwk = client_key.export_public(as_dict=True)\n    claims = {\n        \"jti\": str(uuid.uuid4()),\n        \"htm\": http_method.upper(),\n        \"htu\": http_url,\n        \"iat\": int(time.time()),\n    }\n    if nonce:\n        claims[\"nonce\"] = nonce\n\n    token = jwt.JWT(\n        header={\"alg\": \"ES256\", \"typ\": \"dpop+jwt\", \"jwk\": public_jwk},\n        claims=claims,\n    )\n    token.make_signed_token(client_key)\n    return token.serialize()\n</code></pre><h5>Step 2: Use the proof on both token issuance and resource requests</h5><p>The authorization server returns a DPoP-bound token only if the token request itself carried a valid proof. Resource calls must then send both <code>Authorization: DPoP ...</code> and a fresh DPoP proof.</p><pre><code># File: mcp_client/session.py\nimport requests\n\nfrom mcp_client.dpop import build_dpop_proof\n\n\ndef fetch_dpop_token(token_url: str, client_id: str, client_secret: str) -&gt; str:\n    token_proof = build_dpop_proof(\"POST\", token_url)\n    response = requests.post(\n        token_url,\n        data={\n            \"grant_type\": \"client_credentials\",\n            \"client_id\": client_id,\n            \"client_secret\": client_secret,\n        },\n        headers={\"DPoP\": token_proof},\n        timeout=10,\n    )\n    response.raise_for_status()\n    body = response.json()\n    if body.get(\"token_type\", \"\").lower() != \"dpop\":\n        raise RuntimeError(\"Authorization server did not issue a DPoP-bound token\")\n    return body[\"access_token\"]\n\n\ndef call_mcp_server(resource_url: str, access_token: str) -&gt; dict:\n    resource_proof = build_dpop_proof(\"GET\", resource_url)\n    response = requests.get(\n        resource_url,\n        headers={\n            \"Authorization\": f\"DPoP {access_token}\",\n            \"DPoP\": resource_proof,\n        },\n        timeout=10,\n    )\n    response.raise_for_status()\n    return response.json()\n</code></pre><h5>Step 3: Verify replay resistance</h5><p>Capture a token from staging, then replay it without the private key or with a mismatched DPoP proof. The server should reject the request with <code>401</code> or <code>invalid_dpop_proof</code>.</p><p><strong>Action:</strong> Prefer DPoP or another proof-of-possession mechanism for MCP client sessions whenever the provider supports it. If not, compensate with shorter TTLs, hardware-backed key storage, and replay-detection telemetry, but treat plain bearer tokens as a weaker profile.</p>"
+            },
+            {
+              "implementation": "Use OAuth authorization-code flow with PKCE, state validation, protected-resource metadata, and resource-parameter binding for MCP server authorization.",
+              "howTo": `<h5>Concept:</h5><p>MCP clients that authorize against remote servers must bind the OAuth flow to the intended protected resource. Use authorization-code flow with PKCE S256, an unguessable <code>state</code>, authorization-server metadata, protected-resource metadata, and the OAuth <code>resource</code> parameter. Refuse authorization when metadata is missing, the issuer does not match the trusted authorization server, or the callback state is unknown. This guidance is client-side authorization hygiene; MCP server-side OAuth protected-resource validation, token audience/resource checks, and delegated upstream grant safety belong to <code>AID-H-035.002</code>.</p><h5>OAuth flow helper</h5><pre><code># File: mcp_client/oauth_pkce_resource_binding.py
+from __future__ import annotations
+
+import base64
+import hashlib
+import json
+import secrets
+import time
+from dataclasses import asdict, dataclass
+from typing import Protocol
+from urllib.parse import urlencode, urljoin, urlsplit
+
+import requests
+
+
+@dataclass(frozen=True)
+class OAuthStart:
+    authorization_url: str
+    state: str
+    code_verifier: str
+    issuer: str
+    resource: str
+
+
+class OAuthFlowStore(Protocol):
+    def put(self, state: str, record: dict) -> None:
+        ...
+
+    def pop(self, state: str) -> dict | None:
+        ...
+
+
+class InMemoryOAuthFlowStore:
+    def __init__(self) -> None:
+        self._records: dict[str, dict] = {}
+
+    def put(self, state: str, record: dict) -> None:
+        self._records[state] = record
+
+    def pop(self, state: str) -> dict | None:
+        return self._records.pop(state, None)
+
+
+def b64url(data: bytes) -> str:
+    return base64.urlsafe_b64encode(data).rstrip(b"=").decode("ascii")
+
+
+def pkce_challenge(verifier: str) -> str:
+    return b64url(hashlib.sha256(verifier.encode("ascii")).digest())
+
+
+def well_known_url(origin: str, name: str) -> str:
+    parts = urlsplit(origin)
+    if parts.scheme != "https" or not parts.netloc:
+        raise ValueError("metadata origin must be https")
+    return urljoin(f"{parts.scheme}://{parts.netloc}", f"/.well-known/{name}")
+
+
+def fetch_json(url: str) -> dict:
+    response = requests.get(url, timeout=10)
+    response.raise_for_status()
+    return response.json()
+
+
+def start_oauth(resource_url: str, client_id: str, redirect_uri: str, scope: str) -> OAuthStart:
+    resource_metadata = fetch_json(well_known_url(resource_url, "oauth-protected-resource"))
+    auth_servers = resource_metadata.get("authorization_servers", [])
+    if not auth_servers:
+        raise RuntimeError("protected resource metadata missing authorization_servers")
+
+    auth_metadata = fetch_json(well_known_url(auth_servers[0], "oauth-authorization-server"))
+    issuer = auth_metadata.get("issuer")
+    if issuer != auth_servers[0].rstrip("/"):
+        raise RuntimeError("authorization server issuer mismatch")
+    if not auth_metadata.get("authorization_endpoint") or not auth_metadata.get("token_endpoint"):
+        raise RuntimeError("authorization server metadata missing required endpoints")
+
+    state = secrets.token_urlsafe(32)
+    verifier = secrets.token_urlsafe(64)
+    params = {
+        "response_type": "code",
+        "client_id": client_id,
+        "redirect_uri": redirect_uri,
+        "scope": scope,
+        "state": state,
+        "code_challenge": pkce_challenge(verifier),
+        "code_challenge_method": "S256",
+        "resource": resource_url,
+    }
+    authorization_url = f"{auth_metadata['authorization_endpoint']}?{urlencode(params)}"
+    return OAuthStart(authorization_url, state, verifier, issuer, resource_url)
+
+
+def persist_start(flow: OAuthStart, store: OAuthFlowStore, ttl_seconds: int = 600) -> None:
+    # Store verifier/state in a transient server-side session store, not an artifacts file.
+    # Production implementations should use an encrypted Redis/session store with TTL.
+    store.put(flow.state, {**asdict(flow), "expires_at": int(time.time()) + ttl_seconds})
+</code></pre><h5>Callback and token exchange</h5><pre><code># File: mcp_client/oauth_callback.py
+from __future__ import annotations
+
+import hashlib
+import json
+from pathlib import Path
+
+import requests
+
+from mcp_client.oauth_pkce_resource_binding import OAuthFlowStore, fetch_json, well_known_url
+
+
+def exchange_code(callback_state: str, code: str, client_id: str, redirect_uri: str, store: OAuthFlowStore) -> dict:
+    start = store.pop(callback_state)
+    if start is None:
+        raise RuntimeError("oauth_state_mismatch")
+
+    auth_metadata = fetch_json(well_known_url(start["issuer"], "oauth-authorization-server"))
+    token_endpoint = auth_metadata["token_endpoint"]
+    response = requests.post(
+        token_endpoint,
+        data={
+            "grant_type": "authorization_code",
+            "code": code,
+            "redirect_uri": redirect_uri,
+            "client_id": client_id,
+            "code_verifier": start["code_verifier"],
+            "resource": start["resource"],
+        },
+        timeout=10,
+    )
+    response.raise_for_status()
+    token = response.json()
+    evidence = {
+        "issuer": start["issuer"],
+        "resource": start["resource"],
+        "pkce_method": "S256",
+        "state_validated": True,
+        "state_sha256": hashlib.sha256(callback_state.encode("utf-8")).hexdigest(),
+        "token_type": token.get("token_type"),
+        "scope": token.get("scope"),
+    }
+    Path("artifacts/mcp-oauth-pkce-binding-evidence.json").write_text(
+        json.dumps(evidence, indent=2, sort_keys=True) + "\\n",
+        encoding="utf-8",
+    )
+    return token
+</code></pre><h5>Verification test</h5><pre><code># File: tests/test_oauth_pkce_resource_binding.py
+from mcp_client.oauth_pkce_resource_binding import pkce_challenge
+
+
+def test_pkce_challenge_is_deterministic_and_not_plaintext():
+    verifier = "A" * 64
+    challenge = pkce_challenge(verifier)
+    assert challenge != verifier
+    assert "=" not in challenge
+</code></pre><p><strong>Action:</strong> Require this flow for MCP server authorization. Block flows without PKCE S256, state, issuer metadata, protected-resource metadata, and <code>resource</code> binding. Store <code>artifacts/mcp-oauth-pkce-binding-evidence.json</code> after token exchange so the engine can prove the client authorized the intended MCP resource.</p>`
             }
           ]
         },
@@ -17847,14 +19156,16 @@ def load_cache_if_trustworthy(redis_client, full_key: str, expected: dict) -&gt;
             {
               "framework": "MAESTRO",
               "items": [
-                "Integration Risks (L7) (sampling blurs trust boundary between server-originated and user-originated prompts)"
+                "Integration Risks (L7) (sampling blurs trust boundary between server-originated and user-originated prompts)",
+                "Denial of Service (DoS) Attacks (L1) (token and complexity limits prevent hidden sampling resource exhaustion)"
               ]
             },
             {
               "framework": "OWASP LLM Top 10 2025",
               "items": [
                 "LLM01:2025 Prompt Injection (server-crafted sampling prompt injected into client LLM context)",
-                "LLM06:2025 Excessive Agency (sampling triggers unintended tool invocations or actions)"
+                "LLM06:2025 Excessive Agency (sampling triggers unintended tool invocations or actions)",
+                "LLM10:2025 Unbounded Consumption (token budgets and rate limits constrain hidden sampling consumption)"
               ]
             },
             {
@@ -18087,7 +19398,7 @@ def emit_sampling_event(
           "framework": "OWASP Agentic AI Top 10 2026",
           "items": [
             "ASI06:2026 Memory & Context Poisoning (unauthorized data enters persistent memory or context)",
-            "ASI09:2026 Human-Agent Trust Exploitation (agent uses data beyond the user or enterprise authorization boundary)"
+            "ASI03:2026 Identity and Privilege Abuse (agent uses data beyond the user or enterprise authorization boundary)"
           ]
         },
         {
@@ -20001,8 +21312,7 @@ rules:
               "framework": "Databricks AI Security Framework 3.0",
               "items": [
                 "Model 7.2: Model assets leak",
-                "Model Serving - Inference response 10.6: Sensitive data output from a model",
-                "Agents - Tools MCP Client 13.30: Client-Side Data Leakage"
+                "Model Serving - Inference response 10.6: Sensitive data output from a model"
               ]
             }
           ],
