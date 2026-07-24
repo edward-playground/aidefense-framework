@@ -9,6 +9,7 @@
  *
  * Usage:
  *   node scripts/generate-dataset.js
+ *   node scripts/generate-dataset.js --check
  *
  * Fail-closed keyword policy:
  * - Keywords must come from the tracked keyword lock file.
@@ -18,8 +19,9 @@
 
 import fs from 'fs';
 import path from 'path';
-import { fileURLToPath } from 'url';
+import { fileURLToPath, pathToFileURL } from 'url';
 import { createHash } from 'crypto';
+import { aidefendVersion } from '../aidefend-intro.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -27,9 +29,17 @@ const __dirname = path.dirname(__filename);
 const TACTICS_DIR = path.join(__dirname, '..', 'tactics');
 const OUTPUT_DIR = path.join(__dirname, '..', 'data');
 
-if (process.argv.includes('--refresh-cache')) {
+const args = process.argv.slice(2);
+const unknownArgs = args.filter(arg => !['--check', '--refresh-cache'].includes(arg));
+if (unknownArgs.length > 0) {
+  console.error(`ERROR: unknown argument(s): ${unknownArgs.join(', ')}`);
+  process.exit(2);
+}
+const checkOnly = args.includes('--check');
+
+if (args.includes('--refresh-cache')) {
   console.error('ERROR: --refresh-cache is disabled in fail-closed mode.');
-  console.error('Use devtools/import_llm_keywords.js to update the tracked keyword lock file intentionally.');
+  console.error('Keyword-lock updates are restricted to the maintainer audit workflow.');
   process.exit(1);
 }
 
@@ -44,77 +54,308 @@ const TACTIC_FILES = [
   { file: 'restore.js', id: 'restore', exportName: 'restoreTactic' },
 ];
 
+const TOOL_FIELDS = Object.freeze([
+  'toolsOpenSource',
+  'toolsSourceAvailable',
+  'toolsCommercial',
+]);
+const PARENT_FORBIDDEN_FIELDS = Object.freeze([
+  'pillar',
+  'phase',
+  ...TOOL_FIELDS,
+  'implementationGuidance',
+]);
+const SOURCE_AVAILABLE_TOOL_SUFFIX = /\([^();\r\n]+;\s*(?:source-available|open-weight)\)$/i;
+const GUIDANCE_ID = /^AID-(?:M|H|D|I|DV|E|R)-\d{3}(?:\.\d{3})?-G\d{3}$/;
+const TECHNIQUE_ID = /^AID-(?:M|H|D|I|DV|E|R)-\d{3}(?:\.\d{3})?$/;
+const LEGACY_GUIDANCE_REFERENCE = /\bAID-(?:M|H|D|I|DV|E|R)-\d{3}(?:\.\d{3})?#\d+\b/g;
+const CANONICAL_GUIDANCE_REFERENCE = /\bAID-(?:M|H|D|I|DV|E|R)-\d{3}(?:\.\d{3})?-G\d{3}\b/g;
+const observedGuidanceIds = new Set();
+const observedGuidanceReferences = new Set();
+const observedTechniqueIds = new Set();
+const observedScopeBoundaryReferences = [];
+
+function isPlainObject(value) {
+  return value && typeof value === 'object' && !Array.isArray(value);
+}
+
+function containsHtml(value) {
+  return /<[^>]+>/.test(value);
+}
+
+function registerTechniqueId(unit, file) {
+  if (observedTechniqueIds.has(unit.id)) {
+    throw new Error(`${file}: duplicate technique ID ${unit.id}`);
+  }
+  observedTechniqueIds.add(unit.id);
+}
+
+function validateScopeBoundary(unit, file) {
+  if (!Object.prototype.hasOwnProperty.call(unit, 'scopeBoundary')) return;
+
+  const boundary = unit.scopeBoundary;
+  const expectedBoundaryKeys = ['relatedTechniques', 'responsibility'];
+  if (!isPlainObject(boundary) ||
+      Object.keys(boundary).sort().join(',') !== expectedBoundaryKeys.join(',')) {
+    throw new Error(
+      `${file}: ${unit.id} scopeBoundary must contain exactly responsibility and relatedTechniques`
+    );
+  }
+  if (typeof boundary.responsibility !== 'string' || !boundary.responsibility.trim()) {
+    throw new Error(`${file}: ${unit.id} scopeBoundary.responsibility must be non-empty plain text`);
+  }
+  if (containsHtml(boundary.responsibility)) {
+    throw new Error(`${file}: ${unit.id} scopeBoundary.responsibility must not contain HTML`);
+  }
+  if (!Array.isArray(boundary.relatedTechniques)) {
+    throw new Error(`${file}: ${unit.id} scopeBoundary.relatedTechniques must be an array`);
+  }
+
+  const relatedIds = new Set();
+  for (const [index, related] of boundary.relatedTechniques.entries()) {
+    const expectedRelatedKeys = ['comparison', 'id'];
+    if (!isPlainObject(related) ||
+        Object.keys(related).sort().join(',') !== expectedRelatedKeys.join(',')) {
+      throw new Error(
+        `${file}: ${unit.id} scopeBoundary.relatedTechniques[${index}] must contain exactly id and comparison`
+      );
+    }
+    if (typeof related.id !== 'string' || !TECHNIQUE_ID.test(related.id)) {
+      throw new Error(
+        `${file}: ${unit.id} scopeBoundary.relatedTechniques[${index}].id is not a canonical AIDEFEND ID`
+      );
+    }
+    if (related.id === unit.id) {
+      throw new Error(`${file}: ${unit.id} scopeBoundary must not compare a technique with itself`);
+    }
+    if (relatedIds.has(related.id)) {
+      throw new Error(`${file}: ${unit.id} scopeBoundary repeats related technique ${related.id}`);
+    }
+    relatedIds.add(related.id);
+    if (typeof related.comparison !== 'string' || !related.comparison.trim()) {
+      throw new Error(
+        `${file}: ${unit.id} scopeBoundary comparison for ${related.id} must be non-empty plain text`
+      );
+    }
+    if (containsHtml(related.comparison)) {
+      throw new Error(
+        `${file}: ${unit.id} scopeBoundary comparison for ${related.id} must not contain HTML`
+      );
+    }
+    observedScopeBoundaryReferences.push({
+      sourceId: unit.id,
+      targetId: related.id,
+      file,
+    });
+  }
+}
+
+function validateScopeBoundaryReferences() {
+  const missing = observedScopeBoundaryReferences
+    .filter(reference => !observedTechniqueIds.has(reference.targetId))
+    .map(reference => `${reference.sourceId}->${reference.targetId} (${reference.file})`)
+    .sort();
+  if (missing.length > 0) {
+    throw new Error(`Scope-boundary references do not resolve: ${missing.join(', ')}`);
+  }
+}
+
+function validateLeafToolArrays(unit, file) {
+  for (const field of TOOL_FIELDS) {
+    if (!Object.prototype.hasOwnProperty.call(unit, field)) continue;
+    const tools = unit[field];
+    if (!Array.isArray(tools)) {
+      throw new Error(`${file}: ${unit.id} ${field} must be an array`);
+    }
+    if (tools.length === 0) {
+      throw new Error(`${file}: ${unit.id} ${field} must be omitted instead of using an empty array`);
+    }
+    const normalized = [];
+    for (const tool of tools) {
+      if (typeof tool !== 'string' || !tool.trim()) {
+        throw new Error(`${file}: ${unit.id} ${field} must contain only non-empty strings`);
+      }
+      const value = tool.trim();
+      if (field === 'toolsSourceAvailable' && !SOURCE_AVAILABLE_TOOL_SUFFIX.test(value)) {
+        throw new Error(
+          `${file}: ${unit.id} toolsSourceAvailable entry must end with ` +
+          '`(<license>; source-available)` or `(<license>; open-weight)`: ' + value
+        );
+      }
+      normalized.push(value);
+    }
+    if (new Set(normalized).size !== normalized.length) {
+      throw new Error(`${file}: ${unit.id} ${field} contains duplicate tool entries`);
+    }
+  }
+}
+
+function validateActionableControl(unit, file) {
+  for (const field of ['pillar', 'phase']) {
+    if (!Array.isArray(unit[field]) || unit[field].length === 0 ||
+        unit[field].some(value => typeof value !== 'string' || !value.trim())) {
+      throw new Error(`${file}: ${unit.id} actionable control must define a non-empty ${field} array`);
+    }
+  }
+  if (!Array.isArray(unit.implementationGuidance) || unit.implementationGuidance.length === 0) {
+    throw new Error(`${file}: ${unit.id} actionable control must define implementationGuidance`);
+  }
+  for (const [index, guidance] of unit.implementationGuidance.entries()) {
+    const expectedId = `${unit.id}-G${String(index + 1).padStart(3, '0')}`;
+    if (!guidance || typeof guidance !== 'object' || Array.isArray(guidance) ||
+        guidance.id !== expectedId || !GUIDANCE_ID.test(guidance.id)) {
+      throw new Error(
+        `${file}: ${unit.id} guidance ${index + 1} must use canonical ID ${expectedId}`
+      );
+    }
+    if (observedGuidanceIds.has(guidance.id)) {
+      throw new Error(`${file}: duplicate guidance ID ${guidance.id}`);
+    }
+    observedGuidanceIds.add(guidance.id);
+    if (typeof guidance.implementation !== 'string' || !guidance.implementation.trim() ||
+        typeof guidance.howTo !== 'string' || !guidance.howTo.trim()) {
+      throw new Error(`${file}: ${guidance.id} must define non-empty implementation and howTo strings`);
+    }
+    const guidanceText = `${guidance.implementation}\n${guidance.howTo}`;
+    const legacyReferences = guidanceText.match(LEGACY_GUIDANCE_REFERENCE) || [];
+    if (legacyReferences.length > 0) {
+      throw new Error(
+        `${file}: ${guidance.id} uses legacy guidance reference syntax: ${legacyReferences.join(', ')}`
+      );
+    }
+    for (const reference of guidanceText.match(CANONICAL_GUIDANCE_REFERENCE) || []) {
+      observedGuidanceReferences.add(reference);
+    }
+  }
+  validateLeafToolArrays(unit, file);
+}
+
+function validateGuidanceReferences() {
+  const missing = [...observedGuidanceReferences]
+    .filter(reference => !observedGuidanceIds.has(reference))
+    .sort();
+  if (missing.length > 0) {
+    throw new Error(`Guidance cross-references do not resolve: ${missing.join(', ')}`);
+  }
+}
+
+function isNotApplicableMapping(item) {
+  return /^N\/A(?:\s+\([^\r\n]+\))?$/i.test(String(item || '').trim());
+}
+
+function mappingItemsForFramework(unit, framework) {
+  const entry = (unit.defendsAgainst || []).find(mapping => mapping?.framework === framework);
+  return (entry?.items || []).map(item => String(item).trim()).filter(Boolean);
+}
+
+function validateParentMappingUnion(parent, file) {
+  const frameworks = (parent.defendsAgainst || []).map(mapping => mapping?.framework).filter(Boolean);
+  for (const framework of frameworks) {
+    const parentItems = mappingItemsForFramework(parent, framework);
+    const parentValid = parentItems.filter(item => !isNotApplicableMapping(item));
+    const childValid = parent.subTechniques.flatMap(child =>
+      mappingItemsForFramework(child, framework).filter(item => !isNotApplicableMapping(item))
+    );
+
+    if (childValid.length === 0) {
+      if (parentValid.length !== 0 || parentItems.length !== 1 || !isNotApplicableMapping(parentItems[0])) {
+        throw new Error(
+          `${file}: ${parent.id} ${framework} must be N/A because every child is N/A`
+        );
+      }
+      continue;
+    }
+    if (parentItems.some(isNotApplicableMapping)) {
+      throw new Error(`${file}: ${parent.id} ${framework} cannot be N/A when a child has a mapping`);
+    }
+
+    for (const childItem of childValid) {
+      const represented = parentValid.some(parentItem =>
+        childItem === parentItem || childItem.startsWith(`${parentItem} (`)
+      );
+      if (!represented) {
+        throw new Error(
+          `${file}: ${parent.id} ${framework} parent union is missing child mapping: ${childItem}`
+        );
+      }
+    }
+    for (const parentItem of parentValid) {
+      const supported = childValid.some(childItem =>
+        childItem === parentItem || childItem.startsWith(`${parentItem} (`)
+      );
+      if (!supported) {
+        throw new Error(
+          `${file}: ${parent.id} ${framework} parent union introduces a mapping absent from all children: ${parentItem}`
+        );
+      }
+    }
+  }
+}
+
 /**
- * Parse a JavaScript file containing an exported tactic object
+ * Load the same ESM export consumed by the browser and main.js.
+ *
+ * Tactic modules may deliberately centralize repeated guidance fragments and
+ * apply fail-closed integrity checks while constructing their exported data.
+ * Re-parsing only the object-literal substring would bypass that executable
+ * construction and could make data.json differ from the live framework.
  */
-function parseTacticFile(filePath, exportName) {
-  const content = fs.readFileSync(filePath, 'utf-8');
+async function loadTacticFile(filePath, exportName) {
+  const moduleUrl = pathToFileURL(filePath).href;
+  const tacticModule = await import(moduleUrl);
+  const tacticData = tacticModule[exportName];
 
-  const regex = new RegExp(`export\\s+const\\s+${exportName}\\s*=\\s*`);
-  const match = content.match(regex);
-
-  if (!match) {
-    throw new Error(`Could not find export '${exportName}' in ${filePath}`);
+  if (!tacticData || typeof tacticData !== 'object' || Array.isArray(tacticData)) {
+    throw new Error(`Could not load object export '${exportName}' from ${filePath}`);
   }
 
-  const startPos = match.index + match[0].length;
+  return tacticData;
+}
 
-  // Extract the object by matching braces
-  let depth = 0;
-  let inString = false;
-  let stringChar = null;
-  let escaped = false;
-  let objectEnd = -1;
-
-  for (let i = startPos; i < content.length; i++) {
-    const char = content[i];
-
-    if (escaped) {
-      escaped = false;
+/**
+ * Parent techniques are meaningful only when they group multiple independently
+ * selectable control objectives. A one-child parent must be flattened instead
+ * of preserving a redundant hierarchy.
+ */
+function validateTechniqueHierarchy(tacticData, file) {
+  for (const technique of tacticData.techniques || []) {
+    registerTechniqueId(technique, file);
+    validateScopeBoundary(technique, file);
+    if (!Object.prototype.hasOwnProperty.call(technique, 'subTechniques')) {
+      validateActionableControl(technique, file);
       continue;
     }
-
-    if (char === '\\') {
-      escaped = true;
-      continue;
+    if (!Array.isArray(technique.subTechniques)) {
+      throw new Error(`${file}: ${technique.id} subTechniques must be an array`);
     }
-
-    if (inString) {
-      if (char === stringChar) {
-        inString = false;
-        stringChar = null;
-      }
-      continue;
+    if (technique.subTechniques.length < 2) {
+      throw new Error(
+        `${file}: ${technique.id} has ${technique.subTechniques.length} sub-technique(s); ` +
+        'flatten a single actionable child into the parent ID or define at least two independent control objectives'
+      );
     }
-
-    if (char === '"' || char === "'" || char === '`') {
-      inString = true;
-      stringChar = char;
-      continue;
-    }
-
-    if (char === '{') {
-      depth++;
-    } else if (char === '}') {
-      depth--;
-      if (depth === 0) {
-        objectEnd = i + 1;
-        break;
+    for (const field of PARENT_FORBIDDEN_FIELDS) {
+      if (Object.prototype.hasOwnProperty.call(technique, field)) {
+        throw new Error(`${file}: ${technique.id} parent technique must not define ${field}`);
       }
     }
-  }
+    let previousOrdinal = 0;
+    for (const subTechnique of technique.subTechniques) {
+      registerTechniqueId(subTechnique, file);
+      validateScopeBoundary(subTechnique, file);
+      if (!String(subTechnique.id || '').startsWith(`${technique.id}.`)) {
+        throw new Error(`${file}: ${subTechnique.id || '<missing-id>'} does not extend parent ${technique.id}`);
+      }
+      const ordinalMatch = String(subTechnique.id).match(/\.(\d{3})$/);
+      const ordinal = ordinalMatch ? Number.parseInt(ordinalMatch[1], 10) : 0;
+      if (!ordinal || ordinal <= previousOrdinal) {
+        throw new Error(`${file}: ${subTechnique.id} must be in strictly increasing sub-technique order`);
+      }
 
-  if (objectEnd === -1) {
-    throw new Error(`Could not parse object in ${filePath}`);
-  }
-
-  const objectStr = content.slice(startPos, objectEnd);
-
-  try {
-    const parsed = new Function(`return ${objectStr}`)();
-    return parsed;
-  } catch (e) {
-    throw new Error(`Failed to parse object in ${filePath}: ${e.message}`);
+      previousOrdinal = ordinal;
+      validateActionableControl(subTechnique, file);
+    }
+    validateParentMappingUnion(technique, file);
   }
 }
 
@@ -484,6 +725,7 @@ function extractDefenseKeywords(technique) {
 
   const toolsText = [
     ...(technique.toolsOpenSource || []),
+    ...(technique.toolsSourceAvailable || []),
     ...(technique.toolsCommercial || []),
   ].join(' ').toLowerCase();
 
@@ -569,7 +811,7 @@ function extractKeywords(technique) {
  * Used for cache invalidation: if the hash changes, keywords should be regenerated.
  */
 function computeContentHash(tech) {
-  const content = JSON.stringify({
+  const semanticContent = {
     description: tech.description || '',
     implementationGuidance: (tech.implementationGuidance || []).map(g =>
       typeof g === 'object' ? (g.implementation || '') : g
@@ -577,7 +819,14 @@ function computeContentHash(tech) {
     defendsAgainst: tech.defendsAgainst || [],
     toolsOpenSource: tech.toolsOpenSource || [],
     toolsCommercial: tech.toolsCommercial || [],
-  });
+  };
+  if (tech.scopeBoundary) {
+    semanticContent.scopeBoundary = tech.scopeBoundary;
+  }
+  if (Array.isArray(tech.toolsSourceAvailable) && tech.toolsSourceAvailable.length > 0) {
+    semanticContent.toolsSourceAvailable = tech.toolsSourceAvailable;
+  }
+  const content = JSON.stringify(semanticContent);
   return createHash('sha256').update(content).digest('hex').substring(0, 16);
 }
 
@@ -689,6 +938,7 @@ function transformSubTechnique(subTech) {
   const implGuidance = (subTech.implementationGuidance || []).map(
     strat => strat.implementation || strat.name || ''
   ).filter(Boolean);
+  const implGuidanceIds = (subTech.implementationGuidance || []).map(strat => strat.id);
 
   // Compute content hash and keywords inline so they appear in
   // natural reading order (after tools/defendsAgainst, before closing).
@@ -700,6 +950,7 @@ function transformSubTechnique(subTech) {
     implementationGuidance: implGuidance,
     defendsAgainst: subTech.defendsAgainst || [],
     toolsOpenSource: subTech.toolsOpenSource || [],
+    toolsSourceAvailable: subTech.toolsSourceAvailable || [],
     toolsCommercial: subTech.toolsCommercial || [],
   };
   const keywords = getKeywords(partialForKeywords, contentHash);
@@ -708,10 +959,13 @@ function transformSubTechnique(subTech) {
     id: subTech.id,
     name: subTech.name,
     description: subTech.description || '',
-    pillar: Array.isArray(subTech.pillar) ? subTech.pillar : [subTech.pillar].filter(Boolean),
-    phase: Array.isArray(subTech.phase) ? subTech.phase : [subTech.phase].filter(Boolean),
+    ...(subTech.scopeBoundary ? { scopeBoundary: subTech.scopeBoundary } : {}),
+    pillar: [...subTech.pillar],
+    phase: [...subTech.phase],
     implementationGuidance: implGuidance,
+    implementationGuidanceIds: implGuidanceIds,
     toolsOpenSource: subTech.toolsOpenSource || [],
+    toolsSourceAvailable: subTech.toolsSourceAvailable || [],
     toolsCommercial: subTech.toolsCommercial || [],
     defendsAgainst: subTech.defendsAgainst || [],
     contentHash,
@@ -732,7 +986,7 @@ function transformTechnique(tech, tacticId) {
 
   if (techPillar) {
     // Standalone technique (Pattern B) — preserve full array
-    pillar = Array.isArray(techPillar) ? techPillar : [techPillar].filter(Boolean);
+    pillar = [...techPillar];
   } else if (subs.length > 0) {
     // Parent technique (Pattern A) — aggregate deduplicated union from all sub-techniques
     const allPillars = new Set();
@@ -741,13 +995,13 @@ function transformTechnique(tech, tacticId) {
       if (Array.isArray(p)) p.forEach(v => allPillars.add(v));
       else if (p) allPillars.add(p);
     });
-    pillar = allPillars.size > 0 ? [...allPillars] : [derivePillarFromId(tech.id)];
+    pillar = [...allPillars];
   } else {
-    pillar = [derivePillarFromId(tech.id)];
+    throw new Error(`${tech.id} standalone technique is missing pillar after source validation`);
   }
 
   if (techPhase) {
-    phase = Array.isArray(techPhase) ? techPhase : [techPhase].filter(Boolean);
+    phase = [...techPhase];
   } else if (subs.length > 0) {
     const allPhases = new Set();
     subs.forEach(s => {
@@ -755,15 +1009,16 @@ function transformTechnique(tech, tacticId) {
       if (Array.isArray(p)) p.forEach(v => allPhases.add(v));
       else if (p) allPhases.add(p);
     });
-    phase = allPhases.size > 0 ? [...allPhases] : ['operation'];
+    phase = [...allPhases];
   } else {
-    phase = ['operation'];
+    throw new Error(`${tech.id} standalone technique is missing phase after source validation`);
   }
 
   // Get implementation strategies from technique level if present
   const techStrategies = (tech.implementationGuidance || []).map(
     strat => strat.implementation || strat.name || ''
   ).filter(Boolean);
+  const techStrategyIds = (tech.implementationGuidance || []).map(strat => strat.id);
 
   // Compute content hash and keywords before building the final object
   // so they appear before subTechniques in JSON output for readability.
@@ -775,6 +1030,7 @@ function transformTechnique(tech, tacticId) {
     implementationGuidance: techStrategies,
     defendsAgainst: tech.defendsAgainst || [],
     toolsOpenSource: tech.toolsOpenSource || [],
+    toolsSourceAvailable: tech.toolsSourceAvailable || [],
     toolsCommercial: tech.toolsCommercial || [],
   };
   const keywords = getKeywords(partialForKeywords, contentHash);
@@ -783,29 +1039,21 @@ function transformTechnique(tech, tacticId) {
     id: tech.id,
     name: tech.name,
     description: tech.description || '',
+    ...(tech.scopeBoundary ? { scopeBoundary: tech.scopeBoundary } : {}),
     pillar,
     phase,
     defendsAgainst: tech.defendsAgainst || [],
     implementationGuidance: techStrategies,
-    toolsOpenSource: tech.toolsOpenSource || [],
-    toolsCommercial: tech.toolsCommercial || [],
+    implementationGuidanceIds: techStrategyIds,
+    toolsOpenSource: subs.length > 0 ? [] : (tech.toolsOpenSource || []),
+    toolsSourceAvailable: subs.length > 0 ? [] : (tech.toolsSourceAvailable || []),
+    toolsCommercial: subs.length > 0 ? [] : (tech.toolsCommercial || []),
     contentHash,
     keywords,
     subTechniques: (tech.subTechniques || []).map(transformSubTechnique),
     url: 'https://aidefend.net',
   };
   return transformed;
-}
-
-/**
- * Fallback pillar when a technique has no pillar field.
- * Tactic codes (D, H, I, etc.) are orthogonal to pillar values
- * (data, model, infra, app), so no mapping is possible — return
- * a safe default and warn so the gap is visible.
- */
-function derivePillarFromId(id) {
-  console.warn(`[generate-dataset] WARNING: technique ${id} has no pillar — using fallback 'app'`);
-  return 'app';
 }
 
 /**
@@ -829,16 +1077,59 @@ function sha256(content) {
   return createHash('sha256').update(content).digest('hex').substring(0, 16);
 }
 
+function readCheckTimestamp() {
+  const dataPath = path.join(OUTPUT_DIR, 'data.json');
+  const indexPath = path.join(OUTPUT_DIR, 'tactics-index.json');
+  let data;
+  let index;
+  try {
+    data = JSON.parse(fs.readFileSync(dataPath, 'utf8'));
+    index = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
+  } catch (error) {
+    throw new Error(`Generated outputs are missing or invalid JSON: ${error.message}`);
+  }
+  const dataTimestamp = data?.version?.generatedAt;
+  const indexTimestamp = index?.version?.generatedAt;
+  if (
+    typeof dataTimestamp !== 'string' || dataTimestamp !== indexTimestamp ||
+    !Number.isFinite(Date.parse(dataTimestamp))
+  ) {
+    throw new Error('Generated outputs do not share one valid generatedAt timestamp');
+  }
+  return dataTimestamp;
+}
+
+function verifyOrWrite(pathname, expectedContent) {
+  if (!checkOnly) {
+    fs.writeFileSync(pathname, expectedContent);
+    return;
+  }
+  let observedContent;
+  try {
+    observedContent = fs.readFileSync(pathname, 'utf8');
+  } catch (error) {
+    throw new Error(`Generated output is unavailable: ${pathname}: ${error.message}`);
+  }
+  if (observedContent !== expectedContent) {
+    throw new Error(
+      `Generated output drifted: ${pathname}. Run node scripts/generate-dataset.js and commit the result.`
+    );
+  }
+}
+
 /**
  * Main function
  */
 async function main() {
-  console.log('AIDEFEND Dataset Generator v2.0');
+  console.log(`AIDEFEND Dataset Generator v2.3${checkOnly ? ' (check)' : ''}`);
   console.log('================================');
   console.log('Keywords: Defense mechanisms (flat)\n');
 
   // Ensure output directory exists
   if (!fs.existsSync(OUTPUT_DIR)) {
+    if (checkOnly) {
+      throw new Error(`Generated output directory is unavailable: ${OUTPUT_DIR}`);
+    }
     fs.mkdirSync(OUTPUT_DIR, { recursive: true });
   }
 
@@ -847,6 +1138,7 @@ async function main() {
   let totalSubTechniques = 0;
   let totalStrategies = 0;
   let totalKeywords = 0;
+  let processingErrors = 0;
 
   // Process each tactic file
   for (const { file, id, exportName } of TACTIC_FILES) {
@@ -860,7 +1152,8 @@ async function main() {
     console.log(`Processing ${file}...`);
 
     try {
-      const tacticData = parseTacticFile(filePath, exportName);
+      const tacticData = await loadTacticFile(filePath, exportName);
+      validateTechniqueHierarchy(tacticData, file);
       const transformed = transformTactic(tacticData, id);
       tactics.push(transformed);
 
@@ -890,7 +1183,27 @@ async function main() {
       console.log(`     Keywords: ${kwCount}`);
     } catch (e) {
       console.error(`Error processing ${file}: ${e.message}`);
+      processingErrors++;
     }
+  }
+
+  if (processingErrors > 0) {
+    console.error(`\nGeneration aborted: ${processingErrors} tactic file(s) failed loading or hierarchy validation.`);
+    process.exit(1);
+  }
+
+  try {
+    validateGuidanceReferences();
+  } catch (error) {
+    console.error(`\nGeneration aborted: ${error.message}`);
+    process.exit(1);
+  }
+
+  try {
+    validateScopeBoundaryReferences();
+  } catch (error) {
+    console.error(`\nGeneration aborted: ${error.message}`);
+    process.exit(1);
   }
 
   if (keywordValidationErrors.length > 0) {
@@ -913,11 +1226,16 @@ async function main() {
   }
 
   // Create dataset
-  const now = new Date().toISOString();
+  const now = checkOnly ? readCheckTimestamp() : new Date().toISOString();
+  const versionMatch = /^1\.(\d{4})(\d{2})(\d{2})$/.exec(aidefendVersion);
+  if (!versionMatch) {
+    throw new Error(`Invalid AIDEFEND release version: ${aidefendVersion}`);
+  }
+  const dataVersion = `${versionMatch[1]}.${versionMatch[2]}.${versionMatch[3]}`;
   const dataset = {
     version: {
-      schemaVersion: '2.0',
-      dataVersion: now.split('T')[0].replace(/-/g, '.'),
+      schemaVersion: '2.3',
+      dataVersion,
       generatedAt: now,
       source: 'bundled',
       keywordStructure: 'flat',
@@ -932,12 +1250,12 @@ async function main() {
 
   // Write data.json
   const dataPath = path.join(OUTPUT_DIR, 'data.json');
-  fs.writeFileSync(dataPath, content);
+  verifyOrWrite(dataPath, content);
 
   // Generate tactics-index.json (lightweight skeleton for fast initial rendering)
   const tacticsIndex = {
     version: {
-      schemaVersion: '2.0',
+      schemaVersion: '2.3',
       generatedAt: now,
     },
     tactics: tactics.map(tactic => ({
@@ -966,10 +1284,10 @@ async function main() {
   };
   const indexContent = JSON.stringify(tacticsIndex);
   const indexPath = path.join(OUTPUT_DIR, 'tactics-index.json');
-  fs.writeFileSync(indexPath, indexContent);
+  verifyOrWrite(indexPath, indexContent);
 
   console.log('\n================================');
-  console.log('Generation complete!\n');
+  console.log(checkOnly ? 'Generated outputs verified!\n' : 'Generation complete!\n');
   console.log(`Keyword lock: validated ${Object.keys(keywordCache).length} entries → ${CACHE_PATH}`);
   console.log(`Tactics: ${tactics.length}`);
   console.log(`Techniques: ${totalTechniques}`);
@@ -984,4 +1302,7 @@ async function main() {
   console.log(`Index size: ${(indexContent.length / 1024).toFixed(1)} KB`);
 }
 
-main().catch(console.error);
+main().catch(error => {
+  console.error(error);
+  process.exitCode = 1;
+});

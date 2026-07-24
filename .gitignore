@@ -3,16 +3,47 @@ AGENTS.md
 data-schema.md
 
 node_modules/
-package.json
 package-lock.json
 LOCAL_AUDIT_README.md
 *.log
 *.tmp
+*.bak
+*.swp
 _debug*
 .vscode/
+.idea/
+.fleet/
+
+# Local AI/agent workspaces
+.agents/
+.codex/
+
+# Secrets and local credentials
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.pfx
+*.jks
+*.keystore
+secrets/
+credentials/
+
+# Test output and OS metadata
+coverage/
+.nyc_output/
+.DS_Store
+Thumbs.db
 
 # Dev tools (local only)
 devtools/
+scripts/sync-framework-view-data.cjs
+
+# Maintainer-only validation and release gates
+.github/workflows/howto-high-confidence.yml
+scripts/ci/
 
 # Local settings
 .claude/

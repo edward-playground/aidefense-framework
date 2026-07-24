@@ -43,6 +43,8 @@
     --view-switcher-btn-text: #5a4b48;
     --view-switcher-btn-active-bg: #3f51b5;
     --view-switcher-btn-active-text: #ffffff;
+    --guidance-active-bg: #dce9f5;
+    --scope-boundary-emphasis-color: #241f20;
 }
 
 html[data-theme="dark"] {
@@ -89,6 +91,8 @@ html[data-theme="dark"] {
     --view-switcher-btn-text: #e0e0e0;
     --view-switcher-btn-active-bg: #90caf9;
     --view-switcher-btn-active-text: #121212;
+    --guidance-active-bg: #1e3a5f;
+    --scope-boundary-emphasis-color: #ffffff;
 }
 
 html[data-theme="retro"] {
@@ -136,6 +140,8 @@ html[data-theme="retro"] {
     --view-switcher-btn-text: #00cc33;
     --view-switcher-btn-active-bg: #00ff41;
     --view-switcher-btn-active-text: #0a0a0a;
+    --guidance-active-bg: #0a2a0a;
+    --scope-boundary-emphasis-color: #ccffd8;
 }
 
 html[data-theme="highcontrast"] {
@@ -187,6 +193,8 @@ html[data-theme="highcontrast"] {
     --view-switcher-btn-text: #ffffff;
     --view-switcher-btn-active-bg: #ffd700;
     --view-switcher-btn-active-text: #000000;
+    --guidance-active-bg: #2a2500;
+    --scope-boundary-emphasis-color: #ffffff;
 }
 
 /* High Contrast — additional accessibility rules (WCAG 2.1 / Material Design)

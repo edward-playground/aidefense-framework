@@ -678,6 +678,49 @@ body.modal-open {
     padding-right: 5.5rem;
 }
 
+.control-unit-note {
+    margin: -0.25rem 0 1rem;
+    padding: 0.7rem 0.85rem;
+    border: 1px solid var(--column-border);
+    border-left-width: 4px;
+    border-radius: 0.45rem;
+    background-color: var(--column-bg);
+    color: var(--text-color);
+    font-size: 0.8rem;
+    line-height: 1.5;
+}
+
+.control-unit-note.family {
+    border-left-color: #f59e0b;
+}
+
+.control-unit-note.actionable {
+    border-left-color: #22c55e;
+}
+
+.control-unit-note.actionable {
+    padding-bottom: 0.45rem;
+}
+
+.control-unit-note summary {
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.control-unit-note summary:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 3px;
+    border-radius: 0.15rem;
+}
+
+.control-unit-note-detail {
+    margin: 0.55rem 0 0;
+}
+
+.control-unit-note .control-unit-note-detail {
+    margin-bottom: 0;
+}
+
 .modal-content h3 {
     font-size: 1.25rem;
     font-weight: 500;
@@ -707,6 +750,119 @@ body.modal-open {
     font-size: 0.9375rem;
     line-height: 1.7;
     margin-bottom: 1rem;
+}
+
+.modal-content .scope-boundary-section {
+    margin: 0 0 1rem;
+}
+
+.modal-content .scope-boundary-title {
+    margin: 0 0 0.55rem;
+    font-size: 1rem;
+    font-weight: 650;
+    color: var(--text-color);
+}
+
+.scope-boundary-table-wrap {
+    overflow: hidden;
+    border: 1px solid var(--search-border);
+    border-radius: 0.55rem;
+}
+
+.scope-boundary-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    font-size: 0.875rem;
+    line-height: 1.55;
+}
+
+.scope-boundary-table .scope-boundary-label-column {
+    width: 26%;
+}
+
+.scope-boundary-table .scope-boundary-description-column {
+    width: 74%;
+}
+
+.scope-boundary-table tr + tr {
+    border-top: 1px solid var(--search-border);
+}
+
+.scope-boundary-table th,
+.scope-boundary-table td {
+    padding: 0.75rem 0.85rem;
+    text-align: left;
+    vertical-align: top;
+}
+
+.scope-boundary-table th {
+    border-right: 1px solid var(--search-border);
+    background: var(--search-bg);
+    font-size: 0.82rem;
+    font-weight: 650;
+    white-space: normal;
+}
+
+.scope-boundary-label {
+    display: block;
+    font-weight: 400;
+}
+
+.scope-boundary-label-text {
+    overflow-wrap: anywhere;
+}
+
+.scope-boundary-current-id,
+.scope-boundary-related-id {
+    font-weight: 700;
+}
+
+.scope-boundary-related-technique {
+    overflow-wrap: anywhere;
+}
+
+.scope-boundary-deep-link {
+    display: inline;
+    color: inherit;
+}
+
+.scope-boundary-deep-link:hover,
+.scope-boundary-deep-link:focus-visible {
+    color: var(--link-color);
+}
+
+.scope-boundary-deep-link:focus-visible {
+    outline: 2px solid var(--search-focus-ring);
+    outline-offset: 2px;
+    border-radius: 0.15rem;
+}
+
+.scope-boundary-deep-link svg {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+}
+
+.scope-boundary-table td {
+    color: var(--text-color);
+    overflow-wrap: anywhere;
+}
+
+.scope-boundary-key-difference {
+    display: block;
+    margin-bottom: 0.35rem;
+    color: var(--scope-boundary-emphasis-color);
+    font-weight: 700;
+}
+
+.scope-boundary-comparison-detail {
+    display: block;
+}
+
+.scope-boundary-table .scope-boundary-current th {
+    color: var(--link-color);
 }
 
 .modal-content ul {
@@ -828,6 +984,22 @@ body.modal-open {
     }
     .modal-subtitle {
         padding-right: 4rem;
+    }
+    .scope-boundary-table {
+        font-size: 0.82rem;
+    }
+    .scope-boundary-table .scope-boundary-label-column {
+        width: 34%;
+    }
+    .scope-boundary-table .scope-boundary-description-column {
+        width: 66%;
+    }
+    .scope-boundary-table th {
+        font-size: 0.74rem;
+    }
+    .scope-boundary-table th,
+    .scope-boundary-table td {
+        padding: 0.55rem;
     }
 }
 
@@ -1065,14 +1237,79 @@ body.modal-open {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
     padding: 0.75rem 0.5rem;
+    border: 0;
+    border-radius: 0.4rem;
+    appearance: none;
+    background-color: transparent;
+    color: var(--text-color);
     cursor: pointer;
+    font-family: inherit;
     font-size: 0.9rem;
     font-weight: 500;
+    line-height: inherit;
+    text-align: left;
+    transition: background-color 0.18s ease, color 0.18s ease,
+        font-weight 0.18s ease;
 }
 
 .guidance-accordion-header:hover {
+    background-color: var(--technique-item-hover-bg);
     color: var(--technique-item-hover-text);
+}
+
+.guidance-accordion-header:focus-visible {
+    outline: 2px solid var(--search-focus-ring);
+    outline-offset: 2px;
+}
+
+.guidance-accordion-header.active,
+.guidance-accordion-header.active:hover {
+    background-color: var(--guidance-active-bg);
+    color: var(--text-color);
+    font-weight: 600;
+}
+
+.guidance-accordion-header > span {
+    flex: 1;
+    min-width: 0;
+}
+
+/* Option A: guidance ID row inside the expanded body, with deep-link + copy buttons. */
+.guidance-id-label {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.35rem;
+    margin-bottom: 0.85rem;
+    font-size: 0.85rem;
+    opacity: 0.8;
+}
+.guidance-id-label .guidance-id-text {
+    margin-right: 0.1rem;
+}
+.guidance-id-label code {
+    font-size: 0.8rem;
+    padding: 0.1rem 0.35rem;
+    border-radius: 0.3rem;
+    background: rgba(127, 127, 127, 0.16);
+    word-break: break-all;
+}
+.guidance-id-label .link-btn,
+.guidance-id-label .copy-btn {
+    width: 1.4rem;
+    height: 1.4rem;
+    padding: 0.2rem;
+}
+
+/* Brief highlight when a guidance item is opened via a deep link (#t=...&g=...). */
+.guidance-deeplink-flash {
+    animation: guidanceFlash 2s ease;
+}
+@keyframes guidanceFlash {
+    0%, 100% { background-color: transparent; }
+    12% { background-color: rgba(127, 127, 127, 0.30); }
 }
 
 .guidance-accordion-icon {

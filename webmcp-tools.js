@@ -6,7 +6,7 @@
  * to query the AIDEFEND AI security defense framework.
  * 
  * PUBLIC FRAMEWORK — These tools expose read-only access to the
- * AIDEFEND open-source AI security defense knowledge base.
+ * AIDEFEND openly licensed AI security defense knowledge base.
  * The first version focuses on 5 core query tools for stability
  * and simplicity. Additional tools may be added in future versions.
  * 
@@ -19,19 +19,20 @@
  * 
  * @see https://aidefend.net
  * @see https://webmachinelearning.github.io/webmcp/
- * @version 1.0.0
+ * @version 1.3.0
  */
 
-// Verify the latest stable version at https://www.npmjs.com/package/@mcp-b/global
-// Record tested/verified versions here
-import 'https://esm.sh/@mcp-b/global@1.5.0';
+// Version-locked polyfill verified against the current document.modelContext
+// WebMCP surface. Keep this pin explicit so API drift is caught in review.
+import 'https://esm.sh/@mcp-b/global@4.0.0';
 
 // Guard check: verify API availability after polyfill loads
-if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'function') {
-    console.warn('[AIDEFEND WebMCP] navigator.modelContext not available. WebMCP tools will not be registered.');
+if (!document.modelContext || typeof document.modelContext.registerTool !== 'function') {
+    console.warn('[AIDEFEND WebMCP] document.modelContext not available. WebMCP tools will not be registered.');
 } else {
     // Only dynamically import data and register tools after the guard passes
     const { aidefendData } = await import('./main.js');
+    const { aidefendVersion } = await import('./aidefend-intro.js');
 
     // =========================================================================
     //  Helper Functions
@@ -69,6 +70,31 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
     function normalizeForSearch(text) {
         if (!text) return '';
         return stripHtml(text).toLowerCase();
+    }
+
+    function cleanScopeBoundary(scopeBoundary) {
+        if (!scopeBoundary || typeof scopeBoundary.responsibility !== 'string') {
+            return null;
+        }
+        return {
+            responsibility: scopeBoundary.responsibility.trim(),
+            relatedTechniques: (Array.isArray(scopeBoundary.relatedTechniques)
+                ? scopeBoundary.relatedTechniques
+                : []
+            ).map(related => ({
+                id: related.id,
+                comparison: related.comparison
+            }))
+        };
+    }
+
+    function scopeBoundarySearchText(scopeBoundary) {
+        const boundary = cleanScopeBoundary(scopeBoundary);
+        if (!boundary) return '';
+        return [
+            boundary.responsibility,
+            ...boundary.relatedTechniques.flatMap(related => [related.id, related.comparison])
+        ].join(' ');
     }
 
     /**
@@ -128,6 +154,35 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
         return { matched: false, tier: null, matches: [] };
     }
 
+    function collectThreatHits(entities, threat, classify) {
+        const hits = [];
+        const seen = new Set();
+        for (const entity of entities) {
+            const result = matchThreat(entity.defendsAgainst, threat);
+            if (!result.matched) continue;
+            const byFramework = {};
+            for (const match of result.matches) {
+                if (!byFramework[match.framework]) byFramework[match.framework] = [];
+                byFramework[match.framework].push(match.item);
+            }
+            for (const [framework, items] of Object.entries(byFramework)) {
+                const key = `${entity.id}|${framework}`;
+                if (seen.has(key)) continue;
+                seen.add(key);
+                hits.push({
+                    id: entity.id,
+                    name: entity.name,
+                    tactic: entity.tacticName,
+                    ...classify(entity),
+                    matchedFramework: framework,
+                    matchedItems: items,
+                    _tier: result.tier
+                });
+            }
+        }
+        return hits;
+    }
+
     /**
      * Filter defendsAgainst, removing N/A items and empty frameworks.
      * Returns a clean object keyed by framework name.
@@ -141,6 +196,13 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
             }
         }
         return result;
+    }
+
+    function canonicalToolName(value) {
+        return String(value || '')
+            .trim()
+            .replace(/\s+\([^)]*\)\s*$/, '')
+            .trim();
     }
 
     // =========================================================================
@@ -164,7 +226,10 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
         (tactic.techniques || []).map(tech => ({
             ...tech,
             tacticName: tactic.name,
-            _searchText: normalizeForSearch((tech.name || '') + ' ' + (tech.description || '')),
+            _searchText: normalizeForSearch(
+                (tech.name || '') + ' ' + (tech.description || '') + ' ' +
+                scopeBoundarySearchText(tech.scopeBoundary)
+            ),
             isLeaf: !tech.subTechniques || tech.subTechniques.length === 0
         }))
     );
@@ -177,7 +242,10 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
                 techniqueId: tech.id,
                 techniqueName: tech.name,
                 tacticName: tactic.name,
-                _searchText: normalizeForSearch((sub.name || '') + ' ' + (sub.description || ''))
+                _searchText: normalizeForSearch(
+                    (sub.name || '') + ' ' + (sub.description || '') + ' ' +
+                    scopeBoundarySearchText(sub.scopeBoundary)
+                )
             }))
         )
     );
@@ -207,6 +275,16 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
         })
     );
 
+    const parentFamilies = allTechniques.filter(technique => !technique.isLeaf);
+    const standaloneTechniques = allTechniques.filter(technique => technique.isLeaf);
+    const allTaxonomyEntities = [...allTechniques, ...allSubTechniques];
+    const taxonomyRowCount = allTechniques.length + allSubTechniques.length;
+    const actionableControlCount = allLeafNodes.length;
+
+    function resolveAidefendId(rawId) {
+        return { queryId: String(rawId || '').trim().toUpperCase() };
+    }
+
     // =========================================================================
     //  safeRegisterTool Wrapper
     // =========================================================================
@@ -214,9 +292,9 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
     let registeredCount = 0;
     let skippedCount = 0;
 
-    function safeRegisterTool(toolDef) {
+    async function safeRegisterTool(toolDef) {
         try {
-            navigator.modelContext.registerTool(toolDef);
+            await document.modelContext.registerTool(toolDef);
             registeredCount++;
         } catch (e) {
             if (e.name === 'InvalidStateError') {
@@ -232,12 +310,11 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
     //  Tool 1: search_techniques
     // =========================================================================
 
-    safeRegisterTool({
+    await safeRegisterTool({
         name: 'search_techniques',
-        description: "Search the AIDEFEND AI security defense framework by keyword. Searches across technique and sub-technique names and descriptions. Returns matching IDs, names, parent tactic, and sub-technique counts. Use this as the starting point to explore AIDEFEND's 298 defensive techniques/sub-techniques across 7 tactics (Model, Harden, Detect, Isolate, Deceive, Evict, Restore). Note: framework content is in English. If the user's query is in another language, translate it to English before calling this tool.",
+        description: `Search the AIDEFEND AI security defense framework by keyword. Searches ${taxonomyRowCount} taxonomy entities: ${parentFamilies.length} non-actionable parent families plus ${actionableControlCount} actionable standalone/sub-technique controls across 7 tactics. Results identify whether an entity is a parent family or an actionable control. Framework content is in English; translate non-English queries before calling this tool.`,
         annotations: {
-            readOnlyHint: true,
-            idempotentHint: true
+            readOnlyHint: true
         },
         inputSchema: {
             type: 'object',
@@ -269,6 +346,8 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
                     id: t.id,
                     name: t.name,
                     tactic: t.tacticName,
+                    entityType: t.isLeaf ? 'standaloneTechnique' : 'parentFamily',
+                    isActionable: t.isLeaf,
                     subTechniqueCount: (t.subTechniques || []).length
                 }));
 
@@ -279,7 +358,9 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
                     name: s.name,
                     parentTechniqueId: s.techniqueId,
                     parentTechniqueName: s.techniqueName,
-                    tactic: s.tacticName
+                    tactic: s.tacticName,
+                    entityType: 'subTechnique',
+                    isActionable: true
                 }));
 
                 const result = {
@@ -301,12 +382,11 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
     //  Tool 2: get_technique_detail
     // =========================================================================
 
-    safeRegisterTool({
+    await safeRegisterTool({
         name: 'get_technique_detail',
-        description: "Get full details of an AIDEFEND technique or sub-technique by its ID. Returns description, threat mappings across 9 security frameworks (MITRE ATLAS, OWASP LLM/ML/Agentic Top 10, MAESTRO, NIST AML, Cisco, Google SAIF 2.0, Databricks DASF 3.0), pillar/phase classification, and sub-technique list.",
+        description: "Get full details of an AIDEFEND technique or sub-technique by its ID. Returns description, optional structured scope boundary, threat mappings across 9 security frameworks (MITRE ATLAS, OWASP LLM/ML/Agentic Top 10, MAESTRO, NIST AML, Cisco, Google SAIF 2.0, Databricks DASF 3.0), pillar/phase classification, and sub-technique list.",
         annotations: {
-            readOnlyHint: true,
-            idempotentHint: true
+            readOnlyHint: true
         },
         inputSchema: {
             type: 'object',
@@ -321,7 +401,8 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
         },
         execute: async (args) => {
             try {
-                const queryId = (args.id || '').trim().toUpperCase();
+                const resolved = resolveAidefendId(args.id);
+                const { queryId } = resolved;
 
                 // Search in techniques first
                 const tech = allTechniques.find(t => t.id.toUpperCase() === queryId);
@@ -331,10 +412,14 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
                         const result = {
                             id: tech.id,
                             name: tech.name,
-                            entityType: 'technique',
+                            entityType: 'standaloneTechnique',
+                            isActionable: true,
                             isLeaf: true,
                             tactic: tech.tacticName,
                             description: stripHtml(tech.description),
+                            ...(tech.scopeBoundary ? {
+                                scopeBoundary: cleanScopeBoundary(tech.scopeBoundary)
+                            } : {}),
                             pillar: tech.pillar || [],
                             phase: tech.phase || [],
                             defendsAgainst: cleanDefendsAgainst(tech.defendsAgainst),
@@ -346,10 +431,15 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
                         const result = {
                             id: tech.id,
                             name: tech.name,
-                            entityType: 'technique',
+                            entityType: 'parentFamily',
+                            isActionable: false,
                             isLeaf: false,
+                            mappingSemantics: 'derivedChildUnionForNavigation',
                             tactic: tech.tacticName,
                             description: stripHtml(tech.description),
+                            ...(tech.scopeBoundary ? {
+                                scopeBoundary: cleanScopeBoundary(tech.scopeBoundary)
+                            } : {}),
                             defendsAgainst: cleanDefendsAgainst(tech.defendsAgainst),
                             subTechniques: (tech.subTechniques || []).map(s => ({
                                 id: s.id,
@@ -367,12 +457,16 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
                         id: sub.id,
                         name: sub.name,
                         entityType: 'subTechnique',
+                        isActionable: true,
                         parentTechniqueId: sub.techniqueId,
                         parentTechniqueName: sub.techniqueName,
                         tactic: sub.tacticName,
                         pillar: sub.pillar || [],
                         phase: sub.phase || [],
                         description: stripHtml(sub.description),
+                        ...(sub.scopeBoundary ? {
+                            scopeBoundary: cleanScopeBoundary(sub.scopeBoundary)
+                        } : {}),
                         defendsAgainst: cleanDefendsAgainst(sub.defendsAgainst)
                     };
                     return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
@@ -392,12 +486,11 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
     //  Tool 3: get_implementation_guide
     // =========================================================================
 
-    safeRegisterTool({
+    await safeRegisterTool({
         name: 'get_implementation_guide',
-        description: "Get practical implementation guidance for an AIDEFEND defense: step-by-step strategies with optional code examples, plus recommended open-source and commercial tools. Accepts technique ID (e.g. AID-H-001) or sub-technique ID (e.g. AID-H-001.002). Use mode='full' for detailed code examples.",
+        description: "Get practical implementation guidance for an AIDEFEND defense: step-by-step strategies with optional code examples, plus recommended OSI open-source, source-available/open-weight, and commercial/hosted tools. Accepts technique ID (e.g. AID-H-001) or sub-technique ID (e.g. AID-H-001.002). Use mode='full' for detailed code examples.",
         annotations: {
-            readOnlyHint: true,
-            idempotentHint: true
+            readOnlyHint: true
         },
         inputSchema: {
             type: 'object',
@@ -418,14 +511,15 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
         },
         execute: async (args) => {
             try {
-                const queryId = (args.id || '').trim().toUpperCase();
+                const resolved = resolveAidefendId(args.id);
+                const { queryId } = resolved;
                 const mode = args.mode || 'summary';
 
                 // Search in sub-techniques first
                 const sub = allSubTechniques.find(s => s.id.toUpperCase() === queryId);
                 if (sub) {
                     const strategies = (sub.implementationGuidance || []).map(s => {
-                        const entry = { implementation: s.implementation };
+                        const entry = { id: s.id, implementation: s.implementation };
                         if (mode === 'full' && s.howTo) {
                             entry.details = stripHtml(s.howTo);
                         }
@@ -435,11 +529,14 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
                     const result = {
                         id: sub.id,
                         name: sub.name,
+                        entityType: 'subTechnique',
+                        isActionable: true,
                         tactic: sub.tacticName,
                         pillar: sub.pillar || [],
                         phase: sub.phase || [],
                         strategies,
                         toolsOpenSource: sub.toolsOpenSource || [],
+                        toolsSourceAvailable: sub.toolsSourceAvailable || [],
                         toolsCommercial: sub.toolsCommercial || []
                     };
                     return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
@@ -452,18 +549,21 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
                     // guide the user to query individual sub-techniques
                     if (!tech.isLeaf && !(tech.implementationGuidance && tech.implementationGuidance.length > 0)) {
                         const subList = (tech.subTechniques || []).map(s => ({ id: s.id, name: s.name }));
-                        return { content: [{ type: 'text', text: JSON.stringify({
+                        const result = {
                             id: tech.id,
                             name: tech.name,
                             tactic: tech.tacticName,
+                            entityType: 'parentFamily',
+                            isActionable: false,
                             message: `This technique has ${subList.length} sub-techniques. Implementation guidance is available at the sub-technique level. Query each sub-technique ID for specific implementation guidance.`,
                             subTechniques: subList
-                        }, null, 2) }] };
+                        };
+                        return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
                     }
 
                     // Leaf technique or technique with its own implementationGuidance
                     const strategies = (tech.implementationGuidance || []).map(s => {
-                        const entry = { implementation: s.implementation };
+                        const entry = { id: s.id, implementation: s.implementation };
                         if (mode === 'full' && s.howTo) {
                             entry.details = stripHtml(s.howTo);
                         }
@@ -473,11 +573,14 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
                     const result = {
                         id: tech.id,
                         name: tech.name,
+                        entityType: 'standaloneTechnique',
+                        isActionable: true,
                         tactic: tech.tacticName,
                         pillar: tech.pillar || [],
                         phase: tech.phase || [],
                         strategies,
                         toolsOpenSource: tech.toolsOpenSource || [],
+                        toolsSourceAvailable: tech.toolsSourceAvailable || [],
                         toolsCommercial: tech.toolsCommercial || []
                     };
                     return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
@@ -497,12 +600,11 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
     //  Tool 4: find_defenses_by_threat
     // =========================================================================
 
-    safeRegisterTool({
+    await safeRegisterTool({
         name: 'find_defenses_by_threat',
-        description: "Find AIDEFEND defenses for a specific threat. Accepts threat IDs from any framework (e.g. 'AML.T0051', 'LLM01', 'LLM01:2025') or keywords (e.g. 'prompt injection', 'supply chain'). Uses smart matching: exact IDs matched first, then prefix/family, then keyword search. Note: framework content is in English. Translate non-English threat keywords to English before calling this tool.",
+        description: "Find AIDEFEND mappings for a specific threat. Returns actionable standalone/sub-technique controls separately from non-actionable parent-family context, so a family is never presented as an implementable control. Parent-family mappings are a derived union of reviewed child mappings for navigation, not independent control claims. Accepts exact or prefix framework IDs and English mapping-name keywords; exact IDs are preferred. A mapping expresses a reviewed defensive relationship, not certification that a control is deployed or effective in the caller's environment.",
         annotations: {
-            readOnlyHint: true,
-            idempotentHint: true
+            readOnlyHint: true
         },
         inputSchema: {
             type: 'object',
@@ -528,82 +630,45 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
                 const threat = args.threat || '';
                 const maxResults = Math.min(Math.max(args.maxResults || 15, 1), 30);
 
-                // Collect matching techniques (deduplicated by id + framework)
-                const techHits = [];
-                const techSeen = new Set();
-                for (const tech of allTechniques) {
-                    const result = matchThreat(tech.defendsAgainst, threat);
-                    if (result.matched) {
-                        // Group matches by framework for this technique
-                        const byFramework = {};
-                        for (const m of result.matches) {
-                            if (!byFramework[m.framework]) byFramework[m.framework] = [];
-                            byFramework[m.framework].push(m.item);
-                        }
-                        for (const [framework, items] of Object.entries(byFramework)) {
-                            const key = `${tech.id}|${framework}`;
-                            if (!techSeen.has(key)) {
-                                techSeen.add(key);
-                                techHits.push({
-                                    id: tech.id,
-                                    name: tech.name,
-                                    tactic: tech.tacticName,
-                                    matchedFramework: framework,
-                                    matchedItems: items,
-                                    _tier: result.tier
-                                });
-                            }
-                        }
-                    }
-                }
-
-                // Collect matching sub-techniques (deduplicated)
-                const subHits = [];
-                const subSeen = new Set();
-                for (const sub of allSubTechniques) {
-                    const result = matchThreat(sub.defendsAgainst, threat);
-                    if (result.matched) {
-                        const byFramework = {};
-                        for (const m of result.matches) {
-                            if (!byFramework[m.framework]) byFramework[m.framework] = [];
-                            byFramework[m.framework].push(m.item);
-                        }
-                        for (const [framework, items] of Object.entries(byFramework)) {
-                            const key = `${sub.id}|${framework}`;
-                            if (!subSeen.has(key)) {
-                                subSeen.add(key);
-                                subHits.push({
-                                    id: sub.id,
-                                    name: sub.name,
-                                    parentTechniqueId: sub.techniqueId,
-                                    tactic: sub.tacticName,
-                                    matchedFramework: framework,
-                                    matchedItems: items,
-                                    _tier: result.tier
-                                });
-                            }
-                        }
-                    }
-                }
+                const parentFamilyHits = collectThreatHits(
+                    parentFamilies,
+                    threat,
+                    () => ({ entityType: 'parentFamily', isActionable: false })
+                );
+                const actionableControlHits = collectThreatHits(
+                    allLeafNodes,
+                    threat,
+                    entity => ({
+                        entityType: entity.id === entity.techniqueId ? 'standaloneTechnique' : 'subTechnique',
+                        isActionable: true,
+                        ...(entity.id === entity.techniqueId ? {} : {
+                            parentTechniqueId: entity.techniqueId,
+                            parentTechniqueName: entity.techniqueName
+                        })
+                    })
+                );
 
                 // Determine overall match tier for label
-                const allTiers = [...techHits, ...subHits].map(h => h._tier);
+                const allTiers = [...actionableControlHits, ...parentFamilyHits].map(hit => hit._tier);
                 const bestTier = allTiers.length > 0 ? Math.min(...allTiers) : null;
                 const tierLabel = bestTier === 1 ? 'exact_id' : bestTier === 2 ? 'prefix_family' : bestTier === 3 ? 'keyword' : 'none';
 
                 // Strip internal _tier before returning
-                const techOutput = techHits.slice(0, maxResults).map(({ _tier, ...rest }) => rest);
-                const subOutput = subHits.slice(0, maxResults).map(({ _tier, ...rest }) => rest);
+                const actionableOutput = actionableControlHits.slice(0, maxResults).map(({ _tier, ...rest }) => rest);
+                const familyOutput = parentFamilyHits.slice(0, maxResults).map(({ _tier, ...rest }) => rest);
 
-                const totalMatches = techHits.length + subHits.length;
+                const totalMatches = actionableControlHits.length + parentFamilyHits.length;
 
                 const response = {
                     query: threat,
                     matchTier: tierLabel,
-                    techniques: techOutput,
-                    subTechniques: subOutput,
+                    actionableControls: actionableOutput,
+                    parentFamilies: familyOutput,
+                    parentFamilyMappingSemantics: 'derivedChildUnionForNavigation',
                     totalMatches,
-                    truncated: techHits.length > maxResults || subHits.length > maxResults
+                    actionableMatchCount: actionableControlHits.length,
+                    parentFamilyMatchCount: parentFamilyHits.length,
+                    truncated: actionableControlHits.length > maxResults || parentFamilyHits.length > maxResults
                 };
 
                 return { content: [{ type: 'text', text: JSON.stringify(response, null, 2) }] };
@@ -617,12 +682,11 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
     //  Tool 5: get_framework_stats
     // =========================================================================
 
-    safeRegisterTool({
+    await safeRegisterTool({
         name: 'get_framework_stats',
-        description: "Summary statistics of the AIDEFEND framework: total tactics, techniques, sub-techniques, breakdown per tactic, defense counts mapped to each external security framework, distribution across technology pillars and AI lifecycle phases, and tool counts. Useful for presentations, proposals, executive briefings, and understanding the framework's scope.",
+        description: "Population-explicit AIDEFEND statistics: taxonomy rows, top-level techniques, non-actionable parent families, standalone techniques, sub-techniques, actionable controls, mapping coverage for both all entities and actionable controls, leaf-only pillar/phase distributions, and canonical distinct-tool counts.",
         annotations: {
-            readOnlyHint: true,
-            idempotentHint: true
+            readOnlyHint: true
         },
         inputSchema: {
             type: 'object',
@@ -638,36 +702,40 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
                 const tacticsBreakdown = tactics.map(tactic => {
                     const techniques = tactic.techniques || [];
                     const subCount = techniques.reduce((sum, t) => sum + (t.subTechniques || []).length, 0);
+                    const parentCount = techniques.filter(t => (t.subTechniques || []).length > 0).length;
+                    const standaloneCount = techniques.length - parentCount;
                     return {
                         tactic: tactic.name,
-                        techniqueCount: techniques.length,
-                        subTechniqueCount: subCount
+                        topLevelTechniqueCount: techniques.length,
+                        parentFamilyCount: parentCount,
+                        standaloneTechniqueCount: standaloneCount,
+                        subTechniqueCount: subCount,
+                        taxonomyRowCount: techniques.length + subCount,
+                        actionableControlCount: standaloneCount + subCount
                     };
                 });
 
-                const totalTechniques = allTechniques.length;
-                const totalSubTechniques = allSubTechniques.length;
-
-                // Mapped defense count by framework
-                // Count unique technique/sub-technique IDs that have at least one non-N/A mapping to each framework
-                const mappedDefenseCountByFramework = {};
+                const mappedEntityCountByFramework = {};
+                const mappedActionableControlCountByFramework = {};
                 for (const fk of FRAMEWORK_KEYS) {
-                    const ids = new Set();
-                    for (const tech of allTechniques) {
-                        for (const mapping of (tech.defendsAgainst || [])) {
+                    const mappedEntities = new Set();
+                    const mappedActionable = new Set();
+                    for (const entity of allTaxonomyEntities) {
+                        for (const mapping of (entity.defendsAgainst || [])) {
                             if (mapping.framework === fk && (mapping.items || []).some(isValidItem)) {
-                                ids.add(tech.id);
+                                mappedEntities.add(entity.id);
                             }
                         }
                     }
-                    for (const sub of allSubTechniques) {
-                        for (const mapping of (sub.defendsAgainst || [])) {
+                    for (const control of allLeafNodes) {
+                        for (const mapping of (control.defendsAgainst || [])) {
                             if (mapping.framework === fk && (mapping.items || []).some(isValidItem)) {
-                                ids.add(sub.id);
+                                mappedActionable.add(control.id);
                             }
                         }
                     }
-                    mappedDefenseCountByFramework[fk] = ids.size;
+                    mappedEntityCountByFramework[fk] = mappedEntities.size;
+                    mappedActionableControlCountByFramework[fk] = mappedActionable.size;
                 }
 
                 // Pillar distribution: count leaf nodes per pillar
@@ -694,23 +762,33 @@ if (!navigator.modelContext || typeof navigator.modelContext.registerTool !== 'f
 
                 // Unique tool counts
                 const openSourceTools = new Set();
+                const sourceAvailableTools = new Set();
                 const commercialTools = new Set();
                 for (const leaf of allLeafNodes) {
-                    for (const t of (leaf.toolsOpenSource || [])) openSourceTools.add(t);
-                    for (const t of (leaf.toolsCommercial || [])) commercialTools.add(t);
+                    for (const t of (leaf.toolsOpenSource || [])) openSourceTools.add(canonicalToolName(t));
+                    for (const t of (leaf.toolsSourceAvailable || [])) sourceAvailableTools.add(canonicalToolName(t));
+                    for (const t of (leaf.toolsCommercial || [])) commercialTools.add(canonicalToolName(t));
                 }
 
                 const result = {
-                    frameworkVersion: 'AIDEFEND v1.20260610',
+                    frameworkVersion: `AIDEFEND v${aidefendVersion}`,
                     totalTactics: tacticNames.length,
                     tactics: tacticNames,
-                    totalTechniques,
-                    totalSubTechniques,
+                    totalTaxonomyRows: taxonomyRowCount,
+                    totalTopLevelTechniques: allTechniques.length,
+                    totalParentFamilies: parentFamilies.length,
+                    totalStandaloneTechniques: standaloneTechniques.length,
+                    totalSubTechniques: allSubTechniques.length,
+                    totalActionableControls: actionableControlCount,
                     tacticsBreakdown,
-                    mappedDefenseCountByFramework,
-                    pillarDistribution,
-                    phaseDistribution,
+                    mappedEntityCountByFramework,
+                    mappedActionableControlCountByFramework,
+                    parentFamilyMappingSemantics: 'derivedChildUnionForNavigation; never independently scored',
+                    pillarDistribution: { population: 'actionableControls', counts: pillarDistribution },
+                    phaseDistribution: { population: 'actionableControls', counts: phaseDistribution },
+                    toolCountPopulation: 'actionableControls; canonical product/project name before any role or license annotation',
                     totalUniqueOpenSourceTools: openSourceTools.size,
+                    totalUniqueSourceAvailableTools: sourceAvailableTools.size,
                     totalUniqueCommercialTools: commercialTools.size
                 };
 

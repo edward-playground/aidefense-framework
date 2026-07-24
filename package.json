@@ -1,0 +1,15 @@
+{
+  "name": "aidefense-framework",
+  "version": "1.20260724",
+  "private": true,
+  "type": "module",
+  "description": "AIDEFEND AI defense framework, website, and generated public dataset",
+  "license": "SEE LICENSE IN LICENSING.md",
+  "engines": {
+    "node": ">=22.7.0"
+  },
+  "scripts": {
+    "generate": "node scripts/generate-dataset.js",
+    "count": "node scripts/count-techniques.js"
+  }
+}

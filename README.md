@@ -1,97 +1,181 @@
-# AIDEFEND™ - An AI Defense Framework
+# AIDEFEND™ — AI Defense Framework
 
-[![License: CC BY 4.0](https://img.shields.io/badge/License-CC_BY_4.0-lightgrey.svg?style=for-the-badge)](https://creativecommons.org/licenses/by/4.0/)
-[![Live Demo](https://img.shields.io/badge/Live-Demo-brightgreen?style=for-the-badge)](https://aidefend.net)
+[![Code License: Apache-2.0](https://img.shields.io/badge/code-Apache--2.0-blue.svg?style=for-the-badge)](LICENSE)
+[![Content License: CC BY 4.0](https://img.shields.io/badge/content-CC_BY_4.0-lightgrey.svg?style=for-the-badge)](LICENSE-CONTENT)
+[![Version](https://img.shields.io/badge/version-1.20260724-0ea5e9.svg?style=for-the-badge)](aidefend-intro.js)
+[![Live Demo](https://img.shields.io/badge/live-aidefend.net-brightgreen.svg?style=for-the-badge)](https://aidefend.net)
 
-> AIDEFEND™ (Artificial Intelligence Defense Framework) is an open, AI-focused knowledge base of defensive countermeasures designed to help security professionals protect AI/ML systems from emerging threats.
+AIDEFEND is an open, implementation-oriented knowledge base of defensive controls for AI, machine-learning, LLM, multimodal, RAG, and agentic systems. It organizes defenses by security function, protected component, lifecycle phase, and the external threat frameworks they address.
 
----
+- **Live framework:** https://aidefend.net
+- **MCP and REST service:** https://github.com/edward-playground/aidefend-mcp
 
-### Framework Website
+## Current release
 
-**[Go to the AIDEFEND framework site](https://aidefend.net)**
+Version `1.20260724` contains:
 
----
+- **357** taxonomy entries
+  - 57 parent technique families
+  - 35 actionable standalone techniques
+  - 265 actionable leaf sub-techniques
+- **300** actionable defensive controls
+- **355** reviewed structured scope boundaries, with two entries intentionally requiring none
+- **851** implementation-guidance entries
+- **8,371** mapping items across nine external AI security frameworks
+  - 5,772 actionable-control claims
+  - 2,599 derived parent-family navigation entries
+- **667** explicit justified `N/A` decisions
+- Four exploration views: Tactics, Pillars, Phases, and Frameworks
+- A generated JSON dataset for external tools and integrations
+- Browser-side WebMCP tools for agent-assisted framework lookup
 
-### Key Features
+Counts are generated from the current `tactics/*.js` source files and should be refreshed when the framework changes.
 
-* **Four Strategic Views**: Organize and explore defenses from multiple perspectives to suit different roles and use cases:
-    * **Tactics View**: Aligned with the seven high-level tactics of MITRE D3FEND.
-    * **Pillars View**: Organized by technology stack components (Data, Model, Infrastructure, Application).
-    * **Phases View**: Structured around the AI development and operational lifecycle.
-    * **Frameworks View**: Browse defenses mapped to specific threat frameworks (OWASP LLM/ML/Agentic Top 10, MAESTRO, MITRE ATLAS, NIST AML, Cisco AI Security, Google SAIF 2.0, Databricks DASF 3.0).
-* **Comprehensive Technique Details**: Each defensive technique includes a detailed description, implementation strategies with code examples, and lists of relevant open-source and commercial tools.
-* **Threat Mapping**: Techniques are explicitly mapped to known threats from 9 established frameworks: **MITRE ATLAS**, **MAESTRO**, the **OWASP Top 10** for LLMs, ML, and Agentic Applications, **Cisco Integrated AI Security and Safety Framework**, **NIST Adversarial Machine Learning 2025**, **Google Secure AI Framework (SAIF) 2.0**, and **Databricks AI Security Framework (DASF) 3.0**.
-* **WebMCP Support**: With a [WebMCP](https://webmachinelearning.github.io/webmcp/)-capable browser, AI agents can browse and query AIDEFEND's defense knowledge base directly - just ask questions in any language and get answers.
-* **Interactive Interface**: A clean, responsive UI with powerful search functionality to quickly find relevant techniques and threats.
-* **Four Themes**: Dark, Light, High Contrast, and The Matrix - a comfortable viewing experience for any environment.
+The optional WebMCP integration activates only when the browser exposes the supported `document.modelContext` surface. The framework website continues to operate normally when that experimental browser API is unavailable; in that case, no WebMCP tools are registered.
 
----
+## Framework coverage
 
-### The Framework Views
+Every actionable AIDEFEND control is mapped against the following framework set:
 
-AIDEFEND allows you to view the defensive landscape through four distinct lenses, helping you answer key strategic questions.
+1. MITRE ATLAS
+2. MAESTRO
+3. OWASP Top 10 for LLM Applications 2025
+4. OWASP Machine Learning Security Top 10 2023
+5. OWASP Top 10 for Agentic Applications 2026
+6. NIST Adversarial Machine Learning 2025
+7. Cisco Integrated AI Security and Safety Framework
+8. Google Secure AI Framework 2.0 risks
+9. Databricks AI Security Framework 3.0
 
-#### **1. Tactics View**
-> **Question:** *What high-level approach and concept is being used for this defense?*
+A mapping indicates a defensible relationship between a threat or risk and an AIDEFEND control. It is not a certification claim, an implementation attestation, or evidence that a specific deployment is secure.
 
-This view organizes techniques by their strategic security function, aligned with the seven defensive tactics: **Model, Harden, Detect, Isolate, Deceive, Evict, and Restore**. It is ideal for security strategists and architects designing a defense-in-depth plan.
+Mapping relevance is reviewed at the actionable standalone-technique or leaf-sub-technique level. A non-actionable parent family's mapping list is the de-duplicated union of its reviewed child mappings for navigation and reverse lookup only; it must not be used as implementation evidence or control credit.
 
-#### **2. Pillars View**
-> **Question:** *What part (component) of the AI system is being protected?*
+## Explore the framework
 
-This view organizes defenses by the technology stack component they secure: **Data, Model, Infrastructure, or Application**. This component-centric view helps technical roles like ML Engineers and Cloud Security Engineers find controls relevant to their work.
+### Tactics
 
-#### **3. Phases View**
-> **Question:** *When (what stage) in the AI lifecycle should this defense be applied?*
+Organizes defenses by security function:
 
-This view organizes defenses by the development stage where they are most relevant, from initial **Design & Scoping** through **Building, Validation, Operation, Incident Response, and Restoration**. This process-driven view helps MLOps and DevSecOps teams embed security throughout the entire AI lifecycle.
+- Model
+- Harden
+- Detect
+- Isolate
+- Deceive
+- Evict
+- Restore
 
-#### **4. Frameworks View**
-> **Question:** *What known threats from established frameworks does this defense address?*
+### Pillars
 
-This view lets you browse defenses mapped to specific threat frameworks - **OWASP Top 10 for LLM Applications (2025)**, **OWASP ML Top 10 (2023)**, **OWASP Agentic AI Top 10 (2026)**, **MAESTRO**, **MITRE ATLAS**, **NIST Adversarial Machine Learning (2025)**, **Cisco AI Security**, **Google Secure AI Framework (SAIF) 2.0**, and **Databricks AI Security Framework (DASF) 3.0**. Each framework page includes a brief description, a link to the official source, and an organized breakdown of its threat categories with corresponding AIDEFEND defensive techniques.
+Organizes controls by the component they protect:
 
----
+- Data
+- Model
+- Infrastructure
+- Application
 
-### How to Use This Tool
+### Phases
 
-1. **Select a View**: Use the "View by:" switcher at the top of the page to choose between Tactics, Pillars, Phases, or Frameworks.
-2. **Explore Techniques**: Click on any column header to learn more about that tactic, pillar, or phase. Click on any individual defensive technique to open a detailed modal view. In Frameworks view, use the dropdown to switch between threat frameworks.
-3. **Search Everything**: Use the search bar to filter all content by keywords, technique IDs, or threat mappings (e.g., "Prompt Injection", "AID-H-002", "MAESTRO", "LLM01").
-4. **AIDEFEND MCP/REST API Service**: Now available. A 100% local, private RAG system for the AIDEFEND framework. [Try it now](https://github.com/edward-playground/aidefend-mcp).
-5. **Ask AI Agents (WebMCP)**: Use a WebMCP-capable browser to let AI agents query the framework for you:
-    1. Open [aidefend.net](https://aidefend.net) in a WebMCP-capable browser (e.g., Chrome 146+ with WebMCP flag enabled, or Microsoft Edge with upcoming WebMCP support). **Keep the tab open** - the AI agent can only access AIDEFEND tools while the page is active.
-    2. Ask your AI agent (e.g., Gemini, ChatGPT, Claude) a question in any language - for example, "What defenses exist for prompt injection?" or "Show me techniques for secure model rollback."
-    3. The AI agent searches the framework, retrieves matching techniques, and returns implementation guidance.
+Places controls in the AI-system lifecycle:
 
----
+- Scoping
+- Building
+- Validation
+- Operation
+- Response
+- Improvement
 
-### Acknowledgments & Disclaimer
+### Frameworks
 
-This work is a personal initiative led by Edward Lee. It is intended for informational and educational purposes only.
+Provides a reverse view from external threat-framework entries to the corresponding AIDEFEND defenses.
 
-**Please note:** This work was inspired by, and references, numerous incredible open-source security frameworks. However, **AIDEFEND is not affiliated with, endorsed by, or otherwise connected to The MITRE Corporation, the Cloud Security Alliance (creator of the MAESTRO framework), Google, OWASP, Cisco, NIST, or Databricks.**
+## Public data
 
-The framework synthesizes concepts and knowledge from the following foundational resources:
-* [MAESTRO Framework](https://cloudsecurityalliance.org/blog/2025/02/06/agentic-ai-threat-modeling-framework-maestro/)
-* [MITRE D3FEND™](https://d3fend.mitre.org/)
-* [MITRE ATLAS™](https://atlas.mitre.org/)
-* [MITRE ATT&CK®](https://attack.mitre.org/)
-* [Google Secure AI Framework (SAIF)](https://saif.google/)
-* [OWASP Top 10 for LLM Applications](https://owasp.org/www-project-top-10-for-large-language-model-applications/)
-* [OWASP Top 10 for Machine Learning Security](https://owasp.org/www-project-machine-learning-security-top-10/)
-* [OWASP Top 10 for Agentic Applications 2026](https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/)
-* [Cisco Integrated AI Security and Safety Framework](https://learn-cloudsecurity.cisco.com/ai-security-framework)
-* [NIST Adversarial Machine Learning 2025](https://csrc.nist.gov/pubs/ai/100/2/e2025/final)
-* [Databricks AI Security Framework (DASF) 3.0](https://www.databricks.com/resources/whitepaper/databricks-ai-security-framework-dasf)
+The generated dataset is available at [`data/data.json`](data/data.json). A compact navigation index is available at [`data/tactics-index.json`](data/tactics-index.json).
 
----
+The source of truth for AIDEFEND-authored framework content is `tactics/*.js`. Do not edit generated JSON files directly.
 
-### Contact
+Generation intentionally strips source-only `howTo` detail, warnings, and other authoring fields according to the dataset-generation rules. Consumers must not assume that generated JSON is a complete mirror of the tracked tactic source.
 
-This work is led by **Edward Lee**. You can [connect with me on LinkedIn](https://www.linkedin.com/in/go-edwardlee/).
+The public dataset uses additive schema 2.3. Its top-level `version.dataVersion` is derived from the AIDEFEND release version, while `version.generatedAt` records the UTC generation timestamp. The compact tactics index carries its own schema version and the same generation timestamp.
 
-### License
+Schema 2.3 adds the optional `scopeBoundary` object for structured responsibility and adjacent-technique comparisons; consumers reading older data should treat an absent `scopeBoundary` as no structured boundary metadata. Schema 2.2 added `implementationGuidanceIds`, aligned one-to-one with the existing lightweight guidance strings. A guidance ID such as `AID-H-002.004-G004` is a stable implementation-method reference inside its owning actionable control; it is not a separate control, applicability result, evidence result, or score. Schema 2.1 added `toolsSourceAvailable`; consumers that also read 2.0 data should treat a missing `toolsSourceAvailable` property as an empty array.
 
-This work is licensed under a [Creative Commons Attribution 4.0 International License](http://creativecommons.org/licenses/by/4.0/).
+Tool recommendations use three licensing and delivery categories: `toolsOpenSource` is limited to OSI-licensed software; `toolsSourceAvailable` covers non-OSI tooling and ends each entry with `(<exact license>; source-available)` or `(<exact license>; open-weight)`; and `toolsCommercial` covers proprietary or vendor-hosted offerings. Standards, datasets, specifications, documentation, methodologies, and papers are not classified as tools.
+
+## Local use
+
+The website is static. Open `index.html` directly in a modern browser or serve the repository with any static web server.
+
+For example:
+
+```bash
+python -m http.server 8080
+```
+
+Then open `http://localhost:8080`.
+
+## Public dataset generation
+
+Requirements:
+
+- Node.js 22.7 or newer
+- No runtime npm dependencies
+
+```bash
+npm run generate
+npm run count
+npm run generate -- --check
+```
+
+`npm run generate` regenerates the public dataset from the tracked tactic source and validates the tracked keyword lock and technique hierarchy. `npm run generate -- --check` performs the same public validation without rewriting tracked outputs. Neither command runs the maintainer's private release-audit or external-framework reference workflow.
+
+The complete official release process includes additional maintainer-only source-freshness, mapping, semantic-boundary, content-quality, and Frameworks View synchronization checks. Those internal review assets are intentionally not part of the public repository.
+
+## Repository structure
+
+```text
+tactics/                 AIDEFEND framework source of truth
+data/                    Generated public datasets and keyword lock
+scripts/                 Public dataset generation and count tools
+js/, css/                Main website implementation and vendored browser libraries
+kids/                    AIDEFEND Kids experience and vendored browser libraries
+index.html               Main static application
+webmcp-tools.js          Browser-side WebMCP query tools
+```
+
+## Security and implementation notice
+
+AIDEFEND provides defensive control objectives, implementation patterns, examples, mappings, and verification guidance. Environment-specific thresholds, products, trust boundaries, regulatory obligations, and operational approval requirements must be evaluated by qualified practitioners before production deployment.
+
+Example code is educational implementation guidance, not a drop-in guarantee of security. Validate it against the exact platform version, deployment architecture, threat model, and organizational policy in which it will run.
+
+If you believe the website or published artifacts contain a security vulnerability, use GitHub's private **Report a vulnerability** channel when it is available. Otherwise, open a minimal public issue requesting a private contact path and do not include exploit details, credentials, or sensitive evidence in that issue.
+
+## Licensing
+
+AIDEFEND uses a deliberate split-license model:
+
+- **Software and website implementation code:** Apache License 2.0 — see [`LICENSE`](LICENSE)
+- **Original framework content and data:** Creative Commons Attribution 4.0 International — see [`LICENSE-CONTENT`](LICENSE-CONTENT)
+- **Detailed scope and attribution:** [`LICENSING.md`](LICENSING.md)
+- **AIDEFEND names, marks, logos, and badges:** not granted for unrestricted brand use — see [`TRADEMARKS.md`](TRADEMARKS.md)
+- **Bundled third-party components and data:** retain their upstream terms — see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md)
+
+Suggested content attribution:
+
+> AIDEFEND AI Defense Framework, created by Edward Lee, https://aidefend.net, licensed under CC BY 4.0.
+
+Licensing does not grant permission to imply affiliation, certification, approval, or endorsement by AIDEFEND or any referenced framework owner.
+
+## Acknowledgments and independence
+
+AIDEFEND synthesizes defensive knowledge and references identifiers or concepts from MITRE ATLAS, MITRE D3FEND, MITRE ATT&CK, MAESTRO, OWASP, NIST, Cisco, Google, and Databricks resources.
+
+AIDEFEND is an independent project. It is not affiliated with, endorsed by, sponsored by, or officially connected to The MITRE Corporation, the Cloud Security Alliance, OWASP, NIST, Cisco, Google, or Databricks.
+
+See the framework website and [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for relevant source and license notices.
+
+## Maintainer
+
+AIDEFEND is led by **Edward Lee**. Connect on [LinkedIn](https://www.linkedin.com/in/go-edwardlee/).
