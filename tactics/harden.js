@@ -90,7 +90,7 @@ export const hardenTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "N/A"
                     ]
@@ -214,7 +214,7 @@ export const hardenTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI01:2026 Agent Goal Hijack",
                         "ASI04:2026 Agentic Supply Chain Vulnerabilities"
@@ -362,7 +362,7 @@ export const hardenTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities (sanitizing training data from third-party sources)"
                             ]
@@ -520,7 +520,7 @@ export const hardenTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI01:2026 Agent Goal Hijack (input validation blocks prompt-based goal manipulation)"
                             ]
@@ -696,7 +696,7 @@ export const hardenTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -798,7 +798,7 @@ export const hardenTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -927,7 +927,7 @@ export const hardenTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities (compromised labeling pipeline in agent training supply chain)"
                             ]
@@ -1043,7 +1043,7 @@ export const hardenTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -1190,7 +1190,7 @@ export const hardenTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -1312,7 +1312,7 @@ export const hardenTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI01:2026 Agent Goal Hijack"
                             ]
@@ -1429,7 +1429,7 @@ export const hardenTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI04:2026 Agentic Supply Chain Vulnerabilities",
                         "ASI05:2026 Unexpected Code Execution (RCE)"
@@ -1574,7 +1574,7 @@ export const hardenTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
                                 "ASI05:2026 Unexpected Code Execution (RCE) (malicious packages can execute arbitrary code)"
@@ -1723,7 +1723,7 @@ export const hardenTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                             ]
@@ -2136,7 +2136,7 @@ if __name__ == "__main__":
                           ]
                       },
                       {
-                          "framework": "OWASP Agentic AI Top 10 2026",
+                          "framework": "OWASP Top 10 for Agentic Applications 2026",
                           "items": [
                               "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                           ]
@@ -2259,7 +2259,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -2374,7 +2374,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -2507,7 +2507,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                             ]
@@ -2671,7 +2671,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                             ]
@@ -2811,7 +2811,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                             ]
@@ -2936,7 +2936,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
                                 "ASI05:2026 Unexpected Code Execution (RCE)"
@@ -3053,7 +3053,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
                                 "ASI05:2026 Unexpected Code Execution (RCE)"
@@ -3156,7 +3156,7 @@ if __name__ == "__main__":
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI03:2026 Identity and Privilege Abuse",
                         "ASI04:2026 Agentic Supply Chain Vulnerabilities",
@@ -3280,7 +3280,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI03:2026 Identity and Privilege Abuse (user identity management prevents privilege abuse)"
                             ]
@@ -3413,7 +3413,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI03:2026 Identity and Privilege Abuse (service auth enforces identity verification)"
                             ]
@@ -3551,7 +3551,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI03:2026 Identity and Privilege Abuse",
                                 "ASI07:2026 Insecure Inter-Agent Communication"
@@ -3690,7 +3690,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI03:2026 Identity and Privilege Abuse",
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities (verified discovery prevents supply chain agent compromise)"
@@ -3834,7 +3834,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI07:2026 Insecure Inter-Agent Communication"
                             ]
@@ -3929,7 +3929,7 @@ if __name__ == "__main__":
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "N/A"
                     ]
@@ -4045,7 +4045,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -4176,7 +4176,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -4305,7 +4305,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -4420,7 +4420,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -4531,7 +4531,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -4642,7 +4642,7 @@ if __name__ == "__main__":
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI05:2026 Unexpected Code Execution (RCE)"
                     ]
@@ -4760,7 +4760,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -4915,7 +4915,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI05:2026 Unexpected Code Execution (RCE) (sanitization prevents code execution via output)"
                             ]
@@ -5024,7 +5024,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -5153,7 +5153,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI05:2026 Unexpected Code Execution (RCE) (sanitization prevents code execution via output)"
                             ]
@@ -5253,7 +5253,7 @@ if __name__ == "__main__":
                   ]
               },
               {
-                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "framework": "OWASP Top 10 for Agentic Applications 2026",
                   "items": [
                       "ASI01:2026 Agent Goal Hijack",
                       "ASI04:2026 Agentic Supply Chain Vulnerabilities"
@@ -5395,7 +5395,7 @@ if __name__ == "__main__":
                       ]
                   },
                   {
-                      "framework": "OWASP Agentic AI Top 10 2026",
+                      "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
                           "N/A"
                       ]
@@ -5523,7 +5523,7 @@ if __name__ == "__main__":
                       ]
                   },
                   {
-                      "framework": "OWASP Agentic AI Top 10 2026",
+                      "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
                           "N/A"
                       ]
@@ -5652,7 +5652,7 @@ if __name__ == "__main__":
                       ]
                   },
                   {
-                      "framework": "OWASP Agentic AI Top 10 2026",
+                      "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
                           "N/A"
                       ]
@@ -5776,7 +5776,7 @@ if __name__ == "__main__":
                       ]
                   },
                   {
-                      "framework": "OWASP Agentic AI Top 10 2026",
+                      "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
                           "N/A"
                       ]
@@ -5921,7 +5921,7 @@ if __name__ == "__main__":
                       ]
                   },
                   {
-                      "framework": "OWASP Agentic AI Top 10 2026",
+                      "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
                           "ASI01:2026 Agent Goal Hijack"
                       ]
@@ -6040,7 +6040,7 @@ if __name__ == "__main__":
                       ]
                   },
                   {
-                      "framework": "OWASP Agentic AI Top 10 2026",
+                      "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
                           "ASI04:2026 Agentic Supply Chain Vulnerabilities (derived model artifacts are gated before agent deployment)"
                       ]
@@ -6133,7 +6133,7 @@ if __name__ == "__main__":
                       ]
                   },
                   {
-                      "framework": "OWASP Agentic AI Top 10 2026",
+                      "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
                           "ASI04:2026 Agentic Supply Chain Vulnerabilities (protecting evaluator judge, grader, rubric-template, dependency, harness, threshold-policy, and evidence-writer integrity)"
                       ]
@@ -6326,7 +6326,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                   ]
               },
               {
-                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "framework": "OWASP Top 10 for Agentic Applications 2026",
                   "items": [
                       "N/A"
                   ]
@@ -6446,7 +6446,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                       ]
                   },
                   {
-                      "framework": "OWASP Agentic AI Top 10 2026",
+                      "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
                           "N/A"
                       ]
@@ -6560,7 +6560,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                       ]
                   },
                   {
-                      "framework": "OWASP Agentic AI Top 10 2026",
+                      "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
                           "N/A"
                       ]
@@ -6650,7 +6650,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                       ]
                   },
                   {
-                      "framework": "OWASP Agentic AI Top 10 2026",
+                      "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
                           "N/A"
                       ]
@@ -6758,7 +6758,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "N/A"
                     ]
@@ -6872,7 +6872,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -6997,7 +6997,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -7090,7 +7090,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -7173,7 +7173,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -7281,7 +7281,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -7422,7 +7422,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "N/A"
                     ]
@@ -7501,7 +7501,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "N/A"
                     ]
@@ -7612,7 +7612,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -7730,7 +7730,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -7833,7 +7833,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -7909,7 +7909,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "N/A"
                     ]
@@ -8011,7 +8011,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -8107,7 +8107,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -8203,7 +8203,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -8297,7 +8297,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -8404,7 +8404,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -8473,7 +8473,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "N/A"
                     ]
@@ -8595,7 +8595,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -8693,7 +8693,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -8793,7 +8793,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -8898,7 +8898,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "N/A"
                     ]
@@ -9007,7 +9007,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "N/A"
                     ]
@@ -9087,7 +9087,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI01:2026 Agent Goal Hijack"
                     ]
@@ -9205,7 +9205,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI01:2026 Agent Goal Hijack"
                             ]
@@ -9337,7 +9337,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI01:2026 Agent Goal Hijack"
                             ]
@@ -9449,7 +9449,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI01:2026 Agent Goal Hijack",
                         "ASI02:2026 Tool Misuse and Exploitation",
@@ -9583,7 +9583,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI02:2026 Tool Misuse and Exploitation",
                                 "ASI08:2026 Cascading Failures (interruptible loops break cascade propagation)",
@@ -9701,7 +9701,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI02:2026 Tool Misuse and Exploitation",
                                 "ASI03:2026 Identity and Privilege Abuse",
@@ -9821,7 +9821,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI01:2026 Agent Goal Hijack",
                                 "ASI02:2026 Tool Misuse and Exploitation",
@@ -9939,7 +9939,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI06:2026 Memory & Context Poisoning"
                             ]
@@ -10044,7 +10044,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -10152,7 +10152,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI02:2026 Tool Misuse and Exploitation",
                                 "ASI03:2026 Identity and Privilege Abuse",
@@ -10274,7 +10274,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI01:2026 Agent Goal Hijack",
                                 "ASI02:2026 Tool Misuse and Exploitation",
@@ -10393,7 +10393,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI01:2026 Agent Goal Hijack",
                         "ASI02:2026 Tool Misuse and Exploitation",
@@ -10516,7 +10516,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI02:2026 Tool Misuse and Exploitation"
                             ]
@@ -10627,7 +10627,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI02:2026 Tool Misuse and Exploitation",
                                 "ASI03:2026 Identity and Privilege Abuse",
@@ -10766,7 +10766,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI02:2026 Tool Misuse and Exploitation",
                                 "ASI01:2026 Agent Goal Hijack (independent validator catches goal hijack attempts)",
@@ -10916,7 +10916,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI01:2026 Agent Goal Hijack",
                                 "ASI02:2026 Tool Misuse and Exploitation",
@@ -11047,7 +11047,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI02:2026 Tool Misuse and Exploitation (prevents data exfiltration via legitimate tool chains)",
                                 "ASI01:2026 Agent Goal Hijack (sink enforcement prevents hijacked goals from exfiltrating data)"
@@ -11176,7 +11176,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI03:2026 Identity and Privilege Abuse",
                                 "ASI02:2026 Tool Misuse and Exploitation (TOCTOU prevention ensures authorization is current at execution time)"
@@ -11324,7 +11324,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI02:2026 Tool Misuse and Exploitation",
                                 "ASI03:2026 Identity and Privilege Abuse",
@@ -11461,7 +11461,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI08:2026 Cascading Failures (transactional execution and compensation stop duplicate effects from propagating)"
                             ]
@@ -11562,7 +11562,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI01:2026 Agent Goal Hijack",
                         "ASI02:2026 Tool Misuse and Exploitation",
@@ -11662,7 +11662,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI02:2026 Tool Misuse and Exploitation (exact-URL verification and quiet-fetch gating constrain tool-driven exfiltration and SSRF)"
                             ]
@@ -11781,7 +11781,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI01:2026 Agent Goal Hijack (content demotion prevents embedded malicious instructions from hijacking goals)",
                                 "ASI06:2026 Memory & Context Poisoning (content demotion prevents embedded instructions from poisoning agent context)"
@@ -11894,7 +11894,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI01:2026 Agent Goal Hijack",
                                 "ASI02:2026 Tool Misuse and Exploitation",
@@ -12017,7 +12017,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI01:2026 Agent Goal Hijack",
                         "ASI02:2026 Tool Misuse and Exploitation",
@@ -12124,7 +12124,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI06:2026 Memory & Context Poisoning (chunk-level signing detects tampered retrieval content)"
                             ]
@@ -12235,7 +12235,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI06:2026 Memory & Context Poisoning (RAG context poisoning from untrusted sources gets deprioritized)"
                             ]
@@ -12365,7 +12365,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI03:2026 Identity and Privilege Abuse (retrieval authorization checks principal entitlements)",
                                 "ASI02:2026 Tool Misuse and Exploitation (tool-driven retrieval cannot bypass ACLs)"
@@ -12490,7 +12490,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI06:2026 Memory & Context Poisoning",
                                 "ASI01:2026 Agent Goal Hijack"
@@ -12583,7 +12583,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI03:2026 Identity and Privilege Abuse",
                         "ASI04:2026 Agentic Supply Chain Vulnerabilities",
@@ -12681,7 +12681,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -12808,7 +12808,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                             ]
@@ -12966,7 +12966,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI06:2026 Memory & Context Poisoning",
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
@@ -13117,7 +13117,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI03:2026 Identity and Privilege Abuse",
                                 "ASI10:2026 Rogue Agents"
@@ -13223,7 +13223,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI04:2026 Agentic Supply Chain Vulnerabilities",
                         "ASI05:2026 Unexpected Code Execution (RCE)"
@@ -13342,7 +13342,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
                                 "ASI05:2026 Unexpected Code Execution (RCE) (sandboxing contains malicious install script execution)"
@@ -13466,7 +13466,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                             ]
@@ -13587,7 +13587,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                     ]
@@ -13703,7 +13703,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                     ]
@@ -13810,7 +13810,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                             ]
@@ -13919,7 +13919,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                             ]
@@ -14017,7 +14017,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                             ]
@@ -14135,7 +14135,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                             ]
@@ -14227,7 +14227,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI02:2026 Tool Misuse and Exploitation",
                         "ASI05:2026 Unexpected Code Execution (RCE)"
@@ -14337,7 +14337,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI05:2026 Unexpected Code Execution (RCE)"
                             ]
@@ -14455,7 +14455,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI05:2026 Unexpected Code Execution (RCE)",
                                 "ASI02:2026 Tool Misuse and Exploitation (restricted interpreters constrain what agent-generated code can do)"
@@ -14553,7 +14553,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "N/A"
                     ]
@@ -14675,7 +14675,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -14798,7 +14798,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -14930,7 +14930,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -15051,7 +15051,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI06:2026 Memory & Context Poisoning",
                         "ASI03:2026 Identity and Privilege Abuse (cache reuse across privilege boundaries)"
@@ -15206,7 +15206,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI01:2026 Agent Goal Hijack",
                         "ASI02:2026 Tool Misuse and Exploitation",
@@ -15357,7 +15357,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities (server spoofing in the agent supply chain)",
                                 "ASI07:2026 Insecure Inter-Agent Communication (MitM or impersonation on client-server channel)"
@@ -15484,7 +15484,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI03:2026 Identity and Privilege Abuse (stolen client credentials)"
                             ]
@@ -15594,7 +15594,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -15710,7 +15710,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI02:2026 Tool Misuse and Exploitation (unsafe client handling of suggested actions)",
                                 "ASI05:2026 Unexpected Code Execution (RCE) (server response triggers client execution)",
@@ -15829,7 +15829,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI03:2026 Identity and Privilege Abuse (session hijacking enables privilege abuse)"
                             ]
@@ -15959,7 +15959,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities (client binary, plugin, or updater compromise)"
                             ]
@@ -16069,7 +16069,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI03:2026 Identity and Privilege Abuse (misbound input responses exercise the wrong principal)"
                             ]
@@ -16184,7 +16184,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI01:2026 Agent Goal Hijack (sampling request hijacks client LLM conversation direction and decision pathway)",
                                 "ASI02:2026 Tool Misuse and Exploitation (covert tool invocation via sampling-triggered completions)",
@@ -16293,7 +16293,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "N/A"
                     ]
@@ -16400,7 +16400,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -16519,7 +16519,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                           ]
                       },
                       {
-                          "framework": "OWASP Agentic AI Top 10 2026",
+                          "framework": "OWASP Top 10 for Agentic Applications 2026",
                           "items": [
                               "N/A"
                           ]
@@ -16634,7 +16634,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -16754,7 +16754,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI01:2026 Agent Goal Hijack",
                         "ASI04:2026 Agentic Supply Chain Vulnerabilities",
@@ -16863,7 +16863,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities (metadata honesty validation is a supply-chain trust gate for skills)"
                             ]
@@ -16980,7 +16980,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI01:2026 Agent Goal Hijack (instruction analysis detects skill instructions designed to hijack agent goals)",
                                 "ASI05:2026 Unexpected Code Execution (RCE) (detects instructions that direct agents to execute code outside declared scope)"
@@ -17097,7 +17097,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities (behavioral testing is the empirical verification layer for skill supply-chain security)",
                                 "ASI05:2026 Unexpected Code Execution (RCE) (sandbox detects unexpected code execution paths in skill packages)"
@@ -17198,7 +17198,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities (skill loader hardening protects enterprise ingestion of third-party skills)",
                                 "ASI05:2026 Unexpected Code Execution (RCE) (safe parser defaults reduce deserialization and loader-triggered execution risk)"
@@ -17305,7 +17305,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities (continuous re-scan ensures admission is not a one-time trust decision)"
                             ]
@@ -17410,7 +17410,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI04:2026 Agentic Supply Chain Vulnerabilities",
                         "ASI05:2026 Unexpected Code Execution (RCE)"
@@ -17507,7 +17507,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -17630,7 +17630,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
                                 "ASI05:2026 Unexpected Code Execution (RCE)"
@@ -17750,7 +17750,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI05:2026 Unexpected Code Execution (RCE)",
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
@@ -17867,7 +17867,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
                                 "ASI05:2026 Unexpected Code Execution (RCE)"
@@ -18904,7 +18904,7 @@ if __name__ == "__main__":
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI06:2026 Memory & Context Poisoning"
                     ]
@@ -19008,7 +19008,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -19110,7 +19110,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI06:2026 Memory & Context Poisoning (cross-tenant serving-state reuse can contaminate or expose context)"
                             ]
@@ -19210,7 +19210,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -19343,7 +19343,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -19437,7 +19437,7 @@ if __name__ == "__main__":
                   ]
               },
               {
-                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "framework": "OWASP Top 10 for Agentic Applications 2026",
                   "items": [
                       "ASI04:2026 Agentic Supply Chain Vulnerabilities",
                       "ASI08:2026 Cascading Failures"
@@ -19541,7 +19541,7 @@ if __name__ == "__main__":
                       ]
                   },
                   {
-                      "framework": "OWASP Agentic AI Top 10 2026",
+                      "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
                           "N/A"
                       ]
@@ -19641,7 +19641,7 @@ if __name__ == "__main__":
                   ]
                 },
                 {
-                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "framework": "OWASP Top 10 for Agentic Applications 2026",
                   "items": [
                     "ASI08:2026 Cascading Failures"
                   ]
@@ -19747,7 +19747,7 @@ if __name__ == "__main__":
                   ]
                 },
                 {
-                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "framework": "OWASP Top 10 for Agentic Applications 2026",
                   "items": [
                     "N/A"
                   ]
@@ -19853,7 +19853,7 @@ if __name__ == "__main__":
                   ]
                 },
                 {
-                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "framework": "OWASP Top 10 for Agentic Applications 2026",
                   "items": [
                     "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                   ]
@@ -19949,7 +19949,7 @@ if __name__ == "__main__":
                   ]
                 },
                 {
-                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "framework": "OWASP Top 10 for Agentic Applications 2026",
                   "items": [
                     "ASI04:2026 Agentic Supply Chain Vulnerabilities (blocks dispatch when the resolved route is outside the verified signed route contract)"
                   ]
@@ -20068,7 +20068,7 @@ if __name__ == "__main__":
                                                      ]
                                        },
                                        {
-                                           "framework":  "OWASP Agentic AI Top 10 2026",
+                                           "framework":  "OWASP Top 10 for Agentic Applications 2026",
                                            "items":  [
                                                          "N/A"
                                                      ]
@@ -20218,7 +20218,7 @@ if __name__ == "__main__":
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI02:2026 Tool Misuse and Exploitation",
                         "ASI03:2026 Identity and Privilege Abuse",
@@ -20370,7 +20370,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI07:2026 Insecure Inter-Agent Communication",
                                 "ASI08:2026 Cascading Failures"
@@ -20516,7 +20516,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI03:2026 Identity and Privilege Abuse"
                             ]
@@ -20665,7 +20665,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI02:2026 Tool Misuse and Exploitation",
                                 "ASI03:2026 Identity and Privilege Abuse",
@@ -20800,7 +20800,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                             ]
@@ -20940,7 +20940,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI02:2026 Tool Misuse and Exploitation",
                                 "ASI03:2026 Identity and Privilege Abuse"
@@ -21081,7 +21081,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI03:2026 Identity and Privilege Abuse"
                             ]
@@ -21193,7 +21193,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI03:2026 Identity and Privilege Abuse",
                                 "ASI08:2026 Cascading Failures"
@@ -21303,7 +21303,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI08:2026 Cascading Failures"
                             ]
@@ -21407,7 +21407,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI02:2026 Tool Misuse and Exploitation",
                                 "ASI08:2026 Cascading Failures",
@@ -21976,7 +21976,7 @@ export async function runWithDisableEnforcement(input) {
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI03:2026 Identity and Privilege Abuse",
                         "ASI02:2026 Tool Misuse and Exploitation",
@@ -22127,7 +22127,7 @@ export async function runWithDisableEnforcement(input) {
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI01:2026 Agent Goal Hijack"
                     ]
@@ -22226,7 +22226,7 @@ export async function runWithDisableEnforcement(input) {
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI01:2026 Agent Goal Hijack"
                     ]
@@ -22331,7 +22331,7 @@ export async function runWithDisableEnforcement(input) {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -22440,7 +22440,7 @@ export async function runWithDisableEnforcement(input) {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -22543,7 +22543,7 @@ export async function runWithDisableEnforcement(input) {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI01:2026 Agent Goal Hijack"
                             ]

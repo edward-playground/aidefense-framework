@@ -57,7 +57,7 @@ export const evictTactic = {
                   ]
               },
               {
-                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "framework": "OWASP Top 10 for Agentic Applications 2026",
                   "items": [
                       "ASI02:2026 Tool Misuse and Exploitation",
                       "ASI03:2026 Identity and Privilege Abuse",
@@ -191,7 +191,7 @@ export const evictTactic = {
                   ]
                 },
                 {
-                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "framework": "OWASP Top 10 for Agentic Applications 2026",
                   "items": [
                     "ASI03:2026 Identity and Privilege Abuse"
                   ]
@@ -344,7 +344,7 @@ export const evictTactic = {
                   ]
                 },
                 {
-                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "framework": "OWASP Top 10 for Agentic Applications 2026",
                   "items": [
                     "ASI03:2026 Identity and Privilege Abuse",
                     "ASI02:2026 Tool Misuse and Exploitation (denying compromised agent access tokens and sessions)"
@@ -468,7 +468,7 @@ export const evictTactic = {
                   ]
                 },
                 {
-                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "framework": "OWASP Top 10 for Agentic Applications 2026",
                   "items": [
                     "ASI03:2026 Identity and Privilege Abuse",
                     "ASI10:2026 Rogue Agents (revoking rogue agent identities)"
@@ -612,7 +612,7 @@ export const evictTactic = {
                   ]
                 },
                 {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI03:2026 Identity and Privilege Abuse",
                                 "ASI02:2026 Tool Misuse and Exploitation (revoking the compromised delegated grant removes the connected app or tool authority used for misuse)"
@@ -754,7 +754,7 @@ export const evictTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI10:2026 Rogue Agents",
                         "ASI05:2026 Unexpected Code Execution (RCE) (terminating unauthorized code execution)",
@@ -908,7 +908,7 @@ export const evictTactic = {
                   ]
               },
               {
-                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "framework": "OWASP Top 10 for Agentic Applications 2026",
                   "items": [
                       "ASI04:2026 Agentic Supply Chain Vulnerabilities",
                       "ASI05:2026 Unexpected Code Execution (RCE)",
@@ -1043,7 +1043,7 @@ export const evictTactic = {
                   ]
                 },
                 {
-                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "framework": "OWASP Top 10 for Agentic Applications 2026",
                   "items": [
                     "ASI04:2026 Agentic Supply Chain Vulnerabilities (backdoored models in supply chain)"
                   ]
@@ -1158,7 +1158,7 @@ export const evictTactic = {
                   ]
                 },
                 {
-                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "framework": "OWASP Top 10 for Agentic Applications 2026",
                   "items": [
                     "ASI06:2026 Memory & Context Poisoning (evicting poisoned RAG source and durable graph records prevents their reuse)",
                     "ASI04:2026 Agentic Supply Chain Vulnerabilities (poisoned datasets in supply chain)"
@@ -1291,7 +1291,7 @@ export const evictTactic = {
                   ]
                 },
                 {
-                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "framework": "OWASP Top 10 for Agentic Applications 2026",
                   "items": [
                     "ASI04:2026 Agentic Supply Chain Vulnerabilities",
                     "ASI05:2026 Unexpected Code Execution (RCE) (removing malicious code artifacts)"
@@ -1422,7 +1422,7 @@ export const evictTactic = {
                   ]
                 },
                 {
-                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "framework": "OWASP Top 10 for Agentic Applications 2026",
                   "items": [
                     "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                   ]
@@ -1550,7 +1550,7 @@ export const evictTactic = {
                     ]
                 },
                 {
-                      "framework": "OWASP Agentic AI Top 10 2026",
+                      "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
                         "ASI04:2026 Agentic Supply Chain Vulnerabilities (dependency and deployment readback plus replay prove the signed supply-chain fix is effective)",
                         "ASI05:2026 Unexpected Code Execution (RCE) (exact exploit replay proves the repaired path can no longer reach code execution)",
@@ -1711,7 +1711,7 @@ export const evictTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI06:2026 Memory & Context Poisoning (purging poisoned memory and context)",
                         "ASI10:2026 Rogue Agents (removing durable state that can respawn a rogue agent)",

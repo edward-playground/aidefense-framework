@@ -14,8 +14,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AIDEFEND™ Framework — AI Security Defense Knowledge Base</title>
-    <meta name="description" content="AIDEFEND is a practical knowledge base mapping AI security defense techniques across 9 major frameworks including MITRE ATLAS, OWASP LLM/ML/Agentic Top 10, MAESTRO, NIST Adversarial ML, Cisco AI Security & Safety, Google SAIF 2.0, and Databricks DASF 3.0.">
-    <meta name="keywords" content="AI security, LLM security, machine learning security, MITRE ATLAS, OWASP LLM Top 10, OWASP ML Top 10, OWASP Agentic AI Top 10, MAESTRO CSA, NIST adversarial machine learning, Cisco AI security & safety framework, Google SAIF, Databricks DASF, AI defense techniques, AI threat modeling, agentic AI security, prompt injection defense, AI supply chain security, adversarial ML, AI red team, AI blue team">
+    <meta name="description" content="AIDEFEND is a practical knowledge base mapping AI security defense techniques across 9 major frameworks including MITRE ATLAS, OWASP Top 10 for LLM, ML, and Agentic Applications, MAESTRO, NIST Adversarial ML, Cisco AI Security & Safety, Google SAIF 2.0, and Databricks DASF 3.0.">
+    <meta name="keywords" content="AI security, LLM security, machine learning security, MITRE ATLAS, OWASP LLM Top 10, OWASP ML Top 10, OWASP Top 10 for Agentic Applications, MAESTRO CSA, NIST adversarial machine learning, Cisco AI security & safety framework, Google SAIF, Databricks DASF, AI defense techniques, AI threat modeling, agentic AI security, prompt injection defense, AI supply chain security, adversarial ML, AI red team, AI blue team">
     <meta name="author" content="AIDEFEND">
     <meta name="robots" content="index, follow">
     <link rel="icon" type="image/png" href="./assets/favicon.png">
@@ -44,7 +44,7 @@
         "@type": "WebApplication",
         "name": "AIDEFEND™ Framework",
         "alternateName": "AIDEFEND",
-        "description": "A practical knowledge base for AI security defenses, mapping AI security defense techniques across 9 major frameworks: MITRE ATLAS, OWASP LLM/ML/Agentic Top 10, MAESTRO, NIST Adversarial ML, Cisco AI Security & Safety, Google SAIF 2.0, and Databricks DASF 3.0.",
+        "description": "A practical knowledge base for AI security defenses, mapping AI security defense techniques across 9 major frameworks: MITRE ATLAS, OWASP Top 10 for LLM, ML, and Agentic Applications, MAESTRO, NIST Adversarial ML, Cisco AI Security & Safety, Google SAIF 2.0, and Databricks DASF 3.0.",
         "url": "https://aidefend.net/",
         "applicationCategory": "SecurityApplication",
         "operatingSystem": "Any",
@@ -143,7 +143,7 @@
                                 <option value="maestro">MAESTRO</option>
                                 <option value="owasp-llm">OWASP LLM Top 10 (2025)</option>
                                 <option value="owasp-ml">OWASP ML Top 10 (2023)</option>
-                                <option value="owasp-agentic">OWASP Agentic AI Top 10 (2026)</option>
+                                <option value="owasp-agentic">OWASP Top 10 for Agentic Applications 2026</option>
                                 <option value="nist" data-short="NIST Adversarial ML (2025)" data-full="NIST Adversarial Machine Learning (AI 100-2 E2025)">NIST Adversarial Machine Learning (AI 100-2 E2025)</option>
                                 <option value="cisco" data-short="Cisco AI Security &amp; Safety Framework" data-full="Cisco Integrated AI Security &amp; Safety Framework">Cisco Integrated AI Security & Safety Framework</option>
                                 <option value="saif">Google Secure AI Framework 2.0 - Risks</option>
@@ -174,7 +174,7 @@
                     <h2>AIDEFEND™ — AI Security Defense Framework</h2>
                     <p>AIDEFEND™ is a structured knowledge base of defensive countermeasures for securing AI and ML systems.
                        It provides cross-mapped coverage across industry-leading frameworks including
-                       MITRE ATLAS, OWASP Top 10 for LLM, ML, and Agentic AI, MAESTRO, NIST Adversarial ML, and
+                       MITRE ATLAS, OWASP Top 10 for LLM, ML, and Agentic Applications, MAESTRO, NIST Adversarial ML, and
                        the Cisco AI Security &amp; Safety Framework.</p>
                     <p>Defensive techniques span the full security lifecycle — from threat modeling and preventive hardening,
                        through runtime detection and containment, to incident response and recovery — organized to help
@@ -337,6 +337,7 @@
             };
 
             // Generated from the pinned MITRE ATLAS 2026.06 reference dataset.
+            // GENERATED: atlasTechToTactics from devtools/frameworks/mitre_atlas.json (MITRE ATLAS 2026.06). Run node scripts/sync-framework-view-data.cjs after framework reference updates.
             const atlasTechToTactics = {
                 "AML.T0000": [
                     "Reconnaissance"
@@ -660,6 +661,7 @@
             };
 
                         // Generated from the pinned MITRE ATLAS 2026.06 reference dataset.
+                        // GENERATED: atlasTechNames from devtools/frameworks/mitre_atlas.json (MITRE ATLAS 2026.06). Run node scripts/sync-framework-view-data.cjs after framework reference updates.
                         const atlasTechNames = {
                             "AML.T0000": "Search Open Technical Databases",
                             "AML.T0000.000": "Journals and Conference Proceedings",
@@ -837,6 +839,7 @@
                         };
 
                         // Generated from the pinned MITRE ATLAS 2026.06 reference dataset.
+                        // GENERATED: atlasSubTechniques from devtools/frameworks/mitre_atlas.json (MITRE ATLAS 2026.06). Run node scripts/sync-framework-view-data.cjs after framework reference updates.
                         const atlasSubTechniques = {
                             "AML.T0000": [
                                 "AML.T0000.000",
@@ -957,6 +960,7 @@
                         };
 
                         // Generated from the pinned MITRE ATLAS 2026.06 reference dataset.
+                        // GENERATED: atlasTacticInfo from devtools/frameworks/mitre_atlas.json (MITRE ATLAS 2026.06). Run node scripts/sync-framework-view-data.cjs after framework reference updates.
                         const atlasTacticInfo = {
                             "Reconnaissance": {
                                 "id": "AML.TA0002",
@@ -1025,6 +1029,7 @@
                         };
 
                         // Generated from the pinned MITRE ATLAS 2026.06 reference dataset.
+                        // GENERATED: atlasTechDescs from devtools/frameworks/mitre_atlas.json (MITRE ATLAS 2026.06). Run node scripts/sync-framework-view-data.cjs after framework reference updates.
                         const atlasTechDescs = {
                             "AML.T0000": "Adversaries may search for publicly available research and technical documentation to learn how and where AI is used within a victim organization. The adversary can use this information to identify targets for attack, or to tailor an existing attack to make it more effective. Organizations often use open source model architectures trained on additional proprietary data in production. Knowledge of this underlying architecture allows the adversary to craft more realistic proxy models (Create Proxy AI Model). An adversary can search these resources for publications for authors employed at the victim organization.\n\nResearch and technical materials may exist as academic papers published in Journals and Conference Proceedings, or stored in Pre-Print Repositories, as well as Technical Blogs.",
                             "AML.T0000.000": "Many of the publications accepted at premier artificial intelligence conferences and journals come from commercial labs. Some journals and conferences are open access, others may require paying for access or a membership. These publications will often describe in detail all aspects of a particular approach for reproducibility. This information can be used by adversaries to implement the paper.",
@@ -1251,9 +1256,9 @@
                     parseGroup(item) { const m = item.match(/(ML\d{2}:\d{4})/); return m ? m[1] : null; }
                 },
                 'owasp-agentic': {
-                    frameworkKey: 'OWASP Agentic AI Top 10 2026',
-                    label: 'OWASP Agentic AI Top 10 (2026)',
-                    pageTitle: 'OWASP Agentic AI Top 10 (2026)',
+                    frameworkKey: 'OWASP Top 10 for Agentic Applications 2026',
+                    label: 'OWASP Top 10 for Agentic Applications 2026',
+                    pageTitle: 'OWASP Top 10 for Agentic Applications 2026',
                     about: 'A comprehensive guide identifying the most critical security risks specific to autonomous AI agents and multi-agent systems, published by OWASP Foundation.',
                     url: 'https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/',
                     layout: 'accordion',

@@ -60,7 +60,7 @@ export const restoreTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                     ]
@@ -216,7 +216,7 @@ export const restoreTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                             ]
@@ -333,7 +333,7 @@ export const restoreTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
                             ]
@@ -482,7 +482,7 @@ export const restoreTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI06:2026 Memory & Context Poisoning (restoring the authoritative source corpus removes poisoned context inputs; conversational state and vector-index recovery remain AID-R-003.002 and AID-R-005)"
                     ]
@@ -608,7 +608,7 @@ export const restoreTactic = {
                   ]
               },
               {
-                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "framework": "OWASP Top 10 for Agentic Applications 2026",
                   "items": [
                       "ASI02:2026 Tool Misuse and Exploitation",
                       "ASI03:2026 Identity and Privilege Abuse",
@@ -706,7 +706,7 @@ export const restoreTactic = {
                   ]
                 },
                 {
-                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "framework": "OWASP Top 10 for Agentic Applications 2026",
                   "items": [
                     "ASI03:2026 Identity and Privilege Abuse (fresh trusted sessions replace evicted compromised interactive sessions)"
                   ]
@@ -806,7 +806,7 @@ export const restoreTactic = {
                   ]
                 },
                 {
-                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "framework": "OWASP Top 10 for Agentic Applications 2026",
                   "items": [
                     "ASI06:2026 Memory & Context Poisoning"
                   ]
@@ -910,7 +910,7 @@ export const restoreTactic = {
                   ]
                 },
                 {
-                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "framework": "OWASP Top 10 for Agentic Applications 2026",
                   "items": [
                     "ASI02:2026 Tool Misuse and Exploitation (only policy-approved tool and action edges are re-enabled)",
                     "ASI03:2026 Identity and Privilege Abuse (effective privileges are restored only to the signed tier)"
@@ -1033,7 +1033,7 @@ export const restoreTactic = {
               ]
             },
             {
-              "framework": "OWASP Agentic AI Top 10 2026",
+              "framework": "OWASP Top 10 for Agentic Applications 2026",
               "items": [
                 "N/A"
               ]
@@ -1144,7 +1144,7 @@ export const restoreTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI01:2026 Agent Goal Hijack (rollback removes RAG content that could redirect agent goals)",
                         "ASI06:2026 Memory & Context Poisoning",
@@ -1305,7 +1305,7 @@ export const restoreTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI04:2026 Agentic Supply Chain Vulnerabilities (redeployment verifies prompt, tool, MCP, routing, runtime, and model release assets)",
                         "ASI06:2026 Memory & Context Poisoning (redeployment requires purged state and verified context stores)",
@@ -1427,7 +1427,7 @@ export const restoreTactic = {
               ]
             },
             {
-              "framework": "OWASP Agentic AI Top 10 2026",
+              "framework": "OWASP Top 10 for Agentic Applications 2026",
               "items": [
                 "ASI02:2026 Tool Misuse and Exploitation (downstream effects of exploited tools are reversed, compensated, or explicitly dispositioned)",
                 "ASI08:2026 Cascading Failures (issued effects are reconciled and compensated before unresolved divergence propagates further)"

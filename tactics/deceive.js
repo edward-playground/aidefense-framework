@@ -75,7 +75,7 @@ export const deceiveTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI02:2026 Tool Misuse and Exploitation (decoy tools detect unauthorized tool usage)",
                         "ASI10:2026 Rogue Agents (honeypot attracts and identifies rogue agent behavior)"
@@ -662,7 +662,7 @@ export const deceiveTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI03:2026 Identity and Privilege Abuse (non-authoritative canary credentials expose agent credential harvesting or attempted reuse)"
                     ]
@@ -1463,7 +1463,7 @@ export const deceiveTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI01:2026 Agent Goal Hijack (misleading responses frustrate goal hijacking)",
                         "ASI02:2026 Tool Misuse and Exploitation (feigned compliance exposes tool misuse intent)"
@@ -2289,7 +2289,7 @@ export const deceiveTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
                         "N/A"
                       ]
@@ -2406,7 +2406,7 @@ export const deceiveTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI01:2026 Agent Goal Hijack (canary goals detect goal hijacking)",
                         "ASI02:2026 Tool Misuse and Exploitation (decoy tools detect unauthorized tool use)",
@@ -3418,7 +3418,7 @@ export const deceiveTactic = {
               ]
             },
             {
-              "framework": "OWASP Agentic AI Top 10 2026",
+              "framework": "OWASP Top 10 for Agentic Applications 2026",
               "items": [
                 "N/A"
               ]
@@ -3537,7 +3537,7 @@ export const deceiveTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "N/A"
                     ]

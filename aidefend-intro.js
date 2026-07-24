@@ -12,7 +12,7 @@ export const aidefendIntroduction = {
         {
             "title": "What has been developed?",
             "paragraphs": [
-                "Organized across seven defensive tactics (Model, Harden, Detect, Isolate, Deceive, Evict, and Restore), AIDEFEND provides practical implementation strategies and code examples for protecting AI/ML systems. Parent techniques organize coherent defensive families; standalone techniques and leaf sub-techniques describe actionable technical controls. Guidance entries describe implementation paths within their owning control. The framework can be viewed by Tactic, technology Pillar, or lifecycle Phase, and relates its defenses to threats and risks from 9 major AI security frameworks: MITRE ATLAS, MAESTRO, OWASP LLM/ML/Agentic Top 10, NIST Adversarial ML, Cisco AI Security, Google SAIF, and Databricks DASF."
+                "Organized across seven defensive tactics (Model, Harden, Detect, Isolate, Deceive, Evict, and Restore), AIDEFEND provides practical implementation strategies and code examples for protecting AI/ML systems. Parent techniques organize coherent defensive families; standalone techniques and leaf sub-techniques describe actionable technical controls. Guidance entries describe implementation paths within their owning control. The framework can be viewed by Tactic, technology Pillar, or lifecycle Phase, and relates its defenses to threats and risks from 9 major AI security frameworks: MITRE ATLAS, MAESTRO, OWASP Top 10 for LLM, ML, and Agentic Applications, NIST Adversarial ML, Cisco AI Security, Google SAIF, and Databricks DASF."
             ]
         },
         {

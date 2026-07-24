@@ -66,7 +66,7 @@ export const isolateTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI02:2026 Tool Misuse and Exploitation",
                         "ASI04:2026 Agentic Supply Chain Vulnerabilities",
@@ -192,7 +192,7 @@ export const isolateTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI02:2026 Tool Misuse and Exploitation",
                                 "ASI05:2026 Unexpected Code Execution (RCE)",
@@ -345,7 +345,7 @@ export const isolateTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI05:2026 Unexpected Code Execution (RCE)",
                                 "ASI02:2026 Tool Misuse and Exploitation",
@@ -464,7 +464,7 @@ export const isolateTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI02:2026 Tool Misuse and Exploitation",
                                 "ASI05:2026 Unexpected Code Execution (RCE)"
@@ -579,7 +579,7 @@ export const isolateTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI02:2026 Tool Misuse and Exploitation"
                             ]
@@ -710,7 +710,7 @@ export const isolateTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI05:2026 Unexpected Code Execution (RCE)"
                             ]
@@ -818,7 +818,7 @@ export const isolateTactic = {
                   ]
               },
               {
-                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "framework": "OWASP Top 10 for Agentic Applications 2026",
                   "items": [
                       "ASI02:2026 Tool Misuse and Exploitation",
                       "ASI03:2026 Identity and Privilege Abuse",
@@ -972,7 +972,7 @@ export const isolateTactic = {
                       ]
                   },
                   {
-                      "framework": "OWASP Agentic AI Top 10 2026",
+                      "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
                           "ASI03:2026 Identity and Privilege Abuse (network segmentation enforces access boundaries)",
                           "ASI10:2026 Rogue Agents (internal segmentation contains rogue agent lateral movement)",
@@ -1127,7 +1127,7 @@ export const isolateTactic = {
                       ]
                   },
                   {
-                      "framework": "OWASP Agentic AI Top 10 2026",
+                      "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
                           "ASI02:2026 Tool Misuse and Exploitation (egress controls prevent tool-based exfiltration)",
                           "ASI07:2026 Insecure Inter-Agent Communication (secure external connectivity protects agent-to-service communication)"
@@ -1232,7 +1232,7 @@ export const isolateTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI02:2026 Tool Misuse and Exploitation",
                         "ASI03:2026 Identity and Privilege Abuse",
@@ -1357,7 +1357,7 @@ export const isolateTactic = {
                       ]
                     },
                     {
-                      "framework": "OWASP Agentic AI Top 10 2026",
+                      "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
                         "ASI10:2026 Rogue Agents (quarantine isolates rogue agents)",
                         "ASI08:2026 Cascading Failures (safe-mode limits cascade propagation)",
@@ -1506,7 +1506,7 @@ export const isolateTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI08:2026 Cascading Failures (throttling limits cascade propagation)"
                             ]
@@ -1630,7 +1630,7 @@ export const isolateTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI08:2026 Cascading Failures (resource throttles limit cascade propagation)"
                             ]
@@ -1747,7 +1747,7 @@ export const isolateTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI02:2026 Tool Misuse and Exploitation",
                                 "ASI03:2026 Identity and Privilege Abuse"
@@ -1843,7 +1843,7 @@ export const isolateTactic = {
                   ]
               },
               {
-                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "framework": "OWASP Top 10 for Agentic Applications 2026",
                   "items": [
                       "ASI01:2026 Agent Goal Hijack",
                       "ASI03:2026 Identity and Privilege Abuse",
@@ -1986,7 +1986,7 @@ export const isolateTactic = {
                       ]
                   },
                   {
-                      "framework": "OWASP Agentic AI Top 10 2026",
+                      "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
                           "ASI06:2026 Memory & Context Poisoning",
                           "ASI08:2026 Cascading Failures (context bleed can propagate across sessions)",
@@ -2108,7 +2108,7 @@ export const isolateTactic = {
                       ]
                   },
                   {
-                      "framework": "OWASP Agentic AI Top 10 2026",
+                      "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
                           "ASI06:2026 Memory & Context Poisoning",
                           "ASI03:2026 Identity and Privilege Abuse (authorization-gated retrieval prevents unauthorized access)"
@@ -2222,7 +2222,7 @@ export const isolateTactic = {
                       ]
                   },
                   {
-                      "framework": "OWASP Agentic AI Top 10 2026",
+                      "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
                           "ASI06:2026 Memory & Context Poisoning"
                       ]
@@ -2335,7 +2335,7 @@ export const isolateTactic = {
                       ]
                   },
                   {
-                      "framework": "OWASP Agentic AI Top 10 2026",
+                      "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
                           "ASI06:2026 Memory & Context Poisoning",
                           "ASI01:2026 Agent Goal Hijack (promotion gates prevent poisoned memory from hijacking agent goals)"
@@ -2452,7 +2452,7 @@ export const isolateTactic = {
                       ]
                   },
                   {
-                      "framework": "OWASP Agentic AI Top 10 2026",
+                      "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
                           "ASI06:2026 Memory & Context Poisoning",
                           "ASI01:2026 Agent Goal Hijack"
@@ -2596,7 +2596,7 @@ export const isolateTactic = {
                       ]
                   },
                   {
-                      "framework": "OWASP Agentic AI Top 10 2026",
+                      "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
                           "ASI01:2026 Agent Goal Hijack",
                           "ASI06:2026 Memory & Context Poisoning"
@@ -2736,7 +2736,7 @@ export const isolateTactic = {
                       ]
                   },
                   {
-                      "framework": "OWASP Agentic AI Top 10 2026",
+                      "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
                           "ASI01:2026 Agent Goal Hijack",
                           "ASI03:2026 Identity and Privilege Abuse",
@@ -3381,7 +3381,7 @@ export const isolateTactic = {
                   ]
                 },
                 {
-                  "framework": "OWASP Agentic AI Top 10 2026",
+                  "framework": "OWASP Top 10 for Agentic Applications 2026",
                   "items": [
                     "ASI01:2026 Agent Goal Hijack (compaction drops mission constraints enabling goal drift)",
                     "ASI06:2026 Memory & Context Poisoning (compaction is the primary vector for turning transient poison into persistent context)"
@@ -3481,7 +3481,7 @@ export const isolateTactic = {
               "LLM01:2025 Prompt Injection", "LLM05:2025 Improper Output Handling"
             ]},
             {"framework": "OWASP ML Top 10 2023", "items": ["N/A"]},
-            {"framework": "OWASP Agentic AI Top 10 2026", "items": [
+            {"framework": "OWASP Top 10 for Agentic Applications 2026", "items": [
               "ASI01:2026 Agent Goal Hijack",
               "ASI06:2026 Memory & Context Poisoning",
               "ASI07:2026 Insecure Inter-Agent Communication",
@@ -4285,7 +4285,7 @@ def load_for_context(
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI10:2026 Rogue Agents",
                         "ASI08:2026 Cascading Failures",
@@ -4822,7 +4822,7 @@ def load_for_context(
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "N/A"
                     ]
@@ -4936,7 +4936,7 @@ def load_for_context(
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI05:2026 Unexpected Code Execution (RCE)",
                         "ASI02:2026 Tool Misuse and Exploitation (client-side isolation prevents tool misuse by compromised model)",
@@ -5071,7 +5071,7 @@ def load_for_context(
                     ]
                 },
                 {
-                    "framework": "OWASP Agentic AI Top 10 2026",
+                    "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
                         "ASI01:2026 Agent Goal Hijack",
                         "ASI02:2026 Tool Misuse and Exploitation",
@@ -5195,7 +5195,7 @@ def load_for_context(
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI03:2026 Identity and Privilege Abuse"
                             ]
@@ -5306,7 +5306,7 @@ def load_for_context(
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI01:2026 Agent Goal Hijack",
                                 "ASI02:2026 Tool Misuse and Exploitation",
@@ -5423,7 +5423,7 @@ def load_for_context(
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI02:2026 Tool Misuse and Exploitation"
                             ]
@@ -5578,7 +5578,7 @@ def load_for_context(
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI01:2026 Agent Goal Hijack",
                                 "ASI02:2026 Tool Misuse and Exploitation",
@@ -7354,7 +7354,7 @@ def load_for_context(
                             ]
                         },
                         {
-                            "framework": "OWASP Agentic AI Top 10 2026",
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
                                 "ASI02:2026 Tool Misuse and Exploitation",
                                 "ASI03:2026 Identity and Privilege Abuse"

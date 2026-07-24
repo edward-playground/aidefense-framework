@@ -2,7 +2,7 @@
 "version": {
 "schemaVersion": "2.3",
 "dataVersion": "2026.07.24",
-"generatedAt": "2026-07-24T14:27:56.593Z",
+"generatedAt": "2026-07-24T14:40:39.028Z",
 "source": "bundled",
 "keywordStructure": "flat"
 },
@@ -74,7 +74,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -134,7 +134,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "2223acb7f4f90b77",
+"contentHash": "33d76c52aec16ec2",
 "keywords": [
 "ai asset inventory",
 "ml component cataloging",
@@ -232,7 +232,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -265,7 +265,7 @@
 ]
 }
 ],
-"contentHash": "0fdd610a144027e6",
+"contentHash": "9bff9794be72b342",
 "keywords": [
 "ai component inventory",
 "infrastructure cataloging",
@@ -360,7 +360,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -403,7 +403,7 @@
 ]
 }
 ],
-"contentHash": "60263625989070ca",
+"contentHash": "1caa6ad9390ef808",
 "keywords": [
 "ai bom generation",
 "deployed release bundle",
@@ -506,7 +506,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities (skill inventory enables enterprise-wide supply-chain tracking for agentic skills)"
 ]
@@ -539,7 +539,7 @@
 ]
 }
 ],
-"contentHash": "5f8c45193348ff39",
+"contentHash": "050f0b617c9d709a",
 "keywords": [
 "agent skill inventory",
 "instruction asset inventory",
@@ -639,7 +639,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -669,7 +669,7 @@
 ]
 }
 ],
-"contentHash": "a48baf67a3f00b46",
+"contentHash": "4549bc452f42355c",
 "keywords": [
 "ai service discovery",
 "embedded saas ai discovery",
@@ -763,7 +763,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -799,7 +799,7 @@
 ]
 }
 ],
-"contentHash": "4c0c236665e5c477",
+"contentHash": "40f584e09ed393b6",
 "keywords": [
 "external attack surface management",
 "public AI endpoint discovery",
@@ -898,7 +898,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -932,7 +932,7 @@
 ]
 }
 ],
-"contentHash": "9c89f47fb00a2882",
+"contentHash": "c03fdf53c9bb6e6d",
 "keywords": [
 "internal ai endpoint discovery",
 "agent service inventory",
@@ -1023,7 +1023,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
 "ASI06:2026 Memory & Context Poisoning"
@@ -1087,7 +1087,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "c0277304116cf1b3",
+"contentHash": "61f0358221a41730",
 "keywords": [
 "data provenance",
 "data lineage tracking",
@@ -1174,7 +1174,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -1207,7 +1207,7 @@
 ]
 }
 ],
-"contentHash": "48c123c10a7036f9",
+"contentHash": "6101f3cf8b97d0df",
 "keywords": [
 "data versioning",
 "dvc versioning",
@@ -1312,7 +1312,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -1349,7 +1349,7 @@
 ]
 }
 ],
-"contentHash": "068334a762751d97",
+"contentHash": "51395a25e454dd4b",
 "keywords": [
 "cryptographic integrity verification",
 "whole-artifact hashing",
@@ -1444,7 +1444,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -1487,7 +1487,7 @@
 ]
 }
 ],
-"contentHash": "54276898f54c377e",
+"contentHash": "27f3cb4b5ad0f31a",
 "keywords": [
 "external dataset content risk",
 "complete input manifest",
@@ -1594,7 +1594,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning"
 ]
@@ -1626,7 +1626,7 @@
 ]
 }
 ],
-"contentHash": "cb810bcf3b92675b",
+"contentHash": "20b9047037f58a4b",
 "keywords": [
 "trust-tiered namespace",
 "write-gate admission",
@@ -1731,7 +1731,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -1766,7 +1766,7 @@
 ]
 }
 ],
-"contentHash": "a08299c0a1596557",
+"contentHash": "530bf4acd8f2de87",
 "keywords": [
 "hybrid signature provenance",
 "post-quantum artifact integrity",
@@ -1831,7 +1831,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -1873,7 +1873,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "0ffdf7d3e71eaecf",
+"contentHash": "75a6bbaf29ee3581",
 "keywords": [
 "model behavior baseline",
 "model cards",
@@ -1974,7 +1974,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -2004,7 +2004,7 @@
 ]
 }
 ],
-"contentHash": "4a177f8d64182a34",
+"contentHash": "dec5ef5ce408cf2b",
 "keywords": [
 "model card generation",
 "datasheets for datasets",
@@ -2118,7 +2118,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -2149,7 +2149,7 @@
 ]
 }
 ],
-"contentHash": "d4d09e8bc4ddf2b9",
+"contentHash": "282d6e54e0c28cb1",
 "keywords": [
 "signed performance baseline",
 "operational metric baseline",
@@ -2247,7 +2247,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -2277,7 +2277,7 @@
 ]
 }
 ],
-"contentHash": "c656a515654173d0",
+"contentHash": "4f411c71daf246d5",
 "keywords": [
 "xai baseline",
 "explainability baseline",
@@ -2376,7 +2376,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -2410,7 +2410,7 @@
 ]
 }
 ],
-"contentHash": "7bcf8bc7a0d590d9",
+"contentHash": "d8a40591f81dd6cc",
 "keywords": [
 "agent goal baselining",
 "signed mission directive",
@@ -2506,7 +2506,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -2536,7 +2536,7 @@
 ]
 }
 ],
-"contentHash": "fca83196d13a46fb",
+"contentHash": "83716c87aec57e02",
 "keywords": [
 "generative inversion pre-screening",
 "reconstruction error baselining",
@@ -2636,7 +2636,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -2667,7 +2667,7 @@
 ]
 }
 ],
-"contentHash": "232d02d6007e0481",
+"contentHash": "64327f95ad88d95d",
 "keywords": [
 "graph structured model baseline",
 "graph snapshot digest",
@@ -2762,7 +2762,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -2792,7 +2792,7 @@
 ]
 }
 ],
-"contentHash": "b56e7dbfdc8ad3bd",
+"contentHash": "1caab10a75bff78b",
 "keywords": [
 "llm behavior baseline",
 "golden prompt suite",
@@ -2862,7 +2862,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -2932,7 +2932,7 @@
 "IriusRisk",
 "OneTrust AI Governance"
 ],
-"contentHash": "823c8680e4c69f55",
+"contentHash": "da0c312bc2210272",
 "keywords": [
 "ai threat modeling",
 "stride methodology",
@@ -3004,7 +3004,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse",
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
@@ -3058,7 +3058,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "8ef642fcbf057fa9",
+"contentHash": "675f4d8fa05fdf7f",
 "keywords": [
 "secure configuration baselines",
 "cis benchmarks",
@@ -3151,7 +3151,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -3181,7 +3181,7 @@
 ]
 }
 ],
-"contentHash": "3da4bcc5439ed2bd",
+"contentHash": "da344fb13e53c7a3",
 "keywords": [
 "secure baseline template design",
 "immutable source pinning",
@@ -3281,7 +3281,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities (policy-as-code release gates reject unapproved component configuration)",
 "ASI03:2026 Identity and Privilege Abuse (access-control baselines gate insecure identity configuration)"
@@ -3330,7 +3330,7 @@
 ]
 }
 ],
-"contentHash": "94e74589f5638480",
+"contentHash": "e60b7f9bc6a23c58",
 "keywords": [
 "policy-as-code baseline",
 "posture slo definition",
@@ -3402,7 +3402,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI03:2026 Identity and Privilege Abuse",
@@ -3448,7 +3448,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "108536222d055413",
+"contentHash": "7febe799328ac303",
 "keywords": [
 "human-in-the-loop mapping",
 "hitl control points",
@@ -3537,7 +3537,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -3567,7 +3567,7 @@
 ]
 }
 ],
-"contentHash": "9cb5b479edd64cf3",
+"contentHash": "6e207bdcbd53f389",
 "keywords": [
 "hitl checkpoint design",
 "approval service implementation",
@@ -3661,7 +3661,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI09:2026 Human-Agent Trust Exploitation"
 ]
@@ -3693,7 +3693,7 @@
 ]
 }
 ],
-"contentHash": "5178a172ed2f30f3",
+"contentHash": "d09879952bc70796",
 "keywords": [
 "operator training program",
 "hitl fire drills",
@@ -3794,7 +3794,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation (high-impact tool actions are bound to an escalation and decision record)",
 "ASI08:2026 Cascading Failures (escalation prevents unhandled HITL events from compounding)",
@@ -3832,7 +3832,7 @@
 ]
 }
 ],
-"contentHash": "caee456e35060d3e",
+"contentHash": "99d8a074984aca93",
 "keywords": [
 "hitl escalation topology",
 "event-before-action release",
@@ -3909,7 +3909,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI08:2026 Cascading Failures"
@@ -3951,7 +3951,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "8b19e98903116410",
+"contentHash": "92b359ec769afd18",
 "keywords": [
 "machine-readable safety boundary",
 "signed use-case policy",
@@ -4037,7 +4037,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -4068,7 +4068,7 @@
 ]
 }
 ],
-"contentHash": "6a637787e5dc2056",
+"contentHash": "0b7942a8b4c62333",
 "keywords": [
 "signed safety boundary specification",
 "machine-readable use-case policy",
@@ -4163,7 +4163,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation (machine-readable allowed/forbidden actions help constrain tool usage)",
 "ASI08:2026 Cascading Failures (fail-safe policies + gating tests reduce unsafe behavior propagation)"
@@ -4197,7 +4197,7 @@
 ]
 }
 ],
-"contentHash": "fe6d63a25ab1da68",
+"contentHash": "5eb370ca1b202d87",
 "keywords": [
 "release conformance gate",
 "signed deterministic test suite",
@@ -4286,7 +4286,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A (agentic trust and goal risks do not directly represent statistical group-fairness admission)"
 ]
@@ -4316,7 +4316,7 @@
 ]
 }
 ],
-"contentHash": "6775d336cf474f32",
+"contentHash": "73f9644c891abcaa",
 "keywords": [
 "fairness release evaluation",
 "protected-group population completeness",
@@ -4402,7 +4402,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI02:2026 Tool Misuse and Exploitation",
@@ -4495,7 +4495,7 @@
 "Check Point AI Red Teaming",
 "Credo AI"
 ],
-"contentHash": "3def3911f465ec15",
+"contentHash": "74362261ddb841c2",
 "keywords": [
 "continuous agentic security benchmarking",
 "version-pinned attack suites",
@@ -4578,7 +4578,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI02:2026 Tool Misuse and Exploitation",
@@ -4632,7 +4632,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "0a812c5dce4567b5",
+"contentHash": "bcac9ab1c9f5af6a",
 "keywords": [
 "agent autonomy governance",
 "lethal trifecta risk",
@@ -4718,7 +4718,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -4748,7 +4748,7 @@
 ]
 }
 ],
-"contentHash": "879efaabf7a15824",
+"contentHash": "c537a3b5ee09c046",
 "keywords": [
 "operating scope definition",
 "functional autonomy profile",
@@ -4840,7 +4840,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -4871,7 +4871,7 @@
 ]
 }
 ],
-"contentHash": "3d019b56961bf8eb",
+"contentHash": "98e09c437a54aec2",
 "keywords": [
 "authority envelope policy",
 "action risk classification matrix",
@@ -4959,7 +4959,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse"
 ]
@@ -4991,7 +4991,7 @@
 ]
 }
 ],
-"contentHash": "b781da006600e69a",
+"contentHash": "f49d7e7e1fea7c5c",
 "keywords": [
 "agent runtime identity",
 "delegation lineage tracking",
@@ -5074,7 +5074,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI10:2026 Rogue Agents (signed evidence-bound trust-state demotion prevents stale or unverifiable agent state from being treated as normal)"
 ]
@@ -5104,7 +5104,7 @@
 ]
 }
 ],
-"contentHash": "200650d196c91e0c",
+"contentHash": "609c19c46193b48a",
 "keywords": [
 "runtime trust state model",
 "automatic trust demotion",
@@ -5197,7 +5197,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack"
 ]
@@ -5229,7 +5229,7 @@
 ]
 }
 ],
-"contentHash": "f67bf13101f79cac",
+"contentHash": "ff4d212b7b2c6449",
 "keywords": [
 "goal manifest version control",
 "signed manifest promotion",
@@ -5329,7 +5329,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI02:2026 Tool Misuse and Exploitation",
@@ -5372,7 +5372,7 @@
 ]
 }
 ],
-"contentHash": "28c5171ade8386c0",
+"contentHash": "9cc1b80452e82fe8",
 "keywords": [
 "capability tier binding",
 "control profile matrix",
@@ -5442,7 +5442,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -5487,7 +5487,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "b8151ff0329048b5",
+"contentHash": "6c6708ed5940f253",
 "keywords": [
 "asset retirement governance",
 "end-of-life procedures",
@@ -5580,7 +5580,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A (media sanitization process, not applicable to agentic runtime threats)"
 ]
@@ -5614,7 +5614,7 @@
 ]
 }
 ],
-"contentHash": "ec53887a8022af25",
+"contentHash": "2c7782658ecf40f2",
 "keywords": [
 "cryptographic erasure",
 "crypto-shredding",
@@ -5712,7 +5712,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -5747,7 +5747,7 @@
 ]
 }
 ],
-"contentHash": "6c4d02aef6bbc246",
+"contentHash": "059d7a07c622607f",
 "keywords": [
 "secure asset transfer protocol",
 "ownership handoff governance",
@@ -5849,7 +5849,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -5883,7 +5883,7 @@
 ]
 }
 ],
-"contentHash": "8b917b9b265208e1",
+"contentHash": "6c18bbd76c5c9960",
 "keywords": [
 "logical asset retirement",
 "signed retirement tombstone",
@@ -5970,7 +5970,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -6045,7 +6045,7 @@
 "Weights & Biases",
 "AnyLogic"
 ],
-"contentHash": "af7ec8a0abba5d28",
+"contentHash": "5ff018d1fe758b6a",
 "keywords": [
 "adversarial training",
 "certified robustness",
@@ -6136,7 +6136,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
@@ -6214,7 +6214,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "8002bcfbe68e0899",
+"contentHash": "2912e58d7a986728",
 "keywords": [
 "input sanitization",
 "prompt hardening",
@@ -6319,7 +6319,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities (sanitizing training data from third-party sources)"
 ]
@@ -6361,7 +6361,7 @@
 ]
 }
 ],
-"contentHash": "07a27a590930e6b3",
+"contentHash": "915d7d22e9a9e7ca",
 "keywords": [
 "training data sanitization",
 "poisoned sample removal",
@@ -6492,7 +6492,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack (input validation blocks prompt-based goal manipulation)"
 ]
@@ -6529,7 +6529,7 @@
 ]
 }
 ],
-"contentHash": "7fa751184ba920a9",
+"contentHash": "2c566133be83dbef",
 "keywords": [
 "prompt gate",
 "inference-time validation",
@@ -6634,7 +6634,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -6664,7 +6664,7 @@
 ]
 }
 ],
-"contentHash": "37ffdd3940c85a9a",
+"contentHash": "00925ead9ef8cacc",
 "keywords": [
 "batch multimodal sanitization",
 "artifact-level media gate",
@@ -6764,7 +6764,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -6799,7 +6799,7 @@
 ]
 }
 ],
-"contentHash": "020f0b161611c0f9",
+"contentHash": "456100fdaa49294b",
 "keywords": [
 "feature pipeline integrity",
 "training-serving skew detection",
@@ -6901,7 +6901,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities (compromised labeling pipeline in agent training supply chain)"
 ]
@@ -6935,7 +6935,7 @@
 ]
 }
 ],
-"contentHash": "6cacced4ef955233",
+"contentHash": "a7fa45afa5d1efc0",
 "keywords": [
 "label provenance",
 "label flipping detection",
@@ -7025,7 +7025,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -7057,7 +7057,7 @@
 ]
 }
 ],
-"contentHash": "54780e8cbcc230a4",
+"contentHash": "6e710e40c389ffa0",
 "keywords": [
 "dataset split integrity",
 "deterministic splitting",
@@ -7152,7 +7152,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -7184,7 +7184,7 @@
 ]
 }
 ],
-"contentHash": "17dfaf959bd376fc",
+"contentHash": "d2afb90da9da910e",
 "keywords": [
 "c2pa verification",
 "content credentials",
@@ -7287,7 +7287,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack"
 ]
@@ -7327,7 +7327,7 @@
 ]
 }
 ],
-"contentHash": "d8b3698227229033",
+"contentHash": "0847e67472a00bad",
 "keywords": [
 "realtime multimodal stream security",
 "live audio gate",
@@ -7420,7 +7420,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
 "ASI05:2026 Unexpected Code Execution (RCE)"
@@ -7483,7 +7483,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "68017709707c7e50",
+"contentHash": "fec0cfe4cdf1d980",
 "keywords": [
 "ml supply chain security",
 "software admission controls",
@@ -7599,7 +7599,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
 "ASI05:2026 Unexpected Code Execution (RCE) (malicious packages can execute arbitrary code)"
@@ -7637,7 +7637,7 @@
 ]
 }
 ],
-"contentHash": "7c08e3c92b56f364",
+"contentHash": "b41379bc9e51ed9b",
 "keywords": [
 "software composition analysis",
 "dependency scanning",
@@ -7755,7 +7755,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -7789,7 +7789,7 @@
 ]
 }
 ],
-"contentHash": "78cfc886ec3b3d9b",
+"contentHash": "f4cdf377b084f19e",
 "keywords": [
 "model signing",
 "release gating",
@@ -7882,7 +7882,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -7916,7 +7916,7 @@
 ]
 }
 ],
-"contentHash": "30edd3f85ff9dd49",
+"contentHash": "060dbe3acf65ba1f",
 "keywords": [
 "external dataset provenance admission",
 "source identity verification",
@@ -8013,7 +8013,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -8043,7 +8043,7 @@
 ]
 }
 ],
-"contentHash": "3a9bf8f0f103af99",
+"contentHash": "a44241a92781b66b",
 "keywords": [
 "hardware firmware attestation",
 "cluster node admission",
@@ -8134,7 +8134,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -8166,7 +8166,7 @@
 ]
 }
 ],
-"contentHash": "b312128addd2610a",
+"contentHash": "eeec58989f2fcbcd",
 "keywords": [
 "iac scanning",
 "shift-left security",
@@ -8290,7 +8290,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -8325,7 +8325,7 @@
 ]
 }
 ],
-"contentHash": "253bf233f16654ce",
+"contentHash": "832e82e3f87a90d8",
 "keywords": [
 "model sbom attestation",
 "cyclonedx ml-bom export",
@@ -8435,7 +8435,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -8473,7 +8473,7 @@
 ]
 }
 ],
-"contentHash": "c2fa0d23bbefe64d",
+"contentHash": "a6f73f2de83e5998",
 "keywords": [
 "peft verification",
 "lora attestation",
@@ -8575,7 +8575,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -8607,7 +8607,7 @@
 ]
 }
 ],
-"contentHash": "7106a483b2c77543",
+"contentHash": "df4644693078e7c0",
 "keywords": [
 "crypto-agility",
 "pqc-ready signing",
@@ -8708,7 +8708,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
 "ASI05:2026 Unexpected Code Execution (RCE)"
@@ -8740,7 +8740,7 @@
 ]
 }
 ],
-"contentHash": "233c92dfc898cc63",
+"contentHash": "4ce4018e01ed0c31",
 "keywords": [
 "model artifact scanning",
 "unsafe deserialization detection",
@@ -8842,7 +8842,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
 "ASI05:2026 Unexpected Code Execution (RCE)"
@@ -8874,7 +8874,7 @@
 ]
 }
 ],
-"contentHash": "3ee779848dbb3bac",
+"contentHash": "39bd88617419172f",
 "keywords": [
 "deployed AI software inventory",
 "continuous vulnerability remediation",
@@ -8954,7 +8954,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse",
 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
@@ -9012,7 +9012,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "0ee152ec2a704b45",
+"contentHash": "93a7a8bb5960899b",
 "keywords": [
 "identity access management",
 "trusted AI communication",
@@ -9115,7 +9115,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse (user identity management prevents privilege abuse)"
 ]
@@ -9148,7 +9148,7 @@
 ]
 }
 ],
-"contentHash": "0cc6339b94b0b09d",
+"contentHash": "3f07c819dbdf6858",
 "keywords": [
 "user access management",
 "multi-factor authentication",
@@ -9249,7 +9249,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse (service auth enforces identity verification)"
 ]
@@ -9280,7 +9280,7 @@
 ]
 }
 ],
-"contentHash": "868e2b8c17a3e235",
+"contentHash": "c3f55ccdf146b698",
 "keywords": [
 "service authentication",
 "mtls",
@@ -9403,7 +9403,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse",
 "ASI07:2026 Insecure Inter-Agent Communication"
@@ -9443,7 +9443,7 @@
 ]
 }
 ],
-"contentHash": "947cfc9cb5be1e50",
+"contentHash": "3a91875689d97941",
 "keywords": [
 "secure agent communication",
 "a2a task authorization",
@@ -9547,7 +9547,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse",
 "ASI04:2026 Agentic Supply Chain Vulnerabilities (verified discovery prevents supply chain agent compromise)"
@@ -9582,7 +9582,7 @@
 ]
 }
 ],
-"contentHash": "27cc5bf8a95c0c41",
+"contentHash": "9f817784f99000f4",
 "keywords": [
 "verified agent discovery",
 "agent card provenance",
@@ -9678,7 +9678,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI07:2026 Insecure Inter-Agent Communication"
 ]
@@ -9710,7 +9710,7 @@
 ]
 }
 ],
-"contentHash": "4e0204af39bac5c3",
+"contentHash": "7ef80575d98681ac",
 "keywords": [
 "end-to-end message integrity",
 "message freshness validation",
@@ -9785,7 +9785,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -9837,7 +9837,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "cc1d6dccc65d4c73",
+"contentHash": "8d4b8c6218121ebb",
 "keywords": [
 "privacy-preserving ml",
 "differential privacy",
@@ -9932,7 +9932,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -9973,7 +9973,7 @@
 ]
 }
 ],
-"contentHash": "5b9c90daab101ad4",
+"contentHash": "1eb236c750313d62",
 "keywords": [
 "differential privacy",
 "dp-sgd",
@@ -10064,7 +10064,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -10095,7 +10095,7 @@
 ]
 }
 ],
-"contentHash": "dcd6333613d3847b",
+"contentHash": "bd1896d4598d9fa4",
 "keywords": [
 "homomorphic encryption",
 "microsoft seal",
@@ -10190,7 +10190,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -10227,7 +10227,7 @@
 ]
 }
 ],
-"contentHash": "ee308d4d0a071bd8",
+"contentHash": "f0913380433c3788",
 "keywords": [
 "training-time privacy regularization",
 "membership inference resistance",
@@ -10316,7 +10316,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -10349,7 +10349,7 @@
 ]
 }
 ],
-"contentHash": "5b3e1aa9bc4ddc27",
+"contentHash": "12490d9041439bc1",
 "keywords": [
 "llm training data deduplication",
 "exact sequence deduplication",
@@ -10451,7 +10451,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -10491,7 +10491,7 @@
 ]
 }
 ],
-"contentHash": "2ee87d7697bb1d92",
+"contentHash": "3027eb8714ae5b02",
 "keywords": [
 "embedding confidentiality",
 "vector store confidentiality",
@@ -10580,7 +10580,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI05:2026 Unexpected Code Execution (RCE)"
 ]
@@ -10638,7 +10638,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "c4d022808ab967e3",
+"contentHash": "c6856bb9a23de457",
 "keywords": [
 "output sanitization",
 "output hardening",
@@ -10729,7 +10729,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -10760,7 +10760,7 @@
 ]
 }
 ],
-"contentHash": "41945510c35d8adf",
+"contentHash": "7175e6fb5391d9d2",
 "keywords": [
 "structured output enforcement",
 "json schema validation",
@@ -10877,7 +10877,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI05:2026 Unexpected Code Execution (RCE) (sanitization prevents code execution via output)"
 ]
@@ -10912,7 +10912,7 @@
 ]
 }
 ],
-"contentHash": "87d69e80e923fd66",
+"contentHash": "91e13f9197f03713",
 "keywords": [
 "output content sanitization",
 "remote subresource blocking",
@@ -11015,7 +11015,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -11060,7 +11060,7 @@
 ]
 }
 ],
-"contentHash": "b72b4beee168bcb6",
+"contentHash": "78fe849ca6d1a714",
 "keywords": [
 "prediction response minimization",
 "classifier confidence reduction",
@@ -11153,7 +11153,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI05:2026 Unexpected Code Execution (RCE) (sanitization prevents code execution via output)"
 ]
@@ -11184,7 +11184,7 @@
 ]
 }
 ],
-"contentHash": "a200ae5cf2acc8d4",
+"contentHash": "940ee8a29108e26c",
 "keywords": [
 "generated binary release gate",
 "bounded binary decoding",
@@ -11269,7 +11269,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
@@ -11327,7 +11327,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "d2f612d52faed582",
+"contentHash": "4373ea82aa4df935",
 "keywords": [
 "secure training process",
 "training environment hardening",
@@ -11426,7 +11426,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -11459,7 +11459,7 @@
 ]
 }
 ],
-"contentHash": "6add961fb0015142",
+"contentHash": "5a43179ee4e8ad84",
 "keywords": [
 "isolated training environment",
 "least privilege iam",
@@ -11564,7 +11564,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -11598,7 +11598,7 @@
 ]
 }
 ],
-"contentHash": "ffc17579b6367c11",
+"contentHash": "5cb8821541dbc365",
 "keywords": [
 "training job monitoring",
 "loss anomaly detection",
@@ -11704,7 +11704,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -11738,7 +11738,7 @@
 ]
 }
 ],
-"contentHash": "94bd3eab409bcc40",
+"contentHash": "5f7a03544381557d",
 "keywords": [
 "deterministic training pipelines",
 "seed control enforcement",
@@ -11860,7 +11860,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -11892,7 +11892,7 @@
 ]
 }
 ],
-"contentHash": "0fda7ff3d7e30e1d",
+"contentHash": "2368923d8614df2f",
 "keywords": [
 "evaluation integrity",
 "holdout hashing",
@@ -11992,7 +11992,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack"
 ]
@@ -12028,7 +12028,7 @@
 ]
 }
 ],
-"contentHash": "290efc909662ca7e",
+"contentHash": "91243b3216dacef1",
 "keywords": [
 "fine-tuning safety gate",
 "safety alignment preservation",
@@ -12126,7 +12126,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities (derived model artifacts are gated before agent deployment)"
 ]
@@ -12159,7 +12159,7 @@
 ]
 }
 ],
-"contentHash": "7a47d6907b08be17",
+"contentHash": "8876614d397f56bb",
 "keywords": [
 "post-training transformation safety",
 "model quantization security regression",
@@ -12254,7 +12254,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities (protecting evaluator judge, grader, rubric-template, dependency, harness, threshold-policy, and evidence-writer integrity)"
 ]
@@ -12286,7 +12286,7 @@
 ]
 }
 ],
-"contentHash": "6744b445fec599d8",
+"contentHash": "1686306b813d0102",
 "keywords": [
 "evaluator mechanism integrity",
 "judge model digest binding",
@@ -12357,7 +12357,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -12402,7 +12402,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "8ad3c34de8ae95b6",
+"contentHash": "0b197f32d475c867",
 "keywords": [
 "robust federated aggregation",
 "secure aggregation",
@@ -12496,7 +12496,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -12529,7 +12529,7 @@
 ]
 }
 ],
-"contentHash": "89334ae7d9558f2c",
+"contentHash": "989209ac4065bd1b",
 "keywords": [
 "secure federated aggregation",
 "additively homomorphic aggregation",
@@ -12622,7 +12622,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -12656,7 +12656,7 @@
 ]
 }
 ],
-"contentHash": "ac036f5f83c11d75",
+"contentHash": "596f01d58779178d",
 "keywords": [
 "byzantine-robust aggregation",
 "krum aggregation rule",
@@ -12757,7 +12757,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -12787,7 +12787,7 @@
 ]
 }
 ],
-"contentHash": "6a5c77aa6734100b",
+"contentHash": "4fef874d9f9dd3db",
 "keywords": [
 "federated participant admission",
 "participant workload attestation",
@@ -12855,7 +12855,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -12895,7 +12895,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "cb5c9891fbe640da",
+"contentHash": "4deee938aa82fa69",
 "keywords": [
 "accelerator integrity",
 "gpu hardware security",
@@ -12985,7 +12985,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -13015,7 +13015,7 @@
 ]
 }
 ],
-"contentHash": "fcff0afeb9a30c54",
+"contentHash": "4195837f1fa82498",
 "keywords": [
 "hardware root of trust",
 "local secure boot enforcement",
@@ -13117,7 +13117,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -13147,7 +13147,7 @@
 ]
 }
 ],
-"contentHash": "82ada4e2248de1d2",
+"contentHash": "9d63fef6af566f3c",
 "keywords": [
 "firmware patch management",
 "gpu driver updates",
@@ -13228,7 +13228,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -13258,7 +13258,7 @@
 ]
 }
 ],
-"contentHash": "0b5763e2e8783f08",
+"contentHash": "cc0b0368e7c6b0fe",
 "keywords": [
 "hardware supply chain",
 "trusted supplier assurance",
@@ -13346,7 +13346,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -13378,7 +13378,7 @@
 ]
 }
 ],
-"contentHash": "83439d45fdf73715",
+"contentHash": "74b260252244a46e",
 "keywords": [
 "accelerator trust-zone isolation",
 "device lifecycle reset",
@@ -13476,7 +13476,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -13508,7 +13508,7 @@
 ]
 }
 ],
-"contentHash": "03d9255d82c124ac",
+"contentHash": "0fbd1bd1fd23ee81",
 "keywords": [
 "confidential inference",
 "multi-gpu confidential computing",
@@ -13580,7 +13580,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -13633,7 +13633,7 @@
 ],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "5247481e84c0b8fc",
+"contentHash": "c1496f3f2e27fee6",
 "keywords": [
 "cfg hardening",
 "classifier-free guidance control",
@@ -13709,7 +13709,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -13754,7 +13754,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "88f903685a7fbc4e",
+"contentHash": "b932b456e297c9bd",
 "keywords": [
 "gnn poisoning defense",
 "graph neural network hardening",
@@ -13840,7 +13840,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -13877,7 +13877,7 @@
 ]
 }
 ],
-"contentHash": "6ced5dcfbc94f205",
+"contentHash": "b95f184018caa732",
 "keywords": [
 "graph data sanitization",
 "graph provenance tracking",
@@ -13967,7 +13967,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -14001,7 +14001,7 @@
 ]
 }
 ],
-"contentHash": "a39691d23b8d6a55",
+"contentHash": "35beb14cad77cead",
 "keywords": [
 "robust gnn training",
 "outlier-resistant graph aggregation",
@@ -14085,7 +14085,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -14115,7 +14115,7 @@
 ]
 }
 ],
-"contentHash": "502f0bba19237c49",
+"contentHash": "d26826608176f396",
 "keywords": [
 "bounded gnn certification",
 "exact certified radius",
@@ -14187,7 +14187,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -14227,7 +14227,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "f644b991f6373919",
+"contentHash": "490784354fc7a3d1",
 "keywords": [
 "reward hacking prevention",
 "rlhf reward gaming",
@@ -14310,7 +14310,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -14340,7 +14340,7 @@
 ]
 }
 ],
-"contentHash": "0c130b3a1fdd05a1",
+"contentHash": "a259088cfea1a96c",
 "keywords": [
 "robust reward function",
 "multi-objective reward",
@@ -14425,7 +14425,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -14458,7 +14458,7 @@
 ]
 }
 ],
-"contentHash": "0e3e21a9a8a9a0e1",
+"contentHash": "5cdd2f72246a8d0f",
 "keywords": [
 "preference reward signal integrity",
 "demonstration reward signal",
@@ -14540,7 +14540,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -14570,7 +14570,7 @@
 ]
 }
 ],
-"contentHash": "e1e5e36554e7744f",
+"contentHash": "de92a75a1f86a4de",
 "keywords": [
 "rl sandbox evaluation",
 "behavioral promotion audit",
@@ -14649,7 +14649,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -14680,7 +14680,7 @@
 ]
 }
 ],
-"contentHash": "3205c42aa897739b",
+"contentHash": "3792cbc0390f095a",
 "keywords": [
 "reward channel integrity",
 "mutual tls reward transport",
@@ -14771,7 +14771,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -14801,7 +14801,7 @@
 ]
 }
 ],
-"contentHash": "845c0bc97f56562d",
+"contentHash": "6d9a82bf4d772c72",
 "keywords": [
 "rlhf reward model gaming",
 "rlvr verifier gaming",
@@ -14867,7 +14867,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -14905,7 +14905,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "c2a17383f03f0813",
+"contentHash": "8f9d3cbb6c251f9d",
 "keywords": [
 "governed provenance signals",
 "digital content watermarking",
@@ -15001,7 +15001,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -15031,7 +15031,7 @@
 ]
 }
 ],
-"contentHash": "82b671f1c591e037",
+"contentHash": "f7492fb60c7826f5",
 "keywords": [
 "digital content watermarking",
 "videoseal image watermarking",
@@ -15113,7 +15113,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -15144,7 +15144,7 @@
 ]
 }
 ],
-"contentHash": "5ebdda4f25281ae1",
+"contentHash": "43e6f75cbb30d64a",
 "keywords": [
 "white-box ownership verification",
 "complete artifact comparison",
@@ -15227,7 +15227,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -15257,7 +15257,7 @@
 ]
 }
 ],
-"contentHash": "05b7fa3a77c20844",
+"contentHash": "66b15b4869cbe169",
 "keywords": [
 "black-box behavioral fingerprinting",
 "secret ownership challenge set",
@@ -15332,7 +15332,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -15382,7 +15382,7 @@
 "DataRobot AutoML",
 "H2O Driverless AI"
 ],
-"contentHash": "bf776266c9017af5",
+"contentHash": "07796d7773128b5f",
 "keywords": [
 "ensemble robustness strategy",
 "model voting defenses",
@@ -15457,7 +15457,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -15508,7 +15508,7 @@
 "toolsCommercial": [
 "MATLAB Deep Learning Toolbox (verifyNetworkRobustness with alpha-beta-CROWN)"
 ],
-"contentHash": "741db6ee30a634dc",
+"contentHash": "b62e17eb85554760",
 "keywords": [
 "certified robustness guarantees",
 "formal robustness bounds",
@@ -15582,7 +15582,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack"
 ]
@@ -15629,7 +15629,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "df1c1ed1276cc494",
+"contentHash": "bcd4bdae98695b92",
 "keywords": [
 "instruction hierarchy defense",
 "model-level injection alignment",
@@ -15735,7 +15735,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack"
 ]
@@ -15777,7 +15777,7 @@
 ]
 }
 ],
-"contentHash": "4ff207666800ebe1",
+"contentHash": "34d5cc36896bc929",
 "keywords": [
 "system prompt hardening",
 "instruction data separation",
@@ -15866,7 +15866,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack"
 ]
@@ -15898,7 +15898,7 @@
 ]
 }
 ],
-"contentHash": "7bebbc79ea818541",
+"contentHash": "4eee351587b152f1",
 "keywords": [
 "model-level prompt injection training",
 "instruction hierarchy alignment",
@@ -15998,7 +15998,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI02:2026 Tool Misuse and Exploitation",
@@ -16066,7 +16066,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "0841904103643581",
+"contentHash": "dcb5fdc2996c65b3",
 "keywords": [
 "secure agent architecture",
 "agent hardening",
@@ -16166,7 +16166,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI08:2026 Cascading Failures (interruptible loops break cascade propagation)",
@@ -16199,7 +16199,7 @@
 ]
 }
 ],
-"contentHash": "8a56e47a8a579673",
+"contentHash": "6fff02259d9a1f24",
 "keywords": [
 "interruptible agent loop",
 "auditable state transitions",
@@ -16291,7 +16291,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI03:2026 Identity and Privilege Abuse",
@@ -16327,7 +16327,7 @@
 ]
 }
 ],
-"contentHash": "ac2c0513ace80c4a",
+"contentHash": "8a06fd770c5905fd",
 "keywords": [
 "least privilege tools",
 "single-purpose tool design",
@@ -16427,7 +16427,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI02:2026 Tool Misuse and Exploitation",
@@ -16474,7 +16474,7 @@
 ]
 }
 ],
-"contentHash": "de832b204b3542c8",
+"contentHash": "8a5e8a18b7e52e54",
 "keywords": [
 "decoupled plan then execute",
 "side-effect-free planning",
@@ -16562,7 +16562,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning"
 ]
@@ -16594,7 +16594,7 @@
 ]
 }
 ],
-"contentHash": "72f797ceab00ca85",
+"contentHash": "a758df464d7be50c",
 "keywords": [
 "transient agent state",
 "isolated task state",
@@ -16686,7 +16686,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -16716,7 +16716,7 @@
 ]
 }
 ],
-"contentHash": "55115a07f2619053",
+"contentHash": "e84db44f25b163ac",
 "keywords": [
 "agent behavior contract",
 "signed capability manifest",
@@ -16805,7 +16805,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI03:2026 Identity and Privilege Abuse",
@@ -16842,7 +16842,7 @@
 ]
 }
 ],
-"contentHash": "c1bd1bbe6cd2f650",
+"contentHash": "2dcde24137f63beb",
 "keywords": [
 "delegation graph bounds",
 "capability attenuation",
@@ -16940,7 +16940,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI02:2026 Tool Misuse and Exploitation",
@@ -16981,7 +16981,7 @@
 ]
 }
 ],
-"contentHash": "9e3af5b69143288b",
+"contentHash": "91bf102155b4b901",
 "keywords": [
 "dual llm isolation",
 "privileged quarantined split",
@@ -17080,7 +17080,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI02:2026 Tool Misuse and Exploitation",
@@ -17152,7 +17152,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "2c6423deefb9dd03",
+"contentHash": "172338b48182ab02",
 "keywords": [
 "tool authorization",
 "lethal trifecta mitigation",
@@ -17245,7 +17245,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation"
 ]
@@ -17277,7 +17277,7 @@
 ]
 }
 ],
-"contentHash": "e6ea3f534d680c27",
+"contentHash": "89975cb1dc495587",
 "keywords": [
 "tool parameter validation",
 "schema validation",
@@ -17372,7 +17372,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI03:2026 Identity and Privilege Abuse",
@@ -17408,7 +17408,7 @@
 ]
 }
 ],
-"contentHash": "62ed84ac0df32ef4",
+"contentHash": "5dfdb67ea43e44fc",
 "keywords": [
 "policy-based access control",
 "externalized authorization decision",
@@ -17517,7 +17517,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI01:2026 Agent Goal Hijack (independent validator catches goal hijack attempts)",
@@ -17560,7 +17560,7 @@
 ]
 }
 ],
-"contentHash": "8bb8ea5ad3f370dd",
+"contentHash": "0ed985cac7105a77",
 "keywords": [
 "high impact action gate",
 "canonical action plan",
@@ -17679,7 +17679,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI02:2026 Tool Misuse and Exploitation",
@@ -17721,7 +17721,7 @@
 ]
 }
 ],
-"contentHash": "4dc2cbe38ce70ba7",
+"contentHash": "b6109a8970450b6c",
 "keywords": [
 "intent-based capability scoping",
 "dynamic per-request authorization",
@@ -17827,7 +17827,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation (prevents data exfiltration via legitimate tool chains)",
 "ASI01:2026 Agent Goal Hijack (sink enforcement prevents hijacked goals from exfiltrating data)"
@@ -17868,7 +17868,7 @@
 ]
 }
 ],
-"contentHash": "b60c612fe1deba40",
+"contentHash": "9c230bfef1b64367",
 "keywords": [
 "value level capability metadata",
 "runtime data flow enforcement",
@@ -17964,7 +17964,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse",
 "ASI02:2026 Tool Misuse and Exploitation (TOCTOU prevention ensures authorization is current at execution time)"
@@ -18000,7 +18000,7 @@
 ]
 }
 ],
-"contentHash": "1a794e1eab85f143",
+"contentHash": "a25e5ba1ade76472",
 "keywords": [
 "execution time authorization",
 "anti toctou verification",
@@ -18124,7 +18124,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI03:2026 Identity and Privilege Abuse",
@@ -18166,7 +18166,7 @@
 ]
 }
 ],
-"contentHash": "bee4db00ab6a6a75",
+"contentHash": "169886d869b6c74c",
 "keywords": [
 "skill permission manifest",
 "skill-level authorization",
@@ -18270,7 +18270,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI08:2026 Cascading Failures (transactional execution and compensation stop duplicate effects from propagating)"
 ]
@@ -18301,7 +18301,7 @@
 ]
 }
 ],
-"contentHash": "b0d53ecd8a6ba407",
+"contentHash": "2ef7bf09e3146576",
 "keywords": [
 "agent tool idempotency",
 "side-effect transaction safety",
@@ -18383,7 +18383,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI02:2026 Tool Misuse and Exploitation",
@@ -18434,7 +18434,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "7a2406d5163b64ee",
+"contentHash": "b14505f5c2a99935",
 "keywords": [
 "safe fetch wrapper",
 "browser sandbox",
@@ -18533,7 +18533,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation (exact-URL verification and quiet-fetch gating constrain tool-driven exfiltration and SSRF)"
 ]
@@ -18565,7 +18565,7 @@
 ]
 }
 ],
-"contentHash": "7a1bce72bb9d7a27",
+"contentHash": "1dadca65d37fab2f",
 "keywords": [
 "pinned safe fetch",
 "exact url verification",
@@ -18655,7 +18655,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack (content demotion prevents embedded malicious instructions from hijacking goals)",
 "ASI06:2026 Memory & Context Poisoning (content demotion prevents embedded instructions from poisoning agent context)"
@@ -18688,7 +18688,7 @@
 ]
 }
 ],
-"contentHash": "2a19c2fee84ec16a",
+"contentHash": "49a942a1a67e136c",
 "keywords": [
 "html sanitization",
 "content demotion",
@@ -18793,7 +18793,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI02:2026 Tool Misuse and Exploitation",
@@ -18835,7 +18835,7 @@
 ]
 }
 ],
-"contentHash": "f631a639d8172437",
+"contentHash": "049c2f59b2a58fae",
 "keywords": [
 "browser runtime sandbox",
 "external egress boundary",
@@ -18917,7 +18917,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI02:2026 Tool Misuse and Exploitation",
@@ -18971,7 +18971,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "2d8fa6a10a444be4",
+"contentHash": "292dffe23bc66393",
 "keywords": [
 "rag index integrity",
 "retrieval authorization",
@@ -19066,7 +19066,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning (chunk-level signing detects tampered retrieval content)"
 ]
@@ -19098,7 +19098,7 @@
 ]
 }
 ],
-"contentHash": "28b888bc3c158a69",
+"contentHash": "b32f0127e19ef804",
 "keywords": [
 "chunk-level integrity signing",
 "canonical chunk digest",
@@ -19187,7 +19187,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning (RAG context poisoning from untrusted sources gets deprioritized)"
 ]
@@ -19218,7 +19218,7 @@
 ]
 }
 ],
-"contentHash": "a6b2bac7df7695c1",
+"contentHash": "efa1f75b67acb762",
 "keywords": [
 "source reputation weighting",
 "trust score retrieval",
@@ -19328,7 +19328,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse (retrieval authorization checks principal entitlements)",
 "ASI02:2026 Tool Misuse and Exploitation (tool-driven retrieval cannot bypass ACLs)"
@@ -19365,7 +19365,7 @@
 ]
 }
 ],
-"contentHash": "072f2c81eaa3c1fb",
+"contentHash": "bdf2ce8572b53c5b",
 "keywords": [
 "document level authorization",
 "chunk level retrieval authorization",
@@ -19459,7 +19459,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning",
 "ASI01:2026 Agent Goal Hijack"
@@ -19494,7 +19494,7 @@
 ]
 }
 ],
-"contentHash": "736b499b15081039",
+"contentHash": "23bfce8af414cab1",
 "keywords": [
 "retrieval-time context policy enforcement",
 "context governance release verification",
@@ -19571,7 +19571,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse",
 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
@@ -19626,7 +19626,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "7effd4312c9b2c0d",
+"contentHash": "c071f5f19a4d5ca5",
 "keywords": [
 "configuration integrity",
 "signed configurations",
@@ -19719,7 +19719,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -19753,7 +19753,7 @@
 ]
 }
 ],
-"contentHash": "858a3f9ddaf33871",
+"contentHash": "34c67f7de70771dc",
 "keywords": [
 "client-side configuration enforcement",
 "pre-commit hooks",
@@ -19864,7 +19864,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -19897,7 +19897,7 @@
 ]
 }
 ],
-"contentHash": "8484cd737a81ba24",
+"contentHash": "b6623df0fbdcac36",
 "keywords": [
 "signed configuration",
 "runtime integrity enforcement",
@@ -20014,7 +20014,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning",
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
@@ -20051,7 +20051,7 @@
 ]
 }
 ],
-"contentHash": "79ed78a5acb032b6",
+"contentHash": "1eea2046c4647a05",
 "keywords": [
 "context corpus governance",
 "retrieval-time integrity gate",
@@ -20144,7 +20144,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse",
 "ASI10:2026 Rogue Agents"
@@ -20181,7 +20181,7 @@
 ]
 }
 ],
-"contentHash": "6ce2ea60ddb5e383",
+"contentHash": "f2b38bed3f99b75b",
 "keywords": [
 "control-plane isolation",
 "oversight surface isolation",
@@ -20262,7 +20262,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
 "ASI05:2026 Unexpected Code Execution (RCE)"
@@ -20307,7 +20307,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "07ede458f990081f",
+"contentHash": "8f66398ba1841a1e",
 "keywords": [
 "secure dependency admission",
 "dependency admission gate",
@@ -20417,7 +20417,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
 "ASI05:2026 Unexpected Code Execution (RCE) (sandboxing contains malicious install script execution)"
@@ -20452,7 +20452,7 @@
 ]
 }
 ],
-"contentHash": "803cff377f7546f9",
+"contentHash": "072ee3bab6d94f12",
 "keywords": [
 "sandboxed dependency installation",
 "no network build",
@@ -20544,7 +20544,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -20581,7 +20581,7 @@
 ]
 }
 ],
-"contentHash": "7ee5904f0a86091e",
+"contentHash": "8e1ba05e2efdca26",
 "keywords": [
 "proactive package vetting",
 "package reputation analysis",
@@ -20658,7 +20658,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -20724,7 +20724,7 @@
 "CircleCI",
 "CloudBees CI"
 ],
-"contentHash": "330a59628f17132c",
+"contentHash": "946be307a1931561",
 "keywords": [
 "trusted package publishing",
 "oidc publishing workflow",
@@ -20810,7 +20810,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -20855,7 +20855,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "985deec4e658988a",
+"contentHash": "c2312ceb4996692d",
 "keywords": [
 "tool resolution integrity",
 "mcp endpoint verification",
@@ -20946,7 +20946,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -20979,7 +20979,7 @@
 ]
 }
 ],
-"contentHash": "a8c0e5fd34f1963a",
+"contentHash": "591d1e04a66af15b",
 "keywords": [
 "fully qualified tool identifier",
 "version pinning",
@@ -21072,7 +21072,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -21104,7 +21104,7 @@
 ]
 }
 ],
-"contentHash": "1ee089f23156f197",
+"contentHash": "72b9a96bebae5b19",
 "keywords": [
 "descriptor hash binding",
 "content hash pinning",
@@ -21187,7 +21187,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -21221,7 +21221,7 @@
 ]
 }
 ],
-"contentHash": "55df7a9641a7f0e1",
+"contentHash": "25ff30aca5879e40",
 "keywords": [
 "fail-closed tool resolution",
 "ambiguous identifier blocking",
@@ -21324,7 +21324,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -21358,7 +21358,7 @@
 ]
 }
 ],
-"contentHash": "7b2da49ab9701e5d",
+"contentHash": "191e4726a4aea6a0",
 "keywords": [
 "tool contract semantic invariants",
 "normalized tool contract profile",
@@ -21429,7 +21429,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI05:2026 Unexpected Code Execution (RCE)"
@@ -21471,7 +21471,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "7d49b8336c6e7bff",
+"contentHash": "a65404c579a12c27",
 "keywords": [
 "unsafe code execution prevention",
 "rce prevention",
@@ -21570,7 +21570,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI05:2026 Unexpected Code Execution (RCE)"
 ]
@@ -21603,7 +21603,7 @@
 ]
 }
 ],
-"contentHash": "f74c775443c70e80",
+"contentHash": "a7154beaa7039009",
 "keywords": [
 "pre execution static analysis",
 "ast admission gate",
@@ -21697,7 +21697,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI05:2026 Unexpected Code Execution (RCE)",
 "ASI02:2026 Tool Misuse and Exploitation (restricted interpreters constrain what agent-generated code can do)"
@@ -21731,7 +21731,7 @@
 ]
 }
 ],
-"contentHash": "dcd42b873b0485bd",
+"contentHash": "e80973405c809a93",
 "keywords": [
 "restricted interpreter",
 "restrictedpython sandbox",
@@ -21812,7 +21812,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -21862,7 +21862,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "35c89a5c4bd84cd8",
+"contentHash": "e208d184ea1428e6",
 "keywords": [
 "closed-loop detector hardening",
 "retrainable detector lifecycle",
@@ -21965,7 +21965,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -22004,7 +22004,7 @@
 ]
 }
 ],
-"contentHash": "09f2fc94218575ef",
+"contentHash": "7535da90cd6299e0",
 "keywords": [
 "hard-sample mining",
 "false negative collection",
@@ -22104,7 +22104,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -22148,7 +22148,7 @@
 ]
 }
 ],
-"contentHash": "7f0b86f0dca13943",
+"contentHash": "9d64ec328610a8d9",
 "keywords": [
 "adversarial prompt fuzzing",
 "prompt injection corpus expansion",
@@ -22245,7 +22245,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -22284,7 +22284,7 @@
 ]
 }
 ],
-"contentHash": "a379c8cd0258ad1d",
+"contentHash": "b4a30c48704b440a",
 "keywords": [
 "taxonomy-stratified detector evaluation",
 "prompt attack taxonomy",
@@ -22351,7 +22351,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning",
 "ASI03:2026 Identity and Privilege Abuse (cache reuse across privilege boundaries)"
@@ -22416,7 +22416,7 @@
 "Google Cloud Memorystore",
 "Azure Managed Redis"
 ],
-"contentHash": "f8b704787c42705a",
+"contentHash": "b52095064bc93ee7",
 "keywords": [
 "inference cache isolation",
 "kv cache partitioning",
@@ -22525,7 +22525,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI02:2026 Tool Misuse and Exploitation",
@@ -22607,7 +22607,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "b290c1b70256aec3",
+"contentHash": "fccc89654e422c40",
 "keywords": [
 "mcp client hardening",
 "stateless mcp client",
@@ -22708,7 +22708,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities (server spoofing in the agent supply chain)",
 "ASI07:2026 Insecure Inter-Agent Communication (MitM or impersonation on client-server channel)"
@@ -22743,7 +22743,7 @@
 ]
 }
 ],
-"contentHash": "1506a105e53b1ce6",
+"contentHash": "1f2b19775ef948cd",
 "keywords": [
 "server authenticity validation",
 "connection pinning",
@@ -22845,7 +22845,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse (stolen client credentials)"
 ]
@@ -22880,7 +22880,7 @@
 ]
 }
 ],
-"contentHash": "eb06b0280cbe5cce",
+"contentHash": "04044a1c117d45bc",
 "keywords": [
 "secure credential storage",
 "os keychain storage",
@@ -22966,7 +22966,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -22999,7 +22999,7 @@
 ]
 }
 ],
-"contentHash": "dccdd346c8667e6b",
+"contentHash": "643b0fe40292c7ab",
 "keywords": [
 "client-side data hygiene",
 "log redaction",
@@ -23095,7 +23095,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation (unsafe client handling of suggested actions)",
 "ASI05:2026 Unexpected Code Execution (RCE) (server response triggers client execution)",
@@ -23130,7 +23130,7 @@
 ]
 }
 ],
-"contentHash": "10abebec20b2c256",
+"contentHash": "e41c2b8b6136f2f7",
 "keywords": [
 "mcp client response hardening",
 "strict message schema validation",
@@ -23220,7 +23220,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse (session hijacking enables privilege abuse)"
 ]
@@ -23255,7 +23255,7 @@
 ]
 }
 ],
-"contentHash": "8ae79087506afca9",
+"contentHash": "7aadc94a9fbe2ea9",
 "keywords": [
 "mcp request partitioning",
 "authorization context binding",
@@ -23355,7 +23355,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities (client binary, plugin, or updater compromise)"
 ]
@@ -23389,7 +23389,7 @@
 ]
 }
 ],
-"contentHash": "ea761d0c0c871450",
+"contentHash": "c06a8b6c63d60213",
 "keywords": [
 "client binary signing",
 "cosign verification",
@@ -23475,7 +23475,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse (misbound input responses exercise the wrong principal)"
 ]
@@ -23509,7 +23509,7 @@
 ]
 }
 ],
-"contentHash": "04aa43cff700029b",
+"contentHash": "f91cb5654c868978",
 "keywords": [
 "multi round trip input",
 "active request binding",
@@ -23604,7 +23604,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack (sampling request hijacks client LLM conversation direction and decision pathway)",
 "ASI02:2026 Tool Misuse and Exploitation (covert tool invocation via sampling-triggered completions)",
@@ -23646,7 +23646,7 @@
 ]
 }
 ],
-"contentHash": "77dc6973dec0ece7",
+"contentHash": "2e526148042ec243",
 "keywords": [
 "mcp sampling exception isolation",
 "deprecated sampling capability",
@@ -23722,7 +23722,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -23764,7 +23764,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "58041376870a1828",
+"contentHash": "18d4c7065976db1d",
 "keywords": [
 "purpose-bound authorization",
 "lifecycle-stage boundary enforcement",
@@ -23862,7 +23862,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -23895,7 +23895,7 @@
 ]
 }
 ],
-"contentHash": "99699b1df8bff6ed",
+"contentHash": "3536ae3f6e2345c3",
 "keywords": [
 "data use tagging",
 "machine-readable policy schema",
@@ -23990,7 +23990,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -24022,7 +24022,7 @@
 ]
 }
 ],
-"contentHash": "02e0171093784eb0",
+"contentHash": "4ec184cc243dd2c6",
 "keywords": [
 "lifecycle stage authorization gate",
 "fail-closed stage gate",
@@ -24123,7 +24123,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -24157,7 +24157,7 @@
 ]
 }
 ],
-"contentHash": "31994fa35e14c841",
+"contentHash": "d763909b2ba46723",
 "keywords": [
 "consent scope tracking",
 "consent expiry enforcement",
@@ -24248,7 +24248,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
@@ -24294,7 +24294,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "d652903205dd3ad2",
+"contentHash": "180ba8bf5584d2a1",
 "keywords": [
 "skill admission pipeline",
 "multi-stage security analysis",
@@ -24391,7 +24391,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities (metadata honesty validation is a supply-chain trust gate for skills)"
 ]
@@ -24423,7 +24423,7 @@
 ]
 }
 ],
-"contentHash": "7e48c91685bf528d",
+"contentHash": "3f7880635d205030",
 "keywords": [
 "metadata honesty validation",
 "brand impersonation detection",
@@ -24514,7 +24514,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack (instruction analysis detects skill instructions designed to hijack agent goals)",
 "ASI05:2026 Unexpected Code Execution (RCE) (detects instructions that direct agents to execute code outside declared scope)"
@@ -24547,7 +24547,7 @@
 ]
 }
 ],
-"contentHash": "355f4b2195cb60d9",
+"contentHash": "a74be9966470e44a",
 "keywords": [
 "instruction layer semantic analysis",
 "skill intent classification",
@@ -24648,7 +24648,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities (behavioral testing is the empirical verification layer for skill supply-chain security)",
 "ASI05:2026 Unexpected Code Execution (RCE) (sandbox detects unexpected code execution paths in skill packages)"
@@ -24682,7 +24682,7 @@
 ]
 }
 ],
-"contentHash": "8e4949d219e51bfb",
+"contentHash": "b1fed29b47be8a84",
 "keywords": [
 "manifest vs observed testing",
 "behavioral sandbox verification",
@@ -24767,7 +24767,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities (skill loader hardening protects enterprise ingestion of third-party skills)",
 "ASI05:2026 Unexpected Code Execution (RCE) (safe parser defaults reduce deserialization and loader-triggered execution risk)"
@@ -24799,7 +24799,7 @@
 ]
 }
 ],
-"contentHash": "d44da4d641d51d54",
+"contentHash": "c8ed0b34c6b27815",
 "keywords": [
 "safe skill parsing",
 "loader hardening",
@@ -24895,7 +24895,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities (continuous re-scan ensures admission is not a one-time trust decision)"
 ]
@@ -24926,7 +24926,7 @@
 ]
 }
 ],
-"contentHash": "eb4160d577f75316",
+"contentHash": "cd04900822026f3f",
 "keywords": [
 "admission policy orchestration",
 "continuous rescan governance",
@@ -25010,7 +25010,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
 "ASI05:2026 Unexpected Code Execution (RCE)"
@@ -25060,7 +25060,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "31105183b449a18b",
+"contentHash": "e5819feed1833a7d",
 "keywords": [
 "ai-generated code admission control",
 "safe promotion control plane",
@@ -25154,7 +25154,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -25185,7 +25185,7 @@
 ]
 }
 ],
-"contentHash": "d8886b2aacddbef0",
+"contentHash": "e2575c8b0a2aa040",
 "keywords": [
 "ai-generated change provenance",
 "risk labeling",
@@ -25286,7 +25286,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
 "ASI05:2026 Unexpected Code Execution (RCE)"
@@ -25324,7 +25324,7 @@
 ]
 }
 ],
-"contentHash": "00ecd1613893d18c",
+"contentHash": "b281bc0109c0d4b5",
 "keywords": [
 "static admission gate",
 "ai coding-agent sabotage",
@@ -25419,7 +25419,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI05:2026 Unexpected Code Execution (RCE)",
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
@@ -25454,7 +25454,7 @@
 ]
 }
 ],
-"contentHash": "a2295c9ef88f4076",
+"contentHash": "87478722fbaccab4",
 "keywords": [
 "dynamic promotion validation",
 "ephemeral sandbox validation",
@@ -25552,7 +25552,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
 "ASI05:2026 Unexpected Code Execution (RCE)"
@@ -25587,7 +25587,7 @@
 ]
 }
 ],
-"contentHash": "4d966d36d8d9d965",
+"contentHash": "c9f581096d50d586",
 "keywords": [
 "evidence-bound promotion",
 "high-risk human approval",
@@ -25662,7 +25662,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning"
 ]
@@ -25702,7 +25702,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "26a9624102a6df55",
+"contentHash": "3f72b1035d5adadb",
 "keywords": [
 "multi-tenant inference isolation",
 "cross-tenant leakage prevention",
@@ -25792,7 +25792,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -25822,7 +25822,7 @@
 ]
 }
 ],
-"contentHash": "1d924f2b4adde235",
+"contentHash": "80d6e1a751381266",
 "keywords": [
 "dedicated inference capacity",
 "reserved serving pool",
@@ -25911,7 +25911,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning (cross-tenant serving-state reuse can contaminate or expose context)"
 ]
@@ -25944,7 +25944,7 @@
 ]
 }
 ],
-"contentHash": "85700aacac46a61e",
+"contentHash": "c287da86ad2285eb",
 "keywords": [
 "cross-tenant serving isolation",
 "serving-state partitioning",
@@ -26037,7 +26037,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -26068,7 +26068,7 @@
 ]
 }
 ],
-"contentHash": "d25bb6b7e67ed40e",
+"contentHash": "6424470b5ab0ef8b",
 "keywords": [
 "inference telemetry restriction",
 "debug surface restriction",
@@ -26162,7 +26162,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -26192,7 +26192,7 @@
 ]
 }
 ],
-"contentHash": "e2d963026a7cd642",
+"contentHash": "960cfe84a3f5ead9",
 "keywords": [
 "confidential inference attestation",
 "gpu confidential computing",
@@ -26276,7 +26276,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
 "ASI08:2026 Cascading Failures"
@@ -26324,7 +26324,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "a0ee0311aba9ab7e",
+"contentHash": "d0fb21d3220e4110",
 "keywords": [
 "ai gateway routing integrity",
 "policy-preserving failover",
@@ -26410,7 +26410,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -26440,7 +26440,7 @@
 ]
 }
 ],
-"contentHash": "c6ded57a6863c421",
+"contentHash": "aef429341111cb4c",
 "keywords": [
 "requested vs effective model binding",
 "route decision record",
@@ -26527,7 +26527,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI08:2026 Cascading Failures"
 ]
@@ -26558,7 +26558,7 @@
 ]
 }
 ],
-"contentHash": "329107c677a07864",
+"contentHash": "96e3cb18f03f81f0",
 "keywords": [
 "policy-preserving failover",
 "no silent safety downgrade",
@@ -26650,7 +26650,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -26682,7 +26682,7 @@
 ]
 }
 ],
-"contentHash": "d5a7a5135865a4ef",
+"contentHash": "9b6f1ba7774a02d4",
 "keywords": [
 "residency-constrained routing",
 "data zone routing",
@@ -26773,7 +26773,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -26804,7 +26804,7 @@
 ]
 }
 ],
-"contentHash": "fc639916b5bfe549",
+"contentHash": "e251bad3bcb40177",
 "keywords": [
 "route policy bundle versioning",
 "policy bundle approval",
@@ -26902,7 +26902,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities (blocks dispatch when the resolved route is outside the verified signed route contract)"
 ]
@@ -26935,7 +26935,7 @@
 ]
 }
 ],
-"contentHash": "b1a02d81ecdf8bc3",
+"contentHash": "28ff8c4370f0ea36",
 "keywords": [
 "effective route enforcement",
 "last trusted gateway",
@@ -27030,7 +27030,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -27062,7 +27062,7 @@
 ]
 }
 ],
-"contentHash": "c2cbab028c4a343b",
+"contentHash": "40eefcb10cf1eb7d",
 "keywords": [
 "effective invocation configuration",
 "last trusted gateway",
@@ -27176,7 +27176,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI03:2026 Identity and Privilege Abuse",
@@ -27260,7 +27260,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "4406e88445857cae",
+"contentHash": "71d169455ff3b882",
 "keywords": [
 "mcp server hardening",
 "stateless mcp server",
@@ -27369,7 +27369,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI07:2026 Insecure Inter-Agent Communication",
 "ASI08:2026 Cascading Failures"
@@ -27405,7 +27405,7 @@
 ]
 }
 ],
-"contentHash": "54014d04e5c180bb",
+"contentHash": "dcbd0a45486a625a",
 "keywords": [
 "mcp deployment profile",
 "streamable http hardening",
@@ -27512,7 +27512,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse"
 ]
@@ -27550,7 +27550,7 @@
 ]
 }
 ],
-"contentHash": "9f2e1ec979994868",
+"contentHash": "07dcf215d3c5fb63",
 "keywords": [
 "enterprise managed authorization",
 "identity assertion authorization grant",
@@ -27662,7 +27662,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI03:2026 Identity and Privilege Abuse",
@@ -27702,7 +27702,7 @@
 ]
 }
 ],
-"contentHash": "802338c0f5a8f83d",
+"contentHash": "a66a6cd05bde53c8",
 "keywords": [
 "tool input validation",
 "strict json schema",
@@ -27804,7 +27804,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -27841,7 +27841,7 @@
 ]
 }
 ],
-"contentHash": "dd956cb5bca561eb",
+"contentHash": "001a26a69ce0029d",
 "keywords": [
 "tool publication governance",
 "mcp contract manifest",
@@ -27946,7 +27946,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI03:2026 Identity and Privilege Abuse"
@@ -27988,7 +27988,7 @@
 ]
 }
 ],
-"contentHash": "3b84106d39e57c35",
+"contentHash": "f9c19fe002fd5815",
 "keywords": [
 "output boundary controls",
 "tool output sanitization",
@@ -28079,7 +28079,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse"
 ]
@@ -28116,7 +28116,7 @@
 ]
 }
 ],
-"contentHash": "8f9cf144c14577ca",
+"contentHash": "7c75891ebf40c630",
 "keywords": [
 "explicit application handles",
 "object authorized state",
@@ -28210,7 +28210,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse",
 "ASI08:2026 Cascading Failures"
@@ -28247,7 +28247,7 @@
 ]
 }
 ],
-"contentHash": "90178fb70d187cfd",
+"contentHash": "c0d80b40c4827b43",
 "keywords": [
 "mcp task lifecycle isolation",
 "subscription stream isolation",
@@ -28332,7 +28332,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI08:2026 Cascading Failures"
 ]
@@ -28366,7 +28366,7 @@
 ]
 }
 ],
-"contentHash": "6a07e26efa2206c8",
+"contentHash": "90a3a8d670d56582",
 "keywords": [
 "mcp server abuse budgets",
 "atomic budget reservation",
@@ -28453,7 +28453,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI08:2026 Cascading Failures",
@@ -28486,7 +28486,7 @@
 ]
 }
 ],
-"contentHash": "56cbae67051c1b1e",
+"contentHash": "21842e6f4034c1c2",
 "keywords": [
 "mcp authoritative disable state",
 "signed operation registry",
@@ -28574,7 +28574,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse",
 "ASI02:2026 Tool Misuse and Exploitation",
@@ -28648,7 +28648,7 @@
 "HCP Vault Dedicated",
 "Datadog"
 ],
-"contentHash": "9845058ae2a7226a",
+"contentHash": "c11ba49a31d44090",
 "keywords": [
 "defensive agent hardening",
 "response automation guardrails",
@@ -28731,7 +28731,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack"
 ]
@@ -28791,7 +28791,7 @@
 "Azure AI Content Safety",
 "Check Point AI Guardrails"
 ],
-"contentHash": "6c23ac56760d1bd0",
+"contentHash": "df23c7507a4f1373",
 "keywords": [
 "multilingual guardrail testing",
 "locale-stratified classifier evaluation",
@@ -28867,7 +28867,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack"
 ]
@@ -28913,7 +28913,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "c684b01e868a7e6d",
+"contentHash": "1eaae6b9d1c5b5ac",
 "keywords": [
 "reasoning state security",
 "reasoning compute controls",
@@ -28997,7 +28997,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -29028,7 +29028,7 @@
 ]
 }
 ],
-"contentHash": "be93faaa75f33990",
+"contentHash": "2f6653fd22bd6b23",
 "keywords": [
 "raw reasoning trace suppression",
 "hidden chain-of-thought storage control",
@@ -29120,7 +29120,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -29153,7 +29153,7 @@
 ]
 }
 ],
-"contentHash": "4c78cbdc93cb3fb2",
+"contentHash": "123f3921709c3326",
 "keywords": [
 "thinking budget enforcement",
 "reasoning compute bounding",
@@ -29237,7 +29237,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack"
 ]
@@ -29267,7 +29267,7 @@
 ]
 }
 ],
-"contentHash": "3277f04d28d631fe",
+"contentHash": "d305470baeeeb04a",
 "keywords": [
 "reasoning-block round-trip integrity",
 "provider-authored opaque bytes",
@@ -29382,7 +29382,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI03:2026 Identity and Privilege Abuse",
@@ -29465,7 +29465,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "879e4362d26102c4",
+"contentHash": "24d8a5fd4de46a58",
 "keywords": [
 "adversarial input detection",
 "prompt injection detection",
@@ -29577,7 +29577,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack (adversarial prompts can redirect agent goals)",
 "ASI03:2026 Identity and Privilege Abuse"
@@ -29629,7 +29629,7 @@
 ]
 }
 ],
-"contentHash": "20bb066e79e8b74b",
+"contentHash": "c3af0b8f28087a7d",
 "keywords": [
 "per prompt scanning",
 "content intent analysis",
@@ -29741,7 +29741,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI09:2026 Human-Agent Trust Exploitation (deepfakes exploit human trust in agent-presented media)"
 ]
@@ -29779,7 +29779,7 @@
 ]
 }
 ],
-"contentHash": "06cab20a80e526c1",
+"contentHash": "d9ba5a8acdbe4a1a",
 "keywords": [
 "deepfake detection",
 "synthetic media forensics",
@@ -29876,7 +29876,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -29914,7 +29914,7 @@
 ]
 }
 ],
-"contentHash": "887ca0b016860ac5",
+"contentHash": "9978bff5fd2bba87",
 "keywords": [
 "vector space anomaly detection",
 "embedding outlier detection",
@@ -30004,7 +30004,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -30044,7 +30044,7 @@
 ]
 }
 ],
-"contentHash": "c525c3146c021930",
+"contentHash": "efe64b9861d9c745",
 "keywords": [
 "single-use prompt challenge",
 "prompt integrity heuristic",
@@ -30153,7 +30153,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack (poisoned recalled memory can hijack downstream reasoning or actions)",
 "ASI06:2026 Memory & Context Poisoning (recalled memory is the core exploitation path for this risk)"
@@ -30192,7 +30192,7 @@
 ]
 }
 ],
-"contentHash": "046eec28b7aae02a",
+"contentHash": "8ac042e839f4bff6",
 "keywords": [
 "recall path scanning",
 "memory rehydration gate",
@@ -30292,7 +30292,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack"
 ]
@@ -30331,7 +30331,7 @@
 ]
 }
 ],
-"contentHash": "d62342da55f5e02e",
+"contentHash": "4c1458e3618dfb84",
 "keywords": [
 "prompt gate telemetry",
 "verdict correlation",
@@ -30420,7 +30420,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -30485,7 +30485,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "7cda1d17ed704862",
+"contentHash": "10eb49f52a15bfc2",
 "keywords": [
 "model drift detection",
 "performance drift monitoring",
@@ -30584,7 +30584,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -30624,7 +30624,7 @@
 ]
 }
 ],
-"contentHash": "095cf609364f1cf4",
+"contentHash": "869f4e25837760f1",
 "keywords": [
 "input distribution drift",
 "output distribution drift",
@@ -30718,7 +30718,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -30756,7 +30756,7 @@
 ]
 }
 ],
-"contentHash": "462d34cd3b37eae2",
+"contentHash": "1d61cc5f1d982ef9",
 "keywords": [
 "labeled performance tracking",
 "ground truth feedback loop",
@@ -30846,7 +30846,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -30884,7 +30884,7 @@
 ]
 }
 ],
-"contentHash": "3547898632465873",
+"contentHash": "5098fc1202a9c99b",
 "keywords": [
 "white-box telemetry",
 "attention entropy analysis",
@@ -30979,7 +30979,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -31017,7 +31017,7 @@
 ]
 }
 ],
-"contentHash": "254471b2e4ed72ca",
+"contentHash": "36ff7276948f28c8",
 "keywords": [
 "reasoning trace telemetry",
 "provider capability adapter",
@@ -31138,7 +31138,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI02:2026 Tool Misuse and Exploitation",
@@ -31246,7 +31246,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "6d3b1237adeb5e5c",
+"contentHash": "351cc24540efc9c5",
 "keywords": [
 "output monitoring",
 "policy enforcement",
@@ -31348,7 +31348,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI09:2026 Human-Agent Trust Exploitation"
 ]
@@ -31391,7 +31391,7 @@
 ]
 }
 ],
-"contentHash": "651021b7ed13dadf",
+"contentHash": "74151e6a1e9e2ee2",
 "keywords": [
 "harmful content filtering",
 "output moderation",
@@ -31506,7 +31506,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation (DLP detects sensitive data exfiltrated through tool outputs)",
 "ASI03:2026 Identity and Privilege Abuse (data leakage detection catches credential/identity exposure)"
@@ -31548,7 +31548,7 @@
 ]
 }
 ],
-"contentHash": "4220cfbac5632c69",
+"contentHash": "ad3045c7e35a145f",
 "keywords": [
 "pii leakage detection",
 "secret pattern matching",
@@ -31658,7 +31658,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI02:2026 Tool Misuse and Exploitation",
@@ -31708,7 +31708,7 @@
 ]
 }
 ],
-"contentHash": "6d92828bc61f8b4b",
+"contentHash": "f0d350ee3ffad09c",
 "keywords": [
 "agent tool-use monitoring",
 "tool invocation telemetry",
@@ -31802,7 +31802,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack (hijacked agents produce anomalous tool sequences)",
 "ASI02:2026 Tool Misuse and Exploitation",
@@ -31846,7 +31846,7 @@
 ]
 }
 ],
-"contentHash": "2237f476677fb0df",
+"contentHash": "0e603ac66e208c10",
 "keywords": [
 "tool call sequence anomaly",
 "action sequence baselining",
@@ -31962,7 +31962,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack (intent drift detects gradual goal hijacking)",
 "ASI06:2026 Memory & Context Poisoning",
@@ -32015,7 +32015,7 @@
 ]
 }
 ],
-"contentHash": "b25cb2ad94fae8df",
+"contentHash": "b3870bb9c8acf71e",
 "keywords": [
 "stateful session monitoring",
 "intent drift detection",
@@ -32116,7 +32116,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning",
 "ASI01:2026 Agent Goal Hijack (memory poisoning enables persistent goal hijacking)",
@@ -32154,7 +32154,7 @@
 ]
 }
 ],
-"contentHash": "7de368f98b7d3cb7",
+"contentHash": "fef5d783abff3fc3",
 "keywords": [
 "memory write monitoring",
 "memory drift detection",
@@ -32259,7 +32259,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation (tool outputs combined to infer sensitive attributes)"
 ]
@@ -32294,7 +32294,7 @@
 ]
 }
 ],
-"contentHash": "ef42b4d6acc13e0f",
+"contentHash": "554156267bdca14d",
 "keywords": [
 "attribute inference detection",
 "sensitive attribute inference",
@@ -32391,7 +32391,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI05:2026 Unexpected Code Execution (RCE)"
 ]
@@ -32425,7 +32425,7 @@
 ]
 }
 ],
-"contentHash": "f5f7dee2b6a6d01d",
+"contentHash": "37a187d2a71ce347",
 "keywords": [
 "generated media detection",
 "binary output policy detection",
@@ -32529,7 +32529,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse",
 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
@@ -32610,7 +32610,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "4c031d0a19173640",
+"contentHash": "74383f0d200eb33c",
 "keywords": [
 "AI runtime integrity monitoring",
 "artifact digest verification",
@@ -32718,7 +32718,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -32757,7 +32757,7 @@
 ]
 }
 ],
-"contentHash": "2551c7588ffb4616",
+"contentHash": "f064140f66735933",
 "keywords": [
 "artifact digest verification",
 "signature validation pipeline",
@@ -32850,7 +32850,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -32882,7 +32882,7 @@
 ]
 }
 ],
-"contentHash": "23c86124148bdd75",
+"contentHash": "c85cd17bb55d8163",
 "keywords": [
 "fresh runtime attestation",
 "nonce-bound attestation result",
@@ -32985,7 +32985,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities (config drift can weaken agent supply chain controls)",
 "ASI10:2026 Rogue Agents (config changes can enable rogue agent behavior)",
@@ -33025,7 +33025,7 @@
 ]
 }
 ],
-"contentHash": "4ef9c61a14327ca2",
+"contentHash": "051fbfddb6a6ed49",
 "keywords": [
 "runtime configuration drift detection",
 "policy bundle drift monitoring",
@@ -33121,7 +33121,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -33157,7 +33157,7 @@
 ]
 }
 ],
-"contentHash": "233c1d087676daae",
+"contentHash": "51d89e700b472524",
 "keywords": [
 "model source drift detection",
 "namespace ownership monitoring",
@@ -33259,7 +33259,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning",
 "ASI07:2026 Insecure Inter-Agent Communication"
@@ -33294,7 +33294,7 @@
 ]
 }
 ],
-"contentHash": "bbcdd8f65c89bc70",
+"contentHash": "5fbc76d64bbcd34e",
 "keywords": [
 "runtime turn chain integrity",
 "signed conversation envelope",
@@ -33387,7 +33387,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities (detects an unapproved provider or model fallback)",
 "ASI08:2026 Cascading Failures (detects retry or fallback routes that diverge from the approved decision)"
@@ -33421,7 +33421,7 @@
 ]
 }
 ],
-"contentHash": "e2e8b6bb43ef8243",
+"contentHash": "b03ec534baf3275f",
 "keywords": [
 "effective route drift detection",
 "signed route decision comparison",
@@ -33506,7 +33506,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning (detecting observed AI lifecycle transitions that differ from the signed authorized path)"
 ]
@@ -33544,7 +33544,7 @@
 ]
 }
 ],
-"contentHash": "51fca22cd95bc73a",
+"contentHash": "bcc76050d09db6b4",
 "keywords": [
 "ai lifecycle-path drift",
 "approved architecture path",
@@ -33632,7 +33632,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
 "ASI05:2026 Unexpected Code Execution (RCE)"
@@ -33666,7 +33666,7 @@
 ]
 }
 ],
-"contentHash": "eea6f82a8f255baa",
+"contentHash": "90d6de613da864e2",
 "keywords": [
 "runtime code and module integrity",
 "executable mapping monitoring",
@@ -33780,7 +33780,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI02:2026 Tool Misuse and Exploitation",
@@ -33871,7 +33871,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "9b7d61162e1b4f25",
+"contentHash": "03a1befbcd3ba92b",
 "keywords": [
 "audit logging",
 "ai activity monitoring",
@@ -33990,7 +33990,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -34022,7 +34022,7 @@
 ]
 }
 ],
-"contentHash": "137813295404a2d9",
+"contentHash": "0af3937973826d89",
 "keywords": [
 "otel genai telemetry",
 "gen_ai semantic conventions",
@@ -34127,7 +34127,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -34157,7 +34157,7 @@
 ]
 }
 ],
-"contentHash": "f109d210e55657c3",
+"contentHash": "411f0242b786452e",
 "keywords": [
 "siem alerting",
 "sigma correlation rules",
@@ -34274,7 +34274,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI10:2026 Rogue Agents (hunting for subtle rogue agent indicators)",
 "ASI06:2026 Memory & Context Poisoning (hunting for poisoned context patterns)",
@@ -34323,7 +34323,7 @@
 ]
 }
 ],
-"contentHash": "405a8b1d3743b98a",
+"contentHash": "2deffcf4bf9c2afc",
 "keywords": [
 "proactive threat hunting",
 "hypothesis-driven hunting",
@@ -34442,7 +34442,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI06:2026 Memory & Context Poisoning (session logging captures memory manipulation)",
@@ -34487,7 +34487,7 @@
 ]
 }
 ],
-"contentHash": "3015c002c10726bd",
+"contentHash": "5b7c4fd2ce4d7f60",
 "keywords": [
 "privacy-preserving agent telemetry",
 "approved goal digest",
@@ -34568,7 +34568,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI08:2026 Cascading Failures (telemetry anomalies indicate cascading resource exhaustion)"
 ]
@@ -34603,7 +34603,7 @@
 ]
 }
 ],
-"contentHash": "82f973e96f892de8",
+"contentHash": "628096c5fcd1f157",
 "keywords": [
 "gpu telemetry monitoring",
 "accelerator anomaly detection",
@@ -34687,7 +34687,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse",
 "ASI04:2026 Agentic Supply Chain Vulnerabilities (registry poisoning compromises agent supply chain)",
@@ -34729,7 +34729,7 @@
 ]
 }
 ],
-"contentHash": "ea0d8b8c700eccea",
+"contentHash": "5d72225d94ec6782",
 "keywords": [
 "ans registry telemetry",
 "agent name service audit",
@@ -34832,7 +34832,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI08:2026 Cascading Failures",
@@ -34872,7 +34872,7 @@
 ]
 }
 ],
-"contentHash": "e659e23f7e811d81",
+"contentHash": "0b34ceb28a6bf23d",
 "keywords": [
 "token consumption anomaly",
 "cost spike detection",
@@ -34971,7 +34971,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -35001,7 +35001,7 @@
 ]
 }
 ],
-"contentHash": "e6dbfc9f9c76fcd7",
+"contentHash": "1210997a05a33b54",
 "keywords": [
 "read-only alert triage",
 "agentic alert investigation",
@@ -35113,7 +35113,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI03:2026 Identity and Privilege Abuse",
@@ -35154,7 +35154,7 @@
 ]
 }
 ],
-"contentHash": "f32d2d4cfee22378",
+"contentHash": "587cc92d66901326",
 "keywords": [
 "ai service c2 detection",
 "ai service abuse channel",
@@ -35245,7 +35245,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -35275,7 +35275,7 @@
 ]
 }
 ],
-"contentHash": "bf51d63bcbdfa59f",
+"contentHash": "a4e3fded538ea878",
 "keywords": [
 "telemetry pipeline health",
 "collector heartbeat monitoring",
@@ -35364,7 +35364,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -35395,7 +35395,7 @@
 ]
 }
 ],
-"contentHash": "f3971f47c90f4345",
+"contentHash": "f9495d067474e91d",
 "keywords": [
 "volatile incident evidence",
 "live process capture",
@@ -35470,7 +35470,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI09:2026 Human-Agent Trust Exploitation (manipulated XAI exploits trust)"
 ]
@@ -35537,7 +35537,7 @@
 "Arize AX",
 "IBM watsonx.governance"
 ],
-"contentHash": "e5de33da7b940f23",
+"contentHash": "9140a79ea5925476",
 "keywords": [
 "explanation consistency checks",
 "saliency map tamper detection",
@@ -35613,7 +35613,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack"
 ]
@@ -35664,7 +35664,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "12f4a0ce79e03f27",
+"contentHash": "488dbeb8c9ffe4c9",
 "keywords": [
 "multimodal inconsistency detection",
 "batch versus realtime split",
@@ -35781,7 +35781,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack (cross-modal hidden instructions redirect agent goals)"
 ]
@@ -35824,7 +35824,7 @@
 ]
 }
 ],
-"contentHash": "8196cf9fd9097288",
+"contentHash": "883866122b06e0c9",
 "keywords": [
 "batch cross-modal consistency",
 "artifact anomaly detection",
@@ -35933,7 +35933,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack"
 ]
@@ -35973,7 +35973,7 @@
 ]
 }
 ],
-"contentHash": "d6164f7ee640bbff",
+"contentHash": "744f720cec80fd4d",
 "keywords": [
 "realtime stream anomaly detection",
 "multimodal session telemetry",
@@ -36052,7 +36052,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI08:2026 Cascading Failures (cross-detector fusion exposes linked failures that isolated findings miss)"
 ]
@@ -36116,7 +36116,7 @@
 "Fiddler AI Observability",
 "Weights & Biases"
 ],
-"contentHash": "0645e55212114471",
+"contentHash": "6163ecd3db9d7759",
 "keywords": [
 "ai-based security analytics",
 "ml-driven detection",
@@ -36188,7 +36188,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI06:2026 Memory & Context Poisoning",
@@ -36233,7 +36233,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "7f69e04ead3c840d",
+"contentHash": "dc3a8430a188c768",
 "keywords": [
 "cross-agent fact consensus checks",
 "hallucination cascade detection",
@@ -36342,7 +36342,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning (verification findings identify poisoned context before shared-memory admission)",
 "ASI01:2026 Agent Goal Hijack (poisoned facts redirect agent decision pathways)"
@@ -36378,7 +36378,7 @@
 ]
 }
 ],
-"contentHash": "90509f321eecdb14",
+"contentHash": "ea9610613b027d05",
 "keywords": [
 "source-grounded claim verification",
 "authoritative source checking",
@@ -36469,7 +36469,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI08:2026 Cascading Failures (hallucination cascades across agent networks)",
 "ASI01:2026 Agent Goal Hijack (poisoned facts redirect agent decision pathways)"
@@ -36504,7 +36504,7 @@
 ]
 }
 ],
-"contentHash": "d1b4cdf14255b8f2",
+"contentHash": "34eaa84f14ef70c9",
 "keywords": [
 "exact canonical claim lineage",
 "externally signed claim state",
@@ -36580,7 +36580,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI08:2026 Cascading Failures (goal deviation triggers cascading failures)",
@@ -36652,7 +36652,7 @@
 "Evidently Cloud",
 "NannyML Cloud"
 ],
-"contentHash": "cf8aedffd236b26d",
+"contentHash": "5116157b31302e87",
 "keywords": [
 "goal integrity monitoring",
 "rationale action consistency",
@@ -36733,7 +36733,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI02:2026 Tool Misuse and Exploitation",
@@ -36800,7 +36800,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "90e28225fa88e1c0",
+"contentHash": "13029a5ac39312a5",
 "keywords": [
 "agent behavioral attestation",
 "rogue agent detection",
@@ -36908,7 +36908,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI10:2026 Rogue Agents",
 "ASI01:2026 Agent Goal Hijack (behavioral baselines detect hijacked goals)",
@@ -36947,7 +36947,7 @@
 ]
 }
 ],
-"contentHash": "9616b899a40f16f7",
+"contentHash": "a5f8eebe0df24797",
 "keywords": [
 "signed agent behavior baseline",
 "longitudinal agent anomaly detection",
@@ -37036,7 +37036,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI07:2026 Insecure Inter-Agent Communication",
 "ASI03:2026 Identity and Privilege Abuse",
@@ -37074,7 +37074,7 @@
 ]
 }
 ],
-"contentHash": "1b0ac1e402d4d416",
+"contentHash": "1d140604006ddcc3",
 "keywords": [
 "authenticated inter-agent events",
 "security event contract",
@@ -37164,7 +37164,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities (image-lineage drift reveals unapproved registered-agent code)",
 "ASI10:2026 Rogue Agents (replica, namespace, or workload drift reveals rogue registered instances)"
@@ -37199,7 +37199,7 @@
 ]
 }
 ],
-"contentHash": "851916909d56836e",
+"contentHash": "3c98020aa5125ce9",
 "keywords": [
 "registered agent population drift",
 "approved registry baseline",
@@ -37293,7 +37293,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse",
 "ASI02:2026 Tool Misuse and Exploitation"
@@ -37332,7 +37332,7 @@
 ]
 }
 ],
-"contentHash": "016608395ef798e2",
+"contentHash": "35b31d6ea94c6af5",
 "keywords": [
 "non-human identity detection",
 "delegated token abuse detection",
@@ -37408,7 +37408,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -37451,7 +37451,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "45d0a7e1b2c2ab89",
+"contentHash": "d2532c070c5f5b03",
 "keywords": [
 "gnn trigger-response testing",
 "calibrated graph anomaly detection",
@@ -37552,7 +37552,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -37589,7 +37589,7 @@
 ]
 }
 ],
-"contentHash": "2be58704ed8eb5b7",
+"contentHash": "4af3c570fe800e4e",
 "keywords": [
 "controlled gnn trigger testing",
 "paired clean perturbation cases",
@@ -37678,7 +37678,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -37711,7 +37711,7 @@
 ]
 }
 ],
-"contentHash": "55be1cf9bf2242be",
+"contentHash": "1a047a62fad131e4",
 "keywords": [
 "calibrated structure-feature anomaly",
 "edge endpoint similarity scoring",
@@ -37797,7 +37797,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -37830,7 +37830,7 @@
 ]
 }
 ],
-"contentHash": "bbf4aa49b248e09c",
+"contentHash": "2f7658496448dfa0",
 "keywords": [
 "topology-only anomaly detection",
 "degree outlier scoring",
@@ -37906,7 +37906,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI10:2026 Rogue Agents (reward hacking creates rogue behavior)"
 ]
@@ -37981,7 +37981,7 @@
 "Weights & Biases",
 "Datadog"
 ],
-"contentHash": "37ea0c632b4d2d6c",
+"contentHash": "8f8ccdffc02f0dd5",
 "keywords": [
 "rlhf reward gaming detection",
 "rlvr verifier gaming monitoring",
@@ -38057,7 +38057,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI06:2026 Memory & Context Poisoning"
@@ -38104,7 +38104,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "a3c220af1f7168cb",
+"contentHash": "28ef720f452246d0",
 "keywords": [
 "post-retrieval monitoring",
 "retrieved chunk scanning",
@@ -38206,7 +38206,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI06:2026 Memory & Context Poisoning"
@@ -38246,7 +38246,7 @@
 ]
 }
 ],
-"contentHash": "e5cc91d58da4b3d2",
+"contentHash": "e1f9a4f3112344ec",
 "keywords": [
 "post-retrieval content scanning",
 "retrieved prompt injection detection",
@@ -38337,7 +38337,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning"
 ]
@@ -38371,7 +38371,7 @@
 ]
 }
 ],
-"contentHash": "5eced6ed1e2df523",
+"contentHash": "e6c874490d971958",
 "keywords": [
 "query document semantic relevance",
 "retrieval relevance anomaly",
@@ -38460,7 +38460,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning"
 ]
@@ -38493,7 +38493,7 @@
 ]
 }
 ],
-"contentHash": "6e5481464f2f5a11",
+"contentHash": "5b9f87c47ffbd35f",
 "keywords": [
 "source concentration monitoring",
 "retrieval source diversity",
@@ -38566,7 +38566,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI09:2026 Human-Agent Trust Exploitation",
 "ASI02:2026 Tool Misuse and Exploitation",
@@ -38628,7 +38628,7 @@
 "Microsoft Entra ID",
 "Splunk Enterprise Security"
 ],
-"contentHash": "ce3bc0e9b8939c58",
+"contentHash": "9cd1d4c487f77244",
 "keywords": [
 "signed approval telemetry",
 "confirmation bypass detection",
@@ -38700,7 +38700,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI03:2026 Identity and Privilege Abuse",
@@ -38744,7 +38744,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "cb77a57decd0a9f0",
+"contentHash": "0b73837998fc85bb",
 "keywords": [
 "rogue agent discovery",
 "reputation scoring",
@@ -38838,7 +38838,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI10:2026 Rogue Agents",
 "ASI07:2026 Insecure Inter-Agent Communication",
@@ -38875,7 +38875,7 @@
 ]
 }
 ],
-"contentHash": "93e59e2030f02fb8",
+"contentHash": "c6252d4bc9c807cc",
 "keywords": [
 "signed agent graph baseline",
 "new agent discovery",
@@ -38967,7 +38967,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI10:2026 Rogue Agents",
 "ASI03:2026 Identity and Privilege Abuse",
@@ -39005,7 +39005,7 @@
 ]
 }
 ],
-"contentHash": "d9b464a35229d592",
+"contentHash": "7d6a7ee9cc38627e",
 "keywords": [
 "agent reputation scoring",
 "signed reputation policy",
@@ -39084,7 +39084,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -39142,7 +39142,7 @@
 "Grafana Cloud",
 "ServiceNow Security Operations"
 ],
-"contentHash": "314e9596bdef2fa6",
+"contentHash": "c1ebd6e270f69d3a",
 "keywords": [
 "detection slo measurement",
 "alert coverage measurement",
@@ -39223,7 +39223,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -39275,7 +39275,7 @@
 "Google Security Operations",
 "Datadog Cloud SIEM"
 ],
-"contentHash": "52a45310d206374a",
+"contentHash": "f703de8248f06443",
 "keywords": [
 "production detector efficacy",
 "ai security detector validation",
@@ -39375,7 +39375,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
@@ -39432,7 +39432,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "6ffad60acec841af",
+"contentHash": "63094adf0a3caa16",
 "keywords": [
 "ai execution sandboxing",
 "runtime isolation",
@@ -39539,7 +39539,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI05:2026 Unexpected Code Execution (RCE)",
@@ -39581,7 +39581,7 @@
 ]
 }
 ],
-"contentHash": "f218260b1690333c",
+"contentHash": "63e41c2e25b915b7",
 "keywords": [
 "container-based isolation",
 "minimal signed container image",
@@ -39692,7 +39692,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI05:2026 Unexpected Code Execution (RCE)",
 "ASI02:2026 Tool Misuse and Exploitation",
@@ -39732,7 +39732,7 @@
 ]
 }
 ],
-"contentHash": "daf0f512be68b745",
+"contentHash": "4bfae0c1cb73f7de",
 "keywords": [
 "microvm isolation",
 "hardware-virtualized sandbox",
@@ -39831,7 +39831,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI05:2026 Unexpected Code Execution (RCE)"
@@ -39865,7 +39865,7 @@
 ]
 }
 ],
-"contentHash": "98ea982c332e0539",
+"contentHash": "d0e9eacdcf09bfd2",
 "keywords": [
 "ephemeral sandbox",
 "single-use sandbox",
@@ -39958,7 +39958,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation"
 ]
@@ -39991,7 +39991,7 @@
 ]
 }
 ],
-"contentHash": "240345a241db1afb",
+"contentHash": "4b1bc45d98f1064d",
 "keywords": [
 "sandbox egress restriction",
 "default-deny egress",
@@ -40096,7 +40096,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI05:2026 Unexpected Code Execution (RCE)"
 ]
@@ -40129,7 +40129,7 @@
 ]
 }
 ],
-"contentHash": "907554187497b4db",
+"contentHash": "e7f5a6a6dfb0fd5d",
 "keywords": [
 "ephemeral artifact detonation",
 "raw behavior observation",
@@ -40207,7 +40207,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI03:2026 Identity and Privilege Abuse",
@@ -40261,7 +40261,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "66393e46d302d69c",
+"contentHash": "be6a485cdd960f53",
 "keywords": [
 "network segmentation",
 "micro-segmentation",
@@ -40372,7 +40372,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse (network segmentation enforces access boundaries)",
 "ASI10:2026 Rogue Agents (internal segmentation contains rogue agent lateral movement)",
@@ -40412,7 +40412,7 @@
 ]
 }
 ],
-"contentHash": "8f05eaeb99960d7f",
+"contentHash": "e4283c66baa7cc9a",
 "keywords": [
 "internal network segmentation",
 "microsegmentation",
@@ -40532,7 +40532,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation (egress controls prevent tool-based exfiltration)",
 "ASI07:2026 Insecure Inter-Agent Communication (secure external connectivity protects agent-to-service communication)"
@@ -40571,7 +40571,7 @@
 ]
 }
 ],
-"contentHash": "63f3c06773ceafa3",
+"contentHash": "b17f54b592bf1e62",
 "keywords": [
 "governed external egress",
 "private service connectivity",
@@ -40664,7 +40664,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI03:2026 Identity and Privilege Abuse",
@@ -40720,7 +40720,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "817dded406cd9fca",
+"contentHash": "545e96fb2f57cad7",
 "keywords": [
 "ai interaction quarantine",
 "response-time containment",
@@ -40822,7 +40822,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI10:2026 Rogue Agents (quarantine isolates rogue agents)",
 "ASI08:2026 Cascading Failures (safe-mode limits cascade propagation)",
@@ -40866,7 +40866,7 @@
 ]
 }
 ],
-"contentHash": "c322fb3a9c2053fc",
+"contentHash": "c49acf2afa78d31b",
 "keywords": [
 "detection-driven quarantine",
 "safe-mode downgrade",
@@ -40966,7 +40966,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI08:2026 Cascading Failures (throttling limits cascade propagation)"
 ]
@@ -41005,7 +41005,7 @@
 ]
 }
 ],
-"contentHash": "5fb5f04f9c4bced6",
+"contentHash": "23d74fcec79bad99",
 "keywords": [
 "identity rate limiting",
 "session throttling",
@@ -41100,7 +41100,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI08:2026 Cascading Failures (resource throttles limit cascade propagation)"
 ]
@@ -41134,7 +41134,7 @@
 ]
 }
 ],
-"contentHash": "e8887a5f99132e11",
+"contentHash": "4ae92c508d71ebf6",
 "keywords": [
 "resource budget throttling",
 "token budget enforcement",
@@ -41230,7 +41230,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI03:2026 Identity and Privilege Abuse"
@@ -41262,7 +41262,7 @@
 ]
 }
 ],
-"contentHash": "4c6ba0b5d8aedfe0",
+"contentHash": "29f5f9d0689eec23",
 "keywords": [
 "high-risk action containment",
 "pre-dispatch action gate",
@@ -41343,7 +41343,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI03:2026 Identity and Privilege Abuse",
@@ -41416,7 +41416,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "d6c877848f023d62",
+"contentHash": "1c4864e6f80bff79",
 "keywords": [
 "agent memory isolation",
 "state isolation",
@@ -41517,7 +41517,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning",
 "ASI08:2026 Cascading Failures (context bleed can propagate across sessions)",
@@ -41561,7 +41561,7 @@
 ]
 }
 ],
-"contentHash": "e17f3feda44fe9e9",
+"contentHash": "124a7287a0649c35",
 "keywords": [
 "runtime context isolation",
 "per-session ttl",
@@ -41652,7 +41652,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning",
 "ASI03:2026 Identity and Privilege Abuse (authorization-gated retrieval prevents unauthorized access)"
@@ -41692,7 +41692,7 @@
 ]
 }
 ],
-"contentHash": "4c4d57899aaf52b5",
+"contentHash": "bf83fe3e9275d9cd",
 "keywords": [
 "persistent memory partitioning",
 "tenant isolation",
@@ -41782,7 +41782,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning"
 ]
@@ -41816,7 +41816,7 @@
 ]
 }
 ],
-"contentHash": "9e86f286d9036251",
+"contentHash": "1f06cd1839c63b0a",
 "keywords": [
 "cryptographic memory integrity",
 "signed write verify read",
@@ -41912,7 +41912,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning",
 "ASI01:2026 Agent Goal Hijack (promotion gates prevent poisoned memory from hijacking agent goals)"
@@ -41948,7 +41948,7 @@
 ]
 }
 ],
-"contentHash": "99d19014181fcc5c",
+"contentHash": "9304dfb292a3a4b5",
 "keywords": [
 "transactional promotion gate",
 "quarantine-to-trusted workflow",
@@ -42053,7 +42053,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning",
 "ASI01:2026 Agent Goal Hijack"
@@ -42093,7 +42093,7 @@
 ]
 }
 ],
-"contentHash": "e208b892ba551546",
+"contentHash": "9ba57efad2126339",
 "keywords": [
 "memory ttl",
 "staleness decay",
@@ -42205,7 +42205,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI06:2026 Memory & Context Poisoning"
@@ -42241,7 +42241,7 @@
 ]
 }
 ],
-"contentHash": "355cf7e7f2f93fd5",
+"contentHash": "f1ac95be88a9f8d3",
 "keywords": [
 "agent identity file protection",
 "persistent state write protection",
@@ -42341,7 +42341,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI03:2026 Identity and Privilege Abuse",
@@ -42385,7 +42385,7 @@
 ]
 }
 ],
-"contentHash": "57c1c268991b401b",
+"contentHash": "53a9621d8ece1c3a",
 "keywords": [
 "task-bounded context segmentation",
 "secret demotion",
@@ -42488,7 +42488,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack (compaction drops mission constraints enabling goal drift)",
 "ASI06:2026 Memory & Context Poisoning (compaction is the primary vector for turning transient poison into persistent context)"
@@ -42526,7 +42526,7 @@
 ]
 }
 ],
-"contentHash": "2ab53cc3805491f9",
+"contentHash": "aa0278555f2d572b",
 "keywords": [
 "context compaction integrity",
 "summary safety constraint retention",
@@ -42625,7 +42625,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI06:2026 Memory & Context Poisoning",
@@ -42666,7 +42666,7 @@
 ]
 }
 ],
-"contentHash": "75dd3fcc8d862663",
+"contentHash": "ccd176774d1e22a5",
 "keywords": [
 "peer-agent message quarantine",
 "A2A context isolation",
@@ -42745,7 +42745,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI10:2026 Rogue Agents",
 "ASI08:2026 Cascading Failures",
@@ -42817,7 +42817,7 @@
 "CrowdStrike Falcon Insight XDR",
 "Google Cloud CLI"
 ],
-"contentHash": "6697fb6a6a0287b7",
+"contentHash": "313386dca9e64daa",
 "keywords": [
 "emergency halt propagation",
 "signed run halt decision",
@@ -42887,7 +42887,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -42962,7 +42962,7 @@
 ],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "585077d32310d0f7",
+"contentHash": "4644c929f9d7571c",
 "keywords": [
 "federated client quarantine",
 "federated participant exclusion",
@@ -43044,7 +43044,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI05:2026 Unexpected Code Execution (RCE)",
 "ASI02:2026 Tool Misuse and Exploitation (client-side isolation prevents tool misuse by compromised model)",
@@ -43113,7 +43113,7 @@
 "Android Enterprise Work Profile",
 "Samsung Knox Platform for Enterprise"
 ],
-"contentHash": "5f423c29319f3879",
+"contentHash": "9a83803934b208c6",
 "keywords": [
 "client-side sandboxing",
 "web worker isolation",
@@ -43208,7 +43208,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI02:2026 Tool Misuse and Exploitation",
@@ -43266,7 +43266,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "5716a14238559abf",
+"contentHash": "8bfcece89b64d8ed",
 "keywords": [
 "browser session isolation",
 "computer-use workspace isolation",
@@ -43360,7 +43360,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse"
 ]
@@ -43393,7 +43393,7 @@
 ]
 }
 ],
-"contentHash": "d9981c10971e8dd7",
+"contentHash": "87274257a4f25629",
 "keywords": [
 "ephemeral browser context",
 "per-task browser profile",
@@ -43488,7 +43488,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI02:2026 Tool Misuse and Exploitation",
@@ -43523,7 +43523,7 @@
 ]
 }
 ],
-"contentHash": "8c730639c5099399",
+"contentHash": "9e9f17222bb323d0",
 "keywords": [
 "cross origin segmentation",
 "browser action suspension",
@@ -43615,7 +43615,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation"
 ]
@@ -43647,7 +43647,7 @@
 ]
 }
 ],
-"contentHash": "e87301e3cccaa4eb",
+"contentHash": "5e15aab57907c87b",
 "keywords": [
 "download quarantine",
 "clipboard transfer quarantine",
@@ -43786,7 +43786,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
 "ASI02:2026 Tool Misuse and Exploitation",
@@ -43832,7 +43832,7 @@
 ]
 }
 ],
-"contentHash": "f9c34abadc3642b2",
+"contentHash": "2fa8efaca009f4c5",
 "keywords": [
 "desktop computer use isolation",
 "privileged ui observation",
@@ -43919,7 +43919,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI03:2026 Identity and Privilege Abuse"
@@ -43953,7 +43953,7 @@
 ]
 }
 ],
-"contentHash": "83ab16cba6c35aa2",
+"contentHash": "bd41b67c152ac283",
 "keywords": [
 "authentication-bearing navigation isolation",
 "magic-link broker",
@@ -44040,7 +44040,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation (decoy tools detect unauthorized tool usage)",
 "ASI10:2026 Rogue Agents (honeypot attracts and identifies rogue agent behavior)"
@@ -44117,7 +44117,7 @@
 "Acalvio ShadowPlex (enterprise deception substrate; AI API behavior remains custom)",
 "Thinkst Canary (network/service decoy substrate; AI API behavior remains custom)"
 ],
-"contentHash": "f9e1070ad311fd87",
+"contentHash": "05151ba795168158",
 "keywords": [
 "honeypot ai service",
 "decoy model",
@@ -44206,7 +44206,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse (non-authoritative canary credentials expose agent credential harvesting or attempted reuse)"
 ]
@@ -44273,7 +44273,7 @@
 "Acalvio ShadowPlex",
 "Proofpoint Identity Threat Defense"
 ],
-"contentHash": "7dfa8f491926b674",
+"contentHash": "f3aba4f61b17f5dd",
 "keywords": [
 "canary credential placement",
 "decoy dataset seeding",
@@ -44352,7 +44352,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack (misleading responses frustrate goal hijacking)",
 "ASI02:2026 Tool Misuse and Exploitation (feigned compliance exposes tool misuse intent)"
@@ -44420,7 +44420,7 @@
 "toolsCommercial": [
 "Acalvio ShadowPlex (deception engagement substrate; application-side output manipulation remains custom)"
 ],
-"contentHash": "4edf4ceb6257c7d7",
+"contentHash": "10805b2a0dbaa48b",
 "keywords": [
 "deceptive response orchestration",
 "adaptive decoy reply generation",
@@ -44501,7 +44501,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -44563,7 +44563,7 @@
 "Microsoft Sentinel",
 "Google Security Operations"
 ],
-"contentHash": "e2f2dc3c01674544",
+"contentHash": "a9d6885084c25757",
 "keywords": [
 "ai output telemetry traps",
 "benign marker strings",
@@ -44640,7 +44640,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack (canary goals detect goal hijacking)",
 "ASI02:2026 Tool Misuse and Exploitation (decoy tools detect unauthorized tool use)",
@@ -44712,7 +44712,7 @@
 ],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "6b7baaf3a05c2fb3",
+"contentHash": "387cd3df1fa1e902",
 "keywords": [
 "canary task",
 "decoy agent goal",
@@ -44794,7 +44794,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -44850,7 +44850,7 @@
 "Akamai EdgeWorkers",
 "Cloudflare Workers"
 ],
-"contentHash": "94d4603e91172526",
+"contentHash": "abc21a95a7116e2f",
 "keywords": [
 "public metadata minimization",
 "generic model identity",
@@ -44924,7 +44924,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -44975,7 +44975,7 @@
 "Weights & Biases",
 "Managed MLflow on Databricks"
 ],
-"contentHash": "3f74d837785c8b56",
+"contentHash": "a88a4ca7ba976235",
 "keywords": [
 "training data provenance canary",
 "behavioral canary registry",
@@ -45064,7 +45064,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI03:2026 Identity and Privilege Abuse",
@@ -45116,7 +45116,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "4fe116e0b4278566",
+"contentHash": "e914a9a8727cfbca",
 "keywords": [
 "incident authority eviction",
 "credential object eviction",
@@ -45232,7 +45232,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse"
 ]
@@ -45266,7 +45266,7 @@
 ]
 }
 ],
-"contentHash": "6eb05a98b8094886",
+"contentHash": "49116110b33ac4a3",
 "keywords": [
 "root credential eviction",
 "long-lived secret invalidation",
@@ -45390,7 +45390,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse",
 "ASI02:2026 Tool Misuse and Exploitation (denying compromised agent access tokens and sessions)"
@@ -45429,7 +45429,7 @@
 ]
 }
 ],
-"contentHash": "5adfe12b66ae0ad0",
+"contentHash": "eaf5e220d61225c2",
 "keywords": [
 "automated credential invalidation",
 "real-time token revocation",
@@ -45529,7 +45529,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse",
 "ASI10:2026 Rogue Agents (revoking rogue agent identities)"
@@ -45565,7 +45565,7 @@
 ]
 }
 ],
-"contentHash": "6c96d6c8115944e1",
+"contentHash": "53e5e007d1681c19",
 "keywords": [
 "workload principal disablement",
 "agent identity disablement",
@@ -45672,7 +45672,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse",
 "ASI02:2026 Tool Misuse and Exploitation (revoking the compromised delegated grant removes the connected app or tool authority used for misuse)"
@@ -45708,7 +45708,7 @@
 ]
 }
 ],
-"contentHash": "938c3b25bfd7cd22",
+"contentHash": "c28037112106416c",
 "keywords": [
 "delegated oauth revocation",
 "connected app revocation",
@@ -45792,7 +45792,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI10:2026 Rogue Agents",
 "ASI05:2026 Unexpected Code Execution (RCE) (terminating unauthorized code execution)",
@@ -45877,7 +45877,7 @@
 "Aqua Cloud Security",
 "Sysdig Secure"
 ],
-"contentHash": "0af35603752f845b",
+"contentHash": "f4193e97e0913881",
 "keywords": [
 "runtime process eviction",
 "agent run termination",
@@ -45979,7 +45979,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
 "ASI05:2026 Unexpected Code Execution (RCE)",
@@ -46046,7 +46046,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "9e205dff9b494822",
+"contentHash": "2d235860a30bee57",
 "keywords": [
 "malicious artifact removal",
 "backdoor removal",
@@ -46139,7 +46139,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities (backdoored models in supply chain)"
 ]
@@ -46176,7 +46176,7 @@
 ]
 }
 ],
-"contentHash": "157d074130d37f4f",
+"contentHash": "6de477618d48351a",
 "keywords": [
 "model backdoor candidate triage",
 "neural cleanse candidate signal",
@@ -46272,7 +46272,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning (evicting poisoned RAG source and durable graph records prevents their reuse)",
 "ASI04:2026 Agentic Supply Chain Vulnerabilities (poisoned datasets in supply chain)"
@@ -46316,7 +46316,7 @@
 ]
 }
 ],
-"contentHash": "665824512854a544",
+"contentHash": "ebef41d9767b8a90",
 "keywords": [
 "poisoned data eviction",
 "exact row deletion",
@@ -46420,7 +46420,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
 "ASI05:2026 Unexpected Code Execution (RCE) (removing malicious code artifacts)"
@@ -46461,7 +46461,7 @@
 ]
 }
 ],
-"contentHash": "8c95486c5b0a23fe",
+"contentHash": "96ea6206d8aaef88",
 "keywords": [
 "malicious code cleanup",
 "file integrity monitoring",
@@ -46565,7 +46565,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -46599,7 +46599,7 @@
 ]
 }
 ],
-"contentHash": "52d8f016fbf171dc",
+"contentHash": "f789e445fd0d283b",
 "keywords": [
 "llm adapter removal",
 "lora adapter quarantine",
@@ -46677,7 +46677,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities (dependency and deployment readback plus replay prove the signed supply-chain fix is effective)",
 "ASI05:2026 Unexpected Code Execution (RCE) (exact exploit replay proves the repaired path can no longer reach code execution)",
@@ -46755,7 +46755,7 @@
 "Snyk Open Source (dependency fix and artifact verification)",
 "Mend SCA (dependency fix and artifact verification)"
 ],
-"contentHash": "5f385a7f67f6f2f2",
+"contentHash": "5f7e25df597257eb",
 "keywords": [
 "post-eviction hardening",
 "emergency patching",
@@ -46839,7 +46839,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning (purging poisoned memory and context)",
 "ASI10:2026 Rogue Agents (removing durable state that can respawn a rogue agent)",
@@ -46916,7 +46916,7 @@
 "Redis Enterprise",
 "Temporal Cloud"
 ],
-"contentHash": "7fb99d265740ed57",
+"contentHash": "2f02c364c5d0609c",
 "keywords": [
 "durable session teardown",
 "tainted memory purge",
@@ -47008,7 +47008,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -47062,7 +47062,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "8ad76dd44502ad9e",
+"contentHash": "27796ce0c9870bd6",
 "keywords": [
 "secure model restoration",
 "post-incident retraining",
@@ -47181,7 +47181,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -47217,7 +47217,7 @@
 ]
 }
 ],
-"contentHash": "ac31ee11760cef02",
+"contentHash": "395124484f6d3802",
 "keywords": [
 "versioned model rollback",
 "mlflow registry restore",
@@ -47329,7 +47329,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities"
 ]
@@ -47376,7 +47376,7 @@
 ]
 }
 ],
-"contentHash": "10f607184d891a9e",
+"contentHash": "70f880bbc2b50c3d",
 "keywords": [
 "model remediation retraining",
 "approximate unlearning",
@@ -47449,7 +47449,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning (restoring the authoritative source corpus removes poisoned context inputs; conversational state and vector-index recovery remain AID-R-003.002 and AID-R-005)"
 ]
@@ -47528,7 +47528,7 @@
 "AWS Backup",
 "Azure Backup"
 ],
-"contentHash": "022d8635506c33c2",
+"contentHash": "fc229deba72a5436",
 "keywords": [
 "data integrity recovery",
 "dataset rollback",
@@ -47614,7 +47614,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation",
 "ASI03:2026 Identity and Privilege Abuse",
@@ -47665,7 +47665,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "373ac6eee963e8b9",
+"contentHash": "94acc1cf63401708",
 "keywords": [
 "trusted recovery re-establishment",
 "incident prerequisite verification",
@@ -47751,7 +47751,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI03:2026 Identity and Privilege Abuse (fresh trusted sessions replace evicted compromised interactive sessions)"
 ]
@@ -47783,7 +47783,7 @@
 ]
 }
 ],
-"contentHash": "0bd77bdb0d89780b",
+"contentHash": "ca4dad1613714ca4",
 "keywords": [
 "post-incident identity recovery",
 "fresh reauthentication",
@@ -47867,7 +47867,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI06:2026 Memory & Context Poisoning"
 ]
@@ -47901,7 +47901,7 @@
 ]
 }
 ],
-"contentHash": "d523ffdde5b58ed6",
+"contentHash": "6241a9e727f236d2",
 "keywords": [
 "trusted conversational state recovery",
 "agent-state restoration",
@@ -47988,7 +47988,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation (only policy-approved tool and action edges are re-enabled)",
 "ASI03:2026 Identity and Privilege Abuse (effective privileges are restored only to the signed tier)"
@@ -48023,7 +48023,7 @@
 ]
 }
 ],
-"contentHash": "09c8be53b8e24891",
+"contentHash": "c289a19d98d4615b",
 "keywords": [
 "progressive capability re-enablement",
 "tiered privilege restoration",
@@ -48090,7 +48090,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "N/A"
 ]
@@ -48148,7 +48148,7 @@
 "Google Vertex AI Model Registry",
 "Databricks Unity Catalog"
 ],
-"contentHash": "a30b49ff808a0660",
+"contentHash": "c998fafa1df35b70",
 "keywords": [
 "technical remediation propagation",
 "verified fix artifact",
@@ -48231,7 +48231,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack (rollback removes RAG content that could redirect agent goals)",
 "ASI06:2026 Memory & Context Poisoning",
@@ -48306,7 +48306,7 @@
 "Amazon OpenSearch Service",
 "Amazon S3 Object Lock"
 ],
-"contentHash": "f793e9136ba822ae",
+"contentHash": "f0882e9dc3fa8103",
 "keywords": [
 "vector index rollback",
 "rag index recovery",
@@ -48382,7 +48382,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI04:2026 Agentic Supply Chain Vulnerabilities (redeployment verifies prompt, tool, MCP, routing, runtime, and model release assets)",
 "ASI06:2026 Memory & Context Poisoning (redeployment requires purged state and verified context stores)",
@@ -48454,7 +48454,7 @@
 "HCP Terraform",
 "Terraform Enterprise"
 ],
-"contentHash": "05d2ada85a9a7db4",
+"contentHash": "270e4f1eadf7d005",
 "keywords": [
 "clean-room AI redeployment",
 "AI recovery orchestration",
@@ -48532,7 +48532,7 @@
 ]
 },
 {
-"framework": "OWASP Agentic AI Top 10 2026",
+"framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI02:2026 Tool Misuse and Exploitation (downstream effects of exploited tools are reversed, compensated, or explicitly dispositioned)",
 "ASI08:2026 Cascading Failures (issued effects are reconciled and compensated before unresolved divergence propagates further)"
@@ -48589,7 +48589,7 @@
 "Azure Durable Functions",
 "Google Cloud Workflows"
 ],
-"contentHash": "c6853623ac03d31c",
+"contentHash": "9c03924bab92ef08",
 "keywords": [
 "external side-effect reconciliation",
 "incident action-ledger population",

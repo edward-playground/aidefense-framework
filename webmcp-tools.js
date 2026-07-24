@@ -214,7 +214,7 @@ if (!document.modelContext || typeof document.modelContext.registerTool !== 'fun
         'MAESTRO',
         'OWASP LLM Top 10 2025',
         'OWASP ML Top 10 2023',
-        'OWASP Agentic AI Top 10 2026',
+        'OWASP Top 10 for Agentic Applications 2026',
         'NIST Adversarial Machine Learning 2025',
         'Cisco Integrated AI Security and Safety Framework',
         'Google Secure AI Framework 2.0 - Risks',
@@ -384,7 +384,7 @@ if (!document.modelContext || typeof document.modelContext.registerTool !== 'fun
 
     await safeRegisterTool({
         name: 'get_technique_detail',
-        description: "Get full details of an AIDEFEND technique or sub-technique by its ID. Returns description, optional structured scope boundary, threat mappings across 9 security frameworks (MITRE ATLAS, OWASP LLM/ML/Agentic Top 10, MAESTRO, NIST AML, Cisco, Google SAIF 2.0, Databricks DASF 3.0), pillar/phase classification, and sub-technique list.",
+        description: "Get full details of an AIDEFEND technique or sub-technique by its ID. Returns description, optional structured scope boundary, threat mappings across 9 security frameworks (MITRE ATLAS, MAESTRO, the OWASP Top 10 frameworks for LLM, ML, and Agentic Applications, NIST AML, Cisco, Google SAIF 2.0, and Databricks DASF 3.0), pillar/phase classification, and sub-technique list.",
         annotations: {
             readOnlyHint: true
         },

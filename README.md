@@ -29,6 +29,8 @@ Version `1.20260724` contains:
 - A generated JSON dataset for external tools and integrations
 - Browser-side WebMCP tools for agent-assisted framework lookup
 
+Compatibility note: the Agentic Applications framework label in `defendsAgainst[].framework` now uses the official `OWASP Top 10 for Agentic Applications 2026` name. Consumers that match framework names as exact strings should update accordingly.
+
 Counts are generated from the current `tactics/*.js` source files and should be refreshed when the framework changes.
 
 The optional WebMCP integration activates only when the browser exposes the supported `document.modelContext` surface. The framework website continues to operate normally when that experimental browser API is unavailable; in that case, no WebMCP tools are registered.
