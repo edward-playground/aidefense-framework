@@ -15,7 +15,6 @@ AIDEFEND is an open, implementation-oriented knowledge base of defensive control
 Version `1.20260724` provides:
 
 - **300 actionable defensive controls**: 35 standalone techniques and 265 leaf sub-techniques
-- **57 non-actionable parent families** for navigation and conceptual organization
 - implementation guidance, production-oriented examples, verification guidance, and explicit scope boundaries
 - assessment against nine external AI security frameworks and risk catalogs
 - four exploration views: Tactics, Pillars, Phases, and Frameworks
