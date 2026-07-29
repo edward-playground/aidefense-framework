@@ -862,7 +862,7 @@
     ]
   },
   "AID-H-002": {
-    "contentHash": "2912e58d7a986728",
+    "contentHash": "0c176ea1a3447803",
     "keywords": [
       "input sanitization",
       "prompt hardening",
@@ -881,7 +881,7 @@
     ]
   },
   "AID-H-002.001": {
-    "contentHash": "915d7d22e9a9e7ca",
+    "contentHash": "3e37729ae26f8a1e",
     "keywords": [
       "training data sanitization",
       "poisoned sample removal",
@@ -2562,7 +2562,7 @@
     ]
   },
   "AID-H-019": {
-    "contentHash": "b14505f5c2a99935",
+    "contentHash": "382c3a4b12ad1a3b",
     "keywords": [
       "safe fetch wrapper",
       "browser sandbox",
@@ -2580,7 +2580,7 @@
     ]
   },
   "AID-H-019.001": {
-    "contentHash": "1dadca65d37fab2f",
+    "contentHash": "ec0dec1d15c9b4ef",
     "keywords": [
       "pinned safe fetch",
       "exact url verification",
@@ -3692,7 +3692,7 @@
     ]
   },
   "AID-H-033": {
-    "contentHash": "d0fb21d3220e4110",
+    "contentHash": "b989f4b326aa69fe",
     "keywords": [
       "ai gateway routing integrity",
       "policy-preserving failover",
@@ -3805,7 +3805,7 @@
     ]
   },
   "AID-H-033.006": {
-    "contentHash": "40eefcb10cf1eb7d",
+    "contentHash": "906af8c8d5c7d421",
     "keywords": [
       "effective invocation configuration",
       "last trusted gateway",
@@ -3825,7 +3825,7 @@
     ]
   },
   "AID-H-034": {
-    "contentHash": "71d169455ff3b882",
+    "contentHash": "d7dcbadd31b50c3a",
     "keywords": [
       "mcp server hardening",
       "stateless mcp server",
@@ -3844,7 +3844,7 @@
     ]
   },
   "AID-H-034.001": {
-    "contentHash": "dcbd0a45486a625a",
+    "contentHash": "6af909f7cb900213",
     "keywords": [
       "mcp deployment profile",
       "streamable http hardening",
@@ -3976,7 +3976,7 @@
     ]
   },
   "AID-H-034.008": {
-    "contentHash": "90a3a8d670d56582",
+    "contentHash": "633e58eeba72edf8",
     "keywords": [
       "mcp server abuse budgets",
       "atomic budget reservation",
@@ -4050,7 +4050,7 @@
     ]
   },
   "AID-H-037": {
-    "contentHash": "1eaae6b9d1c5b5ac",
+    "contentHash": "276248c5a541c778",
     "keywords": [
       "reasoning state security",
       "reasoning compute controls",
@@ -4081,7 +4081,7 @@
     ]
   },
   "AID-H-037.002": {
-    "contentHash": "123f3921709c3326",
+    "contentHash": "4d1235670e8d25ed",
     "keywords": [
       "thinking budget enforcement",
       "reasoning compute bounding",
@@ -4248,7 +4248,7 @@
     ]
   },
   "AID-D-002": {
-    "contentHash": "10eb49f52a15bfc2",
+    "contentHash": "832253e729a8af7c",
     "keywords": [
       "model drift detection",
       "performance drift monitoring",
@@ -4324,7 +4324,7 @@
     ]
   },
   "AID-D-002.004": {
-    "contentHash": "36ff7276948f28c8",
+    "contentHash": "8953be1eab6de5ea",
     "keywords": [
       "reasoning trace telemetry",
       "provider capability adapter",
@@ -4676,7 +4676,7 @@
     ]
   },
   "AID-D-005": {
-    "contentHash": "03a1befbcd3ba92b",
+    "contentHash": "e04661e17c5b2cf2",
     "keywords": [
       "audit logging",
       "ai activity monitoring",
@@ -4808,7 +4808,7 @@
     ]
   },
   "AID-D-005.007": {
-    "contentHash": "0b34ceb28a6bf23d",
+    "contentHash": "edbb134cc7cb107c",
     "keywords": [
       "token consumption anomaly",
       "cost spike detection",
@@ -4921,7 +4921,7 @@
     ]
   },
   "AID-D-007": {
-    "contentHash": "488dbeb8c9ffe4c9",
+    "contentHash": "8ff7349674b60f06",
     "keywords": [
       "multimodal inconsistency detection",
       "batch versus realtime split",
@@ -4936,7 +4936,7 @@
     ]
   },
   "AID-D-007.001": {
-    "contentHash": "883866122b06e0c9",
+    "contentHash": "637b5b6ecee18399",
     "keywords": [
       "batch cross-modal consistency",
       "artifact anomaly detection",
@@ -5448,7 +5448,7 @@
     ]
   },
   "AID-I-001": {
-    "contentHash": "63094adf0a3caa16",
+    "contentHash": "abd505faa594942a",
     "keywords": [
       "ai execution sandboxing",
       "runtime isolation",
@@ -5488,7 +5488,7 @@
     ]
   },
   "AID-I-001.002": {
-    "contentHash": "4bfae0c1cb73f7de",
+    "contentHash": "8609f76c6b3019b2",
     "keywords": [
       "microvm isolation",
       "hardware-virtualized sandbox",
@@ -5626,7 +5626,7 @@
     ]
   },
   "AID-I-003": {
-    "contentHash": "545e96fb2f57cad7",
+    "contentHash": "de4800514478711b",
     "keywords": [
       "ai interaction quarantine",
       "response-time containment",
@@ -5641,7 +5641,7 @@
     ]
   },
   "AID-I-003.001": {
-    "contentHash": "c49acf2afa78d31b",
+    "contentHash": "e27c818199360929",
     "keywords": [
       "detection-driven quarantine",
       "safe-mode downgrade",
@@ -5656,7 +5656,7 @@
     ]
   },
   "AID-I-003.002": {
-    "contentHash": "23d74fcec79bad99",
+    "contentHash": "867c2dc290b7db21",
     "keywords": [
       "identity rate limiting",
       "session throttling",
@@ -5671,7 +5671,7 @@
     ]
   },
   "AID-I-003.003": {
-    "contentHash": "4ae92c508d71ebf6",
+    "contentHash": "a4e691775c4541ae",
     "keywords": [
       "resource budget throttling",
       "token budget enforcement",
@@ -5957,7 +5957,7 @@
     ]
   },
   "AID-I-008": {
-    "contentHash": "8bfcece89b64d8ed",
+    "contentHash": "3541e8191af2a427",
     "keywords": [
       "browser session isolation",
       "computer-use workspace isolation",
@@ -5994,7 +5994,7 @@
     ]
   },
   "AID-I-008.002": {
-    "contentHash": "9e9f17222bb323d0",
+    "contentHash": "3ac49eb3ec9a532b",
     "keywords": [
       "cross origin segmentation",
       "browser action suspension",
@@ -6033,7 +6033,7 @@
     ]
   },
   "AID-I-008.004": {
-    "contentHash": "2fa8efaca009f4c5",
+    "contentHash": "b6c9d15121405867",
     "keywords": [
       "desktop computer use isolation",
       "privileged ui observation",
