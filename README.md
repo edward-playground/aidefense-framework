@@ -2,7 +2,7 @@
 
 [![Code License: Apache-2.0](https://img.shields.io/badge/code-Apache--2.0-blue.svg?style=for-the-badge)](LICENSE)
 [![Content License: CC BY 4.0](https://img.shields.io/badge/content-CC_BY_4.0-lightgrey.svg?style=for-the-badge)](LICENSE-CONTENT)
-[![Version](https://img.shields.io/badge/version-1.20260728-0ea5e9.svg?style=for-the-badge)](aidefend-intro.js)
+[![Version](https://img.shields.io/badge/version-1.20260803-0ea5e9.svg?style=for-the-badge)](aidefend-intro.js)
 [![Live Demo](https://img.shields.io/badge/live-aidefend.net-brightgreen.svg?style=for-the-badge)](https://aidefend.net)
 
 AIDEFEND is an open, implementation-oriented knowledge base of defensive controls for AI, machine-learning, LLM, multimodal, RAG, and agentic systems. It organizes defenses by security function, protected component, lifecycle phase, and the external security references they address.
@@ -12,7 +12,7 @@ AIDEFEND is an open, implementation-oriented knowledge base of defensive control
 
 ## Current source version
 
-Version `1.20260728` provides:
+Version `1.20260803` provides:
 
 - **300 actionable defensive controls**: 35 standalone techniques and 265 leaf sub-techniques
 - implementation guidance, production-oriented examples, verification guidance, and explicit scope boundaries

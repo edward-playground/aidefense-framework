@@ -15,15 +15,15 @@ export const modelTactic = {
                     "framework": "MITRE ATLAS",
                     "items": [
                         "AML.T0006 Active Scanning",
+                        "AML.T0007 Discover AI Artifacts",
                         "AML.T0010 AI Supply Chain Compromise",
                         "AML.T0010.001 AI Supply Chain Compromise: AI Software",
-                        "AML.T0040 AI Model Inference API Access",
-                        "AML.T0007 Discover AI Artifacts",
-                        "AML.T0049 Exploit Public-Facing Application",
-                        "AML.T0011.001 User Execution: Malicious Package",
                         "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
-                        "AML.T0104 Publish Poisoned AI Agent Tool",
-                        "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
+                        "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+                        "AML.T0011 User Execution",
+                        "AML.T0011.001 User Execution: Malicious Package",
+                        "AML.T0040 AI Model Inference API Access",
+                        "AML.T0049 Exploit Public-Facing Application"
                     ]
                 },
                 {
@@ -999,6 +999,8 @@ export const modelTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0010 AI Supply Chain Compromise",
+                                "AML.T0011 User Execution",
                                 "AML.T0010.001 AI Supply Chain Compromise: AI Software",
                                 "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
                                 "AML.T0011.001 User Execution: Malicious Package"
@@ -1116,7 +1118,6 @@ export const modelTactic = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0010 AI Supply Chain Compromise (skill inventory enables tracking of supply-chain origin and publisher for every installed skill)",
-                                "AML.T0104 Publish Poisoned AI Agent Tool (inventory-driven approval workflow gates poisoned skill installation)",
                                 "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
                             ]
                         },
@@ -2167,19 +2168,23 @@ export const modelTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0019 Publish Poisoned Datasets",
+                        "AML.T0010 AI Supply Chain Compromise",
                         "AML.T0010.002 AI Supply Chain Compromise: Data",
                         "AML.T0010.003 AI Supply Chain Compromise: Model",
-                        "AML.T0020 Poison Training Data",
-                        "AML.T0058 Publish Poisoned Models",
+                        "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
+                        "AML.T0020 Training Data Poisoning",
                         "AML.T0059 Erode Dataset Integrity",
                         "AML.T0070 RAG Poisoning",
                         "AML.T0071 False RAG Entry Injection",
-                        "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
+                        "AML.T0074 Masquerading",
                         "AML.T0076 Corrupt AI Model",
                         "AML.T0080 AI Agent Context Poisoning",
                         "AML.T0080.000 AI Agent Context Poisoning: Memory",
-                        "AML.T0112.001 Machine Compromise: AI Artifacts"
+                        "AML.T0099 AI Agent Tool Data Poisoning",
+                        "AML.T0112.001 Machine Compromise: AI Artifacts",
+                        "AML.T0115 Publish Poisoned AI Artifacts",
+                        "AML.T0115.000 Publish Poisoned AI Artifacts: Datasets",
+                        "AML.T0115.001 Publish Poisoned AI Artifacts: Models"
                     ]
                 },
                 {
@@ -2438,10 +2443,14 @@ export const modelTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0010 AI Supply Chain Compromise",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
+                                "AML.T0074 Masquerading",
+                                "AML.T0020 Training Data Poisoning",
                                 "AML.T0010.002 AI Supply Chain Compromise: Data",
                                 "AML.T0010.003 AI Supply Chain Compromise: Model",
                                 "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
-                                "AML.T0058 Publish Poisoned Models",
+                                "AML.T0115.001 Publish Poisoned AI Artifacts: Models",
                                 "AML.T0059 Erode Dataset Integrity",
                                 "AML.T0076 Corrupt AI Model",
                                 "AML.T0112.001 Machine Compromise: AI Artifacts"
@@ -2576,9 +2585,12 @@ export const modelTactic = {
                     {
                       "framework": "MITRE ATLAS",
                       "items": [
+                        "AML.T0010 AI Supply Chain Compromise",
+                        "AML.T0115 Publish Poisoned AI Artifacts",
+                        "AML.T0099 AI Agent Tool Data Poisoning",
                         "AML.T0010.002 AI Supply Chain Compromise: Data",
-                        "AML.T0019 Publish Poisoned Datasets",
-                        "AML.T0020 Poison Training Data",
+                        "AML.T0115.000 Publish Poisoned AI Artifacts: Datasets",
+                        "AML.T0020 Training Data Poisoning",
                         "AML.T0059 Erode Dataset Integrity"
                       ]
                     },
@@ -3506,10 +3518,12 @@ export const modelTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0010 AI Supply Chain Compromise",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
                                 "AML.T0010.002 AI Supply Chain Compromise: Data",
                                 "AML.T0010.003 AI Supply Chain Compromise: Model",
                                 "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
-                                "AML.T0058 Publish Poisoned Models (detects post-approval artifact substitution; not poisoning during training)",
+                                "AML.T0115.001 Publish Poisoned AI Artifacts: Models (detects post-approval artifact substitution; not poisoning during training)",
                                 "AML.T0059 Erode Dataset Integrity",
                                 "AML.T0076 Corrupt AI Model",
                                 "AML.T0112.001 Machine Compromise: AI Artifacts"
@@ -6425,7 +6439,7 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                 {
                     "id": "AID-M-004-G002",
                     "implementation": "Leverage AI-specific threat frameworks (ATLAS, MAESTRO, OWASP).",
-                    "howTo": "<h5>Concept:</h5><p>Use frameworks created by security experts to understand known adversary behaviors and common vulnerabilities in AI systems.</p><h5>Step 1: Identify Relevant TTPs and Vulnerabilities</h5><p>Review the frameworks and identify items relevant to your system's architecture.</p><ul><li><strong>MITRE ATLAS:</strong> Look for specific Tactics, Techniques, and Procedures (TTPs) adversaries use against ML systems. (e.g., AML.T0020 Poison Training Data).</li><li><strong>MAESTRO:</strong> Use the 7-layer model to analyze threats at each level of your AI agent, from the foundation model to the agentic ecosystem.</li><li><strong>OWASP Top 10 for LLM/ML:</strong> Use these lists as a checklist for the most common and critical security risks. (e.g., LLM01: Prompt Injection).</li></ul><h5>Step 2: Create a Threat Mapping Template</h5><p>Document threats using a structured approach that references these frameworks.</p><pre><code># File: threat_register_template.md\n## Threat ID: THR-001\n**Description:** Attacker could poison the RAG knowledge base with false information\n**Framework References:** \n- MAESTRO: L2 (Data Operations) - Compromised RAG Pipelines\n- ATLAS: AML.T0020 (Poison Training Data)\n- OWASP LLM: LLM04:2025 (Data and Model Poisoning)\n\n**Attack Vector:** External data source compromise leading to injection of false documents\n**Impact:** High - Could lead to widespread misinformation in model outputs\n**Likelihood:** Medium - Requires access to data pipeline or upstream sources\n**Mitigation:** Implement data validation, source verification, content scanning</code></pre><h5>Step 3: Use Framework-Specific Tools</h5><p>Leverage available tools like the MITRE ATLAS Navigator to visualize attack paths and identify gaps in your defenses.</p><pre><code># Example: Using ATLAS Navigator workflow\n1. Navigate to https://mitre-atlas.github.io/atlas-navigator/\n2. Load the ATLAS matrix\n3. Select techniques relevant to your ML system type\n4. Export selected techniques as a JSON file\n5. Import into your threat modeling documentation\n6. Map each technique to specific components in your architecture</code></pre><p><strong>Action:</strong> Incorporate these frameworks into your process to benefit from community knowledge and avoid reinventing the wheel.</p>"
+                    "howTo": "<h5>Concept:</h5><p>Use frameworks created by security experts to understand known adversary behaviors and common vulnerabilities in AI systems.</p><h5>Step 1: Identify Relevant TTPs and Vulnerabilities</h5><p>Review the frameworks and identify items relevant to your system's architecture.</p><ul><li><strong>MITRE ATLAS:</strong> Look for specific Tactics, Techniques, and Procedures (TTPs) adversaries use against ML systems. (e.g., AML.T0020 Training Data Poisoning).</li><li><strong>MAESTRO:</strong> Use the 7-layer model to analyze threats at each level of your AI agent, from the foundation model to the agentic ecosystem.</li><li><strong>OWASP Top 10 for LLM/ML:</strong> Use these lists as a checklist for the most common and critical security risks. (e.g., LLM01: Prompt Injection).</li></ul><h5>Step 2: Create a Threat Mapping Template</h5><p>Document threats using a structured approach that references these frameworks.</p><pre><code># File: threat_register_template.md\n## Threat ID: THR-001\n**Description:** Attacker could poison the RAG knowledge base with false information\n**Framework References:** \n- MAESTRO: L2 (Data Operations) - Compromised RAG Pipelines\n- ATLAS: AML.T0020 (Training Data Poisoning)\n- OWASP LLM: LLM04:2025 (Data and Model Poisoning)\n\n**Attack Vector:** External data source compromise leading to injection of false documents\n**Impact:** High - Could lead to widespread misinformation in model outputs\n**Likelihood:** Medium - Requires access to data pipeline or upstream sources\n**Mitigation:** Implement data validation, source verification, content scanning</code></pre><h5>Step 3: Use Framework-Specific Tools</h5><p>Leverage available tools like the MITRE ATLAS Navigator to visualize attack paths and identify gaps in your defenses.</p><pre><code># Example: Using ATLAS Navigator workflow\n1. Navigate to https://mitre-atlas.github.io/atlas-navigator/\n2. Load the ATLAS matrix\n3. Select techniques relevant to your ML system type\n4. Export selected techniques as a JSON file\n5. Import into your threat modeling documentation\n6. Map each technique to specific components in your architecture</code></pre><p><strong>Action:</strong> Incorporate these frameworks into your process to benefit from community knowledge and avoid reinventing the wheel.</p>"
                 },
                 {
                     "id": "AID-M-004-G003",
@@ -6557,9 +6571,10 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                     "items": [
                         "AML.T0010 AI Supply Chain Compromise",
                         "AML.T0010.001 AI Supply Chain Compromise: AI Software",
-                        "AML.T0055 Unsecured Credentials",
-                        "AML.T0011.001 User Execution: Malicious Package",
                         "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
+                        "AML.T0011 User Execution",
+                        "AML.T0011.001 User Execution: Malicious Package",
+                        "AML.T0055 Unsecured Credentials",
                         "AML.T0081 Modify AI Agent Configuration",
                         "AML.T0083 Credentials from AI Agent Configuration"
                     ]
@@ -6809,6 +6824,7 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0011 User Execution",
                                 "AML.T0010 AI Supply Chain Compromise",
                                 "AML.T0010.001 AI Supply Chain Compromise: AI Software",
                                 "AML.T0010.004 AI Supply Chain Compromise: Container Registry",

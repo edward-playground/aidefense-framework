@@ -163,13 +163,15 @@ export const hardenTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0019 Publish Poisoned Datasets",
-                        "AML.T0020 Poison Training Data",
+                        "AML.T0011 User Execution",
+                        "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                         "AML.T0015 Evade AI Model",
+                        "AML.T0020 Training Data Poisoning",
                         "AML.T0043 Craft Adversarial Data",
                         "AML.T0051 LLM Prompt Injection",
                         "AML.T0051.000 LLM Prompt Injection: Direct",
                         "AML.T0051.001 LLM Prompt Injection: Indirect",
+                        "AML.T0051.002 LLM Prompt Injection: Triggered",
                         "AML.T0052.001 Phishing: Deepfake-Assisted Phishing",
                         "AML.T0054 LLM Jailbreak",
                         "AML.T0057 LLM Data Leakage",
@@ -178,8 +180,11 @@ export const hardenTactic = {
                         "AML.T0068 LLM Prompt Obfuscation",
                         "AML.T0071 False RAG Entry Injection",
                         "AML.T0093 Prompt Infiltration via Public-Facing Application",
-                        "AML.T0051.002 LLM Prompt Injection: Triggered",
-                        "AML.T0099 AI Agent Tool Data Poisoning"
+                        "AML.T0099 AI Agent Tool Data Poisoning",
+                        "AML.T0110 AI Agent Tool Poisoning",
+                        "AML.T0110.002 AI Agent Tool Poisoning: Runtime Response",
+                        "AML.T0115 Publish Poisoned AI Artifacts",
+                        "AML.T0115.000 Publish Poisoned AI Artifacts: Datasets"
                     ]
                 },
                 {
@@ -336,9 +341,10 @@ export const hardenTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0020 Poison Training Data",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
+                                "AML.T0020 Training Data Poisoning",
                                 "AML.T0059 Erode Dataset Integrity",
-                                "AML.T0019 Publish Poisoned Datasets",
+                                "AML.T0115.000 Publish Poisoned AI Artifacts: Datasets",
                                 "AML.T0057 LLM Data Leakage (removing PII from training data prevents leakage)"
                             ]
                         },
@@ -5047,6 +5053,10 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0011 User Execution",
+                                "AML.T0110 AI Agent Tool Poisoning",
+                                "AML.T0110.002 AI Agent Tool Poisoning: Runtime Response",
+                                "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                                 "AML.T0051 LLM Prompt Injection",
                                 "AML.T0054 LLM Jailbreak",
                                 "AML.T0068 LLM Prompt Obfuscation",
@@ -5054,7 +5064,7 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                                 "AML.T0071 False RAG Entry Injection",
                                 "AML.T0093 Prompt Infiltration via Public-Facing Application",
                                 "AML.T0043 Craft Adversarial Data (inference-time validation catches some adversarial inputs)",
-                                "AML.T0099 AI Agent Tool Data Poisoning (input validation blocks poisoned tool outputs)",
+                                "AML.T0099 AI Agent Tool Data Poisoning (validates poisoned data retrieved through benign tools before prompt assembly)",
                                 "AML.T0051.000 LLM Prompt Injection: Direct",
                                 "AML.T0051.001 LLM Prompt Injection: Indirect",
                                 "AML.T0051.002 LLM Prompt Injection: Triggered (input validation blocks triggered prompt injection)"
@@ -5335,7 +5345,7 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0020 Poison Training Data (feature-level poisoning through transformation logic)",
+                                "AML.T0020 Training Data Poisoning (feature-level poisoning through transformation logic)",
                                 "AML.T0059 Erode Dataset Integrity (feature pipeline corruption erodes dataset integrity)"
                             ]
                         },
@@ -5462,8 +5472,9 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0019 Publish Poisoned Datasets (datasets with manipulated labels)",
-                                "AML.T0020 Poison Training Data (label flipping as poisoning vector)",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
+                                "AML.T0115.000 Publish Poisoned AI Artifacts: Datasets (datasets with manipulated labels)",
+                                "AML.T0020 Training Data Poisoning (label flipping as poisoning vector)",
                                 "AML.T0059 Erode Dataset Integrity (label manipulation erodes supervisory integrity)"
                             ]
                         },
@@ -5946,19 +5957,23 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         "AML.T0010.001 AI Supply Chain Compromise: AI Software",
                         "AML.T0010.002 AI Supply Chain Compromise: Data",
                         "AML.T0010.003 AI Supply Chain Compromise: Model",
+                        "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
+                        "AML.T0011 User Execution",
                         "AML.T0011.000 User Execution: Unsafe AI Artifacts",
+                        "AML.T0011.001 User Execution: Malicious Package",
                         "AML.T0018 Manipulate AI Model",
                         "AML.T0018.000 Manipulate AI Model: Poison AI Model",
-                        "AML.T0049 Exploit Public-Facing Application",
-                        "AML.T0058 Publish Poisoned Models",
-                        "AML.T0011.001 User Execution: Malicious Package",
-                        "AML.T0060 Publish Hallucinated Entities",
                         "AML.T0018.002 Manipulate AI Model: Embed Malware",
-                        "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
+                        "AML.T0018.003 Manipulate AI Model: Modify Prompt Construction Logic",
+                        "AML.T0020 Training Data Poisoning",
+                        "AML.T0049 Exploit Public-Facing Application",
+                        "AML.T0060 Publish Hallucinated Entities",
                         "AML.T0074 Masquerading",
                         "AML.T0076 Corrupt AI Model",
                         "AML.T0109 AI Supply Chain Rug Pull",
-                        "AML.T0112.001 Machine Compromise: AI Artifacts"
+                        "AML.T0112.001 Machine Compromise: AI Artifacts",
+                        "AML.T0115 Publish Poisoned AI Artifacts",
+                        "AML.T0115.001 Publish Poisoned AI Artifacts: Models"
                     ]
                 },
                 {
@@ -6106,6 +6121,8 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0010 AI Supply Chain Compromise",
+                                "AML.T0011 User Execution",
                                 "AML.T0010.001 AI Supply Chain Compromise: AI Software",
                                 "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
                                 "AML.T0011.001 User Execution: Malicious Package",
@@ -6252,9 +6269,13 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0010 AI Supply Chain Compromise",
+                                "AML.T0011 User Execution",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
+                                "AML.T0018.003 Manipulate AI Model: Modify Prompt Construction Logic",
                                 "AML.T0010.003 AI Supply Chain Compromise: Model",
                                 "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
-                                "AML.T0058 Publish Poisoned Models",
+                                "AML.T0115.001 Publish Poisoned AI Artifacts: Models",
                                 "AML.T0076 Corrupt AI Model",
                                 "AML.T0074 Masquerading",
                                 "AML.T0018 Manipulate AI Model (release gating detects model manipulation before deployment)",
@@ -6674,6 +6695,8 @@ if __name__ == "__main__":
                       {
                           "framework": "MITRE ATLAS",
                           "items": [
+                              "AML.T0074 Masquerading",
+                              "AML.T0020 Training Data Poisoning",
                               "AML.T0010 AI Supply Chain Compromise (dataset supply chain is part of broader AI supply chain)",
                               "AML.T0010.002 AI Supply Chain Compromise: Data"
                           ]
@@ -7038,11 +7061,15 @@ if __name__ == "__main__":
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0011 User Execution",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
+                                "AML.T0011.000 User Execution: Unsafe AI Artifacts",
+                                "AML.T0018.003 Manipulate AI Model: Modify Prompt Construction Logic",
                                 "AML.T0010 AI Supply Chain Compromise (SBOM and attestation protect the broader model supply chain)",
                                 "AML.T0010.003 AI Supply Chain Compromise: Model",
                                 "AML.T0018 Manipulate AI Model (provenance attestation detects tampered models)",
                                 "AML.T0018.000 Manipulate AI Model: Poison AI Model (attestation detects unauthorized model modification)",
-                                "AML.T0058 Publish Poisoned Models",
+                                "AML.T0115.001 Publish Poisoned AI Artifacts: Models",
                                 "AML.T0074 Masquerading",
                                 "AML.T0076 Corrupt AI Model",
                                 "AML.T0109 AI Supply Chain Rug Pull"
@@ -7201,10 +7228,13 @@ if __name__ == "__main__":
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0011 User Execution",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
+                                "AML.T0074 Masquerading",
                                 "AML.T0010 AI Supply Chain Compromise",
                                 "AML.T0010.003 AI Supply Chain Compromise: Model",
                                 "AML.T0011.000 User Execution: Unsafe AI Artifacts",
-                                "AML.T0058 Publish Poisoned Models",
+                                "AML.T0115.001 Publish Poisoned AI Artifacts: Models",
                                 "AML.T0109 AI Supply Chain Rug Pull",
                                 "AML.T0018 Manipulate AI Model",
                                 "AML.T0018.000 Manipulate AI Model: Poison AI Model"
@@ -7346,10 +7376,11 @@ if __name__ == "__main__":
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0115 Publish Poisoned AI Artifacts",
                                 "AML.T0010 AI Supply Chain Compromise",
                                 "AML.T0010.003 AI Supply Chain Compromise: Model",
                                 "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
-                                "AML.T0058 Publish Poisoned Models"
+                                "AML.T0115.001 Publish Poisoned AI Artifacts: Models"
                             ]
                         },
                         {
@@ -7471,6 +7502,7 @@ if __name__ == "__main__":
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0011 User Execution",
                                 "AML.T0010 AI Supply Chain Compromise",
                                 "AML.T0010.003 AI Supply Chain Compromise: Model",
                                 "AML.T0011.000 User Execution: Unsafe AI Artifacts",
@@ -7590,6 +7622,7 @@ if __name__ == "__main__":
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0010 AI Supply Chain Compromise",
                                 "AML.T0010.001 AI Supply Chain Compromise: AI Software",
                                 "AML.T0049 Exploit Public-Facing Application"
                             ]
@@ -7679,12 +7712,12 @@ if __name__ == "__main__":
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0040 AI Model Inference API Access",
-                        "AML.T0044 Full AI Model Access",
-                        "AML.T0021 Establish Accounts",
                         "AML.T0012 Valid Accounts",
+                        "AML.T0021 Establish Accounts",
                         "AML.T0036 Data from Information Repositories",
                         "AML.T0037 Data from Local System",
+                        "AML.T0040 AI Model Inference API Access",
+                        "AML.T0044 Full AI Model Access",
                         "AML.T0055 Unsecured Credentials",
                         "AML.T0073 Impersonation",
                         "AML.T0074 Masquerading",
@@ -9773,12 +9806,16 @@ if __name__ == "__main__":
               {
                   "framework": "MITRE ATLAS",
                   "items": [
+                      "AML.T0010 AI Supply Chain Compromise",
                       "AML.T0010.001 AI Supply Chain Compromise: AI Software",
                       "AML.T0010.002 AI Supply Chain Compromise: Data",
                       "AML.T0010.003 AI Supply Chain Compromise: Model",
-                      "AML.T0020 Poison Training Data",
+                      "AML.T0011 User Execution",
+                      "AML.T0011.000 User Execution: Unsafe AI Artifacts",
                       "AML.T0018 Manipulate AI Model",
                       "AML.T0018.000 Manipulate AI Model: Poison AI Model",
+                      "AML.T0018.003 Manipulate AI Model: Modify Prompt Construction Logic",
+                      "AML.T0020 Training Data Poisoning",
                       "AML.T0025 Exfiltration via Cyber Means",
                       "AML.T0031 Erode AI Model Integrity",
                       "AML.T0054 LLM Jailbreak",
@@ -10058,7 +10095,7 @@ if __name__ == "__main__":
                   {
                       "framework": "MITRE ATLAS",
                       "items": [
-                          "AML.T0020 Poison Training Data",
+                          "AML.T0020 Training Data Poisoning",
                           "AML.T0018 Manipulate AI Model",
                           "AML.T0018.000 Manipulate AI Model: Poison AI Model",
                           "AML.T0031 Erode AI Model Integrity (monitoring detects integrity erosion during training)"
@@ -10192,7 +10229,7 @@ if __name__ == "__main__":
                   {
                       "framework": "MITRE ATLAS",
                       "items": [
-                          "N/A"
+                          "AML.T0020 Training Data Poisoning"
                       ]
                   },
                   {
@@ -10314,6 +10351,7 @@ if __name__ == "__main__":
                   {
                       "framework": "MITRE ATLAS",
                       "items": [
+                          "AML.T0010 AI Supply Chain Compromise",
                           "AML.T0010.002 AI Supply Chain Compromise: Data (compromised evaluation datasets or benchmarks)",
                           "AML.T0010.001 AI Supply Chain Compromise: AI Software (compromised evaluation harness or benchmark software)",
                           "AML.T0059 Erode Dataset Integrity (evaluation dataset integrity degradation)"
@@ -10576,6 +10614,10 @@ if __name__ == "__main__":
                   {
                       "framework": "MITRE ATLAS",
                       "items": [
+                          "AML.T0010 AI Supply Chain Compromise",
+                          "AML.T0011 User Execution",
+                          "AML.T0011.000 User Execution: Unsafe AI Artifacts",
+                          "AML.T0018.003 Manipulate AI Model: Modify Prompt Construction Logic",
                           "AML.T0010.003 AI Supply Chain Compromise: Model",
                           "AML.T0018 Manipulate AI Model",
                           "AML.T0031 Erode AI Model Integrity"
@@ -10673,6 +10715,7 @@ if __name__ == "__main__":
                   {
                       "framework": "MITRE ATLAS",
                       "items": [
+                          "AML.T0010 AI Supply Chain Compromise",
                           "AML.T0010.001 AI Supply Chain Compromise: AI Software"
                       ]
                   },
@@ -10856,8 +10899,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
               {
                   "framework": "MITRE ATLAS",
                   "items": [
-                      "AML.T0020 Poison Training Data",
+                      "AML.T0018 Manipulate AI Model",
                       "AML.T0018.000 Manipulate AI Model: Poison AI Model",
+                      "AML.T0020 Training Data Poisoning",
                       "AML.T0025 Exfiltration via Cyber Means",
                       "AML.T0073 Impersonation"
                   ]
@@ -11097,7 +11141,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                   {
                       "framework": "MITRE ATLAS",
                       "items": [
-                          "AML.T0020 Poison Training Data",
+                          "AML.T0018 Manipulate AI Model",
+                          "AML.T0020 Training Data Poisoning",
                           "AML.T0018.000 Manipulate AI Model: Poison AI Model (Byzantine-robust rules filter poisoned model updates)"
                       ]
                   },
@@ -11293,9 +11338,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "items": [
                         "AML.T0010 AI Supply Chain Compromise",
                         "AML.T0010.000 AI Supply Chain Compromise: Hardware",
-                        "AML.T0044 Full AI Model Access",
                         "AML.T0025 Exfiltration via Cyber Means",
-                        "AML.T0037 Data from Local System"
+                        "AML.T0037 Data from Local System",
+                        "AML.T0044 Full AI Model Access"
                     ]
                 },
                 {
@@ -12033,8 +12078,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0020 Poison Training Data",
                         "AML.T0015 Evade AI Model",
+                        "AML.T0020 Training Data Poisoning",
                         "AML.T0031 Erode AI Model Integrity",
                         "AML.T0043 Craft Adversarial Data",
                         "AML.T0059 Erode Dataset Integrity"
@@ -12149,7 +12194,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0020 Poison Training Data",
+                                "AML.T0020 Training Data Poisoning",
                                 "AML.T0059 Erode Dataset Integrity"
                             ]
                         },
@@ -12266,7 +12311,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0020 Poison Training Data",
+                                "AML.T0020 Training Data Poisoning",
                                 "AML.T0015 Evade AI Model (robust aggregation resists adversarial graph perturbations)",
                                 "AML.T0031 Erode AI Model Integrity"
                             ]
@@ -12445,7 +12490,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0020 Poison Training Data",
+                        "AML.T0020 Training Data Poisoning",
                         "AML.T0059 Erode Dataset Integrity"
                     ]
                 },
@@ -12645,7 +12690,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0020 Poison Training Data (governed preference and demonstration signals resist poisoned RL feedback)",
+                                "AML.T0020 Training Data Poisoning (governed preference and demonstration signals resist poisoned RL feedback)",
                                 "AML.T0059 Erode Dataset Integrity (split and lineage controls protect feedback-dataset integrity)"
                             ]
                         },
@@ -12837,7 +12882,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0020 Poison Training Data (authenticated reward signals prevent one training-feedback tampering path)"
+                                "AML.T0020 Training Data Poisoning (authenticated reward signals prevent one training-feedback tampering path)"
                             ]
                         },
                         {
@@ -13623,10 +13668,12 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "AML.T0051 LLM Prompt Injection",
                         "AML.T0051.000 LLM Prompt Injection: Direct",
                         "AML.T0051.001 LLM Prompt Injection: Indirect",
+                        "AML.T0051.002 LLM Prompt Injection: Triggered",
                         "AML.T0054 LLM Jailbreak",
                         "AML.T0065 LLM Prompt Crafting",
                         "AML.T0068 LLM Prompt Obfuscation",
-                        "AML.T0051.002 LLM Prompt Injection: Triggered"
+                        "AML.T0110 AI Agent Tool Poisoning",
+                        "AML.T0110.002 AI Agent Tool Poisoning: Runtime Response"
                     ]
                 },
                 {
@@ -13738,6 +13785,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0110 AI Agent Tool Poisoning",
+                                "AML.T0110.002 AI Agent Tool Poisoning: Runtime Response",
                                 "AML.T0051 LLM Prompt Injection",
                                 "AML.T0051.000 LLM Prompt Injection: Direct",
                                 "AML.T0051.001 LLM Prompt Injection: Indirect",
@@ -13962,11 +14011,15 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
+                        "AML.T0011 User Execution",
+                        "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                         "AML.T0029 Denial of AI Service",
+                        "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption",
                         "AML.T0050 Command and Scripting Interpreter",
                         "AML.T0051 LLM Prompt Injection",
                         "AML.T0051.000 LLM Prompt Injection: Direct",
                         "AML.T0051.001 LLM Prompt Injection: Indirect",
+                        "AML.T0051.002 LLM Prompt Injection: Triggered",
                         "AML.T0053 AI Agent Tool Invocation",
                         "AML.T0054 LLM Jailbreak",
                         "AML.T0067 LLM Trusted Output Components Manipulation",
@@ -13974,14 +14027,14 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "AML.T0080.000 AI Agent Context Poisoning: Memory",
                         "AML.T0086 Exfiltration via AI Agent Tool Invocation",
                         "AML.T0092 Manipulate User LLM Chat History",
-                        "AML.T0051.002 LLM Prompt Injection: Triggered",
                         "AML.T0098 AI Agent Tool Credential Harvesting",
                         "AML.T0099 AI Agent Tool Data Poisoning",
                         "AML.T0100 AI Agent Clickbait",
                         "AML.T0101 Data Destruction via AI Agent Tool Invocation",
                         "AML.T0102 Generate Malicious Commands",
                         "AML.T0108 AI Agent",
-                        "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption"
+                        "AML.T0110 AI Agent Tool Poisoning",
+                        "AML.T0110.002 AI Agent Tool Poisoning: Runtime Response"
                     ]
                 },
                 {
@@ -14807,6 +14860,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0011 User Execution",
+                                "AML.T0110 AI Agent Tool Poisoning",
+                                "AML.T0110.002 AI Agent Tool Poisoning: Runtime Response",
+                                "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                                 "AML.T0051 LLM Prompt Injection",
                                 "AML.T0051.001 LLM Prompt Injection: Indirect",
                                 "AML.T0051.002 LLM Prompt Injection: Triggered",
@@ -14908,6 +14965,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
+                        "AML.T0011 User Execution",
+                        "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
+                        "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption",
                         "AML.T0051 LLM Prompt Injection",
                         "AML.T0051.000 LLM Prompt Injection: Direct",
                         "AML.T0051.001 LLM Prompt Injection: Indirect",
@@ -14921,8 +14981,12 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "AML.T0086 Exfiltration via AI Agent Tool Invocation",
                         "AML.T0098 AI Agent Tool Credential Harvesting",
                         "AML.T0108 AI Agent",
-                        "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption",
-                        "AML.T0114 AI Service Web Interface"
+                        "AML.T0110 AI Agent Tool Poisoning",
+                        "AML.T0110.001 AI Agent Tool Poisoning: Implementation",
+                        "AML.T0110.002 AI Agent Tool Poisoning: Runtime Response",
+                        "AML.T0114 AI Service Web Interface",
+                        "AML.T0115 Publish Poisoned AI Artifacts",
+                        "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools"
                     ]
                 },
                 {
@@ -15578,6 +15642,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0110 AI Agent Tool Poisoning",
+                                "AML.T0110.002 AI Agent Tool Poisoning: Runtime Response (taint tracking contains poisoned-response propagation to sensitive sinks)",
                                 "AML.T0051 LLM Prompt Injection",
                                 "AML.T0051.001 LLM Prompt Injection: Indirect (prevents indirect injection from diverting data flows to attacker-controlled sinks)",
                                 "AML.T0086 Exfiltration via AI Agent Tool Invocation",
@@ -15856,6 +15922,12 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0011 User Execution",
+                                "AML.T0110 AI Agent Tool Poisoning",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
+                                "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools",
+                                "AML.T0110.001 AI Agent Tool Poisoning: Implementation",
+                                "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                                 "AML.T0053 AI Agent Tool Invocation (manifest enforcement constrains tool invocation scope per skill)",
                                 "AML.T0086 Exfiltration via AI Agent Tool Invocation (network allowlist enforcement blocks unauthorized exfiltration)",
                                 "AML.T0081 Modify AI Agent Configuration (deny-write-by-default on protected identity/state resources prevents skill-driven config tampering)",
@@ -16090,12 +16162,12 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
+                        "AML.T0011.003 User Execution: Malicious Link",
                         "AML.T0051 LLM Prompt Injection",
                         "AML.T0051.001 LLM Prompt Injection: Indirect",
                         "AML.T0078 Drive-by Compromise",
                         "AML.T0086 Exfiltration via AI Agent Tool Invocation",
                         "AML.T0100 AI Agent Clickbait",
-                        "AML.T0011.003 User Execution: Malicious Link",
                         "AML.T0108 AI Agent",
                         "AML.T0113 Steal Web Session Cookie",
                         "AML.T0114 AI Service Web Interface"
@@ -16555,7 +16627,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "AML.T0071 False RAG Entry Injection",
                         "AML.T0085 Data from AI Services",
                         "AML.T0085.001 Data from AI Services: AI Agent Tools",
-                        "AML.T0086 Exfiltration via AI Agent Tool Invocation"
+                        "AML.T0086 Exfiltration via AI Agent Tool Invocation",
+                        "AML.T0099 AI Agent Tool Data Poisoning"
                     ]
                 },
                 {
@@ -16665,6 +16738,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0099 AI Agent Tool Data Poisoning",
                                 "AML.T0070 RAG Poisoning",
                                 "AML.T0059 Erode Dataset Integrity",
                                 "AML.T0071 False RAG Entry Injection (integrity verification detects injected entries)"
@@ -16776,6 +16850,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0099 AI Agent Tool Data Poisoning",
                                 "AML.T0070 RAG Poisoning",
                                 "AML.T0066 Retrieval Content Crafting",
                                 "AML.T0071 False RAG Entry Injection"
@@ -17029,6 +17104,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0099 AI Agent Tool Data Poisoning",
                                 "AML.T0070 RAG Poisoning",
                                 "AML.T0071 False RAG Entry Injection",
                                 "AML.T0066 Retrieval Content Crafting",
@@ -17114,13 +17190,16 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "framework": "MITRE ATLAS",
                     "items": [
                         "AML.T0010 AI Supply Chain Compromise",
+                        "AML.T0011 User Execution",
+                        "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                         "AML.T0059 Erode Dataset Integrity",
                         "AML.T0070 RAG Poisoning",
                         "AML.T0071 False RAG Entry Injection",
                         "AML.T0081 Modify AI Agent Configuration",
                         "AML.T0083 Credentials from AI Agent Configuration",
                         "AML.T0084 Discover AI Agent Configuration",
-                        "AML.T0095.000 Search Open Websites/Domains: Code Repositories"
+                        "AML.T0095.000 Search Open Websites/Domains: Code Repositories",
+                        "AML.T0099 AI Agent Tool Data Poisoning"
                     ]
                 },
                 {
@@ -17351,6 +17430,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0011 User Execution",
+                                "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                                 "AML.T0081 Modify AI Agent Configuration",
                                 "AML.T0010 AI Supply Chain Compromise (signed configs detect supply chain-compromised config files)"
                             ]
@@ -17504,6 +17585,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0099 AI Agent Tool Data Poisoning",
                                 "AML.T0070 RAG Poisoning",
                                 "AML.T0071 False RAG Entry Injection",
                                 "AML.T0059 Erode Dataset Integrity",
@@ -17758,14 +17840,17 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "items": [
                         "AML.T0010 AI Supply Chain Compromise",
                         "AML.T0010.001 AI Supply Chain Compromise: AI Software",
-                        "AML.T0025 Exfiltration via Cyber Means",
+                        "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+                        "AML.T0011 User Execution",
                         "AML.T0011.001 User Execution: Malicious Package",
+                        "AML.T0025 Exfiltration via Cyber Means",
                         "AML.T0060 Publish Hallucinated Entities",
                         "AML.T0072 Reverse Shell",
                         "AML.T0074 Masquerading",
-                        "AML.T0104 Publish Poisoned AI Agent Tool",
                         "AML.T0109 AI Supply Chain Rug Pull",
-                        "AML.T0111 AI Supply Chain Reputation Inflation"
+                        "AML.T0111 AI Supply Chain Reputation Inflation",
+                        "AML.T0115 Publish Poisoned AI Artifacts",
+                        "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools"
                     ]
                 },
                 {
@@ -17881,6 +17966,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0011 User Execution",
                                 "AML.T0011.001 User Execution: Malicious Package",
                                 "AML.T0072 Reverse Shell",
                                 "AML.T0025 Exfiltration via Cyber Means",
@@ -18003,11 +18089,14 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0011 User Execution",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
+                                "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
                                 "AML.T0010 AI Supply Chain Compromise",
                                 "AML.T0011.001 User Execution: Malicious Package",
                                 "AML.T0074 Masquerading",
                                 "AML.T0060 Publish Hallucinated Entities (package vetting detects hallucination-squatted packages)",
-                                "AML.T0104 Publish Poisoned AI Agent Tool",
+                                "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools",
                                 "AML.T0109 AI Supply Chain Rug Pull",
                                 "AML.T0111 AI Supply Chain Reputation Inflation"
                             ]
@@ -18124,12 +18213,14 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
+                        "AML.T0115 Publish Poisoned AI Artifacts",
+                        "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
                         "AML.T0010 AI Supply Chain Compromise",
                         "AML.T0010.001 AI Supply Chain Compromise: AI Software",
                         "AML.T0012 Valid Accounts",
                         "AML.T0074 Masquerading",
-                        "AML.T0058 Publish Poisoned Models",
-                        "AML.T0104 Publish Poisoned AI Agent Tool",
+                        "AML.T0115.001 Publish Poisoned AI Artifacts: Models",
+                        "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools",
                         "AML.T0055 Unsecured Credentials (OIDC tokens eliminate long-lived credentials)"
                     ]
                 },
@@ -18236,13 +18327,16 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "items": [
                         "AML.T0010 AI Supply Chain Compromise",
                         "AML.T0010.001 AI Supply Chain Compromise: AI Software",
+                        "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+                        "AML.T0011 User Execution",
+                        "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                         "AML.T0060 Publish Hallucinated Entities",
                         "AML.T0074 Masquerading",
-                        "AML.T0104 Publish Poisoned AI Agent Tool",
-                        "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                         "AML.T0109 AI Supply Chain Rug Pull",
                         "AML.T0110 AI Agent Tool Poisoning",
-                        "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
+                        "AML.T0110.000 AI Agent Tool Poisoning: Definition and Instructions",
+                        "AML.T0115 Publish Poisoned AI Artifacts",
+                        "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools"
                     ]
                 },
                 {
@@ -18346,9 +18440,12 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0010 AI Supply Chain Compromise",
+                                "AML.T0011 User Execution",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
                                 "AML.T0010.001 AI Supply Chain Compromise: AI Software",
                                 "AML.T0074 Masquerading",
-                                "AML.T0104 Publish Poisoned AI Agent Tool",
+                                "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools",
                                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                                 "AML.T0060 Publish Hallucinated Entities (version pinning prevents resolution of hallucination-squatted tools)",
                                 "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
@@ -18457,8 +18554,12 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0011 User Execution",
+                                "AML.T0110 AI Agent Tool Poisoning",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
+                                "AML.T0110.000 AI Agent Tool Poisoning: Definition and Instructions",
                                 "AML.T0010 AI Supply Chain Compromise (descriptor hash detects compromised tool metadata)",
-                                "AML.T0104 Publish Poisoned AI Agent Tool",
+                                "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools",
                                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                                 "AML.T0074 Masquerading (hash binding detects descriptor-level masquerading)",
                                 "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
@@ -18557,8 +18658,12 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0010 AI Supply Chain Compromise",
+                                "AML.T0011 User Execution",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
+                                "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
                                 "AML.T0074 Masquerading",
-                                "AML.T0104 Publish Poisoned AI Agent Tool",
+                                "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools",
                                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                                 "AML.T0060 Publish Hallucinated Entities (typosquat detection catches hallucination-squatted packages)"
                             ]
@@ -18669,9 +18774,13 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0010 AI Supply Chain Compromise",
+                                "AML.T0011 User Execution",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
+                                "AML.T0110.000 AI Agent Tool Poisoning: Definition and Instructions",
                                 "AML.T0010.001 AI Supply Chain Compromise: AI Software",
                                 "AML.T0074 Masquerading",
-                                "AML.T0104 Publish Poisoned AI Agent Tool",
+                                "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools",
                                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                                 "AML.T0110 AI Agent Tool Poisoning",
                                 "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
@@ -18770,7 +18879,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "AML.T0050 Command and Scripting Interpreter",
                         "AML.T0072 Reverse Shell",
                         "AML.T0102 Generate Malicious Commands",
-                        "AML.T0105 Escape to Host"
+                        "AML.T0105 Escape to Host",
+                        "AML.T0110 AI Agent Tool Poisoning",
+                        "AML.T0110.001 AI Agent Tool Poisoning: Implementation",
+                        "AML.T0115 Publish Poisoned AI Artifacts",
+                        "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools"
                     ]
                 },
                 {
@@ -18878,6 +18991,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0110 AI Agent Tool Poisoning",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
+                                "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools",
+                                "AML.T0110.001 AI Agent Tool Poisoning: Implementation",
                                 "AML.T0050 Command and Scripting Interpreter",
                                 "AML.T0072 Reverse Shell (static policy blocks recognized reverse-shell constructs before execution)",
                                 "AML.T0102 Generate Malicious Commands (analyzes generated commands and code before use)",
@@ -19720,6 +19837,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "items": [
                         "AML.T0010 AI Supply Chain Compromise",
                         "AML.T0010.001 AI Supply Chain Compromise: AI Software",
+                        "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+                        "AML.T0011 User Execution",
+                        "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                         "AML.T0012 Valid Accounts",
                         "AML.T0051 LLM Prompt Injection",
                         "AML.T0053 AI Agent Tool Invocation",
@@ -19736,7 +19856,6 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "AML.T0102 Generate Malicious Commands",
                         "AML.T0105 Escape to Host",
                         "AML.T0109 AI Supply Chain Rug Pull",
-                        "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
                         "AML.T0113 Steal Web Session Cookie"
                     ]
                 },
@@ -19898,6 +20017,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0010 AI Supply Chain Compromise",
                                 "AML.T0073 Impersonation (server identity spoofing)",
                                 "AML.T0078 Drive-by Compromise (preventing connection to malicious servers)",
                                 "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
@@ -20248,6 +20368,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0011 User Execution",
+                                "AML.T0053 AI Agent Tool Invocation",
+                                "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                                 "AML.T0078 Drive-by Compromise (malicious server response used as delivery mechanism)",
                                 "AML.T0102 Generate Malicious Commands (server generates actions or payloads the client might execute)",
                                 "AML.T0105 Escape to Host (unsafe client handling allows escape to host context)",
@@ -21285,16 +21408,21 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "framework": "MITRE ATLAS",
                     "items": [
                         "AML.T0010 AI Supply Chain Compromise",
-                        "AML.T0050 Command and Scripting Interpreter",
+                        "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+                        "AML.T0011 User Execution",
                         "AML.T0011.001 User Execution: Malicious Package",
+                        "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
+                        "AML.T0050 Command and Scripting Interpreter",
                         "AML.T0060 Publish Hallucinated Entities",
                         "AML.T0072 Reverse Shell",
                         "AML.T0074 Masquerading",
-                        "AML.T0104 Publish Poisoned AI Agent Tool",
-                        "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                         "AML.T0109 AI Supply Chain Rug Pull",
                         "AML.T0110 AI Agent Tool Poisoning",
-                        "AML.T0111 AI Supply Chain Reputation Inflation"
+                        "AML.T0110.000 AI Agent Tool Poisoning: Definition and Instructions",
+                        "AML.T0110.001 AI Agent Tool Poisoning: Implementation",
+                        "AML.T0111 AI Supply Chain Reputation Inflation",
+                        "AML.T0115 Publish Poisoned AI Artifacts",
+                        "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools"
                     ]
                 },
                 {
@@ -21404,9 +21532,16 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0010 AI Supply Chain Compromise",
+                                "AML.T0011 User Execution",
+                                "AML.T0110 AI Agent Tool Poisoning",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
+                                "AML.T0110.000 AI Agent Tool Poisoning: Definition and Instructions",
+                                "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+                                "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                                 "AML.T0074 Masquerading (metadata validation detects skill-level brand impersonation and typosquatting)",
                                 "AML.T0060 Publish Hallucinated Entities (typosquat detection catches hallucination-squatted skill names)",
-                                "AML.T0104 Publish Poisoned AI Agent Tool (metadata honesty checks flag poisoned tools with misleading metadata)",
+                                "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools (metadata honesty checks flag poisoned tools with misleading metadata)",
                                 "AML.T0111 AI Supply Chain Reputation Inflation (metadata and trust-signal validation reduce reliance on deceptive reputation cues)"
                             ]
                         },
@@ -21522,7 +21657,12 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0104 Publish Poisoned AI Agent Tool (instruction-layer analysis detects malicious behavioral directives in poisoned skills)",
+                                "AML.T0010 AI Supply Chain Compromise",
+                                "AML.T0011 User Execution",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
+                                "AML.T0110.000 AI Agent Tool Poisoning: Definition and Instructions",
+                                "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+                                "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools (instruction-layer analysis detects malicious behavioral directives in poisoned skills)",
                                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool (semantic analysis catches instructions that direct agents to harmful actions)",
                                 "AML.T0110 AI Agent Tool Poisoning (semantic analysis detects poisoned tool descriptions and instruction layers before trust is granted)"
                             ]
@@ -21636,6 +21776,12 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0010 AI Supply Chain Compromise",
+                                "AML.T0011 User Execution",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
+                                "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools",
+                                "AML.T0110.001 AI Agent Tool Poisoning: Implementation",
+                                "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
                                 "AML.T0011.001 User Execution: Malicious Package (behavioral sandbox detects malicious package behavior before installation)",
                                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool (sandbox detects poisoned tool behavior in skill execution)",
                                 "AML.T0110 AI Agent Tool Poisoning (behavioral testing detects compromised tool behavior before enterprise adoption)",
@@ -21740,8 +21886,12 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0010 AI Supply Chain Compromise",
+                                "AML.T0011 User Execution",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
+                                "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
                                 "AML.T0011.001 User Execution: Malicious Package (safe loader path prevents malicious package content from abusing the admission process itself)",
-                                "AML.T0104 Publish Poisoned AI Agent Tool (skill parsing and loader hardening reduce poisoned artifact preparation risk)"
+                                "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools (skill parsing and loader hardening reduce poisoned artifact preparation risk)"
                             ]
                         },
                         {
@@ -21846,8 +21996,16 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0011 User Execution",
+                                "AML.T0110 AI Agent Tool Poisoning",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
+                                "AML.T0110.001 AI Agent Tool Poisoning: Implementation",
+                                "AML.T0110.000 AI Agent Tool Poisoning: Definition and Instructions",
+                                "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+                                "AML.T0074 Masquerading",
+                                "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                                 "AML.T0010 AI Supply Chain Compromise (continuous re-scan detects newly risky skill artifacts already present in the environment)",
-                                "AML.T0104 Publish Poisoned AI Agent Tool (policy orchestration keeps previously admitted poisoned skills from remaining trusted indefinitely)",
+                                "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools (policy orchestration keeps previously admitted poisoned skills from remaining trusted indefinitely)",
                                 "AML.T0109 AI Supply Chain Rug Pull (continuous re-scan and policy reevaluation catch trusted artifacts that become malicious later)"
                             ]
                         },
@@ -21945,6 +22103,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "items": [
                         "AML.T0010 AI Supply Chain Compromise",
                         "AML.T0010.001 AI Supply Chain Compromise: AI Software",
+                        "AML.T0011 User Execution",
                         "AML.T0011.000 User Execution: Unsafe AI Artifacts",
                         "AML.T0011.001 User Execution: Malicious Package",
                         "AML.T0060 Publish Hallucinated Entities",
@@ -22166,6 +22325,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0010 AI Supply Chain Compromise",
+                                "AML.T0011 User Execution",
                                 "AML.T0010.001 AI Supply Chain Compromise: AI Software",
                                 "AML.T0011.001 User Execution: Malicious Package",
                                 "AML.T0011.000 User Execution: Unsafe AI Artifacts",
@@ -22290,6 +22451,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0010 AI Supply Chain Compromise",
+                                "AML.T0011 User Execution",
                                 "AML.T0011.000 User Execution: Unsafe AI Artifacts",
                                 "AML.T0011.001 User Execution: Malicious Package",
                                 "AML.T0010.001 AI Supply Chain Compromise: AI Software"
@@ -22408,6 +22571,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0011 User Execution",
                                 "AML.T0010 AI Supply Chain Compromise",
                                 "AML.T0011.000 User Execution: Unsafe AI Artifacts"
                             ]
@@ -24739,19 +24903,25 @@ if __name__ == "__main__":
                     "framework": "MITRE ATLAS",
                     "items": [
                         "AML.T0010 AI Supply Chain Compromise",
+                        "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+                        "AML.T0011 User Execution",
+                        "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                         "AML.T0012 Valid Accounts",
                         "AML.T0029 Denial of AI Service",
+                        "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption",
                         "AML.T0049 Exploit Public-Facing Application",
                         "AML.T0051 LLM Prompt Injection",
                         "AML.T0053 AI Agent Tool Invocation",
+                        "AML.T0074 Masquerading",
                         "AML.T0086 Exfiltration via AI Agent Tool Invocation",
                         "AML.T0098 AI Agent Tool Credential Harvesting",
                         "AML.T0101 Data Destruction via AI Agent Tool Invocation",
-                        "AML.T0104 Publish Poisoned AI Agent Tool",
                         "AML.T0105 Escape to Host",
                         "AML.T0110 AI Agent Tool Poisoning",
-                        "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
-                        "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption"
+                        "AML.T0110.000 AI Agent Tool Poisoning: Definition and Instructions",
+                        "AML.T0110.002 AI Agent Tool Poisoning: Runtime Response",
+                        "AML.T0115 Publish Poisoned AI Artifacts",
+                        "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools"
                     ]
                 },
                 {
@@ -25348,7 +25518,12 @@ if __name__ == "__main__":
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0104 Publish Poisoned AI Agent Tool",
+                                "AML.T0011 User Execution",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
+                                "AML.T0110.000 AI Agent Tool Poisoning: Definition and Instructions",
+                                "AML.T0074 Masquerading",
+                                "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
+                                "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools",
                                 "AML.T0110 AI Agent Tool Poisoning",
                                 "AML.T0010 AI Supply Chain Compromise",
                                 "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
@@ -25486,6 +25661,10 @@ if __name__ == "__main__":
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0011 User Execution",
+                                "AML.T0110 AI Agent Tool Poisoning",
+                                "AML.T0110.002 AI Agent Tool Poisoning: Runtime Response (requires the output guard to remain outside the poisoned handler trust boundary)",
+                                "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                                 "AML.T0051 LLM Prompt Injection",
                                 "AML.T0086 Exfiltration via AI Agent Tool Invocation",
                                 "AML.T0098 AI Agent Tool Credential Harvesting"
@@ -26771,10 +26950,10 @@ export async function runWithDisableEnforcement(input) {
                     "items": [
                         "AML.T0029 Denial of AI Service",
                         "AML.T0034 Cost Harvesting",
+                        "AML.T0034.001 Cost Harvesting: Resource-Intensive Queries",
                         "AML.T0051 LLM Prompt Injection",
                         "AML.T0056 Extract LLM System Prompt",
-                        "AML.T0057 LLM Data Leakage",
-                        "AML.T0034.001 Cost Harvesting: Resource-Intensive Queries"
+                        "AML.T0057 LLM Data Leakage"
                     ]
                 },
                 {

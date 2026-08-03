@@ -56,9 +56,15 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ## MITRE ATLAS data
 
-The Frameworks View contains metadata derived from MITRE ATLAS data version 2026.06.
+The Frameworks View contains metadata derived from MITRE ATLAS data version 2026.07.
 
-Source: https://github.com/mitre-atlas/atlas-data
+Source artifact: https://github.com/mitre-atlas/atlas-data/blob/2306ecaf04fb7a14be068b97e3ff40c2d9112e28/dist/v6/ATLAS-2026.07.yaml
+
+Source revision: `2306ecaf04fb7a14be068b97e3ff40c2d9112e28`
+
+Source artifact SHA-256: `0e07bb07fc6423d72cdf24ddc2038a6905bcbc00ba571064153119ee1a5888d4`
+
+Normalization note: the unresolved upstream site-template token in `AML.T0016.002` was rendered as “generating malware,” preserving the wording and sentence meaning present in ATLAS 2026.06.
 
 Copyright 2021-2026 MITRE. MITRE ATLAS data is licensed under the Apache License, Version 2.0. The Apache-2.0 license text is available in [`LICENSE`](LICENSE).
 

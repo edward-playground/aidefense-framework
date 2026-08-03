@@ -23,20 +23,27 @@ export const isolateTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
+                        "AML.T0011 User Execution",
+                        "AML.T0011.000 User Execution: Unsafe AI Artifacts",
+                        "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
+                        "AML.T0018 Manipulate AI Model",
+                        "AML.T0018.002 Manipulate AI Model: Embed Malware",
                         "AML.T0025 Exfiltration via Cyber Means",
                         "AML.T0029 Denial of AI Service",
                         "AML.T0034 Cost Harvesting",
                         "AML.T0050 Command and Scripting Interpreter",
                         "AML.T0053 AI Agent Tool Invocation",
-                        "AML.T0018.002 Manipulate AI Model: Embed Malware",
                         "AML.T0072 Reverse Shell",
                         "AML.T0089 Process Discovery",
                         "AML.T0097 Virtualization/Sandbox Evasion",
-                        "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                         "AML.T0105 Escape to Host",
                         "AML.T0106 Exploitation for Credential Access",
                         "AML.T0108 AI Agent",
-                        "AML.T0114 AI Service Web Interface"
+                        "AML.T0110 AI Agent Tool Poisoning",
+                        "AML.T0110.001 AI Agent Tool Poisoning: Implementation",
+                        "AML.T0114 AI Service Web Interface",
+                        "AML.T0115 Publish Poisoned AI Artifacts",
+                        "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools"
                     ]
                 },
                 {
@@ -313,6 +320,9 @@ export const isolateTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0011 User Execution",
+                                "AML.T0018 Manipulate AI Model",
+                                "AML.T0011.000 User Execution: Unsafe AI Artifacts",
                                 "AML.T0053 AI Agent Tool Invocation",
                                 "AML.T0072 Reverse Shell",
                                 "AML.T0089 Process Discovery (sandbox isolation limits process enumeration visibility)",
@@ -441,6 +451,8 @@ export const isolateTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0011 User Execution",
+                                "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                                 "AML.T0050 Command and Scripting Interpreter",
                                 "AML.T0072 Reverse Shell",
                                 "AML.T0053 AI Agent Tool Invocation"
@@ -685,6 +697,13 @@ export const isolateTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0011 User Execution",
+                                "AML.T0110 AI Agent Tool Poisoning",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
+                                "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools",
+                                "AML.T0110.001 AI Agent Tool Poisoning: Implementation",
+                                "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
+                                "AML.T0011.000 User Execution: Unsafe AI Artifacts",
                                 "AML.T0050 Command and Scripting Interpreter",
                                 "AML.T0072 Reverse Shell",
                                 "AML.T0025 Exfiltration via Cyber Means",
@@ -787,9 +806,9 @@ export const isolateTactic = {
               {
                   "framework": "MITRE ATLAS",
                   "items": [
-                      "AML.T0044 Full AI Model Access",
                       "AML.T0025 Exfiltration via Cyber Means",
                       "AML.T0036 Data from Information Repositories",
+                      "AML.T0044 Full AI Model Access",
                       "AML.T0049 Exploit Public-Facing Application",
                       "AML.T0072 Reverse Shell",
                       "AML.T0096 AI Service API",
@@ -1192,18 +1211,18 @@ export const isolateTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0040 AI Model Inference API Access",
                         "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model",
                         "AML.T0029 Denial of AI Service",
-                        "AML.T0046 Spamming AI System with Chaff Data",
                         "AML.T0034 Cost Harvesting",
+                        "AML.T0034.000 Cost Harvesting: Excessive Queries",
+                        "AML.T0034.001 Cost Harvesting: Resource-Intensive Queries",
+                        "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption",
+                        "AML.T0040 AI Model Inference API Access",
+                        "AML.T0046 Spamming AI System with Chaff Data",
                         "AML.T0053 AI Agent Tool Invocation",
                         "AML.T0086 Exfiltration via AI Agent Tool Invocation",
                         "AML.T0096 AI Service API",
-                        "AML.T0101 Data Destruction via AI Agent Tool Invocation",
-                        "AML.T0034.000 Cost Harvesting: Excessive Queries",
-                        "AML.T0034.001 Cost Harvesting: Resource-Intensive Queries",
-                        "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption"
+                        "AML.T0101 Data Destruction via AI Agent Tool Invocation"
                     ]
                 },
                 {
@@ -1803,6 +1822,8 @@ export const isolateTactic = {
               {
                   "framework": "MITRE ATLAS",
                   "items": [
+                      "AML.T0011 User Execution",
+                      "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                       "AML.T0051 LLM Prompt Injection",
                       "AML.T0051.001 LLM Prompt Injection: Indirect",
                       "AML.T0061 LLM Prompt Self-Replication",
@@ -1812,8 +1833,7 @@ export const isolateTactic = {
                       "AML.T0080.001 AI Agent Context Poisoning: Thread",
                       "AML.T0081 Modify AI Agent Configuration",
                       "AML.T0092 Manipulate User LLM Chat History",
-                      "AML.T0099 AI Agent Tool Data Poisoning",
-                      "AML.T0011.002 User Execution: Poisoned AI Agent Tool"
+                      "AML.T0099 AI Agent Tool Data Poisoning"
                   ]
               },
               {
@@ -2758,7 +2778,7 @@ def test_success_revalidates_every_boundary_and_bounds_timeouts():
                       "items": [
                           "AML.T0070 RAG Poisoning",
                           "AML.T0080.000 AI Agent Context Poisoning: Memory",
-                          "AML.T0099 AI Agent Tool Data Poisoning (promotion gates quarantine tool-sourced data until reviewed)"
+                          "AML.T0099 AI Agent Tool Data Poisoning (promotion gates quarantine connected-source records before they become trusted agent context)"
                       ]
                   },
                   {
@@ -3015,6 +3035,7 @@ def test_success_revalidates_every_boundary_and_bounds_timeouts():
                   {
                       "framework": "MITRE ATLAS",
                       "items": [
+                          "AML.T0011 User Execution",
                           "AML.T0081 Modify AI Agent Configuration",
                           "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                           "AML.T0080 AI Agent Context Poisoning",
@@ -5950,7 +5971,7 @@ def load_for_context(
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0020 Poison Training Data",
+                        "AML.T0020 Training Data Poisoning",
                         "AML.T0018 Manipulate AI Model (malicious FL participants directly manipulate the model via updates)"
                     ]
                 },
@@ -6189,6 +6210,7 @@ def load_for_context(
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
+                        "AML.T0011.003 User Execution: Malicious Link",
                         "AML.T0051.001 LLM Prompt Injection: Indirect",
                         "AML.T0053 AI Agent Tool Invocation",
                         "AML.T0086 Exfiltration via AI Agent Tool Invocation",
@@ -6196,7 +6218,6 @@ def load_for_context(
                         "AML.T0091.001 Use Alternate Authentication Material: Web Session Cookie",
                         "AML.T0100 AI Agent Clickbait",
                         "AML.T0101 Data Destruction via AI Agent Tool Invocation",
-                        "AML.T0011.003 User Execution: Malicious Link",
                         "AML.T0112 Machine Compromise",
                         "AML.T0112.000 Machine Compromise: Local AI Agent",
                         "AML.T0113 Steal Web Session Cookie"

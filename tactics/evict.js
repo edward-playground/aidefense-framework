@@ -31,8 +31,8 @@ export const evictTactic = {
                       "AML.T0055 Unsecured Credentials",
                       "AML.T0090 OS Credential Dumping",
                       "AML.T0091 Use Alternate Authentication Material",
-                      "AML.T0091.001 Use Alternate Authentication Material: Web Session Cookie",
-                      "AML.T0091.000 Use Alternate Authentication Material: Application Access Token"
+                      "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
+                      "AML.T0091.001 Use Alternate Authentication Material: Web Session Cookie"
                   ]
               },
               {
@@ -861,21 +861,29 @@ export const evictTactic = {
                       "AML.T0010.001 AI Supply Chain Compromise: AI Software",
                       "AML.T0010.002 AI Supply Chain Compromise: Data",
                       "AML.T0010.003 AI Supply Chain Compromise: Model",
-                      "AML.T0020 Poison Training Data",
+                      "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
+                      "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+                      "AML.T0011 User Execution",
+                      "AML.T0011.000 User Execution: Unsafe AI Artifacts",
+                      "AML.T0011.001 User Execution: Malicious Package",
+                      "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                       "AML.T0018 Manipulate AI Model",
                       "AML.T0018.000 Manipulate AI Model: Poison AI Model",
+                      "AML.T0018.002 Manipulate AI Model: Embed Malware",
+                      "AML.T0018.003 Manipulate AI Model: Modify Prompt Construction Logic",
+                      "AML.T0020 Training Data Poisoning",
                       "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger",
-                      "AML.T0058 Publish Poisoned Models",
                       "AML.T0059 Erode Dataset Integrity",
-                      "AML.T0011.001 User Execution: Malicious Package",
                       "AML.T0070 RAG Poisoning",
                       "AML.T0071 False RAG Entry Injection",
-                      "AML.T0018.002 Manipulate AI Model: Embed Malware",
-                      "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
                       "AML.T0076 Corrupt AI Model",
                       "AML.T0081 Modify AI Agent Configuration",
-                      "AML.T0104 Publish Poisoned AI Agent Tool",
-                      "AML.T0110 AI Agent Tool Poisoning"
+                      "AML.T0110 AI Agent Tool Poisoning",
+                      "AML.T0110.000 AI Agent Tool Poisoning: Definition and Instructions",
+                      "AML.T0110.001 AI Agent Tool Poisoning: Implementation",
+                      "AML.T0115 Publish Poisoned AI Artifacts",
+                      "AML.T0115.001 Publish Poisoned AI Artifacts: Models",
+                      "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools"
                   ]
               },
               {
@@ -1014,6 +1022,9 @@ export const evictTactic = {
                 {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0011 User Execution",
+                                "AML.T0011.000 User Execution: Unsafe AI Artifacts",
+                                "AML.T0018.003 Manipulate AI Model: Modify Prompt Construction Logic",
                                 "AML.T0010 AI Supply Chain Compromise (quarantine removes a confirmed compromised model artifact from serving eligibility)",
                                 "AML.T0010.003 AI Supply Chain Compromise: Model (quarantine makes the exact compromised supply-chain model digest ineligible for serving)",
                                 "AML.T0018 Manipulate AI Model",
@@ -1127,7 +1138,7 @@ export const evictTactic = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0010 AI Supply Chain Compromise (exact source-record or graph eviction removes the signed compromised data population)",
-                                "AML.T0020 Poison Training Data",
+                                "AML.T0020 Training Data Poisoning",
                                 "AML.T0059 Erode Dataset Integrity",
                                 "AML.T0070 RAG Poisoning",
                                 "AML.T0071 False RAG Entry Injection (manifest-bound graph eviction removes the exact injected false entry before governed index rebuild)",
@@ -1260,11 +1271,17 @@ export const evictTactic = {
                 {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0011 User Execution",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
+                                "AML.T0110.001 AI Agent Tool Poisoning: Implementation",
+                                "AML.T0110.000 AI Agent Tool Poisoning: Definition and Instructions",
+                                "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+                                "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                                 "AML.T0010 AI Supply Chain Compromise (eviction removes confirmed malicious code, dependency, tool, or deployment artifacts)",
                                 "AML.T0010.001 AI Supply Chain Compromise: AI Software (manifest-bound eviction removes the confirmed malicious framework or dependency artifact)",
                                 "AML.T0010.004 AI Supply Chain Compromise: Container Registry (manifest-bound eviction removes the confirmed malicious image and tombstones the affected registry reference)",
                                 "AML.T0011.001 User Execution: Malicious Package",
-                                "AML.T0104 Publish Poisoned AI Agent Tool (cleanup removes poisoned agent tools)",
+                                "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools (cleanup removes poisoned agent tools)",
                     "AML.T0081 Modify AI Agent Configuration",
                     "AML.T0110 AI Agent Tool Poisoning"
                   ]
@@ -1393,9 +1410,13 @@ export const evictTactic = {
                 {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0011 User Execution",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
+                                "AML.T0011.000 User Execution: Unsafe AI Artifacts",
+                                "AML.T0018.003 Manipulate AI Model: Modify Prompt Construction Logic",
                                 "AML.T0018 Manipulate AI Model",
                                 "AML.T0018.002 Manipulate AI Model: Embed Malware",
-                                "AML.T0058 Publish Poisoned Models",
+                                "AML.T0115.001 Publish Poisoned AI Artifacts: Models",
                                 "AML.T0010 AI Supply Chain Compromise",
                                 "AML.T0010.003 AI Supply Chain Compromise: Model (adapter quarantine removes the compromised model component from registries and serving)"
                   ]
@@ -1515,6 +1536,7 @@ export const evictTactic = {
                     {
                       "framework": "MITRE ATLAS",
                       "items": [
+                        "AML.T0011 User Execution",
                         "AML.T0010 AI Supply Chain Compromise (independent readback and exploit replay prove the signed supply-chain fix is effective across the affected release population)",
                         "AML.T0010.001 AI Supply Chain Compromise: AI Software (the verifier proves the approved AI-software fix is deployed and the exact exploit no longer succeeds)",
                         "AML.T0011.001 User Execution: Malicious Package (the verifier proves the package removal, deny, or admission fix blocks the exact malicious-package path)",

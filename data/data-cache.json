@@ -1,6 +1,6 @@
 {
   "AID-M-001": {
-    "contentHash": "33d76c52aec16ec2",
+    "contentHash": "ea23913e317a7b17",
     "keywords": [
       "ai asset inventory",
       "ml component cataloging",
@@ -38,7 +38,7 @@
     ]
   },
   "AID-M-001.002": {
-    "contentHash": "1caa6ad9390ef808",
+    "contentHash": "c3e8f607b6bd68fe",
     "keywords": [
       "ai bom generation",
       "deployed release bundle",
@@ -58,7 +58,7 @@
     ]
   },
   "AID-M-001.003": {
-    "contentHash": "050f0b617c9d709a",
+    "contentHash": "f31b8c344f30ca09",
     "keywords": [
       "agent skill inventory",
       "instruction asset inventory",
@@ -133,7 +133,7 @@
     ]
   },
   "AID-M-002": {
-    "contentHash": "61f0358221a41730",
+    "contentHash": "807b4efb801862a3",
     "keywords": [
       "data provenance",
       "data lineage tracking",
@@ -171,7 +171,7 @@
     ]
   },
   "AID-M-002.002": {
-    "contentHash": "51395a25e454dd4b",
+    "contentHash": "7a939baa1aabbf31",
     "keywords": [
       "cryptographic integrity verification",
       "whole-artifact hashing",
@@ -190,7 +190,7 @@
     ]
   },
   "AID-M-002.003": {
-    "contentHash": "27f3cb4b5ad0f31a",
+    "contentHash": "804477f7de7e362f",
     "keywords": [
       "external dataset content risk",
       "complete input manifest",
@@ -228,7 +228,7 @@
     ]
   },
   "AID-M-002.005": {
-    "contentHash": "530bf4acd8f2de87",
+    "contentHash": "cc9f1053be5905ab",
     "keywords": [
       "hybrid signature provenance",
       "post-quantum artifact integrity",
@@ -415,7 +415,7 @@
     ]
   },
   "AID-M-005": {
-    "contentHash": "675f4d8fa05fdf7f",
+    "contentHash": "e4361980e76d5957",
     "keywords": [
       "secure configuration baselines",
       "cis benchmarks",
@@ -453,7 +453,7 @@
     ]
   },
   "AID-M-005.002": {
-    "contentHash": "e60b7f9bc6a23c58",
+    "contentHash": "df515549b10264a0",
     "keywords": [
       "policy-as-code baseline",
       "posture slo definition",
@@ -862,7 +862,7 @@
     ]
   },
   "AID-H-002": {
-    "contentHash": "0c176ea1a3447803",
+    "contentHash": "8d77a2a6b327da62",
     "keywords": [
       "input sanitization",
       "prompt hardening",
@@ -881,7 +881,7 @@
     ]
   },
   "AID-H-002.001": {
-    "contentHash": "3e37729ae26f8a1e",
+    "contentHash": "518823f3e6b99332",
     "keywords": [
       "training data sanitization",
       "poisoned sample removal",
@@ -900,7 +900,7 @@
     ]
   },
   "AID-H-002.002": {
-    "contentHash": "2c566133be83dbef",
+    "contentHash": "281fa490d23776f5",
     "keywords": [
       "prompt gate",
       "inference-time validation",
@@ -936,7 +936,7 @@
     ]
   },
   "AID-H-002.004": {
-    "contentHash": "456100fdaa49294b",
+    "contentHash": "59c345db073035c4",
     "keywords": [
       "feature pipeline integrity",
       "training-serving skew detection",
@@ -955,7 +955,7 @@
     ]
   },
   "AID-H-002.005": {
-    "contentHash": "a7fa45afa5d1efc0",
+    "contentHash": "d059134692e3a68e",
     "keywords": [
       "label provenance",
       "label flipping detection",
@@ -1029,7 +1029,7 @@
     ]
   },
   "AID-H-003": {
-    "contentHash": "fec0cfe4cdf1d980",
+    "contentHash": "e93a9330832b5b7c",
     "keywords": [
       "ml supply chain security",
       "software admission controls",
@@ -1048,7 +1048,7 @@
     ]
   },
   "AID-H-003.001": {
-    "contentHash": "b41379bc9e51ed9b",
+    "contentHash": "0d7475a34771b6f5",
     "keywords": [
       "software composition analysis",
       "dependency scanning",
@@ -1067,7 +1067,7 @@
     ]
   },
   "AID-H-003.002": {
-    "contentHash": "f4cdf377b084f19e",
+    "contentHash": "4ae0d33cd7cca005",
     "keywords": [
       "model signing",
       "release gating",
@@ -1086,7 +1086,7 @@
     ]
   },
   "AID-H-003.003": {
-    "contentHash": "060dbe3acf65ba1f",
+    "contentHash": "c0d94a7025b1fce7",
     "keywords": [
       "external dataset provenance admission",
       "source identity verification",
@@ -1143,7 +1143,7 @@
     ]
   },
   "AID-H-003.006": {
-    "contentHash": "832e82e3f87a90d8",
+    "contentHash": "529024a419e7c862",
     "keywords": [
       "model sbom attestation",
       "cyclonedx ml-bom export",
@@ -1160,7 +1160,7 @@
     ]
   },
   "AID-H-003.007": {
-    "contentHash": "a6f73f2de83e5998",
+    "contentHash": "66b2a1ff00657099",
     "keywords": [
       "peft verification",
       "lora attestation",
@@ -1179,7 +1179,7 @@
     ]
   },
   "AID-H-003.008": {
-    "contentHash": "df4644693078e7c0",
+    "contentHash": "60de71cab0749a26",
     "keywords": [
       "crypto-agility",
       "pqc-ready signing",
@@ -1198,7 +1198,7 @@
     ]
   },
   "AID-H-003.009": {
-    "contentHash": "4ce4018e01ed0c31",
+    "contentHash": "569e7908f88fd980",
     "keywords": [
       "model artifact scanning",
       "unsafe deserialization detection",
@@ -1217,7 +1217,7 @@
     ]
   },
   "AID-H-004": {
-    "contentHash": "93a7a8bb5960899b",
+    "contentHash": "519d30abbff610e8",
     "keywords": [
       "identity access management",
       "trusted AI communication",
@@ -1519,7 +1519,7 @@
     ]
   },
   "AID-H-007": {
-    "contentHash": "4373ea82aa4df935",
+    "contentHash": "05fd34c99309596f",
     "keywords": [
       "secure training process",
       "training environment hardening",
@@ -1557,7 +1557,7 @@
     ]
   },
   "AID-H-007.002": {
-    "contentHash": "5cb8821541dbc365",
+    "contentHash": "e9273dc32d4018d4",
     "keywords": [
       "training job monitoring",
       "loss anomaly detection",
@@ -1576,7 +1576,7 @@
     ]
   },
   "AID-H-007.003": {
-    "contentHash": "5f7a03544381557d",
+    "contentHash": "e1577377d5460739",
     "keywords": [
       "deterministic training pipelines",
       "seed control enforcement",
@@ -1595,7 +1595,7 @@
     ]
   },
   "AID-H-007.004": {
-    "contentHash": "2368923d8614df2f",
+    "contentHash": "cb2ca30d19ecd6f9",
     "keywords": [
       "evaluation integrity",
       "holdout hashing",
@@ -1631,7 +1631,7 @@
     ]
   },
   "AID-H-007.006": {
-    "contentHash": "8876614d397f56bb",
+    "contentHash": "269466b6c8f0e916",
     "keywords": [
       "post-training transformation safety",
       "model quantization security regression",
@@ -1648,7 +1648,7 @@
     ]
   },
   "AID-H-007.007": {
-    "contentHash": "1686306b813d0102",
+    "contentHash": "b9d4398a9799c45f",
     "keywords": [
       "evaluator mechanism integrity",
       "judge model digest binding",
@@ -1665,7 +1665,7 @@
     ]
   },
   "AID-H-008": {
-    "contentHash": "0b197f32d475c867",
+    "contentHash": "4bb7996199f72eac",
     "keywords": [
       "robust federated aggregation",
       "secure aggregation",
@@ -1703,7 +1703,7 @@
     ]
   },
   "AID-H-008.002": {
-    "contentHash": "596f01d58779178d",
+    "contentHash": "b1320a450fae1b5f",
     "keywords": [
       "byzantine-robust aggregation",
       "krum aggregation rule",
@@ -1739,7 +1739,7 @@
     ]
   },
   "AID-H-009": {
-    "contentHash": "4deee938aa82fa69",
+    "contentHash": "167ba248ca523499",
     "keywords": [
       "accelerator integrity",
       "gpu hardware security",
@@ -1874,7 +1874,7 @@
     ]
   },
   "AID-H-011": {
-    "contentHash": "b932b456e297c9bd",
+    "contentHash": "f13da097760c3179",
     "keywords": [
       "gnn poisoning defense",
       "graph neural network hardening",
@@ -1893,7 +1893,7 @@
     ]
   },
   "AID-H-011.001": {
-    "contentHash": "b95f184018caa732",
+    "contentHash": "99e3b13d75fb4cea",
     "keywords": [
       "graph data sanitization",
       "graph provenance tracking",
@@ -1912,7 +1912,7 @@
     ]
   },
   "AID-H-011.002": {
-    "contentHash": "35beb14cad77cead",
+    "contentHash": "a10f77d39ac44e2b",
     "keywords": [
       "robust gnn training",
       "outlier-resistant graph aggregation",
@@ -1950,7 +1950,7 @@
     ]
   },
   "AID-H-012": {
-    "contentHash": "490784354fc7a3d1",
+    "contentHash": "fd3c8eafe8d7a216",
     "keywords": [
       "reward hacking prevention",
       "rlhf reward gaming",
@@ -1990,7 +1990,7 @@
     ]
   },
   "AID-H-012.002": {
-    "contentHash": "5cdd2f72246a8d0f",
+    "contentHash": "02f4604db0d9e2eb",
     "keywords": [
       "preference reward signal integrity",
       "demonstration reward signal",
@@ -2029,7 +2029,7 @@
     ]
   },
   "AID-H-012.004": {
-    "contentHash": "3792cbc0390f095a",
+    "contentHash": "0e35725cffeca4ac",
     "keywords": [
       "reward channel integrity",
       "mutual tls reward transport",
@@ -2182,7 +2182,7 @@
     ]
   },
   "AID-H-016": {
-    "contentHash": "bcd4bdae98695b92",
+    "contentHash": "e0e1a0f79a317131",
     "keywords": [
       "instruction hierarchy defense",
       "model-level injection alignment",
@@ -2201,7 +2201,7 @@
     ]
   },
   "AID-H-016.001": {
-    "contentHash": "34d5cc36896bc929",
+    "contentHash": "5c2241da99904657",
     "keywords": [
       "system prompt hardening",
       "instruction data separation",
@@ -2239,7 +2239,7 @@
     ]
   },
   "AID-H-017": {
-    "contentHash": "dcb5fdc2996c65b3",
+    "contentHash": "8a5bb275a7145bc3",
     "keywords": [
       "secure agent architecture",
       "agent hardening",
@@ -2371,7 +2371,7 @@
     ]
   },
   "AID-H-017.007": {
-    "contentHash": "91bf102155b4b901",
+    "contentHash": "df2e278eeabccc20",
     "keywords": [
       "dual llm isolation",
       "privileged quarantined split",
@@ -2390,7 +2390,7 @@
     ]
   },
   "AID-H-018": {
-    "contentHash": "172338b48182ab02",
+    "contentHash": "561be2000d2a38c5",
     "keywords": [
       "tool authorization",
       "lethal trifecta mitigation",
@@ -2488,7 +2488,7 @@
     ]
   },
   "AID-H-018.005": {
-    "contentHash": "9c230bfef1b64367",
+    "contentHash": "5fa4b1c8c2d1422c",
     "keywords": [
       "value level capability metadata",
       "runtime data flow enforcement",
@@ -2525,7 +2525,7 @@
     ]
   },
   "AID-H-018.007": {
-    "contentHash": "169886d869b6c74c",
+    "contentHash": "5aa1410dda09bde2",
     "keywords": [
       "skill permission manifest",
       "skill-level authorization",
@@ -2562,7 +2562,7 @@
     ]
   },
   "AID-H-019": {
-    "contentHash": "382c3a4b12ad1a3b",
+    "contentHash": "226bb373929afaed",
     "keywords": [
       "safe fetch wrapper",
       "browser sandbox",
@@ -2639,7 +2639,7 @@
     ]
   },
   "AID-H-020": {
-    "contentHash": "292dffe23bc66393",
+    "contentHash": "b38a13c74d761d55",
     "keywords": [
       "rag index integrity",
       "retrieval authorization",
@@ -2656,7 +2656,7 @@
     ]
   },
   "AID-H-020.001": {
-    "contentHash": "b32f0127e19ef804",
+    "contentHash": "523acb56d6de4f27",
     "keywords": [
       "chunk-level integrity signing",
       "canonical chunk digest",
@@ -2676,7 +2676,7 @@
     ]
   },
   "AID-H-020.002": {
-    "contentHash": "efa1f75b67acb762",
+    "contentHash": "a04b51d32bfa0d0a",
     "keywords": [
       "source reputation weighting",
       "trust score retrieval",
@@ -2712,7 +2712,7 @@
     ]
   },
   "AID-H-020.004": {
-    "contentHash": "23bfce8af414cab1",
+    "contentHash": "a4da5668566587d3",
     "keywords": [
       "retrieval-time context policy enforcement",
       "context governance release verification",
@@ -2729,7 +2729,7 @@
     ]
   },
   "AID-H-021": {
-    "contentHash": "c071f5f19a4d5ca5",
+    "contentHash": "f5a23ae600c8886b",
     "keywords": [
       "configuration integrity",
       "signed configurations",
@@ -2766,7 +2766,7 @@
     ]
   },
   "AID-H-021.002": {
-    "contentHash": "b6623df0fbdcac36",
+    "contentHash": "2d50f5637a166968",
     "keywords": [
       "signed configuration",
       "runtime integrity enforcement",
@@ -2786,7 +2786,7 @@
     ]
   },
   "AID-H-021.003": {
-    "contentHash": "1eea2046c4647a05",
+    "contentHash": "902d474499c6c6fb",
     "keywords": [
       "context corpus governance",
       "retrieval-time integrity gate",
@@ -2824,7 +2824,7 @@
     ]
   },
   "AID-H-022": {
-    "contentHash": "8f66398ba1841a1e",
+    "contentHash": "c385c4b9c4493206",
     "keywords": [
       "secure dependency admission",
       "dependency admission gate",
@@ -2844,7 +2844,7 @@
     ]
   },
   "AID-H-022.001": {
-    "contentHash": "072ee3bab6d94f12",
+    "contentHash": "1df97674b2e969eb",
     "keywords": [
       "sandboxed dependency installation",
       "no network build",
@@ -2864,7 +2864,7 @@
     ]
   },
   "AID-H-022.002": {
-    "contentHash": "8e1ba05e2efdca26",
+    "contentHash": "153497860b9e2bee",
     "keywords": [
       "proactive package vetting",
       "package reputation analysis",
@@ -2882,7 +2882,7 @@
     ]
   },
   "AID-H-023": {
-    "contentHash": "946be307a1931561",
+    "contentHash": "cb09b51db88cf4ef",
     "keywords": [
       "trusted package publishing",
       "oidc publishing workflow",
@@ -2899,7 +2899,7 @@
     ]
   },
   "AID-H-024": {
-    "contentHash": "c2312ceb4996692d",
+    "contentHash": "7adea08290a40d1f",
     "keywords": [
       "tool resolution integrity",
       "mcp endpoint verification",
@@ -2918,7 +2918,7 @@
     ]
   },
   "AID-H-024.001": {
-    "contentHash": "591d1e04a66af15b",
+    "contentHash": "241f89605fbeb233",
     "keywords": [
       "fully qualified tool identifier",
       "version pinning",
@@ -2937,7 +2937,7 @@
     ]
   },
   "AID-H-024.002": {
-    "contentHash": "72b9a96bebae5b19",
+    "contentHash": "49706b09a8991e97",
     "keywords": [
       "descriptor hash binding",
       "content hash pinning",
@@ -2956,7 +2956,7 @@
     ]
   },
   "AID-H-024.003": {
-    "contentHash": "25ff30aca5879e40",
+    "contentHash": "5f2adff102bb621f",
     "keywords": [
       "fail-closed tool resolution",
       "ambiguous identifier blocking",
@@ -2975,7 +2975,7 @@
     ]
   },
   "AID-H-024.004": {
-    "contentHash": "191e4726a4aea6a0",
+    "contentHash": "4d566b5327937d05",
     "keywords": [
       "tool contract semantic invariants",
       "normalized tool contract profile",
@@ -2994,7 +2994,7 @@
     ]
   },
   "AID-H-025": {
-    "contentHash": "a65404c579a12c27",
+    "contentHash": "49cf12deb60ce613",
     "keywords": [
       "unsafe code execution prevention",
       "rce prevention",
@@ -3013,7 +3013,7 @@
     ]
   },
   "AID-H-025.001": {
-    "contentHash": "a7154beaa7039009",
+    "contentHash": "ae7116b4d989943b",
     "keywords": [
       "pre execution static analysis",
       "ast admission gate",
@@ -3144,7 +3144,7 @@
     ]
   },
   "AID-H-028": {
-    "contentHash": "fccc89654e422c40",
+    "contentHash": "febbc12b2de9b6c7",
     "keywords": [
       "mcp client hardening",
       "stateless mcp client",
@@ -3163,7 +3163,7 @@
     ]
   },
   "AID-H-028.001": {
-    "contentHash": "1f2b19775ef948cd",
+    "contentHash": "c32c9470629b237d",
     "keywords": [
       "server authenticity validation",
       "connection pinning",
@@ -3220,7 +3220,7 @@
     ]
   },
   "AID-H-028.004": {
-    "contentHash": "e41c2b8b6136f2f7",
+    "contentHash": "ffabe27cadc539d4",
     "keywords": [
       "mcp client response hardening",
       "strict message schema validation",
@@ -3387,7 +3387,7 @@
     ]
   },
   "AID-H-030": {
-    "contentHash": "180ba8bf5584d2a1",
+    "contentHash": "f69f660bed6342a2",
     "keywords": [
       "skill admission pipeline",
       "multi-stage security analysis",
@@ -3407,7 +3407,7 @@
     ]
   },
   "AID-H-030.001": {
-    "contentHash": "3f7880635d205030",
+    "contentHash": "da8304c558feff8d",
     "keywords": [
       "metadata honesty validation",
       "brand impersonation detection",
@@ -3426,7 +3426,7 @@
     ]
   },
   "AID-H-030.002": {
-    "contentHash": "a74be9966470e44a",
+    "contentHash": "b767c18194b29120",
     "keywords": [
       "instruction layer semantic analysis",
       "skill intent classification",
@@ -3445,7 +3445,7 @@
     ]
   },
   "AID-H-030.003": {
-    "contentHash": "b1fed29b47be8a84",
+    "contentHash": "c122a7df290dbcd9",
     "keywords": [
       "manifest vs observed testing",
       "behavioral sandbox verification",
@@ -3464,7 +3464,7 @@
     ]
   },
   "AID-H-030.004": {
-    "contentHash": "c8ed0b34c6b27815",
+    "contentHash": "a855a7345cc3613e",
     "keywords": [
       "safe skill parsing",
       "loader hardening",
@@ -3483,7 +3483,7 @@
     ]
   },
   "AID-H-030.005": {
-    "contentHash": "cd04900822026f3f",
+    "contentHash": "95124c9eed102e72",
     "keywords": [
       "admission policy orchestration",
       "continuous rescan governance",
@@ -3502,7 +3502,7 @@
     ]
   },
   "AID-H-031": {
-    "contentHash": "e5819feed1833a7d",
+    "contentHash": "f0ac90d6025dc64b",
     "keywords": [
       "ai-generated code admission control",
       "safe promotion control plane",
@@ -3540,7 +3540,7 @@
     ]
   },
   "AID-H-031.002": {
-    "contentHash": "b281bc0109c0d4b5",
+    "contentHash": "26de0264c2df9c33",
     "keywords": [
       "static admission gate",
       "ai coding-agent sabotage",
@@ -3559,7 +3559,7 @@
     ]
   },
   "AID-H-031.003": {
-    "contentHash": "87478722fbaccab4",
+    "contentHash": "37d1a64a99d52871",
     "keywords": [
       "dynamic promotion validation",
       "ephemeral sandbox validation",
@@ -3578,7 +3578,7 @@
     ]
   },
   "AID-H-031.004": {
-    "contentHash": "c9f581096d50d586",
+    "contentHash": "db56a486b7a74324",
     "keywords": [
       "evidence-bound promotion",
       "high-risk human approval",
@@ -3825,7 +3825,7 @@
     ]
   },
   "AID-H-034": {
-    "contentHash": "d7dcbadd31b50c3a",
+    "contentHash": "263d5987352d1b40",
     "keywords": [
       "mcp server hardening",
       "stateless mcp server",
@@ -3902,7 +3902,7 @@
     ]
   },
   "AID-H-034.004": {
-    "contentHash": "001a26a69ce0029d",
+    "contentHash": "b9d8a3aad588a3ae",
     "keywords": [
       "tool publication governance",
       "mcp contract manifest",
@@ -3921,7 +3921,7 @@
     ]
   },
   "AID-H-034.005": {
-    "contentHash": "f9c19fe002fd5815",
+    "contentHash": "9b96a74edbbc94fd",
     "keywords": [
       "output boundary controls",
       "tool output sanitization",
@@ -4050,7 +4050,7 @@
     ]
   },
   "AID-H-037": {
-    "contentHash": "276248c5a541c778",
+    "contentHash": "ba5207a5c9b5aae4",
     "keywords": [
       "reasoning state security",
       "reasoning compute controls",
@@ -4114,7 +4114,7 @@
     ]
   },
   "AID-D-001": {
-    "contentHash": "24d8a5fd4de46a58",
+    "contentHash": "2a68d4427cfecae0",
     "keywords": [
       "adversarial input detection",
       "prompt injection detection",
@@ -4248,7 +4248,7 @@
     ]
   },
   "AID-D-002": {
-    "contentHash": "832253e729a8af7c",
+    "contentHash": "f0bc9782d2e1082c",
     "keywords": [
       "model drift detection",
       "performance drift monitoring",
@@ -4267,7 +4267,7 @@
     ]
   },
   "AID-D-002.001": {
-    "contentHash": "869f4e25837760f1",
+    "contentHash": "05ae1bb083b7995f",
     "keywords": [
       "input distribution drift",
       "output distribution drift",
@@ -4286,7 +4286,7 @@
     ]
   },
   "AID-D-002.002": {
-    "contentHash": "1d61cc5f1d982ef9",
+    "contentHash": "ccff096b6ebd05dd",
     "keywords": [
       "labeled performance tracking",
       "ground truth feedback loop",
@@ -4344,7 +4344,7 @@
     ]
   },
   "AID-D-003": {
-    "contentHash": "351cc24540efc9c5",
+    "contentHash": "3b895bdb7fa71586",
     "keywords": [
       "output monitoring",
       "policy enforcement",
@@ -4510,7 +4510,7 @@
     ]
   },
   "AID-D-004": {
-    "contentHash": "74383f0d200eb33c",
+    "contentHash": "b22dffab75338f19",
     "keywords": [
       "AI runtime integrity monitoring",
       "artifact digest verification",
@@ -4529,7 +4529,7 @@
     ]
   },
   "AID-D-004.001": {
-    "contentHash": "f064140f66735933",
+    "contentHash": "3d300bd01e31a515",
     "keywords": [
       "artifact digest verification",
       "signature validation pipeline",
@@ -4548,7 +4548,7 @@
     ]
   },
   "AID-D-004.002": {
-    "contentHash": "c85cd17bb55d8163",
+    "contentHash": "7420c418e87b263e",
     "keywords": [
       "fresh runtime attestation",
       "nonce-bound attestation result",
@@ -4567,7 +4567,7 @@
     ]
   },
   "AID-D-004.003": {
-    "contentHash": "051fbfddb6a6ed49",
+    "contentHash": "3833f6c420d401da",
     "keywords": [
       "runtime configuration drift detection",
       "policy bundle drift monitoring",
@@ -4586,7 +4586,7 @@
     ]
   },
   "AID-D-004.004": {
-    "contentHash": "51d89e700b472524",
+    "contentHash": "c2d9b9c9891a5e30",
     "keywords": [
       "model source drift detection",
       "namespace ownership monitoring",
@@ -4641,7 +4641,7 @@
     ]
   },
   "AID-D-004.007": {
-    "contentHash": "bcc76050d09db6b4",
+    "contentHash": "f6805ddbc37618c4",
     "keywords": [
       "ai lifecycle-path drift",
       "approved architecture path",
@@ -4658,7 +4658,7 @@
     ]
   },
   "AID-D-004.008": {
-    "contentHash": "90d6de613da864e2",
+    "contentHash": "6c3522b0d8a381ae",
     "keywords": [
       "runtime code and module integrity",
       "executable mapping monitoring",
@@ -4676,7 +4676,7 @@
     ]
   },
   "AID-D-005": {
-    "contentHash": "e04661e17c5b2cf2",
+    "contentHash": "54409d52380731c7",
     "keywords": [
       "audit logging",
       "ai activity monitoring",
@@ -4989,7 +4989,7 @@
     ]
   },
   "AID-D-009": {
-    "contentHash": "dc3a8430a188c768",
+    "contentHash": "9efa8998b7c5366b",
     "keywords": [
       "cross-agent fact consensus checks",
       "hallucination cascade detection",
@@ -5154,7 +5154,7 @@
     ]
   },
   "AID-D-012": {
-    "contentHash": "d2532c070c5f5b03",
+    "contentHash": "6a9517a2f3b528ba",
     "keywords": [
       "gnn trigger-response testing",
       "calibrated graph anomaly detection",
@@ -5173,7 +5173,7 @@
     ]
   },
   "AID-D-012.001": {
-    "contentHash": "4af3c570fe800e4e",
+    "contentHash": "7218bd38dfe5a708",
     "keywords": [
       "controlled gnn trigger testing",
       "paired clean perturbation cases",
@@ -5193,7 +5193,7 @@
     ]
   },
   "AID-D-012.002": {
-    "contentHash": "1a047a62fad131e4",
+    "contentHash": "286d30bcc5610ef2",
     "keywords": [
       "calibrated structure-feature anomaly",
       "edge endpoint similarity scoring",
@@ -5212,7 +5212,7 @@
     ]
   },
   "AID-D-012.003": {
-    "contentHash": "2f7658496448dfa0",
+    "contentHash": "f0e5f78ecfe43164",
     "keywords": [
       "topology-only anomaly detection",
       "degree outlier scoring",
@@ -5231,7 +5231,7 @@
     ]
   },
   "AID-D-013": {
-    "contentHash": "8f8ccdffc02f0dd5",
+    "contentHash": "f562ba68e0f4c93a",
     "keywords": [
       "rlhf reward gaming detection",
       "rlvr verifier gaming monitoring",
@@ -5250,7 +5250,7 @@
     ]
   },
   "AID-D-014": {
-    "contentHash": "28ef720f452246d0",
+    "contentHash": "d4b3cb6f0bbe8ebb",
     "keywords": [
       "post-retrieval monitoring",
       "retrieved chunk scanning",
@@ -5270,7 +5270,7 @@
     ]
   },
   "AID-D-014.001": {
-    "contentHash": "e1f9a4f3112344ec",
+    "contentHash": "5ae4bab473f95a48",
     "keywords": [
       "post-retrieval content scanning",
       "retrieved prompt injection detection",
@@ -5290,7 +5290,7 @@
     ]
   },
   "AID-D-014.002": {
-    "contentHash": "e6c874490d971958",
+    "contentHash": "f7c044e9fcded735",
     "keywords": [
       "query document semantic relevance",
       "retrieval relevance anomaly",
@@ -5310,7 +5310,7 @@
     ]
   },
   "AID-D-014.003": {
-    "contentHash": "5b9f87c47ffbd35f",
+    "contentHash": "fa63f651ddca3b5c",
     "keywords": [
       "source concentration monitoring",
       "retrieval source diversity",
@@ -5448,7 +5448,7 @@
     ]
   },
   "AID-I-001": {
-    "contentHash": "abd505faa594942a",
+    "contentHash": "1b61d7d050f0b8a7",
     "keywords": [
       "ai execution sandboxing",
       "runtime isolation",
@@ -5488,7 +5488,7 @@
     ]
   },
   "AID-I-001.002": {
-    "contentHash": "8609f76c6b3019b2",
+    "contentHash": "9b3a7c17cf4761d4",
     "keywords": [
       "microvm isolation",
       "hardware-virtualized sandbox",
@@ -5508,7 +5508,7 @@
     ]
   },
   "AID-I-001.003": {
-    "contentHash": "d0e9eacdcf09bfd2",
+    "contentHash": "a9e4fbaa1a005e1f",
     "keywords": [
       "ephemeral sandbox",
       "single-use sandbox",
@@ -5548,7 +5548,7 @@
     ]
   },
   "AID-I-001.005": {
-    "contentHash": "e7f5a6a6dfb0fd5d",
+    "contentHash": "40036937e745a31c",
     "keywords": [
       "ephemeral artifact detonation",
       "raw behavior observation",
@@ -5567,7 +5567,7 @@
     ]
   },
   "AID-I-002": {
-    "contentHash": "be6a485cdd960f53",
+    "contentHash": "d84c118d32242fb7",
     "keywords": [
       "network segmentation",
       "micro-segmentation",
@@ -5626,7 +5626,7 @@
     ]
   },
   "AID-I-003": {
-    "contentHash": "de4800514478711b",
+    "contentHash": "d637ef4b3c3e1008",
     "keywords": [
       "ai interaction quarantine",
       "response-time containment",
@@ -5706,7 +5706,7 @@
     ]
   },
   "AID-I-004": {
-    "contentHash": "1c4864e6f80bff79",
+    "contentHash": "13dac0bcafe32165",
     "keywords": [
       "agent memory isolation",
       "state isolation",
@@ -5783,7 +5783,7 @@
     ]
   },
   "AID-I-004.004": {
-    "contentHash": "9304dfb292a3a4b5",
+    "contentHash": "32f8a05b56792dff",
     "keywords": [
       "transactional promotion gate",
       "quarantine-to-trusted workflow",
@@ -5822,7 +5822,7 @@
     ]
   },
   "AID-I-004.006": {
-    "contentHash": "f1ac95be88a9f8d3",
+    "contentHash": "0eab0d88f6766cc7",
     "keywords": [
       "agent identity file protection",
       "persistent state write protection",
@@ -5918,7 +5918,7 @@
     ]
   },
   "AID-I-006": {
-    "contentHash": "4644c929f9d7571c",
+    "contentHash": "5f2c2d93a52f7d64",
     "keywords": [
       "federated client quarantine",
       "federated participant exclusion",
@@ -5957,7 +5957,7 @@
     ]
   },
   "AID-I-008": {
-    "contentHash": "3541e8191af2a427",
+    "contentHash": "001d7e877997f5ab",
     "keywords": [
       "browser session isolation",
       "computer-use workspace isolation",
@@ -6206,7 +6206,7 @@
     ]
   },
   "AID-E-001": {
-    "contentHash": "e914a9a8727cfbca",
+    "contentHash": "481da6e6ece3cf05",
     "keywords": [
       "incident authority eviction",
       "credential object eviction",
@@ -6316,7 +6316,7 @@
     ]
   },
   "AID-E-003": {
-    "contentHash": "2d235860a30bee57",
+    "contentHash": "0f57845c63ba5a4f",
     "keywords": [
       "malicious artifact removal",
       "backdoor removal",
@@ -6335,7 +6335,7 @@
     ]
   },
   "AID-E-003.001": {
-    "contentHash": "6de477618d48351a",
+    "contentHash": "3ac4301e2c7a1a80",
     "keywords": [
       "model backdoor candidate triage",
       "neural cleanse candidate signal",
@@ -6354,7 +6354,7 @@
     ]
   },
   "AID-E-003.002": {
-    "contentHash": "ebef41d9767b8a90",
+    "contentHash": "b988e5a48c136e36",
     "keywords": [
       "poisoned data eviction",
       "exact row deletion",
@@ -6374,7 +6374,7 @@
     ]
   },
   "AID-E-003.003": {
-    "contentHash": "96ea6206d8aaef88",
+    "contentHash": "47fb3db4c53de0da",
     "keywords": [
       "malicious code cleanup",
       "file integrity monitoring",
@@ -6393,7 +6393,7 @@
     ]
   },
   "AID-E-003.005": {
-    "contentHash": "f789e445fd0d283b",
+    "contentHash": "446e65ea0405a228",
     "keywords": [
       "llm adapter removal",
       "lora adapter quarantine",
@@ -6410,7 +6410,7 @@
     ]
   },
   "AID-E-004": {
-    "contentHash": "5f7e25df597257eb",
+    "contentHash": "f3336c786fd88ec5",
     "keywords": [
       "post-eviction hardening",
       "emergency patching",
@@ -6450,7 +6450,7 @@
     ]
   },
   "AID-R-001": {
-    "contentHash": "27796ce0c9870bd6",
+    "contentHash": "7467f50787b911af",
     "keywords": [
       "secure model restoration",
       "post-incident retraining",
@@ -6470,7 +6470,7 @@
     ]
   },
   "AID-R-001.001": {
-    "contentHash": "395124484f6d3802",
+    "contentHash": "f73f3cbdf0254782",
     "keywords": [
       "versioned model rollback",
       "mlflow registry restore",
@@ -6490,7 +6490,7 @@
     ]
   },
   "AID-R-001.002": {
-    "contentHash": "70f880bbc2b50c3d",
+    "contentHash": "b7aa9fa5959c47fd",
     "keywords": [
       "model remediation retraining",
       "approximate unlearning",
@@ -6507,7 +6507,7 @@
     ]
   },
   "AID-R-002": {
-    "contentHash": "fc229deba72a5436",
+    "contentHash": "2cd54fd2682b255c",
     "keywords": [
       "data integrity recovery",
       "dataset rollback",
@@ -6527,7 +6527,7 @@
     ]
   },
   "AID-R-003": {
-    "contentHash": "94acc1cf63401708",
+    "contentHash": "e982e2d2c9b348c1",
     "keywords": [
       "trusted recovery re-establishment",
       "incident prerequisite verification",
@@ -6616,7 +6616,7 @@
     ]
   },
   "AID-R-005": {
-    "contentHash": "f0882e9dc3fa8103",
+    "contentHash": "901ec731ff72e8fa",
     "keywords": [
       "vector index rollback",
       "rag index recovery",
@@ -6672,7 +6672,7 @@
     ]
   },
   "AID-H-003.010": {
-    "contentHash": "39bd88617419172f",
+    "contentHash": "703acf703351badf",
     "keywords": [
       "deployed AI software inventory",
       "continuous vulnerability remediation",

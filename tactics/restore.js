@@ -19,17 +19,21 @@ export const restoreTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0019 Publish Poisoned Datasets",
-                        "AML.T0020 Poison Training Data",
+                        "AML.T0011 User Execution",
+                        "AML.T0011.000 User Execution: Unsafe AI Artifacts",
                         "AML.T0018 Manipulate AI Model",
                         "AML.T0018.000 Manipulate AI Model: Poison AI Model",
                         "AML.T0018.001 Manipulate AI Model: Modify AI Model Architecture",
+                        "AML.T0018.002 Manipulate AI Model: Embed Malware",
+                        "AML.T0018.003 Manipulate AI Model: Modify Prompt Construction Logic",
+                        "AML.T0020 Training Data Poisoning",
                         "AML.T0031 Erode AI Model Integrity",
                         "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger",
-                        "AML.T0058 Publish Poisoned Models",
                         "AML.T0059 Erode Dataset Integrity",
-                        "AML.T0018.002 Manipulate AI Model: Embed Malware",
-                        "AML.T0076 Corrupt AI Model"
+                        "AML.T0076 Corrupt AI Model",
+                        "AML.T0115 Publish Poisoned AI Artifacts",
+                        "AML.T0115.000 Publish Poisoned AI Artifacts: Datasets",
+                        "AML.T0115.001 Publish Poisoned AI Artifacts: Models"
                     ]
                 },
                 {
@@ -182,8 +186,12 @@ export const restoreTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0011 User Execution",
+                                "AML.T0115 Publish Poisoned AI Artifacts",
+                                "AML.T0011.000 User Execution: Unsafe AI Artifacts",
+                                "AML.T0018.003 Manipulate AI Model: Modify Prompt Construction Logic",
                                 "AML.T0018 Manipulate AI Model",
-                                "AML.T0058 Publish Poisoned Models",
+                                "AML.T0115.001 Publish Poisoned AI Artifacts: Models",
                                 "AML.T0076 Corrupt AI Model",
                                 "AML.T0031 Erode AI Model Integrity (rollback restores model integrity)",
                                 "AML.T0018.000 Manipulate AI Model: Poison AI Model",
@@ -301,9 +309,10 @@ export const restoreTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
+                                "AML.T0115 Publish Poisoned AI Artifacts",
                                 "AML.T0018 Manipulate AI Model",
-                                "AML.T0019 Publish Poisoned Datasets",
-                                "AML.T0020 Poison Training Data",
+                                "AML.T0115.000 Publish Poisoned AI Artifacts: Datasets",
+                                "AML.T0020 Training Data Poisoning",
                                 "AML.T0059 Erode Dataset Integrity",
                                 "AML.T0031 Erode AI Model Integrity (retraining restores model integrity)",
                         "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (clean retraining removes the compromised model association so the registered trigger no longer activates the incident behavior)",
@@ -451,8 +460,9 @@ export const restoreTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0019 Publish Poisoned Datasets",
-                        "AML.T0020 Poison Training Data",
+                        "AML.T0115 Publish Poisoned AI Artifacts",
+                        "AML.T0115.000 Publish Poisoned AI Artifacts: Datasets",
+                        "AML.T0020 Training Data Poisoning",
                         "AML.T0059 Erode Dataset Integrity",
                         "AML.T0070 RAG Poisoning",
                         "AML.T0071 False RAG Entry Injection",
@@ -578,9 +588,9 @@ export const restoreTactic = {
                       "AML.T0080.000 AI Agent Context Poisoning: Memory",
                       "AML.T0080.001 AI Agent Context Poisoning: Thread",
                       "AML.T0091 Use Alternate Authentication Material",
+                      "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
                       "AML.T0091.001 Use Alternate Authentication Material: Web Session Cookie",
-                      "AML.T0092 Manipulate User LLM Chat History",
-                      "AML.T0091.000 Use Alternate Authentication Material: Application Access Token"
+                      "AML.T0092 Manipulate User LLM Chat History"
                   ]
               },
               {
@@ -1113,6 +1123,7 @@ export const restoreTactic = {
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
+                        "AML.T0099 AI Agent Tool Data Poisoning",
                         "AML.T0059 Erode Dataset Integrity",
                         "AML.T0070 RAG Poisoning",
                         "AML.T0071 False RAG Entry Injection",
