@@ -456,6 +456,7 @@ body.modal-open {
     top: 300px; /* JS overrides this to stay in visible viewport */
     width: 44px; height: 44px; border-radius: 50%;
     background: var(--column-bg); border: 1px solid var(--column-border);
+    padding: 0;
     display: flex; align-items: center; justify-content: center;
     cursor: pointer; opacity: 0; pointer-events: none;
     transition: opacity 0.35s ease, background-color 0.2s ease, box-shadow 0.2s ease;
@@ -476,8 +477,11 @@ body.modal-open {
 .atlas-scroll-hint.hint-pulse { animation: hintPulse 1.5s ease-in-out infinite; }
 .atlas-scroll-wrapper.has-offscreen-matches .hint-left,
 .atlas-scroll-wrapper.has-offscreen-matches .hint-right { opacity: 0; pointer-events: none; }
+.atlas-scroll-wrapper.search-active .atlas-scroll-hint { opacity: 0; pointer-events: none; animation: none; }
 .atlas-scroll-wrapper.has-offscreen-matches::before,
-.atlas-scroll-wrapper.has-offscreen-matches::after { opacity: 0; }
+.atlas-scroll-wrapper.has-offscreen-matches::after,
+.atlas-scroll-wrapper.search-active::before,
+.atlas-scroll-wrapper.search-active::after { opacity: 0; }
 @media (max-width: 768px) {
     .atlas-scroll-wrapper::before, .atlas-scroll-wrapper::after { width: 32px; }
     .atlas-scroll-hint { width: 38px; height: 38px; }
@@ -488,20 +492,32 @@ body.modal-open {
 .atlas-scroll-indicator {
     position: fixed; z-index: 100;
     background: var(--search-focus-ring); color: #fff;
-    padding: 0.5rem 0.85rem; border-radius: 1.25rem;
+    padding: 0.5rem 0.85rem; border-radius: 1.4rem;
+    border: 1px solid rgba(255,255,255,0.45);
     font-size: 0.85rem; font-weight: 700; cursor: pointer;
     opacity: 0; pointer-events: none; white-space: nowrap;
     box-shadow: 0 2px 12px rgba(0,0,0,0.4);
-    transition: opacity 0.25s ease, transform 0.15s ease;
+    transform: translate(-50%, -50%) scale(0.94);
+    transition: opacity 0.2s ease, transform 0.15s ease, box-shadow 0.2s ease;
     min-width: 2.75rem; min-height: 2.75rem;
-    display: flex; align-items: center; justify-content: center;
+    display: flex; align-items: center; justify-content: center; gap: 0.35rem;
+    line-height: 1;
     touch-action: manipulation; user-select: none;
 }
-.atlas-scroll-indicator.visible { opacity: 0.95; pointer-events: auto; }
-.atlas-scroll-indicator:hover { opacity: 1; transform: translateY(-50%) scale(1.08); }
-.atlas-scroll-indicator:active { transform: translateY(-50%) scale(0.95); }
+.atlas-scroll-indicator .direction-arrow { font-size: 1.1rem; line-height: 1; }
+.atlas-scroll-indicator .match-count { min-width: 0.7em; text-align: center; }
+.atlas-scroll-indicator.visible { opacity: 0.96; pointer-events: auto; transform: translate(-50%, -50%) scale(1); }
+.atlas-scroll-indicator:hover { opacity: 1; transform: translate(-50%, -50%) scale(1.07); box-shadow: 0 4px 16px rgba(0,0,0,0.48); }
+.atlas-scroll-indicator:active { transform: translate(-50%, -50%) scale(0.96); }
+.atlas-scroll-indicator:focus-visible { outline: 3px solid var(--bg-color); outline-offset: 2px; }
 @media (max-width: 768px) {
-    .atlas-scroll-indicator { padding: 0.55rem 0.9rem; font-size: 0.9rem; min-width: 3rem; min-height: 3rem; }
+    .atlas-scroll-indicator {
+        padding: 0.55rem 0.8rem; font-size: 0.9rem;
+        min-width: 3rem; min-height: 3rem; border-radius: 1.5rem;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    .atlas-scroll-indicator { transition: none; }
 }
 
 /* Atlas Defense Modal */

@@ -262,6 +262,14 @@
         }
 
         window.onload = async function () {
+            const {
+                ATLAS_SEARCH_DIRECTIONS,
+                calculateAtlasRevealTargets,
+                getAtlasIndicatorAnchor,
+                normalizeAtlasSearchId,
+                selectAtlasNavigationSlots
+            } = await import('./js/atlas-matrix-navigation.js');
+
             const elements = {
                 mainContent: document.getElementById('main-content'),
                 searchBar: document.getElementById('search-bar'),
@@ -2227,12 +2235,9 @@
                         if (id.toLowerCase().includes(lc) || name.toLowerCase().includes(lc)) matchedAtlasIds.add(id);
                     });
                     // Exact match: normalize search term to ATLAS ID format for pulse effect
-                    const idMatch = searchTerm.match(/^(?:aml\.)?t(\d{4}(?:\.\d{3})?)$/i);
-                    if (idMatch) {
-                        exactMatchAtlasId = 'AML.T' + idMatch[1];
-                    }
+                    exactMatchAtlasId = normalizeAtlasSearchId(searchTerm);
                     // Indirect path: only for non-ATLAS-ID searches (avoids cross-contamination)
-                    const isAtlasIdSearch = /^(aml\.)?t\d/i.test(searchTerm);
+                    const isAtlasIdSearch = Boolean(exactMatchAtlasId) || /^(aml\.)?t\d/i.test(searchTerm);
                     if (!isAtlasIdSearch) {
                         Object.entries(atlasDefenseMap).forEach(([atlasId, defenses]) => {
                             defenses.forEach(d => { if (filteredIds && filteredIds.has(d.id)) matchedAtlasIds.add(atlasId); });
@@ -2349,6 +2354,7 @@
                                 const subCovClass = getAtlasCoverageClass(subDefenses.length);
                                 const subCovLabel = getAtlasCoverageLabel(subDefenses.length);
                                 const sub = createElement('div', { className: 'atlas-matrix-sub ' + subCovClass });
+                                sub.setAttribute('data-atlas-id', subId);
                                 if (matchedAtlasIds && matchedAtlasIds.has(subId)) sub.classList.add('search-match');
                                 if (exactMatchAtlasId && subId === exactMatchAtlasId) sub.classList.add('search-exact-match');
                                 if (matchedAtlasIds && !matchedAtlasIds.has(subId)) sub.classList.add('search-dim');
@@ -2372,16 +2378,23 @@
 
                 scroll.appendChild(grid);
 
-                // --- Scroll edge fade hints (gradient + arrow buttons) ---
+                // --- Matrix browsing hints and two-dimensional search navigation ---
                 const scrollWrapper = createElement('div', { className: 'atlas-scroll-wrapper' });
                 elements.mainContent.appendChild(scrollWrapper);
                 scrollWrapper.appendChild(scroll);
+                scrollWrapper.classList.toggle('search-active', Boolean(searchTerm));
+
+                if (_atlasIndicatorAC) _atlasIndicatorAC.abort();
+                _atlasIndicatorAC = new AbortController();
+                const acSignal = { signal: _atlasIndicatorAC.signal };
 
                 const chevronSvg = '<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
-                const hintLeft = createElement('div', { className: 'atlas-scroll-hint hint-left' });
+                const hintLeft = createElement('button', { className: 'atlas-scroll-hint hint-left' });
+                hintLeft.setAttribute('type', 'button');
                 hintLeft.innerHTML = '<svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>';
                 hintLeft.setAttribute('aria-label', 'Scroll left');
-                const hintRight = createElement('div', { className: 'atlas-scroll-hint hint-right' });
+                const hintRight = createElement('button', { className: 'atlas-scroll-hint hint-right' });
+                hintRight.setAttribute('type', 'button');
                 hintRight.innerHTML = chevronSvg;
                 hintRight.setAttribute('aria-label', 'Scroll right');
                 scrollWrapper.appendChild(hintLeft);
@@ -2406,143 +2419,191 @@
                         hintRight.style.top = cy + 'px';
                     }
                 }
-                scroll.addEventListener('scroll', updateScrollHints, { passive: true });
-                window.addEventListener('resize', updateScrollHints);
-                window.addEventListener('scroll', updateScrollHints, { passive: true });
+                scroll.addEventListener('scroll', updateScrollHints, { passive: true, signal: _atlasIndicatorAC.signal });
+                window.addEventListener('resize', updateScrollHints, acSignal);
+                window.addEventListener('scroll', updateScrollHints, { passive: true, signal: _atlasIndicatorAC.signal });
                 requestAnimationFrame(updateScrollHints);
 
-                // Pulse: only on initial render, stop once user has scrolled
-                let _hintUserHasScrolled = false;
-                hintRight.classList.add('hint-pulse');
-                scroll.addEventListener('scroll', function _onFirstScroll() {
-                    if (scroll.scrollLeft > 10) {
-                        _hintUserHasScrolled = true;
+                // Pulse only when browsing without a search; stop after intentional panning.
+                if (!searchTerm) {
+                    hintRight.classList.add('hint-pulse');
+                    const onFirstMatrixScroll = () => {
+                        if (scroll.scrollLeft <= 10) return;
                         hintRight.classList.remove('hint-pulse');
-                        scroll.removeEventListener('scroll', _onFirstScroll);
-                    }
-                });
+                        scroll.removeEventListener('scroll', onFirstMatrixScroll);
+                    };
+                    scroll.addEventListener('scroll', onFirstMatrixScroll, { passive: true, signal: _atlasIndicatorAC.signal });
+                }
 
-
-                hintLeft.addEventListener('click', () => { scroll.scrollBy({ left: -400, behavior: 'smooth' }); });
+                hintLeft.addEventListener('click', () => { scroll.scrollBy({ left: -400, behavior: 'smooth' }); }, acSignal);
                 hintRight.addEventListener('click', () => {
                     hintRight.classList.remove('hint-pulse');
-                    _hintUserHasScrolled = true;
                     scroll.scrollBy({ left: 400, behavior: 'smooth' });
+                }, acSignal);
+
+                const _fixedHeader = document.querySelector('.header-main');
+                const navigationState = new Map();
+                let navigationTimer = 0;
+                let navigationSuppressedUntil = 0;
+
+                ['left', 'right'].forEach(side => {
+                    const indicator = createElement('button', {
+                        className: 'atlas-scroll-indicator navigation-' + side
+                    });
+                    indicator.setAttribute('type', 'button');
+                    indicator.setAttribute('data-side', side);
+                    indicator.setAttribute('data-direction', side);
+                    indicator.setAttribute('aria-hidden', 'true');
+                    indicator.setAttribute('tabindex', '-1');
+                    const arrow = createElement('span', {
+                        className: 'direction-arrow',
+                        textContent: ATLAS_SEARCH_DIRECTIONS[side].arrow
+                    });
+                    arrow.setAttribute('aria-hidden', 'true');
+                    const count = createElement('span', { className: 'match-count' });
+                    count.setAttribute('aria-hidden', 'true');
+                    indicator.appendChild(arrow);
+                    indicator.appendChild(count);
+                    document.body.appendChild(indicator);
+                    navigationState.set(side, {
+                        indicator,
+                        arrow,
+                        count,
+                        target: null
+                    });
+                    indicator.addEventListener('click', () => {
+                        const state = navigationState.get(side);
+                        if (state && state.target) revealMatch(state.target);
+                    }, acSignal);
                 });
 
-                const indicatorLeft = createElement('div', { className: 'atlas-scroll-indicator' });
-                const indicatorRight = createElement('div', { className: 'atlas-scroll-indicator' });
-                indicatorLeft.setAttribute('role', 'button');
-                indicatorRight.setAttribute('role', 'button');
-                indicatorLeft.setAttribute('tabindex', '0');
-                indicatorRight.setAttribute('tabindex', '0');
-                document.body.appendChild(indicatorLeft);
-                document.body.appendChild(indicatorRight);
+                _atlasIndicatorAC.signal.addEventListener('abort', () => {
+                    if (navigationTimer) window.clearTimeout(navigationTimer);
+                }, { once: true });
 
-                let _nearestLeftX = 0, _nearestRightX = 0;
-                let _nearestLeftEl = null, _nearestRightEl = null;
-                const _fixedHeader = document.querySelector('.header-main');
+                function hideIndicator(state) {
+                    state.indicator.classList.remove('visible');
+                    state.indicator.setAttribute('aria-hidden', 'true');
+                    state.indicator.setAttribute('tabindex', '-1');
+                }
 
-                function positionIndicators() {
-                    const rect = scroll.getBoundingClientRect();
+                function hideAllIndicators() {
+                    navigationState.forEach(hideIndicator);
+                }
+
+                function getSearchVisibleRect() {
+                    const scrollRect = scroll.getBoundingClientRect();
                     const headerBottom = _fixedHeader ? _fixedHeader.getBoundingClientRect().bottom : 0;
-                    const vTop = Math.max(rect.top, headerBottom);
-                    const vBot = Math.min(rect.bottom, window.innerHeight);
-                    if (vBot <= vTop + 40) {
-                        indicatorLeft.classList.remove('visible');
-                        indicatorRight.classList.remove('visible');
-                        return false;
-                    }
-                    const cy = (vTop + vBot) / 2;
-                    indicatorLeft.style.top = cy + 'px';
-                    indicatorLeft.style.transform = 'translateY(-50%)';
-                    indicatorLeft.style.left = (rect.left + 8) + 'px';
-                    indicatorRight.style.top = cy + 'px';
-                    indicatorRight.style.transform = 'translateY(-50%)';
-                    indicatorRight.style.right = (window.innerWidth - rect.right + 8) + 'px';
-                    indicatorRight.style.left = 'auto';
-                    return true;
+                    const viewport = window.visualViewport;
+                    const viewportLeft = viewport ? viewport.offsetLeft : 0;
+                    const viewportTop = viewport ? viewport.offsetTop : 0;
+                    const viewportRight = viewportLeft + (viewport ? viewport.width : window.innerWidth);
+                    const viewportBottom = viewportTop + (viewport ? viewport.height : window.innerHeight);
+                    const margin = (viewport ? viewport.width : window.innerWidth) <= 768 ? 8 : 12;
+                    const visibleRect = {
+                        left: Math.max(viewportLeft, scrollRect.left) + margin,
+                        right: Math.min(viewportRight, scrollRect.right) - margin,
+                        top: Math.max(viewportTop, headerBottom) + margin,
+                        bottom: viewportBottom - margin
+                    };
+                    if (visibleRect.right - visibleRect.left < 56 || visibleRect.bottom - visibleRect.top < 56) return null;
+                    return visibleRect;
                 }
 
                 function updateScrollIndicators() {
-                    if (!positionIndicators()) return;
-                    const matches = scroll.querySelectorAll('.atlas-matrix-cell.search-match, .atlas-matrix-sub.search-match');
+                    const matches = Array.from(scroll.querySelectorAll('.atlas-matrix-cell.search-match, .atlas-matrix-sub.search-match'));
                     if (!matches.length) {
-                        indicatorLeft.classList.remove('visible');
-                        indicatorRight.classList.remove('visible');
+                        hideAllIndicators();
                         scrollWrapper.classList.remove('has-offscreen-matches');
                         return;
                     }
-                    const sL = scroll.scrollLeft;
-                    const sR = sL + scroll.clientWidth;
-                    let offLeft = 0, offRight = 0;
-                    let nearL = -1, nearR = Infinity;
-                    let nearLEl = null, nearREl = null;
+                    const visibleRect = getSearchVisibleRect();
+                    if (!visibleRect || performance.now() < navigationSuppressedUntil) {
+                        hideAllIndicators();
+                        return;
+                    }
 
-                    matches.forEach(m => {
-                        let ox = 0, el = m;
-                        while (el && el !== scroll) { ox += el.offsetLeft; el = el.offsetParent; }
-                        const cellR = ox + m.offsetWidth;
-                        if (cellR <= sL) {
-                            offLeft++;
-                            if (ox > nearL) { nearL = ox; nearLEl = m; }
-                        } else if (ox >= sR) {
-                            offRight++;
-                            if (ox < nearR) { nearR = ox; nearREl = m; }
+                    const slots = selectAtlasNavigationSlots(matches.map(match => ({
+                        value: match,
+                        rect: match.getBoundingClientRect(),
+                        exact: match.classList.contains('search-exact-match')
+                    })), visibleRect);
+
+                    let offscreenMatches = 0;
+                    navigationState.forEach((state, side) => {
+                        const slot = slots[side];
+                        state.target = slot ? slot.target : null;
+                        if (!slot) {
+                            hideIndicator(state);
+                            return;
                         }
+                        offscreenMatches += slot.total;
+                        const meta = ATLAS_SEARCH_DIRECTIONS[slot.direction];
+                        state.arrow.textContent = meta.arrow;
+                        state.count.textContent = String(slot.total);
+                        state.indicator.setAttribute('data-direction', slot.direction);
+                        const matchWord = slot.total === 1 ? 'match' : 'matches';
+                        const ariaLabel = slot.merged
+                            ? slot.total + ' off-screen search ' + matchWord + ' on the ' + side + ' side in multiple directions. Show the topmost match.'
+                            : slot.total + ' off-screen search ' + matchWord + ' ' + meta.label + ' on the ' + side + ' side. Show nearest match.';
+                        state.indicator.setAttribute('aria-label', ariaLabel);
+                        state.indicator.setAttribute('title', ariaLabel);
+
+                        const width = Math.max(48, state.indicator.offsetWidth);
+                        const horizontalInset = Math.min(width / 2 + 8, (visibleRect.right - visibleRect.left) / 2);
+                        const anchor = getAtlasIndicatorAnchor(side, visibleRect, horizontalInset, 0);
+                        state.indicator.style.left = anchor.x + 'px';
+                        state.indicator.style.top = anchor.y + 'px';
+                        state.indicator.setAttribute('aria-hidden', 'false');
+                        state.indicator.setAttribute('tabindex', '0');
+                        state.indicator.classList.add('visible');
                     });
-
-                    _nearestLeftX = nearL;
-                    _nearestRightX = nearR;
-                    _nearestLeftEl = nearLEl;
-                    _nearestRightEl = nearREl;
-
-                    if (offLeft > 0) {
-                        indicatorLeft.textContent = '\u2190 ' + offLeft;
-                        indicatorLeft.setAttribute('aria-label', 'Scroll left to ' + offLeft + ' match' + (offLeft > 1 ? 'es' : ''));
-                        indicatorLeft.classList.add('visible');
-                    } else {
-                        indicatorLeft.classList.remove('visible');
-                    }
-                    if (offRight > 0) {
-                        indicatorRight.textContent = offRight + ' \u2192';
-                        indicatorRight.setAttribute('aria-label', 'Scroll right to ' + offRight + ' match' + (offRight > 1 ? 'es' : ''));
-                        indicatorRight.classList.add('visible');
-                    } else {
-                        indicatorRight.classList.remove('visible');
-                    }
-                    // Hide scroll-hint arrows when off-screen match indicators are active
-                    scrollWrapper.classList.toggle('has-offscreen-matches', offLeft > 0 || offRight > 0);
+                    scrollWrapper.classList.toggle('has-offscreen-matches', offscreenMatches > 0);
                 }
 
-                function scrollToMatch(x, el) {
-                    scroll.scrollTo({ left: Math.max(0, x - scroll.clientWidth / 3), behavior: 'smooth' });
-                    if (el) {
-                        const r = el.getBoundingClientRect();
-                        const headerH = _fixedHeader ? _fixedHeader.offsetHeight : 0;
-                        if (r.top < headerH + 20 || r.bottom > window.innerHeight - 40) {
-                            const elDocY = r.top + window.scrollY;
-                            const usableCenter = headerH + (window.innerHeight - headerH) / 2;
-                            const targetY = elDocY - usableCenter + r.height / 2;
-                            window.scrollTo({ top: Math.max(0, targetY), behavior: 'smooth' });
-                        }
-                    }
+                function revealMatch(match) {
+                    if (!match || !match.isConnected) return;
+                    const visibleRect = getSearchVisibleRect();
+                    if (!visibleRect) return;
+                    const matchRect = match.getBoundingClientRect();
+                    const scrollRect = scroll.getBoundingClientRect();
+                    const targets = calculateAtlasRevealTargets({
+                        matchRect,
+                        scrollRect,
+                        scrollLeft: scroll.scrollLeft,
+                        scrollWidth: scroll.scrollWidth,
+                        clientWidth: scroll.clientWidth,
+                        windowScrollY: window.scrollY,
+                        viewportTop: visibleRect.top,
+                        viewportBottom: visibleRect.bottom,
+                        documentHeight: document.scrollingElement.scrollHeight,
+                        viewportHeight: window.innerHeight
+                    });
+                    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+                    const behavior = reducedMotion ? 'auto' : 'smooth';
+                    const settleDelay = reducedMotion ? 0 : 700;
+                    navigationSuppressedUntil = performance.now() + settleDelay;
+                    hideAllIndicators();
+                    scroll.scrollTo({ left: targets.targetScrollLeft, behavior });
+                    window.scrollTo({ top: targets.targetWindowScrollY, behavior });
+                    match.setAttribute('tabindex', '-1');
+                    match.focus({ preventScroll: true });
+                    if (navigationTimer) window.clearTimeout(navigationTimer);
+                    navigationTimer = window.setTimeout(() => {
+                        navigationSuppressedUntil = 0;
+                        updateScrollIndicators();
+                    }, settleDelay + 40);
                 }
-                function scrollToLeft() { scrollToMatch(_nearestLeftX, _nearestLeftEl); }
-                function scrollToRight() { scrollToMatch(_nearestRightX, _nearestRightEl); }
 
-                indicatorLeft.addEventListener('click', scrollToLeft);
-                indicatorRight.addEventListener('click', scrollToRight);
-                indicatorLeft.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); scrollToLeft(); } });
-                indicatorRight.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); scrollToRight(); } });
-
-                _atlasIndicatorAC = new AbortController();
-                const acSignal = { signal: _atlasIndicatorAC.signal };
                 let rafId = 0;
                 const onUpdate = () => { cancelAnimationFrame(rafId); rafId = requestAnimationFrame(updateScrollIndicators); };
                 scroll.addEventListener('scroll', onUpdate, acSignal);
                 window.addEventListener('resize', onUpdate, acSignal);
                 window.addEventListener('scroll', onUpdate, acSignal);
+                if (window.visualViewport) {
+                    window.visualViewport.addEventListener('resize', onUpdate, acSignal);
+                    window.visualViewport.addEventListener('scroll', onUpdate, acSignal);
+                }
                 requestAnimationFrame(updateScrollIndicators);
 
                 // --- Drag-to-scroll for smooth horizontal panning ---
