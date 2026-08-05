@@ -141,7 +141,7 @@
                                 <option value="atlas-matrix">MITRE ATLAS™ - Matrix</option>
                                 <option value="atlas">MITRE ATLAS™ - Tactics</option>
                                 <option value="maestro">MAESTRO</option>
-                                <option value="owasp-llm">OWASP LLM Top 10 (2025)</option>
+                                <option value="owasp-llm">OWASP LLM Top 10 (2026)</option>
                                 <option value="owasp-ml">OWASP ML Top 10 (2023)</option>
                                 <option value="owasp-agentic">OWASP Top 10 for Agentic Applications 2026</option>
                                 <option value="nist" data-short="NIST Adversarial ML (2025)" data-full="NIST Adversarial Machine Learning (AI 100-2 E2025)">NIST Adversarial Machine Learning (AI 100-2 E2025)</option>
@@ -214,9 +214,9 @@
                 class="text-sky-600 dark:text-sky-400 hover:underline">ATT&CK</a>, <a href="https://saif.google/"
                 target="_blank" rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">Google
                 Secure AI Framework</a>, <a
-                href="https://owasp.org/www-project-top-10-for-large-language-model-applications/" target="_blank"
+                href="https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/" target="_blank"
                 rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">OWASP Top 10 LLM
-                2025</a>/<a href="https://owasp.org/www-project-machine-learning-security-top-10/" target="_blank"
+                2026</a>/<a href="https://owasp.org/www-project-machine-learning-security-top-10/" target="_blank"
                 rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">ML Security
                 2023</a>/<a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/" target="_blank"
                 rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">Agentic
@@ -237,6 +237,8 @@
         </p>
     </footer>
     <script type="module">
+        import { frameworkMigrations } from './framework-migrations.js';
+
         // Two-phase rendering: load lightweight index first, then full data in background
         let aidefendData = null;
         let _skeletonData = null;
@@ -245,15 +247,49 @@
         const _loadedTactics = new Map(); // tactic name → full tactic data (as each file loads)
 
         let _webMcpToolsScheduled = false;
+        let _webMcpRuntimePromise = null;
+        const WEBMCP_RUNTIME_URL = 'https://unpkg.com/@mcp-b/global@4.0.0/dist/index.iife.js';
+        const WEBMCP_RUNTIME_INTEGRITY = 'sha384-1ilb0+KiPCJ4wTvm97cC3KX527AS59JIfvfEryVeXbY6mwBCxEAI4u9FEgxnjgX5';
+
+        function ensureWebMcpRuntime() {
+            if (document.modelContext && typeof document.modelContext.registerTool === 'function') {
+                return Promise.resolve();
+            }
+            if (_webMcpRuntimePromise) return _webMcpRuntimePromise;
+
+            _webMcpRuntimePromise = new Promise((resolve, reject) => {
+                const script = document.createElement('script');
+                script.src = WEBMCP_RUNTIME_URL;
+                script.integrity = WEBMCP_RUNTIME_INTEGRITY;
+                script.crossOrigin = 'anonymous';
+                script.referrerPolicy = 'no-referrer';
+                script.dataset.aidefendWebmcpRuntime = '4.0.0';
+                script.addEventListener('load', resolve, { once: true });
+                script.addEventListener('error', () => reject(new Error('Pinned WebMCP runtime failed integrity or network loading.')), { once: true });
+                document.head.appendChild(script);
+            }).then(() => {
+                if (!document.modelContext || typeof document.modelContext.registerTool !== 'function') {
+                    throw new Error('Pinned WebMCP runtime loaded without document.modelContext.registerTool.');
+                }
+            });
+
+            return _webMcpRuntimePromise;
+        }
 
         function scheduleWebMcpToolsLoad() {
             if (_webMcpToolsScheduled) return;
             _webMcpToolsScheduled = true;
 
-            const loadWebMcpTools = () => import('./webmcp-tools.js')
-                .catch((err) => console.warn('[AIDEFEND WebMCP] Background load failed.', err));
+            const loadWebMcpTools = async () => {
+                try {
+                    await ensureWebMcpRuntime();
+                    await import('./webmcp-tools.js');
+                } catch (err) {
+                    console.warn('[AIDEFEND WebMCP] Background load failed.', err);
+                }
+            };
 
-            // Keep WebMCP's external dependency chain off the critical render path.
+            // Keep the self-contained, integrity-pinned WebMCP runtime off the critical render path.
             if ('requestIdleCallback' in window) {
                 requestIdleCallback(() => loadWebMcpTools(), { timeout: 4000 });
             } else {
@@ -340,7 +376,7 @@
                     question: "<strong>Which external security framework standard does this defense align to?</strong>",
                     focus: "This view organizes AIDEFEND techniques by external security framework standards (OWASP, MITRE ATLAS, MAESTRO, NIST, Cisco, Google SAIF, Databricks DASF). Select a framework from the dropdown to see which AIDEFEND defenses map to each risk category, threat layer, or attack tactic in that framework.",
                     audience: "Compliance Officers, GRC Analysts, Security Auditors, and Framework Practitioners.",
-                    useCase: "A security auditor is assessing an organization's AI defenses against the <strong>OWASP LLM Top 10 (2025)</strong>. They use the <strong>Frameworks View</strong> and select the OWASP LLM framework to see which AIDEFEND controls map to each risk.<br><br><ul><li>Under <strong>LLM01 – Prompt Injection</strong>, they review Adversarial Input, Prompt Injection & Signal-Authenticity Detection (AID-D-001) and AI-Contextualized Data Sanitization & Input Validation (AID-H-002).</li><li>Under <strong>LLM06 – Excessive Agency</strong>, they review Secure Agent Architecture (AID-H-017) and Agent Autonomy & Authority Governance (AID-M-009).</li></ul><br>A mapping identifies a reviewed defensive relationship; it does not certify that a control is deployed or effective in the assessed environment."
+                    useCase: "A security auditor is assessing an organization's AI defenses against the <strong>OWASP LLM Top 10 (2026)</strong>. They use the <strong>Frameworks View</strong> and select the OWASP LLM framework to see which AIDEFEND controls map to each risk.<br><br><ul><li>Under <strong>LLM01 – Prompt Injection</strong>, they review Per-Prompt Content, Intent & Obfuscation Analysis (AID-D-001.001) and Inference-Time Prompt & Input Validation (AID-H-002.002).</li><li>Under <strong>LLM03 – Excessive Agency</strong>, they review Least-Privilege Tool Architecture (AID-H-017.002) and Capability-Tier Control-Profile Binding & Assurance Gate (AID-M-009.006).</li></ul><br>A mapping identifies a reviewed defensive relationship; it does not certify that a control is deployed or effective in the assessed environment."
                 }
             };
 
@@ -1234,27 +1270,22 @@
             let _atlasIndicatorAC = null; // AbortController for scroll indicator listeners
             let _fwDropdownObserver = null; // ResizeObserver for framework dropdown labels
 
+            const owaspLlmCatalog = frameworkMigrations.frameworks.owasp_llm;
+
             // Framework view configuration — all 9 frameworks (all use accordion layout)
             const frameworkViewConfig = {
                 'owasp-llm': {
-                    frameworkKey: 'OWASP LLM Top 10 2025',
-                    label: 'OWASP LLM Top 10 (2025)',
-                    pageTitle: 'OWASP Large Language Model Top 10 (2025)',
+                    frameworkKey: owaspLlmCatalog.activeLabel,
+                    label: `OWASP LLM Top 10 (${owaspLlmCatalog.activeEdition})`,
+                    pageTitle: owaspLlmCatalog.officialTitle,
                     about: 'A curated list of the most critical security risks to large language model applications, published by OWASP Foundation.',
-                    url: 'https://owasp.org/www-project-top-10-for-large-language-model-applications/',
+                    url: owaspLlmCatalog.sourceUrl,
                     layout: 'accordion',
-                    groups: [
-                        { key: 'LLM01:2025', name: 'LLM01 – Prompt Injection', description: 'Prompt injection occurs when user prompts or external data sources alter the LLM\u2019s behavior in unintended ways. Direct prompt injection overwrites or manipulates system prompts, while indirect prompt injection embeds malicious instructions in external content (websites, documents, APIs) that the LLM processes.' },
-                        { key: 'LLM02:2025', name: 'LLM02 – Sensitive Information Disclosure', description: 'LLMs may inadvertently reveal sensitive information through their responses, including proprietary algorithms, training data contents, personally identifiable information (PII), confidential business data, or security credentials. This can occur through direct queries, prompt injection attacks, or unintended memorization of training data.' },
-                        { key: 'LLM03:2025', name: 'LLM03 – Supply Chain', description: 'LLM supply chain vulnerabilities arise from dependencies on third-party components including pre-trained models, training datasets, plugins, extensions, and development tools. Compromised base models may contain backdoors or biases, poisoned training data can introduce vulnerabilities, and malicious plugins can execute unauthorized code.' },
-                        { key: 'LLM04:2025', name: 'LLM04 – Data and Model Poisoning', description: 'Attackers corrupt data used in pre-training, fine-tuning, or retrieval-augmented generation (RAG) to introduce vulnerabilities, backdoors, or biases. Poisoning can cause the model to produce incorrect outputs, exhibit biased behavior, leak sensitive information, or activate hidden malicious behaviors when triggered by specific inputs.' },
-                        { key: 'LLM05:2025', name: 'LLM05 – Improper Output Handling', description: 'Insufficient validation, sanitization, and handling of LLM-generated outputs can enable downstream attacks when outputs are passed to other systems. LLM outputs may contain malicious content including XSS payloads, SQL injection, command injection, or SSRF attacks that execute in downstream systems without proper filtering.' },
-                        { key: 'LLM06:2025', name: 'LLM06 – Excessive Agency', description: 'LLM-based systems may be granted excessive functionality, permissions, or autonomy beyond what is necessary for the intended task. This includes access to sensitive systems, ability to execute code, make API calls, or take actions without adequate human oversight. Combined with prompt injection or hallucination, this can lead to unauthorized actions.' },
-                        { key: 'LLM07:2025', name: 'LLM07 – System Prompt Leakage', description: 'System prompts or instructions designed to be hidden from users may be exposed through various techniques. Attackers can craft prompts that cause the LLM to reveal its system instructions, initial prompts, or configuration details, exposing proprietary business logic, security controls, and content filtering rules.' },
-                        { key: 'LLM08:2025', name: 'LLM08 – Vector and Embedding Weaknesses', description: 'Vulnerabilities in vector databases and embedding systems used for RAG can be exploited to manipulate knowledge retrieval. Attackers may poison vector stores with adversarial content, manipulate embedding representations, or exploit similarity search algorithms, causing the LLM to retrieve and use malicious or unauthorized information.' },
-                        { key: 'LLM09:2025', name: 'LLM09 – Misinformation', description: 'LLMs may generate false, misleading, or fabricated information (hallucinations) that appears credible and authoritative. This misinformation can cause security compromises when acted upon, reputational damage when published, and legal liability from incorrect advice. The confident presentation of false information makes detection difficult.' },
-                        { key: 'LLM10:2025', name: 'LLM10 – Unbounded Consumption', description: 'LLMs can consume excessive computational resources through denial of service attacks, resource-intensive queries, or unexpected operational patterns. Attackers may craft inputs that cause maximum token generation, trigger expensive operations, or abuse rate limiting gaps, leading to service degradation and increased operational costs.' }
-                    ],
+                    groups: owaspLlmCatalog.activeItems.map(item => ({
+                        key: item.id,
+                        name: `${item.id.split(':')[0]} – ${item.name}`,
+                        description: item.description
+                    })),
                     parseGroup(item) { const m = item.match(/(LLM\d{2}:\d{4})/); return m ? m[1] : null; }
                 },
                 'owasp-ml': {

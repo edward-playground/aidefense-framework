@@ -19,14 +19,14 @@
  * 
  * @see https://aidefend.net
  * @see https://webmachinelearning.github.io/webmcp/
- * @version 1.3.0
+ * @version 1.4.0
  */
 
-// Version-locked polyfill verified against the current document.modelContext
-// WebMCP surface. Keep this pin explicit so API drift is caught in review.
-import 'https://esm.sh/@mcp-b/global@4.0.0';
+import { frameworkMigrations } from './framework-migrations.js';
+import { buildThreatQueryPlan, mergeThreatHits } from './webmcp-query.js';
 
-// Guard check: verify API availability after polyfill loads
+// The page loads an integrity-pinned, self-contained WebMCP runtime before
+// importing this module. Native implementations can satisfy the same guard.
 if (!document.modelContext || typeof document.modelContext.registerTool !== 'function') {
     console.warn('[AIDEFEND WebMCP] document.modelContext not available. WebMCP tools will not be registered.');
 } else {
@@ -99,7 +99,7 @@ if (!document.modelContext || typeof document.modelContext.registerTool !== 'fun
 
     /**
      * Heuristic: does this query look like a threat ID?
-     * Matches patterns like: AML.T0051, LLM01, LLM01:2025, MAES-03, NIST.AML.018
+     * Matches patterns like: AML.T0051, LLM01, LLM01:2026, MAES-03, NIST.AML.018
      */
     function looksLikeId(query) {
         return /^[A-Z]{2,}[\.\-:]/i.test(query.trim()) || /^[A-Z]+\d+/i.test(query.trim());
@@ -111,7 +111,7 @@ if (!document.modelContext || typeof document.modelContext.registerTool !== 'fun
      * If query looks like an ID:
      *   Tier 1: Exact ID match (query matches the ID portion of the item)
      *   Tier 2: Prefix match (query is a prefix of the item's ID portion)
-     *           e.g., "LLM01" matches "LLM01:2025 Prompt Injection"
+     *           e.g., "LLM01" matches "LLM01:2026 Prompt Injection"
      * 
      * If query looks like a keyword:
      *   Tier 3: Substring search (case-insensitive)
@@ -212,7 +212,7 @@ if (!document.modelContext || typeof document.modelContext.registerTool !== 'fun
     const FRAMEWORK_KEYS = [
         'MITRE ATLAS',
         'MAESTRO',
-        'OWASP LLM Top 10 2025',
+        frameworkMigrations.frameworks.owasp_llm.activeLabel,
         'OWASP ML Top 10 2023',
         'OWASP Top 10 for Agentic Applications 2026',
         'NIST Adversarial Machine Learning 2025',
@@ -602,7 +602,7 @@ if (!document.modelContext || typeof document.modelContext.registerTool !== 'fun
 
     await safeRegisterTool({
         name: 'find_defenses_by_threat',
-        description: "Find AIDEFEND mappings for a specific threat. Returns actionable standalone/sub-technique controls separately from non-actionable parent-family context, so a family is never presented as an implementable control. Parent-family mappings are a derived union of reviewed child mappings for navigation, not independent control claims. Accepts exact or prefix framework IDs and English mapping-name keywords; exact IDs are preferred. A mapping expresses a reviewed defensive relationship, not certification that a control is deployed or effective in the caller's environment.",
+        description: "Find AIDEFEND mappings for a specific threat. Returns actionable standalone/sub-technique controls separately from non-actionable parent-family context, so a family is never presented as an implementable control. Parent-family mappings are a derived union of reviewed child mappings for navigation, not independent control claims. Accepts exact or prefix framework IDs and English mapping-name keywords; exact IDs are preferred. OWASP LLM references default to the current edition, and explicit 2025 IDs or legacy names are migrated by risk concept rather than by rank. Malformed explicit editions and queries containing multiple OWASP LLM concepts return resolution metadata instead of being guessed. A mapping expresses a reviewed defensive relationship, not certification that a control is deployed or effective in the caller's environment.",
         annotations: {
             readOnlyHint: true
         },
@@ -611,7 +611,7 @@ if (!document.modelContext || typeof document.modelContext.registerTool !== 'fun
             properties: {
                 threat: {
                     type: 'string',
-                    description: "Threat ID or keyword in English. Examples: 'AML.T0051', 'LLM01', 'prompt injection', 'supply chain', 'model poisoning'. IMPORTANT: The framework content is in English. Translate any non-English queries into English before calling this tool.",
+                    description: "Threat ID or keyword in English. Examples: 'AML.T0051', 'LLM01', 'LLM03:2025 Supply Chain', 'prompt injection', 'supply chain', 'model poisoning'. OWASP LLM 2025 references are accepted and resolved to their 2026 semantic successor. IMPORTANT: The framework content is in English. Translate any non-English queries into English before calling this tool.",
                     minLength: 2,
                     maxLength: 200
                 },
@@ -630,22 +630,24 @@ if (!document.modelContext || typeof document.modelContext.registerTool !== 'fun
                 const threat = args.threat || '';
                 const maxResults = Math.min(Math.max(args.maxResults || 15, 1), 30);
 
-                const parentFamilyHits = collectThreatHits(
-                    parentFamilies,
-                    threat,
-                    () => ({ entityType: 'parentFamily', isActionable: false })
-                );
-                const actionableControlHits = collectThreatHits(
-                    allLeafNodes,
-                    threat,
-                    entity => ({
-                        entityType: entity.id === entity.techniqueId ? 'standaloneTechnique' : 'subTechnique',
-                        isActionable: true,
-                        ...(entity.id === entity.techniqueId ? {} : {
-                            parentTechniqueId: entity.techniqueId,
-                            parentTechniqueName: entity.techniqueName
-                        })
+                const queryPlan = buildThreatQueryPlan(threat);
+                const { resolution, canonicalThreat } = queryPlan;
+
+                const classifyParent = () => ({ entityType: 'parentFamily', isActionable: false });
+                const classifyActionable = entity => ({
+                    entityType: entity.id === entity.techniqueId ? 'standaloneTechnique' : 'subTechnique',
+                    isActionable: true,
+                    ...(entity.id === entity.techniqueId ? {} : {
+                        parentTechniqueId: entity.techniqueId,
+                        parentTechniqueName: entity.techniqueName
                     })
+                });
+
+                const parentFamilyHits = mergeThreatHits(
+                    ...queryPlan.queries.map(query => collectThreatHits(parentFamilies, query, classifyParent))
+                );
+                const actionableControlHits = mergeThreatHits(
+                    ...queryPlan.queries.map(query => collectThreatHits(allLeafNodes, query, classifyActionable))
                 );
 
                 // Determine overall match tier for label
@@ -661,6 +663,10 @@ if (!document.modelContext || typeof document.modelContext.registerTool !== 'fun
 
                 const response = {
                     query: threat,
+                    ...(resolution ? {
+                        ...(canonicalThreat ? { resolvedQuery: canonicalThreat } : {}),
+                        resolution
+                    } : {}),
                     matchTier: tierLabel,
                     actionableControls: actionableOutput,
                     parentFamilies: familyOutput,

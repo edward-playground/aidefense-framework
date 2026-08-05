@@ -4,6 +4,7 @@
  *
  * Reads tactic JS files from tactics/ directory and generates:
  * - data/data.json - Complete dataset with techniques, strategies, and tools
+ * - data/framework-migrations.json - Framework edition and semantic migrations
  *
  * Keywords: Defense mechanism and method terms (flat array) for search and classification
  *
@@ -22,6 +23,7 @@ import path from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { createHash } from 'crypto';
 import { aidefendVersion } from '../aidefend-intro.js';
+import { frameworkMigrations } from '../framework-migrations.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -1286,6 +1288,10 @@ async function main() {
   const indexPath = path.join(OUTPUT_DIR, 'tactics-index.json');
   verifyOrWrite(indexPath, indexContent);
 
+  const migrationContent = `${JSON.stringify(frameworkMigrations, null, 2)}\n`;
+  const migrationPath = path.join(OUTPUT_DIR, 'framework-migrations.json');
+  verifyOrWrite(migrationPath, migrationContent);
+
   console.log('\n================================');
   console.log(checkOnly ? 'Generated outputs verified!\n' : 'Generation complete!\n');
   console.log(`Keyword lock: validated ${Object.keys(keywordCache).length} entries → ${CACHE_PATH}`);
@@ -1300,6 +1306,8 @@ async function main() {
   console.log(`Checksum: ${checksum.slice(0, 16)}...`);
   console.log(`\nIndex: ${indexPath}`);
   console.log(`Index size: ${(indexContent.length / 1024).toFixed(1)} KB`);
+  console.log(`\nFramework migrations: ${migrationPath}`);
+  console.log(`Migration registry size: ${(migrationContent.length / 1024).toFixed(1)} KB`);
 }
 
 main().catch(error => {

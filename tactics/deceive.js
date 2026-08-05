@@ -24,6 +24,8 @@ export const deceiveTactic = {
               ]
             },
             "toolsOpenSource": [
+                "T-Pot (multi-honeypot decoy and telemetry substrate)",
+                "OpenCanary (multi-protocol network-service decoy and alerting substrate; AI API behavior remains custom)",
                 "Beelzebub",
                 "Galah",
                 "MockServer",
@@ -62,10 +64,10 @@ export const deceiveTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM01:2025 Prompt Injection (honeypot captures injection attempts)",
-                        "LLM02:2025 Sensitive Information Disclosure (decoy endpoints return only synthetic data while capturing disclosure probes)"
+                        "LLM01:2026 Prompt Injection (isolated honeypots capture injection attempts without exposing production authority)",
+                        "LLM02:2026 Sensitive Information Disclosure (decoy endpoints return only synthetic data while capturing disclosure probes)"
                     ]
                 },
                 {
@@ -650,9 +652,9 @@ export const deceiveTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM02:2025 Sensitive Information Disclosure (honey data mimicking sensitive information triggers an attributable disclosure alert)"
+                        "LLM02:2026 Sensitive Information Disclosure (honey records trigger attributable evidence when sensitive-looking data is exported or used)"
                     ]
                 },
                 {
@@ -1450,10 +1452,11 @@ export const deceiveTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM01:2025 Prompt Injection (unreliable outcome for attacker)",
-                        "LLM06:2025 Excessive Agency (receipt-authorized high-risk tool requests are diverted to a credentialless safe no-op)"
+                        "LLM01:2026 Prompt Injection (bounded deceptive responses reduce utility for high-confidence injection attempts)",
+                        "LLM03:2026 Excessive Agency (high-risk tool requests are diverted to a credentialless safe no-op)",
+                        "LLM06:2026 Unbounded Consumption (degraded responses reduce useful yield for high-confidence model-extraction sessions)"
                     ]
                 },
                 {
@@ -2277,9 +2280,10 @@ export const deceiveTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM02:2025 Sensitive Information Disclosure (external marker hits reveal leaked sensitive output)"
+                        "LLM02:2026 Sensitive Information Disclosure (external marker hits reveal leaked sensitive output)",
+                        "LLM06:2026 Unbounded Consumption (marker reuse reveals scraping, unauthorized replay, or model-extraction activity)"
                     ]
                 },
                 {
@@ -2394,9 +2398,11 @@ export const deceiveTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM01:2025 Prompt Injection (injection redirects to canary task, revealing compromise)"
+                        "LLM01:2026 Prompt Injection (canary tasks expose injection-driven agent compromise)",
+                        "LLM03:2026 Excessive Agency (canary tools expose manipulated agents attempting sensitive capabilities)",
+                        "LLM05:2026 Data and Model Poisoning (canary tasks expose poisoned persistent memory or RAG content influencing behavior)"
                     ]
                 },
                 {
@@ -3405,10 +3411,9 @@ export const deceiveTactic = {
               ]
             },
             {
-              "framework": "OWASP LLM Top 10 2025",
+              "framework": "OWASP LLM Top 10 2026",
               "items": [
-                "LLM02:2025 Sensitive Information Disclosure (isolated decoy routes return only synthetic data while exposing disclosure probes)",
-                "LLM07:2025 System Prompt Leakage"
+                  "LLM02:2026 Sensitive Information Disclosure (isolated decoy routes return only synthetic metadata while exposing disclosure probes)"
               ]
             },
             {
@@ -3525,9 +3530,9 @@ export const deceiveTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM02:2025 Sensitive Information Disclosure (statistically powered canary recall tests whether training records are memorized and disclosed)"
+                        "LLM02:2026 Sensitive Information Disclosure (powered canary-recall tests detect memorized training records being reproduced)"
                     ]
                 },
                 {

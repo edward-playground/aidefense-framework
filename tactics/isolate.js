@@ -59,11 +59,15 @@ export const isolateTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM03:2025 Supply Chain",
-                        "LLM06:2025 Excessive Agency",
-                        "LLM10:2025 Unbounded Consumption"
+                        "LLM01:2026 Prompt Injection",
+                        "LLM02:2026 Sensitive Information Disclosure",
+                        "LLM03:2026 Excessive Agency",
+                        "LLM04:2026 Supply Chain",
+                        "LLM05:2026 Data and Model Poisoning",
+                        "LLM06:2026 Unbounded Consumption",
+                        "LLM10:2026 Improper Output Handling"
                     ]
                 },
                 {
@@ -159,7 +163,7 @@ export const isolateTactic = {
                         "Mirantis Kubernetes Engine",
                         "Mirantis Container Runtime",
                         "Red Hat OpenShift Container Platform",
-                        "Aqua Cloud Security",
+                        "Aqua Platform (container runtime immutability and seccomp policy enforcement)",
                         "Palo Alto Networks Prisma Cloud",
                         "Microsoft Azure Kubernetes Service",
                         "Google Kubernetes Engine",
@@ -187,10 +191,10 @@ export const isolateTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM06:2025 Excessive Agency",
-                                "LLM10:2025 Unbounded Consumption"
+                                "LLM03:2026 Excessive Agency (container isolation confines permissions and side effects of over-privileged execution)",
+                                "LLM06:2026 Unbounded Consumption"
                             ]
                         },
                         {
@@ -307,7 +311,8 @@ export const isolateTactic = {
                         "Cilium Tetragon",
                         "Cloud Hypervisor",
                         "bubblewrap",
-                        "QEMU"
+                        "QEMU",
+                        "E2B (Firecracker microVM sandbox infrastructure)"
                     ],
                     "toolsCommercial": [
                         "AWS Lambda",
@@ -344,10 +349,12 @@ export const isolateTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM06:2025 Excessive Agency",
-                                "LLM03:2025 Supply Chain"
+                                "LLM03:2026 Excessive Agency (strong sandbox boundaries confine over-privileged or compromised tool execution)",
+                                "LLM04:2026 Supply Chain (low-level isolation contains malicious third-party model or loader execution)",
+                                "LLM05:2026 Data and Model Poisoning (sandbox isolation limits poisoned models from reaching external tools and systems)",
+                                "LLM10:2026 Improper Output Handling (low-level sandboxing contains generated code after unsafe model output reaches execution)"
                             ]
                         },
                         {
@@ -466,7 +473,7 @@ export const isolateTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -529,6 +536,8 @@ export const isolateTactic = {
                         "Kata Containers",
                         "Firecracker",
                         "E2B",
+                        "Wasmtime (per-store WebAssembly resource isolation for single-use tool execution)",
+                        "Cloudflare Sandbox SDK (Apache-2.0 SDK; requires the managed Cloudflare Workers and Containers runtime)",
                         "microsandbox",
                         "Daytona"
                     ],
@@ -536,7 +545,6 @@ export const isolateTactic = {
                         "AWS Fargate",
                         "Google Kubernetes Engine Sandbox",
                         "Modal Sandboxes",
-                        "Cloudflare Sandbox SDK",
                         "E2B Enterprise"
                     ]
                 },
@@ -581,9 +589,12 @@ export const isolateTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM06:2025 Excessive Agency"
+                                "LLM01:2026 Prompt Injection (default-deny egress limits callbacks and exfiltration after injected execution)",
+                                "LLM02:2026 Sensitive Information Disclosure (egress allowlists block disclosure to unauthorized destinations)",
+                                "LLM03:2026 Excessive Agency (egress policy limits external actions reachable by agent tools)",
+                                "LLM10:2026 Improper Output Handling (destination controls block model-output-driven SSRF and automatic fetches)"
                             ]
                         },
                         {
@@ -641,7 +652,9 @@ export const isolateTactic = {
                     "toolsOpenSource": [
                         "Kubernetes",
                         "Cilium",
-                        "Project Calico"
+                        "Project Calico",
+                        "Istio (egress-gateway policy enforcement)",
+                        "Squid (forward proxy with destination allowlisting)"
                     ],
                     "toolsCommercial": [
                         "Calico Enterprise",
@@ -685,11 +698,13 @@ export const isolateTactic = {
                         "Cilium Tetragon",
                         "strace",
                         "sysdig",
-                        "Wazuh"
+                        "Wazuh",
+                        "CAPE Sandbox (CAPEv2) (detonation and behavioral observations; attestation and evidence binding remain integration-owned)"
                     ],
                     "toolsCommercial": [
                         "Joe Sandbox",
                         "ANY.RUN",
+                        "VMRay Platform (detonation and behavioral observations; attestation and evidence binding remain integration-owned)",
                         "CrowdStrike Falcon Sandbox",
                         "Palo Alto Networks Advanced WildFire"
                     ],
@@ -719,9 +734,9 @@ export const isolateTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "N/A"
+                                "LLM04:2026 Supply Chain (detonation exposes malicious behavior in executable dependencies before promotion)"
                             ]
                         },
                         {
@@ -826,10 +841,12 @@ export const isolateTactic = {
                   ]
               },
               {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                      "LLM02:2025 Sensitive Information Disclosure",
-                      "LLM06:2025 Excessive Agency"
+                      "LLM01:2026 Prompt Injection",
+                      "LLM02:2026 Sensitive Information Disclosure",
+                      "LLM03:2026 Excessive Agency",
+                      "LLM10:2026 Improper Output Handling"
                   ]
               },
               {
@@ -981,9 +998,9 @@ export const isolateTactic = {
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM06:2025 Excessive Agency (limits internal reach of compromised agent)"
+                          "LLM03:2026 Excessive Agency (microsegmentation limits the internal reach of a compromised agent)"
                       ]
                   },
                   {
@@ -1080,7 +1097,7 @@ export const isolateTactic = {
                   "AWS Network Firewall",
                   "Azure Firewall Premium",
                   "Google Cloud NGFW",
-                  "CyberArk Certificate Manager",
+                  "Palo Alto Networks Next-Generation Trust Security (certificate lifecycle management)",
                   "DigiCert Trust Lifecycle Manager",
                   "Splunk Enterprise Security",
                   "Datadog Cloud SIEM",
@@ -1135,10 +1152,12 @@ export const isolateTactic = {
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM02:2025 Sensitive Information Disclosure (via exfiltration)",
-                          "LLM06:2025 Excessive Agency (proxy-based egress control limits what external actions agents can take)"
+                          "LLM01:2026 Prompt Injection (governed external paths limit injected exfiltration and arbitrary callbacks)",
+                          "LLM02:2026 Sensitive Information Disclosure (external egress controls block unauthorized disclosure destinations)",
+                          "LLM03:2026 Excessive Agency (proxy mediation limits external actions available to agents)",
+                          "LLM10:2026 Improper Output Handling (allowlisted and proxied destinations constrain model-output-driven SSRF and automatic fetches)"
                       ]
                   },
                   {
@@ -1240,10 +1259,12 @@ export const isolateTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM06:2025 Excessive Agency",
-                        "LLM10:2025 Unbounded Consumption"
+                        "LLM02:2026 Sensitive Information Disclosure",
+                        "LLM03:2026 Excessive Agency",
+                        "LLM06:2026 Unbounded Consumption",
+                        "LLM07:2026 Misinformation"
                     ]
                 },
                 {
@@ -1367,9 +1388,11 @@ export const isolateTactic = {
                       ]
                     },
                     {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                        "LLM10:2025 Unbounded Consumption"
+                          "LLM03:2026 Excessive Agency (quarantine and safe mode remove risky agent routes and delegated execution paths)",
+                          "LLM06:2026 Unbounded Consumption (budget-exhaustion signals trigger verified downgrade or hard containment)",
+                          "LLM07:2026 Misinformation (hallucination circuit breakers stop suspect outputs from continuing through normal operation)"
                       ]
                     },
                     {
@@ -1517,9 +1540,10 @@ export const isolateTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM10:2025 Unbounded Consumption"
+                                "LLM02:2026 Sensitive Information Disclosure (identity- and session-bound query budgets constrain automated extraction campaigns)",
+                                "LLM06:2026 Unbounded Consumption"
                             ]
                         },
                         {
@@ -1642,9 +1666,10 @@ export const isolateTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM10:2025 Unbounded Consumption"
+                                "LLM02:2026 Sensitive Information Disclosure (per-session token budgets constrain sustained extraction volume)",
+                                "LLM06:2026 Unbounded Consumption"
                             ]
                         },
                         {
@@ -1760,9 +1785,10 @@ export const isolateTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM06:2025 Excessive Agency"
+                                "LLM03:2026 Excessive Agency",
+                                "LLM07:2026 Misinformation (dispatcher containment blocks false-state-driven high-risk actions before side effects)"
                             ]
                         },
                         {
@@ -1850,16 +1876,17 @@ export const isolateTactic = {
                   ]
               },
               {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                      "LLM01:2025 Prompt Injection",
-                      "LLM02:2025 Sensitive Information Disclosure",
-                      "LLM05:2025 Improper Output Handling",
-                      "LLM06:2025 Excessive Agency",
-                      "LLM07:2025 System Prompt Leakage",
-                      "LLM08:2025 Vector and Embedding Weaknesses",
-                      "LLM09:2025 Misinformation",
-                      "LLM10:2025 Unbounded Consumption"
+                      "LLM01:2026 Prompt Injection",
+                      "LLM02:2026 Sensitive Information Disclosure",
+                      "LLM03:2026 Excessive Agency",
+                      "LLM05:2026 Data and Model Poisoning",
+                      "LLM06:2026 Unbounded Consumption",
+                      "LLM07:2026 Misinformation",
+                      "LLM08:2026 Hidden Context Exposure",
+                      "LLM09:2026 Vector and Embedding Weaknesses",
+                      "LLM10:2026 Improper Output Handling"
                   ]
               },
               {
@@ -1998,11 +2025,11 @@ export const isolateTactic = {
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM01:2025 Prompt Injection",
-                          "LLM02:2025 Sensitive Information Disclosure",
-                          "LLM10:2025 Unbounded Consumption"
+                          "LLM01:2026 Prompt Injection (context resets and bounded windows limit injected-context persistence)",
+                          "LLM02:2026 Sensitive Information Disclosure",
+                          "LLM06:2026 Unbounded Consumption"
                       ]
                   },
                   {
@@ -2097,6 +2124,7 @@ export const isolateTactic = {
                   "Qdrant",
                   "Weaviate",
                   "Milvus",
+                  "pgvector with PostgreSQL row-level security (tenant and trust partition enforcement)",
                   "Open Policy Agent (OPA)"
               ],
               "toolsCommercial": [
@@ -2121,10 +2149,12 @@ export const isolateTactic = {
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM02:2025 Sensitive Information Disclosure",
-                          "LLM08:2025 Vector and Embedding Weaknesses"
+                          "LLM01:2026 Prompt Injection (trust-tier partitions keep untrusted persistent content outside trusted context)",
+                          "LLM02:2026 Sensitive Information Disclosure",
+                          "LLM05:2026 Data and Model Poisoning (trust-tier isolation limits poisoned RAG or memory content from trusted retrieval)",
+                          "LLM09:2026 Vector and Embedding Weaknesses"
                       ]
                   },
                   {
@@ -2677,9 +2707,9 @@ def test_success_revalidates_every_boundary_and_bounds_timeouts():
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM08:2025 Vector and Embedding Weaknesses (signed records detect tampered vector/embedding entries)"
+                          "LLM05:2026 Data and Model Poisoning"
                       ]
                   },
                   {
@@ -2790,9 +2820,10 @@ def test_success_revalidates_every_boundary_and_bounds_timeouts():
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM08:2025 Vector and Embedding Weaknesses"
+                          "LLM01:2026 Prompt Injection (quarantined memory cannot inject instructions before approved promotion)",
+                          "LLM05:2026 Data and Model Poisoning"
                       ]
                   },
                   {
@@ -2905,11 +2936,12 @@ def test_success_revalidates_every_boundary_and_bounds_timeouts():
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM01:2025 Prompt Injection",
-                          "LLM02:2025 Sensitive Information Disclosure",
-                          "LLM09:2025 Misinformation (stale memory causes agent to act on outdated context, producing incorrect or misleading outputs)"
+                          "LLM01:2026 Prompt Injection (trust decay and deletion limit persistent injected memory)",
+                          "LLM02:2026 Sensitive Information Disclosure (forced forgetting removes retained privacy-sensitive memory and derived copies)",
+                          "LLM07:2026 Misinformation (stale-memory demotion prevents outdated context from remaining trusted)",
+                          "LLM09:2026 Vector and Embedding Weaknesses"
                       ]
                   },
                   {
@@ -3017,7 +3049,10 @@ def test_success_revalidates_every_boundary_and_bounds_timeouts():
                         "OSSEC (file-integrity telemetry; not write enforcement)",
                         "Falco (write-attempt telemetry; blocking requires an external responder)",
                 "Cilium Tetragon",
-                        "Git (versioned baseline and diff evidence; not write enforcement)",
+                "SELinux (mandatory access control for protected state paths)",
+                "AppArmor (mandatory access control for protected state paths)",
+                "Landlock (process-scoped filesystem access control for protected state paths)",
+                "Git (versioned baseline and diff evidence; not write enforcement)",
                 "gVisor",
                 "libseccomp",
                         "OpenBao (signing and key service; not a content scanner)"
@@ -3026,7 +3061,7 @@ def test_success_revalidates_every_boundary_and_bounds_timeouts():
                 "CrowdStrike Falcon Insight XDR",
                 "SentinelOne Singularity Endpoint",
                 "Microsoft Defender for Endpoint",
-                "Aqua Cloud Security",
+                "Aqua Platform (container file immutability and runtime drift prevention)",
                 "Palo Alto Networks Prisma Cloud",
                 "HashiCorp Vault Enterprise",
                 "HCP Vault Dedicated"
@@ -3051,10 +3086,11 @@ def test_success_revalidates_every_boundary_and_bounds_timeouts():
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM01:2025 Prompt Injection",
-                          "LLM06:2025 Excessive Agency"
+                          "LLM01:2026 Prompt Injection",
+                          "LLM03:2026 Excessive Agency (controlled writers prevent agents from expanding identity or authority-bearing state)",
+                          "LLM05:2026 Data and Model Poisoning"
                       ]
                   },
                   {
@@ -3190,11 +3226,11 @@ def test_success_revalidates_every_boundary_and_bounds_timeouts():
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM01:2025 Prompt Injection",
-                          "LLM02:2025 Sensitive Information Disclosure",
-                          "LLM07:2025 System Prompt Leakage"
+                          "LLM01:2026 Prompt Injection (separate instruction and data lanes reduce cross-boundary context injection)",
+                          "LLM02:2026 Sensitive Information Disclosure",
+                          "LLM08:2026 Hidden Context Exposure (secret demotion removes credentials and internal instructions from model-visible context)"
                       ]
                   },
                   {
@@ -4513,6 +4549,7 @@ def test_success_binds_monotonic_cas_and_revalidates_after_readback():
               },
               "toolsOpenSource": [
                 "Pydantic",
+                "Guardrails AI (compacted-context schema and custom-invariant validation)",
                 "Microsoft Presidio",
                 "pytest",
                 "DeepEval",
@@ -4542,12 +4579,13 @@ def test_success_binds_monotonic_cas_and_revalidates_after_readback():
                   ]
                 },
                 {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-      "LLM01:2025 Prompt Injection (indirect injection survives compaction as summarized fact)",
-      "LLM02:2025 Sensitive Information Disclosure (secrets leak into compacted context carried forward)",
-      "LLM05:2025 Improper Output Handling (compacted model output is validated before reuse as trusted context)",
-      "LLM07:2025 System Prompt Leakage (system prompt content surfaces in user-visible summary)"
+                      "LLM01:2026 Prompt Injection",
+                      "LLM02:2026 Sensitive Information Disclosure (secret scanning rejects summaries that retain sensitive context)",
+                      "LLM07:2026 Misinformation (summary checks preserve required facts and constraints and reject omissions or conflicts)",
+                      "LLM08:2026 Hidden Context Exposure",
+                      "LLM10:2026 Improper Output Handling"
                   ]
                 },
                 {
@@ -4640,7 +4678,13 @@ def test_success_binds_monotonic_cas_and_revalidates_after_readback():
               }
             ]
           },
-          "toolsOpenSource": ["PostgreSQL", "psycopg", "Cosign"],
+          "toolsOpenSource": [
+            "PostgreSQL",
+            "psycopg",
+            "Pydantic (typed projection validation before context promotion)",
+            "Open Policy Agent (OPA) (quarantine and promotion policy decisions)",
+            "Cosign"
+          ],
           "defendsAgainst": [
             {"framework": "MITRE ATLAS", "items": [
               "AML.T0051 LLM Prompt Injection",
@@ -4653,8 +4697,10 @@ def test_success_binds_monotonic_cas_and_revalidates_after_readback():
               "Agent Goal Manipulation (L7)",
               "Integration Risks (L7)"
             ]},
-            {"framework": "OWASP LLM Top 10 2025", "items": [
-              "LLM01:2025 Prompt Injection", "LLM05:2025 Improper Output Handling"
+            {"framework": "OWASP LLM Top 10 2026", "items": [
+              "LLM01:2026 Prompt Injection",
+              "LLM03:2026 Excessive Agency",
+              "LLM10:2026 Improper Output Handling"
             ]},
             {"framework": "OWASP ML Top 10 2023", "items": ["N/A"]},
             {"framework": "OWASP Top 10 for Agentic Applications 2026", "items": [
@@ -5417,9 +5463,11 @@ def load_for_context(
                 "Ansible Core",
                 "AWS CLI v2",
                 "Azure CLI",
+                "flagd (OpenFeature-compatible emergency-disable flag provider)",
                 "PyJWT"
             ],
             "toolsCommercial": [
+                "LaunchDarkly (feature-flag kill switches)",
                 "AWS Systems Manager Automation",
                 "Azure Automation",
                 "Google Cloud Workflows",
@@ -5448,10 +5496,10 @@ def load_for_context(
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM06:2025 Excessive Agency",
-                        "LLM10:2025 Unbounded Consumption"
+                        "LLM03:2026 Excessive Agency (authoritative halt enforcement stops further harmful agent actions)",
+                        "LLM06:2026 Unbounded Consumption (halt enforcement terminates runaway inference and agent loops)"
                     ]
                 },
                 {
@@ -5985,9 +6033,9 @@ def load_for_context(
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM04:2025 Data and Model Poisoning"
+                        "LLM05:2026 Data and Model Poisoning"
                     ]
                 },
                 {
@@ -6099,10 +6147,13 @@ def load_for_context(
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM02:2025 Sensitive Information Disclosure (blocking direct access to other DOM state / tokens / org data)",
-                        "LLM05:2025 Improper Output Handling (preventing model-produced HTML/JS from gaining privileged DOM execution)"
+                        "LLM01:2026 Prompt Injection (client sandboxing contains a prompt-injected model runtime)",
+                        "LLM02:2026 Sensitive Information Disclosure (client isolation blocks access to unrelated DOM, token, and application state)",
+                        "LLM03:2026 Excessive Agency (minimal native bridges constrain model access to device capabilities)",
+                        "LLM04:2026 Supply Chain (client isolation contains malicious downloaded model or runtime code)",
+                        "LLM10:2026 Improper Output Handling (client isolation and CSP contain model-generated active content)"
                     ]
                 },
                 {
@@ -6233,12 +6284,13 @@ def load_for_context(
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM01:2025 Prompt Injection",
-                        "LLM02:2025 Sensitive Information Disclosure",
-                        "LLM05:2025 Improper Output Handling",
-                        "LLM06:2025 Excessive Agency"
+                        "LLM01:2026 Prompt Injection",
+                        "LLM02:2026 Sensitive Information Disclosure",
+                        "LLM03:2026 Excessive Agency",
+                        "LLM07:2026 Misinformation",
+                        "LLM10:2026 Improper Output Handling"
                     ]
                 },
                 {
@@ -6334,17 +6386,19 @@ def load_for_context(
                         }
                       ]
                     },
-                    "toolsOpenSource": [
-                        "Playwright",
-                        "Chromium",
+              "toolsOpenSource": [
+                "Playwright",
+                "Puppeteer",
+                "Chromium",
                         "Firefox Multi-Account Containers"
                     ],
                     "toolsSourceAvailable": [
                         "Browserless self-hosted (SSPL-1.0; source-available)"
                     ],
-                    "toolsCommercial": [
-                        "Browserbase",
-                        "Cloudflare Browser Isolation",
+              "toolsCommercial": [
+                "Browserbase",
+                "Kasm Workspaces (ephemeral containerized browser-session isolation; lifecycle evidence remains deployment-owned)",
+                "Cloudflare Browser Isolation",
                         "Menlo Secure Cloud Browser"
                     ],
                     "defendsAgainst": [
@@ -6362,9 +6416,9 @@ def load_for_context(
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM02:2025 Sensitive Information Disclosure"
+                                "LLM02:2026 Sensitive Information Disclosure"
                             ]
                         },
                         {
@@ -6449,9 +6503,10 @@ def load_for_context(
                       ]
                     },
               "toolsOpenSource": [
-                  "Playwright",
-                  "Cosign",
-                  "Puppeteer"
+                "Playwright",
+                "Puppeteer",
+                "Cosign (signed origin-policy bundle verification; browser enforcement remains external)",
+                "Open Policy Agent (OPA) (cross-origin action and step-up policy decisions)"
               ],
                     "toolsCommercial": [
                         "Browserbase"
@@ -6473,9 +6528,10 @@ def load_for_context(
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM06:2025 Excessive Agency"
+                                "LLM03:2026 Excessive Agency",
+                                "LLM07:2026 Misinformation (request and UI readback prevent false state from driving sensitive writes)"
                             ]
                         },
                         {
@@ -6570,10 +6626,11 @@ def load_for_context(
                         "ClamAV",
                         "YARA"
                     ],
-                    "toolsCommercial": [
-                        "Cloudflare Browser Isolation",
-                        "VirusTotal Enterprise",
-                        "Menlo Secure Cloud Browser",
+              "toolsCommercial": [
+                "Cloudflare Browser Isolation",
+                "VirusTotal Enterprise",
+                "OPSWAT MetaDefender Core",
+                "Menlo Secure Cloud Browser",
                         "Authentic8 Silo Web Isolation Platform"
                     ],
                     "defendsAgainst": [
@@ -6591,10 +6648,10 @@ def load_for_context(
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM05:2025 Improper Output Handling",
-                                "LLM02:2025 Sensitive Information Disclosure"
+                                "LLM02:2026 Sensitive Information Disclosure",
+                                "LLM10:2026 Improper Output Handling (downloads and clipboard transfers are quarantined before interpretation or reuse)"
                             ]
                         },
                         {
@@ -6705,9 +6762,10 @@ def load_for_context(
                   "Tesseract OCR",
                   "pytesseract",
                   "OpenCV",
-                  "Pillow",
-                  "Podman",
-                  "PyGObject",
+                "Pillow",
+                "Podman",
+                "Qubes OS (disposable qube workspace isolation)",
+                "PyGObject",
                   "at-spi2-core",
                   "PyNaCl (signed policy and evidence verification)",
                   "PyYAML (policy parsing; not an isolation boundary)",
@@ -6745,12 +6803,12 @@ def load_for_context(
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection",
-                                "LLM02:2025 Sensitive Information Disclosure",
-                                "LLM05:2025 Improper Output Handling",
-                                "LLM06:2025 Excessive Agency"
+                                "LLM01:2026 Prompt Injection",
+                                "LLM02:2026 Sensitive Information Disclosure",
+                                "LLM03:2026 Excessive Agency",
+                                "LLM10:2026 Improper Output Handling (action-bound confirmation prevents model output from directly controlling desktop sinks)"
                             ]
                         },
                         {
@@ -8500,9 +8558,10 @@ def load_for_context(
                         }
                       ]
                     },
-                    "toolsOpenSource": [
-                        "Playwright (dedicated browser-context isolation and all-request origin interception; authentication verification remains broker-owned)",
-                        "oauth4webapi"
+              "toolsOpenSource": [
+                "Playwright (dedicated browser-context isolation and all-request origin interception; authentication verification remains broker-owned)",
+                "oauth4webapi",
+                "Authlib (OAuth 2.0 and OpenID Connect broker validation)"
                     ],
                     "toolsCommercial": [
                         "Cloudflare Browser Isolation (remote browser containment; authentication-transaction verification still requires a trusted broker)"
@@ -8524,9 +8583,11 @@ def load_for_context(
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM05:2025 Improper Output Handling"
+                                "LLM02:2026 Sensitive Information Disclosure (raw links, authorization codes, and tokens stay outside model context and logs)",
+                                "LLM03:2026 Excessive Agency (a trusted broker rather than the model controls authentication-bearing navigation)",
+                                "LLM10:2026 Improper Output Handling (authentication-bearing links are verified and brokered before navigation)"
                             ]
                         },
                         {

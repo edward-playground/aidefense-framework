@@ -44,10 +44,10 @@ export const evictTactic = {
                   ]
               },
               {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                      "LLM02:2025 Sensitive Information Disclosure",
-                      "LLM06:2025 Excessive Agency"
+                      "LLM02:2026 Sensitive Information Disclosure",
+                      "LLM03:2026 Excessive Agency"
                   ]
               },
               {
@@ -158,7 +158,7 @@ export const evictTactic = {
                 "Azure Key Vault",
                 "Google Cloud Secret Manager",
                 "Google Cloud CLI",
-                "CyberArk Certificate Manager (certificate and issuer credential lifecycle)",
+                "Palo Alto Networks Next-Generation Trust Security (certificate lifecycle management and PKI orchestration)",
                 "DigiCert ONE (certificate and issuer credential lifecycle)"
               ],
               "defendsAgainst": [
@@ -179,9 +179,9 @@ export const evictTactic = {
                   ]
                 },
                 {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                    "LLM02:2025 Sensitive Information Disclosure (if via compromised user credentials)"
+                      "LLM02:2026 Sensitive Information Disclosure (credential eviction stops continued access after credential exposure)"
                   ]
                 },
                 {
@@ -332,9 +332,9 @@ export const evictTactic = {
                   ]
                 },
                 {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                    "LLM02:2025 Sensitive Information Disclosure (by stopping an active breach)"
+                      "LLM02:2026 Sensitive Information Disclosure (token and session revocation stops continued access during an active disclosure incident)"
                   ]
                 },
                 {
@@ -456,9 +456,9 @@ export const evictTactic = {
                   ]
                 },
                 {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                    "N/A"
+                      "LLM03:2026 Excessive Agency (principal disablement stops a compromised agent from obtaining fresh authority)"
                   ]
                 },
                 {
@@ -570,7 +570,7 @@ export const evictTactic = {
               },
               "toolsOpenSource": [
                 "Microsoft Graph PowerShell SDK",
-                        "GAMADV-XTD3",
+                        "GAM7",
                 "Okta Terraform Provider",
                 "jq"
               ],
@@ -600,9 +600,9 @@ export const evictTactic = {
                   ]
                 },
                 {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                    "LLM06:2025 Excessive Agency"
+                      "LLM03:2026 Excessive Agency (grant revocation removes delegated authority after compromise)"
                   ]
                 },
                 {
@@ -714,7 +714,7 @@ export const evictTactic = {
                 "Azure Resource Manager",
                 "Google Compute Engine API",
                 "Palo Alto Networks Prisma Cloud",
-                "Aqua Cloud Security",
+                "Aqua Platform",
                 "Sysdig Secure"
             ],
             "defendsAgainst": [
@@ -741,11 +741,12 @@ export const evictTactic = {
                     ]
                 },
                 {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection (terminating a manipulated agent runtime)",
-                                "LLM10:2025 Unbounded Consumption"
-                    ]
+                                "LLM01:2026 Prompt Injection (runtime eviction terminates an actively manipulated agent)",
+                                "LLM03:2026 Excessive Agency (runtime eviction stops a hijacked agent from continuing harmful actions)",
+                                "LLM06:2026 Unbounded Consumption"
+                            ]
                 },
                 {
                     "framework": "OWASP ML Top 10 2023",
@@ -901,10 +902,10 @@ export const evictTactic = {
                   ]
               },
               {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                      "LLM03:2025 Supply Chain",
-                      "LLM04:2025 Data and Model Poisoning"
+                      "LLM04:2026 Supply Chain",
+                      "LLM05:2026 Data and Model Poisoning"
                   ]
               },
               {
@@ -1040,10 +1041,10 @@ export const evictTactic = {
                   ]
                 },
                 {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                    "LLM03:2025 Supply Chain",
-                    "LLM04:2025 Data and Model Poisoning"
+                      "LLM04:2026 Supply Chain",
+                      "LLM05:2026 Data and Model Poisoning"
                   ]
                 },
                 {
@@ -1124,8 +1125,10 @@ export const evictTactic = {
                   }
                 ]
               },
-              "toolsOpenSource": [
+            "toolsOpenSource": [
                 "DVC",
+                "lakeFS (versioned object-store publication of externally computed manifest set differences)",
+                "Delta Lake (row-level eviction and versioned table publication)",
                 "Apache Spark",
                 "Dask",
                 "NetworkX"
@@ -1156,11 +1159,10 @@ export const evictTactic = {
                   ]
                 },
                 {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM04:2025 Data and Model Poisoning",
-                                "LLM03:2025 Supply Chain"
-                  ]
+                                "LLM05:2026 Data and Model Poisoning"
+                            ]
                 },
                 {
                             "framework": "OWASP ML Top 10 2023",
@@ -1251,9 +1253,10 @@ export const evictTactic = {
                   }
                 ]
               },
-              "toolsOpenSource": [
-                  "Ansible Core",
-                  "OpenVox",
+            "toolsOpenSource": [
+              "Ansible Core",
+              "Velociraptor (fleet persistence remediation artifacts and evidence capture)",
+              "OpenVox",
                   "Cinc Client",
                   "Git (for configuration version control)",
                   "Cosign (signed clean-artifact and manifest verification)"
@@ -1296,9 +1299,10 @@ export const evictTactic = {
                   ]
                 },
                 {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                    "LLM03:2025 Supply Chain"
+                      "LLM04:2026 Supply Chain",
+                      "LLM05:2026 Data and Model Poisoning (eviction removes malicious chat templates, runtime configuration, or other inference artifacts)"
                   ]
                 },
                 {
@@ -1429,10 +1433,10 @@ export const evictTactic = {
                   ]
                 },
                 {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                    "LLM03:2025 Supply Chain",
-                    "LLM04:2025 Data and Model Poisoning"
+                      "LLM04:2026 Supply Chain",
+                      "LLM05:2026 Data and Model Poisoning"
                   ]
                 },
                 {
@@ -1518,8 +1522,9 @@ export const evictTactic = {
               ]
             },
             "toolsOpenSource": [
-                "Greenbone OpenVAS (authenticated vulnerability re-scan and affected-target verification)",
-                "Trivy (deployed artifact, package, SBOM, and configuration readback)",
+              "Greenbone OpenVAS (authenticated vulnerability re-scan and affected-target verification)",
+              "Nuclei (incident-specific exploit-path replay templates)",
+              "Trivy (deployed artifact, package, SBOM, and configuration readback)",
                 "HTTPX (Python client; independent exploit and clean-control replay harness)",
                 "Cosign (signed fix and closure-receipt verification)"
             ],
@@ -1560,10 +1565,10 @@ export const evictTactic = {
                     ]
                 },
                 {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                        "LLM03:2025 Supply Chain (independent version readback and exploit replay prove the affected deployment consumes the approved component fix)"
-                    ]
+                          "N/A"
+                      ]
                 },
                 {
                       "framework": "OWASP ML Top 10 2023",
@@ -1720,10 +1725,11 @@ export const evictTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM01:2025 Prompt Injection (purging poisoned states)",
-                        "LLM02:2025 Sensitive Information Disclosure (removing compromised retained session or conversational state that could expose prior interactions)"
+                        "LLM01:2026 Prompt Injection (durable-state teardown prevents injected context from reloading)",
+                        "LLM02:2026 Sensitive Information Disclosure (removing compromised retained state prevents renewed exposure)",
+                        "LLM05:2026 Data and Model Poisoning (teardown removes durable poisoned conversational or agent state)"
                     ]
                 },
                 {

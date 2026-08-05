@@ -69,14 +69,12 @@ export const detectTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM01:2025 Prompt Injection",
-                        "LLM04:2025 Data and Model Poisoning",
-                        "LLM06:2025 Excessive Agency",
-                        "LLM07:2025 System Prompt Leakage",
-                        "LLM08:2025 Vector and Embedding Weaknesses",
-                        "LLM09:2025 Misinformation"
+                        "LLM01:2026 Prompt Injection",
+                        "LLM05:2026 Data and Model Poisoning",
+                        "LLM07:2026 Misinformation",
+                        "LLM08:2026 Hidden Context Exposure"
                     ]
                 },
                 {
@@ -205,8 +203,7 @@ export const detectTactic = {
                         }
                     ],
                     "toolsOpenSource": [
-                        "NVIDIA NeMo Guardrails",
-                        "LLM Guard"
+                        "NVIDIA NeMo Guardrails"
                     ],
                     "toolsSourceAvailable": [
                         "Granite Guardian 4.1 (Apache-2.0; open-weight)",
@@ -221,7 +218,10 @@ export const detectTactic = {
                         "Check Point AI Guardrails",
                         "Palo Alto Networks Prisma AIRS",
                         "F5 AI Guardrails",
-                        "Securiti LLM Firewall"
+                        "Securiti LLM Firewall",
+                        "Google Cloud Model Armor",
+                        "Amazon Bedrock Guardrails",
+                        "Azure AI Content Safety - Prompt Shields"
                     ],
                     "defendsAgainst": [
                         {
@@ -250,10 +250,9 @@ export const detectTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection",
-                                "LLM06:2025 Excessive Agency (intent analysis identifies attempts to invoke authority outside the approved task)"
+                                "LLM01:2026 Prompt Injection"
                             ]
                         },
                         {
@@ -403,6 +402,7 @@ export const detectTactic = {
                         "Sensity AI Deepfake Detection",
                         "Truepic Vision (controlled capture and media-authenticity checks)",
                         "Hive AI-Generated & Deepfake Content Detection APIs",
+                        "Reality Defender RealAPI",
                         "Pindrop Pulse",
                         "Amazon Rekognition Face Liveness"
                     ],
@@ -431,9 +431,9 @@ export const detectTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM09:2025 Misinformation"
+                                "LLM07:2026 Misinformation (forensic authenticity signals prevent manipulated media from being trusted as evidence)"
                             ]
                         },
                         {
@@ -521,7 +521,8 @@ export const detectTactic = {
                         "Chroma",
                         "Weaviate",
                         "Milvus",
-                        "Qdrant"
+                        "Qdrant",
+                        "PyOD"
                     ],
                     "toolsCommercial": [
                         "Arize AX",
@@ -552,9 +553,9 @@ export const detectTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection"
+                                "LLM01:2026 Prompt Injection (embedding-distance anomalies identify prompts outside validated normal-intent clusters)"
                             ]
                         },
                         {
@@ -627,7 +628,7 @@ export const detectTactic = {
                       ]
                     },
                     "toolsOpenSource": [
-                        "Python",
+                        "Pydantic (canary-response schema validation; canary issuance and comparison remain application-owned)",
                         "LangChain",
                         "LiteLLM",
                         "OpenAI Python SDK"
@@ -654,10 +655,10 @@ export const detectTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection",
-                                "LLM07:2025 System Prompt Leakage (canary tokens directly detect system prompt leakage)"
+                                "LLM01:2026 Prompt Injection (single-use prompt-integrity challenges expose override or format-breakage signals)",
+                                "LLM08:2026 Hidden Context Exposure"
                             ]
                         },
                         {
@@ -783,11 +784,10 @@ export const detectTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection (recalled memory is a prompt injection surface)",
-                                "LLM04:2025 Data and Model Poisoning (poisoned memory or persisted context can be detected at recall time)",
-                                "LLM08:2025 Vector and Embedding Weaknesses (scanning helps catch malicious content recalled from vector-backed stores)"
+                                "LLM01:2026 Prompt Injection",
+                                "LLM05:2026 Data and Model Poisoning"
                             ]
                         },
                         {
@@ -924,9 +924,9 @@ export const detectTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection"
+                                "LLM01:2026 Prompt Injection (cross-session gate correlation exposes evasive probing and repeated near misses)"
                             ]
                         },
                         {
@@ -1019,11 +1019,12 @@ export const detectTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM02:2025 Sensitive Information Disclosure",
-                        "LLM04:2025 Data and Model Poisoning",
-                        "LLM10:2025 Unbounded Consumption"
+                        "LLM02:2026 Sensitive Information Disclosure",
+                        "LLM05:2026 Data and Model Poisoning",
+                        "LLM06:2026 Unbounded Consumption",
+                        "LLM07:2026 Misinformation"
                     ]
                 },
                 {
@@ -1121,10 +1122,12 @@ export const detectTactic = {
                     "toolsOpenSource": [
                         "Evidently",
                         "NannyML",
-                        "Alibi Detect",
                         "SciPy",
                         "Prometheus",
                         "Grafana"
+                    ],
+                    "toolsSourceAvailable": [
+                        "Alibi Detect (Business Source License 1.1; source-available)"
                     ],
                     "toolsCommercial": [
                         "Arize AX",
@@ -1156,9 +1159,9 @@ export const detectTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM04:2025 Data and Model Poisoning"
+                                "LLM05:2026 Data and Model Poisoning (distribution drift is corroborating evidence of poisoning effects, not root-cause proof)"
                             ]
                         },
                         {
@@ -1277,9 +1280,10 @@ export const detectTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM04:2025 Data and Model Poisoning"
+                                "LLM05:2026 Data and Model Poisoning (ground-truth degradation can expose poisoning-induced behavior without proving its cause)",
+                                "LLM07:2026 Misinformation"
                             ]
                         },
                         {
@@ -1360,6 +1364,7 @@ export const detectTactic = {
                     "toolsOpenSource": [
                         "Hugging Face Transformers",
                         "PyTorch",
+                        "TransformerLens",
                         "NumPy",
                         "SciPy",
                         "Prometheus",
@@ -1387,9 +1392,9 @@ export const detectTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM04:2025 Data and Model Poisoning (internal telemetry can reveal poisoned or backdoored model behavior)"
+                                "LLM05:2026 Data and Model Poisoning (backdoor-specific internal anomalies can reveal poisoned model behavior)"
                             ]
                         },
                         {
@@ -1488,6 +1493,7 @@ export const detectTactic = {
                         "Grafana",
                         "ClickHouse",
                         "LiteLLM",
+                        "Langfuse (provider-reported reasoning-token and trace telemetry; hidden reasoning remains unavailable unless provider-exposed)",
                         "Cosign"
                     ],
                     "toolsCommercial": [
@@ -1514,10 +1520,10 @@ export const detectTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM10:2025 Unbounded Consumption",
-                                "LLM02:2025 Sensitive Information Disclosure (detects unexpected disclosure of hidden reasoning or sensitive trace content)"
+                                "LLM02:2026 Sensitive Information Disclosure",
+                                "LLM06:2026 Unbounded Consumption"
                             ]
                         },
                         {
@@ -1653,16 +1659,14 @@ export const detectTactic = {
                   ]
               },
               {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                      "LLM01:2025 Prompt Injection",
-                      "LLM02:2025 Sensitive Information Disclosure",
-                      "LLM04:2025 Data and Model Poisoning",
-                      "LLM05:2025 Improper Output Handling",
-                      "LLM06:2025 Excessive Agency",
-                      "LLM07:2025 System Prompt Leakage",
-                      "LLM09:2025 Misinformation",
-                      "LLM10:2025 Unbounded Consumption"
+                      "LLM01:2026 Prompt Injection",
+                      "LLM02:2026 Sensitive Information Disclosure",
+                      "LLM03:2026 Excessive Agency",
+                      "LLM05:2026 Data and Model Poisoning",
+                      "LLM06:2026 Unbounded Consumption",
+                      "LLM10:2026 Improper Output Handling"
                   ]
               },
               {
@@ -1796,9 +1800,10 @@ export const detectTactic = {
                   }
                 ]
               },
-              "toolsOpenSource": [
-                  "Hugging Face Transformers",
-                  "spaCy",
+                    "toolsOpenSource": [
+                        "Hugging Face Transformers",
+                        "Detoxify",
+                        "spaCy",
                   "NLTK",
                   "NVIDIA NeMo Guardrails"
               ],
@@ -1810,8 +1815,8 @@ export const detectTactic = {
                   "Google ShieldGemma (Gemma Terms of Use; open-weight)"
               ],
               "toolsCommercial": [
-                  "OpenAI Moderations API (omni-moderation-latest)",
-                  "Azure AI Content Safety",
+                        "OpenAI Moderations API (omni-moderation-latest)",
+                        "Azure AI Content Safety",
                   "Clarifai AI Platform",
                   "Hive Text Moderation API",
                   "Check Point AI Guardrails",
@@ -1839,9 +1844,9 @@ export const detectTactic = {
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM09:2025 Misinformation"
+                          "N/A"
                       ]
                   },
                   {
@@ -1949,11 +1954,12 @@ export const detectTactic = {
                   "Hugging Face Transformers",
                   "FlashText",
                   "TruffleHog",
-                  "Gitleaks",
-                  "detect-secrets"
-              ],
-              "toolsCommercial": [
-                  "Google Cloud Sensitive Data Protection",
+                        "Gitleaks",
+                        "detect-secrets"
+                    ],
+                    "toolsCommercial": [
+                        "Nightfall Firewall for AI",
+                        "Google Cloud Sensitive Data Protection",
                   "Microsoft Purview Data Loss Prevention",
                   "Tonic Textual",
                   "Broadcom Symantec Data Loss Prevention",
@@ -1987,10 +1993,9 @@ export const detectTactic = {
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM02:2025 Sensitive Information Disclosure",
-                          "LLM07:2025 System Prompt Leakage (DLP detects leaked system prompts in outputs)"
+                          "LLM02:2026 Sensitive Information Disclosure"
                       ]
                   },
                   {
@@ -2099,8 +2104,9 @@ export const detectTactic = {
                   "LangChain",
                   "Microsoft Agent Framework",
                   "CrewAI",
-                  "Ajv",
-                  "python-jsonschema"
+                        "Ajv",
+                        "python-jsonschema",
+                        "Langfuse (tool-call trace and policy-outcome telemetry; enforcement remains external)"
               ],
               "toolsCommercial": [
                   "Check Point AI Guardrails",
@@ -2141,10 +2147,10 @@ export const detectTactic = {
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM06:2025 Excessive Agency",
-                          "LLM01:2025 Prompt Injection"
+                          "LLM03:2026 Excessive Agency",
+                          "LLM10:2026 Improper Output Handling (parameter-schema failure telemetry detects unsafe model-generated tool calls at the enforcement boundary)"
                       ]
                   },
                   {
@@ -2240,10 +2246,11 @@ export const detectTactic = {
                         }
                       ]
                     },
-              "toolsOpenSource": [
-                  "pandas",
-                  "NumPy",
-                  "scikit-learn"
+                    "toolsOpenSource": [
+                        "pandas",
+                        "NumPy",
+                        "scikit-learn",
+                        "OpenTelemetry (ordered tool-call span capture; anomaly scoring remains detector-owned)"
               ],
               "toolsCommercial": [
                   "Splunk Enterprise Security",
@@ -2273,10 +2280,10 @@ export const detectTactic = {
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM06:2025 Excessive Agency",
-                          "LLM01:2025 Prompt Injection (injection-triggered tool chains appear anomalous)"
+                          "LLM03:2026 Excessive Agency",
+                          "LLM06:2026 Unbounded Consumption (sequence analysis detects recursive and non-progressing tool loops)"
                       ]
                   },
                   {
@@ -2383,7 +2390,7 @@ export const detectTactic = {
                   "Splunk Enterprise Security",
                   "Microsoft Sentinel",
                   "Google Security Operations",
-                  "Amazon ElastiCache for Redis",
+                        "Amazon ElastiCache (Valkey or Redis OSS)",
                   "Azure Managed Redis",
                   "Datadog",
                   "New Relic"
@@ -2416,11 +2423,12 @@ export const detectTactic = {
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM01:2025 Prompt Injection",
-                          "LLM06:2025 Excessive Agency",
-                          "LLM02:2025 Sensitive Information Disclosure"
+                          "LLM01:2026 Prompt Injection",
+                          "LLM02:2026 Sensitive Information Disclosure (session invariants expose a sensitive-read-to-external-destination disclosure path)",
+                          "LLM03:2026 Excessive Agency (multi-turn intent drift exposes a pivot toward unauthorized high-impact action)",
+                          "LLM06:2026 Unbounded Consumption (session correlation exposes context-saturation and many-shot resource-abuse campaigns)"
                       ]
                   },
                   {
@@ -2554,10 +2562,9 @@ export const detectTactic = {
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM04:2025 Data and Model Poisoning",
-                          "LLM10:2025 Unbounded Consumption"
+                          "LLM05:2026 Data and Model Poisoning"
                       ]
                   },
                   {
@@ -2771,9 +2778,9 @@ clamp_min(
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM02:2025 Sensitive Information Disclosure (inference-based sensitive disclosures)"
+                          "LLM02:2026 Sensitive Information Disclosure"
                       ]
                   },
                   {
@@ -2883,10 +2890,11 @@ clamp_min(
                 "ClamAV",
                 "YARA"
               ],
-              "toolsCommercial": [
-                "Azure AI Content Safety",
-                "Hive Visual Moderation API",
-                "Google Cloud Vision SafeSearch Detection"
+                    "toolsCommercial": [
+                        "Azure AI Content Safety",
+                        "Hive Visual Moderation API",
+                        "Google Cloud Vision SafeSearch Detection",
+                        "VirusTotal Private Scanning"
               ],
               "implementationGuidance": [
                 {
@@ -2923,9 +2931,9 @@ clamp_min(
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM05:2025 Improper Output Handling"
+                          "LLM10:2026 Improper Output Handling"
                       ]
                   },
                   {
@@ -3034,11 +3042,11 @@ clamp_min(
                   ]
               },
               {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                      "LLM02:2025 Sensitive Information Disclosure",
-                      "LLM03:2025 Supply Chain",
-                      "LLM04:2025 Data and Model Poisoning"
+                      "LLM02:2026 Sensitive Information Disclosure",
+                      "LLM04:2026 Supply Chain",
+                      "LLM05:2026 Data and Model Poisoning"
                   ]
               },
               {
@@ -3202,9 +3210,10 @@ clamp_min(
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM03:2025 Supply Chain"
+                          "LLM04:2026 Supply Chain",
+                          "LLM05:2026 Data and Model Poisoning"
                       ]
                   },
                   {
@@ -3313,9 +3322,10 @@ clamp_min(
               "toolsOpenSource": [
                   "Intel SGX SDK",
                   "Open Enclave SDK",
-                  "AWS Nitro Enclaves SDK",
-                  "Keylime",
-                  "Cosign"
+                        "AWS Nitro Enclaves SDK",
+                        "Keylime",
+                        "Veraison",
+                        "Cosign"
               ],
               "toolsCommercial": [
                   "Microsoft Azure Attestation",
@@ -3340,9 +3350,10 @@ clamp_min(
                   ]
                 },
                 {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                    "LLM03:2025 Supply Chain"
+                      "LLM02:2026 Sensitive Information Disclosure (fresh attestation prevents secrets from entering an unapproved confidential-inference runtime)",
+                      "LLM04:2026 Supply Chain"
                   ]
                 },
                 {
@@ -3429,8 +3440,9 @@ clamp_min(
                   "GitHub Enterprise Server",
                   "Bitbucket Cloud",
                   "Bitbucket Data Center",
-                  "AWS CloudFormation",
-                  "GitLab Ultimate",
+                        "AWS CloudFormation",
+                        "AWS Config (AWS resource configuration drift only)",
+                        "GitLab Ultimate",
                   "Codefresh"
               ],
               "defendsAgainst": [
@@ -3450,9 +3462,9 @@ clamp_min(
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM03:2025 Supply Chain"
+                          "LLM04:2026 Supply Chain (effective-state drift reveals substituted or unauthorized deployment configuration)"
                       ]
                   },
                   {
@@ -3537,9 +3549,10 @@ clamp_min(
                 ]
               },
               "toolsOpenSource": [
-                  "Falco",
-                  "Cilium Tetragon",
-                  "OpenSearch",
+                        "Falco",
+                        "Cilium Tetragon",
+                        "Zeek (DNS, TLS, and HTTP egress evidence for unexpected model-source destinations)",
+                        "OpenSearch",
                   "curl (CI URL status probe; not continuous monitoring)"
               ],
               "toolsCommercial": [
@@ -3572,9 +3585,9 @@ clamp_min(
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM03:2025 Supply Chain"
+                          "LLM04:2026 Supply Chain"
                       ]
                   },
                   {
@@ -3695,9 +3708,9 @@ clamp_min(
                   ]
                 },
                 {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                    "N/A"
+                      "N/A"
                   ]
                 },
                 {
@@ -3801,10 +3814,10 @@ clamp_min(
                   ]
                 },
                 {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                                "LLM02:2025 Sensitive Information Disclosure (detects sensitive requests routed to an unapproved endpoint)",
-                                "LLM03:2025 Supply Chain (detects an unapproved provider or model fallback)"
+                      "LLM02:2026 Sensitive Information Disclosure (route reconciliation detects sensitive requests sent to an unapproved endpoint)",
+                      "LLM04:2026 Supply Chain (route reconciliation detects unapproved provider or model fallback)"
                   ]
                 },
                 {
@@ -3855,8 +3868,8 @@ clamp_min(
                   "Cosign"
               ],
               "toolsCommercial": [
-                  "Cloudflare AI Gateway",
-                  "Portkey Enterprise",
+                        "Cloudflare AI Gateway",
+                        "Portkey Enterprise Gateway",
                   "Splunk Enterprise Security",
                   "Microsoft Sentinel",
                   "Google Security Operations"
@@ -3933,9 +3946,10 @@ clamp_min(
                   ]
                 },
                 {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                    "LLM04:2025 Data and Model Poisoning (detecting observed AI lifecycle transitions that differ from the signed authorized path)"
+                      "LLM04:2026 Supply Chain (lifecycle-path drift reveals assets bypassing approved build, conversion, or promotion stages)",
+                      "LLM05:2026 Data and Model Poisoning (unauthorized lifecycle transitions expose training, tuning, or knowledge assets to poisoning paths)"
                   ]
                 },
                 {
@@ -4039,9 +4053,10 @@ clamp_min(
                 "operation"
               ],
               "toolsOpenSource": [
-                  "Falco",
-                  "Cilium Tetragon",
-                  "Cosign"
+                        "Falco",
+                        "Cilium Tetragon",
+                        "osquery (loaded-module and process inventory readback)",
+                        "Cosign"
               ],
               "toolsCommercial": [
                   "Microsoft Sysmon",
@@ -4094,9 +4109,9 @@ clamp_min(
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM03:2025 Supply Chain"
+                          "LLM04:2026 Supply Chain"
                       ]
                   },
                   {
@@ -4210,13 +4225,13 @@ clamp_min(
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM02:2025 Sensitive Information Disclosure",
-                        "LLM03:2025 Supply Chain",
-                        "LLM04:2025 Data and Model Poisoning",
-                        "LLM06:2025 Excessive Agency",
-                        "LLM10:2025 Unbounded Consumption"
+                        "LLM02:2026 Sensitive Information Disclosure",
+                        "LLM03:2026 Excessive Agency",
+                        "LLM04:2026 Supply Chain",
+                        "LLM05:2026 Data and Model Poisoning",
+                        "LLM06:2026 Unbounded Consumption"
                     ]
                 },
                 {
@@ -4343,9 +4358,8 @@ clamp_min(
                         }
                       ]
                     },
-                    "toolsOpenSource": [
-                        "Python",
-                        "Loguru",
+              "toolsOpenSource": [
+                  "Loguru",
                         "structlog",
                         "Fluentd",
                         "Vector",
@@ -4386,7 +4400,7 @@ clamp_min(
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -4816,7 +4830,7 @@ export async function instrumentMcpRequest(input, handler) {
                         "Microsoft Sentinel",
                         "Google Security Operations",
                         "IBM QRadar SIEM",
-                        "Datadog Security Platform",
+                        "Datadog Cloud SIEM",
                         "Exabeam New-Scale SIEM",
                         "LogRhythm SIEM"
                     ],
@@ -4835,9 +4849,9 @@ export async function instrumentMcpRequest(input, handler) {
                         ]
                       },
                       {
-                        "framework": "OWASP LLM Top 10 2025",
+                        "framework": "OWASP LLM Top 10 2026",
                         "items": [
-                          "N/A"
+                            "N/A"
                         ]
                       },
                       {
@@ -4972,11 +4986,11 @@ export async function instrumentMcpRequest(input, handler) {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM02:2025 Sensitive Information Disclosure (hunts for low-and-slow leakage campaigns)",
-                                "LLM04:2025 Data and Model Poisoning (hunts for poisoning indicators)",
-                                "LLM03:2025 Supply Chain (hunts for supply-chain compromise indicators)"
+                                "LLM02:2026 Sensitive Information Disclosure (hypothesis-led hunts identify low-and-slow leakage campaigns)",
+                                "LLM04:2026 Supply Chain (hypothesis-led hunts identify supply-chain compromise indicators)",
+                                "LLM05:2026 Data and Model Poisoning (hypothesis-led hunts identify poisoning indicators)"
                             ]
                         },
                         {
@@ -5111,11 +5125,11 @@ export async function instrumentMcpRequest(input, handler) {
                         "Microsoft Agent Framework",
                         "CrewAI",
                         "LlamaIndex",
-                        "Python",
                         "Loguru",
                         "SPIRE",
                         "OpenTelemetry",
                         "Langfuse",
+                        "AgentOps",
                         "OpenInference"
                     ],
                     "toolsSourceAvailable": [
@@ -5129,8 +5143,7 @@ export async function instrumentMcpRequest(input, handler) {
                         "New Relic",
                         "LangSmith",
                         "Braintrust",
-                        "Lasso AI Security Platform",
-                        "Credo AI Governance Platform"
+                        "Lasso AI Security Platform"
                     ],
                     "defendsAgainst": [
                         {
@@ -5154,9 +5167,10 @@ export async function instrumentMcpRequest(input, handler) {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM06:2025 Excessive Agency (action and verifier events preserve evidence of agent authority use)"
+                                "LLM02:2026 Sensitive Information Disclosure (privacy-bounded logging excludes hidden chain-of-thought and raw scratchpads from ordinary telemetry)",
+                                "LLM03:2026 Excessive Agency (action and verifier telemetry preserves evidence of agent authority misuse)"
                             ]
                         },
                         {
@@ -5280,9 +5294,10 @@ export async function instrumentMcpRequest(input, handler) {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM10:2025 Unbounded Consumption"
+                                "LLM02:2026 Sensitive Information Disclosure (accelerator anomalies expose cache and performance-counter side-channel probing)",
+                                "LLM06:2026 Unbounded Consumption"
                             ]
                         },
                         {
@@ -5342,6 +5357,7 @@ export async function instrumentMcpRequest(input, handler) {
                     ],
                     "toolsOpenSource": [
                         "NVIDIA DCGM Exporter",
+                        "AMD Device Metrics Exporter",
                         "Prometheus",
                         "Grafana"
                     ],
@@ -5382,9 +5398,9 @@ export async function instrumentMcpRequest(input, handler) {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM10:2025 Unbounded Consumption"
+                                "N/A"
                             ]
                         },
                         {
@@ -5493,7 +5509,9 @@ export async function instrumentMcpRequest(input, handler) {
                         "Grafana",
                         "Fluent Bit",
                         "Fluentd",
-                        "ClickHouse"
+                        "ClickHouse",
+                        "Langfuse (cost, token-volume, user, session, model, and trace telemetry for downstream spike rules)",
+                        "Helicone (LLM request, token, latency, and cost telemetry for downstream spike rules)"
                     ],
                     "toolsCommercial": [
                         "Datadog",
@@ -5523,9 +5541,9 @@ export async function instrumentMcpRequest(input, handler) {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM10:2025 Unbounded Consumption"
+                                "LLM06:2026 Unbounded Consumption"
                             ]
                         },
                         {
@@ -5660,7 +5678,8 @@ export async function instrumentMcpRequest(input, handler) {
                         "Google Security Operations",
                         "Palo Alto Networks Cortex XSOAR",
                         "ServiceNow Security Operations",
-                        "Datadog Cloud SIEM"
+                        "Datadog Cloud SIEM",
+                        "Dropzone AI (read-only alert investigation; response automation disabled)"
                     ],
                     "defendsAgainst": [
                         {
@@ -5676,7 +5695,7 @@ export async function instrumentMcpRequest(input, handler) {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -5783,6 +5802,7 @@ export async function instrumentMcpRequest(input, handler) {
                         "Sigma CLI",
                         "pySigma",
                         "Zeek",
+                        "RITA (Active Countermeasures)",
                         "Suricata",
                         "OpenTelemetry",
                         "Vector",
@@ -5819,9 +5839,9 @@ export async function instrumentMcpRequest(input, handler) {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM02:2025 Sensitive Information Disclosure"
+                                "LLM02:2026 Sensitive Information Disclosure"
                             ]
                         },
                         {
@@ -5944,7 +5964,8 @@ export async function instrumentMcpRequest(input, handler) {
                         "Prometheus",
                         "Prometheus Alertmanager",
                         "Grafana",
-                        "Vector"
+                        "Vector",
+                        "Healthchecks"
                     ],
                     "toolsCommercial": [
                         "Datadog",
@@ -5970,7 +5991,7 @@ export async function instrumentMcpRequest(input, handler) {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -6057,6 +6078,7 @@ export async function instrumentMcpRequest(input, handler) {
                     "toolsOpenSource": [
                         "OpenTelemetry Collector",
                         "Velociraptor",
+                        "GRR Rapid Response (endpoint volatile-state and artifact acquisition; AI-specific collectors and immutable preservation remain integration-owned)",
                         "Kubernetes",
                         "Ceph Object Gateway",
                         "Cosign"
@@ -6081,7 +6103,7 @@ export async function instrumentMcpRequest(input, handler) {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -6165,13 +6187,15 @@ export async function instrumentMcpRequest(input, handler) {
                 "level": "High on Inference Latency",
                 "description": "<p>The multiple-XAI-method approach multiplies latency, and common methods like SHAP or LIME on deep models <strong>can take single-digit seconds, not milliseconds, per prediction.</strong> This cost must be carefully considered by architects."
             },
-            "toolsOpenSource": [
+              "toolsOpenSource": [
                 "SHAP",
                 "LIME",
                 "Captum",
-                "Alibi Explain",
                 "InterpretML"
-            ],
+              ],
+              "toolsSourceAvailable": [
+                "Alibi Explain (Business Source License 1.1; source-available)"
+              ],
             "toolsCommercial": [
                 "Fiddler AI Observability",
                 "Arize AX",
@@ -6196,9 +6220,10 @@ export async function instrumentMcpRequest(input, handler) {
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM04:2025 Data and Model Poisoning (XAI detects poisoning-induced explanation anomalies)"
+                        "LLM05:2026 Data and Model Poisoning (explanation anomalies corroborate poisoning-induced behavior without identifying the root cause)",
+                        "LLM07:2026 Misinformation"
                     ]
                 },
                 {
@@ -6325,9 +6350,10 @@ export async function instrumentMcpRequest(input, handler) {
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM01:2025 Prompt Injection"
+                        "LLM01:2026 Prompt Injection",
+                        "LLM07:2026 Misinformation"
                     ]
                 },
                 {
@@ -6417,6 +6443,8 @@ export async function instrumentMcpRequest(input, handler) {
                     "toolsOpenSource": [
                         "OpenCV",
                         "Pillow",
+                        "ExifTool",
+                        "binwalk",
                         "Tesseract OCR",
                         "spaCy",
                         "Hugging Face Transformers",
@@ -6457,9 +6485,10 @@ export async function instrumentMcpRequest(input, handler) {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection (multimodal injection)"
+                                "LLM01:2026 Prompt Injection",
+                                "LLM07:2026 Misinformation (cross-modal faithfulness and expert-disagreement findings expose manipulated evidence or misleading output)"
                             ]
                         },
                         {
@@ -7346,6 +7375,7 @@ if __name__ == "__main__":
                         "OpenCV",
                         "Tesseract OCR",
                         "WebRTC VAD",
+                        "Silero VAD (speech-activity segmentation for downstream stream-risk correlation)",
                         "librosa",
                         "OpenTelemetry",
                         "Prometheus"
@@ -7359,6 +7389,7 @@ if __name__ == "__main__":
                         "Google Cloud Speech-to-Text",
                         "Deepgram",
                         "AssemblyAI",
+                        "Pindrop Pulse for Meetings",
                         "Azure AI Content Safety",
                         "Amazon Rekognition",
                         "Google Cloud Vision API"
@@ -7383,9 +7414,9 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection"
+                                "LLM01:2026 Prompt Injection"
                             ]
                         },
                         {
@@ -7782,10 +7813,12 @@ def correlate(
                 "skops",
                 "PyTorch",
                 "PyOD",
-                "Alibi Detect",
                 "MLflow",
                 "DVC"
-            ],
+              ],
+              "toolsSourceAvailable": [
+                "Alibi Detect (Business Source License 1.1; source-available)"
+              ],
             "toolsCommercial": [
                 "Arize AX",
                 "Fiddler AI Observability",
@@ -7808,9 +7841,9 @@ def correlate(
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM01:2025 Prompt Injection (secondary finding fusion identifies evasive multi-signal injection campaigns)"
+                        "LLM01:2026 Prompt Injection (secondary finding fusion exposes evasive multi-signal injection campaigns)"
                     ]
                 },
                 {
@@ -7924,11 +7957,9 @@ def correlate(
                   ]
               },
               {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                      "LLM04:2025 Data and Model Poisoning",
-                      "LLM08:2025 Vector and Embedding Weaknesses",
-                      "LLM09:2025 Misinformation"
+                      "LLM07:2026 Misinformation"
                   ]
               },
               {
@@ -8021,11 +8052,9 @@ def correlate(
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM09:2025 Misinformation (verification findings identify hallucinated or fabricated claims before downstream acceptance, persistence, or rebroadcast)",
-                          "LLM08:2025 Vector and Embedding Weaknesses (fact verification catches misinformation from poisoned embeddings)",
-                          "LLM04:2025 Data and Model Poisoning (verification findings identify poisoned data before it is accepted as fact)"
+                          "LLM07:2026 Misinformation"
                       ]
                   },
                   {
@@ -8071,10 +8100,12 @@ def correlate(
                       ]
                   }
               ],
-              "toolsOpenSource": [
-                  "LlamaIndex",
-                  "LangChain",
-                  "spaCy",
+                    "toolsOpenSource": [
+                        "LlamaIndex",
+                        "LangChain",
+                        "Ragas (faithfulness scoring against supplied retrieval context)",
+                        "DeepEval (faithfulness scoring against supplied retrieval context)",
+                        "spaCy",
                   "sentence-transformers",
                   "Neo4j Community Edition",
                   "jsonschema",
@@ -8158,10 +8189,9 @@ def correlate(
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM09:2025 Misinformation (cascade findings identify hallucinated or fabricated claims being accepted, persisted, or rebroadcast across agents)",
-                          "LLM04:2025 Data and Model Poisoning (cascade findings identify poisoned data propagating as accepted facts)"
+                          "LLM07:2026 Misinformation"
                       ]
                   },
                   {
@@ -8206,11 +8236,12 @@ def correlate(
                       ]
                   }
               ],
-              "toolsOpenSource": [
-                  "LangChain",
-                  "Neo4j Community Edition",
-                  "jsonschema",
-                  "OpenTelemetry"
+                    "toolsOpenSource": [
+                        "LangChain",
+                        "Neo4j Community Edition",
+                        "jsonschema",
+                        "OpenTelemetry",
+                        "Langfuse (trace substrate for claim-occurrence graph analysis; claim-state binding and cascade detection remain external)"
               ],
               "toolsCommercial": [
                   "Neo4j Enterprise Edition",
@@ -8271,10 +8302,11 @@ def correlate(
                 "Valkey",
                 "Redis 8+ AGPLv3 source build"
             ],
-            "toolsCommercial": [
+              "toolsCommercial": [
                 "Splunk Enterprise Security",
                 "Datadog",
                 "IBM QRadar SIEM",
+                "LangSmith (custom online goal and trajectory evaluators)",
                 "Arize AX",
                 "Evidently Cloud",
                 "NannyML Cloud"
@@ -8300,10 +8332,10 @@ def correlate(
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM01:2025 Prompt Injection",
-                        "LLM06:2025 Excessive Agency"
+                        "LLM01:2026 Prompt Injection (goal-consistency findings expose injection-driven objective drift after ingress)",
+                        "LLM03:2026 Excessive Agency (goal and workflow drift reveal behavior outside the approved operational envelope)"
                     ]
                 },
                 {
@@ -8574,11 +8606,11 @@ def test_tampered_fact_is_error():
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM02:2025 Sensitive Information Disclosure",
-                        "LLM03:2025 Supply Chain",
-                        "LLM06:2025 Excessive Agency"
+                        "LLM02:2026 Sensitive Information Disclosure",
+                        "LLM03:2026 Excessive Agency",
+                        "LLM04:2026 Supply Chain"
                     ]
                 },
                 {
@@ -8676,6 +8708,7 @@ def test_tampered_fact_is_error():
                     },
                     "toolsOpenSource": [
                         "scikit-learn",
+                        "PyOD",
                         "pandas",
                         "NumPy",
                         "SciPy",
@@ -8718,9 +8751,9 @@ def test_tampered_fact_is_error():
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM06:2025 Excessive Agency (detecting when an agent's behavior exceeds its normal operational envelope)"
+                                "LLM03:2026 Excessive Agency (behavioral findings reveal agents operating outside their approved authority-use envelope)"
                             ]
                         },
                         {
@@ -8820,7 +8853,8 @@ def test_tampered_fact_is_error():
                     "toolsOpenSource": [
                         "OpenTelemetry",
                         "SPIRE (authenticated event-producer identity)",
-                        "jsonschema (event contract validation)"
+                        "jsonschema (event contract validation)",
+                        "Apache Kafka (authenticated ordered event transport; contract validation remains monitor-owned)"
                     ],
                     "toolsCommercial": [
                         "Temporal Cloud",
@@ -8844,9 +8878,9 @@ def test_tampered_fact_is_error():
                         ]
                       },
                       {
-                        "framework": "OWASP LLM Top 10 2025",
+                        "framework": "OWASP LLM Top 10 2026",
                         "items": [
-                          "N/A"
+                            "N/A"
                         ]
                       },
                       {
@@ -8967,9 +9001,9 @@ def test_tampered_fact_is_error():
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain (image-lineage drift reveals an unapproved registered-agent build)"
+                                "LLM04:2026 Supply Chain (image-lineage drift reveals an unapproved registered-agent build)"
                             ]
                         },
                         {
@@ -9090,10 +9124,10 @@ def test_tampered_fact_is_error():
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM02:2025 Sensitive Information Disclosure",
-                                "LLM06:2025 Excessive Agency"
+                                "LLM02:2026 Sensitive Information Disclosure",
+                                "LLM03:2026 Excessive Agency"
                             ]
                         },
                         {
@@ -9213,7 +9247,7 @@ def test_tampered_fact_is_error():
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
                         "N/A"
                     ]
@@ -9321,6 +9355,7 @@ def test_tampered_fact_is_error():
                     "toolsOpenSource": [
                         "PyTorch Geometric",
                         "Deep Graph Library (DGL)",
+                        "DeepRobust (graph perturbation and attack generation for bounded test cases; case definitions and scoring remain external)",
                         "safetensors",
                         "NumPy",
                         "SciPy",
@@ -9346,7 +9381,7 @@ def test_tampered_fact_is_error():
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -9445,6 +9480,7 @@ def test_tampered_fact_is_error():
                     "toolsOpenSource": [
                         "PyTorch Geometric",
                         "Deep Graph Library (DGL)",
+                        "PyGOD (graph outlier scoring; calibration policy and complete-coverage evidence remain external)",
                         "safetensors",
                         "NumPy",
                         "SciPy",
@@ -9466,7 +9502,7 @@ def test_tampered_fact_is_error():
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -9560,6 +9596,7 @@ def test_tampered_fact_is_error():
                     ],
                     "toolsOpenSource": [
                         "NetworkX",
+                        "python-igraph",
                         "safetensors",
                         "NumPy",
                         "SciPy",
@@ -9580,7 +9617,7 @@ def test_tampered_fact_is_error():
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -9693,9 +9730,9 @@ def test_tampered_fact_is_error():
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM04:2025 Data and Model Poisoning (reward or verifier signal manipulation during post-training)"
+                        "LLM05:2026 Data and Model Poisoning"
                     ]
                 },
                 {
@@ -9847,11 +9884,11 @@ def test_tampered_fact_is_error():
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM01:2025 Prompt Injection",
-                        "LLM04:2025 Data and Model Poisoning",
-                        "LLM08:2025 Vector and Embedding Weaknesses"
+                        "LLM01:2026 Prompt Injection",
+                        "LLM05:2026 Data and Model Poisoning",
+                        "LLM09:2026 Vector and Embedding Weaknesses"
                     ]
                 },
                 {
@@ -9946,11 +9983,10 @@ def test_tampered_fact_is_error():
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM08:2025 Vector and Embedding Weaknesses",
-                                "LLM01:2025 Prompt Injection (indirect)",
-                                "LLM04:2025 Data and Model Poisoning (RAG knowledge-base corruption)"
+                                "LLM01:2026 Prompt Injection",
+                                "LLM05:2026 Data and Model Poisoning"
                             ]
                         },
                         {
@@ -10073,10 +10109,9 @@ def test_tampered_fact_is_error():
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM08:2025 Vector and Embedding Weaknesses",
-                                "LLM04:2025 Data and Model Poisoning (RAG knowledge-base corruption)"
+                                "LLM09:2026 Vector and Embedding Weaknesses"
                             ]
                         },
                         {
@@ -10181,10 +10216,10 @@ def test_tampered_fact_is_error():
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM08:2025 Vector and Embedding Weaknesses",
-                                "LLM04:2025 Data and Model Poisoning (RAG knowledge-base corruption)"
+                                "LLM05:2026 Data and Model Poisoning (unregistered provenance and source concentration expose poisoned RAG content)",
+                                "LLM09:2026 Vector and Embedding Weaknesses"
                             ]
                         },
                         {
@@ -10304,9 +10339,9 @@ def test_tampered_fact_is_error():
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM06:2025 Excessive Agency"
+                        "LLM03:2026 Excessive Agency"
                     ]
                 },
                 {
@@ -10426,7 +10461,7 @@ def test_tampered_fact_is_error():
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
                         "N/A"
                     ]
@@ -10508,6 +10543,7 @@ def test_tampered_fact_is_error():
                     },
                     "toolsOpenSource": [
                         "Istio",
+                        "Kiali (service-graph visualization from Istio telemetry)",
                         "Envoy",
                         "SPIRE",
                         "OpenTelemetry",
@@ -10534,7 +10570,7 @@ def test_tampered_fact_is_error():
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -10652,7 +10688,7 @@ def test_tampered_fact_is_error():
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -10781,7 +10817,7 @@ def test_tampered_fact_is_error():
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
                         "N/A"
                     ]
@@ -10914,7 +10950,7 @@ def test_tampered_fact_is_error():
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
                         "N/A"
                     ]

@@ -2,7 +2,7 @@
 
 [![Code License: Apache-2.0](https://img.shields.io/badge/code-Apache--2.0-blue.svg?style=for-the-badge)](LICENSE)
 [![Content License: CC BY 4.0](https://img.shields.io/badge/content-CC_BY_4.0-lightgrey.svg?style=for-the-badge)](LICENSE-CONTENT)
-[![Version](https://img.shields.io/badge/version-1.20260803-0ea5e9.svg?style=for-the-badge)](aidefend-intro.js)
+[![Version](https://img.shields.io/badge/version-1.20260805-0ea5e9.svg?style=for-the-badge)](aidefend-intro.js)
 [![Live Demo](https://img.shields.io/badge/live-aidefend.net-brightgreen.svg?style=for-the-badge)](https://aidefend.net)
 
 AIDEFEND is an open, implementation-oriented knowledge base of defensive controls for AI, machine-learning, LLM, multimodal, RAG, and agentic systems. It organizes defenses by security function, protected component, lifecycle phase, and the external security references they address.
@@ -12,7 +12,7 @@ AIDEFEND is an open, implementation-oriented knowledge base of defensive control
 
 ## Current source version
 
-Version `1.20260803` provides:
+Version `1.20260805` provides:
 
 - **300 actionable defensive controls**: 35 standalone techniques and 265 leaf sub-techniques
 - implementation guidance, production-oriented examples, verification guidance, and explicit scope boundaries
@@ -23,7 +23,7 @@ Version `1.20260803` provides:
 
 Parent families are not implementation controls and do not receive independent control credit. Implementation-guidance entries are methods within their owning actionable control, not additional controls.
 
-The optional WebMCP module loads a version-pinned browser polyfill from `esm.sh`, then registers tools only when `document.modelContext.registerTool` is available. Core framework browsing and the public datasets do not depend on WebMCP; when the module or API is unavailable, no WebMCP tools are registered.
+The optional WebMCP module loads the self-contained `@mcp-b/global@4.0.0` IIFE from `unpkg.com` with a pinned SHA-384 Subresource Integrity value, then registers tools only when `document.modelContext.registerTool` is available. A compatible native browser implementation bypasses the polyfill. Core framework browsing and the public datasets do not depend on WebMCP; when the runtime or API is unavailable, no WebMCP tools are registered.
 
 ## Framework coverage
 
@@ -31,7 +31,7 @@ Every actionable AIDEFEND control is assessed against the following external ref
 
 1. MITRE ATLAS
 2. MAESTRO
-3. OWASP LLM Top 10 2025
+3. OWASP LLM Top 10 2026
 4. OWASP ML Top 10 2023
 5. OWASP Top 10 for Agentic Applications 2026
 6. NIST Adversarial Machine Learning 2025
@@ -54,7 +54,7 @@ Mapping relevance is reviewed at the actionable standalone-technique or leaf-sub
 
 ## Public data
 
-The generated dataset is available at [`data/data.json`](data/data.json). A compact navigation index is available at [`data/tactics-index.json`](data/tactics-index.json).
+The generated dataset is available at [`data/data.json`](data/data.json). A compact navigation index is available at [`data/tactics-index.json`](data/tactics-index.json). The additive [`data/framework-migrations.json`](data/framework-migrations.json) registry identifies the current framework edition and semantic successors for superseded identifiers; it does not carry AIDEFEND mappings forward without a target-edition review.
 
 The source of truth for AIDEFEND-authored framework content is `tactics/*.js`. Do not edit generated JSON files directly.
 
@@ -78,7 +78,7 @@ python -m http.server 8080
 
 Then open `http://localhost:8080`.
 
-The core framework data, DOMPurify, and Tailwind browser bundle are stored locally. The pages request Google Fonts, the main page also requests Google Analytics, and the optional WebMCP module loads its pinned polyfill from `esm.sh`. Blocking those third-party origins does not remove the local framework data, but it can disable WebMCP, analytics, or hosted fonts.
+The core framework data, DOMPurify, and Tailwind browser bundle are stored locally. The pages request Google Fonts, the main page also requests Google Analytics, and the optional WebMCP module loads its exact-version, integrity-pinned runtime from `unpkg.com`. Blocking those third-party origins does not remove the local framework data, but it can disable WebMCP, analytics, or hosted fonts.
 
 ## Public dataset generation
 

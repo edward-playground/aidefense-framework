@@ -23,7 +23,7 @@ Original AIDEFEND framework content and data are licensed under the Creative Com
 This includes AIDEFEND-authored material in:
 
 - `tactics/`
-- `data/data.json`, `data/data-cache.json`, and `data/tactics-index.json`
+- `data/data.json`, `data/data-cache.json`, `data/tactics-index.json`, and AIDEFEND-authored migration analysis in `data/framework-migrations.json`
 - `aidefend-intro.js`
 - explanatory documentation in `README.md`
 
@@ -37,6 +37,7 @@ Indicate material changes and retain a link to the license. CC BY 4.0 does not g
 
 - The AIDEFEND name, AIDEFEND marks, logos, badges, and other brand identifiers are not licensed for unrestricted brand use. See [`TRADEMARKS.md`](TRADEMARKS.md).
 - External framework names, descriptions, identifiers, and other third-party material remain subject to their respective owners' rights and licenses.
+- OWASP-derived identifiers, names, edition metadata, and normalized risk summaries in `framework-migrations.js`, generated `data/framework-migrations.json`, and the Frameworks View retain the upstream CC BY-SA 4.0 terms described in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md). The resolver implementation and AIDEFEND-authored migration contract remain covered by the applicable AIDEFEND software/content licenses.
 - Bundled third-party software retains its upstream license. See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
 - No license grants permission to claim affiliation with, endorsement by, or official status from AIDEFEND or any referenced framework owner.
 

@@ -43,7 +43,8 @@ export const hardenTactic = {
                 "TensorFlow",
                 "Albumentations (data augmentation)",
                 "torchvision.transforms (data augmentation)",
-                "MLflow"
+                "MLflow",
+                "RobustBench (AutoAttack evaluation)"
             ],
             "toolsCommercial": [
                 "Cisco AI Defense AI Model & Application Validation",
@@ -54,8 +55,7 @@ export const hardenTactic = {
                 "Google Vertex AI",
                 "Databricks Runtime for Machine Learning",
                 "Azure Machine Learning",
-                "Weights & Biases",
-                "AnyLogic"
+                "Weights & Biases"
             ],
             "defendsAgainst": [
                 {
@@ -78,7 +78,7 @@ export const hardenTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
                         "N/A"
                     ]
@@ -201,12 +201,13 @@ export const hardenTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM01:2025 Prompt Injection",
-                        "LLM02:2025 Sensitive Information Disclosure",
-                        "LLM04:2025 Data and Model Poisoning",
-                        "LLM10:2025 Unbounded Consumption"
+                        "LLM01:2026 Prompt Injection",
+                        "LLM02:2026 Sensitive Information Disclosure",
+                        "LLM05:2026 Data and Model Poisoning",
+                        "LLM06:2026 Unbounded Consumption",
+                        "LLM07:2026 Misinformation"
                     ]
                 },
                 {
@@ -328,8 +329,11 @@ export const hardenTactic = {
                         "ydata-profiling",
                         "Microsoft Presidio",
                         "cleanlab",
-                        "Alibi Detect (for outlier detection)",
-                        "NVIDIA NeMo Safe Synthesizer (Apache-2.0)"
+                        "NVIDIA NeMo Safe Synthesizer (Apache-2.0)",
+                        "NVIDIA NeMo Curator"
+                    ],
+                    "toolsSourceAvailable": [
+                        "Alibi Detect for outlier detection (Business Source License 1.1; source-available)"
                     ],
                     "toolsCommercial": [
                         "Databricks",
@@ -356,10 +360,10 @@ export const hardenTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM04:2025 Data and Model Poisoning",
-                                "LLM02:2025 Sensitive Information Disclosure (removing PII from training data)"
+                                "LLM02:2026 Sensitive Information Disclosure",
+                                "LLM05:2026 Data and Model Poisoning"
                             ]
                         },
                         {
@@ -5028,11 +5032,11 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                     },
                     "toolsOpenSource": [
                         "NVIDIA NeMo Guardrails",
-                        "LLM Guard (open-source LLM security toolkit)",
                         "Pydantic",
                         "HTTPX",
                         "nh3",
-                        "Cosign"
+                        "Cosign",
+                        "Guardrails AI"
                     ],
                     "toolsSourceAvailable": [
                         "Meta Llama Guard 4 (Llama 4 Community License; open-weight)",
@@ -5047,7 +5051,9 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         "Check Point AI Guardrails",
                         "Palo Alto Networks Prisma AIRS",
                         "F5 AI Guardrails",
-                        "Securiti LLM Firewall"
+                        "Securiti LLM Firewall",
+                        "Guardrails for Amazon Bedrock",
+                        "Azure AI Content Safety (Prompt Shields)"
                     ],
                     "defendsAgainst": [
                         {
@@ -5080,9 +5086,10 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection"
+                                "LLM01:2026 Prompt Injection",
+                                "LLM06:2026 Unbounded Consumption"
                             ]
                         },
                         {
@@ -5233,7 +5240,9 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         "librosa",
                         "Hugging Face Diffusers",
                         "FFmpeg",
-                        "python-magic"
+                        "python-magic",
+                        "ExifTool",
+                        "Apache Tika (content detection and extraction; isolate parsers independently)"
                     ],
                     "toolsCommercial": [
                         "OPSWAT MetaDefender",
@@ -5256,9 +5265,10 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM10:2025 Unbounded Consumption (bounded decoding and purification prevent oversized or resource-exhausting multimodal inputs)"
+                                "LLM01:2026 Prompt Injection",
+                                "LLM06:2026 Unbounded Consumption"
                             ]
                         },
                         {
@@ -5329,7 +5339,9 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         "Pandera",
                         "Git",
                         "Apache Airflow",
-                        "Prefect"
+                        "Prefect",
+                        "OpenLineage (feature-pipeline lineage instrumentation)",
+                        "Marquez (OpenLineage metadata collection and inspection)"
                     ],
                     "toolsCommercial": [
                         "Tecton",
@@ -5357,9 +5369,9 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM04:2025 Data and Model Poisoning (feature pipeline as a poisoning path for hybrid or structured-input systems)"
+                                "LLM05:2026 Data and Model Poisoning"
                             ]
                         },
                         {
@@ -5487,9 +5499,9 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM04:2025 Data and Model Poisoning (label poisoning for fine-tuning, evaluation, or preference data)"
+                                "LLM05:2026 Data and Model Poisoning"
                             ]
                         },
                         {
@@ -5583,7 +5595,8 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         "simhash",
                         "GX Core (Great Expectations)",
                         "Pandera",
-                        "Python hashlib (content-addressable split hashing)"
+                        "Python hashlib (content-addressable split hashing)",
+                        "NVIDIA NeMo Curator (duplicate and near-duplicate analysis for cross-partition leakage checks only; split creation, immutability, stratification, and access controls remain external)"
                     ],
                     "toolsCommercial": [
                         "Databricks Unity Catalog",
@@ -5604,7 +5617,7 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -5751,9 +5764,10 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM04:2025 Data and Model Poisoning"
+                                "LLM05:2026 Data and Model Poisoning (verified media provenance is an admission trust signal for poisoning review but does not establish that authenticated content is benign)",
+                                "LLM07:2026 Misinformation (signed provenance and step-up review reduce reliance on forged evidence but do not independently validate every claim)"
                             ]
                         },
                         {
@@ -5839,7 +5853,8 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         "librosa",
                         "WebRTC VAD (py-webrtcvad)",
                         "OpenCV",
-                        "Tesseract OCR"
+                        "Tesseract OCR",
+                        "Silero VAD (voice-activity segmentation only; stream normalization, control-token checks, and admission remain external)"
                     ],
                     "toolsSourceAvailable": [
                         "OpenAI Whisper (MIT; open-weight)"
@@ -5873,9 +5888,10 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection"
+                                "LLM01:2026 Prompt Injection",
+                                "LLM06:2026 Unbounded Consumption"
                             ]
                         },
                         {
@@ -5991,10 +6007,10 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM03:2025 Supply Chain",
-                        "LLM04:2025 Data and Model Poisoning"
+                        "LLM04:2026 Supply Chain",
+                        "LLM05:2026 Data and Model Poisoning"
                     ]
                 },
                 {
@@ -6108,7 +6124,9 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         "Cosign",
                         "in-toto",
                         "OWASP Dependency-Check",
-                        "pip-audit"
+                        "pip-audit",
+                        "OSV-Scanner",
+                        "OWASP Dependency-Track"
                     ],
                     "toolsCommercial": [
                         "Snyk Open Source",
@@ -6141,9 +6159,9 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain"
+                                "LLM04:2026 Supply Chain"
                             ]
                         },
                         {
@@ -6292,10 +6310,10 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain",
-                                "LLM04:2025 Data and Model Poisoning"
+                                "LLM04:2026 Supply Chain",
+                                "LLM05:2026 Data and Model Poisoning"
                             ]
                         },
                         {
@@ -6684,7 +6702,8 @@ if __name__ == "__main__":
                       "DVC",
                       "lakeFS",
                       "Witness",
-                      "in-toto"
+                      "in-toto",
+                      "OpenMetadata (dataset provenance evidence source; separate admission gate required)"
                   ],
                   "toolsCommercial": [
                     "Databricks Unity Catalog",
@@ -6709,9 +6728,10 @@ if __name__ == "__main__":
                           ]
                       },
                       {
-                          "framework": "OWASP LLM Top 10 2025",
+                          "framework": "OWASP LLM Top 10 2026",
                           "items": [
-                              "LLM03:2025 Supply Chain"
+                              "LLM04:2026 Supply Chain",
+                              "LLM05:2026 Data and Model Poisoning"
                           ]
                       },
                       {
@@ -6810,7 +6830,8 @@ if __name__ == "__main__":
                         "binwalk",
                         "Intel SGX SDK",
                         "Open Enclave SDK",
-                        "Keylime (nonce-bound TPM attestation and verifier policy enforcement)"
+                        "Keylime (nonce-bound TPM attestation and verifier policy enforcement)",
+                        "tpm2-tools (TPM quote generation and verification only; asset identity, measurement policy, nonce issuance, and cluster admission remain external)"
                     ],
                     "toolsCommercial": [
                         "NVIDIA Confidential Computing",
@@ -6832,9 +6853,9 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "N/A"
+                                "LLM04:2026 Supply Chain"
                             ]
                         },
                         {
@@ -6947,7 +6968,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -7049,7 +7070,8 @@ if __name__ == "__main__":
                         "safetensors",
                         "CycloneDX CLI",
                         "cdxgen",
-                        "SPDX Python Tools (spdx/tools-python)"
+                        "SPDX Python Tools (spdx/tools-python)",
+                        "OWASP Dependency-Track (CycloneDX ML-BOM monitoring; separate artifact-digest admission gate required)"
                     ],
                     "toolsCommercial": [
                         "JFrog Artifactory",
@@ -7082,10 +7104,10 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain",
-                                "LLM04:2025 Data and Model Poisoning"
+                                "LLM04:2026 Supply Chain",
+                                "LLM05:2026 Data and Model Poisoning"
                             ]
                         },
                         {
@@ -7248,10 +7270,10 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain",
-                                "LLM04:2025 Data and Model Poisoning"
+                                "LLM04:2026 Supply Chain",
+                                "LLM05:2026 Data and Model Poisoning"
                             ]
                         },
                         {
@@ -7363,14 +7385,16 @@ if __name__ == "__main__":
                         "in-toto",
                         "slsa-verifier",
                         "python-tuf",
-                        "liboqs",
-                        "Open Quantum Safe provider for OpenSSL (oqs-provider)"
+                        "liboqs (prototype PQC interoperability testing only; not recommended for production)",
+                        "Open Quantum Safe provider for OpenSSL (oqs-provider; prototype interoperability testing only; not recommended for production)",
+                        "OpenSSL 3.5+ (ML-DSA signing primitives; artifact-envelope integration required)"
                     ],
                     "toolsCommercial": [
                         "DigiCert Binary Signing",
                         "CyberArk Code Sign Manager",
                         "JFrog Artifactory",
-                        "Keyfactor Command"
+                        "Keyfactor Command",
+                        "AWS Key Management Service (ML-DSA signing)"
                     ],
                     "defendsAgainst": [
                         {
@@ -7392,9 +7416,9 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain"
+                                "LLM04:2026 Supply Chain"
                             ]
                         },
                         {
@@ -7496,7 +7520,8 @@ if __name__ == "__main__":
                     "toolsCommercial": [
                         "Prisma AIRS AI Model Security",
                         "JFrog Advanced Security",
-                        "ReversingLabs Spectra Assure"
+                        "ReversingLabs Spectra Assure",
+                        "HiddenLayer Model Scanner"
                     ],
                     "defendsAgainst": [
                         {
@@ -7518,9 +7543,9 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain"
+                                "LLM04:2026 Supply Chain"
                             ]
                         },
                         {
@@ -7611,12 +7636,15 @@ if __name__ == "__main__":
                         "Trivy",
                         "Syft",
                         "Grype",
-                        "pip-audit"
+                        "pip-audit",
+                        "OSV-Scanner",
+                        "OWASP Dependency-Track"
                     ],
                     "toolsCommercial": [
                         "Snyk Open Source",
                         "Mend SCA",
-                        "JFrog Xray"
+                        "JFrog Xray",
+                        "Qualys VMDR"
                     ],
                     "defendsAgainst": [
                         {
@@ -7636,9 +7664,9 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain"
+                                "LLM04:2026 Supply Chain"
                             ]
                         },
                         {
@@ -7739,9 +7767,9 @@ if __name__ == "__main__":
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM03:2025 Supply Chain"
+                        "N/A"
                     ]
                 },
                 {
@@ -7863,7 +7891,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -7969,7 +7997,8 @@ if __name__ == "__main__":
                         "oauth2-proxy",
                         "SPIRE",
                         "Istio",
-                        "Linkerd"
+                        "Linkerd",
+                        "OpenBao (dynamic workload credentials and PKI)"
                     ],
                     "toolsSourceAvailable": [
                         "HashiCorp Vault Community (BUSL-1.1; source-available)"
@@ -7996,7 +8025,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -8114,7 +8143,7 @@ if __name__ == "__main__":
                         "Cloudflare Zero Trust",
                         "Kong Gateway Enterprise",
                         "Kong Konnect",
-                        "Apigee AI Gateway"
+                        "Google Cloud Apigee API Management (AI gateway capabilities)"
                     ],
                     "defendsAgainst": [
                         {
@@ -8134,7 +8163,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -8273,9 +8302,9 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain"
+                                "N/A"
                             ]
                         },
                         {
@@ -8353,7 +8382,7 @@ if __name__ == "__main__":
                         "OpenSSL"
                     ],
                     "toolsCommercial": [
-                        "CyberArk Certificate Manager",
+                        "Palo Alto Networks Next-Generation Trust Security (certificate lifecycle management)",
                         "HashiCorp Vault Enterprise",
                         "HCP Vault Dedicated",
                         "AWS Private CA",
@@ -8417,7 +8446,7 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -8510,10 +8539,10 @@ if __name__ == "__main__":
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM02:2025 Sensitive Information Disclosure",
-                        "LLM08:2025 Vector and Embedding Weaknesses"
+                        "LLM02:2026 Sensitive Information Disclosure",
+                        "LLM09:2026 Vector and Embedding Weaknesses"
                     ]
                 },
                 {
@@ -8601,10 +8630,10 @@ if __name__ == "__main__":
                         "TensorFlow Privacy",
                         "Google DP Library",
                         "OpenDP",
-                        "NVIDIA NeMo Safe Synthesizer (Apache-2.0)"
+                        "NVIDIA NeMo Safe Synthesizer (Apache-2.0)",
+                        "Diffprivlib (IBM public release; research and education only; contact IBM for production use)"
                     ],
                     "toolsCommercial": [
-                        "Immuta Data Security Platform (query-time differential privacy)",
                         "Sarus",
                         "AWS Clean Rooms Differential Privacy",
                         "BigQuery Differential Privacy"
@@ -8627,9 +8656,9 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM02:2025 Sensitive Information Disclosure"
+                                "LLM02:2026 Sensitive Information Disclosure"
                             ]
                         },
                         {
@@ -8733,13 +8762,15 @@ if __name__ == "__main__":
                     "toolsOpenSource": [
                         "Microsoft SEAL",
                         "HElib",
-                        "OpenFHE"
+                        "OpenFHE",
+                        "TenSEAL",
+                        "Lattigo"
                     ],
                     "toolsSourceAvailable": [
                         "Concrete ML (commercial patent license required) (BSD-3-Clause-Clear; source-available)"
                     ],
                     "toolsCommercial": [
-                        "Duality 4.6",
+                        "Duality Platform",
                         "Enveil ZeroReveal Machine Learning",
                         "IBM HElayers SDK",
                         "CRYPTOLAB HEaaN Private AI"
@@ -8759,9 +8790,9 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "N/A"
+                                "LLM02:2026 Sensitive Information Disclosure"
                             ]
                         },
                         {
@@ -8862,7 +8893,9 @@ if __name__ == "__main__":
                         "Albumentations (data augmentation)",
                         "torchvision.transforms (data augmentation)",
                         "Adversarial Robustness Toolbox (ART)",
-                        "MLflow"
+                        "MLflow",
+                        "Privacy Meter (membership-inference auditing for regularization validation; does not implement regularization)",
+                        "tensorflow-empirical-privacy (membership-inference auditing for regularization validation; does not implement regularization)"
                     ],
                     "toolsCommercial": [
                         "Amazon SageMaker AI",
@@ -8887,9 +8920,9 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM02:2025 Sensitive Information Disclosure"
+                                "LLM02:2026 Sensitive Information Disclosure"
                             ]
                         },
                         {
@@ -8980,7 +9013,9 @@ if __name__ == "__main__":
                         "datasketch",
                         "pandas",
                         "NumPy",
-                        "Hugging Face Datasets library (for data processing features)"
+                        "Hugging Face Datasets library (for data processing features)",
+                        "NVIDIA NeMo Curator",
+                        "Dolma"
                     ],
                     "toolsCommercial": [
                         "Databricks Runtime",
@@ -9003,9 +9038,9 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM02:2025 Sensitive Information Disclosure"
+                                "LLM02:2026 Sensitive Information Disclosure"
                             ]
                         },
                         {
@@ -9084,6 +9119,9 @@ if __name__ == "__main__":
                         "Milvus",
                         "pgvector"
                     ],
+                    "toolsSourceAvailable": [
+                        "HashiCorp Vault Community Transit secrets engine (Business Source License 1.1; source-available)"
+                    ],
                     "toolsCommercial": [
                         "Pinecone",
                         "Weaviate Cloud",
@@ -9112,10 +9150,10 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM08:2025 Vector and Embedding Weaknesses",
-                                "LLM02:2025 Sensitive Information Disclosure"
+                                "LLM02:2026 Sensitive Information Disclosure",
+                                "LLM09:2026 Vector and Embedding Weaknesses"
                             ]
                         },
                         {
@@ -9220,11 +9258,12 @@ if __name__ == "__main__":
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM02:2025 Sensitive Information Disclosure",
-                        "LLM05:2025 Improper Output Handling",
-                        "LLM07:2025 System Prompt Leakage"
+                        "LLM02:2026 Sensitive Information Disclosure",
+                        "LLM06:2026 Unbounded Consumption",
+                        "LLM08:2026 Hidden Context Exposure",
+                        "LLM10:2026 Improper Output Handling"
                     ]
                 },
                 {
@@ -9319,7 +9358,9 @@ if __name__ == "__main__":
                         "Outlines",
                         "TypeChat",
                         "LangChain",
-                        "Microsoft Semantic Kernel"
+                        "Microsoft Semantic Kernel",
+                        "XGrammar",
+                        "lm-format-enforcer"
                     ],
                     "toolsCommercial": [
                         "OpenAI API",
@@ -9343,9 +9384,9 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM05:2025 Improper Output Handling"
+                                "LLM10:2026 Improper Output Handling"
                             ]
                         },
                         {
@@ -9496,11 +9537,11 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM05:2025 Improper Output Handling",
-                                "LLM02:2025 Sensitive Information Disclosure (sanitization can redact sensitive info)",
-                                "LLM07:2025 System Prompt Leakage (sink-specific redaction and holdback prevent recognized system-instruction fragments from being released)"
+                                "LLM02:2026 Sensitive Information Disclosure",
+                                "LLM08:2026 Hidden Context Exposure (sink-specific redaction and holdback can block known hidden-context material at release but cannot ensure the model has not reconstructed or paraphrased it)",
+                                "LLM10:2026 Improper Output Handling"
                             ]
                         },
                         {
@@ -9574,7 +9615,8 @@ if __name__ == "__main__":
                         "PyTorch",
                         "TensorFlow",
                         "FastAPI",
-                        "Flask"
+                        "Flask",
+                        "Adversarial Robustness Toolbox (model-extraction attack replay)"
                     ],
                     "toolsCommercial": [
                         "Kong Gateway Enterprise",
@@ -9605,9 +9647,10 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "N/A"
+                                "LLM02:2026 Sensitive Information Disclosure",
+                                "LLM06:2026 Unbounded Consumption"
                             ]
                         },
                         {
@@ -9715,12 +9758,15 @@ if __name__ == "__main__":
                         "pyca/cryptography (runtime-profile signature verification)",
                         "FFmpeg",
                         "python-magic",
-                        "ClamAV"
+                        "ClamAV",
+                        "Dangerzone",
+                        "Apache Tika (content detection and extraction; isolate parsers independently)"
                     ],
                     "toolsCommercial": [
                         "OPSWAT MetaDefender",
                         "Glasswall CDR",
-                        "Menlo File Security"
+                        "Menlo File Security",
+                        "VirusTotal"
                     ],
                     "defendsAgainst": [
                         {
@@ -9736,9 +9782,9 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM05:2025 Improper Output Handling"
+                                "LLM10:2026 Improper Output Handling"
                             ]
                         },
                         {
@@ -9834,12 +9880,13 @@ if __name__ == "__main__":
                   ]
               },
               {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                      "LLM01:2025 Prompt Injection",
-                      "LLM02:2025 Sensitive Information Disclosure",
-                      "LLM03:2025 Supply Chain",
-                      "LLM04:2025 Data and Model Poisoning"
+                      "LLM01:2026 Prompt Injection",
+                      "LLM02:2026 Sensitive Information Disclosure",
+                      "LLM03:2026 Excessive Agency",
+                      "LLM04:2026 Supply Chain",
+                      "LLM05:2026 Data and Model Poisoning"
                   ]
               },
               {
@@ -9950,7 +9997,9 @@ if __name__ == "__main__":
                 "Intel SGX SDK",
                 "Open Enclave SDK",
                         "AWS CLI v2 (Apache-2.0)",
-                        "Azure CLI (MIT)"
+                        "Azure CLI (MIT)",
+                  "Checkov",
+                  "Trivy"
               ],
               "toolsSourceAvailable": [
                   "HashiCorp Terraform Community (BUSL-1.1; source-available)"
@@ -9982,9 +10031,10 @@ if __name__ == "__main__":
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "N/A"
+                          "LLM02:2026 Sensitive Information Disclosure (isolated least-privilege training infrastructure reduces unauthorized data exposure but does not control model response disclosure)",
+                          "LLM05:2026 Data and Model Poisoning (hardened isolated training infrastructure limits unauthorized data or model modification but does not validate corpus content)"
                       ]
                   },
                   {
@@ -10077,7 +10127,8 @@ if __name__ == "__main__":
                         "Prometheus",
                         "Grafana",
                         "PyTorch",
-                        "TensorFlow"
+                        "TensorFlow",
+                        "TensorBoard"
                     ],
                     "toolsSourceAvailable": [
                         "ClearML Server (SSPL-1.0; source-available)",
@@ -10109,9 +10160,9 @@ if __name__ == "__main__":
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM04:2025 Data and Model Poisoning"
+                          "LLM05:2026 Data and Model Poisoning"
                       ]
                   },
                   {
@@ -10208,7 +10259,9 @@ if __name__ == "__main__":
                         "Podman",
                 "Harbor (for container registries)",
                 "MLflow",
-                "Kubeflow Pipelines"
+                "Kubeflow Pipelines",
+                  "lakeFS",
+                  "Bazel (hermetic training-code builds with pinned toolchains; container-image construction requires separate OCI rules)"
               ],
               "toolsCommercial": [
                 "GitHub Enterprise Cloud (source control)",
@@ -10239,9 +10292,10 @@ if __name__ == "__main__":
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "N/A"
+                          "LLM04:2026 Supply Chain",
+                          "LLM05:2026 Data and Model Poisoning"
                       ]
                   },
                   {
@@ -10334,7 +10388,9 @@ if __name__ == "__main__":
                 "Apache Airflow",
                 "Prefect",
                 "datasketch",
-                "simhash"
+                "simhash",
+                  "Deepchecks",
+                  "EleutherAI lm-evaluation-harness"
               ],
               "toolsCommercial": [
                 "Weights & Biases",
@@ -10364,9 +10420,9 @@ if __name__ == "__main__":
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM03:2025 Supply Chain (compromised third-party benchmarks or evaluation tooling)"
+                          "LLM04:2026 Supply Chain"
                       ]
                   },
                   {
@@ -10480,7 +10536,12 @@ if __name__ == "__main__":
                 "garak",
                 "PyRIT",
                 "promptfoo",
-                "MLflow"
+                "MLflow",
+                  "HarmBench",
+                  "JailbreakBench"
+              ],
+              "toolsSourceAvailable": [
+                  "Meta Llama Guard 4 (Llama 4 Community License; open-weight)"
               ],
               "toolsCommercial": [
                 "Patronus AI",
@@ -10506,11 +10567,12 @@ if __name__ == "__main__":
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM04:2025 Data and Model Poisoning",
-                          "LLM01:2025 Prompt Injection",
-                          "LLM02:2025 Sensitive Information Disclosure (pre/post fine-tuning regression testing blocks releases that newly disclose sensitive data)"
+                          "LLM01:2026 Prompt Injection",
+                          "LLM02:2026 Sensitive Information Disclosure",
+                          "LLM03:2026 Excessive Agency (tool-policy and goal-stability regression tests block releases with expanded behavior, while runtime authority remains separately enforced)",
+                          "LLM05:2026 Data and Model Poisoning"
                       ]
                   },
                   {
@@ -10601,7 +10663,9 @@ if __name__ == "__main__":
                 "Cosign",
                 "Inspect AI",
                 "garak",
-                "promptfoo"
+                "promptfoo",
+                  "Intel Neural Compressor",
+                        "NVIDIA Model Optimizer"
               ],
               "toolsCommercial": [
                 "NVIDIA TensorRT",
@@ -10630,10 +10694,13 @@ if __name__ == "__main__":
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM03:2025 Supply Chain",
-                          "LLM04:2025 Data and Model Poisoning (post-transform regression testing detects integrity loss in derived model artifacts)"
+                          "LLM01:2026 Prompt Injection",
+                          "LLM02:2026 Sensitive Information Disclosure",
+                          "LLM03:2026 Excessive Agency (post-conversion tool-policy regression tests block artifacts with expanded behavior, while runtime authority remains separately enforced)",
+                          "LLM04:2026 Supply Chain",
+                          "LLM05:2026 Data and Model Poisoning"
                       ]
                   },
                   {
@@ -10726,9 +10793,9 @@ if __name__ == "__main__":
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM03:2025 Supply Chain (protecting evaluator judge, grader, rubric-template, dependency, harness, threshold-policy, and evidence-writer integrity)"
+                          "LLM04:2026 Supply Chain"
                       ]
                   },
                   {
@@ -10778,7 +10845,8 @@ if __name__ == "__main__":
                 "Inspect AI",
                 "Git",
                 "Kubernetes RBAC",
-                "pytest"
+                "pytest",
+                  "Open Policy Agent (OPA)"
               ],
               "toolsCommercial": [
                 "Weights & Biases",
@@ -10917,9 +10985,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                   ]
               },
               {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                      "LLM04:2025 Data and Model Poisoning"
+                      "LLM02:2026 Sensitive Information Disclosure",
+                      "LLM05:2026 Data and Model Poisoning"
                   ]
               },
               {
@@ -11015,12 +11084,13 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                 "FATE (Federated AI Technology Enabler)",
                 "PySyft (OpenMined)",
                 "Microsoft SEAL",
-                "OpenFHE"
+                "OpenFHE",
+                        "TenSEAL (encrypted tensor aggregation; federated dropout and collusion controls required)"
               ],
               "toolsCommercial": [
                 "AWS Nitro Enclaves",
                 "Google Cloud Confidential Computing",
-                "Duality 4.6",
+                "Duality Platform",
                 "Enveil ZeroReveal Machine Learning"
               ],
               "defendsAgainst": [
@@ -11039,9 +11109,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "N/A"
+                          "LLM02:2026 Sensitive Information Disclosure"
                       ]
                   },
                   {
@@ -11154,9 +11224,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "LLM04:2025 Data and Model Poisoning"
+                          "LLM05:2026 Data and Model Poisoning"
                       ]
                   },
                   {
@@ -11245,9 +11315,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
-                          "N/A"
+                          "LLM05:2026 Data and Model Poisoning"
                       ]
                   },
                   {
@@ -11296,7 +11366,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                 "pyca/cryptography",
                 "jwcrypto",
                         "Valkey",
-                        "Redis 8+ (AGPL-3.0)"
+                        "Redis 8+ (AGPL-3.0)",
+                  "Keylime"
               ],
               "toolsCommercial": [
                   "Microsoft Azure Attestation",
@@ -11353,9 +11424,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "N/A"
+                        "LLM02:2026 Sensitive Information Disclosure",
+                        "LLM04:2026 Supply Chain"
                     ]
                 },
                 {
@@ -11445,7 +11517,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "tianocore/edk2 (open-source UEFI implementation)",
                         "GRUB2 (Linux Secure Boot)",
                         "shim (Linux Secure Boot)",
-                        "tpm2-tools (local TPM measurement and policy inspection)"
+                        "tpm2-tools (local TPM measurement and policy inspection)",
+                        "Keylime"
                     ],
                     "toolsCommercial": [
                         "Google Cloud Shielded VM (Secure Boot, vTPM, and integrity monitoring)",
@@ -11467,9 +11540,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "N/A"
+                                "LLM04:2026 Supply Chain"
                             ]
                         },
                         {
@@ -11567,7 +11640,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "APT",
                         "YUM",
                         "DNF",
-                        "Greenbone Community Edition (OpenVAS Scanner)"
+                        "Greenbone Community Edition (OpenVAS Scanner)",
+                        "fwupd (LVFS-backed firmware update client)"
                     ],
                     "toolsCommercial": [
                         "Tenable Nessus",
@@ -11592,9 +11666,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "N/A"
+                                "LLM04:2026 Supply Chain"
                             ]
                         },
                         {
@@ -11665,9 +11739,12 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             "howTo": "<h5>Concept:</h5><p>Assume that even trusted supply chains can be compromised. Implement a technical and physical verification process for all new hardware before it is installed in a server.</p><h5>Step 1: Maintain a mandatory receipt-verification artifact</h5><p>Your hardware engineering team should execute the same checks for every new accelerator card and record the result in a receipt log.</p><pre><code># File: hardware_receipt_checks/gpu_accelerator_verification.yaml\nasset_type: gpu_accelerator\nrequired_checks:\n  - check_id: physical_inspection\n    description: compare the board against approved vendor photos and inspect for damage or extra components\n  - check_id: serial_verification\n    description: confirm the physical serial number matches packaging and shipping records\n  - check_id: quarantine_power_on\n    description: boot the device only in an isolated test bench before production use\n  - check_id: firmware_hash_verification\n    description: compare installed firmware hash against the vendor-published baseline\nrelease_rule: all_checks_must_pass</code></pre><p><strong>Action:</strong> Develop a mandatory hardware verification checklist. All new AI accelerators must pass physical inspection and firmware verification in a quarantined environment before approval for deployment.</p><h5>Verify safely</h5><p>A separately credentialed verifier independently reads back or replays each received device under its signed product/serial/firmware/component acceptance profile, exercises positive, negative, boundary and dependency-failure fixtures, and reconciles the complete eligible population.</p>"
                         }
                     ],
+                    "toolsOpenSource": [
+                        "paccor (TCG Platform Certificate creation and validation)"
+                    ],
                     "toolsCommercial": [
                         "Eclypsium",
-                        "Intel Transparent Supply Chain (Intel TSC)",
+                        "Intel Transparent Supply Chain Local Verify Tool",
                         "Dell Secured Component Verification (SCV)"
                     ],
                     "defendsAgainst": [
@@ -11685,9 +11762,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "N/A"
+                                "LLM04:2026 Supply Chain"
                             ]
                         },
                         {
@@ -11768,9 +11845,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "N/A"
+                                "LLM02:2026 Sensitive Information Disclosure"
                             ]
                         },
                         {
@@ -11827,7 +11904,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "toolsOpenSource": [
                         "NVIDIA GPU Operator",
                         "NVIDIA k8s-device-plugin",
-                        "NVIDIA Data Center GPU Manager (DCGM; allocation and health readback only)"
+                        "NVIDIA Data Center GPU Manager (DCGM; allocation and health readback only)",
+                        "vLLM (serving-engine prefix KV-cache reset only; does not prove accelerator-memory zeroization or cross-tenant isolation)",
+                        "Kata Containers (workload VM boundary only; independent accelerator partition and reset evidence required)"
                     ],
                     "toolsCommercial": [
                         "NVIDIA System Management Interface (nvidia-smi)",
@@ -11876,9 +11955,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "N/A"
+                                "LLM02:2026 Sensitive Information Disclosure"
                             ]
                         },
                         {
@@ -11944,7 +12023,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Azure Attestation",
                         "Google Confidential GKE with GPU where supported",
                         "Google Confidential VM with GPU where supported",
-                        "Anjuna Seaglass"
+                        "Anjuna Seaglass",
+                        "AWS Nitro Enclaves (CPU inference isolation and attestation)"
                     ]
                 }
             ]
@@ -12017,7 +12097,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
                         "N/A"
                     ]
@@ -12095,7 +12175,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
                         "N/A"
                     ]
@@ -12188,7 +12268,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Polars",
                         "PyTorch",
                         "PyTorch Geometric",
-                        "Cosign"
+                        "Cosign",
+                        "DeepRobust",
+                        "NetworkX (graph structural validation and repair transformations)"
                     ],
                     "defendsAgainst": [
                         {
@@ -12207,7 +12289,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -12305,7 +12387,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "toolsOpenSource": [
                         "PyTorch",
                         "PyTorch Geometric",
-                        "Cosign"
+                        "Cosign",
+                        "DeepRobust"
                     ],
                     "defendsAgainst": [
                         {
@@ -12324,7 +12407,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -12428,7 +12511,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -12504,9 +12587,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM04:2025 Data and Model Poisoning"
+                        "LLM05:2026 Data and Model Poisoning"
                     ]
                 },
                 {
@@ -12606,7 +12689,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -12684,7 +12767,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Gymnasium",
                         "PyTorch",
                         "Stable-Baselines3",
-                        "Label Studio"
+                        "Label Studio",
+                        "Hugging Face TRL (RewardTrainer execution; independent split and calibration gates required)"
                     ],
                     "defendsAgainst": [
                         {
@@ -12702,9 +12786,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM04:2025 Data and Model Poisoning (covers poisoned RLHF preference data)"
+                                "LLM05:2026 Data and Model Poisoning"
                             ]
                         },
                         {
@@ -12798,7 +12882,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -12876,7 +12960,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Istio",
                         "PyJWT",
                         "pyca/cryptography",
-                        "Cosign"
+                        "Cosign",
+                        "SPIRE (workload identity issuance; mTLS dataplane required)"
                     ],
                     "defendsAgainst": [
                         {
@@ -12892,9 +12977,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM04:2025 Data and Model Poisoning (covers tampered RLHF reward signals)"
+                                "LLM05:2026 Data and Model Poisoning"
                             ]
                         },
                         {
@@ -12983,7 +13068,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "EleutherAI lm-evaluation-harness",
                         "Inspect AI",
                         "python-jsonschema",
-                        "Cosign"
+                        "Cosign",
+                        "RewardBench"
                     ],
                     "defendsAgainst": [
                         {
@@ -12999,7 +13085,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -13067,9 +13153,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "N/A"
+                        "LLM06:2026 Unbounded Consumption",
+                        "LLM07:2026 Misinformation"
                     ]
                 },
                 {
@@ -13166,7 +13253,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Cosign",
                         "PyTorch",
                         "torchvision",
-                        "Pillow"
+                        "Pillow",
+                        "TrustMark"
                     ],
                     "toolsSourceAvailable": [
                         "VideoSeal (MIT; open-weight)",
@@ -13190,9 +13278,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "N/A"
+                                "LLM07:2026 Misinformation (signed provenance lets consumers identify generated or altered media and reduces false attribution, but it does not prove factual truth)"
                             ]
                         },
                         {
@@ -13272,7 +13360,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "toolsOpenSource": [
                         "Cosign",
                         "safetensors",
-                        "PyTorch"
+                        "PyTorch",
+                        "Sigstore model-signing (complete model artifact-tree signing and verification)"
                     ],
                     "defendsAgainst": [
                         {
@@ -13288,9 +13377,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "N/A"
+                                "LLM06:2026 Unbounded Consumption (ownership fingerprinting supports investigation of extracted or cloned models but does not prevent abusive queries at inference)"
                             ]
                         },
                         {
@@ -13388,9 +13477,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "N/A"
+                                "LLM06:2026 Unbounded Consumption (behavioral fingerprinting supports investigation of extracted or cloned models but does not prevent abusive queries at inference)"
                             ]
                         },
                         {
@@ -13493,7 +13582,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
                         "N/A"
                     ]
@@ -13578,7 +13667,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                 "auto_LiRPA",
                 "alpha-beta-CROWN",
                 "Adversarial Robustness Toolbox (ART)",
-                "PyTorch"
+                "PyTorch",
+                "Marabou"
             ],
             "toolsCommercial": [
                 "MATLAB Deep Learning Toolbox (verifyNetworkRobustness with alpha-beta-CROWN)"
@@ -13602,7 +13692,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
                         "N/A"
                     ]
@@ -13684,9 +13774,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM01:2025 Prompt Injection"
+                        "LLM01:2026 Prompt Injection"
                     ]
                 },
                 {
@@ -13768,7 +13858,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Open Policy Agent (OPA)",
                         "Conftest",
                         "LangChain",
-                        "LlamaIndex"
+                        "LlamaIndex",
+                        "promptfoo (prompt-structure and instruction/data-separation regression testing; runtime separation and authority enforcement remain external)"
                     ],
                     "toolsCommercial": [
                         "AWS AppConfig",
@@ -13804,9 +13895,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection"
+                                "LLM01:2026 Prompt Injection"
                             ]
                         },
                         {
@@ -13917,6 +14008,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Hugging Face Transformers",
                         "Hugging Face PEFT",
                         "Hugging Face TRL",
+                        "Axolotl (SFT and preference-training execution for hierarchy-aware datasets; injection-resistance data and validation remain control-owned)",
                         "PyTorch",
                         "Cosign"
                     ],
@@ -13936,9 +14028,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection"
+                                "LLM01:2026 Prompt Injection"
                             ]
                         },
                         {
@@ -14049,12 +14141,14 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM01:2025 Prompt Injection",
-                        "LLM05:2025 Improper Output Handling",
-                        "LLM06:2025 Excessive Agency",
-                        "LLM10:2025 Unbounded Consumption"
+                        "LLM01:2026 Prompt Injection",
+                        "LLM03:2026 Excessive Agency",
+                        "LLM05:2026 Data and Model Poisoning",
+                        "LLM06:2026 Unbounded Consumption",
+                        "LLM08:2026 Hidden Context Exposure",
+                        "LLM10:2026 Improper Output Handling"
                     ]
                 },
                 {
@@ -14161,7 +14255,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Valkey",
                         "Redis 8+ (AGPL-3.0)",
                         "Flagsmith",
-                        "Unleash"
+                        "Unleash",
+                        "LangGraph (interrupt and checkpoint substrate; external authorization required)"
                     ],
                     "toolsCommercial": [
                         "Temporal Cloud",
@@ -14185,10 +14280,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM06:2025 Excessive Agency",
-                                "LLM10:2025 Unbounded Consumption"
+                                "LLM03:2026 Excessive Agency",
+                                "LLM06:2026 Unbounded Consumption"
                             ]
                         },
                         {
@@ -14277,7 +14372,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "python-jsonschema",
                         "FastAPI",
                         "Flask",
-                        "Microsoft Semantic Kernel"
+                        "Microsoft Semantic Kernel",
+                        "Model Context Protocol Python SDK (typed tool registration only; external authorization required)",
+                        "Model Context Protocol TypeScript SDK (typed tool registration only; external authorization required)"
                     ],
                     "toolsCommercial": [
                         "Kong Gateway Enterprise",
@@ -14304,9 +14401,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM06:2025 Excessive Agency"
+                                "LLM01:2026 Prompt Injection (least-privilege single-purpose tool architecture bounds the actions available after a successful injection)",
+                                "LLM03:2026 Excessive Agency",
+                                "LLM08:2026 Hidden Context Exposure"
                             ]
                         },
                         {
@@ -14422,11 +14521,12 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM06:2025 Excessive Agency",
-                                "LLM05:2025 Improper Output Handling",
-                                "LLM01:2025 Prompt Injection"
+                                "LLM01:2026 Prompt Injection (deterministic plan validation prevents injected model output from directly reaching side-effecting tools)",
+                                "LLM03:2026 Excessive Agency",
+                                "LLM08:2026 Hidden Context Exposure",
+                                "LLM10:2026 Improper Output Handling"
                             ]
                         },
                         {
@@ -14542,9 +14642,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "N/A"
+                                "LLM01:2026 Prompt Injection (per-task isolation and bounded retention limit persistence of injected instructions but do not detect their semantics)",
+                                "LLM05:2026 Data and Model Poisoning (state isolation and expiry limit durable memory contamination but do not validate candidate memory content)"
                             ]
                         },
                         {
@@ -14624,7 +14725,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Cosign",
                         "Open Policy Agent (OPA)",
                         "python-jsonschema",
-                        "Pydantic"
+                        "Pydantic",
+                        "in-toto (signed behavior-contract attestation envelope)"
                     ],
                     "toolsCommercial": [
                         "AWS Key Management Service (AWS KMS)",
@@ -14647,7 +14749,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -14731,7 +14833,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Open Policy Agent (OPA)",
                         "gRPC",
                         "Istio",
-                        "Linkerd"
+                        "Linkerd",
+                        "Biscuit"
                     ],
                     "toolsCommercial": [
                         "Tetrate Service Bridge",
@@ -14754,10 +14857,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM06:2025 Excessive Agency",
-                                "LLM10:2025 Unbounded Consumption"
+                                "LLM01:2026 Prompt Injection (delegation depth, loop, and capability attenuation limit propagation and authority after a successful injection)",
+                                "LLM03:2026 Excessive Agency",
+                                "LLM06:2026 Unbounded Consumption"
                             ]
                         },
                         {
@@ -14881,9 +14985,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection"
+                                "LLM01:2026 Prompt Injection"
                             ]
                         },
                         {
@@ -15004,12 +15108,15 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM01:2025 Prompt Injection",
-                        "LLM02:2025 Sensitive Information Disclosure",
-                        "LLM05:2025 Improper Output Handling",
-                        "LLM06:2025 Excessive Agency"
+                        "LLM01:2026 Prompt Injection",
+                        "LLM02:2026 Sensitive Information Disclosure",
+                        "LLM03:2026 Excessive Agency",
+                        "LLM06:2026 Unbounded Consumption",
+                        "LLM07:2026 Misinformation",
+                        "LLM08:2026 Hidden Context Exposure",
+                        "LLM10:2026 Improper Output Handling"
                     ]
                 },
                 {
@@ -15130,9 +15237,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM05:2025 Improper Output Handling"
+                                "LLM01:2026 Prompt Injection (strict tool schemas and argument validation limit injected output from becoming unsafe tool parameters)",
+                                "LLM03:2026 Excessive Agency",
+                                "LLM10:2026 Improper Output Handling"
                             ]
                         },
                         {
@@ -15186,7 +15295,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Ajv",
                         "python-jsonschema",
                         "Instructor",
-                        "Microsoft TypeChat"
+                        "Microsoft TypeChat",
+                        "Zod"
                     ],
                     "toolsCommercial": [
                         "Kong Gateway Enterprise (custom schema/plugin policy required at agent-tool dispatch)",
@@ -15241,9 +15351,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM06:2025 Excessive Agency"
+                                "LLM01:2026 Prompt Injection (external policy enforcement keeps injected model output from authorizing tool use)",
+                                "LLM03:2026 Excessive Agency",
+                                "LLM08:2026 Hidden Context Exposure"
                             ]
                         },
                         {
@@ -15300,7 +15412,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Open Policy Agent (OPA)",
                         "Casbin",
                         "Cedar",
-                        "Cerbos PDP"
+                        "Cerbos PDP",
+                        "OpenFGA"
                     ],
                     "toolsCommercial": [
                         "Cerbos Hub",
@@ -15351,7 +15464,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "toolsOpenSource": [
                         "Cosign",
                         "Valkey",
-                        "Redis 8+ (AGPL-3.0)"
+                        "Redis 8+ (AGPL-3.0)",
+                        "OpenBao (approval-receipt signing-key custody only; separate approval and validation channel required)"
                     ],
                     "toolsCommercial": [
                         "Microsoft Entra ID Conditional Access (step-up identity signal only; separate approval ledger required)",
@@ -15378,11 +15492,12 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection",
-                                "LLM06:2025 Excessive Agency",
-                                "LLM05:2025 Improper Output Handling"
+                                "LLM01:2026 Prompt Injection (independent validation and approval block high-impact consequences of injected instructions but do not detect the injection itself)",
+                                "LLM03:2026 Excessive Agency",
+                                "LLM07:2026 Misinformation (evidence-bound independent validation implements a claim-check-act barrier for high-impact actions but does not fact-check ordinary responses)",
+                                "LLM10:2026 Improper Output Handling"
                             ]
                         },
                         {
@@ -15529,10 +15644,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection",
-                                "LLM06:2025 Excessive Agency"
+                                "LLM01:2026 Prompt Injection (intent-bound least capability limits the effects available to an injected prompt but does not identify malicious instructions)",
+                                "LLM03:2026 Excessive Agency",
+                                "LLM06:2026 Unbounded Consumption"
                             ]
                         },
                         {
@@ -15628,7 +15744,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Envoy Proxy",
                         "Istio",
                         "Cilium",
-                        "Kubernetes"
+                        "Kubernetes",
+                        "LlamaFirewall (agent-action alignment and custom sink-risk scanning; value provenance, taint propagation, and sink authorization remain external)"
                     ],
                     "toolsCommercial": [
                         "Palo Alto Networks Next-Generation Firewall",
@@ -15661,11 +15778,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection",
-                                "LLM02:2025 Sensitive Information Disclosure (sink enforcement prevents data flow to unauthorized destinations)",
-                                "LLM05:2025 Improper Output Handling"
+                                "LLM01:2026 Prompt Injection (provenance-aware value-to-sink policy blocks injected values from driving exfiltration or durable writes)",
+                                "LLM02:2026 Sensitive Information Disclosure",
+                                "LLM10:2026 Improper Output Handling"
                             ]
                         },
                         {
@@ -15766,7 +15883,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Valkey",
                         "Redis 8+ (AGPL-3.0)",
                         "HTTPX",
-                        "OPAL (Open Policy Administration Layer)"
+                        "OPAL (Open Policy Administration Layer)",
+                        "Open Policy Agent (OPA)",
+                        "SpiceDB"
                     ],
                     "toolsSourceAvailable": [
                         "HashiCorp Vault Community (BUSL-1.1; source-available)"
@@ -15792,9 +15911,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM06:2025 Excessive Agency (continuous re-authorization prevents privilege creep)"
+                                "LLM01:2026 Prompt Injection (fresh pre-dispatch authorization and bound action context limit injected requests from exploiting stale approvals)",
+                                "LLM03:2026 Excessive Agency"
                             ]
                         },
                         {
@@ -15915,7 +16035,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Calico Enterprise",
                         "Isovalent Enterprise Platform",
                         "Palo Alto Networks Prisma Cloud",
-                        "Aqua Cloud Security",
+                        "Aqua Platform (CNAPP)",
                         "CyberArk Secrets Manager SaaS"
                     ],
                     "defendsAgainst": [
@@ -15945,10 +16065,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM06:2025 Excessive Agency",
-                                "LLM02:2025 Sensitive Information Disclosure (file and network scope controls reduce unauthorized disclosure through skills)"
+                                "LLM01:2026 Prompt Injection (per-skill scoped credentials and runtime manifest enforcement bound the capabilities available after a successful injection)",
+                                "LLM02:2026 Sensitive Information Disclosure",
+                                "LLM03:2026 Excessive Agency"
                             ]
                         },
                         {
@@ -16083,7 +16204,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -16184,9 +16305,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM01:2025 Prompt Injection"
+                        "LLM01:2026 Prompt Injection",
+                        "LLM10:2026 Improper Output Handling"
                     ]
                 },
                 {
@@ -16286,9 +16408,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "N/A"
+                                "LLM10:2026 Improper Output Handling"
                             ]
                         },
                         {
@@ -16356,7 +16478,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Pydantic",
                         "HTTPX",
                         "Cosign",
-                        "rfc8785 Python package"
+                        "rfc8785 Python package",
+                        "Smokescreen (egress proxy with private-address blocking)"
                     ],
                     "toolsCommercial": [
                         "Zscaler Internet Access (ZIA; egress URL-policy backstop only)",
@@ -16407,9 +16530,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection (indirect injection via HTML content)"
+                                "LLM01:2026 Prompt Injection"
                             ]
                         },
                         {
@@ -16462,7 +16585,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "toolsOpenSource": [
                         "nh3",
                         "BeautifulSoup4",
-                        "html5lib"
+                        "html5lib",
+                        "DOMPurify",
+                        "Trafilatura (main-text extraction only; active-content sanitization, byte limits, and trust labeling remain external)"
                     ],
                     "toolsCommercial": [
                         "Menlo File Security",
@@ -16520,9 +16645,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection"
+                                "LLM01:2026 Prompt Injection"
                             ]
                         },
                         {
@@ -16589,16 +16714,17 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Firecracker",
                         "Envoy",
                         "Cilium",
-                        "mitmproxy"
+                        "mitmproxy",
+                        "Cloudflare Sandbox SDK (Apache-2.0 SDK; requires the managed Cloudflare Workers and Containers runtime; egress and host isolation remain external)"
                     ],
                     "toolsSourceAvailable": [
                         "Browserless self-hosted image (browser orchestration service; no sandbox boundary) (SSPL-1.0; source-available)"
                     ],
                     "toolsCommercial": [
-                        "Cloudflare Sandbox SDK (sandbox service only; independently enforce egress and host isolation)",
                         "Browserless Cloud (browser orchestration only; independent sandbox and egress controls required)",
                         "Browserless Enterprise Docker (browser orchestration only; independent sandbox and egress controls required)",
-                        "Menlo Agent Runtime Security (MARS)"
+                        "Menlo Agent Runtime Security (MARS)",
+                        "Browserbase (browser orchestration only; independent sandbox and egress controls required)"
                     ]
                 }
             ]
@@ -16641,12 +16767,13 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM01:2025 Prompt Injection",
-                        "LLM02:2025 Sensitive Information Disclosure",
-                        "LLM08:2025 Vector and Embedding Weaknesses",
-                        "LLM09:2025 Misinformation"
+                        "LLM01:2026 Prompt Injection",
+                        "LLM02:2026 Sensitive Information Disclosure",
+                        "LLM05:2026 Data and Model Poisoning",
+                        "LLM07:2026 Misinformation",
+                        "LLM09:2026 Vector and Embedding Weaknesses"
                     ]
                 },
                 {
@@ -16752,9 +16879,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM08:2025 Vector and Embedding Weaknesses"
+                                "LLM05:2026 Data and Model Poisoning",
+                                "LLM09:2026 Vector and Embedding Weaknesses"
                             ]
                         },
                         {
@@ -16810,8 +16938,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ],
                     "toolsOpenSource": [
                         "Cosign",
-                        "immudb",
-                        "pyca/cryptography"
+                        "pyca/cryptography",
+                        "Sigstore Rekor v2 (signed chunk-manifest digest transparency anchoring; manifest storage and verification remain external)"
+                    ],
+                    "toolsSourceAvailable": [
+                        "immudb (Business Source License 1.1; source-available)"
                     ],
                     "toolsCommercial": [
                         "AWS Key Management Service (AWS KMS)",
@@ -16863,10 +16994,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM08:2025 Vector and Embedding Weaknesses",
-                                "LLM09:2025 Misinformation"
+                                "LLM05:2026 Data and Model Poisoning (source reputation lowers poisoned content retrieval influence but does not authenticate or sanitize the content)",
+                                "LLM07:2026 Misinformation",
+                                "LLM09:2026 Vector and Embedding Weaknesses"
                             ]
                         },
                         {
@@ -16917,7 +17049,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "toolsOpenSource": [
                         "LangChain (custom source-reputation fusion required)",
                         "LlamaIndex (custom source-reputation fusion required)",
-                        "Vespa"
+                        "Vespa",
+                        "OpenSearch (source-reputation field storage and function-score fusion)"
                     ],
                     "toolsCommercial": [
                         "Cohere Rerank (similarity signal only; custom source-reputation fusion required)",
@@ -16964,11 +17097,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Casbin",
                         "PostgreSQL row-level security",
                         "LangChain retriever hooks",
-                        "LlamaIndex retriever hooks"
+                        "LlamaIndex retriever hooks",
+                        "SpiceDB"
                     ],
                     "toolsCommercial": [
-                        "Okta Fine-Grained Authorization",
-                        "Auth0 FGA",
+                        "Auth0 Fine-Grained Authorization (FGA)",
                         "Google Cloud IAM (identity/policy source only; not retrieval enforcement)",
                         "Google Cloud Identity (identity source only; not retrieval enforcement)",
                         "Microsoft Entra ID (identity source only; not retrieval enforcement)",
@@ -16993,10 +17126,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM02:2025 Sensitive Information Disclosure",
-                                "LLM08:2025 Vector and Embedding Weaknesses"
+                                "LLM02:2026 Sensitive Information Disclosure"
                             ]
                         },
                         {
@@ -17119,10 +17251,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM08:2025 Vector and Embedding Weaknesses",
-                                "LLM01:2025 Prompt Injection"
+                                "LLM01:2026 Prompt Injection (approved-source and freshness enforcement reduces exposure to injected retrieved content but does not inspect instruction semantics)",
+                                "LLM05:2026 Data and Model Poisoning",
+                                "LLM07:2026 Misinformation"
                             ]
                         },
                         {
@@ -17214,11 +17347,12 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM03:2025 Supply Chain",
-                        "LLM06:2025 Excessive Agency",
-                        "LLM08:2025 Vector and Embedding Weaknesses"
+                        "LLM01:2026 Prompt Injection",
+                        "LLM03:2026 Excessive Agency",
+                        "LLM05:2026 Data and Model Poisoning",
+                        "LLM07:2026 Misinformation"
                     ]
                 },
                 {
@@ -17314,9 +17448,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM06:2025 Excessive Agency"
+                                "LLM03:2026 Excessive Agency (endpoint policy blocks high-risk agent settings before use, while runtime action authorization remains separately enforced)"
                             ]
                         },
                         {
@@ -17366,7 +17500,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Code - OSS (MIT-licensed Extension API implementation)",
                         "Semgrep",
                         "Open Policy Agent (OPA)",
-                        "Conftest"
+                        "Conftest",
+                        "pre-commit",
+                        "Checkov"
                     ],
                     "toolsCommercial": [
                         "CrowdStrike Falcon Insight XDR",
@@ -17443,9 +17579,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain (signed configs as supply chain integrity defense)"
+                                "LLM01:2026 Prompt Injection (signed runtime admission and drift restoration block unauthorized persistent changes to prompt text and agent-control artifacts but do not judge approved content semantics)",
+                                "LLM03:2026 Excessive Agency (signature verification preserves approved agent control artifacts against tampering but does not itself define least privilege)",
+                                "LLM05:2026 Data and Model Poisoning"
                             ]
                         },
                         {
@@ -17493,7 +17631,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "GnuPG",
                         "SPIRE (workload identity only; separate artifact signing required)",
                         "Cosign",
-                        "in-toto"
+                        "in-toto",
+                        "Notation"
                     ],
                     "toolsSourceAvailable": [
                         "HashiCorp Vault Community (BUSL-1.1; source-available)"
@@ -17601,10 +17740,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM08:2025 Vector and Embedding Weaknesses",
-                                "LLM03:2025 Supply Chain (signed context corpus controls reduce untrusted document supply chain risk)"
+                                "LLM05:2026 Data and Model Poisoning (signed source governance supplies trusted context-release evidence to retrieval enforcement but does not itself admit each retrieved chunk)",
+                                "LLM07:2026 Misinformation (owned and freshness-governed context sources support grounded answers but do not independently verify every generated claim)"
                             ]
                         },
                         {
@@ -17753,9 +17892,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM06:2025 Excessive Agency"
+                                "LLM03:2026 Excessive Agency"
                             ]
                         },
                         {
@@ -17862,9 +18001,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM03:2025 Supply Chain"
+                        "LLM04:2026 Supply Chain"
                     ]
                 },
                 {
@@ -17955,7 +18094,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "PyPA build",
                         "twine",
                         "Cosign",
-                        "jq"
+                        "jq",
+                        "Verdaccio (npm package staging/cache only; immutable promotion, offline export, signature verification, and sandbox enforcement remain external)",
+                        "devpi (Python package staging/cache only; immutable promotion, offline export, signature verification, and sandbox enforcement remain external)"
                     ],
                     "toolsCommercial": [
                         "JFrog Artifactory",
@@ -17982,9 +18123,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain"
+                                "LLM04:2026 Supply Chain"
                             ]
                         },
                         {
@@ -18078,7 +18219,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "toolsOpenSource": [
                         "OpenSSF Scorecard",
                         "GitHub Dependency Review Action (actions/dependency-review-action; MIT)",
-                        "Socket CLI (MIT; Socket platform/API dependency)"
+                        "Socket CLI (MIT; Socket platform/API dependency)",
+                        "GuardDog",
+                        "OSV-Scanner"
                     ],
                     "toolsCommercial": [
                         "Snyk Advisor",
@@ -18109,9 +18252,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain"
+                                "LLM04:2026 Supply Chain"
                             ]
                         },
                         {
@@ -18200,7 +18343,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                 "npm CLI",
                 "PyPA build",
                 "twine",
-                "pypa/gh-action-pypi-publish"
+                "pypa/gh-action-pypi-publish",
+                "slsa-github-generator"
             ],
             "toolsCommercial": [
                 "JFrog Artifactory",
@@ -18232,9 +18376,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM03:2025 Supply Chain"
+                        "LLM04:2026 Supply Chain"
                     ]
                 },
                 {
@@ -18350,10 +18494,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM03:2025 Supply Chain",
-                        "LLM06:2025 Excessive Agency"
+                        "LLM01:2026 Prompt Injection",
+                        "LLM03:2026 Excessive Agency"
                     ]
                 },
                 {
@@ -18461,9 +18605,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain"
+                                "LLM01:2026 Prompt Injection"
                             ]
                         },
                         {
@@ -18543,7 +18687,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Cosign",
                         "jq",
                         "python-jsonschema",
-                        "OpenTelemetry"
+                        "OpenTelemetry",
+                        "Snyk Agent Scan (descriptor-drift and tool-poisoning checks; Snyk verification API required; sandbox untrusted MCP stdio discovery)"
                     ],
                     "toolsCommercial": [
                         "Splunk",
@@ -18574,9 +18719,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain"
+                                "LLM01:2026 Prompt Injection"
                             ]
                         },
                         {
@@ -18676,9 +18821,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain (typosquatting is a supply chain attack vector)"
+                                "LLM01:2026 Prompt Injection"
                             ]
                         },
                         {
@@ -18761,7 +18906,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "python-jsonschema",
                         "Cosign",
                         "OpenTelemetry",
-                        "Snyk Agent Scan (Apache-2.0; Snyk verification API required; sandbox untrusted MCP stdio discovery)"
+                        "Snyk Agent Scan (Snyk verification API required; sandbox untrusted MCP stdio discovery)"
                     ],
                     "toolsCommercial": [
                         "Kong Gateway Enterprise (custom semantic-invariant plugin required)",
@@ -18797,10 +18942,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain",
-                                "LLM06:2025 Excessive Agency"
+                                "LLM03:2026 Excessive Agency"
                             ]
                         },
                         {
@@ -18893,10 +19037,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM05:2025 Improper Output Handling",
-                        "LLM06:2025 Excessive Agency"
+                        "LLM03:2026 Excessive Agency",
+                        "LLM10:2026 Improper Output Handling"
                     ]
                 },
                 {
@@ -18978,7 +19122,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "ESLint",
                         "eslint-plugin-security",
                         "tree-sitter (multi-language parsing)",
-                        "Cosign"
+                        "Cosign",
+                        "LlamaFirewall CodeShield (static analysis of LLM-generated code)"
                     ],
                     "toolsCommercial": [
                         "GitHub Advanced Security",
@@ -19008,9 +19153,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM05:2025 Improper Output Handling"
+                                "LLM10:2026 Improper Output Handling"
                             ]
                         },
                         {
@@ -19101,7 +19246,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "gVisor",
                         "Firecracker",
                         "Wasmtime (WASM runtime)",
-                        "Wasmer (WASM runtime)"
+                        "Wasmer (WASM runtime)",
+                        "nsjail (process and seccomp sandbox for untrusted code)",
+                        "Pyodide (WASM Python runtime; independently restrict host capabilities)"
                     ],
                     "toolsCommercial": [
                         "Azure Container Apps Dynamic Sessions (code-interpreter or custom-container sessions)",
@@ -19125,10 +19272,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM05:2025 Improper Output Handling",
-                                "LLM06:2025 Excessive Agency (restricted interpreters limit agent capabilities)"
+                                "LLM03:2026 Excessive Agency",
+                                "LLM10:2026 Improper Output Handling"
                             ]
                         },
                         {
@@ -19224,9 +19371,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM01:2025 Prompt Injection"
+                        "LLM01:2026 Prompt Injection"
                     ]
                 },
                 {
@@ -19317,7 +19464,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Apache Airflow",
                         "scikit-learn",
                         "pandas",
-                        "Jupyter"
+                        "Jupyter",
+                        "Label Studio",
+                        "Argilla"
                     ],
                     "toolsCommercial": [
                         "Amazon SageMaker AI",
@@ -19346,9 +19495,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection"
+                                "LLM01:2026 Prompt Injection"
                             ]
                         },
                         {
@@ -19441,7 +19590,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Hugging Face Datasets",
                         "Hugging Face Transformers",
                         "PyRIT",
-                        "Jinja"
+                        "Jinja",
+                        "promptfoo"
                     ],
                     "toolsCommercial": [
                         "Check Point AI Red Teaming",
@@ -19469,9 +19619,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection"
+                                "LLM01:2026 Prompt Injection"
                             ]
                         },
                         {
@@ -19572,7 +19722,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "pandas",
                         "scikit-learn",
                         "Jupyter",
-                        "Captum"
+                        "Captum",
+                        "Evidently"
                     ],
                     "toolsCommercial": [
                         "Weights & Biases",
@@ -19601,9 +19752,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection"
+                                "LLM01:2026 Prompt Injection"
                             ]
                         },
                         {
@@ -19722,9 +19873,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM02:2025 Sensitive Information Disclosure"
+                        "LLM02:2026 Sensitive Information Disclosure"
                     ]
                 },
                 {
@@ -19873,14 +20024,13 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM01:2025 Prompt Injection",
-                        "LLM02:2025 Sensitive Information Disclosure",
-                        "LLM03:2025 Supply Chain",
-                        "LLM05:2025 Improper Output Handling",
-                        "LLM06:2025 Excessive Agency",
-                        "LLM10:2025 Unbounded Consumption"
+                        "LLM01:2026 Prompt Injection",
+                        "LLM02:2026 Sensitive Information Disclosure",
+                        "LLM03:2026 Excessive Agency",
+                        "LLM04:2026 Supply Chain",
+                        "LLM06:2026 Unbounded Consumption"
                     ]
                 },
                 {
@@ -20001,13 +20151,14 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Cert Spotter (open-source certificate-transparency monitor)",
                         "Python ssl (connection-level identity verification)",
                         "Node.js tls (connection-level identity verification)",
-                        "Go crypto/tls (connection-level identity verification)"
+                        "Go crypto/tls (connection-level identity verification)",
+                        "step-ca"
                     ],
                     "toolsSourceAvailable": [
                         "HashiCorp Vault Community (BUSL-1.1; source-available)"
                     ],
                     "toolsCommercial": [
-                        "CyberArk Certificate Manager",
+                        "Palo Alto Networks Next-Generation Trust Security (certificate lifecycle management)",
                         "DigiCert Trust Lifecycle Manager",
                         "AWS Private Certificate Authority",
                         "Google Cloud Certificate Authority Service",
@@ -20031,9 +20182,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain (connection to fraudulent MCP or tool server)"
+                                "LLM01:2026 Prompt Injection"
                             ]
                         },
                         {
@@ -20127,7 +20278,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "SOPS (encrypted file-based secret storage when keychains are unavailable)",
                         "age (secret-file encryption)",
                         "GnuPG",
-                        "pass (GPG-backed password store)"
+                        "pass (GPG-backed password store)",
+                        "Infisical (MIT-licensed core; enterprise features excluded)"
                     ],
                     "toolsSourceAvailable": [
                         "HashiCorp Vault Community (BUSL-1.1; source-available)"
@@ -20158,7 +20310,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -20244,7 +20396,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "structlog (structured logging with redaction hooks)",
                         "Loguru (structured logging with redaction hooks)",
                         "pino (structured logging with redaction hooks)",
-                        "SQLCipher (encrypted local SQLite caches where persistent cache is necessary)"
+                        "SQLCipher (encrypted local SQLite caches where persistent cache is necessary)",
+                        "Vector (log redaction and remap transforms)"
                     ],
                     "toolsCommercial": [
                         "Google Cloud Sensitive Data Protection API (DLP scanning)",
@@ -20268,9 +20421,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM02:2025 Sensitive Information Disclosure (client-side data leakage)"
+                                "LLM02:2026 Sensitive Information Disclosure"
                             ]
                         },
                         {
@@ -20386,10 +20539,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM05:2025 Improper Output Handling (unsafe handling of server or model output)",
-                                "LLM06:2025 Excessive Agency (explicit confirmation prevents implicit server-suggested actions)"
+                                "LLM01:2026 Prompt Injection (exact-action confirmation and no-implicit-execution limit the client-side consequences of malicious MCP responses but do not detect instruction content later supplied to a model)",
+                                "LLM03:2026 Excessive Agency",
+                                "LLM06:2026 Unbounded Consumption (message byte, nesting-depth, and read-time bounds stop oversized or pathological MCP responses from exhausting the client, while model-inference budgets remain separate)"
                             ]
                         },
                         {
@@ -20506,9 +20660,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "N/A"
+                                "LLM02:2026 Sensitive Information Disclosure"
                             ]
                         },
                         {
@@ -20610,7 +20764,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "python-tuf",
                         "in-toto",
                         "slsa-verifier",
-                        "GnuPG"
+                        "GnuPG",
+                        "Notation"
                     ],
                     "toolsCommercial": [
                         "Apple Notarization (macOS application notarization and signing checks)",
@@ -20636,9 +20791,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain (compromised client distribution or plugin)"
+                                "LLM04:2026 Supply Chain"
                             ]
                         },
                         {
@@ -20746,7 +20901,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -20859,11 +21014,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection (server-crafted sampling prompt injected into client LLM context)",
-                                "LLM06:2025 Excessive Agency (sampling triggers unintended tool invocations or actions)",
-                                "LLM10:2025 Unbounded Consumption (token budgets and rate limits constrain hidden sampling consumption)"
+                                "LLM01:2026 Prompt Injection (isolated context, denied tools, and hard budgets bound the blast radius of injected sampling content but do not detect the injection)",
+                                "LLM03:2026 Excessive Agency",
+                                "LLM06:2026 Unbounded Consumption"
                             ]
                         },
                         {
@@ -20970,9 +21125,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM02:2025 Sensitive Information Disclosure"
+                        "LLM02:2026 Sensitive Information Disclosure"
                     ]
                 },
                 {
@@ -21061,7 +21216,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "OneTrust Data Use Governance",
                         "BigID Data Security Platform",
                         "Immuta Data Security Platform",
-                        "Securiti DataAI Command Platform"
+                        "Veeam DataAI Command Platform",
+                        "Microsoft Purview Data Map (metadata scanning and classification)",
+                        "Microsoft Purview Unified Catalog (policy and classification metadata curation)"
                     ],
                     "defendsAgainst": [
                         {
@@ -21077,7 +21234,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -21196,9 +21353,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                           ]
                       },
                       {
-                          "framework": "OWASP LLM Top 10 2025",
+                          "framework": "OWASP LLM Top 10 2026",
                           "items": [
-                              "LLM02:2025 Sensitive Information Disclosure (prevents unauthorized logging, memory, or retention)"
+                              "LLM02:2026 Sensitive Information Disclosure"
                           ]
                       },
                       {
@@ -21311,9 +21468,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM02:2025 Sensitive Information Disclosure (withdrawn data remains available in outputs or memory)"
+                                "LLM02:2026 Sensitive Information Disclosure"
                             ]
                         },
                         {
@@ -21435,10 +21592,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM03:2025 Supply Chain",
-                        "LLM06:2025 Excessive Agency"
+                        "LLM01:2026 Prompt Injection",
+                        "LLM03:2026 Excessive Agency"
                     ]
                 },
                 {
@@ -21519,12 +21676,12 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "python-Levenshtein",
                         "Open Policy Agent (OPA)",
                         "ICU",
-                        "python-confusable-homoglyphs (homoglyph detection for registry names)",
+                        "confusable-homoglyphs (homoglyph detection for registry names)",
                         "Cisco AI Skill Scanner (Apache-2.0; best-effort scanner, not certification)",
-                        "Snyk Agent Scan (Apache-2.0; Snyk verification API required; sandbox untrusted MCP stdio discovery)"
+                        "Snyk Agent Scan (Snyk verification API required; sandbox untrusted MCP stdio discovery)"
                     ],
                     "toolsCommercial": [
-                        "Snyk Agent Scan - Skill Inspector (vendor-hosted)",
+                        "Snyk Agent Scan Skill Inspector (vendor-hosted)",
                         "CertiK Skill Scanner",
                         "Socket for Skills"
                     ],
@@ -21552,9 +21709,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain (metadata honesty is a supply-chain trust signal for skill artifacts)"
+                                "LLM01:2026 Prompt Injection"
                             ]
                         },
                         {
@@ -21641,17 +21798,18 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "toolsOpenSource": [
                         "Guardrails.ai (structured LLM output validation for classification results)",
                         "Cisco AI Skill Scanner (Apache-2.0; best-effort scanner, not certification)",
-                        "Snyk Agent Scan (Apache-2.0; Snyk verification API required; sandbox untrusted MCP stdio discovery)"
+                        "Snyk Agent Scan (Snyk verification API required; sandbox untrusted MCP stdio discovery)"
                     ],
                     "toolsSourceAvailable": [
-                        "Meta Llama Guard 4 (Llama 4 Community License; open-weight)"
+                        "Meta Llama Guard 4 (Llama 4 Community License; open-weight)",
+                        "Meta Llama Prompt Guard 2 (Llama 4 Community License; open-weight)"
                     ],
                     "toolsCommercial": [
                         "Palo Alto Networks Prisma AIRS (custom purpose/permission comparison required)",
                         "Check Point AI Guardrails (custom purpose/permission comparison required)",
                         "OpenAI fine-tuning API (enterprise intent-classifier adaptation)",
                         "Azure OpenAI fine-tuning (enterprise intent-classifier adaptation)",
-                        "Snyk Agent Scan - Skill Inspector (vendor-hosted)"
+                        "Snyk Agent Scan Skill Inspector (vendor-hosted)"
                     ],
                     "defendsAgainst": [
                         {
@@ -21674,9 +21832,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "N/A"
+                                "LLM01:2026 Prompt Injection"
                             ]
                         },
                         {
@@ -21797,9 +21955,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM06:2025 Excessive Agency (behavioral testing detects skills exercising more authority than declared)"
+                                "LLM03:2026 Excessive Agency (digest-bound sandbox observations expose skills that exceed their declared authority before admission, while runtime permission enforcement remains separate)"
                             ]
                         },
                         {
@@ -21902,9 +22060,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain (safe parsing reduces supply-chain risk from malformed or weaponized skill artifacts)"
+                                "N/A"
                             ]
                         },
                         {
@@ -22017,9 +22175,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain (re-scan governance maintains supply-chain trust decisions over time)"
+                                "N/A"
                             ]
                         },
                         {
@@ -22122,10 +22280,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM03:2025 Supply Chain",
-                        "LLM05:2025 Improper Output Handling"
+                        "LLM04:2026 Supply Chain",
+                        "LLM10:2026 Improper Output Handling"
                     ]
                 },
                 {
@@ -22220,7 +22378,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
                                 "N/A"
                             ]
@@ -22271,7 +22429,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "slsa-verifier",
                         "Cosign",
                         "Kyverno",
-                        "OPA Gatekeeper (admission control)"
+                        "OPA Gatekeeper (admission control)",
+                        "gitsign (commit-signature integrity when AI provenance metadata is embedded in the signed commit; label generation and validation remain external)"
                     ],
                     "toolsCommercial": [
                         "GitHub Enterprise Cloud",
@@ -22344,10 +22503,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain",
-                                "LLM05:2025 Improper Output Handling"
+                                "LLM04:2026 Supply Chain",
+                                "LLM10:2026 Improper Output Handling"
                             ]
                         },
                         {
@@ -22402,7 +22561,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Grype",
                         "Conftest",
                         "Open Policy Agent (OPA)",
-                        "Gitleaks"
+                        "Gitleaks",
+                        "Checkov"
                     ],
                     "toolsCommercial": [
                         "GitHub Advanced Security",
@@ -22467,9 +22627,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM05:2025 Improper Output Handling"
+                                "LLM10:2026 Improper Output Handling"
                             ]
                         },
                         {
@@ -22522,12 +22682,13 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Docker Engine",
                         "Cilium Tetragon",
                         "Falco",
-                        "OpenTelemetry"
+                        "OpenTelemetry",
+                        "E2B (ephemeral sandbox infrastructure for generated-code validation)"
                     ],
                     "toolsCommercial": [
                         "Wiz Defend (Wiz Runtime Sensor)",
                         "Isovalent Enterprise Platform",
-                        "Aqua Cloud Security",
+                        "Aqua Platform (CNAPP)",
                         "Sysdig Secure"
                     ],
                     "implementationGuidance": [
@@ -22585,9 +22746,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain"
+                                "LLM10:2026 Improper Output Handling"
                             ]
                         },
                         {
@@ -22637,7 +22798,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "in-toto",
                         "slsa-verifier",
                         "Open Policy Agent (OPA)",
-                        "OpenTelemetry"
+                        "OpenTelemetry",
+                        "Sigstore Rekor v2 (promotion-evidence digest transparency anchoring; approval and promotion enforcement remain external)"
                     ],
                     "toolsCommercial": [
                         "GitHub Enterprise Cloud",
@@ -23622,9 +23784,9 @@ if __name__ == "__main__":
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM02:2025 Sensitive Information Disclosure"
+                        "LLM02:2026 Sensitive Information Disclosure"
                     ]
                 },
                 {
@@ -23710,7 +23872,9 @@ if __name__ == "__main__":
                     "toolsCommercial": [
                         "Red Hat OpenShift AI",
                         "NVIDIA DGX Cloud Lepton Reservations (exclusive nodes; disable fallback to unreserved nodes)",
-                        "Amazon Bedrock Provisioned Throughput for custom models (dedicated compute capacity; separate serving-state isolation evidence required)"
+                        "Amazon Bedrock Provisioned Throughput for custom models (dedicated compute capacity; separate serving-state isolation evidence required)",
+                        "Microsoft Foundry provisioned throughput (reserved throughput only; does not prove hardware isolation; disable spillover)",
+                        "Vertex AI Provisioned Throughput (reserved throughput only; does not prove hardware isolation; reject pay-as-you-go overages)"
                     ],
                     "defendsAgainst": [
                         {
@@ -23726,9 +23890,9 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM02:2025 Sensitive Information Disclosure"
+                                "LLM02:2026 Sensitive Information Disclosure"
                             ]
                         },
                         {
@@ -23828,9 +23992,9 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM02:2025 Sensitive Information Disclosure"
+                                "LLM02:2026 Sensitive Information Disclosure"
                             ]
                         },
                         {
@@ -23928,9 +24092,9 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM02:2025 Sensitive Information Disclosure"
+                                "LLM02:2026 Sensitive Information Disclosure"
                             ]
                         },
                         {
@@ -24045,7 +24209,8 @@ if __name__ == "__main__":
                         "Google Cloud Confidential VM",
                         "Google Kubernetes Engine (GKE) Confidential Nodes with GPUs",
                         "Google Cloud Confidential VM with GPUs",
-                        "Anjuna Seaglass"
+                        "Anjuna Seaglass",
+                        "AWS Nitro Enclaves (attestation evidence for enclave-hosted inference only)"
                     ],
                     "defendsAgainst": [
                         {
@@ -24061,9 +24226,9 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM02:2025 Sensitive Information Disclosure"
+                                "LLM02:2026 Sensitive Information Disclosure"
                             ]
                         },
                         {
@@ -24152,12 +24317,12 @@ if __name__ == "__main__":
                   ]
               },
               {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                      "LLM02:2025 Sensitive Information Disclosure",
-                      "LLM03:2025 Supply Chain",
-                      "LLM06:2025 Excessive Agency",
-                      "LLM10:2025 Unbounded Consumption"
+                      "LLM02:2026 Sensitive Information Disclosure",
+                      "LLM03:2026 Excessive Agency",
+                      "LLM04:2026 Supply Chain",
+                      "LLM06:2026 Unbounded Consumption"
                   ]
               },
               {
@@ -24239,7 +24404,8 @@ if __name__ == "__main__":
               "toolsOpenSource": [
                 "LiteLLM",
                 "OpenTelemetry",
-                "Envoy"
+                "Envoy",
+                  "Helicone (requested-versus-routed model telemetry)"
               ],
               "toolsCommercial": [
                   "Cloudflare AI Gateway",
@@ -24260,7 +24426,7 @@ if __name__ == "__main__":
                       ]
                   },
                   {
-                      "framework": "OWASP LLM Top 10 2025",
+                      "framework": "OWASP LLM Top 10 2026",
                       "items": [
                           "N/A"
                       ]
@@ -24359,11 +24525,11 @@ if __name__ == "__main__":
                   ]
                 },
                 {
-                  "framework": "OWASP LLM Top 10 2025",
-                  "items": [
-                    "LLM02:2025 Sensitive Information Disclosure",
-                    "LLM06:2025 Excessive Agency"
-                  ]
+                    "framework": "OWASP LLM Top 10 2026",
+                    "items": [
+                        "LLM02:2026 Sensitive Information Disclosure (failover equivalence preserves downstream confidentiality controls but does not itself redact or authorize data)",
+                        "LLM03:2026 Excessive Agency (failover equivalence preserves downstream tool and approval constraints but does not authorize individual actions)"
+                    ]
                 },
                 {
                   "framework": "OWASP ML Top 10 2023",
@@ -24449,7 +24615,8 @@ if __name__ == "__main__":
               "toolsCommercial": [
                 "Microsoft Foundry (signed endpoint handling profile remains authoritative)",
                 "Azure API Management (routing only; signed endpoint handling profile required)",
-                "Cloudflare AI Gateway (routing only; signed endpoint handling profile required)"
+                "Cloudflare AI Gateway (routing only; signed endpoint handling profile required)",
+                  "Google Cloud Apigee API Management (policy-based regional routing)"
               ],
               "defendsAgainst": [
                 {
@@ -24466,10 +24633,10 @@ if __name__ == "__main__":
                   ]
                 },
                 {
-                  "framework": "OWASP LLM Top 10 2025",
-                  "items": [
-                    "LLM02:2025 Sensitive Information Disclosure"
-                  ]
+                    "framework": "OWASP LLM Top 10 2026",
+                    "items": [
+                        "LLM02:2026 Sensitive Information Disclosure"
+                    ]
                 },
                 {
                   "framework": "OWASP ML Top 10 2023",
@@ -24572,10 +24739,10 @@ if __name__ == "__main__":
                   ]
                 },
                 {
-                  "framework": "OWASP LLM Top 10 2025",
-                  "items": [
-                    "LLM03:2025 Supply Chain"
-                  ]
+                    "framework": "OWASP LLM Top 10 2026",
+                    "items": [
+                        "LLM04:2026 Supply Chain (versioned approval and rollback protect route-policy releases that select model suppliers, while component provenance is verified elsewhere)"
+                    ]
                 },
                 {
                   "framework": "OWASP ML Top 10 2023",
@@ -24667,11 +24834,11 @@ if __name__ == "__main__":
                   ]
                 },
                 {
-                  "framework": "OWASP LLM Top 10 2025",
-                  "items": [
-                    "LLM02:2025 Sensitive Information Disclosure (blocks dispatch when the resolved route is outside the verified signed route contract)",
-                    "LLM03:2025 Supply Chain (blocks dispatch when the resolved route is outside the verified signed route contract)"
-                  ]
+                    "framework": "OWASP LLM Top 10 2026",
+                    "items": [
+                        "LLM02:2026 Sensitive Information Disclosure",
+                        "LLM04:2026 Supply Chain"
+                    ]
                 },
                 {
                   "framework": "OWASP ML Top 10 2023",
@@ -24787,10 +24954,11 @@ if __name__ == "__main__":
                                                      ]
                                        },
                                        {
-                                           "framework":  "OWASP LLM Top 10 2025",
-                                           "items":  [
-                                                         "LLM10:2025 Unbounded Consumption"
-                                                     ]
+                                           "framework": "OWASP LLM Top 10 2026",
+                                           "items": [
+                                               "LLM02:2026 Sensitive Information Disclosure",
+                                               "LLM06:2026 Unbounded Consumption"
+                                           ]
                                        },
                                        {
                                            "framework":  "OWASP ML Top 10 2023",
@@ -24938,14 +25106,14 @@ if __name__ == "__main__":
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM01:2025 Prompt Injection",
-                        "LLM02:2025 Sensitive Information Disclosure",
-                        "LLM03:2025 Supply Chain",
-                        "LLM05:2025 Improper Output Handling",
-                        "LLM06:2025 Excessive Agency",
-                        "LLM10:2025 Unbounded Consumption"
+                        "LLM01:2026 Prompt Injection",
+                        "LLM02:2026 Sensitive Information Disclosure",
+                        "LLM03:2026 Excessive Agency",
+                        "LLM06:2026 Unbounded Consumption",
+                        "LLM08:2026 Hidden Context Exposure",
+                        "LLM10:2026 Improper Output Handling"
                     ]
                 },
                 {
@@ -25099,9 +25267,9 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "N/A"
+                                "LLM06:2026 Unbounded Consumption (coarse gateway and process limits bound MCP-driven request floods, while per-task and per-tool budgets are enforced separately)"
                             ]
                         },
                         {
@@ -25248,9 +25416,9 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM06:2025 Excessive Agency"
+                                "LLM03:2026 Excessive Agency"
                             ]
                         },
                         {
@@ -25368,12 +25536,13 @@ if __name__ == "__main__":
                         "Cedar",
                         "gVisor",
                         "Firecracker",
-                        "Semgrep"
+                        "Semgrep",
+                        "Zod (TypeScript argument-schema validation only; external object authorization required)"
                     ],
                     "toolsCommercial": [
                         "Snyk Code (pre-release SAST verification only)",
                         "Checkmarx One (pre-release SAST verification only)",
-                        "Aqua Cloud Security",
+                        "Aqua Platform (CNAPP)",
                         "Sysdig Secure"
                     ],
                     "defendsAgainst": [
@@ -25395,11 +25564,13 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM02:2025 Sensitive Information Disclosure",
-                                "LLM05:2025 Improper Output Handling",
-                                "LLM06:2025 Excessive Agency"
+                                "LLM01:2026 Prompt Injection (server-side authorization and sink validation limit the consequences of injected tool requests but do not detect the originating prompt injection)",
+                                "LLM02:2026 Sensitive Information Disclosure",
+                                "LLM03:2026 Excessive Agency",
+                                "LLM08:2026 Hidden Context Exposure",
+                                "LLM10:2026 Improper Output Handling"
                             ]
                         },
                         {
@@ -25508,7 +25679,7 @@ if __name__ == "__main__":
                         "Open Policy Agent (OPA)",
                         "Semgrep",
                         "python-jsonschema",
-                        "Snyk Agent Scan (Apache-2.0; Snyk verification API required; sandbox untrusted MCP stdio discovery)"
+                        "Snyk Agent Scan (Snyk verification API required; sandbox untrusted MCP stdio discovery)"
                     ],
                     "toolsCommercial": [
                         "GitHub Enterprise Cloud",
@@ -25537,9 +25708,9 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain"
+                                "LLM01:2026 Prompt Injection"
                             ]
                         },
                         {
@@ -25679,11 +25850,11 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection",
-                                "LLM02:2025 Sensitive Information Disclosure",
-                                "LLM05:2025 Improper Output Handling"
+                                "LLM01:2026 Prompt Injection",
+                                "LLM02:2026 Sensitive Information Disclosure",
+                                "LLM06:2026 Unbounded Consumption (tool-output size and complexity bounds plus completion budgets prevent MCP responses from exhausting client or model-context resources)"
                             ]
                         },
                         {
@@ -25821,10 +25992,10 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM02:2025 Sensitive Information Disclosure",
-                                "LLM06:2025 Excessive Agency"
+                                "LLM02:2026 Sensitive Information Disclosure",
+                                "LLM03:2026 Excessive Agency"
                             ]
                         },
                         {
@@ -25933,10 +26104,10 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM02:2025 Sensitive Information Disclosure",
-                                "LLM06:2025 Excessive Agency"
+                                "LLM02:2026 Sensitive Information Disclosure",
+                                "LLM03:2026 Excessive Agency"
                             ]
                         },
                         {
@@ -26044,9 +26215,9 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM10:2025 Unbounded Consumption"
+                                "LLM06:2026 Unbounded Consumption"
                             ]
                         },
                         {
@@ -26149,9 +26320,9 @@ if __name__ == "__main__":
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM06:2025 Excessive Agency"
+                                "LLM03:2026 Excessive Agency"
                             ]
                         },
                         {
@@ -26688,7 +26859,8 @@ export async function runWithDisableEnforcement(input) {
                 "Cosign",
                 "Kyverno",
                 "OpenTelemetry",
-                "Pydantic"
+                "Pydantic",
+                "Shuffle (self-hosted security-automation workflow substrate; independent identity and action gates required)"
             ],
             "toolsCommercial": [
                 "Cortex XSOAR",
@@ -26718,9 +26890,10 @@ export async function runWithDisableEnforcement(input) {
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM06:2025 Excessive Agency"
+                        "LLM03:2026 Excessive Agency",
+                        "LLM05:2026 Data and Model Poisoning (validated response evidence reduces poisoned security-data influence on containment decisions, while source-data admission remains separately enforced)"
                     ]
                 },
                 {
@@ -26837,7 +27010,8 @@ export async function runWithDisableEnforcement(input) {
                 "garak",
                 "Inspect AI",
                 "pandas",
-                "scikit-learn"
+                "scikit-learn",
+                "EleutherAI lm-evaluation-harness (custom locale-stratified task runner)"
             ],
             "toolsSourceAvailable": [
                 "Qwen3Guard-Gen (Apache-2.0; open-weight)",
@@ -26869,9 +27043,9 @@ export async function runWithDisableEnforcement(input) {
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM01:2025 Prompt Injection"
+                        "LLM01:2026 Prompt Injection"
                     ]
                 },
                 {
@@ -26965,12 +27139,12 @@ export async function runWithDisableEnforcement(input) {
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM01:2025 Prompt Injection",
-                        "LLM02:2025 Sensitive Information Disclosure",
-                        "LLM07:2025 System Prompt Leakage",
-                        "LLM10:2025 Unbounded Consumption"
+                        "LLM01:2026 Prompt Injection",
+                        "LLM02:2026 Sensitive Information Disclosure",
+                        "LLM06:2026 Unbounded Consumption",
+                        "LLM08:2026 Hidden Context Exposure"
                     ]
                 },
                 {
@@ -27073,10 +27247,10 @@ export async function runWithDisableEnforcement(input) {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM02:2025 Sensitive Information Disclosure",
-                                "LLM07:2025 System Prompt Leakage (raw reasoning and scratchpad controls prevent hidden traces from becoming a system-instruction disclosure channel)"
+                                "LLM02:2026 Sensitive Information Disclosure",
+                                "LLM08:2026 Hidden Context Exposure (raw reasoning controls reduce reconstruction of non-user-facing instructions and policy context, while generic server-log leakage remains outside LLM08)"
                             ]
                         },
                         {
@@ -27183,9 +27357,9 @@ export async function runWithDisableEnforcement(input) {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM10:2025 Unbounded Consumption"
+                                "LLM06:2026 Unbounded Consumption"
                             ]
                         },
                         {
@@ -27287,9 +27461,9 @@ export async function runWithDisableEnforcement(input) {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM01:2025 Prompt Injection"
+                                "LLM01:2026 Prompt Injection"
                             ]
                         },
                         {

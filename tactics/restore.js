@@ -48,10 +48,10 @@ export const restoreTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM03:2025 Supply Chain",
-                        "LLM04:2025 Data and Model Poisoning"
+                        "LLM04:2026 Supply Chain",
+                        "LLM05:2026 Data and Model Poisoning"
                     ]
                 },
                 {
@@ -209,10 +209,10 @@ export const restoreTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM03:2025 Supply Chain",
-                                "LLM04:2025 Data and Model Poisoning"
+                                "LLM04:2026 Supply Chain",
+                                "LLM05:2026 Data and Model Poisoning"
                             ]
                         },
                         {
@@ -287,6 +287,8 @@ export const restoreTactic = {
                     "toolsOpenSource": [
                         "MLflow",
                         "Kubeflow Pipelines",
+                        "Ray Train (distributed recovery-retraining execution)",
+                        "cleanlab (training-data issue triage before governed recovery snapshot)",
                         "DVC",
                         "Flower",
                         "NVIDIA FLARE",
@@ -328,9 +330,9 @@ export const restoreTactic = {
                             ]
                         },
                         {
-                            "framework": "OWASP LLM Top 10 2025",
+                            "framework": "OWASP LLM Top 10 2026",
                             "items": [
-                                "LLM04:2025 Data and Model Poisoning"
+                                "LLM05:2026 Data and Model Poisoning"
                             ]
                         },
                         {
@@ -433,10 +435,13 @@ export const restoreTactic = {
                 }
               ]
             },
-            "toolsOpenSource": [
-                "pg_dump",
-                "mysqldump",
-                "GX Core",
+                    "toolsOpenSource": [
+                        "pg_dump",
+                        "mysqldump",
+                        "lakeFS (atomic known-good data-lake commit restoration)",
+                        "Delta Lake (versioned table restoration)",
+                        "restic (encrypted snapshot restore and verification)",
+                        "GX Core",
                 "DataHub",
                 "Marquez",
                 "rsync",
@@ -480,9 +485,9 @@ export const restoreTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM04:2025 Data and Model Poisoning"
+                        "LLM05:2026 Data and Model Poisoning"
                     ]
                 },
                 {
@@ -605,10 +610,11 @@ export const restoreTactic = {
                   ]
               },
               {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                      "LLM01:2025 Prompt Injection",
-                      "LLM06:2025 Excessive Agency"
+                      "LLM01:2026 Prompt Injection",
+                      "LLM03:2026 Excessive Agency",
+                      "LLM05:2026 Data and Model Poisoning"
                   ]
               },
               {
@@ -704,9 +710,9 @@ export const restoreTactic = {
                   ]
                 },
                 {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                    "N/A"
+                      "N/A"
                   ]
                 },
                 {
@@ -753,8 +759,9 @@ export const restoreTactic = {
                   "FreeIPA",
                   "authentik"
               ],
-              "toolsCommercial": [
-                    "Okta Workforce Identity",
+            "toolsCommercial": [
+                "Microsoft Entra ID (refresh-token revocation and policy-driven reauthentication; application-issued session revocation remains external)",
+                "Okta Workforce Identity",
                         "Auth0",
                     "PingOne for Workforce"
               ],
@@ -804,9 +811,10 @@ export const restoreTactic = {
                   ]
                 },
                 {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                    "LLM01:2025 Prompt Injection (restoring clean conversational state removes persistent injected context from the recovered namespace)"
+                      "LLM01:2026 Prompt Injection (clean-state restoration removes persistent injected context from the recovered namespace)",
+                      "LLM05:2026 Data and Model Poisoning (clean-state restoration excludes tainted persistent conversational or agent state)"
                   ]
                 },
                 {
@@ -857,7 +865,8 @@ export const restoreTactic = {
                   "Temporal"
               ],
               "toolsCommercial": [
-                  "Temporal Cloud",
+                "Mem0 Platform (scoped memory export and import)",
+                "Temporal Cloud",
                   "LangSmith Deployments",
                   "Redis Enterprise"
               ],
@@ -908,9 +917,9 @@ export const restoreTactic = {
                   ]
                 },
                 {
-                  "framework": "OWASP LLM Top 10 2025",
+                  "framework": "OWASP LLM Top 10 2026",
                   "items": [
-                    "LLM06:2025 Excessive Agency (progressive capability restoration constrains recovered tool and action authority)"
+                      "LLM03:2026 Excessive Agency (progressive capability restoration constrains recovered tool and action authority)"
                   ]
                 },
                 {
@@ -956,9 +965,10 @@ export const restoreTactic = {
                 }
               ],
               "toolsOpenSource": [
-                  "Keycloak",
-                  "FreeIPA",
-                  "Open Policy Agent (OPA)"
+                "Keycloak",
+                "FreeIPA",
+                "OpenFGA (progressive relationship-tuple regrant and readback)",
+                "Open Policy Agent (OPA)"
               ],
               "toolsCommercial": [
                     "Okta Workforce Identity",
@@ -1006,7 +1016,9 @@ export const restoreTactic = {
             "promptfoo",
             "GX Core",
             "Git",
-            "GitLab Community Edition"
+            "GitLab Community Edition",
+            "Ansible Core (idempotent fleet remediation propagation)",
+            "osquery (independent endpoint OS-state readback for covered tables; application and control-plane state remain external)"
           ],
           "toolsCommercial": [
             "GitHub Enterprise Server",
@@ -1031,9 +1043,9 @@ export const restoreTactic = {
               ]
             },
             {
-              "framework": "OWASP LLM Top 10 2025",
+              "framework": "OWASP LLM Top 10 2026",
               "items": [
-                "N/A"
+                  "N/A"
               ]
             },
             {
@@ -1141,11 +1153,11 @@ export const restoreTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM01:2025 Prompt Injection (rollback removes indirect prompt injections embedded in RAG index)",
-                        "LLM04:2025 Data and Model Poisoning",
-                        "LLM08:2025 Vector and Embedding Weaknesses"
+                        "LLM01:2026 Prompt Injection (rollback removes indirect prompt injections embedded in a RAG index)",
+                        "LLM05:2026 Data and Model Poisoning",
+                        "LLM09:2026 Vector and Embedding Weaknesses"
                     ]
                 },
                 {
@@ -1237,8 +1249,8 @@ export const restoreTactic = {
           ],
           "toolsCommercial": [
             "Pinecone",
-            "Weaviate Cloud",
-            "Weaviate Enterprise",
+            "Weaviate Shared Cloud",
+            "Weaviate Dedicated Cloud",
             "Amazon OpenSearch Service",
             "Amazon S3 Object Lock"
             ]
@@ -1268,6 +1280,7 @@ export const restoreTactic = {
             },
             "toolsOpenSource": [
                 "Argo Workflows",
+                "Argo CD (Kubernetes GitOps deployment and desired-versus-live resource readback; external service readiness remains separate)",
                 "Temporal",
                 "Tekton",
                 "OpenTofu",
@@ -1302,10 +1315,9 @@ export const restoreTactic = {
                     ]
                 },
                 {
-                    "framework": "OWASP LLM Top 10 2025",
+                    "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM03:2025 Supply Chain (signed release manifests prevent recovery from unverified dependencies)",
-                        "LLM04:2025 Data and Model Poisoning (recovery consumes verified model and data restoration receipts)"
+                        "LLM04:2026 Supply Chain (signed dependency manifests prevent recovery from unverified components or workflows)"
                     ]
                 },
                 {
@@ -1426,9 +1438,9 @@ export const restoreTactic = {
               ]
             },
             {
-              "framework": "OWASP LLM Top 10 2025",
+              "framework": "OWASP LLM Top 10 2026",
               "items": [
-                "LLM06:2025 Excessive Agency (compensation addresses external effects already issued with excessive authority)"
+                  "LLM03:2026 Excessive Agency (compensation addresses external effects already issued with excessive authority)"
               ]
             },
             {
@@ -1473,10 +1485,13 @@ export const restoreTactic = {
             }
           ],
           "toolsOpenSource": [
-              "PostgreSQL",
-              "Temporal",
-              "OpenTelemetry",
-              "Cosign"
+            "PostgreSQL",
+            "Temporal",
+            "OpenTelemetry",
+            "Cosign"
+          ],
+          "toolsSourceAvailable": [
+            "Camunda 8 Self-Managed (Camunda License 1.0; source-available)"
           ],
           "toolsCommercial": [
             "Temporal Cloud",
