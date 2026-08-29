@@ -1,4 +1,4 @@
-export const aidefendVersion = "1.20260805";
+export const aidefendVersion = "1.20260830";
 
 export const aidefendIntroduction = {
     "mainTitle": "About AIDEFEND™ - An AI Defense Framework",
@@ -25,7 +25,7 @@ export const aidefendIntroduction = {
             "title": "Version & Date",
             "paragraphs": [
                 `Version: ${aidefendVersion}`,
-                "Last Updated: August 5, 2026 (Taipei Time, UTC+8)"
+                "Last Updated: August 30, 2026 (Taipei Time, UTC+8)"
             ]
         },
         {

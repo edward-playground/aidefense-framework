@@ -1,8 +1,8 @@
 {
 "version": {
 "schemaVersion": "2.3",
-"dataVersion": "2026.08.05",
-"generatedAt": "2026-08-05T03:29:32.409Z",
+"dataVersion": "2026.08.30",
+"generatedAt": "2026-08-29T22:39:49.919Z",
 "source": "bundled",
 "keywordStructure": "flat"
 },
@@ -6116,7 +6116,8 @@
 },
 "pillar": [
 "data",
-"app"
+"app",
+"infra"
 ],
 "phase": [
 "building",
@@ -6126,10 +6127,15 @@
 {
 "framework": "MITRE ATLAS",
 "items": [
+"AML.T0010 AI Supply Chain Compromise",
+"AML.T0010.002 AI Supply Chain Compromise: Data",
 "AML.T0011 User Execution",
+"AML.T0011.000 User Execution: Unsafe AI Artifacts",
 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
 "AML.T0015 Evade AI Model",
 "AML.T0020 Training Data Poisoning",
+"AML.T0025 Exfiltration via Cyber Means",
+"AML.T0037 Data from Local System",
 "AML.T0043 Craft Adversarial Data",
 "AML.T0051 LLM Prompt Injection",
 "AML.T0051.000 LLM Prompt Injection: Direct",
@@ -6146,6 +6152,8 @@
 "AML.T0099 AI Agent Tool Data Poisoning",
 "AML.T0110 AI Agent Tool Poisoning",
 "AML.T0110.002 AI Agent Tool Poisoning: Runtime Response",
+"AML.T0112 Machine Compromise",
+"AML.T0112.001 Machine Compromise: AI Artifacts",
 "AML.T0115 Publish Poisoned AI Artifacts",
 "AML.T0115.000 Publish Poisoned AI Artifacts: Datasets"
 ]
@@ -6158,9 +6166,11 @@
 "Reprogramming Attacks (L1)",
 "Data Poisoning (L2)",
 "Data Tampering (L2)",
+"Compromised RAG Pipelines (L2)",
 "Input Validation Attacks (L3)",
 "Framework Evasion (L3)",
-"Manipulation of Evaluation Metrics (L5)"
+"Manipulation of Evaluation Metrics (L5)",
+"Data Leakage (Cross-Layer)"
 ]
 },
 {
@@ -6168,6 +6178,7 @@
 "items": [
 "LLM01:2026 Prompt Injection",
 "LLM02:2026 Sensitive Information Disclosure",
+"LLM04:2026 Supply Chain",
 "LLM05:2026 Data and Model Poisoning",
 "LLM06:2026 Unbounded Consumption",
 "LLM07:2026 Misinformation"
@@ -6179,6 +6190,7 @@
 "ML01:2023 Input Manipulation Attack",
 "ML02:2023 Data Poisoning Attack",
 "ML04:2023 Membership Inference Attack",
+"ML06:2023 AI Supply Chain Attacks",
 "ML08:2023 Model Skewing"
 ]
 },
@@ -6186,7 +6198,8 @@
 "framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
 "ASI01:2026 Agent Goal Hijack",
-"ASI04:2026 Agentic Supply Chain Vulnerabilities"
+"ASI04:2026 Agentic Supply Chain Vulnerabilities",
+"ASI05:2026 Unexpected Code Execution (RCE)"
 ]
 },
 {
@@ -6212,6 +6225,8 @@
 "AITech-2.1 Jailbreak",
 "AITech-6.1 Training Data Poisoning",
 "AITech-7.3 Data Source Abuse and Manipulation",
+"AITech-8.3 Information Disclosure",
+"AITech-9.1 Model or Agentic System Manipulation",
 "AITech-17.1 Sensor Spoofing",
 "AITech-19.2 Fusion Payload Split",
 "AISubtech-17.1.1 Sensor Spoofing: Action Signals (audio, visual)",
@@ -6220,7 +6235,10 @@
 "AISubtech-1.4.3 Audio Command Injection",
 "AISubtech-1.4.4 Video Overlay Manipulation",
 "AISubtech-6.1.1 Knowledge Base Poisoning",
-"AISubtech-7.3.1 Corrupted Third-Party Data"
+"AISubtech-7.3.1 Corrupted Third-Party Data",
+"AISubtech-8.3.2 System Information Leakage",
+"AISubtech-9.1.1 Code Execution",
+"AISubtech-9.1.5 Template Injection (e.g., SSTI)"
 ]
 },
 {
@@ -6228,6 +6246,7 @@
 "items": [
 "DP: Data Poisoning",
 "EDH: Excessive Data Handling",
+"IIC: Insecure Integrated Component",
 "PIJ: Prompt Injection",
 "MEV: Model Evasion",
 "SDD: Sensitive Data Disclosure"
@@ -6254,6 +6273,7 @@
 "Model Serving - Inference requests 9.3: Model breakout",
 "Model Serving - Inference requests 9.9: Input Resource Control",
 "Model Serving - Inference requests 9.12: LLM Jailbreak",
+"Platform 12.7: Initial Access",
 "Agents - Core 13.6: Intent Breaking & Goal Manipulation"
 ]
 }
@@ -6263,7 +6283,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "085114a3c1370e8b",
+"contentHash": "0ae25214391e8a3c",
 "keywords": [
 "input sanitization",
 "prompt hardening",
@@ -6278,7 +6298,8 @@
 "prompt injection defense",
 "data poisoning prevention",
 "rag input validation",
-"canonicalization"
+"canonicalization",
+"dataset parser admission"
 ],
 "subTechniques": [
 {
@@ -6299,6 +6320,10 @@
 {
 "id": "AID-H-003.003",
 "comparison": "AID-H-002.001 decides whether dataset contents are safe enough for training use; AID-H-003.003 decides whether the external supplier, provenance, license, signature, and lineage satisfy supply-chain admission.\nContent sanitization and source admission are independent requirements."
+},
+{
+"id": "AID-H-002.009",
+"comparison": "AID-H-002.001 sanitizes the records that may influence training or evaluation; AID-H-002.009 admits the dataset container and parser result against hostile format features.\nA dataset can contain benign records yet exploit its parser, and a parser-safe artifact can still contain poisoned or privacy-sensitive records."
 }
 ]
 },
@@ -6415,7 +6440,7 @@
 ]
 }
 ],
-"contentHash": "4b6233f7e20968cc",
+"contentHash": "04051132c0d8bced",
 "keywords": [
 "training data sanitization",
 "poisoned sample removal",
@@ -6630,6 +6655,10 @@
 {
 "id": "AID-D-007.001",
 "comparison": "AID-H-002.003 executes preventive artifact transformation and admission; AID-D-007.001 emits cross-modal inconsistency and hidden-payload findings for complete artifacts.\nThe detector supplies evidence, while this control owns the final artifact gate."
+},
+{
+"id": "AID-H-002.009",
+"comparison": "AID-H-002.003 safely decodes and sanitizes complete image, audio, video, document, and OCR artifacts; AID-H-002.009 governs dataset containers, reference descriptors, and the parser result.\nA dataset whose records include media may require both controls: parser admission for the container and media admission for each extracted artifact."
 }
 ]
 },
@@ -6728,7 +6757,7 @@
 ]
 }
 ],
-"contentHash": "aad32a9437b905d6",
+"contentHash": "edc8eeb829241154",
 "keywords": [
 "batch multimodal sanitization",
 "artifact-level media gate",
@@ -7412,6 +7441,183 @@
 "visual frame admission",
 "live media prompt injection",
 "multimodal stream gating"
+]
+},
+{
+"id": "AID-H-002.009",
+"name": "Untrusted ML Dataset Artifact Parser Admission",
+"description": "Treat an externally supplied ML dataset or structured-data artifact that a service automatically parses for preview, conversion, sampling, indexing, or RAG ingestion as a hostile parser payload. Route it only to a policy-pinned parser, reject dangerous format features before admitting a result, and admit only a result bound to the exact artifact, parser image, policy, and required isolation receipts.<br/><br/><strong>Threat:</strong> HDF5 external raw storage can make a worker read local bytes; malformed native-format parsing can disclose adjacent heap memory; and attacker-controlled descriptor templating can execute code. Metadata inspection is not a safe pre-sandbox step because opening a binary format already invokes native parser code.<br/><br/><strong>Outcome states:</strong><ul><li><code>PASS</code> only when every policy-required benign, forbidden-feature, exploit-regression, and fail-closed orchestration case ran on the production-equivalent parser image, matched its exact expected result, and every admitted result carried valid required dependency evidence.</li><li><code>FAIL</code> when a completed case makes the wrong admission decision, leaks protected bytes, admits a forbidden feature, or admits a result without a required dependency PASS.</li><li><code>INSUFFICIENT_DATA</code> when a required case, parser observation, result digest, or dependency observation is missing or stale.</li><li><code>NOT_APPLICABLE</code> only when no external or user-supplied dataset artifact reaches an automatic parser.</li><li><code>ERROR</code> when an applicable policy, manifest, parser, evidence source, or verifier is malformed, unavailable, or unable to complete deterministically.</li></ul>The conditional bounded-preview broker in G005 is defense-in-depth under this same objective and never creates a second scoreable publication result.",
+"scopeBoundary": {
+"responsibility": "Owns dataset-format routing, dangerous-feature denial, the parser-side admission decision, and evidence binding for preview, conversion, sampling, indexing, and RAG-ingestion parsers. It consumes but does not own or re-score isolation strength, sandbox ephemerality, egress denial, detonation, safe remote fetch, model-artifact scanning, generic output sanitization, MCP response handling, or agentic value-to-sink authorization. A bounded dataset preview broker is a conditional implementation method here, not an independently scoreable release control.",
+"relatedTechniques": [
+{
+"id": "AID-H-002.001",
+"comparison": "AID-H-002.001 sanitizes the records that may influence training or evaluation; AID-H-002.009 admits the dataset container and parser result against hostile format features.\nA dataset can contain benign records yet exploit its parser, and a parser-safe artifact can still contain poisoned or privacy-sensitive records."
+},
+{
+"id": "AID-H-002.003",
+"comparison": "AID-H-002.003 safely decodes and sanitizes complete image, audio, video, document, and OCR artifacts; AID-H-002.009 governs dataset containers, reference descriptors, and the parser result.\nA dataset whose records include media may require both controls: parser admission for the container and media admission for each extracted artifact."
+},
+{
+"id": "AID-H-003.009",
+"comparison": "AID-H-003.009 statically scans models, checkpoints, and adapters for unsafe serialization and embedded code; AID-H-002.009 admits untrusted dataset and structured-data artifacts against parser-specific features.\nRoute each object by its actual format and loader; a model-artifact scan does not make a dataset parser safe, and parser admission does not approve model loading."
+},
+{
+"id": "AID-H-006.002",
+"comparison": "AID-H-006.002 owns sink-specific release of model-generated text, markup, URLs, structured payloads, and token streams; AID-H-002.009 owns dataset-parser admission and its conditional bounded-row preview method.\nFor a mixed response, apply each control to its own segment and assign one primary release-gate result to the final bytes rather than double-scoring the same publication."
+},
+{
+"id": "AID-H-034.005",
+"comparison": "AID-H-034.005 owns MCP server tool, resource, and elicitation output boundaries. The bounded preview method here applies to an ordinary dataset preview or sampling endpoint, not MCP protocol output."
+},
+{
+"id": "AID-H-028.004",
+"comparison": "AID-H-028.004 owns parsing, rendering, and execution surfaces for MCP client responses. The bounded preview method here rebuilds dataset rows before an ordinary preview or sampling API publishes them."
+},
+{
+"id": "AID-H-018.005",
+"comparison": "AID-H-018.005 owns value-to-sink capability and data-flow enforcement for agentic actions. This control owns the narrower upstream dataset-parser admission and does not authorize any later agentic sink."
+},
+{
+"id": "AID-H-019.001",
+"comparison": "AID-H-019.001 owns URL normalization, destination validation, redirect handling, and SSRF-safe fetch when a remote URL is staged. This control consumes the fetched exact object and digest; it does not re-score remote-fetch safety."
+},
+{
+"id": "AID-I-001.002",
+"comparison": "AID-I-001.002 owns and verifies the policy-selected microVM or low-level isolation boundary. This control verifies and binds its receipt before admitting a parse result; it does not create a second isolation PASS."
+},
+{
+"id": "AID-I-001.003",
+"comparison": "AID-I-001.003 owns per-run sandbox freshness and teardown. This control consumes its run-bound receipt and fails closed when policy-required evidence is absent or unverifiable."
+},
+{
+"id": "AID-I-001.004",
+"comparison": "AID-I-001.004 owns sandbox egress policy and enforcement. This control consumes its receipt; egress denial does not inspect the legitimate parser-result channel."
+},
+{
+"id": "AID-I-001.005",
+"comparison": "AID-I-001.005 owns safe detonation and raw observation integrity. Parser admission may consume its evidence for hostile-format tests but does not re-score detonation."
+}
+]
+},
+"pillar": [
+"data",
+"infra"
+],
+"phase": [
+"building",
+"operation"
+],
+"implementationGuidance": [
+"Pin the accepted parser routes and structurally reject dangerous dataset-format features before admitting a parser result.",
+"Use a version-and-digest-bound input handoff and parse the same opened descriptor in a secretless, no-network worker.",
+"Do not evaluate artifact-controlled templates or invoke code-bearing loaders on the dataset-parser path.",
+"Independently verify parser admission over the complete policy-required benign, negative, and regression case population without re-scoring consumed isolation controls.",
+"For bounded preview or sampling endpoints, use a small independent broker to validate, rebuild, and publish the exact policy-bounded parser result, then run specific negative tests without creating a second control outcome."
+],
+"implementationGuidanceIds": [
+"AID-H-002.009-G001",
+"AID-H-002.009-G002",
+"AID-H-002.009-G003",
+"AID-H-002.009-G004",
+"AID-H-002.009-G005"
+],
+"toolsOpenSource": [
+"h5py (BSD-3-Clause; confined HDF5 feature inspection, pinned with the HDF5 runtime)",
+"python-magic (MIT; content-type routing backed by a separately maintained libmagic installation)",
+"Magika (Apache-2.0; bounded content-type routing signal only; structural parser admission remains authoritative)",
+"Atheris (Apache-2.0; coverage-guided fuzzing of Python admission code and instrumented native parser extensions)",
+"ClusterFuzzLite (Apache-2.0; CI fuzzing and sanitizer-backed parser regression testing)"
+],
+"toolsSourceAvailable": [],
+"toolsCommercial": [],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0010 AI Supply Chain Compromise",
+"AML.T0010.002 AI Supply Chain Compromise: Data",
+"AML.T0011 User Execution",
+"AML.T0011.000 User Execution: Unsafe AI Artifacts",
+"AML.T0025 Exfiltration via Cyber Means (the conditional bounded-preview method limits the parser-result response channel)",
+"AML.T0037 Data from Local System (hostile dataset features can cause a parser to disclose local files)",
+"AML.T0112 Machine Compromise",
+"AML.T0112.001 Machine Compromise: AI Artifacts"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Compromised RAG Pipelines (L2) (when the parser is part of a RAG ingestion or indexing workflow)",
+"Input Validation Attacks (L3)",
+"Data Leakage (Cross-Layer) (the conditional bounded-preview method limits disclosure through the parser-result channel)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2026",
+"items": [
+"LLM02:2026 Sensitive Information Disclosure (when a bounded dataset response is exposed through an LLM-integrated pipeline)",
+"LLM04:2026 Supply Chain"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"ML06:2023 AI Supply Chain Attacks"
+]
+},
+{
+"framework": "OWASP Top 10 for Agentic Applications 2026",
+"items": [
+"ASI04:2026 Agentic Supply Chain Vulnerabilities (when an agentic workflow consumes the hostile dataset artifact)",
+"ASI05:2026 Unexpected Code Execution (RCE)"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"N/A"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-8.3 Information Disclosure",
+"AISubtech-8.3.2 System Information Leakage",
+"AITech-9.1 Model or Agentic System Manipulation",
+"AISubtech-9.1.1 Code Execution",
+"AISubtech-9.1.5 Template Injection (e.g., SSTI)"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"IIC: Insecure Integrated Component (an automatically invoked dataset parser is an integrated component exposed to hostile artifacts)"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Platform 12.7: Initial Access (a hostile dataset artifact can exploit an automatically invoked platform parser)"
+]
+}
+],
+"contentHash": "14ddae284d92e33b",
+"keywords": [
+"untrusted dataset parser admission",
+"hostile dataset artifact parsing",
+"policy-pinned parser routing",
+"dangerous dataset feature denial",
+"hdf5 external storage blocking",
+"descriptor-bound artifact handoff",
+"parser image digest binding",
+"exact parser result binding",
+"code-bearing loader denial",
+"parser result admission receipt",
+"bounded dataset preview broker",
+"complete parser case population",
+"structured artifact quarantine",
+"parser negative regression testing"
 ]
 }
 ],
@@ -8746,6 +8952,10 @@
 {
 "id": "AID-H-025.001",
 "comparison": "AID-H-003.009 analyzes serialized model and adapter artifacts; AID-H-025.001 analyzes generated code and execution requests for dangerous constructs.\nBoth are pre-execution gates, but they operate on different artifact languages and loaders."
+},
+{
+"id": "AID-H-002.009",
+"comparison": "AID-H-003.009 statically scans models, checkpoints, and adapters for unsafe serialization and embedded code; AID-H-002.009 admits untrusted dataset and structured-data artifacts against parser-specific features.\nRoute each object by its actual format and loader; a model-artifact scan does not make a dataset parser safe, and parser admission does not approve model loading."
 }
 ]
 },
@@ -8841,7 +9051,7 @@
 ]
 }
 ],
-"contentHash": "b8d1ff76b26aebb6",
+"contentHash": "741c1492bdfe1e1d",
 "keywords": [
 "model artifact scanning",
 "unsafe deserialization detection",
@@ -9448,7 +9658,7 @@
 "Bind every signed inter-agent message to a unique message ID/nonce, audience, and policy-derived validity window, then reject replay atomically.",
 "Implement identity-preserving protocol translation (anti-scrubbing) for adapters/gateways.",
 "Bind every cross-agent request to delegation context and authorize it at the receiving agent before any side effect.",
-"Pin the A2A v1.0 service parameter and validate each binding-specific request against a digest-pinned official contract before dispatch."
+"Pin the A2A v1.0 service parameter and validate each HTTP+JSON request against a digest-pinned binding contract before dispatch."
 ],
 "implementationGuidanceIds": [
 "AID-H-004.003-G001",
@@ -9549,7 +9759,7 @@
 ]
 }
 ],
-"contentHash": "0e7811c701305c49",
+"contentHash": "9005bc133c54b357",
 "keywords": [
 "secure agent communication",
 "a2a task authorization",
@@ -10913,6 +11123,14 @@
 {
 "id": "AID-H-025",
 "comparison": "AID-H-006.002 prevents generated text or code from creating unsafe sink behavior during release; AID-H-025 decides whether generated code or an execution request may run and under which interpreter.\nA safely displayed script is not approved executable code."
+},
+{
+"id": "AID-H-002.009",
+"comparison": "AID-H-006.002 owns sink-specific release of model-generated text, markup, URLs, structured payloads, and token streams; AID-H-002.009 owns dataset-parser admission and its conditional bounded-row preview method.\nFor a mixed response, apply each control to its own segment and assign one primary release-gate result to the final bytes rather than double-scoring the same publication."
+},
+{
+"id": "AID-H-018.009",
+"comparison": "AID-H-006.002 owns sink-specific release of generated text, markup, structured payloads, URLs, and token streams; AID-H-018.009 confines the local filesystem object that an applicable model-callable handler actually opens or mutates.\nA path-broker receipt can be an input to release, but it neither sanitizes returned content nor earns a second sink-safety PASS."
 }
 ]
 },
@@ -11029,7 +11247,7 @@
 ]
 }
 ],
-"contentHash": "f522fb219320a0ba",
+"contentHash": "89047ede0b6f733d",
 "keywords": [
 "output content sanitization",
 "remote subresource blocking",
@@ -17207,9 +17425,9 @@
 {
 "id": "AID-H-018",
 "name": "Tool Authorization & Capability Scoping",
-"description": "Establish and enforce strict authorization and capability limits for tools invocable by an AI agent. Apply least privilege with allowlists, parameter boundaries, mandatory structured inputs/outputs, and transaction-safe side-effect execution so authorized retries, resumptions, and duplicate deliveries cannot silently repeat high-impact actions. This is the runtime enforcement layer for agent risk models such as the lethal trifecta (private data, untrusted content, and an exfiltration or side-effect channel in one session) and Meta's Agents Rule of Two, which limits how many of those high-risk properties may coexist without stronger gates.",
+"description": "Establish and enforce strict authorization and capability limits for tools invocable by an AI agent. Apply least privilege with allowlists, parameter boundaries, authoritative object authorization, filesystem-object confinement, mandatory structured inputs/outputs, and transaction-safe side-effect execution so authorized retries, resumptions, and duplicate deliveries cannot silently repeat high-impact actions. This is the runtime enforcement layer for agent risk models such as the lethal trifecta (private data, untrusted content, and an exfiltration or side-effect channel in one session) and Meta's Agents Rule of Two, which limits how many of those high-risk properties may coexist without stronger gates.",
 "scopeBoundary": {
-"responsibility": "Owns runtime enforcement of tool and action authority through parameter constraints, policy decisions, high-impact approval, dynamic capability scope, value-flow controls, execution-time freshness, skill permissions, and transaction-safe side effects. It independently verifies governance and HITL inputs.",
+"responsibility": "Owns runtime enforcement of tool and action authority through parameter constraints, policy decisions, high-impact approval, dynamic capability scope, value-flow controls, filesystem-object confinement, execution-time freshness, skill permissions, and transaction-safe side effects. It independently verifies governance and HITL inputs.",
 "relatedTechniques": [
 {
 "id": "AID-M-009",
@@ -17238,6 +17456,8 @@
 "AML.T0011 User Execution",
 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
 "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption",
+"AML.T0037 Data from Local System",
+"AML.T0050 Command and Scripting Interpreter",
 "AML.T0051 LLM Prompt Injection",
 "AML.T0051.000 LLM Prompt Injection: Direct",
 "AML.T0051.001 LLM Prompt Injection: Indirect",
@@ -17250,6 +17470,7 @@
 "AML.T0085.001 Data from AI Services: AI Agent Tools",
 "AML.T0086 Exfiltration via AI Agent Tool Invocation",
 "AML.T0098 AI Agent Tool Credential Harvesting",
+"AML.T0101 Data Destruction via AI Agent Tool Invocation",
 "AML.T0108 AI Agent",
 "AML.T0110 AI Agent Tool Poisoning",
 "AML.T0110.001 AI Agent Tool Poisoning: Implementation",
@@ -17329,6 +17550,8 @@
 "AISubtech-4.3.4 Replay Exploitation",
 "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
 "AISubtech-12.1.1 Parameter Manipulation",
+"AISubtech-12.1.3 Unsafe System / Browser / File Execution",
+"AISubtech-14.1.2 Insufficient Access Controls",
 "AISubtech-14.2.1 Permission Escalation via Delegation"
 ]
 },
@@ -17354,6 +17577,7 @@
 "Agents - Core 13.6: Intent Breaking & Goal Manipulation",
 "Agents - Core 13.7: Misaligned & Deceptive Behaviors",
 "Agents - Core 13.8: Repudiation & Untraceability",
+"Agents - Core 13.11: Unexpected RCE and Code Attacks",
 "Agents - Tools MCP Server 13.17: Confused Deputy",
 "Agents - Tools MCP Server 13.19: Credential and Token Exposure"
 ]
@@ -17364,7 +17588,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "2d3f7551d9328646",
+"contentHash": "eec82615f317bbc2",
 "keywords": [
 "tool authorization",
 "lethal trifecta mitigation",
@@ -17376,17 +17600,17 @@
 "least privilege tools",
 "tool access control",
 "typed parameter validation",
-"agent authorization",
+"authoritative object authorization",
 "tool invocation gating",
 "deny-by-default tool access",
-"capability limits",
+"filesystem object confinement",
 "tool policy enforcement"
 ],
 "subTechniques": [
 {
 "id": "AID-H-018.001",
 "name": "Tool Parameter Constraint & Schema Validation",
-"description": "Define strict, machine-readable schemas for each agent tool's input parameters and enforce validation before execution (types, formats, ranges, enums). Prevents malicious parameter injection (command/SQL injection, path traversal).",
+"description": "Define strict, machine-readable schemas for each agent tool's input parameters and enforce validation before execution, including types, formats, ranges, enums, cardinality, and bounded dangerous-string rules. Reject structurally invalid or prohibited parameter values before they reach authorization or execution; filesystem-object confinement for valid path values remains in AID-H-018.009.",
 "scopeBoundary": {
 "responsibility": "Owns deterministic schema, type, format, range, enum, cardinality, and dangerous-string validation for the parameters of one tool call before execution. It does not decide whether the caller is authorized or whether a valid value may flow to the destination.",
 "relatedTechniques": [
@@ -17401,6 +17625,10 @@
 {
 "id": "AID-H-017.002",
 "comparison": "AID-H-018.001 validates calls to an exposed tool; AID-H-017.002 determines whether that tool should exist as a narrow, single-purpose capability and what backend authority it holds.\nParameter validation cannot make an ambient-power tool least privilege."
+},
+{
+"id": "AID-H-018.009",
+"comparison": "AID-H-018.001 determines whether a path value satisfies the tool's structural contract; AID-H-018.009 proves which filesystem object that value actually opens or affects.\nA syntactically valid path can still escape through links, mounts, aliases, or replacement races."
 }
 ]
 },
@@ -17492,7 +17720,7 @@
 ]
 }
 ],
-"contentHash": "b39e1410383fd978",
+"contentHash": "8b841a3375c7aa7f",
 "keywords": [
 "tool parameter validation",
 "schema validation",
@@ -17513,9 +17741,9 @@
 {
 "id": "AID-H-018.002",
 "name": "Policy-Based Access Control",
-"description": "Externalize authorization decisions for tool usage with a policy engine (e.g., OPA), enabling context-aware, stateful rules that decouple policy from application code.",
+"description": "Externalize fail-closed authorization decisions for model- or agent-triggered tool and service operations. Derive subject, workload, tenant, delegation, and run context from trusted identity; resolve caller-visible handles through an authoritative registry; authorize the exact canonical object, type, version, action, and context; and enforce the decision at the final adapter or service boundary. Reject stale, revoked, wrong-type, cross-tenant, cross-run, or ambiguously resolved objects without revealing whether another tenant's object exists.",
 "scopeBoundary": {
-"responsibility": "Owns fail-closed runtime allow or deny decisions from verified subject, workload, delegation, tool, resource, action, environment, and policy attributes. It consumes governance and checkpoint facts but does not define operator readiness or delegation authority.",
+"responsibility": "Owns fail-closed runtime allow or deny decisions for non-MCP model- or agent-triggered tool and service operations from verified subject, workload, tenant, run, delegation, tool, canonical object, type, version, action, environment, and policy attributes. It owns authoritative opaque-handle resolution and final-adapter enforcement for those paths, but not filesystem resolution, inference shared-memory topology, MCP-local object policy, or generic authorization for unrelated APIs.",
 "relatedTechniques": [
 {
 "id": "AID-M-009.002",
@@ -17532,6 +17760,26 @@
 {
 "id": "AID-D-003.003",
 "comparison": "AID-H-018.002 produces the canonical runtime authorization decision; AID-D-003.003 monitors those decisions, failures, and bursts for suspicious patterns.\nEnforcement and independent detection of enforcement outcomes must remain separate."
+},
+{
+"id": "AID-H-017.004",
+"comparison": "AID-H-018.002 authorizes each read or write to a canonical mutable object for the verified tenant, principal, and run; AID-H-017.004 defines the ownership, isolation, retention, provenance, and expiry architecture for transient working state.\nPer-operation authorization does not make cross-run state architecture safe, and state isolation does not authorize an object operation."
+},
+{
+"id": "AID-H-018.009",
+"comparison": "AID-H-018.002 authorizes the verified subject, action, and canonical object; AID-H-018.009 proves which filesystem object an authorized path actually opens or affects.\nBusiness authorization does not make pathname resolution race-safe."
+},
+{
+"id": "AID-H-032.002",
+"comparison": "AID-H-018.002 authorizes application and service objects used by model- or agent-triggered operations; AID-H-032.002 isolates inference queues, caches, shared memory, IPC state, warm workers, and failover placement by tenant.\nA shared policy engine may support both controls, but their populations, enforcement points, evidence, and PASS results remain separate."
+},
+{
+"id": "AID-H-034.003",
+"comparison": "AID-H-018.002 owns authorization at an external non-MCP application or service boundary; AID-H-034.003 owns the MCP handler's local tool, tenant, backend, and MCP-owned object checks.\nWhen an MCP handler calls an external service, it may consume that service's decision without awarding a second PASS for the same external-object authorization, but it still enforces its own MCP request boundary."
+},
+{
+"id": "AID-H-034.006",
+"comparison": "AID-H-018.002 authorizes an application or service object whenever a non-MCP operation presents an opaque handle; AID-H-034.006 owns MCP-specific cross-call handle issuance, binding, expiry, revocation, and per-use lifecycle.\nDo not recreate MCP handle lifecycle in this protocol-neutral policy control."
 }
 ]
 },
@@ -17543,7 +17791,7 @@
 "operation"
 ],
 "implementationGuidance": [
-"Use Open Policy Agent (OPA) or Casbin to make fail-closed allow/deny decisions for tool calls using verified identity, tool context, and resource attributes."
+"Use Open Policy Agent (OPA) or Casbin to make fail-closed decisions from verified identity and authoritative object attributes, then enforce the exact tenant, object, type, version, action, and run binding at the final adapter."
 ],
 "implementationGuidanceIds": [
 "AID-H-018.002-G001"
@@ -17626,22 +17874,23 @@
 ]
 }
 ],
-"contentHash": "7cd7d043118c74ec",
+"contentHash": "569d924039863ca7",
 "keywords": [
-"policy-based access control",
+"policy based access control",
 "externalized authorization decision",
-"fail-closed tool authorization",
-"open policy agent",
-"opa rego policy",
-"casbin authorization",
-"cerbos hub policy distribution",
-"permit.io authorization",
-"verified workload identity",
-"resource attribute authorization",
-"context-aware tool policy",
-"signed policy bundle",
+"fail closed tool authorization",
+"authoritative opaque handle resolution",
+"canonical object authorization",
+"tenant object isolation",
+"workload identity binding",
+"delegation context authorization",
+"run scoped authorization",
+"object type version binding",
+"final adapter enforcement",
+"stale object rejection",
+"cross tenant denial",
 "authorization decision receipt",
-"independent policy replay"
+"policy engine enforcement"
 ]
 },
 {
@@ -17674,6 +17923,10 @@
 {
 "id": "AID-I-008.002",
 "comparison": "AID-H-018.003 issues the canonical approval receipt; AID-I-008.002 suspends, re-observes, binds, and resumes the exact browser action while consuming that receipt.\nThe browser adapter adds observation and suspension but does not create a second approval authority."
+},
+{
+"id": "AID-H-021.005",
+"comparison": "AID-H-018.003 authorizes one exact high-impact action plan after identity, policy, freshness, and approval checks; AID-H-021.005 decides whether an AI development workspace may activate its declared execution-capable surfaces.\nWorkspace trust is not transaction approval, and a trusted workspace cannot bypass the per-action gate."
 }
 ]
 },
@@ -17685,10 +17938,12 @@
 "operation"
 ],
 "implementationGuidance": [
-"Verify the exact canonical action, current signed policy and identity registry, typed signed evidence, and policy-selected multi-party approvals; atomically consume approval nonces and issue a signed, replayable outcome for every gate evaluation."
+"Verify the exact canonical action, current signed policy and identity registry, typed signed evidence, and policy-selected multi-party approvals; atomically consume approval nonces and issue a signed, replayable outcome for every gate evaluation.",
+"Optionally use a separately invoked semantic reviewer as a typed negative signal before a high-impact action, while the deterministic gate retains final authority and all required human approval remains mandatory."
 ],
 "implementationGuidanceIds": [
-"AID-H-018.003-G001"
+"AID-H-018.003-G001",
+"AID-H-018.003-G002"
 ],
 "toolsOpenSource": [
 "Cosign",
@@ -17780,7 +18035,7 @@
 ]
 }
 ],
-"contentHash": "b083295a49fe5be5",
+"contentHash": "5c071ddbfd98c30e",
 "keywords": [
 "high impact action gate",
 "canonical action plan",
@@ -18126,6 +18381,10 @@
 {
 "id": "AID-I-008.002",
 "comparison": "AID-H-018.006 supplies fresh execution-time authorization for the re-observed action; AID-I-008.002 owns browser request suspension and exact DOM, accessibility, method, URL, body, origin, and action re-observation.\nGeneric authorization freshness and browser-specific observation are composed at dispatch."
+},
+{
+"id": "AID-H-018.009",
+"comparison": "AID-H-018.006 proves authorization and live action context remain current immediately before dispatch; AID-H-018.009 binds a filesystem operation to the descriptor or handle of the object actually opened or affected.\nFresh authorization and filesystem-object confinement are composed at use but produce separate evidence and outcomes."
 }
 ]
 },
@@ -18227,7 +18486,7 @@
 ]
 }
 ],
-"contentHash": "856147c3921c81f8",
+"contentHash": "059250a630f25189",
 "keywords": [
 "execution time authorization",
 "anti toctou verification",
@@ -18276,6 +18535,10 @@
 {
 "id": "AID-M-001.003",
 "comparison": "AID-H-018.007 enforces permissions per installed skill; AID-M-001.003 maintains enterprise-wide skill identity, version, owner, deployment, approval, and lifecycle inventory.\nLocal enforcement requires but does not replace centralized visibility and revocation coordination."
+},
+{
+"id": "AID-H-018.009",
+"comparison": "AID-H-018.007 defines and intercepts the installed skill's declared file-resource ceiling; AID-H-018.009 supplies the generic descriptor- or handle-safe filesystem broker for skills and non-skill adapters.\nA manifest PASS does not prove that each opened or affected object remained inside the declared root."
 }
 ]
 },
@@ -18400,7 +18663,7 @@
 ]
 }
 ],
-"contentHash": "d4165cd5c03f5229",
+"contentHash": "28826c46d3c485d9",
 "keywords": [
 "skill permission manifest",
 "skill-level authorization",
@@ -18549,6 +18812,177 @@
 "saga compensation",
 "at-most-once effect",
 "agent action deduplication"
+]
+},
+{
+"id": "AID-H-018.009",
+"name": "Model-Callable Filesystem Path Confinement",
+"description": "<strong>Control intent:</strong> Confine every model- or agent-influenced file, directory, local-resource, archive-destination, working-directory, interpreter, script, module, and executable path through a non-bypassable filesystem broker. Resolve from versioned, authenticated, operation-specific root policy and bind the decision to the filesystem object actually opened or affected. Apply separate read, create, replace, rename, delete, and execution-target permissions; fail closed on traversal, link, mount, reparse, special-file, encoding, case, replacement-race, or platform-verification ambiguity.<br/><br/><strong>Applicability and outcome:</strong> This control applies when any model-callable path can reach a host or mounted filesystem. It is NOT_APPLICABLE only when no such path exists or a separately verified immutable-object or virtual-filesystem broker exposes no attacker-influenced path. PASS requires complete adapter and enabled-operation coverage for every claimed platform/filesystem profile plus independent negative-test evidence. Missing population or evidence is INSUFFICIENT_DATA; a required broker, policy, identity, OS primitive, or verifier failure is ERROR; and any unbrokered or incorrectly affected object is FAIL.",
+"scopeBoundary": {
+"responsibility": "Owns protocol-neutral rooted filesystem resolution and confinement for model-callable read, create, replace, rename, delete, archive-destination, working-directory, interpreter, script, module, and executable paths. It binds policy and operation to the object actually opened or affected, applies platform-specific link, mount, reparse, special-file, and race controls, and proves complete adapter coverage. It does not validate parameter schemas, decide business authorization, authorize code execution, isolate processes, admit skill packages, or govern MCP publication and output semantics.",
+"relatedTechniques": [
+{
+"id": "AID-H-006.002",
+"comparison": "AID-H-006.002 sanitizes and releases model-generated text, markup, structured values, and URLs to a sink; AID-H-018.009 proves which filesystem object an applicable path value actually opens or affects.\nA sink-safe value can still escape through filesystem resolution, and a safely opened object does not sanitize other output sinks."
+},
+{
+"id": "AID-H-018.001",
+"comparison": "AID-H-018.001 validates the path parameter's schema, type, format, and structural contract; AID-H-018.009 proves that filesystem resolution and use stay inside the authorized root and affect the verified object.\nA syntactically valid path can still escape through links, mounts, aliases, or replacement races."
+},
+{
+"id": "AID-H-018.002",
+"comparison": "AID-H-018.002 decides whether the verified subject, tool, canonical resource, action, and context are authorized; AID-H-018.009 resolves the authorized filesystem scope and binds it to the object actually opened or affected.\nBusiness authorization does not make pathname resolution race-safe."
+},
+{
+"id": "AID-H-018.006",
+"comparison": "AID-H-018.006 re-verifies authorization and live action context immediately before dispatch and after pause, retry, resume, or handoff; AID-H-018.009 owns descriptor- or handle-safe filesystem resolution and use.\nFresh authorization and opened-object confinement are composed at use but scored separately."
+},
+{
+"id": "AID-H-018.007",
+"comparison": "AID-H-018.007 defines and intercepts each skill's declared file-resource ceiling; AID-H-018.009 supplies the generic filesystem broker for skills and non-skill adapters.\nA manifest PASS does not prove that every opened or affected object stayed inside its declared root."
+},
+{
+"id": "AID-H-025.002",
+"comparison": "AID-H-025.002 selects and configures the restricted interpreter and authorizes code evaluation; AID-H-018.009 confines any model-influenced interpreter, script, module, working-directory, or executable filesystem target.\nExecution admission and filesystem-target confinement are separate results and neither PASS proves the other."
+},
+{
+"id": "AID-H-030.004",
+"comparison": "AID-H-030.004 safely parses and normalizes candidate skill packages before deeper admission; AID-H-018.009 confines model-callable runtime and reusable filesystem operations.\nPackage parsing and runtime filesystem confinement retain separate evidence and outcomes."
+},
+{
+"id": "AID-H-034.004",
+"comparison": "AID-H-034.004 governs which MCP tool, resource, prompt, schema, and UI contracts a server may publish; AID-H-018.009 confines a local filesystem object used by an applicable model-callable capability.\nMCP publication approval does not prove local path confinement."
+},
+{
+"id": "AID-H-034.005",
+"comparison": "AID-H-034.005 owns MCP server output, resource-URI, template, prompt, completion, and elicitation semantics; AID-H-018.009 owns the reusable local-filesystem opened-object result for an applicable handler.\nThe MCP control may consume the broker receipt but must not score the same confinement result twice."
+},
+{
+"id": "AID-I-001",
+"comparison": "AID-I-001 contains a process, container, microVM, WASM, or other workload boundary; AID-H-018.009 confines permitted filesystem capabilities, including in-process tools that never enter a subprocess sandbox.\nIsolation and opened-object confinement are independent controls and neither PASS proves the other."
+}
+]
+},
+"pillar": [
+"app",
+"infra"
+],
+"phase": [
+"building",
+"operation"
+],
+"implementationGuidance": [
+"Broker model-callable reads through a trusted root descriptor or Windows file handle, bind policy to the opened regular-file identity, and consume bytes only through that descriptor or handle.",
+"Apply operation-specific Linux atomic mutation and execution-target resolution; fail closed for mutation or executable profiles whose platform invariants are not implemented and verified.",
+"Reconcile every model-callable filesystem adapter and independently verify rooted object confinement for each enabled operation and claimed platform/filesystem profile."
+],
+"implementationGuidanceIds": [
+"AID-H-018.009-G001",
+"AID-H-018.009-G002",
+"AID-H-018.009-G003"
+],
+"toolsOpenSource": [
+"golang.org/x/sys/unix (BSD-3-Clause low-level Linux syscall bindings)",
+"Go os.Root (Go 1.25+; BSD-3-Clause; traversal-resistant rooted filesystem operations; object-identity receipts, hard-link and mount profiles, no-replace behavior, and durability semantics require additional broker logic)",
+"libpathrs (MPL-2.0 OR LGPL-3.0-or-later; Linux handle-based rooted path resolution with Rust, C, and Go APIs)",
+"cap-std (Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT; capability-oriented rooted filesystem operations for Rust; control-specific receipts and mutation semantics require additional integration)"
+],
+"toolsSourceAvailable": [],
+"toolsCommercial": [],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0037 Data from Local System",
+"AML.T0050 Command and Scripting Interpreter (approved target identity blocks path substitution; interpreter admission and sandboxing remain separate)",
+"AML.T0053 AI Agent Tool Invocation",
+"AML.T0086 Exfiltration via AI Agent Tool Invocation (rooted resolution prevents reads of out-of-scope local objects but does not police the outbound channel)",
+"AML.T0098 AI Agent Tool Credential Harvesting (credential files outside authorized roots remain unreachable; ambient-credential minimization remains separate)",
+"AML.T0101 Data Destruction via AI Agent Tool Invocation (operation-specific rooted mutation prevents destruction outside authorized roots)"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Agent Tool Misuse (L7)",
+"Integration Risks (L7)",
+"Privilege Escalation (Cross-Layer)",
+"Data Leakage (Cross-Layer)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2026",
+"items": [
+"LLM02:2026 Sensitive Information Disclosure",
+"LLM03:2026 Excessive Agency",
+"LLM10:2026 Improper Output Handling"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"N/A"
+]
+},
+{
+"framework": "OWASP Top 10 for Agentic Applications 2026",
+"items": [
+"ASI02:2026 Tool Misuse and Exploitation",
+"ASI03:2026 Identity and Privilege Abuse",
+"ASI05:2026 Unexpected Code Execution (RCE)"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"NISTAML.039 Compromising connected resources"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-8.2 Data Exfiltration / Exposure",
+"AITech-12.1 Tool Exploitation",
+"AITech-14.1 Unauthorized Access",
+"AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
+"AISubtech-12.1.3 Unsafe System / Browser / File Execution",
+"AISubtech-14.1.2 Insufficient Access Controls"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"IIC: Insecure Integrated Component",
+"SDD: Sensitive Data Disclosure",
+"RA: Rogue Actions"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Agents - Core 13.2: Tool Misuse",
+"Agents - Core 13.3: Privilege Compromise",
+"Agents - Core 13.11: Unexpected RCE and Code Attacks"
+]
+}
+],
+"contentHash": "be4f18bb65c03947",
+"keywords": [
+"model-callable filesystem confinement",
+"descriptor-based path resolution",
+"opened-object identity binding",
+"authenticated root policy",
+"trusted root descriptor",
+"operation-specific path permissions",
+"path traversal prevention",
+"symlink race prevention",
+"mount boundary enforcement",
+"Windows reparse-point denial",
+"special-file rejection",
+"atomic filesystem mutation",
+"executable-target confinement",
+"filesystem adapter reconciliation",
+"cross-platform path negative tests"
 ]
 }
 ],
@@ -19769,9 +20203,9 @@
 {
 "id": "AID-H-021",
 "name": "AI Agent Configuration Integrity & Hardening",
-"description": "This technique establishes and enforces the integrity and security of an AI agent's instructional configurations (e.g., system prompts, operational parameters, external configuration files like <code>CLAUDE.md</code>).<br/><br/><strong>Defense-in-Depth Strategy:</strong> It combines client-side controls to prevent the creation of insecure configurations in development environments, cryptographic verification at runtime to ensure the agent only operates based on a trusted, untampered directive, and context-corpus governance over external runbooks, tool specifications, and operational knowledge so the agent does not act on stale, conflicting, or unauthorized context.<br/><br/><strong>Structured Format Mandate:</strong> Crucially, this technique mandates the use of structured, non-executable formats (e.g., schema-validated JSON, YAML) for configurations, prohibiting the use of formats that could be interpreted as executable code.<br/><br/>This directly counters attacks where adversaries manipulate an agent's behavior by injecting malicious instructions through external or modified configuration files.",
+"description": "This technique establishes and enforces the integrity and security of an AI agent's instructional configurations (e.g., system prompts, operational parameters, external configuration files like <code>CLAUDE.md</code>).<br/><br/><strong>Defense-in-Depth Strategy:</strong> It combines client-side controls to prevent the creation of insecure configurations in development environments, cryptographic verification at runtime to ensure the agent only operates based on a trusted, untampered directive, context-corpus governance over external runbooks, tool specifications, and operational knowledge, restricted-before-trust workspace activation, and isolation of the runtime from its oversight plane.<br/><br/><strong>Structured Format Mandate:</strong> Use structured, non-executable formats (e.g., schema-validated JSON or YAML) where the consuming platform supports them, and prevent configuration parsing from becoming an execution path. Repository-controlled activation surfaces still require an exact workspace trust decision even when their bytes are authentic and schema-valid.<br/><br/>This directly counters attacks where adversaries manipulate an agent's behavior or developer-machine authority through external, modified, or silently activated configuration.",
 "scopeBoundary": {
-"responsibility": "Owns shift-left agent configuration controls, runtime signature enforcement, governed external context sources, and separation of the supervised runtime from its oversight and control plane.",
+"responsibility": "Owns shift-left agent configuration controls, runtime signature enforcement, governed external context sources, restricted-before-trust workspace activation, and separation of the supervised runtime from its oversight and control plane.",
 "relatedTechniques": []
 },
 "pillar": [
@@ -19789,6 +20223,7 @@
 "framework": "MITRE ATLAS",
 "items": [
 "AML.T0010 AI Supply Chain Compromise",
+"AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
 "AML.T0011 User Execution",
 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
 "AML.T0059 Erode Dataset Integrity",
@@ -19809,6 +20244,7 @@
 "Evasion of Security AI Agents (L6)",
 "Compromised Agents (L7)",
 "Agent Goal Manipulation (L7)",
+"Integration Risks (L7)",
 "Supply Chain Attacks (Cross-Layer)"
 ]
 },
@@ -19832,6 +20268,7 @@
 "items": [
 "ASI03:2026 Identity and Privilege Abuse",
 "ASI04:2026 Agentic Supply Chain Vulnerabilities",
+"ASI05:2026 Unexpected Code Execution (RCE)",
 "ASI06:2026 Memory & Context Poisoning",
 "ASI10:2026 Rogue Agents"
 ]
@@ -19847,10 +20284,12 @@
 "items": [
 "AITech-1.3 Goal Manipulation",
 "AITech-5.2 Configuration Persistence",
+"AITech-9.3 Dependency / Plugin Compromise",
 "AITech-7.3 Data Source Abuse and Manipulation",
 "AITech-14.1 Unauthorized Access",
 "AITech-14.2 Abuse of Delegated Authority",
 "AISubtech-5.2.1 Agent Profile Tampering",
+"AISubtech-9.3.1 Malicious Package / Tool Injection",
 "AISubtech-6.1.1 Knowledge Base Poisoning"
 ]
 },
@@ -19871,7 +20310,9 @@
 "Model 7.4: Source code control attack",
 "Agents - Core 13.1: Memory Poisoning",
 "Agents - Core 13.6: Intent Breaking & Goal Manipulation",
+"Agents - Core 13.11: Unexpected RCE and Code Attacks",
 "Agents - Core 13.13: Rogue Agents in Multi-Agent Systems",
+"Agents - Tools MCP Server 13.18: Tool Poisoning",
 "Agents - Tools MCP Server 13.20: Insecure Server Configuration",
 "Agents - Tools MCP Server 13.21: Supply Chain Attacks",
 "Agents - Tools MCP Client 13.27: Insecure Credential Storage"
@@ -19883,7 +20324,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "2ab67c0661293694",
+"contentHash": "a8cd3996378a67d8",
 "keywords": [
 "configuration integrity",
 "signed configurations",
@@ -19898,7 +20339,8 @@
 "system prompt integrity",
 "supply chain config defense",
 "client-side config enforcement",
-"retrieval-time context integrity"
+"retrieval-time context integrity",
+"workspace activation trust gate"
 ],
 "subTechniques": [
 {
@@ -19911,6 +20353,10 @@
 {
 "id": "AID-H-021.002",
 "comparison": "AID-H-021.001 blocks insecure configuration before commit or build acceptance; AID-H-021.002 verifies and enforces signed configuration at agent startup and runtime.\nShift-left checks do not prove the running agent loaded the approved bytes."
+},
+{
+"id": "AID-H-021.005",
+"comparison": "AID-H-021.001 prevents unsafe workspace and agent configuration from being authored or accepted in source; AID-H-021.005 evaluates the effective workspace manifest before execution-capable surfaces activate.\nA pre-commit check does not grant runtime workspace trust, and the trust gate does not replace source-policy enforcement."
 }
 ]
 },
@@ -20012,7 +20458,7 @@
 ]
 }
 ],
-"contentHash": "9ea89892b6209955",
+"contentHash": "382a7b9515998d4b",
 "keywords": [
 "client-side configuration enforcement",
 "pre-commit hooks",
@@ -20047,6 +20493,10 @@
 {
 "id": "AID-H-021.004",
 "comparison": "AID-H-021.002 proves configuration artifacts are signed and approved; AID-H-021.004 prevents the agent identity from accessing or administering the oversight surfaces that enforce those artifacts.\nA valid configuration can still be dangerous if it grants self-administration of supervision."
+},
+{
+"id": "AID-H-021.005",
+"comparison": "AID-H-021.002 verifies approved startup and runtime control artifacts; AID-H-021.005 binds a workspace trust decision to the effective manifest of execution-capable surfaces.\nA valid signed artifact is one input to workspace trust, not proof that every activated surface was declared and accepted."
 }
 ]
 },
@@ -20161,7 +20611,7 @@
 ]
 }
 ],
-"contentHash": "001c1fe163cb8c22",
+"contentHash": "af24a4d26872f2ea",
 "keywords": [
 "signed configuration",
 "runtime integrity enforcement",
@@ -20198,6 +20648,10 @@
 {
 "id": "AID-H-016",
 "comparison": "AID-H-021.003 decides which external context sources and configurations are eligible; AID-H-016 hardens instruction hierarchy and data separation once context is assembled.\nApproved context can still be untrusted data relative to system instructions."
+},
+{
+"id": "AID-H-021.005",
+"comparison": "AID-H-021.003 governs source ownership, freshness, precedence, and release of operational context; AID-H-021.005 decides whether the workspace manifest may activate execution-capable surfaces.\nApproved context governance does not establish workspace trust, and workspace trust does not approve every context source."
 }
 ]
 },
@@ -20316,7 +20770,7 @@
 ]
 }
 ],
-"contentHash": "1958dfbf6d4156b7",
+"contentHash": "80e56897a37c23a5",
 "keywords": [
 "context corpus governance",
 "retrieval-time integrity gate",
@@ -20337,13 +20791,17 @@
 {
 "id": "AID-H-021.004",
 "name": "Control-Plane & Oversight-Surface Isolation",
-"description": "Separate the agent runtime from the control plane that supervises it. A production agent must not be able to read, modify, disable, or bypass its own monitoring rules, policy bundles, sandbox settings, kill-switch controls, audit streams, canary definitions, or oversight thresholds.",
+"description": "Separate the agent runtime from the control plane that supervises it. A production agent must not be able to read, modify, disable, or bypass its own monitoring rules, policy bundles, sandbox settings, kill-switch controls, audit streams, canary definitions, oversight thresholds, egress policy, load balancers, network routes, or security groups. This control owns the single PASS for that inability; a capability-tier profile may require several independent layers, but their shared enforcement result must not be scored again. Any break-glass path that crosses those layers requires independently authenticated quorum approval, just-in-time and time-bounded scope, tamper-evident audit, and an alert delivered through a channel the runtime cannot suppress.",
 "scopeBoundary": {
-"responsibility": "Owns identity, network, storage, and administration separation between the agent runtime and its monitoring rules, policy bundles, sandbox settings, kill switches, audit streams, canaries, detector internals, and oversight thresholds.",
+"responsibility": "Owns identity, network, storage, and administration separation between the agent runtime and its monitoring rules, policy bundles, sandbox settings, kill switches, audit streams, canaries, detector internals, oversight thresholds, egress policy, load balancers, routes, and security groups. It owns the one scoreable result for runtime inability to administer these surfaces, even when a capability-tier profile requires multiple independent layers.",
 "relatedTechniques": [
 {
 "id": "AID-H-021.002",
 "comparison": "AID-H-021.004 prevents the supervised subject from administering its own controls; AID-H-021.002 verifies that the loaded configuration artifacts are signed and approved.\nAuthentic configuration does not prove control-plane separation."
+},
+{
+"id": "AID-M-009.006",
+"comparison": "AID-M-009.006 defines which independent control layers a capability tier requires; AID-H-021.004 enforces and alone scores the runtime's inability to administer its oversight, egress, and infrastructure-control surfaces.\nSeveral required layers may support one assurance conclusion, but they do not create duplicate PASS results for the same separation outcome."
 }
 ]
 },
@@ -20356,7 +20814,7 @@
 "operation"
 ],
 "implementationGuidance": [
-"Deny agent runtime identities from reading or changing their own monitoring, sandbox, policy, kill-switch, and audit control-plane resources.",
+"Deny agent runtime identities from reading or changing their own monitoring, sandbox, policy, kill-switch, audit, egress, routing, load-balancer, and security-group control-plane resources; constrain break-glass access with independently verified quorum, JIT expiry, tamper-evident audit, and independent alerting.",
 "Silo oversight rules, thresholds, canary definitions, and detector internals from agent-readable retrieval corpora."
 ],
 "implementationGuidanceIds": [
@@ -20446,7 +20904,7 @@
 ]
 }
 ],
-"contentHash": "aa632d47fa73fe3c",
+"contentHash": "3c63efbf16359560",
 "keywords": [
 "control-plane isolation",
 "oversight surface isolation",
@@ -20462,6 +20920,153 @@
 "oversight internal corpus",
 "retrieval-time access gate",
 "canary definition isolation"
+]
+},
+{
+"id": "AID-H-021.005",
+"name": "AI Coding-Agent Workspace Activation Trust Gate",
+"description": "Treat a newly opened, cloned, moved, aliased, or security-relevantly changed repository as an untrusted workspace before an AI coding agent activates repository-controlled behavior. Inventory lifecycle hooks, command-based MCP servers, folder-open tasks, dev-container or bootstrap commands, authority-changing agent rules, auto-approval settings, and repository-local skills or plugins without executing or authenticated-prefetching them. Keep passive bounded inspection available in restricted mode, but require an attributable user decision or exact organization policy decision bound to the canonical workspace identity and activation-manifest digest before a protected surface starts, registers, changes authority, or executes. Re-evaluate on relevant change and support immediate revocation. Workspace trust authorizes only the reviewed activation set; it never authorizes later tool actions.<br/><br/><strong>Outcome states:</strong><ul><li><code>NOT_APPLICABLE</code> only when no model- or agent-influenced repository activation path exists.</li><li><code>FAIL</code> when such a path exists but the client has no non-bypassable trust boundary, or any protected activation occurs without the exact current decision.</li><li><code>INSUFFICIENT_DATA</code> when the complete activation-surface or activation-attempt population, effective binding, or required bypass-test evidence cannot be established.</li><li><code>ERROR</code> when an applicable parser, workspace-identity, policy, broker, adapter, revocation, or verifier dependency fails or becomes indeterminate.</li><li><code>PASS</code> only when every supported activation adapter is restricted before trust, every consumed decision is bound to the effective workspace and manifest, revocation and change re-evaluation work, and independent negative tests find no bypass.</li></ul>",
+"scopeBoundary": {
+"responsibility": "Owns restricted-mode admission, complete repository activation-surface inventory, normalized effect preview, explicit per-workspace user decision or organization policy decision, immutable workspace and manifest binding, change-triggered re-evaluation, revocation, and proof that no protected activation occurred before a valid decision. It does not classify authentic repository content as benign, admit skill artifacts, authorize later tool effects, or provide execution isolation.",
+"relatedTechniques": [
+{
+"id": "AID-H-021.001",
+"comparison": "AID-H-021.001 owns development-time configuration quality and repository policy checks; AID-H-021.005 owns local restricted-before-trust activation when a workspace is opened or changes.\nA pre-commit check does not prove the local client withheld repository automation."
+},
+{
+"id": "AID-H-021.002",
+"comparison": "AID-H-021.002 proves startup or runtime artifacts are signed and approved; AID-H-021.005 decides whether repository-controlled behavior may activate for this exact workspace state.\nAuthenticity is an input, not workspace trust or semantic safety."
+},
+{
+"id": "AID-H-021.003",
+"comparison": "AID-H-021.003 governs which context and configuration sources are eligible for a trusted release; AID-H-021.005 owns developer-client restricted mode and activation admission.\nAn eligible source is not automatically active in every checkout."
+},
+{
+"id": "AID-H-030.005",
+"comparison": "AID-H-030.005 admits an exact agentic skill artifact for installation or continued use; AID-H-021.005 covers the complete workspace activation surface, including non-skill hooks, tasks, servers, and settings.\nAn admitted skill can remain inactive until workspace trust, and workspace trust cannot admit an unreviewed skill."
+},
+{
+"id": "AID-H-018.003",
+"comparison": "AID-H-018.003 independently validates and approves an exact high-impact runtime action; AID-H-021.005 authorizes only the reviewed repository activation set.\nWorkspace trust must never satisfy mandatory approval for a later tool call."
+},
+{
+"id": "AID-I-001",
+"comparison": "AID-I-001 contains code after execution is permitted; AID-H-021.005 decides whether repository-controlled execution or registration may begin.\nRestricted-before-trust admission and runtime containment are independently required where both apply."
+}
+]
+},
+"pillar": [
+"app",
+"infra"
+],
+"phase": [
+"building",
+"operation"
+],
+"implementationGuidance": [
+"Build a canonical activation manifest and trusted safe preview from a complete set of non-executing, client-owned workspace adapters before evaluating trust.",
+"Enforce restricted mode through one revocable activation broker that consumes an exact user or organization decision and issues activation-only authority for the reviewed workspace manifest.",
+"Apply exact managed policy in enterprise or headless clients and independently reconcile every protected activation attempt with broker decisions and a complete adapter-specific bypass-test matrix."
+],
+"implementationGuidanceIds": [
+"AID-H-021.005-G001",
+"AID-H-021.005-G002",
+"AID-H-021.005-G003"
+],
+"toolsOpenSource": [
+"Code - OSS Workspace Trust (MIT; restricted-mode baseline; complete activation-manifest binding and change-triggered revocation require custom integration)",
+"Pipelock Community (Apache-2.0; MCP binary and script integrity manifests only; a separate complete workspace activation broker is required)"
+],
+"toolsSourceAvailable": [],
+"toolsCommercial": [
+"Parallel Works pw code (content-bound workspace settings, hook, and skill trust baseline; complete activation-surface coverage and immediate filesystem-change revocation require additional enforcement)",
+"Visual Studio Code Workspace Trust (supported fully patched release; restricted-mode and MCP trust baseline; complete manifest binding and bypass-proof change revocation require custom integration)",
+"JetBrains Junie CLI Project Trust (interactive project-configuration gate; non-interactive modes require a separate fail-closed trust gate)"
+],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool (manifest-bound admission prevents a repository-supplied tool or MCP server from silently joining the active workspace toolchain)",
+"AML.T0011 User Execution (workspace-open admission prevents unreviewed repository artifacts from silently becoming executable or behavior-shaping)",
+"AML.T0011.002 User Execution: Poisoned AI Agent Tool (manifest-bound activation keeps repository-supplied tools inactive until an attributable workspace decision)",
+"AML.T0081 Modify AI Agent Configuration (security-relevant manifest changes invalidate trust before modified hooks, rules, servers, or settings activate)"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Agent Goal Manipulation (L7) (restricted mode prevents repository rules from gaining privileged instruction authority before review)",
+"Integration Risks (L7) (the activation broker mediates repository-defined tool, server, plug-in, and automation integrations before use)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2026",
+"items": [
+"LLM03:2026 Excessive Agency (complete mediation prevents a repository from silently expanding coding-agent functionality or autonomy, while later action authorization remains separate)"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"N/A"
+]
+},
+{
+"framework": "OWASP Top 10 for Agentic Applications 2026",
+"items": [
+"ASI04:2026 Agentic Supply Chain Vulnerabilities (exact-workspace activation admission prevents third-party or compromised repository artifacts from silently joining the agent execution chain)",
+"ASI05:2026 Unexpected Code Execution (RCE) (restricted mode blocks repository-controlled hooks, tasks, bootstrap commands, and local servers from executing before trust)"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"N/A (workspace activation is an agent-client execution boundary rather than a direct adversarial-machine-learning attack mechanism)"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-5.2 Configuration Persistence (manifest-change re-evaluation prevents modified agent configuration from silently retaining activation authority)",
+"AISubtech-5.2.1 Agent Profile Tampering (authority-changing repository profiles remain restricted until an exact workspace decision)",
+"AITech-9.3 Dependency / Plugin Compromise (repository-local plug-ins and servers cannot activate merely because the workspace opens)",
+"AISubtech-9.3.1 Malicious Package / Tool Injection (the broker prevents unreviewed repository-supplied tools from joining the active toolset)"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"IIC: Insecure Integrated Component (repository-defined agent integrations remain inactive until their normalized effects receive an exact workspace decision)",
+"RA: Rogue Actions (restricted-before-trust prevents repository automation from causing unreviewed agent-client actions)"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Agents - Core 13.11: Unexpected RCE and Code Attacks (workspace hooks, tasks, bootstrap commands, and local servers cannot execute before trust)",
+"Agents - Tools MCP Server 13.18: Tool Poisoning (repository-defined MCP servers remain inactive until the exact command or endpoint manifest is reviewed)",
+"Agents - Tools MCP Server 13.21: Supply Chain Attacks (manifest-bound activation admission limits silent adoption of compromised or replaced repository MCP servers)"
+]
+}
+],
+"contentHash": "c77d693d41936124",
+"keywords": [
+"coding-agent workspace trust",
+"restricted-before-trust mode",
+"repository activation gate",
+"canonical workspace identity",
+"activation manifest digest",
+"non-executing activation preview",
+"repository lifecycle-hook inventory",
+"command-based MCP server gating",
+"folder-open task gating",
+"dev-container bootstrap gating",
+"managed workspace trust policy",
+"activation-broker revocation",
+"security-change re-evaluation",
+"pre-trust bypass testing",
+"activation-attempt reconciliation"
 ]
 }
 ],
@@ -21942,6 +22547,10 @@
 {
 "id": "AID-I-001",
 "comparison": "AID-H-025.002 restricts language semantics inside an evaluator; AID-I-001 contains the evaluator process and its operating-system effects.\nA restricted interpreter escape must still meet a separate sandbox boundary."
+},
+{
+"id": "AID-H-018.009",
+"comparison": "AID-H-025.002 selects and configures the restricted interpreter and authorizes code evaluation; AID-H-018.009 confines any model-influenced interpreter, script, module, working-directory, or executable filesystem target.\nInterpreter admission and opened-object confinement remain separate results, and execution permission stays with this control and AID-I-001."
 }
 ]
 },
@@ -22039,7 +22648,7 @@
 ]
 }
 ],
-"contentHash": "b3c23cab592fe868",
+"contentHash": "8aa9a5f42152c01a",
 "keywords": [
 "restricted interpreter",
 "restrictedpython sandbox",
@@ -23731,7 +24340,7 @@
 },
 {
 "id": "AID-H-028.007",
-"name": "MCP inputRequired Multi-Round-Trip Request Integrity",
+"name": "MCP input_required Multi-Round-Trip Request Integrity",
 "description": "Constrain every MCP InputRequiredResult and retry to one active client request. Validate named inputRequests, optional opaque requestState, user consent, and inputResponses; bind method, server, user, tenant, schema, and single-use state so a server cannot prompt out of band or resume an unrelated request.",
 "scopeBoundary": {
 "responsibility": "Owns client-side binding of each InputRequiredResult and retry to one active request, verified server, user, tenant, schema, single-use state, visible consent flow, and validated input response. It does not construct or authorize the server-side input request.",
@@ -23742,7 +24351,7 @@
 },
 {
 "id": "AID-H-028.008",
-"comparison": "AID-H-028.007 owns user-mediated inputRequired multi-round-trip requests; AID-H-028.008 isolates the deprecated sampling/createMessage capability as an explicit exception.\nAn input request that continues an active client operation is not permission for a server to initiate model sampling."
+"comparison": "AID-H-028.007 owns user-mediated input_required multi-round-trip requests; AID-H-028.008 isolates the deprecated sampling/createMessage capability as an explicit exception.\nAn input request that continues an active client operation is not permission for a server to initiate model sampling."
 }
 ]
 },
@@ -23755,7 +24364,7 @@
 ],
 "implementationGuidance": [
 "Bind every InputRequiredResult and inputResponses retry to one live client request, verified server, method/name, user, tenant, schema, and single-use requestState.",
-"Audit each inputRequired round with active-request, server, user, tenant, schema, consent, state-digest, retry, and terminal-outcome bindings."
+"Audit each input_required round with active-request, server, user, tenant, schema, consent, state-digest, retry, and terminal-outcome bindings."
 ],
 "implementationGuidanceIds": [
 "AID-H-028.007-G001",
@@ -23831,7 +24440,7 @@
 ]
 }
 ],
-"contentHash": "9642a06182e90c29",
+"contentHash": "a9462c6663e0013e",
 "keywords": [
 "multi round trip input",
 "active request binding",
@@ -23851,14 +24460,14 @@
 },
 {
 "id": "AID-H-028.008",
-"name": "Server-Initiated Sampling Compatibility Isolation (Deprecated MCP Capability)",
+"name": "Server-Requested Sampling Compatibility Isolation (Deprecated MCP Capability)",
 "description": "Permit MCP sampling/createMessage only as a signed expiring exception inside MCP v2 2026-07-28. Bind the exception to the verified server, client capability, model route, visible purpose, isolated context, and token, request, iteration, tool, and cost budgets. Deny privileged tools by default and prefer direct provider integration for new designs.",
 "scopeBoundary": {
 "responsibility": "Owns client-side admission and isolation of deprecated sampling/createMessage as a signed, expiring, server-bound exception with visible purpose and strict model, context, token, tool, iteration, and cost limits. It is not a general agent-action authorization mechanism.",
 "relatedTechniques": [
 {
 "id": "AID-H-018.002",
-"comparison": "AID-H-028.008 decides whether a deprecated server-initiated sampling exception is enabled and bounded at the client; AID-H-018.002 authorizes ordinary runtime capabilities and actions under policy.\nThe deprecated exception must remain narrower than the agent's general capability policy."
+"comparison": "AID-H-028.008 decides whether a deprecated server-requested sampling exception is enabled and bounded at the client; AID-H-018.002 authorizes ordinary runtime capabilities and actions under policy.\nThe deprecated exception must remain narrower than the agent's general capability policy."
 },
 {
 "id": "AID-H-034",
@@ -23968,7 +24577,7 @@
 ]
 }
 ],
-"contentHash": "a1f1a790741bcba8",
+"contentHash": "8151d88ce625c3a2",
 "keywords": [
 "mcp sampling exception isolation",
 "deprecated sampling capability",
@@ -25062,6 +25671,10 @@
 {
 "id": "AID-H-025.001",
 "comparison": "AID-H-030.004 safely parses and bounds skill package structure; AID-H-025.001 scans executable text and code for prohibited constructs.\nLoader safety must precede deeper static analysis because parsing itself is attackable."
+},
+{
+"id": "AID-H-018.009",
+"comparison": "AID-H-030.004 safely parses and normalizes candidate skill packages before deeper admission; AID-H-018.009 confines model-callable runtime and reusable filesystem operations.\nPackage parsing and runtime filesystem confinement retain separate evidence and outcomes."
 }
 ]
 },
@@ -25151,7 +25764,7 @@
 ]
 }
 ],
-"contentHash": "cc5eafb6b16d500f",
+"contentHash": "48bd4ceab2705d4b",
 "keywords": [
 "safe skill parsing",
 "loader hardening",
@@ -25183,6 +25796,10 @@
 {
 "id": "AID-H-003.001",
 "comparison": "AID-H-030.005 admits the composite behavior and semantics of an agentic skill; AID-H-003.001 admits the exact third-party package population and bytes consumed by build or deployment.\nA skill can require both decisions when it includes dependencies or executable packages."
+},
+{
+"id": "AID-H-021.005",
+"comparison": "AID-H-030.005 admits an exact skill artifact for installation or continued use; AID-H-021.005 decides whether the complete repository-controlled activation manifest, including hooks, tasks, servers, settings, and already admitted local skills, may activate in this workspace.\nSkill admission does not trust a workspace, and workspace trust does not admit an unreviewed skill or authorize later tool actions."
 }
 ]
 },
@@ -25286,7 +25903,7 @@
 ]
 }
 ],
-"contentHash": "c4db362f7db9b232",
+"contentHash": "0e6503d5d9d11829",
 "keywords": [
 "admission policy orchestration",
 "continuous rescan governance",
@@ -26215,9 +26832,9 @@
 {
 "id": "AID-H-032.002",
 "name": "Cross-Tenant Serving-State Isolation",
-"description": "Prevent one tenant's requests from influencing or exposing another tenant's inference state by isolating request queues, prefix caches, KV caches, batching groups, session state, warm-worker state, failover state, and memory pools. This control should explicitly govern how the serving stack handles prompt-prefix reuse, request coalescing, warm caches, worker reuse, restart/failover behavior, and serving-placement decisions, because these performance features are common leakage pathways in shared inference systems.",
+"description": "Prevent one tenant's requests from influencing or exposing another tenant's inference state by isolating request queues, prefix caches, KV caches, batching groups, session state, warm-worker state, failover state, memory pools, shared-memory regions, and IPC handles. Require a server-authoritative registry and lifecycle authorization for every shared-memory or IPC create, map, attach, read, write, unmap, destroy, restart, failover, and ownership-handoff operation.<br/><br/>This control should explicitly govern prompt-prefix reuse, request coalescing, warm caches, worker reuse, region generation and revocation, restart/failover behavior, and serving-placement decisions, because these performance features are common leakage and cross-tenant contamination paths in shared inference systems.",
 "scopeBoundary": {
-"responsibility": "Owns cross-tenant isolation of request queues, batching groups, prefix and KV state, sessions, warm workers, memory pools, failover state, serving pools, and placement remediation. It governs logical serving topology rather than cache-object integrity or hardware residue clearing.",
+"responsibility": "Owns cross-tenant isolation of request queues, batching groups, prefix and KV state, sessions, warm workers, memory pools, shared-memory regions and IPC handles, failover state, serving pools, and placement remediation. It governs registry-authorized serving-state lifecycle and logical serving topology rather than general application-resource authorization, cache-object integrity, or hardware residue clearing.",
 "relatedTechniques": [
 {
 "id": "AID-H-027",
@@ -26226,6 +26843,10 @@
 {
 "id": "AID-H-009.004",
 "comparison": "AID-H-032.002 isolates logical serving state above the hardware layer; AID-H-009.004 clears GPU or accelerator residue and verifies low-level compute hygiene.\nWorker and queue isolation do not prove VRAM sanitization."
+},
+{
+"id": "AID-H-018.002",
+"comparison": "AID-H-032.002 owns tenant-isolated inference serving state, including shared-memory and IPC region lifecycles; AID-H-018.002 authorizes application and service resource handles at the final action adapter.\nAn authorized business resource does not authorize inference-memory attachment, and an isolated inference region does not authorize the later business action."
 }
 ]
 },
@@ -26239,7 +26860,7 @@
 "operation"
 ],
 "implementationGuidance": [
-"Partition serving state by tenant and disable cross-tenant prefix, queue, batch, warm-state, or failover reuse unless the serving platform can prove tenant-safe isolation and pass cache-timing evidence gates."
+"Partition serving state by tenant; authorize every shared-memory and IPC lifecycle transition through an authoritative generation-bound registry; and disable cross-tenant prefix, queue, batch, warm-state, or failover reuse unless the serving platform can prove tenant-safe isolation and pass cache-timing evidence gates."
 ],
 "implementationGuidanceIds": [
 "AID-H-032.002-G001"
@@ -26316,7 +26937,7 @@
 ]
 }
 ],
-"contentHash": "66718d98ce83eaad",
+"contentHash": "1b4f45d834f642fd",
 "keywords": [
 "cross-tenant serving isolation",
 "serving-state partitioning",
@@ -26324,13 +26945,15 @@
 "kv cache isolation",
 "batching group isolation",
 "warm worker isolation",
-"failover state rebind",
+"shared-memory namespace isolation",
+"authoritative region registry",
+"IPC lifecycle authorization",
+"generation-bound region leases",
+"anti-TOCTOU memory mapping",
+"restart and failover rebind",
 "cache timing evidence consumption",
 "placement remediation",
-"tenant-scoped serving pools",
-"shared-state covert channel",
-"dedicated inference tier",
-"scheduler state isolation"
+"tenant-scoped serving pools"
 ]
 },
 {
@@ -27968,7 +28591,7 @@
 "relatedTechniques": [
 {
 "id": "AID-H-018.002",
-"comparison": "AID-H-034.003 authorizes the request inside the MCP server against backend objects and tenant state; AID-H-018.002 authorizes the agent or orchestrator's capability before dispatch.\nNeither side may trust the other's decision as a substitute for local enforcement."
+"comparison": "AID-H-034.003 authorizes the MCP request inside the handler against MCP-local tools, tenants, backends, and objects; AID-H-018.002 owns authorization at an external non-MCP application or service boundary.\nAn MCP handler may consume an external service's decision without scoring the same external-object authorization twice, but it still enforces its own MCP request boundary."
 },
 {
 "id": "AID-H-019.001",
@@ -28095,7 +28718,7 @@
 ]
 }
 ],
-"contentHash": "9c2e41fe14c272bf",
+"contentHash": "0c187afaaa422305",
 "keywords": [
 "tool input validation",
 "strict json schema",
@@ -28127,6 +28750,10 @@
 {
 "id": "AID-H-023",
 "comparison": "AID-H-034.004 governs MCP server capability publication and dynamic descriptor changes; AID-H-023 hardens software package publisher identity and trusted CI release workflows.\nBoth concern publishing, but one governs live protocol contracts and the other package releases."
+},
+{
+"id": "AID-H-018.009",
+"comparison": "AID-H-034.004 governs MCP tool, resource, prompt, schema, and UI publication; AID-H-018.009 confines a local filesystem object used by an applicable model-callable capability.\nPublication approval does not prove filesystem-object confinement, and a build-time administrator-selected source path is not automatically model-callable."
 }
 ]
 },
@@ -28239,7 +28866,7 @@
 ]
 }
 ],
-"contentHash": "e4cb01454ccc15e0",
+"contentHash": "d3afb89bf99d7cfb",
 "keywords": [
 "tool publication governance",
 "mcp contract manifest",
@@ -28271,6 +28898,10 @@
 {
 "id": "AID-H-028.004",
 "comparison": "AID-H-034.005 constrains content before it leaves the MCP server; AID-H-028.004 safely parses and renders all received content at the client.\nServer sanitization does not justify an unsafe renderer."
+},
+{
+"id": "AID-H-018.009",
+"comparison": "AID-H-034.005 owns MCP resource-URI, output, prompt, completion, and elicitation semantics; AID-H-018.009 owns the generic descriptor- or handle-safe opened-object result for an applicable local-file handler.\nThe MCP handler consumes the broker receipt and must not claim a second PASS for the same filesystem confinement."
 }
 ]
 },
@@ -28285,7 +28916,7 @@
 "implementationGuidance": [
 "Validate, bound, label, and redact MCP tool outputs before returning them to the client or model context.",
 "Validate structuredContent against each tool's outputSchema, recursively bound and redact structured fields, and return sanitized tool-execution errors.",
-"Validate resource URIs and resource templates with canonicalization, scheme allowlists, path boundaries, and authorization checks before reading or returning data.",
+"Validate resource URIs and templates, authorize the canonical resource, and delegate every applicable local-file resolution and read to the AID-H-018.009 filesystem broker without rescoring its opened-object result.",
 "Constrain server-generated prompts, prompt arguments, resource text, and completion inputs so they cannot smuggle privileged instructions or unauthorized values.",
 "For form-mode elicitation, never request sensitive information and validate returned data against the requested schema.",
 "Return MRTR InputRequiredResult values with integrity-protected requestState bound to the initiating identity, original method/name/arguments, input schema, and expiry."
@@ -28390,7 +29021,7 @@
 ]
 }
 ],
-"contentHash": "728b25329a356e9b",
+"contentHash": "06e2d7415782d5f7",
 "keywords": [
 "output boundary controls",
 "tool output sanitization",
@@ -28422,6 +29053,10 @@
 {
 "id": "AID-H-028.005",
 "comparison": "AID-H-034.006 authorizes the object represented by a handle on the server; AID-H-028.005 isolates and expires client-side handle references and request state.\nClient storage discipline cannot grant server object access."
+},
+{
+"id": "AID-H-018.002",
+"comparison": "AID-H-034.006 owns MCP-specific cross-call handle issuance, binding, expiry, revocation, and per-use authorization; AID-H-018.002 authorizes opaque application or service objects at non-MCP model- or agent-triggered boundaries.\nIf an MCP handler calls an external service, preserve both enforcement boundaries but award no duplicate PASS for that service's object decision."
 }
 ]
 },
@@ -28518,7 +29153,7 @@
 ]
 }
 ],
-"contentHash": "2877e11e5d739de5",
+"contentHash": "fb76ce5c6dca6d12",
 "keywords": [
 "explicit application handles",
 "object authorized state",
@@ -39792,6 +40427,14 @@
 {
 "id": "AID-I-008",
 "comparison": "AID-I-001 isolates execution processes and tool runtimes; AID-I-008 isolates browser-managed and desktop-workspace state per task or trust zone.\nA process sandbox does not by itself rotate cookies, browser storage, downloads, clipboard, history, desktop profiles, or authenticated computer-use state."
+},
+{
+"id": "AID-H-018.009",
+"comparison": "AID-I-001 contains a process, container, microVM, WASM, or other workload boundary; AID-H-018.009 confines the particular filesystem object that a model-influenced path may open or affect, including in-process tools.\nIsolation and opened-object confinement remain independently applicable and neither PASS substitutes for the other."
+},
+{
+"id": "AID-H-021.005",
+"comparison": "AID-I-001 contains execution after an AI development client starts a task, tool, extension, server, or other workload; AID-H-021.005 decides whether the exact repository-controlled activation manifest may leave restricted mode in the first place.\nA sandbox does not approve workspace activation, and a trusted activation manifest does not prove runtime containment."
 }
 ]
 },
@@ -39919,7 +40562,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "65e55cd2d93ebaca",
+"contentHash": "a55eb64d5382f9ab",
 "keywords": [
 "ai execution sandboxing",
 "runtime isolation",
@@ -44964,8 +45607,8 @@
 ],
 "implementationGuidance": [
 "Admit only high-confidence malicious sessions through a signed, evidence-bound deception eligibility gate before serving any deceptive output.",
-"Apply one deterministic, signed degradation profile—bounded logit noise or lower-utility generation—only to the request identified by the verified deception-eligibility token.",
-"Route an eligibility-token-bound high-risk tool request to a credentialless safe-noop service that cannot reach the real tool, returns only a signed-template synthetic result, and records downstream readback showing no real side effect.",
+"Apply one request-bound, signed degradation profile—bounded logit noise or lower-utility generation—only to the request identified by the verified deception-eligibility token.",
+"Route an eligibility-token-bound high-risk tool request to a credentialless safe-noop service that cannot reach the real tool, returns only a signed-template synthetic result, and records a safe-noop execution receipt for separate business-state reconciliation.",
 "Bound every deception engagement with a signed-policy mode-disable switch, TTL, explicit exit conditions, and verified return to the normal response path.",
 "Ensure all deceptive responses are clearly tagged in internal monitoring and incident telemetry."
 ],
@@ -44987,7 +45630,7 @@
 "toolsCommercial": [
 "Acalvio ShadowPlex (deception engagement substrate; application-side output manipulation remains custom)"
 ],
-"contentHash": "99e90511fa388d54",
+"contentHash": "31cbddd8f12b232d",
 "keywords": [
 "deceptive response orchestration",
 "adaptive decoy reply generation",
@@ -48102,9 +48745,9 @@
 "implementationGuidance": [
 "Identify all affected data stores, downstream assets, and derived artifacts.",
 "Restore each affected data store from the most recent trusted, pre-incident backup or snapshot.",
-"If no clean backup exists, reconstruct or repair data in place using deterministic rules and validation logic.",
+"If no clean backup exists, deterministically repair or reconstruct the immutable damaged source into a new isolated candidate using explicit rules and validation logic; never mutate the damaged or serving store in place.",
 "Re-validate integrity, schema, and statistical consistency of restored/repaired data before reuse.",
-"Keep recovered data blocked from production reuse until the incident's exact ingestion or update path has an authenticated remediation record or approved exception, then read the effective gate configuration and behavior through a separate read-only path."
+"Keep recovered data blocked from production reuse until the incident's exact ingestion or update path has an authenticated remediation record and an independent read-only path verifies the effective gate configuration and behavior."
 ],
 "implementationGuidanceIds": [
 "AID-R-002-G001",
@@ -48140,7 +48783,7 @@
 "AWS Backup",
 "Azure Backup"
 ],
-"contentHash": "387edd59d80e6fd3",
+"contentHash": "691469042ead84f8",
 "keywords": [
 "data integrity recovery",
 "dataset rollback",
@@ -48317,7 +48960,7 @@
 "improvement"
 ],
 "implementationGuidance": [
-"Require MFA or step-up authentication for all restored sessions."
+"Require MFA or step-up authentication for every applicable restored interactive session under the authority-signed recovery policy."
 ],
 "implementationGuidanceIds": [
 "AID-R-003.001-G001"
@@ -48397,7 +49040,7 @@
 ]
 }
 ],
-"contentHash": "2787543f252c9a65",
+"contentHash": "10a5c1f30465200a",
 "keywords": [
 "post-incident identity recovery",
 "fresh reauthentication",

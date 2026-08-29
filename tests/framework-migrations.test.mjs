@@ -26,6 +26,12 @@ function allEntities() {
     );
 }
 
+function entityById(id) {
+    const entity = allEntities().find(item => item.id === id);
+    assert.ok(entity, `missing framework entity ${id}`);
+    return entity;
+}
+
 test('OWASP LLM registry has one complete current catalog and a one-to-one legacy migration', () => {
     assert.equal(frameworkMigrations.registryVersion, '2026-08-05');
     assert.equal(catalog.activeEdition, '2026');
@@ -298,7 +304,7 @@ test('WebMCP query planning preserves generic lookup and prioritizes canonical m
 
 test('every active framework entity uses only canonical OWASP LLM 2026 items', () => {
     const entities = allEntities();
-    assert.equal(entities.length, 357);
+    assert.equal(entities.length, 360);
 
     for (const entity of entities) {
         const current = entity.defendsAgainst.filter(
@@ -323,6 +329,151 @@ test('every active framework entity uses only canonical OWASP LLM 2026 items', (
             );
         }
     }
+});
+
+test('2026-08-28 practical-control migration preserves the frozen control boundaries', () => {
+    const expectedGuidance = new Map([
+        ['AID-H-002.009', 5],
+        ['AID-H-018.009', 3],
+        ['AID-H-021.005', 3]
+    ]);
+    const entities = allEntities();
+
+    assert.equal(entities.some(item => item.id === 'AID-H-002.010'), false);
+    assert.equal(entities.some(item => item.id === 'AID-H-004.006'), false);
+
+    for (const [id, count] of expectedGuidance) {
+        const entity = entityById(id);
+        assert.equal(entity.implementationGuidance.length, count, id);
+        assert.equal(entity.defendsAgainst.length, 9, `${id} mapping coverage`);
+        assert.deepEqual(
+            entity.implementationGuidance.map(item => item.id),
+            Array.from({ length: count }, (_, index) => `${id}-G${String(index + 1).padStart(3, '0')}`)
+        );
+    }
+
+    const optionalReviewer = entityById('AID-H-018.003').implementationGuidance;
+    assert.equal(optionalReviewer.at(-1).id, 'AID-H-018.003-G002');
+    assert.match(optionalReviewer.at(-1).implementation, /non-authoritative|review/i);
+
+    const reciprocalBoundaries = new Map([
+        ['AID-H-002.009', [
+            'AID-H-002.001', 'AID-H-002.003', 'AID-H-003.009', 'AID-H-006.002'
+        ]],
+        ['AID-H-018.009', [
+            'AID-H-006.002', 'AID-H-018.001', 'AID-H-018.002',
+            'AID-H-018.006', 'AID-H-018.007', 'AID-H-025.002',
+            'AID-H-030.004', 'AID-H-034.004', 'AID-H-034.005', 'AID-I-001'
+        ]],
+        ['AID-H-021.005', [
+            'AID-H-021.001', 'AID-H-021.002', 'AID-H-021.003',
+            'AID-H-030.005', 'AID-H-018.003', 'AID-I-001'
+        ]]
+    ]);
+    for (const [target, neighbors] of reciprocalBoundaries) {
+        for (const neighbor of neighbors) {
+            const related = entityById(neighbor).scopeBoundary?.relatedTechniques || [];
+            assert.ok(
+                related.some(item => item.id === target),
+                neighbor + ' must contain the reciprocal boundary to ' + target
+            );
+        }
+    }
+});
+
+test('MCP examples preserve the 2026-07-28 input_required wire value', () => {
+    const hardenSource = fs.readFileSync(path.join(ROOT, 'tactics', 'harden.js'), 'utf8');
+
+    assert.doesNotMatch(
+        hardenSource,
+        /resultType\s*:\s*\\?["']inputRequired\\?["']/,
+        'camelCase helper naming must not leak into the MCP resultType wire value'
+    );
+    assert.doesNotMatch(
+        hardenSource,
+        /resultType\s*!==?\s*\\?["']inputRequired\\?["']/,
+        'MCP resultType comparisons must use the protocol wire value'
+    );
+    assert.match(
+        hardenSource,
+        /resultType\s*:\s*\\?["']input_required\\?["']/,
+        'at least one authored MCP example must exercise input_required'
+    );
+});
+
+test('inter-agent event verification binds the claimed key ID to its producer', () => {
+    const guidance = entityById('AID-D-011.002').implementationGuidance
+        .find(item => item.id === 'AID-D-011.002-G001');
+
+    assert.ok(guidance, 'missing AID-D-011.002-G001');
+    assert.match(guidance.howTo, /active_keys: dict\[tuple\[str, str\]/);
+    assert.match(guidance.howTo, /active_keys\.get\(\(producer, key_id\)\)/);
+    assert.doesNotMatch(guidance.howTo, /active_keys\[producer\]\.verify/);
+});
+
+test('reviewed hardening corrections preserve their enforcement contracts', () => {
+    const h032Registry = entityById('AID-H-032.002').implementationGuidance
+        .find(item => item.id === 'AID-H-032.002-G001').howTo;
+    assert.match(h032Registry, /authoritative registry/i);
+    assert.match(h032Registry, /require_atomic_generation_lease: true/);
+    assert.match(h032Registry, /ownership_handoff/);
+    assert.match(h032Registry, /direct runtime-API bypass/);
+
+    const diagnostics = entityById('AID-H-032.003').implementationGuidance
+        .find(item => item.id === 'AID-H-032.003-G006').howTo;
+    assert.match(diagnostics, /path: \/internal\/diagnostics/);
+    assert.doesNotMatch(diagnostics, /prefix: \/internal\/diagnostics/);
+    assert.match(diagnostics, /wrong-identity\.crt/);
+    assert.match(diagnostics, /\$\{BASE_URL\}-extra/);
+    assert.match(diagnostics, /401\|403\|404/);
+    assert.doesNotMatch(diagnostics, /200\|401\|403\|404/);
+
+    const authorization = entityById('AID-H-018.002').implementationGuidance
+        .find(item => item.id === 'AID-H-018.002-G001').howTo;
+    assert.match(authorization, /input\.resource\.canonical_id in input\.user\.allowed_account_ids/);
+    assert.match(authorization, /input\.resource\.tenant_id == input\.user\.tenant_id/);
+    assert.doesNotMatch(authorization, /input\.resource\.account_id/);
+    assert.doesNotMatch(authorization, /input\.resource\.sensitivity/);
+
+    const breaker = entityById('AID-H-017.001').implementationGuidance
+        .find(item => item.id === 'AID-H-017.001-G002').howTo;
+    assert.match(breaker, /max_cumulative_tokens/);
+    assert.match(breaker, /max_cumulative_cost_microunits/);
+    assert.match(breaker, /token_budget_exhausted/);
+    assert.match(breaker, /cost_budget_exhausted/);
+
+    const workspaceGate = entityById('AID-H-021.005');
+    const atlas = workspaceGate.defendsAgainst.find(
+        mapping => mapping.framework === 'MITRE ATLAS'
+    );
+    assert.ok(atlas.items.some(item => item.startsWith(
+        'AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool'
+    )));
+    const broker = workspaceGate.implementationGuidance
+        .find(item => item.id === 'AID-H-021.005-G002').howTo;
+    assert.match(broker, /def teardown\(/);
+    assert.match(broker, /evidence failed and teardown was not proven/);
+});
+
+test('standalone Terraform security-group rules do not mix with inline egress', () => {
+    const guidance = entityById('AID-I-002.001').implementationGuidance
+        .find(item => item.id === 'AID-I-002.001-G002').howTo;
+
+    assert.doesNotMatch(guidance, /\begress\s*=\s*\[\]/);
+    assert.match(guidance, /aws_vpc_security_group_egress_rule/);
+    assert.match(guidance, /Keep inline <code>ingress<\/code>\/<code>egress<\/code> arguments absent/);
+});
+
+test('inter-agent authorization uses one ordered complete-rule decision chain', () => {
+    const guidance = entityById('AID-H-004.003').implementationGuidance
+        .find(item => item.id === 'AID-H-004.003-G007').howTo;
+    const policy = guidance.slice(
+        guidance.indexOf('# File: policy/inter_agent_authorization.rego'),
+        guidance.indexOf('</code></pre>', guidance.indexOf('# File: policy/inter_agent_authorization.rego'))
+    );
+
+    assert.equal((policy.match(/^decision :=/gm) || []).length, 1);
+    assert.equal((policy.match(/^else :=/gm) || []).length, 6);
 });
 
 test('generated migration JSON and browser consumers use the authored registry', () => {

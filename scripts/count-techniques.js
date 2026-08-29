@@ -17,7 +17,7 @@ const TACTICS_DIR = path.join(__dirname, '..', 'tactics');
 
 const tacticModules = [
   ['detect.js', 'detectTactic', 18, 53],
-  ['harden.js', 'hardenTactic', 37, 139],
+  ['harden.js', 'hardenTactic', 37, 142],
   ['isolate.js', 'isolateTactic', 8, 25],
   ['model.js', 'modelTactic', 10, 35],
   ['deceive.js', 'deceiveTactic', 7, 0],
@@ -92,10 +92,10 @@ console.log(`TOTAL: ${totalTechniques} techniques, ${totalSubTechniques} sub-tec
 console.log(`TOTAL TAXONOMY ENTRIES: ${totalTechniques + totalSubTechniques}`);
 console.log(`PARENT FAMILIES (navigation only): ${totalParentFamilies}`);
 console.log(`ACTIONABLE CONTROLS: ${totalStandaloneTechniques + totalSubTechniques}`);
-if (totalTechniques !== 92 || totalSubTechniques !== 265 || seenIds.size !== 357 ||
+if (totalTechniques !== 92 || totalSubTechniques !== 268 || seenIds.size !== 360 ||
     totalParentFamilies !== 57 || totalStandaloneTechniques !== 35) {
   throw new Error(
-    `Live corpus count drifted: expected 92 techniques, 265 sub-techniques, 357 unique IDs, ` +
+    `Live corpus count drifted: expected 92 techniques, 268 sub-techniques, 360 unique IDs, ` +
     `57 parent families, and 35 standalone controls; found ${totalTechniques}, ` +
     `${totalSubTechniques}, ${seenIds.size}, ${totalParentFamilies}, and ` +
     `${totalStandaloneTechniques}`,

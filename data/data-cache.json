@@ -862,7 +862,7 @@
     ]
   },
   "AID-H-002": {
-    "contentHash": "085114a3c1370e8b",
+    "contentHash": "0ae25214391e8a3c",
     "keywords": [
       "input sanitization",
       "prompt hardening",
@@ -877,11 +877,12 @@
       "prompt injection defense",
       "data poisoning prevention",
       "rag input validation",
-      "canonicalization"
+      "canonicalization",
+      "dataset parser admission"
     ]
   },
   "AID-H-002.001": {
-    "contentHash": "4b6233f7e20968cc",
+    "contentHash": "04051132c0d8bced",
     "keywords": [
       "training data sanitization",
       "poisoned sample removal",
@@ -919,7 +920,7 @@
     ]
   },
   "AID-H-002.003": {
-    "contentHash": "aad32a9437b905d6",
+    "contentHash": "edc8eeb829241154",
     "keywords": [
       "batch multimodal sanitization",
       "artifact-level media gate",
@@ -1198,7 +1199,7 @@
     ]
   },
   "AID-H-003.009": {
-    "contentHash": "b8d1ff76b26aebb6",
+    "contentHash": "741c1492bdfe1e1d",
     "keywords": [
       "model artifact scanning",
       "unsafe deserialization detection",
@@ -1274,7 +1275,7 @@
     ]
   },
   "AID-H-004.003": {
-    "contentHash": "0e7811c701305c49",
+    "contentHash": "9005bc133c54b357",
     "keywords": [
       "secure agent communication",
       "a2a task authorization",
@@ -1463,7 +1464,7 @@
     ]
   },
   "AID-H-006.002": {
-    "contentHash": "f522fb219320a0ba",
+    "contentHash": "89047ede0b6f733d",
     "keywords": [
       "output content sanitization",
       "remote subresource blocking",
@@ -2390,7 +2391,7 @@
     ]
   },
   "AID-H-018": {
-    "contentHash": "2d3f7551d9328646",
+    "contentHash": "eec82615f317bbc2",
     "keywords": [
       "tool authorization",
       "lethal trifecta mitigation",
@@ -2402,15 +2403,15 @@
       "least privilege tools",
       "tool access control",
       "typed parameter validation",
-      "agent authorization",
+      "authoritative object authorization",
       "tool invocation gating",
       "deny-by-default tool access",
-      "capability limits",
+      "filesystem object confinement",
       "tool policy enforcement"
     ]
   },
   "AID-H-018.001": {
-    "contentHash": "b39e1410383fd978",
+    "contentHash": "8b841a3375c7aa7f",
     "keywords": [
       "tool parameter validation",
       "schema validation",
@@ -2429,26 +2430,27 @@
     ]
   },
   "AID-H-018.002": {
-    "contentHash": "7cd7d043118c74ec",
+    "contentHash": "569d924039863ca7",
     "keywords": [
-      "policy-based access control",
+      "policy based access control",
       "externalized authorization decision",
-      "fail-closed tool authorization",
-      "open policy agent",
-      "opa rego policy",
-      "casbin authorization",
-      "cerbos hub policy distribution",
-      "permit.io authorization",
-      "verified workload identity",
-      "resource attribute authorization",
-      "context-aware tool policy",
-      "signed policy bundle",
+      "fail closed tool authorization",
+      "authoritative opaque handle resolution",
+      "canonical object authorization",
+      "tenant object isolation",
+      "workload identity binding",
+      "delegation context authorization",
+      "run scoped authorization",
+      "object type version binding",
+      "final adapter enforcement",
+      "stale object rejection",
+      "cross tenant denial",
       "authorization decision receipt",
-      "independent policy replay"
+      "policy engine enforcement"
     ]
   },
   "AID-H-018.003": {
-    "contentHash": "b083295a49fe5be5",
+    "contentHash": "5c071ddbfd98c30e",
     "keywords": [
       "high impact action gate",
       "canonical action plan",
@@ -2505,7 +2507,7 @@
     ]
   },
   "AID-H-018.006": {
-    "contentHash": "856147c3921c81f8",
+    "contentHash": "059250a630f25189",
     "keywords": [
       "execution time authorization",
       "anti toctou verification",
@@ -2525,7 +2527,7 @@
     ]
   },
   "AID-H-018.007": {
-    "contentHash": "d4165cd5c03f5229",
+    "contentHash": "28826c46d3c485d9",
     "keywords": [
       "skill permission manifest",
       "skill-level authorization",
@@ -2729,7 +2731,7 @@
     ]
   },
   "AID-H-021": {
-    "contentHash": "2ab67c0661293694",
+    "contentHash": "a8cd3996378a67d8",
     "keywords": [
       "configuration integrity",
       "signed configurations",
@@ -2744,11 +2746,12 @@
       "system prompt integrity",
       "supply chain config defense",
       "client-side config enforcement",
-      "retrieval-time context integrity"
+      "retrieval-time context integrity",
+      "workspace activation trust gate"
     ]
   },
   "AID-H-021.001": {
-    "contentHash": "9ea89892b6209955",
+    "contentHash": "382a7b9515998d4b",
     "keywords": [
       "client-side configuration enforcement",
       "pre-commit hooks",
@@ -2766,7 +2769,7 @@
     ]
   },
   "AID-H-021.002": {
-    "contentHash": "001c1fe163cb8c22",
+    "contentHash": "af24a4d26872f2ea",
     "keywords": [
       "signed configuration",
       "runtime integrity enforcement",
@@ -2786,7 +2789,7 @@
     ]
   },
   "AID-H-021.003": {
-    "contentHash": "1958dfbf6d4156b7",
+    "contentHash": "80e56897a37c23a5",
     "keywords": [
       "context corpus governance",
       "retrieval-time integrity gate",
@@ -2805,7 +2808,7 @@
     ]
   },
   "AID-H-021.004": {
-    "contentHash": "aa632d47fa73fe3c",
+    "contentHash": "3c63efbf16359560",
     "keywords": [
       "control-plane isolation",
       "oversight surface isolation",
@@ -3033,7 +3036,7 @@
     ]
   },
   "AID-H-025.002": {
-    "contentHash": "b3c23cab592fe868",
+    "contentHash": "8aa9a5f42152c01a",
     "keywords": [
       "restricted interpreter",
       "restrictedpython sandbox",
@@ -3275,7 +3278,7 @@
     ]
   },
   "AID-H-028.007": {
-    "contentHash": "9642a06182e90c29",
+    "contentHash": "a9462c6663e0013e",
     "keywords": [
       "multi round trip input",
       "active request binding",
@@ -3294,7 +3297,7 @@
     ]
   },
   "AID-H-028.008": {
-    "contentHash": "a1f1a790741bcba8",
+    "contentHash": "8151d88ce625c3a2",
     "keywords": [
       "mcp sampling exception isolation",
       "deprecated sampling capability",
@@ -3464,7 +3467,7 @@
     ]
   },
   "AID-H-030.004": {
-    "contentHash": "cc5eafb6b16d500f",
+    "contentHash": "48bd4ceab2705d4b",
     "keywords": [
       "safe skill parsing",
       "loader hardening",
@@ -3483,7 +3486,7 @@
     ]
   },
   "AID-H-030.005": {
-    "contentHash": "c4db362f7db9b232",
+    "contentHash": "0e6503d5d9d11829",
     "keywords": [
       "admission policy orchestration",
       "continuous rescan governance",
@@ -3636,7 +3639,7 @@
     ]
   },
   "AID-H-032.002": {
-    "contentHash": "66718d98ce83eaad",
+    "contentHash": "1b4f45d834f642fd",
     "keywords": [
       "cross-tenant serving isolation",
       "serving-state partitioning",
@@ -3644,13 +3647,15 @@
       "kv cache isolation",
       "batching group isolation",
       "warm worker isolation",
-      "failover state rebind",
+      "shared-memory namespace isolation",
+      "authoritative region registry",
+      "IPC lifecycle authorization",
+      "generation-bound region leases",
+      "anti-TOCTOU memory mapping",
+      "restart and failover rebind",
       "cache timing evidence consumption",
       "placement remediation",
-      "tenant-scoped serving pools",
-      "shared-state covert channel",
-      "dedicated inference tier",
-      "scheduler state isolation"
+      "tenant-scoped serving pools"
     ]
   },
   "AID-H-032.003": {
@@ -3883,7 +3888,7 @@
     ]
   },
   "AID-H-034.003": {
-    "contentHash": "9c2e41fe14c272bf",
+    "contentHash": "0c187afaaa422305",
     "keywords": [
       "tool input validation",
       "strict json schema",
@@ -3902,7 +3907,7 @@
     ]
   },
   "AID-H-034.004": {
-    "contentHash": "e4cb01454ccc15e0",
+    "contentHash": "d3afb89bf99d7cfb",
     "keywords": [
       "tool publication governance",
       "mcp contract manifest",
@@ -3921,7 +3926,7 @@
     ]
   },
   "AID-H-034.005": {
-    "contentHash": "728b25329a356e9b",
+    "contentHash": "06e2d7415782d5f7",
     "keywords": [
       "output boundary controls",
       "tool output sanitization",
@@ -3940,7 +3945,7 @@
     ]
   },
   "AID-H-034.006": {
-    "contentHash": "2877e11e5d739de5",
+    "contentHash": "fb76ce5c6dca6d12",
     "keywords": [
       "explicit application handles",
       "object authorized state",
@@ -5448,7 +5453,7 @@
     ]
   },
   "AID-I-001": {
-    "contentHash": "65e55cd2d93ebaca",
+    "contentHash": "a55eb64d5382f9ab",
     "keywords": [
       "ai execution sandboxing",
       "runtime isolation",
@@ -6111,7 +6116,7 @@
     ]
   },
   "AID-DV-003": {
-    "contentHash": "99e90511fa388d54",
+    "contentHash": "31cbddd8f12b232d",
     "keywords": [
       "deceptive response orchestration",
       "adaptive decoy reply generation",
@@ -6507,7 +6512,7 @@
     ]
   },
   "AID-R-002": {
-    "contentHash": "387edd59d80e6fd3",
+    "contentHash": "691469042ead84f8",
     "keywords": [
       "data integrity recovery",
       "dataset rollback",
@@ -6546,7 +6551,7 @@
     ]
   },
   "AID-R-003.001": {
-    "contentHash": "2787543f252c9a65",
+    "contentHash": "10a5c1f30465200a",
     "keywords": [
       "post-incident identity recovery",
       "fresh reauthentication",
@@ -6707,6 +6712,65 @@
       "TLS termination boundary",
       "zero RTT replay defense",
       "message path inventory"
+    ]
+  },
+  "AID-H-002.009": {
+    "contentHash": "14ddae284d92e33b",
+    "keywords": [
+      "untrusted dataset parser admission",
+      "hostile dataset artifact parsing",
+      "policy-pinned parser routing",
+      "dangerous dataset feature denial",
+      "hdf5 external storage blocking",
+      "descriptor-bound artifact handoff",
+      "parser image digest binding",
+      "exact parser result binding",
+      "code-bearing loader denial",
+      "parser result admission receipt",
+      "bounded dataset preview broker",
+      "complete parser case population",
+      "structured artifact quarantine",
+      "parser negative regression testing"
+    ]
+  },
+  "AID-H-018.009": {
+    "contentHash": "be4f18bb65c03947",
+    "keywords": [
+      "model-callable filesystem confinement",
+      "descriptor-based path resolution",
+      "opened-object identity binding",
+      "authenticated root policy",
+      "trusted root descriptor",
+      "operation-specific path permissions",
+      "path traversal prevention",
+      "symlink race prevention",
+      "mount boundary enforcement",
+      "Windows reparse-point denial",
+      "special-file rejection",
+      "atomic filesystem mutation",
+      "executable-target confinement",
+      "filesystem adapter reconciliation",
+      "cross-platform path negative tests"
+    ]
+  },
+  "AID-H-021.005": {
+    "contentHash": "c77d693d41936124",
+    "keywords": [
+      "coding-agent workspace trust",
+      "restricted-before-trust mode",
+      "repository activation gate",
+      "canonical workspace identity",
+      "activation manifest digest",
+      "non-executing activation preview",
+      "repository lifecycle-hook inventory",
+      "command-based MCP server gating",
+      "folder-open task gating",
+      "dev-container bootstrap gating",
+      "managed workspace trust policy",
+      "activation-broker revocation",
+      "security-change re-evaluation",
+      "pre-trust bypass testing",
+      "activation-attempt reconciliation"
     ]
   }
 }
