@@ -304,7 +304,7 @@ test('WebMCP query planning preserves generic lookup and prioritizes canonical m
 
 test('every active framework entity uses only canonical OWASP LLM 2026 items', () => {
     const entities = allEntities();
-    assert.equal(entities.length, 360);
+    assert.equal(entities.length, 365);
 
     for (const entity of entities) {
         const current = entity.defendsAgainst.filter(

@@ -576,6 +576,10 @@ export const isolateTactic = {
                         {
                           "id": "AID-H-019.003",
                           "comparison": "AID-I-001.004 owns the reusable sandbox egress-policy object and its external enforcement; AID-H-019.003 owns admission and observation export for a browser runtime.\nThe browser control binds to this policy but does not redefine the allowlist, proxy enforcement, or network-bypass tests."
+                        },
+                        {
+                          "id": "AID-I-002.002",
+                          "comparison": "AID-I-001.004 is the primary owner for default-deny egress and bypass resistance of sandboxed execution; AID-I-002.002 owns governed connectivity from AI workloads to external MaaS, SaaS, APIs, callbacks, relays, and cross-organization agents.\nWhen a sandbox calls an external AI service, identical network-policy evidence may be reused, but the same default-deny enforcement must not receive two PASS outcomes; AID-I-002.002 must additionally prove its external endpoint, transport, and mediation population."
                         }
                       ]
                     },
@@ -1078,10 +1082,14 @@ export const isolateTactic = {
               "scopeBoundary": {
                 "responsibility": "Owns default-deny network path control, transport security, mediation, and effective-reachability verification for external MaaS, SaaS, API, callback, relay, broker-bridge, and cross-organization agent connections. It does not define internal microsegmentation between organization-controlled components.",
                 "relatedTechniques": [
-                  {
-                    "id": "AID-I-002.001",
-                    "comparison": "AID-I-002.002 governs external and cross-organization service connectivity; AID-I-002.001 segments internal organization-controlled AI systems and trust zones.\nA privately addressed provider route can still be external by ownership and trust boundary, while an Internet-routable organization-owned endpoint may remain part of the internal administrative population."
-                  }
+                        {
+                          "id": "AID-I-002.001",
+                          "comparison": "AID-I-002.002 governs external and cross-organization service connectivity; AID-I-002.001 segments internal organization-controlled AI systems and trust zones.\nA privately addressed provider route can still be external by ownership and trust boundary, while an Internet-routable organization-owned endpoint may remain part of the internal administrative population."
+                        },
+                        {
+                          "id": "AID-I-001.004",
+                          "comparison": "AID-I-002.002 owns external-service endpoint, transport, mediation, and reachability controls for the applicable AI-workload population; AID-I-001.004 is the primary owner for default-deny egress and bypass tests of sandboxed executions.\nFor an external call originating inside a sandbox, reuse the sandbox network evidence without scoring the identical enforcement twice, and evaluate the additional external-service identity and mediation requirements here."
+                        }
                 ]
               },
               "toolsOpenSource": [
@@ -1237,6 +1245,10 @@ export const isolateTactic = {
                 {
                   "id": "AID-I-005",
                   "comparison": "AID-I-003 contains a scoped identity, session, tenant, agent, budget, or action; AID-I-005 applies a last-resort system-wide or tenant-wide halt or severe restriction.\nA local quarantine or throttle is not proof that the emergency halt propagated across every required execution boundary."
+                },
+                {
+                  "id": "AID-E-001",
+                  "comparison": "AID-I-003 applies reversible quarantine, safe-mode downgrade, or throttling while investigation and recovery proceed; AID-E-001 authoritatively revokes compromised credentials, sessions, principals, issuance paths, and delegated grants after an incident decision.\nA quarantine receipt cannot prove durable identity-plane eviction, and revocation does not replace bounded containment of the affected workload or action."
                 }
               ]
             },
@@ -1464,7 +1476,7 @@ export const isolateTactic = {
                   "implementationGuidance": [
                     {
                       "id": "AID-I-003.001-G001",
-                      "implementation": "Automated quarantine based on high-risk behavior alerts (cut access, move to honeypot, disable key/account).",
+                      "implementation": "Apply reversible quarantine or safe-mode downgrade from an authenticated high-risk finding; credential, session, principal, or grant revocation remains an AID-E-001 action with separate evidence.",
                       "howTo": "<h5>Required alert and trust inputs</h5><p>Use this method when a signed detection receipt nominates one concrete principal, session, workload, source address, or tenant for containment. The responder does not trust queue-body confidence, target IDs, or requested actions. A signature-verifying adapter checks the detector issuer/audience, schema, target binding, source evidence digest, policy version, freshness, and replay nonce. A separately signed containment policy maps the verified finding class and asset type to one bounded action. Network/session quarantine is owned here; credential revocation and decoy routing remain separate dependency actions with independently verified receipts.</p><h5>Idempotent containment transaction</h5><pre><code class=\"language-python\"># File: response/verified_quarantine.py\nfrom __future__ import annotations\n\nfrom dataclasses import dataclass\nfrom typing import Callable\n\n\n@dataclass(frozen=True)\nclass VerifiedAlert:\n    alert_id: str\n    incident_id: str\n    target_type: str\n    target_id: str\n    finding_class: str\n    evidence_sha256: str\n    receipt_sha256: str\n\n\n@dataclass(frozen=True)\nclass VerifiedContainmentPolicy:\n    policy_sha256: str\n    scope_id: str\n    action_by_finding_and_target: dict[tuple[str, str], str]\n\n\n@dataclass(frozen=True)\nclass ContainmentAuthority:\n    \"\"\"Required authenticated runtime adapter callables; no fallback implementation.\"\"\"\n    claim_once: Callable[[VerifiedAlert, str, VerifiedContainmentPolicy], dict[str, object]]\n    apply: Callable[[dict[str, object]], dict[str, object]]\n    read_effective_state: Callable[[dict[str, object]], dict[str, object]]\n    finalize: Callable[[dict[str, object], str], None]\n\n\n@dataclass(frozen=True)\nclass EvidenceWriter:\n    \"\"\"Required authenticated runtime adapter callables; no fallback implementation.\"\"\"\n    append_and_verify: Callable[[dict[str, object]], dict[str, str]]\n\n\ndef quarantine(\n    *,\n    alert: VerifiedAlert,\n    policy: VerifiedContainmentPolicy,\n    authority: ContainmentAuthority,\n    evidence: EvidenceWriter,\n) -&gt; dict[str, object]:\n    key = (alert.finding_class, alert.target_type)\n    if key not in policy.action_by_finding_and_target:\n        event = {\n            \"schema_version\": \"aidefend.quarantine.v1\",\n            \"control\": \"AID-I-003.001\",\n            \"alert_id\": alert.alert_id,\n            \"incident_id\": alert.incident_id,\n            \"target_type\": alert.target_type,\n            \"target_id\": alert.target_id,\n            \"policy_sha256\": policy.policy_sha256,\n            \"outcome\": \"NOT_APPLICABLE\",\n        }\n        return {\"outcome\": \"NOT_APPLICABLE\", \"evidence\": evidence.append_and_verify(event)}\n\n    action = policy.action_by_finding_and_target[key]\n    lease = authority.claim_once(alert, action, policy)\n    try:\n        action_receipt = authority.apply(lease)\n        state = authority.read_effective_state(lease)\n        expected = {\n            \"target_type\": alert.target_type,\n            \"target_id\": alert.target_id,\n            \"action\": action,\n            \"policy_sha256\": policy.policy_sha256,\n            \"lease_id\": lease[\"lease_id\"],\n        }\n        for field, value in expected.items():\n            if state.get(field) != value:\n                raise PermissionError(\"effective containment mismatch: \" + field)\n        if state.get(\"contained\") is not True:\n            raise PermissionError(\"target is not effectively contained\")\n        final = evidence.append_and_verify({\n            \"schema_version\": \"aidefend.quarantine.v1\",\n            \"control\": \"AID-I-003.001\",\n            \"alert_id\": alert.alert_id,\n            \"incident_id\": alert.incident_id,\n            **expected,\n            \"alert_receipt_sha256\": alert.receipt_sha256,\n            \"source_evidence_sha256\": alert.evidence_sha256,\n            \"action_receipt_sha256\": action_receipt[\"receipt_sha256\"],\n            \"readback_receipt_sha256\": state[\"receipt_sha256\"],\n            \"outcome\": \"PASS\",\n        })\n        authority.finalize(lease, \"PASS\")\n        return {\"outcome\": \"PASS\", \"evidence\": final}\n    except Exception:\n        authority.finalize(lease, \"ERROR\")\n        raise\n</code></pre><h5>Apply quarantine and verify</h5><p>The authority uses a durable uniqueness key over alert, target, action, and policy; applies the provider change with optimistic concurrency; and records before/after state. For a WAF IP set it retries lock-token conflicts and preserves unrelated entries. For a session or workload it changes the exact server-side authorization/network state. Requests to disable credentials, route to a honeypot, or open tickets carry their own action-bound receipts and are evaluated by their owners; their receipts remain separate and do not change the quarantine result.</p>"
                     },
                     {
@@ -2000,10 +2012,14 @@ export const isolateTactic = {
                     "id": "AID-I-004.007",
                     "comparison": "AID-I-004.001 separates and limits active context by session or tenant; AID-I-004.007 removes or demotes secrets and privileged intermediate state at verified task-phase transitions within a live session.\nGeneral context isolation does not prove that no-longer-needed sensitive values were replaced when the task moved to a new phase."
                   },
-                  {
-                    "id": "AID-I-004.008",
-                    "comparison": "AID-I-004.001 owns active-context boundaries and hygiene; AID-I-004.008 validates the security integrity of a summarization or compaction transformation.\nA bounded context window does not prove that a generated summary preserved constraints, provenance, or secret-removal requirements."
-                  }
+                        {
+                          "id": "AID-I-004.008",
+                          "comparison": "AID-I-004.001 owns active-context boundaries and hygiene; AID-I-004.008 validates the security integrity of a summarization or compaction transformation.\nA bounded context window does not prove that a generated summary preserved constraints, provenance, or secret-removal requirements."
+                        },
+                        {
+                          "id": "AID-H-017.004",
+                          "comparison": "AID-I-004.001 owns steady-state isolation, size, TTL, reset, and serialization enforcement for volatile runtime context stores; AID-H-017.004 owns the application architecture that avoids retained cross-task state and reloads trusted mission objectives.\nStore isolation and TTL receive their outcome here even when a stateless design references the same runtime evidence."
+                        }
                 ]
               },
               "toolsOpenSource": [
@@ -5641,10 +5657,14 @@ def load_for_context(
             "scopeBoundary": {
               "responsibility": "Owns authoritative, identity-bound federated-client quarantine decisions, signed deny-state distribution, and exclusion enforcement at enrollment, selection, update ingestion, training, retraining, and recovery. Statistical clustering and reputation may nominate investigation candidates but cannot independently prove malice or authorize durable quarantine.",
               "relatedTechniques": [
-                {
-                  "id": "AID-H-008.002",
-                  "comparison": "AID-I-006 excludes clients already named in a verified quarantine decision; AID-H-008.002 robustly aggregates updates from the accepted client population.\nByzantine-robust aggregation is not identity-bound eviction, and quarantine does not define how accepted updates are combined or made robust to residual outliers."
-                }
+                        {
+                          "id": "AID-H-008.002",
+                          "comparison": "AID-I-006 excludes clients already named in a verified quarantine decision; AID-H-008.002 robustly aggregates updates from the accepted client population.\nByzantine-robust aggregation is not identity-bound eviction, and quarantine does not define how accepted updates are combined or made robust to residual outliers."
+                        },
+                        {
+                          "id": "AID-R-001.002",
+                          "comparison": "AID-I-006 produces and enforces the signed federated-client and update exclusion population; AID-R-001.002 consumes that population when building sanitized recovery-training inputs and validating a newly remediated model.\nRecovery retraining must not recreate the quarantine decision, and successful exclusion does not prove that the replacement model passed remediation evaluation."
+                        }
               ]
             },
             "implementationGuidance": [
@@ -6210,10 +6230,14 @@ def load_for_context(
                   "id": "AID-I-008",
                   "comparison": "AID-I-007 isolates the embedded client-side model or runtime component; AID-I-008 isolates browser-agent and desktop computer-use state by task or trust zone.\nCookies, localStorage, IndexedDB, cache, history, downloads, clipboard, magic links, desktop profiles, and workspace residue belong to I-008 even when the model component is separately confined here."
                 },
-                {
-                  "id": "AID-I-001",
-                  "comparison": "AID-I-007 confines a model inside an end-user client application; AID-I-001 isolates managed AI execution in containers, sandboxes, or microVMs.\nA client-side Worker or iframe boundary is not evidence that a server-side tool or model workload runs in the managed sandbox family."
-                }
+                        {
+                          "id": "AID-I-001",
+                          "comparison": "AID-I-007 confines a model inside an end-user client application; AID-I-001 isolates managed AI execution in containers, sandboxes, or microVMs.\nA client-side Worker or iframe boundary is not evidence that a server-side tool or model workload runs in the managed sandbox family."
+                        },
+                        {
+                          "id": "AID-H-003.011",
+                          "comparison": "AID-I-007 confines the client-side model runtime and its access to browser, application, operating-system, and native-bridge capabilities after execution begins; AID-H-003.011 decides whether an entitled, freshly attested client may receive the decryption key for an exact protected model release.\nClient isolation does not authorize model delivery, and key-release admission does not prove post-release runtime confinement."
+                        }
               ]
             },
             "toolsOpenSource": [

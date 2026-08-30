@@ -241,13 +241,17 @@ export const modelTactic = {
                         "validation",
                         "operation"
                     ],
-                    "description": "Systematically identifies and documents all components and services that an AI system depends on to function correctly. This includes direct software libraries, transitive dependencies, external data sources, third-party APIs, and other internal AI models or microservices. This dependency map is crucial for understanding the complete supply chain attack surface and for performing comprehensive security assessments.",
+                    "description": "Systematically identify and document every component and service an AI system depends on, including software libraries, external data and APIs, internal models, serving runtimes, and the exact model-interface bundle used to turn messages into tokens and raw generations into structured fields. Reconcile the approved release composition with every deployed replica so hidden dependency or interface drift remains visible.",
                     "scopeBoundary": {
-                      "responsibility": "Owns direct and transitive dependency relationships, external service and data dependencies, trust-boundary interfaces, SBOM composition, and deployed release-composition reconciliation.",
+                      "responsibility": "Owns direct and transitive dependency relationships, external service and data dependencies, trust-boundary interfaces, SBOM composition, the release-bound model-interface tuple (model, tokenizer, special tokens, chat template, generation configuration, tool/reasoning parser configuration, and runtime selectors), and deployed release-composition reconciliation for agent and non-agent services. It reports composition facts and drift but does not admit runtime configuration or decide release promotion.",
                       "relatedTechniques": [
                         {
                           "id": "AID-M-001.001",
                           "comparison": "AID-M-001.002 maps how components and services depend on one another; AID-M-001.001 records the authoritative identity and attributes of each asset.\nDependency completeness and asset-inventory completeness are separate claims and require different populations and evidence."
+                        },
+                        {
+                          "id": "AID-H-021.002",
+                          "comparison": "AID-M-001.002 inventories the approved model-interface tuple and reconciles the effective composition of deployed replicas; AID-H-021.002 verifies and admits signed startup or runtime control artifacts for an agent.\nFor an agent deployment, the same configuration bytes may support both controls, but composition reconciliation must not be scored again as runtime artifact admission."
                         }
                       ]
                     },
@@ -269,9 +273,9 @@ export const modelTactic = {
                         },
                         {
                             "id": "AID-M-001.002-G004",
-                            "implementation": "Maintain a version-controlled system and service dependency map, assemble the complete release composition, and independently read back every deployed replica.",
+                            "implementation": "Maintain a version-controlled dependency map, bind the complete model-interface tuple into the release composition, and independently read back every deployed replica.",
                             "howTo": [
-                                "<h5>Scope and ownership</h5><p>This step closes the preceding dependency inventories into one release-composition and deployed-readback result. The build identity binds the exact software lock, dependency SBOM, service dependency manifest, system topology, model artifacts, runtime, prompts, routing, tools, guardrails, adapters, and quantization state. A separately credentialed deployment verifier then reads the complete live replica population back. This step verifies dependency/composition completeness and equality with the deployed candidate; vulnerability remediation and runtime behavior remain separate controls.</p>\n",
+                                "<h5>Scope and ownership</h5><p>This step closes the preceding dependency inventories into one release-composition and deployed-readback result. The build identity binds the exact software lock, dependency SBOM, service dependency manifest, system topology, model artifacts, runtime, model-interface tuple, prompts, routing, tools, guardrails, adapters, and quantization state. The interface tuple includes the tokenizer, special-token map, chat template, generation configuration, tool parser, reasoning parser, and explicit container command plus arguments. Require a nonempty Kubernetes <code>command</code> so the approved vector replaces, rather than silently inherits, the image entrypoint. A separately credentialed deployment verifier then reads the complete live replica population back. This step verifies dependency/composition completeness and equality with the deployed candidate; parser behavior, security regression, vulnerability remediation, and runtime behavior remain separate controls.</p>\n",
                                 "<h5>Step 1: Sign the policy and exact release inputs before parsing</h5><pre><code># File: release/release-policy.json\n",
                                 "{\n",
                                 "  \"schema_version\": \"aidefend.release_composition_policy.v1\",\n",
@@ -283,7 +287,11 @@ export const modelTactic = {
                                 "    \"system_dependency_map\",\n",
                                 "    \"base_model_weights\",\n",
                                 "    \"tokenizer\",\n",
+                                "    \"special_tokens\",\n",
                                 "    \"chat_template\",\n",
+                                "    \"generation_config\",\n",
+                                "    \"tool_parser_config\",\n",
+                                "    \"reasoning_parser_config\",\n",
                                 "    \"system_policy_prompt\",\n",
                                 "    \"routing_fallback\",\n",
                                 "    \"tool_catalog\",\n",
@@ -307,7 +315,8 @@ export const modelTactic = {
                                 "  \"runtime\": {\n",
                                 "    \"container_image_digest\": \"registry.example.com/fraud-agent@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\",\n",
                                 "    \"inference_runtime_name\": \"vllm\",\n",
-                                "    \"inference_runtime_version\": \"0.10.1\"\n",
+                                "    \"inference_runtime_version\": \"0.10.1\",\n",
+                                "    \"launch_argv\": [\"vllm\", \"serve\", \"/opt/model\", \"--chat-template\", \"/etc/aidefend/chat-template.jinja\", \"--tool-call-parser\", \"hermes\", \"--reasoning-parser\", \"deepseek_r1\"]\n",
                                 "  },\n",
                                 "  \"components\": {\n",
                                 "    \"software_lock\": {\"version\": \"git:8a4c2d1\", \"path\": \"requirements.txt\", \"runtime_path\": \"/opt/aidefend/release/requirements.txt\"},\n",
@@ -316,7 +325,11 @@ export const modelTactic = {
                                 "    \"system_dependency_map\": {\"version\": \"git:8a4c2d1\", \"path\": \"config/system-dependency-map.json\", \"runtime_path\": \"/opt/aidefend/release/system-dependency-map.json\"},\n",
                                 "    \"base_model_weights\": {\"version\": \"fraud-base-7\", \"path\": \"dist/model.safetensors\", \"runtime_path\": \"/opt/model/model.safetensors\"},\n",
                                 "    \"tokenizer\": {\"version\": \"fraud-tokenizer-7\", \"path\": \"dist/tokenizer.json\", \"runtime_path\": \"/opt/model/tokenizer.json\"},\n",
+                                "    \"special_tokens\": {\"version\": \"fraud-tokenizer-7\", \"path\": \"dist/special_tokens_map.json\", \"runtime_path\": \"/opt/model/special_tokens_map.json\"},\n",
                                 "    \"chat_template\": {\"version\": \"chat-template-4\", \"path\": \"config/chat-template.jinja\", \"runtime_path\": \"/etc/aidefend/chat-template.jinja\"},\n",
+                                "    \"generation_config\": {\"version\": \"generation-6\", \"path\": \"config/generation-config.json\", \"runtime_path\": \"/etc/aidefend/generation-config.json\"},\n",
+                                "    \"tool_parser_config\": {\"version\": \"tool-parser-3\", \"path\": \"config/tool-parser.json\", \"runtime_path\": \"/etc/aidefend/tool-parser.json\"},\n",
+                                "    \"reasoning_parser_config\": {\"version\": \"reasoning-parser-2\", \"path\": \"config/reasoning-parser.json\", \"runtime_path\": \"/etc/aidefend/reasoning-parser.json\"},\n",
                                 "    \"system_policy_prompt\": {\"version\": \"system-policy-19\", \"path\": \"config/system-prompt.txt\", \"runtime_path\": \"/etc/aidefend/system-prompt.txt\"},\n",
                                 "    \"routing_fallback\": {\"version\": \"routing-8\", \"path\": \"config/routing.json\", \"runtime_path\": \"/etc/aidefend/routing.json\"},\n",
                                 "    \"tool_catalog\": {\"version\": \"tools-11\", \"path\": \"config/tools.json\", \"runtime_path\": \"/etc/aidefend/tools.json\"},\n",
@@ -420,7 +433,9 @@ export const modelTactic = {
                                 "MANDATORY_COMPONENTS = {\n",
                                 "    \"software_lock\", \"dependency_sbom\", \"service_dependencies\",\n",
                                 "    \"system_dependency_map\", \"base_model_weights\", \"tokenizer\",\n",
-                                "    \"chat_template\", \"system_policy_prompt\", \"routing_fallback\",\n",
+                                "    \"special_tokens\", \"chat_template\", \"generation_config\",\n",
+                                "    \"tool_parser_config\", \"reasoning_parser_config\",\n",
+                                "    \"system_policy_prompt\", \"routing_fallback\",\n",
                                 "    \"tool_catalog\", \"guardrail_config\",\n",
                                 "}\n",
                                 "MANDATORY_CONDITIONAL = {\"adapters\", \"quantization\"}\n",
@@ -632,12 +647,16 @@ export const modelTactic = {
                                 "if not source.get(\"release_id\") or any(not str(value).strip() for value in source[\"target\"].values()):\n",
                                 "    raise ValueError(\"release identity or deployment target is empty\")\n",
                                 "runtime = source.get(\"runtime\", {})\n",
-                                "if set(runtime) != {\"container_image_digest\", \"inference_runtime_name\", \"inference_runtime_version\"}:\n",
+                                "if set(runtime) != {\"container_image_digest\", \"inference_runtime_name\", \"inference_runtime_version\", \"launch_argv\"}:\n",
                                 "    raise ValueError(\"runtime schema differs\")\n",
                                 "if not IMAGE.fullmatch(runtime[\"container_image_digest\"]):\n",
                                 "    raise ValueError(\"container image is not digest-pinned\")\n",
                                 "if not runtime[\"inference_runtime_name\"] or not runtime[\"inference_runtime_version\"]:\n",
                                 "    raise ValueError(\"runtime name and version are required\")\n",
+                                "launch_argv = runtime[\"launch_argv\"]\n",
+                                "if (not isinstance(launch_argv, list) or not launch_argv or len(launch_argv) &gt; 128\n",
+                                "        or any(not isinstance(item, str) or not item or len(item) &gt; 4096 or \"\\x00\" in item for item in launch_argv)):\n",
+                                "    raise ValueError(\"runtime launch_argv is invalid\")\n",
                                 "max_readback_age_seconds = int(policy.get(\"max_readback_age_seconds\", 0))\n",
                                 "if max_readback_age_seconds &lt;= 0:\n",
                                 "    raise ValueError(\"max_readback_age_seconds must be positive\")\n",
@@ -928,6 +947,35 @@ export const modelTactic = {
                                 "                    for item in conditional[\"items\"]\n",
                                 "                )\n",
                                 "        for pod in sorted(ready, key=lambda item: item[\"metadata\"][\"name\"]):\n",
+                                "            container_specs = {\n",
+                                "                item[\"name\"]: item\n",
+                                "                for item in pod.get(\"spec\", {}).get(\"containers\", [])\n",
+                                "            }\n",
+                                "            container_spec = container_specs.get(container)\n",
+                                "            if container_spec is None:\n",
+                                "                mismatches.append({\n",
+                                "                    \"pod_uid\": pod[\"metadata\"][\"uid\"],\n",
+                                "                    \"field\": \"container_spec\",\n",
+                                "                })\n",
+                                "                continue\n",
+                                "            command = container_spec.get(\"command\")\n",
+                                "            arguments = container_spec.get(\"args\", [])\n",
+                                "            if (not isinstance(command, list) or not command\n",
+                                "                    or not isinstance(arguments, list)):\n",
+                                "                mismatches.append({\n",
+                                "                    \"pod_uid\": pod[\"metadata\"][\"uid\"],\n",
+                                "                    \"field\": \"explicit_container_command\",\n",
+                                "                })\n",
+                                "                continue\n",
+                                "            observed_launch_argv = [\n",
+                                "                *command,\n",
+                                "                *arguments,\n",
+                                "            ]\n",
+                                "            if observed_launch_argv != bundle[\"runtime\"][\"launch_argv\"]:\n",
+                                "                mismatches.append({\n",
+                                "                    \"pod_uid\": pod[\"metadata\"][\"uid\"],\n",
+                                "                    \"field\": \"launch_argv\",\n",
+                                "                })\n",
                                 "            statuses = {\n",
                                 "                item[\"name\"]: item\n",
                                 "                for item in pod[\"status\"][\"containerStatuses\"]\n",
@@ -955,6 +1003,7 @@ export const modelTactic = {
                                 "            replica_readbacks.append({\n",
                                 "                \"pod_uid\": pod[\"metadata\"][\"uid\"],\n",
                                 "                \"image_id\": status[\"imageID\"],\n",
+                                "                \"launch_argv\": observed_launch_argv,\n",
                                 "                \"component_sha256\": measured,\n",
                                 "            })\n",
                                 "        if annotation != expected_bundle_sha:\n",
@@ -989,7 +1038,7 @@ export const modelTactic = {
                                 "</code></pre><pre><code>python release/verify_deployed_bundle.py\n",
                                 "cosign sign-blob --yes --key env://DEPLOYMENT_VERIFIER_SIGNING_KEY --bundle evidence/deployed-release-readback.sig evidence/deployed-release-readback.json\n",
                                 "cosign verify-blob --key keys/deployment-verifier.pub --bundle evidence/deployed-release-readback.sig evidence/deployed-release-readback.json</code></pre>\n",
-                                "<h5>Independent replay and evidence</h5><p>A promotion identity that cannot alter the build, workload, or first verifier re-verifies all signatures, checks receipt freshness, and repeats the full population readback. Retain the signed policy, approved inputs, bundle, raw platform response, both readback receipts, signer identities, timestamps, and all referenced artifacts in append-only storage. Never accept a caller-provided <code>passed</code> field or a successful deployment command as proof. <strong>Action:</strong> Block promotion unless a separate verifier reproduces a fresh signed <code>PASS</code> for the exact release.</p>",
+                                "<h5>Independent replay and evidence</h5><p>An independent read-only identity that cannot alter the build, workload, or first verifier re-verifies all signatures, checks receipt freshness, and repeats the full population readback. Retain the signed policy, approved inputs, bundle, raw platform response, both readback receipts, signer identities, timestamps, and all referenced artifacts in append-only storage. Never accept a caller-provided <code>passed</code> field or a successful deployment command as proof. <strong>Action:</strong> Publish signed reconciliation evidence. When the independent replay is not a fresh <code>PASS</code>, withhold the clean reconciliation receipt and emit the exact <code>FAIL</code>, <code>INSUFFICIENT_DATA</code>, or <code>ERROR</code> result; <code>AID-H-003.002</code> owns any promotion block that consumes this evidence.</p>",
                             ].join("")
                         }
                     ],
@@ -2481,7 +2530,7 @@ export const modelTactic = {
                     ],
                     "description": "Employs cryptographic hashing and digital signatures to create and verify a tamper-evident chain of custody for macro-scale AI artifacts throughout their lifecycle. Focuses on whole-artifact integrity for datasets, model weights, container images, and manifests to ensure you deploy exactly what you built. This technique provides artifact lifecycle integrity from creation through storage to deployment, with provenance verification to prove authenticity and origin.",
                     "scopeBoundary": {
-                      "responsibility": "Owns whole-artifact cryptographic digest and signature verification for stored or transferred datasets, models, configurations, and related artifacts, bound to the expected identity and provenance record.",
+                      "responsibility": "Owns creation and verification of whole-artifact cryptographic digests and signatures for stored, transferred, loaded, or admission-bound datasets, models, configurations, and related artifacts, bound to the expected identity and provenance record. It does not decide release promotion or own continuous drift monitoring.",
                       "relatedTechniques": [
                         {
                           "id": "AID-M-002.001",
@@ -2490,6 +2539,10 @@ export const modelTactic = {
                         {
                           "id": "AID-H-020.001",
                           "comparison": "AID-M-002.002 verifies a complete artifact as one integrity object; AID-H-020.001 signs and verifies individual retrieval chunks so partial knowledge-base content cannot be substituted at query time.\nA valid whole-artifact digest does not prove the identity of each runtime-retrieved chunk, and chunk signatures do not replace release-artifact verification."
+                        },
+                        {
+                          "id": "AID-D-004.001",
+                          "comparison": "AID-M-002.002 owns the authoritative whole-artifact digest and signature verification used at ingestion, transfer, load, or admission; AID-D-004.001 independently replays those checks over a declared candidate or deployed snapshot and emits integrity-drift findings.\nThe same promotion-time verification cannot earn a second PASS under Detect, and a later detector result does not replace artifact admission."
                         }
                       ]
                     },

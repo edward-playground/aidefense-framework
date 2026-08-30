@@ -281,6 +281,10 @@ export const restoreTactic = {
                         {
                           "id": "AID-E-003.005",
                           "comparison": "AID-R-001.002 builds and validates the replacement model; AID-E-003.005 quarantines compromised adapters and their derivatives.\nFor adapter-derived compromise, this control consumes signed quarantine, tombstone, and derivative-routing evidence. Retraining does not establish that the original adapter or derivative can no longer be served."
+                        },
+                        {
+                          "id": "AID-I-006",
+                          "comparison": "AID-R-001.002 consumes the signed federated-client and update exclusion population when constructing sanitized recovery-training inputs and validating the remediated model; AID-I-006 owns the underlying quarantine decision and exclusion enforcement.\nRetraining must not recreate or independently score client quarantine, and quarantine alone does not prove that the replacement model is safe to promote."
                         }
                       ]
                     },

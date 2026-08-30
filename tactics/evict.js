@@ -20,6 +20,10 @@ export const evictTactic = {
                 {
                   "id": "AID-R-003.001",
                   "comparison": "AID-E-001 invalidates compromised or prior authentication and authorization state; AID-R-003.001 creates a new trusted interactive session after eviction.\nSuccessful reauthentication does not prove that the old credential, token, grant, or session population was revoked, and eviction does not itself establish a recovered session."
+                },
+                {
+                  "id": "AID-I-003",
+                  "comparison": "AID-E-001 authoritatively and durably revokes compromised credentials, sessions, principals, issuance paths, and delegated grants; AID-I-003 applies reversible quarantine, safe-mode downgrade, throttling, or action containment while investigation or recovery proceeds.\nContainment does not prove identity-plane eviction, and revocation does not replace immediate bounded control of the affected workload, session, or action."
                 }
               ]
             },

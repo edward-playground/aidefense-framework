@@ -38,7 +38,7 @@
     ]
   },
   "AID-M-001.002": {
-    "contentHash": "96f666ca05aa95e6",
+    "contentHash": "2a85f83afde32f40",
     "keywords": [
       "ai bom generation",
       "deployed release bundle",
@@ -52,9 +52,9 @@
       "signed release manifest",
       "replica population reconciliation",
       "independent release readback",
-      "cyclonedx ai ml bom",
-      "transitive dependency tracking",
-      "library provenance"
+      "model interface tuple",
+      "tool reasoning parser configuration",
+      "runtime selector readback"
     ]
   },
   "AID-M-001.003": {
@@ -171,7 +171,7 @@
     ]
   },
   "AID-M-002.002": {
-    "contentHash": "dadc98230108ee37",
+    "contentHash": "5425d289c1188505",
     "keywords": [
       "cryptographic integrity verification",
       "whole-artifact hashing",
@@ -1030,7 +1030,7 @@
     ]
   },
   "AID-H-003": {
-    "contentHash": "e571ed5f82963a1e",
+    "contentHash": "1413e611333381a2",
     "keywords": [
       "ml supply chain security",
       "software admission controls",
@@ -1044,8 +1044,8 @@
       "model provenance",
       "trusted registries",
       "container image verification",
-      "compensating control expiry",
-      "secure build pipeline"
+      "protected edge model delivery",
+      "attested model key release"
     ]
   },
   "AID-H-003.001": {
@@ -1068,7 +1068,7 @@
     ]
   },
   "AID-H-003.002": {
-    "contentHash": "01432dac497ea0bf",
+    "contentHash": "9acd2ba58e6fc5a8",
     "keywords": [
       "model signing",
       "release gating",
@@ -1083,7 +1083,8 @@
       "kyverno",
       "model promotion gate",
       "safe deserialization",
-      "runtime hash verification"
+      "model interface package",
+      "runtime interface verification"
     ]
   },
   "AID-H-003.003": {
@@ -1144,7 +1145,7 @@
     ]
   },
   "AID-H-003.006": {
-    "contentHash": "11bb645e7176d374",
+    "contentHash": "3148f119b7db3780",
     "keywords": [
       "model sbom attestation",
       "cyclonedx ml-bom export",
@@ -1157,7 +1158,9 @@
       "technical documentation evidence",
       "canonical model manifest",
       "ai-bom interoperability",
-      "runtime sbom verification"
+      "runtime sbom verification",
+      "reasoning parser provenance",
+      "generation config inventory"
     ]
   },
   "AID-H-003.007": {
@@ -1445,7 +1448,7 @@
     ]
   },
   "AID-H-006.001": {
-    "contentHash": "392792d5eb061e58",
+    "contentHash": "a1f711119be7f272",
     "keywords": [
       "structured output enforcement",
       "json schema validation",
@@ -1460,7 +1463,8 @@
       "instructor structured outputs",
       "outlines constrained generation",
       "typechat schema enforcement",
-      "structured output audit evidence"
+      "tool call parser validation",
+      "reasoning field extraction"
     ]
   },
   "AID-H-006.002": {
@@ -1632,7 +1636,7 @@
     ]
   },
   "AID-H-007.006": {
-    "contentHash": "5893171a56747e85",
+    "contentHash": "3cefd48feed29d0d",
     "keywords": [
       "post-training transformation safety",
       "model quantization security regression",
@@ -1645,7 +1649,7 @@
       "speculative decoding safety",
       "source model lineage",
       "transformed artifact attestation",
-      "promotion gate"
+      "model interface pairing"
     ]
   },
   "AID-H-007.007": {
@@ -1932,7 +1936,7 @@
     ]
   },
   "AID-H-011.003": {
-    "contentHash": "58a563c7ccc566bd",
+    "contentHash": "215af2f544dc0ba3",
     "keywords": [
       "bounded gnn certification",
       "exact certified radius",
@@ -2030,7 +2034,7 @@
     ]
   },
   "AID-H-012.004": {
-    "contentHash": "dd5d086028ea3650",
+    "contentHash": "9cc2250cd65daed9",
     "keywords": [
       "reward channel integrity",
       "mutual tls reward transport",
@@ -2068,7 +2072,7 @@
     ]
   },
   "AID-H-013": {
-    "contentHash": "17245af7e9ffc6a3",
+    "contentHash": "28b2441c00cee951",
     "keywords": [
       "governed provenance signals",
       "digital content watermarking",
@@ -2164,7 +2168,7 @@
     ]
   },
   "AID-H-015": {
-    "contentHash": "d9e99efbb7208190",
+    "contentHash": "d0ae1086b67727fa",
     "keywords": [
       "certified robustness guarantees",
       "formal robustness bounds",
@@ -2316,22 +2320,22 @@
     ]
   },
   "AID-H-017.004": {
-    "contentHash": "7172b532194284af",
+    "contentHash": "6c5e9f8e2d49f984",
     "keywords": [
-      "transient agent state",
-      "isolated task state",
-      "ephemeral agent memory",
-      "stateless agent design",
-      "per-principal state isolation",
-      "per-task state namespace",
-      "bounded state retention",
+      "application working-state architecture",
+      "request-local state reconstruction",
+      "stateless task handling",
+      "cross-task persistence minimization",
+      "authenticated task binding",
       "signed mission reload",
-      "state provenance binding",
-      "temporary credential expiry",
+      "trusted objective source",
+      "mission-state provenance",
+      "task-local state construction",
       "cross-session injection prevention",
-      "task teardown verification",
-      "cross-tenant state denial",
-      "ephemeral store readback"
+      "untrusted state rejection",
+      "restart objective reload",
+      "runtime-store evidence delegation",
+      "volatile-context boundary"
     ]
   },
   "AID-H-017.005": {
@@ -2527,7 +2531,7 @@
     ]
   },
   "AID-H-018.007": {
-    "contentHash": "28826c46d3c485d9",
+    "contentHash": "d51ed14e9dfe4f1b",
     "keywords": [
       "skill permission manifest",
       "skill-level authorization",
@@ -2731,7 +2735,7 @@
     ]
   },
   "AID-H-021": {
-    "contentHash": "a8cd3996378a67d8",
+    "contentHash": "24deca3cec477b68",
     "keywords": [
       "configuration integrity",
       "signed configurations",
@@ -2769,7 +2773,7 @@
     ]
   },
   "AID-H-021.002": {
-    "contentHash": "af24a4d26872f2ea",
+    "contentHash": "f252fa94c74b4f53",
     "keywords": [
       "signed configuration",
       "runtime integrity enforcement",
@@ -3888,7 +3892,7 @@
     ]
   },
   "AID-H-034.003": {
-    "contentHash": "0c187afaaa422305",
+    "contentHash": "fa98c79980977e99",
     "keywords": [
       "tool input validation",
       "strict json schema",
@@ -4070,7 +4074,7 @@
     ]
   },
   "AID-H-037.001": {
-    "contentHash": "8f6f4a84e8feebe9",
+    "contentHash": "8049bf4a104da7d5",
     "keywords": [
       "raw reasoning trace suppression",
       "hidden chain-of-thought storage control",
@@ -4082,7 +4086,10 @@
       "round-trip reasoning integrity",
       "break-glass reasoning access",
       "reasoning state audit",
-      "chain-of-thought leakage prevention"
+      "chain-of-thought leakage prevention",
+      "purpose-bound reasoning monitor",
+      "ephemeral reasoning buffer",
+      "sanitized reasoning alert"
     ]
   },
   "AID-H-037.002": {
@@ -4215,7 +4222,7 @@
     ]
   },
   "AID-D-001.005": {
-    "contentHash": "a729436f247fa4a1",
+    "contentHash": "a6e7b837639a945a",
     "keywords": [
       "recall path scanning",
       "memory rehydration gate",
@@ -4253,7 +4260,7 @@
     ]
   },
   "AID-D-002": {
-    "contentHash": "fc7a2193377d7d58",
+    "contentHash": "b3c02c0c78e8ce10",
     "keywords": [
       "model drift detection",
       "performance drift monitoring",
@@ -4268,11 +4275,12 @@
       "model quality monitoring",
       "output distribution monitoring",
       "statistical drift analysis",
-      "inference telemetry"
+      "inference telemetry",
+      "reasoning semantic monitoring"
     ]
   },
   "AID-D-002.001": {
-    "contentHash": "d415a58f370c934c",
+    "contentHash": "2d39456e1b1e9e09",
     "keywords": [
       "input distribution drift",
       "output distribution drift",
@@ -4286,8 +4294,8 @@
       "nannyml",
       "reference baseline comparison",
       "statistical distribution monitoring",
-      "live feature telemetry",
-      "psi drift metric"
+      "top-k logprob distribution",
+      "missing probability mass"
     ]
   },
   "AID-D-002.002": {
@@ -4310,7 +4318,7 @@
     ]
   },
   "AID-D-002.003": {
-    "contentHash": "a955badef6582b6c",
+    "contentHash": "55b0e790ae31da00",
     "keywords": [
       "white-box telemetry",
       "attention entropy analysis",
@@ -4323,16 +4331,15 @@
       "self-hosted model introspection",
       "attention head monitoring",
       "runtime tensor inspection",
-      "internal signal anomaly",
-      "attention pattern profiling",
-      "open-weight model telemetry"
+      "activation probe binding",
+      "quantization-specific calibration",
+      "runtime kernel binding"
     ]
   },
   "AID-D-002.004": {
-    "contentHash": "76dbcd59e28f4288",
+    "contentHash": "6a2028956bd1bc22",
     "keywords": [
       "reasoning trace telemetry",
-      "provider capability adapter",
       "field presence bitmap",
       "missing signal preservation",
       "thinking token anomaly",
@@ -4345,7 +4352,8 @@
       "reasoning compute abuse",
       "cost harvesting telemetry",
       "hidden trace disclosure",
-      "model api version binding"
+      "model api version binding",
+      "reasoning metadata monitoring"
     ]
   },
   "AID-D-003": {
@@ -4368,7 +4376,7 @@
     ]
   },
   "AID-D-003.001": {
-    "contentHash": "ce7f99d50aac7819",
+    "contentHash": "a9c65f1f24d789c8",
     "keywords": [
       "harmful content filtering",
       "output moderation",
@@ -4383,7 +4391,8 @@
       "output safety classifier",
       "moderation api",
       "response content scanning",
-      "policy violation alert"
+      "policy violation alert",
+      "user-visible output monitoring"
     ]
   },
   "AID-D-003.002": {
@@ -4534,22 +4543,22 @@
     ]
   },
   "AID-D-004.001": {
-    "contentHash": "4a84ce9311b98d10",
+    "contentHash": "cbf2f7edac1e976b",
     "keywords": [
-      "artifact digest verification",
-      "signature validation pipeline",
-      "supply-chain integrity checks",
-      "detached signature enforcement",
-      "sha256 manifest comparison",
-      "tamper-evident build artifacts",
-      "provenance attestation verification",
-      "cosign verify-blob workflow",
-      "trust-anchor pinning",
-      "release artifact admission gate",
-      "signed model package validation",
-      "immutable artifact registry checks",
-      "offline integrity verification",
-      "signature failure incident alerting"
+      "artifact integrity re-verification",
+      "deployed artifact drift",
+      "signed manifest comparison",
+      "immutable registry baseline",
+      "declared artifact population",
+      "missing artifact detection",
+      "unexpected member detection",
+      "signature failure finding",
+      "unauthorized modification detection",
+      "independent scheduled verification",
+      "event-triggered integrity check",
+      "read-only candidate snapshot",
+      "integrity detector receipt",
+      "continuous artifact monitoring"
     ]
   },
   "AID-D-004.002": {
@@ -4572,7 +4581,7 @@
     ]
   },
   "AID-D-004.003": {
-    "contentHash": "d54ae2d9c32f6bfa",
+    "contentHash": "cc752cae023c6f74",
     "keywords": [
       "runtime configuration drift detection",
       "policy bundle drift monitoring",
@@ -4586,8 +4595,8 @@
       "drift evidence audit logging",
       "control-plane mutation monitoring",
       "runtime hardening state verification",
-      "detected drift containment playbook",
-      "configuration compliance posture tracking"
+      "model interface drift",
+      "parser configuration drift"
     ]
   },
   "AID-D-004.004": {
@@ -4794,7 +4803,7 @@
     ]
   },
   "AID-D-005.006": {
-    "contentHash": "59bf8b5f15350b92",
+    "contentHash": "ce0b7678f51d7e1a",
     "keywords": [
       "ans registry telemetry",
       "agent name service audit",
@@ -5103,7 +5112,7 @@
     ]
   },
   "AID-D-011.002": {
-    "contentHash": "e5afb2af75f82e05",
+    "contentHash": "e4b2cc8d4e583f3b",
     "keywords": [
       "authenticated inter-agent events",
       "security event contract",
@@ -5275,7 +5284,7 @@
     ]
   },
   "AID-D-014.001": {
-    "contentHash": "8244def7a957dfef",
+    "contentHash": "a94b56e38f80e205",
     "keywords": [
       "post-retrieval content scanning",
       "retrieved prompt injection detection",
@@ -5286,11 +5295,11 @@
       "granite guardian 4.1",
       "qwen3guard classifier",
       "gpt-oss-safeguard research preview",
-      "scheduled vector-store scan",
+      "exact retrieval population",
       "semantic malicious-concept scan",
+      "embedding representation screening",
       "pre-context assembly finding",
       "poisoning telemetry emission",
-      "complete retrieved population",
       "independent detector replay"
     ]
   },
@@ -5533,7 +5542,7 @@
     ]
   },
   "AID-I-001.004": {
-    "contentHash": "04c113e68591ce80",
+    "contentHash": "41ea5142577022b8",
     "keywords": [
       "sandbox egress restriction",
       "default-deny egress",
@@ -5611,7 +5620,7 @@
     ]
   },
   "AID-I-002.002": {
-    "contentHash": "0bddcad7b626d740",
+    "contentHash": "52b46f9fd3137f39",
     "keywords": [
       "governed external egress",
       "private service connectivity",
@@ -5631,7 +5640,7 @@
     ]
   },
   "AID-I-003": {
-    "contentHash": "83e9fda557d3cf54",
+    "contentHash": "fae69275616849b7",
     "keywords": [
       "ai interaction quarantine",
       "response-time containment",
@@ -5646,7 +5655,7 @@
     ]
   },
   "AID-I-003.001": {
-    "contentHash": "335f38cdffb4bd24",
+    "contentHash": "d05316b1ac2a6cd3",
     "keywords": [
       "detection-driven quarantine",
       "safe-mode downgrade",
@@ -5730,7 +5739,7 @@
     ]
   },
   "AID-I-004.001": {
-    "contentHash": "833507b6533eb52f",
+    "contentHash": "039f892a90a9b9ae",
     "keywords": [
       "runtime context isolation",
       "per-session ttl",
@@ -5923,7 +5932,7 @@
     ]
   },
   "AID-I-006": {
-    "contentHash": "67bde8af334a6875",
+    "contentHash": "5b57f5c26e685535",
     "keywords": [
       "federated client quarantine",
       "federated participant exclusion",
@@ -5943,7 +5952,7 @@
     ]
   },
   "AID-I-007": {
-    "contentHash": "1429e6419bdb0df8",
+    "contentHash": "e5af4f88b6714f1c",
     "keywords": [
       "client-side sandboxing",
       "web worker isolation",
@@ -6211,7 +6220,7 @@
     ]
   },
   "AID-E-001": {
-    "contentHash": "1f3c652454eae664",
+    "contentHash": "6eff7c4401e2f6a6",
     "keywords": [
       "incident authority eviction",
       "credential object eviction",
@@ -6495,7 +6504,7 @@
     ]
   },
   "AID-R-001.002": {
-    "contentHash": "13c5984301245e5e",
+    "contentHash": "089ac093cb70ff27",
     "keywords": [
       "model remediation retraining",
       "approximate unlearning",
@@ -6696,7 +6705,7 @@
     ]
   },
   "AID-H-004.005": {
-    "contentHash": "e052ef8f36382d55",
+    "contentHash": "3f055de6be286e13",
     "keywords": [
       "end-to-end message integrity",
       "message freshness validation",
@@ -6754,7 +6763,7 @@
     ]
   },
   "AID-H-021.005": {
-    "contentHash": "74cc0142b92785f9",
+    "contentHash": "2dc594dabfe9a9fc",
     "keywords": [
       "coding-agent workspace trust",
       "restricted-before-trust mode",
@@ -6771,6 +6780,100 @@
       "security-change re-evaluation",
       "pre-trust bypass testing",
       "activation-attempt reconciliation"
+    ]
+  },
+  "AID-H-003.011": {
+    "contentHash": "c43f2caf1f837e67",
+    "keywords": [
+      "edge model entitlement",
+      "attested key release",
+      "device attestation verification",
+      "app attest validation",
+      "play integrity verdict",
+      "model content key wrapping",
+      "release digest binding",
+      "one-time challenge binding",
+      "key broker authorization",
+      "offline model protection",
+      "encrypted model package",
+      "recipient key binding",
+      "attestation replay prevention",
+      "edge model distribution"
+    ]
+  },
+  "AID-H-038": {
+    "contentHash": "f58b57d6536fb9fa",
+    "keywords": [
+      "inference serving surface",
+      "runtime listener governance",
+      "privileged inference operations",
+      "management endpoint authorization",
+      "distributed serving ports",
+      "kv transfer listener",
+      "model runtime control plane",
+      "inference process attack surface",
+      "listener profile conformance",
+      "operation-level authorization",
+      "inference runtime hardening",
+      "serving capability governance"
+    ]
+  },
+  "AID-H-038.001": {
+    "contentHash": "aa90fea0885f144e",
+    "keywords": [
+      "inference listener inventory",
+      "process socket enumeration",
+      "signed exposure profile",
+      "tcp listener conformance",
+      "udp listener conformance",
+      "unix socket conformance",
+      "kv transfer port",
+      "distributed inference transport",
+      "unexpected bind detection",
+      "loopback binding verification",
+      "post-startup listener readback",
+      "dynamic port range policy",
+      "inference protocol inventory",
+      "serving attack surface reduction"
+    ]
+  },
+  "AID-H-038.002": {
+    "contentHash": "09dd6541eb130e99",
+    "keywords": [
+      "privileged inference operation",
+      "model load authorization",
+      "adapter update authorization",
+      "weight update authorization",
+      "model repository control",
+      "pause resume authorization",
+      "runtime route registry",
+      "default deny management api",
+      "operation scope enforcement",
+      "alternate path denial",
+      "authoritative state readback",
+      "ordinary inference key isolation",
+      "plugin route inventory",
+      "inference control plane authorization"
+    ]
+  },
+  "AID-D-002.005": {
+    "contentHash": "9ccc2e2d78207e28",
+    "keywords": [
+      "emitted reasoning trace monitoring",
+      "chain-of-thought semantic detection",
+      "reasoning prompt injection signal",
+      "reasoning jailbreak detection",
+      "goal displacement detection",
+      "deception signal monitoring",
+      "safeguard evasion detection",
+      "complete trace coverage",
+      "reasoning monitor isolation",
+      "sanitized reasoning alert",
+      "monitor model revision binding",
+      "reasoning trace digest",
+      "reasoning detector uncertainty",
+      "optimization pressure separation",
+      "operator-visible reasoning"
     ]
   }
 }

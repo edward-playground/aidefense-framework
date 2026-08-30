@@ -2,7 +2,7 @@
 "version": {
 "schemaVersion": "2.3",
 "dataVersion": "2026.08.30",
-"generatedAt": "2026-08-30T00:34:49.189Z",
+"generatedAt": "2026-08-30T13:50:22.513Z",
 "source": "bundled",
 "keywordStructure": "flat"
 },
@@ -285,13 +285,17 @@
 {
 "id": "AID-M-001.002",
 "name": "AI System Dependency Mapping",
-"description": "Systematically identifies and documents all components and services that an AI system depends on to function correctly. This includes direct software libraries, transitive dependencies, external data sources, third-party APIs, and other internal AI models or microservices. This dependency map is crucial for understanding the complete supply chain attack surface and for performing comprehensive security assessments.",
+"description": "Systematically identify and document every component and service an AI system depends on, including software libraries, external data and APIs, internal models, serving runtimes, and the exact model-interface bundle used to turn messages into tokens and raw generations into structured fields. Reconcile the approved release composition with every deployed replica so hidden dependency or interface drift remains visible.",
 "scopeBoundary": {
-"responsibility": "Owns direct and transitive dependency relationships, external service and data dependencies, trust-boundary interfaces, SBOM composition, and deployed release-composition reconciliation.",
+"responsibility": "Owns direct and transitive dependency relationships, external service and data dependencies, trust-boundary interfaces, SBOM composition, the release-bound model-interface tuple (model, tokenizer, special tokens, chat template, generation configuration, tool/reasoning parser configuration, and runtime selectors), and deployed release-composition reconciliation for agent and non-agent services. It reports composition facts and drift but does not admit runtime configuration or decide release promotion.",
 "relatedTechniques": [
 {
 "id": "AID-M-001.001",
 "comparison": "AID-M-001.002 maps how components and services depend on one another; AID-M-001.001 records the authoritative identity and attributes of each asset.\nDependency completeness and asset-inventory completeness are separate claims and require different populations and evidence."
+},
+{
+"id": "AID-H-021.002",
+"comparison": "AID-M-001.002 inventories the approved model-interface tuple and reconciles the effective composition of deployed replicas; AID-H-021.002 verifies and admits signed startup or runtime control artifacts for an agent.\nFor an agent deployment, the same configuration bytes may support both controls, but composition reconciliation must not be scored again as runtime artifact admission."
 }
 ]
 },
@@ -308,7 +312,7 @@
 "Pin every direct and transitive software dependency to an immutable reviewed version and verify that the resolved build population exactly matches the lock state.",
 "Document every internal service, external service, model-provider API, data feed, and runtime dependency with an accountable owner and a deployable interface and trust-boundary record.",
 "Generate a validated dependency SBOM for every releasable software artifact and bind it to the exact build inputs and output digest.",
-"Maintain a version-controlled system and service dependency map, assemble the complete release composition, and independently read back every deployed replica."
+"Maintain a version-controlled dependency map, bind the complete model-interface tuple into the release composition, and independently read back every deployed replica."
 ],
 "implementationGuidanceIds": [
 "AID-M-001.002-G001",
@@ -406,7 +410,7 @@
 ]
 }
 ],
-"contentHash": "96f666ca05aa95e6",
+"contentHash": "2a85f83afde32f40",
 "keywords": [
 "ai bom generation",
 "deployed release bundle",
@@ -420,9 +424,9 @@
 "signed release manifest",
 "replica population reconciliation",
 "independent release readback",
-"cyclonedx ai ml bom",
-"transitive dependency tracking",
-"library provenance"
+"model interface tuple",
+"tool reasoning parser configuration",
+"runtime selector readback"
 ]
 },
 {
@@ -1237,7 +1241,7 @@
 "name": "Cryptographic Integrity Verification",
 "description": "Employs cryptographic hashing and digital signatures to create and verify a tamper-evident chain of custody for macro-scale AI artifacts throughout their lifecycle. Focuses on whole-artifact integrity for datasets, model weights, container images, and manifests to ensure you deploy exactly what you built. This technique provides artifact lifecycle integrity from creation through storage to deployment, with provenance verification to prove authenticity and origin.",
 "scopeBoundary": {
-"responsibility": "Owns whole-artifact cryptographic digest and signature verification for stored or transferred datasets, models, configurations, and related artifacts, bound to the expected identity and provenance record.",
+"responsibility": "Owns creation and verification of whole-artifact cryptographic digests and signatures for stored, transferred, loaded, or admission-bound datasets, models, configurations, and related artifacts, bound to the expected identity and provenance record. It does not decide release promotion or own continuous drift monitoring.",
 "relatedTechniques": [
 {
 "id": "AID-M-002.001",
@@ -1246,6 +1250,10 @@
 {
 "id": "AID-H-020.001",
 "comparison": "AID-M-002.002 verifies a complete artifact as one integrity object; AID-H-020.001 signs and verifies individual retrieval chunks so partial knowledge-base content cannot be substituted at query time.\nA valid whole-artifact digest does not prove the identity of each runtime-retrieved chunk, and chunk signatures do not replace release-artifact verification."
+},
+{
+"id": "AID-D-004.001",
+"comparison": "AID-M-002.002 owns the authoritative whole-artifact digest and signature verification used at ingestion, transfer, load, or admission; AID-D-004.001 independently replays those checks over a declared candidate or deployed snapshot and emits integrity-drift findings.\nThe same promotion-time verification cannot earn a second PASS under Detect, and a later detector result does not replace artifact admission."
 }
 ]
 },
@@ -1361,7 +1369,7 @@
 ]
 }
 ],
-"contentHash": "dadc98230108ee37",
+"contentHash": "5425d289c1188505",
 "keywords": [
 "cryptographic integrity verification",
 "whole-artifact hashing",
@@ -7626,9 +7634,9 @@
 {
 "id": "AID-H-003",
 "name": "Secure ML Supply Chain Management",
-"description": "Apply rigorous software supply chain security principles throughout the AI/ML development and operational lifecycle. This includes admitting trusted source code, models, datasets, libraries, development tools, and deployment infrastructure; securely promoting produced releases; and continuously remediating vulnerabilities in deployed AI software. The aim is to prevent malicious, tampered, or vulnerable components from entering or remaining exploitable in the AI system.",
+"description": "Apply software supply-chain security throughout the AI/ML lifecycle: admit trusted inputs, promote and distribute exact signed releases, control protected model delivery to clients or edge devices outside the enterprise trust boundary, and remediate vulnerabilities in deployed AI software. The aim is to prevent malicious, tampered, vulnerable, or unauthorized model and software bytes from entering, leaving, or remaining exploitable in the system.",
 "scopeBoundary": {
-"responsibility": "Owns preventive admission and release controls for third-party software, datasets, hardware, infrastructure definitions, models, adapters, manifests, signatures, and unsafe serialized artifacts, plus continuous vulnerability remediation for deployed AI application and platform software. Accelerator firmware and driver remediation remains under AID-H-009.002.",
+"responsibility": "Owns preventive admission, promotion, and distribution controls for third-party software, datasets, hardware, infrastructure definitions, models, adapters, manifests, signatures, unsafe serialized artifacts, and protected client/edge model releases outside the enterprise trust boundary, plus continuous vulnerability remediation for deployed AI application and platform software. Accelerator firmware and driver remediation remains under AID-H-009.002.",
 "relatedTechniques": []
 },
 "pillar": [
@@ -7661,6 +7669,8 @@
 "AML.T0018.002 Manipulate AI Model: Embed Malware",
 "AML.T0018.003 Manipulate AI Model: Modify Prompt Construction Logic",
 "AML.T0020 Training Data Poisoning",
+"AML.T0025 Exfiltration via Cyber Means",
+"AML.T0044 Full AI Model Access",
 "AML.T0049 Exploit Public-Facing Application",
 "AML.T0060 Publish Hallucinated Entities",
 "AML.T0074 Masquerading",
@@ -7674,6 +7684,7 @@
 {
 "framework": "MAESTRO",
 "items": [
+"Model Stealing (L1)",
 "Backdoor Attacks (L1)",
 "Data Tampering (L2)",
 "Compromised Framework Components (L3)",
@@ -7682,7 +7693,8 @@
 "Orchestration Attacks (L4)",
 "Infrastructure-as-Code (IaC) Manipulation (L4)",
 "Lateral Movement (L4)",
-"Supply Chain Attacks (Cross-Layer)"
+"Supply Chain Attacks (Cross-Layer)",
+"Data Leakage (Cross-Layer)"
 ]
 },
 {
@@ -7695,6 +7707,7 @@
 {
 "framework": "OWASP ML Top 10 2023",
 "items": [
+"ML05:2023 Model Theft",
 "ML06:2023 AI Supply Chain Attacks",
 "ML07:2023 Transfer Learning Attack",
 "ML10:2023 Model Poisoning"
@@ -7721,6 +7734,8 @@
 "AITech-7.3 Data Source Abuse and Manipulation",
 "AITech-9.1 Model or Agentic System Manipulation",
 "AITech-9.3 Dependency / Plugin Compromise",
+"AITech-10.1 Model Extraction",
+"AITech-14.1 Unauthorized Access",
 "AISubtech-7.3.1 Corrupted Third-Party Data",
 "AISubtech-9.1.1 Code Execution",
 "AISubtech-9.1.2 Unauthorized or Unsolicited System Access",
@@ -7736,6 +7751,7 @@
 "items": [
 "UTD: Unauthorized Training Data",
 "MST: Model Source Tampering",
+"MXF: Model Exfiltration",
 "MDT: Model Deployment Tampering",
 "IIC: Insecure Integrated Component"
 ]
@@ -7750,8 +7766,10 @@
 "Governance 4.1: Lack of traceability and transparency of model assets",
 "Algorithms 5.4: Malicious libraries",
 "Model 7.1: Backdoor machine learning / Trojaned model",
+"Model 7.2: Model assets leak",
 "Model 7.3: ML Supply chain vulnerabilities",
 "Model Management 8.1: Model attribution",
+"Model Management 8.2: Model theft",
 "Operations 11.1: Lack of MLOps - repeatable enforced standards",
 "Platform 12.1: Lack of vulnerability management",
 "Platform 12.5: Poor security in the software development lifecycle",
@@ -7764,7 +7782,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "e571ed5f82963a1e",
+"contentHash": "1413e611333381a2",
 "keywords": [
 "ml supply chain security",
 "software admission controls",
@@ -7778,8 +7796,8 @@
 "model provenance",
 "trusted registries",
 "container image verification",
-"compensating control expiry",
-"secure build pipeline"
+"protected edge model delivery",
+"attested model key release"
 ],
 "subTechniques": [
 {
@@ -7943,9 +7961,9 @@
 {
 "id": "AID-H-003.002",
 "name": "CI/CD Release Gating, Model Artifact Signing & Secure Distribution",
-"description": "Mandatory, automated acceptance criteria applied to a model artifact before promotion to production. Acts as a final security gate to ensure only trusted, verified, and safely configured models are deployed by validating their origin, integrity, provenance, and operational policies. This control assumes production never trusts public names directly; only immutable, attested bytes from an internal mirror are allowed.",
+"description": "Apply mandatory automated acceptance criteria before promoting a model or deployment-bound model package. Verify origin, integrity, provenance, and the exact model-interface files and selectors that ship with the release. Production trusts only immutable, attested bytes from an internal mirror; a signed weight file does not authorize a different tokenizer, chat template, generation configuration, or parser.",
 "scopeBoundary": {
-"responsibility": "Owns final automated promotion criteria, exact release-artifact verification, signing, immutable internal mirroring, and secure distribution so production consumes only approved attested model bytes.",
+"responsibility": "Owns final automated promotion criteria, exact release-package verification, signing, immutable internal mirroring, and secure distribution so production consumes only approved attested model and interface bytes.",
 "relatedTechniques": [
 {
 "id": "AID-H-003.001",
@@ -7954,6 +7972,10 @@
 {
 "id": "AID-H-003.006",
 "comparison": "AID-H-003.002 makes the final promotion and distribution decision; AID-H-003.006 creates the model SBOM and provenance attestation bound to the artifact digest.\nThe attestation is gate evidence, while the release gate independently verifies and enforces it."
+},
+{
+"id": "AID-M-002.002",
+"comparison": "AID-M-002.002 creates and verifies the whole-artifact digest and signature verdict consumed by release policy; AID-H-003.002 owns the final promotion, signing, mirroring, and distribution decision.\nA valid integrity verdict is necessary gate evidence but cannot promote a release by itself."
 },
 {
 "id": "AID-H-003.008",
@@ -8078,7 +8100,7 @@
 ]
 }
 ],
-"contentHash": "01432dac497ea0bf",
+"contentHash": "9acd2ba58e6fc5a8",
 "keywords": [
 "model signing",
 "release gating",
@@ -8093,7 +8115,8 @@
 "kyverno",
 "model promotion gate",
 "safe deserialization",
-"runtime hash verification"
+"model interface package",
+"runtime interface verification"
 ]
 },
 {
@@ -8481,9 +8504,9 @@
 {
 "id": "AID-H-003.006",
 "name": "Model SBOM & Provenance Attestation",
-"description": "Produce a model-centric SBOM that inventories model bytes (files, hashes), tokenizer, config, format, and loader code commit; bind it to the exact artifact digest via in-toto/SLSA attestation signed with Sigstore.<br/><br/><strong>Interoperability:</strong> keep one internal canonical manifest for enforcement, then export standards-compatible AI-BOM formats such as CycloneDX ML-BOM 1.7 and SPDX 3 AI Profile for procurement, regulator, partner exchange, and technical-documentation evidence such as EU AI Act Annex IV-style model and data documentation.<br/><br/><strong>Admission control:</strong> verify the attestation and digest binding before promotion, and re-verify hashes at runtime before loading. This creates a tamper-evident content contract for the model, closing name/namespace trust gaps.",
+"description": "Produce a model-centric SBOM that inventories model weights, tokenizer and special-token files, chat template, generation configuration, tool/reasoning parser configuration, model format, and loader code commit; bind every item to the exact release digest through signed in-toto/SLSA provenance.<br/><br/><strong>Interoperability:</strong> keep one internal canonical manifest for enforcement, then export standards-compatible AI-BOM formats such as CycloneDX ML-BOM 1.7 and SPDX 3 AI Profile for procurement, regulator, partner exchange, and technical documentation.<br/><br/><strong>Admission control:</strong> verify the attestation and digest binding before promotion, and re-verify the same bytes at runtime before loading. This creates a tamper-evident content contract for the complete model interface, not only the weights.",
 "scopeBoundary": {
-"responsibility": "Owns a signed model SBOM and provenance attestation bound to the exact model artifact, including components, training inputs, code, frameworks, adapters, build identity, and lineage needed by release admission.",
+"responsibility": "Owns a signed model SBOM and provenance attestation bound to the exact model release, including weights, tokenizer, special tokens, templates, generation and parser configuration, training inputs, code, frameworks, adapters, build identity, and lineage needed by release admission.",
 "relatedTechniques": [
 {
 "id": "AID-M-001.002",
@@ -8624,7 +8647,7 @@
 ]
 }
 ],
-"contentHash": "11bb645e7176d374",
+"contentHash": "3148f119b7db3780",
 "keywords": [
 "model sbom attestation",
 "cyclonedx ml-bom export",
@@ -8637,7 +8660,9 @@
 "technical documentation evidence",
 "canonical model manifest",
 "ai-bom interoperability",
-"runtime sbom verification"
+"runtime sbom verification",
+"reasoning parser provenance",
+"generation config inventory"
 ]
 },
 {
@@ -9205,6 +9230,143 @@
 "time-bound compensating controls",
 "vulnerability exception expiry",
 "rollback readiness"
+]
+},
+{
+"id": "AID-H-003.011",
+"name": "Attested Edge Model Entitlement & Key Release",
+"description": "When protected model weights are distributed to a client or edge device outside the enterprise trust boundary, keep the package encrypted and release its content key only after the server verifies a fresh, request-bound app/device attestation and the authenticated subject's entitlement to the exact model release. Bind the decision to the app identity, device or workload key, release digest, challenge, policy, and expiry; deny release when verification is unavailable or incomplete.",
+"scopeBoundary": {
+"responsibility": "Owns entitlement and fresh platform-attestation enforcement at the protected client/edge model key-release point, including request binding, replay prevention, exact release identity, wrapped-key delivery, and release evidence. It does not sign model packages, establish the user identity, or claim that attestation prevents all post-release extraction.",
+"relatedTechniques": [
+{
+"id": "AID-H-003.002",
+"comparison": "AID-H-003.002 signs, promotes, and distributes the exact model release package; AID-H-003.011 decides whether one client or edge subject may receive its decryption key.\nArtifact authenticity does not establish recipient entitlement, and an entitled recipient must still receive only an approved signed release."
+},
+{
+"id": "AID-H-004.001",
+"comparison": "AID-H-004.001 establishes and authorizes the human or privileged subject; AID-H-003.011 consumes that authenticated identity together with device/app attestation at the model-key release point.\nNeither a valid login nor a valid device verdict alone is sufficient to release protected model bytes."
+},
+{
+"id": "AID-H-009.005",
+"comparison": "AID-H-003.011 controls decryption-key release for a model intentionally distributed to a client or edge device; AID-H-009.005 protects inference inside an attested confidential-computing boundary.\nClient-side distribution accepts bounded residual extraction risk after release, while confidential inference keeps the model inside a protected execution environment."
+},
+{
+"id": "AID-I-007",
+"comparison": "AID-H-003.011 decides whether an entitled, freshly attested client may receive the content key for an exact model release; AID-I-007 confines what the client-side model runtime can access after execution begins.\nKey-release admission does not prove client-runtime isolation, and isolation does not authorize delivery of protected model bytes."
+},
+{
+"id": "AID-H-013",
+"comparison": "AID-H-003.011 controls entitlement and decryption-key release before protected model bytes become usable on a client; AID-H-013 embeds or evaluates bounded provenance and ownership signals after an artifact or its outputs may be copied.\nA watermark or fingerprint is not an entitlement decision, and attested delivery does not provide later ownership attribution."
+}
+]
+},
+"pillar": [
+"model",
+"infra",
+"app"
+],
+"phase": [
+"building",
+"operation"
+],
+"implementationGuidance": [
+"Release a model content key only after exact entitlement, fresh request-bound platform attestation, one-time challenge consumption, and recipient-key binding all succeed."
+],
+"implementationGuidanceIds": [
+"AID-H-003.011-G001"
+],
+"toolsOpenSource": [
+"Cosign",
+"ORAS CLI",
+"pyca/cryptography",
+"Google Tink"
+],
+"toolsSourceAvailable": [],
+"toolsCommercial": [
+"Apple App Attest",
+"Google Play Integrity API",
+"AWS Key Management Service",
+"Azure Key Vault",
+"Google Cloud Key Management Service"
+],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0025 Exfiltration via Cyber Means (entitlement and key release prevent unauthorized direct download of distributed model bytes)",
+"AML.T0044 Full AI Model Access"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Model Stealing (L1)",
+"Data Leakage (Cross-Layer)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2026",
+"items": [
+"LLM04:2026 Supply Chain (attested entitlement protects the final model distribution path)"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"ML05:2023 Model Theft",
+"ML06:2023 AI Supply Chain Attacks"
+]
+},
+{
+"framework": "OWASP Top 10 for Agentic Applications 2026",
+"items": [
+"N/A"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"N/A"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-10.1 Model Extraction",
+"AITech-14.1 Unauthorized Access"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"MXF: Model Exfiltration"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Model 7.2: Model assets leak",
+"Model Management 8.2: Model theft"
+]
+}
+],
+"contentHash": "c43f2caf1f837e67",
+"keywords": [
+"edge model entitlement",
+"attested key release",
+"device attestation verification",
+"app attest validation",
+"play integrity verdict",
+"model content key wrapping",
+"release digest binding",
+"one-time challenge binding",
+"key broker authorization",
+"offline model protection",
+"encrypted model package",
+"recipient key binding",
+"attestation replay prevention",
+"edge model distribution"
 ]
 }
 ],
@@ -9937,6 +10099,10 @@
 "comparison": "AID-H-004.005 atomically rejects an altered, stale, or reused message envelope; AID-H-018.008 prevents duplicate external side effects across retries, redelivery, and ambiguous outcomes.\nSingle-use message acceptance does not guarantee exactly-once provider behavior, and an idempotency key does not prove message authenticity."
 },
 {
+"id": "AID-H-012.004",
+"comparison": "AID-H-004.005 provides the reusable end-to-end message-envelope primitive across untrusted intermediaries; AID-H-012.004 owns authenticity, freshness, producer identity, and consumption binding for externally computed reward payloads.\nWhen the message is a learning reward, the reward-channel result is scored only under AID-H-012.004 rather than again as a generic envelope PASS."
+},
+{
 "id": "AID-H-034",
 "comparison": "AID-H-004.005 owns a generic envelope profile across untrusted or asynchronous intermediaries; AID-H-034 owns MCP-specific transport, OAuth, routing, handles, Tasks, subscriptions, operation budgets, idempotency boundaries, and disable-state enforcement.\nMCP-specific nonce, proof-of-possession, handle, task, or commit-fence mechanisms remain with their MCP controls and do not replace an applicable end-to-end envelope."
 }
@@ -10026,7 +10192,7 @@
 ]
 }
 ],
-"contentHash": "e052ef8f36382d55",
+"contentHash": "3f055de6be286e13",
 "keywords": [
 "end-to-end message integrity",
 "message freshness validation",
@@ -10984,9 +11150,9 @@
 {
 "id": "AID-H-006.001",
 "name": "Structured Output Enforcement",
-"description": "Forces LLMs to generate output that conforms to a strict, pre-defined schema (e.g., JSON, YAML) instead of free-form text. This ensures the output can be safely parsed and validated by downstream systems, preventing the generation of unintended or malicious scripts, formats, or commands.",
+"description": "Require model output and any extracted tool-call or reasoning fields to conform to a strict predefined schema and bounded parser contract before downstream use. Reject ambiguous, duplicated, malformed, truncated, or out-of-contract structures instead of repairing them into an action.",
 "scopeBoundary": {
-"responsibility": "Owns deterministic conformance of model output to a predefined structured schema and bounded parser contract before downstream use.",
+"responsibility": "Owns deterministic conformance of model output to a predefined structured schema and verifies the bounded parser that extracts tool calls, reasoning fields, and visible content from raw generation before downstream use.",
 "relatedTechniques": [
 {
 "id": "AID-H-006.002",
@@ -11003,11 +11169,13 @@
 ],
 "implementationGuidance": [
 "Enforce schema-bound structured outputs using either native function-calling or response-model wrappers.",
-"High-impact JSON Schema + Pydantic enforcement profile with fail-closed validation, bounded normalization, and audit persistence."
+"High-impact JSON Schema + Pydantic enforcement profile with fail-closed validation, bounded normalization, and audit persistence.",
+"Verify the deployed tool-call and reasoning parsers against a signed positive and negative fixture population before their extracted fields reach downstream code."
 ],
 "implementationGuidanceIds": [
 "AID-H-006.001-G001",
-"AID-H-006.001-G002"
+"AID-H-006.001-G002",
+"AID-H-006.001-G003"
 ],
 "toolsOpenSource": [
 "Instructor",
@@ -11087,7 +11255,7 @@
 ]
 }
 ],
-"contentHash": "392792d5eb061e58",
+"contentHash": "a1f711119be7f272",
 "keywords": [
 "structured output enforcement",
 "json schema validation",
@@ -11102,7 +11270,8 @@
 "instructor structured outputs",
 "outlines constrained generation",
 "typechat schema enforcement",
-"structured output audit evidence"
+"tool call parser validation",
+"reasoning field extraction"
 ]
 },
 {
@@ -12407,9 +12576,9 @@
 {
 "id": "AID-H-007.006",
 "name": "Post-Training Optimization & Format-Conversion Safety Regression",
-"description": "Treat every derived deployment artifact, post-training optimization, model merge, format conversion, or serving-time model pairing as a security-relevant change that requires signed source-to-candidate lineage and a pre/post behavioral regression gate. Covered changes include quantization, pruning, training-based teacher-student distillation, weight or adapter merging, ONNX export, GGUF conversion, TensorRT engine compilation, and adding or changing a speculative-decoding draft model. Promotion fails when lineage is unverifiable, required evaluation populations are missing, or task-quality, jailbreak, prompt-injection, leakage, harmful-content, or tool-policy behavior regresses beyond policy.",
+"description": "Treat every derived deployment artifact or serving-time model/interface pairing as a security-relevant change. Require signed source-to-candidate lineage and a pre/post behavioral regression gate. This includes quantization, pruning, distillation, weight or adapter merges, ONNX/GGUF/TensorRT conversion, speculative-decoding pairs, and changes to the tokenizer, special tokens, chat template, generation configuration, or tool/reasoning parser. Fail promotion when lineage or required evaluation coverage is missing, or when task quality, jailbreak, prompt injection, leakage, harmful content, structured output, reasoning extraction, or tool policy regresses beyond policy.",
 "scopeBoundary": {
-"responsibility": "Owns source-to-candidate lineage and pre/post behavioral regression for quantization, pruning, distillation, merges, format conversion, runtime engine compilation, and serving-time model pairings derived from an approved source.",
+"responsibility": "Owns source-to-candidate lineage and pre/post behavioral regression for quantization, pruning, distillation, merges, format conversion, runtime engine compilation, and serving-time model/interface pairings derived from an approved source.",
 "relatedTechniques": [
 {
 "id": "AID-H-007.005",
@@ -12431,10 +12600,12 @@
 "validation"
 ],
 "implementationGuidance": [
-"Bind each transformed candidate to approved source bytes and transformation settings, compare the source and candidate on the same signed task and security suite, and fail promotion on missing evidence or excessive regression."
+"Bind each transformed candidate to approved source bytes and transformation settings, compare the source and candidate on the same signed task and security suite, and fail promotion on missing evidence or excessive regression.",
+"Treat a model-interface pairing change as a release candidate and run the same signed functional and security fixtures against the approved and candidate tuples."
 ],
 "implementationGuidanceIds": [
-"AID-H-007.006-G001"
+"AID-H-007.006-G001",
+"AID-H-007.006-G002"
 ],
 "toolsOpenSource": [
 "PyTorch",
@@ -12528,7 +12699,7 @@
 ]
 }
 ],
-"contentHash": "5893171a56747e85",
+"contentHash": "3cefd48feed29d0d",
 "keywords": [
 "post-training transformation safety",
 "model quantization security regression",
@@ -12541,7 +12712,7 @@
 "speculative decoding safety",
 "source model lineage",
 "transformed artifact attestation",
-"promotion gate"
+"model interface pairing"
 ]
 },
 {
@@ -14420,6 +14591,10 @@
 {
 "id": "AID-D-012.001",
 "comparison": "AID-H-011.003 exhaustively certifies every perturbation within a bounded universe; AID-D-012.001 measures candidate response to preregistered trigger and perturbation families.\nControlled trigger testing samples a threat contract and is not an exhaustive certificate."
+},
+{
+"id": "AID-H-015",
+"comparison": "AID-H-011.003 is the primary owner for exhaustive certification of a fixed GNN over an exact graph, target, candidate-edge universe, graph semantics, and structural radius; AID-H-015 owns other declared formal robustness properties and certification methods.\nThe same GNN structural certificate must not receive a second PASS under the generic certified-defense control."
 }
 ]
 },
@@ -14502,7 +14677,7 @@
 ]
 }
 ],
-"contentHash": "58a563c7ccc566bd",
+"contentHash": "215af2f544dc0ba3",
 "keywords": [
 "bounded gnn certification",
 "exact certified radius",
@@ -14986,6 +15161,10 @@
 {
 "id": "AID-H-012.001",
 "comparison": "AID-H-012.004 protects the reward value from transport or service tampering; AID-H-012.001 determines whether the reward function itself encodes the intended objective.\nAn authentic reward can still be badly designed, and a sound reward is useless if attackers can alter it in transit."
+},
+{
+"id": "AID-H-004.005",
+"comparison": "AID-H-012.004 is the primary owner for an externally computed reward payload's producer identity, integrity, freshness, and learning-consumption binding; AID-H-004.005 supplies a protocol-independent signed-envelope primitive when intermediaries break transport trust.\nThe same signed reward evidence must not earn a second PASS under the generic message control."
 }
 ]
 },
@@ -15069,7 +15248,7 @@
 ]
 }
 ],
-"contentHash": "dd5d086028ea3650",
+"contentHash": "9cc2250cd65daed9",
 "keywords": [
 "reward channel integrity",
 "mutual tls reward transport",
@@ -15218,7 +15397,12 @@
 "description": "Embed governed provenance, watermark, or ownership signals into generated content and model assets so authorized investigators can trace origin, detect bounded reuse, or test a model-ownership hypothesis. Content-level controls cover supported image, video, text-generation, and signed-provenance paths; model-level controls use canonical artifact fingerprints or preregistered behavioral challenge populations.",
 "scopeBoundary": {
 "responsibility": "Owns bounded technical provenance and ownership signals through content watermarking, signed provenance, exact white-box artifact or tensor comparison, and calibrated black-box behavioral challenges. It does not prevent copying, guarantee confidentiality, prove factual truth, or establish legal ownership.",
-"relatedTechniques": []
+"relatedTechniques": [
+{
+"id": "AID-H-003.011",
+"comparison": "AID-H-013 embeds or evaluates bounded provenance and ownership signals after model artifacts or generated content may be copied; AID-H-003.011 decides whether an entitled, freshly attested client may receive the decryption key for an exact protected model release.\nAttribution evidence is not an entitlement decision, and attested delivery does not provide later ownership proof."
+}
+]
 },
 "pillar": [
 "data",
@@ -15296,7 +15480,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "17245af7e9ffc6a3",
+"contentHash": "28b2441c00cee951",
 "keywords": [
 "governed provenance signals",
 "digital content watermarking",
@@ -15800,7 +15984,7 @@
 "name": "Certified Defenses",
 "description": "Use sound certification methods to prove a specified robustness property for an exact model, input, perturbation set or norm, radius, verifier implementation, and numerical assumption. A certificate does not establish immunity to prompt injection, unrestricted semantic change, poisoning, extraction, unsupported operations, or attacks outside the declared threat model. Independently reproduce the certificate for the deployed artifact.",
 "scopeBoundary": {
-"responsibility": "Owns independently reproducible formal certification of a specified robustness property for an exact deployed artifact, input, perturbation set or norm, radius, verifier implementation, and numerical assumptions. It makes no claim outside that threat model.",
+"responsibility": "Owns independently reproducible formal certification of a specified robustness property for an exact deployed artifact, input, perturbation set or norm, radius, verifier implementation, and numerical assumptions, except for the fully enumerated GNN structural-perturbation certificate owned by AID-H-011.003. It makes no claim outside the declared threat model.",
 "relatedTechniques": [
 {
 "id": "AID-H-001",
@@ -15809,6 +15993,10 @@
 {
 "id": "AID-H-014",
 "comparison": "AID-H-015 issues a formal bound under explicit assumptions; AID-H-014 aggregates multiple models and measures empirical robustness.\nA diverse ensemble may still lack a sound certified radius."
+},
+{
+"id": "AID-H-011.003",
+"comparison": "AID-H-011.003 is the primary owner for exhaustive certification of a fixed GNN over an exact graph, target, candidate-edge universe, graph semantics, and structural radius; AID-H-015 owns other declared formal robustness properties and certification methods.\nOne GNN structural certificate must not receive a second PASS under the generic certified-defense control."
 }
 ]
 },
@@ -15902,7 +16090,7 @@
 "toolsCommercial": [
 "MATLAB Deep Learning Toolbox (verifyNetworkRobustness with alpha-beta-CROWN)"
 ],
-"contentHash": "d9e99efbb7208190",
+"contentHash": "d0ae1086b67727fa",
 "keywords": [
 "certified robustness guarantees",
 "formal robustness bounds",
@@ -16907,13 +17095,13 @@
 {
 "id": "AID-H-017.004",
 "name": "Transient & Isolated State Management",
-"description": "Harden an agent's application-level working state against cross-task persistence by isolating it per principal and task, enforcing bounded retention, and reloading signed mission objectives from a trusted source. Agents should be as stateless as the use case permits; any retained state must have an explicit owner, scope, TTL, provenance, and deletion or expiry path.",
+"description": "Design an agent's application-level working state to avoid unnecessary cross-task persistence: keep task handling stateless where practical, construct request-local state from the current authenticated task, and reload signed mission objectives from a trusted source. When a deployment retains volatile context in RAM, Redis, or another shared store, consume the runtime isolation, size, TTL, reset, and serialization evidence owned by <code>AID-I-004.001</code> rather than scoring those store controls here.",
 "scopeBoundary": {
-"responsibility": "Owns application-level working-state architecture and lifecycle across principals and tasks, including isolation, bounded retention, trusted mission reload, owner, TTL, provenance, and deletion or expiry. It is design-time and steady-state hardening rather than incident containment.",
+"responsibility": "Owns application-level statelessness, task-local state construction, cross-task persistence avoidance, and trusted mission reload. It does not own runtime context-store tenant or session isolation, size limits, TTL, reset, serialization, process teardown, or memory zeroization.",
 "relatedTechniques": [
 {
 "id": "AID-I-004.001",
-"comparison": "AID-H-017.004 designs task and session state to avoid cross-task persistence during normal operation; AID-I-004.001 isolates and truncates runtime context after suspicious activity or at a containment boundary.\nSteady-state state architecture and incident-time context containment are separate responsibilities."
+"comparison": "AID-H-017.004 owns the application architecture that avoids or minimizes retained cross-task state and reloads the trusted mission for each task; AID-I-004.001 owns steady-state runtime enforcement for any volatile context store, including tenant and session isolation, bounded size, TTL, resets, and fail-closed serialization.\nA stateless design can consume AID-I-004.001 evidence when a store exists, but retained-state TTL and isolation receive only the AID-I-004.001 outcome."
 },
 {
 "id": "AID-I-001",
@@ -17007,22 +17195,22 @@
 ]
 }
 ],
-"contentHash": "7172b532194284af",
+"contentHash": "6c5e9f8e2d49f984",
 "keywords": [
-"transient agent state",
-"isolated task state",
-"ephemeral agent memory",
-"stateless agent design",
-"per-principal state isolation",
-"per-task state namespace",
-"bounded state retention",
+"application working-state architecture",
+"request-local state reconstruction",
+"stateless task handling",
+"cross-task persistence minimization",
+"authenticated task binding",
 "signed mission reload",
-"state provenance binding",
-"temporary credential expiry",
+"trusted objective source",
+"mission-state provenance",
+"task-local state construction",
 "cross-session injection prevention",
-"task teardown verification",
-"cross-tenant state denial",
-"ephemeral store readback"
+"untrusted state rejection",
+"restart objective reload",
+"runtime-store evidence delegation",
+"volatile-context boundary"
 ]
 },
 {
@@ -18539,6 +18727,10 @@
 {
 "id": "AID-H-018.009",
 "comparison": "AID-H-018.007 defines and intercepts the installed skill's declared file-resource ceiling; AID-H-018.009 supplies the generic descriptor- or handle-safe filesystem broker for skills and non-skill adapters.\nA manifest PASS does not prove that each opened or affected object remained inside the declared root."
+},
+{
+"id": "AID-H-021.005",
+"comparison": "AID-H-018.007 enforces a skill's declared file, network, shell, tool, and protected-resource permissions after installation and activation; AID-H-021.005 decides whether the exact repository-controlled activation manifest may leave restricted mode.\nWorkspace trust does not grant runtime skill permissions, and a valid skill permission manifest does not authorize workspace activation."
 }
 ]
 },
@@ -18663,7 +18855,7 @@
 ]
 }
 ],
-"contentHash": "28826c46d3c485d9",
+"contentHash": "d51ed14e9dfe4f1b",
 "keywords": [
 "skill permission manifest",
 "skill-level authorization",
@@ -20284,13 +20476,13 @@
 "items": [
 "AITech-1.3 Goal Manipulation",
 "AITech-5.2 Configuration Persistence",
-"AITech-9.3 Dependency / Plugin Compromise",
 "AITech-7.3 Data Source Abuse and Manipulation",
+"AITech-9.3 Dependency / Plugin Compromise",
 "AITech-14.1 Unauthorized Access",
 "AITech-14.2 Abuse of Delegated Authority",
 "AISubtech-5.2.1 Agent Profile Tampering",
-"AISubtech-9.3.1 Malicious Package / Tool Injection",
-"AISubtech-6.1.1 Knowledge Base Poisoning"
+"AISubtech-6.1.1 Knowledge Base Poisoning",
+"AISubtech-9.3.1 Malicious Package / Tool Injection"
 ]
 },
 {
@@ -20324,7 +20516,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "a8cd3996378a67d8",
+"contentHash": "24deca3cec477b68",
 "keywords": [
 "configuration integrity",
 "signed configurations",
@@ -20497,6 +20689,10 @@
 {
 "id": "AID-H-021.005",
 "comparison": "AID-H-021.002 verifies approved startup and runtime control artifacts; AID-H-021.005 binds a workspace trust decision to the effective manifest of execution-capable surfaces.\nA valid signed artifact is one input to workspace trust, not proof that every activated surface was declared and accepted."
+},
+{
+"id": "AID-M-001.002",
+"comparison": "AID-H-021.002 verifies and admits signed startup or runtime control artifacts for an agent; AID-M-001.002 inventories the release-bound model-interface tuple and reconciles effective composition across deployed replicas.\nAgent configuration bytes may support both checks, but runtime admission and deployed composition reconciliation remain separate outcomes and must not be scored twice."
 }
 ]
 },
@@ -20611,7 +20807,7 @@
 ]
 }
 ],
-"contentHash": "af24a4d26872f2ea",
+"contentHash": "f252fa94c74b4f53",
 "keywords": [
 "signed configuration",
 "runtime integrity enforcement",
@@ -20952,6 +21148,10 @@
 {
 "id": "AID-I-001",
 "comparison": "AID-I-001 contains code after execution is permitted; AID-H-021.005 decides whether repository-controlled execution or registration may begin.\nRestricted-before-trust admission and runtime containment are independently required where both apply."
+},
+{
+"id": "AID-H-018.007",
+"comparison": "AID-H-021.005 decides whether the exact repository-controlled activation manifest may leave restricted mode; AID-H-018.007 enforces a skill's declared file, network, shell, tool, and protected-resource permissions after installation and activation.\nWorkspace trust neither grants runtime skill permissions nor proves that later resource accesses stayed within the skill manifest."
 }
 ]
 },
@@ -20977,7 +21177,7 @@
 "Code - OSS Workspace Trust (MIT; restricted-mode baseline; complete activation-manifest binding and change-triggered revocation require custom integration)",
 "Pipelock Community (Apache-2.0; MCP binary and script integrity manifests only; a separate complete workspace activation broker is required)",
 "Veritas Kanban (MIT; provider-neutral pre-launch workspace inventory, exact inventory-bound trust decisions, revocation, drift fail-closed, and launch-time rescan for supported agent adapters)",
-"Workspace Guard workspace-guard-scan CLI (Apache-2.0; pre-open repository trust-surface inventory and review only; a separate manifest-bound activation broker, revocation path, and bypass testing are required)"
+"ToppyMicroServices Workspace Guard / workspace-guard-scan (Apache-2.0; source-built CLI or published VS Code extension for pre-open repository trust-surface inventory and review; not distributed through the npm registry; separate activation enforcement, revocation, and bypass testing required)"
 ],
 "toolsSourceAvailable": [],
 "toolsCommercial": [
@@ -21052,7 +21252,7 @@
 ]
 }
 ],
-"contentHash": "74cc0142b92785f9",
+"contentHash": "2dc594dabfe9a9fc",
 "keywords": [
 "coding-agent workspace trust",
 "restricted-before-trust mode",
@@ -28602,6 +28802,10 @@
 {
 "id": "AID-I-001",
 "comparison": "AID-H-034.003 validates and authorizes command or code paths in the MCP handler; AID-I-001 contains the execution environment when such paths are permitted.\nHandler checks do not create process isolation."
+},
+{
+"id": "AID-H-018.009",
+"comparison": "AID-H-034.003 validates the MCP tool request and consumes a filesystem-broker receipt before a handler uses a workspace, working directory, interpreter, script, module, executable, or other model-influenced path; AID-H-018.009 owns rooted object resolution, path confinement, race resistance, and exact-object evidence.\nThe MCP handler must not replay path-traversal or symlink fixtures as a second confinement PASS."
 }
 ]
 },
@@ -28619,7 +28823,7 @@
 "Bind each tool invocation to the authenticated principal, per-request client metadata, tenant, explicit application handles, and backend object authorization before executing side effects.",
 "Use parameterized SQL or NoSQL APIs and server-side identifier allowlists for every database-backed MCP tool.",
 "For tools that fetch URLs or resolve network targets, enforce SSRF-safe URL validation, redirect validation, DNS rebinding checks, and egress allowlists.",
-"For command, code, browser, and filesystem tools, deny shell execution by default and route high-risk handlers through sandboxed execution profiles."
+"For command, code, browser, and filesystem tools, deny shell execution by default, consume AID-H-018.009 filesystem-broker receipts instead of caller paths, and route permitted handlers through sandboxed execution profiles."
 ],
 "implementationGuidanceIds": [
 "AID-H-034.003-G001",
@@ -28720,7 +28924,7 @@
 ]
 }
 ],
-"contentHash": "0c187afaaa422305",
+"contentHash": "fa98c79980977e99",
 "keywords": [
 "tool input validation",
 "strict json schema",
@@ -29974,9 +30178,9 @@
 {
 "id": "AID-H-037.001",
 "name": "Reasoning-Trace Confidentiality & Storage Controls",
-"description": "Classify raw reasoning traces, hidden chain-of-thought, scratchpads, and thinking summaries as sensitive state. Prevent raw display, ordinary logging, analytics export, or client-supplied hidden state. Store only approved summaries and integrity hashes by default; break-glass raw storage is separate, encrypted, access-controlled, and expiring.",
+"description": "Classify raw reasoning traces, hidden chain-of-thought, scratchpads, and thinking summaries as sensitive state. Prevent raw display, ordinary logging, analytics export, or client-supplied hidden state. Store only approved summaries and integrity hashes by default. Allow raw content only through either a separate expiring break-glass path or a purpose-bound continuous monitor that processes it in protected memory or a short-lived encrypted buffer and exports only sanitized findings.",
 "scopeBoundary": {
-"responsibility": "Owns classification, display prohibition, ordinary-log and analytics exclusion, approved summary or hash storage, and separate expiring break-glass storage for raw reasoning traces and hidden scratchpads. It does not validate provider continuation blocks.",
+"responsibility": "Owns classification, display prohibition, ordinary-log and analytics exclusion, approved summary or hash storage, separate expiring break-glass storage, and the isolated raw-data path required by an authorized continuous semantic monitor. It does not validate provider continuation blocks or decide whether a semantic finding exists.",
 "relatedTechniques": [
 {
 "id": "AID-H-037.003",
@@ -29985,6 +30189,10 @@
 {
 "id": "AID-D-002.004",
 "comparison": "AID-H-037.001 protects raw reasoning content and approved storage; AID-D-002.004 observes bounded reasoning and thinking-token telemetry for anomalies without requiring raw chain-of-thought.\nConfidentiality controls must not force detectors to ingest hidden reasoning text."
+},
+{
+"id": "AID-D-002.005",
+"comparison": "AID-H-037.001 authorizes and isolates the narrow raw-reasoning data path; AID-D-002.005 defines the semantic detector, coverage, model binding, and finding evidence.\nContinuous automated monitoring is purpose-bound processing, not a break-glass human-access exception."
 }
 ]
 },
@@ -29997,10 +30205,12 @@
 "operation"
 ],
 "implementationGuidance": [
-"Classify reasoning fields server-side, deny raw display and ordinary logging, reject client-supplied hidden state, and store only approved summaries or hashes outside break-glass."
+"Classify reasoning fields server-side, deny raw display and ordinary logging, reject client-supplied hidden state, and store only approved summaries or hashes outside break-glass.",
+"Isolate continuous reasoning-trace monitoring from normal telemetry and retain raw content only in protected memory or a policy-bounded encrypted buffer."
 ],
 "implementationGuidanceIds": [
-"AID-H-037.001-G001"
+"AID-H-037.001-G001",
+"AID-H-037.001-G002"
 ],
 "toolsOpenSource": [
 "OpenTelemetry",
@@ -30072,7 +30282,7 @@
 ]
 }
 ],
-"contentHash": "8f6f4a84e8feebe9",
+"contentHash": "8049bf4a104da7d5",
 "keywords": [
 "raw reasoning trace suppression",
 "hidden chain-of-thought storage control",
@@ -30084,7 +30294,10 @@
 "round-trip reasoning integrity",
 "break-glass reasoning access",
 "reasoning state audit",
-"chain-of-thought leakage prevention"
+"chain-of-thought leakage prevention",
+"purpose-bound reasoning monitor",
+"ephemeral reasoning buffer",
+"sanitized reasoning alert"
 ]
 },
 {
@@ -30326,6 +30539,393 @@
 "signed reasoning block",
 "continuation integrity",
 "opaque block verification"
+]
+}
+],
+"url": "https://aidefend.net"
+},
+{
+"id": "AID-H-038",
+"name": "Inference Serving Runtime Surface & Privileged Capability Governance",
+"description": "Constrain the process-level network surface and privileged capabilities of self-hosted or operator-controlled inference runtimes. Verify which listeners and internal transports actually start, and separately authorize state-changing runtime operations such as model load, unload, weight or adapter update, pause, resume, scaling, and repository control.",
+"scopeBoundary": {
+"responsibility": "Owns inference-runtime listener and protocol conformance plus operation-level authorization of privileged or state-changing serving capabilities. It does not own TLS, caller authentication, network reachability policy, debug-output content, generic service discovery, vulnerability remediation, or model-interface composition.",
+"relatedTechniques": [
+{
+"id": "AID-I-002",
+"comparison": "AID-H-038.001 verifies which listeners and protocols the inference process actually starts; AID-I-002 controls which network sources can reach an approved endpoint.\nA blocked unexpected port is still an unnecessary process surface, while an approved listener still requires network containment."
+},
+{
+"id": "AID-H-004.002",
+"comparison": "AID-H-004.002 establishes and authenticates the calling workload or service; AID-H-038.002 decides which authenticated identity may invoke each privileged inference-runtime operation.\nAuthentication without operation authorization does not protect weight update, adapter load, pause, scale, or model-control functions."
+},
+{
+"id": "AID-H-032.003",
+"comparison": "AID-H-038.001 determines whether a debug or metrics listener should exist and where it binds; AID-H-032.003 governs whether debug and observability output discloses sensitive information.\nA listener can conform while leaking data, or expose no sensitive content while still being an unnecessary attack surface."
+}
+]
+},
+"pillar": [
+"infra",
+"model",
+"app"
+],
+"phase": [
+"building",
+"operation"
+],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0018 Manipulate AI Model",
+"AML.T0018.000 Manipulate AI Model: Poison AI Model",
+"AML.T0029 Denial of AI Service",
+"AML.T0040 AI Model Inference API Access",
+"AML.T0049 Exploit Public-Facing Application"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Orchestration Attacks (L4)",
+"Privilege Escalation (Cross-Layer)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2026",
+"items": [
+"LLM05:2026 Data and Model Poisoning",
+"LLM06:2026 Unbounded Consumption"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"ML05:2023 Model Theft",
+"ML10:2023 Model Poisoning"
+]
+},
+{
+"framework": "OWASP Top 10 for Agentic Applications 2026",
+"items": [
+"N/A"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"NISTAML.026 Model Poisoning (Integrity)",
+"NISTAML.031 Model Extraction"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-9.1 Model or Agentic System Manipulation",
+"AITech-10.1 Model Extraction",
+"AITech-14.1 Unauthorized Access"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"MXF: Model Exfiltration",
+"MDT: Model Deployment Tampering",
+"IIC: Insecure Integrated Component"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Model 7.1: Backdoor machine learning / Trojaned model",
+"Model Serving - Inference requests 9.11: Model Inference API Access",
+"Platform 12.4: Unauthorized privileged access"
+]
+}
+],
+"implementationGuidance": [],
+"implementationGuidanceIds": [],
+"toolsOpenSource": [],
+"toolsSourceAvailable": [],
+"toolsCommercial": [],
+"contentHash": "f58b57d6536fb9fa",
+"keywords": [
+"inference serving surface",
+"runtime listener governance",
+"privileged inference operations",
+"management endpoint authorization",
+"distributed serving ports",
+"kv transfer listener",
+"model runtime control plane",
+"inference process attack surface",
+"listener profile conformance",
+"operation-level authorization",
+"inference runtime hardening",
+"serving capability governance"
+],
+"subTechniques": [
+{
+"id": "AID-H-038.001",
+"name": "Inference Runtime Listener & Protocol Conformance",
+"description": "Define a signed exposure profile for every inference-serving process and verify after startup that its actual TCP, UDP, Unix-socket, distributed-control, and KV-transfer listeners match approved addresses, ports or ranges, transports, and roles. Disable unused listeners and fail deployment on an unknown or unexpectedly broad bind.",
+"scopeBoundary": {
+"responsibility": "Owns post-startup process-level enumeration and conformance of actual inference-runtime listeners, sockets, internal transports, bind addresses, ports or approved ranges, and declared roles. It does not own TLS/mTLS, caller identity, network reachability, debug content, discovery, management-operation authorization, or model-interface readback.",
+"relatedTechniques": [
+{
+"id": "AID-I-002.001",
+"comparison": "AID-H-038.001 proves that the serving process starts only approved listeners; AID-I-002.001 proves that network policy permits only approved source-to-destination paths.\nProcess surface and network reachability require separate readbacks and can fail independently."
+},
+{
+"id": "AID-M-001.005",
+"comparison": "AID-M-001.005 discovers organization-owned Internet-reachable AI endpoints from an outside vantage point; AID-H-038.001 enforces the signed listener profile inside the serving workload.\nExternal discovery cannot prove that an internal or blocked listener was never started."
+},
+{
+"id": "AID-H-038.002",
+"comparison": "AID-H-038.001 controls whether a listener or protocol exists; AID-H-038.002 controls which authenticated identity may invoke a privileged operation exposed through an approved listener.\nA clean listener inventory does not authorize the operations behind it."
+},
+{
+"id": "AID-H-034.001",
+"comparison": "AID-H-034.001 owns the MCP server front end's deployment profile, transport, Origin and protocol checks, TLS or mTLS, runtime hardening, egress, and coarse exposure limits; AID-H-038.001 owns the listeners and internal transports started by the underlying inference-serving process.\nAn MCP-fronted inference deployment must evaluate both process populations, and one listener readback cannot satisfy both controls."
+},
+{
+"id": "AID-H-033.005",
+"comparison": "AID-H-033.005 resolves and enforces the effective provider, account, model, deployment, endpoint, region, route, and fallback immediately before dispatch; AID-H-038.001 verifies which local listeners and protocols the inference process actually starts.\nAn approved dispatch route does not authorize an extra process listener, and a conforming listener does not prove the requested model route is approved."
+},
+{
+"id": "AID-D-004.008",
+"comparison": "AID-D-004.008 monitors executable code and modules actually loaded by the runtime; AID-H-038.001 verifies the runtime's process-level listener and protocol surface.\nA conforming binary and module population can still expose an unexpected port, and a clean listener inventory does not prove loaded-code integrity."
+},
+{
+"id": "AID-M-001.006",
+"comparison": "AID-M-001.006 discovers organization-owned internal AI endpoints and agent services from authorized network and control-plane scope; AID-H-038.001 enforces the signed listener profile inside each applicable inference workload.\nDiscovery reports what is reachable or registered but cannot prove that blocked, loopback, Unix-socket, distributed-control, or KV-transfer listeners were never started."
+}
+]
+},
+"pillar": [
+"infra",
+"model"
+],
+"phase": [
+"building",
+"operation"
+],
+"implementationGuidance": [
+"Enumerate every listener owned by the inference process tree after readiness and compare it with a signed, role-labeled endpoint profile."
+],
+"implementationGuidanceIds": [
+"AID-H-038.001-G001"
+],
+"toolsOpenSource": [
+"psutil",
+"vLLM",
+"SGLang",
+"NVIDIA Triton Inference Server",
+"Kubernetes"
+],
+"toolsSourceAvailable": [],
+"toolsCommercial": [],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0040 AI Model Inference API Access",
+"AML.T0049 Exploit Public-Facing Application"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Orchestration Attacks (L4)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2026",
+"items": [
+"N/A"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"ML05:2023 Model Theft (closing unintended inference listeners removes unauthorized query paths)"
+]
+},
+{
+"framework": "OWASP Top 10 for Agentic Applications 2026",
+"items": [
+"N/A"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"NISTAML.031 Model Extraction"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-10.1 Model Extraction",
+"AITech-14.1 Unauthorized Access"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"MXF: Model Exfiltration",
+"IIC: Insecure Integrated Component"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Model Serving - Inference requests 9.11: Model Inference API Access"
+]
+}
+],
+"contentHash": "aa90fea0885f144e",
+"keywords": [
+"inference listener inventory",
+"process socket enumeration",
+"signed exposure profile",
+"tcp listener conformance",
+"udp listener conformance",
+"unix socket conformance",
+"kv transfer port",
+"distributed inference transport",
+"unexpected bind detection",
+"loopback binding verification",
+"post-startup listener readback",
+"dynamic port range policy",
+"inference protocol inventory",
+"serving attack surface reduction"
+]
+},
+{
+"id": "AID-H-038.002",
+"name": "Inference Runtime Privileged Operation Authorization",
+"description": "Inventory every inference-runtime operation that can change model bytes, adapters, repositories, capacity, execution state, plugins, or control-plane state. Disable operations that are not required, and enforce exact operation-level authorization for enabled capabilities on every HTTP, gRPC, plugin, and direct backend path. Verify both denial and authoritative state readback.",
+"scopeBoundary": {
+"responsibility": "Owns the complete registry, disablement, operation-level authorization, alternate-path denial, and post-operation state readback for privileged or state-changing inference-runtime capabilities. It consumes authenticated identity but does not establish identity, sign release artifacts, control network reachability, or authorize ordinary inference content.",
+"relatedTechniques": [
+{
+"id": "AID-H-004.002",
+"comparison": "AID-H-004.002 authenticates the calling service or workload; AID-H-038.002 maps that identity and its trusted scopes to one privileged inference-runtime operation.\nA valid inference API key must not automatically authorize weight updates, adapter loading, pause, scaling, or repository control."
+},
+{
+"id": "AID-H-003.002",
+"comparison": "AID-H-003.002 decides which signed model release may be promoted and distributed; AID-H-038.002 decides who may invoke the runtime operation that loads or changes an already approved release.\nRuntime authorization must consume the release-gate receipt rather than duplicate artifact admission."
+},
+{
+"id": "AID-H-038.001",
+"comparison": "AID-H-038.002 protects privileged operations on approved paths; AID-H-038.001 verifies that no direct or alternate listener bypasses those paths.\nOperation policy cannot secure a backend port that remains independently reachable."
+}
+]
+},
+"pillar": [
+"infra",
+"model",
+"app"
+],
+"phase": [
+"building",
+"operation"
+],
+"implementationGuidance": [
+"Classify every runtime route, disable unused privileged capabilities, and place an authenticated default-deny operation gate in the same process path as every enabled management action."
+],
+"implementationGuidanceIds": [
+"AID-H-038.002-G001"
+],
+"toolsOpenSource": [
+"Open Policy Agent (OPA)",
+"Envoy",
+"vLLM",
+"NVIDIA Triton Inference Server",
+"Kubernetes"
+],
+"toolsSourceAvailable": [],
+"toolsCommercial": [],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0018 Manipulate AI Model",
+"AML.T0018.000 Manipulate AI Model: Poison AI Model",
+"AML.T0029 Denial of AI Service"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Orchestration Attacks (L4)",
+"Privilege Escalation (Cross-Layer)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2026",
+"items": [
+"LLM05:2026 Data and Model Poisoning",
+"LLM06:2026 Unbounded Consumption (operation authorization prevents untrusted callers from changing serving capacity or execution state, while request budgets and rate limits remain separate)"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"ML10:2023 Model Poisoning"
+]
+},
+{
+"framework": "OWASP Top 10 for Agentic Applications 2026",
+"items": [
+"N/A"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"NISTAML.026 Model Poisoning (Integrity)"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-9.1 Model or Agentic System Manipulation",
+"AITech-14.1 Unauthorized Access"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"MDT: Model Deployment Tampering",
+"IIC: Insecure Integrated Component"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Model 7.1: Backdoor machine learning / Trojaned model",
+"Platform 12.4: Unauthorized privileged access"
+]
+}
+],
+"contentHash": "09dd6541eb130e99",
+"keywords": [
+"privileged inference operation",
+"model load authorization",
+"adapter update authorization",
+"weight update authorization",
+"model repository control",
+"pause resume authorization",
+"runtime route registry",
+"default deny management api",
+"operation scope enforcement",
+"alternate path denial",
+"authoritative state readback",
+"ordinary inference key isolation",
+"plugin route inventory",
+"inference control plane authorization"
 ]
 }
 ],
@@ -31135,7 +31735,7 @@
 ],
 "implementationGuidance": [
 "Rescan every versioned memory record on the recall path before prompt assembly and emit a detector-derived, content-bound finding for downstream policy consumers.",
-"Maintain a tenant-aware, versioned quarantine fingerprint store and integrate it with incident response so newly confirmed malicious memory patterns are blocked on future recall without creating cross-tenant bleed-over."
+"Maintain a tenant-aware, versioned quarantine fingerprint store and emit a content-bound match finding when recalled memory matches a confirmed malicious pattern; downstream Harden or Isolate controls decide whether recall is denied or quarantined."
 ],
 "implementationGuidanceIds": [
 "AID-D-001.005-G001",
@@ -31237,7 +31837,7 @@
 ]
 }
 ],
-"contentHash": "a729436f247fa4a1",
+"contentHash": "a6e7b837639a945a",
 "keywords": [
 "recall path scanning",
 "memory rehydration gate",
@@ -31400,9 +32000,9 @@
 {
 "id": "AID-D-002",
 "name": "AI Model Anomaly & Performance Drift Detection",
-"description": "Monitor deployed AI systems for statistically significant shifts in input distributions, output behavior, labeled performance, and, when available, internal model telemetry. This family groups detective controls that reveal data drift, concept drift, poisoning effects, evasion symptoms, and backdoor activation.<br/><br/><strong>Applicability:</strong> select the sub-technique that matches the model class, available feedback loop, and runtime observability. An absent label stream or unsupported internal signal provides no evidence that drift or anomalous behavior is absent.",
+"description": "Monitor deployed AI systems for statistically significant shifts in input distributions, output behavior, labeled performance, and available model telemetry. Where an operator can lawfully observe an emitted reasoning trace, inspect its meaning for attack or policy-evasion signals without treating it as a faithful record of internal cognition. This family groups detective controls for drift, poisoning effects, evasion symptoms, backdoor activation, reasoning abuse, and reasoning-specific resource anomalies.<br/><br/><strong>Applicability:</strong> select only the sub-technique whose required signal is actually observable. An absent label stream, log-probability distribution, internal tensor, reasoning metadata, or emitted reasoning trace provides no evidence that the corresponding anomaly is absent.",
 "scopeBoundary": {
-"responsibility": "Owns production detection of statistically significant shifts in input distributions, output behavior, labeled performance, and available model-internal or reasoning telemetry. Each claim is limited by the applicable model class, feedback loop, and runtime observability.",
+"responsibility": "Owns production detection of statistically significant shifts in input distributions, output behavior, labeled performance, model-internal signals, reasoning metadata, and the semantics of an operator-visible emitted reasoning trace. Each claim is limited to the exact observable signal and measured population.",
 "relatedTechniques": [
 {
 "id": "AID-M-003.002",
@@ -31431,6 +32031,8 @@
 "AML.T0034.001 Cost Harvesting: Resource-Intensive Queries",
 "AML.T0043 Craft Adversarial Data",
 "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger",
+"AML.T0051 LLM Prompt Injection",
+"AML.T0054 LLM Jailbreak",
 "AML.T0057 LLM Data Leakage",
 "AML.T0076 Corrupt AI Model"
 ]
@@ -31444,12 +32046,15 @@
 "Data Tampering (L2)",
 "Resource Hijacking (L4)",
 "Manipulation of Evaluation Metrics (L5)",
-"Data Leakage through Observability (L5)"
+"Evasion of Detection (L5)",
+"Data Leakage through Observability (L5)",
+"Agent Goal Manipulation (L7)"
 ]
 },
 {
 "framework": "OWASP LLM Top 10 2026",
 "items": [
+"LLM01:2026 Prompt Injection",
 "LLM02:2026 Sensitive Information Disclosure",
 "LLM05:2026 Data and Model Poisoning",
 "LLM06:2026 Unbounded Consumption",
@@ -31468,7 +32073,7 @@
 {
 "framework": "OWASP Top 10 for Agentic Applications 2026",
 "items": [
-"N/A"
+"ASI01:2026 Agent Goal Hijack"
 ]
 },
 {
@@ -31478,6 +32083,7 @@
 "NISTAML.012 Clean-label Poisoning",
 "NISTAML.013 Data Poisoning",
 "NISTAML.014 Energy-latency",
+"NISTAML.018 Prompt Injection",
 "NISTAML.021 Clean-label Backdoor",
 "NISTAML.022 Evasion",
 "NISTAML.023 Backdoor Poisoning",
@@ -31490,6 +32096,8 @@
 {
 "framework": "Cisco Integrated AI Security and Safety Framework",
 "items": [
+"AITech-1.3 Goal Manipulation",
+"AITech-2.1 Jailbreak",
 "AITech-6.1 Training Data Poisoning",
 "AITech-7.1 Reasoning Corruption",
 "AITech-8.2 Data Exfiltration / Exposure",
@@ -31510,6 +32118,7 @@
 "items": [
 "DP: Data Poisoning",
 "DMS: Denial of ML Service",
+"PIJ: Prompt Injection",
 "MEV: Model Evasion",
 "SDD: Sensitive Data Disclosure"
 ]
@@ -31521,9 +32130,11 @@
 "Algorithms 5.2: Model drift",
 "Model 7.1: Backdoor machine learning / Trojaned model",
 "Model Serving - Inference requests 9.7: Denial of Service (DoS)",
+"Model Serving - Inference requests 9.12: LLM Jailbreak",
 "Model Serving - Inference response 10.1: Lack of audit and monitoring inference quality",
 "Model Serving - Inference response 10.6: Sensitive data output from a model",
-"Agents - Core 13.4: Resource Overload"
+"Agents - Core 13.4: Resource Overload",
+"Agents - Core 13.6: Intent Breaking & Goal Manipulation"
 ]
 }
 ],
@@ -31532,7 +32143,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "fc7a2193377d7d58",
+"contentHash": "b3c02c0c78e8ce10",
 "keywords": [
 "model drift detection",
 "performance drift monitoring",
@@ -31547,15 +32158,16 @@
 "model quality monitoring",
 "output distribution monitoring",
 "statistical drift analysis",
-"inference telemetry"
+"inference telemetry",
+"reasoning semantic monitoring"
 ],
 "subTechniques": [
 {
 "id": "AID-D-002.001",
 "name": "Input / Output Distribution Drift Monitoring",
-"description": "Compare live feature distributions and prediction distributions against trusted reference baselines to detect data drift, concept drift, poisoned traffic, and subtle degradation in model behavior. This sub-technique applies whenever you can observe the model's production inputs or outputs, including classical ML services and vendor-hosted inference APIs with sufficient telemetry.",
+"description": "Compare live feature, prediction, or token-probability distributions against trusted reference baselines to detect data drift, concept drift, poisoned traffic, uncertainty shifts, and subtle degradation in model behavior. This sub-technique applies to classical ML services and to self-hosted or vendor-hosted inference APIs that expose a complete, documented top-k log-probability signal.",
 "scopeBoundary": {
-"responsibility": "Owns unlabeled production drift findings from live input-feature and prediction-output distributions compared with signed reference distributions.",
+"responsibility": "Owns unlabeled production drift findings from live input-feature, prediction-output, and provider- or runtime-exposed token-probability distributions compared with signed reference distributions. It does not claim access to hidden logits that the serving interface does not return.",
 "relatedTechniques": [
 {
 "id": "AID-D-002.002",
@@ -31572,11 +32184,13 @@
 ],
 "implementationGuidance": [
 "Monitor the statistical distribution of model inputs to detect data drift.",
-"Monitor the statistical distribution of model outputs to detect concept drift."
+"Monitor the statistical distribution of model outputs to detect concept drift.",
+"When a serving API exposes top-k token log probabilities, monitor their distribution as an output signal and preserve the unreturned probability mass as unknown."
 ],
 "implementationGuidanceIds": [
 "AID-D-002.001-G001",
-"AID-D-002.001-G002"
+"AID-D-002.001-G002",
+"AID-D-002.001-G003"
 ],
 "toolsOpenSource": [
 "Evidently",
@@ -31672,7 +32286,7 @@
 ]
 }
 ],
-"contentHash": "d415a58f370c934c",
+"contentHash": "2d39456e1b1e9e09",
 "keywords": [
 "input distribution drift",
 "output distribution drift",
@@ -31686,8 +32300,8 @@
 "nannyml",
 "reference baseline comparison",
 "statistical distribution monitoring",
-"live feature telemetry",
-"psi drift metric"
+"top-k logprob distribution",
+"missing probability mass"
 ]
 },
 {
@@ -31826,9 +32440,9 @@
 {
 "id": "AID-D-002.003",
 "name": "White-Box Transformer Internal-Signal Anomaly Telemetry",
-"description": "Instrument self-hosted or open-weight Transformer inference stacks to monitor internal-signal anomalies such as abnormal attention concentration, entropy collapse, and attention isolation. This sub-technique applies only when you can access model internals such as logits, scores, or attention tensors at runtime.",
+"description": "Instrument self-hosted or open-weight Transformer inference stacks to monitor internal-signal anomalies such as abnormal attention concentration, activation shifts, entropy collapse, and attention isolation. Bind every probe and baseline to the exact model digest, layer or hook, runtime image, framework, kernel path, numeric precision, quantization, and compilation mode. This sub-technique applies only when those internals are observable at runtime.",
 "scopeBoundary": {
-"responsibility": "Owns white-box runtime anomaly telemetry from self-hosted or open-weight Transformer internals such as attention tensors, logits, entropy, and activation-like signals. It applies only where those internals are observable.",
+"responsibility": "Owns white-box runtime anomaly telemetry from self-hosted or open-weight Transformer internals such as attention tensors, logits, entropy, and activations, including configuration-bound calibration and transfer limits. Provider-returned top-k log probabilities remain output-distribution telemetry under AID-D-002.001.",
 "relatedTechniques": [
 {
 "id": "AID-D-002.004",
@@ -31844,11 +32458,13 @@
 ],
 "implementationGuidance": [
 "Detect anomalous attention patterns in Transformer-based models.",
-"Monitor backdoor-specific internal telemetry (entropy collapse and attention isolation) in sampled/high-audit runtime flows."
+"Monitor backdoor-specific internal telemetry (entropy collapse and attention isolation) in sampled/high-audit runtime flows.",
+"Calibrate each activation, attention, or logit probe for the exact model and inference stack that produces the measured tensor."
 ],
 "implementationGuidanceIds": [
 "AID-D-002.003-G001",
-"AID-D-002.003-G002"
+"AID-D-002.003-G002",
+"AID-D-002.003-G003"
 ],
 "toolsOpenSource": [
 "Hugging Face Transformers",
@@ -31934,7 +32550,7 @@
 ]
 }
 ],
-"contentHash": "a955badef6582b6c",
+"contentHash": "55b0e790ae31da00",
 "keywords": [
 "white-box telemetry",
 "attention entropy analysis",
@@ -31947,17 +32563,17 @@
 "self-hosted model introspection",
 "attention head monitoring",
 "runtime tensor inspection",
-"internal signal anomaly",
-"attention pattern profiling",
-"open-weight model telemetry"
+"activation probe binding",
+"quantization-specific calibration",
+"runtime kernel binding"
 ]
 },
 {
 "id": "AID-D-002.004",
 "name": "Reasoning Trace & Thinking-Token Anomaly Telemetry",
-"description": "Collect and analyze output-side reasoning telemetry for systems that expose extended-thinking, hidden reasoning summaries, provider thinking blocks, or thinking-token accounting. This sub-technique monitors reasoning-token counts, reasoning-to-visible-output ratios, omitted or redacted thinking flags, trace-summary length, provider display mode, request intent, latency, and budget decisions to detect forced over-reasoning, abnormal hidden-trace disclosure, and reasoning-specific availability abuse.",
+"description": "Collect and analyze output-side reasoning metadata for systems that expose extended-thinking summaries, provider thinking blocks, redaction flags, or thinking-token accounting. Monitor token counts, hidden-to-visible ratios, omission or redaction state, summary length, display mode, request intent, latency, and budget decisions to detect forced over-reasoning, abnormal trace disclosure, and reasoning-specific availability abuse. The meaning of an emitted reasoning trace is assessed separately by AID-D-002.005.",
 "scopeBoundary": {
-"responsibility": "Owns anomalies in provider or API-visible reasoning telemetry, including thinking-token counts, reasoning-to-visible-output ratios, redaction flags, trace-summary shape, display mode, latency, and reasoning-budget decisions.",
+"responsibility": "Owns anomalies in provider or API-visible reasoning metadata and accounting, including thinking-token counts, reasoning-to-visible-output ratios, redaction flags, trace-summary shape, display mode, latency, and reasoning-budget decisions. It does not semantically judge the content of an emitted reasoning trace.",
 "relatedTechniques": [
 {
 "id": "AID-D-002.003",
@@ -32069,10 +32685,9 @@
 ]
 }
 ],
-"contentHash": "76dbcd59e28f4288",
+"contentHash": "6a2028956bd1bc22",
 "keywords": [
 "reasoning trace telemetry",
-"provider capability adapter",
 "field presence bitmap",
 "missing signal preservation",
 "thinking token anomaly",
@@ -32085,7 +32700,140 @@
 "reasoning compute abuse",
 "cost harvesting telemetry",
 "hidden trace disclosure",
-"model api version binding"
+"model api version binding",
+"reasoning metadata monitoring"
+]
+},
+{
+"id": "AID-D-002.005",
+"name": "Emitted Reasoning-Trace Semantic Monitoring",
+"description": "When the deployment operator can observe a model-emitted reasoning trace, treat that trace as untrusted input and inspect the complete emitted trace field with an independent semantic monitor for prompt injection, jailbreak, goal displacement, concealment, deception, and safeguard-evasion signals. Treat findings as detector evidence, not proof of the model's hidden intent: emitted reasoning may be incomplete, unfaithful, strategically shaped, or absent.",
+"scopeBoundary": {
+"responsibility": "Owns semantic findings from the complete operator-visible reasoning field for an eligible response, including untrusted-input handling, coverage, monitor-version binding, thresholding, sanitized alert evidence, and explicit uncertainty. It does not own token-count or trace-shape telemetry, visible answer moderation, confidentiality enforcement, response blocking, containment, or claims about unobserved internal cognition.",
+"relatedTechniques": [
+{
+"id": "AID-D-002.004",
+"comparison": "AID-D-002.005 judges the meaning of an emitted reasoning trace; AID-D-002.004 measures reasoning metadata such as token counts, ratios, redaction state, latency, and budget use.\nSemantic content and trace-shape accounting use different signals and produce independently verifiable findings."
+},
+{
+"id": "AID-D-003.001",
+"comparison": "AID-D-002.005 monitors a non-user-facing emitted reasoning channel for attack and evasion signals; AID-D-003.001 monitors text intended for users or downstream application consumption for policy violations.\nThe same text must not earn two PASS outcomes merely because a gateway exposes it under two field names."
+},
+{
+"id": "AID-H-037.001",
+"comparison": "AID-D-002.005 defines the semantic detection objective; AID-H-037.001 defines the purpose-bound, short-lived path allowed to handle sensitive raw reasoning and the sanitized fields permitted to leave it.\nDetection does not authorize ordinary logging, analytics export, or long-term raw-trace retention."
+},
+{
+"id": "AID-I-003",
+"comparison": "AID-D-002.005 evaluates the untrusted emitted reasoning field and produces a semantic finding; AID-I-003 consumes an authenticated finding or policy decision to quarantine, degrade, throttle, or contain the resolved target.\nA detector label never performs containment, and a containment action must not be counted as proof that semantic monitoring covered the trace."
+}
+]
+},
+"pillar": [
+"model",
+"app"
+],
+"phase": [
+"operation"
+],
+"implementationGuidance": [
+"Send each complete eligible emitted reasoning field through a purpose-bound semantic monitor and export only a policy label, severity, trace digest, and restricted evidence reference."
+],
+"implementationGuidanceIds": [
+"AID-D-002.005-G001"
+],
+"toolsOpenSource": [
+"Hugging Face Transformers",
+"vLLM",
+"SGLang",
+"OpenTelemetry",
+"Prometheus"
+],
+"toolsSourceAvailable": [
+"Granite Guardian 4.1 (Apache-2.0; open-weight)",
+"gpt-oss-safeguard (Apache-2.0; open-weight)"
+],
+"toolsCommercial": [],
+"defendsAgainst": [
+{
+"framework": "MITRE ATLAS",
+"items": [
+"AML.T0051 LLM Prompt Injection (reasoning-trace findings can reveal instruction displacement that was not visible in the final answer)",
+"AML.T0054 LLM Jailbreak (reasoning-trace findings can reveal safeguard-evasion behavior before or despite a benign-looking answer)"
+]
+},
+{
+"framework": "MAESTRO",
+"items": [
+"Evasion of Detection (L5) (the trace monitor supplies a second semantic observation channel)",
+"Agent Goal Manipulation (L7) (reasoning traces can reveal displaced goals or attacker-controlled planning)"
+]
+},
+{
+"framework": "OWASP LLM Top 10 2026",
+"items": [
+"LLM01:2026 Prompt Injection (semantic monitoring detects injection and jailbreak effects expressed in an emitted reasoning trace)"
+]
+},
+{
+"framework": "OWASP ML Top 10 2023",
+"items": [
+"N/A"
+]
+},
+{
+"framework": "OWASP Top 10 for Agentic Applications 2026",
+"items": [
+"ASI01:2026 Agent Goal Hijack (trace findings can expose goal displacement in reasoning-capable agents)"
+]
+},
+{
+"framework": "NIST Adversarial Machine Learning 2025",
+"items": [
+"NISTAML.018 Prompt Injection",
+"NISTAML.027 Misaligned Outputs (reasoning-trace findings are a corroborating signal, not proof of internal alignment)"
+]
+},
+{
+"framework": "Cisco Integrated AI Security and Safety Framework",
+"items": [
+"AITech-1.3 Goal Manipulation",
+"AITech-2.1 Jailbreak",
+"AITech-7.1 Reasoning Corruption"
+]
+},
+{
+"framework": "Google Secure AI Framework 2.0 - Risks",
+"items": [
+"PIJ: Prompt Injection"
+]
+},
+{
+"framework": "Databricks AI Security Framework 3.0",
+"items": [
+"Model Serving - Inference requests 9.12: LLM Jailbreak",
+"Model Serving - Inference response 10.1: Lack of audit and monitoring inference quality",
+"Agents - Core 13.6: Intent Breaking & Goal Manipulation"
+]
+}
+],
+"contentHash": "9ccc2e2d78207e28",
+"keywords": [
+"emitted reasoning trace monitoring",
+"chain-of-thought semantic detection",
+"reasoning prompt injection signal",
+"reasoning jailbreak detection",
+"goal displacement detection",
+"deception signal monitoring",
+"safeguard evasion detection",
+"complete trace coverage",
+"reasoning monitor isolation",
+"sanitized reasoning alert",
+"monitor model revision binding",
+"reasoning trace digest",
+"reasoning detector uncertainty",
+"optimization pressure separation",
+"operator-visible reasoning"
 ]
 }
 ],
@@ -32317,13 +33065,17 @@
 {
 "id": "AID-D-003.001",
 "name": "Harmful Text & Token Output Policy-Violation Detection",
-"description": "Inspect model-generated text, token streams, and text-bearing structured fields for policy-defined harmful, abusive, deceptive, regulated, or otherwise disallowed language. Emit matched rule IDs, classifier versions, scores, language and stream coverage, and alert evidence.",
+"description": "Inspect model-generated text, token streams, and text-bearing structured fields that are intended for user display or downstream application consumption for policy-defined harmful, abusive, deceptive, regulated, or otherwise disallowed language. Emit matched rule IDs, classifier versions, scores, language and stream coverage, and alert evidence. Non-user-facing emitted reasoning fields are owned by AID-D-002.005.",
 "scopeBoundary": {
-"responsibility": "Owns policy-violation findings for generated text, token streams, and text-bearing structured fields. It does not inspect non-text media or binary containers and does not block, sanitize, approve, or safely render the content.",
+"responsibility": "Owns policy-violation findings for generated text, token streams, and text-bearing structured fields intended for display or downstream application use. It does not inspect a non-user-facing emitted reasoning channel, non-text media, or binary containers, and does not block, sanitize, approve, or safely render content.",
 "relatedTechniques": [
 {
 "id": "AID-D-003.008",
 "comparison": "AID-D-003.001 inspects text and token-bearing fields; AID-D-003.008 inspects generated images, audio, video, documents, archives, serialized objects, executables, and other binary artifacts.\nChoose the detector by the actual decoded output type, and route mixed outputs through both applicable populations."
+},
+{
+"id": "AID-D-002.005",
+"comparison": "AID-D-003.001 monitors text intended for a user or downstream application; AID-D-002.005 monitors a separately identified, operator-visible emitted reasoning field for attack and evasion signals.\nIf the same field is deliberately exposed as ordinary output, assign one primary measured population and do not score it twice."
 }
 ]
 },
@@ -32442,7 +33194,7 @@
 ]
 }
 ],
-"contentHash": "ce7f99d50aac7819",
+"contentHash": "a9c65f1f24d789c8",
 "keywords": [
 "harmful content filtering",
 "output moderation",
@@ -32457,7 +33209,8 @@
 "output safety classifier",
 "moderation api",
 "response content scanning",
-"policy violation alert"
+"policy violation alert",
+"user-visible output monitoring"
 ]
 },
 {
@@ -33691,10 +34444,10 @@
 "subTechniques": [
 {
 "id": "AID-D-004.001",
-"name": "Static Artifact Hash & Signature Verification",
-"description": "Compute cryptographic hashes of stored model artifacts, datasets, and container image layers and compare them with the authorized signed manifests or immutable registry entries established by <code>AID-M-002.002</code>. Detect unauthorized modification, signature failure, and drift from approved baselines before deployment or promotion.",
+"name": "Static Artifact Integrity Re-verification & Drift Monitoring",
+"description": "Independently re-verify a declared population of candidate or deployed model artifacts, datasets, container image layers, libraries, and related files against the authorized signed manifests or immutable registry records established by <code>AID-M-002.002</code>. Emit findings for unauthorized modification, signature failure, missing or unexpected members, and drift from the approved baseline; do not turn the same release-gate verification into a second integrity PASS.",
 "scopeBoundary": {
-"responsibility": "Owns pre-deployment or promotion-time comparison of stored model, dataset, image-layer, library, and related artifact hashes and signatures against authorized manifests or immutable registry records.",
+"responsibility": "Owns independently scheduled or event-triggered detective reconciliation of a declared candidate or deployed static-artifact snapshot against authorized manifests or immutable registry records, including complete-population coverage and integrity-drift findings. It does not create the authoritative digest or signature verdict, admit an artifact, or decide promotion.",
 "relatedTechniques": [
 {
 "id": "AID-D-004.008",
@@ -33703,6 +34456,10 @@
 {
 "id": "AID-D-004.002",
 "comparison": "AID-D-004.001 verifies artifact bytes and signatures; AID-D-004.002 verifies a fresh platform-backed confidential-runtime attestation measurement.\nArtifact integrity and attested execution environment identity are distinct cryptographic claims."
+},
+{
+"id": "AID-M-002.002",
+"comparison": "AID-M-002.002 owns authoritative whole-artifact digest and signature creation and verification at ingestion, transfer, load, or admission; AID-D-004.001 independently replays those checks over a declared candidate or deployed snapshot and emits findings for drift.\nThe same promotion-time verification cannot earn a second PASS under Detect, and detector coverage cannot replace artifact admission."
 }
 ]
 },
@@ -33713,10 +34470,11 @@
 ],
 "phase": [
 "building",
-"validation"
+"validation",
+"operation"
 ],
 "implementationGuidance": [
-"Verify artifact hashes against authorized manifest in a write-once model registry.",
+"Independently re-verify a complete candidate snapshot against the authorized manifest and emit findings without recreating the release-admission verdict.",
 "Detect drift from approved manifests across deployed models, framework libraries, system binaries, and runtime configs using file integrity monitoring."
 ],
 "implementationGuidanceIds": [
@@ -33823,22 +34581,22 @@
 ]
 }
 ],
-"contentHash": "4a84ce9311b98d10",
+"contentHash": "cbf2f7edac1e976b",
 "keywords": [
-"artifact digest verification",
-"signature validation pipeline",
-"supply-chain integrity checks",
-"detached signature enforcement",
-"sha256 manifest comparison",
-"tamper-evident build artifacts",
-"provenance attestation verification",
-"cosign verify-blob workflow",
-"trust-anchor pinning",
-"release artifact admission gate",
-"signed model package validation",
-"immutable artifact registry checks",
-"offline integrity verification",
-"signature failure incident alerting"
+"artifact integrity re-verification",
+"deployed artifact drift",
+"signed manifest comparison",
+"immutable registry baseline",
+"declared artifact population",
+"missing artifact detection",
+"unexpected member detection",
+"signature failure finding",
+"unauthorized modification detection",
+"independent scheduled verification",
+"event-triggered integrity check",
+"read-only candidate snapshot",
+"integrity detector receipt",
+"continuous artifact monitoring"
 ]
 },
 {
@@ -33972,9 +34730,9 @@
 {
 "id": "AID-D-004.003",
 "name": "Runtime Configuration & Policy Drift Detection and Monitoring",
-"description": "Continuously detect unauthorized or out-of-process changes to AI-serving configurations such as model-serving YAMLs, feature-store ACLs, RAG index schemas, and inference-time policy files. Compare the effective production state with the formally approved state and emit evidence-rich drift findings.",
+"description": "Continuously detect unauthorized or out-of-process changes to AI-serving configurations such as model-serving YAMLs, feature-store ACLs, RAG index schemas, inference-time policy files, and the deployed model-interface tuple of tokenizer, special tokens, chat template, generation configuration, and tool or reasoning parser settings. Compare effective production state with the formally approved state and emit evidence-rich drift findings.",
 "scopeBoundary": {
-"responsibility": "Owns observe-first declared-versus-live configuration and policy drift findings. It does not harden repositories, block admission, or automatically reconcile the runtime.",
+"responsibility": "Owns observe-first declared-versus-live configuration, model-interface composition, and policy drift findings. It does not create the approved release tuple, harden repositories, block admission, or automatically reconcile the runtime.",
 "relatedTechniques": [
 {
 "id": "AID-H-021.002",
@@ -33983,6 +34741,10 @@
 {
 "id": "AID-D-004.006",
 "comparison": "AID-D-004.003 detects generic configuration and policy drift; AID-D-004.006 reconciles the route actually selected after alias, default, retry, provider translation, and failover resolution.\nA route can drift despite unchanged configuration, and configuration drift may affect controls unrelated to routing."
+},
+{
+"id": "AID-M-001.002",
+"comparison": "AID-M-001.002 defines and reads back the approved release-bound model-interface tuple; AID-D-004.003 continuously detects later drift in that effective tuple.\nRelease conformance and ongoing observation use the same binding but produce different outcomes and evidence windows."
 }
 ]
 },
@@ -34096,7 +34858,7 @@
 ]
 }
 ],
-"contentHash": "d54ae2d9c32f6bfa",
+"contentHash": "cc752cae023c6f74",
 "keywords": [
 "runtime configuration drift detection",
 "policy bundle drift monitoring",
@@ -34110,8 +34872,8 @@
 "drift evidence audit logging",
 "control-plane mutation monitoring",
 "runtime hardening state verification",
-"detected drift containment playbook",
-"configuration compliance posture tracking"
+"model interface drift",
+"parser configuration drift"
 ]
 },
 {
@@ -35708,8 +36470,17 @@
 },
 {
 "id": "AID-D-005.006",
-"name": "ANS Registry & Resolution Telemetry Monitoring",
-"description": "Monitors Agent Name Service (ANS) registration events and resolution traffic to identify anomalies indicative of registry poisoning, Sybil-style namespace abuse, directory reconnaissance, or credential churn. It correlates identity, issuer, and query outcomes (e.g., NXDOMAIN/Agent Not Found, version-range mismatches) into actionable security alerts.",
+"name": "Agent Registry & Resolution Telemetry Monitoring",
+"description": "Monitor registration, update, revocation, lookup, and resolution telemetry from applicable agent registries and name-resolution services to detect registry poisoning indicators, Sybil-style namespace abuse, directory reconnaissance, issuer or credential churn, and abnormal not-found or version-mismatch outcomes. Agent Name Service (ANS) is a named implementation driver and example, not the applicability boundary.",
+"scopeBoundary": {
+"responsibility": "Owns anomaly detection over the complete declared population of agent-registry and resolution events, including namespace churn, identity and issuer correlations, reconnaissance patterns, poisoning indicators, and outcome-rate changes. It does not authenticate the event contract, reconcile inter-agent ledger completeness, authorize registration or routing, or establish that a registry entry is trustworthy.",
+"relatedTechniques": [
+{
+"id": "AID-D-011.002",
+"comparison": "AID-D-005.006 detects suspicious patterns in registry and resolution activity after events are available; AID-D-011.002 authenticates the inter-agent event contract and reconciles discovery and routing events against authoritative ledgers.\nA contract-valid event can still be anomalous, while a missing, forged, replayed, or misbound event is owned by AID-D-011.002 and must not be scored again as registry anomaly detection."
+}
+]
+},
 "pillar": [
 "infra",
 "app"
@@ -35814,7 +36585,7 @@
 ]
 }
 ],
-"contentHash": "59bf8b5f15350b92",
+"contentHash": "ce0b7678f51d7e1a",
 "keywords": [
 "ans registry telemetry",
 "agent name service audit",
@@ -38082,6 +38853,10 @@
 {
 "id": "AID-D-010",
 "comparison": "AID-D-011.002 verifies that goal and action events are authentic, correctly bound, and contract-complete; AID-D-010 evaluates whether their semantic content remains aligned with the approved goal.\nA valid signed event may describe a goal-divergent action."
+},
+{
+"id": "AID-D-005.006",
+"comparison": "AID-D-011.002 authenticates discovery and routing event contracts and reconciles their complete population against authoritative interaction ledgers; AID-D-005.006 detects registry poisoning indicators, namespace churn, reconnaissance, and other anomalies within available registry and resolution telemetry.\nMissing, forged, replayed, or misbound events are scored here, while anomalous patterns in valid events are scored under AID-D-005.006."
 }
 ]
 },
@@ -38180,7 +38955,7 @@
 ]
 }
 ],
-"contentHash": "e5afb2af75f82e05",
+"contentHash": "e4b2cc8d4e583f3b",
 "keywords": [
 "authenticated inter-agent events",
 "security event contract",
@@ -39236,7 +40011,7 @@
 {
 "id": "AID-D-014.001",
 "name": "Post-Retrieval Malicious Content Scanning",
-"description": "Treat retrieved RAG chunks and vector-store contents as untrusted input; scan them for prompt-injection patterns or malicious payloads and emit poisoning findings before context assembly or cleanup actions. Use the same pinned detector contract as prompt ingress, with modern guardrail options such as Llama Prompt Guard 2, Llama Guard 4, Granite Guardian 4.1, Qwen3Guard, or gpt-oss-safeguard where they fit the language, modality, latency, and policy requirements.",
+"description": "Treat every chunk in the exact post-retrieval population as untrusted input; inspect its content or policy-bound embedding representation for prompt-injection patterns, malicious payloads, or known malicious concepts and emit poisoning findings before context assembly. Use the same pinned detector contract as prompt ingress, with modern guardrail options such as Llama Prompt Guard 2, Llama Guard 4, Granite Guardian 4.1, Qwen3Guard, or gpt-oss-safeguard where they fit the language, modality, latency, and policy requirements.",
 "scopeBoundary": {
 "responsibility": "Owns malicious-instruction, prompt-injection, and payload findings for chunks already retrieved from a RAG index or vector store before context assembly. It does not remove, rewrite, quarantine, or admit the chunk.",
 "relatedTechniques": [
@@ -39258,7 +40033,7 @@
 ],
 "implementationGuidance": [
 "Scan retrieved chunks with prompt-safety detectors and emit poisoning findings for tainted content.",
-"Run scheduled semantic similarity scans over the vector store to find entries that match known malicious concepts before they are ever retrieved."
+"Compare every chunk in the exact ordered retrieval population with policy-owned malicious-concept embeddings and emit content findings before context assembly."
 ],
 "implementationGuidanceIds": [
 "AID-D-014.001-G001",
@@ -39356,7 +40131,7 @@
 ]
 }
 ],
-"contentHash": "8244def7a957dfef",
+"contentHash": "a94b56e38f80e205",
 "keywords": [
 "post-retrieval content scanning",
 "retrieved prompt injection detection",
@@ -39367,11 +40142,11 @@
 "granite guardian 4.1",
 "qwen3guard classifier",
 "gpt-oss-safeguard research preview",
-"scheduled vector-store scan",
+"exact retrieval population",
 "semantic malicious-concept scan",
+"embedding representation screening",
 "pre-context assembly finding",
 "poisoning telemetry emission",
-"complete retrieved population",
 "independent detector replay"
 ]
 },
@@ -41040,6 +41815,10 @@
 {
 "id": "AID-H-019.003",
 "comparison": "AID-I-001.004 owns the reusable sandbox egress-policy object and its external enforcement; AID-H-019.003 owns admission and observation export for a browser runtime.\nThe browser control binds to this policy but does not redefine the allowlist, proxy enforcement, or network-bypass tests."
+},
+{
+"id": "AID-I-002.002",
+"comparison": "AID-I-001.004 is the primary owner for default-deny egress and bypass resistance of sandboxed execution; AID-I-002.002 owns governed connectivity from AI workloads to external MaaS, SaaS, APIs, callbacks, relays, and cross-organization agents.\nWhen a sandbox calls an external AI service, identical network-policy evidence may be reused, but the same default-deny enforcement must not receive two PASS outcomes; AID-I-002.002 must additionally prove its external endpoint, transport, and mediation population."
 }
 ]
 },
@@ -41138,7 +41917,7 @@
 ]
 }
 ],
-"contentHash": "04c113e68591ce80",
+"contentHash": "41ea5142577022b8",
 "keywords": [
 "sandbox egress restriction",
 "default-deny egress",
@@ -41598,6 +42377,10 @@
 {
 "id": "AID-I-002.001",
 "comparison": "AID-I-002.002 governs external and cross-organization service connectivity; AID-I-002.001 segments internal organization-controlled AI systems and trust zones.\nA privately addressed provider route can still be external by ownership and trust boundary, while an Internet-routable organization-owned endpoint may remain part of the internal administrative population."
+},
+{
+"id": "AID-I-001.004",
+"comparison": "AID-I-002.002 owns external-service endpoint, transport, mediation, and reachability controls for the applicable AI-workload population; AID-I-001.004 is the primary owner for default-deny egress and bypass tests of sandboxed executions.\nFor an external call originating inside a sandbox, reuse the sandbox network evidence without scoring the identical enforcement twice, and evaluate the additional external-service identity and mediation requirements here."
 }
 ]
 },
@@ -41731,7 +42514,7 @@
 ]
 }
 ],
-"contentHash": "0bddcad7b626d740",
+"contentHash": "52b46f9fd3137f39",
 "keywords": [
 "governed external egress",
 "private service connectivity",
@@ -41767,6 +42550,10 @@
 {
 "id": "AID-I-005",
 "comparison": "AID-I-003 contains a scoped identity, session, tenant, agent, budget, or action; AID-I-005 applies a last-resort system-wide or tenant-wide halt or severe restriction.\nA local quarantine or throttle is not proof that the emergency halt propagated across every required execution boundary."
+},
+{
+"id": "AID-E-001",
+"comparison": "AID-I-003 applies reversible quarantine, safe-mode downgrade, or throttling while investigation and recovery proceed; AID-E-001 authoritatively revokes compromised credentials, sessions, principals, issuance paths, and delegated grants after an incident decision.\nA quarantine receipt cannot prove durable identity-plane eviction, and revocation does not replace bounded containment of the affected workload or action."
 }
 ]
 },
@@ -41883,7 +42670,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "83e9fda557d3cf54",
+"contentHash": "fae69275616849b7",
 "keywords": [
 "ai interaction quarantine",
 "response-time containment",
@@ -41922,7 +42709,7 @@
 "response"
 ],
 "implementationGuidance": [
-"Automated quarantine based on high-risk behavior alerts (cut access, move to honeypot, disable key/account).",
+"Apply reversible quarantine or safe-mode downgrade from an authenticated high-risk finding; credential, session, principal, or grant revocation remains an AID-E-001 action with separate evidence.",
 "Design AI systems with a 'safe mode' or degraded functionality state.",
 "Utilize SOAR platforms to automate quarantine/throttling actions.",
 "Trip a hallucination or safety circuit breaker into a degraded operating mode when upstream health signals cross containment thresholds.",
@@ -42032,7 +42819,7 @@
 ]
 }
 ],
-"contentHash": "335f38cdffb4bd24",
+"contentHash": "d05316b1ac2a6cd3",
 "keywords": [
 "detection-driven quarantine",
 "safe-mode downgrade",
@@ -42625,6 +43412,10 @@
 {
 "id": "AID-I-004.008",
 "comparison": "AID-I-004.001 owns active-context boundaries and hygiene; AID-I-004.008 validates the security integrity of a summarization or compaction transformation.\nA bounded context window does not prove that a generated summary preserved constraints, provenance, or secret-removal requirements."
+},
+{
+"id": "AID-H-017.004",
+"comparison": "AID-I-004.001 owns steady-state isolation, size, TTL, reset, and serialization enforcement for volatile runtime context stores; AID-H-017.004 owns the application architecture that avoids retained cross-task state and reloads trusted mission objectives.\nStore isolation and TTL receive their outcome here even when a stateless design references the same runtime evidence."
 }
 ]
 },
@@ -42734,7 +43525,7 @@
 ]
 }
 ],
-"contentHash": "833507b6533eb52f",
+"contentHash": "039f892a90a9b9ae",
 "keywords": [
 "runtime context isolation",
 "per-session ttl",
@@ -44037,6 +44828,10 @@
 {
 "id": "AID-H-008.002",
 "comparison": "AID-I-006 excludes clients already named in a verified quarantine decision; AID-H-008.002 robustly aggregates updates from the accepted client population.\nByzantine-robust aggregation is not identity-bound eviction, and quarantine does not define how accepted updates are combined or made robust to residual outliers."
+},
+{
+"id": "AID-R-001.002",
+"comparison": "AID-I-006 produces and enforces the signed federated-client and update exclusion population; AID-R-001.002 consumes that population when building sanitized recovery-training inputs and validating a newly remediated model.\nRecovery retraining must not recreate the quarantine decision, and successful exclusion does not prove that the replacement model passed remediation evaluation."
 }
 ]
 },
@@ -44152,7 +44947,7 @@
 ],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "67bde8af334a6875",
+"contentHash": "5b57f5c26e685535",
 "keywords": [
 "federated client quarantine",
 "federated participant exclusion",
@@ -44187,6 +44982,10 @@
 {
 "id": "AID-I-001",
 "comparison": "AID-I-007 confines a model inside an end-user client application; AID-I-001 isolates managed AI execution in containers, sandboxes, or microVMs.\nA client-side Worker or iframe boundary is not evidence that a server-side tool or model workload runs in the managed sandbox family."
+},
+{
+"id": "AID-H-003.011",
+"comparison": "AID-I-007 confines the client-side model runtime and its access to browser, application, operating-system, and native-bridge capabilities after execution begins; AID-H-003.011 decides whether an entitled, freshly attested client may receive the decryption key for an exact protected model release.\nClient isolation does not authorize model delivery, and key-release admission does not prove post-release runtime confinement."
 }
 ]
 },
@@ -44306,7 +45105,7 @@
 "Android Enterprise Work Profile",
 "Samsung Knox Platform for Enterprise"
 ],
-"contentHash": "1429e6419bdb0df8",
+"contentHash": "e5af4f88b6714f1c",
 "keywords": [
 "client-side sandboxing",
 "web worker isolation",
@@ -46234,6 +47033,10 @@
 {
 "id": "AID-R-003.001",
 "comparison": "AID-E-001 invalidates compromised or prior authentication and authorization state; AID-R-003.001 creates a new trusted interactive session after eviction.\nSuccessful reauthentication does not prove that the old credential, token, grant, or session population was revoked, and eviction does not itself establish a recovered session."
+},
+{
+"id": "AID-I-003",
+"comparison": "AID-E-001 authoritatively and durably revokes compromised credentials, sessions, principals, issuance paths, and delegated grants; AID-I-003 applies reversible quarantine, safe-mode downgrade, throttling, or action containment while investigation or recovery proceeds.\nContainment does not prove identity-plane eviction, and revocation does not replace immediate bounded control of the affected workload, session, or action."
 }
 ]
 },
@@ -46330,7 +47133,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "1f3c652454eae664",
+"contentHash": "6eff7c4401e2f6a6",
 "keywords": [
 "incident authority eviction",
 "credential object eviction",
@@ -48500,6 +49303,10 @@
 {
 "id": "AID-E-003.005",
 "comparison": "AID-R-001.002 builds and validates the replacement model; AID-E-003.005 quarantines compromised adapters and their derivatives.\nFor adapter-derived compromise, this control consumes signed quarantine, tombstone, and derivative-routing evidence. Retraining does not establish that the original adapter or derivative can no longer be served."
+},
+{
+"id": "AID-I-006",
+"comparison": "AID-R-001.002 consumes the signed federated-client and update exclusion population when constructing sanitized recovery-training inputs and validating the remediated model; AID-I-006 owns the underlying quarantine decision and exclusion enforcement.\nRetraining must not recreate or independently score client quarantine, and quarantine alone does not prove that the replacement model is safe to promote."
 }
 ]
 },
@@ -48629,7 +49436,7 @@
 ]
 }
 ],
-"contentHash": "13c5984301245e5e",
+"contentHash": "089ac093cb70ff27",
 "keywords": [
 "model remediation retraining",
 "approximate unlearning",
