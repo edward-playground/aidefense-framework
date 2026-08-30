@@ -15265,7 +15265,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
         {
             "id": "AID-H-018",
             "name": "Tool Authorization & Capability Scoping",
-            "description": "Establish and enforce strict authorization and capability limits for tools invocable by an AI agent. Apply least privilege with allowlists, parameter boundaries, authoritative object authorization, filesystem-object confinement, mandatory structured inputs/outputs, and transaction-safe side-effect execution so authorized retries, resumptions, and duplicate deliveries cannot silently repeat high-impact actions. This is the runtime enforcement layer for agent risk models such as the lethal trifecta (private data, untrusted content, and an exfiltration or side-effect channel in one session) and Meta's Agents Rule of Two, which limits how many of those high-risk properties may coexist without stronger gates.",
+            "description": "Establish and enforce strict authorization and capability limits for tools invocable by an AI agent. Apply least privilege with allowlists, parameter boundaries, authoritative object authorization, filesystem-object confinement, mandatory structured inputs/outputs, and transaction-safe side-effect execution so authorized retries, resumptions, and duplicate deliveries cannot silently repeat high-impact actions.<br/><br/>This is the runtime enforcement layer for agent risk models such as the lethal trifecta (private data, untrusted content, and an exfiltration or side-effect channel in one session) and Meta's Agents Rule of Two, which limits how many of those high-risk properties may coexist without stronger gates.",
             "scopeBoundary": {
               "responsibility": "Owns runtime enforcement of tool and action authority through parameter constraints, policy decisions, high-impact approval, dynamic capability scope, value-flow controls, filesystem-object confinement, execution-time freshness, skill permissions, and transaction-safe side effects. It independently verifies governance and HITL inputs.",
               "relatedTechniques": [
@@ -16657,7 +16657,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ],
                     "toolsOpenSource": [
                         "golang.org/x/sys/unix (BSD-3-Clause low-level Linux syscall bindings)",
-                        "Go os.Root (Go 1.25+; BSD-3-Clause; traversal-resistant rooted filesystem operations; object-identity receipts, hard-link and mount profiles, no-replace behavior, and durability semantics require additional broker logic)",
+                        "Go os.Root (Go 1.24+; BSD-3-Clause; traversal-resistant rooted filesystem operations; object-identity receipts, hard-link and mount profiles, no-replace behavior, and durability semantics require additional broker logic)",
                         "libpathrs (MPL-2.0 OR LGPL-3.0-or-later; Linux handle-based rooted path resolution with Rust, C, and Go APIs)",
                         "cap-std (Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT; capability-oriented rooted filesystem operations for Rust; control-specific receipts and mutation semantics require additional integration)"
                     ],
@@ -18291,7 +18291,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "building",
                         "operation"
                     ],
-                    "description": "Separate the agent runtime from the control plane that supervises it. A production agent must not be able to read, modify, disable, or bypass its own monitoring rules, policy bundles, sandbox settings, kill-switch controls, audit streams, canary definitions, oversight thresholds, egress policy, load balancers, network routes, or security groups. This control owns the single PASS for that inability; a capability-tier profile may require several independent layers, but their shared enforcement result must not be scored again. Any break-glass path that crosses those layers requires independently authenticated quorum approval, just-in-time and time-bounded scope, tamper-evident audit, and an alert delivered through a channel the runtime cannot suppress.",
+                    "description": "Separate the agent runtime from the control plane that supervises it. A production agent must not be able to read, modify, disable, or bypass its own monitoring rules, policy bundles, sandbox settings, kill-switch controls, audit streams, canary definitions, oversight thresholds, egress policy, load balancers, network routes, or security groups.<br/><br/>This control owns the single PASS for that inability; a capability-tier profile may require several independent layers, but their shared enforcement result must not be scored again.<br/><br/>Any break-glass path that crosses those layers requires independently authenticated quorum approval, just-in-time and time-bounded scope, tamper-evident audit, and an alert delivered through a channel the runtime cannot suppress.",
                     "scopeBoundary": {
                       "responsibility": "Owns identity, network, storage, and administration separation between the agent runtime and its monitoring rules, policy bundles, sandbox settings, kill switches, audit streams, canaries, detector internals, oversight thresholds, egress policy, load balancers, routes, and security groups. It owns the one scoreable result for runtime inability to administer these surfaces, even when a capability-tier profile requires multiple independent layers.",
                       "relatedTechniques": [
@@ -18510,7 +18510,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ],
                     "toolsOpenSource": [
                         "Code - OSS Workspace Trust (MIT; restricted-mode baseline; complete activation-manifest binding and change-triggered revocation require custom integration)",
-                        "Pipelock Community (Apache-2.0; MCP binary and script integrity manifests only; a separate complete workspace activation broker is required)"
+                        "Pipelock Community (Apache-2.0; MCP binary and script integrity manifests only; a separate complete workspace activation broker is required)",
+                        "Veritas Kanban (MIT; provider-neutral pre-launch workspace inventory, exact inventory-bound trust decisions, revocation, drift fail-closed, and launch-time rescan for supported agent adapters)",
+                        "Workspace Guard workspace-guard-scan CLI (Apache-2.0; pre-open repository trust-surface inventory and review only; a separate manifest-bound activation broker, revocation path, and bypass testing are required)"
                     ],
                     "toolsCommercial": [
                         "Parallel Works pw code (content-bound workspace settings, hook, and skill trust baseline; complete activation-surface coverage and immediate filesystem-change revocation require additional enforcement)",

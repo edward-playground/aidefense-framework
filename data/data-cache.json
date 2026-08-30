@@ -2391,7 +2391,7 @@
     ]
   },
   "AID-H-018": {
-    "contentHash": "eec82615f317bbc2",
+    "contentHash": "4065414cac0518df",
     "keywords": [
       "tool authorization",
       "lethal trifecta mitigation",
@@ -2808,7 +2808,7 @@
     ]
   },
   "AID-H-021.004": {
-    "contentHash": "3c63efbf16359560",
+    "contentHash": "386a7e9b0bd52455",
     "keywords": [
       "control-plane isolation",
       "oversight surface isolation",
@@ -6734,7 +6734,7 @@
     ]
   },
   "AID-H-018.009": {
-    "contentHash": "be4f18bb65c03947",
+    "contentHash": "670547f3e2ba22a2",
     "keywords": [
       "model-callable filesystem confinement",
       "descriptor-based path resolution",
@@ -6754,7 +6754,7 @@
     ]
   },
   "AID-H-021.005": {
-    "contentHash": "c77d693d41936124",
+    "contentHash": "74cc0142b92785f9",
     "keywords": [
       "coding-agent workspace trust",
       "restricted-before-trust mode",
