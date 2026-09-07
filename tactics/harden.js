@@ -191,7 +191,9 @@ export const hardenTactic = {
                         "AML.T0112 Machine Compromise",
                         "AML.T0112.001 Machine Compromise: AI Artifacts",
                         "AML.T0115 Publish Poisoned AI Artifacts",
-                        "AML.T0115.000 Publish Poisoned AI Artifacts: Datasets"
+                        "AML.T0115.000 Publish Poisoned AI Artifacts: Datasets",
+                        "AML.T0119 Exploit Automated Artifact Processing Pipeline",
+                        "AML.T0123 Obfuscated Files or Information"
                     ]
                 },
                 {
@@ -5096,7 +5098,8 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                                 "AML.T0099 AI Agent Tool Data Poisoning (validates poisoned data retrieved through benign tools before prompt assembly)",
                                 "AML.T0051.000 LLM Prompt Injection: Direct",
                                 "AML.T0051.001 LLM Prompt Injection: Indirect",
-                                "AML.T0051.002 LLM Prompt Injection: Triggered (input validation blocks triggered prompt injection)"
+                                "AML.T0051.002 LLM Prompt Injection: Triggered (input validation blocks triggered prompt injection)",
+                                "AML.T0123 Obfuscated Files or Information (normalization and encoding checks reject text or structured content that would decode or assemble differently downstream)"
                             ]
                         },
                         {
@@ -5281,7 +5284,9 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0043 Craft Adversarial Data",
-                                "AML.T0015 Evade AI Model"
+                                "AML.T0015 Evade AI Model",
+                                "AML.T0119 Exploit Automated Artifact Processing Pipeline (safe decoding and canonical re-encoding of uploaded media before automated processing)",
+                                "AML.T0123 Obfuscated Files or Information (canonical re-encoding strips payloads hidden inside media containers)"
                             ]
                         },
                         {
@@ -6057,7 +6062,8 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                                 "AML.T0025 Exfiltration via Cyber Means (the conditional bounded-preview method limits the parser-result response channel)",
                                 "AML.T0037 Data from Local System (hostile dataset features can cause a parser to disclose local files)",
                                 "AML.T0112 Machine Compromise",
-                                "AML.T0112.001 Machine Compromise: AI Artifacts"
+                                "AML.T0112.001 Machine Compromise: AI Artifacts",
+                                "AML.T0119 Exploit Automated Artifact Processing Pipeline"
                             ]
                         },
                         {
@@ -6193,7 +6199,10 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         "AML.T0109 AI Supply Chain Rug Pull",
                         "AML.T0112.001 Machine Compromise: AI Artifacts",
                         "AML.T0115 Publish Poisoned AI Artifacts",
-                        "AML.T0115.001 Publish Poisoned AI Artifacts: Models"
+                        "AML.T0115.001 Publish Poisoned AI Artifacts: Models",
+                        "AML.T0119 Exploit Automated Artifact Processing Pipeline",
+                        "AML.T0120 AI Artifact Repository",
+                        "AML.T0122 Exploitation of Remote Services"
                     ]
                 },
                 {
@@ -6516,7 +6525,8 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                                 "AML.T0018.002 Manipulate AI Model: Embed Malware",
                                 "AML.T0011.000 User Execution: Unsafe AI Artifacts",
                                 "AML.T0109 AI Supply Chain Rug Pull",
-                                "AML.T0112.001 Machine Compromise: AI Artifacts"
+                                "AML.T0112.001 Machine Compromise: AI Artifacts",
+                                "AML.T0120 AI Artifact Repository (production consumes only attested bytes from an internal mirror and never polls public repositories)"
                             ]
                         },
                         {
@@ -7751,7 +7761,8 @@ if __name__ == "__main__":
                                 "AML.T0010 AI Supply Chain Compromise",
                                 "AML.T0010.003 AI Supply Chain Compromise: Model",
                                 "AML.T0011.000 User Execution: Unsafe AI Artifacts",
-                                "AML.T0112.001 Machine Compromise: AI Artifacts"
+                                "AML.T0112.001 Machine Compromise: AI Artifacts",
+                                "AML.T0119 Exploit Automated Artifact Processing Pipeline (unsafe-serialization scanning blocks artifacts that would execute during automated import or conversion)"
                             ]
                         },
                         {
@@ -7872,7 +7883,8 @@ if __name__ == "__main__":
                             "items": [
                                 "AML.T0010 AI Supply Chain Compromise",
                                 "AML.T0010.001 AI Supply Chain Compromise: AI Software",
-                                "AML.T0049 Exploit Public-Facing Application"
+                                "AML.T0049 Exploit Public-Facing Application",
+                                "AML.T0122 Exploitation of Remote Services (patching reachable AI services removes the weaknesses lateral exploitation depends on)"
                             ]
                         },
                         {
@@ -8095,7 +8107,12 @@ if __name__ == "__main__":
                         "AML.T0074 Masquerading",
                         "AML.T0080 AI Agent Context Poisoning",
                         "AML.T0080.001 AI Agent Context Poisoning: Thread",
-                        "AML.T0091 Use Alternate Authentication Material"
+                        "AML.T0091 Use Alternate Authentication Material",
+                        "AML.T0118 Autonomous AI Agent Communication",
+                        "AML.T0118.001 Autonomous AI Agent Communication: Direct Agent Communication",
+                        "AML.T0122 Exploitation of Remote Services",
+                        "AML.T0124 Autonomous Attack Orchestration",
+                        "AML.T0125 Create Account"
                     ]
                 },
                 {
@@ -8224,7 +8241,8 @@ if __name__ == "__main__":
                                 "AML.T0037 Data from Local System",
                                 "AML.T0055 Unsecured Credentials",
                                 "AML.T0044 Full AI Model Access (privileged access management prevents unauthorized full model access)",
-                                "AML.T0021 Establish Accounts (user access controls prevent unauthorized account creation)"
+                                "AML.T0021 Establish Accounts (user access controls prevent unauthorized account creation)",
+                                "AML.T0125 Create Account (account-creation rights are confined to governed privileged roles)"
                             ]
                         },
                         {
@@ -8359,7 +8377,8 @@ if __name__ == "__main__":
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0040 AI Model Inference API Access"
+                                "AML.T0040 AI Model Inference API Access",
+                                "AML.T0122 Exploitation of Remote Services (unauthenticated workloads cannot reach AI API or data-store handlers)"
                             ]
                         },
                         {
@@ -8495,7 +8514,10 @@ if __name__ == "__main__":
                             "items": [
                                 "AML.T0073 Impersonation",
                                 "AML.T0080 AI Agent Context Poisoning",
-                                "AML.T0080.001 AI Agent Context Poisoning: Thread"
+                                "AML.T0080.001 AI Agent Context Poisoning: Thread",
+                                "AML.T0118 Autonomous AI Agent Communication",
+                                "AML.T0118.001 Autonomous AI Agent Communication: Direct Agent Communication (receivers reject unauthenticated or unauthorized peer tasking)",
+                                "AML.T0124 Autonomous Attack Orchestration (orchestrator assignments are accepted only from authenticated, authorized peers)"
                             ]
                         },
                         {
@@ -9594,7 +9616,8 @@ if __name__ == "__main__":
                         "AML.T0067 LLM Trusted Output Components Manipulation",
                         "AML.T0077 LLM Response Rendering",
                         "AML.T0082 RAG Credential Harvesting",
-                        "AML.T0113 Steal Web Session Cookie"
+                        "AML.T0113 Steal Web Session Cookie",
+                        "AML.T0123 Obfuscated Files or Information"
                     ]
                 },
                 {
@@ -10133,7 +10156,8 @@ if __name__ == "__main__":
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0050 Command and Scripting Interpreter"
+                                "AML.T0050 Command and Scripting Interpreter",
+                                "AML.T0123 Obfuscated Files or Information (content-derived type identification and polyglot rejection defeat disguised binary artifacts)"
                             ]
                         },
                         {
@@ -14498,9 +14522,12 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "AML.T0053 AI Agent Tool Invocation",
                         "AML.T0054 LLM Jailbreak",
                         "AML.T0067 LLM Trusted Output Components Manipulation",
+                        "AML.T0072 Cyber Communication Channel",
+                        "AML.T0075 Enterprise Resource Discovery",
                         "AML.T0080 AI Agent Context Poisoning",
                         "AML.T0080.000 AI Agent Context Poisoning: Memory",
                         "AML.T0086 Exfiltration via AI Agent Tool Invocation",
+                        "AML.T0089 Enterprise Environment Discovery",
                         "AML.T0092 Manipulate User LLM Chat History",
                         "AML.T0098 AI Agent Tool Credential Harvesting",
                         "AML.T0099 AI Agent Tool Data Poisoning",
@@ -14509,7 +14536,13 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "AML.T0102 Generate Malicious Commands",
                         "AML.T0108 AI Agent",
                         "AML.T0110 AI Agent Tool Poisoning",
-                        "AML.T0110.002 AI Agent Tool Poisoning: Runtime Response"
+                        "AML.T0110.002 AI Agent Tool Poisoning: Runtime Response",
+                        "AML.T0117 Autonomous Attack-Path Adaptation",
+                        "AML.T0118 Autonomous AI Agent Communication",
+                        "AML.T0118.000 Autonomous AI Agent Communication: Communication via Shared Artifacts",
+                        "AML.T0118.001 Autonomous AI Agent Communication: Direct Agent Communication",
+                        "AML.T0121 AI Agent Environment Reconstruction",
+                        "AML.T0124 Autonomous Attack Orchestration"
                     ]
                 },
                 {
@@ -14653,7 +14686,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0050 Command and Scripting Interpreter",
-                                "AML.T0053 AI Agent Tool Invocation (interruptible loops allow inspection before tool invocation)"
+                                "AML.T0053 AI Agent Tool Invocation (interruptible loops allow inspection before tool invocation)",
+                                "AML.T0117 Autonomous Attack-Path Adaptation (bounded state transitions let the orchestrator stop a replanned path before a high-risk side effect)"
                             ]
                         },
                         {
@@ -14774,7 +14808,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                                 "AML.T0098 AI Agent Tool Credential Harvesting (least privilege limits credential exposure via tools)",
                                 "AML.T0086 Exfiltration via AI Agent Tool Invocation (least-privilege tools limit data exfiltration surface)",
                                 "AML.T0101 Data Destruction via AI Agent Tool Invocation (granular tools prevent destructive operations)",
-                                "AML.T0108 AI Agent"
+                                "AML.T0108 AI Agent",
+                                "AML.T0072 Cyber Communication Channel (denying unrestricted HTTP and shell tools removes the agent's ability to open arbitrary outbound channels)",
+                                "AML.T0089 Enterprise Environment Discovery (without generic shell or broad filesystem tools an injected agent cannot enumerate host processes, configuration, or users)",
+                                "AML.T0075 Enterprise Resource Discovery (no generic shell, SQL, or broad filesystem tools to enumerate accounts, files, or services)"
                             ]
                         },
                         {
@@ -14891,7 +14928,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                                 "AML.T0054 LLM Jailbreak",
                                 "AML.T0100 AI Agent Clickbait (plan-execute separation prevents automatic navigation to malicious content)",
                                 "AML.T0102 Generate Malicious Commands (plan-execute separation prevents direct execution of generated commands)",
-                                "AML.T0051.002 LLM Prompt Injection: Triggered"
+                                "AML.T0051.002 LLM Prompt Injection: Triggered",
+                                "AML.T0117 Autonomous Attack-Path Adaptation (each replanned step is validated against safety policy before dispatch)"
                             ]
                         },
                         {
@@ -15015,7 +15053,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             "items": [
                                 "AML.T0080 AI Agent Context Poisoning",
                                 "AML.T0080.000 AI Agent Context Poisoning: Memory",
-                                "AML.T0092 Manipulate User LLM Chat History (ephemeral state prevents persistent chat history manipulation across sessions)"
+                                "AML.T0092 Manipulate User LLM Chat History (ephemeral state prevents persistent chat history manipulation across sessions)",
+                                "AML.T0118 Autonomous AI Agent Communication",
+                                "AML.T0118.000 Autonomous AI Agent Communication: Communication via Shared Artifacts (request-local state leaves no shared persistent artifacts for agents to coordinate through)",
+                                "AML.T0121 AI Agent Environment Reconstruction (state is rebuilt only from the signed mission source, not from recovered working artifacts)"
                             ]
                         },
                         {
@@ -15229,7 +15270,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             "items": [
                                 "AML.T0053 AI Agent Tool Invocation (capability attenuation limits what a delegated agent may invoke)",
                                 "AML.T0029 Denial of AI Service (hop and loop bounds limit recursive delegation exhaustion)",
-                                "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption"
+                                "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption",
+                                "AML.T0117 Autonomous Attack-Path Adaptation (authority can only attenuate across delegation, blocking self-expanding enabling objectives)",
+                                "AML.T0118 Autonomous AI Agent Communication",
+                                "AML.T0118.001 Autonomous AI Agent Communication: Direct Agent Communication (delegation must be bound to the root principal and attenuated, so peer tasking cannot widen scope)",
+                                "AML.T0124 Autonomous Attack Orchestration (bounded delegation depth and attenuated capabilities prevent an orchestrator from fanning out unbounded sub-agent work)"
                             ]
                         },
                         {
@@ -15463,11 +15508,14 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "AML.T0052.001 Phishing: Deepfake-Assisted Phishing",
                         "AML.T0053 AI Agent Tool Invocation",
                         "AML.T0054 LLM Jailbreak",
+                        "AML.T0072 Cyber Communication Channel",
+                        "AML.T0075 Enterprise Resource Discovery",
                         "AML.T0081 Modify AI Agent Configuration",
                         "AML.T0084 Discover AI Agent Configuration",
                         "AML.T0085 Data from AI Services",
                         "AML.T0085.001 Data from AI Services: AI Agent Tools",
                         "AML.T0086 Exfiltration via AI Agent Tool Invocation",
+                        "AML.T0089 Enterprise Environment Discovery",
                         "AML.T0098 AI Agent Tool Credential Harvesting",
                         "AML.T0101 Data Destruction via AI Agent Tool Invocation",
                         "AML.T0108 AI Agent",
@@ -15476,7 +15524,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "AML.T0110.002 AI Agent Tool Poisoning: Runtime Response",
                         "AML.T0114 AI Service Web Interface",
                         "AML.T0115 Publish Poisoned AI Artifacts",
-                        "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools"
+                        "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools",
+                        "AML.T0117 Autonomous Attack-Path Adaptation",
+                        "AML.T0126 Automated Collection",
+                        "AML.T0127 Data Staged"
                     ]
                 },
                 {
@@ -16054,7 +16105,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                                 "AML.T0085 Data from AI Services (dynamic scoping restricts tools available for data collection)",
                                 "AML.T0085.001 Data from AI Services: AI Agent Tools (per-request scoping limits which agent tools can retrieve data)",
                                 "AML.T0108 AI Agent",
-                                "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption"
+                                "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption",
+                                "AML.T0117 Autonomous Attack-Path Adaptation (capabilities are bound to the authenticated initial intent, so replanning cannot acquire tools outside the grant)"
                             ]
                         },
                         {
@@ -16189,7 +16241,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                                 "AML.T0053 AI Agent Tool Invocation (sink enforcement controls what tools can receive sensitive data)",
                                 "AML.T0085 Data from AI Services (sink enforcement prevents exfiltration of data collected via AI services)",
                                 "AML.T0085.001 Data from AI Services: AI Agent Tools (prevents agent tools from sending collected data to unauthorized sinks)",
-                                "AML.T0114 AI Service Web Interface (sink enforcement blocks sensitive data sent through AI-service prompts or URLs)"
+                                "AML.T0114 AI Service Web Interface (sink enforcement blocks sensitive data sent through AI-service prompts or URLs)",
+                                "AML.T0127 Data Staged (sensitivity-tagged values cannot be written into unapproved storage sinks)"
                             ]
                         },
                         {
@@ -16487,7 +16540,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                                 "AML.T0081 Modify AI Agent Configuration (deny-write-by-default on protected identity/state resources prevents skill-driven config tampering)",
                                 "AML.T0084 Discover AI Agent Configuration (file-read restrictions prevent skills from reading sensitive agent configuration outside declared scope)",
                                 "AML.T0098 AI Agent Tool Credential Harvesting (per-skill scoped credentials reduce value of shared-secret harvesting)",
-                                "AML.T0108 AI Agent"
+                                "AML.T0108 AI Agent",
+                                "AML.T0072 Cyber Communication Channel (runtime enforcement of declared network destinations denies undeclared skill callbacks)"
                             ]
                         },
                         {
@@ -16760,7 +16814,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                                 "AML.T0053 AI Agent Tool Invocation",
                                 "AML.T0086 Exfiltration via AI Agent Tool Invocation (rooted resolution prevents reads of out-of-scope local objects but does not police the outbound channel)",
                                 "AML.T0098 AI Agent Tool Credential Harvesting (credential files outside authorized roots remain unreachable; ambient-credential minimization remains separate)",
-                                "AML.T0101 Data Destruction via AI Agent Tool Invocation (operation-specific rooted mutation prevents destruction outside authorized roots)"
+                                "AML.T0101 Data Destruction via AI Agent Tool Invocation (operation-specific rooted mutation prevents destruction outside authorized roots)",
+                                "AML.T0089 Enterprise Environment Discovery (brokered path resolution denies model-directed reads of host configuration and process metadata paths)",
+                                "AML.T0075 Enterprise Resource Discovery (brokered path resolution denies model-directed directory enumeration outside approved roots)",
+                                "AML.T0126 Automated Collection (brokered reads confine model-directed bulk file collection to approved roots)",
+                                "AML.T0127 Data Staged (archive and working-directory writes are confined to approved roots, denying staging locations)"
                             ]
                         },
                         {
@@ -16882,12 +16940,14 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "AML.T0011.003 User Execution: Malicious Link",
                         "AML.T0051 LLM Prompt Injection",
                         "AML.T0051.001 LLM Prompt Injection: Indirect",
+                        "AML.T0072 Cyber Communication Channel",
                         "AML.T0078 Drive-by Compromise",
                         "AML.T0086 Exfiltration via AI Agent Tool Invocation",
                         "AML.T0100 AI Agent Clickbait",
                         "AML.T0108 AI Agent",
                         "AML.T0113 Steal Web Session Cookie",
-                        "AML.T0114 AI Service Web Interface"
+                        "AML.T0114 AI Service Web Interface",
+                        "AML.T0122 Exploitation of Remote Services"
                     ]
                 },
                 {
@@ -16993,7 +17053,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             "items": [
                                 "AML.T0011.003 User Execution: Malicious Link",
                                 "AML.T0086 Exfiltration via AI Agent Tool Invocation (exact-URL verification and quiet-fetch gating block tool-driven URL exfiltration)",
-                                "AML.T0114 AI Service Web Interface (exact-URL verification blocks attacker-controlled AI-service relay fetches)"
+                                "AML.T0114 AI Service Web Interface (exact-URL verification blocks attacker-controlled AI-service relay fetches)",
+                                "AML.T0072 Cyber Communication Channel (scheme and domain allowlists keep agent fetches from reaching attacker-controlled relay endpoints)",
+                                "AML.T0122 Exploitation of Remote Services (private-range and redirect blocking prevents fetch tools from reaching internal services)"
                             ]
                         },
                         {
@@ -17350,7 +17412,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "AML.T0085 Data from AI Services",
                         "AML.T0085.001 Data from AI Services: AI Agent Tools",
                         "AML.T0086 Exfiltration via AI Agent Tool Invocation",
-                        "AML.T0099 AI Agent Tool Data Poisoning"
+                        "AML.T0099 AI Agent Tool Data Poisoning",
+                        "AML.T0126 Automated Collection"
                     ]
                 },
                 {
@@ -17711,7 +17774,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             "items": [
                                 "AML.T0085 Data from AI Services (retrieval authorization limits data returned by AI services)",
                                 "AML.T0085.001 Data from AI Services: AI Agent Tools (authorized retrieval constrains tool-mediated context access)",
-                                "AML.T0086 Exfiltration via AI Agent Tool Invocation (unauthorized chunks are removed before context assembly)"
+                                "AML.T0086 Exfiltration via AI Agent Tool Invocation (unauthorized chunks are removed before context assembly)",
+                                "AML.T0126 Automated Collection (chunk-level entitlements deny automated retrieval of unauthorized documents)"
                             ]
                         },
                         {
@@ -17928,8 +17992,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "AML.T0081 Modify AI Agent Configuration",
                         "AML.T0083 Credentials from AI Agent Configuration",
                         "AML.T0084 Discover AI Agent Configuration",
+                        "AML.T0089 Enterprise Environment Discovery",
                         "AML.T0095.000 Search Open Websites/Domains: Code Repositories",
-                        "AML.T0099 AI Agent Tool Data Poisoning"
+                        "AML.T0099 AI Agent Tool Data Poisoning",
+                        "AML.T0121 AI Agent Environment Reconstruction"
                     ]
                 },
                 {
@@ -18184,7 +18250,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                                 "AML.T0011 User Execution",
                                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                                 "AML.T0081 Modify AI Agent Configuration",
-                                "AML.T0010 AI Supply Chain Compromise (signed configs detect supply chain-compromised config files)"
+                                "AML.T0010 AI Supply Chain Compromise (signed configs detect supply chain-compromised config files)",
+                                "AML.T0121 AI Agent Environment Reconstruction (unsigned reconstructed configuration and tool manifests fail integrity verification at startup)"
                             ]
                         },
                         {
@@ -18504,7 +18571,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                             "items": [
                                 "AML.T0081 Modify AI Agent Configuration",
                                 "AML.T0083 Credentials from AI Agent Configuration",
-                                "AML.T0084 Discover AI Agent Configuration"
+                                "AML.T0084 Discover AI Agent Configuration",
+                                "AML.T0089 Enterprise Environment Discovery (agents cannot read their own monitoring rules, policy bundles, or sandbox settings)"
                             ]
                         },
                         {
@@ -19547,12 +19615,13 @@ if __name__ == "__main__":
                         "AML.T0011.001 User Execution: Malicious Package",
                         "AML.T0025 Exfiltration via Cyber Means",
                         "AML.T0060 Publish Hallucinated Entities",
-                        "AML.T0072 Reverse Shell",
+                        "AML.T0072 Cyber Communication Channel",
                         "AML.T0074 Masquerading",
                         "AML.T0109 AI Supply Chain Rug Pull",
                         "AML.T0111 AI Supply Chain Reputation Inflation",
                         "AML.T0115 Publish Poisoned AI Artifacts",
-                        "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools"
+                        "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools",
+                        "AML.T0119 Exploit Automated Artifact Processing Pipeline"
                     ]
                 },
                 {
@@ -19672,7 +19741,8 @@ if __name__ == "__main__":
                             "items": [
                                 "AML.T0011 User Execution",
                                 "AML.T0011.001 User Execution: Malicious Package",
-                                "AML.T0072 Reverse Shell",
+                                "AML.T0072 Cyber Communication Channel (no-network ephemeral install containers deny install-time callback channels)",
+                                "AML.T0119 Exploit Automated Artifact Processing Pipeline (dependency artifacts are installed only in a no-network ephemeral worker with install scripts and source builds denied)",
                                 "AML.T0025 Exfiltration via Cyber Means",
                                 "AML.T0010 AI Supply Chain Compromise",
                                 "AML.T0010.001 AI Supply Chain Compromise: AI Software"
@@ -20584,7 +20654,7 @@ if __name__ == "__main__":
                     "framework": "MITRE ATLAS",
                     "items": [
                         "AML.T0050 Command and Scripting Interpreter",
-                        "AML.T0072 Reverse Shell",
+                        "AML.T0072 Cyber Communication Channel",
                         "AML.T0102 Generate Malicious Commands",
                         "AML.T0105 Escape to Host",
                         "AML.T0110 AI Agent Tool Poisoning",
@@ -20704,7 +20774,7 @@ if __name__ == "__main__":
                                 "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools",
                                 "AML.T0110.001 AI Agent Tool Poisoning: Implementation",
                                 "AML.T0050 Command and Scripting Interpreter",
-                                "AML.T0072 Reverse Shell (static policy blocks recognized reverse-shell constructs before execution)",
+                                "AML.T0072 Cyber Communication Channel (static policy blocks recognized reverse-shell and callback constructs in generated code before execution)",
                                 "AML.T0102 Generate Malicious Commands (analyzes generated commands and code before use)",
                                 "AML.T0105 Escape to Host (blocks recognized host-escape primitives before execution)"
                             ]
@@ -20828,7 +20898,7 @@ if __name__ == "__main__":
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0050 Command and Scripting Interpreter",
-                                "AML.T0072 Reverse Shell (restricted interpreters prevent reverse shell establishment)",
+                                "AML.T0072 Cyber Communication Channel (restricted interpreters deny network access, so evaluated code cannot establish callback channels)",
                                 "AML.T0105 Escape to Host (restricted interpreters prevent filesystem/network access needed for host escape)"
                             ]
                         },
@@ -20925,7 +20995,8 @@ if __name__ == "__main__":
                         "AML.T0051 LLM Prompt Injection",
                         "AML.T0054 LLM Jailbreak",
                         "AML.T0065 LLM Prompt Crafting",
-                        "AML.T0068 LLM Prompt Obfuscation"
+                        "AML.T0068 LLM Prompt Obfuscation",
+                        "AML.T0123 Obfuscated Files or Information"
                     ]
                 },
                 {
@@ -21173,7 +21244,8 @@ if __name__ == "__main__":
                                 "AML.T0065 LLM Prompt Crafting",
                                 "AML.T0051 LLM Prompt Injection",
                                 "AML.T0054 LLM Jailbreak",
-                                "AML.T0015 Evade AI Model"
+                                "AML.T0015 Evade AI Model",
+                                "AML.T0123 Obfuscated Files or Information (fuzzed obfuscation and format-variant corpora harden the filter against disguised payloads)"
                             ]
                         },
                         {
@@ -21306,7 +21378,8 @@ if __name__ == "__main__":
                                 "AML.T0054 LLM Jailbreak",
                                 "AML.T0068 LLM Prompt Obfuscation",
                                 "AML.T0065 LLM Prompt Crafting",
-                                "AML.T0015 Evade AI Model"
+                                "AML.T0015 Evade AI Model",
+                                "AML.T0123 Obfuscated Files or Information (per-category coverage exposes filter weakness against obfuscation and encoding classes)"
                             ]
                         },
                         {
@@ -23138,7 +23211,7 @@ if __name__ == "__main__":
                         "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                         "AML.T0050 Command and Scripting Interpreter",
                         "AML.T0060 Publish Hallucinated Entities",
-                        "AML.T0072 Reverse Shell",
+                        "AML.T0072 Cyber Communication Channel",
                         "AML.T0074 Masquerading",
                         "AML.T0109 AI Supply Chain Rug Pull",
                         "AML.T0110 AI Agent Tool Poisoning",
@@ -23146,7 +23219,8 @@ if __name__ == "__main__":
                         "AML.T0110.001 AI Agent Tool Poisoning: Implementation",
                         "AML.T0111 AI Supply Chain Reputation Inflation",
                         "AML.T0115 Publish Poisoned AI Artifacts",
-                        "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools"
+                        "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools",
+                        "AML.T0119 Exploit Automated Artifact Processing Pipeline"
                     ]
                 },
                 {
@@ -23510,7 +23584,7 @@ if __name__ == "__main__":
                                 "AML.T0011.001 User Execution: Malicious Package (behavioral sandbox detects malicious package behavior before installation)",
                                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool (sandbox detects poisoned tool behavior in skill execution)",
                                 "AML.T0110 AI Agent Tool Poisoning (behavioral testing detects compromised tool behavior before enterprise adoption)",
-                                "AML.T0072 Reverse Shell (network monitoring in sandbox detects reverse-shell establishment attempts)",
+                                "AML.T0072 Cyber Communication Channel (admission sandbox records undeclared DNS and outbound connection attempts before a skill is installed)",
                                 "AML.T0050 Command and Scripting Interpreter (syscall tracing detects unexpected shell invocations)"
                             ]
                         },
@@ -23620,7 +23694,8 @@ if __name__ == "__main__":
                                 "AML.T0115 Publish Poisoned AI Artifacts",
                                 "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
                                 "AML.T0011.001 User Execution: Malicious Package (safe loader path prevents malicious package content from abusing the admission process itself)",
-                                "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools (skill parsing and loader hardening reduce poisoned artifact preparation risk)"
+                                "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools (skill parsing and loader hardening reduce poisoned artifact preparation risk)",
+                                "AML.T0119 Exploit Automated Artifact Processing Pipeline (hardened loaders keep the skill admission pipeline from being exploited by the artifact it parses)"
                             ]
                         },
                         {
@@ -26659,6 +26734,7 @@ if __name__ == "__main__":
                         "AML.T0049 Exploit Public-Facing Application",
                         "AML.T0051 LLM Prompt Injection",
                         "AML.T0053 AI Agent Tool Invocation",
+                        "AML.T0072 Cyber Communication Channel",
                         "AML.T0074 Masquerading",
                         "AML.T0086 Exfiltration via AI Agent Tool Invocation",
                         "AML.T0098 AI Agent Tool Credential Harvesting",
@@ -26668,7 +26744,8 @@ if __name__ == "__main__":
                         "AML.T0110.000 AI Agent Tool Poisoning: Definition and Instructions",
                         "AML.T0110.002 AI Agent Tool Poisoning: Runtime Response",
                         "AML.T0115 Publish Poisoned AI Artifacts",
-                        "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools"
+                        "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools",
+                        "AML.T0122 Exploitation of Remote Services"
                     ]
                 },
                 {
@@ -26836,7 +26913,9 @@ if __name__ == "__main__":
                             "items": [
                                 "AML.T0049 Exploit Public-Facing Application",
                                 "AML.T0105 Escape to Host",
-                                "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption"
+                                "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption",
+                                "AML.T0072 Cyber Communication Channel (default-deny server egress denies callback channels from a compromised MCP server)",
+                                "AML.T0122 Exploitation of Remote Services (local binding, Origin validation, and mutual TLS shrink the reachable MCP server surface)"
                             ]
                         },
                         {
@@ -27135,7 +27214,8 @@ if __name__ == "__main__":
                                 "AML.T0053 AI Agent Tool Invocation",
                                 "AML.T0086 Exfiltration via AI Agent Tool Invocation",
                                 "AML.T0101 Data Destruction via AI Agent Tool Invocation",
-                                "AML.T0105 Escape to Host"
+                                "AML.T0105 Escape to Host",
+                                "AML.T0122 Exploitation of Remote Services (SSRF and injection hardening keeps an MCP server from being used to reach internal services)"
                             ]
                         },
                         {
@@ -28625,7 +28705,8 @@ export async function runWithDisableEnforcement(input) {
                         "AML.T0054 LLM Jailbreak",
                         "AML.T0068 LLM Prompt Obfuscation",
                         "AML.T0015 Evade AI Model",
-                        "AML.T0043 Craft Adversarial Data"
+                        "AML.T0043 Craft Adversarial Data",
+                        "AML.T0123 Obfuscated Files or Information (measures filter collapse under mixed-language and locale-shifted evasion)"
                     ]
                 },
                 {
@@ -29146,7 +29227,9 @@ export async function runWithDisableEnforcement(input) {
                         "AML.T0018.000 Manipulate AI Model: Poison AI Model",
                         "AML.T0029 Denial of AI Service",
                         "AML.T0040 AI Model Inference API Access",
-                        "AML.T0049 Exploit Public-Facing Application"
+                        "AML.T0049 Exploit Public-Facing Application",
+                        "AML.T0120 AI Artifact Repository",
+                        "AML.T0122 Exploitation of Remote Services"
                     ]
                 },
                 {
@@ -29266,7 +29349,8 @@ export async function runWithDisableEnforcement(input) {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0040 AI Model Inference API Access",
-                                "AML.T0049 Exploit Public-Facing Application"
+                                "AML.T0049 Exploit Public-Facing Application",
+                                "AML.T0122 Exploitation of Remote Services (unapproved inference-runtime listeners and control transports are disabled)"
                             ]
                         },
                         {
@@ -29371,7 +29455,9 @@ export async function runWithDisableEnforcement(input) {
                             "items": [
                                 "AML.T0018 Manipulate AI Model",
                                 "AML.T0018.000 Manipulate AI Model: Poison AI Model",
-                                "AML.T0029 Denial of AI Service"
+                                "AML.T0029 Denial of AI Service",
+                                "AML.T0120 AI Artifact Repository (repository pull and push operations on the serving runtime require explicit per-operation authorization)",
+                                "AML.T0122 Exploitation of Remote Services (privileged runtime operations require explicit authorization even from a reachable client)"
                             ]
                         },
                         {

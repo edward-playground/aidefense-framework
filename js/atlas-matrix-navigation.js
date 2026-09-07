@@ -9,6 +9,8 @@ const DIRECTION_PARTS = Object.freeze({
     'down-right': { vertical: 'down', horizontal: 'right' }
 });
 
+const ATLAS_TECHNIQUE_ID_PATTERN = /^AML\.T\d{4}(?:\.\d{3})?$/;
+
 export const ATLAS_SEARCH_DIRECTIONS = Object.freeze({
     'up-left': { arrow: '\u2196', label: 'upper left' },
     up: { arrow: '\u2191', label: 'above' },
@@ -27,6 +29,14 @@ function clamp(value, minimum, maximum) {
 export function normalizeAtlasSearchId(searchTerm) {
     const match = String(searchTerm || '').trim().match(/^(?:(?:aml\.)?t)?(\d{4}(?:\.\d{3})?)$/i);
     return match ? 'AML.T' + match[1] : null;
+}
+
+export function buildAtlasTechniqueUrl(atlasId) {
+    const normalizedId = String(atlasId || '').trim().toUpperCase();
+    if (!ATLAS_TECHNIQUE_ID_PATTERN.test(normalizedId)) {
+        throw new TypeError('Invalid MITRE ATLAS technique ID: ' + atlasId);
+    }
+    return 'https://atlas.mitre.org/techniques/' + normalizedId;
 }
 
 /**

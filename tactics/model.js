@@ -23,7 +23,8 @@ export const modelTactic = {
                         "AML.T0011 User Execution",
                         "AML.T0011.001 User Execution: Malicious Package",
                         "AML.T0040 AI Model Inference API Access",
-                        "AML.T0049 Exploit Public-Facing Application"
+                        "AML.T0049 Exploit Public-Facing Application",
+                        "AML.T0116 Autonomous Reconnaissance"
                     ]
                 },
                 {
@@ -1422,7 +1423,8 @@ export const modelTactic = {
                                 "AML.T0006 Active Scanning (outside-in discovery finds exposed AI services before adversaries operationalize the same scan)",
                                 "AML.T0007 Discover AI Artifacts (reconciliation identifies publicly discoverable AI artifacts and endpoints)",
                                 "AML.T0040 AI Model Inference API Access (validation finds unintended or unauthenticated inference API exposure)",
-                                "AML.T0049 Exploit Public-Facing Application (exposure validation identifies public AI applications requiring remediation)"
+                                "AML.T0049 Exploit Public-Facing Application (exposure validation identifies public AI applications requiring remediation)",
+                                "AML.T0116 Autonomous Reconnaissance (outside-in discovery closes the unknown exposed surface an autonomous agent would enumerate)"
                             ]
                         },
                         {
@@ -11163,7 +11165,8 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                         "AML.T0081 Modify AI Agent Configuration",
                         "AML.T0101 Data Destruction via AI Agent Tool Invocation",
                         "AML.T0103 Deploy AI Agent",
-                        "AML.T0108 AI Agent"
+                        "AML.T0108 AI Agent",
+                        "AML.T0125 Create Account"
                     ]
                 },
                 {
@@ -11492,7 +11495,8 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0073 Impersonation"
+                                "AML.T0073 Impersonation",
+                                "AML.T0125 Create Account (workload identities require a registered owner and sponsor before issuance)"
                             ]
                         },
                         {

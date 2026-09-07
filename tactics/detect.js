@@ -51,7 +51,8 @@ export const detectTactic = {
                         "AML.T0080.000 AI Agent Context Poisoning: Memory",
                         "AML.T0080.001 AI Agent Context Poisoning: Thread",
                         "AML.T0088 Generate Deepfakes",
-                        "AML.T0094 Delay Execution of LLM Instructions"
+                        "AML.T0094 Delay Execution of LLM Instructions",
+                        "AML.T0123 Obfuscated Files or Information"
                     ]
                 },
                 {
@@ -235,7 +236,8 @@ export const detectTactic = {
                                 "AML.T0053 AI Agent Tool Invocation (intent analysis identifies prompts seeking unauthorized tool use or privilege escalation)",
                                 "AML.T0068 LLM Prompt Obfuscation",
                                 "AML.T0069.000 Discover LLM System Information: Special Character Sets (obfuscation analysis detects character encoding and distribution patterns used for probing)",
-                                "AML.T0015 Evade AI Model (per-prompt obfuscation analysis detects adversarial evasion inputs)"
+                                "AML.T0015 Evade AI Model (per-prompt obfuscation analysis detects adversarial evasion inputs)",
+                                "AML.T0123 Obfuscated Files or Information (layered-encoding, homoglyph, and high-entropy analysis targets payloads obfuscated to evade filters)"
                             ]
                         },
                         {
@@ -1778,7 +1780,12 @@ export const detectTactic = {
                       "AML.T0094 Delay Execution of LLM Instructions",
                       "AML.T0098 AI Agent Tool Credential Harvesting",
                       "AML.T0102 Generate Malicious Commands",
-                      "AML.T0108 AI Agent"
+                      "AML.T0108 AI Agent",
+                      "AML.T0117 Autonomous Attack-Path Adaptation",
+                      "AML.T0118 Autonomous AI Agent Communication",
+                      "AML.T0118.000 Autonomous AI Agent Communication: Communication via Shared Artifacts",
+                      "AML.T0123 Obfuscated Files or Information",
+                      "AML.T0126 Automated Collection"
                   ]
               },
               {
@@ -2410,7 +2417,9 @@ export const detectTactic = {
                           "AML.T0051.002 LLM Prompt Injection: Triggered",
                           "AML.T0086 Exfiltration via AI Agent Tool Invocation (unusual tool sequences signal exfiltration attempts)",
                           "AML.T0051.000 LLM Prompt Injection: Direct",
-                          "AML.T0108 AI Agent"
+                          "AML.T0108 AI Agent",
+                          "AML.T0117 Autonomous Attack-Path Adaptation (off-graph tool sequences and high-risk pivots reveal adaptive attack-path replanning)",
+                          "AML.T0126 Automated Collection (repetitive retrieval loops outside the approved workflow graph)"
                       ]
                   },
                   {
@@ -2692,7 +2701,9 @@ export const detectTactic = {
                           "AML.T0051 LLM Prompt Injection (findings identify injection payloads persisted to memory)",
                           "AML.T0051.001 LLM Prompt Injection: Indirect (findings identify indirect injections written to memory)",
                           "AML.T0061 LLM Prompt Self-Replication (repeated write fingerprints reveal self-replicating prompts)",
-                          "AML.T0092 Manipulate User LLM Chat History (memory-write telemetry covers chat-history manipulation)"
+                          "AML.T0092 Manipulate User LLM Chat History (memory-write telemetry covers chat-history manipulation)",
+                          "AML.T0118 Autonomous AI Agent Communication",
+                          "AML.T0118.000 Autonomous AI Agent Communication: Communication via Shared Artifacts (cross-namespace and repeated-fingerprint writes reveal shared memory used as a coordination channel)"
                       ]
                   },
                   {
@@ -3064,7 +3075,8 @@ clamp_min(
                       "items": [
                           "AML.T0048 External Harms",
                           "AML.T0067 LLM Trusted Output Components Manipulation",
-                          "AML.T0077 LLM Response Rendering"
+                          "AML.T0077 LLM Response Rendering",
+                          "AML.T0123 Obfuscated Files or Information (real media-type and container detection exposes disguised binary outputs)"
                       ]
                   },
                   {
@@ -3163,7 +3175,8 @@ clamp_min(
                       "AML.T0110.001 AI Agent Tool Poisoning: Implementation",
                       "AML.T0112.001 Machine Compromise: AI Artifacts",
                       "AML.T0115 Publish Poisoned AI Artifacts",
-                      "AML.T0115.001 Publish Poisoned AI Artifacts: Models"
+                      "AML.T0115.001 Publish Poisoned AI Artifacts: Models",
+                      "AML.T0120 AI Artifact Repository"
                   ]
               },
               {
@@ -3724,7 +3737,8 @@ clamp_min(
                           "AML.T0074 Masquerading",
                           "AML.T0115.001 Publish Poisoned AI Artifacts: Models (source deletion or redirect can expose namespace replacement)",
                           "AML.T0018.002 Manipulate AI Model: Embed Malware (namespace takeover can substitute a malware-bearing model)",
-                          "AML.T0060 Publish Hallucinated Entities (source validation exposes nonexistent or replaced model namespaces)"
+                          "AML.T0060 Publish Hallucinated Entities (source validation exposes nonexistent or replaced model namespaces)",
+                          "AML.T0120 AI Artifact Repository (unexpected production DNS or egress to public model hubs surfaces repository dead-drop polling)"
                       ]
                   },
                   {
@@ -4336,6 +4350,7 @@ clamp_min(
                         "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger",
                         "AML.T0053 AI Agent Tool Invocation",
                         "AML.T0057 LLM Data Leakage",
+                        "AML.T0072 Cyber Communication Channel",
                         "AML.T0073 Impersonation",
                         "AML.T0080 AI Agent Context Poisoning",
                         "AML.T0080.000 AI Agent Context Poisoning: Memory",
@@ -4347,7 +4362,9 @@ clamp_min(
                         "AML.T0096 AI Service API",
                         "AML.T0107 Exploitation for Defense Evasion",
                         "AML.T0108 AI Agent",
-                        "AML.T0114 AI Service Web Interface"
+                        "AML.T0114 AI Service Web Interface",
+                        "AML.T0125 Create Account",
+                        "AML.T0126 Automated Collection"
                     ]
                 },
                 {
@@ -5544,7 +5561,8 @@ export async function instrumentMcpRequest(input, handler) {
                             "items": [
                                 "AML.T0029 Denial of AI Service",
                                 "AML.T0034 Cost Harvesting",
-                                "AML.T0073 Impersonation (Sybil-style namespace abuse is a form of impersonation)"
+                                "AML.T0073 Impersonation (Sybil-style namespace abuse is a form of impersonation)",
+                                "AML.T0125 Create Account (abnormal registration and credential churn in agent registries)"
                             ]
                         },
                         {
@@ -5688,7 +5706,8 @@ export async function instrumentMcpRequest(input, handler) {
                                 "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption",
                                 "AML.T0029 Denial of AI Service",
                                 "AML.T0053 AI Agent Tool Invocation",
-                                "AML.T0040 AI Model Inference API Access"
+                                "AML.T0040 AI Model Inference API Access",
+                                "AML.T0126 Automated Collection (abnormal tool-invocation volume and request fan-out reveal scripted collection)"
                             ]
                         },
                         {
@@ -5986,7 +6005,8 @@ export async function instrumentMcpRequest(input, handler) {
                                 "AML.T0085.001 Data from AI Services: AI Agent Tools",
                                 "AML.T0086 Exfiltration via AI Agent Tool Invocation",
                                 "AML.T0025 Exfiltration via Cyber Means",
-                                "AML.T0114 AI Service Web Interface"
+                                "AML.T0114 AI Service Web Interface",
+                                "AML.T0072 Cyber Communication Channel (behavioral detection of AI-service traffic used as a command-and-control or relay channel)"
                             ]
                         },
                         {
@@ -6497,7 +6517,8 @@ export async function instrumentMcpRequest(input, handler) {
                         "AML.T0051 LLM Prompt Injection",
                         "AML.T0051.000 LLM Prompt Injection: Direct",
                         "AML.T0051.001 LLM Prompt Injection: Indirect",
-                        "AML.T0052.001 Phishing: Deepfake-Assisted Phishing"
+                        "AML.T0052.001 Phishing: Deepfake-Assisted Phishing",
+                        "AML.T0123 Obfuscated Files or Information"
                     ]
                 },
                 {
@@ -6633,7 +6654,8 @@ export async function instrumentMcpRequest(input, handler) {
                                 "AML.T0043 Craft Adversarial Data (multimodal adversarial examples)",
                                 "AML.T0043.000 Craft Adversarial Data: White-Box Optimization",
                                 "AML.T0043.003 Craft Adversarial Data: Manual Modification",
-                                "AML.T0052.001 Phishing: Deepfake-Assisted Phishing (cross-modal inconsistency detection catches spoofed media evidence)"
+                                "AML.T0052.001 Phishing: Deepfake-Assisted Phishing (cross-modal inconsistency detection catches spoofed media evidence)",
+                                "AML.T0123 Obfuscated Files or Information (detects hidden payloads embedded in multimodal artifacts)"
                             ]
                         },
                         {
@@ -8479,7 +8501,8 @@ def correlate(
                         "AML.T0051.001 LLM Prompt Injection: Indirect",
                         "AML.T0054 LLM Jailbreak",
                         "AML.T0080 AI Agent Context Poisoning (context poisoning can produce observable goal deviation)",
-                        "AML.T0108 AI Agent (goal deviation can reveal a C2-controlled agent)"
+                        "AML.T0108 AI Agent (goal deviation can reveal a C2-controlled agent)",
+                        "AML.T0117 Autonomous Attack-Path Adaptation (detects intermediate objectives diverging from the approved goal state)"
                     ]
                 },
                 {
@@ -8748,7 +8771,14 @@ def test_tampered_fact_is_error():
                         "AML.T0053 AI Agent Tool Invocation",
                         "AML.T0073 Impersonation",
                         "AML.T0074 Masquerading",
-                        "AML.T0086 Exfiltration via AI Agent Tool Invocation"
+                        "AML.T0086 Exfiltration via AI Agent Tool Invocation",
+                        "AML.T0117 Autonomous Attack-Path Adaptation",
+                        "AML.T0118 Autonomous AI Agent Communication",
+                        "AML.T0118.001 Autonomous AI Agent Communication: Direct Agent Communication",
+                        "AML.T0121 AI Agent Environment Reconstruction",
+                        "AML.T0124 Autonomous Attack Orchestration",
+                        "AML.T0125 Create Account",
+                        "AML.T0126 Automated Collection"
                     ]
                 },
                 {
@@ -8898,7 +8928,8 @@ def test_tampered_fact_is_error():
                                 "AML.T0048 External Harms (by detecting the anomalous behavior that leads to harm)",
                                 "AML.T0073 Impersonation (behavioral analytics detects impostor agents)",
                                 "AML.T0074 Masquerading",
-                                "AML.T0053 AI Agent Tool Invocation (anomalous tool usage patterns reveal hijacked agents)"
+                                "AML.T0053 AI Agent Tool Invocation (anomalous tool usage patterns reveal hijacked agents)",
+                                "AML.T0117 Autonomous Attack-Path Adaptation (behavioral deviation from the agent's fingerprint surfaces autonomous path changes)"
                             ]
                         },
                         {
@@ -9030,7 +9061,10 @@ def test_tampered_fact_is_error():
                         "framework": "MITRE ATLAS",
                         "items": [
                           "AML.T0073 Impersonation",
-                          "AML.T0074 Masquerading"
+                          "AML.T0074 Masquerading",
+                          "AML.T0118 Autonomous AI Agent Communication",
+                          "AML.T0118.001 Autonomous AI Agent Communication: Direct Agent Communication (out-of-contract inter-agent exchanges are rejected and recorded)",
+                          "AML.T0124 Autonomous Attack Orchestration (assignment and status exchanges outside the event contract are recorded)"
                         ]
                       },
                       {
@@ -9153,7 +9187,8 @@ def test_tampered_fact_is_error():
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0073 Impersonation",
-                                "AML.T0074 Masquerading"
+                                "AML.T0074 Masquerading",
+                                "AML.T0121 AI Agent Environment Reconstruction (replica, namespace, and image-lineage drift reveals an agent re-establishing execution environments)"
                             ]
                         },
                         {
@@ -9276,7 +9311,9 @@ def test_tampered_fact_is_error():
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0012 Valid Accounts",
-                                "AML.T0086 Exfiltration via AI Agent Tool Invocation"
+                                "AML.T0086 Exfiltration via AI Agent Tool Invocation",
+                                "AML.T0125 Create Account (identity-provider issuance for unexpected workload principals is correlated with downstream activity)",
+                                "AML.T0126 Automated Collection (delegated-token use correlated with bulk export and fan-out reveals automated collection)"
                             ]
                         },
                         {
@@ -10612,7 +10649,11 @@ def test_tampered_fact_is_error():
                     "framework": "MITRE ATLAS",
                     "items": [
                         "AML.T0103 Deploy AI Agent",
-                        "AML.T0108 AI Agent"
+                        "AML.T0108 AI Agent",
+                        "AML.T0118 Autonomous AI Agent Communication",
+                        "AML.T0118.001 Autonomous AI Agent Communication: Direct Agent Communication",
+                        "AML.T0124 Autonomous Attack Orchestration",
+                        "AML.T0125 Create Account"
                     ]
                 },
                 {
@@ -10723,7 +10764,11 @@ def test_tampered_fact_is_error():
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0103 Deploy AI Agent (baseline detects unauthorized agent deployments)"
+                                "AML.T0103 Deploy AI Agent (baseline detects unauthorized agent deployments)",
+                                "AML.T0118 Autonomous AI Agent Communication",
+                                "AML.T0118.001 Autonomous AI Agent Communication: Direct Agent Communication (unapproved agent-to-agent communication edges surface against the baseline graph)",
+                                "AML.T0124 Autonomous Attack Orchestration (new orchestrator-to-executor edges surface against the approved agent graph)",
+                                "AML.T0125 Create Account (newly created agent identities surface against the baseline graph)"
                             ]
                         },
                         {

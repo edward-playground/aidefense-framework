@@ -599,7 +599,8 @@ export const restoreTactic = {
                       "AML.T0091 Use Alternate Authentication Material",
                       "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
                       "AML.T0091.001 Use Alternate Authentication Material: Web Session Cookie",
-                      "AML.T0092 Manipulate User LLM Chat History"
+                      "AML.T0092 Manipulate User LLM Chat History",
+                      "AML.T0121 AI Agent Environment Reconstruction"
                   ]
               },
               {
@@ -805,7 +806,8 @@ export const restoreTactic = {
                     "AML.T0092 Manipulate User LLM Chat History (clean re-establishment restores trusted conversational context)",
                     "AML.T0080 AI Agent Context Poisoning (a new isolated namespace restores only authority-selected pre-incident state)",
                     "AML.T0080.000 AI Agent Context Poisoning: Memory (restoration excludes tainted memory objects and credential-bearing state)",
-                    "AML.T0080.001 AI Agent Context Poisoning: Thread (clean re-establishment restores trusted thread context)"
+                    "AML.T0080.001 AI Agent Context Poisoning: Thread (clean re-establishment restores trusted thread context)",
+                    "AML.T0121 AI Agent Environment Reconstruction (recovery restores only authority-selected pre-incident state, excluding post-cutoff reconstruction artifacts)"
                   ]
                 },
                 {

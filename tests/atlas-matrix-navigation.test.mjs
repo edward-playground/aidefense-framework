@@ -3,6 +3,7 @@ import test from 'node:test';
 
 import {
     calculateAtlasRevealTargets,
+    buildAtlasTechniqueUrl,
     classifyAtlasMatchDirection,
     distanceFromAtlasVisibleRegion,
     getAtlasIndicatorAnchor,
@@ -19,6 +20,21 @@ test('normalizes every supported ATLAS ID search form without accepting substrin
     assert.equal(normalizeAtlasSearchId('AML.T0115'), 'AML.T0115');
     assert.equal(normalizeAtlasSearchId(' t0115.002 '), 'AML.T0115.002');
     assert.equal(normalizeAtlasSearchId('find t0115'), null);
+});
+
+test('links techniques and sub-techniques to their exact MITRE ATLAS pages', () => {
+    assert.equal(
+        buildAtlasTechniqueUrl('AML.T0118'),
+        'https://atlas.mitre.org/techniques/AML.T0118'
+    );
+    assert.equal(
+        buildAtlasTechniqueUrl('AML.T0118.001'),
+        'https://atlas.mitre.org/techniques/AML.T0118.001'
+    );
+    assert.throws(
+        () => buildAtlasTechniqueUrl('AML.T0118.001/extra'),
+        /Invalid MITRE ATLAS technique ID/
+    );
 });
 
 test('classifies every off-screen direction and preserves partial visibility', () => {

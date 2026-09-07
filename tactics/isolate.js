@@ -41,8 +41,8 @@ export const isolateTactic = {
                         "AML.T0034 Cost Harvesting",
                         "AML.T0050 Command and Scripting Interpreter",
                         "AML.T0053 AI Agent Tool Invocation",
-                        "AML.T0072 Reverse Shell",
-                        "AML.T0089 Process Discovery",
+                        "AML.T0072 Cyber Communication Channel",
+                        "AML.T0089 Enterprise Environment Discovery",
                         "AML.T0097 Virtualization/Sandbox Evasion",
                         "AML.T0105 Escape to Host",
                         "AML.T0106 Exploitation for Credential Access",
@@ -51,7 +51,10 @@ export const isolateTactic = {
                         "AML.T0110.001 AI Agent Tool Poisoning: Implementation",
                         "AML.T0114 AI Service Web Interface",
                         "AML.T0115 Publish Poisoned AI Artifacts",
-                        "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools"
+                        "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools",
+                        "AML.T0119 Exploit Automated Artifact Processing Pipeline",
+                        "AML.T0120 AI Artifact Repository",
+                        "AML.T0122 Exploitation of Remote Services"
                     ]
                 },
                 {
@@ -182,10 +185,11 @@ export const isolateTactic = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0053 AI Agent Tool Invocation",
-                                "AML.T0072 Reverse Shell",
+                                "AML.T0072 Cyber Communication Channel (default-deny pod network policy blocks unapproved outbound channels)",
                                 "AML.T0029 Denial of AI Service",
                                 "AML.T0034 Cost Harvesting",
-                                "AML.T0105 Escape to Host"
+                                "AML.T0105 Escape to Host",
+                                "AML.T0089 Enterprise Environment Discovery (container process and filesystem namespaces limit enumeration of host processes and configuration)"
                             ]
                         },
                         {
@@ -337,8 +341,8 @@ export const isolateTactic = {
                                 "AML.T0018 Manipulate AI Model",
                                 "AML.T0011.000 User Execution: Unsafe AI Artifacts",
                                 "AML.T0053 AI Agent Tool Invocation",
-                                "AML.T0072 Reverse Shell",
-                                "AML.T0089 Process Discovery (sandbox isolation limits process enumeration visibility)",
+                                "AML.T0072 Cyber Communication Channel (microVM network policy constrains callback channels from untrusted code)",
+                                "AML.T0089 Enterprise Environment Discovery (guest-kernel isolation limits enumeration of host processes, configuration, and network state)",
                                 "AML.T0050 Command and Scripting Interpreter",
                                 "AML.T0018.002 Manipulate AI Model: Embed Malware",
                                 "AML.T0105 Escape to Host",
@@ -469,7 +473,7 @@ export const isolateTactic = {
                                 "AML.T0011 User Execution",
                                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                                 "AML.T0050 Command and Scripting Interpreter",
-                                "AML.T0072 Reverse Shell",
+                                "AML.T0072 Cyber Communication Channel (guaranteed teardown ends any channel a compromised tool opened once the invocation completes)",
                                 "AML.T0053 AI Agent Tool Invocation"
                             ]
                         },
@@ -587,10 +591,12 @@ export const isolateTactic = {
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0072 Reverse Shell",
+                                "AML.T0072 Cyber Communication Channel",
                                 "AML.T0025 Exfiltration via Cyber Means",
                                 "AML.T0108 AI Agent",
-                                "AML.T0114 AI Service Web Interface (default-deny egress blocks browser or WebView relay callbacks)"
+                                "AML.T0114 AI Service Web Interface (default-deny egress blocks browser or WebView relay callbacks)",
+                                "AML.T0120 AI Artifact Repository (default-deny egress blocks sandboxed workloads from polling repositories as dead drops)",
+                                "AML.T0122 Exploitation of Remote Services (default-deny egress keeps sandboxed code from reaching internal services)"
                             ]
                         },
                         {
@@ -733,9 +739,10 @@ export const isolateTactic = {
                                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                                 "AML.T0011.000 User Execution: Unsafe AI Artifacts",
                                 "AML.T0050 Command and Scripting Interpreter",
-                                "AML.T0072 Reverse Shell",
+                                "AML.T0072 Cyber Communication Channel (detonation exposes only instrumented egress and records attempted callback channels)",
                                 "AML.T0025 Exfiltration via Cyber Means",
-                                "AML.T0097 Virtualization/Sandbox Evasion (pre-execution analysis detects sandbox evasion techniques)"
+                                "AML.T0097 Virtualization/Sandbox Evasion (pre-execution analysis detects sandbox evasion techniques)",
+                                "AML.T0119 Exploit Automated Artifact Processing Pipeline (policy-designated artifacts are processed only inside a credential-free, deny-by-default detonation boundary)"
                             ]
                         },
                         {
@@ -838,10 +845,13 @@ export const isolateTactic = {
                       "AML.T0036 Data from Information Repositories",
                       "AML.T0044 Full AI Model Access",
                       "AML.T0049 Exploit Public-Facing Application",
-                      "AML.T0072 Reverse Shell",
+                      "AML.T0072 Cyber Communication Channel",
+                      "AML.T0075 Enterprise Resource Discovery",
                       "AML.T0096 AI Service API",
                       "AML.T0108 AI Agent",
-                      "AML.T0114 AI Service Web Interface"
+                      "AML.T0114 AI Service Web Interface",
+                      "AML.T0120 AI Artifact Repository",
+                      "AML.T0122 Exploitation of Remote Services"
                   ]
               },
               {
@@ -1003,7 +1013,9 @@ export const isolateTactic = {
                       "framework": "MITRE ATLAS",
                       "items": [
                           "AML.T0044 Full AI Model Access (limits internal access)",
-                          "AML.T0036 Data from Information Repositories (limits internal access)"
+                          "AML.T0036 Data from Information Repositories (limits internal access)",
+                          "AML.T0075 Enterprise Resource Discovery (segmentation limits which systems and services a compromised AI component can enumerate)",
+                          "AML.T0122 Exploitation of Remote Services (segmentation limits which internal AI services are reachable from a compromised workload)"
                       ]
                   },
                   {
@@ -1160,10 +1172,12 @@ export const isolateTactic = {
                       "items": [
                           "AML.T0025 Exfiltration via Cyber Means",
                           "AML.T0049 Exploit Public-Facing Application (SSRF)",
-                          "AML.T0072 Reverse Shell",
+                          "AML.T0072 Cyber Communication Channel (governed outbound path allows only approved upstreams, denying arbitrary callback or relay destinations)",
                           "AML.T0096 AI Service API (egress monitoring detects C2 communication via AI service channels)",
                           "AML.T0108 AI Agent (C2)",
-                          "AML.T0114 AI Service Web Interface (approved-upstream egress controls block AI-service web relays)"
+                          "AML.T0114 AI Service Web Interface (approved-upstream egress controls block AI-service web relays)",
+                          "AML.T0120 AI Artifact Repository (only approved upstream repositories are reachable, through a governed mediated path)",
+                          "AML.T0122 Exploitation of Remote Services (default-deny external reachability prevents AI workloads from reaching unapproved exploitable services)"
                       ]
                   },
                   {
@@ -1267,7 +1281,8 @@ export const isolateTactic = {
                         "AML.T0053 AI Agent Tool Invocation",
                         "AML.T0086 Exfiltration via AI Agent Tool Invocation",
                         "AML.T0096 AI Service API",
-                        "AML.T0101 Data Destruction via AI Agent Tool Invocation"
+                        "AML.T0101 Data Destruction via AI Agent Tool Invocation",
+                        "AML.T0126 Automated Collection"
                     ]
                 },
                 {
@@ -1553,7 +1568,8 @@ export const isolateTactic = {
                                 "AML.T0034.000 Cost Harvesting: Excessive Queries",
                                 "AML.T0040 AI Model Inference API Access",
                                 "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (rate limiting slows extraction)",
-                                "AML.T0096 AI Service API (rate limiting restricts abusive API throughput)"
+                                "AML.T0096 AI Service API (rate limiting restricts abusive API throughput)",
+                                "AML.T0126 Automated Collection (per-principal admission throttles bound automated bulk retrieval)"
                             ]
                         },
                         {
@@ -1679,7 +1695,8 @@ export const isolateTactic = {
                                 "AML.T0034 Cost Harvesting",
                                 "AML.T0034.001 Cost Harvesting: Resource-Intensive Queries",
                                 "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption",
-                                "AML.T0046 Spamming AI System with Chaff Data"
+                                "AML.T0046 Spamming AI System with Chaff Data",
+                                "AML.T0126 Automated Collection (tool-call and cumulative budgets cap scripted collection runs)"
                             ]
                         },
                         {
@@ -1885,7 +1902,12 @@ export const isolateTactic = {
                       "AML.T0080.001 AI Agent Context Poisoning: Thread",
                       "AML.T0081 Modify AI Agent Configuration",
                       "AML.T0092 Manipulate User LLM Chat History",
-                      "AML.T0099 AI Agent Tool Data Poisoning"
+                      "AML.T0099 AI Agent Tool Data Poisoning",
+                      "AML.T0118 Autonomous AI Agent Communication",
+                      "AML.T0118.000 Autonomous AI Agent Communication: Communication via Shared Artifacts",
+                      "AML.T0118.001 Autonomous AI Agent Communication: Direct Agent Communication",
+                      "AML.T0121 AI Agent Environment Reconstruction",
+                      "AML.T0124 Autonomous Attack Orchestration"
                   ]
               },
               {
@@ -2167,7 +2189,9 @@ export const isolateTactic = {
                       "framework": "MITRE ATLAS",
                       "items": [
                           "AML.T0070 RAG Poisoning",
-                          "AML.T0080.000 AI Agent Context Poisoning: Memory"
+                          "AML.T0080.000 AI Agent Context Poisoning: Memory",
+                          "AML.T0118 Autonomous AI Agent Communication",
+                          "AML.T0118.000 Autonomous AI Agent Communication: Communication via Shared Artifacts (partitioned memory namespaces with central retrieval authorization deny cross-agent dead-drop coordination)"
                       ]
                   },
                   {
@@ -2726,7 +2750,9 @@ def test_success_revalidates_every_boundary_and_bounds_timeouts():
                       "framework": "MITRE ATLAS",
                       "items": [
                           "AML.T0080.000 AI Agent Context Poisoning: Memory",
-                          "AML.T0070 RAG Poisoning (crypto integrity prevents direct-to-DB poisoning)"
+                          "AML.T0070 RAG Poisoning (crypto integrity prevents direct-to-DB poisoning)",
+                          "AML.T0118 Autonomous AI Agent Communication",
+                          "AML.T0118.000 Autonomous AI Agent Communication: Communication via Shared Artifacts (unsigned direct writes to shared memory never re-enter another agent's context)"
                       ]
                   },
                   {
@@ -2838,7 +2864,9 @@ def test_success_revalidates_every_boundary_and_bounds_timeouts():
                       "items": [
                           "AML.T0070 RAG Poisoning",
                           "AML.T0080.000 AI Agent Context Poisoning: Memory",
-                          "AML.T0099 AI Agent Tool Data Poisoning (promotion gates quarantine connected-source records before they become trusted agent context)"
+                          "AML.T0099 AI Agent Tool Data Poisoning (promotion gates quarantine connected-source records before they become trusted agent context)",
+                          "AML.T0118 Autonomous AI Agent Communication",
+                          "AML.T0118.000 Autonomous AI Agent Communication: Communication via Shared Artifacts (quarantined writes cannot influence another agent until independently promoted)"
                       ]
                   },
                   {
@@ -3104,7 +3132,8 @@ def test_success_revalidates_every_boundary_and_bounds_timeouts():
                           "AML.T0081 Modify AI Agent Configuration",
                           "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
                           "AML.T0080 AI Agent Context Poisoning",
-                          "AML.T0080.000 AI Agent Context Poisoning: Memory"
+                          "AML.T0080.000 AI Agent Context Poisoning: Memory",
+                          "AML.T0121 AI Agent Environment Reconstruction (protected identity and state files cannot be rewritten to persist across restart or redeployment)"
                       ]
                   },
                   {
@@ -4737,7 +4766,10 @@ def test_success_binds_monotonic_cas_and_revalidates_after_readback():
               "AML.T0051 LLM Prompt Injection",
               "AML.T0051.001 LLM Prompt Injection: Indirect",
               "AML.T0080 AI Agent Context Poisoning",
-              "AML.T0080.001 AI Agent Context Poisoning: Thread"
+              "AML.T0080.001 AI Agent Context Poisoning: Thread",
+              "AML.T0118 Autonomous AI Agent Communication",
+              "AML.T0118.001 Autonomous AI Agent Communication: Direct Agent Communication (peer messages carry no instruction, credential, or delegated-authority semantics)",
+              "AML.T0124 Autonomous Attack Orchestration (peer tasking cannot enter active context with instruction, tool, credential, or delegated-authority semantics)"
             ]},
             {"framework": "MAESTRO", "items": [
               "Data Tampering (L2)",
@@ -5544,7 +5576,8 @@ def load_for_context(
                         "AML.T0034 Cost Harvesting (kill-switch stops runaway cost)",
                         "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption (kill-switch halts runaway agent loops and delegated tool cascades)",
                         "AML.T0108 AI Agent (C2)",
-                        "AML.T0053 AI Agent Tool Invocation (kill-switch halts unauthorized tool invocations)"
+                        "AML.T0053 AI Agent Tool Invocation (kill-switch halts unauthorized tool invocations)",
+                        "AML.T0117 Autonomous Attack-Path Adaptation (last-resort halt when replanning crosses authorization or safety boundaries)"
                     ]
                 },
                 {
@@ -6264,7 +6297,8 @@ def load_for_context(
                         "AML.T0112.000 Machine Compromise: Local AI Agent (client-side isolation constrains a compromised local agent before it can become full machine compromise)",
                         "AML.T0112 Machine Compromise",
                         "AML.T0113 Steal Web Session Cookie (sandboxing prevents hostile client-side AI from reading cookies or browser state)",
-                        "AML.T0114 AI Service Web Interface (CSP and capability isolation constrain browser/WebView relay channels)"
+                        "AML.T0114 AI Service Web Interface (CSP and capability isolation constrain browser/WebView relay channels)",
+                        "AML.T0089 Enterprise Environment Discovery (isolated client-side runtimes cannot enumerate other tabs, local application context, or the host OS)"
                     ]
                 },
                 {
@@ -6399,7 +6433,7 @@ def load_for_context(
                         "AML.T0051.001 LLM Prompt Injection: Indirect",
                         "AML.T0053 AI Agent Tool Invocation",
                         "AML.T0086 Exfiltration via AI Agent Tool Invocation",
-                        "AML.T0089 Process Discovery",
+                        "AML.T0089 Enterprise Environment Discovery",
                         "AML.T0091.001 Use Alternate Authentication Material: Web Session Cookie",
                         "AML.T0100 AI Agent Clickbait",
                         "AML.T0101 Data Destruction via AI Agent Tool Invocation",
@@ -6540,7 +6574,8 @@ def load_for_context(
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0113 Steal Web Session Cookie (fresh browser contexts keep cookies out of shared agent state)",
-                                "AML.T0091.001 Use Alternate Authentication Material: Web Session Cookie (context teardown destroys reusable authenticated cookies)"
+                                "AML.T0091.001 Use Alternate Authentication Material: Web Session Cookie (context teardown destroys reusable authenticated cookies)",
+                                "AML.T0089 Enterprise Environment Discovery (fresh per-task browser contexts expose no prior history, sessions, or cached identity to discovery)"
                             ]
                         },
                         {
@@ -6922,7 +6957,7 @@ def load_for_context(
                                 "AML.T0051.001 LLM Prompt Injection: Indirect",
                                 "AML.T0053 AI Agent Tool Invocation",
                                 "AML.T0086 Exfiltration via AI Agent Tool Invocation",
-                                "AML.T0089 Process Discovery (private PID namespaces and complete process-population checks limit host-process enumeration from desktop workspaces)",
+                                "AML.T0089 Enterprise Environment Discovery (disposable workspaces with private PID namespaces limit enumeration of host processes, sessions, and installed applications)",
                                 "AML.T0100 AI Agent Clickbait",
                                 "AML.T0101 Data Destruction via AI Agent Tool Invocation",
                                 "AML.T0112 Machine Compromise",

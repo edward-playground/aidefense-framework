@@ -36,7 +36,9 @@ export const evictTactic = {
                       "AML.T0090 OS Credential Dumping",
                       "AML.T0091 Use Alternate Authentication Material",
                       "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
-                      "AML.T0091.001 Use Alternate Authentication Material: Web Session Cookie"
+                      "AML.T0091.001 Use Alternate Authentication Material: Web Session Cookie",
+                      "AML.T0121 AI Agent Environment Reconstruction",
+                      "AML.T0125 Create Account"
                   ]
               },
               {
@@ -170,6 +172,7 @@ export const evictTactic = {
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0012 Valid Accounts (authoritative credential-object revocation makes the incident-scoped account material unusable for fresh authentication)",
+                                "AML.T0121 AI Agent Environment Reconstruction (revoked incident-scoped long-lived credentials remain unusable when an agent attempts to recover them during reconstruction)",
                                 "AML.T0055 Unsecured Credentials (rotation or disablement neutralizes exposed passwords, keys, and long-lived certificates)",
                                 "AML.T0091 Use Alternate Authentication Material (revoking long-lived hashes, tickets, keys, or certificates stops their continued use; issued tokens and sessions remain AID-E-001.002)",
                                 "AML.T0090 OS Credential Dumping (rotation or disablement neutralizes dumped passwords, hashes, keys, and long-lived credentials)"
@@ -448,7 +451,9 @@ export const evictTactic = {
                 {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0012 Valid Accounts (authoritative principal disablement blocks fresh authentication and issuance for the compromised AI-agent or workload identity)"
+                                "AML.T0012 Valid Accounts (authoritative principal disablement blocks fresh authentication and issuance for the compromised AI-agent or workload identity)",
+                                "AML.T0121 AI Agent Environment Reconstruction (disabled principals cannot re-obtain credentials to rebuild their access after eviction)",
+                                "AML.T0125 Create Account (rogue agent or workload principals are disabled at every authoritative control plane)"
                   ]
                 },
                 {
@@ -592,7 +597,8 @@ export const evictTactic = {
                 {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0012 Valid Accounts (revoking the delegated authorization prevents fresh delegated access or issuance; AID-E-001.002 remains required for already-issued tokens)"
+                                "AML.T0012 Valid Accounts (revoking the delegated authorization prevents fresh delegated access or issuance; AID-E-001.002 remains required for already-issued tokens)",
+                                "AML.T0121 AI Agent Environment Reconstruction (revoked delegated grants cannot mint fresh tokens for environment reconstruction)"
                   ]
                 },
                 {
@@ -727,12 +733,12 @@ export const evictTactic = {
                     "items": [
                         "AML.T0051 LLM Prompt Injection (terminating the manipulated agent runtime)",
                         "AML.T0054 LLM Jailbreak (terminates the manipulated agent runtime)",
-                        "AML.T0072 Reverse Shell (terminating reverse shell connections)",
-                                "AML.T0080 AI Agent Context Poisoning (terminating the poisoned agent runtime)",
-                                "AML.T0108 AI Agent (C2)",
-                                "AML.T0114 AI Service Web Interface (eviction terminates browser or WebView C2 relay processes)",
-                                "AML.T0034 Cost Harvesting",
-                                "AML.T0103 Deploy AI Agent (eviction terminates adversary-deployed agents)"
+                        "AML.T0072 Cyber Communication Channel (terminating the compromised runtime ends its active command-and-control channel)",
+                        "AML.T0080 AI Agent Context Poisoning (terminating the poisoned agent runtime)",
+                        "AML.T0108 AI Agent (C2)",
+                        "AML.T0114 AI Service Web Interface (eviction terminates browser or WebView C2 relay processes)",
+                        "AML.T0034 Cost Harvesting",
+                        "AML.T0103 Deploy AI Agent (eviction terminates adversary-deployed agents)"
                     ]
                 },
                 {
@@ -888,7 +894,8 @@ export const evictTactic = {
                       "AML.T0110.001 AI Agent Tool Poisoning: Implementation",
                       "AML.T0115 Publish Poisoned AI Artifacts",
                       "AML.T0115.001 Publish Poisoned AI Artifacts: Models",
-                      "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools"
+                      "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools",
+                      "AML.T0121 AI Agent Environment Reconstruction"
                   ]
               },
               {
@@ -1289,8 +1296,9 @@ export const evictTactic = {
                                 "AML.T0010.004 AI Supply Chain Compromise: Container Registry (manifest-bound eviction removes the confirmed malicious image and tombstones the affected registry reference)",
                                 "AML.T0011.001 User Execution: Malicious Package",
                                 "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools (cleanup removes poisoned agent tools)",
-                    "AML.T0081 Modify AI Agent Configuration",
-                    "AML.T0110 AI Agent Tool Poisoning"
+                                "AML.T0081 Modify AI Agent Configuration",
+                                "AML.T0110 AI Agent Tool Poisoning",
+                                "AML.T0121 AI Agent Environment Reconstruction (removes file-backed persistence and startup code an agent would use to rebuild its environment)"
                   ]
                 },
                 {
@@ -1549,7 +1557,7 @@ export const evictTactic = {
                         "AML.T0010 AI Supply Chain Compromise (independent readback and exploit replay prove the signed supply-chain fix is effective across the affected release population)",
                         "AML.T0010.001 AI Supply Chain Compromise: AI Software (the verifier proves the approved AI-software fix is deployed and the exact exploit no longer succeeds)",
                         "AML.T0011.001 User Execution: Malicious Package (the verifier proves the package removal, deny, or admission fix blocks the exact malicious-package path)",
-                        "AML.T0072 Reverse Shell (independent replay proves the fixed entry path can no longer establish the protected reverse-shell effect)",
+                        "AML.T0072 Cyber Communication Channel (independent replay proves the fixed path can no longer establish the incident's command-and-control channel)",
                         "AML.T0031 Erode AI Model Integrity (adversarial replay proves the repaired input path no longer reaches the integrity-eroding model effect)",
                         "AML.T0105 Escape to Host (independent boundary replay proves the approved isolation fix prevents the exact host-escape path)",
                         "AML.T0106 Exploitation for Credential Access (version readback and exact exploit replay prove the credential-access vulnerability is closed)",
@@ -1718,7 +1726,8 @@ export const evictTactic = {
                         "AML.T0080.001 AI Agent Context Poisoning: Thread (purging poisoned conversation threads)",
                         "AML.T0091.001 Use Alternate Authentication Material: Web Session Cookie (deleting the scoped server-side session record stops cookie replay)",
                         "AML.T0108 AI Agent (C2)",
-                        "AML.T0092 Manipulate User LLM Chat History (session purge clears manipulated chat history)"
+                        "AML.T0092 Manipulate User LLM Chat History (session purge clears manipulated chat history)",
+                        "AML.T0121 AI Agent Environment Reconstruction (tainted durable agent state is purged so an evicted agent cannot resume from it)"
                     ]
                 },
                 {

@@ -52,7 +52,8 @@ export const deceiveTactic = {
                         "AML.T0051.000 LLM Prompt Injection: Direct (decoy chat endpoints capture direct injection attempts)",
                         "AML.T0054 LLM Jailbreak (honeypot captures jailbreak techniques)",
                         "AML.T0005 Create Proxy AI Model (honeypot attracts adversaries attempting model replication via API queries)",
-                        "AML.T0005.001 Create Proxy AI Model: Train Proxy via Replication (decoy API captures replication queries)"
+                        "AML.T0005.001 Create Proxy AI Model: Train Proxy via Replication (decoy API captures replication queries)",
+                        "AML.T0116 Autonomous Reconnaissance (honeypot AI services absorb and record autonomous agent probing)"
                     ]
                 },
                 {
@@ -661,7 +662,9 @@ export const deceiveTactic = {
                         "AML.T0095.000 Search Open Websites/Domains: Code Repositories (repository canaries detect public-code reconnaissance)",
                         "AML.T0055 Unsecured Credentials (seeded non-authoritative credentials alert on discovery or attempted use)",
                         "AML.T0083 Credentials from AI Agent Configuration (canary credentials in synthetic agent configurations expose harvesting)",
-                        "AML.T0098 AI Agent Tool Credential Harvesting (canary credentials in agent-accessible stores expose harvesting attempts)"
+                        "AML.T0098 AI Agent Tool Credential Harvesting (canary credentials in agent-accessible stores expose harvesting attempts)",
+                        "AML.T0075 Enterprise Resource Discovery (decoy artifacts and canary records alert when repositories or file stores are browsed)",
+                        "AML.T0126 Automated Collection (canary records inside datasets and repositories are swept up by automated collection and alert)"
                     ]
                 },
                 {
@@ -3422,7 +3425,10 @@ export const deceiveTactic = {
                 "AML.T0069.002 Discover LLM System Information: System Prompt (synthetic prompt details expose targeted probing)",
                 "AML.T0084 Discover AI Agent Configuration (synthetic configuration metadata exposes agent reconnaissance)",
                 "AML.T0084.000 Discover AI Agent Configuration: Embedded Knowledge (synthetic knowledge-source metadata exposes reconnaissance)",
-                "AML.T0084.001 Discover AI Agent Configuration: Tool Definitions (synthetic tool definitions expose reconnaissance)"
+                "AML.T0084.001 Discover AI Agent Configuration: Tool Definitions (synthetic tool definitions expose reconnaissance)",
+                "AML.T0089 Enterprise Environment Discovery (decoy routes return synthetic topology and environment metadata to reconnaissance probes)",
+                "AML.T0075 Enterprise Resource Discovery (synthetic topology and service metadata misdirect resource enumeration)",
+                "AML.T0116 Autonomous Reconnaissance (decoy routes feed synthetic environment metadata to recursive autonomous probing)"
               ]
             },
             {
