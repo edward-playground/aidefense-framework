@@ -107,6 +107,31 @@ index.html               Main static application
 webmcp-tools.js          Browser-side WebMCP query tools
 ```
 
+## Release versions and automatic tags
+
+To publish a new Framework version:
+
+1. Set the same `1.YYYYMMDD` version in `package.json` and `aidefend-intro.js`.
+2. Run `npm run generate`, review the content and generated changes, and commit them together.
+3. Push or merge to `main`. The release workflow runs the repository tests, verifies generated outputs, and creates the annotated `v1.YYYYMMDD` tag on the exact validated commit.
+
+Each version is published once. Later commits with the same version preserve its
+original tag; a content release needs a new version. The current date format
+supports one release version per calendar day. Existing tags are never moved,
+overwritten, or deleted, and version rollback or conflicting tag targets fail
+the workflow. If validation fails, fix the issue and retry the workflow on
+`main`; no tag is created until validation passes. To inspect the proposed tag
+without publishing, run `node scripts/release-tag.mjs` in a complete checkout
+with the remote tags fetched.
+
+Pull requests run validation with read-only permissions. Only the subsequent
+main-branch publication job receives `contents: write`, using GitHub's temporary
+token without an additional repository secret. Automated tag pushes do not
+trigger another GitHub Actions workflow through `GITHUB_TOKEN`; future tag-based
+deployment workflows must be connected explicitly. The website continues to
+deploy from `main`. This automation creates Git tags, not GitHub Release pages,
+npm packages, Engine promotions, or semantic-review approvals.
+
 ## Security and implementation notice
 
 AIDEFEND provides defensive control objectives, implementation patterns, examples, mappings, and verification guidance. Environment-specific thresholds, products, trust boundaries, regulatory obligations, and operational approval requirements must be evaluated by qualified practitioners before production deployment.
