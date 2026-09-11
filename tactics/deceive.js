@@ -95,11 +95,7 @@ export const deceiveTactic = {
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-10.1 Model Extraction (honeypot lures extraction attempts)",
-                        "AITech-8.3 Information Disclosure (honeypot captures information probing)",
-                        "AITech-1.1 Direct Prompt Injection (decoy chat endpoints capture direct injection attempts)",
-                        "AITech-2.1 Jailbreak (honeypot captures jailbreak attempts)",
-                        "AISubtech-10.1.1 API Query Stealing (decoy inference APIs capture systematic replication queries)"
+                        "AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation) (detects matching direct-injection attempts at the decoy endpoint)"
                     ]
                 },
                 {
@@ -701,10 +697,9 @@ export const deceiveTactic = {
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-8.2 Data Exfiltration / Exposure (canary tokens detect data exfiltration)",
-                        "AITech-8.3 Information Disclosure (canary configuration artifacts expose unauthorized information gathering)",
-                        "AISubtech-14.1.1 Credential Theft (canary API keys detect credential harvesting)",
-                        "AITech-14.1 Unauthorized Access (access to monitored decoy assets produces attributable evidence)"
+                        "AITech-14.1 Unauthorized Access (detects use of a seeded canary cloud credential)",
+                        "AITech-8.2 Data Exfiltration / Exposure (exposure signals for seeded honey data and AI artifacts)",
+                        "AITech-8.3 Information Disclosure (exposure signals for seeded honey data and AI artifacts)"
                     ]
                 },
                 {
@@ -1459,11 +1454,8 @@ export const deceiveTactic = {
                     "framework": "MITRE ATLAS",
                     "items": [
                         "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (deceptive outputs degrade extraction quality)",
-                        "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model (misleading outputs prevent inversion)",
                         "AML.T0005 Create Proxy AI Model (deceptive inference responses reduce the utility of a replicated proxy)",
                         "AML.T0005.001 Create Proxy AI Model: Train Proxy via Replication (deceptive labels frustrate replication training)",
-                        "AML.T0051 LLM Prompt Injection (unreliable outcome for attacker)",
-                        "AML.T0054 LLM Jailbreak (feigned compliance captures intent)",
                         "AML.T0053 AI Agent Tool Invocation (deceptive no-ops reveal unauthorized tool invocations)"
                     ]
                 },
@@ -1471,14 +1463,12 @@ export const deceiveTactic = {
                     "framework": "MAESTRO",
                     "items": [
                         "Model Stealing (L1) (deceptive responses frustrate extraction)",
-                        "Agent Goal Manipulation (L7) (feigned compliance exposes manipulation intent)",
                         "Agent Tool Misuse (L7) (safe no-ops detect tool misuse)"
                     ]
                 },
                 {
                     "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM01:2026 Prompt Injection (bounded deceptive responses reduce utility for high-confidence injection attempts)",
                         "LLM03:2026 Excessive Agency (high-risk tool requests are diverted to a credentialless safe no-op)",
                         "LLM06:2026 Unbounded Consumption (degraded responses reduce useful yield for high-confidence model-extraction sessions)"
                     ]
@@ -1486,49 +1476,39 @@ export const deceiveTactic = {
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "ML05:2023 Model Theft (noisy/degraded responses make extracted data unusable)"
+                        "ML05:2023 Model Theft (eligible numeric-output degradation reduces measured surrogate replication utility)"
                     ]
                 },
                 {
                     "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
-                        "ASI01:2026 Agent Goal Hijack (misleading responses frustrate goal hijacking)",
                         "ASI02:2026 Tool Misuse and Exploitation (feigned compliance exposes tool misuse intent)"
                     ]
                 },
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
-                        "NISTAML.031 Model Extraction (noisy responses degrade extraction quality)",
-                        "NISTAML.018 Prompt Injection (deceptive responses make injection unreliable)",
-                        "NISTAML.032 Reconstruction (deceptive outputs prevent training data reconstruction)"
+                        "NISTAML.031 Model Extraction (noisy responses degrade extraction quality)"
                     ]
                 },
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-10.1 Model Extraction (degraded outputs frustrate extraction)",
-                        "AISubtech-10.1.1 API Query Stealing (deceptive query responses reduce replication utility)",
-                        "AITech-2.1 Jailbreak (feigned compliance captures jailbreak intent)",
-                        "AITech-1.1 Direct Prompt Injection (misleading responses for injected prompts)",
-                        "AITech-12.1 Tool Exploitation (deceptive no-ops expose tool exploitation attempts)"
+                        "AITech-12.1 Tool Exploitation (credentialless safe-noop for eligible tool-misuse requests)",
+                        "AITech-10.1 Model Extraction (eligible extraction sessions receive controlled responses with measured surrogate-utility degradation)",
+                        "AISubtech-10.1.1 API Query Stealing (reduces replication utility of systematic API queries under the verified deception policy)"
                     ]
                 },
                 {
                     "framework": "Google Secure AI Framework 2.0 - Risks",
                     "items": [
-                        "MRE: Model Reverse Engineering (deceptive outputs degrade reverse engineering quality)",
-                        "PIJ: Prompt Injection (deceptive responses make injection results unreliable for attacker)"
+                        "MRE: Model Reverse Engineering (deceptive outputs degrade reverse engineering quality)"
                     ]
                 },
                 {
                     "framework": "Databricks AI Security Framework 3.0",
                     "items": [
-                        "Model Management 8.2: Model theft (noisy and degraded responses make stolen model data unusable)",
-                        "Model Serving - Inference requests 9.2: Model inversion (deceptive outputs prevent model inversion)",
-                        "Model Serving - Inference requests 9.1: Prompt inject (deceptive responses frustrate prompt injection)",
-                        "Model Serving - Inference requests 9.12: LLM Jailbreak (feigned compliance captures jailbreak intent)",
-                        "Agents - Core 13.6: Intent Breaking & Goal Manipulation",
+                        "Model Management 8.2: Model theft (eligible numeric-score degradation reduces measured surrogate replication utility)",
                         "Agents - Core 13.2: Tool Misuse (deceptive no-ops expose tool misuse attempts)"
                     ]
                 }
@@ -1851,7 +1831,7 @@ export const deceiveTactic = {
                 {
                     "id": "AID-DV-003-G002",
                     "implementation": "Apply one request-bound, signed degradation profile—bounded logit noise or lower-utility generation—only to the request identified by the verified deception-eligibility token.",
-                    "howTo": "<p><strong>Runtime policy:</strong> Load response length, generation deadline, and model-sampling bounds from the signed, versioned deception profile bound to this eligibility receipt and responder release, bind its version/digest to response evidence, and return <code>ERROR</code> if the profile or any value is absent, invalid, or unverifiable.</p><h5>Required inputs and boundaries</h5><p>This method consumes a cryptographically verified <code>AID-DV-003</code> eligibility receipt and an active lifecycle-state receipt; verify both receipts locally before applying the degradation profile. Bind the profile to exact session, request, model/service digest, policy digest, approved mode, expiry, and response population. Values such as noise scale, token limit, temperature, and top-p come from a signed per-model policy. Do not apply degradation to ordinary, review, excluded-domain, safety-critical, or expired traffic.</p><h5>Build a deterministic request-bound degradation plan</h5><pre><code># File: deception/degradation_profile.py\nfrom __future__ import annotations\n\nimport hashlib\nimport json\nimport math\nfrom dataclasses import dataclass\n\nimport torch\n\nHEX = set(\"0123456789abcdef\")\n\n@dataclass(frozen=True)\nclass VerifiedEligibility:\n    session_id: str\n    mode: str\n    receipt_sha256: str\n    expires_at_epoch: int\n\n@dataclass(frozen=True)\nclass DegradationPolicy:\n    policy_version: str\n    policy_sha256: str\n    model_sha256: str\n    allowed_modes: tuple[str, ...]\n    logit_noise_std: float\n    maximum_noise_l2: float\n    low_utility_max_new_tokens: int\n    low_utility_temperature: float\n    low_utility_top_p: float\n\n\ndef digest_ok(value: str) -> bool:\n    return len(value) == 64 and set(value) <= HEX\n\n\ndef seed_for(eligibility: VerifiedEligibility, policy: DegradationPolicy, request_id: str) -> int:\n    if not request_id or not all(map(digest_ok, (eligibility.receipt_sha256, policy.policy_sha256, policy.model_sha256))):\n        raise ValueError(\"stable request and digest bindings are required\")\n    material = json.dumps({\n        \"session_id\": eligibility.session_id,\n        \"request_id\": request_id,\n        \"eligibility_sha256\": eligibility.receipt_sha256,\n        \"policy_sha256\": policy.policy_sha256,\n        \"model_sha256\": policy.model_sha256,\n        \"mode\": eligibility.mode,\n    }, sort_keys=True, separators=(\",\", \":\")).encode()\n    return int.from_bytes(hashlib.sha256(material).digest()[:8], \"big\")\n\n\ndef validate(policy: DegradationPolicy) -> None:\n    if set(policy.allowed_modes) - {\"noisy_logits\", \"low_utility_generation\"}:\n        raise ValueError(\"unsupported degradation mode\")\n    numeric = (policy.logit_noise_std, policy.maximum_noise_l2, policy.low_utility_temperature, policy.low_utility_top_p)\n    if any(type(value) not in (int, float) or not math.isfinite(float(value)) or value <= 0 for value in numeric):\n        raise ValueError(\"signed profile contains invalid numeric bounds\")\n    if (\n        isinstance(policy.low_utility_max_new_tokens, bool)\n        or not isinstance(policy.low_utility_max_new_tokens, int)\n        or policy.low_utility_max_new_tokens < 1\n        or policy.low_utility_top_p > 1\n    ):\n        raise ValueError(\"signed generation bounds are invalid\")\n\n\ndef apply_logit_noise(logits: torch.Tensor, eligibility: VerifiedEligibility, policy: DegradationPolicy, request_id: str) -> tuple[torch.Tensor, dict]:\n    validate(policy)\n    if eligibility.mode != \"noisy_logits\" or eligibility.mode not in policy.allowed_modes:\n        raise PermissionError(\"eligibility does not authorize noisy logits\")\n    generator = torch.Generator(device=logits.device)\n    seed = seed_for(eligibility, policy, request_id)\n    generator.manual_seed(seed)\n    noise = torch.randn(logits.shape, generator=generator, device=logits.device, dtype=logits.dtype) * policy.logit_noise_std\n    l2 = float(torch.linalg.vector_norm(noise).item())\n    if not math.isfinite(l2) or l2 > policy.maximum_noise_l2:\n        raise RuntimeError(\"generated noise exceeds signed L2 bound\")\n    degraded = logits + noise\n    if not bool(torch.isfinite(degraded).all().item()):\n        raise RuntimeError(\"degraded logits contain NaN or infinity\")\n    return degraded, {\"seed\": seed, \"noise_l2\": l2}\n\n\ndef generation_plan(eligibility: VerifiedEligibility, policy: DegradationPolicy, request_id: str) -> dict:\n    validate(policy)\n    if eligibility.mode != \"low_utility_generation\" or eligibility.mode not in policy.allowed_modes:\n        raise PermissionError(\"eligibility does not authorize lower-utility generation\")\n    return {\n        \"seed\": seed_for(eligibility, policy, request_id),\n        \"max_new_tokens\": policy.low_utility_max_new_tokens,\n        \"temperature\": policy.low_utility_temperature,\n        \"top_p\": policy.low_utility_top_p,\n        \"do_sample\": True,\n    }</code></pre><h5>Enforcement, replay, and evidence</h5><p>The caller must verify current time is before both eligibility and lifecycle expiry, consume the request ID exactly once, verify the signed policy/model digests, and commit a decision receipt before returning output. The receipt includes request/session/eligibility/policy/model digests, mode, seed, exact parameters, pre/post-output digests, measured noise norm where applicable, lifecycle state, and outcome. A separate replay identity always recomputes the same request-bound plan. Claim byte-identical output replay only when the receipt also pins the tokenizer, framework/runtime, device, kernel, deterministic settings, and model/config generations; otherwise compare the recorded parameters and security bounds rather than overstating seed-level reproducibility. Raw user content remains outside normal telemetry.</p><p><strong>Action:</strong> Apply degradation only through this exact receipt-bound plan, publish a non-overwrite decision receipt, and continuously test that the ordinary response path is byte/parameter unaffected.</p>"
+                    "howTo": "<p><strong>Runtime policy:</strong> Load response length, generation deadline, and model-sampling bounds from the signed, versioned deception profile bound to this eligibility receipt and responder release, bind its version/digest to response evidence, and return <code>ERROR</code> if the profile or any value is absent, invalid, or unverifiable.</p><h5>Required inputs and boundaries</h5><p>This method consumes a cryptographically verified <code>AID-DV-003</code> eligibility receipt and an active lifecycle-state receipt; verify both receipts locally before applying the degradation profile. Bind the profile to exact session, request, model/service digest, policy digest, approved mode, expiry, and response population. Values such as noise scale, token limit, temperature, and top-p come from a signed per-model policy. Do not apply degradation to ordinary, review, excluded-domain, safety-critical, or expired traffic.</p><h5>Build a deterministic request-bound degradation plan</h5><pre><code># File: deception/degradation_profile.py\nfrom __future__ import annotations\n\nimport hashlib\nimport json\nimport math\nfrom dataclasses import dataclass\n\nimport torch\n\nHEX = set(\"0123456789abcdef\")\n\n@dataclass(frozen=True)\nclass VerifiedEligibility:\n    session_id: str\n    mode: str\n    receipt_sha256: str\n    expires_at_epoch: int\n\n@dataclass(frozen=True)\nclass DegradationPolicy:\n    policy_version: str\n    policy_sha256: str\n    model_sha256: str\n    allowed_modes: tuple[str, ...]\n    logit_noise_std: float\n    maximum_noise_l2: float\n    low_utility_max_new_tokens: int\n    low_utility_temperature: float\n    low_utility_top_p: float\n\n\ndef digest_ok(value: str) -&gt; bool:\n    return len(value) == 64 and set(value) &lt;= HEX\n\n\ndef seed_for(eligibility: VerifiedEligibility, policy: DegradationPolicy, request_id: str) -&gt; int:\n    if not request_id or not all(map(digest_ok, (eligibility.receipt_sha256, policy.policy_sha256, policy.model_sha256))):\n        raise ValueError(\"stable request and digest bindings are required\")\n    material = json.dumps({\n        \"session_id\": eligibility.session_id,\n        \"request_id\": request_id,\n        \"eligibility_sha256\": eligibility.receipt_sha256,\n        \"policy_sha256\": policy.policy_sha256,\n        \"model_sha256\": policy.model_sha256,\n        \"mode\": eligibility.mode,\n    }, sort_keys=True, separators=(\",\", \":\")).encode()\n    return int.from_bytes(hashlib.sha256(material).digest()[:8], \"big\")\n\n\ndef validate(policy: DegradationPolicy) -&gt; None:\n    if set(policy.allowed_modes) - {\"noisy_logits\", \"low_utility_generation\"}:\n        raise ValueError(\"unsupported degradation mode\")\n    numeric = (policy.logit_noise_std, policy.maximum_noise_l2, policy.low_utility_temperature, policy.low_utility_top_p)\n    if any(type(value) not in (int, float) or not math.isfinite(float(value)) or value &lt;= 0 for value in numeric):\n        raise ValueError(\"signed profile contains invalid numeric bounds\")\n    if (\n        isinstance(policy.low_utility_max_new_tokens, bool)\n        or not isinstance(policy.low_utility_max_new_tokens, int)\n        or policy.low_utility_max_new_tokens &lt; 1\n        or policy.low_utility_top_p &gt; 1\n    ):\n        raise ValueError(\"signed generation bounds are invalid\")\n\n\ndef apply_logit_noise(logits: torch.Tensor, eligibility: VerifiedEligibility, policy: DegradationPolicy, request_id: str) -&gt; tuple[torch.Tensor, dict]:\n    validate(policy)\n    if eligibility.mode != \"noisy_logits\" or eligibility.mode not in policy.allowed_modes:\n        raise PermissionError(\"eligibility does not authorize noisy logits\")\n    generator = torch.Generator(device=logits.device)\n    seed = seed_for(eligibility, policy, request_id)\n    generator.manual_seed(seed)\n    noise = torch.randn(logits.shape, generator=generator, device=logits.device, dtype=logits.dtype) * policy.logit_noise_std\n    l2 = float(torch.linalg.vector_norm(noise).item())\n    if not math.isfinite(l2) or l2 &gt; policy.maximum_noise_l2:\n        raise RuntimeError(\"generated noise exceeds signed L2 bound\")\n    degraded = logits + noise\n    if not bool(torch.isfinite(degraded).all().item()):\n        raise RuntimeError(\"degraded logits contain NaN or infinity\")\n    return degraded, {\"seed\": seed, \"noise_l2\": l2}\n\n\ndef generation_plan(eligibility: VerifiedEligibility, policy: DegradationPolicy, request_id: str) -&gt; dict:\n    validate(policy)\n    if eligibility.mode != \"low_utility_generation\" or eligibility.mode not in policy.allowed_modes:\n        raise PermissionError(\"eligibility does not authorize lower-utility generation\")\n    return {\n        \"seed\": seed_for(eligibility, policy, request_id),\n        \"max_new_tokens\": policy.low_utility_max_new_tokens,\n        \"temperature\": policy.low_utility_temperature,\n        \"top_p\": policy.low_utility_top_p,\n        \"do_sample\": True,\n    }</code></pre><h5>Enforcement, replay, and evidence</h5><p>The caller must verify current time is before both eligibility and lifecycle expiry, consume the request ID exactly once, verify the signed policy/model digests, and commit a decision receipt before returning output. The receipt includes request/session/eligibility/policy/model digests, mode, seed, exact parameters, pre/post-output digests, measured noise norm where applicable, lifecycle state, and outcome. A separate replay identity always recomputes the same request-bound plan. Claim byte-identical output replay only when the receipt also pins the tokenizer, framework/runtime, device, kernel, deterministic settings, and model/config generations; otherwise compare the recorded parameters and security bounds rather than overstating seed-level reproducibility. Raw user content remains outside normal telemetry.</p><p><strong>Action:</strong> Apply degradation only through this exact receipt-bound plan, publish a non-overwrite decision receipt, and continuously test that the ordinary response path is byte/parameter unaffected.</p><h5>Verify extraction utility for the applicable model family</h5><p>For numeric-score APIs, replay the same authenticated, disjoint query/holdout suite against ordinary and eligibility-authorized degraded paths. Capture exact model, policy, suite, query budget and output evidence; include repeated-query averaging and adaptive-query variants. Fit both surrogate models and compare holdout error using the policy-owned threshold below. This is a numeric-score Ridge-surrogate path; generative models require their model-family extraction harness. Sign each comparison and require every applicable policy suite to pass before enabling that degradation profile. Ordinary responses must remain unchanged. A failed comparison disables the deception profile; it does not prove the model is safe from extraction. Do not claim inversion, training-data reconstruction, or universal extraction prevention from this test.</p><pre><code class=\"language-python\"># File: deception/verify_extraction_utility.py\nfrom __future__ import annotations\nimport hashlib\nimport json\nimport math\nimport numpy as np\nfrom sklearn.linear_model import Ridge\n\n\ndef evaluate_numeric_extraction(*, query_features, ordinary_scores, degraded_scores,\n                                holdout_features, holdout_scores, ordinary_control_before,\n                                ordinary_control_after, query_ids, holdout_ids,\n                                model_sha256, policy_sha256, suite_sha256,\n                                ridge_alpha, minimum_mse_increase) -&gt; dict:\n    \"\"\"Compare two numeric-output surrogate fits on the same held-out population.\n\n    The caller authenticates the suite/profile and captures actual gateway\n    scores under identical policy-approved query budgets, including averaging\n    and adaptive-query variants. This function is not a universal LLM extractor.\n    \"\"\"\n    for value in (model_sha256, policy_sha256, suite_sha256):\n        if not isinstance(value, str) or len(value) != 64 or set(value) - set(\"0123456789abcdef\") or value == \"0\" * 64:\n            raise ValueError(\"verified model, policy and suite identities required\")\n    if any(type(value) not in (int, float) or not math.isfinite(value) or value &lt;= 0\n           for value in (ridge_alpha, minimum_mse_increase)):\n        raise ValueError(\"positive finite policy-owned evaluation bounds required\")\n    x, ordinary, degraded, h, truth = [np.asarray(value, dtype=float) for value in\n        (query_features, ordinary_scores, degraded_scores, holdout_features, holdout_scores)]\n    if (x.ndim != 2 or h.ndim != 2 or x.shape[1] != h.shape[1]\n            or ordinary.ndim not in (1, 2) or truth.ndim != ordinary.ndim\n            or ordinary.shape != degraded.shape or ordinary.shape[0] != x.shape[0]\n            or truth.shape[0] != h.shape[0] or ordinary.shape[1:] != truth.shape[1:]\n            or not len(x) or not len(h) or any(not np.isfinite(a).all() for a in (x, ordinary, degraded, h, truth))):\n        raise ValueError(\"complete finite query/holdout score populations required\")\n    if (len(query_ids) != len(x) or len(holdout_ids) != len(h)\n            or any(not isinstance(i, str) or not i for i in [*query_ids, *holdout_ids])\n            or len(set(query_ids)) != len(query_ids) or len(set(holdout_ids)) != len(holdout_ids)\n            or set(query_ids) &amp; set(holdout_ids)):\n        raise ValueError(\"query and held-out identities must be complete, unique and disjoint\")\n    if not isinstance(ordinary_control_before, bytes) or not ordinary_control_before or not isinstance(ordinary_control_after, bytes):\n        raise ValueError(\"captured ordinary-response bytes required\")\n    normal_unchanged = ordinary_control_before == ordinary_control_after\n    baseline = Ridge(alpha=ridge_alpha).fit(x, ordinary).predict(h)\n    defended = Ridge(alpha=ridge_alpha).fit(x, degraded).predict(h)\n    if not np.isfinite(baseline).all() or not np.isfinite(defended).all():\n        raise ValueError(\"surrogate predictions are not finite\")\n    try:\n        with np.errstate(over=\"raise\", invalid=\"raise\"):\n            baseline_mse = float(np.mean((baseline - truth) ** 2))\n            defended_mse = float(np.mean((defended - truth) ** 2))\n            mse_increase = defended_mse - baseline_mse\n    except FloatingPointError as error:\n        raise ValueError(\"surrogate error calculation overflowed\") from error\n    if not all(math.isfinite(value) for value in (baseline_mse, defended_mse, mse_increase)):\n        raise ValueError(\"surrogate error metrics are not finite\")\n    values = {\"queries\": x.tolist(), \"ordinary\": ordinary.tolist(), \"degraded\": degraded.tolist(),\n              \"holdout\": h.tolist(), \"truth\": truth.tolist(), \"query_ids\": query_ids, \"holdout_ids\": holdout_ids}\n    return {\"schema_version\": \"aidefend.numeric-extraction-comparison.v1\",\n            \"model_sha256\": model_sha256, \"policy_sha256\": policy_sha256, \"suite_sha256\": suite_sha256,\n            \"population_sha256\": hashlib.sha256(json.dumps(values, sort_keys=True, separators=(\",\", \":\"), allow_nan=False).encode()).hexdigest(),\n            \"baseline_mse\": baseline_mse, \"defended_mse\": defended_mse,\n            \"ordinary_control_unchanged\": normal_unchanged,\n            \"outcome\": \"PASS\" if normal_unchanged and mse_increase &gt;= minimum_mse_increase else \"FAIL\"}\n</code></pre>"
                 },
                 {
                     "id": "AID-DV-003-G003",
@@ -2332,9 +2312,8 @@ export const deceiveTactic = {
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-10.1 Model Extraction (trap markers support model-extraction investigations)",
-                        "AISubtech-10.1.1 API Query Stealing (trap markers reveal reuse of systematically captured API outputs)",
-                        "AITech-8.2 Data Exfiltration / Exposure (leak beacons reveal exfiltrated outputs)"
+                        "AITech-8.2 Data Exfiltration / Exposure (detects external reuse of registered output markers)",
+                        "AITech-8.3 Information Disclosure (detects external reuse of registered output markers)"
                     ]
                 },
                 {
@@ -2455,13 +2434,12 @@ export const deceiveTactic = {
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-1.3 Goal Manipulation (canary goals detect goal manipulation)",
-                        "AISubtech-1.3.1 Goal Manipulation (Models, Agents) (canary goals target model/agent-level goal manipulation)",
-                        "AITech-12.1 Tool Exploitation (decoy tools detect tool exploitation)",
-                        "AISubtech-12.1.2 Tool Poisoning (canary tool descriptions expose agents that follow malicious or poisoned tool metadata)",
-                        "AISubtech-4.1.1 Rogue Agent Introduction (canary tasks detect rogue agent introduction)",
-                        "AITech-5.1 Memory System Persistence (canary tasks detect persistent memory manipulation)",
-                        "AITech-14.2 Abuse of Delegated Authority"
+                        "AISubtech-2.1.2 Capability and Permission Overreach (detects selection of never-legitimate canary capabilities)",
+                        "AISubtech-8.3.1 Tool Metadata Exposure (exact marker detection for internal tool-metadata disclosure)",
+                        "AITech-1.2 Indirect Prompt Injection (RAG instruction-to-canary invocation tripwire)",
+                        "AITech-12.1 Tool Exploitation (detects selection of never-legitimate canary capabilities)",
+                        "AITech-2.1 Excessive Agency (detects selection of never-legitimate canary capabilities)",
+                        "AITech-8.3 Information Disclosure (exact marker detection for internal tool-metadata disclosure)"
                     ]
                 },
                 {
@@ -3464,8 +3442,9 @@ export const deceiveTactic = {
             {
               "framework": "Cisco Integrated AI Security and Safety Framework",
               "items": [
-                "AITech-8.3 Information Disclosure (isolated synthetic metadata routes reveal disclosure probes without exposing production state)",
-                "AISubtech-8.3.2 System Information Leakage (decoy stack details expose system-information reconnaissance)"
+                  "AISubtech-8.3.2 System Information Exposure (synthetic system-information trap routes only)",
+                  "AITech-8.2 Data Exfiltration / Exposure (replaces policy-selected debug/env disclosure routes with synthetic responses and no production fallback)",
+                  "AITech-8.3 Information Disclosure (replaces policy-selected system-information routes with isolated synthetic responses)"
               ]
             },
             {
@@ -3583,7 +3562,10 @@ export const deceiveTactic = {
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-8.2 Data Exfiltration / Exposure (registered canary recall detects exposure of inserted training records)"
+                        "AISubtech-10.1.3 Sensitive Data Reconstruction (registered synthetic training-canary recall audit only)",
+                        "AISubtech-8.2.1 Training Data Exposure (registered synthetic training-canary recall audit only)",
+                        "AITech-8.2 Data Exfiltration / Exposure (registered synthetic training-canary recall audit only)",
+                        "AITech-8.3 Information Disclosure (registered synthetic training-canary recall audit only)"
                     ]
                 },
                 {

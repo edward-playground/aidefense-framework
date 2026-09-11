@@ -24,6 +24,7 @@ import { fileURLToPath, pathToFileURL } from 'url';
 import { createHash } from 'crypto';
 import { aidefendVersion } from '../aidefend-intro.js';
 import { frameworkMigrations } from '../framework-migrations.js';
+import { ciscoFramework } from '../cisco-framework.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -1291,6 +1292,11 @@ async function main() {
   const migrationContent = `${JSON.stringify(frameworkMigrations, null, 2)}\n`;
   const migrationPath = path.join(OUTPUT_DIR, 'framework-migrations.json');
   verifyOrWrite(migrationPath, migrationContent);
+
+  verifyOrWrite(
+    path.join(OUTPUT_DIR, 'cisco-framework.json'),
+    `${JSON.stringify(ciscoFramework, null, 2)}\n`,
+  );
 
   console.log('\n================================');
   console.log(checkOnly ? 'Generated outputs verified!\n' : 'Generation complete!\n');

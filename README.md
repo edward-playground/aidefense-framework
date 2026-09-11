@@ -2,7 +2,7 @@
 
 [![Code License: Apache-2.0](https://img.shields.io/badge/code-Apache--2.0-blue.svg?style=for-the-badge)](LICENSE)
 [![Content License: CC BY 4.0](https://img.shields.io/badge/content-CC_BY_4.0-lightgrey.svg?style=for-the-badge)](LICENSE-CONTENT)
-[![Version](https://img.shields.io/badge/version-1.20260907-0ea5e9.svg?style=for-the-badge)](aidefend-intro.js)
+[![Version](https://img.shields.io/badge/version-1.20260911-0ea5e9.svg?style=for-the-badge)](aidefend-intro.js)
 [![Live Demo](https://img.shields.io/badge/live-aidefend.net-brightgreen.svg?style=for-the-badge)](https://aidefend.net)
 
 AIDEFEND is an open, implementation-oriented knowledge base of defensive controls for AI, machine-learning, LLM, multimodal, RAG, and agentic systems. It organizes defenses by security function, protected component, lifecycle phase, and the external security references they address.
@@ -12,7 +12,7 @@ AIDEFEND is an open, implementation-oriented knowledge base of defensive control
 
 ## Current source version
 
-Version `1.20260907` provides:
+Version `1.20260911` provides:
 
 - **307 actionable defensive controls**: 35 standalone techniques and 272 leaf sub-techniques
 - implementation guidance, production-oriented examples, verification guidance, and explicit scope boundaries
@@ -35,7 +35,7 @@ Every actionable AIDEFEND control is assessed against the following external ref
 4. OWASP ML Top 10 2023
 5. OWASP Top 10 for Agentic Applications 2026
 6. NIST Adversarial Machine Learning 2025
-7. Cisco Integrated AI Security and Safety Framework
+7. Cisco Integrated AI Security and Safety Framework v2.0
 8. Google Secure AI Framework 2.0 - Risks
 9. Databricks AI Security Framework 3.0
 
@@ -165,6 +165,16 @@ AIDEFEND synthesizes defensive knowledge and references identifiers or concepts 
 AIDEFEND is an independent project. It is not affiliated with, endorsed by, sponsored by, or officially connected to The MITRE Corporation, the Cloud Security Alliance, OWASP, NIST, Cisco, Google, or Databricks.
 
 External names, identifiers, titles, and other third-party material remain subject to their respective owners' rights. AIDEFEND's licenses apply only to AIDEFEND-authored code, content, and data as defined in [`LICENSING.md`](LICENSING.md). See [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md) for bundled third-party software and redistributed data notices.
+
+## Cisco AI Security and Safety Framework v2
+
+Cisco mappings use the current v2.0.0 taxonomy announced on September 9, 2026: 19 objectives, 41 techniques, and 115 subtechniques. The Frameworks View retains Cisco objective names and uses AIDEFEND-authored summaries of their child techniques. Mapping decisions follow the complete official technique/subtechnique record and each AIDEFEND control's deployment mechanism. Definitions are primary; Cisco's own examples and standards mappings can clarify ambiguous scope, without creating transitive equivalence between frameworks. Shared keywords or an objective heading alone do not establish defense coverage.
+
+The current catalog and source provenance are available in [`cisco-framework.js`](cisco-framework.js) and generated [`data/cisco-framework.json`](data/cisco-framework.json). Cisco's framework key remains stable; identifiers and names represent v2 only. The migration registry and WebMCP resolver report the current edition for bare IDs, reject unsupported editions and retired IDs, and report ID/name conflicts instead of silently interpreting a v1 concept as v2. Historical conflict metadata does not restore v1 mappings or automatically select a successor.
+
+Parent-family mappings are derived child unions for navigation. All nine framework views list and count only actionable controls that actually match the selected threat group. Full and High describe relevance within the defense's stated scope, not verified deployment. Repairable implementation defects are tracked separately from relevance; a missing primary defense mechanism still cannot earn coverage from a title or tool name.
+
+Official sources: [Cisco v2 announcement](https://blogs.cisco.com/ai/security-framework-v2) and [Cisco taxonomy](https://learn-cloudsecurity.cisco.com/ai-security-framework).
 
 ## Maintainer
 

@@ -105,9 +105,10 @@ export const hardenTactic = {
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-11.1 Environment-Aware Evasion",
-                        "AITech-11.2 Model-Selective Evasion",
-                        "AISubtech-11.1.1 Agent-Specific Evasion (robust training hardens models against agent-specific evasion attacks)"
+                        "AISubtech-1.3.2 Image Manipulation",
+                        "AITech-1.3 Multimodal Injection and Manipulation",
+                        "AITech-9.1 Model or Agentic System Manipulation",
+                        "AITech-9.2 Detection Evasion"
                     ]
                 },
                 {
@@ -257,26 +258,40 @@ export const hardenTactic = {
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-1.1 Direct Prompt Injection",
+                        "AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation)",
                         "AITech-1.2 Indirect Prompt Injection",
-                        "AITech-1.4 Multi-Modal Injection and Manipulation",
-                        "AITech-2.1 Jailbreak",
+                        "AITech-1.3 Multimodal Injection and Manipulation",
+                        "AITech-2.3 Reward Hacking",
                         "AITech-6.1 Training Data Poisoning",
                         "AITech-7.3 Data Source Abuse and Manipulation",
+                        "AITech-8.2 Data Exfiltration / Exposure",
                         "AITech-8.3 Information Disclosure",
                         "AITech-9.1 Model or Agentic System Manipulation",
-                        "AITech-17.1 Sensor Spoofing",
+                        "AITech-13.1 Disruption of Availability",
+                        "AITech-14.1 Unauthorized Access",
+                        "AITech-15.1 Harmful Content",
                         "AITech-19.2 Fusion Payload Split",
-                        "AISubtech-17.1.1 Sensor Spoofing: Action Signals (audio, visual)",
-                        "AISubtech-19.2.1 Convergence Payload Injection",
-                        "AISubtech-1.4.1 Image-Text Injection",
-                        "AISubtech-1.4.3 Audio Command Injection",
-                        "AISubtech-1.4.4 Video Overlay Manipulation",
-                        "AISubtech-6.1.1 Knowledge Base Poisoning",
+                        "AISubtech-1.1.1 Instruction Manipulation",
+                        "AISubtech-1.1.2 Obfuscation",
+                        "AISubtech-1.1.4 Token Exploitation",
+                        "AISubtech-1.3.1 Image-Text Injection",
+                        "AISubtech-1.3.2 Image Manipulation",
+                        "AISubtech-1.3.3 Audio Command Injection",
+                        "AISubtech-1.3.4 Video Overlay Manipulation",
+                        "AISubtech-2.3.2 Verifier Manipulation",
+                        "AISubtech-2.3.3 Shortcut Acquisition",
+                        "AISubtech-4.3.1 Schema Inconsistencies",
+                        "AISubtech-6.1.2 Reinforcement Biasing",
+                        "AISubtech-6.1.3 Reinforcement Signal Corruption",
                         "AISubtech-7.3.1 Corrupted Third-Party Data",
-                        "AISubtech-8.3.2 System Information Leakage",
-                        "AISubtech-9.1.1 Code Execution",
-                        "AISubtech-9.1.5 Template Injection (e.g., SSTI)"
+                        "AISubtech-8.2.1 Training Data Exposure",
+                        "AISubtech-8.2.2 LLM Data Leakage",
+                        "AISubtech-8.3.3 Personally Identifiable Information Exposure",
+                        "AISubtech-10.1.3 Sensitive Data Reconstruction",
+                        "AISubtech-13.1.1 Compute Exhaustion",
+                        "AISubtech-13.1.2 Memory Flooding",
+                        "AISubtech-13.1.4 Application Denial of Service",
+                        "AISubtech-19.2.1 Convergence Payload Injection"
                     ]
                 },
                 {
@@ -418,10 +433,17 @@ export const hardenTactic = {
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-10.1.3 Sensitive Data Reconstruction (Removes recognized sensitive training literals before memorization can expose them)",
+                                "AISubtech-19.2.1 Convergence Payload Injection (Training-side fusion anomaly admission with model-specific partial-payload tests)",
+                                "AISubtech-7.3.1 Corrupted Third-Party Data",
+                                "AISubtech-8.2.1 Training Data Exposure (Removes recognized sensitive records before training; unknown PII remains outside this guarantee)",
+                                "AISubtech-8.2.2 LLM Data Leakage (Removes recognized sensitive records before training; unknown PII remains outside this guarantee)",
+                                "AISubtech-8.3.3 Personally Identifiable Information Exposure (Removes recognized sensitive records before training; unknown PII remains outside this guarantee)",
+                                "AITech-19.2 Fusion Payload Split (Training-side fusion anomaly admission with model-specific partial-payload tests)",
                                 "AITech-6.1 Training Data Poisoning",
-                                "AITech-19.2 Fusion Payload Split (signed multimodal group admission blocks anomalous training-time fusion inputs)",
-                                "AISubtech-7.3.1 Corrupted Third-Party Data (dataset sanitization detects corrupted external data)",
-                                "AISubtech-19.2.1 Convergence Payload Injection (joint-embedding and fusion-layer evidence quarantines training-time payload components)"
+                                "AITech-7.3 Data Source Abuse and Manipulation",
+                                "AITech-8.2 Data Exfiltration / Exposure (Removes recognized sensitive records before training; unknown PII remains outside this guarantee)",
+                                "AITech-8.3 Information Disclosure (Removes recognized sensitive records before training; unknown PII remains outside this guarantee)"
                             ]
                         },
                         {
@@ -5140,9 +5162,17 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-1.1 Direct Prompt Injection",
+                                "AISubtech-1.1.1 Instruction Manipulation",
+                                "AISubtech-1.1.2 Obfuscation (Covers supported Unicode and control-character obfuscation paths)",
+                                "AISubtech-1.1.4 Token Exploitation",
+                                "AISubtech-13.1.1 Compute Exhaustion",
+                                "AISubtech-13.1.2 Memory Flooding",
+                                "AISubtech-13.1.4 Application Denial of Service",
+                                "AISubtech-4.3.1 Schema Inconsistencies (Validates model-facing schemas; agentic communication is not assumed)",
+                                "AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation)",
                                 "AITech-1.2 Indirect Prompt Injection",
-                                "AITech-2.1 Jailbreak"
+                                "AITech-13.1 Disruption of Availability",
+                                "AITech-15.1 Harmful Content"
                             ]
                         },
                         {
@@ -5324,7 +5354,11 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-1.4 Multi-Modal Injection and Manipulation"
+                                "AISubtech-1.3.2 Image Manipulation (Purifies bounded visual perturbations under measured utility constraints)",
+                                "AISubtech-13.1.2 Memory Flooding",
+                                "AISubtech-13.1.4 Application Denial of Service",
+                                "AITech-1.3 Multimodal Injection and Manipulation (Purifies bounded visual perturbations under measured utility constraints)",
+                                "AITech-13.1 Disruption of Availability"
                             ]
                         },
                         {
@@ -5429,7 +5463,8 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-6.1 Training Data Poisoning (feature transformation used as poisoning vector)"
+                                "AITech-6.1 Training Data Poisoning",
+                                "AITech-9.1 Model or Agentic System Manipulation (Protects serving-time feature transformations from runtime manipulation)"
                             ]
                         },
                         {
@@ -5559,7 +5594,11 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-6.1 Training Data Poisoning (label manipulation in supervised or preference data)"
+                                "AISubtech-2.3.2 Verifier Manipulation",
+                                "AISubtech-6.1.2 Reinforcement Biasing",
+                                "AISubtech-6.1.3 Reinforcement Signal Corruption",
+                                "AITech-2.3 Reward Hacking",
+                                "AITech-6.1 Training Data Poisoning"
                             ]
                         },
                         {
@@ -5675,7 +5714,9 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "N/A"
+                                "AISubtech-2.3.2 Verifier Manipulation",
+                                "AISubtech-2.3.3 Shortcut Acquisition",
+                                "AITech-2.3 Reward Hacking"
                             ]
                         },
                         {
@@ -5823,8 +5864,7 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AISubtech-6.1.1 Knowledge Base Poisoning",
-                                "AITech-7.3 Data Source Abuse and Manipulation"
+                                "AITech-7.3 Data Source Abuse and Manipulation (Rejects external content lacking required verified provenance; does not establish factual truth)"
                             ]
                         },
                         {
@@ -5949,12 +5989,14 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-1.4 Multi-Modal Injection and Manipulation",
-                                "AISubtech-1.4.1 Image-Text Injection",
-                                "AISubtech-1.4.3 Audio Command Injection",
-                                "AISubtech-1.4.4 Video Overlay Manipulation",
-                                "AITech-17.1 Sensor Spoofing",
-                                "AISubtech-17.1.1 Sensor Spoofing: Action Signals (audio, visual)"
+                                "AISubtech-1.1.4 Token Exploitation",
+                                "AISubtech-1.3.1 Image-Text Injection",
+                                "AISubtech-1.3.3 Audio Command Injection",
+                                "AISubtech-1.3.4 Video Overlay Manipulation",
+                                "AISubtech-13.1.2 Memory Flooding",
+                                "AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation)",
+                                "AITech-1.3 Multimodal Injection and Manipulation",
+                                "AITech-13.1 Disruption of Availability"
                             ]
                         },
                         {
@@ -6103,11 +6145,12 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-8.3 Information Disclosure",
-                                "AISubtech-8.3.2 System Information Leakage",
-                                "AITech-9.1 Model or Agentic System Manipulation",
-                                "AISubtech-9.1.1 Code Execution",
-                                "AISubtech-9.1.5 Template Injection (e.g., SSTI)"
+                                "AISubtech-13.1.2 Memory Flooding",
+                                "AISubtech-13.1.4 Application Denial of Service",
+                                "AITech-13.1 Disruption of Availability",
+                                "AITech-14.1 Unauthorized Access",
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AITech-8.3 Information Disclosure"
                             ]
                         },
                         {
@@ -6255,19 +6298,25 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
+                        "AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation)",
+                        "AITech-6.1 Training Data Poisoning",
                         "AITech-7.3 Data Source Abuse and Manipulation",
-                        "AITech-9.1 Model or Agentic System Manipulation",
+                        "AITech-8.2 Data Exfiltration / Exposure",
+                        "AITech-8.3 Information Disclosure",
+                        "AITech-8.4 Prompt/Meta Extraction",
+                        "AITech-9.2 Detection Evasion",
                         "AITech-9.3 Dependency / Plugin Compromise",
                         "AITech-10.1 Model Extraction",
                         "AITech-14.1 Unauthorized Access",
+                        "AISubtech-1.1.1 Instruction Manipulation",
                         "AISubtech-7.3.1 Corrupted Third-Party Data",
-                        "AISubtech-9.1.1 Code Execution",
-                        "AISubtech-9.1.2 Unauthorized or Unsolicited System Access",
+                        "AISubtech-8.4.1 System LLM Prompt Leakage",
                         "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access",
-                        "AISubtech-9.2.2 Backdoors and Trojans",
+                        "AISubtech-9.2.1 Obfuscation Vulnerabilities",
                         "AISubtech-9.3.1 Malicious Package / Tool Injection",
                         "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
-                        "AISubtech-9.3.3 Dependency Replacement / Rug Pull"
+                        "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
+                        "AISubtech-14.1.2 Insufficient Access Controls"
                     ]
                 },
                 {
@@ -6407,9 +6456,10 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-9.3 Dependency / Plugin Compromise",
-                                "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers) (dependency scanning detects typosquatted packages)",
-                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull (version pinning and hash verification detect replaced dependencies)"
+                                "AISubtech-9.3.1 Malicious Package / Tool Injection",
+                                "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
+                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
+                                "AITech-9.3 Dependency / Plugin Compromise"
                             ]
                         },
                         {
@@ -6565,7 +6615,9 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-9.1 Model or Agentic System Manipulation"
+                                "AISubtech-9.3.1 Malicious Package / Tool Injection (Applies to curated external model packages and their mirror-refresh path)",
+                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull (Applies to curated external model packages and their mirror-refresh path)",
+                                "AITech-9.3 Dependency / Plugin Compromise (Applies to curated external model packages and their mirror-refresh path)"
                             ]
                         },
                         {
@@ -6981,8 +7033,9 @@ if __name__ == "__main__":
                       {
                           "framework": "Cisco Integrated AI Security and Safety Framework",
                           "items": [
-                              "AITech-7.3 Data Source Abuse and Manipulation",
-                              "AISubtech-7.3.1 Corrupted Third-Party Data"
+                              "AISubtech-7.3.1 Corrupted Third-Party Data",
+                              "AITech-6.1 Training Data Poisoning (Blocks alteration of an approved external training-data snapshot)",
+                              "AITech-7.3 Data Source Abuse and Manipulation"
                           ]
                       },
                       {
@@ -7105,7 +7158,8 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "N/A"
+                                "AITech-14.1 Unauthorized Access (Attests the underlying host before admitting the AI workload)",
+                                "AISubtech-14.1.2 Insufficient Access Controls (fresh platform identity and measured-state admission before workload credential release)"
                             ]
                         },
                         {
@@ -7220,8 +7274,11 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AISubtech-9.1.2 Unauthorized or Unsolicited System Access (IaC scanning detects configurations enabling unauthorized access)",
-                                "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access (IaC scanning detects insecure network paths)"
+                                "AISubtech-14.1.2 Insufficient Access Controls",
+                                "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access",
+                                "AITech-14.1 Unauthorized Access",
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AITech-8.3 Information Disclosure"
                             ]
                         },
                         {
@@ -7359,8 +7416,9 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-9.1 Model or Agentic System Manipulation",
-                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull (digest binding and tombstone handling detect replaced artifacts)"
+                                "AISubtech-9.3.1 Malicious Package / Tool Injection (Applies to external model-source admission and upstream refresh)",
+                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull (Applies to external model-source admission and upstream refresh)",
+                                "AITech-9.3 Dependency / Plugin Compromise (Applies to external model-source admission and upstream refresh)"
                             ]
                         },
                         {
@@ -7413,7 +7471,7 @@ if __name__ == "__main__":
                         {
                             "id": "AID-H-003.006-G007",
                             "implementation": "Re-verify both Sigstore bundles and the actual model digest immediately before every model load or hot reload.",
-                            "howTo": "<h5>Concept:</h5><p>The runtime repeats cryptographic verification on the exact bytes it will load. It verifies the release trust policy, artifact attestation, detached SBOM signature, and approved admission-receipt signature before parsing their fields; no trust identity is accepted from caller input.</p><pre><code># File: model_sbom/runtime_guard.py\nfrom __future__ import annotations\n\nimport argparse\nimport json\nfrom pathlib import Path\n\nfrom model_sbom.admit_model_artifact import (\n    admit,\n    load_release_policy,\n    sha256_file,\n    verify_blob,\n)\n\n\nRECEIPT_FIELDS = {\n    \"schema_version\", \"artifact_digest\", \"sbom_sha256\", \"predicate_type\",\n    \"release_policy_sha256\", \"release_policy_version\",\n    \"artifact_signer_identity\", \"artifact_signer_issuer\",\n}\n\n\nclass StartupRejected(RuntimeError):\n    pass\n\n\ndef runtime_verify(args: argparse.Namespace) -> dict:\n    try:\n        admission = admit(args)\n        policy = load_release_policy(\n            args.release_policy, args.release_policy_bundle\n        )\n        verify_blob(\n            args.approved_receipt,\n            args.approved_receipt_bundle,\n            policy[\"admission_receipt_identity\"],\n            policy[\"admission_receipt_issuer\"],\n        )\n    except Exception as exc:\n        raise StartupRejected(\n            \"model release-policy, signature, attestation, receipt, or digest verification failed\"\n        ) from exc\n\n    approved = json.loads(args.approved_receipt.read_text(encoding=\"utf-8\"))\n    if set(approved) != RECEIPT_FIELDS:\n        raise StartupRejected(\"approved admission receipt schema differs\")\n    if approved[\"schema_version\"] != \"aidefend.model-admission-receipt.v2\":\n        raise StartupRejected(\"approved admission receipt version differs\")\n    if approved != admission:\n        raise StartupRejected(\"runtime model evidence differs from release admission\")\n    return {\n        \"schema_version\": \"aidefend.model-runtime-verification.v2\",\n        \"artifact_digest\": admission[\"artifact_digest\"],\n        \"sbom_sha256\": sha256_file(args.sbom),\n        \"release_policy_sha256\": sha256_file(args.release_policy),\n        \"approved_receipt_sha256\": sha256_file(args.approved_receipt),\n    }\n</code></pre><p>Use the same artifact, SBOM, bundles, and verified release-policy arguments as <code>admit_model_artifact.py</code>, plus <code>approved_receipt</code> and its detached bundle. Run this guard before every initial load and hot reload. Send the canonical runtime receipt to an external signer or append-only audit writer before the loader receives the artifact path.</p><p><strong>Action:</strong> Policy signature, receipt signature, identity, issuer, predicate, actual artifact digest, SBOM digest, or exact-receipt mismatch fails startup. An unavailable verifier or unreadable evidence is <code>insufficient_data</code>, never a pass.</p><h5>Before you begin</h5><p>Apply <code>AID-H-003.006-G007</code> only when a model artifact is packaged, promoted, mirrored, loaded, hot-reloaded, or investigated as a released asset.</p>"
+                            "howTo": "<h5>Concept:</h5><p>The runtime repeats cryptographic verification on the exact bytes it will load. It verifies the release trust policy, artifact attestation, detached SBOM signature, and approved admission-receipt signature before parsing their fields; no trust identity is accepted from caller input.</p><pre><code># File: model_sbom/runtime_guard.py\nfrom __future__ import annotations\n\nimport argparse\nimport json\nimport hashlib\nfrom pathlib import Path\n\nfrom model_sbom.admit_model_artifact import (\n    admit,\n    load_release_policy,\n    sha256_file,\n    verified_json_bytes,\n)\n\n\nRECEIPT_FIELDS = {\n    \"schema_version\", \"artifact_digest\", \"sbom_sha256\", \"predicate_type\",\n    \"release_policy_sha256\", \"release_policy_version\",\n    \"artifact_signer_identity\", \"artifact_signer_issuer\",\n}\n\n\nclass StartupRejected(RuntimeError):\n    pass\n\n\ndef runtime_verify(args: argparse.Namespace) -> dict:\n    try:\n        admission = admit(args)\n        policy, release_policy_raw = load_release_policy(\n            args.release_policy, args.release_policy_bundle\n        )\n        if hashlib.sha256(release_policy_raw).hexdigest() != admission[\"release_policy_sha256\"]:\n            raise StartupRejected(\"release policy changed during verification\")\n        approved, approved_raw = verified_json_bytes(\n            args.approved_receipt,\n            args.approved_receipt_bundle,\n            policy[\"admission_receipt_identity\"],\n            policy[\"admission_receipt_issuer\"],\n            \"approved admission receipt\",\n        )\n    except Exception as exc:\n        raise StartupRejected(\n            \"model release-policy, signature, attestation, receipt, or digest verification failed\"\n        ) from exc\n\n    if set(approved) != RECEIPT_FIELDS:\n        raise StartupRejected(\"approved admission receipt schema differs\")\n    if approved[\"schema_version\"] != \"aidefend.model-admission-receipt.v2\":\n        raise StartupRejected(\"approved admission receipt version differs\")\n    if approved != admission:\n        raise StartupRejected(\"runtime model evidence differs from release admission\")\n    return {\n        \"schema_version\": \"aidefend.model-runtime-verification.v2\",\n        \"artifact_digest\": admission[\"artifact_digest\"],\n        \"sbom_sha256\": admission[\"sbom_sha256\"],\n        \"release_policy_sha256\": hashlib.sha256(release_policy_raw).hexdigest(),\n        \"approved_receipt_sha256\": hashlib.sha256(approved_raw).hexdigest(),\n    }\n</code></pre><p>Use the same artifact, SBOM, bundles, and verified release-policy arguments as <code>admit_model_artifact.py</code>, plus <code>approved_receipt</code> and its detached bundle. Run this guard before every initial load and hot reload. Send the canonical runtime receipt to an external signer or append-only audit writer before the loader receives the artifact path.</p><p><strong>Action:</strong> Policy signature, receipt signature, identity, issuer, predicate, actual artifact digest, SBOM digest, or exact-receipt mismatch fails startup. An unavailable verifier or unreadable evidence is <code>insufficient_data</code>, never a pass.</p><h5>Before you begin</h5><p>Apply <code>AID-H-003.006-G007</code> only when a model artifact is packaged, promoted, mirrored, loaded, hot-reloaded, or investigated as a released asset.</p>"
                         },
                         {
                             "id": "AID-H-003.006-G008",
@@ -7423,7 +7481,7 @@ if __name__ == "__main__":
                         {
                             "id": "AID-H-003.006-G009",
                             "implementation": "Enforce a signed model-format and loader policy; verify exception verdict signatures and recompute the actual artifact digest.",
-                            "howTo": "<h5>Concept:</h5><p>Model-loader admission recomputes the artifact digest, verifies a loader policy under trust roots selected only by the signature-verified release trust policy, and verifies any sandbox exception under the separately pinned sandbox identity from that same policy. A caller cannot nominate an identity, issuer, or permissive policy.</p><pre><code># File: runtime/verify_model_loader_policy.py\nfrom __future__ import annotations\n\nimport hashlib\nimport json\nfrom datetime import datetime, timezone\nfrom pathlib import Path\n\nimport onnx\nfrom safetensors import safe_open\n\nfrom model_sbom.admit_model_artifact import (\n    load_release_policy,\n    sha256_file,\n    verify_blob,\n)\n\n\nLOADER_POLICY_FIELDS = {\n    \"schema_version\", \"policy_version\", \"allowed_static_formats\",\n    \"exception_formats\", \"required_loader_flags\",\n}\nVERDICT_FIELDS = {\n    \"schema_version\", \"profile\", \"artifact_digest\", \"artifact_format\",\n    \"loader_name\", \"verdict\", \"verified_at\", \"expires_at\",\n    \"loader_policy_sha256\",\n}\n\n\ndef parse_time(value: str) -> datetime:\n    parsed = datetime.fromisoformat(value.replace(\"Z\", \"+00:00\"))\n    if parsed.tzinfo is None:\n        raise ValueError(\"timestamp must include a timezone\")\n    return parsed.astimezone(timezone.utc)\n\n\ndef load_loader_policy(\n    path: Path,\n    bundle: Path,\n    release_policy_path: Path,\n    release_policy_bundle: Path,\n) -> tuple[dict, dict]:\n    release = load_release_policy(\n        release_policy_path, release_policy_bundle\n    )\n    verify_blob(\n        path,\n        bundle,\n        release[\"loader_policy_identity\"],\n        release[\"loader_policy_issuer\"],\n    )\n    policy = json.loads(path.read_text(encoding=\"utf-8\"))\n    if set(policy) != LOADER_POLICY_FIELDS:\n        raise ValueError(\"loader policy schema differs\")\n    if policy[\"schema_version\"] != \"aidefend.model-loader-policy.v1\":\n        raise ValueError(\"loader policy version is unsupported\")\n    if not isinstance(policy[\"policy_version\"], str) or not policy[\"policy_version\"]:\n        raise ValueError(\"loader policy version is missing\")\n    static_formats = policy[\"allowed_static_formats\"]\n    exception_formats = policy[\"exception_formats\"]\n    if (\n        not isinstance(static_formats, list)\n        or not isinstance(exception_formats, list)\n        or len(static_formats) != len(set(static_formats))\n        or len(exception_formats) != len(set(exception_formats))\n        or set(static_formats) & set(exception_formats)\n    ):\n        raise ValueError(\"format lists must be unique and disjoint\")\n    if not set(static_formats).issubset({\".onnx\", \".safetensors\"}):\n        raise ValueError(\"a claimed static format lacks an implemented parser\")\n    if not all(\n        isinstance(value, str) and value.startswith(\".\")\n        for value in static_formats + exception_formats\n    ):\n        raise ValueError(\"format entries are invalid\")\n    if not isinstance(policy[\"required_loader_flags\"], dict):\n        raise ValueError(\"required_loader_flags must be an object\")\n    return policy, release\n\n\ndef verify_signed_verdict(\n    verdict_path: Path,\n    bundle_path: Path,\n    artifact_digest: str,\n    artifact_format: str,\n    loader_name: str,\n    loader_policy_sha256: str,\n    release: dict,\n) -> dict:\n    verify_blob(\n        verdict_path,\n        bundle_path,\n        release[\"sandbox_verdict_identity\"],\n        release[\"sandbox_verdict_issuer\"],\n    )\n    verdict = json.loads(verdict_path.read_text(encoding=\"utf-8\"))\n    if set(verdict) != VERDICT_FIELDS:\n        raise ValueError(\"sandbox verdict schema differs\")\n    if verdict[\"schema_version\"] != \"aidefend.model-loader-analysis.v1\":\n        raise ValueError(\"sandbox verdict version is unsupported\")\n    expected = {\n        \"profile\": \"model-loader-analysis\",\n        \"artifact_digest\": artifact_digest,\n        \"artifact_format\": artifact_format,\n        \"loader_name\": loader_name,\n        \"loader_policy_sha256\": loader_policy_sha256,\n    }\n    if any(verdict[field] != value for field, value in expected.items()):\n        raise ValueError(\"sandbox verdict binding differs\")\n    now = datetime.now(timezone.utc)\n    if (\n        verdict[\"verdict\"] != \"allow\"\n        or parse_time(verdict[\"verified_at\"]) > now\n        or parse_time(verdict[\"expires_at\"]) <= now\n    ):\n        raise PermissionError(\"sandbox verdict does not currently allow this load\")\n    return verdict\n\n\ndef verify_onnx(artifact: Path) -> None:\n    model = onnx.load(str(artifact), load_external_data=False)\n    onnx.checker.check_model(model)\n    if any(tensor.external_data for tensor in model.graph.initializer):\n        raise PermissionError(\"ONNX external data is not approved\")\n    standard_domains = {\"\", \"ai.onnx\", \"ai.onnx.ml\"}\n    if any(node.domain not in standard_domains for node in model.graph.node):\n        raise PermissionError(\"ONNX custom operator domain is not approved\")\n\n\ndef verify_safetensors(artifact: Path) -> None:\n    with safe_open(str(artifact), framework=\"pt\", device=\"cpu\") as handle:\n        if not list(handle.keys()):\n            raise ValueError(\"safetensors artifact contains no tensors\")\n\n\ndef verify_model(\n    artifact_path: Path,\n    loader_policy_path: Path,\n    loader_policy_bundle: Path,\n    release_policy_path: Path,\n    release_policy_bundle: Path,\n    loader_name: str,\n    loader_kwargs: dict,\n    verdict_path: Path | None = None,\n    verdict_bundle: Path | None = None,\n) -> dict:\n    policy, release = load_loader_policy(\n        loader_policy_path,\n        loader_policy_bundle,\n        release_policy_path,\n        release_policy_bundle,\n    )\n    artifact_digest = \"sha256:\" + sha256_file(artifact_path)\n    policy_digest = sha256_file(loader_policy_path)\n    suffix = artifact_path.suffix.lower()\n\n    if suffix not in set(policy[\"allowed_static_formats\"]) | set(policy[\"exception_formats\"]):\n        raise PermissionError(\"artifact format is not declared by signed policy\")\n    if suffix == \".onnx\":\n        verify_onnx(artifact_path)\n    elif suffix == \".safetensors\":\n        verify_safetensors(artifact_path)\n    else:\n        if verdict_path is None or verdict_bundle is None:\n            raise PermissionError(\"executable-format exception lacks signed evidence\")\n        verify_signed_verdict(\n            verdict_path,\n            verdict_bundle,\n            artifact_digest,\n            suffix,\n            loader_name,\n            policy_digest,\n            release,\n        )\n\n    flags = policy[\"required_loader_flags\"].get(loader_name)\n    if not isinstance(flags, dict) or not flags:\n        raise PermissionError(\"loader has no signed flag profile\")\n    for key, expected in flags.items():\n        if key not in loader_kwargs or loader_kwargs[key] != expected:\n            raise PermissionError(f\"loader flag violation: {key}\")\n\n    return {\n        \"schema_version\": \"aidefend.model-loader-admission.v2\",\n        \"artifact_digest\": artifact_digest,\n        \"artifact_format\": suffix,\n        \"loader_policy_sha256\": policy_digest,\n        \"loader_policy_version\": policy[\"policy_version\"],\n        \"release_policy_sha256\": sha256_file(release_policy_path),\n        \"loader_name\": loader_name,\n    }\n</code></pre><p><strong>Action:</strong> Keep the release-policy root compiled into the verifier image, mount signed policies read-only, and recompute the actual artifact digest. Signature failure, caller-selected trust root, unsupported format, incomplete static parsing, loader mismatch, expired verdict, or unavailable evidence denies load; it never becomes a configuration-derived pass.</p>"
+                            "howTo": "<h5>Concept:</h5><p>Model-loader admission recomputes the artifact digest, verifies a loader policy under trust roots selected only by the signature-verified release trust policy, and verifies any sandbox exception under the separately pinned sandbox identity from that same policy. A caller cannot nominate an identity, issuer, or permissive policy.</p><pre><code># File: runtime/verify_model_loader_policy.py\nfrom __future__ import annotations\n\nimport hashlib\nimport json\nfrom datetime import datetime, timezone\nfrom pathlib import Path\n\nimport onnx\nfrom safetensors import safe_open\n\nfrom model_sbom.admit_model_artifact import (\n    load_release_policy,\n    sha256_file,\n    verified_json_bytes,\n)\n\n\nLOADER_POLICY_FIELDS = {\n    \"schema_version\", \"policy_version\", \"allowed_static_formats\",\n    \"exception_formats\", \"required_loader_flags\",\n}\nVERDICT_FIELDS = {\n    \"schema_version\", \"profile\", \"artifact_digest\", \"artifact_format\",\n    \"loader_name\", \"verdict\", \"verified_at\", \"expires_at\",\n    \"loader_policy_sha256\",\n}\n\n\ndef parse_time(value: str) -> datetime:\n    parsed = datetime.fromisoformat(value.replace(\"Z\", \"+00:00\"))\n    if parsed.tzinfo is None:\n        raise ValueError(\"timestamp must include a timezone\")\n    return parsed.astimezone(timezone.utc)\n\n\ndef load_loader_policy(\n    path: Path,\n    bundle: Path,\n    release_policy_path: Path,\n    release_policy_bundle: Path,\n) -> tuple[dict, dict, bytes, bytes]:\n    release, release_raw = load_release_policy(\n        release_policy_path, release_policy_bundle\n    )\n    policy, policy_raw = verified_json_bytes(\n        path,\n        bundle,\n        release[\"loader_policy_identity\"],\n        release[\"loader_policy_issuer\"],\n        \"loader policy\",\n    )\n    if set(policy) != LOADER_POLICY_FIELDS:\n        raise ValueError(\"loader policy schema differs\")\n    if policy[\"schema_version\"] != \"aidefend.model-loader-policy.v1\":\n        raise ValueError(\"loader policy version is unsupported\")\n    if not isinstance(policy[\"policy_version\"], str) or not policy[\"policy_version\"]:\n        raise ValueError(\"loader policy version is missing\")\n    static_formats = policy[\"allowed_static_formats\"]\n    exception_formats = policy[\"exception_formats\"]\n    if (\n        not isinstance(static_formats, list)\n        or not isinstance(exception_formats, list)\n        or len(static_formats) != len(set(static_formats))\n        or len(exception_formats) != len(set(exception_formats))\n        or set(static_formats) & set(exception_formats)\n    ):\n        raise ValueError(\"format lists must be unique and disjoint\")\n    if not set(static_formats).issubset({\".onnx\", \".safetensors\"}):\n        raise ValueError(\"a claimed static format lacks an implemented parser\")\n    if not all(\n        isinstance(value, str) and value.startswith(\".\")\n        for value in static_formats + exception_formats\n    ):\n        raise ValueError(\"format entries are invalid\")\n    if not isinstance(policy[\"required_loader_flags\"], dict):\n        raise ValueError(\"required_loader_flags must be an object\")\n    return policy, release, policy_raw, release_raw\n\n\ndef verify_signed_verdict(\n    verdict_path: Path,\n    bundle_path: Path,\n    artifact_digest: str,\n    artifact_format: str,\n    loader_name: str,\n    loader_policy_sha256: str,\n    release: dict,\n) -> dict:\n    verdict, _verdict_raw = verified_json_bytes(\n        verdict_path,\n        bundle_path,\n        release[\"sandbox_verdict_identity\"],\n        release[\"sandbox_verdict_issuer\"],\n        \"sandbox verdict\",\n    )\n    if set(verdict) != VERDICT_FIELDS:\n        raise ValueError(\"sandbox verdict schema differs\")\n    if verdict[\"schema_version\"] != \"aidefend.model-loader-analysis.v1\":\n        raise ValueError(\"sandbox verdict version is unsupported\")\n    expected = {\n        \"profile\": \"model-loader-analysis\",\n        \"artifact_digest\": artifact_digest,\n        \"artifact_format\": artifact_format,\n        \"loader_name\": loader_name,\n        \"loader_policy_sha256\": loader_policy_sha256,\n    }\n    if any(verdict[field] != value for field, value in expected.items()):\n        raise ValueError(\"sandbox verdict binding differs\")\n    now = datetime.now(timezone.utc)\n    if (\n        verdict[\"verdict\"] != \"allow\"\n        or parse_time(verdict[\"verified_at\"]) > now\n        or parse_time(verdict[\"expires_at\"]) <= now\n    ):\n        raise PermissionError(\"sandbox verdict does not currently allow this load\")\n    return verdict\n\n\ndef verify_onnx(artifact: Path) -> None:\n    model = onnx.load(str(artifact), load_external_data=False)\n    onnx.checker.check_model(model)\n    if any(tensor.external_data for tensor in model.graph.initializer):\n        raise PermissionError(\"ONNX external data is not approved\")\n    standard_domains = {\"\", \"ai.onnx\", \"ai.onnx.ml\"}\n    if any(node.domain not in standard_domains for node in model.graph.node):\n        raise PermissionError(\"ONNX custom operator domain is not approved\")\n\n\ndef verify_safetensors(artifact: Path) -> None:\n    with safe_open(str(artifact), framework=\"pt\", device=\"cpu\") as handle:\n        if not list(handle.keys()):\n            raise ValueError(\"safetensors artifact contains no tensors\")\n\n\ndef verify_model(\n    artifact_path: Path,\n    loader_policy_path: Path,\n    loader_policy_bundle: Path,\n    release_policy_path: Path,\n    release_policy_bundle: Path,\n    loader_name: str,\n    loader_kwargs: dict,\n    verdict_path: Path | None = None,\n    verdict_bundle: Path | None = None,\n) -> dict:\n    policy, release, policy_raw, release_raw = load_loader_policy(\n        loader_policy_path,\n        loader_policy_bundle,\n        release_policy_path,\n        release_policy_bundle,\n    )\n    artifact_digest = \"sha256:\" + sha256_file(artifact_path)\n    policy_digest = hashlib.sha256(policy_raw).hexdigest()\n    suffix = artifact_path.suffix.lower()\n\n    if suffix not in set(policy[\"allowed_static_formats\"]) | set(policy[\"exception_formats\"]):\n        raise PermissionError(\"artifact format is not declared by signed policy\")\n    if suffix == \".onnx\":\n        verify_onnx(artifact_path)\n    elif suffix == \".safetensors\":\n        verify_safetensors(artifact_path)\n    else:\n        if verdict_path is None or verdict_bundle is None:\n            raise PermissionError(\"executable-format exception lacks signed evidence\")\n        verify_signed_verdict(\n            verdict_path,\n            verdict_bundle,\n            artifact_digest,\n            suffix,\n            loader_name,\n            policy_digest,\n            release,\n        )\n\n    flags = policy[\"required_loader_flags\"].get(loader_name)\n    if not isinstance(flags, dict) or not flags:\n        raise PermissionError(\"loader has no signed flag profile\")\n    for key, expected in flags.items():\n        if key not in loader_kwargs or loader_kwargs[key] != expected:\n            raise PermissionError(f\"loader flag violation: {key}\")\n\n    return {\n        \"schema_version\": \"aidefend.model-loader-admission.v2\",\n        \"artifact_digest\": artifact_digest,\n        \"artifact_format\": suffix,\n        \"loader_policy_sha256\": policy_digest,\n        \"loader_policy_version\": policy[\"policy_version\"],\n        \"release_policy_sha256\": hashlib.sha256(release_raw).hexdigest(),\n        \"loader_name\": loader_name,\n    }\n</code></pre><p><strong>Action:</strong> Keep the release-policy root compiled into the verifier image, mount signed policies read-only, and recompute the actual artifact digest. Signature failure, caller-selected trust root, unsupported format, incomplete static parsing, loader mismatch, expired verdict, or unavailable evidence denies load; it never becomes a configuration-derived pass.</p>"
                         }
                     ]
                 },
@@ -7527,11 +7585,13 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-9.1 Model or Agentic System Manipulation",
-                                "AITech-9.3 Dependency / Plugin Compromise",
-                                "AISubtech-9.2.2 Backdoors and Trojans",
-                                "AISubtech-9.3.1 Malicious Package / Tool Injection",
-                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull"
+                                "AISubtech-1.1.1 Instruction Manipulation (Requires adapter-specific instruction-override and system-prompt canary tests)",
+                                "AISubtech-8.4.1 System LLM Prompt Leakage (Requires adapter-specific instruction-override and system-prompt canary tests)",
+                                "AISubtech-9.3.1 Malicious Package / Tool Injection (Applies to external-hub or marketplace adapters and subsequent reloads)",
+                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull (Applies to external-hub or marketplace adapters and subsequent reloads)",
+                                "AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation) (Requires adapter-specific instruction-override and system-prompt canary tests)",
+                                "AITech-8.4 Prompt/Meta Extraction (Requires adapter-specific instruction-override and system-prompt canary tests)",
+                                "AITech-9.3 Dependency / Plugin Compromise (Applies to external-hub or marketplace adapters and subsequent reloads)"
                             ]
                         },
                         {
@@ -7668,8 +7728,7 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-9.3 Dependency / Plugin Compromise",
-                                "AITech-9.1 Model or Agentic System Manipulation"
+                                "N/A"
                             ]
                         },
                         {
@@ -7801,7 +7860,9 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AISubtech-9.1.1 Code Execution"
+                                "AISubtech-9.2.1 Obfuscation Vulnerabilities (Inspects concealed executable model-serialization content)",
+                                "AISubtech-9.3.1 Malicious Package / Tool Injection (Rejects executable malicious model packages before registry admission)",
+                                "AITech-9.2 Detection Evasion (Inspects concealed executable model-serialization content)"
                             ]
                         },
                         {
@@ -7923,6 +7984,7 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AITech-14.1 Unauthorized Access (Remediates exploitable weaknesses in the deployed AI hosting infrastructure)",
                                 "AITech-9.3 Dependency / Plugin Compromise"
                             ]
                         },
@@ -8056,8 +8118,10 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-10.1 Model Extraction",
-                                "AITech-14.1 Unauthorized Access"
+                                "AISubtech-14.1.2 Insufficient Access Controls (Enforces entitled subject, device and release at the model-key broker)",
+                                "AITech-10.1 Model Extraction (Protects encrypted local model bytes and recipient-bound release keys)",
+                                "AITech-8.2 Data Exfiltration / Exposure (Protects encrypted local model bytes and recipient-bound release keys)",
+                                "AITech-8.3 Information Disclosure (Protects encrypted local model bytes and recipient-bound release keys)"
                             ]
                         },
                         {
@@ -8078,7 +8142,7 @@ if __name__ == "__main__":
                         {
                             "id": "AID-H-003.011-G001",
                             "implementation": "Release a model content key only after exact entitlement, fresh request-bound platform attestation, one-time challenge consumption, and recipient-key binding all succeed.",
-                            "howTo": "<h5>Architecture</h5><p>Encrypt each immutable model release with a unique data-encryption key (DEK), store only ciphertext plus the signed release manifest, and keep the wrapped DEK in KMS. The client obtains a one-time server challenge and requests a platform verdict whose request hash covers that challenge, the authenticated subject, exact release and policy digests, response expiry, and an ephemeral X25519 recipient key. The broker calls the platform's authoritative server verifier; it never trusts client-produced verdict JSON.</p><pre><code class=\"language-python\"># File: edge_release/key_broker.py\nfrom __future__ import annotations\n\nimport base64, hashlib, hmac, json, os\nfrom dataclasses import dataclass\nfrom datetime import datetime, timezone\nfrom typing import Callable\nfrom cryptography.hazmat.primitives import hashes, serialization\nfrom cryptography.hazmat.primitives.asymmetric.x25519 import X25519PrivateKey, X25519PublicKey\nfrom cryptography.hazmat.primitives.ciphers.aead import AESGCM\nfrom cryptography.hazmat.primitives.kdf.hkdf import HKDF\n\n@dataclass(frozen=True)\nclass VerifiedAttestation:\n    platform: str\n    app_id: str\n    app_version: str\n    device_key_id: str\n    request_hash: str\n    issued_at: datetime\n    device_integrity: bool\n    app_integrity: bool\n    platform_policy_ok: bool\n\nVerifyAttestation = Callable[[str], VerifiedAttestation]\nConsumeChallenge = Callable[[str, str], bool]\nCheckEntitlement = Callable[[str, str], bool]\nUnwrapDek = Callable[[str], bytearray]\n\ndef canonical(value: dict) -&gt; bytes:\n    return json.dumps(value, sort_keys=True, separators=(\",\", \":\"), allow_nan=False).encode()\n\ndef decode_key(value: str) -&gt; bytes:\n    if not isinstance(value, str) or not value:\n        raise ValueError(\"recipient key is required\")\n    if \"=\" in value:\n        raise ValueError(\"recipient key must be unpadded base64url\")\n    try:\n        raw = base64.b64decode(value.encode(\"ascii\"), altchars=b\"-_\", validate=True)\n    except (ValueError, UnicodeEncodeError) as error:\n        raise ValueError(\"recipient key is not canonical base64url\") from error\n    canonical_value = base64.urlsafe_b64encode(raw).rstrip(b\"=\").decode(\"ascii\")\n    if len(raw) != 32 or not hmac.compare_digest(canonical_value, value):\n        raise ValueError(\"recipient X25519 key must be one canonical 32-byte key\")\n    return raw\n\ndef release_key(*, request: dict, subject: str, release: dict, max_age: int,\n                max_future_skew: int, max_key_lifetime: int,\n                verify: VerifyAttestation, consume: ConsumeChallenge,\n                entitled: CheckEntitlement, unwrap: UnwrapDek) -&gt; dict:\n    fields = {\"release_id\", \"release_sha256\", \"challenge_id\", \"recipient_key\",\n              \"attestation_token\", \"expires_at\"}\n    if (not isinstance(request, dict) or set(request) != fields\n            or not isinstance(subject, str) or not subject or len(subject) &gt; 256\n            or any(not isinstance(request[field], str) or not request[field]\n                   for field in fields)):\n        raise PermissionError(\"request schema or authenticated subject differs\")\n    release_fields = {\"release_id\", \"release_sha256\", \"wrapped_dek_ref\",\n                      \"allowed_app_versions\", \"allowed_attestation_platforms\",\n                      \"policy_version\", \"policy_sha256\"}\n    if (not isinstance(release, dict) or set(release) != release_fields\n            or request[\"release_id\"] != release[\"release_id\"]\n            or request[\"release_sha256\"] != release[\"release_sha256\"]):\n        raise PermissionError(\"request is not bound to the approved release\")\n    for field in (\"release_id\", \"wrapped_dek_ref\", \"policy_version\"):\n        if not isinstance(release[field], str) or not release[field]:\n            raise ValueError(\"approved release identity is incomplete\")\n    for field in (\"release_sha256\", \"policy_sha256\"):\n        if (not isinstance(release[field], str) or len(release[field]) != 64\n                or set(release[field]) - set(\"0123456789abcdef\")):\n            raise ValueError(\"approved release digest is invalid\")\n    versions = release[\"allowed_app_versions\"]\n    platforms = release[\"allowed_attestation_platforms\"]\n    if (not isinstance(versions, dict) or not versions\n            or any(not isinstance(app_id, str) or not app_id\n                   or not isinstance(items, list) or not items\n                   or len(items) != len(set(items))\n                   or any(not isinstance(item, str) or not item for item in items)\n                   for app_id, items in versions.items())\n            or not isinstance(platforms, list) or not platforms\n            or len(platforms) != len(set(platforms))\n            or any(not isinstance(item, str) or not item for item in platforms)):\n        raise ValueError(\"approved app or platform population is invalid\")\n    if any(type(value) is not int or value &lt; 0\n           for value in (max_age, max_future_skew, max_key_lifetime)) or min(max_age, max_key_lifetime) &lt; 1:\n        raise ValueError(\"attestation and key-lifetime policy is invalid\")\n    now = datetime.now(timezone.utc)\n    try:\n        expires_at = datetime.fromisoformat(request[\"expires_at\"].replace(\"Z\", \"+00:00\"))\n    except ValueError as error:\n        raise PermissionError(\"key response expiry is not RFC 3339\") from error\n    if expires_at.tzinfo is None:\n        raise PermissionError(\"key response expiry lacks an offset\")\n    remaining = (expires_at.astimezone(timezone.utc) - now).total_seconds()\n    if not 0 &lt; remaining &lt;= max_key_lifetime:\n        raise PermissionError(\"key response expiry is outside policy\")\n    recipient = decode_key(request[\"recipient_key\"])\n    binding = {\"challenge_id\": request[\"challenge_id\"], \"subject\": subject,\n               \"release_id\": release[\"release_id\"], \"release_sha256\": release[\"release_sha256\"],\n               \"recipient_key\": request[\"recipient_key\"], \"expires_at\": request[\"expires_at\"],\n               \"policy_version\": release[\"policy_version\"],\n               \"policy_sha256\": release[\"policy_sha256\"]}\n    commitment = hashlib.sha256(canonical(binding)).hexdigest()\n    verdict = verify(request[\"attestation_token\"])\n    if verdict.issued_at.tzinfo is None:\n        raise PermissionError(\"attestation time lacks an offset\")\n    age = (now - verdict.issued_at.astimezone(timezone.utc)).total_seconds()\n    allowed_versions = versions.get(verdict.app_id, [])\n    if (verdict.request_hash != commitment or age &lt; -max_future_skew or age &gt; max_age\n            or not all((verdict.device_integrity, verdict.app_integrity, verdict.platform_policy_ok))\n            or verdict.platform not in platforms or verdict.app_version not in allowed_versions\n            or not isinstance(verdict.device_key_id, str) or not verdict.device_key_id):\n        raise PermissionError(\"attestation does not satisfy release policy\")\n    if not entitled(subject, release[\"release_id\"]):\n        raise PermissionError(\"subject is not entitled to this release\")\n    if not consume(request[\"challenge_id\"], commitment):\n        raise PermissionError(\"challenge is absent, stale, mismatched, or replayed\")\n    dek = unwrap(release[\"wrapped_dek_ref\"])\n    if type(dek) is not bytearray or len(dek) != 32:\n        if isinstance(dek, bytearray):\n            dek[:] = b\"\\x00\" * len(dek)\n        raise RuntimeError(\"KMS adapter must return one mutable 32-byte model DEK\")\n    try:\n        sender = X25519PrivateKey.generate()\n        shared = sender.exchange(X25519PublicKey.from_public_bytes(recipient))\n        wrap_key = HKDF(algorithm=hashes.SHA256(), length=32, salt=bytes.fromhex(commitment),\n                        info=b\"aidefend.edge-model-key.v1\").derive(shared)\n        nonce = os.urandom(12)\n        ciphertext = AESGCM(wrap_key).encrypt(nonce, bytes(dek), canonical(binding))\n        sender_public = sender.public_key().public_bytes(\n            serialization.Encoding.Raw, serialization.PublicFormat.Raw)\n    finally:\n        dek[:] = b\"\\x00\" * len(dek)\n    encode = lambda value: base64.urlsafe_b64encode(value).rstrip(b\"=\").decode(\"ascii\")\n    return {\"release_id\": release[\"release_id\"], \"release_sha256\": release[\"release_sha256\"],\n            \"sender_key\": encode(sender_public), \"nonce\": encode(nonce),\n            \"wrapped_dek\": encode(ciphertext), \"binding_sha256\": commitment,\n            \"expires_at\": request[\"expires_at\"], \"policy_version\": release[\"policy_version\"],\n            \"policy_sha256\": release[\"policy_sha256\"],\n            \"attestation_platform\": verdict.platform, \"device_key_id\": verdict.device_key_id}</code></pre><h5>Platform verification and evidence</h5><p>For Play Integrity, bind <code>requestHash</code> to the canonical request, decode the token through Google's server API, and verify request package, hash, timestamp, app recognition, licensing, device integrity, and policy-selected environment verdicts. For App Attest, validate the certificate chain, App ID, authenticator data, counter, server challenge, and assertion signature according to Apple's server contract. Treat the response expiry as a broker replay bound, not proof that a client erased a DEK it already received. Python bytearray overwrite is best-effort only; isolate and recycle the broker process or use a native/enclave key broker when stronger plaintext-memory handling is required. Keep raw tokens out of normal logs; retain token digest, verified fields, entitlement revision, release and policy digests, challenge-consumption receipt, recipient-key digest, KMS audit event, decision, and expiry.</p><h5>Outcomes and tests</h5><p>No protected edge distribution architecture is <code>NOT_APPLICABLE</code>. Refusing release because required verification is unsupported can satisfy the control; releasing anyway is <code>FAIL</code>. Missing evidence is <code>INSUFFICIENT_DATA</code>; verifier or KMS failure is <code>ERROR</code>. Independently test wrong subject, app, release, digest, challenge, recipient key, stale verdict, replay, unlicensed app, failed device integrity, revoked entitlement, KMS failure, and ciphertext substitution.</p><p><strong>Action:</strong> Put this broker on the only model-key release path and release no key unless entitlement, fresh request binding, attestation, and one-time challenge consumption all succeed.</p>"
+                            "howTo": "<h5>Architecture</h5><p>Encrypt each immutable model release with a unique data-encryption key (DEK), store only ciphertext plus the signed release manifest, and keep the wrapped DEK in KMS. The client obtains a one-time server challenge and requests a platform verdict whose request hash covers that challenge, the authenticated subject, exact release and policy digests, response expiry, and an ephemeral X25519 recipient key. The broker calls the platform's authoritative server verifier; it never trusts client-produced verdict JSON.</p><pre><code class=\"language-python\"># File: edge_release/key_broker.py\nfrom __future__ import annotations\n\nimport base64, hashlib, hmac, json, os\nfrom dataclasses import dataclass\nfrom datetime import datetime, timezone\nfrom typing import Callable\nfrom cryptography.hazmat.primitives import hashes, serialization\nfrom cryptography.hazmat.primitives.asymmetric.x25519 import X25519PrivateKey, X25519PublicKey\nfrom cryptography.hazmat.primitives.ciphers.aead import AESGCM\nfrom cryptography.hazmat.primitives.kdf.hkdf import HKDF\n\n@dataclass(frozen=True)\nclass VerifiedAttestation:\n    platform: str\n    app_id: str\n    app_version: str\n    device_key_id: str\n    request_hash: str\n    issued_at: datetime\n    device_integrity: bool\n    app_integrity: bool\n    platform_policy_ok: bool\n\nVerifyAttestation = Callable[[str], VerifiedAttestation]\nConsumeChallenge = Callable[[str, str], bool]\nCheckEntitlement = Callable[[str, str], bool]\nUnwrapDek = Callable[[str], bytearray]\n\ndef canonical(value: dict) -&gt; bytes:\n    return json.dumps(value, sort_keys=True, separators=(\",\", \":\"), allow_nan=False).encode()\n\ndef decode_key(value: str) -&gt; bytes:\n    if not isinstance(value, str) or not value:\n        raise ValueError(\"recipient key is required\")\n    if \"=\" in value:\n        raise ValueError(\"recipient key must be unpadded base64url\")\n    try:\n        raw = base64.b64decode((value + \"=\" * (-len(value) % 4)).encode(\"ascii\"), altchars=b\"-_\", validate=True)\n    except (ValueError, UnicodeEncodeError) as error:\n        raise ValueError(\"recipient key is not canonical base64url\") from error\n    canonical_value = base64.urlsafe_b64encode(raw).rstrip(b\"=\").decode(\"ascii\")\n    if len(raw) != 32 or not hmac.compare_digest(canonical_value, value):\n        raise ValueError(\"recipient X25519 key must be one canonical 32-byte key\")\n    return raw\n\ndef release_key(*, request: dict, subject: str, release: dict, max_age: int,\n                max_future_skew: int, max_key_lifetime: int,\n                verify: VerifyAttestation, consume: ConsumeChallenge,\n                entitled: CheckEntitlement, unwrap: UnwrapDek) -&gt; dict:\n    fields = {\"release_id\", \"release_sha256\", \"challenge_id\", \"recipient_key\",\n              \"attestation_token\", \"expires_at\"}\n    if (not isinstance(request, dict) or set(request) != fields\n            or not isinstance(subject, str) or not subject or len(subject) &gt; 256\n            or any(not isinstance(request[field], str) or not request[field]\n                   for field in fields)):\n        raise PermissionError(\"request schema or authenticated subject differs\")\n    release_fields = {\"release_id\", \"release_sha256\", \"wrapped_dek_ref\",\n                      \"allowed_app_versions\", \"allowed_attestation_platforms\",\n                      \"policy_version\", \"policy_sha256\"}\n    if (not isinstance(release, dict) or set(release) != release_fields\n            or request[\"release_id\"] != release[\"release_id\"]\n            or request[\"release_sha256\"] != release[\"release_sha256\"]):\n        raise PermissionError(\"request is not bound to the approved release\")\n    for field in (\"release_id\", \"wrapped_dek_ref\", \"policy_version\"):\n        if not isinstance(release[field], str) or not release[field]:\n            raise ValueError(\"approved release identity is incomplete\")\n    for field in (\"release_sha256\", \"policy_sha256\"):\n        if (not isinstance(release[field], str) or len(release[field]) != 64\n                or set(release[field]) - set(\"0123456789abcdef\")):\n            raise ValueError(\"approved release digest is invalid\")\n    versions = release[\"allowed_app_versions\"]\n    platforms = release[\"allowed_attestation_platforms\"]\n    if (not isinstance(versions, dict) or not versions\n            or any(not isinstance(app_id, str) or not app_id\n                   or not isinstance(items, list) or not items\n                   or len(items) != len(set(items))\n                   or any(not isinstance(item, str) or not item for item in items)\n                   for app_id, items in versions.items())\n            or not isinstance(platforms, list) or not platforms\n            or len(platforms) != len(set(platforms))\n            or any(not isinstance(item, str) or not item for item in platforms)):\n        raise ValueError(\"approved app or platform population is invalid\")\n    if any(type(value) is not int or value &lt; 0\n           for value in (max_age, max_future_skew, max_key_lifetime)) or min(max_age, max_key_lifetime) &lt; 1:\n        raise ValueError(\"attestation and key-lifetime policy is invalid\")\n    now = datetime.now(timezone.utc)\n    try:\n        expires_at = datetime.fromisoformat(request[\"expires_at\"].replace(\"Z\", \"+00:00\"))\n    except ValueError as error:\n        raise PermissionError(\"key response expiry is not RFC 3339\") from error\n    if expires_at.tzinfo is None:\n        raise PermissionError(\"key response expiry lacks an offset\")\n    remaining = (expires_at.astimezone(timezone.utc) - now).total_seconds()\n    if not 0 &lt; remaining &lt;= max_key_lifetime:\n        raise PermissionError(\"key response expiry is outside policy\")\n    recipient = decode_key(request[\"recipient_key\"])\n    binding = {\"challenge_id\": request[\"challenge_id\"], \"subject\": subject,\n               \"release_id\": release[\"release_id\"], \"release_sha256\": release[\"release_sha256\"],\n               \"recipient_key\": request[\"recipient_key\"], \"expires_at\": request[\"expires_at\"],\n               \"policy_version\": release[\"policy_version\"],\n               \"policy_sha256\": release[\"policy_sha256\"]}\n    commitment = hashlib.sha256(canonical(binding)).hexdigest()\n    verdict = verify(request[\"attestation_token\"])\n    if verdict.issued_at.tzinfo is None:\n        raise PermissionError(\"attestation time lacks an offset\")\n    age = (now - verdict.issued_at.astimezone(timezone.utc)).total_seconds()\n    allowed_versions = versions.get(verdict.app_id, [])\n    if (verdict.request_hash != commitment or age &lt; -max_future_skew or age &gt; max_age\n            or not all((verdict.device_integrity, verdict.app_integrity, verdict.platform_policy_ok))\n            or verdict.platform not in platforms or verdict.app_version not in allowed_versions\n            or not isinstance(verdict.device_key_id, str) or not verdict.device_key_id):\n        raise PermissionError(\"attestation does not satisfy release policy\")\n    if not entitled(subject, release[\"release_id\"]):\n        raise PermissionError(\"subject is not entitled to this release\")\n    if not consume(request[\"challenge_id\"], commitment):\n        raise PermissionError(\"challenge is absent, stale, mismatched, or replayed\")\n    dek = unwrap(release[\"wrapped_dek_ref\"])\n    if type(dek) is not bytearray or len(dek) != 32:\n        if isinstance(dek, bytearray):\n            dek[:] = b\"\\x00\" * len(dek)\n        raise RuntimeError(\"KMS adapter must return one mutable 32-byte model DEK\")\n    try:\n        sender = X25519PrivateKey.generate()\n        shared = sender.exchange(X25519PublicKey.from_public_bytes(recipient))\n        wrap_key = HKDF(algorithm=hashes.SHA256(), length=32, salt=bytes.fromhex(commitment),\n                        info=b\"aidefend.edge-model-key.v1\").derive(shared)\n        nonce = os.urandom(12)\n        ciphertext = AESGCM(wrap_key).encrypt(nonce, bytes(dek), canonical(binding))\n        sender_public = sender.public_key().public_bytes(\n            serialization.Encoding.Raw, serialization.PublicFormat.Raw)\n    finally:\n        dek[:] = b\"\\x00\" * len(dek)\n    encode = lambda value: base64.urlsafe_b64encode(value).rstrip(b\"=\").decode(\"ascii\")\n    return {\"release_id\": release[\"release_id\"], \"release_sha256\": release[\"release_sha256\"],\n            \"sender_key\": encode(sender_public), \"nonce\": encode(nonce),\n            \"wrapped_dek\": encode(ciphertext), \"binding_sha256\": commitment,\n            \"expires_at\": request[\"expires_at\"], \"policy_version\": release[\"policy_version\"],\n            \"policy_sha256\": release[\"policy_sha256\"],\n            \"attestation_platform\": verdict.platform, \"device_key_id\": verdict.device_key_id}</code></pre><h5>Platform verification and evidence</h5><p>For Play Integrity, bind <code>requestHash</code> to the canonical request, decode the token through Google's server API, and verify request package, hash, timestamp, app recognition, licensing, device integrity, and policy-selected environment verdicts. For App Attest, validate the certificate chain, App ID, authenticator data, counter, server challenge, and assertion signature according to Apple's server contract. Treat the response expiry as a broker replay bound, not proof that a client erased a DEK it already received. Python bytearray overwrite is best-effort only; isolate and recycle the broker process or use a native/enclave key broker when stronger plaintext-memory handling is required. Keep raw tokens out of normal logs; retain token digest, verified fields, entitlement revision, release and policy digests, challenge-consumption receipt, recipient-key digest, KMS audit event, decision, and expiry.</p><h5>Outcomes and tests</h5><p>No protected edge distribution architecture is <code>NOT_APPLICABLE</code>. Refusing release because required verification is unsupported can satisfy the control; releasing anyway is <code>FAIL</code>. Missing evidence is <code>INSUFFICIENT_DATA</code>; verifier or KMS failure is <code>ERROR</code>. Independently test wrong subject, app, release, digest, challenge, recipient key, stale verdict, replay, unlicensed app, failed device integrity, revoked entitlement, KMS failure, and ciphertext substitution.</p><p><strong>Action:</strong> Put this broker on the only model-key release path and release no key unless entitlement, fresh request binding, attestation, and one-time challenge consumption all succeed.</p>"
                         }
                     ]
                 }
@@ -8156,18 +8220,25 @@ if __name__ == "__main__":
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
+                        "AITech-2.1 Excessive Agency",
                         "AITech-3.1 Masquerading / Obfuscation / Impersonation",
                         "AITech-4.1 Agent Injection",
                         "AITech-4.3 Protocol Manipulation",
-                        "AITech-7.4 Token Manipulation",
+                        "AITech-8.2 Data Exfiltration / Exposure",
+                        "AITech-8.3 Information Disclosure",
                         "AITech-14.1 Unauthorized Access",
                         "AITech-14.2 Abuse of Delegated Authority",
+                        "AITech-16.1 Eavesdropping",
+                        "AISubtech-2.1.2 Capability and Permission Overreach",
                         "AISubtech-3.1.1 Identity Obfuscation",
                         "AISubtech-3.1.2 Trusted Agent Spoofing",
                         "AISubtech-4.1.1 Rogue Agent Introduction",
                         "AISubtech-4.3.1 Schema Inconsistencies",
                         "AISubtech-4.3.2 Namespace Collision",
-                        "AISubtech-4.3.4 Replay Exploitation"
+                        "AISubtech-4.3.4 Replay Exploitation",
+                        "AISubtech-4.3.5 Capability Inflation",
+                        "AISubtech-14.1.2 Insufficient Access Controls",
+                        "AISubtech-14.2.1 Permission Escalation via Delegation"
                     ]
                 },
                 {
@@ -8279,8 +8350,10 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-14.1.2 Insufficient Access Controls",
                                 "AITech-14.1 Unauthorized Access",
-                                "AITech-14.2 Abuse of Delegated Authority (access management prevents privilege delegation abuse)"
+                                "AITech-8.2 Data Exfiltration / Exposure (resource-scoped RBAC denies unauthorized model-registry and feature-store reads)",
+                                "AITech-8.3 Information Disclosure (resource-scoped RBAC denies unauthorized model-registry and feature-store reads)"
                             ]
                         },
                         {
@@ -8414,7 +8487,11 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-7.4 Token Manipulation (short-lived tokens and secure storage prevent token manipulation)"
+                                "AISubtech-14.1.2 Insufficient Access Controls",
+                                "AISubtech-3.1.2 Trusted Agent Spoofing (Authenticates the explicitly approved agent workload and route)",
+                                "AITech-14.1 Unauthorized Access",
+                                "AITech-16.1 Eavesdropping",
+                                "AITech-3.1 Masquerading / Obfuscation / Impersonation (Authenticates the explicitly approved agent workload and route)"
                             ]
                         },
                         {
@@ -8556,12 +8633,20 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-4.1 Agent Injection",
-                                "AITech-4.3 Protocol Manipulation",
+                                "AISubtech-14.1.2 Insufficient Access Controls (Enforces task ownership and delegated operation access at the receiving agent)",
+                                "AISubtech-14.2.1 Permission Escalation via Delegation",
+                                "AISubtech-2.1.2 Capability and Permission Overreach",
+                                "AISubtech-3.1.1 Identity Obfuscation",
                                 "AISubtech-3.1.2 Trusted Agent Spoofing",
                                 "AISubtech-4.3.1 Schema Inconsistencies",
-                                "AISubtech-4.3.2 Namespace Collision",
-                                "AISubtech-4.3.4 Replay Exploitation"
+                                "AISubtech-4.3.4 Replay Exploitation",
+                                "AITech-14.2 Abuse of Delegated Authority",
+                                "AITech-16.1 Eavesdropping",
+                                "AITech-2.1 Excessive Agency",
+                                "AITech-3.1 Masquerading / Obfuscation / Impersonation",
+                                "AITech-4.3 Protocol Manipulation",
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AITech-8.3 Information Disclosure"
                             ]
                         },
                         {
@@ -8695,11 +8780,14 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-3.1 Masquerading / Obfuscation / Impersonation",
                                 "AISubtech-3.1.1 Identity Obfuscation",
                                 "AISubtech-3.1.2 Trusted Agent Spoofing",
-                                "AISubtech-4.1.1 Rogue Agent Introduction (ANS prevents rogue agents from being discovered)",
-                                "AITech-14.1 Unauthorized Access (ANS identity verification prevents unauthorized agent access to the ecosystem)"
+                                "AISubtech-4.1.1 Rogue Agent Introduction",
+                                "AISubtech-4.3.2 Namespace Collision",
+                                "AISubtech-4.3.5 Capability Inflation",
+                                "AITech-3.1 Masquerading / Obfuscation / Impersonation",
+                                "AITech-4.1 Agent Injection",
+                                "AITech-4.3 Protocol Manipulation"
                             ]
                         },
                         {
@@ -8842,8 +8930,10 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-4.3 Protocol Manipulation",
-                                "AISubtech-4.3.4 Replay Exploitation"
+                                "AISubtech-3.1.2 Trusted Agent Spoofing",
+                                "AISubtech-4.3.4 Replay Exploitation",
+                                "AITech-3.1 Masquerading / Obfuscation / Impersonation",
+                                "AITech-4.3 Protocol Manipulation"
                             ]
                         },
                         {
@@ -8942,12 +9032,15 @@ if __name__ == "__main__":
                     "items": [
                         "AITech-8.1 Membership Inference",
                         "AITech-8.2 Data Exfiltration / Exposure",
+                        "AITech-8.3 Information Disclosure",
                         "AITech-10.2 Model Inversion",
-                        "AISubtech-10.2.1 Model Inversion",
                         "AISubtech-8.1.1 Presence Detection",
                         "AISubtech-8.2.1 Training Data Exposure",
                         "AISubtech-8.2.2 LLM Data Leakage",
-                        "AISubtech-10.1.3 Sensitive Data Reconstruction"
+                        "AISubtech-8.3.3 Personally Identifiable Information Exposure",
+                        "AISubtech-10.1.3 Sensitive Data Reconstruction",
+                        "AISubtech-10.2.1 Model Inversion",
+                        "AISubtech-14.1.2 Insufficient Access Controls"
                     ]
                 },
                 {
@@ -9056,12 +9149,13 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-8.1 Membership Inference",
-                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AISubtech-10.1.3 Sensitive Data Reconstruction (Bounds individual training-record reconstruction under the verified privacy budget)",
+                                "AISubtech-10.2.1 Model Inversion (Bounds individual training-record influence under a verified differential-privacy budget)",
                                 "AISubtech-8.1.1 Presence Detection",
-                                "AISubtech-8.2.1 Training Data Exposure",
-                                "AITech-10.2 Model Inversion (DP noise degrades model inversion effectiveness)",
-                                "AISubtech-10.2.1 Model Inversion (DP noise directly impedes inversion attacks)"
+                                "AISubtech-8.2.1 Training Data Exposure (Bounds individual training-record influence under a verified differential-privacy budget)",
+                                "AITech-10.2 Model Inversion (Bounds individual training-record influence under a verified differential-privacy budget)",
+                                "AITech-8.1 Membership Inference",
+                                "AITech-8.2 Data Exfiltration / Exposure (Bounds individual training-record influence under a verified differential-privacy budget)"
                             ]
                         },
                         {
@@ -9186,7 +9280,8 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "N/A"
+                                "AITech-8.2 Data Exfiltration / Exposure (Protects computation inputs while encrypted; authorized decrypted outputs need separate controls)",
+                                "AITech-8.3 Information Disclosure (Protects computation inputs while encrypted; authorized decrypted outputs need separate controls)"
                             ]
                         },
                         {
@@ -9231,25 +9326,25 @@ if __name__ == "__main__":
                         "building",
                         "validation"
                     ],
-                    "description": "Reduce record-level memorization and confidence leakage by applying one governed, non-differentially-private regularization mechanism during training and requiring the defended candidate to improve the policy-selected membership-inference or reconstruction evaluation without exceeding the signed utility budget for the model family. The signed profile selects mixup, calibrated input noise, or label smoothing and binds that mechanism to the candidate and evaluation population.",
+                    "description": "Reduce record-level memorization and confidence leakage by applying one governed, non-differentially-private regularization mechanism during training and requiring the defended candidate to improve the policy-selected membership-inference evaluation without exceeding the signed utility budget for the model family. The signed profile selects mixup, calibrated input noise, or label smoothing and binds that mechanism to the candidate and evaluation population.",
                     "scopeBoundary": {
-                      "responsibility": "Owns one governed non-differentially-private training regularization profile and empirical evidence that it reduces policy-selected membership-inference or reconstruction risk within the utility budget. It makes no formal privacy guarantee.",
-                      "relatedTechniques": [
-                        {
-                          "id": "AID-H-005.001",
-                          "comparison": "AID-H-005.003 provides empirical privacy hardening through mixup, input noise, or label smoothing; AID-H-005.001 provides a quantified differential-privacy guarantee.\nUse the DP control when a formal epsilon and delta claim is required."
-                        },
-                        {
-                          "id": "AID-H-005.004",
-                          "comparison": "AID-H-005.003 changes model training to reduce memorization risk; AID-H-005.004 removes duplicate and near-duplicate corpus content before training.\nData-centric deduplication and model-training regularization address different causes of memorization."
-                        }
-                      ]
+                        "responsibility": "Owns one governed non-differentially-private training regularization profile and empirical evidence that it reduces policy-selected membership-inference risk within the utility budget. It makes no formal privacy guarantee.",
+                        "relatedTechniques": [
+                            {
+                                "id": "AID-H-005.001",
+                                "comparison": "AID-H-005.003 provides empirical privacy hardening through mixup, input noise, or label smoothing; AID-H-005.001 provides a quantified differential-privacy guarantee.\nUse the DP control when a formal epsilon and delta claim is required."
+                            },
+                            {
+                                "id": "AID-H-005.004",
+                                "comparison": "AID-H-005.003 changes model training to reduce memorization risk; AID-H-005.004 removes duplicate and near-duplicate corpus content before training.\nData-centric deduplication and model-training regularization address different causes of memorization."
+                            }
+                        ]
                     },
                     "implementationGuidance": [
                         {
                             "id": "AID-H-005.003-G001",
                             "implementation": "Apply one versioned non-DP training-time privacy regularization profile using mixup, calibrated input noise, or label smoothing.",
-                            "howTo": "<h5>Before you begin</h5><p>Use this control when a model family shows unacceptable membership-inference, inversion, or record-memorization evidence but does not require a formal differential-privacy claim.</p><h5>Step 1: Load one signed regularization profile</h5><p>The training-policy owner supplies a concrete JSON profile with one selected mechanism, all three typed parameter slots, a seed, owner, baseline run, and required evidence set. The loader below verifies an immutable snapshot and rejects an inactive parameter that is nonzero, so a deployment cannot silently combine mechanisms.</p><h5>Step 2: Verify the profile and apply only its selected mechanism</h5><pre><code># File: hardening/privacy_regularized_step.py\nfrom __future__ import annotations\nimport json, math, os, subprocess, tempfile\nfrom dataclasses import dataclass\nfrom pathlib import Path\nimport numpy as np\nimport torch\nimport torch.nn.functional as F\n\nPROFILE_KEY = Path(\"/opt/aidefend/trust/privacy-regularization-profile.pub\")\n\ndef verify_timeout() -&gt; float:\n    value = float(os.environ[\"VERIFIED_H005_PROFILE_VERIFY_TIMEOUT_SECONDS\"])\n    if not math.isfinite(value) or value &lt;= 0: raise ValueError(\"profile verification timeout must be finite and positive\")\n    return value\n\n@dataclass(frozen=True)\nclass RegularizationConfig:\n    mechanism: str\n    seed: int\n    mixup_alpha: float\n    input_noise_stddev: float\n    label_smoothing: float\n\n    def validate(self) -&gt; None:\n        if self.mechanism not in {\"mixup\", \"input_noise\", \"label_smoothing\"}: raise ValueError(\"unsupported mechanism\")\n        values = (self.mixup_alpha, self.input_noise_stddev, self.label_smoothing)\n        if any(isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) for value in values): raise ValueError(\"regularization parameters must be finite numbers\")\n        if self.mechanism == \"mixup\" and not (self.mixup_alpha &gt; 0 and self.input_noise_stddev == 0 and self.label_smoothing == 0): raise ValueError(\"mixup profile must enable only mixup_alpha\")\n        if self.mechanism == \"input_noise\" and not (self.input_noise_stddev &gt; 0 and self.mixup_alpha == 0 and self.label_smoothing == 0): raise ValueError(\"input-noise profile must enable only input_noise_stddev\")\n        if self.mechanism == \"label_smoothing\" and not (0 &lt; self.label_smoothing &lt; 1 and self.mixup_alpha == 0 and self.input_noise_stddev == 0): raise ValueError(\"label-smoothing profile must enable only label_smoothing\")\n        if isinstance(self.seed, bool) or not isinstance(self.seed, int) or self.seed &lt; 0: raise ValueError(\"seed must be a non-negative integer\")\n\ndef load_config(path: str, signature: str) -&gt; RegularizationConfig:\n    payload = Path(path).read_bytes()\n    with tempfile.NamedTemporaryFile(prefix=\"aidefend-privacy-profile-\", delete=False) as handle:\n        handle.write(payload); snapshot = Path(handle.name)\n    try:\n        subprocess.run([\"cosign\", \"verify-blob\", \"--key\", str(PROFILE_KEY), \"--bundle\", signature, str(snapshot)], check=True, capture_output=True, text=True, timeout=verify_timeout())\n    finally:\n        snapshot.unlink(missing_ok=True)\n    raw = json.loads(payload)\n    fields = {\"schema_version\", \"profile_version\", \"mechanism\", \"parameters\", \"seed\", \"owner\", \"baseline_run_id\", \"required_verification_artifacts\"}\n    if not isinstance(raw, dict) or set(raw) != fields: raise ValueError(\"regularization profile schema mismatch\")\n    if raw[\"schema_version\"] != \"aidefend.training-privacy-regularization.v1\" or not isinstance(raw[\"profile_version\"], str) or not raw[\"profile_version\"]: raise ValueError(\"regularization profile identity is invalid\")\n    if not isinstance(raw[\"parameters\"], dict) or set(raw[\"parameters\"]) != {\"mixup_alpha\", \"input_noise_stddev\", \"label_smoothing\"}: raise ValueError(\"regularization parameter schema mismatch\")\n    if any(not isinstance(raw[field], str) or not raw[field] for field in (\"owner\", \"baseline_run_id\")): raise ValueError(\"owner and baseline run are required\")\n    expected_evidence = {\"task_utility_report\", \"membership_inference_report\", \"training_config_digest\"}\n    if not isinstance(raw[\"required_verification_artifacts\"], list) or set(raw[\"required_verification_artifacts\"]) != expected_evidence or len(raw[\"required_verification_artifacts\"]) != len(expected_evidence): raise ValueError(\"required evidence population differs\")\n    config = RegularizationConfig(mechanism=raw[\"mechanism\"], seed=raw[\"seed\"], **raw[\"parameters\"]); config.validate(); return config\n\ndef train_step(model, optimizer, inputs, targets, cfg: RegularizationConfig, step: int) -&gt; float:\n    cfg.validate(); optimizer.zero_grad(set_to_none=True)\n    generator = torch.Generator(device=inputs.device).manual_seed(cfg.seed + step)\n    if cfg.mechanism == \"mixup\":\n        rng = np.random.default_rng(cfg.seed + step); lam = float(rng.beta(cfg.mixup_alpha, cfg.mixup_alpha))\n        permutation = torch.randperm(inputs.size(0), generator=generator, device=inputs.device)\n        mixed = lam * inputs + (1.0 - lam) * inputs[permutation]; logits = model(mixed)\n        loss = lam * F.cross_entropy(logits, targets) + (1.0 - lam) * F.cross_entropy(logits, targets[permutation])\n    elif cfg.mechanism == \"input_noise\":\n        noise = torch.randn(inputs.shape, dtype=inputs.dtype, device=inputs.device, generator=generator) * cfg.input_noise_stddev\n        logits = model(inputs + noise); loss = F.cross_entropy(logits, targets)\n    else:\n        logits = model(inputs); loss = F.cross_entropy(logits, targets, label_smoothing=cfg.label_smoothing)\n    if not torch.isfinite(loss): raise RuntimeError(\"privacy regularization produced a non-finite loss\")\n    loss.backward(); optimizer.step(); return float(loss.detach().cpu())</code></pre><h5>Step 3: Preserve replay inputs</h5><p>Store the exact configuration, code commit, data-split digest, model initialization digest, seed policy, and resulting model digest with the training run. If the baseline and candidate do not share the declared comparison inputs, mark the result <code>insufficient_data</code> rather than passed.</p><p><strong>Action:</strong> Approve one mechanism only after an independent evaluator can replay the baseline/candidate comparison and reproduce both the privacy-attack and utility results. Do not describe mixup, noise, or label smoothing as differential privacy.</p><h5>Production action and outcome</h5><p><strong>Action:</strong> train an otherwise identical baseline/candidate pair with one signed non-DP regularizer and promote only when every privacy-attack and utility gate passes.</p><p><strong>Boundary:</strong> Dataset and attack-harness evidence are prerequisites only; H-005.001 owns formal DP, and no prerequisite PASS is inherited.</p>"
+                            "howTo": "<h5>Before you begin</h5><p>Use this control when a model family shows unacceptable membership-inference evidence but does not require a formal differential-privacy claim.</p><h5>Step 1: Load one signed regularization profile</h5><p>The training-policy owner supplies a concrete JSON profile with one selected mechanism, all three typed parameter slots, a seed, owner, baseline run, and required evidence set. The loader below verifies an immutable snapshot and rejects an inactive parameter that is nonzero, so a deployment cannot silently combine mechanisms.</p><h5>Step 2: Verify the profile and apply only its selected mechanism</h5><pre><code># File: hardening/privacy_regularized_step.py\nfrom __future__ import annotations\nimport json, math, os, subprocess, tempfile\nfrom dataclasses import dataclass\nfrom pathlib import Path\nimport numpy as np\nimport torch\nimport torch.nn.functional as F\n\nPROFILE_KEY = Path(\"/opt/aidefend/trust/privacy-regularization-profile.pub\")\n\ndef verify_timeout() -&gt; float:\n    value = float(os.environ[\"VERIFIED_H005_PROFILE_VERIFY_TIMEOUT_SECONDS\"])\n    if not math.isfinite(value) or value &lt;= 0: raise ValueError(\"profile verification timeout must be finite and positive\")\n    return value\n\n@dataclass(frozen=True)\nclass RegularizationConfig:\n    mechanism: str\n    seed: int\n    mixup_alpha: float\n    input_noise_stddev: float\n    label_smoothing: float\n\n    def validate(self) -&gt; None:\n        if self.mechanism not in {\"mixup\", \"input_noise\", \"label_smoothing\"}: raise ValueError(\"unsupported mechanism\")\n        values = (self.mixup_alpha, self.input_noise_stddev, self.label_smoothing)\n        if any(isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(value) for value in values): raise ValueError(\"regularization parameters must be finite numbers\")\n        if self.mechanism == \"mixup\" and not (self.mixup_alpha &gt; 0 and self.input_noise_stddev == 0 and self.label_smoothing == 0): raise ValueError(\"mixup profile must enable only mixup_alpha\")\n        if self.mechanism == \"input_noise\" and not (self.input_noise_stddev &gt; 0 and self.mixup_alpha == 0 and self.label_smoothing == 0): raise ValueError(\"input-noise profile must enable only input_noise_stddev\")\n        if self.mechanism == \"label_smoothing\" and not (0 &lt; self.label_smoothing &lt; 1 and self.mixup_alpha == 0 and self.input_noise_stddev == 0): raise ValueError(\"label-smoothing profile must enable only label_smoothing\")\n        if isinstance(self.seed, bool) or not isinstance(self.seed, int) or self.seed &lt; 0: raise ValueError(\"seed must be a non-negative integer\")\n\ndef load_config(path: str, signature: str) -&gt; RegularizationConfig:\n    payload = Path(path).read_bytes()\n    with tempfile.NamedTemporaryFile(prefix=\"aidefend-privacy-profile-\", delete=False) as handle:\n        handle.write(payload); snapshot = Path(handle.name)\n    try:\n        subprocess.run([\"cosign\", \"verify-blob\", \"--key\", str(PROFILE_KEY), \"--bundle\", signature, str(snapshot)], check=True, capture_output=True, text=True, timeout=verify_timeout())\n    finally:\n        snapshot.unlink(missing_ok=True)\n    raw = json.loads(payload)\n    fields = {\"schema_version\", \"profile_version\", \"mechanism\", \"parameters\", \"seed\", \"owner\", \"baseline_run_id\", \"required_verification_artifacts\"}\n    if not isinstance(raw, dict) or set(raw) != fields: raise ValueError(\"regularization profile schema mismatch\")\n    if raw[\"schema_version\"] != \"aidefend.training-privacy-regularization.v1\" or not isinstance(raw[\"profile_version\"], str) or not raw[\"profile_version\"]: raise ValueError(\"regularization profile identity is invalid\")\n    if not isinstance(raw[\"parameters\"], dict) or set(raw[\"parameters\"]) != {\"mixup_alpha\", \"input_noise_stddev\", \"label_smoothing\"}: raise ValueError(\"regularization parameter schema mismatch\")\n    if any(not isinstance(raw[field], str) or not raw[field] for field in (\"owner\", \"baseline_run_id\")): raise ValueError(\"owner and baseline run are required\")\n    expected_evidence = {\"task_utility_report\", \"membership_inference_report\", \"training_config_digest\"}\n    if not isinstance(raw[\"required_verification_artifacts\"], list) or set(raw[\"required_verification_artifacts\"]) != expected_evidence or len(raw[\"required_verification_artifacts\"]) != len(expected_evidence): raise ValueError(\"required evidence population differs\")\n    config = RegularizationConfig(mechanism=raw[\"mechanism\"], seed=raw[\"seed\"], **raw[\"parameters\"]); config.validate(); return config\n\ndef train_step(model, optimizer, inputs, targets, cfg: RegularizationConfig, step: int) -&gt; float:\n    cfg.validate(); optimizer.zero_grad(set_to_none=True)\n    generator = torch.Generator(device=inputs.device).manual_seed(cfg.seed + step)\n    if cfg.mechanism == \"mixup\":\n        rng = np.random.default_rng(cfg.seed + step); lam = float(rng.beta(cfg.mixup_alpha, cfg.mixup_alpha))\n        permutation = torch.randperm(inputs.size(0), generator=generator, device=inputs.device)\n        mixed = lam * inputs + (1.0 - lam) * inputs[permutation]; logits = model(mixed)\n        loss = lam * F.cross_entropy(logits, targets) + (1.0 - lam) * F.cross_entropy(logits, targets[permutation])\n    elif cfg.mechanism == \"input_noise\":\n        noise = torch.randn(inputs.shape, dtype=inputs.dtype, device=inputs.device, generator=generator) * cfg.input_noise_stddev\n        logits = model(inputs + noise); loss = F.cross_entropy(logits, targets)\n    else:\n        logits = model(inputs); loss = F.cross_entropy(logits, targets, label_smoothing=cfg.label_smoothing)\n    if not torch.isfinite(loss): raise RuntimeError(\"privacy regularization produced a non-finite loss\")\n    loss.backward(); optimizer.step(); return float(loss.detach().cpu())</code></pre><h5>Step 3: Preserve replay inputs</h5><p>Store the exact configuration, code commit, data-split digest, model initialization digest, seed policy, and resulting model digest with the training run. If the baseline and candidate do not share the declared comparison inputs, mark the result <code>insufficient_data</code> rather than passed.</p><p><strong>Action:</strong> Approve one mechanism only after an independent evaluator can replay the baseline/candidate comparison and reproduce both the privacy-attack and utility results. Do not describe mixup, noise, or label smoothing as differential privacy.</p><h5>Production action and outcome</h5><p><strong>Action:</strong> train an otherwise identical baseline/candidate pair with one signed non-DP regularizer and promote only when every privacy-attack and utility gate passes.</p><p><strong>Boundary:</strong> Dataset and attack-harness evidence are prerequisites only; H-005.001 owns formal DP, and no prerequisite PASS is inherited.</p>"
                         },
                         {
                             "id": "AID-H-005.003-G002",
@@ -9278,15 +9373,13 @@ if __name__ == "__main__":
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0024 Exfiltration via AI Inference API",
-                                "AML.T0024.000 Exfiltration via AI Inference API: Infer Training Data Membership",
-                                "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model (mixup training smooths decision boundaries, hardening against inversion)"
+                                "AML.T0024.000 Exfiltration via AI Inference API: Infer Training Data Membership"
                             ]
                         },
                         {
                             "framework": "MAESTRO",
                             "items": [
-                                "Membership Inference Attacks (L1)",
-                                "Data Exfiltration (L2) (mixup reduces what can be inferred from model outputs)"
+                                "Membership Inference Attacks (L1)"
                             ]
                         },
                         {
@@ -9298,7 +9391,6 @@ if __name__ == "__main__":
                         {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
-                                "ML03:2023 Model Inversion Attack",
                                 "ML04:2023 Membership Inference Attack"
                             ]
                         },
@@ -9311,31 +9403,25 @@ if __name__ == "__main__":
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
-                                "NISTAML.033 Membership Inference",
-                                "NISTAML.032 Reconstruction (mixup training reduces memorization, hardening against reconstruction)",
-                                "NISTAML.038 Data Extraction (mixup reduces memorization that enables data extraction)"
+                                "NISTAML.033 Membership Inference"
                             ]
                         },
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-10.2 Model Inversion (mixup training hardens against inversion attacks)",
-                                "AISubtech-10.2.1 Model Inversion",
-                                "AISubtech-10.1.3 Sensitive Data Reconstruction (mixup reduces memorization, protecting against data reconstruction)",
+                                "AISubtech-8.1.1 Presence Detection",
                                 "AITech-8.1 Membership Inference"
                             ]
                         },
                         {
                             "framework": "Google Secure AI Framework 2.0 - Risks",
                             "items": [
-                                "SDD: Sensitive Data Disclosure (training-time regularization reduces memorization that leads to disclosure)"
+                                "SDD: Sensitive Data Disclosure (training regularization is independently checked for reduced membership disclosure)"
                             ]
                         },
                         {
                             "framework": "Databricks AI Security Framework 3.0",
                             "items": [
-                                "Model Management 8.4: Model inversion",
-                                "Model Serving - Inference requests 9.2: Model inversion",
                                 "Model Serving - Inference requests 9.5: Infer training data membership"
                             ]
                         }
@@ -9435,8 +9521,10 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AISubtech-10.1.3 Sensitive Data Reconstruction",
-                                "AISubtech-8.2.2 LLM Data Leakage"
+                                "AISubtech-10.1.3 Sensitive Data Reconstruction (Limits memorized training-data extraction under verified canary-query thresholds)",
+                                "AISubtech-8.2.1 Training Data Exposure",
+                                "AISubtech-8.2.2 LLM Data Leakage",
+                                "AITech-8.2 Data Exfiltration / Exposure"
                             ]
                         },
                         {
@@ -9550,11 +9638,13 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-10.1.3 Sensitive Data Reconstruction (Denies raw embedding outputs used to reconstruct their sensitive source records)",
+                                "AISubtech-10.2.1 Model Inversion (Denies raw vector export used as an inversion input)",
+                                "AISubtech-14.1.2 Insufficient Access Controls (Restricts raw-vector exports and encrypted index or backup access)",
+                                "AISubtech-8.3.3 Personally Identifiable Information Exposure",
+                                "AITech-10.2 Model Inversion (Denies raw vector export used as an inversion input)",
                                 "AITech-8.2 Data Exfiltration / Exposure",
-                                "AITech-10.2 Model Inversion",
-                                "AISubtech-10.2.1 Model Inversion",
-                                "AISubtech-10.1.3 Sensitive Data Reconstruction",
-                                "AITech-8.1 Membership Inference"
+                                "AITech-8.3 Information Disclosure"
                             ]
                         },
                         {
@@ -9666,14 +9756,30 @@ if __name__ == "__main__":
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
+                        "AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation)",
+                        "AITech-4.3 Protocol Manipulation",
                         "AITech-8.1 Membership Inference",
                         "AITech-8.2 Data Exfiltration / Exposure",
+                        "AITech-8.3 Information Disclosure",
+                        "AITech-9.1 Model or Agentic System Manipulation",
                         "AITech-10.1 Model Extraction",
                         "AITech-10.2 Model Inversion",
+                        "AITech-12.1 Tool Exploitation",
                         "AITech-12.2 Insecure Output Handling",
+                        "AITech-13.1 Disruption of Availability",
+                        "AISubtech-1.1.4 Token Exploitation",
+                        "AISubtech-4.3.1 Schema Inconsistencies",
                         "AISubtech-8.1.1 Presence Detection",
+                        "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access",
+                        "AISubtech-9.1.4 Injection Attacks (e.g., SQL, Command Execution, XSS)",
                         "AISubtech-10.1.1 API Query Stealing",
-                        "AISubtech-12.2.1 Code Detection / Malicious Code Output"
+                        "AISubtech-10.1.2 Weight Reconstruction",
+                        "AISubtech-10.1.3 Sensitive Data Reconstruction",
+                        "AISubtech-12.1.1 Parameter Manipulation",
+                        "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
+                        "AISubtech-12.2.1 Code Detection / Malicious Code Output",
+                        "AISubtech-13.1.2 Memory Flooding",
+                        "AISubtech-13.1.4 Application Denial of Service"
                     ]
                 },
                 {
@@ -9781,8 +9887,13 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-1.1.4 Token Exploitation",
+                                "AISubtech-12.1.1 Parameter Manipulation",
+                                "AISubtech-4.3.1 Schema Inconsistencies",
+                                "AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation)",
+                                "AITech-12.1 Tool Exploitation",
                                 "AITech-12.2 Insecure Output Handling",
-                                "AISubtech-12.2.1 Code Detection / Malicious Code Output"
+                                "AITech-4.3 Protocol Manipulation"
                             ]
                         },
                         {
@@ -9950,9 +10061,14 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
+                                "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access",
+                                "AISubtech-9.1.4 Injection Attacks (e.g., SQL, Command Execution, XSS)",
+                                "AITech-12.1 Tool Exploitation",
                                 "AITech-12.2 Insecure Output Handling",
-                                "AISubtech-12.2.1 Code Detection / Malicious Code Output",
-                                "AITech-8.2 Data Exfiltration / Exposure"
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AITech-8.3 Information Disclosure",
+                                "AITech-9.1 Model or Agentic System Manipulation"
                             ]
                         },
                         {
@@ -9983,15 +10099,15 @@ if __name__ == "__main__":
                         "validation",
                         "operation"
                     ],
-                    "description": "Reduce externally exposed prediction precision through one versioned response-minimization profile, and gate release on a model-family query suite showing that the selected transform reduces the approved extraction or inference-attack signal without exceeding utility and API-contract budgets.<br/><br/><strong>Applicability:</strong> use only for APIs that expose classifier confidence or continuous predictions. If the API already returns no numeric model signal, this control does not apply. A configured bin, rounding rule, or noise flag alone is insufficient. This control makes no differential-privacy claim and never permits raw logits or probability vectors to leave the trusted response boundary.",
+                    "description": "Reduce externally exposed prediction precision through one versioned response-minimization profile, and gate release on a model-family query suite showing that the selected transform reduces the approved extraction signal without exceeding utility and API-contract budgets.<br/><br/><strong>Applicability:</strong> use only for APIs that expose classifier confidence or continuous predictions. If the API already returns no numeric model signal, this control does not apply. A configured bin, rounding rule, or noise flag alone is insufficient. This control makes no differential-privacy claim and never permits raw logits or probability vectors to leave the trusted response boundary.",
                     "scopeBoundary": {
-                      "responsibility": "Owns response minimization for numeric prediction APIs and independent validation that rounding, binning, range reduction, or approved noise lowers extraction or inference-attack signal within utility and API-contract budgets. It makes no differential-privacy claim.",
-                      "relatedTechniques": [
-                        {
-                          "id": "AID-H-005.001",
-                          "comparison": "AID-H-006.003 empirically reduces externally exposed prediction precision; AID-H-005.001 provides a quantified differential-privacy guarantee through calibrated noise and accounting.\nResponse minimization must not be represented as DP unless the full privacy mechanism and accountant apply."
-                        }
-                      ]
+                        "responsibility": "Owns response minimization for numeric prediction APIs and independent validation that rounding, binning, range reduction, or approved noise lowers extraction signal within utility and API-contract budgets. It makes no differential-privacy claim.",
+                        "relatedTechniques": [
+                            {
+                                "id": "AID-H-005.001",
+                                "comparison": "AID-H-006.003 empirically reduces externally exposed prediction precision; AID-H-005.001 provides a quantified differential-privacy guarantee through calibrated noise and accounting.\nResponse minimization must not be represented as DP unless the full privacy mechanism and accountant apply."
+                            }
+                        ]
                     },
                     "toolsOpenSource": [
                         "NumPy",
@@ -10020,7 +10136,7 @@ if __name__ == "__main__":
                                 "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model",
                                 "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model",
                                 "AML.T0042 Verify Attack (obfuscation reduces fidelity of attacker feedback loops)",
-                                "AML.T0063 Discover AI Model Outputs (output obfuscation prevents discovery of high-precision model outputs)"
+                                "AML.T0063 Discover AI Model Outputs (the response boundary withholds raw logits and probability vectors)"
                             ]
                         },
                         {
@@ -10057,17 +10173,19 @@ if __name__ == "__main__":
                                 "NISTAML.031 Model Extraction",
                                 "NISTAML.032 Reconstruction",
                                 "NISTAML.033 Membership Inference",
-                                "NISTAML.034 Property Inference (API hardening limits queries needed for property inference)"
+                                "NISTAML.034 Property Inference (numeric precision minimization limits the confidence channel for property inference)"
                             ]
                         },
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-10.1 Model Extraction",
-                                "AITech-10.2 Model Inversion",
-                                "AISubtech-10.1.1 API Query Stealing (obfuscation reduces value of API queries for stealing)",
-                                "AITech-8.1 Membership Inference",
-                                "AISubtech-8.1.1 Presence Detection"
+                                "AISubtech-10.1.1 API Query Stealing (Tests extraction resistance of the released numeric-output precision)",
+                                "AITech-10.1 Model Extraction (Tests extraction resistance of the released numeric-output precision)",
+                                "AISubtech-10.1.2 Weight Reconstruction (limits parameter approximation from numeric prediction APIs; model-family validation required)",
+                                "AITech-8.1 Membership Inference (limits confidence-based privacy inference from numeric outputs; no inference metric is claimed)",
+                                "AISubtech-8.1.1 Presence Detection (limits confidence-based privacy inference from numeric outputs; no inference metric is claimed)",
+                                "AITech-10.2 Model Inversion (limits confidence-based privacy inference from numeric outputs; no inference metric is claimed)",
+                                "AISubtech-10.1.3 Sensitive Data Reconstruction (limits confidence-based privacy inference from numeric outputs; no inference metric is claimed)"
                             ]
                         },
                         {
@@ -10075,7 +10193,7 @@ if __name__ == "__main__":
                             "items": [
                                 "MXF: Model Exfiltration (obfuscated outputs reduce utility of exfiltrated information)",
                                 "MRE: Model Reverse Engineering (reduced output precision hinders reverse engineering)",
-                                "SDD: Sensitive Data Disclosure (output obfuscation prevents precise data extraction)",
+                                "SDD: Sensitive Data Disclosure (numeric-output minimization constrains confidence-based data inference)",
                                 "ISD: Inferred Sensitive Data"
                             ]
                         },
@@ -10193,8 +10311,11 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-12.2.1 Code Detection / Malicious Code Output",
+                                "AISubtech-13.1.2 Memory Flooding",
+                                "AISubtech-13.1.4 Application Denial of Service",
                                 "AITech-12.2 Insecure Output Handling",
-                                "AISubtech-12.2.1 Code Detection / Malicious Code Output"
+                                "AITech-13.1 Disruption of Availability"
                             ]
                         },
                         {
@@ -10303,11 +10424,24 @@ if __name__ == "__main__":
               {
                   "framework": "Cisco Integrated AI Security and Safety Framework",
                   "items": [
-                      "AITech-2.1 Jailbreak",
+                      "AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation)",
+                      "AITech-1.2 Indirect Prompt Injection",
+                      "AITech-2.3 Reward Hacking",
+                      "AITech-4.2 Context Boundary Attacks",
+                      "AITech-4.3 Protocol Manipulation",
                       "AITech-6.1 Training Data Poisoning",
-                      "AITech-9.1 Model or Agentic System Manipulation",
-                      "AITech-9.3 Dependency / Plugin Compromise",
-                      "AITech-14.1 Unauthorized Access"
+                      "AITech-8.2 Data Exfiltration / Exposure",
+                      "AITech-8.3 Information Disclosure",
+                      "AITech-12.1 Tool Exploitation",
+                      "AITech-13.2 Cost Harvesting / Repurposing",
+                      "AITech-14.1 Unauthorized Access",
+                      "AITech-15.1 Harmful Content",
+                      "AISubtech-1.1.4 Token Exploitation",
+                      "AISubtech-2.3.2 Verifier Manipulation",
+                      "AISubtech-2.3.3 Shortcut Acquisition",
+                      "AISubtech-4.3.1 Schema Inconsistencies",
+                      "AISubtech-13.2.1 Service Misuse for Cost Inflation",
+                      "AISubtech-14.1.2 Insufficient Access Controls"
                   ]
               },
               {
@@ -10443,7 +10577,10 @@ if __name__ == "__main__":
                   {
                       "framework": "Cisco Integrated AI Security and Safety Framework",
                       "items": [
-                          "AITech-14.1 Unauthorized Access (secure environment prevents unauthorized access to training)"
+                          "AISubtech-14.1.2 Insufficient Access Controls",
+                          "AITech-14.1 Unauthorized Access",
+                          "AITech-8.2 Data Exfiltration / Exposure",
+                          "AITech-8.3 Information Disclosure"
                       ]
                   },
                   {
@@ -10573,7 +10710,9 @@ if __name__ == "__main__":
                   {
                       "framework": "Cisco Integrated AI Security and Safety Framework",
                       "items": [
-                          "AITech-6.1 Training Data Poisoning (monitoring detects training data poisoning effects)"
+                          "AISubtech-13.2.1 Service Misuse for Cost Inflation (Halts poisoned training runs that waste GPU compute)",
+                          "AITech-13.2 Cost Harvesting / Repurposing (Halts poisoned training runs that waste GPU compute)",
+                          "AITech-6.1 Training Data Poisoning"
                       ]
                   },
                   {
@@ -10704,7 +10843,7 @@ if __name__ == "__main__":
                   {
                       "framework": "Cisco Integrated AI Security and Safety Framework",
                       "items": [
-                          "N/A"
+                          "AITech-6.1 Training Data Poisoning"
                       ]
                   },
                   {
@@ -10831,7 +10970,9 @@ if __name__ == "__main__":
                   {
                       "framework": "Cisco Integrated AI Security and Safety Framework",
                       "items": [
-                          "AITech-9.3 Dependency / Plugin Compromise (compromised evaluation libraries or plugins)"
+                          "AISubtech-2.3.2 Verifier Manipulation",
+                          "AISubtech-2.3.3 Shortcut Acquisition",
+                          "AITech-2.3 Reward Hacking"
                       ]
                   },
                   {
@@ -10898,7 +11039,7 @@ if __name__ == "__main__":
                 "validation",
                 "improvement"
               ],
-              "description": "Gate fine-tuned, adapter-tuned, instruction-tuned, RLHF/RLAIF-updated, or otherwise customized models against a pre/post safety regression suite before promotion. The control compares the tuned model to an approved baseline on refusal behavior, harmful-content compliance, jailbreak and prompt-injection resistance, tool-use policy adherence, sensitive-data leakage, and agent-goal stability. Promotion is blocked when the tuned model materially erodes safety alignment even if ordinary task-quality metrics improve.",
+              "description": "Gate fine-tuned, adapter-tuned, instruction-tuned, RLHF/RLAIF-updated, or otherwise customized models against a pre/post safety regression suite before promotion. The control compares the tuned model to an approved baseline on refusal behavior, harmful-content compliance, jailbreak and prompt-injection resistance, tool-use policy adherence, and sensitive-data leakage. Promotion is blocked when the tuned model materially erodes safety alignment even if ordinary task-quality metrics improve.",
               "scopeBoundary": {
                 "responsibility": "Owns the pre/post safety-alignment regression gate for fine-tuned, adapter-tuned, instruction-tuned, RLHF or RLAIF-updated, and otherwise customized target models, blocking promotion on policy-defined safety erosion.",
                 "relatedTechniques": [
@@ -10956,7 +11097,7 @@ if __name__ == "__main__":
                       "items": [
                           "LLM01:2026 Prompt Injection",
                           "LLM02:2026 Sensitive Information Disclosure",
-                          "LLM03:2026 Excessive Agency (tool-policy and goal-stability regression tests block releases with expanded behavior, while runtime authority remains separately enforced)",
+                          "LLM03:2026 Excessive Agency (tool-policy regression tests block releases with expanded behavior, while runtime authority remains separately enforced)",
                           "LLM05:2026 Data and Model Poisoning"
                       ]
                   },
@@ -10970,7 +11111,7 @@ if __name__ == "__main__":
                   {
                       "framework": "OWASP Top 10 for Agentic Applications 2026",
                       "items": [
-                          "ASI01:2026 Agent Goal Hijack"
+                          "ASI01:2026 Agent Goal Hijack (pre/post prompt-injection and tool-policy regression; no separate trajectory-stability metric)"
                       ]
                   },
                   {
@@ -10985,9 +11126,11 @@ if __name__ == "__main__":
                   {
                       "framework": "Cisco Integrated AI Security and Safety Framework",
                       "items": [
-                          "AITech-9.1 Model or Agentic System Manipulation",
-                          "AITech-6.1 Training Data Poisoning",
-                          "AITech-2.1 Jailbreak"
+                          "AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation)",
+                          "AITech-1.2 Indirect Prompt Injection",
+                          "AITech-12.1 Tool Exploitation",
+                          "AITech-15.1 Harmful Content",
+                          "AITech-8.2 Data Exfiltration / Exposure"
                       ]
                   },
                   {
@@ -11111,7 +11254,15 @@ if __name__ == "__main__":
                   {
                       "framework": "Cisco Integrated AI Security and Safety Framework",
                       "items": [
-                          "AITech-9.1 Model or Agentic System Manipulation"
+                          "AISubtech-1.1.4 Token Exploitation",
+                          "AISubtech-4.3.1 Schema Inconsistencies",
+                          "AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation)",
+                          "AITech-1.2 Indirect Prompt Injection",
+                          "AITech-12.1 Tool Exploitation",
+                          "AITech-15.1 Harmful Content",
+                          "AITech-4.2 Context Boundary Attacks",
+                          "AITech-4.3 Protocol Manipulation",
+                          "AITech-8.2 Data Exfiltration / Exposure"
                       ]
                   },
                   {
@@ -11209,8 +11360,9 @@ if __name__ == "__main__":
                   {
                       "framework": "Cisco Integrated AI Security and Safety Framework",
                       "items": [
-                          "AITech-9.1 Model or Agentic System Manipulation (protecting evaluator judge, grader, rubric-template, dependency, harness, threshold-policy, and evidence-writer integrity)",
-                          "AITech-9.3 Dependency / Plugin Compromise (protecting evaluator judge, grader, rubric-template, dependency, harness, threshold-policy, and evidence-writer integrity)"
+                          "AISubtech-2.3.2 Verifier Manipulation",
+                          "AISubtech-2.3.3 Shortcut Acquisition",
+                          "AITech-2.3 Reward Hacking"
                       ]
                   },
                   {
@@ -11413,9 +11565,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                   "items": [
                       "AITech-6.1 Training Data Poisoning",
                       "AITech-8.2 Data Exfiltration / Exposure",
-                      "AITech-9.1 Model or Agentic System Manipulation",
+                      "AITech-8.3 Information Disclosure",
                       "AITech-10.2 Model Inversion",
-                      "AITech-14.1 Unauthorized Access"
+                      "AISubtech-4.3.4 Replay Exploitation",
+                      "AISubtech-10.2.1 Model Inversion",
+                      "AISubtech-14.1.2 Insufficient Access Controls"
                   ]
               },
               {
@@ -11528,8 +11682,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                   {
                       "framework": "Cisco Integrated AI Security and Safety Framework",
                       "items": [
-                          "AITech-10.2 Model Inversion (secure aggregation prevents inversion of individual client models)",
-                          "AITech-8.2 Data Exfiltration / Exposure"
+                          "AISubtech-10.2.1 Model Inversion (Hides individual client gradients from the aggregation server)",
+                          "AITech-10.2 Model Inversion (Hides individual client gradients from the aggregation server)",
+                          "AITech-8.2 Data Exfiltration / Exposure",
+                          "AITech-8.3 Information Disclosure"
                       ]
                   },
                   {
@@ -11644,8 +11800,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                   {
                       "framework": "Cisco Integrated AI Security and Safety Framework",
                       "items": [
-                          "AITech-6.1 Training Data Poisoning",
-                          "AITech-9.1 Model or Agentic System Manipulation (Byzantine-robust aggregation protects global model from malicious update manipulation)"
+                          "AITech-6.1 Training Data Poisoning"
                       ]
                   },
                   {
@@ -11731,7 +11886,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                   {
                       "framework": "Cisco Integrated AI Security and Safety Framework",
                       "items": [
-                          "AITech-14.1 Unauthorized Access"
+                          "AISubtech-14.1.2 Insufficient Access Controls (Restricts federated round admission to approved and unrevoked participants)",
+                          "AISubtech-4.3.4 Replay Exploitation (Rejects replayed federated updates; agentic communication is not assumed)",
+                          "AITech-6.1 Training Data Poisoning"
                       ]
                   },
                   {
@@ -11842,8 +11999,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
                         "AITech-8.2 Data Exfiltration / Exposure",
-                        "AITech-10.1 Model Extraction",
-                        "AISubtech-10.1.2 Weight Reconstruction"
+                        "AITech-8.3 Information Disclosure",
+                        "AITech-14.1 Unauthorized Access",
+                        "AITech-16.1 Eavesdropping",
+                        "AISubtech-10.1.2 Weight Reconstruction",
+                        "AISubtech-14.1.2 Insufficient Access Controls"
                     ]
                 },
                 {
@@ -11956,7 +12116,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "N/A"
+                                "AITech-14.1 Unauthorized Access (Verifies the AI host boot chain before workload admission)"
                             ]
                         },
                         {
@@ -12082,7 +12242,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "N/A"
+                                "AITech-14.1 Unauthorized Access (Closes exploitable AI-host firmware weaknesses)"
                             ]
                         },
                         {
@@ -12261,9 +12421,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-8.2 Data Exfiltration / Exposure (VRAM clearing prevents data exposure between tenants)",
-                                "AITech-10.1 Model Extraction (VRAM isolation prevents model extraction via leftover weights)",
-                                "AISubtech-10.1.2 Weight Reconstruction (VRAM clearing prevents reconstruction of model weights from leftover accelerator memory)"
+                                "AITech-14.1 Unauthorized Access (Enforces isolation of GPU allocations and released accelerator memory)",
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AITech-8.3 Information Disclosure",
+                                "AISubtech-10.1.2 Weight Reconstruction (prevents parameter recovery from residual accelerator state across trust zones)",
+                                "AISubtech-14.1.2 Insufficient Access Controls (independently verified accelerator allocation and cross-zone residual-state exclusion)"
                             ]
                         },
                         {
@@ -12371,8 +12533,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-10.1 Model Extraction (confidential inference prevents model extraction)",
-                                "AITech-8.2 Data Exfiltration / Exposure"
+                                "AISubtech-14.1.2 Insufficient Access Controls (Releases model and data keys only to the approved attested inference runtime)",
+                                "AITech-16.1 Eavesdropping",
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AITech-8.3 Information Disclosure"
                             ]
                         },
                         {
@@ -12514,7 +12678,12 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-15.1 Harmful Content"
+                        "AISubtech-12.1.1 Parameter Manipulation",
+                        "AISubtech-13.1.1 Compute Exhaustion",
+                        "AITech-12.1 Tool Exploitation",
+                        "AITech-13.1 Disruption of Availability",
+                        "AITech-15.1 Harmful Content",
+                        "AITech-9.2 Detection Evasion"
                     ]
                 },
                 {
@@ -12596,6 +12765,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
                         "AITech-6.1 Training Data Poisoning",
+                        "AITech-7.3 Data Source Abuse and Manipulation",
+                        "AITech-9.1 Model or Agentic System Manipulation",
                         "AISubtech-7.3.1 Corrupted Third-Party Data"
                     ]
                 },
@@ -12707,8 +12878,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-7.3.1 Corrupted Third-Party Data",
                                 "AITech-6.1 Training Data Poisoning",
-                                "AISubtech-7.3.1 Corrupted Third-Party Data (sanitization catches poisoned graph data from external sources)"
+                                "AITech-7.3 Data Source Abuse and Manipulation"
                             ]
                         },
                         {
@@ -12826,7 +12998,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-6.1 Training Data Poisoning"
+                                "AITech-6.1 Training Data Poisoning",
+                                "AITech-9.1 Model or Agentic System Manipulation"
                             ]
                         },
                         {
@@ -12931,7 +13104,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "N/A"
+                                "AITech-9.1 Model or Agentic System Manipulation (Certifies prediction stability within the declared graph-perturbation bounds)"
                             ]
                         },
                         {
@@ -13009,8 +13182,19 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
+                        "AITech-2.2 Goal Drift",
+                        "AITech-2.3 Reward Hacking",
+                        "AITech-6.1 Training Data Poisoning",
+                        "AITech-16.1 Eavesdropping",
+                        "AISubtech-2.2.2 Goal Substitution",
+                        "AISubtech-2.2.3 Authorization and Constraint Erosion",
+                        "AISubtech-2.3.1 Task Loophole Exploitation",
+                        "AISubtech-2.3.2 Verifier Manipulation",
+                        "AISubtech-2.3.3 Shortcut Acquisition",
+                        "AISubtech-4.3.4 Replay Exploitation",
                         "AISubtech-6.1.2 Reinforcement Biasing",
-                        "AISubtech-6.1.3 Reinforcement Signal Corruption"
+                        "AISubtech-6.1.3 Reinforcement Signal Corruption",
+                        "AISubtech-14.1.2 Insufficient Access Controls"
                     ]
                 },
                 {
@@ -13109,7 +13293,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "N/A"
+                                "AISubtech-2.3.1 Task Loophole Exploitation",
+                                "AITech-2.3 Reward Hacking"
                             ]
                         },
                         {
@@ -13208,7 +13393,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AISubtech-6.1.2 Reinforcement Biasing"
+                                "AISubtech-6.1.2 Reinforcement Biasing",
+                                "AISubtech-6.1.3 Reinforcement Signal Corruption",
+                                "AITech-2.3 Reward Hacking",
+                                "AITech-6.1 Training Data Poisoning"
                             ]
                         },
                         {
@@ -13302,7 +13490,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "N/A"
+                                "AISubtech-2.2.2 Goal Substitution",
+                                "AISubtech-2.2.3 Authorization and Constraint Erosion",
+                                "AISubtech-2.3.1 Task Loophole Exploitation",
+                                "AITech-2.2 Goal Drift",
+                                "AITech-2.3 Reward Hacking"
                             ]
                         },
                         {
@@ -13402,7 +13594,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AISubtech-6.1.3 Reinforcement Signal Corruption"
+                                "AISubtech-14.1.2 Insufficient Access Controls (Authenticates and authorizes the exact trainer-to-reward-oracle service path)",
+                                "AISubtech-4.3.4 Replay Exploitation (Rejects replayed reward messages; agentic communication is not assumed)",
+                                "AISubtech-6.1.3 Reinforcement Signal Corruption",
+                                "AITech-16.1 Eavesdropping",
+                                "AITech-6.1 Training Data Poisoning"
                             ]
                         },
                         {
@@ -13509,7 +13705,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "N/A"
+                                "AISubtech-2.3.1 Task Loophole Exploitation",
+                                "AISubtech-2.3.2 Verifier Manipulation",
+                                "AISubtech-2.3.3 Shortcut Acquisition",
+                                "AITech-2.3 Reward Hacking"
                             ]
                         },
                         {
@@ -13584,6 +13783,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
+                        "AITech-8.2 Data Exfiltration / Exposure",
+                        "AITech-8.3 Information Disclosure",
                         "AITech-10.1 Model Extraction"
                     ]
                 },
@@ -13806,7 +14007,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-10.1 Model Extraction"
+                                "AITech-8.2 Data Exfiltration / Exposure (exact artifact/tensor fingerprint comparison within a suspected unauthorized-distribution incident)",
+                                "AITech-8.3 Information Disclosure (exact artifact/tensor fingerprint comparison within a suspected unauthorized-distribution incident)"
                             ]
                         },
                         {
@@ -13906,7 +14108,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-10.1 Model Extraction"
+                                "AITech-10.1 Model Extraction (Tests suspected replicas through a retained behavioral fingerprint)"
                             ]
                         },
                         {
@@ -14012,8 +14214,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-11.1 Environment-Aware Evasion (ensemble diversity mitigates environment-specific adversarial inputs)",
-                        "AITech-11.2 Model-Selective Evasion (ensemble diversity mitigates model-specific adversarial inputs)"
+                        "AITech-9.1 Model or Agentic System Manipulation",
+                        "AITech-9.2 Detection Evasion"
                     ]
                 },
                 {
@@ -14126,9 +14328,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-11.1 Environment-Aware Evasion",
-                        "AITech-11.2 Model-Selective Evasion",
-                        "AISubtech-11.1.4 Defense-Aware Payloads (certified bounds hold against defense-aware attacks)"
+                        "AITech-9.1 Model or Agentic System Manipulation",
+                        "AITech-9.2 Detection Evasion"
                     ]
                 },
                 {
@@ -14208,16 +14409,15 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-1.1 Direct Prompt Injection",
+                        "AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation)",
                         "AITech-1.2 Indirect Prompt Injection",
-                        "AITech-1.3 Goal Manipulation",
-                        "AITech-2.1 Jailbreak",
-                        "AISubtech-1.1.1 Instruction Manipulation (Direct Prompt Injection)",
-                        "AISubtech-1.2.1 Instruction Manipulation (Indirect Prompt Injection)",
-                        "AISubtech-1.3.1 Goal Manipulation (Models, Agents)",
-                        "AISubtech-2.1.1 Context Manipulation (Jailbreak)",
-                        "AISubtech-2.1.2 Obfuscation (Jailbreak)",
-                        "AISubtech-2.1.3 Semantic Manipulation (Jailbreak)"
+                        "AITech-4.2 Context Boundary Attacks",
+                        "AITech-4.3 Protocol Manipulation",
+                        "AITech-5.2 Configuration Persistence",
+                        "AISubtech-1.1.1 Instruction Manipulation",
+                        "AISubtech-1.1.4 Token Exploitation",
+                        "AISubtech-4.3.1 Schema Inconsistencies",
+                        "AISubtech-5.2.1 Agent Profile Tampering"
                     ]
                 },
                 {
@@ -14329,16 +14529,15 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-1.1 Direct Prompt Injection",
+                                "AISubtech-1.1.1 Instruction Manipulation",
+                                "AISubtech-1.1.4 Token Exploitation",
+                                "AISubtech-4.3.1 Schema Inconsistencies",
+                                "AISubtech-5.2.1 Agent Profile Tampering",
+                                "AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation)",
                                 "AITech-1.2 Indirect Prompt Injection",
-                                "AITech-2.1 Jailbreak",
-                                "AISubtech-2.1.1 Context Manipulation (Jailbreak)",
-                                "AISubtech-2.1.2 Obfuscation (Jailbreak)",
-                                "AISubtech-2.1.3 Semantic Manipulation (Jailbreak)",
-                                "AISubtech-1.1.1 Instruction Manipulation (Direct Prompt Injection)",
-                                "AISubtech-1.2.1 Instruction Manipulation (Indirect Prompt Injection)",
-                                "AITech-1.3 Goal Manipulation (system prompt hardening prevents goal re-specification via injection)",
-                                "AISubtech-1.3.1 Goal Manipulation (Models, Agents) (hardened instruction hierarchy resists model/agent goal manipulation)"
+                                "AITech-4.2 Context Boundary Attacks",
+                                "AITech-4.3 Protocol Manipulation",
+                                "AITech-5.2 Configuration Persistence"
                             ]
                         },
                         {
@@ -14462,8 +14661,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-1.1 Direct Prompt Injection",
-                                "AITech-1.2 Indirect Prompt Injection"
+                                "AISubtech-1.1.1 Instruction Manipulation",
+                                "AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation)",
+                                "AITech-1.2 Indirect Prompt Injection",
+                                "AITech-4.2 Context Boundary Attacks"
                             ]
                         },
                         {
@@ -14597,17 +14798,42 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
                         "AITech-1.2 Indirect Prompt Injection",
-                        "AITech-1.3 Goal Manipulation",
-                        "AITech-4.1 Agent Injection",
+                        "AITech-2.1 Excessive Agency",
+                        "AITech-2.2 Goal Drift",
                         "AITech-4.2 Context Boundary Attacks",
+                        "AITech-4.3 Protocol Manipulation",
                         "AITech-5.1 Memory System Persistence",
-                        "AITech-7.1 Reasoning Corruption",
+                        "AITech-8.2 Data Exfiltration / Exposure",
+                        "AITech-9.1 Model or Agentic System Manipulation",
                         "AITech-12.1 Tool Exploitation",
                         "AITech-12.2 Insecure Output Handling",
+                        "AITech-13.1 Disruption of Availability",
+                        "AITech-13.2 Cost Harvesting / Repurposing",
                         "AITech-14.2 Abuse of Delegated Authority",
+                        "AISubtech-2.1.1 Execution Approval Bypass",
+                        "AISubtech-2.1.2 Capability and Permission Overreach",
+                        "AISubtech-2.2.1 Unauthorized Scope Expansion",
+                        "AISubtech-2.2.3 Authorization and Constraint Erosion",
                         "AISubtech-4.2.2 Session Boundary Violation",
+                        "AISubtech-4.3.1 Schema Inconsistencies",
+                        "AISubtech-4.3.4 Replay Exploitation",
                         "AISubtech-4.3.5 Capability Inflation",
                         "AISubtech-5.1.1 Long-term / Short-term Memory Injection",
+                        "AISubtech-5.2.1 Agent Profile Tampering",
+                        "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
+                        "AISubtech-9.1.1 Code Execution",
+                        "AISubtech-9.1.2 Unauthorized or Unsolicited System Access",
+                        "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access",
+                        "AISubtech-12.1.1 Parameter Manipulation",
+                        "AISubtech-12.1.2 Tool Poisoning",
+                        "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
+                        "AISubtech-13.1.1 Compute Exhaustion",
+                        "AISubtech-13.1.2 Memory Flooding",
+                        "AISubtech-13.1.3 Model Denial of Service",
+                        "AISubtech-13.1.4 Application Denial of Service",
+                        "AISubtech-13.1.5 Decision Paralysis Attacks",
+                        "AISubtech-13.2.1 Service Misuse for Cost Inflation",
+                        "AISubtech-14.1.2 Insufficient Access Controls",
                         "AISubtech-14.2.1 Permission Escalation via Delegation"
                     ]
                 },
@@ -14726,7 +14952,18 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-12.1 Tool Exploitation"
+                                "AISubtech-13.1.1 Compute Exhaustion",
+                                "AISubtech-13.1.2 Memory Flooding (bounds excessive tool-call or delegation growth in agent processing pipelines)",
+                                "AISubtech-13.1.3 Model Denial of Service",
+                                "AISubtech-13.1.4 Application Denial of Service",
+                                "AISubtech-13.1.5 Decision Paralysis Attacks",
+                                "AISubtech-13.2.1 Service Misuse for Cost Inflation",
+                                "AISubtech-2.1.1 Execution Approval Bypass",
+                                "AISubtech-4.3.4 Replay Exploitation",
+                                "AITech-12.1 Tool Exploitation",
+                                "AITech-13.1 Disruption of Availability",
+                                "AITech-13.2 Cost Harvesting / Repurposing",
+                                "AITech-2.1 Excessive Agency"
                             ]
                         },
                         {
@@ -14851,8 +15088,18 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-12.1.1 Parameter Manipulation",
+                                "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
+                                "AISubtech-14.1.2 Insufficient Access Controls",
+                                "AISubtech-2.1.2 Capability and Permission Overreach",
+                                "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
+                                "AISubtech-9.1.1 Code Execution",
+                                "AISubtech-9.1.2 Unauthorized or Unsolicited System Access",
+                                "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access",
                                 "AITech-12.1 Tool Exploitation",
-                                "AITech-14.2 Abuse of Delegated Authority (least-privilege tools prevent delegated authority abuse)"
+                                "AITech-2.1 Excessive Agency",
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AITech-9.1 Model or Agentic System Manipulation"
                             ]
                         },
                         {
@@ -14975,12 +15222,16 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-4.1 Agent Injection",
-                                "AITech-4.2 Context Boundary Attacks (plan validation enforces context boundaries)",
-                                "AITech-7.1 Reasoning Corruption (corrupted reasoning caught by plan validation before execution)",
-                                "AITech-1.3 Goal Manipulation (plan validation catches manipulated goals before execution)",
+                                "AISubtech-12.1.1 Parameter Manipulation",
+                                "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
+                                "AISubtech-14.1.2 Insufficient Access Controls (Enforces the stated application access boundary; hosting infrastructure is a separate scope)",
+                                "AISubtech-2.1.2 Capability and Permission Overreach",
+                                "AISubtech-9.1.1 Code Execution",
+                                "AISubtech-9.1.2 Unauthorized or Unsolicited System Access",
                                 "AITech-12.1 Tool Exploitation",
-                                "AITech-12.2 Insecure Output Handling"
+                                "AITech-12.2 Insecure Output Handling",
+                                "AITech-2.1 Excessive Agency",
+                                "AITech-9.1 Model or Agentic System Manipulation"
                             ]
                         },
                         {
@@ -15093,9 +15344,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-5.1 Memory System Persistence",
+                                "AISubtech-4.2.2 Session Boundary Violation",
                                 "AISubtech-5.1.1 Long-term / Short-term Memory Injection",
-                                "AISubtech-4.2.2 Session Boundary Violation (ephemeral state enforces clean session boundaries)"
+                                "AITech-4.2 Context Boundary Attacks",
+                                "AITech-5.1 Memory System Persistence"
                             ]
                         },
                         {
@@ -15199,7 +15451,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "N/A"
+                                "AISubtech-5.2.1 Agent Profile Tampering (signed agent behavior-contract integrity; runtime authorization remains separate)"
                             ]
                         },
                         {
@@ -15315,9 +15567,20 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-13.1.2 Memory Flooding (bounds excessive tool-call or delegation growth in agent processing pipelines)",
+                                "AISubtech-13.1.4 Application Denial of Service",
+                                "AISubtech-13.2.1 Service Misuse for Cost Inflation",
+                                "AISubtech-14.1.2 Insufficient Access Controls",
+                                "AISubtech-14.2.1 Permission Escalation via Delegation",
+                                "AISubtech-2.1.2 Capability and Permission Overreach",
+                                "AISubtech-2.2.1 Unauthorized Scope Expansion (bounds agent-originated capability expansion and authority expiry, without proving semantic goal fidelity)",
+                                "AISubtech-2.2.3 Authorization and Constraint Erosion (bounds agent-originated capability expansion and authority expiry, without proving semantic goal fidelity)",
                                 "AISubtech-4.3.5 Capability Inflation",
+                                "AITech-13.1 Disruption of Availability",
+                                "AITech-13.2 Cost Harvesting / Repurposing",
                                 "AITech-14.2 Abuse of Delegated Authority",
-                                "AISubtech-14.2.1 Permission Escalation via Delegation"
+                                "AITech-2.1 Excessive Agency",
+                                "AITech-2.2 Goal Drift (bounds agent-originated capability expansion and authority expiry, without proving semantic goal fidelity)"
                             ]
                         },
                         {
@@ -15443,10 +15706,13 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-12.1.2 Tool Poisoning",
+                                "AISubtech-4.3.1 Schema Inconsistencies",
                                 "AITech-1.2 Indirect Prompt Injection",
-                                "AITech-4.2 Context Boundary Attacks",
                                 "AITech-12.1 Tool Exploitation",
-                                "AITech-12.2 Insecure Output Handling"
+                                "AITech-12.2 Insecure Output Handling",
+                                "AITech-4.2 Context Boundary Attacks",
+                                "AITech-4.3 Protocol Manipulation"
                             ]
                         },
                         {
@@ -15586,23 +15852,47 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-1.1 Direct Prompt Injection",
-                        "AITech-1.2 Indirect Prompt Injection",
-                        "AITech-4.1 Agent Injection",
+                        "AITech-2.1 Excessive Agency",
+                        "AITech-2.2 Goal Drift",
+                        "AITech-4.2 Context Boundary Attacks",
                         "AITech-4.3 Protocol Manipulation",
-                        "AITech-7.1 Reasoning Corruption",
+                        "AITech-5.1 Memory System Persistence",
+                        "AITech-5.2 Configuration Persistence",
                         "AITech-8.2 Data Exfiltration / Exposure",
                         "AITech-8.3 Information Disclosure",
+                        "AITech-9.1 Model or Agentic System Manipulation",
                         "AITech-12.1 Tool Exploitation",
                         "AITech-12.2 Insecure Output Handling",
+                        "AITech-13.1 Disruption of Availability",
+                        "AITech-13.2 Cost Harvesting / Repurposing",
                         "AITech-14.1 Unauthorized Access",
                         "AITech-14.2 Abuse of Delegated Authority",
+                        "AISubtech-2.1.1 Execution Approval Bypass",
+                        "AISubtech-2.1.2 Capability and Permission Overreach",
+                        "AISubtech-2.2.1 Unauthorized Scope Expansion",
+                        "AISubtech-2.2.3 Authorization and Constraint Erosion",
+                        "AISubtech-4.2.2 Session Boundary Violation",
+                        "AISubtech-4.3.1 Schema Inconsistencies",
                         "AISubtech-4.3.4 Replay Exploitation",
+                        "AISubtech-4.3.5 Capability Inflation",
+                        "AISubtech-5.1.1 Long-term / Short-term Memory Injection",
+                        "AISubtech-5.2.1 Agent Profile Tampering",
                         "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
+                        "AISubtech-8.3.2 System Information Exposure",
+                        "AISubtech-8.3.3 Personally Identifiable Information Exposure",
+                        "AISubtech-9.1.1 Code Execution",
+                        "AISubtech-9.1.2 Unauthorized or Unsolicited System Access",
+                        "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access",
+                        "AISubtech-11.1.2 Tool-Scoped Evasion",
                         "AISubtech-12.1.1 Parameter Manipulation",
                         "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
+                        "AISubtech-13.1.2 Memory Flooding",
+                        "AISubtech-13.1.4 Application Denial of Service",
+                        "AISubtech-13.2.1 Service Misuse for Cost Inflation",
+                        "AISubtech-14.1.1 Credential Theft",
                         "AISubtech-14.1.2 Insufficient Access Controls",
-                        "AISubtech-14.2.1 Permission Escalation via Delegation"
+                        "AISubtech-14.2.1 Permission Escalation via Delegation",
+                        "AISubtech-18.2.1 Abuse of APIs for Mass Automation"
                     ]
                 },
                 {
@@ -15709,9 +15999,12 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-12.1.1 Parameter Manipulation",
+                                "AISubtech-4.3.1 Schema Inconsistencies",
                                 "AITech-12.1 Tool Exploitation",
                                 "AITech-12.2 Insecure Output Handling",
-                                "AISubtech-12.1.1 Parameter Manipulation"
+                                "AITech-4.3 Protocol Manipulation",
+                                "AISubtech-11.1.2 Tool-Scoped Evasion (rejects tool-specific prohibited argument forms before dispatch)"
                             ]
                         },
                         {
@@ -15845,9 +16138,18 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-12.1.1 Parameter Manipulation",
+                                "AISubtech-14.1.2 Insufficient Access Controls",
+                                "AISubtech-14.2.1 Permission Escalation via Delegation",
+                                "AISubtech-2.1.2 Capability and Permission Overreach",
+                                "AISubtech-4.2.2 Session Boundary Violation",
+                                "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
                                 "AITech-12.1 Tool Exploitation",
-                                "AITech-14.1 Unauthorized Access",
-                                "AITech-14.2 Abuse of Delegated Authority (policy engine detects abuse of delegated permissions)"
+                                "AITech-14.2 Abuse of Delegated Authority",
+                                "AITech-2.1 Excessive Agency",
+                                "AITech-4.2 Context Boundary Attacks",
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AITech-8.3 Information Disclosure"
                             ]
                         },
                         {
@@ -15994,10 +16296,14 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-12.1.1 Parameter Manipulation",
+                                "AISubtech-2.1.1 Execution Approval Bypass",
+                                "AISubtech-2.2.3 Authorization and Constraint Erosion",
+                                "AISubtech-4.3.4 Replay Exploitation",
                                 "AITech-12.1 Tool Exploitation",
-                                "AITech-7.1 Reasoning Corruption (independent validator detects corrupted reasoning)",
-                                "AITech-4.1 Agent Injection (second channel catches injected actions)",
-                                "AITech-14.2 Abuse of Delegated Authority"
+                                "AITech-14.2 Abuse of Delegated Authority",
+                                "AITech-2.1 Excessive Agency",
+                                "AITech-2.2 Goal Drift"
                             ]
                         },
                         {
@@ -16152,10 +16458,21 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-13.1.2 Memory Flooding (bounds excessive tool-call or delegation growth in agent processing pipelines)",
+                                "AISubtech-13.1.4 Application Denial of Service",
+                                "AISubtech-13.2.1 Service Misuse for Cost Inflation",
+                                "AISubtech-14.1.2 Insufficient Access Controls",
+                                "AISubtech-18.2.1 Abuse of APIs for Mass Automation (Caps bulk tool API calls per signed grant and denies dispatch after exhaustion; no global flood protection)",
+                                "AISubtech-2.1.2 Capability and Permission Overreach",
+                                "AISubtech-2.2.1 Unauthorized Scope Expansion (bounds agent-originated capability expansion and authority expiry, without proving semantic goal fidelity)",
+                                "AISubtech-2.2.3 Authorization and Constraint Erosion (bounds agent-originated capability expansion and authority expiry, without proving semantic goal fidelity)",
+                                "AISubtech-4.3.5 Capability Inflation",
                                 "AITech-12.1 Tool Exploitation",
-                                "AITech-4.1 Agent Injection (signed scope prevents injected agents from expanding privileges)",
-                                "AITech-1.1 Direct Prompt Injection (dynamic scoping limits injection impact)",
-                                "AITech-1.2 Indirect Prompt Injection (dynamic scoping limits injection impact)"
+                                "AITech-13.1 Disruption of Availability",
+                                "AITech-13.2 Cost Harvesting / Repurposing",
+                                "AITech-2.1 Excessive Agency",
+                                "AITech-2.2 Goal Drift (bounds agent-originated capability expansion and authority expiry, without proving semantic goal fidelity)",
+                                "AITech-4.3 Protocol Manipulation"
                             ]
                         },
                         {
@@ -16284,11 +16601,16 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-12.1.1 Parameter Manipulation",
+                                "AISubtech-14.1.2 Insufficient Access Controls",
+                                "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
+                                "AISubtech-8.3.3 Personally Identifiable Information Exposure",
+                                "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access",
+                                "AITech-12.1 Tool Exploitation",
+                                "AITech-12.2 Insecure Output Handling",
                                 "AITech-8.2 Data Exfiltration / Exposure",
                                 "AITech-8.3 Information Disclosure",
-                                "AITech-12.1 Tool Exploitation (sink enforcement prevents tool-based exfiltration)",
-                                "AITech-12.2 Insecure Output Handling",
-                                "AISubtech-8.2.3 Data Exfiltration via Agent Tooling"
+                                "AITech-9.1 Model or Agentic System Manipulation"
                             ]
                         },
                         {
@@ -16418,10 +16740,17 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-12.1.1 Parameter Manipulation",
+                                "AISubtech-14.1.2 Insufficient Access Controls",
+                                "AISubtech-14.2.1 Permission Escalation via Delegation",
+                                "AISubtech-2.1.1 Execution Approval Bypass",
+                                "AISubtech-2.1.2 Capability and Permission Overreach",
+                                "AISubtech-2.2.3 Authorization and Constraint Erosion",
+                                "AISubtech-4.3.4 Replay Exploitation",
                                 "AITech-12.1 Tool Exploitation",
-                                "AITech-14.1 Unauthorized Access (continuous re-authorization prevents time-delayed unauthorized access)",
-                                "AITech-14.2 Abuse of Delegated Authority (continuous re-authorization catches delegated authority abuse)",
-                                "AISubtech-14.2.1 Permission Escalation via Delegation (continuous re-authorization prevents stale delegation from escalating permissions)"
+                                "AITech-14.2 Abuse of Delegated Authority",
+                                "AITech-2.1 Excessive Agency",
+                                "AITech-2.2 Goal Drift"
                             ]
                         },
                         {
@@ -16585,10 +16914,23 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
+                                "AISubtech-14.1.2 Insufficient Access Controls",
+                                "AISubtech-14.2.1 Permission Escalation via Delegation",
+                                "AISubtech-2.1.2 Capability and Permission Overreach",
+                                "AISubtech-5.1.1 Long-term / Short-term Memory Injection",
+                                "AISubtech-5.2.1 Agent Profile Tampering",
+                                "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
+                                "AISubtech-9.1.1 Code Execution",
+                                "AISubtech-9.1.2 Unauthorized or Unsolicited System Access",
+                                "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access",
                                 "AITech-12.1 Tool Exploitation",
                                 "AITech-14.2 Abuse of Delegated Authority",
-                                "AISubtech-14.2.1 Permission Escalation via Delegation",
-                                "AITech-4.1 Agent Injection (skill-level capability boundaries constrain injected agent behavior routed through skills)"
+                                "AITech-2.1 Excessive Agency",
+                                "AITech-5.1 Memory System Persistence",
+                                "AITech-5.2 Configuration Persistence",
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AITech-9.1 Model or Agentic System Manipulation"
                             ]
                         },
                         {
@@ -16718,7 +17060,6 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-4.3 Protocol Manipulation",
                                 "AISubtech-4.3.4 Replay Exploitation"
                             ]
                         },
@@ -16861,12 +17202,20 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-8.2 Data Exfiltration / Exposure",
-                                "AITech-12.1 Tool Exploitation",
-                                "AITech-14.1 Unauthorized Access",
-                                "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
+                                "AISubtech-12.1.1 Parameter Manipulation",
                                 "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
-                                "AISubtech-14.1.2 Insufficient Access Controls"
+                                "AISubtech-14.1.1 Credential Theft (confines access to host files and credential-bearing filesystem objects)",
+                                "AISubtech-14.1.2 Insufficient Access Controls (confines access to host files and credential-bearing filesystem objects)",
+                                "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
+                                "AISubtech-8.3.2 System Information Exposure",
+                                "AISubtech-9.1.2 Unauthorized or Unsolicited System Access",
+                                "AITech-12.1 Tool Exploitation",
+                                "AITech-12.2 Insecure Output Handling",
+                                "AITech-14.1 Unauthorized Access (confines access to host files and credential-bearing filesystem objects)",
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AITech-8.3 Information Disclosure",
+                                "AITech-9.1 Model or Agentic System Manipulation",
+                                "AISubtech-11.1.2 Tool-Scoped Evasion (opened-object confinement blocks tool-specific filesystem payload effects)"
                             ]
                         },
                         {
@@ -16994,12 +17343,15 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
                         "AITech-1.2 Indirect Prompt Injection",
+                        "AITech-4.2 Context Boundary Attacks",
                         "AITech-4.3 Protocol Manipulation",
-                        "AITech-8.2 Data Exfiltration / Exposure",
+                        "AITech-9.1 Model or Agentic System Manipulation",
                         "AITech-12.1 Tool Exploitation",
+                        "AITech-12.2 Insecure Output Handling",
                         "AITech-14.1 Unauthorized Access",
                         "AISubtech-4.3.3 Server Rebinding Attack",
                         "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access",
+                        "AISubtech-12.1.1 Parameter Manipulation",
                         "AISubtech-12.1.3 Unsafe System / Browser / File Execution"
                     ]
                 },
@@ -17092,11 +17444,15 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-4.3 Protocol Manipulation (canonical URL, DNS, redirect, and pinned-connection validation prevent rebinding)",
-                                "AITech-12.1 Tool Exploitation (URL normalization prevents SSRF via safe fetch tool)",
-                                "AISubtech-4.3.3 Server Rebinding Attack (fresh public-address validation and pinned connections block DNS rebinding)",
+                                "AISubtech-12.1.1 Parameter Manipulation",
+                                "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
+                                "AISubtech-4.3.3 Server Rebinding Attack",
                                 "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access",
-                                "AITech-14.1 Unauthorized Access"
+                                "AITech-12.1 Tool Exploitation",
+                                "AITech-12.2 Insecure Output Handling",
+                                "AITech-14.1 Unauthorized Access (blocks SSRF access to private, loopback and cloud-metadata endpoints)",
+                                "AITech-4.3 Protocol Manipulation (validates the structured agent safe-fetch service contract before releasing bytes)",
+                                "AITech-9.1 Model or Agentic System Manipulation"
                             ]
                         },
                         {
@@ -17216,7 +17572,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-1.2 Indirect Prompt Injection"
+                                "AITech-1.2 Indirect Prompt Injection (demotes and sanitizes retrieved HTML before model context ingestion)",
+                                "AITech-4.2 Context Boundary Attacks (demotes and sanitizes retrieved HTML before model context ingestion)"
                             ]
                         },
                         {
@@ -17333,10 +17690,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
                                 "AITech-1.2 Indirect Prompt Injection",
                                 "AITech-12.1 Tool Exploitation",
-                                "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
-                                "AITech-8.2 Data Exfiltration / Exposure"
+                                "AITech-4.2 Context Boundary Attacks"
                             ]
                         },
                         {
@@ -17461,13 +17818,13 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
                         "AITech-1.2 Indirect Prompt Injection",
-                        "AITech-7.2 Memory System Corruption",
                         "AITech-7.3 Data Source Abuse and Manipulation",
                         "AITech-8.2 Data Exfiltration / Exposure",
                         "AITech-8.3 Information Disclosure",
                         "AITech-12.1 Tool Exploitation",
-                        "AITech-14.1 Unauthorized Access",
-                        "AISubtech-6.1.1 Knowledge Base Poisoning"
+                        "AISubtech-6.1.1 Knowledge Base Poisoning",
+                        "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
+                        "AISubtech-14.1.2 Insufficient Access Controls"
                     ]
                 },
                 {
@@ -17565,9 +17922,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-7.3 Data Source Abuse and Manipulation",
                                 "AISubtech-6.1.1 Knowledge Base Poisoning",
-                                "AITech-7.2 Memory System Corruption"
+                                "AITech-1.2 Indirect Prompt Injection",
+                                "AITech-7.3 Data Source Abuse and Manipulation"
                             ]
                         },
                         {
@@ -17681,6 +18038,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-6.1.1 Knowledge Base Poisoning",
                                 "AITech-7.3 Data Source Abuse and Manipulation"
                             ]
                         },
@@ -17813,10 +18171,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-14.1.2 Insufficient Access Controls",
+                                "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
+                                "AITech-12.1 Tool Exploitation",
                                 "AITech-8.2 Data Exfiltration / Exposure",
-                                "AITech-8.3 Information Disclosure",
-                                "AITech-14.1 Unauthorized Access",
-                                "AITech-12.1 Tool Exploitation (retrieval tool cannot return unauthorized chunks)"
+                                "AITech-8.3 Information Disclosure"
                             ]
                         },
                         {
@@ -17940,9 +18299,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-7.3 Data Source Abuse and Manipulation",
                                 "AISubtech-6.1.1 Knowledge Base Poisoning",
-                                "AITech-1.2 Indirect Prompt Injection"
+                                "AITech-1.2 Indirect Prompt Injection",
+                                "AITech-7.3 Data Source Abuse and Manipulation"
                             ]
                         },
                         {
@@ -18044,15 +18403,30 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-1.3 Goal Manipulation",
+                        "AITech-2.1 Excessive Agency",
+                        "AITech-2.2 Goal Drift",
+                        "AITech-2.3 Reward Hacking",
                         "AITech-5.2 Configuration Persistence",
                         "AITech-7.3 Data Source Abuse and Manipulation",
+                        "AITech-8.3 Information Disclosure",
                         "AITech-9.3 Dependency / Plugin Compromise",
+                        "AITech-11.1 Environment-Aware Evasion",
+                        "AITech-12.1 Tool Exploitation",
                         "AITech-14.1 Unauthorized Access",
-                        "AITech-14.2 Abuse of Delegated Authority",
+                        "AISubtech-2.1.1 Execution Approval Bypass",
+                        "AISubtech-2.1.2 Capability and Permission Overreach",
+                        "AISubtech-2.2.3 Authorization and Constraint Erosion",
+                        "AISubtech-2.3.2 Verifier Manipulation",
                         "AISubtech-5.2.1 Agent Profile Tampering",
                         "AISubtech-6.1.1 Knowledge Base Poisoning",
-                        "AISubtech-9.3.1 Malicious Package / Tool Injection"
+                        "AISubtech-8.3.2 System Information Exposure",
+                        "AISubtech-9.1.2 Unauthorized or Unsolicited System Access",
+                        "AISubtech-9.3.1 Malicious Package / Tool Injection",
+                        "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
+                        "AISubtech-11.1.4 Defense-Aware Payloads",
+                        "AISubtech-12.1.2 Tool Poisoning",
+                        "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
+                        "AISubtech-14.1.2 Insufficient Access Controls"
                     ]
                 },
                 {
@@ -18147,9 +18521,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-5.2 Configuration Persistence",
+                                "AISubtech-2.1.1 Execution Approval Bypass",
                                 "AISubtech-5.2.1 Agent Profile Tampering",
-                                "AITech-1.3 Goal Manipulation (blocks configs that enable goal manipulation)"
+                                "AITech-2.1 Excessive Agency",
+                                "AITech-5.2 Configuration Persistence"
                             ]
                         },
                         {
@@ -18289,8 +18664,13 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-12.1.2 Tool Poisoning",
+                                "AISubtech-5.2.1 Agent Profile Tampering",
+                                "AISubtech-9.3.1 Malicious Package / Tool Injection (Verifies the complete loaded tool/plugin file population)",
+                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull (Verifies the complete loaded tool/plugin file population)",
+                                "AITech-12.1 Tool Exploitation",
                                 "AITech-5.2 Configuration Persistence",
-                                "AISubtech-5.2.1 Agent Profile Tampering"
+                                "AITech-9.3 Dependency / Plugin Compromise (Verifies the complete loaded tool/plugin file population)"
                             ]
                         },
                         {
@@ -18454,10 +18834,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-7.3 Data Source Abuse and Manipulation",
                                 "AISubtech-6.1.1 Knowledge Base Poisoning",
-                                "AITech-5.2 Configuration Persistence",
-                                "AISubtech-5.2.1 Agent Profile Tampering"
+                                "AITech-7.3 Data Source Abuse and Manipulation"
                             ]
                         },
                         {
@@ -18515,7 +18893,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "id": "AID-H-021.003-G004",
                             "implementation": "Sign the approved context source/configuration governance state as an immutable release manifest for H-020.004 to verify and enforce.",
-                            "howTo": "<h5>Concept</h5><p>Sign the source/configuration governance state, not a second copy of the RAG chunk-integrity manifest. The signed artifact declares which sources, owners, trust tiers, precedence rules, freshness states, and release versions are approved. H-020.004 verifies and enforces it at retrieval time; H-020.001 separately verifies chunk and embedding bytes.</p><h5>Create and sign the governance release manifest</h5><pre><code class=\"language-python\"># File: context_governance/build_release_manifest.py\nfrom __future__ import annotations\n\nimport hashlib\nimport json\nimport math\nimport os\nimport subprocess\nfrom pathlib import Path\n\n\nSOURCES = Path(\"context/sources.json\")\nFRESHNESS = Path(\"artifacts/context/freshness.json\")\nPRECEDENCE = Path(\"context/precedence.json\")\nOUTPUT = Path(\"artifacts/context/context_release_manifest.json\")\nSIGNATURE = OUTPUT.with_suffix(\".sig\")\nSIGN_TIMEOUT_SECONDS = float(os.environ[\"VERIFIED_CONTEXT_GOVERNANCE_SIGN_TIMEOUT_SECONDS\"])\nVERIFY_TIMEOUT_SECONDS = float(os.environ[\"VERIFIED_CONTEXT_GOVERNANCE_VERIFY_TIMEOUT_SECONDS\"])\nif any(\n    not math.isfinite(value) or value <= 0\n    for value in (SIGN_TIMEOUT_SECONDS, VERIFY_TIMEOUT_SECONDS)\n):\n    raise RuntimeError(\"verified context-governance signing timeouts are invalid\")\n\n\ndef sha256_file(path: Path) -&gt; str:\n    return hashlib.sha256(path.read_bytes()).hexdigest()\n\n\ndef canonical(value: dict) -&gt; bytes:\n    return (json.dumps(\n        value, sort_keys=True, separators=(\",\", \":\"), allow_nan=False\n    ) + \"\\n\").encode(\"utf-8\")\n\n\nsources = json.loads(SOURCES.read_text(encoding=\"utf-8\"))\nfreshness = json.loads(FRESHNESS.read_text(encoding=\"utf-8\"))\nprecedence = json.loads(PRECEDENCE.read_text(encoding=\"utf-8\"))\nif not isinstance(sources, dict) or set(sources) != {\"sources\"}:\n    raise SystemExit(\"ERROR: context source manifest schema mismatch\")\nif freshness.get(\"status\") != \"PASS\":\n    raise SystemExit(\"FAIL: context source eligibility did not pass\")\nif precedence.get(\"status\") != \"PASS\":\n    raise SystemExit(\"FAIL: context precedence gate did not pass\")\nif freshness.get(\"manifest_sha256\") != sha256_file(SOURCES):\n    raise SystemExit(\"ERROR: freshness report is bound to different source bytes\")\nsource_ids = [item.get(\"source_id\") for item in sources[\"sources\"]]\nfresh_ids = [item.get(\"source_id\") for item in freshness.get(\"results\", [])]\nif source_ids != fresh_ids or source_ids != sorted(set(source_ids)):\n    raise SystemExit(\"ERROR: source population differs across governance artifacts\")\nrelease_id = os.environ[\"CONTEXT_RELEASE_ID\"]\nif not release_id or len(release_id) > 128:\n    raise SystemExit(\"ERROR: invalid context release ID\")\nmanifest = {\n    \"schema_version\": \"aidefend.context-governance-release.v1\",\n    \"release_id\": release_id,\n    \"sources_sha256\": sha256_file(SOURCES),\n    \"freshness_report_sha256\": sha256_file(FRESHNESS),\n    \"precedence_policy_sha256\": sha256_file(PRECEDENCE),\n    \"source_count\": freshness[\"source_count\"],\n    \"source_states\": [\n        {\n            \"source_id\": item[\"source_id\"],\n            \"content_sha256\": item[\"content_sha256\"],\n            \"expires_at\": item[\"expires_at\"],\n        }\n        for item in sorted(freshness[\"results\"], key=lambda row: row[\"source_id\"])\n    ],\n}\nOUTPUT.parent.mkdir(parents=True, exist_ok=True)\nOUTPUT.write_bytes(canonical(manifest))\nsubprocess.run([\n    \"cosign\", \"sign-blob\", \"--yes\",\n    \"--key\", \"env://CONTEXT_GOVERNANCE_SIGNING_KEY\",\n    \"--bundle\", str(SIGNATURE), str(OUTPUT),\n], check=True, timeout=SIGN_TIMEOUT_SECONDS)\nsubprocess.run([\n    \"cosign\", \"verify-blob\", \"--key\", os.environ[\"CONTEXT_GOVERNANCE_VERIFY_KEY\"],\n    \"--bundle\", str(SIGNATURE), str(OUTPUT),\n], check=True, capture_output=True, text=True, timeout=VERIFY_TIMEOUT_SECONDS)\n</code></pre><h5>Independent verification</h5><p>A release-independent identity verifies the signature, recomputes all three source artifact digests and the complete source-state population, and confirms that no source is missing, duplicated, or expired at release time. Retain the manifest/signature, freshness report/signature, precedence policy, source bytes, CI identity, and replay result. Runtime retrieval denial and audit events remain in H-020.004.</p><p><strong>Action:</strong> Publish one immutable governance release manifest per approved context release and expose its exact digest to the RAG enforcement plane.</p>"
+                            "howTo": "<h5>Concept</h5><p>Sign the source/configuration governance state, not a second copy of the RAG chunk-integrity manifest. The signed artifact declares which sources, owners, trust tiers, precedence rules, freshness states, and release versions are approved. H-020.004 verifies and enforces it at retrieval time; H-020.001 separately verifies chunk and embedding bytes.</p><h5>Create and sign the governance release manifest</h5><pre><code class=\"language-python\"># File: context_governance/build_release_manifest.py\nfrom __future__ import annotations\n\nimport hashlib\nimport json\nimport math\nimport os\nimport subprocess\nfrom pathlib import Path\n\n\nSOURCES = Path(\"context/sources.json\")\nFRESHNESS = Path(\"artifacts/context/freshness.json\")\nPRECEDENCE = Path(\"context/precedence.json\")\nOUTPUT = Path(\"artifacts/context/context_release_manifest.json\")\nSIGNATURE = OUTPUT.with_suffix(\".sig\")\nSIGN_TIMEOUT_SECONDS = float(os.environ[\"VERIFIED_CONTEXT_GOVERNANCE_SIGN_TIMEOUT_SECONDS\"])\nVERIFY_TIMEOUT_SECONDS = float(os.environ[\"VERIFIED_CONTEXT_GOVERNANCE_VERIFY_TIMEOUT_SECONDS\"])\nif any(\n    not math.isfinite(value) or value <= 0\n    for value in (SIGN_TIMEOUT_SECONDS, VERIFY_TIMEOUT_SECONDS)\n):\n    raise RuntimeError(\"verified context-governance signing timeouts are invalid\")\n\n\ndef sha256_file(path: Path) -&gt; str:\n    return hashlib.sha256(path.read_bytes()).hexdigest()\n\n\ndef canonical(value: dict) -&gt; bytes:\n    return (json.dumps(\n        value, sort_keys=True, separators=(\",\", \":\"), allow_nan=False\n    ) + \"\\n\").encode(\"utf-8\")\n\n\nsources = json.loads(SOURCES.read_text(encoding=\"utf-8\"))\nfreshness = json.loads(FRESHNESS.read_text(encoding=\"utf-8\"))\nprecedence = json.loads(PRECEDENCE.read_text(encoding=\"utf-8\"))\nif (not isinstance(sources, dict)\n        or set(sources) != {\"schema_version\", \"manifest_version\", \"sources\"}\n        or sources[\"schema_version\"] != \"aidefend.context-corpus-manifest.v1\"\n        or not isinstance(sources[\"manifest_version\"], str)\n        or not 1 <= len(sources[\"manifest_version\"]) <= 128\n        or not isinstance(sources[\"sources\"], list) or not sources[\"sources\"]):\n    raise SystemExit(\"ERROR: context source manifest schema mismatch\")\nif freshness.get(\"status\") != \"PASS\":\n    raise SystemExit(\"FAIL: context source eligibility did not pass\")\nif precedence.get(\"status\") != \"PASS\":\n    raise SystemExit(\"FAIL: context precedence gate did not pass\")\nif freshness.get(\"manifest_sha256\") != sha256_file(SOURCES):\n    raise SystemExit(\"ERROR: freshness report is bound to different source bytes\")\nsource_ids = [item.get(\"source_id\") for item in sources[\"sources\"]]\nfresh_ids = [item.get(\"source_id\") for item in freshness.get(\"results\", [])]\nif source_ids != fresh_ids or source_ids != sorted(set(source_ids)):\n    raise SystemExit(\"ERROR: source population differs across governance artifacts\")\nrelease_id = os.environ[\"CONTEXT_RELEASE_ID\"]\nif not release_id or len(release_id) > 128:\n    raise SystemExit(\"ERROR: invalid context release ID\")\nmanifest = {\n    \"schema_version\": \"aidefend.context-governance-release.v1\",\n    \"release_id\": release_id,\n    \"sources_sha256\": sha256_file(SOURCES),\n    \"freshness_report_sha256\": sha256_file(FRESHNESS),\n    \"precedence_policy_sha256\": sha256_file(PRECEDENCE),\n    \"source_count\": freshness[\"source_count\"],\n    \"source_states\": [\n        {\n            \"source_id\": item[\"source_id\"],\n            \"content_sha256\": item[\"content_sha256\"],\n            \"expires_at\": item[\"expires_at\"],\n        }\n        for item in sorted(freshness[\"results\"], key=lambda row: row[\"source_id\"])\n    ],\n}\nOUTPUT.parent.mkdir(parents=True, exist_ok=True)\nOUTPUT.write_bytes(canonical(manifest))\nsubprocess.run([\n    \"cosign\", \"sign-blob\", \"--yes\",\n    \"--key\", \"env://CONTEXT_GOVERNANCE_SIGNING_KEY\",\n    \"--bundle\", str(SIGNATURE), str(OUTPUT),\n], check=True, timeout=SIGN_TIMEOUT_SECONDS)\nsubprocess.run([\n    \"cosign\", \"verify-blob\", \"--key\", os.environ[\"CONTEXT_GOVERNANCE_VERIFY_KEY\"],\n    \"--bundle\", str(SIGNATURE), str(OUTPUT),\n], check=True, capture_output=True, text=True, timeout=VERIFY_TIMEOUT_SECONDS)\n</code></pre><h5>Independent verification</h5><p>A release-independent identity verifies the signature, recomputes all three source artifact digests and the complete source-state population, and confirms that no source is missing, duplicated, or expired at release time. Retain the manifest/signature, freshness report/signature, precedence policy, source bytes, CI identity, and replay result. Runtime retrieval denial and audit events remain in H-020.004.</p><p><strong>Action:</strong> Publish one immutable governance release manifest per approved context release and expose its exact digest to the RAG enforcement plane.</p>"
                         },
                         {
                             "id": "AID-H-021.003-G005",
@@ -18610,9 +18988,21 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-5.2 Configuration Persistence",
+                                "AISubtech-11.1.4 Defense-Aware Payloads",
+                                "AISubtech-14.1.2 Insufficient Access Controls",
+                                "AISubtech-2.1.2 Capability and Permission Overreach",
+                                "AISubtech-2.2.3 Authorization and Constraint Erosion",
+                                "AISubtech-2.3.2 Verifier Manipulation (prevents the supervised agent from altering its verifier and oversight surfaces)",
+                                "AISubtech-5.2.1 Agent Profile Tampering",
+                                "AISubtech-8.3.2 System Information Exposure",
+                                "AISubtech-9.1.2 Unauthorized or Unsolicited System Access",
+                                "AITech-11.1 Environment-Aware Evasion",
                                 "AITech-14.1 Unauthorized Access",
-                                "AITech-14.2 Abuse of Delegated Authority"
+                                "AITech-2.1 Excessive Agency",
+                                "AITech-2.2 Goal Drift",
+                                "AITech-2.3 Reward Hacking (prevents the supervised agent from altering its verifier and oversight surfaces)",
+                                "AITech-5.2 Configuration Persistence",
+                                "AITech-8.3 Information Disclosure"
                             ]
                         },
                         {
@@ -18735,10 +19125,17 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-5.2 Configuration Persistence (manifest-change re-evaluation prevents modified agent configuration from silently retaining activation authority)",
-                                "AISubtech-5.2.1 Agent Profile Tampering (authority-changing repository profiles remain restricted until an exact workspace decision)",
-                                "AITech-9.3 Dependency / Plugin Compromise (repository-local plug-ins and servers cannot activate merely because the workspace opens)",
-                                "AISubtech-9.3.1 Malicious Package / Tool Injection (the broker prevents unreviewed repository-supplied tools from joining the active toolset)"
+                                "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
+                                "AISubtech-14.1.2 Insufficient Access Controls (Enforces the stated application access boundary; hosting infrastructure is a separate scope)",
+                                "AISubtech-2.1.1 Execution Approval Bypass",
+                                "AISubtech-2.1.2 Capability and Permission Overreach",
+                                "AISubtech-5.2.1 Agent Profile Tampering",
+                                "AISubtech-9.3.1 Malicious Package / Tool Injection (Gates repository-supplied skills, plugins and local MCP servers before activation)",
+                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull (Gates repository-supplied skills, plugins and local MCP servers before activation)",
+                                "AITech-12.1 Tool Exploitation",
+                                "AITech-2.1 Excessive Agency",
+                                "AITech-5.2 Configuration Persistence",
+                                "AITech-9.3 Dependency / Plugin Compromise (Gates repository-supplied skills, plugins and local MCP servers before activation)"
                             ]
                         },
                         {
@@ -19661,7 +20058,6 @@ if __name__ == "__main__":
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
                         "AITech-9.3 Dependency / Plugin Compromise",
-                        "AISubtech-9.1.1 Code Execution",
                         "AISubtech-9.3.1 Malicious Package / Tool Injection",
                         "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
                         "AISubtech-9.3.3 Dependency Replacement / Rug Pull"
@@ -19783,9 +20179,9 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-9.3 Dependency / Plugin Compromise",
                                 "AISubtech-9.3.1 Malicious Package / Tool Injection",
-                                "AISubtech-9.1.1 Code Execution (sandboxing contains malicious code execution from install scripts)"
+                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
+                                "AITech-9.3 Dependency / Plugin Compromise"
                             ]
                         },
                         {
@@ -19911,10 +20307,10 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-9.3 Dependency / Plugin Compromise",
                                 "AISubtech-9.3.1 Malicious Package / Tool Injection",
                                 "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
-                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull"
+                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
+                                "AITech-9.3 Dependency / Plugin Compromise"
                             ]
                         },
                         {
@@ -20035,10 +20431,9 @@ if __name__ == "__main__":
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-9.3 Dependency / Plugin Compromise",
-                        "AISubtech-9.3.1 Malicious Package / Tool Injection",
-                        "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
-                        "AITech-14.1 Unauthorized Access (prevents unauthorized publishing via stolen credentials)"
+                        "AISubtech-9.3.1 Malicious Package / Tool Injection (Verifies externally published npm/PyPI packages before dependency mirror or promotion)",
+                        "AISubtech-9.3.3 Dependency Replacement / Rug Pull (Verifies externally published npm/PyPI packages before dependency mirror or promotion)",
+                        "AITech-9.3 Dependency / Plugin Compromise (Verifies externally published npm/PyPI packages before dependency mirror or promotion)"
                     ]
                 },
                 {
@@ -20154,10 +20549,17 @@ if __name__ == "__main__":
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
+                        "AITech-2.1 Excessive Agency",
                         "AITech-4.3 Protocol Manipulation",
                         "AITech-9.3 Dependency / Plugin Compromise",
+                        "AITech-12.1 Tool Exploitation",
+                        "AISubtech-2.1.2 Capability and Permission Overreach",
+                        "AISubtech-4.3.1 Schema Inconsistencies",
+                        "AISubtech-4.3.2 Namespace Collision",
+                        "AISubtech-4.3.5 Capability Inflation",
                         "AISubtech-9.3.1 Malicious Package / Tool Injection",
                         "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
+                        "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
                         "AISubtech-12.1.2 Tool Poisoning",
                         "AISubtech-12.1.4 Tool Shadowing"
                     ]
@@ -20265,8 +20667,13 @@ if __name__ == "__main__":
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
                                 "AISubtech-12.1.4 Tool Shadowing",
+                                "AISubtech-4.3.2 Namespace Collision",
                                 "AISubtech-9.3.1 Malicious Package / Tool Injection",
-                                "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)"
+                                "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
+                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
+                                "AITech-12.1 Tool Exploitation",
+                                "AITech-4.3 Protocol Manipulation",
+                                "AITech-9.3 Dependency / Plugin Compromise"
                             ]
                         },
                         {
@@ -20378,7 +20785,10 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AISubtech-12.1.4 Tool Shadowing (hash binding detects shadowed tool descriptors)",
+                                "AISubtech-12.1.2 Tool Poisoning (pins reviewed descriptor bytes; semantic honesty requires separate review)",
+                                "AISubtech-12.1.4 Tool Shadowing (pins reviewed descriptor bytes; semantic honesty requires separate review)",
+                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
+                                "AITech-12.1 Tool Exploitation (pins reviewed descriptor bytes; semantic honesty requires separate review)",
                                 "AITech-9.3 Dependency / Plugin Compromise"
                             ]
                         },
@@ -20481,8 +20891,12 @@ if __name__ == "__main__":
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
                                 "AISubtech-12.1.4 Tool Shadowing",
+                                "AISubtech-4.3.2 Namespace Collision",
+                                "AISubtech-9.3.1 Malicious Package / Tool Injection",
                                 "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
-                                "AISubtech-9.3.1 Malicious Package / Tool Injection (typosquat detection prevents malicious package injection via similar names)"
+                                "AITech-12.1 Tool Exploitation",
+                                "AITech-4.3 Protocol Manipulation",
+                                "AITech-9.3 Dependency / Plugin Compromise"
                             ]
                         },
                         {
@@ -20602,8 +21016,14 @@ if __name__ == "__main__":
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
                                 "AISubtech-12.1.2 Tool Poisoning",
-                                "AISubtech-12.1.4 Tool Shadowing",
-                                "AITech-4.3 Protocol Manipulation"
+                                "AISubtech-2.1.2 Capability and Permission Overreach (rejects unapproved expansion of published tool capability contracts)",
+                                "AISubtech-4.3.1 Schema Inconsistencies",
+                                "AISubtech-4.3.5 Capability Inflation",
+                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
+                                "AITech-12.1 Tool Exploitation",
+                                "AITech-2.1 Excessive Agency (rejects unapproved expansion of published tool capability contracts)",
+                                "AITech-4.3 Protocol Manipulation",
+                                "AITech-9.3 Dependency / Plugin Compromise"
                             ]
                         },
                         {
@@ -20698,7 +21118,12 @@ if __name__ == "__main__":
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
+                        "AITech-9.1 Model or Agentic System Manipulation",
+                        "AITech-12.1 Tool Exploitation",
+                        "AITech-12.2 Insecure Output Handling",
                         "AISubtech-9.1.1 Code Execution",
+                        "AISubtech-9.1.2 Unauthorized or Unsolicited System Access",
+                        "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access",
                         "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
                         "AISubtech-12.2.1 Code Detection / Malicious Code Output"
                     ]
@@ -20814,7 +21239,10 @@ if __name__ == "__main__":
                             "items": [
                                 "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
                                 "AISubtech-12.2.1 Code Detection / Malicious Code Output",
-                                "AISubtech-9.1.1 Code Execution (pre-execution static gate blocks recognized malicious code)"
+                                "AISubtech-9.1.1 Code Execution",
+                                "AITech-12.1 Tool Exploitation",
+                                "AITech-12.2 Insecure Output Handling",
+                                "AITech-9.1 Model or Agentic System Manipulation"
                             ]
                         },
                         {
@@ -20937,7 +21365,14 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AISubtech-12.1.3 Unsafe System / Browser / File Execution"
+                                "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
+                                "AISubtech-12.2.1 Code Detection / Malicious Code Output",
+                                "AISubtech-9.1.1 Code Execution",
+                                "AISubtech-9.1.2 Unauthorized or Unsolicited System Access",
+                                "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access",
+                                "AITech-12.1 Tool Exploitation",
+                                "AITech-12.2 Insecure Output Handling",
+                                "AITech-9.1 Model or Agentic System Manipulation"
                             ]
                         },
                         {
@@ -21038,16 +21473,12 @@ if __name__ == "__main__":
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-1.1 Direct Prompt Injection",
+                        "AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation)",
                         "AITech-1.2 Indirect Prompt Injection",
-                        "AITech-2.1 Jailbreak",
                         "AITech-9.2 Detection Evasion",
-                        "AISubtech-1.1.2 Obfuscation (Direct Prompt Injection)",
-                        "AISubtech-1.2.2 Obfuscation (Indirect Prompt Injection)",
-                        "AISubtech-2.1.2 Obfuscation (Jailbreak)",
-                        "AISubtech-2.1.3 Semantic Manipulation (Jailbreak)",
-                        "AISubtech-2.1.4 Token Exploitation (Jailbreak)",
-                        "AISubtech-9.2.1 Obfuscation Vulnerabilities"
+                        "AISubtech-1.1.1 Instruction Manipulation",
+                        "AISubtech-1.1.2 Obfuscation",
+                        "AISubtech-1.1.5 Context Manipulation"
                     ]
                 },
                 {
@@ -21162,11 +21593,9 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-1.1 Direct Prompt Injection",
-                                "AITech-1.2 Indirect Prompt Injection",
-                                "AITech-2.1 Jailbreak",
-                                "AITech-9.2 Detection Evasion",
-                                "AISubtech-9.2.1 Obfuscation Vulnerabilities"
+                                "AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation) (requires target-detector holdout improvement and deployed-version readback)",
+                                "AITech-1.2 Indirect Prompt Injection (requires target-detector holdout improvement and deployed-version readback)",
+                                "AITech-9.2 Detection Evasion (requires target-detector holdout improvement and deployed-version readback)"
                             ]
                         },
                         {
@@ -21287,16 +21716,7 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-1.1 Direct Prompt Injection",
-                                "AITech-1.2 Indirect Prompt Injection",
-                                "AITech-2.1 Jailbreak",
-                                "AITech-9.2 Detection Evasion",
-                                "AISubtech-1.1.2 Obfuscation (Direct Prompt Injection)",
-                                "AISubtech-1.2.2 Obfuscation (Indirect Prompt Injection)",
-                                "AISubtech-2.1.2 Obfuscation (Jailbreak)",
-                                "AISubtech-2.1.3 Semantic Manipulation (Jailbreak)",
-                                "AISubtech-2.1.4 Token Exploitation (Jailbreak)",
-                                "AISubtech-9.2.1 Obfuscation Vulnerabilities"
+                                "AITech-9.2 Detection Evasion (confirms malicious-intent false negatives on the actual detector in offline testing)"
                             ]
                         },
                         {
@@ -21421,10 +21841,12 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-1.1 Direct Prompt Injection",
-                                "AITech-1.2 Indirect Prompt Injection",
-                                "AITech-2.1 Jailbreak",
-                                "AITech-9.2 Detection Evasion"
+                                "AISubtech-1.1.1 Instruction Manipulation (blocks detector promotion on independently measured category failures)",
+                                "AISubtech-1.1.2 Obfuscation (blocks detector promotion on independently measured category failures)",
+                                "AISubtech-1.1.5 Context Manipulation (blocks detector promotion on independently measured category failures)",
+                                "AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation) (blocks detector promotion on independently measured category failures)",
+                                "AITech-1.2 Indirect Prompt Injection (blocks detector promotion on independently measured category failures)",
+                                "AITech-9.2 Detection Evasion (blocks detector promotion on independently measured category failures)"
                             ]
                         },
                         {
@@ -21457,7 +21879,7 @@ if __name__ == "__main__":
                         {
                             "id": "AID-H-026.003-G003",
                             "implementation": "Use attribution methods to debug representative detector misses and guide the next hardening cycle.",
-                            "howTo": "<h5>Purpose and scope boundary</h5>\n<p>Use attribution only to debug a policy-selected population of detector errors after the sealed benchmark. It is not causal proof, a promotion metric, or authorization to change a model. Preserve the complete miss population and deterministic selection evidence so analysts cannot cherry-pick attractive explanations.</p>\n<h5>Step 1: Deterministically select representative misses from every weak category</h5>\n<pre><code class=\"language-python\"># File: detector_hardening/attribution_selection.py\nfrom __future__ import annotations\n\nimport hashlib\nimport math\nimport re\nfrom dataclasses import dataclass\n\nEVAL_ROW_FIELDS = {\n    \"case_id\", \"text\", \"text_sha256\", \"label\", \"pred\", \"category\",\n    \"detector_sha256\",\n}\nSHA256 = re.compile(r\"^[a-f0-9]{64}$\")\n\n\n@dataclass(frozen=True)\nclass AttributionPolicy:\n    max_examples_per_category: int\n    selection_seed: str\n    tokenizer_max_length: int\n    integration_steps: int\n    top_tokens_per_direction: int\n\n\ndef positive_integer(value: object, name: str) -&gt; int:\n    if isinstance(value, bool) or not isinstance(value, int) or value &lt; 1:\n        raise ValueError(name + \" must be a positive integer\")\n    return value\n\n\ndef select_representative_misses(\n    eval_rows: list[dict],\n    weak_categories: list[dict],\n    expected_detector_sha256: str,\n    policy: AttributionPolicy,\n) -&gt; dict:\n    positive_integer(policy.max_examples_per_category, \"max_examples_per_category\")\n    if not policy.selection_seed or not SHA256.fullmatch(expected_detector_sha256):\n        raise ValueError(\"selection seed or detector digest is invalid\")\n    if not isinstance(weak_categories, list) or not weak_categories:\n        raise ValueError(\"weak-category finding population is empty\")\n    finding_keys: list[tuple[str, str]] = []\n    for item in weak_categories:\n        if (not isinstance(item, dict)\n                or set(item) != {\"category\", \"issue\", \"value\", \"threshold\"}\n                or not isinstance(item[\"category\"], str) or not item[\"category\"]\n                or item[\"issue\"] not in {\"high_fpr\", \"low_recall\", \"recall_regression\"}):\n            raise ValueError(\"weak-category finding schema differs\")\n        finding_keys.append((item[\"category\"], item[\"issue\"]))\n    if len(set(finding_keys)) != len(finding_keys):\n        raise ValueError(\"weak-category finding is duplicated\")\n    weak_names = sorted({category for category, _ in finding_keys})\n\n    case_ids: set[str] = set()\n    misses: dict[str, list[dict]] = {category: [] for category in weak_names}\n    for row in eval_rows:\n        if not isinstance(row, dict) or set(row) != EVAL_ROW_FIELDS:\n            raise ValueError(\"evaluation-row schema differs\")\n        if not row[\"case_id\"] or row[\"case_id\"] in case_ids:\n            raise ValueError(\"evaluation case ID is empty or duplicated\")\n        case_ids.add(row[\"case_id\"])\n        if (not isinstance(row[\"text\"], str) or not row[\"text\"].strip()\n                or hashlib.sha256(row[\"text\"].encode(\"utf-8\")).hexdigest() != row[\"text_sha256\"]\n                or row[\"label\"] not in (0, 1) or row[\"pred\"] not in (0, 1)\n                or isinstance(row[\"label\"], bool) or isinstance(row[\"pred\"], bool)\n                or row[\"detector_sha256\"] != expected_detector_sha256):\n            raise ValueError(\"evaluation row is invalid or misbound\")\n        if row[\"category\"] in misses and row[\"label\"] != row[\"pred\"]:\n            misses[row[\"category\"]].append(row)\n\n    if any(not rows for rows in misses.values()):\n        raise RuntimeError(\"a weak category has no attributable miss population\")\n    selected: dict[str, list[dict]] = {}\n    for category, rows in misses.items():\n        ordered = sorted(rows, key=lambda row: hashlib.sha256(\n            (policy.selection_seed + \":\" + row[\"case_id\"]).encode(\"utf-8\")\n        ).hexdigest())\n        selected[category] = ordered[:policy.max_examples_per_category]\n    return {\n        \"eligible_miss_counts\": {name: len(rows) for name, rows in misses.items()},\n        \"selected_counts\": {name: len(rows) for name, rows in selected.items()},\n        \"selected_case_ids\": {\n            name: [row[\"case_id\"] for row in rows] for name, rows in selected.items()\n        },\n        \"selected\": selected,\n    }\n</code></pre>\n<h5>Step 2: Run version-bound integrated gradients with convergence evidence</h5>\n<pre><code class=\"language-python\"># File: detector_hardening/miss_attribution.py\nimport math\n\nimport torch\nfrom captum.attr import LayerIntegratedGradients\n\nfrom detector_hardening.attribution_selection import AttributionPolicy, positive_integer\n\n\nclass UnsupportedAttribution(RuntimeError):\n    pass\n\n\ndef explain_detector_miss(\n    model,\n    tokenizer,\n    case: dict,\n    policy: AttributionPolicy,\n) -&gt; dict:\n    max_length = positive_integer(policy.tokenizer_max_length, \"tokenizer_max_length\")\n    steps = positive_integer(policy.integration_steps, \"integration_steps\")\n    if case[\"label\"] == case[\"pred\"] or case[\"label\"] not in (0, 1):\n        raise ValueError(\"attribution input is not a binary detector miss\")\n    if not hasattr(model, \"get_input_embeddings\"):\n        raise UnsupportedAttribution(\"model has no supported input-embedding boundary\")\n    embeddings = model.get_input_embeddings()\n    if embeddings is None or tokenizer.pad_token_id is None:\n        raise UnsupportedAttribution(\"embedding layer or tokenizer baseline is unavailable\")\n\n    model.eval()\n    device = next(model.parameters()).device\n    encoded = tokenizer(\n        case[\"text\"], return_tensors=\"pt\", truncation=True, max_length=max_length\n    )\n    input_ids = encoded[\"input_ids\"].to(device)\n    attention_mask = encoded[\"attention_mask\"].to(device)\n    baseline = torch.full_like(input_ids, tokenizer.pad_token_id)\n\n    def forward(ids, mask):\n        return model(input_ids=ids, attention_mask=mask).logits\n\n    explainer = LayerIntegratedGradients(forward, embeddings)\n    attribution, convergence_delta = explainer.attribute(\n        inputs=input_ids,\n        baselines=baseline,\n        additional_forward_args=(attention_mask,),\n        target=case[\"label\"],\n        n_steps=steps,\n        return_convergence_delta=True,\n    )\n    scores = attribution.sum(dim=-1).squeeze(0).detach().cpu().tolist()\n    tokens = tokenizer.convert_ids_to_tokens(input_ids.squeeze(0).detach().cpu())\n    delta = float(convergence_delta.detach().cpu().reshape(-1)[0])\n    if len(tokens) != len(scores) or any(not math.isfinite(float(value)) for value in scores + [delta]):\n        raise RuntimeError(\"attribution population or convergence result differs\")\n    return {\n        \"case_id\": case[\"case_id\"], \"category\": case[\"category\"],\n        \"text_sha256\": case[\"text_sha256\"],\n        \"detector_sha256\": case[\"detector_sha256\"],\n        \"target_label\": case[\"label\"], \"token_ids\": input_ids.squeeze(0).tolist(),\n        \"tokens\": tokens, \"token_scores\": scores,\n        \"convergence_delta\": delta,\n        \"tokenizer_max_length\": max_length, \"integration_steps\": steps,\n    }\n</code></pre>\n<h5>Step 3: Convert every selected explanation into a reviewable backlog item</h5>\n<pre><code class=\"language-python\"># File: detector_hardening/debug_backlog.py\nfrom detector_hardening.attribution_selection import AttributionPolicy, positive_integer\n\n\ndef build_debug_backlog(explanations: list[dict], policy: AttributionPolicy) -&gt; list[dict]:\n    top_k = positive_integer(policy.top_tokens_per_direction, \"top_tokens_per_direction\")\n    if not explanations:\n        raise ValueError(\"selected explanation population is empty\")\n    case_ids: set[str] = set()\n    backlog: list[dict] = []\n    for explanation in explanations:\n        case_id = explanation.get(\"case_id\")\n        tokens = explanation.get(\"tokens\")\n        scores = explanation.get(\"token_scores\")\n        if (not isinstance(case_id, str) or not case_id or case_id in case_ids\n                or not isinstance(tokens, list) or not isinstance(scores, list)\n                or not tokens or len(tokens) != len(scores)):\n            raise ValueError(\"explanation schema, population, or case identity differs\")\n        case_ids.add(case_id)\n        ranked = list(zip(tokens, scores))\n        backlog.append({\n            \"case_id\": case_id, \"category\": explanation[\"category\"],\n            \"text_sha256\": explanation[\"text_sha256\"],\n            \"detector_sha256\": explanation[\"detector_sha256\"],\n            \"suspect_positive_tokens\": sorted(\n                ranked, key=lambda item: item[1], reverse=True)[:top_k],\n            \"suspect_negative_tokens\": sorted(ranked, key=lambda item: item[1])[:top_k],\n            \"convergence_delta\": explanation[\"convergence_delta\"],\n            \"proposed_actions\": [\n                \"review tokenizer and normalization behavior\",\n                \"mine governed adversarial and benign counterexamples\",\n                \"test the hypothesis in a separately approved experiment\",\n            ],\n            \"release_authority\": \"none\",\n        })\n    if len(backlog) != len(explanations):\n        raise RuntimeError(\"explanation-to-backlog reconciliation failed\")\n    return backlog\n</code></pre><h5>Verify complete coverage</h5><p>Materialize the complete population of every miss in each weak category, every deterministically selected case, token and score returned for each selected input, every explanation, and every resulting backlog item or error disposition before evaluation; require stable unique IDs and reject duplicates or undeclared members.</p><h5>Verify safely</h5><p>Emit a canonical signed receipt binding <code>AID-H-026.003-G003</code>, policy ID/version/digest, eligible/selected population roots and counts, deterministic rank keys, exact detector/tokenizer and input bindings, token IDs/scores, convergence deltas, unsupported/error dispositions, analyst review, backlog IDs, and secure-sink readback, complete-population manifest digest and counts, immutable code/model/tool/container versions, timestamps, disposition reasons, and the applied action. Write the receipt and exact replay inputs to an append-only or WORM sink under an identity that the detector and training job cannot alter, for the policy-derived retention period.</p>"
+                            "howTo": "<h5>Purpose and scope boundary</h5>\n<p>Use attribution only to debug a policy-selected population of detector errors after the sealed benchmark. It is not causal proof, a promotion metric, or authorization to change a model. Preserve the complete miss population and deterministic selection evidence so analysts cannot cherry-pick attractive explanations.</p>\n<h5>Step 1: Deterministically select representative misses from every weak category</h5>\n<pre><code class=\"language-python\"># File: detector_hardening/attribution_selection.py\nfrom __future__ import annotations\n\nimport hashlib\nimport math\nimport re\nfrom dataclasses import dataclass\n\nEVAL_ROW_FIELDS = {\n    \"case_id\", \"text\", \"text_sha256\", \"label\", \"pred\", \"category\",\n    \"detector_sha256\",\n}\nSHA256 = re.compile(r\"^[a-f0-9]{64}$\")\n\n\n@dataclass(frozen=True)\nclass AttributionPolicy:\n    max_examples_per_category: int\n    selection_seed: str\n    tokenizer_max_length: int\n    integration_steps: int\n    top_tokens_per_direction: int\n\n\ndef positive_integer(value: object, name: str) -&gt; int:\n    if isinstance(value, bool) or not isinstance(value, int) or value &lt; 1:\n        raise ValueError(name + \" must be a positive integer\")\n    return value\n\n\ndef select_representative_misses(\n    eval_rows: list[dict],\n    weak_categories: list[dict],\n    expected_detector_sha256: str,\n    policy: AttributionPolicy,\n) -&gt; dict:\n    positive_integer(policy.max_examples_per_category, \"max_examples_per_category\")\n    if not policy.selection_seed or not SHA256.fullmatch(expected_detector_sha256):\n        raise ValueError(\"selection seed or detector digest is invalid\")\n    if not isinstance(weak_categories, list) or not weak_categories:\n        raise ValueError(\"weak-category finding population is empty\")\n    finding_keys: list[tuple[str, str]] = []\n    for item in weak_categories:\n        if (not isinstance(item, dict)\n                or not isinstance(item.get(\"category\"), str) or not item[\"category\"]\n                or item.get(\"issue\") not in {\"high_fpr\", \"low_recall\", \"recall_regression\"}):\n            raise ValueError(\"weak-category finding schema differs\")\n        regression = item[\"issue\"] == \"recall_regression\"\n        numeric_fields = {\"current\", \"previous\", \"delta\", \"threshold\"} if regression else {\"value\", \"threshold\"}\n        if set(item) != {\"category\", \"issue\"} | numeric_fields:\n            raise ValueError(\"weak-category finding schema differs\")\n        for field in numeric_fields:\n            value = item[field]\n            if (isinstance(value, bool) or not isinstance(value, (int, float))\n                    or not math.isfinite(value) or not 0 <= value <= 1):\n                raise ValueError(\"weak-category metric is invalid: \" + field)\n        if regression:\n            if (not math.isclose(item[\"previous\"] - item[\"current\"], item[\"delta\"], rel_tol=1e-12, abs_tol=1e-12)\n                    or item[\"delta\"] <= item[\"threshold\"]):\n                raise ValueError(\"recall-regression evidence is inconsistent\")\n        elif ((item[\"issue\"] == \"high_fpr\" and item[\"value\"] <= item[\"threshold\"])\n              or (item[\"issue\"] == \"low_recall\" and item[\"value\"] >= item[\"threshold\"])):\n            raise ValueError(\"finding does not breach its threshold\")\n        finding_keys.append((item[\"category\"], item[\"issue\"]))\n    if len(set(finding_keys)) != len(finding_keys):\n        raise ValueError(\"weak-category finding is duplicated\")\n    weak_names = sorted({category for category, _ in finding_keys})\n\n    case_ids: set[str] = set()\n    misses: dict[str, list[dict]] = {category: [] for category in weak_names}\n    for row in eval_rows:\n        if not isinstance(row, dict) or set(row) != EVAL_ROW_FIELDS:\n            raise ValueError(\"evaluation-row schema differs\")\n        if not row[\"case_id\"] or row[\"case_id\"] in case_ids:\n            raise ValueError(\"evaluation case ID is empty or duplicated\")\n        case_ids.add(row[\"case_id\"])\n        if (not isinstance(row[\"text\"], str) or not row[\"text\"].strip()\n                or hashlib.sha256(row[\"text\"].encode(\"utf-8\")).hexdigest() != row[\"text_sha256\"]\n                or row[\"label\"] not in (0, 1) or row[\"pred\"] not in (0, 1)\n                or isinstance(row[\"label\"], bool) or isinstance(row[\"pred\"], bool)\n                or row[\"detector_sha256\"] != expected_detector_sha256):\n            raise ValueError(\"evaluation row is invalid or misbound\")\n        if row[\"category\"] in misses and row[\"label\"] != row[\"pred\"]:\n            misses[row[\"category\"]].append(row)\n\n    if any(not rows for rows in misses.values()):\n        raise RuntimeError(\"a weak category has no attributable miss population\")\n    selected: dict[str, list[dict]] = {}\n    for category, rows in misses.items():\n        ordered = sorted(rows, key=lambda row: hashlib.sha256(\n            (policy.selection_seed + \":\" + row[\"case_id\"]).encode(\"utf-8\")\n        ).hexdigest())\n        selected[category] = ordered[:policy.max_examples_per_category]\n    return {\n        \"eligible_miss_counts\": {name: len(rows) for name, rows in misses.items()},\n        \"selected_counts\": {name: len(rows) for name, rows in selected.items()},\n        \"selected_case_ids\": {\n            name: [row[\"case_id\"] for row in rows] for name, rows in selected.items()\n        },\n        \"selected\": selected,\n    }\n</code></pre>\n<h5>Step 2: Run version-bound integrated gradients with convergence evidence</h5>\n<pre><code class=\"language-python\"># File: detector_hardening/miss_attribution.py\nimport math\n\nimport torch\nfrom captum.attr import LayerIntegratedGradients\n\nfrom detector_hardening.attribution_selection import AttributionPolicy, positive_integer\n\n\nclass UnsupportedAttribution(RuntimeError):\n    pass\n\n\ndef explain_detector_miss(\n    model,\n    tokenizer,\n    case: dict,\n    policy: AttributionPolicy,\n) -&gt; dict:\n    max_length = positive_integer(policy.tokenizer_max_length, \"tokenizer_max_length\")\n    steps = positive_integer(policy.integration_steps, \"integration_steps\")\n    if case[\"label\"] == case[\"pred\"] or case[\"label\"] not in (0, 1):\n        raise ValueError(\"attribution input is not a binary detector miss\")\n    if not hasattr(model, \"get_input_embeddings\"):\n        raise UnsupportedAttribution(\"model has no supported input-embedding boundary\")\n    embeddings = model.get_input_embeddings()\n    if embeddings is None or tokenizer.pad_token_id is None:\n        raise UnsupportedAttribution(\"embedding layer or tokenizer baseline is unavailable\")\n\n    model.eval()\n    device = next(model.parameters()).device\n    encoded = tokenizer(\n        case[\"text\"], return_tensors=\"pt\", truncation=True, max_length=max_length\n    )\n    input_ids = encoded[\"input_ids\"].to(device)\n    attention_mask = encoded[\"attention_mask\"].to(device)\n    baseline = torch.full_like(input_ids, tokenizer.pad_token_id)\n\n    def forward(ids, mask):\n        return model(input_ids=ids, attention_mask=mask).logits\n\n    explainer = LayerIntegratedGradients(forward, embeddings)\n    attribution, convergence_delta = explainer.attribute(\n        inputs=input_ids,\n        baselines=baseline,\n        additional_forward_args=(attention_mask,),\n        target=case[\"label\"],\n        n_steps=steps,\n        return_convergence_delta=True,\n    )\n    scores = attribution.sum(dim=-1).squeeze(0).detach().cpu().tolist()\n    tokens = tokenizer.convert_ids_to_tokens(input_ids.squeeze(0).detach().cpu())\n    delta = float(convergence_delta.detach().cpu().reshape(-1)[0])\n    if len(tokens) != len(scores) or any(not math.isfinite(float(value)) for value in scores + [delta]):\n        raise RuntimeError(\"attribution population or convergence result differs\")\n    return {\n        \"case_id\": case[\"case_id\"], \"category\": case[\"category\"],\n        \"text_sha256\": case[\"text_sha256\"],\n        \"detector_sha256\": case[\"detector_sha256\"],\n        \"target_label\": case[\"label\"], \"token_ids\": input_ids.squeeze(0).tolist(),\n        \"tokens\": tokens, \"token_scores\": scores,\n        \"convergence_delta\": delta,\n        \"tokenizer_max_length\": max_length, \"integration_steps\": steps,\n    }\n</code></pre>\n<h5>Step 3: Convert every selected explanation into a reviewable backlog item</h5>\n<pre><code class=\"language-python\"># File: detector_hardening/debug_backlog.py\nfrom detector_hardening.attribution_selection import AttributionPolicy, positive_integer\n\n\ndef build_debug_backlog(explanations: list[dict], policy: AttributionPolicy) -&gt; list[dict]:\n    top_k = positive_integer(policy.top_tokens_per_direction, \"top_tokens_per_direction\")\n    if not explanations:\n        raise ValueError(\"selected explanation population is empty\")\n    case_ids: set[str] = set()\n    backlog: list[dict] = []\n    for explanation in explanations:\n        case_id = explanation.get(\"case_id\")\n        tokens = explanation.get(\"tokens\")\n        scores = explanation.get(\"token_scores\")\n        if (not isinstance(case_id, str) or not case_id or case_id in case_ids\n                or not isinstance(tokens, list) or not isinstance(scores, list)\n                or not tokens or len(tokens) != len(scores)):\n            raise ValueError(\"explanation schema, population, or case identity differs\")\n        case_ids.add(case_id)\n        ranked = list(zip(tokens, scores))\n        backlog.append({\n            \"case_id\": case_id, \"category\": explanation[\"category\"],\n            \"text_sha256\": explanation[\"text_sha256\"],\n            \"detector_sha256\": explanation[\"detector_sha256\"],\n            \"suspect_positive_tokens\": sorted(\n                ranked, key=lambda item: item[1], reverse=True)[:top_k],\n            \"suspect_negative_tokens\": sorted(ranked, key=lambda item: item[1])[:top_k],\n            \"convergence_delta\": explanation[\"convergence_delta\"],\n            \"proposed_actions\": [\n                \"review tokenizer and normalization behavior\",\n                \"mine governed adversarial and benign counterexamples\",\n                \"test the hypothesis in a separately approved experiment\",\n            ],\n            \"release_authority\": \"none\",\n        })\n    if len(backlog) != len(explanations):\n        raise RuntimeError(\"explanation-to-backlog reconciliation failed\")\n    return backlog\n</code></pre><h5>Verify complete coverage</h5><p>Materialize the complete population of every miss in each weak category, every deterministically selected case, token and score returned for each selected input, every explanation, and every resulting backlog item or error disposition before evaluation; require stable unique IDs and reject duplicates or undeclared members.</p><h5>Verify safely</h5><p>Emit a canonical signed receipt binding <code>AID-H-026.003-G003</code>, policy ID/version/digest, eligible/selected population roots and counts, deterministic rank keys, exact detector/tokenizer and input bindings, token IDs/scores, convergence deltas, unsupported/error dispositions, analyst review, backlog IDs, and secure-sink readback, complete-population manifest digest and counts, immutable code/model/tool/container versions, timestamps, disposition reasons, and the applied action. Write the receipt and exact replay inputs to an append-only or WORM sink under an identity that the detector and training job cannot alter, for the policy-derived retention period.</p>"
                         }
                     ]
                 }
@@ -21540,9 +21962,10 @@ if __name__ == "__main__":
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
+                        "AISubtech-4.2.2 Session Boundary Violation",
                         "AITech-4.2 Context Boundary Attacks",
-                        "AITech-8.2 Data Exfiltration / Exposure (cache isolation prevents another tenant's output from being exposed)",
-                        "AISubtech-4.2.2 Session Boundary Violation"
+                        "AITech-8.2 Data Exfiltration / Exposure",
+                        "AITech-8.3 Information Disclosure"
                     ]
                 },
                 {
@@ -21703,22 +22126,37 @@ if __name__ == "__main__":
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-1.3 Goal Manipulation",
+                        "AITech-1.2 Indirect Prompt Injection",
+                        "AITech-2.1 Excessive Agency",
                         "AITech-4.2 Context Boundary Attacks",
+                        "AITech-4.3 Protocol Manipulation",
+                        "AITech-7.4 Token Manipulation",
                         "AITech-8.2 Data Exfiltration / Exposure",
                         "AITech-8.3 Information Disclosure",
                         "AITech-9.3 Dependency / Plugin Compromise",
                         "AITech-12.1 Tool Exploitation",
-                        "AITech-14.1 Unauthorized Access",
+                        "AITech-13.1 Disruption of Availability",
+                        "AITech-13.2 Cost Harvesting / Repurposing",
+                        "AITech-16.1 Eavesdropping",
+                        "AISubtech-2.1.1 Execution Approval Bypass",
+                        "AISubtech-2.1.2 Capability and Permission Overreach",
                         "AISubtech-4.2.2 Session Boundary Violation",
-                        "AISubtech-4.3.2 Namespace Collision",
+                        "AISubtech-4.3.1 Schema Inconsistencies",
                         "AISubtech-4.3.3 Server Rebinding Attack",
+                        "AISubtech-4.3.4 Replay Exploitation",
+                        "AISubtech-7.4.1 Token Theft",
+                        "AISubtech-8.3.3 Personally Identifiable Information Exposure",
                         "AISubtech-9.3.1 Malicious Package / Tool Injection",
                         "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
                         "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
                         "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
-                        "AISubtech-14.1.1 Credential Theft",
-                        "AISubtech-15.1.25 Privacy Attacks: PII / PHI / PCI"
+                        "AISubtech-13.1.1 Compute Exhaustion",
+                        "AISubtech-13.1.2 Memory Flooding",
+                        "AISubtech-13.1.3 Model Denial of Service",
+                        "AISubtech-13.1.4 Application Denial of Service",
+                        "AISubtech-13.2.1 Service Misuse for Cost Inflation",
+                        "AISubtech-14.1.2 Insufficient Access Controls",
+                        "AISubtech-16.1.1 Logging Sensitive Conversations"
                     ]
                 },
                 {
@@ -21849,8 +22287,13 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AISubtech-4.3.2 Namespace Collision (server name squatting leads client to wrong endpoint)",
-                                "AISubtech-4.3.3 Server Rebinding Attack (DNS rebinding redirects client to malicious MCP endpoint)"
+                                "AISubtech-14.1.2 Insufficient Access Controls",
+                                "AISubtech-9.3.1 Malicious Package / Tool Injection",
+                                "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
+                                "AITech-16.1 Eavesdropping",
+                                "AITech-4.3 Protocol Manipulation",
+                                "AITech-9.3 Dependency / Plugin Compromise",
+                                "AISubtech-4.3.3 Server Rebinding Attack (origin and transport-identity pinning constrain endpoint substitution; not universal rebinding prevention)"
                             ]
                         },
                         {
@@ -21976,10 +22419,12 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-8.2 Data Exfiltration / Exposure (credentials exposed on the client)",
-                                "AITech-8.3 Information Disclosure (credential disclosure)",
-                                "AITech-14.1 Unauthorized Access",
-                                "AISubtech-14.1.1 Credential Theft (credential harvesting from insecure client storage)"
+                                "AISubtech-14.1.2 Insufficient Access Controls",
+                                "AISubtech-4.3.4 Replay Exploitation (Rejects stale or revoked MCP client credentials on replay)",
+                                "AISubtech-7.4.1 Token Theft",
+                                "AITech-7.4 Token Manipulation",
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AITech-8.3 Information Disclosure"
                             ]
                         },
                         {
@@ -22087,9 +22532,13 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-8.2 Data Exfiltration / Exposure (client-side response or log exposure)",
-                                "AITech-8.3 Information Disclosure",
-                                "AISubtech-15.1.25 Privacy Attacks: PII / PHI / PCI (regulated data retained in local artifacts)"
+                                "AISubtech-16.1.1 Logging Sensitive Conversations",
+                                "AISubtech-7.4.1 Token Theft",
+                                "AISubtech-8.3.3 Personally Identifiable Information Exposure",
+                                "AITech-16.1 Eavesdropping",
+                                "AITech-7.4 Token Manipulation",
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AITech-8.3 Information Disclosure"
                             ]
                         },
                         {
@@ -22209,8 +22658,16 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-12.1 Tool Exploitation (server output exploits client processing)",
-                                "AISubtech-12.1.3 Unsafe System / Browser / File Execution"
+                                "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
+                                "AISubtech-13.1.2 Memory Flooding",
+                                "AISubtech-13.1.4 Application Denial of Service",
+                                "AISubtech-2.1.1 Execution Approval Bypass",
+                                "AISubtech-4.3.1 Schema Inconsistencies",
+                                "AISubtech-4.3.4 Replay Exploitation",
+                                "AITech-12.1 Tool Exploitation",
+                                "AITech-13.1 Disruption of Availability",
+                                "AITech-2.1 Excessive Agency",
+                                "AITech-4.3 Protocol Manipulation"
                             ]
                         },
                         {
@@ -22326,9 +22783,15 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-8.3 Information Disclosure (cross-session information exposure)",
-                                "AITech-14.1 Unauthorized Access",
-                                "AISubtech-4.2.2 Session Boundary Violation (request/cache/application-state isolation prevents cross-request context contamination without inventing MCP session state)"
+                                "AISubtech-14.1.2 Insufficient Access Controls",
+                                "AISubtech-4.2.2 Session Boundary Violation",
+                                "AISubtech-4.3.4 Replay Exploitation",
+                                "AISubtech-7.4.1 Token Theft",
+                                "AITech-4.2 Context Boundary Attacks",
+                                "AITech-4.3 Protocol Manipulation",
+                                "AITech-7.4 Token Manipulation",
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AITech-8.3 Information Disclosure"
                             ]
                         },
                         {
@@ -22457,10 +22920,10 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-9.3 Dependency / Plugin Compromise (client software supply chain compromise)",
-                                "AISubtech-9.3.1 Malicious Package / Tool Injection (malicious client plugin or dependency injection)",
-                                "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers) (near-name mimicry of legitimate client plugins)",
-                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull (legitimate client plugin replaced with malicious version)"
+                                "AISubtech-9.3.1 Malicious Package / Tool Injection",
+                                "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
+                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
+                                "AITech-9.3 Dependency / Plugin Compromise"
                             ]
                         },
                         {
@@ -22567,9 +23030,15 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-8.3 Information Disclosure (cross-request state can expose another request's data)",
-                                "AITech-14.1 Unauthorized Access",
-                                "AISubtech-4.2.2 Session Boundary Violation (cross-request state contamination)"
+                                "AISubtech-2.1.1 Execution Approval Bypass",
+                                "AISubtech-4.2.2 Session Boundary Violation",
+                                "AISubtech-4.3.1 Schema Inconsistencies",
+                                "AISubtech-4.3.4 Replay Exploitation",
+                                "AITech-2.1 Excessive Agency",
+                                "AITech-4.2 Context Boundary Attacks",
+                                "AITech-4.3 Protocol Manipulation",
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AITech-8.3 Information Disclosure"
                             ]
                         },
                         {
@@ -22685,9 +23154,18 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-1.3 Goal Manipulation (sampling request manipulates client LLM objective and task selection)",
-                                "AITech-12.1 Tool Exploitation (sampling prompt triggers unauthorized tool execution through client LLM)",
-                                "AITech-4.2 Context Boundary Attacks"
+                                "AISubtech-13.1.1 Compute Exhaustion",
+                                "AISubtech-13.1.2 Memory Flooding",
+                                "AISubtech-13.1.3 Model Denial of Service",
+                                "AISubtech-13.1.4 Application Denial of Service",
+                                "AISubtech-13.2.1 Service Misuse for Cost Inflation",
+                                "AISubtech-2.1.2 Capability and Permission Overreach",
+                                "AITech-1.2 Indirect Prompt Injection (isolates deprecated sampling requests from privileged client context)",
+                                "AITech-12.1 Tool Exploitation",
+                                "AITech-13.1 Disruption of Availability",
+                                "AITech-13.2 Cost Harvesting / Repurposing",
+                                "AITech-2.1 Excessive Agency",
+                                "AITech-4.2 Context Boundary Attacks (isolates deprecated sampling requests from privileged client context)"
                             ]
                         },
                         {
@@ -22791,7 +23269,12 @@ if __name__ == "__main__":
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AISubtech-15.1.25 Privacy Attacks: PII / PHI / PCI"
+                        "AITech-8.2 Data Exfiltration / Exposure",
+                        "AITech-8.3 Information Disclosure",
+                        "AITech-16.1 Eavesdropping",
+                        "AISubtech-8.3.3 Personally Identifiable Information Exposure",
+                        "AISubtech-14.1.2 Insufficient Access Controls",
+                        "AISubtech-16.1.1 Logging Sensitive Conversations"
                     ]
                 },
                 {
@@ -23019,7 +23502,11 @@ if __name__ == "__main__":
                       {
                           "framework": "Cisco Integrated AI Security and Safety Framework",
                           "items": [
-                              "N/A"
+                              "AISubtech-14.1.2 Insufficient Access Controls",
+                              "AISubtech-16.1.1 Logging Sensitive Conversations (denies unauthorized data at the logging-stage ingress)",
+                              "AITech-16.1 Eavesdropping (denies unauthorized data at the logging-stage ingress)",
+                              "AITech-8.2 Data Exfiltration / Exposure",
+                              "AITech-8.3 Information Disclosure"
                           ]
                       },
                       {
@@ -23134,7 +23621,10 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AISubtech-15.1.25 Privacy Attacks: PII / PHI / PCI (consent violations for regulated data)"
+                                "AISubtech-8.3.3 Personally Identifiable Information Exposure (purges withdrawn data from active online use; model unlearning remains separate)",
+                                "AITech-8.2 Data Exfiltration / Exposure (purges withdrawn data from active online use; model unlearning remains separate)",
+                                "AITech-8.3 Information Disclosure (purges withdrawn data from active online use; model unlearning remains separate)",
+                                "AISubtech-14.1.2 Insufficient Access Controls (withdrawal freezes online use and independently verifies denied reads)"
                             ]
                         },
                         {
@@ -23262,11 +23752,29 @@ if __name__ == "__main__":
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
+                        "AITech-1.2 Indirect Prompt Injection",
+                        "AITech-2.1 Excessive Agency",
+                        "AITech-5.1 Memory System Persistence",
+                        "AITech-5.2 Configuration Persistence",
+                        "AITech-8.2 Data Exfiltration / Exposure",
                         "AITech-9.2 Detection Evasion",
                         "AITech-9.3 Dependency / Plugin Compromise",
-                        "AISubtech-9.1.1 Code Execution",
+                        "AITech-11.1 Environment-Aware Evasion",
+                        "AITech-12.1 Tool Exploitation",
+                        "AITech-13.1 Disruption of Availability",
+                        "AISubtech-2.1.2 Capability and Permission Overreach",
+                        "AISubtech-5.1.1 Long-term / Short-term Memory Injection",
+                        "AISubtech-5.2.1 Agent Profile Tampering",
+                        "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
                         "AISubtech-9.3.1 Malicious Package / Tool Injection",
-                        "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)"
+                        "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
+                        "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
+                        "AISubtech-11.1.3 Environment-Scoped Payloads",
+                        "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
+                        "AISubtech-13.1.1 Compute Exhaustion",
+                        "AISubtech-13.1.2 Memory Flooding",
+                        "AISubtech-13.1.4 Application Denial of Service",
+                        "AISubtech-14.1.2 Insufficient Access Controls"
                     ]
                 },
                 {
@@ -23376,8 +23884,11 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers) (typosquat detection identifies name-squatted skills)",
-                                "AITech-9.2 Detection Evasion (steganographic content detection catches evasion via hidden Unicode and encoding in metadata)"
+                                "AISubtech-9.3.1 Malicious Package / Tool Injection",
+                                "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
+                                "AITech-1.2 Indirect Prompt Injection",
+                                "AITech-9.2 Detection Evasion (screens hidden or misleading skill publication metadata before admission)",
+                                "AITech-9.3 Dependency / Plugin Compromise"
                             ]
                         },
                         {
@@ -23500,8 +24011,18 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-9.2 Detection Evasion (semantic analysis mitigates natural-language evasion of pattern-based scanners)",
-                                "AISubtech-9.1.1 Code Execution (detects instructions that direct code execution via natural language without code signatures)"
+                                "AISubtech-11.1.3 Environment-Scoped Payloads (screens skill instructions for malicious file- or environment-triggered behavior)",
+                                "AISubtech-5.1.1 Long-term / Short-term Memory Injection",
+                                "AISubtech-5.2.1 Agent Profile Tampering",
+                                "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
+                                "AISubtech-9.3.1 Malicious Package / Tool Injection",
+                                "AITech-1.2 Indirect Prompt Injection",
+                                "AITech-11.1 Environment-Aware Evasion (screens skill instructions for malicious file- or environment-triggered behavior)",
+                                "AITech-5.1 Memory System Persistence",
+                                "AITech-5.2 Configuration Persistence",
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AITech-9.2 Detection Evasion",
+                                "AITech-9.3 Dependency / Plugin Compromise"
                             ]
                         },
                         {
@@ -23623,8 +24144,16 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AISubtech-9.3.1 Malicious Package / Tool Injection (behavioral sandbox detects malicious behavior in injected skill packages)",
-                                "AITech-9.2 Detection Evasion (multi-condition testing mitigates context-dependent malice that evades single-run testing)"
+                                "AISubtech-11.1.3 Environment-Scoped Payloads",
+                                "AISubtech-12.1.3 Unsafe System / Browser / File Execution (compares observed skill effects with its declared contract in pre-install tests)",
+                                "AISubtech-2.1.2 Capability and Permission Overreach (compares observed skill effects with its declared contract in pre-install tests)",
+                                "AISubtech-9.3.1 Malicious Package / Tool Injection",
+                                "AITech-11.1 Environment-Aware Evasion",
+                                "AITech-12.1 Tool Exploitation (compares observed skill effects with its declared contract in pre-install tests)",
+                                "AITech-2.1 Excessive Agency (compares observed skill effects with its declared contract in pre-install tests)",
+                                "AITech-9.2 Detection Evasion",
+                                "AITech-9.3 Dependency / Plugin Compromise",
+                                "AISubtech-14.1.2 Insufficient Access Controls (pre-install comparison of attested effects against declared permissions; not runtime enforcement)"
                             ]
                         },
                         {
@@ -23733,8 +24262,12 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-9.3 Dependency / Plugin Compromise (loader hardening protects handling of third-party skill dependencies and manifests)",
-                                "AITech-9.2 Detection Evasion (bounded decoding and include limits reduce admission-path evasion opportunities)"
+                                "AISubtech-13.1.1 Compute Exhaustion",
+                                "AISubtech-13.1.2 Memory Flooding",
+                                "AISubtech-13.1.4 Application Denial of Service",
+                                "AISubtech-9.3.1 Malicious Package / Tool Injection",
+                                "AITech-13.1 Disruption of Availability",
+                                "AITech-9.3 Dependency / Plugin Compromise"
                             ]
                         },
                         {
@@ -23851,8 +24384,9 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-9.2 Detection Evasion (re-scan with improved scanners revisits artifacts that may have evaded prior analysis)",
-                                "AITech-9.3 Dependency / Plugin Compromise (governance reevaluates installed skill dependencies over time)"
+                                "AISubtech-9.3.1 Malicious Package / Tool Injection",
+                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
+                                "AITech-9.3 Dependency / Plugin Compromise"
                             ]
                         },
                         {
@@ -23958,10 +24492,13 @@ if __name__ == "__main__":
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-3.1 Masquerading / Obfuscation / Impersonation",
+                        "AITech-2.1 Excessive Agency",
+                        "AITech-2.3 Reward Hacking",
+                        "AITech-8.3 Information Disclosure",
                         "AITech-9.3 Dependency / Plugin Compromise",
                         "AITech-12.2 Insecure Output Handling",
-                        "AISubtech-9.1.1 Code Execution",
+                        "AISubtech-2.1.1 Execution Approval Bypass",
+                        "AISubtech-2.3.2 Verifier Manipulation",
                         "AISubtech-9.3.1 Malicious Package / Tool Injection",
                         "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
                         "AISubtech-12.2.1 Code Detection / Malicious Code Output"
@@ -24181,10 +24718,14 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-9.3 Dependency / Plugin Compromise",
+                                "AISubtech-12.2.1 Code Detection / Malicious Code Output (scans the exact generated-code artifact before release)",
+                                "AISubtech-2.3.2 Verifier Manipulation (detects changes that remove or weaken the generated-code verifier tests)",
                                 "AISubtech-9.3.1 Malicious Package / Tool Injection",
                                 "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
-                                "AISubtech-12.2.1 Code Detection / Malicious Code Output"
+                                "AITech-12.2 Insecure Output Handling (scans the exact generated-code artifact before release)",
+                                "AITech-2.3 Reward Hacking (detects changes that remove or weaken the generated-code verifier tests)",
+                                "AITech-8.3 Information Disclosure",
+                                "AITech-9.3 Dependency / Plugin Compromise"
                             ]
                         },
                         {
@@ -24304,9 +24845,8 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-12.2 Insecure Output Handling",
-                                "AISubtech-9.1.1 Code Execution",
-                                "AISubtech-12.2.1 Code Detection / Malicious Code Output"
+                                "AISubtech-12.2.1 Code Detection / Malicious Code Output (gates exact generated-code artifacts on signed dynamic behavior evidence)",
+                                "AITech-12.2 Insecure Output Handling (gates exact generated-code artifacts on signed dynamic behavior evidence)"
                             ]
                         },
                         {
@@ -24423,9 +24963,10 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-9.3 Dependency / Plugin Compromise",
-                                "AITech-3.1 Masquerading / Obfuscation / Impersonation (named approval and evidence binding reduce the risk of impersonated, misattributed, or unverified promotion decisions)",
-                                "AISubtech-12.2.1 Code Detection / Malicious Code Output"
+                                "AISubtech-12.2.1 Code Detection / Malicious Code Output (requires exact artifact-bound verification receipts at final promotion)",
+                                "AISubtech-2.1.1 Execution Approval Bypass",
+                                "AITech-12.2 Insecure Output Handling (requires exact artifact-bound verification receipts at final promotion)",
+                                "AITech-2.1 Excessive Agency"
                             ]
                         },
                         {
@@ -25461,9 +26002,20 @@ if __name__ == "__main__":
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
                         "AITech-4.2 Context Boundary Attacks",
+                        "AITech-7.4 Token Manipulation",
                         "AITech-8.2 Data Exfiltration / Exposure",
+                        "AITech-8.3 Information Disclosure",
+                        "AITech-8.4 Prompt/Meta Extraction",
+                        "AITech-11.2 Model-Selective Evasion",
+                        "AITech-14.1 Unauthorized Access",
+                        "AITech-16.1 Eavesdropping",
                         "AISubtech-4.2.2 Session Boundary Violation",
-                        "AISubtech-8.3.2 System Information Leakage"
+                        "AISubtech-7.4.1 Token Theft",
+                        "AISubtech-8.3.2 System Information Exposure",
+                        "AISubtech-8.4.1 System LLM Prompt Leakage",
+                        "AISubtech-11.2.1 Targeted Model Fingerprinting",
+                        "AISubtech-14.1.2 Insufficient Access Controls",
+                        "AISubtech-16.1.1 Logging Sensitive Conversations"
                     ]
                 },
                 {
@@ -25566,7 +26118,8 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-8.2 Data Exfiltration / Exposure"
+                                "AITech-8.2 Data Exfiltration / Exposure (requires dedicated serving placement without shared-pool spillover)",
+                                "AITech-8.3 Information Disclosure (requires dedicated serving placement without shared-pool spillover)"
                             ]
                         },
                         {
@@ -25672,9 +26225,12 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-14.1.2 Insufficient Access Controls",
+                                "AISubtech-4.2.2 Session Boundary Violation",
+                                "AITech-14.1 Unauthorized Access",
                                 "AITech-4.2 Context Boundary Attacks",
                                 "AITech-8.2 Data Exfiltration / Exposure",
-                                "AISubtech-4.2.2 Session Boundary Violation"
+                                "AITech-8.3 Information Disclosure"
                             ]
                         },
                         {
@@ -25772,8 +26328,18 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-11.2.1 Targeted Model Fingerprinting (suppresses model and serving details exposed through diagnostics)",
+                                "AISubtech-14.1.2 Insufficient Access Controls (Enforces the stated application access boundary; hosting infrastructure is a separate scope)",
+                                "AISubtech-16.1.1 Logging Sensitive Conversations",
+                                "AISubtech-7.4.1 Token Theft",
+                                "AISubtech-8.3.2 System Information Exposure",
+                                "AISubtech-8.4.1 System LLM Prompt Leakage",
+                                "AITech-11.2 Model-Selective Evasion (suppresses model and serving details exposed through diagnostics)",
+                                "AITech-16.1 Eavesdropping",
+                                "AITech-7.4 Token Manipulation",
                                 "AITech-8.2 Data Exfiltration / Exposure",
-                                "AISubtech-8.3.2 System Information Leakage"
+                                "AITech-8.3 Information Disclosure",
+                                "AITech-8.4 Prompt/Meta Extraction"
                             ]
                         },
                         {
@@ -25906,7 +26472,8 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-8.2 Data Exfiltration / Exposure"
+                                "AITech-8.2 Data Exfiltration / Exposure (gates shared serving on current target-bound isolation evidence)",
+                                "AITech-8.3 Information Disclosure (gates shared serving on current target-bound isolation evidence)"
                             ]
                         },
                         {
@@ -26001,13 +26568,17 @@ if __name__ == "__main__":
               {
                   "framework": "Cisco Integrated AI Security and Safety Framework",
                   "items": [
+                      "AITech-2.1 Excessive Agency",
                       "AITech-8.2 Data Exfiltration / Exposure",
                       "AITech-8.3 Information Disclosure",
-                      "AITech-9.3 Dependency / Plugin Compromise",
                       "AITech-13.1 Disruption of Availability",
+                      "AITech-13.2 Cost Harvesting / Repurposing",
+                      "AISubtech-2.1.2 Capability and Permission Overreach",
+                      "AISubtech-10.1.2 Weight Reconstruction",
                       "AISubtech-13.1.1 Compute Exhaustion",
                       "AISubtech-13.1.3 Model Denial of Service",
-                      "AISubtech-13.2.1 Service Misuse for Cost Inflation"
+                      "AISubtech-13.2.1 Service Misuse for Cost Inflation",
+                      "AISubtech-14.1.2 Insufficient Access Controls"
                   ]
               },
               {
@@ -26206,7 +26777,10 @@ if __name__ == "__main__":
                 {
                   "framework": "Cisco Integrated AI Security and Safety Framework",
                   "items": [
-                    "AITech-8.2 Data Exfiltration / Exposure"
+                      "AISubtech-2.1.2 Capability and Permission Overreach (rejects fallback routes that expand the approved tool-capability profile)",
+                      "AITech-2.1 Excessive Agency (rejects fallback routes that expand the approved tool-capability profile)",
+                      "AITech-8.2 Data Exfiltration / Exposure (rejects fallback routes with weaker approved data-handling profiles)",
+                      "AITech-8.3 Information Disclosure (rejects fallback routes with weaker approved data-handling profiles)"
                   ]
                 },
                 {
@@ -26313,8 +26887,8 @@ if __name__ == "__main__":
                 {
                   "framework": "Cisco Integrated AI Security and Safety Framework",
                   "items": [
-                    "AITech-8.2 Data Exfiltration / Exposure",
-                    "AITech-8.3 Information Disclosure"
+                      "AITech-8.2 Data Exfiltration / Exposure (blocks inference dispatch outside approved region and data-handling constraints)",
+                      "AITech-8.3 Information Disclosure (blocks inference dispatch outside approved region and data-handling constraints)"
                   ]
                 },
                 {
@@ -26419,7 +26993,7 @@ if __name__ == "__main__":
                 {
                   "framework": "Cisco Integrated AI Security and Safety Framework",
                   "items": [
-                    "AITech-9.3 Dependency / Plugin Compromise"
+                      "N/A"
                   ]
                 },
                 {
@@ -26515,8 +27089,9 @@ if __name__ == "__main__":
                 {
                   "framework": "Cisco Integrated AI Security and Safety Framework",
                   "items": [
-                    "AITech-8.2 Data Exfiltration / Exposure (blocks dispatch when the resolved route is outside the verified signed route contract)",
-                    "AITech-9.3 Dependency / Plugin Compromise (blocks dispatch when the resolved route is outside the verified signed route contract)"
+                      "AISubtech-14.1.2 Insufficient Access Controls (Enforces the stated application access boundary; hosting infrastructure is a separate scope)",
+                      "AITech-8.2 Data Exfiltration / Exposure",
+                      "AITech-8.3 Information Disclosure"
                   ]
                 },
                 {
@@ -26593,67 +27168,69 @@ if __name__ == "__main__":
                   ]
                 },
                 "defendsAgainst":  [
-                                       {
-                                           "framework":  "MITRE ATLAS",
-                                           "items":  [
-                                                         "AML.T0029 Denial of AI Service",
-                                                         "AML.T0034 Cost Harvesting"
-                                                     ]
-                                       },
-                                       {
-                                           "framework":  "MAESTRO",
-                                           "items":  [
-                                                         "Denial of Service (DoS) Attacks (L1)",
-                                                         "Denial of Service on Framework APIs (L3)"
-                                                     ]
-                                       },
-                                       {
-                                           "framework": "OWASP LLM Top 10 2026",
-                                           "items": [
-                                               "LLM02:2026 Sensitive Information Disclosure",
-                                               "LLM06:2026 Unbounded Consumption"
-                                           ]
-                                       },
-                                       {
-                                           "framework":  "OWASP ML Top 10 2023",
-                                           "items":  [
-                                                         "N/A"
-                                                     ]
-                                       },
-                                       {
-                                           "framework":  "OWASP Top 10 for Agentic Applications 2026",
-                                           "items":  [
-                                                         "N/A"
-                                                     ]
-                                       },
-                                       {
-                                           "framework":  "NIST Adversarial Machine Learning 2025",
-                                           "items":  [
-                                                         "NISTAML.014 Energy-latency"
-                                                     ]
-                                       },
-                                       {
-                                           "framework":  "Cisco Integrated AI Security and Safety Framework",
-                                           "items":  [
-                                                         "AITech-13.1 Disruption of Availability",
-                                                         "AISubtech-13.1.1 Compute Exhaustion",
-                                                         "AISubtech-13.1.3 Model Denial of Service (effective output-token limits constrain oversized model responses)",
-                                                         "AISubtech-13.2.1 Service Misuse for Cost Inflation"
-                                                     ]
-                                       },
-                                       {
-                                           "framework":  "Google Secure AI Framework 2.0 - Risks",
-                                           "items":  [
-                                                         "DMS: Denial of ML Service"
-                                                     ]
-                                       },
-                                       {
-                                           "framework":  "Databricks AI Security Framework 3.0",
-                                           "items":  [
-                                                         "Model Serving - Inference requests 9.7: Denial of Service (DoS)"
-                                                     ]
-                                       }
-                                   ],
+                    {
+                        "framework": "MITRE ATLAS",
+                        "items": [
+                            "AML.T0029 Denial of AI Service",
+                            "AML.T0034 Cost Harvesting"
+                        ]
+                    },
+                    {
+                        "framework": "MAESTRO",
+                        "items": [
+                            "Denial of Service (DoS) Attacks (L1)",
+                            "Denial of Service on Framework APIs (L3)"
+                        ]
+                    },
+                    {
+                        "framework": "OWASP LLM Top 10 2026",
+                        "items": [
+                            "LLM02:2026 Sensitive Information Disclosure",
+                            "LLM06:2026 Unbounded Consumption"
+                        ]
+                    },
+                    {
+                        "framework": "OWASP ML Top 10 2023",
+                        "items": [
+                            "N/A"
+                        ]
+                    },
+                    {
+                        "framework": "OWASP Top 10 for Agentic Applications 2026",
+                        "items": [
+                            "N/A"
+                        ]
+                    },
+                    {
+                        "framework": "NIST Adversarial Machine Learning 2025",
+                        "items": [
+                            "NISTAML.014 Energy-latency"
+                        ]
+                    },
+                    {
+                        "framework": "Cisco Integrated AI Security and Safety Framework",
+                        "items": [
+                            "AISubtech-13.1.1 Compute Exhaustion (bounds effective output tokens after provider translation; hidden reasoning is separately controlled)",
+                            "AISubtech-13.1.3 Model Denial of Service (bounds effective output tokens after provider translation; hidden reasoning is separately controlled)",
+                            "AISubtech-13.2.1 Service Misuse for Cost Inflation (bounds effective output tokens after provider translation; hidden reasoning is separately controlled)",
+                            "AITech-13.1 Disruption of Availability (bounds effective output tokens after provider translation; hidden reasoning is separately controlled)",
+                            "AITech-13.2 Cost Harvesting / Repurposing (bounds effective output tokens after provider translation; hidden reasoning is separately controlled)",
+                            "AISubtech-10.1.2 Weight Reconstruction (denies disallowed logprobs at the final provider dispatch boundary)"
+                        ]
+                    },
+                    {
+                        "framework": "Google Secure AI Framework 2.0 - Risks",
+                        "items": [
+                            "DMS: Denial of ML Service"
+                        ]
+                    },
+                    {
+                        "framework": "Databricks AI Security Framework 3.0",
+                        "items": [
+                            "Model Serving - Inference requests 9.7: Denial of Service (DoS)"
+                        ]
+                    }
+                ],
                 "toolsOpenSource":  [
                                         "LiteLLM",
                                         "Envoy Proxy",
@@ -26803,9 +27380,15 @@ if __name__ == "__main__":
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
+                        "AITech-1.2 Indirect Prompt Injection",
+                        "AITech-2.1 Excessive Agency",
+                        "AITech-2.2 Goal Drift",
+                        "AITech-4.2 Context Boundary Attacks",
                         "AITech-4.3 Protocol Manipulation",
+                        "AITech-7.4 Token Manipulation",
                         "AITech-8.2 Data Exfiltration / Exposure",
                         "AITech-8.3 Information Disclosure",
+                        "AITech-9.1 Model or Agentic System Manipulation",
                         "AITech-9.3 Dependency / Plugin Compromise",
                         "AITech-12.1 Tool Exploitation",
                         "AITech-12.2 Insecure Output Handling",
@@ -26813,25 +27396,38 @@ if __name__ == "__main__":
                         "AITech-13.2 Cost Harvesting / Repurposing",
                         "AITech-14.1 Unauthorized Access",
                         "AITech-14.2 Abuse of Delegated Authority",
+                        "AITech-16.1 Eavesdropping",
+                        "AISubtech-2.1.1 Execution Approval Bypass",
+                        "AISubtech-2.1.2 Capability and Permission Overreach",
+                        "AISubtech-2.2.3 Authorization and Constraint Erosion",
+                        "AISubtech-4.2.2 Session Boundary Violation",
+                        "AISubtech-4.3.1 Schema Inconsistencies",
                         "AISubtech-4.3.3 Server Rebinding Attack",
                         "AISubtech-4.3.4 Replay Exploitation",
+                        "AISubtech-4.3.5 Capability Inflation",
                         "AISubtech-4.3.6 Cross-Origin Exploitation",
+                        "AISubtech-7.4.1 Token Theft",
                         "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
-                        "AISubtech-8.3.1 Tool Metadata Exposure",
+                        "AISubtech-8.3.2 System Information Exposure",
+                        "AISubtech-8.3.3 Personally Identifiable Information Exposure",
+                        "AISubtech-8.3.4 Payment Card Industry Data Exposure",
+                        "AISubtech-8.3.5 Protected Health Information Exposure",
+                        "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access",
+                        "AISubtech-9.1.4 Injection Attacks (e.g., SQL, Command Execution, XSS)",
                         "AISubtech-9.3.1 Malicious Package / Tool Injection",
                         "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
+                        "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
                         "AISubtech-12.1.1 Parameter Manipulation",
                         "AISubtech-12.1.2 Tool Poisoning",
                         "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
-                        "AISubtech-12.1.4 Tool Shadowing",
-                        "AISubtech-12.2.1 Code Detection / Malicious Code Output",
                         "AISubtech-13.1.1 Compute Exhaustion",
                         "AISubtech-13.1.2 Memory Flooding",
                         "AISubtech-13.1.3 Model Denial of Service",
                         "AISubtech-13.1.4 Application Denial of Service",
                         "AISubtech-13.2.1 Service Misuse for Cost Inflation",
-                        "AISubtech-14.1.1 Credential Theft",
-                        "AISubtech-14.2.1 Permission Escalation via Delegation"
+                        "AISubtech-14.1.2 Insufficient Access Controls",
+                        "AISubtech-14.2.1 Permission Escalation via Delegation",
+                        "AISubtech-18.2.1 Abuse of APIs for Mass Automation"
                     ]
                 },
                 {
@@ -26952,13 +27548,21 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-4.3 Protocol Manipulation (MCP Origin, Host, and transport validation rejects cross-origin and rebinding requests)",
-                                "AITech-13.1 Disruption of Availability",
-                                "AITech-13.2 Cost Harvesting / Repurposing",
+                                "AISubtech-13.1.1 Compute Exhaustion",
+                                "AISubtech-13.1.2 Memory Flooding",
+                                "AISubtech-13.1.4 Application Denial of Service",
+                                "AISubtech-13.2.1 Service Misuse for Cost Inflation (bounds coarse MCP endpoint consumption; fine-grained budgets remain separate)",
+                                "AISubtech-14.1.2 Insufficient Access Controls (hardens the actual MCP hosting runtime and verifies effective privileges)",
+                                "AISubtech-4.3.1 Schema Inconsistencies",
                                 "AISubtech-4.3.3 Server Rebinding Attack",
-                                "AISubtech-4.3.6 Cross-Origin Exploitation (strict MCP Origin and Host validation rejects cross-origin requests)",
-                                "AISubtech-13.1.3 Model Denial of Service (coarse gateway and process limits bound MCP-driven model-service floods)",
-                                "AISubtech-13.1.4 Application Denial of Service"
+                                "AISubtech-4.3.6 Cross-Origin Exploitation",
+                                "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
+                                "AITech-13.1 Disruption of Availability",
+                                "AITech-13.2 Cost Harvesting / Repurposing (bounds coarse MCP endpoint consumption; fine-grained budgets remain separate)",
+                                "AITech-14.1 Unauthorized Access (hardens the actual MCP hosting runtime and verifies effective privileges)",
+                                "AITech-16.1 Eavesdropping",
+                                "AITech-4.3 Protocol Manipulation",
+                                "AITech-8.2 Data Exfiltration / Exposure"
                             ]
                         },
                         {
@@ -27100,10 +27704,16 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-14.1 Unauthorized Access",
+                                "AISubtech-14.1.2 Insufficient Access Controls",
+                                "AISubtech-14.2.1 Permission Escalation via Delegation",
+                                "AISubtech-2.1.1 Execution Approval Bypass (requires fresh client-specific OAuth-proxy consent before delegated authorization)",
+                                "AISubtech-2.1.2 Capability and Permission Overreach",
+                                "AISubtech-4.3.4 Replay Exploitation",
+                                "AISubtech-7.4.1 Token Theft (blocks token passthrough and binds enterprise grants to resource and proof of possession)",
                                 "AITech-14.2 Abuse of Delegated Authority",
-                                "AISubtech-14.1.1 Credential Theft",
-                                "AISubtech-14.2.1 Permission Escalation via Delegation"
+                                "AITech-2.1 Excessive Agency",
+                                "AITech-4.3 Protocol Manipulation",
+                                "AITech-7.4 Token Manipulation (blocks token passthrough and binds enterprise grants to resource and proof of possession)"
                             ]
                         },
                         {
@@ -27259,12 +27869,24 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-12.1 Tool Exploitation",
-                                "AITech-14.1 Unauthorized Access",
-                                "AITech-14.2 Abuse of Delegated Authority",
                                 "AISubtech-12.1.1 Parameter Manipulation",
                                 "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
-                                "AISubtech-8.2.3 Data Exfiltration via Agent Tooling"
+                                "AISubtech-14.1.2 Insufficient Access Controls",
+                                "AISubtech-14.2.1 Permission Escalation via Delegation",
+                                "AISubtech-2.1.2 Capability and Permission Overreach",
+                                "AISubtech-4.3.3 Server Rebinding Attack",
+                                "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
+                                "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access",
+                                "AISubtech-9.1.4 Injection Attacks (e.g., SQL, Command Execution, XSS) (neutralizes model-generated SQL or NoSQL injection arguments at the datastore boundary)",
+                                "AITech-12.1 Tool Exploitation",
+                                "AITech-12.2 Insecure Output Handling",
+                                "AITech-14.1 Unauthorized Access (blocks MCP fetches to internal and cloud-metadata infrastructure)",
+                                "AITech-14.2 Abuse of Delegated Authority",
+                                "AITech-2.1 Excessive Agency",
+                                "AITech-4.3 Protocol Manipulation",
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AITech-8.3 Information Disclosure",
+                                "AITech-9.1 Model or Agentic System Manipulation (neutralizes model-generated SQL or NoSQL injection arguments at the datastore boundary)"
                             ]
                         },
                         {
@@ -27401,11 +28023,16 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-9.3 Dependency / Plugin Compromise",
-                                "AISubtech-9.3.1 Malicious Package / Tool Injection",
-                                "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
-                                "AISubtech-12.1.2 Tool Poisoning",
-                                "AISubtech-12.1.4 Tool Shadowing"
+                                "AISubtech-12.1.2 Tool Poisoning (gates MCP publication and replacement on reviewed signed contracts)",
+                                "AISubtech-4.3.1 Schema Inconsistencies (rejects poisoned schema fields and privilege-inflating descriptors before publication)",
+                                "AISubtech-4.3.5 Capability Inflation (rejects poisoned schema fields and privilege-inflating descriptors before publication)",
+                                "AISubtech-9.3.1 Malicious Package / Tool Injection (Gates published MCP tools and server contracts before downstream discovery or invocation)",
+                                "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers) (Gates published MCP tools and server contracts before downstream discovery or invocation)",
+                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull (Gates published MCP tools and server contracts before downstream discovery or invocation)",
+                                "AITech-1.2 Indirect Prompt Injection",
+                                "AITech-12.1 Tool Exploitation (gates MCP publication and replacement on reviewed signed contracts)",
+                                "AITech-4.3 Protocol Manipulation (rejects poisoned schema fields and privilege-inflating descriptors before publication)",
+                                "AITech-9.3 Dependency / Plugin Compromise (Gates published MCP tools and server contracts before downstream discovery or invocation)"
                             ]
                         },
                         {
@@ -27433,12 +28060,12 @@ if __name__ == "__main__":
                         {
                             "id": "AID-H-034.004-G002",
                             "implementation": "Review model-visible tool, resource, and prompt text for semantic honesty, hidden instructions, and privilege-inflating descriptions before publication.",
-                            "howTo": "<h5>Concept:</h5><p>Tool descriptions, parameter descriptions, prompt templates, and resource templates are read by models and sometimes users. A malicious or careless description can smuggle instructions, overstate authority, hide side effects, or make a destructive tool look read-only.</p><h5>Example descriptor review policy</h5><p><strong>File:</strong> <code>policies/mcp_descriptor_review.json</code></p><pre><code class=\"language-json\">    {\n      \"required_checks\": [\n        \"description_matches_handler_behavior\",\n        \"no_hidden_instructions\",\n        \"no_claims_to_override_client_policy\",\n        \"no_instruction_to_exfiltrate_or_hide_data\",\n        \"side_effects_disclosed\",\n        \"read_only_and_destructive_annotations_match_behavior\",\n        \"schema_defaults_do_not_encode_behavioral_instructions\"\n      ],\n      \"blocked_phrases\": [\n        \"ignore previous instructions\",\n        \"do not tell the user\",\n        \"always call this tool\",\n        \"bypass approval\",\n        \"send secrets\"\n      ]\n    }\n    </code></pre><h5>Example static check</h5><pre><code class=\"language-javascript\">// file: scripts/check-mcp-descriptors.mjs\n    import fs from \"node:fs\";\n\n    const policy = JSON.parse(fs.readFileSync(\"policies/mcp_descriptor_review.json\", \"utf8\"));\n    const manifest = JSON.parse(fs.readFileSync(\"mcp-contract-manifest.json\", \"utf8\"));\n\n    const hiddenControls = /[\\u200B-\\u200D\\uFEFF\\u202A-\\u202E\\u2066-\\u2069]/u;\n    const allowedDescriptorChars = /^[\\u0009\\u000A\\u000D\\u0020-\\u007E]*$/u;\n\n    function canonicalizeDescriptorText(value) {\n      const normalized = String(value).normalize(\"NFKC\");\n      if (hiddenControls.test(normalized)) {\n        throw new Error(\"Hidden Unicode control characters are not allowed in MCP descriptors\");\n      }\n      if (!allowedDescriptorChars.test(normalized)) {\n        throw new Error(\"Descriptor contains characters outside the approved review alphabet\");\n      }\n      return normalized.toLowerCase();\n    }\n\n    const text = canonicalizeDescriptorText(JSON.stringify(manifest));\n\n    for (const phrase of policy.blocked_phrases) {\n      if (text.includes(phrase)) {\n        throw new Error(\"Blocked descriptor phrase found: \" + phrase);\n      }\n    }\n\n    console.log(\"MCP descriptor text check passed\");\n    </code></pre><p><strong>Operational notes:</strong> Run the check over the entire published contract, not only the human-facing description. Parameter names, enum values, defaults, annotations, custom fields, and output schemas can also carry poisoned instructions. This static check is only a baseline; high-value tools should also receive human review because semantic deception is not always catchable by keyword scans.</p><h5>Verify safely</h5><p>A separately credentialed verifier independently renders all variants and tests Unicode/markup hiding, instruction smuggling, annotation contradiction, privilege inflation, locale drift and handler-side-effect mismatch fixtures.</p>"
+                            "howTo": "<h5>Concept:</h5><p>Tool descriptions, parameter descriptions, prompt templates, and resource templates are read by models and sometimes users. A malicious or careless description can smuggle instructions, overstate authority, hide side effects, or make a destructive tool look read-only.</p><h5>Example descriptor review policy</h5><p><strong>File:</strong> <code>policies/mcp_descriptor_review.json</code></p><pre><code class=\"language-json\">    {\n      \"required_checks\": [\n        \"description_matches_handler_behavior\",\n        \"no_hidden_instructions\",\n        \"no_claims_to_override_client_policy\",\n        \"no_instruction_to_exfiltrate_or_hide_data\",\n        \"side_effects_disclosed\",\n        \"read_only_and_destructive_annotations_match_behavior\",\n        \"schema_defaults_do_not_encode_behavioral_instructions\"\n      ],\n      \"blocked_phrases\": [\n        \"ignore previous instructions\",\n        \"do not tell the user\",\n        \"always call this tool\",\n        \"bypass approval\",\n        \"send secrets\"\n      ]\n    }\n    </code></pre><h5>Example static check</h5><pre><code class=\"language-javascript\">// file: scripts/check-mcp-descriptors.mjs\n    import fs from \"node:fs\";\n\n    const policy = JSON.parse(fs.readFileSync(\"policies/mcp_descriptor_review.json\", \"utf8\"));\n    const manifestSource = process.argv[2] ?? \"mcp-contract-manifest.json\";\n    const manifest = JSON.parse(fs.readFileSync(manifestSource === \"-\" ? 0 : manifestSource, \"utf8\"));\n\n    const hiddenControls = /[\\u200B-\\u200D\\uFEFF\\u202A-\\u202E\\u2066-\\u2069]/u;\n    const allowedDescriptorChars = /^[\\u0009\\u000A\\u000D\\u0020-\\u007E]*$/u;\n\n    function canonicalizeDescriptorText(value) {\n      const normalized = String(value).normalize(\"NFKC\");\n      if (hiddenControls.test(normalized)) {\n        throw new Error(\"Hidden Unicode control characters are not allowed in MCP descriptors\");\n      }\n      if (!allowedDescriptorChars.test(normalized)) {\n        throw new Error(\"Descriptor contains characters outside the approved review alphabet\");\n      }\n      return normalized.toLowerCase();\n    }\n\n    const text = canonicalizeDescriptorText(JSON.stringify(manifest));\n\n    for (const phrase of policy.blocked_phrases) {\n      if (text.includes(phrase)) {\n        throw new Error(\"Blocked descriptor phrase found: \" + phrase);\n      }\n    }\n\n    console.log(\"MCP descriptor text check passed\");\n    </code></pre><p><strong>Operational notes:</strong> Run the check over the entire published contract, not only the human-facing description. Parameter names, enum values, defaults, annotations, custom fields, and output schemas can also carry poisoned instructions. This static check is only a baseline; high-value tools should also receive human review because semantic deception is not always catchable by keyword scans.</p><h5>Verify safely</h5><p>A separately credentialed verifier independently renders all variants and tests Unicode/markup hiding, instruction smuggling, annotation contradiction, privilege inflation, locale drift and handler-side-effect mismatch fixtures.</p>"
                         },
                         {
                             "id": "AID-H-034.004-G003",
                             "implementation": "Govern dynamic tool, resource, prompt, capability, and cache-policy changes as approved releases; publish deterministic results and auditable change notifications.",
-                            "howTo": "<h5>Concept:</h5><p>The ability to change the published tool list at runtime is powerful. Treat list_changed events as security-relevant changes, especially if a client or model may automatically discover and use newly exposed capabilities.</p><h5>Example change gate</h5><pre><code class=\"language-javascript\">// File: src/publication/changeGate.js\r\nimport crypto from \"node:crypto\";\r\nimport { execFileSync } from \"node:child_process\";\r\nimport fs from \"node:fs\";\r\nimport os from \"node:os\";\r\nimport path from \"node:path\";\r\n\r\nfunction positiveInteger(name) {\r\n  const value = Number(process.env[name]);\r\n  if (!Number.isSafeInteger(value) || value &lt;= 0) throw new Error(name + \" must come from the verified release profile\");\r\n  return value;\r\n}\r\n\r\nfunction requiredProfileString(name) {\r\n  const value = process.env[name];\r\n  if (typeof value !== \"string\" || value.length === 0 || value !== value.trim()) {\r\n    throw new Error(name + \" must be a non-empty exact value from the verified release profile\");\r\n  }\r\n  return value;\r\n}\r\n\r\nconst COMMAND_TIMEOUT_MS = positiveInteger(\"VERIFIED_MCP_RELEASE_COMMAND_TIMEOUT_MS\");\r\nconst COMMAND_MAX_BUFFER_BYTES = positiveInteger(\"VERIFIED_MCP_RELEASE_COMMAND_MAX_BUFFER_BYTES\");\r\nconst APPROVAL_MAX_AGE_MS = positiveInteger(\"VERIFIED_MCP_APPROVAL_MAX_AGE_MS\");\r\nconst VERIFIED_MCP_CONTRACT_SIGNER_IDENTITY = requiredProfileString(\r\n  \"VERIFIED_MCP_CONTRACT_SIGNER_IDENTITY\"\r\n);\r\nconst APPROVAL_PUBLIC_KEY = crypto.createPublicKey(\r\n  fs.readFileSync(process.env.MCP_APPROVAL_PUBLIC_KEY_PATH)\r\n);\r\nlet activeContractHash = null;\r\n\r\nfunction canonicalize(value) {\r\n  if (Array.isArray(value)) return value.map(canonicalize);\r\n  if (value &amp;&amp; typeof value === \"object\") {\r\n    return Object.fromEntries(Object.keys(value).sort().map(function mapKey(key) {\r\n      return [key, canonicalize(value[key])];\r\n    }));\r\n  }\r\n  return value;\r\n}\r\n\r\nfunction canonicalBytes(value) {\r\n  return Buffer.from(JSON.stringify(canonicalize(value)) + \"\\n\");\r\n}\r\n\r\nfunction sha256(value) {\r\n  return crypto.createHash(\"sha256\").update(value).digest(\"hex\");\r\n}\r\n\r\nfunction run(file, args) {\r\n  execFileSync(file, args, {\r\n    stdio: [\"ignore\", \"pipe\", \"pipe\"],\r\n    timeout: COMMAND_TIMEOUT_MS,\r\n    maxBuffer: COMMAND_MAX_BUFFER_BYTES,\r\n    windowsHide: true\r\n  });\r\n}\r\n\r\nfunction verifyApprovalReceipt(receipt, contractHash, nowMs) {\r\n  if (!receipt || Object.keys(receipt).sort().join(\",\") !== \"payload,signature_b64\") {\r\n    throw new Error(\"approval_receipt_schema_mismatch\");\r\n  }\r\n  const payload = receipt.payload;\r\n  const expected = [\r\n    \"approval_id\", \"approver_subject\", \"contract_sha256\", \"decision\",\r\n    \"expires_at\", \"issued_at\"\r\n  ];\r\n  if (!payload || Object.keys(payload).sort().join(\",\") !== expected.sort().join(\",\")) {\r\n    throw new Error(\"approval_payload_schema_mismatch\");\r\n  }\r\n  const signature = Buffer.from(receipt.signature_b64, \"base64\");\r\n  if (!signature.length || !crypto.verify(null, canonicalBytes(payload), APPROVAL_PUBLIC_KEY, signature)) {\r\n    throw new Error(\"approval_signature_invalid\");\r\n  }\r\n  const issuedAt = Date.parse(payload.issued_at);\r\n  const expiresAt = Date.parse(payload.expires_at);\r\n  if (payload.decision !== \"approve\" || payload.contract_sha256 !== contractHash ||\r\n      typeof payload.approval_id !== \"string\" || !payload.approval_id ||\r\n      typeof payload.approver_subject !== \"string\" || !payload.approver_subject ||\r\n      !Number.isFinite(issuedAt) || !Number.isFinite(expiresAt) || issuedAt &gt; nowMs ||\r\n      expiresAt &lt;= nowMs || nowMs - issuedAt &gt; APPROVAL_MAX_AGE_MS) {\r\n    throw new Error(\"approval_not_current_or_not_bound\");\r\n  }\r\n  return { approvalId: payload.approval_id, subject: payload.approver_subject };\r\n}\r\n\r\nexport function verifyContractArtifact({ manifestPath, bundlePath, hashPath }) {\r\n  const manifestBytes = fs.readFileSync(manifestPath);\r\n  const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), \"mcp-contract-\"));\r\n  const snapshotPath = path.join(temporaryRoot, \"contract.json\");\r\n  try {\r\n    fs.writeFileSync(snapshotPath, manifestBytes, { flag: \"wx\", mode: 0o600 });\r\n    run(\"node\", [\"scripts/check-mcp-descriptors.mjs\"]);\r\n    run(\"node\", [\"scripts/hash-mcp-contract.mjs\", snapshotPath, \"--check\", hashPath]);\r\n    run(\"cosign\", [\r\n      \"verify-blob\", \"--bundle\", bundlePath,\r\n      \"--certificate-identity\", VERIFIED_MCP_CONTRACT_SIGNER_IDENTITY,\r\n      \"--certificate-oidc-issuer\", \"https://token.actions.githubusercontent.com\",\r\n      snapshotPath\r\n    ]);\r\n    const contract = JSON.parse(manifestBytes.toString(\"utf8\"));\r\n    if (!contract || typeof contract !== \"object\" || Array.isArray(contract) ||\r\n        typeof contract.contract_version !== \"string\" || !Array.isArray(contract.tools)) {\r\n      throw new Error(\"verified_contract_schema_mismatch\");\r\n    }\r\n    return { contract: Object.freeze(contract), contractHash: sha256(manifestBytes) };\r\n  } finally {\r\n    fs.rmSync(temporaryRoot, { recursive: true, force: true });\r\n  }\r\n}\r\n\r\nexport function activateContract({\r\n  approvalReceipts, logger, manifestPath, bundlePath, hashPath\r\n}) {\r\n  const verified = verifyContractArtifact({ manifestPath, bundlePath, hashPath });\r\n  if (!Array.isArray(approvalReceipts) || approvalReceipts.length &lt; 2) {\r\n    throw new Error(\"MCP contract activation requires two authenticated approvals\");\r\n  }\r\n  const nowMs = Date.now();\r\n  const approvals = approvalReceipts.map(function verifyReceipt(receipt) {\r\n    return verifyApprovalReceipt(receipt, verified.contractHash, nowMs);\r\n  });\r\n  if (new Set(approvals.map(item =&gt; item.subject)).size &lt; 2 ||\r\n      new Set(approvals.map(item =&gt; item.approvalId)).size !== approvals.length) {\r\n    throw new Error(\"MCP contract approvals must be distinct\");\r\n  }\r\n\r\n  activeContractHash = verified.contractHash;\r\n  logger.info({\r\n    event_type: \"mcp_contract_activated\",\r\n    contract_version: verified.contract.contract_version,\r\n    contract_hash: verified.contractHash,\r\n    approver_subject_hashes: approvals.map(item =&gt; sha256(item.subject)),\r\n    tool_count: verified.contract.tools.length\r\n  });\r\n  return verified.contractHash;\r\n}\r\n\r\nexport function getActiveContractHash() {\r\n  return activeContractHash;\r\n}</code></pre><p><strong>Operational notes:</strong> Do not let individual tool handlers mutate the server's public contract as a side effect of user input. Dynamic discovery should still be backed by an approved manifest, feature flag, or release artifact. Before emitting <code>notifications/tools/list_changed</code>, rerun descriptor scanning, compare every tool's contract hash against the approved contract, verify the manifest signature over the immutable bytes that will be activated, validate two distinct approval-service signatures bound to that exact artifact hash, and emit the new contract hash in telemetry. The command limits, maximum approval age, and exact signer identity must come from the signed, versioned release profile exported as the <code>VERIFIED_MCP_*</code> values. The signed profile must pin the complete expected GitHub Actions workflow/ref identity; a repository-prefix pattern is not sufficient.</p><h5>Verify safely</h5><p>A separately credentialed verifier recomputes the semantic diff, repeats list/discover calls for determinism, tests supported <code>2026-07-28</code> client-capability combinations, cursor/cache invalidation, duplicate/out-of-order/missed notifications, partial rollout, restart and rollback across every instance.</p>"
+                            "howTo": "<h5>Concept:</h5><p>The ability to change the published tool list at runtime is powerful. Treat list_changed events as security-relevant changes, especially if a client or model may automatically discover and use newly exposed capabilities.</p><h5>Example change gate</h5><pre><code class=\"language-javascript\">// File: src/publication/changeGate.js\nimport crypto from \"node:crypto\";\nimport { execFileSync } from \"node:child_process\";\nimport fs from \"node:fs\";\nimport os from \"node:os\";\nimport path from \"node:path\";\n\nfunction positiveInteger(name) {\n  const value = Number(process.env[name]);\n  if (!Number.isSafeInteger(value) || value &lt;= 0) throw new Error(name + \" must come from the verified release profile\");\n  return value;\n}\n\nfunction requiredProfileString(name) {\n  const value = process.env[name];\n  if (typeof value !== \"string\" || value.length === 0 || value !== value.trim()) {\n    throw new Error(name + \" must be a non-empty exact value from the verified release profile\");\n  }\n  return value;\n}\n\nconst COMMAND_TIMEOUT_MS = positiveInteger(\"VERIFIED_MCP_RELEASE_COMMAND_TIMEOUT_MS\");\nconst COMMAND_MAX_BUFFER_BYTES = positiveInteger(\"VERIFIED_MCP_RELEASE_COMMAND_MAX_BUFFER_BYTES\");\nconst APPROVAL_MAX_AGE_MS = positiveInteger(\"VERIFIED_MCP_APPROVAL_MAX_AGE_MS\");\nconst VERIFIED_MCP_CONTRACT_SIGNER_IDENTITY = requiredProfileString(\n  \"VERIFIED_MCP_CONTRACT_SIGNER_IDENTITY\"\n);\nconst APPROVAL_PUBLIC_KEY = crypto.createPublicKey(\n  fs.readFileSync(process.env.MCP_APPROVAL_PUBLIC_KEY_PATH)\n);\nlet activeContractHash = null;\n\nfunction canonicalize(value) {\n  if (Array.isArray(value)) return value.map(canonicalize);\n  if (value &amp;&amp; typeof value === \"object\") {\n    return Object.fromEntries(Object.keys(value).sort().map(function mapKey(key) {\n      return [key, canonicalize(value[key])];\n    }));\n  }\n  return value;\n}\n\nfunction canonicalBytes(value) {\n  return Buffer.from(JSON.stringify(canonicalize(value)) + \"\\n\");\n}\n\nfunction sha256(value) {\n  return crypto.createHash(\"sha256\").update(value).digest(\"hex\");\n}\n\nfunction run(file, args, input) {\n  execFileSync(file, args, {\n    stdio: [input === undefined ? \"ignore\" : \"pipe\", \"pipe\", \"pipe\"],\n\n    input,\n    timeout: COMMAND_TIMEOUT_MS,\n    maxBuffer: COMMAND_MAX_BUFFER_BYTES,\n    windowsHide: true\n  });\n}\n\nfunction verifyApprovalReceipt(receipt, contractHash, nowMs) {\n  if (!receipt || Object.keys(receipt).sort().join(\",\") !== \"payload,signature_b64\") {\n    throw new Error(\"approval_receipt_schema_mismatch\");\n  }\n  const payload = receipt.payload;\n  const expected = [\n    \"approval_id\", \"approver_subject\", \"contract_sha256\", \"decision\",\n    \"expires_at\", \"issued_at\"\n  ];\n  if (!payload || Object.keys(payload).sort().join(\",\") !== expected.sort().join(\",\")) {\n    throw new Error(\"approval_payload_schema_mismatch\");\n  }\n  const signature = Buffer.from(receipt.signature_b64, \"base64\");\n  if (!signature.length || !crypto.verify(null, canonicalBytes(payload), APPROVAL_PUBLIC_KEY, signature)) {\n    throw new Error(\"approval_signature_invalid\");\n  }\n  const issuedAt = Date.parse(payload.issued_at);\n  const expiresAt = Date.parse(payload.expires_at);\n  if (payload.decision !== \"approve\" || payload.contract_sha256 !== contractHash ||\n      typeof payload.approval_id !== \"string\" || !payload.approval_id ||\n      typeof payload.approver_subject !== \"string\" || !payload.approver_subject ||\n      !Number.isFinite(issuedAt) || !Number.isFinite(expiresAt) || issuedAt &gt; nowMs ||\n      expiresAt &lt;= nowMs || nowMs - issuedAt &gt; APPROVAL_MAX_AGE_MS) {\n    throw new Error(\"approval_not_current_or_not_bound\");\n  }\n  return { approvalId: payload.approval_id, subject: payload.approver_subject };\n}\n\nexport function verifyContractArtifact({ manifestPath, bundlePath, hashPath }) {\n  const manifestBytes = fs.readFileSync(manifestPath);\n  const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), \"mcp-contract-\"));\n  const snapshotPath = path.join(temporaryRoot, \"contract.json\");\n  try {\n    fs.writeFileSync(snapshotPath, manifestBytes, { flag: \"wx\", mode: 0o600 });\n    run(\"node\", [\"scripts/check-mcp-descriptors.mjs\", \"-\"], manifestBytes);\n    run(\"node\", [\"scripts/hash-mcp-contract.mjs\", snapshotPath, \"--check\", hashPath]);\n    run(\"cosign\", [\n      \"verify-blob\", \"--bundle\", bundlePath,\n      \"--certificate-identity\", VERIFIED_MCP_CONTRACT_SIGNER_IDENTITY,\n      \"--certificate-oidc-issuer\", \"https://token.actions.githubusercontent.com\",\n      snapshotPath\n    ]);\n    const contract = JSON.parse(manifestBytes.toString(\"utf8\"));\n    if (!contract || typeof contract !== \"object\" || Array.isArray(contract) ||\n        typeof contract.contract_version !== \"string\" || !Array.isArray(contract.tools)) {\n      throw new Error(\"verified_contract_schema_mismatch\");\n    }\n    return { contract: Object.freeze(contract), contractHash: sha256(manifestBytes) };\n  } finally {\n    fs.rmSync(temporaryRoot, { recursive: true, force: true });\n  }\n}\n\nexport function activateContract({\n  approvalReceipts, logger, manifestPath, bundlePath, hashPath\n}) {\n  const verified = verifyContractArtifact({ manifestPath, bundlePath, hashPath });\n  if (!Array.isArray(approvalReceipts) || approvalReceipts.length &lt; 2) {\n    throw new Error(\"MCP contract activation requires two authenticated approvals\");\n  }\n  const nowMs = Date.now();\n  const approvals = approvalReceipts.map(function verifyReceipt(receipt) {\n    return verifyApprovalReceipt(receipt, verified.contractHash, nowMs);\n  });\n  if (new Set(approvals.map(item =&gt; item.subject)).size &lt; 2 ||\n      new Set(approvals.map(item =&gt; item.approvalId)).size !== approvals.length) {\n    throw new Error(\"MCP contract approvals must be distinct\");\n  }\n\n  activeContractHash = verified.contractHash;\n  logger.info({\n    event_type: \"mcp_contract_activated\",\n    contract_version: verified.contract.contract_version,\n    contract_hash: verified.contractHash,\n    approver_subject_hashes: approvals.map(item =&gt; sha256(item.subject)),\n    tool_count: verified.contract.tools.length\n  });\n  return verified.contractHash;\n}\n\nexport function getActiveContractHash() {\n  return activeContractHash;\n}</code></pre><p><strong>Operational notes:</strong> Do not let individual tool handlers mutate the server's public contract as a side effect of user input. Dynamic discovery should still be backed by an approved manifest, feature flag, or release artifact. Before emitting <code>notifications/tools/list_changed</code>, rerun descriptor scanning, compare every tool's contract hash against the approved contract, verify the manifest signature over the immutable bytes that will be activated, validate two distinct approval-service signatures bound to that exact artifact hash, and emit the new contract hash in telemetry. The command limits, maximum approval age, and exact signer identity must come from the signed, versioned release profile exported as the <code>VERIFIED_MCP_*</code> values. The signed profile must pin the complete expected GitHub Actions workflow/ref identity; a repository-prefix pattern is not sufficient.</p><h5>Verify safely</h5><p>A separately credentialed verifier recomputes the semantic diff, repeats list/discover calls for determinism, tests supported <code>2026-07-28</code> client-capability combinations, cursor/cache invalidation, duplicate/out-of-order/missed notifications, partial rollout, restart and rollback across every instance.</p>"
                         },
                         {
                             "id": "AID-H-034.004-G004",
@@ -27551,12 +28178,21 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-8.2 Data Exfiltration / Exposure",
-                                "AITech-8.3 Information Disclosure",
-                                "AITech-12.2 Insecure Output Handling",
+                                "AISubtech-2.1.1 Execution Approval Bypass",
+                                "AISubtech-4.2.2 Session Boundary Violation",
+                                "AISubtech-4.3.1 Schema Inconsistencies",
+                                "AISubtech-4.3.4 Replay Exploitation",
                                 "AISubtech-8.2.3 Data Exfiltration via Agent Tooling",
-                                "AISubtech-8.3.1 Tool Metadata Exposure",
-                                "AISubtech-12.2.1 Code Detection / Malicious Code Output"
+                                "AISubtech-8.3.2 System Information Exposure",
+                                "AISubtech-8.3.3 Personally Identifiable Information Exposure (blocks prohibited sensitive fields in signed elicitation forms)",
+                                "AISubtech-8.3.4 Payment Card Industry Data Exposure (blocks prohibited sensitive fields in signed elicitation forms)",
+                                "AISubtech-8.3.5 Protected Health Information Exposure (blocks prohibited sensitive fields in signed elicitation forms)",
+                                "AITech-1.2 Indirect Prompt Injection",
+                                "AITech-2.1 Excessive Agency",
+                                "AITech-4.2 Context Boundary Attacks",
+                                "AITech-4.3 Protocol Manipulation",
+                                "AITech-8.2 Data Exfiltration / Exposure",
+                                "AITech-8.3 Information Disclosure"
                             ]
                         },
                         {
@@ -27694,9 +28330,19 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-12.1.1 Parameter Manipulation",
+                                "AISubtech-14.1.2 Insufficient Access Controls",
+                                "AISubtech-14.2.1 Permission Escalation via Delegation",
+                                "AISubtech-2.1.2 Capability and Permission Overreach",
+                                "AISubtech-4.2.2 Session Boundary Violation",
+                                "AISubtech-4.3.4 Replay Exploitation (rejects stale, revoked or cross-context handle reuse; valid repeat use is allowed)",
+                                "AITech-12.1 Tool Exploitation",
+                                "AITech-14.2 Abuse of Delegated Authority",
+                                "AITech-2.1 Excessive Agency",
+                                "AITech-4.2 Context Boundary Attacks",
+                                "AITech-4.3 Protocol Manipulation (rejects stale, revoked or cross-context handle reuse; valid repeat use is allowed)",
                                 "AITech-8.2 Data Exfiltration / Exposure",
-                                "AITech-14.1 Unauthorized Access",
-                                "AISubtech-4.3.4 Replay Exploitation"
+                                "AITech-8.3 Information Disclosure"
                             ]
                         },
                         {
@@ -27808,9 +28454,16 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-14.1.2 Insufficient Access Controls",
+                                "AISubtech-2.1.2 Capability and Permission Overreach",
+                                "AISubtech-4.2.2 Session Boundary Violation",
+                                "AISubtech-4.3.4 Replay Exploitation (bounds task and stream lifecycle replay; backend exactly-once effects remain separate)",
+                                "AITech-12.1 Tool Exploitation",
+                                "AITech-2.1 Excessive Agency",
+                                "AITech-4.2 Context Boundary Attacks",
+                                "AITech-4.3 Protocol Manipulation (bounds task and stream lifecycle replay; backend exactly-once effects remain separate)",
                                 "AITech-8.2 Data Exfiltration / Exposure",
-                                "AITech-14.1 Unauthorized Access",
-                                "AISubtech-4.3.4 Replay Exploitation"
+                                "AITech-8.3 Information Disclosure"
                             ]
                         },
                         {
@@ -27916,12 +28569,16 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-13.1 Disruption of Availability",
-                                "AITech-13.2 Cost Harvesting / Repurposing",
-                                "AISubtech-13.1.1 Compute Exhaustion",
-                                "AISubtech-13.1.2 Memory Flooding",
-                                "AISubtech-13.1.3 Model Denial of Service (authoritative MCP request, token, byte, and tool budgets constrain resource-intensive model operations)",
-                                "AISubtech-13.2.1 Service Misuse for Cost Inflation"
+                                "AISubtech-13.1.1 Compute Exhaustion (enforces authoritative MCP budget decisions at all policy-selected lifecycle hooks)",
+                                "AISubtech-13.1.2 Memory Flooding (enforces authoritative MCP budget decisions at all policy-selected lifecycle hooks)",
+                                "AISubtech-13.1.3 Model Denial of Service (enforces authoritative MCP budget decisions at all policy-selected lifecycle hooks)",
+                                "AISubtech-13.1.4 Application Denial of Service (enforces authoritative MCP budget decisions at all policy-selected lifecycle hooks)",
+                                "AISubtech-13.2.1 Service Misuse for Cost Inflation (enforces authoritative MCP budget decisions at all policy-selected lifecycle hooks)",
+                                "AISubtech-18.2.1 Abuse of APIs for Mass Automation (Bounds bulk MCP operations through authoritative per-scope request and concurrency budgets)",
+                                "AISubtech-4.3.4 Replay Exploitation",
+                                "AITech-13.1 Disruption of Availability (enforces authoritative MCP budget decisions at all policy-selected lifecycle hooks)",
+                                "AITech-13.2 Cost Harvesting / Repurposing (enforces authoritative MCP budget decisions at all policy-selected lifecycle hooks)",
+                                "AITech-4.3 Protocol Manipulation"
                             ]
                         },
                         {
@@ -28023,8 +28680,16 @@ if __name__ == "__main__":
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-14.2.1 Permission Escalation via Delegation",
+                                "AISubtech-2.1.2 Capability and Permission Overreach",
+                                "AISubtech-2.2.3 Authorization and Constraint Erosion (blocks agent continuation after authority is withdrawn, without proving semantic goal fidelity)",
+                                "AISubtech-4.3.4 Replay Exploitation",
                                 "AITech-12.1 Tool Exploitation",
-                                "AITech-14.2 Abuse of Delegated Authority"
+                                "AITech-14.2 Abuse of Delegated Authority",
+                                "AITech-2.1 Excessive Agency",
+                                "AITech-2.2 Goal Drift (blocks agent continuation after authority is withdrawn, without proving semantic goal fidelity)",
+                                "AITech-4.3 Protocol Manipulation",
+                                "AISubtech-14.1.2 Insufficient Access Controls (current disable-state admission and commit fences revoke operation access)"
                             ]
                         },
                         {
@@ -28044,443 +28709,7 @@ if __name__ == "__main__":
                        {
                             "id": "AID-H-034.009-G001",
                             "implementation": "Verify a nonce-bound authoritative current checkpoint before MCP dispatch and effect, reject head rollback, and carry revocable authority fences into each covered backend commit.",
-                            "howTo": `<h5>Applicability and ownership</h5><p>Use this integration only for an MCP operation that the complete, locally signature-verified operation registry classifies as <code>COVERED</code>. The MCP server owns policy classification, current-state verification, pre-dispatch and pre-effect enforcement, and delivery of commit fences. <code>AID-I-005</code> owns the decision and authoritative state. A registry entry may be <code>NOT_APPLICABLE</code> only with a technical architecture reason; an unlisted operation is an error and never inherits an allow.</p><h5>Verify the policy and online authority response locally</h5><p>The authority signs each response over a fresh server-generated query nonce, exact target, enforcement phase, policy generation, and current head generation. This prevents a cached signed ENABLE from being replayed as the latest state. Numeric freshness bounds and operation coverage come from the signed policy.</p><pre><code class="language-javascript">// File: src/disable/mcpDisableEnforcement.js
-import crypto from "node:crypto";
-import fs from "node:fs";
-import https from "node:https";
-import path from "node:path";
-
-const TARGET_FIELD = Object.freeze({
-  server_release: "serverRelease",
-  tenant: "tenantId",
-  client: "clientId",
-  tool: "toolName",
-  resource: "resourceId",
-  task: "taskId",
-  subscription: "subscriptionId",
-  upstream: "upstreamId",
-  object: "objectId"
-});
-const COVERAGE = new Set(["COVERED", "NOT_APPLICABLE"]);
-const PHASES = new Set(["pre_dispatch", "pre_side_effect"]);
-
-const exactKeys = (value, expected) =&gt;
-  value &amp;&amp; Object.getPrototypeOf(value) === Object.prototype
-  &amp;&amp; Object.keys(value).sort().join(",")
-    === [...expected].sort().join(",");
-
-const canonical = value =&gt; {
-  if (
-    value === null || typeof value === "string"
-    || typeof value === "boolean"
-  ) return JSON.stringify(value);
-  if (Number.isSafeInteger(value)) return String(value);
-  if (Array.isArray(value)) {
-    return "[" + value.map(canonical).join(",") + "]";
-  }
-  if (value &amp;&amp; Object.getPrototypeOf(value) === Object.prototype) {
-    return "{" + Object.keys(value).sort().map(
-      key =&gt; JSON.stringify(key) + ":" + canonical(value[key])
-    ).join(",") + "}";
-  }
-  throw new Error("non_canonical_disable_value");
-};
-
-const decodeBase64 = value =&gt; {
-  if (typeof value !== "string" || !/^[A-Za-z0-9+/]+={0,2}$/.test(value)) {
-    throw new Error("invalid_disable_base64");
-  }
-  const decoded = Buffer.from(value, "base64");
-  if (!decoded.length || decoded.toString("base64") !== value) {
-    throw new Error("non_canonical_disable_base64");
-  }
-  return decoded;
-};
-
-function verifyEnvelope(rawEnvelope, publicKey) {
-  if (!Buffer.isBuffer(rawEnvelope) || !rawEnvelope.length) {
-    throw new Error("signed_disable_envelope_unavailable");
-  }
-  const envelope = JSON.parse(rawEnvelope.toString("utf8"));
-  if (!exactKeys(envelope, ["payload_b64", "signature_b64"])) {
-    throw new Error("disable_envelope_schema_differs");
-  }
-  const payloadBytes = decodeBase64(envelope.payload_b64);
-  const signature = decodeBase64(envelope.signature_b64);
-  if (!crypto.verify(null, payloadBytes, publicKey, signature)) {
-    throw new Error("disable_signature_invalid");
-  }
-  return {
-    payload: JSON.parse(payloadBytes.toString("utf8")),
-    payloadDigest: crypto.createHash("sha256")
-      .update(payloadBytes).digest("hex")
-  };
-}
-
-function positiveInteger(value, field) {
-  if (!Number.isSafeInteger(value) || value &lt;= 0) {
-    throw new Error("invalid_" + field);
-  }
-  return value;
-}
-
-function postHttps(url, options, body) {
-  return new Promise((resolve, reject) =&gt; {
-    const request = https.request(url, {
-      method: "POST",
-      agent: options.agent,
-      headers: options.headers,
-      timeout: options.timeoutMs
-    }, response =&gt; {
-      const chunks = [];
-      let received = 0;
-      response.on("data", chunk =&gt; {
-        received += chunk.length;
-        if (received &gt; options.maxResponseBytes) {
-          request.destroy(new Error("disable_authority_response_too_large"));
-          return;
-        }
-        chunks.push(chunk);
-      });
-      response.on("end", () =&gt; resolve({
-        statusCode: response.statusCode || 0,
-        body: Buffer.concat(chunks)
-      }));
-    });
-    request.on("timeout", () =&gt;
-      request.destroy(new Error("disable_authority_timeout"))
-    );
-    request.on("error", reject);
-    request.end(body);
-  });
-}
-
-function loadHexKey(name) {
-  const encoded = process.env[name] || "";
-  if (!/^[a-f0-9]+$/.test(encoded) || encoded.length % 2 !== 0) {
-    throw new Error("invalid_hex_key:" + name);
-  }
-  const key = Buffer.from(encoded, "hex");
-  if (key.length &lt; 32) throw new Error("short_key:" + name);
-  return key;
-}
-
-export function loadVerifiedDisablePolicy() {
-  const rootPublicKey = crypto.createPublicKey(
-    fs.readFileSync(process.env.MCP_DISABLE_POLICY_VERIFY_KEY)
-  );
-  const rawEnvelope = fs.readFileSync(
-    process.env.MCP_DISABLE_POLICY_ENVELOPE
-  );
-  const verified = verifyEnvelope(rawEnvelope, rootPublicKey);
-  const policy = verified.payload;
-  const fields = [
-    "authority", "authority_key_path", "authority_key_sha256",
-    "max_authority_response_age_ms", "not_after", "operations",
-    "policy_generation", "policy_version", "schema_version"
-  ];
-  if (
-    !exactKeys(policy, fields)
-    || policy.schema_version !== "aidefend.mcp-disable-policy.v2"
-    || typeof policy.policy_version !== "string"
-    || !policy.policy_version
-    || !Number.isSafeInteger(policy.policy_generation)
-    || policy.policy_generation &lt;= 0
-    || typeof policy.authority !== "string"
-    || !/^[a-zA-Z0-9._:-]+$/.test(policy.authority)
-    || !/^[a-f0-9]{64}$/.test(policy.authority_key_sha256)
-    || !Number.isFinite(Date.parse(policy.not_after))
-    || Date.parse(policy.not_after) &lt;= Date.now()
-    || !policy.operations
-    || Object.getPrototypeOf(policy.operations) !== Object.prototype
-    || Object.keys(policy.operations).length === 0
-  ) {
-    throw new Error("disable_policy_schema_or_freshness_invalid");
-  }
-  positiveInteger(
-    policy.max_authority_response_age_ms,
-    "max_authority_response_age_ms"
-  );
-  for (const [operation, rule] of Object.entries(policy.operations)) {
-    if (
-      !operation
-      || !exactKeys(rule, [
-        "coverage", "require_commit_fence",
-        "required_target_kinds", "technical_reason"
-      ])
-      || !COVERAGE.has(rule.coverage)
-      || typeof rule.require_commit_fence !== "boolean"
-      || !Array.isArray(rule.required_target_kinds)
-      || rule.required_target_kinds.length
-        !== new Set(rule.required_target_kinds).size
-      || rule.required_target_kinds.some(
-        kind =&gt; !Object.hasOwn(TARGET_FIELD, kind)
-      )
-    ) {
-      throw new Error("invalid_disable_operation_rule:" + operation);
-    }
-    if (
-      rule.coverage === "COVERED"
-      &amp;&amp; (
-        rule.required_target_kinds.length === 0
-        || rule.technical_reason !== null
-      )
-    ) {
-      throw new Error("covered_disable_rule_is_incomplete:" + operation);
-    }
-    if (
-      rule.coverage === "NOT_APPLICABLE"
-      &amp;&amp; (
-        rule.required_target_kinds.length !== 0
-        || rule.require_commit_fence
-        || typeof rule.technical_reason !== "string"
-        || !rule.technical_reason.trim()
-      )
-    ) {
-      throw new Error("invalid_disable_not_applicable_rule:" + operation);
-    }
-  }
-
-  const keyRoot = path.resolve(process.env.MCP_DISABLE_AUTHORITY_KEY_ROOT);
-  const keyPath = path.resolve(keyRoot, policy.authority_key_path);
-  if (!keyPath.startsWith(keyRoot + path.sep)) {
-    throw new Error("disable_authority_key_escapes_trust_root");
-  }
-  const keyBytes = fs.readFileSync(keyPath);
-  const keyDigest = crypto.createHash("sha256")
-    .update(keyBytes).digest("hex");
-  if (keyDigest !== policy.authority_key_sha256) {
-    throw new Error("disable_authority_key_digest_differs");
-  }
-  return Object.freeze({
-    ...policy,
-    policyDigest: verified.payloadDigest,
-    authorityPublicKey: crypto.createPublicKey(keyBytes)
-  });
-}
-
-const ACCEPT_MONOTONIC = [
-  "local current=tonumber(redis.call('HGET',KEYS[1],'generation') or '0')",
-  "local incoming=tonumber(ARGV[1])",
-  "if not incoming or incoming&lt;1 then return redis.error_reply('generation') end",
-  "if incoming&lt;current then return {'STALE'} end",
-  "if incoming==current then",
-  "  if redis.call('HGET',KEYS[1],'digest')~=ARGV[2] then return {'CONFLICT'} end",
-  "  return {'REPLAY'}",
-  "end",
-  "redis.call('HSET',KEYS[1],'generation',incoming,'digest',ARGV[2],'state',ARGV[3])",
-  "return {'ACCEPTED'}"
-].join("\\n");
-
-async function acceptMonotonic(store, key, generation, digest, state) {
-  const result = await store.eval(ACCEPT_MONOTONIC, {
-    keys: [key],
-    arguments: [String(generation), digest, state]
-  });
-  const status = String(result[0]);
-  if (status === "STALE" || status === "CONFLICT") {
-    throw new Error("disable_monotonic_" + status.toLowerCase());
-  }
-  if (status !== "ACCEPTED" &amp;&amp; status !== "REPLAY") {
-    throw new Error("disable_monotonic_store_error");
-  }
-}
-
-export class DisableAuthorityClient {
-  constructor() {
-    this.baseUrl = new URL(process.env.MCP_DISABLE_AUTHORITY_URL);
-    if (this.baseUrl.protocol !== "https:") {
-      throw new Error("disable authority must use HTTPS");
-    }
-    this.timeoutMs = positiveInteger(
-      Number(process.env.MCP_DISABLE_AUTHORITY_TIMEOUT_MS),
-      "disable_authority_timeout_ms"
-    );
-    this.maxResponseBytes = positiveInteger(
-      Number(process.env.MCP_DISABLE_AUTHORITY_MAX_RESPONSE_BYTES),
-      "disable_authority_max_response_bytes"
-    );
-    this.agent = new https.Agent({
-      ca: fs.readFileSync(process.env.MCP_DISABLE_AUTHORITY_CA_FILE),
-      cert: fs.readFileSync(process.env.MCP_DISABLE_CLIENT_CERT),
-      key: fs.readFileSync(process.env.MCP_DISABLE_CLIENT_KEY),
-      minVersion: "TLSv1.2"
-    });
-  }
-
-  async readCurrentHead(policy, target, phase) {
-    const queryNonce = crypto.randomUUID();
-    const url = new URL("/v1/disable/current-head", this.baseUrl);
-    if (url.origin !== this.baseUrl.origin) {
-      throw new Error("disable_authority_origin_changed");
-    }
-    const response = await postHttps(url, {
-      agent: this.agent,
-      headers: {
-        "cache-control": "no-store",
-        "content-type": "application/json"
-      },
-      timeoutMs: this.timeoutMs,
-      maxResponseBytes: this.maxResponseBytes
-    }, canonical({
-        schema_version: "aidefend.mcp-disable-query.v1",
-        policy_digest: policy.policyDigest,
-        policy_generation: policy.policy_generation,
-        query_nonce: queryNonce,
-        phase,
-        target
-      }));
-    const rawEnvelope = response.body;
-    if (response.statusCode !== 200) {
-      throw new Error("disable_authority_http_" + response.statusCode);
-    }
-    const verified = verifyEnvelope(
-      rawEnvelope, policy.authorityPublicKey
-    );
-    const head = verified.payload;
-    const fields = [
-      "authority", "commit_token", "expires_at", "generation",
-      "issued_at", "phase", "policy_digest", "policy_generation",
-      "query_nonce", "reason_code", "schema_version", "state", "target"
-    ];
-    const now = Date.now();
-    const issuedAt = Date.parse(head.issued_at);
-    const expiresAt = Date.parse(head.expires_at);
-    if (
-      !exactKeys(head, fields)
-      || !exactKeys(head.target, ["digest", "kind"])
-      || head.schema_version !== "aidefend.mcp-disable-head.v2"
-      || head.authority !== policy.authority
-      || head.policy_digest !== policy.policyDigest
-      || head.policy_generation !== policy.policy_generation
-      || head.query_nonce !== queryNonce
-      || head.phase !== phase
-      || head.target.kind !== target.kind
-      || head.target.digest !== target.digest
-      || !Number.isSafeInteger(head.generation)
-      || head.generation &lt;= 0
-      || !["ENABLE", "DISABLE"].includes(head.state)
-      || typeof head.reason_code !== "string"
-      || !head.reason_code
-      || !Number.isFinite(issuedAt)
-      || !Number.isFinite(expiresAt)
-      || issuedAt &gt; now
-      || now - issuedAt &gt; policy.max_authority_response_age_ms
-      || expiresAt &lt;= now
-    ) {
-      throw new Error("disable_authority_head_invalid");
-    }
-    if (
-      head.commit_token !== null
-      &amp;&amp; (typeof head.commit_token !== "string" || !head.commit_token)
-    ) {
-      throw new Error("disable_commit_token_invalid");
-    }
-    return {...head, payloadDigest: verified.payloadDigest};
-  }
-}
-
-function operationRule(policy, operationKey) {
-  if (typeof operationKey !== "string" || !operationKey) {
-    throw new Error("server_derived_operation_key_missing");
-  }
-  const rule = policy.operations[operationKey];
-  if (!rule) {
-    throw new Error("operation_absent_from_complete_disable_registry");
-  }
-  return rule;
-}
-
-function requiredTargets(context, rule, digestKey) {
-  return rule.required_target_kinds.map(kind =&gt; {
-    const value = context[TARGET_FIELD[kind]];
-    if (typeof value !== "string" || !value) {
-      throw new Error("required_disable_target_missing:" + kind);
-    }
-    const digest = crypto.createHmac("sha256", digestKey)
-      .update(kind).update(Buffer.from([0]))
-      .update(value).digest("hex");
-    return {kind, digest};
-  });
-}
-
-export async function createDisableEnforcer(input) {
-  const policy = loadVerifiedDisablePolicy();
-  await acceptMonotonic(
-    input.generationStore,
-    "mcp-disable-policy:{" + policy.authority + "}",
-    policy.policy_generation,
-    policy.policyDigest,
-    "POLICY"
-  );
-  const digestKey = loadHexKey("MCP_DISABLE_TARGET_HMAC_KEY_HEX");
-  const client = new DisableAuthorityClient();
-
-  return async function enforce(operationKey, context, phase) {
-    if (!PHASES.has(phase)) throw new Error("invalid_disable_phase");
-    if (Date.parse(policy.not_after) &lt;= Date.now()) {
-      throw new Error("disable_policy_expired");
-    }
-    const rule = operationRule(policy, operationKey);
-    if (rule.coverage === "NOT_APPLICABLE") {
-      return {
-        applicable: false,
-        phase,
-        technicalReason: rule.technical_reason
-      };
-    }
-    const targets = requiredTargets(context, rule, digestKey);
-    const heads = [];
-    for (const target of targets) {
-      const head = await client.readCurrentHead(policy, target, phase);
-      await acceptMonotonic(
-        input.generationStore,
-        "mcp-disable:{" + target.digest + "}:head",
-        head.generation,
-        head.payloadDigest,
-        head.state
-      );
-      if (head.state === "DISABLE") {
-        throw new Error("mcp_operation_disabled:" + target.kind);
-      }
-      if (
-        phase === "pre_side_effect"
-        &amp;&amp; rule.require_commit_fence
-        &amp;&amp; !head.commit_token
-      ) {
-        throw new Error("required_disable_commit_fence_missing");
-      }
-      heads.push(head);
-    }
-    return {
-      applicable: true,
-      phase,
-      requireCommitFence: rule.require_commit_fence,
-      heads
-    };
-  };
-}
-
-export async function runWithDisableEnforcement(input) {
-  const enforce = await createDisableEnforcer(input);
-  await enforce(input.operationKey, input.context, "pre_dispatch");
-  const prepared = await input.prepareSideEffectFree();
-  const current = await enforce(
-    input.operationKey, input.context, "pre_side_effect"
-  );
-  const commitTokens = current.heads.map(head =&gt; ({
-    target: head.target,
-    generation: head.generation,
-    token: head.commit_token
-  }));
-  if (
-    current.requireCommitFence
-    &amp;&amp; commitTokens.some(item =&gt; !item.token)
-  ) {
-    throw new Error("incomplete_disable_commit_fence_set");
-  }
-  return input.commitWithDisableFences(prepared, commitTokens);
-}</code></pre><p><strong>Commit-fence contract:</strong> For a policy entry with <code>require_commit_fence</code>, the backend must atomically redeem every authority-issued token at the protected commit point and reject a token invalidated by a newer DISABLE generation. Merely checking in the MCP process cannot close the race after the second hook. <code>prepareSideEffectFree</code> must not perform network writes, queue publication, durable file changes, or other protected effects.</p><h5>Verify safely</h5><p>Enumerate every exposed MCP method and tool against the signed operation registry. Test an omitted operation, justified NOT_APPLICABLE entry, signed ENABLE and DISABLE, wrong policy or target, replayed nonce, stale-but-signed ENABLE, lower and conflicting generations, authority timeout, cache partition, process restart, newer re-enable, and DISABLE arriving between the second hook and backend commit. Confirm all covered failures block and the backend rejects a fence superseded before commit.</p>`
+                            "howTo": "<h5>Applicability and ownership</h5><p>Use this integration only for an MCP operation that the complete, locally signature-verified operation registry classifies as <code>COVERED</code>. The MCP server owns policy classification, current-state verification, pre-dispatch and pre-effect enforcement, and delivery of commit fences. <code>AID-I-005</code> owns the decision and authoritative state. A registry entry may be <code>NOT_APPLICABLE</code> only with a technical architecture reason; an unlisted operation is an error and never inherits an allow.</p><h5>Verify the policy and online authority response locally</h5><p>The authority signs each response over a fresh server-generated query nonce, exact target, enforcement phase, policy generation, and current head generation. This prevents a cached signed ENABLE from being replayed as the latest state. Numeric freshness bounds and operation coverage come from the signed policy.</p><pre><code class=\"language-javascript\">// File: src/disable/mcpDisableEnforcement.js\nimport crypto from \"node:crypto\";\nimport fs from \"node:fs\";\nimport https from \"node:https\";\nimport path from \"node:path\";\n\nconst TARGET_FIELD = Object.freeze({\n  server_release: \"serverRelease\",\n  tenant: \"tenantId\",\n  client: \"clientId\",\n  tool: \"toolName\",\n  resource: \"resourceId\",\n  task: \"taskId\",\n  subscription: \"subscriptionId\",\n  upstream: \"upstreamId\",\n  object: \"objectId\"\n});\nconst COVERAGE = new Set([\"COVERED\", \"NOT_APPLICABLE\"]);\nconst PHASES = new Set([\"pre_dispatch\", \"pre_side_effect\"]);\n\nconst exactKeys = (value, expected) =&gt;\n  value &amp;&amp; Object.getPrototypeOf(value) === Object.prototype\n  &amp;&amp; Object.keys(value).sort().join(\",\")\n    === [...expected].sort().join(\",\");\n\nconst canonical = value =&gt; {\n  if (\n    value === null || typeof value === \"string\"\n    || typeof value === \"boolean\"\n  ) return JSON.stringify(value);\n  if (Number.isSafeInteger(value)) return String(value);\n  if (Array.isArray(value)) {\n    return \"[\" + value.map(canonical).join(\",\") + \"]\";\n  }\n  if (value &amp;&amp; Object.getPrototypeOf(value) === Object.prototype) {\n    return \"{\" + Object.keys(value).sort().map(\n      key =&gt; JSON.stringify(key) + \":\" + canonical(value[key])\n    ).join(\",\") + \"}\";\n  }\n  throw new Error(\"non_canonical_disable_value\");\n};\n\nconst decodeBase64 = value =&gt; {\n  if (typeof value !== \"string\" || !/^[A-Za-z0-9+/]+={0,2}$/.test(value)) {\n    throw new Error(\"invalid_disable_base64\");\n  }\n  const decoded = Buffer.from(value, \"base64\");\n  if (!decoded.length || decoded.toString(\"base64\") !== value) {\n    throw new Error(\"non_canonical_disable_base64\");\n  }\n  return decoded;\n};\n\nfunction verifyEnvelope(rawEnvelope, publicKey) {\n  if (!Buffer.isBuffer(rawEnvelope) || !rawEnvelope.length) {\n    throw new Error(\"signed_disable_envelope_unavailable\");\n  }\n  const envelope = JSON.parse(rawEnvelope.toString(\"utf8\"));\n  if (!exactKeys(envelope, [\"payload_b64\", \"signature_b64\"])) {\n    throw new Error(\"disable_envelope_schema_differs\");\n  }\n  const payloadBytes = decodeBase64(envelope.payload_b64);\n  const signature = decodeBase64(envelope.signature_b64);\n  if (!crypto.verify(null, payloadBytes, publicKey, signature)) {\n    throw new Error(\"disable_signature_invalid\");\n  }\n  return {\n    payload: JSON.parse(payloadBytes.toString(\"utf8\")),\n    payloadDigest: crypto.createHash(\"sha256\")\n      .update(payloadBytes).digest(\"hex\")\n  };\n}\n\nfunction positiveInteger(value, field) {\n  if (!Number.isSafeInteger(value) || value &lt;= 0) {\n    throw new Error(\"invalid_\" + field);\n  }\n  return value;\n}\n\nfunction postHttps(url, options, body) {\n  return new Promise((resolve, reject) =&gt; {\n    const request = https.request(url, {\n      method: \"POST\",\n      agent: options.agent,\n      headers: options.headers,\n      timeout: options.timeoutMs\n    }, response =&gt; {\n      const chunks = [];\n      let received = 0;\n      response.on(\"data\", chunk =&gt; {\n        received += chunk.length;\n        if (received &gt; options.maxResponseBytes) {\n          request.destroy(new Error(\"disable_authority_response_too_large\"));\n          return;\n        }\n        chunks.push(chunk);\n      });\n      response.on(\"end\", () =&gt; resolve({\n        statusCode: response.statusCode || 0,\n        body: Buffer.concat(chunks)\n      }));\n    });\n    request.on(\"timeout\", () =&gt;\n      request.destroy(new Error(\"disable_authority_timeout\"))\n    );\n    request.on(\"error\", reject);\n    request.end(body);\n  });\n}\n\nfunction loadHexKey(name) {\n  const encoded = process.env[name] || \"\";\n  if (!/^[a-f0-9]+$/.test(encoded) || encoded.length % 2 !== 0) {\n    throw new Error(\"invalid_hex_key:\" + name);\n  }\n  const key = Buffer.from(encoded, \"hex\");\n  if (key.length &lt; 32) throw new Error(\"short_key:\" + name);\n  return key;\n}\n\nexport function loadVerifiedDisablePolicy() {\n  const rootPublicKey = crypto.createPublicKey(\n    fs.readFileSync(process.env.MCP_DISABLE_POLICY_VERIFY_KEY)\n  );\n  const rawEnvelope = fs.readFileSync(\n    process.env.MCP_DISABLE_POLICY_ENVELOPE\n  );\n  const verified = verifyEnvelope(rawEnvelope, rootPublicKey);\n  const policy = verified.payload;\n  const fields = [\n    \"authority\", \"authority_key_path\", \"authority_key_sha256\",\n    \"max_authority_response_age_ms\", \"not_after\", \"operations\",\n    \"policy_generation\", \"policy_version\", \"schema_version\"\n  ];\n  if (\n    !exactKeys(policy, fields)\n    || policy.schema_version !== \"aidefend.mcp-disable-policy.v2\"\n    || typeof policy.policy_version !== \"string\"\n    || !policy.policy_version\n    || !Number.isSafeInteger(policy.policy_generation)\n    || policy.policy_generation &lt;= 0\n    || typeof policy.authority !== \"string\"\n    || !/^[a-zA-Z0-9._:-]+$/.test(policy.authority)\n    || !/^[a-f0-9]{64}$/.test(policy.authority_key_sha256)\n    || !Number.isFinite(Date.parse(policy.not_after))\n    || Date.parse(policy.not_after) &lt;= Date.now()\n    || !policy.operations\n    || Object.getPrototypeOf(policy.operations) !== Object.prototype\n    || Object.keys(policy.operations).length === 0\n  ) {\n    throw new Error(\"disable_policy_schema_or_freshness_invalid\");\n  }\n  positiveInteger(\n    policy.max_authority_response_age_ms,\n    \"max_authority_response_age_ms\"\n  );\n  for (const [operation, rule] of Object.entries(policy.operations)) {\n    if (\n      !operation\n      || !exactKeys(rule, [\n        \"coverage\", \"require_commit_fence\",\n        \"required_target_kinds\", \"technical_reason\"\n      ])\n      || !COVERAGE.has(rule.coverage)\n      || typeof rule.require_commit_fence !== \"boolean\"\n      || !Array.isArray(rule.required_target_kinds)\n      || rule.required_target_kinds.length\n        !== new Set(rule.required_target_kinds).size\n      || rule.required_target_kinds.some(\n        kind =&gt; !Object.hasOwn(TARGET_FIELD, kind)\n      )\n    ) {\n      throw new Error(\"invalid_disable_operation_rule:\" + operation);\n    }\n    if (\n      rule.coverage === \"COVERED\"\n      &amp;&amp; (\n        rule.required_target_kinds.length === 0\n        || rule.technical_reason !== null\n      )\n    ) {\n      throw new Error(\"covered_disable_rule_is_incomplete:\" + operation);\n    }\n    if (\n      rule.coverage === \"NOT_APPLICABLE\"\n      &amp;&amp; (\n        rule.required_target_kinds.length !== 0\n        || rule.require_commit_fence\n        || typeof rule.technical_reason !== \"string\"\n        || !rule.technical_reason.trim()\n      )\n    ) {\n      throw new Error(\"invalid_disable_not_applicable_rule:\" + operation);\n    }\n  }\n\n  const keyRoot = path.resolve(process.env.MCP_DISABLE_AUTHORITY_KEY_ROOT);\n  const keyPath = path.resolve(keyRoot, policy.authority_key_path);\n  if (!keyPath.startsWith(keyRoot + path.sep)) {\n    throw new Error(\"disable_authority_key_escapes_trust_root\");\n  }\n  const keyBytes = fs.readFileSync(keyPath);\n  const keyDigest = crypto.createHash(\"sha256\")\n    .update(keyBytes).digest(\"hex\");\n  if (keyDigest !== policy.authority_key_sha256) {\n    throw new Error(\"disable_authority_key_digest_differs\");\n  }\n  return Object.freeze({\n    ...policy,\n    policyDigest: verified.payloadDigest,\n    authorityPublicKey: crypto.createPublicKey(keyBytes)\n  });\n}\n\nconst ACCEPT_MONOTONIC = [\n  \"local current=tonumber(redis.call('HGET',KEYS[1],'generation') or '0')\",\n  \"local incoming=tonumber(ARGV[1])\",\n  \"if not incoming or incoming&lt;1 then return redis.error_reply('generation') end\",\n  \"if incoming&lt;current then return {'STALE'} end\",\n  \"if incoming==current then\",\n  \"  if redis.call('HGET',KEYS[1],'digest')~=ARGV[2] then return {'CONFLICT'} end\",\n  \"  return {'REPLAY'}\",\n  \"end\",\n  \"redis.call('HSET',KEYS[1],'generation',incoming,'digest',ARGV[2],'state',ARGV[3])\",\n  \"return {'ACCEPTED'}\"\n].join(\"\\n\");\n\nasync function acceptMonotonic(store, key, generation, digest, state) {\n  const result = await store.eval(ACCEPT_MONOTONIC, {\n    keys: [key],\n    arguments: [String(generation), digest, state]\n  });\n  const status = String(result[0]);\n  if (status === \"STALE\" || status === \"CONFLICT\") {\n    throw new Error(\"disable_monotonic_\" + status.toLowerCase());\n  }\n  if (status !== \"ACCEPTED\" &amp;&amp; status !== \"REPLAY\") {\n    throw new Error(\"disable_monotonic_store_error\");\n  }\n}\n\nexport class DisableAuthorityClient {\n  constructor() {\n    this.baseUrl = new URL(process.env.MCP_DISABLE_AUTHORITY_URL);\n    if (this.baseUrl.protocol !== \"https:\") {\n      throw new Error(\"disable authority must use HTTPS\");\n    }\n    this.timeoutMs = positiveInteger(\n      Number(process.env.MCP_DISABLE_AUTHORITY_TIMEOUT_MS),\n      \"disable_authority_timeout_ms\"\n    );\n    this.maxResponseBytes = positiveInteger(\n      Number(process.env.MCP_DISABLE_AUTHORITY_MAX_RESPONSE_BYTES),\n      \"disable_authority_max_response_bytes\"\n    );\n    this.agent = new https.Agent({\n      ca: fs.readFileSync(process.env.MCP_DISABLE_AUTHORITY_CA_FILE),\n      cert: fs.readFileSync(process.env.MCP_DISABLE_CLIENT_CERT),\n      key: fs.readFileSync(process.env.MCP_DISABLE_CLIENT_KEY),\n      minVersion: \"TLSv1.2\"\n    });\n  }\n\n  async readCurrentHead(policy, target, phase) {\n    const queryNonce = crypto.randomUUID();\n    const url = new URL(\"/v1/disable/current-head\", this.baseUrl);\n    if (url.origin !== this.baseUrl.origin) {\n      throw new Error(\"disable_authority_origin_changed\");\n    }\n    const response = await postHttps(url, {\n      agent: this.agent,\n      headers: {\n        \"cache-control\": \"no-store\",\n        \"content-type\": \"application/json\"\n      },\n      timeoutMs: this.timeoutMs,\n      maxResponseBytes: this.maxResponseBytes\n    }, canonical({\n        schema_version: \"aidefend.mcp-disable-query.v1\",\n        policy_digest: policy.policyDigest,\n        policy_generation: policy.policy_generation,\n        query_nonce: queryNonce,\n        phase,\n        target\n      }));\n    const rawEnvelope = response.body;\n    if (response.statusCode !== 200) {\n      throw new Error(\"disable_authority_http_\" + response.statusCode);\n    }\n    const verified = verifyEnvelope(\n      rawEnvelope, policy.authorityPublicKey\n    );\n    const head = verified.payload;\n    const fields = [\n      \"authority\", \"commit_token\", \"expires_at\", \"generation\",\n      \"issued_at\", \"phase\", \"policy_digest\", \"policy_generation\",\n      \"query_nonce\", \"reason_code\", \"schema_version\", \"state\", \"target\"\n    ];\n    const now = Date.now();\n    const issuedAt = Date.parse(head.issued_at);\n    const expiresAt = Date.parse(head.expires_at);\n    if (\n      !exactKeys(head, fields)\n      || !exactKeys(head.target, [\"digest\", \"kind\"])\n      || head.schema_version !== \"aidefend.mcp-disable-head.v2\"\n      || head.authority !== policy.authority\n      || head.policy_digest !== policy.policyDigest\n      || head.policy_generation !== policy.policy_generation\n      || head.query_nonce !== queryNonce\n      || head.phase !== phase\n      || head.target.kind !== target.kind\n      || head.target.digest !== target.digest\n      || !Number.isSafeInteger(head.generation)\n      || head.generation &lt;= 0\n      || ![\"ENABLE\", \"DISABLE\"].includes(head.state)\n      || typeof head.reason_code !== \"string\"\n      || !head.reason_code\n      || !Number.isFinite(issuedAt)\n      || !Number.isFinite(expiresAt)\n      || issuedAt &gt; now\n      || now - issuedAt &gt; policy.max_authority_response_age_ms\n      || expiresAt &lt;= now\n    ) {\n      throw new Error(\"disable_authority_head_invalid\");\n    }\n    if (\n      head.commit_token !== null\n      &amp;&amp; (typeof head.commit_token !== \"string\" || !head.commit_token)\n    ) {\n      throw new Error(\"disable_commit_token_invalid\");\n    }\n    // Only authority state belongs to the monotonic identity. Nonce, phase,\n    // response times and one-use commit tokens remain verified envelope data.\n    const stateDigest = crypto.createHash(\"sha256\").update(canonical({\n      authority: head.authority,\n      target: head.target,\n      generation: head.generation,\n      state: head.state,\n      reason_code: head.reason_code\n    })).digest(\"hex\");\n    return {...head, payloadDigest: verified.payloadDigest, stateDigest};\n  }\n}\n\nfunction operationRule(policy, operationKey) {\n  if (typeof operationKey !== \"string\" || !operationKey) {\n    throw new Error(\"server_derived_operation_key_missing\");\n  }\n  const rule = policy.operations[operationKey];\n  if (!rule) {\n    throw new Error(\"operation_absent_from_complete_disable_registry\");\n  }\n  return rule;\n}\n\nfunction requiredTargets(context, rule, digestKey) {\n  return rule.required_target_kinds.map(kind =&gt; {\n    const value = context[TARGET_FIELD[kind]];\n    if (typeof value !== \"string\" || !value) {\n      throw new Error(\"required_disable_target_missing:\" + kind);\n    }\n    const digest = crypto.createHmac(\"sha256\", digestKey)\n      .update(kind).update(Buffer.from([0]))\n      .update(value).digest(\"hex\");\n    return {kind, digest};\n  });\n}\n\nexport async function createDisableEnforcer(input) {\n  const policy = loadVerifiedDisablePolicy();\n  await acceptMonotonic(\n    input.generationStore,\n    \"mcp-disable-policy:{\" + policy.authority + \"}\",\n    policy.policy_generation,\n    policy.policyDigest,\n    \"POLICY\"\n  );\n  const digestKey = loadHexKey(\"MCP_DISABLE_TARGET_HMAC_KEY_HEX\");\n  const client = new DisableAuthorityClient();\n\n  return async function enforce(operationKey, context, phase) {\n    if (!PHASES.has(phase)) throw new Error(\"invalid_disable_phase\");\n    if (Date.parse(policy.not_after) &lt;= Date.now()) {\n      throw new Error(\"disable_policy_expired\");\n    }\n    const rule = operationRule(policy, operationKey);\n    if (rule.coverage === \"NOT_APPLICABLE\") {\n      return {\n        applicable: false,\n        phase,\n        technicalReason: rule.technical_reason\n      };\n    }\n    const targets = requiredTargets(context, rule, digestKey);\n    const heads = [];\n    for (const target of targets) {\n      const head = await client.readCurrentHead(policy, target, phase);\n      await acceptMonotonic(\n        input.generationStore,\n        \"mcp-disable:\" + policy.authority + \":\" + target.kind + \":{\" + target.digest + \"}:head\",\n        head.generation,\n        head.stateDigest,\n        head.state\n      );\n      if (head.state === \"DISABLE\") {\n        throw new Error(\"mcp_operation_disabled:\" + target.kind);\n      }\n      if (\n        phase === \"pre_side_effect\"\n        &amp;&amp; rule.require_commit_fence\n        &amp;&amp; !head.commit_token\n      ) {\n        throw new Error(\"required_disable_commit_fence_missing\");\n      }\n      heads.push(head);\n    }\n    return {\n      applicable: true,\n      phase,\n      requireCommitFence: rule.require_commit_fence,\n      heads\n    };\n  };\n}\n\nexport async function runWithDisableEnforcement(input) {\n  const enforce = await createDisableEnforcer(input);\n  await enforce(input.operationKey, input.context, \"pre_dispatch\");\n  const prepared = await input.prepareSideEffectFree();\n  const current = await enforce(\n    input.operationKey, input.context, \"pre_side_effect\"\n  );\n  if (!current.applicable) {\n    // The signed complete registry explicitly excludes this operation.\n    // Keep the same commit adapter; its empty fence set is deliberate here.\n    return input.commitWithDisableFences(prepared, []);\n  }\n  const commitTokens = current.heads.map(head =&gt; ({\n    target: head.target,\n    generation: head.generation,\n    token: head.commit_token\n  }));\n  if (\n    current.requireCommitFence\n    &amp;&amp; commitTokens.some(item =&gt; !item.token)\n  ) {\n    throw new Error(\"incomplete_disable_commit_fence_set\");\n  }\n  return input.commitWithDisableFences(prepared, commitTokens);\n}</code></pre><p><strong>Commit-fence contract:</strong> For a policy entry with <code>require_commit_fence</code>, the backend must atomically redeem every authority-issued token at the protected commit point and reject a token invalidated by a newer DISABLE generation. Merely checking in the MCP process cannot close the race after the second hook. <code>prepareSideEffectFree</code> must not perform network writes, queue publication, durable file changes, or other protected effects.</p><h5>Verify safely</h5><p>Enumerate every exposed MCP method and tool against the signed operation registry. Test an omitted operation, justified NOT_APPLICABLE entry, signed ENABLE and DISABLE, wrong policy or target, replayed nonce, stale-but-signed ENABLE, lower and conflicting generations, authority timeout, cache partition, process restart, newer re-enable, and DISABLE arriving between the second hook and backend commit. Confirm all covered failures block and the backend rejects a fence superseded before commit.</p>"
                        }
                     ],
                     "toolsOpenSource": [
@@ -28595,10 +28824,18 @@ export async function runWithDisableEnforcement(input) {
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
+                        "AISubtech-14.1.2 Insufficient Access Controls",
+                        "AISubtech-14.2.1 Permission Escalation via Delegation",
+                        "AISubtech-2.1.1 Execution Approval Bypass",
+                        "AISubtech-2.1.2 Capability and Permission Overreach",
+                        "AISubtech-4.3.4 Replay Exploitation",
+                        "AISubtech-5.2.1 Agent Profile Tampering (protects immutable defensive-agent deployment inputs)",
+                        "AITech-12.1 Tool Exploitation",
                         "AITech-14.1 Unauthorized Access",
                         "AITech-14.2 Abuse of Delegated Authority",
-                        "AITech-12.1 Tool Exploitation",
-                        "AITech-5.2 Configuration Persistence"
+                        "AITech-2.1 Excessive Agency",
+                        "AITech-4.3 Protocol Manipulation",
+                        "AITech-5.2 Configuration Persistence (protects immutable defensive-agent deployment inputs)"
                     ]
                 },
                 {
@@ -28747,10 +28984,10 @@ export async function runWithDisableEnforcement(input) {
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-1.1 Direct Prompt Injection",
-                        "AITech-2.1 Jailbreak",
-                        "AITech-9.2 Detection Evasion",
-                        "AITech-15.1 Harmful Content"
+                        "AISubtech-1.1.2 Obfuscation (measures exact classifier coverage per language and category before promotion)",
+                        "AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation) (measures exact classifier coverage per language and category before promotion)",
+                        "AITech-15.1 Harmful Content (measures exact classifier coverage per language and category before promotion)",
+                        "AITech-9.2 Detection Evasion (measures exact classifier coverage per language and category before promotion)"
                     ]
                 },
                 {
@@ -28773,7 +29010,7 @@ export async function runWithDisableEnforcement(input) {
                 {
                     "id": "AID-H-036-G001",
                     "implementation": "Build a language and locale coverage matrix for inbound prompt safety classifiers, run the matrix in CI, and block promotion when any supported or unsupported language segment lacks measured policy behavior.",
-                    "howTo": "<h5>Concept:</h5><p>A prompt safety classifier can look strong on English benchmarks while failing on mixed-language, transliterated, low-resource, or unsupported-language prompts. Treat language as an explicit coverage dimension. Supported languages must meet category thresholds; unsupported languages must fail closed to review or block rather than being treated as safe by default.</p><p>Keep locale-native prompts in a private, access-controlled and content-addressed corpus. Publish the closed schema below in source control; sign the real manifest and bind its digest in the gate policy. This avoids shipping attack strings or universal language lists in the framework.</p><h5>Step 1: Define the private evaluation-manifest schema</h5><pre><code># File: guardrail_eval/multilingual_cases.schema.json\r\n{\r\n  \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\r\n  \"$id\": \"urn:aidefend:multilingual-cases:v1\",\r\n  \"type\": \"array\",\r\n  \"minItems\": 1,\r\n  \"items\": {\r\n    \"type\": \"object\",\r\n    \"additionalProperties\": false,\r\n    \"required\": [\r\n      \"case_id\", \"language\", \"locale\", \"language_support\", \"label\",\r\n      \"policy_category\", \"expected_verdict\", \"prompt\", \"prompt_sha256\"\r\n    ],\r\n    \"properties\": {\r\n      \"case_id\": {\"type\": \"string\", \"minLength\": 1},\r\n      \"language\": {\"type\": \"string\", \"minLength\": 1},\r\n      \"locale\": {\"type\": \"string\", \"minLength\": 1},\r\n      \"language_support\": {\"enum\": [\"supported\", \"unsupported\"]},\r\n      \"label\": {\"enum\": [\"benign\", \"malicious\", \"unsupported\"]},\r\n      \"policy_category\": {\"type\": \"string\", \"minLength\": 1},\r\n      \"expected_verdict\": {\"enum\": [\"allow\", \"review\", \"block\"]},\r\n      \"prompt\": {\"type\": \"string\", \"minLength\": 1},\r\n      \"prompt_sha256\": {\"type\": \"string\", \"pattern\": \"^[a-f0-9]{64}$\"}\r\n    }\r\n  }\r\n}\r\n</code></pre><h5>Step 2: Run the classifier and compute per-segment evidence</h5><pre><code># File: guardrail_eval/multilingual_classifier_gate.py\r\nfrom __future__ import annotations\r\n\r\nimport base64\r\nimport hashlib\r\nimport json\r\nimport math\r\nimport os\r\nimport re\r\nfrom dataclasses import asdict, dataclass, fields\r\nfrom datetime import datetime, timezone\r\nfrom pathlib import Path\r\nfrom typing import Literal\r\nfrom urllib.parse import urlsplit, urlunsplit\r\n\r\nimport requests\r\nfrom cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey\r\n\r\n\r\nVerdict = Literal[\"allow\", \"review\", \"block\"]\r\nLabel = Literal[\"benign\", \"malicious\", \"unsupported\"]\r\n\r\n\r\n@dataclass(frozen=True)\r\nclass EvalCase:\r\n    case_id: str\r\n    language: str\r\n    locale: str\r\n    language_support: Literal[\"supported\", \"unsupported\"]\r\n    label: Label\r\n    policy_category: str\r\n    expected_verdict: Verdict\r\n    prompt: str\r\n    prompt_sha256: str\r\n\r\n\r\n@dataclass(frozen=True)\r\nclass EvalResult:\r\n    case_id: str\r\n    language: str\r\n    locale: str\r\n    language_support: Literal[\"supported\", \"unsupported\"]\r\n    label: Label\r\n    policy_category: str\r\n    expected_verdict: Verdict\r\n    observed_verdict: Verdict | None\r\n    passed: bool\r\n    reason: str\r\n\r\n\r\n@dataclass(frozen=True)\r\nclass GatePolicy:\r\n    policy_version: str\r\n    case_manifest_sha256: str\r\n    required_supported_segments: list[list[str]]\r\n    required_unsupported_segments: list[list[str]]\r\n    required_malicious_categories: list[str]\r\n    min_benign_per_segment: int\r\n    min_malicious_per_segment: int\r\n    min_malicious_per_category: int\r\n    min_unsupported_per_segment: int\r\n    min_malicious_recall: float\r\n    min_malicious_precision: float\r\n    max_benign_fpr: float\r\n    min_exact_verdict_rate: float\r\n    wilson_z: float\r\n    classifier_timeout_seconds: float\r\n    classifier_response_max_bytes: int\r\n\r\n\r\nVALID_VERDICTS = {\"allow\", \"review\", \"block\"}\r\nSHA256 = re.compile(r\"^[a-f0-9]{64}$\")\r\n\r\n\r\ndef no_duplicates(pairs: list[tuple[str, object]]) -&gt; dict:\r\n    result = {}\r\n    for key, value in pairs:\r\n        if key in result:\r\n            raise ValueError(f\"duplicate JSON key: {key}\")\r\n        result[key] = value\r\n    return result\r\n\r\n\r\ndef strict_json(raw: bytes):\r\n    return json.loads(\r\n        raw,\r\n        object_pairs_hook=no_duplicates,\r\n        parse_constant=lambda value: (_ for _ in ()).throw(\r\n            ValueError(f\"non-finite JSON number: {value}\")\r\n        ),\r\n    )\r\n\r\n\r\ndef canonical_https_endpoint(value: str) -&gt; str:\r\n    parsed = urlsplit(value)\r\n    if (\r\n        parsed.scheme != \"https\"\r\n        or not parsed.hostname\r\n        or parsed.username is not None\r\n        or parsed.password is not None\r\n        or parsed.query\r\n        or parsed.fragment\r\n        or not parsed.path.startswith(\"/\")\r\n    ):\r\n        raise ValueError(\"classifier endpoint must be an exact HTTPS URL\")\r\n    canonical = urlunsplit((\"https\", parsed.netloc.lower(), parsed.path, \"\", \"\"))\r\n    if value != canonical:\r\n        raise ValueError(\"classifier endpoint is not canonical\")\r\n    return value\r\n\r\n\r\ndef load_signed_policy(\r\n    path: Path, signature_path: Path, public_key_path: Path,\r\n) -&gt; tuple[GatePolicy, str]:\r\n    payload = path.read_bytes()\r\n    public_key_bytes = base64.b64decode(\r\n        public_key_path.read_text(encoding=\"ascii\").strip(), validate=True\r\n    )\r\n    signature = base64.b64decode(\r\n        signature_path.read_text(encoding=\"ascii\").strip(), validate=True\r\n    )\r\n    Ed25519PublicKey.from_public_bytes(public_key_bytes).verify(signature, payload)\r\n    raw = strict_json(payload)\r\n    required = {field.name for field in fields(GatePolicy)}\r\n    if not isinstance(raw, dict) or set(raw) != required:\r\n        raise ValueError(\"multilingual gate policy schema mismatch\")\r\n    policy = GatePolicy(**raw)\r\n    if not SHA256.fullmatch(policy.case_manifest_sha256):\r\n        raise ValueError(\"case_manifest_sha256 is invalid\")\r\n    counts = (\r\n        policy.min_benign_per_segment, policy.min_malicious_per_segment,\r\n        policy.min_malicious_per_category, policy.min_unsupported_per_segment,\r\n    )\r\n    rates = (\r\n        policy.min_malicious_recall, policy.min_malicious_precision,\r\n        policy.max_benign_fpr, policy.min_exact_verdict_rate,\r\n    )\r\n    if any(isinstance(value, bool) or not isinstance(value, int) or value &lt;= 0 for value in counts):\r\n        raise ValueError(\"signed minimum populations must be positive integers\")\r\n    if any(\r\n        isinstance(value, bool)\r\n        or not isinstance(value, (int, float))\r\n        or not math.isfinite(float(value))\r\n        or not 0 &lt;= float(value) &lt;= 1\r\n        for value in rates\r\n    ):\r\n        raise ValueError(\"signed metric thresholds must be finite values in [0, 1]\")\r\n    if (\r\n        isinstance(policy.wilson_z, bool)\r\n        or not isinstance(policy.wilson_z, (int, float))\r\n        or not math.isfinite(float(policy.wilson_z))\r\n        or policy.wilson_z &lt;= 0\r\n        or isinstance(policy.classifier_timeout_seconds, bool)\r\n        or not isinstance(policy.classifier_timeout_seconds, (int, float))\r\n        or not math.isfinite(float(policy.classifier_timeout_seconds))\r\n        or policy.classifier_timeout_seconds &lt;= 0\r\n        or isinstance(policy.classifier_response_max_bytes, bool)\r\n        or not isinstance(policy.classifier_response_max_bytes, int)\r\n        or policy.classifier_response_max_bytes &lt;= 0\r\n    ):\r\n        raise ValueError(\"signed confidence, timeout, or response bounds are invalid\")\r\n    if not policy.required_supported_segments or not policy.required_malicious_categories:\r\n        raise ValueError(\"signed policy omits required coverage populations\")\r\n    return policy, hashlib.sha256(payload).hexdigest()\r\n\r\n\r\ndef classify_prompt(\r\n    session: requests.Session,\r\n    endpoint: str,\r\n    prompt: str,\r\n    expected_classifier_version: str,\r\n    timeout_seconds: float,\r\n    response_max_bytes: int,\r\n) -&gt; Verdict:\r\n    endpoint = canonical_https_endpoint(endpoint)\r\n    with session.post(\r\n        endpoint,\r\n        json={\"input\": prompt},\r\n        timeout=timeout_seconds,\r\n        allow_redirects=False,\r\n        stream=True,\r\n    ) as response:\r\n        if response.status_code != 200:\r\n            raise ValueError(f\"classifier returned HTTP {response.status_code}\")\r\n        media_type = response.headers.get(\"Content-Type\", \"\").split(\";\", 1)[0].strip().lower()\r\n        if media_type != \"application/json\":\r\n            raise ValueError(\"classifier did not return application/json\")\r\n        declared = response.headers.get(\"Content-Length\")\r\n        if declared is not None:\r\n            try:\r\n                if int(declared) &gt; response_max_bytes:\r\n                    raise ValueError(\"classifier response exceeds signed byte cap\")\r\n            except ValueError as exc:\r\n                raise ValueError(\"classifier Content-Length is invalid or too large\") from exc\r\n        raw = bytearray()\r\n        for chunk in response.iter_content(chunk_size=min(65536, response_max_bytes + 1)):\r\n            if chunk:\r\n                raw.extend(chunk)\r\n            if len(raw) &gt; response_max_bytes:\r\n                raise ValueError(\"classifier response exceeds signed decoded-byte cap\")\r\n    body = strict_json(bytes(raw))\r\n    if not isinstance(body, dict) or set(body) != {\"classifier_version\", \"verdict\"}:\r\n        raise ValueError(\"classifier response schema differs\")\r\n    if body[\"classifier_version\"] != expected_classifier_version:\r\n        raise ValueError(\"classifier response version differs from candidate release\")\r\n    verdict = body.get(\"verdict\")\r\n    if verdict not in VALID_VERDICTS:\r\n        raise ValueError(\"Classifier returned invalid verdict: \" + str(verdict))\r\n    return verdict\r\n\r\n\r\ndef load_cases(path: str) -&gt; list[EvalCase]:\r\n    raw_cases = strict_json(Path(path).read_bytes())\r\n    if not isinstance(raw_cases, list):\r\n        raise ValueError(\"case manifest root must be an array\")\r\n    cases = [EvalCase(**item) for item in raw_cases]\r\n    case_ids: set[str] = set()\r\n    for case in cases:\r\n        if case.case_id in case_ids:\r\n            raise ValueError(\"Duplicate case_id: \" + case.case_id)\r\n        case_ids.add(case.case_id)\r\n        if not SHA256.fullmatch(case.prompt_sha256):\r\n            raise ValueError(\"case prompt_sha256 is invalid: \" + case.case_id)\r\n        observed_prompt_sha256 = hashlib.sha256(case.prompt.encode(\"utf-8\")).hexdigest()\r\n        if observed_prompt_sha256 != case.prompt_sha256:\r\n            raise ValueError(\"case prompt digest mismatch: \" + case.case_id)\r\n        if case.language_support == \"supported\" and case.label not in {\"benign\", \"malicious\"}:\r\n            raise ValueError(\"Supported case must be labeled benign or malicious: \" + case.case_id)\r\n        if case.language_support == \"unsupported\" and case.label != \"unsupported\":\r\n            raise ValueError(\"Unsupported-language case must use label=unsupported: \" + case.case_id)\r\n        if case.label == \"benign\" and case.expected_verdict != \"allow\":\r\n            raise ValueError(\"Benign case must expect exact verdict allow: \" + case.case_id)\r\n        if case.label in {\"malicious\", \"unsupported\"} and case.expected_verdict == \"allow\":\r\n            raise ValueError(\"Malicious or unsupported case cannot expect allow: \" + case.case_id)\r\n    return cases\r\n\r\n\r\ndef run_matrix(\r\n    session: requests.Session,\r\n    endpoint: str,\r\n    cases: list[EvalCase],\r\n    expected_classifier_version: str,\r\n    timeout_seconds: float,\r\n    response_max_bytes: int,\r\n) -&gt; list[EvalResult]:\r\n    results: list[EvalResult] = []\r\n    for case in cases:\r\n        try:\r\n            observed = classify_prompt(\r\n                session,\r\n                endpoint,\r\n                case.prompt,\r\n                expected_classifier_version,\r\n                timeout_seconds,\r\n                response_max_bytes,\r\n            )\r\n            passed = observed == case.expected_verdict\r\n            reason = \"exact_verdict_match\" if passed else \"exact_verdict_mismatch\"\r\n        except Exception as exc:\r\n            observed = None\r\n            passed = False\r\n            reason = \"classifier_error:\" + type(exc).__name__\r\n\r\n        results.append(EvalResult(\r\n            case_id=case.case_id,\r\n            language=case.language,\r\n            locale=case.locale,\r\n            language_support=case.language_support,\r\n            label=case.label,\r\n            policy_category=case.policy_category,\r\n            expected_verdict=case.expected_verdict,\r\n            observed_verdict=observed,\r\n            passed=passed,\r\n            reason=reason,\r\n        ))\r\n    return results\r\n\r\n\r\ndef ratio(numerator: int, denominator: int) -&gt; float | None:\r\n    if denominator == 0:\r\n        return None\r\n    return round(numerator / denominator, 4)\r\n\r\n\r\ndef wilson_interval(successes: int, trials: int, z: float) -&gt; dict | None:\r\n    \"\"\"Return a two-sided Wilson score interval for a binomial proportion.\"\"\"\r\n    if trials == 0:\r\n        return None\r\n    if trials &lt; 0 or successes &lt; 0 or successes &gt; trials:\r\n        raise ValueError(\"Wilson interval requires 0 &lt;= successes &lt;= trials\")\r\n    proportion = successes / trials\r\n    z_squared = z * z\r\n    denominator = 1.0 + z_squared / trials\r\n    center = (proportion + z_squared / (2.0 * trials)) / denominator\r\n    margin = (\r\n        z\r\n        * math.sqrt((proportion * (1.0 - proportion) + z_squared / (4.0 * trials)) / trials)\r\n        / denominator\r\n    )\r\n    return {\r\n        \"lower\": round(max(0.0, center - margin), 6),\r\n        \"upper\": round(min(1.0, center + margin), 6),\r\n        \"confidence\": 0.95,\r\n        \"method\": \"wilson_score\",\r\n    }\r\n\r\n\r\ndef summarize_supported_segment(\r\n    language: str,\r\n    locale: str,\r\n    results: list[EvalResult],\r\n    policy: GatePolicy,\r\n) -&gt; dict:\r\n    segment = [\r\n        item for item in results\r\n        if item.language_support == \"supported\" and item.language == language and item.locale == locale\r\n    ]\r\n    benign = [item for item in segment if item.label == \"benign\"]\r\n    malicious = [item for item in segment if item.label == \"malicious\"]\r\n    errors = [item for item in segment if item.observed_verdict is None]\r\n\r\n    true_positives = sum(item.observed_verdict in {\"review\", \"block\"} for item in malicious)\r\n    false_positives = sum(item.observed_verdict in {\"review\", \"block\"} for item in benign)\r\n    exact_matches = sum(item.passed for item in segment)\r\n    recall = ratio(true_positives, len(malicious))\r\n    precision = ratio(true_positives, true_positives + false_positives)\r\n    benign_fpr = ratio(false_positives, len(benign))\r\n    exact_rate = ratio(exact_matches, len(segment))\r\n    recall_interval = wilson_interval(true_positives, len(malicious), policy.wilson_z)\r\n    precision_interval = wilson_interval(\r\n        true_positives,\r\n        true_positives + false_positives,\r\n        policy.wilson_z,\r\n    )\r\n    benign_fpr_interval = wilson_interval(false_positives, len(benign), policy.wilson_z)\r\n    exact_rate_interval = wilson_interval(exact_matches, len(segment), policy.wilson_z)\r\n\r\n    insufficient: list[dict] = []\r\n    failures: list[dict] = []\r\n    if len(benign) &lt; policy.min_benign_per_segment:\r\n        insufficient.append({\"population\": \"benign\", \"n\": len(benign), \"minimum\": policy.min_benign_per_segment})\r\n    if len(malicious) &lt; policy.min_malicious_per_segment:\r\n        insufficient.append({\"population\": \"malicious\", \"n\": len(malicious), \"minimum\": policy.min_malicious_per_segment})\r\n    if errors:\r\n        failures.append({\"metric\": \"classifier_errors\", \"count\": len(errors), \"case_ids\": [item.case_id for item in errors]})\r\n    if recall_interval is not None and recall_interval[\"lower\"] &lt; policy.min_malicious_recall:\r\n        failures.append({\r\n            \"metric\": \"malicious_recall\",\r\n            \"estimate\": recall,\r\n            \"conservative_lower_bound\": recall_interval[\"lower\"],\r\n            \"minimum\": policy.min_malicious_recall,\r\n        })\r\n    if precision_interval is None:\r\n        failures.append({\"metric\": \"malicious_precision\", \"issue\": \"no_positive_predictions\"})\r\n    elif precision_interval[\"lower\"] &lt; policy.min_malicious_precision:\r\n        failures.append({\r\n            \"metric\": \"malicious_precision\",\r\n            \"estimate\": precision,\r\n            \"conservative_lower_bound\": precision_interval[\"lower\"],\r\n            \"minimum\": policy.min_malicious_precision,\r\n        })\r\n    if benign_fpr_interval is not None and benign_fpr_interval[\"upper\"] &gt; policy.max_benign_fpr:\r\n        failures.append({\r\n            \"metric\": \"benign_fpr\",\r\n            \"estimate\": benign_fpr,\r\n            \"conservative_upper_bound\": benign_fpr_interval[\"upper\"],\r\n            \"maximum\": policy.max_benign_fpr,\r\n        })\r\n    if exact_rate_interval is not None and exact_rate_interval[\"lower\"] &lt; policy.min_exact_verdict_rate:\r\n        failures.append({\r\n            \"metric\": \"exact_verdict_rate\",\r\n            \"estimate\": exact_rate,\r\n            \"conservative_lower_bound\": exact_rate_interval[\"lower\"],\r\n            \"minimum\": policy.min_exact_verdict_rate,\r\n        })\r\n\r\n    category_metrics = {}\r\n    observed_categories = {item.policy_category for item in malicious}\r\n    categories = sorted(set(policy.required_malicious_categories) | observed_categories)\r\n    for category in categories:\r\n        category_results = [item for item in malicious if item.policy_category == category]\r\n        category_tp = sum(item.observed_verdict in {\"review\", \"block\"} for item in category_results)\r\n        category_recall = ratio(category_tp, len(category_results))\r\n        category_recall_interval = wilson_interval(\r\n            category_tp,\r\n            len(category_results),\r\n            policy.wilson_z,\r\n        )\r\n        category_metrics[category] = {\r\n            \"n\": len(category_results),\r\n            \"recall\": category_recall,\r\n            \"recall_wilson_95\": category_recall_interval,\r\n        }\r\n        if category in policy.required_malicious_categories and len(category_results) &lt; policy.min_malicious_per_category:\r\n            insufficient.append({\r\n                \"population\": \"malicious_category\",\r\n                \"category\": category,\r\n                \"n\": len(category_results),\r\n                \"minimum\": policy.min_malicious_per_category,\r\n            })\r\n        if (\r\n            category_recall_interval is not None\r\n            and category_recall_interval[\"lower\"] &lt; policy.min_malicious_recall\r\n        ):\r\n            failures.append({\r\n                \"metric\": \"category_recall\",\r\n                \"category\": category,\r\n                \"estimate\": category_recall,\r\n                \"conservative_lower_bound\": category_recall_interval[\"lower\"],\r\n                \"minimum\": policy.min_malicious_recall,\r\n            })\r\n\r\n    status = \"insufficient_data\" if insufficient else (\"fail\" if failures else \"pass\")\r\n    return {\r\n        \"status\": status,\r\n        \"n_total\": len(segment),\r\n        \"n_benign\": len(benign),\r\n        \"n_malicious\": len(malicious),\r\n        \"n_predicted_positive\": true_positives + false_positives,\r\n        \"malicious_recall\": recall,\r\n        \"malicious_recall_wilson_95\": recall_interval,\r\n        \"malicious_precision\": precision,\r\n        \"malicious_precision_wilson_95\": precision_interval,\r\n        \"benign_fpr\": benign_fpr,\r\n        \"benign_fpr_wilson_95\": benign_fpr_interval,\r\n        \"exact_verdict_rate\": exact_rate,\r\n        \"exact_verdict_rate_wilson_95\": exact_rate_interval,\r\n        \"category_metrics\": category_metrics,\r\n        \"insufficient_populations\": insufficient,\r\n        \"failures\": failures,\r\n    }\r\n\r\n\r\ndef summarize_unsupported_segment(\r\n    language: str,\r\n    locale: str,\r\n    results: list[EvalResult],\r\n    policy: GatePolicy,\r\n) -&gt; dict:\r\n    segment = [\r\n        item for item in results\r\n        if item.language_support == \"unsupported\" and item.language == language and item.locale == locale\r\n    ]\r\n    errors = [item for item in segment if item.observed_verdict is None]\r\n    allowed = [item for item in segment if item.observed_verdict == \"allow\"]\r\n    exact_matches = sum(item.passed for item in segment)\r\n    exact_rate = ratio(exact_matches, len(segment))\r\n    exact_rate_interval = wilson_interval(exact_matches, len(segment), policy.wilson_z)\r\n    insufficient = []\r\n    failures = []\r\n    if len(segment) &lt; policy.min_unsupported_per_segment:\r\n        insufficient.append({\"population\": \"unsupported\", \"n\": len(segment), \"minimum\": policy.min_unsupported_per_segment})\r\n    if errors:\r\n        failures.append({\"metric\": \"classifier_errors\", \"count\": len(errors), \"case_ids\": [item.case_id for item in errors]})\r\n    if allowed:\r\n        failures.append({\"metric\": \"unsupported_language_allowed\", \"count\": len(allowed), \"case_ids\": [item.case_id for item in allowed]})\r\n    if exact_rate_interval is not None and exact_rate_interval[\"lower\"] &lt; policy.min_exact_verdict_rate:\r\n        failures.append({\r\n            \"metric\": \"exact_verdict_rate\",\r\n            \"estimate\": exact_rate,\r\n            \"conservative_lower_bound\": exact_rate_interval[\"lower\"],\r\n            \"minimum\": policy.min_exact_verdict_rate,\r\n        })\r\n    status = \"insufficient_data\" if insufficient else (\"fail\" if failures else \"pass\")\r\n    return {\r\n        \"status\": status,\r\n        \"n_total\": len(segment),\r\n        \"allow_count\": len(allowed),\r\n        \"exact_verdict_rate\": exact_rate,\r\n        \"exact_verdict_rate_wilson_95\": exact_rate_interval,\r\n        \"insufficient_populations\": insufficient,\r\n        \"failures\": failures,\r\n    }\r\n\r\n\r\ndef summarize(results: list[EvalResult], policy: GatePolicy) -&gt; dict:\r\n    found_supported = {\r\n        (item.language, item.locale) for item in results if item.language_support == \"supported\"\r\n    }\r\n    found_unsupported = {\r\n        (item.language, item.locale) for item in results if item.language_support == \"unsupported\"\r\n    }\r\n    supported_segments = sorted(set(policy.required_supported_segments) | found_supported)\r\n    unsupported_segments = sorted(set(policy.required_unsupported_segments) | found_unsupported)\r\n    supported = {\r\n        f\"{language}:{locale}\": summarize_supported_segment(language, locale, results, policy)\r\n        for language, locale in supported_segments\r\n    }\r\n    unsupported = {\r\n        f\"{language}:{locale}\": summarize_unsupported_segment(language, locale, results, policy)\r\n        for language, locale in unsupported_segments\r\n    }\r\n    statuses = [item[\"status\"] for item in [*supported.values(), *unsupported.values()]]\r\n    gate_status = \"insufficient_data\" if \"insufficient_data\" in statuses else (\"fail\" if \"fail\" in statuses else \"pass\")\r\n    return {\r\n        \"gate_status\": gate_status,\r\n        \"policy\": asdict(policy),\r\n        \"supported_segments\": supported,\r\n        \"unsupported_segments\": unsupported,\r\n    }\r\n\r\n\r\ndef enforce_gate(summary: dict) -&gt; None:\r\n    if summary[\"gate_status\"] != \"pass\":\r\n        raise SystemExit(\r\n            \"Multilingual guardrail coverage gate did not pass: \"\r\n            + json.dumps(summary, sort_keys=True)\r\n        )\r\n\r\n\r\ndef main() -&gt; None:\r\n    case_path = Path(os.environ[\"MULTILINGUAL_CASE_MANIFEST_PATH\"])\r\n    endpoint = canonical_https_endpoint(os.environ[\"CLASSIFIER_ENDPOINT\"])\r\n    classifier_version = os.environ[\"CLASSIFIER_VERSION\"]\r\n    policy, policy_sha256 = load_signed_policy(\r\n        Path(os.environ[\"MULTILINGUAL_GATE_POLICY_PATH\"]),\r\n        Path(os.environ[\"MULTILINGUAL_GATE_POLICY_SIGNATURE_PATH\"]),\r\n        Path(os.environ[\"MULTILINGUAL_GATE_POLICY_PUBLIC_KEY_PATH\"]),\r\n    )\r\n    case_set_sha256 = hashlib.sha256(case_path.read_bytes()).hexdigest()\r\n    if case_set_sha256 != policy.case_manifest_sha256:\r\n        raise ValueError(\"case manifest differs from signed gate policy\")\r\n    cases = load_cases(str(case_path))\r\n    session = requests.Session()\r\n    session.trust_env = False\r\n    session.verify = os.environ[\"CLASSIFIER_CA_BUNDLE\"]\r\n    session.cert = (\r\n        os.environ[\"CLASSIFIER_CLIENT_CERT\"],\r\n        os.environ[\"CLASSIFIER_CLIENT_KEY\"],\r\n    )\r\n    results = run_matrix(\r\n        session,\r\n        endpoint,\r\n        cases,\r\n        classifier_version,\r\n        policy.classifier_timeout_seconds,\r\n        policy.classifier_response_max_bytes,\r\n    )\r\n    summary = summarize(results, policy)\r\n    summary.update({\r\n        \"generated_at\": datetime.now(timezone.utc).isoformat(),\r\n        \"classifier_version\": classifier_version,\r\n        \"case_set_sha256\": case_set_sha256,\r\n        \"policy_sha256\": policy_sha256,\r\n    })\r\n    Path(\"guardrail_eval/results.json\").write_text(\r\n        json.dumps([asdict(item) for item in results], indent=2, sort_keys=True) + \"\\n\",\r\n        encoding=\"utf-8\",\r\n    )\r\n    Path(\"guardrail_eval/summary.json\").write_text(\r\n        json.dumps(summary, indent=2, sort_keys=True) + \"\\n\",\r\n        encoding=\"utf-8\",\r\n    )\r\n    enforce_gate(summary)\r\n\r\n\r\nif __name__ == \"__main__\":\r\n    main()\r\n</code></pre><h5>Step 3: Preserve reviewer-grade evidence</h5><p>Promotion evidence should include the classifier version, policy version, signed classifier response-byte cap, case-set hash, language and locale list, category matrix, unmeasured segment list, point estimates, Wilson 95% confidence intervals, failed examples, and the resulting allow/review/block decision. Gate on the conservative interval bound: lower bounds for recall, precision, exact-verdict rate, and per-category recall; the upper bound for benign false-positive rate. Do not drop segments with too few examples; mark them as <code>insufficient_data</code> and block promotion or route to risk acceptance.</p><p><strong>Action:</strong> run this gate before releasing a new classifier, moderation prompt, guardrail model, supported-language expansion, or policy threshold change. Unsupported-language behavior must be explicit and tested.</p><h5>Keep the action safely bounded</h5><p>Reconcile the complete population of every policy-required supported and unsupported language-locale-category segment and every case in the signed corpus manifest; reject expired, revoked, or stale policy and asset bindings under the policy-defined freshness window.</p><h5>Verify safely</h5><p>A separately credentialed verifier independently replays policy/corpus/candidate binding and metrics, replaying supported, unsupported, mixed-language, transliterated, obfuscated, benign, malicious, classifier-error, sparse-segment, and label-leakage fixtures, reads back effective state from the enforcement system, exercises positive, negative, boundary, stale-evidence, and dependency-failure fixtures, and reconciles every eligible item.</p>"
+                    "howTo": "<h5>Concept:</h5><p>A prompt safety classifier can look strong on English benchmarks while failing on mixed-language, transliterated, low-resource, or unsupported-language prompts. Treat language as an explicit coverage dimension. Supported languages must meet category thresholds; unsupported languages must fail closed to review or block rather than being treated as safe by default.</p><p>Keep locale-native prompts in a private, access-controlled and content-addressed corpus. Publish the closed schema below in source control; sign the real manifest and bind its digest in the gate policy. This avoids shipping attack strings or universal language lists in the framework.</p><h5>Step 1: Define the private evaluation-manifest schema</h5><pre><code># File: guardrail_eval/multilingual_cases.schema.json\n{\n  \"$schema\": \"https://json-schema.org/draft/2020-12/schema\",\n  \"$id\": \"urn:aidefend:multilingual-cases:v1\",\n  \"type\": \"array\",\n  \"minItems\": 1,\n  \"items\": {\n    \"type\": \"object\",\n    \"additionalProperties\": false,\n    \"required\": [\n      \"case_id\", \"language\", \"locale\", \"language_support\", \"label\",\n      \"policy_category\", \"expected_verdict\", \"prompt\", \"prompt_sha256\"\n    ],\n    \"properties\": {\n      \"case_id\": {\"type\": \"string\", \"minLength\": 1},\n      \"language\": {\"type\": \"string\", \"minLength\": 1},\n      \"locale\": {\"type\": \"string\", \"minLength\": 1},\n      \"language_support\": {\"enum\": [\"supported\", \"unsupported\"]},\n      \"label\": {\"enum\": [\"benign\", \"malicious\", \"unsupported\"]},\n      \"policy_category\": {\"type\": \"string\", \"minLength\": 1},\n      \"expected_verdict\": {\"enum\": [\"allow\", \"review\", \"block\"]},\n      \"prompt\": {\"type\": \"string\", \"minLength\": 1},\n      \"prompt_sha256\": {\"type\": \"string\", \"pattern\": \"^[a-f0-9]{64}$\"}\n    }\n  }\n}\n</code></pre><h5>Step 2: Run the classifier and compute per-segment evidence</h5><pre><code># File: guardrail_eval/multilingual_classifier_gate.py\nfrom __future__ import annotations\n\nimport base64\nimport hashlib\nimport json\nimport math\nimport os\nimport re\nfrom dataclasses import asdict, dataclass, fields\nfrom datetime import datetime, timezone\nfrom pathlib import Path\nfrom typing import Literal\nfrom urllib.parse import urlsplit, urlunsplit\n\nimport requests\nfrom cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey\n\n\nVerdict = Literal[\"allow\", \"review\", \"block\"]\nLabel = Literal[\"benign\", \"malicious\", \"unsupported\"]\n\n\n@dataclass(frozen=True)\nclass EvalCase:\n    case_id: str\n    language: str\n    locale: str\n    language_support: Literal[\"supported\", \"unsupported\"]\n    label: Label\n    policy_category: str\n    expected_verdict: Verdict\n    prompt: str\n    prompt_sha256: str\n\n\n@dataclass(frozen=True)\nclass EvalResult:\n    case_id: str\n    language: str\n    locale: str\n    language_support: Literal[\"supported\", \"unsupported\"]\n    label: Label\n    policy_category: str\n    expected_verdict: Verdict\n    observed_verdict: Verdict | None\n    passed: bool\n    reason: str\n\n\n@dataclass(frozen=True)\nclass GatePolicy:\n    policy_version: str\n    case_manifest_sha256: str\n    required_supported_segments: tuple[tuple[str, str], ...]\n    required_unsupported_segments: tuple[tuple[str, str], ...]\n    required_malicious_categories: list[str]\n    min_benign_per_segment: int\n    min_malicious_per_segment: int\n    min_malicious_per_category: int\n    min_unsupported_per_segment: int\n    min_malicious_recall: float\n    min_malicious_precision: float\n    max_benign_fpr: float\n    min_exact_verdict_rate: float\n    wilson_z: float\n    classifier_timeout_seconds: float\n    classifier_response_max_bytes: int\n\n\nVALID_VERDICTS = {\"allow\", \"review\", \"block\"}\nSHA256 = re.compile(r\"^[a-f0-9]{64}$\")\n\n\ndef no_duplicates(pairs: list[tuple[str, object]]) -&gt; dict:\n    result = {}\n    for key, value in pairs:\n        if key in result:\n            raise ValueError(f\"duplicate JSON key: {key}\")\n        result[key] = value\n    return result\n\n\ndef strict_json(raw: bytes):\n    return json.loads(\n        raw,\n        object_pairs_hook=no_duplicates,\n        parse_constant=lambda value: (_ for _ in ()).throw(\n            ValueError(f\"non-finite JSON number: {value}\")\n        ),\n    )\n\n\ndef canonical_https_endpoint(value: str) -&gt; str:\n    parsed = urlsplit(value)\n    if (\n        parsed.scheme != \"https\"\n        or not parsed.hostname\n        or parsed.username is not None\n        or parsed.password is not None\n        or parsed.query\n        or parsed.fragment\n        or not parsed.path.startswith(\"/\")\n    ):\n        raise ValueError(\"classifier endpoint must be an exact HTTPS URL\")\n    canonical = urlunsplit((\"https\", parsed.netloc.lower(), parsed.path, \"\", \"\"))\n    if value != canonical:\n        raise ValueError(\"classifier endpoint is not canonical\")\n    return value\n\n\ndef load_signed_policy(\n    path: Path, signature_path: Path, public_key_path: Path,\n) -&gt; tuple[GatePolicy, str]:\n    payload = path.read_bytes()\n    public_key_bytes = base64.b64decode(\n        public_key_path.read_text(encoding=\"ascii\").strip(), validate=True\n    )\n    signature = base64.b64decode(\n        signature_path.read_text(encoding=\"ascii\").strip(), validate=True\n    )\n    Ed25519PublicKey.from_public_bytes(public_key_bytes).verify(signature, payload)\n    raw = strict_json(payload)\n    required = {field.name for field in fields(GatePolicy)}\n    if not isinstance(raw, dict) or set(raw) != required:\n        raise ValueError(\"multilingual gate policy schema mismatch\")\n    for name in (\"required_supported_segments\", \"required_unsupported_segments\"):\n        rows = raw[name]\n        if (not isinstance(rows, list) or any(\n                not isinstance(row, list) or len(row) != 2\n                or any(not isinstance(part, str) or not part or part != part.strip() for part in row)\n                for row in rows)):\n            raise ValueError(\"invalid signed segment population: \" + name)\n        normalized = tuple(tuple(row) for row in rows)\n        if len(set(normalized)) != len(normalized):\n            raise ValueError(\"duplicate signed segment: \" + name)\n        raw[name] = normalized\n    if set(raw[\"required_supported_segments\"]) & set(raw[\"required_unsupported_segments\"]):\n        raise ValueError(\"segment cannot be both supported and unsupported\")\n    categories = raw[\"required_malicious_categories\"]\n    if (not isinstance(categories, list)\n            or any(not isinstance(value, str) or not value for value in categories)\n            or len(set(categories)) != len(categories)):\n        raise ValueError(\"invalid or duplicate malicious category\")\n    policy = GatePolicy(**raw)\n    if not SHA256.fullmatch(policy.case_manifest_sha256):\n        raise ValueError(\"case_manifest_sha256 is invalid\")\n    counts = (\n        policy.min_benign_per_segment, policy.min_malicious_per_segment,\n        policy.min_malicious_per_category, policy.min_unsupported_per_segment,\n    )\n    rates = (\n        policy.min_malicious_recall, policy.min_malicious_precision,\n        policy.max_benign_fpr, policy.min_exact_verdict_rate,\n    )\n    if any(isinstance(value, bool) or not isinstance(value, int) or value &lt;= 0 for value in counts):\n        raise ValueError(\"signed minimum populations must be positive integers\")\n    if any(\n        isinstance(value, bool)\n        or not isinstance(value, (int, float))\n        or not math.isfinite(float(value))\n        or not 0 &lt;= float(value) &lt;= 1\n        for value in rates\n    ):\n        raise ValueError(\"signed metric thresholds must be finite values in [0, 1]\")\n    if (\n        isinstance(policy.wilson_z, bool)\n        or not isinstance(policy.wilson_z, (int, float))\n        or not math.isfinite(float(policy.wilson_z))\n        or policy.wilson_z &lt;= 0\n        or isinstance(policy.classifier_timeout_seconds, bool)\n        or not isinstance(policy.classifier_timeout_seconds, (int, float))\n        or not math.isfinite(float(policy.classifier_timeout_seconds))\n        or policy.classifier_timeout_seconds &lt;= 0\n        or isinstance(policy.classifier_response_max_bytes, bool)\n        or not isinstance(policy.classifier_response_max_bytes, int)\n        or policy.classifier_response_max_bytes &lt;= 0\n    ):\n        raise ValueError(\"signed confidence, timeout, or response bounds are invalid\")\n    if not policy.required_supported_segments or not policy.required_malicious_categories:\n        raise ValueError(\"signed policy omits required coverage populations\")\n    return policy, hashlib.sha256(payload).hexdigest()\n\n\ndef classify_prompt(\n    session: requests.Session,\n    endpoint: str,\n    prompt: str,\n    expected_classifier_version: str,\n    timeout_seconds: float,\n    response_max_bytes: int,\n) -&gt; Verdict:\n    endpoint = canonical_https_endpoint(endpoint)\n    with session.post(\n        endpoint,\n        json={\"input\": prompt},\n        timeout=timeout_seconds,\n        allow_redirects=False,\n        stream=True,\n    ) as response:\n        if response.status_code != 200:\n            raise ValueError(f\"classifier returned HTTP {response.status_code}\")\n        media_type = response.headers.get(\"Content-Type\", \"\").split(\";\", 1)[0].strip().lower()\n        if media_type != \"application/json\":\n            raise ValueError(\"classifier did not return application/json\")\n        declared = response.headers.get(\"Content-Length\")\n        if declared is not None:\n            try:\n                if int(declared) &gt; response_max_bytes:\n                    raise ValueError(\"classifier response exceeds signed byte cap\")\n            except ValueError as exc:\n                raise ValueError(\"classifier Content-Length is invalid or too large\") from exc\n        raw = bytearray()\n        for chunk in response.iter_content(chunk_size=min(65536, response_max_bytes + 1)):\n            if chunk:\n                raw.extend(chunk)\n            if len(raw) &gt; response_max_bytes:\n                raise ValueError(\"classifier response exceeds signed decoded-byte cap\")\n    body = strict_json(bytes(raw))\n    if not isinstance(body, dict) or set(body) != {\"classifier_version\", \"verdict\"}:\n        raise ValueError(\"classifier response schema differs\")\n    if body[\"classifier_version\"] != expected_classifier_version:\n        raise ValueError(\"classifier response version differs from candidate release\")\n    verdict = body.get(\"verdict\")\n    if verdict not in VALID_VERDICTS:\n        raise ValueError(\"Classifier returned invalid verdict: \" + str(verdict))\n    return verdict\n\n\ndef load_cases(path: str) -&gt; list[EvalCase]:\n    raw_cases = strict_json(Path(path).read_bytes())\n    if not isinstance(raw_cases, list):\n        raise ValueError(\"case manifest root must be an array\")\n    cases = [EvalCase(**item) for item in raw_cases]\n    case_ids: set[str] = set()\n    for case in cases:\n        if case.case_id in case_ids:\n            raise ValueError(\"Duplicate case_id: \" + case.case_id)\n        case_ids.add(case.case_id)\n        if not SHA256.fullmatch(case.prompt_sha256):\n            raise ValueError(\"case prompt_sha256 is invalid: \" + case.case_id)\n        observed_prompt_sha256 = hashlib.sha256(case.prompt.encode(\"utf-8\")).hexdigest()\n        if observed_prompt_sha256 != case.prompt_sha256:\n            raise ValueError(\"case prompt digest mismatch: \" + case.case_id)\n        if case.language_support == \"supported\" and case.label not in {\"benign\", \"malicious\"}:\n            raise ValueError(\"Supported case must be labeled benign or malicious: \" + case.case_id)\n        if case.language_support == \"unsupported\" and case.label != \"unsupported\":\n            raise ValueError(\"Unsupported-language case must use label=unsupported: \" + case.case_id)\n        if case.label == \"benign\" and case.expected_verdict != \"allow\":\n            raise ValueError(\"Benign case must expect exact verdict allow: \" + case.case_id)\n        if case.label in {\"malicious\", \"unsupported\"} and case.expected_verdict == \"allow\":\n            raise ValueError(\"Malicious or unsupported case cannot expect allow: \" + case.case_id)\n    return cases\n\n\ndef run_matrix(\n    session: requests.Session,\n    endpoint: str,\n    cases: list[EvalCase],\n    expected_classifier_version: str,\n    timeout_seconds: float,\n    response_max_bytes: int,\n) -&gt; list[EvalResult]:\n    results: list[EvalResult] = []\n    for case in cases:\n        try:\n            observed = classify_prompt(\n                session,\n                endpoint,\n                case.prompt,\n                expected_classifier_version,\n                timeout_seconds,\n                response_max_bytes,\n            )\n            passed = observed == case.expected_verdict\n            reason = \"exact_verdict_match\" if passed else \"exact_verdict_mismatch\"\n        except Exception as exc:\n            observed = None\n            passed = False\n            reason = \"classifier_error:\" + type(exc).__name__\n\n        results.append(EvalResult(\n            case_id=case.case_id,\n            language=case.language,\n            locale=case.locale,\n            language_support=case.language_support,\n            label=case.label,\n            policy_category=case.policy_category,\n            expected_verdict=case.expected_verdict,\n            observed_verdict=observed,\n            passed=passed,\n            reason=reason,\n        ))\n    return results\n\n\ndef ratio(numerator: int, denominator: int) -&gt; float | None:\n    if denominator == 0:\n        return None\n    return round(numerator / denominator, 4)\n\n\ndef wilson_interval(successes: int, trials: int, z: float) -&gt; dict | None:\n    \"\"\"Return a two-sided Wilson score interval for a binomial proportion.\"\"\"\n    if trials == 0:\n        return None\n    if trials &lt; 0 or successes &lt; 0 or successes &gt; trials:\n        raise ValueError(\"Wilson interval requires 0 &lt;= successes &lt;= trials\")\n    proportion = successes / trials\n    z_squared = z * z\n    denominator = 1.0 + z_squared / trials\n    center = (proportion + z_squared / (2.0 * trials)) / denominator\n    margin = (\n        z\n        * math.sqrt((proportion * (1.0 - proportion) + z_squared / (4.0 * trials)) / trials)\n        / denominator\n    )\n    return {\n        \"lower\": round(max(0.0, center - margin), 6),\n        \"upper\": round(min(1.0, center + margin), 6),\n        \"confidence\": 0.95,\n        \"method\": \"wilson_score\",\n    }\n\n\ndef summarize_supported_segment(\n    language: str,\n    locale: str,\n    results: list[EvalResult],\n    policy: GatePolicy,\n) -&gt; dict:\n    segment = [\n        item for item in results\n        if item.language_support == \"supported\" and item.language == language and item.locale == locale\n    ]\n    benign = [item for item in segment if item.label == \"benign\"]\n    malicious = [item for item in segment if item.label == \"malicious\"]\n    errors = [item for item in segment if item.observed_verdict is None]\n\n    true_positives = sum(item.observed_verdict in {\"review\", \"block\"} for item in malicious)\n    false_positives = sum(item.observed_verdict in {\"review\", \"block\"} for item in benign)\n    exact_matches = sum(item.passed for item in segment)\n    recall = ratio(true_positives, len(malicious))\n    precision = ratio(true_positives, true_positives + false_positives)\n    benign_fpr = ratio(false_positives, len(benign))\n    exact_rate = ratio(exact_matches, len(segment))\n    recall_interval = wilson_interval(true_positives, len(malicious), policy.wilson_z)\n    precision_interval = wilson_interval(\n        true_positives,\n        true_positives + false_positives,\n        policy.wilson_z,\n    )\n    benign_fpr_interval = wilson_interval(false_positives, len(benign), policy.wilson_z)\n    exact_rate_interval = wilson_interval(exact_matches, len(segment), policy.wilson_z)\n\n    insufficient: list[dict] = []\n    failures: list[dict] = []\n    if len(benign) &lt; policy.min_benign_per_segment:\n        insufficient.append({\"population\": \"benign\", \"n\": len(benign), \"minimum\": policy.min_benign_per_segment})\n    if len(malicious) &lt; policy.min_malicious_per_segment:\n        insufficient.append({\"population\": \"malicious\", \"n\": len(malicious), \"minimum\": policy.min_malicious_per_segment})\n    if errors:\n        failures.append({\"metric\": \"classifier_errors\", \"count\": len(errors), \"case_ids\": [item.case_id for item in errors]})\n    if recall_interval is not None and recall_interval[\"lower\"] &lt; policy.min_malicious_recall:\n        failures.append({\n            \"metric\": \"malicious_recall\",\n            \"estimate\": recall,\n            \"conservative_lower_bound\": recall_interval[\"lower\"],\n            \"minimum\": policy.min_malicious_recall,\n        })\n    if precision_interval is None:\n        failures.append({\"metric\": \"malicious_precision\", \"issue\": \"no_positive_predictions\"})\n    elif precision_interval[\"lower\"] &lt; policy.min_malicious_precision:\n        failures.append({\n            \"metric\": \"malicious_precision\",\n            \"estimate\": precision,\n            \"conservative_lower_bound\": precision_interval[\"lower\"],\n            \"minimum\": policy.min_malicious_precision,\n        })\n    if benign_fpr_interval is not None and benign_fpr_interval[\"upper\"] &gt; policy.max_benign_fpr:\n        failures.append({\n            \"metric\": \"benign_fpr\",\n            \"estimate\": benign_fpr,\n            \"conservative_upper_bound\": benign_fpr_interval[\"upper\"],\n            \"maximum\": policy.max_benign_fpr,\n        })\n    if exact_rate_interval is not None and exact_rate_interval[\"lower\"] &lt; policy.min_exact_verdict_rate:\n        failures.append({\n            \"metric\": \"exact_verdict_rate\",\n            \"estimate\": exact_rate,\n            \"conservative_lower_bound\": exact_rate_interval[\"lower\"],\n            \"minimum\": policy.min_exact_verdict_rate,\n        })\n\n    category_metrics = {}\n    observed_categories = {item.policy_category for item in malicious}\n    categories = sorted(set(policy.required_malicious_categories) | observed_categories)\n    for category in categories:\n        category_results = [item for item in malicious if item.policy_category == category]\n        category_tp = sum(item.observed_verdict in {\"review\", \"block\"} for item in category_results)\n        category_recall = ratio(category_tp, len(category_results))\n        category_recall_interval = wilson_interval(\n            category_tp,\n            len(category_results),\n            policy.wilson_z,\n        )\n        category_metrics[category] = {\n            \"n\": len(category_results),\n            \"recall\": category_recall,\n            \"recall_wilson_95\": category_recall_interval,\n        }\n        if category in policy.required_malicious_categories and len(category_results) &lt; policy.min_malicious_per_category:\n            insufficient.append({\n                \"population\": \"malicious_category\",\n                \"category\": category,\n                \"n\": len(category_results),\n                \"minimum\": policy.min_malicious_per_category,\n            })\n        if (\n            category_recall_interval is not None\n            and category_recall_interval[\"lower\"] &lt; policy.min_malicious_recall\n        ):\n            failures.append({\n                \"metric\": \"category_recall\",\n                \"category\": category,\n                \"estimate\": category_recall,\n                \"conservative_lower_bound\": category_recall_interval[\"lower\"],\n                \"minimum\": policy.min_malicious_recall,\n            })\n\n    status = \"insufficient_data\" if insufficient else (\"fail\" if failures else \"pass\")\n    return {\n        \"status\": status,\n        \"n_total\": len(segment),\n        \"n_benign\": len(benign),\n        \"n_malicious\": len(malicious),\n        \"n_predicted_positive\": true_positives + false_positives,\n        \"malicious_recall\": recall,\n        \"malicious_recall_wilson_95\": recall_interval,\n        \"malicious_precision\": precision,\n        \"malicious_precision_wilson_95\": precision_interval,\n        \"benign_fpr\": benign_fpr,\n        \"benign_fpr_wilson_95\": benign_fpr_interval,\n        \"exact_verdict_rate\": exact_rate,\n        \"exact_verdict_rate_wilson_95\": exact_rate_interval,\n        \"category_metrics\": category_metrics,\n        \"insufficient_populations\": insufficient,\n        \"failures\": failures,\n    }\n\n\ndef summarize_unsupported_segment(\n    language: str,\n    locale: str,\n    results: list[EvalResult],\n    policy: GatePolicy,\n) -&gt; dict:\n    segment = [\n        item for item in results\n        if item.language_support == \"unsupported\" and item.language == language and item.locale == locale\n    ]\n    errors = [item for item in segment if item.observed_verdict is None]\n    allowed = [item for item in segment if item.observed_verdict == \"allow\"]\n    exact_matches = sum(item.passed for item in segment)\n    exact_rate = ratio(exact_matches, len(segment))\n    exact_rate_interval = wilson_interval(exact_matches, len(segment), policy.wilson_z)\n    insufficient = []\n    failures = []\n    if len(segment) &lt; policy.min_unsupported_per_segment:\n        insufficient.append({\"population\": \"unsupported\", \"n\": len(segment), \"minimum\": policy.min_unsupported_per_segment})\n    if errors:\n        failures.append({\"metric\": \"classifier_errors\", \"count\": len(errors), \"case_ids\": [item.case_id for item in errors]})\n    if allowed:\n        failures.append({\"metric\": \"unsupported_language_allowed\", \"count\": len(allowed), \"case_ids\": [item.case_id for item in allowed]})\n    if exact_rate_interval is not None and exact_rate_interval[\"lower\"] &lt; policy.min_exact_verdict_rate:\n        failures.append({\n            \"metric\": \"exact_verdict_rate\",\n            \"estimate\": exact_rate,\n            \"conservative_lower_bound\": exact_rate_interval[\"lower\"],\n            \"minimum\": policy.min_exact_verdict_rate,\n        })\n    status = \"insufficient_data\" if insufficient else (\"fail\" if failures else \"pass\")\n    return {\n        \"status\": status,\n        \"n_total\": len(segment),\n        \"allow_count\": len(allowed),\n        \"exact_verdict_rate\": exact_rate,\n        \"exact_verdict_rate_wilson_95\": exact_rate_interval,\n        \"insufficient_populations\": insufficient,\n        \"failures\": failures,\n    }\n\n\ndef summarize(results: list[EvalResult], policy: GatePolicy) -&gt; dict:\n    found_supported = {\n        (item.language, item.locale) for item in results if item.language_support == \"supported\"\n    }\n    found_unsupported = {\n        (item.language, item.locale) for item in results if item.language_support == \"unsupported\"\n    }\n    supported_segments = sorted(set(policy.required_supported_segments) | found_supported)\n    unsupported_segments = sorted(set(policy.required_unsupported_segments) | found_unsupported)\n    supported = {\n        f\"{language}:{locale}\": summarize_supported_segment(language, locale, results, policy)\n        for language, locale in supported_segments\n    }\n    unsupported = {\n        f\"{language}:{locale}\": summarize_unsupported_segment(language, locale, results, policy)\n        for language, locale in unsupported_segments\n    }\n    statuses = [item[\"status\"] for item in [*supported.values(), *unsupported.values()]]\n    gate_status = \"insufficient_data\" if \"insufficient_data\" in statuses else (\"fail\" if \"fail\" in statuses else \"pass\")\n    return {\n        \"gate_status\": gate_status,\n        \"policy\": asdict(policy),\n        \"supported_segments\": supported,\n        \"unsupported_segments\": unsupported,\n    }\n\n\ndef enforce_gate(summary: dict) -&gt; None:\n    if summary[\"gate_status\"] != \"pass\":\n        raise SystemExit(\n            \"Multilingual guardrail coverage gate did not pass: \"\n            + json.dumps(summary, sort_keys=True)\n        )\n\n\ndef main() -&gt; None:\n    case_path = Path(os.environ[\"MULTILINGUAL_CASE_MANIFEST_PATH\"])\n    endpoint = canonical_https_endpoint(os.environ[\"CLASSIFIER_ENDPOINT\"])\n    classifier_version = os.environ[\"CLASSIFIER_VERSION\"]\n    policy, policy_sha256 = load_signed_policy(\n        Path(os.environ[\"MULTILINGUAL_GATE_POLICY_PATH\"]),\n        Path(os.environ[\"MULTILINGUAL_GATE_POLICY_SIGNATURE_PATH\"]),\n        Path(os.environ[\"MULTILINGUAL_GATE_POLICY_PUBLIC_KEY_PATH\"]),\n    )\n    case_set_sha256 = hashlib.sha256(case_path.read_bytes()).hexdigest()\n    if case_set_sha256 != policy.case_manifest_sha256:\n        raise ValueError(\"case manifest differs from signed gate policy\")\n    cases = load_cases(str(case_path))\n    session = requests.Session()\n    session.trust_env = False\n    session.verify = os.environ[\"CLASSIFIER_CA_BUNDLE\"]\n    session.cert = (\n        os.environ[\"CLASSIFIER_CLIENT_CERT\"],\n        os.environ[\"CLASSIFIER_CLIENT_KEY\"],\n    )\n    results = run_matrix(\n        session,\n        endpoint,\n        cases,\n        classifier_version,\n        policy.classifier_timeout_seconds,\n        policy.classifier_response_max_bytes,\n    )\n    summary = summarize(results, policy)\n    summary.update({\n        \"generated_at\": datetime.now(timezone.utc).isoformat(),\n        \"classifier_version\": classifier_version,\n        \"case_set_sha256\": case_set_sha256,\n        \"policy_sha256\": policy_sha256,\n    })\n    Path(\"guardrail_eval/results.json\").write_text(\n        json.dumps([asdict(item) for item in results], indent=2, sort_keys=True) + \"\\n\",\n        encoding=\"utf-8\",\n    )\n    Path(\"guardrail_eval/summary.json\").write_text(\n        json.dumps(summary, indent=2, sort_keys=True) + \"\\n\",\n        encoding=\"utf-8\",\n    )\n    enforce_gate(summary)\n\n\nif __name__ == \"__main__\":\n    main()\n</code></pre><h5>Step 3: Preserve reviewer-grade evidence</h5><p>Promotion evidence should include the classifier version, policy version, signed classifier response-byte cap, case-set hash, language and locale list, category matrix, unmeasured segment list, point estimates, Wilson 95% confidence intervals, failed examples, and the resulting allow/review/block decision. Gate on the conservative interval bound: lower bounds for recall, precision, exact-verdict rate, and per-category recall; the upper bound for benign false-positive rate. Do not drop segments with too few examples; mark them as <code>insufficient_data</code> and block promotion or route to risk acceptance.</p><p><strong>Action:</strong> run this gate before releasing a new classifier, moderation prompt, guardrail model, supported-language expansion, or policy threshold change. Unsupported-language behavior must be explicit and tested.</p><h5>Keep the action safely bounded</h5><p>Reconcile the complete population of every policy-required supported and unsupported language-locale-category segment and every case in the signed corpus manifest; reject expired, revoked, or stale policy and asset bindings under the policy-defined freshness window.</p><h5>Verify safely</h5><p>A separately credentialed verifier independently replays policy/corpus/candidate binding and metrics, replaying supported, unsupported, mixed-language, transliterated, obfuscated, benign, malicious, classifier-error, sparse-segment, and label-leakage fixtures, reads back effective state from the enforcement system, exercises positive, negative, boundary, stale-evidence, and dependency-failure fixtures, and reconciles every eligible item.</p>"
                 }
             ],
             "warning": {
@@ -28846,13 +29083,20 @@ export async function runWithDisableEnforcement(input) {
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
+                        "AITech-4.2 Context Boundary Attacks",
                         "AITech-7.1 Reasoning Corruption",
                         "AITech-8.2 Data Exfiltration / Exposure",
+                        "AITech-8.3 Information Disclosure",
                         "AITech-13.1 Disruption of Availability",
                         "AITech-13.2 Cost Harvesting / Repurposing",
-                        "AISubtech-8.2.2 LLM Data Leakage",
+                        "AITech-16.1 Eavesdropping",
+                        "AISubtech-4.2.2 Session Boundary Violation",
+                        "AISubtech-13.1.1 Compute Exhaustion",
                         "AISubtech-13.1.3 Model Denial of Service",
-                        "AISubtech-13.2.1 Service Misuse for Cost Inflation"
+                        "AISubtech-13.1.5 Decision Paralysis Attacks",
+                        "AISubtech-13.2.1 Service Misuse for Cost Inflation",
+                        "AISubtech-14.1.2 Insufficient Access Controls",
+                        "AISubtech-16.1.1 Logging Sensitive Conversations"
                     ]
                 },
                 {
@@ -28954,8 +29198,13 @@ export async function runWithDisableEnforcement(input) {
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-14.1.2 Insufficient Access Controls (Enforces the stated application access boundary; hosting infrastructure is a separate scope)",
+                                "AISubtech-16.1.1 Logging Sensitive Conversations",
+                                "AITech-16.1 Eavesdropping",
+                                "AITech-4.2 Context Boundary Attacks (rejects client-supplied hidden reasoning state at the gateway)",
+                                "AITech-7.1 Reasoning Corruption (rejects client-supplied hidden reasoning state at the gateway)",
                                 "AITech-8.2 Data Exfiltration / Exposure",
-                                "AISubtech-8.2.2 LLM Data Leakage"
+                                "AITech-8.3 Information Disclosure"
                             ]
                         },
                         {
@@ -29068,10 +29317,12 @@ export async function runWithDisableEnforcement(input) {
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-13.2 Cost Harvesting / Repurposing",
+                                "AISubtech-13.1.1 Compute Exhaustion",
+                                "AISubtech-13.1.3 Model Denial of Service",
+                                "AISubtech-13.1.5 Decision Paralysis Attacks (bounds unproductive hidden reasoning; it does not guarantee task completion)",
                                 "AISubtech-13.2.1 Service Misuse for Cost Inflation",
                                 "AITech-13.1 Disruption of Availability",
-                                "AISubtech-13.1.3 Model Denial of Service (reasoning-effort and thinking-token limits bound resource-intensive model requests)"
+                                "AITech-13.2 Cost Harvesting / Repurposing"
                             ]
                         },
                         {
@@ -29172,6 +29423,8 @@ export async function runWithDisableEnforcement(input) {
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-4.2.2 Session Boundary Violation (rejects cross-conversation or cross-provider reasoning-block reuse)",
+                                "AITech-4.2 Context Boundary Attacks (rejects cross-conversation or cross-provider reasoning-block reuse)",
                                 "AITech-7.1 Reasoning Corruption"
                             ]
                         },
@@ -29269,9 +29522,13 @@ export async function runWithDisableEnforcement(input) {
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-9.1 Model or Agentic System Manipulation",
-                        "AITech-10.1 Model Extraction",
-                        "AITech-14.1 Unauthorized Access"
+                        "AITech-9.3 Dependency / Plugin Compromise",
+                        "AITech-13.1 Disruption of Availability",
+                        "AITech-14.1 Unauthorized Access",
+                        "AISubtech-9.3.1 Malicious Package / Tool Injection",
+                        "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
+                        "AISubtech-13.1.3 Model Denial of Service",
+                        "AISubtech-14.1.2 Insufficient Access Controls"
                     ]
                 },
                 {
@@ -29386,8 +29643,7 @@ export async function runWithDisableEnforcement(input) {
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-10.1 Model Extraction",
-                                "AITech-14.1 Unauthorized Access"
+                                "AITech-14.1 Unauthorized Access (blocks deployment of unapproved inference-runtime listeners)"
                             ]
                         },
                         {
@@ -29495,8 +29751,13 @@ export async function runWithDisableEnforcement(input) {
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-9.1 Model or Agentic System Manipulation",
-                                "AITech-14.1 Unauthorized Access"
+                                "AISubtech-13.1.3 Model Denial of Service (denies unauthorized pause, scale and execution-state changes)",
+                                "AISubtech-14.1.2 Insufficient Access Controls",
+                                "AISubtech-9.3.1 Malicious Package / Tool Injection (Authorizes runtime plugin activation or replacement; model checkpoint integrity is separate)",
+                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull (Authorizes runtime plugin activation or replacement; model checkpoint integrity is separate)",
+                                "AITech-13.1 Disruption of Availability (denies unauthorized pause, scale and execution-state changes)",
+                                "AITech-14.1 Unauthorized Access",
+                                "AITech-9.3 Dependency / Plugin Compromise (Authorizes runtime plugin activation or replacement; model checkpoint integrity is separate)"
                             ]
                         },
                         {

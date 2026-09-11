@@ -145,7 +145,7 @@
                                 <option value="owasp-ml">OWASP ML Top 10 (2023)</option>
                                 <option value="owasp-agentic">OWASP Top 10 for Agentic Applications 2026</option>
                                 <option value="nist" data-short="NIST Adversarial ML (2025)" data-full="NIST Adversarial Machine Learning (AI 100-2 E2025)">NIST Adversarial Machine Learning (AI 100-2 E2025)</option>
-                                <option value="cisco" data-short="Cisco AI Security &amp; Safety Framework" data-full="Cisco Integrated AI Security &amp; Safety Framework">Cisco Integrated AI Security & Safety Framework</option>
+                                <option value="cisco" data-short="Cisco AI Security &amp; Safety v2.0" data-full="Cisco Integrated AI Security &amp; Safety Framework v2.0">Cisco Integrated AI Security & Safety Framework v2.0</option>
                                 <option value="saif">Google Secure AI Framework 2.0 - Risks</option>
                                 <option value="dasf">Databricks AI Security Framework 3.0</option>
                             </select>
@@ -175,7 +175,7 @@
                     <p>AIDEFEND™ is a structured knowledge base of defensive countermeasures for securing AI and ML systems.
                        It provides cross-mapped coverage across industry-leading frameworks including
                        MITRE ATLAS, OWASP Top 10 for LLM, ML, and Agentic Applications, MAESTRO, NIST Adversarial ML, and
-                       the Cisco AI Security &amp; Safety Framework.</p>
+                       the Cisco AI Security &amp; Safety Framework v2.0.</p>
                     <p>Defensive techniques span the full security lifecycle — from threat modeling and preventive hardening,
                        through runtime detection and containment, to incident response and recovery — organized to help
                        security architects and CISOs identify gaps and build layered AI defense strategies.</p>
@@ -221,7 +221,7 @@
                 2023</a>/<a href="https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/" target="_blank"
                 rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">Agentic
                 2026</a>, <a href="https://learn-cloudsecurity.cisco.com/ai-security-framework" target="_blank"
-                rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">Cisco AI Security & Safety Framework</a>, <a
+                rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">Cisco AI Security & Safety Framework v2.0</a>, <a
                 href="https://csrc.nist.gov/pubs/ai/100/2/e2025/final" target="_blank"
                 rel="noopener noreferrer" class="text-sky-600 dark:text-sky-400 hover:underline">NIST AML 2025</a>, and <a
                 href="https://www.databricks.com/resources/whitepaper/databricks-ai-security-framework-dasf" target="_blank"
@@ -238,6 +238,7 @@
     </footer>
     <script type="module">
         import { frameworkMigrations } from './framework-migrations.js';
+        import { ciscoFramework } from './cisco-framework.js';
 
         // Two-phase rendering: load lightweight index first, then full data in background
         let aidefendData = null;
@@ -1516,33 +1517,8 @@
                     }
                 },
                 'cisco': {
-                    frameworkKey: 'Cisco Integrated AI Security and Safety Framework',
-                    label: 'Cisco AI Security & Safety Framework',
-                    pageTitle: 'Cisco Integrated AI Security & Safety Framework',
-                    about: 'A structured framework addressing security and safety considerations across the AI lifecycle, from development to deployment, published by Cisco.',
-                    url: 'https://learn-cloudsecurity.cisco.com/ai-security-framework',
+                    ...ciscoFramework,
                     layout: 'accordion',
-                    groups: [
-                        { key: '1', name: 'OB-001 – Goal Hijacking', description: 'Attacks where adversaries manipulate AI system directives, override intended behavior, or redirect models toward attacker-defined objectives. This includes direct and indirect prompt injection, goal manipulation, and multi-modal injection techniques.' },
-                        { key: '2', name: 'OB-002 – Jailbreak', description: 'Techniques to bypass safety constraints, content filters, or alignment mechanisms to force generation of restricted outputs. Includes context manipulation, obfuscation, semantic manipulation, token exploitation, and multi-agent collaboration.' },
-                        { key: '3', name: 'OB-003 – Masquerading / Obfuscation / Impersonation', description: 'Attacks involving false identity assumption, credential spoofing, or deceptive representation within AI systems. Includes identity obfuscation and trusted agent spoofing.' },
-                        { key: '4', name: 'OB-004 – Communication Compromise', description: 'Interception, alteration, or impersonation of communications between AI systems and users; man-in-the-middle attacks on agent communications. Includes agent injection, context boundary attacks, and protocol manipulation.' },
-                        { key: '5', name: 'OB-005 – Persistence', description: 'Establishing long-term presence or capability to maintain access within AI systems through memory or configuration manipulation. Includes memory system persistence and configuration persistence.' },
-                        { key: '6', name: 'OB-006 – Feedback Loop Manipulation', description: 'Corrupting training data, reinforcement signals, or model update mechanisms to degrade system performance or introduce bias. Includes knowledge base poisoning, reinforcement biasing, and signal corruption.' },
-                        { key: '7', name: 'OB-007 – Sabotage / Integrity Degradation', description: 'Deliberate corruption of reasoning, memory systems, data sources, or tokens to degrade AI system functionality or reliability. Includes reasoning corruption, memory system corruption, data source abuse, and token manipulation.' },
-                        { key: '8', name: 'OB-008 – Data Privacy Violations', description: 'Unauthorized access to, inference of, or exposure of private or sensitive information processed by AI systems. Includes membership inference, data exfiltration, information disclosure, and prompt extraction.' },
-                        { key: '9', name: 'OB-009 – Supply Chain Compromise', description: 'Manipulation of models, dependencies, build pipelines, or artifacts to introduce backdoors or malicious behavior. Includes code execution, system access, injection attacks, and dependency compromise.' },
-                        { key: '10', name: 'OB-010 – Model Theft / Extraction', description: 'Unauthorized replication or reconstruction of model weights, parameters, or sensitive training data through API queries or inference. Includes API query stealing, weight reconstruction, and model inversion.' },
-                        { key: '11', name: 'OB-011 – Adversarial Evasion', description: 'Environment-aware or model-selective attacks designed to evade detection systems or defensive mechanisms. Includes agent-specific evasion, tool-scoped evasion, environment-scoped payloads, and defense-aware payloads.' },
-                        { key: '12', name: 'OB-012 – Action-Space and Integration Abuse', description: 'Exploitation of tool integration, parameter manipulation, or insecure output handling to cause unintended system behavior. Includes parameter manipulation, tool poisoning, unsafe execution, and tool shadowing.' },
-                        { key: '13', name: 'OB-013 – Availability Abuse', description: 'Attacks targeting system availability through resource exhaustion, denial of service, or cost harvesting. Includes compute exhaustion, memory flooding, model DoS, application DoS, and decision paralysis.' },
-                        { key: '14', name: 'OB-014 – Privilege Compromise', description: 'Unauthorized access or escalation of privileges within AI systems or associated infrastructure. Includes credential theft, insufficient access controls, and permission escalation via delegation.' },
-                        { key: '15', name: 'OB-015 – Harmful / Misleading / Inaccurate Content', description: 'Generation of dangerous, deceptive, or unreliable outputs including malware, abuse, disinformation, or privacy violations. Covers categories of harmful content across cybersecurity, safety, integrity, IP, and privacy domains.' },
-                        { key: '16', name: 'OB-016 – Surveillance', description: 'Unauthorized monitoring, eavesdropping, or logging of sensitive conversations or system interactions. Includes logging sensitive conversations without consent.' },
-                        { key: '17', name: 'OB-017 – Cyber-Physical / Sensor Attacks', description: 'Manipulation of sensor inputs or physical-world signals to deceive AI systems controlling physical infrastructure. Includes spoofing of audio or visual action signals.' },
-                        { key: '18', name: 'OB-018 – System Misuse / Malicious Application', description: 'Fraudulent, spammy, or malicious use of AI systems for mass automation, social engineering, or infrastructure abuse. Includes spam/scam generation and API abuse for mass automation.' },
-                        { key: '19', name: 'OB-019 – Multi-Modal / Cross-Modal Risks', description: 'Exploits targeting inconsistencies between modalities or leveraging modality fusion for coordinated attacks. Includes contradictory inputs, modality skewing, convergence payload injection, and chained payload execution.' }
-                    ],
                     parseGroup(item) {
                         const m = item.match(/AI(?:Tech|Subtech)-(\d+)\./);
                         return m ? m[1] : null;
@@ -3050,8 +3026,10 @@
                 const fwData = frameworkViews[currentFramework] || {};
                 const filteredIds = getFilteredTechniqueIds(searchTerm);
 
-                // Check for zero results
-                if (searchTerm && filteredIds.size === 0) {
+                // Only actual mappings in this framework can produce results.
+                const hasMappedResults = Object.values(fwData).some(controls =>
+                    controls.some(control => !searchTerm || filteredIds.has(control.id)));
+                if (searchTerm && !hasMappedResults) {
                     elements.mainContent.appendChild(createElement('p', {
                         className: 'text-center text-gray-500 dark:text-gray-400 py-10',
                         textContent: `No techniques found matching "${searchTerm}".`
@@ -3077,11 +3055,18 @@
                     elements.mainContent.appendChild(briefEl);
                 }
 
+                elements.mainContent.appendChild(createElement('p', {
+                    className: 'fw-page-brief',
+                    textContent: 'Counts show distinct actionable controls. Parent families remain available in the Tactics view.'
+                }));
+
                 // All frameworks use accordion layout
                 const container = createElement('div', { className: 'fw-accordion-container' });
                 // Helper: build an accordion header row
                 function buildAccordionHeader(group, techs, cfg) {
                     const header = createElement('div', { className: 'fw-accordion-header' });
+                    header.dataset.frameworkGroup = group.key;
+                    header.setAttribute('title', `${techs.length} actionable controls`);
                     header.setAttribute('aria-expanded', 'false');
                     const headerLeft = createElement('div', { className: 'fw-accordion-header-left' });
                     const dashIdx = group.name.indexOf(' \u2013 ');
@@ -3101,7 +3086,12 @@
 
                 // Helper: build toggle bar + grouped body inside an accordion body
                 function buildAccordionBodyContent(body, section, techniquesToRender, groupName, filteredIds2, searchTerm2, parentBody, groupObj) {
-                    // Description data kept in groupObj for future use; visual display removed
+                    if (currentFramework === 'cisco' && groupObj?.description) {
+                        body.appendChild(createElement('p', {
+                            className: 'fw-objective-summary',
+                            textContent: groupObj.description
+                        }));
+                    }
                     if (techniquesToRender.length === 0) return;
                     const toggleBar = createElement('div', { className: 'fw-group-toggle' });
                     const modes = [
@@ -3138,16 +3128,23 @@
                 config.groups.forEach(group => {
                     // ── Hierarchical rendering (objectives → nested techniques) ──
                     if (group.children && config.techniqueGroups) {
-                        // Sum technique counts across all child groups (consistent with flat framework views)
+                        // Count each matching actionable control once across the child groups.
                         const allTechs = [];
                         group.children.forEach(ck => { (fwData[ck] || []).forEach(t => allTechs.push(t)); });
                         (fwData[group.key] || []).forEach(t => allTechs.push(t));
-                        const allFiltered = allTechs.filter(t => !searchTerm || filteredIds.has(t.id));
+                        const allFiltered = [...new Map(allTechs
+                            .filter(t => !searchTerm || filteredIds.has(t.id))
+                            .map(t => [t.id, t])).values()];
 
                         const section = createElement('div', { className: 'fw-accordion-section fw-objective-section elevation-2' });
                         const header = buildAccordionHeader(group, allFiltered, config);
                         const body = createElement('div', { className: 'fw-accordion-body' });
                         const childContainer = createElement('div', { className: 'fw-child-container' });
+                        const directControls = (fwData[group.key] || [])
+                            .filter(t => !searchTerm || filteredIds.has(t.id));
+                        if (directControls.length) {
+                            buildAccordionBodyContent(body, section, directControls, group.name, filteredIds, searchTerm, null, group);
+                        }
 
                         group.children.forEach(childKey => {
                             const childInfo = config.techniqueGroups[childKey];
@@ -3730,7 +3727,7 @@
                 section.appendChild(createElement('h3', { className: 'font-semibold text-base mb-2', textContent: 'Defends Against:' }));
                 defendsAgainst.forEach(da => {
                     const daDiv = createElement('div', { className: 'mb-2' });
-                    daDiv.innerHTML += `<p class="defends-against-framework">${DOMPurify.sanitize(da.framework)}:</p>`;
+                    daDiv.innerHTML += `<p class="defends-against-framework">${DOMPurify.sanitize(da.framework === ciscoFramework.frameworkKey ? ciscoFramework.pageTitle : da.framework)}:</p>`;
                     const itemsList = createElement('div', { className: 'defends-against-list opacity-90' });
                     da.items.forEach(item => itemsList.innerHTML += `<div class="defends-against-item"><span class="defends-against-item-text">${DOMPurify.sanitize(item)}</span></div>`);
                     daDiv.appendChild(itemsList);
@@ -4225,6 +4222,8 @@
                     }
 
                     eligibleTechniques.forEach(tech => {
+                        // Parent unions support family navigation, never defense counts.
+                        if (tech.subTechniques?.length) return;
                         if (!tech.defendsAgainst) return;
                         const fwEntry = tech.defendsAgainst.find(da => da.framework === config.frameworkKey);
                         if (!fwEntry || !fwEntry.items) return;
@@ -4253,6 +4252,7 @@
                 // Build ATLAS defense reverse-index: ATLAS technique ID → AIDEFEND techniques
                 atlasDefenseMap = {};
                 eligibleTechniques.forEach(tech => {
+                    if (tech.subTechniques?.length) return;
                     if (!tech.defendsAgainst) return;
                     const fwEntry = tech.defendsAgainst.find(da => da.framework === 'MITRE ATLAS');
                     if (!fwEntry || !fwEntry.items) return;

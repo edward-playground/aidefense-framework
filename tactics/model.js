@@ -66,14 +66,15 @@ export const modelTactic = {
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
+                        "AITech-5.2 Configuration Persistence",
+                        "AITech-6.1 Training Data Poisoning",
+                        "AITech-8.2 Data Exfiltration / Exposure",
+                        "AITech-8.3 Information Disclosure",
                         "AITech-9.3 Dependency / Plugin Compromise",
-                        "AITech-10.1 Model Extraction",
-                        "AITech-12.1 Tool Exploitation",
-                        "AITech-14.1 Unauthorized Access",
-                        "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access",
+                        "AISubtech-5.2.1 Agent Profile Tampering",
                         "AISubtech-9.3.1 Malicious Package / Tool Injection",
-                        "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
-                        "AISubtech-9.3.3 Dependency Replacement / Rug Pull"
+                        "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
+                        "AISubtech-14.1.2 Insufficient Access Controls"
                     ]
                 },
                 {
@@ -210,7 +211,7 @@ export const modelTactic = {
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "N/A"
+                                "AITech-6.1 Training Data Poisoning (Signed dataset digest is checked before the illustrated training run)"
                             ]
                         },
                         {
@@ -1103,10 +1104,11 @@ export const modelTactic = {
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-9.3 Dependency / Plugin Compromise",
-                                "AISubtech-9.3.1 Malicious Package / Tool Injection",
-                                "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
-                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull"
+                                "AISubtech-5.2.1 Agent Profile Tampering (Deployed agent configuration drift is detected against the signed release)",
+                                "AISubtech-9.3.1 Malicious Package / Tool Injection (Frozen dependency resolution detects substituted or unreviewed package updates)",
+                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull (Frozen dependency resolution detects substituted or unreviewed package updates)",
+                                "AITech-5.2 Configuration Persistence (Deployed agent configuration drift is detected against the signed release)",
+                                "AITech-9.3 Dependency / Plugin Compromise (Frozen dependency resolution detects substituted or unreviewed package updates)"
                             ]
                         },
                         {
@@ -1216,9 +1218,9 @@ export const modelTactic = {
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-9.3 Dependency / Plugin Compromise (skill inventory tracks every installed skill as a dependency asset)",
-                                "AISubtech-9.3.1 Malicious Package / Tool Injection (approval workflow gates malicious skill installation)",
-                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull (lifecycle governance detects unauthorized skill replacements)"
+                                "AISubtech-5.2.1 Agent Profile Tampering (Detects installed instruction-package digest drift against recorded versions)",
+                                "AITech-5.2 Configuration Persistence (Detects installed instruction-package digest drift against recorded versions)",
+                                "AITech-9.3 Dependency / Plugin Compromise (Detects digest changes in installed third-party skill or plugin packages)"
                             ]
                         },
                         {
@@ -1341,7 +1343,8 @@ export const modelTactic = {
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "N/A"
+                                "AITech-8.2 Data Exfiltration / Exposure (Detects observed data-class sharing outside approved AI-service or tenant scope)",
+                                "AITech-8.3 Information Disclosure (Detects observed data-class sharing outside approved AI-service or tenant scope)"
                             ]
                         },
                         {
@@ -1461,9 +1464,7 @@ export const modelTactic = {
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-10.1 Model Extraction (public model and inference exposure enables extraction)",
-                                "AITech-12.1 Tool Exploitation (public MCP and agent-service exposure enables direct tool targeting)",
-                                "AITech-14.1 Unauthorized Access (external validation identifies unauthenticated or unintended access paths)"
+                                "AISubtech-14.1.2 Insufficient Access Controls (External probes identify routes whose required authentication is not proven)"
                             ]
                         },
                         {
@@ -1586,8 +1587,7 @@ export const modelTactic = {
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AISubtech-9.1.3 Unauthorized or Unsolicited Network Access (private discovery identifies unintended network-reachable AI services)",
-                                "AITech-14.1 Unauthorized Access (inventory reconciliation surfaces undeclared internal access paths for remediation)"
+                                "N/A"
                             ]
                         },
                         {
@@ -2368,13 +2368,16 @@ export const modelTactic = {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
                         "AITech-6.1 Training Data Poisoning",
-                        "AITech-7.2 Memory System Corruption",
                         "AITech-7.3 Data Source Abuse and Manipulation",
-                        "AITech-9.1 Model or Agentic System Manipulation",
-                        "AITech-9.3 Dependency / Plugin Compromise",
+                        "AITech-8.2 Data Exfiltration / Exposure",
+                        "AITech-8.3 Information Disclosure",
                         "AISubtech-6.1.1 Knowledge Base Poisoning",
                         "AISubtech-7.3.1 Corrupted Third-Party Data",
-                        "AISubtech-9.3.3 Dependency Replacement / Rug Pull"
+                        "AISubtech-8.2.1 Training Data Exposure",
+                        "AISubtech-8.2.2 LLM Data Leakage",
+                        "AISubtech-8.3.3 Personally Identifiable Information Exposure",
+                        "AISubtech-8.3.4 Payment Card Industry Data Exposure",
+                        "AISubtech-10.1.3 Sensitive Data Reconstruction"
                     ]
                 },
                 {
@@ -2497,7 +2500,7 @@ export const modelTactic = {
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "N/A"
+                                "AITech-6.1 Training Data Poisoning (Rejects dataset bytes that differ from a reviewed reproducible version)"
                             ]
                         },
                         {
@@ -2630,9 +2633,7 @@ export const modelTactic = {
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-9.1 Model or Agentic System Manipulation",
-                                "AITech-9.3 Dependency / Plugin Compromise",
-                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull"
+                                "AITech-6.1 Training Data Poisoning (Rejects training data altered after its approved signed digest was established)"
                             ]
                         },
                         {
@@ -2772,10 +2773,16 @@ export const modelTactic = {
                     {
                       "framework": "Cisco Integrated AI Security and Safety Framework",
                       "items": [
-                        "AITech-6.1 Training Data Poisoning",
-                        "AISubtech-6.1.1 Knowledge Base Poisoning",
-                        "AITech-7.3 Data Source Abuse and Manipulation",
-                        "AISubtech-7.3.1 Corrupted Third-Party Data"
+                          "AISubtech-10.1.3 Sensitive Data Reconstruction (Blocks detected sensitive training literals before later memorization-based extraction)",
+                          "AISubtech-7.3.1 Corrupted Third-Party Data",
+                          "AISubtech-8.2.1 Training Data Exposure (Blocks dataset promotion when measured PII, card data or verified secrets exceed policy)",
+                          "AISubtech-8.2.2 LLM Data Leakage (Blocks dataset promotion when measured PII, card data or verified secrets exceed policy)",
+                          "AISubtech-8.3.3 Personally Identifiable Information Exposure (Blocks dataset promotion when measured PII, card data or verified secrets exceed policy)",
+                          "AISubtech-8.3.4 Payment Card Industry Data Exposure (Blocks dataset promotion when measured PII, card data or verified secrets exceed policy)",
+                          "AITech-6.1 Training Data Poisoning (Detects policy-defined malformed records and label-distribution poisoning indicators)",
+                          "AITech-7.3 Data Source Abuse and Manipulation",
+                          "AITech-8.2 Data Exfiltration / Exposure (Blocks dataset promotion when measured PII, card data or verified secrets exceed policy)",
+                          "AITech-8.3 Information Disclosure (Blocks dataset promotion when measured PII, card data or verified secrets exceed policy)"
                       ]
                     },
                     {
@@ -2885,9 +2892,7 @@ export const modelTactic = {
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-7.2 Memory System Corruption",
-                                "AITech-7.3 Data Source Abuse and Manipulation",
-                                "AISubtech-6.1.1 Knowledge Base Poisoning"
+                                "AISubtech-6.1.1 Knowledge Base Poisoning (version-bound candidate/trusted-fact contradiction evidence flags runtime knowledge poisoning)"
                             ]
                         },
                         {
@@ -3592,7 +3597,7 @@ export const modelTactic = {
                         {
                             "id": "AID-M-002.004-G004",
                             "implementation": "Generate promotion evidence by checking candidate facts against trusted facts before any KB or memory entry is marked trusted.",
-                            "howTo": "<h5>Concept:</h5><p>A write candidate can have valid identity and evidence yet still contradict already trusted knowledge. Before a candidate is eligible for trusted promotion, compare it against the existing trusted fact set for the same entity and predicate. Contradictions should produce promotion evidence that downstream controls can use for probation, quarantine, or human review.</p><h5>Step 1: Normalize claims into comparable keys</h5><pre><code># File: kb_trust_contract/claims.py\nfrom pydantic import BaseModel\n\n\nclass Claim(BaseModel):\n    entity_id: str\n    predicate: str\n    value: str\n    confidence: float\n    evidence_refs: list[str]</code></pre><h5>Step 2: Return promotion evidence when a contradictory fact already exists</h5><pre><code>from __future__ import annotations\n\n# File: kb_trust_contract/contradictions.py\n\nfrom claims import Claim\n\n\ndef contradiction_key(claim: Claim) -> tuple[str, str]:\n    return claim.entity_id, claim.predicate\n\n\ndef detect_contradiction(candidate: Claim, trusted_claims: list[Claim]) -> Claim | None:\n    for trusted in trusted_claims:\n        if contradiction_key(trusted) != contradiction_key(candidate):\n            continue\n        if trusted.value != candidate.value:\n            return trusted\n    return None</code></pre><h5>Step 3: Produce a promotion decision record instead of overwriting trusted state</h5><pre><code># File: kb_trust_contract/promotion.py\nfrom claims import Claim\nfrom contradictions import detect_contradiction\n\n\ndef build_promotion_evidence(candidate: Claim, trusted_claims: list[Claim]) -> dict:\n    conflict = detect_contradiction(candidate, trusted_claims)\n    if conflict:\n        return {\n            \"promotion_state\": \"probation_required\",\n            \"reason\": \"contradicts_trusted_fact\",\n            \"conflicting_entity_id\": conflict.entity_id,\n            \"conflicting_predicate\": conflict.predicate,\n        }\n    return {\n        \"promotion_state\": \"trusted_eligible\",\n        \"reason\": \"no_conflicting_trusted_fact\",\n    }</code></pre><p><strong>Action:</strong> Do not let new writes silently replace contradictory trusted facts. Preserve both the candidate and the conflicting trusted fact in the promotion evidence so analysts and Harden controls can see exactly what changed and why trusted promotion was not eligible.</p>"
+                            "howTo": "<h5>Concept:</h5><p>A write candidate can have valid identity and evidence yet still contradict already trusted knowledge. Before a candidate is eligible for trusted promotion, compare it against the existing trusted fact set for the same entity and predicate. Contradictions should produce promotion evidence that downstream controls can use for probation, quarantine, or human review.</p><h5>Step 1: Normalize claims into comparable keys</h5><pre><code># File: kb_trust_contract/claims.py\nfrom pydantic import BaseModel, ConfigDict, Field\n\n\nclass Claim(BaseModel):\n    model_config = ConfigDict(extra=\"forbid\", strict=True)\n    entity_id: str = Field(min_length=1)\n    predicate: str = Field(min_length=1)\n    value: str = Field(min_length=1)\n    confidence: float = Field(ge=0, le=1, allow_inf_nan=False)\n    evidence_refs: list[str] = Field(min_length=1)</code></pre><h5>Step 2: Return promotion evidence when a contradictory fact already exists</h5><pre><code>from __future__ import annotations\n\n# File: kb_trust_contract/contradictions.py\n\nfrom claims import Claim\n\n\ndef contradiction_key(claim: Claim) -&gt; tuple[str, str]:\n    return claim.entity_id, claim.predicate\n\n\ndef detect_contradiction(candidate: Claim, trusted_claims: list[Claim]) -&gt; Claim | None:\n    for trusted in trusted_claims:\n        if contradiction_key(trusted) != contradiction_key(candidate):\n            continue\n        if trusted.value != candidate.value:\n            return trusted\n    return None</code></pre><h5>Step 3: Produce a promotion decision record instead of overwriting trusted state</h5><pre><code># File: kb_trust_contract/promotion.py\nfrom claims import Claim\nfrom contradictions import detect_contradiction\nimport hashlib\nimport json\n\n\ndef build_promotion_evidence(\n    candidate: Claim, trusted_claims: list[Claim], *, trusted_version: str,\n    expected_trusted_sha256: str, population_complete: bool,\n) -&gt; dict:\n    # Call only after authenticating the immutable trusted-fact manifest.\n    if not trusted_version or population_complete is not True:\n        raise ValueError(\"trusted fact version and complete population are required\")\n    canonical = lambda value: json.dumps(value, sort_keys=True, separators=(\",\", \":\"), ensure_ascii=False, allow_nan=False).encode(\"utf-8\")\n    candidate_record = candidate.model_dump(mode=\"json\")\n    trusted_records = [claim.model_dump(mode=\"json\") for claim in trusted_claims]\n    for record in [candidate_record, *trusted_records]:\n        if any(not ref.strip() for ref in record[\"evidence_refs\"]):\n            raise ValueError(\"evidence references must be nonempty\")\n    trusted_sha256 = hashlib.sha256(canonical(trusted_records)).hexdigest()\n    if trusted_sha256 != expected_trusted_sha256:\n        raise ValueError(\"trusted fact population differs from verified manifest\")\n    conflict = detect_contradiction(candidate, trusted_claims)\n    return {\n        \"schema_version\": \"aidefend.kb-promotion-evidence.v1\",\n        \"promotion_state\": \"probation_required\" if conflict else \"trusted_eligible\",\n        \"reason\": \"contradicts_trusted_fact\" if conflict else \"no_conflicting_trusted_fact\",\n        \"candidate\": candidate_record,\n        \"candidate_sha256\": hashlib.sha256(canonical(candidate_record)).hexdigest(),\n        \"conflicting_trusted_fact\": conflict.model_dump(mode=\"json\") if conflict else None,\n        \"trusted_version\": trusted_version,\n        \"trusted_population_sha256\": trusted_sha256,\n        \"population_complete\": True,\n    }\n</code></pre><p><strong>Action:</strong> Do not let new writes silently replace contradictory trusted facts. Preserve both the candidate and the conflicting trusted fact in the promotion evidence so analysts and Harden controls can see exactly what changed and why trusted promotion was not eligible.</p><p>Pass the version and digest from the authenticated immutable fact-set manifest, covering the complete applicable entity/predicate population in its signed order. Store this evidence with the proposed write and its references; Harden promotion enforcement consumes it independently. A missing fact population or digest mismatch is ERROR/INSUFFICIENT_DATA, not trusted eligibility. A legitimate changed fact can require review; this contradiction signal does not prove attacker intent.</p>"
                         },
                         {
                             "id": "AID-M-002.004-G005",
@@ -3706,8 +3711,7 @@ export const modelTactic = {
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-9.1 Model or Agentic System Manipulation",
-                                "AITech-9.3 Dependency / Plugin Compromise"
+                                "AITech-6.1 Training Data Poisoning (Verifies long-lived dataset bytes before their reuse after archive or trust migration)"
                             ]
                         },
                         {
@@ -3829,10 +3833,16 @@ export const modelTactic = {
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-1.3 Goal Manipulation",
+                        "AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation)",
                         "AITech-5.2 Configuration Persistence",
-                        "AISubtech-1.3.1 Goal Manipulation (Models, Agents)",
-                        "AISubtech-5.2.1 Agent Profile Tampering"
+                        "AITech-8.2 Data Exfiltration / Exposure",
+                        "AITech-8.3 Information Disclosure",
+                        "AITech-8.4 Prompt/Meta Extraction",
+                        "AISubtech-1.1.1 Instruction Manipulation",
+                        "AISubtech-5.2.1 Agent Profile Tampering",
+                        "AISubtech-8.3.3 Personally Identifiable Information Exposure",
+                        "AISubtech-8.3.4 Payment Card Industry Data Exposure",
+                        "AISubtech-8.4.1 System LLM Prompt Leakage"
                     ]
                 },
                 {
@@ -4434,7 +4444,7 @@ export const modelTactic = {
                         {
                             "id": "AID-M-003.003-G001",
                             "implementation": "Generate and store baseline feature attributions for different prediction classes.",
-                            "howTo": "<h5>Concept:</h5><p>We compute SHAP values on a trusted reference dataset and average the absolute attribution per feature. That gives us a reproducible 'this is what matters' fingerprint for the model. We store it as JSON so we can diff later. Below is a runnable-style script: it imports needed libs, assumes a scikit-learn style model, and uses a DataFrame so <code>.columns</code> is defined.</p><pre><code>from __future__ import annotations\n\n# File: modeling/generate_xai_baselines.py\n\nimport hashlib\nimport json\nimport platform\nfrom pathlib import Path\n\nimport numpy as np\nfrom skops.io import load as load_skops\nimport pandas as pd\nimport shap\n\nMODEL_PATH = Path(\"artifacts/model.skops\")\nBASELINE_DATA_PATH = Path(\"data/X_baseline.csv\")\nOUTPUT_PATH = Path(\"baselines/model_v2_xai_baseline.json\")\nCLASS_INDEX = 1\n\n\ndef sha256_file(path: Path) -&gt; str:\n    return \"sha256:\" + hashlib.sha256(path.read_bytes()).hexdigest()\n\n\ndef select_class_attributions(explanation, *, class_index: int, feature_count: int) -> np.ndarray:\n    values = explanation.values\n    if isinstance(values, list):\n        if class_index >= len(values):\n            raise ValueError(\"class_index is outside SHAP output list\")\n        selected = np.asarray(values[class_index], dtype=float)\n    else:\n        arr = np.asarray(values, dtype=float)\n        if arr.ndim == 2 and arr.shape[1] == feature_count:\n            selected = arr\n        elif arr.ndim == 3 and arr.shape[1] == feature_count:\n            selected = arr[:, :, class_index]\n        elif arr.ndim == 3 and arr.shape[2] == feature_count:\n            selected = arr[:, class_index, :]\n        else:\n            raise ValueError(f\"unsupported SHAP values shape {arr.shape}\")\n    if selected.ndim != 2 or selected.shape[1] != feature_count:\n        raise ValueError(f\"selected attribution shape {selected.shape} does not match feature count {feature_count}\")\n    if not np.isfinite(selected).all():\n        raise ValueError(\"SHAP attributions contain NaN or infinity\")\n    return selected\n\n\nmodel = load_skops(MODEL_PATH, trusted=[]) # unknown types fail closed\nX_baseline = pd.read_csv(BASELINE_DATA_PATH)\nif X_baseline.empty:\n    raise ValueError(\"baseline data is empty\")\nfeature_names = list(X_baseline.columns)\nfeature_schema = [\n    {\"name\": str(name), \"dtype\": str(X_baseline[name].dtype)}\n    for name in feature_names\n]\n\nexplainer = shap.Explainer(model.predict_proba, X_baseline)\nshap_values = explainer(X_baseline)\nvalues_for_class = np.abs(\n    select_class_attributions(\n        shap_values, class_index=CLASS_INDEX, feature_count=len(feature_names)\n    )\n)\navg_feature_importance = values_for_class.mean(axis=0)\n\nxai_baseline = {\n    \"schema_version\": \"aidefend.xai-baseline.v1\",\n    \"method\": \"SHAP\",\n    \"explainer_class\": type(explainer).__name__,\n    \"class_of_interest\": CLASS_INDEX,\n    \"model_sha256\": sha256_file(MODEL_PATH),\n    \"baseline_dataset_sha256\": sha256_file(BASELINE_DATA_PATH),\n    \"baseline_rows\": int(len(X_baseline)),\n    \"feature_schema\": feature_schema,\n    \"feature_schema_sha256\": \"sha256:\" + hashlib.sha256(\n        json.dumps(feature_schema, sort_keys=True, separators=(\",\", \":\")).encode(\"utf-8\")\n    ).hexdigest(),\n    \"feature_count\": len(feature_names),\n    \"runtime\": {\n        \"python\": platform.python_version(),\n        \"numpy\": np.__version__,\n        \"pandas\": pd.__version__,\n        \"shap\": shap.__version__,\n    },\n    \"average_feature_importance\": {\n        fname: float(score)\n        for fname, score in zip(feature_names, avg_feature_importance, strict=True)\n    },\n}\n\nOUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)\nOUTPUT_PATH.write_text(\n    json.dumps(xai_baseline, indent=2, sort_keys=True), encoding=\"utf-8\"\n)\nprint(f\"XAI baseline saved to {OUTPUT_PATH}\")\n</code></pre><p><strong>Action:</strong> Run this script during validation. It fails closed on unsupported SHAP tensor layouts instead of silently treating a feature axis as a class axis. The local JSON is only a digest-bound candidate baseline; it cannot produce control <code>PASS</code>. A governed baseline registry must authenticate the publisher, bind the exact candidate bytes to the release, apply policy-owned currentness, publish an immutable version, and return a readback of the same model, dataset, feature schema, explainer/runtime, and baseline digests. Missing, stale, revoked, mismatched, or unreadback publication remains <code>INSUFFICIENT_DATA</code> or <code>ERROR</code>.</p>"
+                            "howTo": "<h5>Concept:</h5><p>We compute SHAP values on a trusted reference dataset and average the absolute attribution per feature. That gives us a reproducible 'this is what matters' fingerprint for the model. We store it as JSON so we can diff later. Below is a runnable-style script: it imports needed libs, assumes a scikit-learn style model, and uses a DataFrame so <code>.columns</code> is defined.</p><pre><code>from __future__ import annotations\n\n# File: modeling/generate_xai_baselines.py\n\nimport hashlib\nimport json\nimport os\nimport platform\nimport io\nimport tempfile\nfrom pathlib import Path\n\nimport numpy as np\nfrom skops.io import load as load_skops\nimport pandas as pd\nimport shap\n\nMODEL_PATH = Path(\"artifacts/model.skops\")\nBASELINE_DATA_PATH = Path(\"data/X_baseline.csv\")\nOUTPUT_PATH = Path(\"baselines/model_v2_xai_baseline.json\")\nCLASS_INDEX = 1\nRELEASE_ID = os.environ[\"VERIFIED_RELEASE_ID\"].strip()\nif not RELEASE_ID:\n    raise ValueError(\"verified release identity is required\")\n\n\ndef sha256_file(path: Path) -&gt; str:\n    return \"sha256:\" + hashlib.sha256(path.read_bytes()).hexdigest()\n\n\ndef capture_baseline_inputs(model_path: Path, baseline_path: Path):\n    # Load and hash the same captured bytes even if an input path later changes.\n    model_raw = model_path.read_bytes()\n    baseline_raw = baseline_path.read_bytes()\n    if not model_raw or not baseline_raw:\n        raise ValueError(\"model and baseline bytes must be nonempty\")\n    with tempfile.TemporaryDirectory(prefix=\"xai-source-\") as directory:\n        snapshot = Path(directory) / \"model.skops\"\n        descriptor = os.open(snapshot, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o400)\n        with os.fdopen(descriptor, \"wb\") as handle:\n            handle.write(model_raw)\n            handle.flush()\n            os.fsync(handle.fileno())\n        model = load_skops(snapshot, trusted=[])\n    dataset = pd.read_csv(io.BytesIO(baseline_raw))\n    return model, dataset, model_raw, baseline_raw\n\n\ndef select_class_attributions(explanation, *, class_index: int, feature_count: int) -&gt; np.ndarray:\n    values = explanation.values\n    if isinstance(values, list):\n        if class_index &gt;= len(values):\n            raise ValueError(\"class_index is outside SHAP output list\")\n        selected = np.asarray(values[class_index], dtype=float)\n    else:\n        arr = np.asarray(values, dtype=float)\n        if arr.ndim == 2 and arr.shape[1] == feature_count:\n            selected = arr\n        elif arr.ndim == 3 and arr.shape[1] == feature_count:\n            selected = arr[:, :, class_index]\n        elif arr.ndim == 3 and arr.shape[2] == feature_count:\n            selected = arr[:, class_index, :]\n        else:\n            raise ValueError(f\"unsupported SHAP values shape {arr.shape}\")\n    if selected.ndim != 2 or selected.shape[1] != feature_count:\n        raise ValueError(f\"selected attribution shape {selected.shape} does not match feature count {feature_count}\")\n    if not np.isfinite(selected).all():\n        raise ValueError(\"SHAP attributions contain NaN or infinity\")\n    return selected\n\n\nmodel, X_baseline, model_raw, baseline_raw = capture_baseline_inputs(MODEL_PATH, BASELINE_DATA_PATH)\nif X_baseline.empty:\n    raise ValueError(\"baseline data is empty\")\nfeature_names = list(X_baseline.columns)\nfeature_schema = [\n    {\"name\": str(name), \"dtype\": str(X_baseline[name].dtype)}\n    for name in feature_names\n]\n\nexplainer = shap.Explainer(model.predict_proba, X_baseline)\nshap_values = explainer(X_baseline)\nvalues_for_class = np.abs(\n    select_class_attributions(\n        shap_values, class_index=CLASS_INDEX, feature_count=len(feature_names)\n    )\n)\navg_feature_importance = values_for_class.mean(axis=0)\n\nxai_baseline = {\n    \"schema_version\": \"aidefend.xai-baseline.v1\",\n    \"release_id\": RELEASE_ID,\n    \"method\": \"SHAP\",\n    \"explainer_class\": type(explainer).__name__,\n    \"class_of_interest\": CLASS_INDEX,\n    \"model_sha256\": \"sha256:\" + hashlib.sha256(model_raw).hexdigest(),\n    \"baseline_dataset_sha256\": \"sha256:\" + hashlib.sha256(baseline_raw).hexdigest(),\n    \"baseline_rows\": int(len(X_baseline)),\n    \"feature_schema\": feature_schema,\n    \"feature_schema_sha256\": \"sha256:\" + hashlib.sha256(\n        json.dumps(feature_schema, sort_keys=True, separators=(\",\", \":\")).encode(\"utf-8\")\n    ).hexdigest(),\n    \"feature_count\": len(feature_names),\n    \"runtime\": {\n        \"python\": platform.python_version(),\n        \"numpy\": np.__version__,\n        \"pandas\": pd.__version__,\n        \"shap\": shap.__version__,\n    },\n    \"average_feature_importance\": {\n        fname: float(score)\n        for fname, score in zip(feature_names, avg_feature_importance, strict=True)\n    },\n}\n\nOUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)\nOUTPUT_PATH.write_text(\n    json.dumps(xai_baseline, indent=2, sort_keys=True), encoding=\"utf-8\"\n)\nprint(f\"XAI baseline saved to {OUTPUT_PATH}\")\n</code></pre><p><strong>Action:</strong> Run this script during validation. It fails closed on unsupported SHAP tensor layouts instead of silently treating a feature axis as a class axis. The local JSON is only a digest-bound candidate baseline; it cannot produce control <code>PASS</code>. A governed baseline registry must authenticate the publisher, bind the exact candidate bytes to the release, apply policy-owned currentness, publish an immutable version, and return a readback of the same model, dataset, feature schema, explainer/runtime, and baseline digests. Missing, stale, revoked, mismatched, or unreadback publication remains <code>INSUFFICIENT_DATA</code> or <code>ERROR</code>.</p>"
                         },
                         {
                             "id": "AID-M-003.003-G002",
@@ -4449,433 +4459,7 @@ export const modelTactic = {
                         {
                             "id": "AID-M-003.003-G004",
                             "implementation": "Version control XAI baselines and link them to specific model versions in a registry.",
-                            "howTo": [
-                                "<h5>Concept and prerequisite</h5><p>Bind the signed XAI baseline bytes to the exact MLflow registered-model name and version, not merely to a neighboring run. Pin the MLflow Python client and tracking-server compatibility tuple in the deployment lock, use an authenticated tracking endpoint, and supply all paths and timeouts from the signed release profile.</p><h5>Step 1: Register the model and publish a signed version binding</h5><pre><code># File: modeling/register_xai_bundle.py\n",
-                                "from __future__ import annotations\n",
-                                "\n",
-                                "import hashlib\n",
-                                "import json\n",
-                                "import math\n",
-                                "import os\n",
-                                "import stat\n",
-                                "import subprocess\n",
-                                "import tempfile\n",
-                                "from pathlib import Path\n",
-                                "\n",
-                                "import mlflow\n",
-                                "import mlflow.artifacts\n",
-                                "import mlflow.sklearn\n",
-                                "from mlflow import MlflowClient\n",
-                                "\n",
-                                "\n",
-                                "def positive_timeout(name: str) -&gt; float:\n",
-                                "    value = float(os.environ[name])\n",
-                                "    if not math.isfinite(value) or value &lt;= 0:\n",
-                                "        raise RuntimeError(f\"{name} must be finite and positive\")\n",
-                                "    return value\n",
-                                "\n",
-                                "\n",
-                                "COMMAND_TIMEOUT = positive_timeout(\"M003003_COMMAND_TIMEOUT_SECONDS\")\n",
-                                "REGISTRATION_TIMEOUT = int(os.environ[\"M003003_REGISTRATION_TIMEOUT_SECONDS\"])\n",
-                                "if REGISTRATION_TIMEOUT &lt; 1:\n",
-                                "    raise RuntimeError(\"registration timeout must be positive\")\n",
-                                "MODEL_PATH = Path(os.environ[\"VERIFIED_MODEL_ARTIFACT_PATH\"])\n",
-                                "BASELINE_PATH = Path(os.environ[\"VERIFIED_XAI_BASELINE_PATH\"])\n",
-                                "BASELINE_SIGNATURE = Path(os.environ[\"VERIFIED_XAI_BASELINE_SIGNATURE\"])\n",
-                                "MODEL_NAME = os.environ[\"MLFLOW_REGISTERED_MODEL_NAME\"]\n",
-                                "if not MODEL_NAME.strip():\n",
-                                "    raise RuntimeError(\"registered model name is required\")\n",
-                                "\n",
-                                "\n",
-                                "def sha256_file(path: Path) -&gt; str:\n",
-                                "    if not path.is_file() or path.is_symlink() or path.stat().st_size == 0:\n",
-                                "        raise ValueError(f\"missing, empty, or unsafe file: {path}\")\n",
-                                "    digest = hashlib.sha256()\n",
-                                "    with path.open(\"rb\") as handle:\n",
-                                "        for chunk in iter(lambda: handle.read(1024 * 1024), b\"\"):\n",
-                                "            digest.update(chunk)\n",
-                                "    return digest.hexdigest()\n",
-                                "\n",
-                                "\n",
-                                "def tree_sha256(path: Path) -&gt; str:\n",
-                                "    if not path.exists() or path.is_symlink():\n",
-                                "        raise ValueError(f\"missing or unsafe artifact: {path}\")\n",
-                                "    files = [path] if path.is_file() else sorted(\n",
-                                "        item for item in path.rglob(\"*\") if item.is_file()\n",
-                                "    )\n",
-                                "    if not files:\n",
-                                "        raise ValueError(f\"artifact contains no files: {path}\")\n",
-                                "    digest = hashlib.sha256()\n",
-                                "    for item in files:\n",
-                                "        if item.is_symlink():\n",
-                                "            raise ValueError(f\"artifact contains a symlink: {item}\")\n",
-                                "        relative = item.name if path.is_file() else item.relative_to(path).as_posix()\n",
-                                "        name = relative.encode(\"utf-8\")\n",
-                                "        content = item.read_bytes()\n",
-                                "        digest.update(len(name).to_bytes(8, \"big\"))\n",
-                                "        digest.update(name)\n",
-                                "        digest.update(len(content).to_bytes(8, \"big\"))\n",
-                                "        digest.update(content)\n",
-                                "    return digest.hexdigest()\n",
-                                "\n",
-                                "\n",
-                                "def verify_blob(path: Path, signature: Path, key: str) -&gt; None:\n",
-                                "    subprocess.run(\n",
-                                "        [\"cosign\", \"verify-blob\", \"--key\", key, \"--bundle\", str(signature), str(path)],\n",
-                                "        check=True, capture_output=True, text=True, timeout=COMMAND_TIMEOUT,\n",
-                                "    )\n",
-                                "\n",
-                                "\n",
-                                "def regular_bytes(path: Path) -&gt; bytes:\n",
-                                "    descriptor = os.open(path, os.O_RDONLY | getattr(os, \"O_NOFOLLOW\", 0))\n",
-                                "    with os.fdopen(descriptor, \"rb\") as handle:\n",
-                                "        status = os.fstat(handle.fileno())\n",
-                                "        if not stat.S_ISREG(status.st_mode) or status.st_size == 0:\n",
-                                "            raise ValueError(f\"missing, empty, or unsafe signed input: {path}\")\n",
-                                "        return handle.read()\n",
-                                "\n",
-                                "\n",
-                                "def private_file(path: Path, raw: bytes) -&gt; None:\n",
-                                "    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, \"O_NOFOLLOW\", 0)\n",
-                                "    descriptor = os.open(path, flags, 0o400)\n",
-                                "    with os.fdopen(descriptor, \"wb\") as handle:\n",
-                                "        handle.write(raw)\n",
-                                "        handle.flush()\n",
-                                "        os.fsync(handle.fileno())\n",
-                                "\n",
-                                "\n",
-                                "def strict_json(raw: bytes, label: str) -&gt; object:\n",
-                                "    def unique(pairs):\n",
-                                "        value = {}\n",
-                                "        for key, item in pairs:\n",
-                                "            if key in value:\n",
-                                "                raise ValueError(f\"duplicate JSON key in {label}: {key}\")\n",
-                                "            value[key] = item\n",
-                                "        return value\n",
-                                "    return json.loads(\n",
-                                "        raw.decode(\"utf-8\", errors=\"strict\"), object_pairs_hook=unique,\n",
-                                "        parse_constant=lambda value: (_ for _ in ()).throw(ValueError(value)),\n",
-                                "    )\n",
-                                "\n",
-                                "\n",
-                                "snapshot_directory = tempfile.TemporaryDirectory(prefix=\"aidefend-xai-baseline-\")\n",
-                                "snapshot_root = Path(snapshot_directory.name)\n",
-                                "snapshot_root.chmod(0o700)\n",
-                                "baseline_raw = regular_bytes(BASELINE_PATH)\n",
-                                "baseline_signature_raw = regular_bytes(BASELINE_SIGNATURE)\n",
-                                "baseline_snapshot = snapshot_root / BASELINE_PATH.name\n",
-                                "baseline_signature_snapshot = snapshot_root / BASELINE_SIGNATURE.name\n",
-                                "if baseline_snapshot == baseline_signature_snapshot:\n",
-                                "    raise ValueError(\"baseline payload and signature names collide\")\n",
-                                "private_file(baseline_snapshot, baseline_raw)\n",
-                                "private_file(baseline_signature_snapshot, baseline_signature_raw)\n",
-                                "verify_blob(baseline_snapshot, baseline_signature_snapshot, os.environ[\"XAI_BASELINE_VERIFY_KEY\"])\n",
-                                "baseline = strict_json(baseline_raw, \"signed XAI baseline\")\n",
-                                "if not isinstance(baseline, dict) or set(baseline) != {\n",
-                                "    \"schema_version\", \"release_id\", \"model_source_sha256\",\n",
-                                "    \"explainer\", \"reference_population_sha256\", \"statistics\",\n",
-                                "}:\n",
-                                "    raise ValueError(\"XAI baseline schema differs\")\n",
-                                "if (\n",
-                                "    baseline[\"schema_version\"] != \"aidefend.xai-baseline.v1\"\n",
-                                "    or not isinstance(baseline[\"release_id\"], str) or not baseline[\"release_id\"]\n",
-                                "    or not isinstance(baseline[\"model_source_sha256\"], str)\n",
-                                "    or len(baseline[\"model_source_sha256\"]) != 64\n",
-                                "    or set(baseline[\"model_source_sha256\"]) - set(\"0123456789abcdef\")\n",
-                                "):\n",
-                                "    raise ValueError(\"XAI baseline identity is invalid\")\n",
-                                "\n",
-                                "source_model_sha256 = tree_sha256(MODEL_PATH)\n",
-                                "if baseline[\"model_source_sha256\"] != source_model_sha256:\n",
-                                "    raise ValueError(\"XAI baseline is bound to different source-model bytes\")\n",
-                                "\n",
-                                "mlflow.set_tracking_uri(os.environ[\"MLFLOW_TRACKING_URI\"])\n",
-                                "mlflow.set_experiment(os.environ[\"MLFLOW_EXPERIMENT_NAME\"])\n",
-                                "model = mlflow.sklearn.load_model(str(MODEL_PATH))\n",
-                                "client = MlflowClient()\n",
-                                "binding_path = Path(\"artifacts/xai-binding.json\")\n",
-                                "binding_signature = binding_path.with_suffix(\".sig\")\n",
-                                "binding_path.parent.mkdir(parents=True, exist_ok=True)\n",
-                                "\n",
-                                "with mlflow.start_run() as run:\n",
-                                "    mlflow.sklearn.log_model(model, name=\"classifier\")\n",
-                                "    mlflow.log_artifact(str(baseline_snapshot), artifact_path=\"xai\")\n",
-                                "    mlflow.log_artifact(str(baseline_signature_snapshot), artifact_path=\"xai\")\n",
-                                "    registered = mlflow.register_model(\n",
-                                "        model_uri=f\"runs:/{run.info.run_id}/classifier\",\n",
-                                "        name=MODEL_NAME,\n",
-                                "        await_registration_for=REGISTRATION_TIMEOUT,\n",
-                                "    )\n",
-                                "    registered_uri = f\"models:/{registered.name}/{registered.version}\"\n",
-                                "    registered_model_path = Path(\n",
-                                "        mlflow.artifacts.download_artifacts(artifact_uri=registered_uri)\n",
-                                "    )\n",
-                                "    registered_model_sha256 = tree_sha256(registered_model_path)\n",
-                                "    binding = {\n",
-                                "        \"schema_version\": \"aidefend.mlflow-xai-binding.v1\",\n",
-                                "        \"release_id\": baseline[\"release_id\"],\n",
-                                "        \"model_name\": registered.name,\n",
-                                "        \"model_version\": str(registered.version),\n",
-                                "        \"model_run_id\": run.info.run_id,\n",
-                                "        \"model_source_uri\": registered.source,\n",
-                                "        \"model_source_sha256\": source_model_sha256,\n",
-                                "        \"registered_model_sha256\": registered_model_sha256,\n",
-                                "        \"baseline_artifact_path\": \"xai/\" + baseline_snapshot.name,\n",
-                                "        \"baseline_signature_path\": \"xai/\" + baseline_signature_snapshot.name,\n",
-                                "        \"baseline_sha256\": hashlib.sha256(baseline_raw).hexdigest(),\n",
-                                "        \"baseline_signature_sha256\": hashlib.sha256(baseline_signature_raw).hexdigest(),\n",
-                                "    }\n",
-                                "    binding_path.write_text(\n",
-                                "        json.dumps(binding, sort_keys=True, separators=(\",\", \":\"), allow_nan=False) + \"\\n\",\n",
-                                "        encoding=\"utf-8\",\n",
-                                "    )\n",
-                                "    subprocess.run(\n",
-                                "        [\n",
-                                "            \"cosign\", \"sign-blob\", \"--yes\",\n",
-                                "            \"--key\", \"env://XAI_BINDING_SIGNING_KEY\",\n",
-                                "            \"--bundle\", str(binding_signature), str(binding_path),\n",
-                                "        ],\n",
-                                "        check=True, timeout=COMMAND_TIMEOUT,\n",
-                                "    )\n",
-                                "    verify_blob(binding_path, binding_signature, os.environ[\"XAI_BINDING_VERIFY_KEY\"])\n",
-                                "    mlflow.log_artifact(str(binding_path), artifact_path=\"xai\")\n",
-                                "    mlflow.log_artifact(str(binding_signature), artifact_path=\"xai\")\n",
-                                "\n",
-                                "binding_sha256 = sha256_file(binding_path)\n",
-                                "expected_tags = {\n",
-                                "    \"aidefend.release_id\": binding[\"release_id\"],\n",
-                                "    \"aidefend.xai_binding_path\": \"xai/\" + binding_path.name,\n",
-                                "    \"aidefend.xai_binding_signature_path\": \"xai/\" + binding_signature.name,\n",
-                                "    \"aidefend.xai_binding_sha256\": binding_sha256,\n",
-                                "    \"aidefend.xai_baseline_sha256\": binding[\"baseline_sha256\"],\n",
-                                "    \"aidefend.registered_model_sha256\": binding[\"registered_model_sha256\"],\n",
-                                "}\n",
-                                "for key, value in expected_tags.items():\n",
-                                "    client.set_model_version_tag(registered.name, registered.version, key, value)\n",
-                                "readback = client.get_model_version(registered.name, registered.version)\n",
-                                "if str(readback.version) != str(registered.version) or readback.run_id != binding[\"model_run_id\"]:\n",
-                                "    raise RuntimeError(\"registered-model version readback differs\")\n",
-                                "for key, expected in expected_tags.items():\n",
-                                "    if readback.tags.get(key) != expected:\n",
-                                "        raise RuntimeError(f\"registered-model tag readback differs: {key}\")\n",
-                                "Path(\"artifacts/xai-registration.json\").write_text(\n",
-                                "    json.dumps({\n",
-                                "        \"model_name\": readback.name,\n",
-                                "        \"model_version\": str(readback.version),\n",
-                                "        \"binding_sha256\": binding_sha256,\n",
-                                "    }, sort_keys=True) + \"\\n\",\n",
-                                "    encoding=\"utf-8\",\n",
-                                ")</code></pre><h5>Step 2: Re-download through the exact registered-model version</h5><pre><code># File: modeling/verify_xai_binding.py\n",
-                                "from __future__ import annotations\n",
-                                "\n",
-                                "import hashlib\n",
-                                "import json\n",
-                                "import math\n",
-                                "import os\n",
-                                "import stat\n",
-                                "import subprocess\n",
-                                "import tempfile\n",
-                                "from pathlib import Path\n",
-                                "\n",
-                                "import mlflow\n",
-                                "import mlflow.artifacts\n",
-                                "from mlflow import MlflowClient\n",
-                                "\n",
-                                "\n",
-                                "def positive_timeout(name: str) -&gt; float:\n",
-                                "    value = float(os.environ[name])\n",
-                                "    if not math.isfinite(value) or value &lt;= 0:\n",
-                                "        raise RuntimeError(f\"{name} must be finite and positive\")\n",
-                                "    return value\n",
-                                "\n",
-                                "\n",
-                                "COMMAND_TIMEOUT = positive_timeout(\"M003003_COMMAND_TIMEOUT_SECONDS\")\n",
-                                "\n",
-                                "\n",
-                                "def sha256_file(path: Path) -&gt; str:\n",
-                                "    if not path.is_file() or path.is_symlink() or path.stat().st_size == 0:\n",
-                                "        raise ValueError(f\"missing, empty, or unsafe file: {path}\")\n",
-                                "    digest = hashlib.sha256()\n",
-                                "    with path.open(\"rb\") as handle:\n",
-                                "        for chunk in iter(lambda: handle.read(1024 * 1024), b\"\"):\n",
-                                "            digest.update(chunk)\n",
-                                "    return digest.hexdigest()\n",
-                                "\n",
-                                "\n",
-                                "def tree_sha256(path: Path) -&gt; str:\n",
-                                "    if not path.exists() or path.is_symlink():\n",
-                                "        raise ValueError(f\"missing or unsafe artifact: {path}\")\n",
-                                "    files = [path] if path.is_file() else sorted(\n",
-                                "        item for item in path.rglob(\"*\") if item.is_file()\n",
-                                "    )\n",
-                                "    if not files:\n",
-                                "        raise ValueError(f\"artifact contains no files: {path}\")\n",
-                                "    digest = hashlib.sha256()\n",
-                                "    for item in files:\n",
-                                "        if item.is_symlink():\n",
-                                "            raise ValueError(f\"artifact contains a symlink: {item}\")\n",
-                                "        relative = item.name if path.is_file() else item.relative_to(path).as_posix()\n",
-                                "        name = relative.encode(\"utf-8\")\n",
-                                "        content = item.read_bytes()\n",
-                                "        digest.update(len(name).to_bytes(8, \"big\"))\n",
-                                "        digest.update(name)\n",
-                                "        digest.update(len(content).to_bytes(8, \"big\"))\n",
-                                "        digest.update(content)\n",
-                                "    return digest.hexdigest()\n",
-                                "\n",
-                                "\n",
-                                "def verify_blob(path: Path, signature: Path, key: str) -&gt; None:\n",
-                                "    subprocess.run(\n",
-                                "        [\"cosign\", \"verify-blob\", \"--key\", key, \"--bundle\", str(signature), str(path)],\n",
-                                "        check=True, capture_output=True, text=True, timeout=COMMAND_TIMEOUT,\n",
-                                "    )\n",
-                                "\n",
-                                "\n",
-                                "def regular_bytes(path: Path) -&gt; bytes:\n",
-                                "    descriptor = os.open(path, os.O_RDONLY | getattr(os, \"O_NOFOLLOW\", 0))\n",
-                                "    with os.fdopen(descriptor, \"rb\") as handle:\n",
-                                "        status = os.fstat(handle.fileno())\n",
-                                "        if not stat.S_ISREG(status.st_mode) or status.st_size == 0:\n",
-                                "            raise ValueError(f\"missing, empty, or unsafe signed input: {path}\")\n",
-                                "        return handle.read()\n",
-                                "\n",
-                                "\n",
-                                "def private_file(path: Path, raw: bytes) -&gt; None:\n",
-                                "    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, \"O_NOFOLLOW\", 0)\n",
-                                "    descriptor = os.open(path, flags, 0o400)\n",
-                                "    with os.fdopen(descriptor, \"wb\") as handle:\n",
-                                "        handle.write(raw)\n",
-                                "        handle.flush()\n",
-                                "        os.fsync(handle.fileno())\n",
-                                "\n",
-                                "\n",
-                                "def capture_verified(path: Path, signature: Path, key: str) -&gt; tuple[bytes, bytes]:\n",
-                                "    raw, signature_raw = regular_bytes(path), regular_bytes(signature)\n",
-                                "    with tempfile.TemporaryDirectory(prefix=\"aidefend-xai-readback-\") as directory:\n",
-                                "        root = Path(directory)\n",
-                                "        root.chmod(0o700)\n",
-                                "        payload_snapshot, signature_snapshot = root / \"payload\", root / \"payload.sig\"\n",
-                                "        private_file(payload_snapshot, raw)\n",
-                                "        private_file(signature_snapshot, signature_raw)\n",
-                                "        verify_blob(payload_snapshot, signature_snapshot, key)\n",
-                                "        if regular_bytes(payload_snapshot) != raw or regular_bytes(signature_snapshot) != signature_raw:\n",
-                                "            raise ValueError(\"private signed-input snapshot changed during verification\")\n",
-                                "    return raw, signature_raw\n",
-                                "\n",
-                                "\n",
-                                "def strict_json(raw: bytes, label: str) -&gt; object:\n",
-                                "    def unique(pairs):\n",
-                                "        value = {}\n",
-                                "        for key, item in pairs:\n",
-                                "            if key in value:\n",
-                                "                raise ValueError(f\"duplicate JSON key in {label}: {key}\")\n",
-                                "            value[key] = item\n",
-                                "        return value\n",
-                                "    return json.loads(raw.decode(\"utf-8\", errors=\"strict\"), object_pairs_hook=unique,\n",
-                                "                      parse_constant=lambda value: (_ for _ in ()).throw(ValueError(value)))\n",
-                                "\n",
-                                "model_name = os.environ[\"MLFLOW_REGISTERED_MODEL_NAME\"]\n",
-                                "model_version = os.environ[\"MLFLOW_REGISTERED_MODEL_VERSION\"]\n",
-                                "mlflow.set_tracking_uri(os.environ[\"MLFLOW_TRACKING_URI\"])\n",
-                                "client = MlflowClient()\n",
-                                "version = client.get_model_version(model_name, model_version)\n",
-                                "if version.name != model_name or str(version.version) != model_version or not version.run_id:\n",
-                                "    raise RuntimeError(\"exact registered-model version is unavailable\")\n",
-                                "\n",
-                                "required_tags = {\n",
-                                "    \"aidefend.release_id\", \"aidefend.xai_binding_path\",\n",
-                                "    \"aidefend.xai_binding_signature_path\", \"aidefend.xai_binding_sha256\",\n",
-                                "    \"aidefend.xai_baseline_sha256\", \"aidefend.registered_model_sha256\",\n",
-                                "}\n",
-                                "if any(not version.tags.get(tag) for tag in required_tags):\n",
-                                "    raise RuntimeError(\"exact registered-model version lacks XAI binding tags\")\n",
-                                "\n",
-                                "binding_path = Path(mlflow.artifacts.download_artifacts(\n",
-                                "    run_id=version.run_id,\n",
-                                "    artifact_path=version.tags[\"aidefend.xai_binding_path\"],\n",
-                                "))\n",
-                                "binding_signature = Path(mlflow.artifacts.download_artifacts(\n",
-                                "    run_id=version.run_id,\n",
-                                "    artifact_path=version.tags[\"aidefend.xai_binding_signature_path\"],\n",
-                                "))\n",
-                                "binding_raw, binding_signature_raw = capture_verified(\n",
-                                "    binding_path, binding_signature, os.environ[\"XAI_BINDING_VERIFY_KEY\"]\n",
-                                ")\n",
-                                "if hashlib.sha256(binding_raw).hexdigest() != version.tags[\"aidefend.xai_binding_sha256\"]:\n",
-                                "    raise RuntimeError(\"downloaded XAI binding digest differs from model-version tag\")\n",
-                                "binding = strict_json(binding_raw, \"signed XAI binding\")\n",
-                                "required_binding = {\n",
-                                "    \"schema_version\", \"release_id\", \"model_name\", \"model_version\",\n",
-                                "    \"model_run_id\", \"model_source_uri\", \"model_source_sha256\",\n",
-                                "    \"registered_model_sha256\", \"baseline_artifact_path\",\n",
-                                "    \"baseline_signature_path\", \"baseline_sha256\",\n",
-                                "    \"baseline_signature_sha256\",\n",
-                                "}\n",
-                                "if set(binding) != required_binding or binding[\"schema_version\"] != \"aidefend.mlflow-xai-binding.v1\":\n",
-                                "    raise RuntimeError(\"XAI binding schema differs\")\n",
-                                "if (\n",
-                                "    binding[\"model_name\"] != version.name\n",
-                                "    or binding[\"model_version\"] != str(version.version)\n",
-                                "    or binding[\"model_run_id\"] != version.run_id\n",
-                                "    or binding[\"model_source_uri\"] != version.source\n",
-                                "    or binding[\"release_id\"] != version.tags[\"aidefend.release_id\"]\n",
-                                "):\n",
-                                "    raise RuntimeError(\"XAI binding does not name the exact registered-model version\")\n",
-                                "\n",
-                                "baseline_path = Path(mlflow.artifacts.download_artifacts(\n",
-                                "    run_id=version.run_id, artifact_path=binding[\"baseline_artifact_path\"]\n",
-                                "))\n",
-                                "baseline_signature = Path(mlflow.artifacts.download_artifacts(\n",
-                                "    run_id=version.run_id, artifact_path=binding[\"baseline_signature_path\"]\n",
-                                "))\n",
-                                "baseline_raw, baseline_signature_raw = capture_verified(\n",
-                                "    baseline_path, baseline_signature, os.environ[\"XAI_BASELINE_VERIFY_KEY\"]\n",
-                                ")\n",
-                                "if (\n",
-                                "    hashlib.sha256(baseline_raw).hexdigest() != binding[\"baseline_sha256\"]\n",
-                                "    or hashlib.sha256(baseline_signature_raw).hexdigest() != binding[\"baseline_signature_sha256\"]\n",
-                                "    or binding[\"baseline_sha256\"] != version.tags[\"aidefend.xai_baseline_sha256\"]\n",
-                                "):\n",
-                                "    raise RuntimeError(\"XAI baseline bytes or signature differ from the exact version binding\")\n",
-                                "baseline = strict_json(baseline_raw, \"signed XAI baseline\")\n",
-                                "if (\n",
-                                "    baseline.get(\"schema_version\") != \"aidefend.xai-baseline.v1\"\n",
-                                "    or baseline.get(\"release_id\") != binding[\"release_id\"]\n",
-                                "    or baseline.get(\"model_source_sha256\") != binding[\"model_source_sha256\"]\n",
-                                "):\n",
-                                "    raise RuntimeError(\"XAI baseline identity differs from signed version binding\")\n",
-                                "\n",
-                                "registered_model = Path(mlflow.artifacts.download_artifacts(\n",
-                                "    artifact_uri=f\"models:/{version.name}/{version.version}\"\n",
-                                "))\n",
-                                "observed_model_sha256 = tree_sha256(registered_model)\n",
-                                "if (\n",
-                                "    observed_model_sha256 != binding[\"registered_model_sha256\"]\n",
-                                "    or observed_model_sha256 != version.tags[\"aidefend.registered_model_sha256\"]\n",
-                                "):\n",
-                                "    raise RuntimeError(\"registered-model bytes differ from XAI binding\")\n",
-                                "result = {\n",
-                                "    \"schema_version\": \"aidefend.mlflow-xai-readback.v1\",\n",
-                                "    \"model_name\": version.name,\n",
-                                "    \"model_version\": str(version.version),\n",
-                                "    \"model_run_id\": version.run_id,\n",
-                                "    \"release_id\": binding[\"release_id\"],\n",
-                                "    \"registered_model_sha256\": observed_model_sha256,\n",
-                                "    \"baseline_sha256\": binding[\"baseline_sha256\"],\n",
-                                "    \"binding_sha256\": hashlib.sha256(binding_raw).hexdigest(),\n",
-                                "    \"outcome\": \"PASS\",\n",
-                                "}\n",
-                                "out = Path(\"evidence/mlflow-xai-readback.json\")\n",
-                                "out.parent.mkdir(parents=True, exist_ok=True)\n",
-                                "out.write_text(json.dumps(result, sort_keys=True) + \"\\n\", encoding=\"utf-8\")\n",
-                                "subprocess.run(\n",
-                                "    [\n",
-                                "        \"cosign\", \"sign-blob\", \"--yes\", \"--key\", \"env://XAI_READBACK_SIGNING_KEY\",\n",
-                                "        \"--bundle\", str(out.with_suffix(\".sig\")), str(out),\n",
-                                "    ],\n",
-                                "    check=True, timeout=COMMAND_TIMEOUT,\n",
-                                ")</code></pre><h5>Step 3: Run with separated registry roles</h5><p>The registration job may create a model version and set its tags. A separate read-only MLflow identity runs the second script using the name and version from the signed release manifest, downloads the model through <code>models:/name/version</code>, re-downloads the baseline and signed binding from that version's run, and signs the readback. Missing bytes, a tag-only assertion, a different run or version, a failed signature, or a digest mismatch prevents release.</p><p><strong>Action:</strong> Store the signed baseline, binding, and readback with the exact release. Do not infer a baseline-to-model relationship from run adjacency, mutable aliases, or a successful registration message.</p>"
-                            ].join("")
+                            "howTo": "<h5>Concept and prerequisite</h5><p>Bind the signed XAI baseline bytes to the exact MLflow registered-model name and version, not merely to a neighboring run. Pin the MLflow Python client and tracking-server compatibility tuple in the deployment lock, use an authenticated tracking endpoint, and supply all paths and timeouts from the signed release profile.</p><h5>Step 1: Register the model and publish a signed version binding</h5><pre><code># File: modeling/register_xai_bundle.py\nfrom __future__ import annotations\n\nimport hashlib\nimport json\nimport math\nimport os\nimport stat\nimport subprocess\nimport tempfile\nfrom pathlib import Path\n\nimport mlflow\nimport mlflow.artifacts\nimport mlflow.sklearn\nfrom mlflow import MlflowClient\nfrom skops.io import load as load_skops\n\n\ndef positive_timeout(name: str) -&gt; float:\n    value = float(os.environ[name])\n    if not math.isfinite(value) or value &lt;= 0:\n        raise RuntimeError(f\"{name} must be finite and positive\")\n    return value\n\n\nCOMMAND_TIMEOUT = positive_timeout(\"M003003_COMMAND_TIMEOUT_SECONDS\")\nREGISTRATION_TIMEOUT = int(os.environ[\"M003003_REGISTRATION_TIMEOUT_SECONDS\"])\nif REGISTRATION_TIMEOUT &lt; 1:\n    raise RuntimeError(\"registration timeout must be positive\")\nMODEL_PATH = Path(os.environ[\"VERIFIED_MODEL_ARTIFACT_PATH\"])\nBASELINE_PATH = Path(os.environ[\"VERIFIED_XAI_BASELINE_PATH\"])\nBASELINE_SIGNATURE = Path(os.environ[\"VERIFIED_XAI_BASELINE_SIGNATURE\"])\nMODEL_NAME = os.environ[\"MLFLOW_REGISTERED_MODEL_NAME\"]\nif not MODEL_NAME.strip():\n    raise RuntimeError(\"registered model name is required\")\n\n\ndef sha256_file(path: Path) -&gt; str:\n    if not path.is_file() or path.is_symlink() or path.stat().st_size == 0:\n        raise ValueError(f\"missing, empty, or unsafe file: {path}\")\n    digest = hashlib.sha256()\n    with path.open(\"rb\") as handle:\n        for chunk in iter(lambda: handle.read(1024 * 1024), b\"\"):\n            digest.update(chunk)\n    return digest.hexdigest()\n\n\ndef tree_sha256(path: Path) -&gt; str:\n    if not path.exists() or path.is_symlink():\n        raise ValueError(f\"missing or unsafe artifact: {path}\")\n    files = [path] if path.is_file() else sorted(\n        item for item in path.rglob(\"*\") if item.is_file()\n    )\n    if not files:\n        raise ValueError(f\"artifact contains no files: {path}\")\n    digest = hashlib.sha256()\n    for item in files:\n        if item.is_symlink():\n            raise ValueError(f\"artifact contains a symlink: {item}\")\n        relative = item.name if path.is_file() else item.relative_to(path).as_posix()\n        name = relative.encode(\"utf-8\")\n        content = item.read_bytes()\n        digest.update(len(name).to_bytes(8, \"big\"))\n        digest.update(name)\n        digest.update(len(content).to_bytes(8, \"big\"))\n        digest.update(content)\n    return digest.hexdigest()\n\n\ndef verify_blob(path: Path, signature: Path, key: str) -&gt; None:\n    subprocess.run(\n        [\"cosign\", \"verify-blob\", \"--key\", key, \"--bundle\", str(signature), str(path)],\n        check=True, capture_output=True, text=True, timeout=COMMAND_TIMEOUT,\n    )\n\n\ndef regular_bytes(path: Path) -&gt; bytes:\n    descriptor = os.open(path, os.O_RDONLY | getattr(os, \"O_NOFOLLOW\", 0))\n    with os.fdopen(descriptor, \"rb\") as handle:\n        status = os.fstat(handle.fileno())\n        if not stat.S_ISREG(status.st_mode) or status.st_size == 0:\n            raise ValueError(f\"missing, empty, or unsafe signed input: {path}\")\n        return handle.read()\n\n\ndef private_file(path: Path, raw: bytes) -&gt; None:\n    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, \"O_NOFOLLOW\", 0)\n    descriptor = os.open(path, flags, 0o400)\n    with os.fdopen(descriptor, \"wb\") as handle:\n        handle.write(raw)\n        handle.flush()\n        os.fsync(handle.fileno())\n\n\ndef strict_json(raw: bytes, label: str) -&gt; object:\n    def unique(pairs):\n        value = {}\n        for key, item in pairs:\n            if key in value:\n                raise ValueError(f\"duplicate JSON key in {label}: {key}\")\n            value[key] = item\n        return value\n    return json.loads(\n        raw.decode(\"utf-8\", errors=\"strict\"), object_pairs_hook=unique,\n        parse_constant=lambda value: (_ for _ in ()).throw(ValueError(value)),\n    )\n\n\nsnapshot_directory = tempfile.TemporaryDirectory(prefix=\"aidefend-xai-baseline-\")\nsnapshot_root = Path(snapshot_directory.name)\nsnapshot_root.chmod(0o700)\nbaseline_raw = regular_bytes(BASELINE_PATH)\nbaseline_signature_raw = regular_bytes(BASELINE_SIGNATURE)\nbaseline_snapshot = snapshot_root / BASELINE_PATH.name\nbaseline_signature_snapshot = snapshot_root / BASELINE_SIGNATURE.name\nif baseline_snapshot == baseline_signature_snapshot:\n    raise ValueError(\"baseline payload and signature names collide\")\nprivate_file(baseline_snapshot, baseline_raw)\nprivate_file(baseline_signature_snapshot, baseline_signature_raw)\nverify_blob(baseline_snapshot, baseline_signature_snapshot, os.environ[\"XAI_BASELINE_VERIFY_KEY\"])\nbaseline = strict_json(baseline_raw, \"signed XAI baseline\")\nif not isinstance(baseline, dict) or set(baseline) != {\n    \"schema_version\", \"release_id\", \"method\", \"explainer_class\", \"class_of_interest\",\n    \"model_sha256\", \"baseline_dataset_sha256\", \"baseline_rows\", \"feature_schema\",\n    \"feature_schema_sha256\", \"feature_count\", \"runtime\", \"average_feature_importance\",\n}:\n    raise ValueError(\"XAI baseline schema differs\")\nif (\n    baseline[\"schema_version\"] != \"aidefend.xai-baseline.v1\"\n    or not isinstance(baseline[\"release_id\"], str) or not baseline[\"release_id\"]\n    or baseline[\"release_id\"] != os.environ[\"VERIFIED_RELEASE_ID\"].strip()\n    or not isinstance(baseline[\"model_sha256\"], str)\n    or not baseline[\"model_sha256\"].startswith(\"sha256:\")\n    or len(baseline[\"model_sha256\"]) != 71\n    or set(baseline[\"model_sha256\"][7:]) - set(\"0123456789abcdef\")\n):\n    raise ValueError(\"XAI baseline identity is invalid\")\n\n# G001 hashes the exact .skops file, not a tree hash or MLflow directory.\nsource_model_raw = regular_bytes(MODEL_PATH)\nsource_model_sha256 = hashlib.sha256(source_model_raw).hexdigest()\nmodel_snapshot = snapshot_root / \"source-model.skops\"\nprivate_file(model_snapshot, source_model_raw)\nif baseline[\"model_sha256\"] != \"sha256:\" + source_model_sha256:\n    raise ValueError(\"XAI baseline is bound to different source-model bytes\")\n\nmlflow.set_tracking_uri(os.environ[\"MLFLOW_TRACKING_URI\"])\nmlflow.set_experiment(os.environ[\"MLFLOW_EXPERIMENT_NAME\"])\nmodel = load_skops(model_snapshot, trusted=[])\nclient = MlflowClient()\nbinding_path = Path(\"artifacts/xai-binding.json\")\nbinding_signature = binding_path.with_suffix(\".sig\")\nbinding_path.parent.mkdir(parents=True, exist_ok=True)\n\nwith mlflow.start_run() as run:\n    mlflow.sklearn.log_model(model, name=\"classifier\")\n    mlflow.log_artifact(str(baseline_snapshot), artifact_path=\"xai\")\n    mlflow.log_artifact(str(baseline_signature_snapshot), artifact_path=\"xai\")\n    registered = mlflow.register_model(\n        model_uri=f\"runs:/{run.info.run_id}/classifier\",\n        name=MODEL_NAME,\n        await_registration_for=REGISTRATION_TIMEOUT,\n    )\n    registered_uri = f\"models:/{registered.name}/{registered.version}\"\n    registered_model_path = Path(\n        mlflow.artifacts.download_artifacts(artifact_uri=registered_uri)\n    )\n    registered_model_sha256 = tree_sha256(registered_model_path)\n    binding = {\n        \"schema_version\": \"aidefend.mlflow-xai-binding.v1\",\n        \"release_id\": baseline[\"release_id\"],\n        \"model_name\": registered.name,\n        \"model_version\": str(registered.version),\n        \"model_run_id\": run.info.run_id,\n        \"model_source_uri\": registered.source,\n        \"model_source_sha256\": source_model_sha256,\n        \"registered_model_sha256\": registered_model_sha256,\n        \"baseline_artifact_path\": \"xai/\" + baseline_snapshot.name,\n        \"baseline_signature_path\": \"xai/\" + baseline_signature_snapshot.name,\n        \"baseline_sha256\": hashlib.sha256(baseline_raw).hexdigest(),\n        \"baseline_signature_sha256\": hashlib.sha256(baseline_signature_raw).hexdigest(),\n    }\n    binding_path.write_text(\n        json.dumps(binding, sort_keys=True, separators=(\",\", \":\"), allow_nan=False) + \"\\n\",\n        encoding=\"utf-8\",\n    )\n    subprocess.run(\n        [\n            \"cosign\", \"sign-blob\", \"--yes\",\n            \"--key\", \"env://XAI_BINDING_SIGNING_KEY\",\n            \"--bundle\", str(binding_signature), str(binding_path),\n        ],\n        check=True, timeout=COMMAND_TIMEOUT,\n    )\n    verify_blob(binding_path, binding_signature, os.environ[\"XAI_BINDING_VERIFY_KEY\"])\n    mlflow.log_artifact(str(binding_path), artifact_path=\"xai\")\n    mlflow.log_artifact(str(binding_signature), artifact_path=\"xai\")\n\nbinding_sha256 = sha256_file(binding_path)\nexpected_tags = {\n    \"aidefend.release_id\": binding[\"release_id\"],\n    \"aidefend.xai_binding_path\": \"xai/\" + binding_path.name,\n    \"aidefend.xai_binding_signature_path\": \"xai/\" + binding_signature.name,\n    \"aidefend.xai_binding_sha256\": binding_sha256,\n    \"aidefend.xai_baseline_sha256\": binding[\"baseline_sha256\"],\n    \"aidefend.registered_model_sha256\": binding[\"registered_model_sha256\"],\n}\nfor key, value in expected_tags.items():\n    client.set_model_version_tag(registered.name, registered.version, key, value)\nreadback = client.get_model_version(registered.name, registered.version)\nif str(readback.version) != str(registered.version) or readback.run_id != binding[\"model_run_id\"]:\n    raise RuntimeError(\"registered-model version readback differs\")\nfor key, expected in expected_tags.items():\n    if readback.tags.get(key) != expected:\n        raise RuntimeError(f\"registered-model tag readback differs: {key}\")\nPath(\"artifacts/xai-registration.json\").write_text(\n    json.dumps({\n        \"model_name\": readback.name,\n        \"model_version\": str(readback.version),\n        \"binding_sha256\": binding_sha256,\n    }, sort_keys=True) + \"\\n\",\n    encoding=\"utf-8\",\n)</code></pre><h5>Step 2: Re-download through the exact registered-model version</h5><pre><code># File: modeling/verify_xai_binding.py\nfrom __future__ import annotations\n\nimport hashlib\nimport json\nimport math\nimport os\nimport stat\nimport subprocess\nimport tempfile\nfrom pathlib import Path\n\nimport mlflow\nimport mlflow.artifacts\nfrom mlflow import MlflowClient\n\n\ndef positive_timeout(name: str) -&gt; float:\n    value = float(os.environ[name])\n    if not math.isfinite(value) or value &lt;= 0:\n        raise RuntimeError(f\"{name} must be finite and positive\")\n    return value\n\n\nCOMMAND_TIMEOUT = positive_timeout(\"M003003_COMMAND_TIMEOUT_SECONDS\")\n\n\ndef sha256_file(path: Path) -&gt; str:\n    if not path.is_file() or path.is_symlink() or path.stat().st_size == 0:\n        raise ValueError(f\"missing, empty, or unsafe file: {path}\")\n    digest = hashlib.sha256()\n    with path.open(\"rb\") as handle:\n        for chunk in iter(lambda: handle.read(1024 * 1024), b\"\"):\n            digest.update(chunk)\n    return digest.hexdigest()\n\n\ndef tree_sha256(path: Path) -&gt; str:\n    if not path.exists() or path.is_symlink():\n        raise ValueError(f\"missing or unsafe artifact: {path}\")\n    files = [path] if path.is_file() else sorted(\n        item for item in path.rglob(\"*\") if item.is_file()\n    )\n    if not files:\n        raise ValueError(f\"artifact contains no files: {path}\")\n    digest = hashlib.sha256()\n    for item in files:\n        if item.is_symlink():\n            raise ValueError(f\"artifact contains a symlink: {item}\")\n        relative = item.name if path.is_file() else item.relative_to(path).as_posix()\n        name = relative.encode(\"utf-8\")\n        content = item.read_bytes()\n        digest.update(len(name).to_bytes(8, \"big\"))\n        digest.update(name)\n        digest.update(len(content).to_bytes(8, \"big\"))\n        digest.update(content)\n    return digest.hexdigest()\n\n\ndef verify_blob(path: Path, signature: Path, key: str) -&gt; None:\n    subprocess.run(\n        [\"cosign\", \"verify-blob\", \"--key\", key, \"--bundle\", str(signature), str(path)],\n        check=True, capture_output=True, text=True, timeout=COMMAND_TIMEOUT,\n    )\n\n\ndef regular_bytes(path: Path) -&gt; bytes:\n    descriptor = os.open(path, os.O_RDONLY | getattr(os, \"O_NOFOLLOW\", 0))\n    with os.fdopen(descriptor, \"rb\") as handle:\n        status = os.fstat(handle.fileno())\n        if not stat.S_ISREG(status.st_mode) or status.st_size == 0:\n            raise ValueError(f\"missing, empty, or unsafe signed input: {path}\")\n        return handle.read()\n\n\ndef private_file(path: Path, raw: bytes) -&gt; None:\n    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, \"O_NOFOLLOW\", 0)\n    descriptor = os.open(path, flags, 0o400)\n    with os.fdopen(descriptor, \"wb\") as handle:\n        handle.write(raw)\n        handle.flush()\n        os.fsync(handle.fileno())\n\n\ndef capture_verified(path: Path, signature: Path, key: str) -&gt; tuple[bytes, bytes]:\n    raw, signature_raw = regular_bytes(path), regular_bytes(signature)\n    with tempfile.TemporaryDirectory(prefix=\"aidefend-xai-readback-\") as directory:\n        root = Path(directory)\n        root.chmod(0o700)\n        payload_snapshot, signature_snapshot = root / \"payload\", root / \"payload.sig\"\n        private_file(payload_snapshot, raw)\n        private_file(signature_snapshot, signature_raw)\n        verify_blob(payload_snapshot, signature_snapshot, key)\n        if regular_bytes(payload_snapshot) != raw or regular_bytes(signature_snapshot) != signature_raw:\n            raise ValueError(\"private signed-input snapshot changed during verification\")\n    return raw, signature_raw\n\n\ndef strict_json(raw: bytes, label: str) -&gt; object:\n    def unique(pairs):\n        value = {}\n        for key, item in pairs:\n            if key in value:\n                raise ValueError(f\"duplicate JSON key in {label}: {key}\")\n            value[key] = item\n        return value\n    return json.loads(raw.decode(\"utf-8\", errors=\"strict\"), object_pairs_hook=unique,\n                      parse_constant=lambda value: (_ for _ in ()).throw(ValueError(value)))\n\nmodel_name = os.environ[\"MLFLOW_REGISTERED_MODEL_NAME\"]\nmodel_version = os.environ[\"MLFLOW_REGISTERED_MODEL_VERSION\"]\nmlflow.set_tracking_uri(os.environ[\"MLFLOW_TRACKING_URI\"])\nclient = MlflowClient()\nversion = client.get_model_version(model_name, model_version)\nif version.name != model_name or str(version.version) != model_version or not version.run_id:\n    raise RuntimeError(\"exact registered-model version is unavailable\")\n\nrequired_tags = {\n    \"aidefend.release_id\", \"aidefend.xai_binding_path\",\n    \"aidefend.xai_binding_signature_path\", \"aidefend.xai_binding_sha256\",\n    \"aidefend.xai_baseline_sha256\", \"aidefend.registered_model_sha256\",\n}\nif any(not version.tags.get(tag) for tag in required_tags):\n    raise RuntimeError(\"exact registered-model version lacks XAI binding tags\")\n\nbinding_path = Path(mlflow.artifacts.download_artifacts(\n    run_id=version.run_id,\n    artifact_path=version.tags[\"aidefend.xai_binding_path\"],\n))\nbinding_signature = Path(mlflow.artifacts.download_artifacts(\n    run_id=version.run_id,\n    artifact_path=version.tags[\"aidefend.xai_binding_signature_path\"],\n))\nbinding_raw, binding_signature_raw = capture_verified(\n    binding_path, binding_signature, os.environ[\"XAI_BINDING_VERIFY_KEY\"]\n)\nif hashlib.sha256(binding_raw).hexdigest() != version.tags[\"aidefend.xai_binding_sha256\"]:\n    raise RuntimeError(\"downloaded XAI binding digest differs from model-version tag\")\nbinding = strict_json(binding_raw, \"signed XAI binding\")\nrequired_binding = {\n    \"schema_version\", \"release_id\", \"model_name\", \"model_version\",\n    \"model_run_id\", \"model_source_uri\", \"model_source_sha256\",\n    \"registered_model_sha256\", \"baseline_artifact_path\",\n    \"baseline_signature_path\", \"baseline_sha256\",\n    \"baseline_signature_sha256\",\n}\nif set(binding) != required_binding or binding[\"schema_version\"] != \"aidefend.mlflow-xai-binding.v1\":\n    raise RuntimeError(\"XAI binding schema differs\")\nif (\n    binding[\"model_name\"] != version.name\n    or binding[\"model_version\"] != str(version.version)\n    or binding[\"model_run_id\"] != version.run_id\n    or binding[\"model_source_uri\"] != version.source\n    or binding[\"release_id\"] != version.tags[\"aidefend.release_id\"]\n):\n    raise RuntimeError(\"XAI binding does not name the exact registered-model version\")\n\nbaseline_path = Path(mlflow.artifacts.download_artifacts(\n    run_id=version.run_id, artifact_path=binding[\"baseline_artifact_path\"]\n))\nbaseline_signature = Path(mlflow.artifacts.download_artifacts(\n    run_id=version.run_id, artifact_path=binding[\"baseline_signature_path\"]\n))\nbaseline_raw, baseline_signature_raw = capture_verified(\n    baseline_path, baseline_signature, os.environ[\"XAI_BASELINE_VERIFY_KEY\"]\n)\nif (\n    hashlib.sha256(baseline_raw).hexdigest() != binding[\"baseline_sha256\"]\n    or hashlib.sha256(baseline_signature_raw).hexdigest() != binding[\"baseline_signature_sha256\"]\n    or binding[\"baseline_sha256\"] != version.tags[\"aidefend.xai_baseline_sha256\"]\n):\n    raise RuntimeError(\"XAI baseline bytes or signature differ from the exact version binding\")\nbaseline = strict_json(baseline_raw, \"signed XAI baseline\")\nif (\n    baseline.get(\"schema_version\") != \"aidefend.xai-baseline.v1\"\n    or baseline.get(\"release_id\") != binding[\"release_id\"]\n    or baseline.get(\"model_sha256\") != \"sha256:\" + binding[\"model_source_sha256\"]\n):\n    raise RuntimeError(\"XAI baseline identity differs from signed version binding\")\n\nregistered_model = Path(mlflow.artifacts.download_artifacts(\n    artifact_uri=f\"models:/{version.name}/{version.version}\"\n))\nobserved_model_sha256 = tree_sha256(registered_model)\nif (\n    observed_model_sha256 != binding[\"registered_model_sha256\"]\n    or observed_model_sha256 != version.tags[\"aidefend.registered_model_sha256\"]\n):\n    raise RuntimeError(\"registered-model bytes differ from XAI binding\")\nresult = {\n    \"schema_version\": \"aidefend.mlflow-xai-readback.v1\",\n    \"model_name\": version.name,\n    \"model_version\": str(version.version),\n    \"model_run_id\": version.run_id,\n    \"release_id\": binding[\"release_id\"],\n    \"registered_model_sha256\": observed_model_sha256,\n    \"baseline_sha256\": binding[\"baseline_sha256\"],\n    \"binding_sha256\": hashlib.sha256(binding_raw).hexdigest(),\n    \"outcome\": \"PASS\",\n}\nout = Path(\"evidence/mlflow-xai-readback.json\")\nout.parent.mkdir(parents=True, exist_ok=True)\nout.write_text(json.dumps(result, sort_keys=True) + \"\\n\", encoding=\"utf-8\")\nsubprocess.run(\n    [\n        \"cosign\", \"sign-blob\", \"--yes\", \"--key\", \"env://XAI_READBACK_SIGNING_KEY\",\n        \"--bundle\", str(out.with_suffix(\".sig\")), str(out),\n    ],\n    check=True, timeout=COMMAND_TIMEOUT,\n)</code></pre><h5>Step 3: Run with separated registry roles</h5><p>The registration job may create a model version and set its tags. A separate read-only MLflow identity runs the second script using the name and version from the signed release manifest, downloads the model through <code>models:/name/version</code>, re-downloads the baseline and signed binding from that version's run, and signs the readback. Missing bytes, a tag-only assertion, a different run or version, a failed signature, or a digest mismatch prevents release.</p><p><strong>Action:</strong> Store the signed baseline, binding, and readback with the exact release. Do not infer a baseline-to-model relationship from run adjacency, mutable aliases, or a successful registration message.</p><p>G001 and this registration path share the detailed aidefend.xai-baseline.v1 SHAP schema. VERIFIED_MODEL_ARTIFACT_PATH names the same .skops bytes measured by G001; it is not an MLflow model directory. The signed release supplies VERIFIED_RELEASE_ID. The original source file uses a raw SHA-256 (with sha256: in the baseline); only the newly registered MLflow directory uses tree_sha256. Neither artifact may be substituted merely because predictions look similar.</p>"
                         }
                     ],
                     "toolsOpenSource": [
@@ -5064,10 +4648,8 @@ export const modelTactic = {
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-1.3 Goal Manipulation",
-                                "AISubtech-1.3.1 Goal Manipulation (Models, Agents)",
-                                "AITech-5.2 Configuration Persistence",
-                                "AISubtech-5.2.1 Agent Profile Tampering"
+                                "AISubtech-5.2.1 Agent Profile Tampering",
+                                "AITech-5.2 Configuration Persistence"
                             ]
                         },
                         {
@@ -6537,7 +6119,14 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "N/A"
+                                "AISubtech-1.1.1 Instruction Manipulation (Release regression tests cover the signed direct instruction-override cases)",
+                                "AISubtech-8.3.3 Personally Identifiable Information Exposure (Release tests detect SSN and payment-card disclosure in the governed probes)",
+                                "AISubtech-8.3.4 Payment Card Industry Data Exposure (Release tests detect SSN and payment-card disclosure in the governed probes)",
+                                "AISubtech-8.4.1 System LLM Prompt Leakage (Release regression tests cover the signed hidden-policy disclosure cases)",
+                                "AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation) (Release regression tests cover the signed direct instruction-override cases)",
+                                "AITech-8.2 Data Exfiltration / Exposure (Release tests detect SSN and payment-card disclosure in the governed probes)",
+                                "AITech-8.3 Information Disclosure (Release tests detect SSN and payment-card disclosure in the governed probes)",
+                                "AITech-8.4 Prompt/Meta Extraction (Release regression tests cover the signed hidden-policy disclosure cases)"
                             ]
                         },
                         {
@@ -6768,13 +6357,7 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-5.2 Configuration Persistence",
-                        "AITech-9.3 Dependency / Plugin Compromise",
                         "AITech-14.1 Unauthorized Access",
-                        "AISubtech-9.3.1 Malicious Package / Tool Injection",
-                        "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
-                        "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
-                        "AISubtech-14.1.1 Credential Theft",
                         "AISubtech-14.1.2 Insufficient Access Controls"
                     ]
                 },
@@ -7025,14 +6608,8 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-5.2 Configuration Persistence",
-                                "AITech-9.3 Dependency / Plugin Compromise",
-                                "AISubtech-9.3.1 Malicious Package / Tool Injection",
-                                "AISubtech-9.3.2 Dependency Name Squatting (Tools / Servers)",
-                                "AISubtech-9.3.3 Dependency Replacement / Rug Pull",
-                                "AITech-14.1 Unauthorized Access",
-                                "AISubtech-14.1.2 Insufficient Access Controls",
-                                "AISubtech-14.1.1 Credential Theft"
+                                "AISubtech-14.1.2 Insufficient Access Controls (Blocks AI-host releases with measured public-exposure configuration violations)",
+                                "AITech-14.1 Unauthorized Access (Blocks AI-host releases with measured public-exposure configuration violations)"
                             ]
                         },
                         {
@@ -7121,9 +6698,8 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-12.1 Tool Exploitation",
-                        "AITech-14.2 Abuse of Delegated Authority",
-                        "AISubtech-12.1.3 Unsafe System / Browser / File Execution"
+                        "AITech-2.1 Excessive Agency",
+                        "AISubtech-2.1.1 Execution Approval Bypass"
                     ]
                 },
                 {
@@ -7233,7 +6809,8 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "N/A"
+                                "AISubtech-2.1.1 Execution Approval Bypass (Tests rejection of unauthorized, expired and unanswered human-approval requests)",
+                                "AITech-2.1 Excessive Agency (Tests rejection of unauthorized, expired and unanswered human-approval requests)"
                             ]
                         },
                         {
@@ -7342,7 +6919,8 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "N/A"
+                                "AISubtech-2.1.1 Execution Approval Bypass (Independently drills approval, denial, timeout and override through the observed final action)",
+                                "AITech-2.1 Excessive Agency (Independently drills approval, denial, timeout and override through the observed final action)"
                             ]
                         },
                         {
@@ -7465,9 +7043,8 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-14.2 Abuse of Delegated Authority (operator approval and final action are bound to durable decision evidence)",
-                                "AITech-12.1 Tool Exploitation (high-impact tool execution is auditable against the HITL escalation contract)",
-                                "AISubtech-12.1.3 Unsafe System / Browser / File Execution (unsafe execution paths require an explicit, auditable HITL outcome)"
+                                "AISubtech-2.1.1 Execution Approval Bypass (Reconciles human decisions and signed gate receipts with the observed final action)",
+                                "AITech-2.1 Excessive Agency (Reconciles human decisions and signed gate receipts with the observed final action)"
                             ]
                         },
                         {
@@ -7553,7 +7130,12 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
               {
                   "framework": "Cisco Integrated AI Security and Safety Framework",
                   "items": [
-                      "AITech-15.1 Harmful Content"
+                      "AITech-2.1 Excessive Agency",
+                      "AITech-8.2 Data Exfiltration / Exposure",
+                      "AITech-8.3 Information Disclosure",
+                      "AITech-15.1 Harmful Content",
+                      "AISubtech-2.1.2 Capability and Permission Overreach",
+                      "AISubtech-8.3.3 Personally Identifiable Information Exposure"
                   ]
               },
               {
@@ -8238,7 +7820,12 @@ cosign sign-blob --yes --key env://SAFETY_POLICY_SIGNING_KEY --bundle safety/con
                   {
                       "framework": "Cisco Integrated AI Security and Safety Framework",
                       "items": [
-                          "AITech-15.1 Harmful Content (by defining and validating content guardrails through forbidden content categories and refusal tests)"
+                          "AISubtech-2.1.2 Capability and Permission Overreach (Release tests verify forbidden actions have no committed effect)",
+                          "AISubtech-8.3.3 Personally Identifiable Information Exposure (Release tests cover policy-selected PII disclosure and egress cases)",
+                          "AITech-15.1 Harmful Content (Release tests cover the signed harmful-content case population)",
+                          "AITech-2.1 Excessive Agency (Release tests verify forbidden actions have no committed effect)",
+                          "AITech-8.2 Data Exfiltration / Exposure (Release tests cover policy-selected PII disclosure and egress cases)",
+                          "AITech-8.3 Information Disclosure (Release tests cover policy-selected PII disclosure and egress cases)"
                       ]
                   },
                   {
@@ -8948,7 +8535,7 @@ cosign sign-blob --yes --key env://SAFETY_POLICY_SIGNING_KEY --bundle safety/con
                     {
                         "framework": "Cisco Integrated AI Security and Safety Framework",
                         "items": [
-                            "N/A (content harm and poisoning items do not directly represent statistical group-fairness admission)"
+                            "N/A"
                         ]
                     },
                     {
@@ -9757,22 +9344,19 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-1.1 Direct Prompt Injection",
-                        "AISubtech-1.1.1 Instruction Manipulation (Direct Prompt Injection)",
-                        "AISubtech-1.1.2 Obfuscation (Direct Prompt Injection)",
-                        "AITech-1.2 Indirect Prompt Injection",
-                        "AISubtech-1.2.1 Instruction Manipulation (Indirect Prompt Injection)",
-                        "AISubtech-1.2.2 Obfuscation (Indirect Prompt Injection)",
-                        "AITech-2.1 Jailbreak",
-                        "AISubtech-2.1.2 Obfuscation (Jailbreak)",
-                        "AISubtech-2.1.3 Semantic Manipulation (Jailbreak)",
-                        "AISubtech-2.1.4 Token Exploitation (Jailbreak)",
-                        "AITech-12.1 Tool Exploitation",
-                        "AISubtech-12.1.1 Parameter Manipulation",
-                        "AISubtech-12.1.3 Unsafe System / Browser / File Execution",
-                        "AITech-12.2 Insecure Output Handling",
-                        "AITech-9.2 Detection Evasion",
-                        "AISubtech-9.2.1 Obfuscation Vulnerabilities"
+                        "AISubtech-1.3.1 Image-Text Injection (Browser assessment covers OCR and rendered image-text instruction payloads)",
+                        "AISubtech-2.1.2 Capability and Permission Overreach (Independent release tests detect unauthorized tool actions and side effects)",
+                        "AISubtech-2.2.1 Unauthorized Scope Expansion (Impossible-task tests detect scope expansion and abandoned execution constraints)",
+                        "AISubtech-2.2.3 Authorization and Constraint Erosion (Impossible-task tests detect scope expansion and abandoned execution constraints)",
+                        "AISubtech-8.2.3 Data Exfiltration via Agent Tooling (Release tests detect prohibited disclosure and browser/tool data transfer)",
+                        "AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation) (Release-bound static and adaptive prompt-injection assessment)",
+                        "AITech-1.2 Indirect Prompt Injection (Real-browser regression tests cover external-content instruction injection)",
+                        "AITech-1.3 Multimodal Injection and Manipulation (Browser assessment covers OCR and rendered image-text instruction payloads)",
+                        "AITech-2.1 Excessive Agency (Independent release tests detect unauthorized tool actions and side effects)",
+                        "AITech-2.2 Goal Drift (Impossible-task tests detect scope expansion and abandoned execution constraints)",
+                        "AITech-7.2 Memory System Corruption (Release assessment covers the signed adaptive persistent-memory poisoning suite)",
+                        "AITech-8.2 Data Exfiltration / Exposure (Release tests detect prohibited disclosure and browser/tool data transfer)",
+                        "AITech-8.3 Information Disclosure (Release tests detect prohibited disclosure and browser/tool data transfer)"
                     ]
                 },
                 {
@@ -11213,11 +10797,16 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                 {
                     "framework": "Cisco Integrated AI Security and Safety Framework",
                     "items": [
-                        "AITech-1.3 Goal Manipulation",
-                        "AITech-12.1 Tool Exploitation",
-                        "AITech-14.1 Unauthorized Access",
+                        "AITech-2.1 Excessive Agency",
+                        "AITech-3.1 Masquerading / Obfuscation / Impersonation",
+                        "AITech-5.2 Configuration Persistence",
                         "AITech-14.2 Abuse of Delegated Authority",
-                        "AISubtech-1.3.1 Goal Manipulation (Models, Agents)",
+                        "AISubtech-2.1.2 Capability and Permission Overreach",
+                        "AISubtech-3.1.1 Identity Obfuscation",
+                        "AISubtech-3.1.2 Trusted Agent Spoofing",
+                        "AISubtech-4.3.4 Replay Exploitation",
+                        "AISubtech-5.2.1 Agent Profile Tampering",
+                        "AISubtech-14.1.2 Insufficient Access Controls",
                         "AISubtech-14.2.1 Permission Escalation via Delegation"
                     ]
                 },
@@ -11317,7 +10906,8 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "N/A"
+                                "AISubtech-5.2.1 Agent Profile Tampering (Rejects deployment of an autonomy profile lacking approval for its exact bytes)",
+                                "AITech-5.2 Configuration Persistence (Rejects deployment of an autonomy profile lacking approval for its exact bytes)"
                             ]
                         },
                         {
@@ -11426,7 +11016,8 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "N/A"
+                                "AISubtech-5.2.1 Agent Profile Tampering (Rejects authority-envelope or tool-policy changes outside the signed release generation)",
+                                "AITech-5.2 Configuration Persistence (Rejects authority-envelope or tool-policy changes outside the signed release generation)"
                             ]
                         },
                         {
@@ -11533,8 +11124,15 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
+                                "AISubtech-14.1.2 Insufficient Access Controls (Enforces authenticated actor and non-widening scope at delegated tool execution)",
+                                "AISubtech-14.2.1 Permission Escalation via Delegation",
+                                "AISubtech-2.1.2 Capability and Permission Overreach (Rejects action identity contexts whose requested tool or scope exceeds delegated authority)",
+                                "AISubtech-3.1.1 Identity Obfuscation",
+                                "AISubtech-3.1.2 Trusted Agent Spoofing",
+                                "AISubtech-4.3.4 Replay Exploitation",
                                 "AITech-14.2 Abuse of Delegated Authority",
-                                "AISubtech-14.2.1 Permission Escalation via Delegation"
+                                "AITech-2.1 Excessive Agency (Rejects action identity contexts whose requested tool or scope exceeds delegated authority)",
+                                "AITech-3.1 Masquerading / Obfuscation / Impersonation"
                             ]
                         },
                         {
@@ -12256,8 +11854,8 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-1.3 Goal Manipulation",
-                                "AISubtech-1.3.1 Goal Manipulation (Models, Agents)"
+                                "AISubtech-5.2.1 Agent Profile Tampering",
+                                "AITech-5.2 Configuration Persistence"
                             ]
                         },
                         {
@@ -12389,10 +11987,8 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                         {
                             "framework": "Cisco Integrated AI Security and Safety Framework",
                             "items": [
-                                "AITech-1.3 Goal Manipulation",
-                                "AITech-12.1 Tool Exploitation",
-                                "AITech-14.1 Unauthorized Access",
-                                "AITech-14.2 Abuse of Delegated Authority"
+                                "AISubtech-2.1.2 Capability and Permission Overreach (Denies elevated agent privileges when required safeguards lack current verified evidence)",
+                                "AITech-2.1 Excessive Agency (Denies elevated agent privileges when required safeguards lack current verified evidence)"
                             ]
                         },
                         {
@@ -12486,7 +12082,10 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                   "framework": "Cisco Integrated AI Security and Safety Framework",
                   "items": [
                       "AITech-8.2 Data Exfiltration / Exposure",
-                      "AITech-10.1 Model Extraction"
+                      "AITech-8.3 Information Disclosure",
+                      "AITech-10.1 Model Extraction",
+                      "AITech-14.1 Unauthorized Access",
+                      "AISubtech-14.1.2 Insufficient Access Controls"
                   ]
               },
               {
@@ -12576,8 +12175,9 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                   {
                       "framework": "Cisco Integrated AI Security and Safety Framework",
                       "items": [
-                          "AITech-10.1 Model Extraction",
-                          "AITech-8.2 Data Exfiltration / Exposure"
+                          "AITech-10.1 Model Extraction (Prevents recovery of retired model bytes from governed residual storage copies)",
+                          "AITech-8.2 Data Exfiltration / Exposure",
+                          "AITech-8.3 Information Disclosure"
                       ]
                   },
                   {
@@ -12696,8 +12296,11 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                   {
                       "framework": "Cisco Integrated AI Security and Safety Framework",
                       "items": [
-                          "AITech-10.1 Model Extraction",
-                          "AITech-8.2 Data Exfiltration / Exposure"
+                          "AISubtech-14.1.2 Insufficient Access Controls (Revokes and verifies former-owner infrastructure and service access)",
+                          "AITech-10.1 Model Extraction (Closes former-owner model download and inference access after transfer)",
+                          "AITech-14.1 Unauthorized Access (Revokes and verifies former-owner infrastructure and service access)",
+                          "AITech-8.2 Data Exfiltration / Exposure (Authorized encrypted custody transfer and former-owner access revocation)",
+                          "AITech-8.3 Information Disclosure (Authorized encrypted custody transfer and former-owner access revocation)"
                       ]
                   },
                   {
@@ -12832,8 +12435,10 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                   {
                       "framework": "Cisco Integrated AI Security and Safety Framework",
                       "items": [
-                          "AITech-10.1 Model Extraction (de-publication and zero active resolution of a logically retired digest while retained bytes remain preserved)",
-                          "AITech-8.2 Data Exfiltration / Exposure (de-publication and zero active resolution of a logically retired digest while retained bytes remain preserved)"
+                          "AISubtech-14.1.2 Insufficient Access Controls",
+                          "AITech-10.1 Model Extraction (Closes retired model resolution and endpoint access without claiming erasure)",
+                          "AITech-8.2 Data Exfiltration / Exposure (Closes exposure through retired asset references and serving paths)",
+                          "AITech-8.3 Information Disclosure (Closes exposure through retired asset references and serving paths)"
                       ]
                   },
                   {
@@ -12875,7 +12480,7 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                 {
                   "id": "AID-M-010.003-G002",
                   "implementation": "Remove or repoint all active routes, workload grants, schedules, indexes, and pipeline references through the declared authoritative adapters while preserving forensic bytes.",
-                  "howTo": "<h5>Declare only the asset's applicable resolution authorities</h5><p>Build the signed source list from the retired asset's actual registry, deployment, routing, scheduling, retrieval, and pipeline topology. It is not a requirement to enumerate unrelated enterprise systems. An architecture that is absent is not listed; once an applicable source is listed, a missing source adapter or unreadable source produces <code>INSUFFICIENT_DATA</code>, never PASS.</p><pre><code class=\"language-json\">{\n  \"schema_version\": \"aidefend.logical-retirement-reference-policy.v2\",\n  \"policy_version\": \"retirement-prod-2026-08\",\n  \"retired_asset_digest\": \"sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\",\n  \"max_readback_age_seconds\": 900,\n  \"max_future_skew_seconds\": 30,\n  \"authoritative_sources\": [\n    {\n      \"source\": \"model_registry\",\n      \"scope\": \"tenant-a/model-prod\",\n      \"adapter_id\": \"registry-prod-v3\",\n      \"action\": \"REPOINT\",\n      \"replacement_digest\": \"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n      \"compensation_mode\": \"REVERSIBLE\",\n      \"timeout_seconds\": 30\n    },\n    {\n      \"source\": \"deployment_control_plane\",\n      \"scope\": \"cluster-prod/inference\",\n      \"adapter_id\": \"kubernetes-prod-v2\",\n      \"action\": \"REMOVE\",\n      \"replacement_digest\": null,\n      \"compensation_mode\": \"REVERSIBLE\",\n      \"timeout_seconds\": 30\n    },\n    {\n      \"source\": \"gateway\",\n      \"scope\": \"gateway-prod/model-routes\",\n      \"adapter_id\": \"gateway-prod-v4\",\n      \"action\": \"REPOINT\",\n      \"replacement_digest\": \"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n      \"compensation_mode\": \"FORWARD_ONLY\",\n      \"timeout_seconds\": 20\n    }\n  ]\n}</code></pre><pre><code class=\"language-json\">{\n  \"schema_version\": \"aidefend.retirement-adapter-registry.v1\",\n  \"adapters\": [\n    {\n      \"adapter_id\": \"registry-prod-v3\",\n      \"adapter_version\": \"3.4.1\",\n      \"release_sha256\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n      \"protocol_version\": \"aidefend.retirement-adapter.v1\",\n      \"argv\": [\"python3\", \"adapters/model_registry.py\"]\n    },\n    {\n      \"adapter_id\": \"kubernetes-prod-v2\",\n      \"adapter_version\": \"2.8.0\",\n      \"release_sha256\": \"2222222222222222222222222222222222222222222222222222222222222222\",\n      \"protocol_version\": \"aidefend.retirement-adapter.v1\",\n      \"argv\": [\"python3\", \"adapters/kubernetes_references.py\"]\n    },\n    {\n      \"adapter_id\": \"gateway-prod-v4\",\n      \"adapter_version\": \"4.2.0\",\n      \"release_sha256\": \"3333333333333333333333333333333333333333333333333333333333333333\",\n      \"protocol_version\": \"aidefend.retirement-adapter.v1\",\n      \"argv\": [\"python3\", \"adapters/gateway_routes.py\"]\n    }\n  ]\n}</code></pre><p>The policy and adapter registry are signed by their owning authorities. Timeouts above are illustrative fields in that signed policy, not framework defaults. Each adapter reads one canonical JSON request from standard input and writes one canonical JSON result to standard output. The operations are <code>SNAPSHOT</code>, <code>APPLY</code>, <code>READBACK</code>, and, only when declared reversible, <code>COMPENSATE</code>. An APPLY request carries the exact generation and population digest returned by SNAPSHOT; the adapter must perform a native conditional update or compare-and-swap and return <code>PRECONDITION_FAILED</code> instead of overwriting drifted state.</p><h5>Invoke every declared adapter under a versioned contract</h5><pre><code class=\"language-python\"># File: tools/apply_retirement_references.py\nfrom __future__ import annotations\n\nimport argparse\nimport atexit\nimport hashlib\nimport json\nimport math\nimport os\nimport re\nimport shutil\nimport stat\nimport subprocess\nimport tempfile\nimport uuid\nfrom datetime import datetime, timezone\nfrom pathlib import Path\n\nDIGEST = re.compile(r\"^sha256:[a-f0-9]{64}$\")\nPOLICY_FIELDS = {\"schema_version\", \"policy_version\", \"retired_asset_digest\",\n                 \"max_readback_age_seconds\", \"max_future_skew_seconds\",\n                 \"authoritative_sources\"}\nSOURCE_FIELDS = {\"source\", \"scope\", \"adapter_id\", \"action\", \"replacement_digest\",\n                 \"compensation_mode\", \"timeout_seconds\"}\nREGISTRY_FIELDS = {\"schema_version\", \"adapters\"}\nADAPTER_FIELDS = {\"adapter_id\", \"adapter_version\", \"release_sha256\", \"protocol_version\", \"argv\"}\nRESULT_FIELDS = {\"schema_version\", \"request_id\", \"source\", \"scope\", \"operation\",\n                 \"adapter_version\", \"status\", \"observed_at\", \"generation\",\n                 \"population_digest\", \"references\", \"changed\", \"compensation_token\"}\nREFERENCE_FIELDS = {\"reference_id\", \"asset_digest\"}\nUNAVAILABLE = {\"SOURCE_NOT_FOUND\", \"UNSUPPORTED\", \"NOT_APPLICABLE\"}\n\n\nclass Stop(Exception):\n    def __init__(self, outcome: str, reason: str):\n        super().__init__(reason)\n        self.outcome, self.reason = outcome, reason\n\n\ndef strict_json(raw: bytes, label: str) -&gt; object:\n    def unique(pairs):\n        value = {}\n        for key, item in pairs:\n            if key in value:\n                raise ValueError(f\"duplicate JSON key in {label}: {key}\")\n            value[key] = item\n        return value\n    return json.loads(raw.decode(\"utf-8\", errors=\"strict\"), object_pairs_hook=unique,\n                      parse_constant=lambda value: (_ for _ in ()).throw(ValueError(value)))\n\n\ndef canonical(value: object) -&gt; bytes:\n    return (json.dumps(value, sort_keys=True, separators=(\",\", \":\"), allow_nan=False)\n            + \"\\n\").encode(\"utf-8\")\n\n\ndef timestamp(value: object) -&gt; datetime:\n    if not isinstance(value, str) or not value:\n        raise ValueError(\"observation timestamp is absent\")\n    parsed = datetime.fromisoformat(value.replace(\"Z\", \"+00:00\"))\n    if parsed.tzinfo is None:\n        raise ValueError(\"observation timestamp lacks timezone\")\n    return parsed.astimezone(timezone.utc)\n\n\ndef population_digest(rows: list[dict]) -&gt; str:\n    normalized = sorted(rows, key=lambda row: row[\"reference_id\"])\n    return hashlib.sha256(canonical(normalized)).hexdigest()\n\n\ndef validate_references(rows: object) -&gt; list[dict]:\n    if not isinstance(rows, list):\n        raise ValueError(\"reference population is not an array\")\n    identities = set()\n    for row in rows:\n        if (not isinstance(row, dict) or set(row) != REFERENCE_FIELDS\n                or not isinstance(row[\"reference_id\"], str) or not row[\"reference_id\"]\n                or row[\"reference_id\"] in identities\n                or not isinstance(row[\"asset_digest\"], str)\n                or not DIGEST.fullmatch(row[\"asset_digest\"])):\n            raise ValueError(\"reference population schema differs\")\n        identities.add(row[\"reference_id\"])\n    return rows\n\n\ndef invoke(adapter: dict, source: dict, policy_sha256: str, operation: str,\n           *, expected_generation: str | None = None,\n           expected_population_digest: str | None = None,\n           compensation_token: str | None = None) -&gt; dict:\n    request = {\n        \"schema_version\": \"aidefend.retirement-adapter-request.v1\",\n        \"request_id\": str(uuid.uuid4()),\n        \"operation\": operation,\n        \"source\": source[\"source\"],\n        \"scope\": source[\"scope\"],\n        \"policy_sha256\": policy_sha256,\n        \"retired_asset_digest\": POLICY[\"retired_asset_digest\"],\n        \"action\": source[\"action\"],\n        \"replacement_digest\": source[\"replacement_digest\"],\n        \"expected_generation\": expected_generation,\n        \"expected_population_digest\": expected_population_digest,\n        \"compensation_token\": compensation_token,\n    }\n    try:\n        completed = subprocess.run(\n            adapter[\"argv\"], input=canonical(request), capture_output=True,\n            timeout=source[\"timeout_seconds\"], check=False,\n        )\n    except subprocess.TimeoutExpired as error:\n        raise Stop(\"ERROR\", f\"adapter_timeout:{source['source']}\") from error\n    if completed.returncode != 0:\n        raise Stop(\"ERROR\", f\"adapter_process_failed:{source['source']}\")\n    result = strict_json(completed.stdout, f\"{source['source']} result\")\n    if (not isinstance(result, dict) or set(result) != RESULT_FIELDS\n            or result[\"schema_version\"] != \"aidefend.retirement-adapter-result.v1\"\n            or result[\"request_id\"] != request[\"request_id\"]\n            or result[\"source\"] != source[\"source\"] or result[\"scope\"] != source[\"scope\"]\n            or result[\"operation\"] != operation\n            or result[\"adapter_version\"] != adapter[\"adapter_version\"]\n            or not isinstance(result[\"status\"], str)\n            or not isinstance(result[\"generation\"], str) or not result[\"generation\"]\n            or not isinstance(result[\"population_digest\"], str)\n            or re.fullmatch(r\"[a-f0-9]{64}\", result[\"population_digest\"]) is None\n            or not isinstance(result[\"changed\"], bool)\n            or (result[\"compensation_token\"] is not None\n                and not isinstance(result[\"compensation_token\"], str))):\n        raise Stop(\"ERROR\", f\"adapter_contract_invalid:{source['source']}\")\n    references = validate_references(result[\"references\"])\n    if population_digest(references) != result[\"population_digest\"]:\n        raise Stop(\"ERROR\", f\"adapter_population_digest_invalid:{source['source']}\")\n    now = datetime.now(timezone.utc)\n    age = (now - timestamp(result[\"observed_at\"])).total_seconds()\n    if (age &gt; POLICY[\"max_readback_age_seconds\"]\n            or age &lt; -POLICY[\"max_future_skew_seconds\"]):\n        raise Stop(\"INSUFFICIENT_DATA\", f\"adapter_result_stale:{source['source']}\")\n    if result[\"status\"] in UNAVAILABLE:\n        raise Stop(\"INSUFFICIENT_DATA\", f\"applicable_source_unavailable:{source['source']}\")\n    return result\n\n\ndef validate_after(source: dict, before: dict, applied: dict, after: dict) -&gt; None:\n    if applied[\"status\"] not in {\"APPLIED\", \"NO_CHANGE\"} or after[\"status\"] != \"OK\":\n        if applied[\"status\"] == \"PRECONDITION_FAILED\":\n            raise Stop(\"FAIL\", f\"compare_and_swap_failed:{source['source']}\")\n        raise Stop(\"ERROR\", f\"mutation_or_readback_failed:{source['source']}\")\n    if (after[\"generation\"] != applied[\"generation\"]\n            or after[\"population_digest\"] != applied[\"population_digest\"]):\n        raise Stop(\"FAIL\", f\"post_apply_state_drifted:{source['source']}\")\n    target = POLICY[\"retired_asset_digest\"]\n    before_target = {row[\"reference_id\"] for row in before[\"references\"]\n                     if row[\"asset_digest\"] == target}\n    after_by_id = {row[\"reference_id\"]: row[\"asset_digest\"] for row in after[\"references\"]}\n    if any(row[\"asset_digest\"] == target for row in after[\"references\"]):\n        raise Stop(\"FAIL\", f\"retired_reference_remains:{source['source']}\")\n    if source[\"action\"] == \"REMOVE\" and before_target &amp; set(after_by_id):\n        raise Stop(\"FAIL\", f\"removed_reference_remains:{source['source']}\")\n    if source[\"action\"] == \"REPOINT\" and any(\n        after_by_id.get(reference_id) != source[\"replacement_digest\"]\n        for reference_id in before_target\n    ):\n        raise Stop(\"FAIL\", f\"reference_not_repointed:{source['source']}\")\n\n\nADAPTER_STAGE = Path(tempfile.mkdtemp(prefix=\"aidefend-retirement-adapters-\"))\nADAPTER_STAGE.chmod(0o700)\natexit.register(lambda: shutil.rmtree(ADAPTER_STAGE, ignore_errors=True))\n\n\ndef stage_adapter(adapter: dict) -&gt; dict:\n    if len(adapter[\"argv\"]) &lt; 2:\n        raise ValueError(\"adapter argv must name an executable and release file\")\n    source = Path(adapter[\"argv\"][-1])\n    descriptor = os.open(source, os.O_RDONLY | getattr(os, \"O_NOFOLLOW\", 0))\n    with os.fdopen(descriptor, \"rb\") as handle:\n        metadata = os.fstat(handle.fileno())\n        if not stat.S_ISREG(metadata.st_mode) or metadata.st_size == 0:\n            raise ValueError(\"adapter release is unsafe or empty\")\n        raw = handle.read()\n    actual = hashlib.sha256(raw).hexdigest()\n    if actual != adapter[\"release_sha256\"]:\n        raise ValueError(\"adapter release digest differs\")\n    target = ADAPTER_STAGE / (adapter[\"adapter_id\"] + \".release\")\n    descriptor = os.open(target, os.O_WRONLY | os.O_CREAT | os.O_EXCL\n                         | getattr(os, \"O_NOFOLLOW\", 0), 0o500)\n    with os.fdopen(descriptor, \"wb\") as handle:\n        handle.write(raw)\n        handle.flush()\n        os.fsync(handle.fileno())\n    staged = dict(adapter)\n    staged[\"argv\"] = [*adapter[\"argv\"][:-1], str(target)]\n    return staged\n\ndef validate_inputs(policy: object, registry: object) -&gt; tuple[list[dict], dict[str, dict]]:\n    if (not isinstance(policy, dict) or set(policy) != POLICY_FIELDS\n            or policy[\"schema_version\"] != \"aidefend.logical-retirement-reference-policy.v2\"\n            or not isinstance(policy[\"policy_version\"], str) or not policy[\"policy_version\"]\n            or not DIGEST.fullmatch(str(policy[\"retired_asset_digest\"]))\n            or isinstance(policy[\"max_readback_age_seconds\"], bool)\n            or not isinstance(policy[\"max_readback_age_seconds\"], (int, float))\n            or not math.isfinite(policy[\"max_readback_age_seconds\"])\n            or policy[\"max_readback_age_seconds\"] &lt;= 0\n            or isinstance(policy[\"max_future_skew_seconds\"], bool)\n            or not isinstance(policy[\"max_future_skew_seconds\"], (int, float))\n            or not math.isfinite(policy[\"max_future_skew_seconds\"])\n            or policy[\"max_future_skew_seconds\"] &lt; 0\n            or not isinstance(policy[\"authoritative_sources\"], list)\n            or not policy[\"authoritative_sources\"]):\n        raise ValueError(\"retirement reference policy differs\")\n    sources = policy[\"authoritative_sources\"]\n    seen_sources = set()\n    for source in sources:\n        replacement = source.get(\"replacement_digest\") if isinstance(source, dict) else None\n        timeout = source.get(\"timeout_seconds\") if isinstance(source, dict) else None\n        if (not isinstance(source, dict) or set(source) != SOURCE_FIELDS\n                or any(not isinstance(source[field], str) or not source[field]\n                       for field in (\"source\", \"scope\", \"adapter_id\"))\n                or source[\"source\"] in seen_sources\n                or source[\"action\"] not in {\"REMOVE\", \"REPOINT\"}\n                or source[\"compensation_mode\"] not in {\"REVERSIBLE\", \"FORWARD_ONLY\"}\n                or (source[\"action\"] == \"REMOVE\" and replacement is not None)\n                or (source[\"action\"] == \"REPOINT\"\n                    and (not isinstance(replacement, str) or not DIGEST.fullmatch(replacement)))\n                or isinstance(timeout, bool) or not isinstance(timeout, (int, float))\n                or not math.isfinite(timeout) or timeout &lt;= 0):\n            raise ValueError(\"authoritative source declaration differs\")\n        seen_sources.add(source[\"source\"])\n    if (not isinstance(registry, dict) or set(registry) != REGISTRY_FIELDS\n            or registry[\"schema_version\"] != \"aidefend.retirement-adapter-registry.v1\"\n            or not isinstance(registry[\"adapters\"], list)):\n        raise ValueError(\"adapter registry differs\")\n    adapters = {}\n    for adapter in registry[\"adapters\"]:\n        if (not isinstance(adapter, dict) or set(adapter) != ADAPTER_FIELDS\n                or any(not isinstance(adapter[field], str) or not adapter[field]\n                       for field in (\"adapter_id\", \"adapter_version\", \"protocol_version\"))\n                or adapter[\"protocol_version\"] != \"aidefend.retirement-adapter.v1\"\n                or not isinstance(adapter[\"release_sha256\"], str)\n                or re.fullmatch(r\"[a-f0-9]{64}\", adapter[\"release_sha256\"]) is None\n                or not isinstance(adapter[\"argv\"], list) or not adapter[\"argv\"]\n                or any(not isinstance(item, str) or not item for item in adapter[\"argv\"])\n                or adapter[\"adapter_id\"] in adapters):\n            raise ValueError(\"adapter registration differs\")\n        adapters[adapter[\"adapter_id\"]] = stage_adapter(adapter)\n    missing = sorted({source[\"adapter_id\"] for source in sources} - set(adapters))\n    if missing:\n        raise Stop(\"INSUFFICIENT_DATA\", \"applicable_adapter_missing:\" + \",\".join(missing))\n    return sources, adapters\n\n\nparser = argparse.ArgumentParser()\nparser.add_argument(\"--policy\", type=Path, required=True)\nparser.add_argument(\"--registry\", type=Path, required=True)\nparser.add_argument(\"--out\", type=Path, required=True)\nargs = parser.parse_args()\npolicy_raw, registry_raw = args.policy.read_bytes(), args.registry.read_bytes()\nPOLICY = strict_json(policy_raw, \"policy\")\nREGISTRY = strict_json(registry_raw, \"adapter registry\")\nper_source, mutations = [], []\ncurrent_entry = None\noutcome, reason = \"ERROR\", \"unhandled_error\"\ntry:\n    sources, adapters = validate_inputs(POLICY, REGISTRY)\n    policy_sha256 = hashlib.sha256(policy_raw).hexdigest()\n    for source in sources:\n        adapter = adapters[source[\"adapter_id\"]]\n        current_entry = {\n            \"source\": source[\"source\"], \"scope\": source[\"scope\"],\n            \"adapter_id\": source[\"adapter_id\"], \"adapter_version\": adapter[\"adapter_version\"],\n            \"adapter_release_sha256\": adapter[\"release_sha256\"],\n            \"status\": \"IN_PROGRESS\", \"compensation_boundary\": source[\"compensation_mode\"],\n        }\n        per_source.append(current_entry)\n        before = invoke(adapter, source, policy_sha256, \"SNAPSHOT\")\n        if before[\"status\"] != \"OK\":\n            raise Stop(\"ERROR\", f\"snapshot_failed:{source['source']}\")\n        applied = invoke(\n            adapter, source, policy_sha256, \"APPLY\",\n            expected_generation=before[\"generation\"],\n            expected_population_digest=before[\"population_digest\"],\n        )\n        if applied[\"changed\"]:\n            mutations.append((current_entry, source, adapter, applied))\n        after = invoke(\n            adapter, source, policy_sha256, \"READBACK\",\n            expected_generation=applied[\"generation\"],\n            expected_population_digest=applied[\"population_digest\"],\n        )\n        validate_after(source, before, applied, after)\n        current_entry.update({\n            \"status\": \"PASS\", \"before\": before, \"apply\": applied, \"after\": after,\n        })\n        current_entry = None\n    outcome, reason = \"PASS\", \"all_declared_sources_changed_and_read_back\"\nexcept Stop as error:\n    outcome, reason = error.outcome, error.reason\n    if current_entry is not None and current_entry[\"status\"] == \"IN_PROGRESS\":\n        current_entry.update({\"status\": error.outcome, \"reason_code\": error.reason})\n    for entry, source, adapter, applied in reversed(mutations):\n        compensation_status = \"FORWARD_RECOVERY_REQUIRED\"\n        if source[\"compensation_mode\"] == \"REVERSIBLE\" and applied[\"compensation_token\"]:\n            try:\n                compensated = invoke(\n                    adapter, source, hashlib.sha256(policy_raw).hexdigest(), \"COMPENSATE\",\n                    expected_generation=applied[\"generation\"],\n                    expected_population_digest=applied[\"population_digest\"],\n                    compensation_token=applied[\"compensation_token\"],\n                )\n                compensation_status = compensated[\"status\"]\n            except Exception:\n                compensation_status = \"COMPENSATION_ERROR\"\n        entry.update({\"status\": \"NOT_COMPLETE\", \"compensation_status\": compensation_status})\nexcept Exception as error:\n    outcome, reason = \"ERROR\", type(error).__name__\n    if current_entry is not None and current_entry[\"status\"] == \"IN_PROGRESS\":\n        current_entry.update({\"status\": \"ERROR\", \"reason_code\": reason})\n    for entry, source, adapter, applied in reversed(mutations):\n        compensation_status = \"FORWARD_RECOVERY_REQUIRED\"\n        if source[\"compensation_mode\"] == \"REVERSIBLE\" and applied[\"compensation_token\"]:\n            try:\n                compensated = invoke(\n                    adapter, source, hashlib.sha256(policy_raw).hexdigest(), \"COMPENSATE\",\n                    expected_generation=applied[\"generation\"],\n                    expected_population_digest=applied[\"population_digest\"],\n                    compensation_token=applied[\"compensation_token\"],\n                )\n                compensation_status = compensated[\"status\"]\n            except Exception:\n                compensation_status = \"COMPENSATION_ERROR\"\n        entry.update({\"status\": \"NOT_COMPLETE\", \"compensation_status\": compensation_status})\n\nresult = {\n    \"schema_version\": \"aidefend.logical-retirement-reference-result.v2\",\n    \"policy_sha256\": hashlib.sha256(policy_raw).hexdigest(),\n    \"adapter_registry_sha256\": hashlib.sha256(registry_raw).hexdigest(),\n    \"outcome\": outcome,\n    \"reason_code\": reason,\n    \"sources\": per_source,\n}\ntemporary = args.out.with_suffix(args.out.suffix + \".tmp\")\ntemporary.write_bytes(canonical(result))\ntemporary.replace(args.out)\nif outcome != \"PASS\":\n    raise SystemExit(2)\n</code></pre><h5>Run only verified immutable policy, registry, and adapter releases</h5><pre><code class=\"language-shell\">set -euo pipefail\numask 077\nstage=\"$(mktemp -d)\"\ntrap 'rm -rf -- \"$stage\"' EXIT HUP INT TERM\nchmod 0700 \"$stage\"\ninstall -m 0400 -- policy/retirement-reference-policy.json \"$stage/policy.json\"\ninstall -m 0400 -- policy/retirement-reference-policy.sig \"$stage/policy.sig\"\ninstall -m 0400 -- policy/retirement-adapter-registry.json \"$stage/registry.json\"\ninstall -m 0400 -- policy/retirement-adapter-registry.sig \"$stage/registry.sig\"\ncosign verify-blob --key keys/retirement-policy.pub --bundle \"$stage/policy.sig\" \"$stage/policy.json\" &gt;/dev/null\ncosign verify-blob --key keys/adapter-registry.pub --bundle \"$stage/registry.sig\" \"$stage/registry.json\" &gt;/dev/null\nset +e\npython tools/apply_logical_retirement.py --policy \"$stage/policy.json\" \\\n  --registry \"$stage/registry.json\" --out \"$stage/retirement-mutation.json\"\nstatus=$?\nset -e\ncosign sign-blob --yes --key env://RETIREMENT_OPERATOR_KEY \\\n  --bundle \"$stage/retirement-mutation.sig\" \"$stage/retirement-mutation.json\"\ninstall -m 0400 -- \"$stage/retirement-mutation.json\" \"$stage/retirement-mutation.sig\" evidence/\nexit \"$status\"\n</code></pre><p>The result preserves each source's before snapshot, native CAS result, after readback, adapter release, and compensation boundary. Compensation is attempted only where the source owner declared a reversible operation; there is no fictional cross-system transaction. A forward-only or failed compensation keeps digest denial and quarantine in force for operator recovery. Wildcard mutation, a stale snapshot, a missing applicable adapter, an unverified adapter result, or an owner/readback mismatch cannot PASS.</p>"
+                  "howTo": "<h5>Declare only the asset's applicable resolution authorities</h5><p>Build the signed source list from the retired asset's actual registry, deployment, routing, scheduling, retrieval, and pipeline topology. It is not a requirement to enumerate unrelated enterprise systems. An architecture that is absent is not listed; once an applicable source is listed, a missing source adapter or unreadable source produces <code>INSUFFICIENT_DATA</code>, never PASS.</p><pre><code class=\"language-json\">{\n  \"schema_version\": \"aidefend.logical-retirement-reference-policy.v2\",\n  \"policy_version\": \"retirement-prod-2026-08\",\n  \"retired_asset_digest\": \"sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\",\n  \"max_readback_age_seconds\": 900,\n  \"max_future_skew_seconds\": 30,\n  \"authoritative_sources\": [\n    {\n      \"source\": \"model_registry\",\n      \"scope\": \"tenant-a/model-prod\",\n      \"adapter_id\": \"registry-prod-v3\",\n      \"action\": \"REPOINT\",\n      \"replacement_digest\": \"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n      \"compensation_mode\": \"REVERSIBLE\",\n      \"timeout_seconds\": 30\n    },\n    {\n      \"source\": \"deployment_control_plane\",\n      \"scope\": \"cluster-prod/inference\",\n      \"adapter_id\": \"kubernetes-prod-v2\",\n      \"action\": \"REMOVE\",\n      \"replacement_digest\": null,\n      \"compensation_mode\": \"REVERSIBLE\",\n      \"timeout_seconds\": 30\n    },\n    {\n      \"source\": \"gateway\",\n      \"scope\": \"gateway-prod/model-routes\",\n      \"adapter_id\": \"gateway-prod-v4\",\n      \"action\": \"REPOINT\",\n      \"replacement_digest\": \"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n      \"compensation_mode\": \"FORWARD_ONLY\",\n      \"timeout_seconds\": 20\n    }\n  ]\n}</code></pre><pre><code class=\"language-json\">{\n  \"schema_version\": \"aidefend.retirement-adapter-registry.v1\",\n  \"adapters\": [\n    {\n      \"adapter_id\": \"registry-prod-v3\",\n      \"adapter_version\": \"3.4.1\",\n      \"release_sha256\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n      \"protocol_version\": \"aidefend.retirement-adapter.v1\",\n      \"argv\": [\"python3\", \"adapters/model_registry.py\"]\n    },\n    {\n      \"adapter_id\": \"kubernetes-prod-v2\",\n      \"adapter_version\": \"2.8.0\",\n      \"release_sha256\": \"2222222222222222222222222222222222222222222222222222222222222222\",\n      \"protocol_version\": \"aidefend.retirement-adapter.v1\",\n      \"argv\": [\"python3\", \"adapters/kubernetes_references.py\"]\n    },\n    {\n      \"adapter_id\": \"gateway-prod-v4\",\n      \"adapter_version\": \"4.2.0\",\n      \"release_sha256\": \"3333333333333333333333333333333333333333333333333333333333333333\",\n      \"protocol_version\": \"aidefend.retirement-adapter.v1\",\n      \"argv\": [\"python3\", \"adapters/gateway_routes.py\"]\n    }\n  ]\n}</code></pre><p>The policy and adapter registry are signed by their owning authorities. Timeouts above are illustrative fields in that signed policy, not framework defaults. Each adapter reads one canonical JSON request from standard input and writes one canonical JSON result to standard output. The operations are <code>SNAPSHOT</code>, <code>APPLY</code>, <code>READBACK</code>, and, only when declared reversible, <code>COMPENSATE</code>. An APPLY request carries the exact generation and population digest returned by SNAPSHOT; the adapter must perform a native conditional update or compare-and-swap and return <code>PRECONDITION_FAILED</code> instead of overwriting drifted state.</p><h5>Invoke every declared adapter under a versioned contract</h5><pre><code class=\"language-python\"># File: tools/apply_retirement_references.py\nfrom __future__ import annotations\n\nimport argparse\nimport atexit\nimport hashlib\nimport json\nimport math\nimport os\nimport re\nimport shutil\nimport stat\nimport subprocess\nimport tempfile\nimport uuid\nfrom datetime import datetime, timezone\nfrom pathlib import Path\n\nDIGEST = re.compile(r\"^sha256:[a-f0-9]{64}$\")\nPOLICY_FIELDS = {\"schema_version\", \"policy_version\", \"retired_asset_digest\",\n                 \"max_readback_age_seconds\", \"max_future_skew_seconds\",\n                 \"authoritative_sources\"}\nSOURCE_FIELDS = {\"source\", \"scope\", \"adapter_id\", \"action\", \"replacement_digest\",\n                 \"compensation_mode\", \"timeout_seconds\"}\nREGISTRY_FIELDS = {\"schema_version\", \"adapters\"}\nADAPTER_FIELDS = {\"adapter_id\", \"adapter_version\", \"release_sha256\", \"protocol_version\", \"argv\"}\nRESULT_FIELDS = {\"schema_version\", \"request_id\", \"source\", \"scope\", \"operation\",\n                 \"adapter_version\", \"status\", \"observed_at\", \"generation\",\n                 \"population_digest\", \"references\", \"changed\", \"compensation_token\"}\nREFERENCE_FIELDS = {\"reference_id\", \"asset_digest\"}\nUNAVAILABLE = {\"SOURCE_NOT_FOUND\", \"UNSUPPORTED\", \"NOT_APPLICABLE\"}\n\n\nclass Stop(Exception):\n    def __init__(self, outcome: str, reason: str):\n        super().__init__(reason)\n        self.outcome, self.reason = outcome, reason\n\n\ndef strict_json(raw: bytes, label: str) -&gt; object:\n    def unique(pairs):\n        value = {}\n        for key, item in pairs:\n            if key in value:\n                raise ValueError(f\"duplicate JSON key in {label}: {key}\")\n            value[key] = item\n        return value\n    return json.loads(raw.decode(\"utf-8\", errors=\"strict\"), object_pairs_hook=unique,\n                      parse_constant=lambda value: (_ for _ in ()).throw(ValueError(value)))\n\n\ndef canonical(value: object) -&gt; bytes:\n    return (json.dumps(value, sort_keys=True, separators=(\",\", \":\"), allow_nan=False)\n            + \"\\n\").encode(\"utf-8\")\n\n\ndef timestamp(value: object) -&gt; datetime:\n    if not isinstance(value, str) or not value:\n        raise ValueError(\"observation timestamp is absent\")\n    parsed = datetime.fromisoformat(value.replace(\"Z\", \"+00:00\"))\n    if parsed.tzinfo is None:\n        raise ValueError(\"observation timestamp lacks timezone\")\n    return parsed.astimezone(timezone.utc)\n\n\ndef population_digest(rows: list[dict]) -&gt; str:\n    normalized = sorted(rows, key=lambda row: row[\"reference_id\"])\n    return hashlib.sha256(canonical(normalized)).hexdigest()\n\n\ndef validate_references(rows: object) -&gt; list[dict]:\n    if not isinstance(rows, list):\n        raise ValueError(\"reference population is not an array\")\n    identities = set()\n    for row in rows:\n        if (not isinstance(row, dict) or set(row) != REFERENCE_FIELDS\n                or not isinstance(row[\"reference_id\"], str) or not row[\"reference_id\"]\n                or row[\"reference_id\"] in identities\n                or not isinstance(row[\"asset_digest\"], str)\n                or not DIGEST.fullmatch(row[\"asset_digest\"])):\n            raise ValueError(\"reference population schema differs\")\n        identities.add(row[\"reference_id\"])\n    return rows\n\n\ndef invoke(adapter: dict, source: dict, policy_sha256: str, operation: str,\n           *, expected_generation: str | None = None,\n           expected_population_digest: str | None = None,\n           compensation_token: str | None = None) -&gt; dict:\n    request = {\n        \"schema_version\": \"aidefend.retirement-adapter-request.v1\",\n        \"request_id\": str(uuid.uuid4()),\n        \"operation\": operation,\n        \"source\": source[\"source\"],\n        \"scope\": source[\"scope\"],\n        \"policy_sha256\": policy_sha256,\n        \"retired_asset_digest\": POLICY[\"retired_asset_digest\"],\n        \"action\": source[\"action\"],\n        \"replacement_digest\": source[\"replacement_digest\"],\n        \"expected_generation\": expected_generation,\n        \"expected_population_digest\": expected_population_digest,\n        \"compensation_token\": compensation_token,\n    }\n    try:\n        completed = subprocess.run(\n            adapter[\"argv\"], input=canonical(request), capture_output=True,\n            timeout=source[\"timeout_seconds\"], check=False,\n        )\n    except subprocess.TimeoutExpired as error:\n        raise Stop(\"ERROR\", f\"adapter_timeout:{source['source']}\") from error\n    if completed.returncode != 0:\n        raise Stop(\"ERROR\", f\"adapter_process_failed:{source['source']}\")\n    result = strict_json(completed.stdout, f\"{source['source']} result\")\n    if (not isinstance(result, dict) or set(result) != RESULT_FIELDS\n            or result[\"schema_version\"] != \"aidefend.retirement-adapter-result.v1\"\n            or result[\"request_id\"] != request[\"request_id\"]\n            or result[\"source\"] != source[\"source\"] or result[\"scope\"] != source[\"scope\"]\n            or result[\"operation\"] != operation\n            or result[\"adapter_version\"] != adapter[\"adapter_version\"]\n            or not isinstance(result[\"status\"], str)\n            or not isinstance(result[\"generation\"], str) or not result[\"generation\"]\n            or not isinstance(result[\"population_digest\"], str)\n            or re.fullmatch(r\"[a-f0-9]{64}\", result[\"population_digest\"]) is None\n            or not isinstance(result[\"changed\"], bool)\n            or (result[\"compensation_token\"] is not None\n                and not isinstance(result[\"compensation_token\"], str))):\n        raise Stop(\"ERROR\", f\"adapter_contract_invalid:{source['source']}\")\n    references = validate_references(result[\"references\"])\n    if population_digest(references) != result[\"population_digest\"]:\n        raise Stop(\"ERROR\", f\"adapter_population_digest_invalid:{source['source']}\")\n    now = datetime.now(timezone.utc)\n    age = (now - timestamp(result[\"observed_at\"])).total_seconds()\n    if (age &gt; POLICY[\"max_readback_age_seconds\"]\n            or age &lt; -POLICY[\"max_future_skew_seconds\"]):\n        raise Stop(\"INSUFFICIENT_DATA\", f\"adapter_result_stale:{source['source']}\")\n    if result[\"status\"] in UNAVAILABLE:\n        raise Stop(\"INSUFFICIENT_DATA\", f\"applicable_source_unavailable:{source['source']}\")\n    return result\n\n\ndef validate_after(source: dict, before: dict, applied: dict, after: dict) -&gt; None:\n    if applied[\"status\"] not in {\"APPLIED\", \"NO_CHANGE\"} or after[\"status\"] != \"OK\":\n        if applied[\"status\"] == \"PRECONDITION_FAILED\":\n            raise Stop(\"FAIL\", f\"compare_and_swap_failed:{source['source']}\")\n        raise Stop(\"ERROR\", f\"mutation_or_readback_failed:{source['source']}\")\n    if (after[\"generation\"] != applied[\"generation\"]\n            or after[\"population_digest\"] != applied[\"population_digest\"]):\n        raise Stop(\"FAIL\", f\"post_apply_state_drifted:{source['source']}\")\n    target = POLICY[\"retired_asset_digest\"]\n    before_target = {row[\"reference_id\"] for row in before[\"references\"]\n                     if row[\"asset_digest\"] == target}\n    after_by_id = {row[\"reference_id\"]: row[\"asset_digest\"] for row in after[\"references\"]}\n    if any(row[\"asset_digest\"] == target for row in after[\"references\"]):\n        raise Stop(\"FAIL\", f\"retired_reference_remains:{source['source']}\")\n    if source[\"action\"] == \"REMOVE\" and before_target &amp; set(after_by_id):\n        raise Stop(\"FAIL\", f\"removed_reference_remains:{source['source']}\")\n    if source[\"action\"] == \"REPOINT\" and any(\n        after_by_id.get(reference_id) != source[\"replacement_digest\"]\n        for reference_id in before_target\n    ):\n        raise Stop(\"FAIL\", f\"reference_not_repointed:{source['source']}\")\n\n\nADAPTER_STAGE = Path(tempfile.mkdtemp(prefix=\"aidefend-retirement-adapters-\"))\nADAPTER_STAGE.chmod(0o700)\natexit.register(lambda: shutil.rmtree(ADAPTER_STAGE, ignore_errors=True))\n\n\ndef stage_adapter(adapter: dict) -&gt; dict:\n    if len(adapter[\"argv\"]) &lt; 2:\n        raise ValueError(\"adapter argv must name an executable and release file\")\n    source = Path(adapter[\"argv\"][-1])\n    descriptor = os.open(source, os.O_RDONLY | getattr(os, \"O_NOFOLLOW\", 0))\n    with os.fdopen(descriptor, \"rb\") as handle:\n        metadata = os.fstat(handle.fileno())\n        if not stat.S_ISREG(metadata.st_mode) or metadata.st_size == 0:\n            raise ValueError(\"adapter release is unsafe or empty\")\n        raw = handle.read()\n    actual = hashlib.sha256(raw).hexdigest()\n    if actual != adapter[\"release_sha256\"]:\n        raise ValueError(\"adapter release digest differs\")\n    target = ADAPTER_STAGE / (adapter[\"adapter_id\"] + \".release\")\n    descriptor = os.open(target, os.O_WRONLY | os.O_CREAT | os.O_EXCL\n                         | getattr(os, \"O_NOFOLLOW\", 0), 0o500)\n    with os.fdopen(descriptor, \"wb\") as handle:\n        handle.write(raw)\n        handle.flush()\n        os.fsync(handle.fileno())\n    staged = dict(adapter)\n    staged[\"argv\"] = [*adapter[\"argv\"][:-1], str(target)]\n    return staged\n\ndef validate_inputs(policy: object, registry: object) -&gt; tuple[list[dict], dict[str, dict]]:\n    if (not isinstance(policy, dict) or set(policy) != POLICY_FIELDS\n            or policy[\"schema_version\"] != \"aidefend.logical-retirement-reference-policy.v2\"\n            or not isinstance(policy[\"policy_version\"], str) or not policy[\"policy_version\"]\n            or not DIGEST.fullmatch(str(policy[\"retired_asset_digest\"]))\n            or isinstance(policy[\"max_readback_age_seconds\"], bool)\n            or not isinstance(policy[\"max_readback_age_seconds\"], (int, float))\n            or not math.isfinite(policy[\"max_readback_age_seconds\"])\n            or policy[\"max_readback_age_seconds\"] &lt;= 0\n            or isinstance(policy[\"max_future_skew_seconds\"], bool)\n            or not isinstance(policy[\"max_future_skew_seconds\"], (int, float))\n            or not math.isfinite(policy[\"max_future_skew_seconds\"])\n            or policy[\"max_future_skew_seconds\"] &lt; 0\n            or not isinstance(policy[\"authoritative_sources\"], list)\n            or not policy[\"authoritative_sources\"]):\n        raise ValueError(\"retirement reference policy differs\")\n    sources = policy[\"authoritative_sources\"]\n    seen_sources = set()\n    for source in sources:\n        replacement = source.get(\"replacement_digest\") if isinstance(source, dict) else None\n        timeout = source.get(\"timeout_seconds\") if isinstance(source, dict) else None\n        if (not isinstance(source, dict) or set(source) != SOURCE_FIELDS\n                or any(not isinstance(source[field], str) or not source[field]\n                       for field in (\"source\", \"scope\", \"adapter_id\"))\n                or source[\"source\"] in seen_sources\n                or source[\"action\"] not in {\"REMOVE\", \"REPOINT\"}\n                or source[\"compensation_mode\"] not in {\"REVERSIBLE\", \"FORWARD_ONLY\"}\n                or (source[\"action\"] == \"REMOVE\" and replacement is not None)\n                or (source[\"action\"] == \"REPOINT\"\n                    and (not isinstance(replacement, str) or not DIGEST.fullmatch(replacement)))\n                or isinstance(timeout, bool) or not isinstance(timeout, (int, float))\n                or not math.isfinite(timeout) or timeout &lt;= 0):\n            raise ValueError(\"authoritative source declaration differs\")\n        seen_sources.add(source[\"source\"])\n    if (not isinstance(registry, dict) or set(registry) != REGISTRY_FIELDS\n            or registry[\"schema_version\"] != \"aidefend.retirement-adapter-registry.v1\"\n            or not isinstance(registry[\"adapters\"], list)):\n        raise ValueError(\"adapter registry differs\")\n    adapters = {}\n    for adapter in registry[\"adapters\"]:\n        if (not isinstance(adapter, dict) or set(adapter) != ADAPTER_FIELDS\n                or any(not isinstance(adapter[field], str) or not adapter[field]\n                       for field in (\"adapter_id\", \"adapter_version\", \"protocol_version\"))\n                or adapter[\"protocol_version\"] != \"aidefend.retirement-adapter.v1\"\n                or not isinstance(adapter[\"release_sha256\"], str)\n                or re.fullmatch(r\"[a-f0-9]{64}\", adapter[\"release_sha256\"]) is None\n                or not isinstance(adapter[\"argv\"], list) or not adapter[\"argv\"]\n                or any(not isinstance(item, str) or not item for item in adapter[\"argv\"])\n                or adapter[\"adapter_id\"] in adapters):\n            raise ValueError(\"adapter registration differs\")\n        adapters[adapter[\"adapter_id\"]] = stage_adapter(adapter)\n    missing = sorted({source[\"adapter_id\"] for source in sources} - set(adapters))\n    if missing:\n        raise Stop(\"INSUFFICIENT_DATA\", \"applicable_adapter_missing:\" + \",\".join(missing))\n    return sources, adapters\n\n\nparser = argparse.ArgumentParser()\nparser.add_argument(\"--policy\", type=Path, required=True)\nparser.add_argument(\"--registry\", type=Path, required=True)\nparser.add_argument(\"--out\", type=Path, required=True)\nargs = parser.parse_args()\npolicy_raw, registry_raw = args.policy.read_bytes(), args.registry.read_bytes()\nPOLICY = strict_json(policy_raw, \"policy\")\nREGISTRY = strict_json(registry_raw, \"adapter registry\")\nper_source, mutations = [], []\ncurrent_entry = None\noutcome, reason = \"ERROR\", \"unhandled_error\"\ntry:\n    sources, adapters = validate_inputs(POLICY, REGISTRY)\n    policy_sha256 = hashlib.sha256(policy_raw).hexdigest()\n    for source in sources:\n        adapter = adapters[source[\"adapter_id\"]]\n        current_entry = {\n            \"source\": source[\"source\"], \"scope\": source[\"scope\"],\n            \"adapter_id\": source[\"adapter_id\"], \"adapter_version\": adapter[\"adapter_version\"],\n            \"adapter_release_sha256\": adapter[\"release_sha256\"],\n            \"status\": \"IN_PROGRESS\", \"compensation_boundary\": source[\"compensation_mode\"],\n        }\n        per_source.append(current_entry)\n        before = invoke(adapter, source, policy_sha256, \"SNAPSHOT\")\n        if before[\"status\"] != \"OK\":\n            raise Stop(\"ERROR\", f\"snapshot_failed:{source['source']}\")\n        applied = invoke(\n            adapter, source, policy_sha256, \"APPLY\",\n            expected_generation=before[\"generation\"],\n            expected_population_digest=before[\"population_digest\"],\n        )\n        if applied[\"changed\"]:\n            mutations.append((current_entry, source, adapter, applied))\n        after = invoke(\n            adapter, source, policy_sha256, \"READBACK\",\n            expected_generation=applied[\"generation\"],\n            expected_population_digest=applied[\"population_digest\"],\n        )\n        validate_after(source, before, applied, after)\n        current_entry.update({\n            \"status\": \"PASS\", \"before\": before, \"apply\": applied, \"after\": after,\n        })\n        current_entry = None\n    outcome, reason = \"PASS\", \"all_declared_sources_changed_and_read_back\"\nexcept Stop as error:\n    outcome, reason = error.outcome, error.reason\n    if current_entry is not None and current_entry[\"status\"] == \"IN_PROGRESS\":\n        current_entry.update({\"status\": error.outcome, \"reason_code\": error.reason})\n    for entry, source, adapter, applied in reversed(mutations):\n        compensation_status = \"FORWARD_RECOVERY_REQUIRED\"\n        if source[\"compensation_mode\"] == \"REVERSIBLE\" and applied[\"compensation_token\"]:\n            try:\n                compensated = invoke(\n                    adapter, source, hashlib.sha256(policy_raw).hexdigest(), \"COMPENSATE\",\n                    expected_generation=applied[\"generation\"],\n                    expected_population_digest=applied[\"population_digest\"],\n                    compensation_token=applied[\"compensation_token\"],\n                )\n                compensation_status = compensated[\"status\"]\n            except Exception:\n                compensation_status = \"COMPENSATION_ERROR\"\n        entry.update({\"status\": \"NOT_COMPLETE\", \"compensation_status\": compensation_status})\nexcept Exception as error:\n    outcome, reason = \"ERROR\", type(error).__name__\n    if current_entry is not None and current_entry[\"status\"] == \"IN_PROGRESS\":\n        current_entry.update({\"status\": \"ERROR\", \"reason_code\": reason})\n    for entry, source, adapter, applied in reversed(mutations):\n        compensation_status = \"FORWARD_RECOVERY_REQUIRED\"\n        if source[\"compensation_mode\"] == \"REVERSIBLE\" and applied[\"compensation_token\"]:\n            try:\n                compensated = invoke(\n                    adapter, source, hashlib.sha256(policy_raw).hexdigest(), \"COMPENSATE\",\n                    expected_generation=applied[\"generation\"],\n                    expected_population_digest=applied[\"population_digest\"],\n                    compensation_token=applied[\"compensation_token\"],\n                )\n                compensation_status = compensated[\"status\"]\n            except Exception:\n                compensation_status = \"COMPENSATION_ERROR\"\n        entry.update({\"status\": \"NOT_COMPLETE\", \"compensation_status\": compensation_status})\n\nresult = {\n    \"schema_version\": \"aidefend.logical-retirement-reference-result.v2\",\n    \"policy_sha256\": hashlib.sha256(policy_raw).hexdigest(),\n    \"adapter_registry_sha256\": hashlib.sha256(registry_raw).hexdigest(),\n    \"outcome\": outcome,\n    \"reason_code\": reason,\n    \"sources\": per_source,\n}\ntemporary = args.out.with_suffix(args.out.suffix + \".tmp\")\ntemporary.write_bytes(canonical(result))\ntemporary.replace(args.out)\nif outcome != \"PASS\":\n    raise SystemExit(2)\n</code></pre><h5>Run only verified immutable policy, registry, and adapter releases</h5><pre><code class=\"language-shell\">set -euo pipefail\numask 077\nstage=\"$(mktemp -d)\"\ntrap 'rm -rf -- \"$stage\"' EXIT HUP INT TERM\nchmod 0700 \"$stage\"\ninstall -m 0400 -- policy/retirement-reference-policy.json \"$stage/policy.json\"\ninstall -m 0400 -- policy/retirement-reference-policy.sig \"$stage/policy.sig\"\ninstall -m 0400 -- policy/retirement-adapter-registry.json \"$stage/registry.json\"\ninstall -m 0400 -- policy/retirement-adapter-registry.sig \"$stage/registry.sig\"\ncosign verify-blob --key keys/retirement-policy.pub --bundle \"$stage/policy.sig\" \"$stage/policy.json\" &gt;/dev/null\ncosign verify-blob --key keys/adapter-registry.pub --bundle \"$stage/registry.sig\" \"$stage/registry.json\" &gt;/dev/null\nset +e\npython tools/apply_retirement_references.py --policy \"$stage/policy.json\" \\\n  --registry \"$stage/registry.json\" --out \"$stage/retirement-mutation.json\"\nstatus=$?\nset -e\ncosign sign-blob --yes --key env://RETIREMENT_OPERATOR_KEY \\\n  --bundle \"$stage/retirement-mutation.sig\" \"$stage/retirement-mutation.json\"\ninstall -m 0400 -- \"$stage/retirement-mutation.json\" \"$stage/retirement-mutation.sig\" evidence/\nexit \"$status\"\n</code></pre><p>The result preserves each source's before snapshot, native CAS result, after readback, adapter release, and compensation boundary. Compensation is attempted only where the source owner declared a reversible operation; there is no fictional cross-system transaction. A forward-only or failed compensation keeps digest denial and quarantine in force for operator recovery. Wildcard mutation, a stale snapshot, a missing applicable adapter, an unverified adapter result, or an owner/readback mismatch cannot PASS.</p>"
                 },
                 {
                   "id": "AID-M-010.003-G003",

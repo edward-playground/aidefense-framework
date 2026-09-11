@@ -1,3 +1,5 @@
+import { ciscoFramework } from './cisco-framework.js';
+
 /**
  * Public framework edition and semantic migration registry.
  *
@@ -6,9 +8,213 @@
  */
 export const frameworkMigrations = {
     schemaVersion: "1.0",
-    registryVersion: "2026-08-05",
+    registryVersion: "2026-09-11",
     contract: "AIDEFEND framework edition and semantic migration registry",
     frameworks: {
+        cisco: {
+            stableKey: "cisco",
+            activeEdition: ciscoFramework.version,
+            activeLabel: ciscoFramework.frameworkKey,
+            displayLabel: ciscoFramework.label,
+            officialTitle: "Cisco Integrated AI Security and Safety Framework",
+            sourceUrl: ciscoFramework.url,
+            sourceArtifact: {
+                release: "v" + ciscoFramework.version,
+                publicationDate: ciscoFramework.publicationDate,
+                retrievedDate: ciscoFramework.retrievedDate,
+                sha256: ciscoFramework.sourceSnapshotSha256,
+                announcementUrl: ciscoFramework.announcementUrl
+            },
+            sourceLicense: {
+                attribution: "Cisco; official public AI Security and Safety Framework taxonomy",
+                scope: "Cisco identifiers, names and version provenance; historical names are retained only for conflict detection",
+                changesMade: "AIDEFEND-authored resolver and independent semantic mapping decisions; no automatic legacy successor"
+            },
+            editions: {
+                "1": { label: "Cisco Integrated AI Security and Safety Framework v1", status: "superseded" },
+                "2.0.0": { label: ciscoFramework.frameworkKey, status: "current" }
+            },
+            resolutionPolicy: {
+                bareId: "resolve against v2.0.0 and return explicit edition metadata",
+                explicitLegacyEdition: "reject; no legacy mappings or automatic successors are served",
+                retiredId: "reject with retired_identifier metadata",
+                idNameConflict: "reject; neither identifier nor name silently wins",
+                multipleReferences: "return ambiguity without issuing a lookup",
+                mappingCarryForward: "never automatic; requires target-edition semantic review"
+            },
+            responseContract: {
+                canonicalEdition: ciscoFramework.version,
+                canonicalIdFormat: "AITech-N.N or AISubtech-N.N.N",
+                metadataField: "resolution",
+                metadataValues: ["canonical", "migrated", "normalized", "fallback_latest", "ambiguous", "invalid"]
+            },
+            activeItems: ciscoFramework.activeItems.map(item => ({ ...item })),
+            migrations: [],
+            historicalItems: [
+            {
+                        "edition": "1",
+                        "id": "AITech-1.4",
+                        "name": "Multi-Modal Injection and Manipulation",
+                        "status": "retired"
+            },
+            {
+                        "edition": "1",
+                        "id": "AITech-1.1",
+                        "name": "Direct Prompt Injection",
+                        "status": "name-changed"
+            },
+            {
+                        "edition": "1",
+                        "id": "AITech-1.3",
+                        "name": "Goal Manipulation",
+                        "status": "name-changed"
+            },
+            {
+                        "edition": "1",
+                        "id": "AITech-2.1",
+                        "name": "Jailbreak",
+                        "status": "name-changed"
+            },
+            {
+                        "edition": "1",
+                        "id": "AISubtech-1.2.1",
+                        "name": "Instruction Manipulation (Indirect Prompt Injection)",
+                        "status": "retired"
+            },
+            {
+                        "edition": "1",
+                        "id": "AISubtech-1.2.2",
+                        "name": "Obfuscation (Indirect Prompt Injection)",
+                        "status": "retired"
+            },
+            {
+                        "edition": "1",
+                        "id": "AISubtech-1.2.3",
+                        "name": "Multi-Agent (Indirect Prompt Injection)",
+                        "status": "retired"
+            },
+            {
+                        "edition": "1",
+                        "id": "AISubtech-1.4.1",
+                        "name": "Image-Text Injection",
+                        "status": "retired"
+            },
+            {
+                        "edition": "1",
+                        "id": "AISubtech-1.4.2",
+                        "name": "Image Manipulation",
+                        "status": "retired"
+            },
+            {
+                        "edition": "1",
+                        "id": "AISubtech-1.4.3",
+                        "name": "Audio Command Injection",
+                        "status": "retired"
+            },
+            {
+                        "edition": "1",
+                        "id": "AISubtech-1.4.4",
+                        "name": "Video Overlay Manipulation",
+                        "status": "retired"
+            },
+            {
+                        "edition": "1",
+                        "id": "AISubtech-2.1.3",
+                        "name": "Semantic Manipulation (Jailbreak)",
+                        "status": "retired"
+            },
+            {
+                        "edition": "1",
+                        "id": "AISubtech-2.1.4",
+                        "name": "Token Exploitation (Jailbreak)",
+                        "status": "retired"
+            },
+            {
+                        "edition": "1",
+                        "id": "AISubtech-2.1.5",
+                        "name": "Multi-Agent Jailbreak Collaboration",
+                        "status": "retired"
+            },
+            {
+                        "edition": "1",
+                        "id": "AISubtech-1.1.1",
+                        "name": "Instruction Manipulation (Direct Prompt Injection)",
+                        "status": "name-changed"
+            },
+            {
+                        "edition": "1",
+                        "id": "AISubtech-1.1.2",
+                        "name": "Obfuscation (Direct Prompt Injection)",
+                        "status": "name-changed"
+            },
+            {
+                        "edition": "1",
+                        "id": "AISubtech-1.1.3",
+                        "name": "Multi-Agent Prompt Injection",
+                        "status": "name-changed"
+            },
+            {
+                        "edition": "1",
+                        "id": "AISubtech-1.3.1",
+                        "name": "Goal Manipulation (Models, Agents)",
+                        "status": "name-changed"
+            },
+            {
+                        "edition": "1",
+                        "id": "AISubtech-1.3.2",
+                        "name": "Goal Manipulation (Tools, Prompts, Resources)",
+                        "status": "name-changed"
+            },
+            {
+                        "edition": "1",
+                        "id": "AISubtech-15.1.19",
+                        "name": "Integrity Compromise: Hallucinations / Misinformation",
+                        "status": "name-changed"
+            },
+            {
+                        "edition": "1",
+                        "id": "AISubtech-15.1.20",
+                        "name": "Integrity Compromise: Unauthorized Financial Advice",
+                        "status": "name-changed"
+            },
+            {
+                        "edition": "1",
+                        "id": "AISubtech-15.1.21",
+                        "name": "Integrity Compromise: Unauthorized Legal Advice",
+                        "status": "name-changed"
+            },
+            {
+                        "edition": "1",
+                        "id": "AISubtech-15.1.22",
+                        "name": "Integrity Compromise: Unauthorized Medical Advice",
+                        "status": "name-changed"
+            },
+            {
+                        "edition": "1",
+                        "id": "AISubtech-15.1.25",
+                        "name": "Privacy Attacks: PII / PHI / PCI",
+                        "status": "name-changed"
+            },
+            {
+                        "edition": "1",
+                        "id": "AISubtech-2.1.1",
+                        "name": "Context Manipulation (Jailbreak)",
+                        "status": "name-changed"
+            },
+            {
+                        "edition": "1",
+                        "id": "AISubtech-2.1.2",
+                        "name": "Obfuscation (Jailbreak)",
+                        "status": "name-changed"
+            },
+            {
+                        "edition": "1",
+                        "id": "AISubtech-8.3.2",
+                        "name": "System Information Leakage",
+                        "status": "name-changed"
+            }
+]
+        },
         owasp_llm: {
             stableKey: "owasp_llm",
             activeEdition: "2026",
@@ -557,6 +763,81 @@ export function resolveOwaspLlmReference(rawReference) {
         canonical,
         reason
     };
+}
+
+/** Resolve Cisco current-edition references without reusing a v1 meaning. */
+export function resolveCiscoReference(rawReference) {
+    const input = String(rawReference || '').trim();
+    if (!input || !/\b(?:Cisco|AI(?:Subtech|Tech))/i.test(input)) return null;
+    const catalog = frameworkMigrations.frameworks.cisco;
+    const base = { input, frameworkKey: catalog.stableKey, activeEdition: catalog.activeEdition };
+    const invalid = (reasonCode, reason, extra = {}) => ({ status: 'invalid', ...base, reasonCode, reason, ...extra });
+    if (/\b(?:LLM\d|AML\.T|ASI\d|NISTAML\.)/i.test(input)) {
+        return invalid('mixed_frameworks', 'Submit one framework reference per query.');
+    }
+    const tokens = [...input.matchAll(/\bAI(?:Subtech|Tech)-[^\s,;()[\]{}&/?]+/ig)];
+    const starts = [...input.matchAll(/\bAI(?:Subtech|Tech)/ig)];
+    if (tokens.length !== starts.length) return invalid('malformed_identifier', 'Use a complete AITech-N.N or AISubtech-N.N.N identifier.');
+    const editions = [];
+    const identifiers = [];
+    for (const token of tokens) {
+        const match = token[0].match(/^(AITech|AISubtech)-([1-9]\d*\.[1-9]\d*(?:\.[1-9]\d*)?)(?::([^:]+))?$/i);
+        if (!match || match[2].split('.').length !== (/^AISubtech$/i.test(match[1]) ? 3 : 2)) {
+            return invalid('malformed_identifier', 'Cisco identifier or edition suffix is malformed.');
+        }
+        identifiers.push((/^AISubtech$/i.test(match[1]) ? 'AISubtech-' : 'AITech-') + match[2]);
+        if (match[3] !== undefined) editions.push(match[3].toLowerCase());
+    }
+    let remainder = input.replace(/\bAI(?:Subtech|Tech)-[^\s,;()[\]{}&/?]+/ig, ' ');
+    remainder = remainder.replace(/\b(?:version\s+|edition\s+|v(?=\d|latest|current|next))([^\s,;()[\]{}&/?]+)/ig, (_, edition) => {
+        editions.push(edition.toLowerCase()); return ' ';
+    });
+    const normalizedEditions = editions.map(value => value.replace(/^v/, ''));
+    if (normalizedEditions.some(value => !['2', '2.0', '2.0.0', 'latest', 'current'].includes(value))) {
+        const legacy = normalizedEditions.some(value => ['1', '1.0', '1.0.0'].includes(value));
+        return invalid(legacy ? 'unsupported_edition' : 'malformed_or_unsupported_edition',
+            'Only Cisco v2.0.0 is served. Legacy identifiers require a new semantic mapping review.',
+            { requestedEditions: normalizedEditions, supportedEditions: [catalog.activeEdition] });
+    }
+    // Remove only known framework labels, not arbitrary prose that might contain a conflicting name.
+    remainder = remainder.replace(/\bCisco(?:\s+(?:Integrated\s+)?AI\s+Security(?:\s*(?:and|&)\s*Safety)?(?:\s+Framework)?)?/ig, ' ');
+    remainder = remainder.replace(/^\s*[-:,;()[\]{}]+|[-:,;()[\]{}]+\s*$/g, ' ').trim();
+    const name = normalizeConceptName(remainder);
+    const byId = new Map(catalog.activeItems.map(item => [item.id, item]));
+    const ids = [...new Set(identifiers)];
+    const canonical = item => ({ frameworkKey: catalog.stableKey, framework: catalog.activeLabel,
+        displayFramework: catalog.displayLabel, edition: catalog.activeEdition,
+        id: item.id, name: item.name, label: `${item.id} ${item.name}` });
+    if (ids.length > 1) return { status: 'ambiguous', ...base, reasonCode: 'multiple_identifiers',
+        reason: 'Submit one Cisco technique or subtechnique per query.',
+        candidates: ids.filter(id => byId.has(id)).map(id => canonical(byId.get(id))), requestedIds: ids };
+    const named = name ? catalog.activeItems.filter(item => normalizeConceptName(item.name) === name) : [];
+    const historical = name ? catalog.historicalItems.filter(item => normalizeConceptName(item.name) === name) : [];
+    if (!ids.length) {
+        if (named.length > 1) return { status: 'ambiguous', ...base, reasonCode: 'multiple_name_matches',
+            reason: 'This Cisco name is not unique; use an exact current identifier.', candidates: named.map(canonical) };
+        if (named.length === 1) return { status: 'normalized', ...base, canonical: canonical(named[0]),
+            reason: 'The exact current Cisco name resolves within v2.0.0.' };
+        return invalid(historical.length ? 'legacy_name_unsupported' : 'unrecognized_reference',
+            'Use an exact current Cisco identifier or canonical name; historical names are not migrated automatically.',
+            historical.length ? { historicalReferences: historical } : {});
+    }
+    const id = ids[0];
+    if (!byId.has(id)) {
+        const retired = catalog.historicalItems.filter(item => item.id === id && item.status === 'retired');
+        return invalid(retired.length ? 'retired_identifier' : 'unknown_identifier',
+            'This identifier is not active in Cisco v2.0.0. No successor is inferred.',
+            { requestedId: id, ...(retired.length ? { historicalReferences: retired } : {}) });
+    }
+    const current = byId.get(id);
+    if (name && normalizeConceptName(current.name) !== name) {
+        return invalid('id_name_conflict', 'The supplied name does not match the current identifier; neither silently overrides the other.',
+            { requestedId: id, identifierCandidate: canonical(current),
+                namedCandidates: named.map(canonical), ...(historical.length ? { historicalReferences: historical } : {}) });
+    }
+    return { status: 'canonical', ...base, canonical: canonical(current),
+        reason: 'The identifier resolves against Cisco v2.0.0 only; v1 meanings and mappings are not carried forward.',
+        ...(catalog.historicalItems.some(item => item.id === id) ? { reusedIdentifier: true } : {}) };
 }
 
 export default frameworkMigrations;

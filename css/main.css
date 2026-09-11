@@ -1746,6 +1746,14 @@ body.modal-open {
     transition: max-height 0.4s cubic-bezier(0.25, 0.1, 0.25, 1);
 }
 
+.fw-objective-summary {
+    margin: 0;
+    padding: 1rem 1.25rem 0.5rem;
+    color: var(--text-secondary-color);
+    font-size: 0.875rem;
+    line-height: 1.6;
+}
+
 .fw-accordion-body-inner {
     display: flex;
     flex-wrap: wrap;

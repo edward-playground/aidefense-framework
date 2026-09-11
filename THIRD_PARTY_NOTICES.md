@@ -123,3 +123,9 @@ Attribution: OWASP Top 10 for LLM Applications 2026, OWASP Foundation / OWASP Ge
 The source document is licensed under the [Creative Commons Attribution-ShareAlike 4.0 International license](https://creativecommons.org/licenses/by-sa/4.0/legalcode) (`CC-BY-SA-4.0`). The public AIDEFEND files do not bundle the complete source PDF or reproduce its full prose.
 
 Changes made: AIDEFEND preserves the official risk identifiers and names, paraphrases and normalizes short risk summaries for its public catalog, adapts presentation formatting, and adds independently authored mapping decisions, migration analysis, and resolver behavior. OWASP-derived portions retain the upstream license; AIDEFEND-authored portions are identified separately. These changes do not imply OWASP endorsement.
+
+# Cisco Integrated AI Security and Safety Framework v2
+
+`cisco-framework.js` and generated `data/cisco-framework.json` contain current v2.0.0 identifiers, names, and hierarchy derived from Cisco's [public taxonomy](https://learn-cloudsecurity.cisco.com/ai-security-framework), announced [September 9, 2026](https://blogs.cisco.com/ai/security-framework-v2). Those identifiers, names, and other Cisco material remain subject to Cisco's rights and applicable terms. AIDEFEND authored the objective summaries and defense mappings; these are independent assessments and do not imply Cisco endorsement.
+
+`framework-migrations.js` and generated `data/framework-migrations.json` also include Cisco edition and historical identifier/name conflict metadata. AIDEFEND authors the resolver behavior and bounded interpretations of ambiguous official records, considering Cisco's definitions, examples and standards mappings together. These interpretations are not Cisco corrections or automatic cross-framework equivalence.

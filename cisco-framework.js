@@ -1,0 +1,919 @@
+// Current Cisco taxonomy identifiers and names are derived from the official public Airtable.
+// Objective summaries and defense-mapping policy are authored by AIDEFEND.
+// Source provenance is included below; third-party rights remain with Cisco.
+export const ciscoFramework = {
+    "frameworkKey": "Cisco Integrated AI Security and Safety Framework",
+    "version": "2.0.0",
+    "label": "Cisco AI Security & Safety Framework v2.0",
+    "pageTitle": "Cisco Integrated AI Security & Safety Framework v2.0",
+    "about": "Cisco v2.0.0 organizes AI security and safety risks into 19 objectives, 41 techniques, and 115 subtechniques. Objective summaries below are written by AIDEFEND from the official child techniques; identifiers and names follow Cisco. Listed controls and counts include only actionable AIDEFEND defenses assessed as Full or High relevance.",
+    "url": "https://learn-cloudsecurity.cisco.com/ai-security-framework",
+    "announcementUrl": "https://blogs.cisco.com/ai/security-framework-v2",
+    "publicationDate": "2026-09-09",
+    "retrievedDate": "2026-09-10",
+    "sourceSnapshotSha256": "020c642a7d998b0167ea262699709ea70d8cef0f3d4f8b6bdea6f5292a8440c1",
+    "counts": {
+        "objectives": 19,
+        "techniques": 41,
+        "subtechniques": 115
+    },
+    "mappingPolicy": "Current v2 semantics only. Reused identifiers do not carry v1 meanings or mappings forward. Objectives group navigation; only actionable AIDEFEND controls carry defense claims.",
+    "groups": [
+        {
+            "key": "1",
+            "id": "OB-001",
+            "name": "OB-001 – Goal Hijacking (Prompt Injection, Jailbreak)",
+            "description": "Attacker-controlled prompts or external content redirect model behavior or bypass safeguards. Covers direct prompt injection and jailbreak, indirect prompt injection, and multimodal manipulation."
+        },
+        {
+            "key": "2",
+            "id": "OB-002",
+            "name": "OB-002 – Agentic Autonomy Failures (Misuse, Misalignment, Drift)",
+            "description": "Agents exceed current task authority, change or abandon the authorized goal, erode constraints, or game success signals. Covers excessive agency, goal drift, and reward hacking."
+        },
+        {
+            "key": "3",
+            "id": "OB-003",
+            "name": "OB-003 – Masquerading / Obfuscation / Impersonation",
+            "description": "False agent identities and trusted-agent impersonation cause systems or people to accept malicious communications or actions as authentic."
+        },
+        {
+            "key": "4",
+            "id": "OB-004",
+            "name": "OB-004 – Communication Compromise",
+            "description": "Unauthorized agents, porous context and session boundaries, and manipulated communication protocols compromise agent interactions. Includes replay, namespace collisions, rebinding, and cross-origin exploitation."
+        },
+        {
+            "key": "5",
+            "id": "OB-005",
+            "name": "OB-005 – Persistence",
+            "description": "Malicious instructions or settings persist in memory, agent profiles, configuration, or initialization state and influence later execution."
+        },
+        {
+            "key": "6",
+            "id": "OB-006",
+            "name": "OB-006 – Feedback Loop Manipulation",
+            "description": "Poisoned training inputs, knowledge bases, feedback, or reinforcement signals corrupt learning and the information used by models and agents."
+        },
+        {
+            "key": "7",
+            "id": "OB-007",
+            "name": "OB-007 – Sabotage / Integrity Degradation",
+            "description": "Manipulated reasoning, working memory, retrieval sources, or integration tokens corrupt decisions, recall, or system access."
+        },
+        {
+            "key": "8",
+            "id": "OB-008",
+            "name": "OB-008 – Data and Privacy Violations",
+            "description": "Membership inference, data extraction, unintended disclosure, or prompt extraction expose sensitive information. Includes distinct personal, payment-card, and health-data exposure scenarios."
+        },
+        {
+            "key": "9",
+            "id": "OB-009",
+            "name": "OB-009 – Supply Chain Compromise",
+            "description": "This objective groups runtime model or agent manipulation, detection evasion, backdoors, and compromised dependencies or plugins. Mapping uses each technique definition rather than assuming every child is a supply-chain attack."
+        },
+        {
+            "key": "10",
+            "id": "OB-010",
+            "name": "OB-010 – Model Theft / Extraction",
+            "description": "Systematic model interaction reconstructs model behavior or parameters, or recovers sensitive training information through extraction and inversion."
+        },
+        {
+            "key": "11",
+            "id": "OB-011",
+            "name": "OB-011 – Adversarial Evasion",
+            "description": "Payloads exploit a particular agent role, tool, environment, defense, or model implementation to evade safeguards, including fingerprinting and conditional activation."
+        },
+        {
+            "key": "12",
+            "id": "OB-012",
+            "name": "OB-012 – Action-Space and Integration Abuse",
+            "description": "Abuse of tool parameters, tool behavior, execution integrations, or downstream output handling enables unauthorized actions and system compromise."
+        },
+        {
+            "key": "13",
+            "id": "OB-013",
+            "name": "OB-013 – Availability Abuse",
+            "description": "Compute exhaustion, memory flooding, service disruption, decision paralysis, and costly or repurposed workloads undermine AI service availability and cost controls."
+        },
+        {
+            "key": "14",
+            "id": "OB-014",
+            "name": "OB-014 – Privilege Compromise",
+            "description": "Unauthorized infrastructure access, weak authentication or resource permissions, and abuse of delegated authority exceed intended access. Includes credentials exposed through model or agent interactions and delegation-based escalation."
+        },
+        {
+            "key": "15",
+            "id": "OB-015",
+            "name": "OB-015 – Harmful / Misleading / Inaccurate Content",
+            "description": "Unsafe or misleading generated content creates cybersecurity, safety, integrity, intellectual-property, or confidentiality harms. Coverage depends on the specific content category a defense actually handles."
+        },
+        {
+            "key": "16",
+            "id": "OB-016",
+            "name": "OB-016 – Surveillance",
+            "description": "Passive interception or insecure recording of model and agent communications exposes conversations and sensitive interaction data."
+        },
+        {
+            "key": "17",
+            "id": "OB-017",
+            "name": "OB-017 – Cyber-Physical / Sensor Attacks",
+            "description": "Deceptive or manipulated sensor signals mislead AI perception and trigger unsafe decisions or actions in connected environments."
+        },
+        {
+            "key": "18",
+            "id": "OB-018",
+            "name": "OB-018 – System Misuse / Malicious Application",
+            "description": "AI models, APIs, and supporting infrastructure are used to generate or scale fraud, social engineering, malicious automation, and harmful workflows."
+        },
+        {
+            "key": "19",
+            "id": "OB-019",
+            "name": "OB-019 – Multimodal / Cross-Modal Risks",
+            "description": "Conflicting modalities, manipulated arbitration, or complementary payload components exploit how systems combine inputs. Covers cross-modal inconsistency and payloads assembled through fusion."
+        }
+    ],
+    "activeItems": [
+        {
+            "id": "AITech-1.1",
+            "name": "Direct Prompt Injection and Jailbreak (Prompt-based Manipulation)",
+            "parentObjective": "OB-001"
+        },
+        {
+            "id": "AITech-1.2",
+            "name": "Indirect Prompt Injection",
+            "parentObjective": "OB-001"
+        },
+        {
+            "id": "AITech-1.3",
+            "name": "Multimodal Injection and Manipulation",
+            "parentObjective": "OB-001"
+        },
+        {
+            "id": "AITech-2.1",
+            "name": "Excessive Agency",
+            "parentObjective": "OB-002"
+        },
+        {
+            "id": "AITech-2.2",
+            "name": "Goal Drift",
+            "parentObjective": "OB-002"
+        },
+        {
+            "id": "AITech-2.3",
+            "name": "Reward Hacking",
+            "parentObjective": "OB-002"
+        },
+        {
+            "id": "AITech-3.1",
+            "name": "Masquerading / Obfuscation / Impersonation",
+            "parentObjective": "OB-003"
+        },
+        {
+            "id": "AITech-4.1",
+            "name": "Agent Injection",
+            "parentObjective": "OB-004"
+        },
+        {
+            "id": "AITech-4.2",
+            "name": "Context Boundary Attacks",
+            "parentObjective": "OB-004"
+        },
+        {
+            "id": "AITech-4.3",
+            "name": "Protocol Manipulation",
+            "parentObjective": "OB-004"
+        },
+        {
+            "id": "AITech-5.1",
+            "name": "Memory System Persistence",
+            "parentObjective": "OB-005"
+        },
+        {
+            "id": "AITech-5.2",
+            "name": "Configuration Persistence",
+            "parentObjective": "OB-005"
+        },
+        {
+            "id": "AITech-6.1",
+            "name": "Training Data Poisoning",
+            "parentObjective": "OB-006"
+        },
+        {
+            "id": "AITech-7.1",
+            "name": "Reasoning Corruption",
+            "parentObjective": "OB-007"
+        },
+        {
+            "id": "AITech-7.2",
+            "name": "Memory System Corruption",
+            "parentObjective": "OB-007"
+        },
+        {
+            "id": "AITech-7.3",
+            "name": "Data Source Abuse and Manipulation",
+            "parentObjective": "OB-007"
+        },
+        {
+            "id": "AITech-7.4",
+            "name": "Token Manipulation",
+            "parentObjective": "OB-007"
+        },
+        {
+            "id": "AITech-8.1",
+            "name": "Membership Inference",
+            "parentObjective": "OB-008"
+        },
+        {
+            "id": "AITech-8.2",
+            "name": "Data Exfiltration / Exposure",
+            "parentObjective": "OB-008"
+        },
+        {
+            "id": "AITech-8.3",
+            "name": "Information Disclosure",
+            "parentObjective": "OB-008"
+        },
+        {
+            "id": "AITech-8.4",
+            "name": "Prompt/Meta Extraction",
+            "parentObjective": "OB-008"
+        },
+        {
+            "id": "AITech-9.1",
+            "name": "Model or Agentic System Manipulation",
+            "parentObjective": "OB-009"
+        },
+        {
+            "id": "AITech-9.2",
+            "name": "Detection Evasion",
+            "parentObjective": "OB-009"
+        },
+        {
+            "id": "AITech-9.3",
+            "name": "Dependency / Plugin Compromise",
+            "parentObjective": "OB-009"
+        },
+        {
+            "id": "AITech-10.1",
+            "name": "Model Extraction",
+            "parentObjective": "OB-010"
+        },
+        {
+            "id": "AITech-10.2",
+            "name": "Model Inversion",
+            "parentObjective": "OB-010"
+        },
+        {
+            "id": "AITech-11.1",
+            "name": "Environment-Aware Evasion",
+            "parentObjective": "OB-011"
+        },
+        {
+            "id": "AITech-11.2",
+            "name": "Model-Selective Evasion",
+            "parentObjective": "OB-011"
+        },
+        {
+            "id": "AITech-12.1",
+            "name": "Tool Exploitation",
+            "parentObjective": "OB-012"
+        },
+        {
+            "id": "AITech-12.2",
+            "name": "Insecure Output Handling",
+            "parentObjective": "OB-012"
+        },
+        {
+            "id": "AITech-13.1",
+            "name": "Disruption of Availability",
+            "parentObjective": "OB-013"
+        },
+        {
+            "id": "AITech-13.2",
+            "name": "Cost Harvesting / Repurposing",
+            "parentObjective": "OB-013"
+        },
+        {
+            "id": "AITech-14.1",
+            "name": "Unauthorized Access",
+            "parentObjective": "OB-014"
+        },
+        {
+            "id": "AITech-14.2",
+            "name": "Abuse of Delegated Authority",
+            "parentObjective": "OB-014"
+        },
+        {
+            "id": "AITech-15.1",
+            "name": "Harmful Content",
+            "parentObjective": "OB-015"
+        },
+        {
+            "id": "AITech-16.1",
+            "name": "Eavesdropping",
+            "parentObjective": "OB-016"
+        },
+        {
+            "id": "AITech-17.1",
+            "name": "Sensor Spoofing",
+            "parentObjective": "OB-017"
+        },
+        {
+            "id": "AITech-18.1",
+            "name": "Fraudulent Use",
+            "parentObjective": "OB-018"
+        },
+        {
+            "id": "AITech-18.2",
+            "name": "Malicious Workflows",
+            "parentObjective": "OB-018"
+        },
+        {
+            "id": "AITech-19.1",
+            "name": "Cross-Modal Inconsistency Exploits",
+            "parentObjective": "OB-019"
+        },
+        {
+            "id": "AITech-19.2",
+            "name": "Fusion Payload Split",
+            "parentObjective": "OB-019"
+        },
+        {
+            "id": "AISubtech-1.1.1",
+            "name": "Instruction Manipulation",
+            "parentTechnique": "AITech-1.1"
+        },
+        {
+            "id": "AISubtech-1.1.2",
+            "name": "Obfuscation",
+            "parentTechnique": "AITech-1.1"
+        },
+        {
+            "id": "AISubtech-1.1.3",
+            "name": "Multi-Agent Propagation",
+            "parentTechnique": "AITech-1.1"
+        },
+        {
+            "id": "AISubtech-1.1.4",
+            "name": "Token Exploitation",
+            "parentTechnique": "AITech-1.1"
+        },
+        {
+            "id": "AISubtech-1.1.5",
+            "name": "Context Manipulation",
+            "parentTechnique": "AITech-1.1"
+        },
+        {
+            "id": "AISubtech-1.3.1",
+            "name": "Image-Text Injection",
+            "parentTechnique": "AITech-1.3"
+        },
+        {
+            "id": "AISubtech-1.3.2",
+            "name": "Image Manipulation",
+            "parentTechnique": "AITech-1.3"
+        },
+        {
+            "id": "AISubtech-1.3.3",
+            "name": "Audio Command Injection",
+            "parentTechnique": "AITech-1.3"
+        },
+        {
+            "id": "AISubtech-1.3.4",
+            "name": "Video Overlay Manipulation",
+            "parentTechnique": "AITech-1.3"
+        },
+        {
+            "id": "AISubtech-2.1.1",
+            "name": "Execution Approval Bypass",
+            "parentTechnique": "AITech-2.1"
+        },
+        {
+            "id": "AISubtech-2.1.2",
+            "name": "Capability and Permission Overreach",
+            "parentTechnique": "AITech-2.1"
+        },
+        {
+            "id": "AISubtech-2.2.1",
+            "name": "Unauthorized Scope Expansion",
+            "parentTechnique": "AITech-2.2"
+        },
+        {
+            "id": "AISubtech-2.2.2",
+            "name": "Goal Substitution",
+            "parentTechnique": "AITech-2.2"
+        },
+        {
+            "id": "AISubtech-2.2.3",
+            "name": "Authorization and Constraint Erosion",
+            "parentTechnique": "AITech-2.2"
+        },
+        {
+            "id": "AISubtech-2.3.1",
+            "name": "Task Loophole Exploitation",
+            "parentTechnique": "AITech-2.3"
+        },
+        {
+            "id": "AISubtech-2.3.2",
+            "name": "Verifier Manipulation",
+            "parentTechnique": "AITech-2.3"
+        },
+        {
+            "id": "AISubtech-2.3.3",
+            "name": "Shortcut Acquisition",
+            "parentTechnique": "AITech-2.3"
+        },
+        {
+            "id": "AISubtech-3.1.1",
+            "name": "Identity Obfuscation",
+            "parentTechnique": "AITech-3.1"
+        },
+        {
+            "id": "AISubtech-3.1.2",
+            "name": "Trusted Agent Spoofing",
+            "parentTechnique": "AITech-3.1"
+        },
+        {
+            "id": "AISubtech-4.1.1",
+            "name": "Rogue Agent Introduction",
+            "parentTechnique": "AITech-4.1"
+        },
+        {
+            "id": "AISubtech-4.2.1",
+            "name": "Context Window Exploitation",
+            "parentTechnique": "AITech-4.2"
+        },
+        {
+            "id": "AISubtech-4.2.2",
+            "name": "Session Boundary Violation",
+            "parentTechnique": "AITech-4.2"
+        },
+        {
+            "id": "AISubtech-4.3.1",
+            "name": "Schema Inconsistencies",
+            "parentTechnique": "AITech-4.3"
+        },
+        {
+            "id": "AISubtech-4.3.2",
+            "name": "Namespace Collision",
+            "parentTechnique": "AITech-4.3"
+        },
+        {
+            "id": "AISubtech-4.3.3",
+            "name": "Server Rebinding Attack",
+            "parentTechnique": "AITech-4.3"
+        },
+        {
+            "id": "AISubtech-4.3.4",
+            "name": "Replay Exploitation",
+            "parentTechnique": "AITech-4.3"
+        },
+        {
+            "id": "AISubtech-4.3.5",
+            "name": "Capability Inflation",
+            "parentTechnique": "AITech-4.3"
+        },
+        {
+            "id": "AISubtech-4.3.6",
+            "name": "Cross-Origin Exploitation",
+            "parentTechnique": "AITech-4.3"
+        },
+        {
+            "id": "AISubtech-5.1.1",
+            "name": "Long-term / Short-term Memory Injection",
+            "parentTechnique": "AITech-5.1"
+        },
+        {
+            "id": "AISubtech-5.2.1",
+            "name": "Agent Profile Tampering",
+            "parentTechnique": "AITech-5.2"
+        },
+        {
+            "id": "AISubtech-6.1.1",
+            "name": "Knowledge Base Poisoning",
+            "parentTechnique": "AITech-6.1"
+        },
+        {
+            "id": "AISubtech-6.1.2",
+            "name": "Reinforcement Biasing",
+            "parentTechnique": "AITech-6.1"
+        },
+        {
+            "id": "AISubtech-6.1.3",
+            "name": "Reinforcement Signal Corruption",
+            "parentTechnique": "AITech-6.1"
+        },
+        {
+            "id": "AISubtech-7.2.1",
+            "name": "Memory Anchor Attacks",
+            "parentTechnique": "AITech-7.2"
+        },
+        {
+            "id": "AISubtech-7.2.2",
+            "name": "Memory Index Manipulation",
+            "parentTechnique": "AITech-7.2"
+        },
+        {
+            "id": "AISubtech-7.3.1",
+            "name": "Corrupted Third-Party Data",
+            "parentTechnique": "AITech-7.3"
+        },
+        {
+            "id": "AISubtech-7.4.1",
+            "name": "Token Theft",
+            "parentTechnique": "AITech-7.4"
+        },
+        {
+            "id": "AISubtech-8.1.1",
+            "name": "Presence Detection",
+            "parentTechnique": "AITech-8.1"
+        },
+        {
+            "id": "AISubtech-8.2.1",
+            "name": "Training Data Exposure",
+            "parentTechnique": "AITech-8.2"
+        },
+        {
+            "id": "AISubtech-8.2.2",
+            "name": "LLM Data Leakage",
+            "parentTechnique": "AITech-8.2"
+        },
+        {
+            "id": "AISubtech-8.2.3",
+            "name": "Data Exfiltration via Agent Tooling",
+            "parentTechnique": "AITech-8.2"
+        },
+        {
+            "id": "AISubtech-8.3.1",
+            "name": "Tool Metadata Exposure",
+            "parentTechnique": "AITech-8.3"
+        },
+        {
+            "id": "AISubtech-8.3.2",
+            "name": "System Information Exposure",
+            "parentTechnique": "AITech-8.3"
+        },
+        {
+            "id": "AISubtech-8.3.3",
+            "name": "Personally Identifiable Information Exposure",
+            "parentTechnique": "AITech-8.3"
+        },
+        {
+            "id": "AISubtech-8.3.4",
+            "name": "Payment Card Industry Data Exposure",
+            "parentTechnique": "AITech-8.3"
+        },
+        {
+            "id": "AISubtech-8.3.5",
+            "name": "Protected Health Information Exposure",
+            "parentTechnique": "AITech-8.3"
+        },
+        {
+            "id": "AISubtech-8.4.1",
+            "name": "System LLM Prompt Leakage",
+            "parentTechnique": "AITech-8.4"
+        },
+        {
+            "id": "AISubtech-9.1.1",
+            "name": "Code Execution",
+            "parentTechnique": "AITech-9.1"
+        },
+        {
+            "id": "AISubtech-9.1.2",
+            "name": "Unauthorized or Unsolicited System Access",
+            "parentTechnique": "AITech-9.1"
+        },
+        {
+            "id": "AISubtech-9.1.3",
+            "name": "Unauthorized or Unsolicited Network Access",
+            "parentTechnique": "AITech-9.1"
+        },
+        {
+            "id": "AISubtech-9.1.4",
+            "name": "Injection Attacks (e.g., SQL, Command Execution, XSS)",
+            "parentTechnique": "AITech-9.1"
+        },
+        {
+            "id": "AISubtech-9.1.5",
+            "name": "Template Injection (e.g., SSTI)",
+            "parentTechnique": "AITech-9.1"
+        },
+        {
+            "id": "AISubtech-9.2.1",
+            "name": "Obfuscation Vulnerabilities",
+            "parentTechnique": "AITech-9.2"
+        },
+        {
+            "id": "AISubtech-9.2.2",
+            "name": "Backdoors and Trojans",
+            "parentTechnique": "AITech-9.3"
+        },
+        {
+            "id": "AISubtech-9.3.1",
+            "name": "Malicious Package / Tool Injection",
+            "parentTechnique": "AITech-9.3"
+        },
+        {
+            "id": "AISubtech-9.3.2",
+            "name": "Dependency Name Squatting (Tools / Servers)",
+            "parentTechnique": "AITech-9.3"
+        },
+        {
+            "id": "AISubtech-9.3.3",
+            "name": "Dependency Replacement / Rug Pull",
+            "parentTechnique": "AITech-9.3"
+        },
+        {
+            "id": "AISubtech-10.1.1",
+            "name": "API Query Stealing",
+            "parentTechnique": "AITech-10.1"
+        },
+        {
+            "id": "AISubtech-10.1.2",
+            "name": "Weight Reconstruction",
+            "parentTechnique": "AITech-10.1"
+        },
+        {
+            "id": "AISubtech-10.1.3",
+            "name": "Sensitive Data Reconstruction",
+            "parentTechnique": "AITech-10.1"
+        },
+        {
+            "id": "AISubtech-10.2.1",
+            "name": "Model Inversion",
+            "parentTechnique": "AITech-10.2"
+        },
+        {
+            "id": "AISubtech-11.1.1",
+            "name": "Agent-Specific Evasion",
+            "parentTechnique": "AITech-11.1"
+        },
+        {
+            "id": "AISubtech-11.1.2",
+            "name": "Tool-Scoped Evasion",
+            "parentTechnique": "AITech-11.1"
+        },
+        {
+            "id": "AISubtech-11.1.3",
+            "name": "Environment-Scoped Payloads",
+            "parentTechnique": "AITech-11.1"
+        },
+        {
+            "id": "AISubtech-11.1.4",
+            "name": "Defense-Aware Payloads",
+            "parentTechnique": "AITech-11.1"
+        },
+        {
+            "id": "AISubtech-11.2.1",
+            "name": "Targeted Model Fingerprinting",
+            "parentTechnique": "AITech-11.2"
+        },
+        {
+            "id": "AISubtech-11.2.2",
+            "name": "Conditional Attack Execution",
+            "parentTechnique": "AITech-11.2"
+        },
+        {
+            "id": "AISubtech-12.1.1",
+            "name": "Parameter Manipulation",
+            "parentTechnique": "AITech-12.1"
+        },
+        {
+            "id": "AISubtech-12.1.2",
+            "name": "Tool Poisoning",
+            "parentTechnique": "AITech-12.1"
+        },
+        {
+            "id": "AISubtech-12.1.3",
+            "name": "Unsafe System / Browser / File Execution",
+            "parentTechnique": "AITech-12.1"
+        },
+        {
+            "id": "AISubtech-12.1.4",
+            "name": "Tool Shadowing",
+            "parentTechnique": "AITech-12.1"
+        },
+        {
+            "id": "AISubtech-12.2.1",
+            "name": "Code Detection / Malicious Code Output",
+            "parentTechnique": "AITech-13.1"
+        },
+        {
+            "id": "AISubtech-13.1.1",
+            "name": "Compute Exhaustion",
+            "parentTechnique": "AITech-13.1"
+        },
+        {
+            "id": "AISubtech-13.1.2",
+            "name": "Memory Flooding",
+            "parentTechnique": "AITech-13.1"
+        },
+        {
+            "id": "AISubtech-13.1.3",
+            "name": "Model Denial of Service",
+            "parentTechnique": "AITech-13.1"
+        },
+        {
+            "id": "AISubtech-13.1.4",
+            "name": "Application Denial of Service",
+            "parentTechnique": "AITech-13.1"
+        },
+        {
+            "id": "AISubtech-13.1.5",
+            "name": "Decision Paralysis Attacks",
+            "parentTechnique": "AITech-13.1"
+        },
+        {
+            "id": "AISubtech-13.2.1",
+            "name": "Service Misuse for Cost Inflation",
+            "parentTechnique": "AITech-13.2"
+        },
+        {
+            "id": "AISubtech-14.1.1",
+            "name": "Credential Theft",
+            "parentTechnique": "AITech-14.1"
+        },
+        {
+            "id": "AISubtech-14.1.2",
+            "name": "Insufficient Access Controls",
+            "parentTechnique": "AITech-14.1"
+        },
+        {
+            "id": "AISubtech-14.2.1",
+            "name": "Permission Escalation via Delegation",
+            "parentTechnique": "AITech-14.2"
+        },
+        {
+            "id": "AISubtech-15.1.1",
+            "name": "Cybersecurity and Hacking: Malware / Exploits",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.2",
+            "name": "Cybersecurity and Hacking: Cyber Abuse",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.3",
+            "name": "Safety Harms and Toxicity: Animal Abuse",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.4",
+            "name": "Safety Harms and Toxicity: Child Abuse / Exploitation",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.5",
+            "name": "Safety Harms and Toxicity: Disinformation",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.6",
+            "name": "Safety Harms and Toxicity: Environmental Harm",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.7",
+            "name": "Safety Harms and Toxicity: Financial Harm",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.8",
+            "name": "Safety Harms and Toxicity: Harassment",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.9",
+            "name": "Safety Harms and Toxicity: Hate Speech",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.10",
+            "name": "Safety Harms and Toxicity: Non-Violent Crime",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.11",
+            "name": "Safety Harms and Toxicity: Profanity",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.12",
+            "name": "Safety Harms and Toxicity: Scams and Deception",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.13",
+            "name": "Safety Harms and Toxicity: Self Harm",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.14",
+            "name": "Safety Harms and Toxicity: Sexual Content and Exploitation",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.15",
+            "name": "Safety Harms and Toxicity: Social Division and Polarization",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.16",
+            "name": "Safety Harms and Toxicity: Terrorism / Extremism",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.17",
+            "name": "Safety Harms and Toxicity: Violence and Public Safety Threat",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.18",
+            "name": "Safety Harms and Toxicity: Weapons / CBRN Risks",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.19",
+            "name": "Integrity: Hallucinations / Misinformation",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.20",
+            "name": "Integrity: Unauthorized Financial Advice",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.21",
+            "name": "Integrity: Unauthorized Legal Advice",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.22",
+            "name": "Integrity: Unauthorized Medical Advice",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.23",
+            "name": "Intellectual Property Compromise: Intellectual Property Infringement",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.24",
+            "name": "Intellectual Property Compromise: Confidential Data",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-15.1.25",
+            "name": "General Harms",
+            "parentTechnique": "AITech-15.1"
+        },
+        {
+            "id": "AISubtech-16.1.1",
+            "name": "Logging Sensitive Conversations",
+            "parentTechnique": "AITech-16.1"
+        },
+        {
+            "id": "AISubtech-17.1.1",
+            "name": "Sensor Spoofing: Action Signals (audio, visual)",
+            "parentTechnique": "AITech-17.1"
+        },
+        {
+            "id": "AISubtech-18.1.1",
+            "name": "Spam / Scam / Social Engineering Generation",
+            "parentTechnique": "AITech-18.1"
+        },
+        {
+            "id": "AISubtech-18.2.1",
+            "name": "Abuse of APIs for Mass Automation",
+            "parentTechnique": "AITech-18.2"
+        },
+        {
+            "id": "AISubtech-18.2.2",
+            "name": "Dedicated Malicious Server or Infrastructure",
+            "parentTechnique": "AITech-18.2"
+        },
+        {
+            "id": "AISubtech-19.1.1",
+            "name": "Contradictory Inputs Attack",
+            "parentTechnique": "AITech-19.1"
+        },
+        {
+            "id": "AISubtech-19.1.2",
+            "name": "Modality Skewing",
+            "parentTechnique": "AITech-19.1"
+        },
+        {
+            "id": "AISubtech-19.2.1",
+            "name": "Convergence Payload Injection",
+            "parentTechnique": "AITech-19.2"
+        },
+        {
+            "id": "AISubtech-19.2.2",
+            "name": "Chained Payload Execution",
+            "parentTechnique": "AITech-19.2"
+        }
+    ]
+};

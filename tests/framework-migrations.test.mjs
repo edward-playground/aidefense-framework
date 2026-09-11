@@ -33,7 +33,7 @@ function entityById(id) {
 }
 
 test('OWASP LLM registry has one complete current catalog and a one-to-one legacy migration', () => {
-    assert.equal(frameworkMigrations.registryVersion, '2026-08-05');
+    assert.equal(frameworkMigrations.registryVersion, '2026-09-11');
     assert.equal(catalog.activeEdition, '2026');
     assert.equal(catalog.activeLabel, 'OWASP LLM Top 10 2026');
     assert.equal(catalog.sourceArtifact.fileName, 'OWASP-GenAI-LLM-Top-10-2026-v1.0.pdf');
