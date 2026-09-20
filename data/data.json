@@ -1,8 +1,8 @@
 {
 "version": {
 "schemaVersion": "2.3",
-"dataVersion": "2026.09.11",
-"generatedAt": "2026-09-11T07:22:10.584Z",
+"dataVersion": "2026.09.20",
+"generatedAt": "2026-09-20T23:17:20.848Z",
 "source": "bundled",
 "keywordStructure": "flat"
 },
@@ -6558,7 +6558,7 @@
 ],
 "implementationGuidance": [
 "Apply strict schema validation and bounds checking for all user inputs.",
-"Canonicalize text (Unicode normalization, strip control chars) to defeat obfuscation.",
+"Validate text under a field-specific normalization contract, preserving code and data semantics; bind optional obfuscation-analysis views to the admitted input.",
 "Sanitize prompts: strip/escape control tokens and known injection markers.",
 "Moderate with a guardrail model or API before invoking the primary LLM.",
 "Deploy a deterministic synchronous prompt gate at the API edge with fixed pre-model pipeline ordering.",
@@ -6691,7 +6691,7 @@
 ]
 }
 ],
-"contentHash": "046bc4eaeaca89ee",
+"contentHash": "e65d1c2c0e3be28f",
 "keywords": [
 "prompt gate",
 "inference-time validation",
@@ -6706,7 +6706,8 @@
 "nemo guardrails",
 "llama guard",
 "rag source validation",
-"synchronous prompt gate"
+"field-specific normalization",
+"semantic preservation"
 ]
 },
 {
@@ -11612,9 +11613,9 @@
 {
 "id": "AID-H-006.003",
 "name": "Prediction Response Minimization & Extraction-Resistance Validation",
-"description": "Reduce externally exposed prediction precision through one versioned response-minimization profile, and gate release on a model-family query suite showing that the selected transform reduces the approved extraction signal without exceeding utility and API-contract budgets.<br/><br/><strong>Applicability:</strong> use only for APIs that expose classifier confidence or continuous predictions. If the API already returns no numeric model signal, this control does not apply. A configured bin, rounding rule, or noise flag alone is insufficient. This control makes no differential-privacy claim and never permits raw logits or probability vectors to leave the trusted response boundary.",
+"description": "Expose only the numeric prediction detail required by an explicit API contract through one versioned response profile. For a minimization transform, gate release on a model-family query suite showing reduced extraction signal within utility and API-contract budgets. If calibrated probabilities are required, explicitly bind the permitted fields and precision to that contract, retain calibration and extraction-risk review, and enforce compensating access and query-abuse controls. Keeping required precision is not evidence that extraction risk was reduced.<br/><br/><strong>Applicability:</strong> use only for APIs that expose classifier confidence or continuous predictions. If the API already returns no numeric model signal, this control does not apply. A configured bin, rounding rule, or noise flag alone is insufficient. This control makes no differential-privacy claim and rejects raw logits and probability fields outside the approved response contract.",
 "scopeBoundary": {
-"responsibility": "Owns response minimization for numeric prediction APIs and independent validation that rounding, binning, range reduction, or approved noise lowers extraction signal within utility and API-contract budgets. It makes no differential-privacy claim.",
+"responsibility": "Owns contract-bounded response detail for numeric prediction APIs, including explicit calibrated-probability release decisions, and independent validation that rounding, binning, range reduction, or approved noise lowers extraction signal within utility and API-contract budgets. It makes no differential-privacy claim.",
 "relatedTechniques": [
 {
 "id": "AID-H-005.001",
@@ -11632,7 +11633,7 @@
 "operation"
 ],
 "implementationGuidance": [
-"Apply a signed classifier response-minimization profile and reject any raw probability field.",
+"Apply a signed classifier response profile that permits only contract-required labels, confidence bands, or explicitly authorized calibrated probabilities.",
 "Apply a signed regression rounding or range profile with an exact response-schema gate.",
 "Independently validate the selected output-minimization profile against extraction and utility policy."
 ],
@@ -11742,12 +11743,12 @@
 ]
 }
 ],
-"contentHash": "be26b82268a3f7dc",
+"contentHash": "be871e1357e7a361",
 "keywords": [
 "prediction response minimization",
 "classifier confidence reduction",
 "regression precision reduction",
-"raw probability rejection",
+"contract-bounded calibrated probabilities",
 "exact response schema gate",
 "signed minimization profile",
 "model extraction resistance",
@@ -21467,7 +21468,7 @@
 {
 "id": "AID-H-021.004",
 "name": "Control-Plane & Oversight-Surface Isolation",
-"description": "Separate the agent runtime from the control plane that supervises it. A production agent must not be able to read, modify, disable, or bypass its own monitoring rules, policy bundles, sandbox settings, kill-switch controls, audit streams, canary definitions, oversight thresholds, egress policy, load balancers, network routes, or security groups.<br/><br/>This control owns the single PASS for that inability; a capability-tier profile may require several independent layers, but their shared enforcement result must not be scored again.<br/><br/>Any break-glass path that crosses those layers requires independently authenticated quorum approval, just-in-time and time-bounded scope, tamper-evident audit, and an alert delivered through a channel the runtime cannot suppress.",
+"description": "Separate the agent runtime from the control plane that supervises it. A production agent must not be able to modify, disable, or bypass its own monitoring rules, policy bundles, sandbox settings, kill-switch controls, audit streams, canary definitions, oversight thresholds, egress policy, load balancers, network routes, or security groups. Keep evasion-sensitive detector internals, thresholds, canaries, and trigger logic unreadable to the runtime. An explicitly published, read-only projection of allowed tools, destinations, and public operating limits may be exposed without granting access to authoritative configuration or administration.<br/><br/>This control owns the single PASS for that inability; a capability-tier profile may require several independent layers, but their shared enforcement result must not be scored again.<br/><br/>Any break-glass path that crosses those layers requires independently authenticated quorum approval, just-in-time and time-bounded scope, tamper-evident audit, and an alert delivered through a channel the runtime cannot suppress.",
 "scopeBoundary": {
 "responsibility": "Owns identity, network, storage, and administration separation between the agent runtime and its monitoring rules, policy bundles, sandbox settings, kill switches, audit streams, canaries, detector internals, oversight thresholds, egress policy, load balancers, routes, and security groups. It owns the one scoreable result for runtime inability to administer these surfaces, even when a capability-tier profile requires multiple independent layers.",
 "relatedTechniques": [
@@ -21490,7 +21491,7 @@
 "operation"
 ],
 "implementationGuidance": [
-"Deny agent runtime identities from reading or changing their own monitoring, sandbox, policy, kill-switch, audit, egress, routing, load-balancer, and security-group control-plane resources; constrain break-glass access with independently verified quorum, JIT expiry, tamper-evident audit, and independent alerting.",
+"Deny agent runtime administration of its oversight and infrastructure controls and reads of evasion-sensitive internals; expose only an explicitly published read-only limits projection, with independently verified break-glass access.",
 "Silo oversight rules, thresholds, canary definitions, and detector internals from agent-readable retrieval corpora."
 ],
 "implementationGuidanceIds": [
@@ -21593,7 +21594,7 @@
 ]
 }
 ],
-"contentHash": "843c3a4d94c6fba0",
+"contentHash": "aaaf6b60b8c4d728",
 "keywords": [
 "control-plane isolation",
 "oversight surface isolation",
@@ -21608,7 +21609,8 @@
 "control-plane identity separation",
 "oversight internal corpus",
 "retrieval-time access gate",
-"canary definition isolation"
+"canary definition isolation",
+"read-only public limits"
 ]
 },
 {

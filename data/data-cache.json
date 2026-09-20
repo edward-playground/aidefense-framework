@@ -901,7 +901,7 @@
     ]
   },
   "AID-H-002.002": {
-    "contentHash": "046bc4eaeaca89ee",
+    "contentHash": "e65d1c2c0e3be28f",
     "keywords": [
       "prompt gate",
       "inference-time validation",
@@ -916,7 +916,8 @@
       "nemo guardrails",
       "llama guard",
       "rag source validation",
-      "synchronous prompt gate"
+      "field-specific normalization",
+      "semantic preservation"
     ]
   },
   "AID-H-002.003": {
@@ -1488,12 +1489,12 @@
     ]
   },
   "AID-H-006.003": {
-    "contentHash": "be26b82268a3f7dc",
+    "contentHash": "be871e1357e7a361",
     "keywords": [
       "prediction response minimization",
       "classifier confidence reduction",
       "regression precision reduction",
-      "raw probability rejection",
+      "contract-bounded calibrated probabilities",
       "exact response schema gate",
       "signed minimization profile",
       "model extraction resistance",
@@ -2812,7 +2813,7 @@
     ]
   },
   "AID-H-021.004": {
-    "contentHash": "843c3a4d94c6fba0",
+    "contentHash": "aaaf6b60b8c4d728",
     "keywords": [
       "control-plane isolation",
       "oversight surface isolation",
@@ -2827,7 +2828,8 @@
       "control-plane identity separation",
       "oversight internal corpus",
       "retrieval-time access gate",
-      "canary definition isolation"
+      "canary definition isolation",
+      "read-only public limits"
     ]
   },
   "AID-H-022": {
