@@ -1,8 +1,8 @@
 {
 "version": {
 "schemaVersion": "2.3",
-"dataVersion": "2026.09.20",
-"generatedAt": "2026-09-20T23:17:20.848Z",
+"dataVersion": "2026.09.22",
+"generatedAt": "2026-09-21T23:52:54.683Z",
 "source": "bundled",
 "keywordStructure": "flat"
 },
@@ -43696,9 +43696,9 @@
 {
 "id": "AID-I-003.002",
 "name": "Identity, Session & API Rate-Limit Throttling",
-"description": "Apply atomic admission-control throttles at the API gateway or application edge for authenticated principals, tenants, sessions, API keys, and low-trust or unauthenticated callers. This sub-technique owns identity binding, trust-tier limits, server-derived cost inputs, atomic counters, and fail-closed storage behavior.",
+"description": "Apply atomic admission-control throttles at the API gateway or application edge for authenticated principals, tenants, sessions, API keys, and low-trust or unauthenticated callers. For AI endpoints exposed to untrusted clients, consume trusted bot or abuse signals to apply additional bounded restrictions to suspicious traffic, including correlated rotating sources where the deployed service supports them. Preserve the base identity allowance when adaptive restrictions change. This sub-technique owns identity binding, base trust-tier limits, server-derived admission costs, quota enforcement and bounded adaptive responses; it does not require a custom ML detector.",
 "scopeBoundary": {
-"responsibility": "Owns request-admission throttling by principal, tenant, session, API key, or trust tier at the gateway or application edge. It does not enforce cumulative GPU, CPU, token, tool-call, retry, concurrency, or spend budgets and does not decide the disposition of one high-risk action.",
+"responsibility": "Owns request-admission throttling by principal, tenant, session, API key or trust tier, and additional restrictions on a bounded suspicious traffic set, at the gateway or application edge. It consumes trusted bot or abuse findings without owning their detection or attribution. It does not enforce cumulative GPU, CPU, token, tool-call, retry, concurrency or spend budgets and does not decide the disposition of one high-risk action.",
 "relatedTechniques": [
 {
 "id": "AID-I-003.003",
@@ -43719,8 +43719,8 @@
 "operation"
 ],
 "implementationGuidance": [
-"Dynamic rate limiting for anomalous behavior (query spikes, complex queries).",
-"Stricter rate limits for unauthenticated/less trusted users."
+"Enforce atomic identity-bound request admission limits with server-derived costs.",
+"Apply stricter admission limits to anonymous, lower-trust, or suspicious traffic using trusted bot and abuse signals."
 ],
 "implementationGuidanceIds": [
 "AID-I-003.002-G001",
@@ -43739,7 +43739,9 @@
 "toolsCommercial": [
 "Cloudflare API Shield",
 "Cloudflare Bot Management",
+"Cloudflare Advanced Rate Limiting (pair with Bot Management for behavioral-score and fingerprint rules)",
 "Akamai App & API Protector",
+"Akamai Bot Manager",
 "Imperva Advanced Bot Protection",
 "Amazon API Gateway",
 "Azure API Management",
@@ -43823,7 +43825,7 @@
 ]
 }
 ],
-"contentHash": "8160e574a4351352",
+"contentHash": "760ca1079af9983e",
 "keywords": [
 "identity rate limiting",
 "session throttling",
@@ -43834,7 +43836,12 @@
 "server-derived request cost",
 "gateway throttling",
 "api key rate limits",
-"fail-closed counter store"
+"fail-closed counter store",
+"adaptive rate limiting",
+"trusted abuse signals",
+"bot-score restrictions",
+"suspicious traffic aggregation",
+"base quota preservation"
 ]
 },
 {

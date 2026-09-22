@@ -5672,7 +5672,7 @@
     ]
   },
   "AID-I-003.002": {
-    "contentHash": "8160e574a4351352",
+    "contentHash": "760ca1079af9983e",
     "keywords": [
       "identity rate limiting",
       "session throttling",
@@ -5683,7 +5683,12 @@
       "server-derived request cost",
       "gateway throttling",
       "api key rate limits",
-      "fail-closed counter store"
+      "fail-closed counter store",
+      "adaptive rate limiting",
+      "trusted abuse signals",
+      "bot-score restrictions",
+      "suspicious traffic aggregation",
+      "base quota preservation"
     ]
   },
   "AID-I-003.003": {
