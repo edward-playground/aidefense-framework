@@ -882,7 +882,7 @@
     ]
   },
   "AID-H-002.001": {
-    "contentHash": "ee77b4f69c41e92c",
+    "contentHash": "534197a5c588aa7d",
     "keywords": [
       "training data sanitization",
       "poisoned sample removal",
@@ -890,13 +890,13 @@
       "pii anonymization",
       "data quality validation",
       "exploratory data analysis",
-      "clean-label detection",
+      "evaluation data sanitization",
       "schema validation",
-      "dataset hashing",
+      "record quarantine",
       "cleanlab",
       "great expectations",
-      "label noise detection",
-      "data provenance checks",
+      "recognizer canaries",
+      "complete snapshot admission",
       "policy-as-code validation"
     ]
   },
@@ -1601,7 +1601,7 @@
     ]
   },
   "AID-H-007.004": {
-    "contentHash": "20fe7e253cbc0a64",
+    "contentHash": "6bd968f3cf598475",
     "keywords": [
       "evaluation integrity",
       "holdout hashing",

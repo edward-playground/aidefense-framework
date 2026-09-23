@@ -1,8 +1,8 @@
 {
 "version": {
 "schemaVersion": "2.3",
-"dataVersion": "2026.09.22",
-"generatedAt": "2026-09-21T23:52:54.683Z",
+"dataVersion": "2026.09.24",
+"generatedAt": "2026-09-23T18:22:38.537Z",
 "source": "bundled",
 "keywordStructure": "flat"
 },
@@ -6165,6 +6165,7 @@
 ],
 "phase": [
 "building",
+"validation",
 "operation"
 ],
 "defendsAgainst": [
@@ -6364,10 +6365,10 @@
 "subTechniques": [
 {
 "id": "AID-H-002.001",
-"name": "Training & Fine-Tuning Data Sanitization",
-"description": "Detect and remove malicious, anomalous, privacy-sensitive, or policy-prohibited records before a dataset is admitted to model training or fine-tuning. Apply content inspection, normalization, quarantine, and redaction over the complete candidate snapshot.",
+"name": "Training, Fine-Tuning & Evaluation Data Sanitization",
+"description": "Detect and remove malicious, anomalous, privacy-sensitive, or policy-prohibited records before a dataset is admitted to model training, fine-tuning, or evaluation. Apply content inspection, normalization, quarantine, and redaction over the complete candidate snapshot.",
 "scopeBoundary": {
-"responsibility": "Owns content-level sanitization of the complete candidate training or fine-tuning dataset before admission. It does not establish supplier provenance, cryptographic artifact integrity, feature-pipeline integrity, label integrity, or split isolation.",
+"responsibility": "Owns content-level sanitization of the complete candidate training, fine-tuning, or evaluation dataset before admission. Evaluation-data preparation also applies when using an existing model without training or fine-tuning it; each method retains its own data and runtime prerequisites. It does not establish supplier provenance, cryptographic artifact integrity, feature-pipeline integrity, label integrity, or split isolation.",
 "relatedTechniques": [
 {
 "id": "AID-H-002.004",
@@ -6379,7 +6380,11 @@
 },
 {
 "id": "AID-H-003.003",
-"comparison": "AID-H-002.001 decides whether dataset contents are safe enough for training use; AID-H-003.003 decides whether the external supplier, provenance, license, signature, and lineage satisfy supply-chain admission.\nContent sanitization and source admission are independent requirements."
+"comparison": "AID-H-002.001 decides whether dataset contents are safe enough for training or evaluation use; AID-H-003.003 decides whether the external supplier, provenance, license, signature, and lineage satisfy supply-chain admission.\nContent sanitization and source admission are independent requirements."
+},
+{
+"id": "AID-H-007.004",
+"comparison": "AID-H-002.001 sanitizes candidate evaluation records before use; AID-H-007.004 protects evaluation independence, corpus sufficiency, holdout isolation, and promotion evidence.\nSanitized records do not establish representative test coverage or trustworthy evaluation results."
 },
 {
 "id": "AID-H-002.009",
@@ -6391,13 +6396,14 @@
 "data"
 ],
 "phase": [
-"building"
+"building",
+"validation"
 ],
 "implementationGuidance": [
 "Perform EDA to understand distributions and flag outliers for human review.",
 "Validate data against schema and constraints with policy-as-code.",
 "Fit reference-bound generic and multimodal anomaly detectors, then quarantine anomalous records or paired/grouped fusion evidence before training.",
-"Scan and anonymize PII or sensitive data prior to training."
+"Scan and anonymize PII or sensitive data before training, fine-tuning, or evaluation."
 ],
 "implementationGuidanceIds": [
 "AID-H-002.001-G001",
@@ -6507,7 +6513,7 @@
 ]
 }
 ],
-"contentHash": "ee77b4f69c41e92c",
+"contentHash": "534197a5c588aa7d",
 "keywords": [
 "training data sanitization",
 "poisoned sample removal",
@@ -6515,13 +6521,13 @@
 "pii anonymization",
 "data quality validation",
 "exploratory data analysis",
-"clean-label detection",
+"evaluation data sanitization",
 "schema validation",
-"dataset hashing",
+"record quarantine",
 "cleanlab",
 "great expectations",
-"label noise detection",
-"data provenance checks",
+"recognizer canaries",
+"complete snapshot admission",
 "policy-as-code validation"
 ]
 },
@@ -12498,6 +12504,10 @@
 {
 "id": "AID-M-008",
 "comparison": "AID-H-007.004 secures benchmark data, independence, sufficiency, and evidence; AID-M-008 executes adversarial agent security benchmark campaigns.\nBenchmark execution does not own the integrity of its holdout and promotion evidence."
+},
+{
+"id": "AID-H-002.001",
+"comparison": "AID-H-007.004 protects evaluation independence, corpus sufficiency, holdout isolation, and promotion evidence; AID-H-002.001 sanitizes the content of candidate evaluation records before an evaluation job can read them.\nAn independent, sufficient, and leak-free evaluation corpus can still contain poisoned or privacy-sensitive records."
 }
 ]
 },
@@ -12617,7 +12627,7 @@
 ]
 }
 ],
-"contentHash": "20fe7e253cbc0a64",
+"contentHash": "6bd968f3cf598475",
 "keywords": [
 "evaluation integrity",
 "holdout hashing",
