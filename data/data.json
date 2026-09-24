@@ -2,7 +2,7 @@
 "version": {
 "schemaVersion": "2.3",
 "dataVersion": "2026.09.24",
-"generatedAt": "2026-09-23T18:22:38.537Z",
+"generatedAt": "2026-09-24T03:07:26.312Z",
 "source": "bundled",
 "keywordStructure": "flat"
 },
@@ -16526,7 +16526,7 @@
 ],
 "implementationGuidance": [
 "Render all prompt fields through a structural serializer so untrusted user and tool content cannot break namespace boundaries.",
-"Apply deterministic normalization and signed byte budgets to every untrusted prompt segment.",
+"Preserve untrusted prompt text by default, apply only contract-permitted normalization, and enforce signed byte budgets.",
 "Verify a digest-pinned signed prompt policy before injecting its namespaced rules and budgets.",
 "Use fail-closed feature evaluation only to narrow the signed prompt policy into a safe prompt mode."
 ],
@@ -16633,7 +16633,7 @@
 ]
 }
 ],
-"contentHash": "7009694e2a15983e",
+"contentHash": "6f9228d52087744a",
 "keywords": [
 "system prompt hardening",
 "instruction data separation",
@@ -16643,7 +16643,8 @@
 "structural escaping",
 "instruction precedence policy",
 "data-only content marking",
-"unicode normalization",
+"contract-permitted unicode normalization",
+"byte-preserving prompt text",
 "signed utf-8 byte budgets",
 "signed prompt policy",
 "prompt policy provenance",

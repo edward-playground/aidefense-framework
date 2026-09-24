@@ -2207,7 +2207,7 @@
     ]
   },
   "AID-H-016.001": {
-    "contentHash": "7009694e2a15983e",
+    "contentHash": "6f9228d52087744a",
     "keywords": [
       "system prompt hardening",
       "instruction data separation",
@@ -2217,7 +2217,8 @@
       "structural escaping",
       "instruction precedence policy",
       "data-only content marking",
-      "unicode normalization",
+      "contract-permitted unicode normalization",
+      "byte-preserving prompt text",
       "signed utf-8 byte budgets",
       "signed prompt policy",
       "prompt policy provenance",
