@@ -12,7 +12,7 @@ AIDEFEND is an open, implementation-oriented knowledge base of defensive control
 
 ## Current source version
 
-Version `1.20260911` provides:
+Version `1.20260925` provides:
 
 - **307 actionable defensive controls**: 35 standalone techniques and 272 leaf sub-techniques
 - implementation guidance, production-oriented examples, verification guidance, and explicit scope boundaries
@@ -55,6 +55,8 @@ Mapping relevance is reviewed at the actionable standalone-technique or leaf-sub
 ## Public data
 
 The generated dataset is available at [`data/data.json`](data/data.json). A compact navigation index is available at [`data/tactics-index.json`](data/tactics-index.json). The additive [`data/framework-migrations.json`](data/framework-migrations.json) registry identifies the current framework edition and semantic successors for superseded identifiers; it does not carry AIDEFEND mappings forward without a target-edition review.
+
+The tool-neutral integration export in [`data/integration/`](data/integration/) repackages the same release for downstream converters (first consumer: the Precogly AI security library pack). `manifest.json` locks the AIDEFEND version, release tag, `data.json` checksum and per-file checksums; `controls.json` lists the 307 actionable controls with plain-text descriptions, scope boundaries and site links, plus the 58 navigation-only families flagged `actionable: false`; `threat-control-joins.json` inverts `defendsAgainst` into one record per external threat item with the AIDEFEND controls and per-pair rationales; and `threat-catalogs/<framework_key>.json` carries upstream identifiers, names and structure only, never third-party descriptions. This release exports MITRE ATLAS, OWASP LLM Top 10 2026, OWASP ML Top 10 2023 and OWASP Top 10 for Agentic Applications 2026; the other five mapped frameworks are listed as deferred in the manifest. Every file carries `schema_version` and `aidefend_version`, the layout only gains fields within a schema version, and the folder is regenerated and verified with every release. A threat-to-control mapping says a control is relevant to a threat; it does not say the threat is mitigated, that a system is secure, or that any standard is satisfied.
 
 The source of truth for AIDEFEND-authored framework content is `tactics/*.js`. Do not edit generated JSON files directly.
 
@@ -100,6 +102,7 @@ npm run generate -- --check
 ```text
 tactics/                 AIDEFEND framework source of truth
 data/                    Generated public datasets and keyword lock
+data/integration/        Tool-neutral integration export (manifest, controls, threat catalogs, threat-to-control joins)
 scripts/                 Public dataset generation and count tools
 js/, css/                Main website implementation and vendored browser libraries
 kids/                    AIDEFEND Kids experience and vendored browser libraries

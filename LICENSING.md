@@ -24,6 +24,7 @@ This includes AIDEFEND-authored material in:
 
 - `tactics/`
 - `data/data.json`, `data/data-cache.json`, `data/tactics-index.json`, and AIDEFEND-authored migration analysis in `data/framework-migrations.json`
+- AIDEFEND-authored content in `data/integration/`: control records, plain-text descriptions, scope boundaries, threat-to-control relationships and rationales. The threat catalogs in that folder reproduce third-party identifiers, names and structure under their owners' terms (see [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md))
 - `aidefend-intro.js`
 - explanatory documentation in `README.md`
 

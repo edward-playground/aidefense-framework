@@ -25,6 +25,7 @@ import { createHash } from 'crypto';
 import { aidefendVersion } from '../aidefend-intro.js';
 import { frameworkMigrations } from '../framework-migrations.js';
 import { ciscoFramework } from '../cisco-framework.js';
+import { buildIntegrationExport } from './integration-export.mjs';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -1120,6 +1121,26 @@ function verifyOrWrite(pathname, expectedContent) {
   }
 }
 
+function assertNoStaleIntegrationFiles(directory, expectedRelativePaths) {
+  const expected = new Set(expectedRelativePaths.map(relative => relative.split('/').join(path.sep)));
+  const stale = [];
+  const walk = (dir, prefix) => {
+    if (!fs.existsSync(dir)) return;
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const relative = prefix ? path.join(prefix, entry.name) : entry.name;
+      if (entry.isDirectory()) walk(path.join(dir, entry.name), relative);
+      else if (!expected.has(relative)) stale.push(relative);
+    }
+  };
+  walk(directory, '');
+  if (stale.length > 0) {
+    throw new Error(
+      `Unexpected file(s) in ${directory}: ${stale.join(', ')}. ` +
+      'The integration export is fully generated; remove stale files and re-run the generator.'
+    );
+  }
+}
+
 /**
  * Main function
  */
@@ -1298,6 +1319,24 @@ async function main() {
     `${JSON.stringify(ciscoFramework, null, 2)}\n`,
   );
 
+  // Tool-neutral integration export (data/integration/). Built from the same
+  // generated tactics so the export can never drift from data.json.
+  const integrationDir = path.join(OUTPUT_DIR, 'integration');
+  const integration = buildIntegrationExport({
+    tactics,
+    aidefendVersion,
+    dataVersion,
+    generatedAt: now,
+    dataJsonContent: content,
+  });
+  if (!checkOnly) {
+    fs.mkdirSync(path.join(integrationDir, 'threat-catalogs'), { recursive: true });
+  }
+  for (const [relativePath, body] of integration.files) {
+    verifyOrWrite(path.join(integrationDir, relativePath), body);
+  }
+  assertNoStaleIntegrationFiles(integrationDir, [...integration.files.keys()]);
+
   console.log('\n================================');
   console.log(checkOnly ? 'Generated outputs verified!\n' : 'Generation complete!\n');
   console.log(`Keyword lock: validated ${Object.keys(keywordCache).length} entries → ${CACHE_PATH}`);
@@ -1314,6 +1353,13 @@ async function main() {
   console.log(`Index size: ${(indexContent.length / 1024).toFixed(1)} KB`);
   console.log(`\nFramework migrations: ${migrationPath}`);
   console.log(`Migration registry size: ${(migrationContent.length / 1024).toFixed(1)} KB`);
+  console.log(`\nIntegration export: ${integrationDir}`);
+  console.log(`  Files: ${integration.files.size} | Controls: ${integration.summary.controls} | Families: ${integration.summary.families}`);
+  console.log(`  Threat joins: ${integration.summary.joinRecords} records, ${integration.summary.controlPairs} control pairs` +
+    (integration.summary.duplicatePairs ? ` (${integration.summary.duplicatePairs} duplicate pairs collapsed)` : ''));
+  for (const catalog of integration.summary.catalogs) {
+    console.log(`  ${catalog.framework_key}: ${catalog.referenced_items}/${catalog.items} items referenced`);
+  }
 }
 
 main().catch(error => {

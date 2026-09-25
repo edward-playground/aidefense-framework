@@ -1,0 +1,122 @@
+{
+  "schema_version": 1,
+  "aidefend_version": "1.20260925",
+  "data_version": "2026.09.25",
+  "git_tag": "v1.20260925",
+  "generated_at": "2026-09-25T17:12:42.586Z",
+  "source_data_json_sha256": "sha256:7842c6bcf442802a66450fb92d19a381750fefffac1864221ed66a7af397c863",
+  "first_consumer": "precogly",
+  "layout": {
+    "controls": "controls.json",
+    "threat_control_joins": "threat-control-joins.json",
+    "threat_catalogs": "threat-catalogs/<framework_key>.json"
+  },
+  "counts": {
+    "tactics": 7,
+    "parent_families": 58,
+    "actionable_controls": 307,
+    "standalone_techniques": 35,
+    "leaf_subtechniques": 272,
+    "threat_join_records": 192,
+    "threat_control_pairs": 2356
+  },
+  "frameworks_published": [
+    {
+      "framework_key": "mitre-atlas",
+      "source_framework_label": "MITRE ATLAS",
+      "catalog_path": "threat-catalogs/mitre-atlas.json",
+      "items": 197,
+      "referenced_items": 162
+    },
+    {
+      "framework_key": "owasp-llm-top-10-2026",
+      "source_framework_label": "OWASP LLM Top 10 2026",
+      "catalog_path": "threat-catalogs/owasp-llm-top-10-2026.json",
+      "items": 10,
+      "referenced_items": 10
+    },
+    {
+      "framework_key": "owasp-ml-top-10-2023",
+      "source_framework_label": "OWASP ML Top 10 2023",
+      "catalog_path": "threat-catalogs/owasp-ml-top-10-2023.json",
+      "items": 10,
+      "referenced_items": 10
+    },
+    {
+      "framework_key": "owasp-agentic-top-10-2026",
+      "source_framework_label": "OWASP Top 10 for Agentic Applications 2026",
+      "catalog_path": "threat-catalogs/owasp-agentic-top-10-2026.json",
+      "items": 10,
+      "referenced_items": 10
+    }
+  ],
+  "frameworks_deferred": [
+    {
+      "framework_key": "maestro-1-0",
+      "source_framework_label": "MAESTRO",
+      "reason": "Mapped in data.json; catalog and joins export deferred until the upstream license notice for redistributing the full identifier list is recorded in THIRD_PARTY_NOTICES.md."
+    },
+    {
+      "framework_key": "nist-aml-2025",
+      "source_framework_label": "NIST Adversarial Machine Learning 2025",
+      "reason": "Mapped in data.json; catalog and joins export deferred until the upstream license notice for redistributing the full identifier list is recorded in THIRD_PARTY_NOTICES.md."
+    },
+    {
+      "framework_key": "cisco-ai-security-safety-2-0",
+      "source_framework_label": "Cisco Integrated AI Security and Safety Framework",
+      "reason": "Mapped in data.json; catalog and joins export deferred until the upstream license notice for redistributing the full identifier list is recorded in THIRD_PARTY_NOTICES.md."
+    },
+    {
+      "framework_key": "google-saif-2-0-risks",
+      "source_framework_label": "Google Secure AI Framework 2.0 - Risks",
+      "reason": "Mapped in data.json; catalog and joins export deferred until the upstream license notice for redistributing the full identifier list is recorded in THIRD_PARTY_NOTICES.md."
+    },
+    {
+      "framework_key": "databricks-dasf-3-0",
+      "source_framework_label": "Databricks AI Security Framework 3.0",
+      "reason": "Mapped in data.json; catalog and joins export deferred until the upstream license notice for redistributing the full identifier list is recorded in THIRD_PARTY_NOTICES.md."
+    }
+  ],
+  "files": [
+    {
+      "path": "controls.json",
+      "sha256": "sha256:54f7b7c74e371ee2650dd00e3546658a8210a3c2a20abca1b04ab157817cd7a7",
+      "bytes": 796022
+    },
+    {
+      "path": "threat-control-joins.json",
+      "sha256": "sha256:3a70ac6b22fc012d4a5650d99addd9dd2ca6b6e20863c1cf3268ef5891058bcb",
+      "bytes": 519888
+    },
+    {
+      "path": "threat-catalogs/mitre-atlas.json",
+      "sha256": "sha256:a0a00ccb5ed33c1b8e132e0e7460aa2e9fe310235cbc1ec6148705ea2ffe55df",
+      "bytes": 71478
+    },
+    {
+      "path": "threat-catalogs/owasp-llm-top-10-2026.json",
+      "sha256": "sha256:dc2904c51c4871e68a48eaedd614208c3dc92530953fb5c4f6bbabd8d5ca845f",
+      "bytes": 3280
+    },
+    {
+      "path": "threat-catalogs/owasp-ml-top-10-2023.json",
+      "sha256": "sha256:1f81bcfb8a6e5a7a19af8d94172327ff0bbd7486f81904aecf44cda5036b23e6",
+      "bytes": 3094
+    },
+    {
+      "path": "threat-catalogs/owasp-agentic-top-10-2026.json",
+      "sha256": "sha256:067c73fc17c3cc982222984a97695f203472ff0be2493415ed136bf4773fe5b2",
+      "bytes": 3456
+    }
+  ],
+  "license": "CC BY 4.0 for AIDEFEND-authored content: control names, descriptions, scope boundaries, threat-to-control relationships and rationales. External framework identifiers, names and structure remain their owners' material under the license recorded in each threat catalog.",
+  "license_url": "https://creativecommons.org/licenses/by/4.0/",
+  "attribution": "AIDEFEND AI Defense Framework, created by Edward Lee, https://aidefend.net, licensed under CC BY 4.0.",
+  "claim_boundary": "A threat-to-control mapping says a control is relevant to a threat. It does not say the threat is mitigated, that a system is secure, or that any standard is satisfied.",
+  "notes": [
+    "Generated by scripts/generate-dataset.js from tactics/*.js; do not hand-edit. Regenerated with every AIDEFEND release and verified by CI.",
+    "Control IDs are stable across releases; retirements or splits are called out in release notes.",
+    "Threat catalogs carry upstream identifiers, names and structure only. Item descriptions are the upstream owners' material and are not reproduced.",
+    "Within one schema_version the layout only gains fields; consumers should ignore unknown fields."
+  ]
+}

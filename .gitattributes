@@ -1,0 +1,5 @@
+# Generated public datasets are hashed and verified byte for byte
+# (data/integration/manifest.json checksums, `generate-dataset.js --check`).
+# Force LF on every checkout so a Windows clone with core.autocrlf=true
+# still matches the recorded sha256 values.
+data/** text eol=lf

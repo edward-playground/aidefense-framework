@@ -1009,7 +1009,7 @@
       "sourceUrl": "https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/",
       "sourceArtifact": {
         "release": "v1.0",
-        "downloadUrl": "https://genai.owasp.org/download/56791/",
+        "downloadUrl": "https://genai.owasp.org/download/56857/",
         "fileName": "OWASP-GenAI-LLM-Top-10-2026-v1.0.pdf",
         "mediaType": "application/pdf",
         "bytes": 2402520,

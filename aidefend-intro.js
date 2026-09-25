@@ -1,4 +1,4 @@
-export const aidefendVersion = "1.20260924";
+export const aidefendVersion = "1.20260925";
 
 export const aidefendIntroduction = {
     "mainTitle": "About AIDEFEND™ - An AI Defense Framework",

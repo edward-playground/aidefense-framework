@@ -88,6 +88,8 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 The Frameworks View contains metadata derived from MITRE ATLAS data version 2026.08.
 
+`integration-catalogs.js` and the generated `data/integration/threat-catalogs/mitre-atlas.json` and `data/integration/threat-control-joins.json` contain ATLAS technique identifiers, names, tactic membership and parent/sub-technique relationships from the same data version. Technique descriptions are not reproduced in those files.
+
 Source artifact: https://github.com/mitre-atlas/atlas-data/blob/41d4f5ca4112f0e492ffaa3ebff07dc80a75afa5/dist/v6/ATLAS-2026.08.yaml
 
 Source revision: `41d4f5ca4112f0e492ffaa3ebff07dc80a75afa5`
@@ -105,10 +107,13 @@ OWASP-derived identifiers, names, edition metadata, and normalized risk summarie
 - `framework-migrations.js`
 - generated `data/framework-migrations.json`
 - the OWASP LLM Frameworks View in `index.html`
+- generated `data/integration/threat-catalogs/owasp-llm-top-10-2026.json` and `data/integration/threat-control-joins.json` (identifiers, ranks and names only)
 
 Official source: https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/
 
-Version-pinned artifact: https://genai.owasp.org/download/56791/
+Version-pinned artifact: https://genai.owasp.org/download/56857/
+
+The numeric download id on genai.owasp.org has changed before (56791 became 56857 without a content change); the artifact SHA-256 below is the pin, and a request without browser headers may receive an HTML page instead of the PDF.
 
 Artifact release: `v1.0`
 
@@ -123,6 +128,24 @@ Attribution: OWASP Top 10 for LLM Applications 2026, OWASP Foundation / OWASP Ge
 The source document is licensed under the [Creative Commons Attribution-ShareAlike 4.0 International license](https://creativecommons.org/licenses/by-sa/4.0/legalcode) (`CC-BY-SA-4.0`). The public AIDEFEND files do not bundle the complete source PDF or reproduce its full prose.
 
 Changes made: AIDEFEND preserves the official risk identifiers and names, paraphrases and normalizes short risk summaries for its public catalog, adapts presentation formatting, and adds independently authored mapping decisions, migration analysis, and resolver behavior. OWASP-derived portions retain the upstream license; AIDEFEND-authored portions are identified separately. These changes do not imply OWASP endorsement.
+
+## OWASP Machine Learning Security Top 10 (2023)
+
+OWASP-derived identifiers and names appear in `integration-catalogs.js`, the generated `data/integration/threat-catalogs/owasp-ml-top-10-2023.json` and `data/integration/threat-control-joins.json`, the OWASP ML Frameworks View in `index.html`, and the `defendsAgainst` mappings in `tactics/*.js` and `data/data.json`.
+
+Official source: https://owasp.org/www-project-machine-learning-security-top-10/ (project site: https://mltop10.info/)
+
+Copyright 2003-2023 The OWASP Foundation. The source is licensed under the [Creative Commons Attribution-ShareAlike 4.0 International license](https://creativecommons.org/licenses/by-sa/4.0/) (`CC-BY-SA-4.0`), as stated on the project notice page. The public AIDEFEND files reproduce identifiers, ranks and names only, not the source prose. AIDEFEND mapping decisions are independently authored and do not imply OWASP endorsement.
+
+## OWASP Top 10 for Agentic Applications 2026
+
+OWASP-derived identifiers and names appear in `integration-catalogs.js`, the generated `data/integration/threat-catalogs/owasp-agentic-top-10-2026.json` and `data/integration/threat-control-joins.json`, the OWASP Agentic Frameworks View in `index.html`, and the `defendsAgainst` mappings in `tactics/*.js` and `data/data.json`.
+
+Official source: https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/
+
+Attribution: OWASP Top 10 for Agentic Applications 2026, OWASP Foundation / OWASP GenAI Security Project.
+
+The OWASP GenAI Security Project site states that, unless otherwise specified, its content is licensed under the [Creative Commons Attribution-ShareAlike 4.0 International license](https://creativecommons.org/licenses/by-sa/4.0/) (`CC-BY-SA-4.0`). The public AIDEFEND files reproduce identifiers, ranks and names only, not the source prose. AIDEFEND mapping decisions are independently authored and do not imply OWASP endorsement.
 
 # Cisco Integrated AI Security and Safety Framework v2
 

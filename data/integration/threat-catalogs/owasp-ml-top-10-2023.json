@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "aidefend_version": "1.20260925",
+  "framework_key": "owasp-ml-top-10-2023",
+  "source_framework_label": "OWASP ML Top 10 2023",
+  "display_name": "OWASP ML Top 10 2023",
+  "upstream": "OWASP Foundation",
+  "upstream_version": "2023",
+  "upstream_url": "https://owasp.org/www-project-machine-learning-security-top-10/",
+  "source_artifact": {
+    "url": "https://mltop10.info/",
+    "edition": "2023"
+  },
+  "license_notice": "OWASP Machine Learning Security Top 10 (2023), Copyright 2003-2023 The OWASP Foundation, licensed under the Creative Commons Attribution-ShareAlike 4.0 International license (https://creativecommons.org/licenses/by-sa/4.0/). Identifiers, ranks and names only; no source prose is reproduced. See THIRD_PARTY_NOTICES.md.",
+  "item_locator_rule": "item_locator is \"<external_id> <name>\". Match identity on external_id; never on the raw AIDEFEND string.",
+  "counts": {
+    "items": 10,
+    "referenced_items": 10
+  },
+  "items": [
+    {
+      "item_locator": "ML01:2023 Input Manipulation Attack",
+      "external_id": "ML01:2023",
+      "rank": 1,
+      "name": "Input Manipulation Attack",
+      "referenced": true,
+      "control_count": 29
+    },
+    {
+      "item_locator": "ML02:2023 Data Poisoning Attack",
+      "external_id": "ML02:2023",
+      "rank": 2,
+      "name": "Data Poisoning Attack",
+      "referenced": true,
+      "control_count": 20
+    },
+    {
+      "item_locator": "ML03:2023 Model Inversion Attack",
+      "external_id": "ML03:2023",
+      "rank": 3,
+      "name": "Model Inversion Attack",
+      "referenced": true,
+      "control_count": 5
+    },
+    {
+      "item_locator": "ML04:2023 Membership Inference Attack",
+      "external_id": "ML04:2023",
+      "rank": 4,
+      "name": "Membership Inference Attack",
+      "referenced": true,
+      "control_count": 7
+    },
+    {
+      "item_locator": "ML05:2023 Model Theft",
+      "external_id": "ML05:2023",
+      "rank": 5,
+      "name": "Model Theft",
+      "referenced": true,
+      "control_count": 24
+    },
+    {
+      "item_locator": "ML06:2023 AI Supply Chain Attacks",
+      "external_id": "ML06:2023",
+      "rank": 6,
+      "name": "AI Supply Chain Attacks",
+      "referenced": true,
+      "control_count": 54
+    },
+    {
+      "item_locator": "ML07:2023 Transfer Learning Attack",
+      "external_id": "ML07:2023",
+      "rank": 7,
+      "name": "Transfer Learning Attack",
+      "referenced": true,
+      "control_count": 5
+    },
+    {
+      "item_locator": "ML08:2023 Model Skewing",
+      "external_id": "ML08:2023",
+      "rank": 8,
+      "name": "Model Skewing",
+      "referenced": true,
+      "control_count": 9
+    },
+    {
+      "item_locator": "ML09:2023 Output Integrity Attack",
+      "external_id": "ML09:2023",
+      "rank": 9,
+      "name": "Output Integrity Attack",
+      "referenced": true,
+      "control_count": 11
+    },
+    {
+      "item_locator": "ML10:2023 Model Poisoning",
+      "external_id": "ML10:2023",
+      "rank": 10,
+      "name": "Model Poisoning",
+      "referenced": true,
+      "control_count": 21
+    }
+  ]
+}

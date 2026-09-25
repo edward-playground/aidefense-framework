@@ -1,0 +1,2488 @@
+{
+  "schema_version": 1,
+  "aidefend_version": "1.20260925",
+  "framework_key": "mitre-atlas",
+  "source_framework_label": "MITRE ATLAS",
+  "display_name": "MITRE ATLAS",
+  "upstream": "The MITRE Corporation",
+  "upstream_version": "2026.08",
+  "upstream_url": "https://atlas.mitre.org/",
+  "source_artifact": {
+    "url": "https://github.com/mitre-atlas/atlas-data/blob/41d4f5ca4112f0e492ffaa3ebff07dc80a75afa5/dist/v6/ATLAS-2026.08.yaml",
+    "git_revision": "41d4f5ca4112f0e492ffaa3ebff07dc80a75afa5",
+    "sha256": "a8d32f676854cc57721c217ec5b39f07db518076dee4a6c1335df0a7bc8271a2",
+    "data_format_version": "6.0.0"
+  },
+  "license_notice": "MITRE ATLAS data, Copyright 2021-2026 The MITRE Corporation, licensed under the Apache License, Version 2.0. MITRE and MITRE ATLAS are trademarks of The MITRE Corporation; use of this material does not imply endorsement. Identifiers, names and structure only; technique descriptions are not reproduced. See THIRD_PARTY_NOTICES.md.",
+  "item_name_rule": "Sub-technique names are \"<parent name>: <sub-technique name>\", matching the AIDEFEND source strings.",
+  "item_locator_rule": "item_locator is \"<external_id> <name>\". Match identity on external_id; never on the raw AIDEFEND string.",
+  "counts": {
+    "items": 197,
+    "referenced_items": 162
+  },
+  "tactics": [
+    {
+      "id": "AML.TA0002",
+      "name": "Reconnaissance",
+      "order": 1
+    },
+    {
+      "id": "AML.TA0003",
+      "name": "Resource Development",
+      "order": 2
+    },
+    {
+      "id": "AML.TA0001",
+      "name": "AI Attack Adaptation",
+      "order": 3
+    },
+    {
+      "id": "AML.TA0004",
+      "name": "Initial Access",
+      "order": 4
+    },
+    {
+      "id": "AML.TA0000",
+      "name": "AI Model Access",
+      "order": 5
+    },
+    {
+      "id": "AML.TA0005",
+      "name": "Execution",
+      "order": 6
+    },
+    {
+      "id": "AML.TA0006",
+      "name": "Persistence",
+      "order": 7
+    },
+    {
+      "id": "AML.TA0012",
+      "name": "Privilege Escalation",
+      "order": 8
+    },
+    {
+      "id": "AML.TA0007",
+      "name": "Defense Evasion",
+      "order": 9
+    },
+    {
+      "id": "AML.TA0013",
+      "name": "Credential Access",
+      "order": 10
+    },
+    {
+      "id": "AML.TA0008",
+      "name": "Discovery",
+      "order": 11
+    },
+    {
+      "id": "AML.TA0015",
+      "name": "Lateral Movement",
+      "order": 12
+    },
+    {
+      "id": "AML.TA0009",
+      "name": "Collection",
+      "order": 13
+    },
+    {
+      "id": "AML.TA0014",
+      "name": "Command and Control",
+      "order": 14
+    },
+    {
+      "id": "AML.TA0010",
+      "name": "Exfiltration",
+      "order": 15
+    },
+    {
+      "id": "AML.TA0011",
+      "name": "Impact",
+      "order": 16
+    }
+  ],
+  "items": [
+    {
+      "item_locator": "AML.T0000 Search Open Technical Databases",
+      "external_id": "AML.T0000",
+      "name": "Search Open Technical Databases",
+      "short_name": "Search Open Technical Databases",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0002"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0000.000 Search Open Technical Databases: Journals and Conference Proceedings",
+      "external_id": "AML.T0000.000",
+      "name": "Search Open Technical Databases: Journals and Conference Proceedings",
+      "short_name": "Journals and Conference Proceedings",
+      "parent_id": "AML.T0000",
+      "tactic_ids": [
+        "AML.TA0002"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0000.001 Search Open Technical Databases: Pre-Print Repositories",
+      "external_id": "AML.T0000.001",
+      "name": "Search Open Technical Databases: Pre-Print Repositories",
+      "short_name": "Pre-Print Repositories",
+      "parent_id": "AML.T0000",
+      "tactic_ids": [
+        "AML.TA0002"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0000.002 Search Open Technical Databases: Technical Blogs",
+      "external_id": "AML.T0000.002",
+      "name": "Search Open Technical Databases: Technical Blogs",
+      "short_name": "Technical Blogs",
+      "parent_id": "AML.T0000",
+      "tactic_ids": [
+        "AML.TA0002"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0001 Search Open AI Vulnerability Analysis",
+      "external_id": "AML.T0001",
+      "name": "Search Open AI Vulnerability Analysis",
+      "short_name": "Search Open AI Vulnerability Analysis",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0002"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0002 Acquire Public AI Artifacts",
+      "external_id": "AML.T0002",
+      "name": "Acquire Public AI Artifacts",
+      "short_name": "Acquire Public AI Artifacts",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0002.000 Acquire Public AI Artifacts: Datasets",
+      "external_id": "AML.T0002.000",
+      "name": "Acquire Public AI Artifacts: Datasets",
+      "short_name": "Datasets",
+      "parent_id": "AML.T0002",
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0002.001 Acquire Public AI Artifacts: Models",
+      "external_id": "AML.T0002.001",
+      "name": "Acquire Public AI Artifacts: Models",
+      "short_name": "Models",
+      "parent_id": "AML.T0002",
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0002.002 Acquire Public AI Artifacts: AI Agent Configuration",
+      "external_id": "AML.T0002.002",
+      "name": "Acquire Public AI Artifacts: AI Agent Configuration",
+      "short_name": "AI Agent Configuration",
+      "parent_id": "AML.T0002",
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": true,
+      "control_count": 1
+    },
+    {
+      "item_locator": "AML.T0003 Search Victim-Owned Websites",
+      "external_id": "AML.T0003",
+      "name": "Search Victim-Owned Websites",
+      "short_name": "Search Victim-Owned Websites",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0002"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0004 Search Application Repositories",
+      "external_id": "AML.T0004",
+      "name": "Search Application Repositories",
+      "short_name": "Search Application Repositories",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0002"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0005 Create Proxy AI Model",
+      "external_id": "AML.T0005",
+      "name": "Create Proxy AI Model",
+      "short_name": "Create Proxy AI Model",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0001"
+      ],
+      "referenced": true,
+      "control_count": 4
+    },
+    {
+      "item_locator": "AML.T0005.000 Create Proxy AI Model: Train Proxy via Gathered AI Artifacts",
+      "external_id": "AML.T0005.000",
+      "name": "Create Proxy AI Model: Train Proxy via Gathered AI Artifacts",
+      "short_name": "Train Proxy via Gathered AI Artifacts",
+      "parent_id": "AML.T0005",
+      "tactic_ids": [
+        "AML.TA0001"
+      ],
+      "referenced": true,
+      "control_count": 1
+    },
+    {
+      "item_locator": "AML.T0005.001 Create Proxy AI Model: Train Proxy via Replication",
+      "external_id": "AML.T0005.001",
+      "name": "Create Proxy AI Model: Train Proxy via Replication",
+      "short_name": "Train Proxy via Replication",
+      "parent_id": "AML.T0005",
+      "tactic_ids": [
+        "AML.TA0001"
+      ],
+      "referenced": true,
+      "control_count": 3
+    },
+    {
+      "item_locator": "AML.T0005.002 Create Proxy AI Model: Use Pre-Trained Model",
+      "external_id": "AML.T0005.002",
+      "name": "Create Proxy AI Model: Use Pre-Trained Model",
+      "short_name": "Use Pre-Trained Model",
+      "parent_id": "AML.T0005",
+      "tactic_ids": [
+        "AML.TA0001"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0006 Active Scanning",
+      "external_id": "AML.T0006",
+      "name": "Active Scanning",
+      "short_name": "Active Scanning",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0002"
+      ],
+      "referenced": true,
+      "control_count": 4
+    },
+    {
+      "item_locator": "AML.T0007 Discover AI Artifacts",
+      "external_id": "AML.T0007",
+      "name": "Discover AI Artifacts",
+      "short_name": "Discover AI Artifacts",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0008"
+      ],
+      "referenced": true,
+      "control_count": 3
+    },
+    {
+      "item_locator": "AML.T0008 Acquire Infrastructure",
+      "external_id": "AML.T0008",
+      "name": "Acquire Infrastructure",
+      "short_name": "Acquire Infrastructure",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0008.000 Acquire Infrastructure: AI Development Workspaces",
+      "external_id": "AML.T0008.000",
+      "name": "Acquire Infrastructure: AI Development Workspaces",
+      "short_name": "AI Development Workspaces",
+      "parent_id": "AML.T0008",
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0008.001 Acquire Infrastructure: Consumer Hardware",
+      "external_id": "AML.T0008.001",
+      "name": "Acquire Infrastructure: Consumer Hardware",
+      "short_name": "Consumer Hardware",
+      "parent_id": "AML.T0008",
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0008.002 Acquire Infrastructure: Domains",
+      "external_id": "AML.T0008.002",
+      "name": "Acquire Infrastructure: Domains",
+      "short_name": "Domains",
+      "parent_id": "AML.T0008",
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0008.003 Acquire Infrastructure: Physical Countermeasures",
+      "external_id": "AML.T0008.003",
+      "name": "Acquire Infrastructure: Physical Countermeasures",
+      "short_name": "Physical Countermeasures",
+      "parent_id": "AML.T0008",
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0008.004 Acquire Infrastructure: Serverless",
+      "external_id": "AML.T0008.004",
+      "name": "Acquire Infrastructure: Serverless",
+      "short_name": "Serverless",
+      "parent_id": "AML.T0008",
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0008.005 Acquire Infrastructure: AI Service Proxies",
+      "external_id": "AML.T0008.005",
+      "name": "Acquire Infrastructure: AI Service Proxies",
+      "short_name": "AI Service Proxies",
+      "parent_id": "AML.T0008",
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0010 AI Supply Chain Compromise",
+      "external_id": "AML.T0010",
+      "name": "AI Supply Chain Compromise",
+      "short_name": "AI Supply Chain Compromise",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0004"
+      ],
+      "referenced": true,
+      "control_count": 57
+    },
+    {
+      "item_locator": "AML.T0010.000 AI Supply Chain Compromise: Hardware",
+      "external_id": "AML.T0010.000",
+      "name": "AI Supply Chain Compromise: Hardware",
+      "short_name": "Hardware",
+      "parent_id": "AML.T0010",
+      "tactic_ids": [
+        "AML.TA0004"
+      ],
+      "referenced": true,
+      "control_count": 3
+    },
+    {
+      "item_locator": "AML.T0010.001 AI Supply Chain Compromise: AI Software",
+      "external_id": "AML.T0010.001",
+      "name": "AI Supply Chain Compromise: AI Software",
+      "short_name": "AI Software",
+      "parent_id": "AML.T0010",
+      "tactic_ids": [
+        "AML.TA0004"
+      ],
+      "referenced": true,
+      "control_count": 19
+    },
+    {
+      "item_locator": "AML.T0010.002 AI Supply Chain Compromise: Data",
+      "external_id": "AML.T0010.002",
+      "name": "AI Supply Chain Compromise: Data",
+      "short_name": "Data",
+      "parent_id": "AML.T0010",
+      "tactic_ids": [
+        "AML.TA0004"
+      ],
+      "referenced": true,
+      "control_count": 8
+    },
+    {
+      "item_locator": "AML.T0010.003 AI Supply Chain Compromise: Model",
+      "external_id": "AML.T0010.003",
+      "name": "AI Supply Chain Compromise: Model",
+      "short_name": "Model",
+      "parent_id": "AML.T0010",
+      "tactic_ids": [
+        "AML.TA0004"
+      ],
+      "referenced": true,
+      "control_count": 12
+    },
+    {
+      "item_locator": "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
+      "external_id": "AML.T0010.004",
+      "name": "AI Supply Chain Compromise: Container Registry",
+      "short_name": "Container Registry",
+      "parent_id": "AML.T0010",
+      "tactic_ids": [
+        "AML.TA0004"
+      ],
+      "referenced": true,
+      "control_count": 10
+    },
+    {
+      "item_locator": "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+      "external_id": "AML.T0010.005",
+      "name": "AI Supply Chain Compromise: AI Agent Tool",
+      "short_name": "AI Agent Tool",
+      "parent_id": "AML.T0010",
+      "tactic_ids": [
+        "AML.TA0004"
+      ],
+      "referenced": true,
+      "control_count": 16
+    },
+    {
+      "item_locator": "AML.T0011 User Execution",
+      "external_id": "AML.T0011",
+      "name": "User Execution",
+      "short_name": "User Execution",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0005"
+      ],
+      "referenced": true,
+      "control_count": 42
+    },
+    {
+      "item_locator": "AML.T0011.000 User Execution: Unsafe AI Artifacts",
+      "external_id": "AML.T0011.000",
+      "name": "User Execution: Unsafe AI Artifacts",
+      "short_name": "Unsafe AI Artifacts",
+      "parent_id": "AML.T0011",
+      "tactic_ids": [
+        "AML.TA0005"
+      ],
+      "referenced": true,
+      "control_count": 16
+    },
+    {
+      "item_locator": "AML.T0011.001 User Execution: Malicious Package",
+      "external_id": "AML.T0011.001",
+      "name": "User Execution: Malicious Package",
+      "short_name": "Malicious Package",
+      "parent_id": "AML.T0011",
+      "tactic_ids": [
+        "AML.TA0005"
+      ],
+      "referenced": true,
+      "control_count": 11
+    },
+    {
+      "item_locator": "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
+      "external_id": "AML.T0011.002",
+      "name": "User Execution: Poisoned AI Agent Tool",
+      "short_name": "Poisoned AI Agent Tool",
+      "parent_id": "AML.T0011",
+      "tactic_ids": [
+        "AML.TA0005"
+      ],
+      "referenced": true,
+      "control_count": 22
+    },
+    {
+      "item_locator": "AML.T0011.003 User Execution: Malicious Link",
+      "external_id": "AML.T0011.003",
+      "name": "User Execution: Malicious Link",
+      "short_name": "Malicious Link",
+      "parent_id": "AML.T0011",
+      "tactic_ids": [
+        "AML.TA0005"
+      ],
+      "referenced": true,
+      "control_count": 3
+    },
+    {
+      "item_locator": "AML.T0012 Valid Accounts",
+      "external_id": "AML.T0012",
+      "name": "Valid Accounts",
+      "short_name": "Valid Accounts",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0004",
+        "AML.TA0012",
+        "AML.TA0015"
+      ],
+      "referenced": true,
+      "control_count": 14
+    },
+    {
+      "item_locator": "AML.T0013 Discover AI Model Ontology",
+      "external_id": "AML.T0013",
+      "name": "Discover AI Model Ontology",
+      "short_name": "Discover AI Model Ontology",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0008"
+      ],
+      "referenced": true,
+      "control_count": 1
+    },
+    {
+      "item_locator": "AML.T0014 Discover AI Model Family",
+      "external_id": "AML.T0014",
+      "name": "Discover AI Model Family",
+      "short_name": "Discover AI Model Family",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0008"
+      ],
+      "referenced": true,
+      "control_count": 1
+    },
+    {
+      "item_locator": "AML.T0015 Evade AI Model",
+      "external_id": "AML.T0015",
+      "name": "Evade AI Model",
+      "short_name": "Evade AI Model",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0004",
+        "AML.TA0007",
+        "AML.TA0011"
+      ],
+      "referenced": true,
+      "control_count": 23
+    },
+    {
+      "item_locator": "AML.T0016 Obtain Capabilities",
+      "external_id": "AML.T0016",
+      "name": "Obtain Capabilities",
+      "short_name": "Obtain Capabilities",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0016.000 Obtain Capabilities: Adversarial AI Attack Implementations",
+      "external_id": "AML.T0016.000",
+      "name": "Obtain Capabilities: Adversarial AI Attack Implementations",
+      "short_name": "Adversarial AI Attack Implementations",
+      "parent_id": "AML.T0016",
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0016.001 Obtain Capabilities: Software Tools",
+      "external_id": "AML.T0016.001",
+      "name": "Obtain Capabilities: Software Tools",
+      "short_name": "Software Tools",
+      "parent_id": "AML.T0016",
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0016.002 Obtain Capabilities: Generative AI",
+      "external_id": "AML.T0016.002",
+      "name": "Obtain Capabilities: Generative AI",
+      "short_name": "Generative AI",
+      "parent_id": "AML.T0016",
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0016.003 Obtain Capabilities: Exploits",
+      "external_id": "AML.T0016.003",
+      "name": "Obtain Capabilities: Exploits",
+      "short_name": "Exploits",
+      "parent_id": "AML.T0016",
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0016.004 Obtain Capabilities: AI Agent Tools",
+      "external_id": "AML.T0016.004",
+      "name": "Obtain Capabilities: AI Agent Tools",
+      "short_name": "AI Agent Tools",
+      "parent_id": "AML.T0016",
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0017 Develop Capabilities",
+      "external_id": "AML.T0017",
+      "name": "Develop Capabilities",
+      "short_name": "Develop Capabilities",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0017.000 Develop Capabilities: Adversarial AI Attacks",
+      "external_id": "AML.T0017.000",
+      "name": "Develop Capabilities: Adversarial AI Attacks",
+      "short_name": "Adversarial AI Attacks",
+      "parent_id": "AML.T0017",
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0017.001 Develop Capabilities: Autonomous Exploit Development",
+      "external_id": "AML.T0017.001",
+      "name": "Develop Capabilities: Autonomous Exploit Development",
+      "short_name": "Autonomous Exploit Development",
+      "parent_id": "AML.T0017",
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0017.002 Develop Capabilities: AI Agent Tools",
+      "external_id": "AML.T0017.002",
+      "name": "Develop Capabilities: AI Agent Tools",
+      "short_name": "AI Agent Tools",
+      "parent_id": "AML.T0017",
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0018 Manipulate AI Model",
+      "external_id": "AML.T0018",
+      "name": "Manipulate AI Model",
+      "short_name": "Manipulate AI Model",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0001",
+        "AML.TA0006"
+      ],
+      "referenced": true,
+      "control_count": 20
+    },
+    {
+      "item_locator": "AML.T0018.000 Manipulate AI Model: Poison AI Model",
+      "external_id": "AML.T0018.000",
+      "name": "Manipulate AI Model: Poison AI Model",
+      "short_name": "Poison AI Model",
+      "parent_id": "AML.T0018",
+      "tactic_ids": [
+        "AML.TA0001",
+        "AML.TA0006"
+      ],
+      "referenced": true,
+      "control_count": 13
+    },
+    {
+      "item_locator": "AML.T0018.001 Manipulate AI Model: Modify AI Model Architecture",
+      "external_id": "AML.T0018.001",
+      "name": "Manipulate AI Model: Modify AI Model Architecture",
+      "short_name": "Modify AI Model Architecture",
+      "parent_id": "AML.T0018",
+      "tactic_ids": [
+        "AML.TA0001",
+        "AML.TA0006"
+      ],
+      "referenced": true,
+      "control_count": 2
+    },
+    {
+      "item_locator": "AML.T0018.002 Manipulate AI Model: Embed Malware",
+      "external_id": "AML.T0018.002",
+      "name": "Manipulate AI Model: Embed Malware",
+      "short_name": "Embed Malware",
+      "parent_id": "AML.T0018",
+      "tactic_ids": [
+        "AML.TA0001",
+        "AML.TA0006"
+      ],
+      "referenced": true,
+      "control_count": 7
+    },
+    {
+      "item_locator": "AML.T0018.003 Manipulate AI Model: Modify Prompt Construction Logic",
+      "external_id": "AML.T0018.003",
+      "name": "Manipulate AI Model: Modify Prompt Construction Logic",
+      "short_name": "Modify Prompt Construction Logic",
+      "parent_id": "AML.T0018",
+      "tactic_ids": [
+        "AML.TA0001",
+        "AML.TA0006"
+      ],
+      "referenced": true,
+      "control_count": 7
+    },
+    {
+      "item_locator": "AML.T0020 Training Data Poisoning",
+      "external_id": "AML.T0020",
+      "name": "Training Data Poisoning",
+      "short_name": "Training Data Poisoning",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0006"
+      ],
+      "referenced": true,
+      "control_count": 25
+    },
+    {
+      "item_locator": "AML.T0021 Establish Accounts",
+      "external_id": "AML.T0021",
+      "name": "Establish Accounts",
+      "short_name": "Establish Accounts",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": true,
+      "control_count": 1
+    },
+    {
+      "item_locator": "AML.T0024 Exfiltration via AI Inference API",
+      "external_id": "AML.T0024",
+      "name": "Exfiltration via AI Inference API",
+      "short_name": "Exfiltration via AI Inference API",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0010"
+      ],
+      "referenced": true,
+      "control_count": 6
+    },
+    {
+      "item_locator": "AML.T0024.000 Exfiltration via AI Inference API: Infer Training Data Membership",
+      "external_id": "AML.T0024.000",
+      "name": "Exfiltration via AI Inference API: Infer Training Data Membership",
+      "short_name": "Infer Training Data Membership",
+      "parent_id": "AML.T0024",
+      "tactic_ids": [
+        "AML.TA0010"
+      ],
+      "referenced": true,
+      "control_count": 4
+    },
+    {
+      "item_locator": "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model",
+      "external_id": "AML.T0024.001",
+      "name": "Exfiltration via AI Inference API: Invert AI Model",
+      "short_name": "Invert AI Model",
+      "parent_id": "AML.T0024",
+      "tactic_ids": [
+        "AML.TA0010"
+      ],
+      "referenced": true,
+      "control_count": 5
+    },
+    {
+      "item_locator": "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model",
+      "external_id": "AML.T0024.002",
+      "name": "Exfiltration via AI Inference API: Extract AI Model",
+      "short_name": "Extract AI Model",
+      "parent_id": "AML.T0024",
+      "tactic_ids": [
+        "AML.TA0010"
+      ],
+      "referenced": true,
+      "control_count": 7
+    },
+    {
+      "item_locator": "AML.T0025 Exfiltration via Cyber Means",
+      "external_id": "AML.T0025",
+      "name": "Exfiltration via Cyber Means",
+      "short_name": "Exfiltration via Cyber Means",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0010"
+      ],
+      "referenced": true,
+      "control_count": 23
+    },
+    {
+      "item_locator": "AML.T0029 Denial of AI Service",
+      "external_id": "AML.T0029",
+      "name": "Denial of AI Service",
+      "short_name": "Denial of AI Service",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0011"
+      ],
+      "referenced": true,
+      "control_count": 12
+    },
+    {
+      "item_locator": "AML.T0031 Erode AI Model Integrity",
+      "external_id": "AML.T0031",
+      "name": "Erode AI Model Integrity",
+      "short_name": "Erode AI Model Integrity",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0011"
+      ],
+      "referenced": true,
+      "control_count": 11
+    },
+    {
+      "item_locator": "AML.T0034 Cost Harvesting",
+      "external_id": "AML.T0034",
+      "name": "Cost Harvesting",
+      "short_name": "Cost Harvesting",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0011"
+      ],
+      "referenced": true,
+      "control_count": 11
+    },
+    {
+      "item_locator": "AML.T0034.000 Cost Harvesting: Excessive Queries",
+      "external_id": "AML.T0034.000",
+      "name": "Cost Harvesting: Excessive Queries",
+      "short_name": "Excessive Queries",
+      "parent_id": "AML.T0034",
+      "tactic_ids": [
+        "AML.TA0011"
+      ],
+      "referenced": true,
+      "control_count": 2
+    },
+    {
+      "item_locator": "AML.T0034.001 Cost Harvesting: Resource-Intensive Queries",
+      "external_id": "AML.T0034.001",
+      "name": "Cost Harvesting: Resource-Intensive Queries",
+      "short_name": "Resource-Intensive Queries",
+      "parent_id": "AML.T0034",
+      "tactic_ids": [
+        "AML.TA0011"
+      ],
+      "referenced": true,
+      "control_count": 4
+    },
+    {
+      "item_locator": "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption",
+      "external_id": "AML.T0034.002",
+      "name": "Cost Harvesting: Agentic Resource Consumption",
+      "short_name": "Agentic Resource Consumption",
+      "parent_id": "AML.T0034",
+      "tactic_ids": [
+        "AML.TA0011"
+      ],
+      "referenced": true,
+      "control_count": 8
+    },
+    {
+      "item_locator": "AML.T0035 AI Artifact Collection",
+      "external_id": "AML.T0035",
+      "name": "AI Artifact Collection",
+      "short_name": "AI Artifact Collection",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0009"
+      ],
+      "referenced": true,
+      "control_count": 1
+    },
+    {
+      "item_locator": "AML.T0036 Data from Information Repositories",
+      "external_id": "AML.T0036",
+      "name": "Data from Information Repositories",
+      "short_name": "Data from Information Repositories",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0009"
+      ],
+      "referenced": true,
+      "control_count": 4
+    },
+    {
+      "item_locator": "AML.T0037 Data from Local System",
+      "external_id": "AML.T0037",
+      "name": "Data from Local System",
+      "short_name": "Data from Local System",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0009"
+      ],
+      "referenced": true,
+      "control_count": 6
+    },
+    {
+      "item_locator": "AML.T0040 AI Model Inference API Access",
+      "external_id": "AML.T0040",
+      "name": "AI Model Inference API Access",
+      "short_name": "AI Model Inference API Access",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0000"
+      ],
+      "referenced": true,
+      "control_count": 7
+    },
+    {
+      "item_locator": "AML.T0041 Physical Environment Access",
+      "external_id": "AML.T0041",
+      "name": "Physical Environment Access",
+      "short_name": "Physical Environment Access",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0000"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0042 Verify Attack",
+      "external_id": "AML.T0042",
+      "name": "Verify Attack",
+      "short_name": "Verify Attack",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0001"
+      ],
+      "referenced": true,
+      "control_count": 2
+    },
+    {
+      "item_locator": "AML.T0043 Craft Adversarial Data",
+      "external_id": "AML.T0043",
+      "name": "Craft Adversarial Data",
+      "short_name": "Craft Adversarial Data",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0001"
+      ],
+      "referenced": true,
+      "control_count": 13
+    },
+    {
+      "item_locator": "AML.T0043.000 Craft Adversarial Data: White-Box Optimization",
+      "external_id": "AML.T0043.000",
+      "name": "Craft Adversarial Data: White-Box Optimization",
+      "short_name": "White-Box Optimization",
+      "parent_id": "AML.T0043",
+      "tactic_ids": [
+        "AML.TA0001"
+      ],
+      "referenced": true,
+      "control_count": 5
+    },
+    {
+      "item_locator": "AML.T0043.001 Craft Adversarial Data: Black-Box Optimization",
+      "external_id": "AML.T0043.001",
+      "name": "Craft Adversarial Data: Black-Box Optimization",
+      "short_name": "Black-Box Optimization",
+      "parent_id": "AML.T0043",
+      "tactic_ids": [
+        "AML.TA0001"
+      ],
+      "referenced": true,
+      "control_count": 3
+    },
+    {
+      "item_locator": "AML.T0043.002 Craft Adversarial Data: Black-Box Transfer",
+      "external_id": "AML.T0043.002",
+      "name": "Craft Adversarial Data: Black-Box Transfer",
+      "short_name": "Black-Box Transfer",
+      "parent_id": "AML.T0043",
+      "tactic_ids": [
+        "AML.TA0001"
+      ],
+      "referenced": true,
+      "control_count": 3
+    },
+    {
+      "item_locator": "AML.T0043.003 Craft Adversarial Data: Manual Modification",
+      "external_id": "AML.T0043.003",
+      "name": "Craft Adversarial Data: Manual Modification",
+      "short_name": "Manual Modification",
+      "parent_id": "AML.T0043",
+      "tactic_ids": [
+        "AML.TA0001"
+      ],
+      "referenced": true,
+      "control_count": 5
+    },
+    {
+      "item_locator": "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger",
+      "external_id": "AML.T0043.004",
+      "name": "Craft Adversarial Data: Insert Backdoor Trigger",
+      "short_name": "Insert Backdoor Trigger",
+      "parent_id": "AML.T0043",
+      "tactic_ids": [
+        "AML.TA0001"
+      ],
+      "referenced": true,
+      "control_count": 7
+    },
+    {
+      "item_locator": "AML.T0044 Full AI Model Access",
+      "external_id": "AML.T0044",
+      "name": "Full AI Model Access",
+      "short_name": "Full AI Model Access",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0000"
+      ],
+      "referenced": true,
+      "control_count": 5
+    },
+    {
+      "item_locator": "AML.T0046 Spamming AI System with Chaff Data",
+      "external_id": "AML.T0046",
+      "name": "Spamming AI System with Chaff Data",
+      "short_name": "Spamming AI System with Chaff Data",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0011"
+      ],
+      "referenced": true,
+      "control_count": 2
+    },
+    {
+      "item_locator": "AML.T0047 AI-Enabled Product or Service",
+      "external_id": "AML.T0047",
+      "name": "AI-Enabled Product or Service",
+      "short_name": "AI-Enabled Product or Service",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0000"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0048 External Harms",
+      "external_id": "AML.T0048",
+      "name": "External Harms",
+      "short_name": "External Harms",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0011"
+      ],
+      "referenced": true,
+      "control_count": 8
+    },
+    {
+      "item_locator": "AML.T0048.000 External Harms: Financial Harm",
+      "external_id": "AML.T0048.000",
+      "name": "External Harms: Financial Harm",
+      "short_name": "Financial Harm",
+      "parent_id": "AML.T0048",
+      "tactic_ids": [
+        "AML.TA0011"
+      ],
+      "referenced": true,
+      "control_count": 3
+    },
+    {
+      "item_locator": "AML.T0048.001 External Harms: Reputational Harm",
+      "external_id": "AML.T0048.001",
+      "name": "External Harms: Reputational Harm",
+      "short_name": "Reputational Harm",
+      "parent_id": "AML.T0048",
+      "tactic_ids": [
+        "AML.TA0011"
+      ],
+      "referenced": true,
+      "control_count": 2
+    },
+    {
+      "item_locator": "AML.T0048.002 External Harms: Societal Harm",
+      "external_id": "AML.T0048.002",
+      "name": "External Harms: Societal Harm",
+      "short_name": "Societal Harm",
+      "parent_id": "AML.T0048",
+      "tactic_ids": [
+        "AML.TA0011"
+      ],
+      "referenced": true,
+      "control_count": 3
+    },
+    {
+      "item_locator": "AML.T0048.003 External Harms: User Harm",
+      "external_id": "AML.T0048.003",
+      "name": "External Harms: User Harm",
+      "short_name": "User Harm",
+      "parent_id": "AML.T0048",
+      "tactic_ids": [
+        "AML.TA0011"
+      ],
+      "referenced": true,
+      "control_count": 4
+    },
+    {
+      "item_locator": "AML.T0048.004 External Harms: AI Intellectual Property Theft",
+      "external_id": "AML.T0048.004",
+      "name": "External Harms: AI Intellectual Property Theft",
+      "short_name": "AI Intellectual Property Theft",
+      "parent_id": "AML.T0048",
+      "tactic_ids": [
+        "AML.TA0011"
+      ],
+      "referenced": true,
+      "control_count": 6
+    },
+    {
+      "item_locator": "AML.T0049 Exploit Public-Facing Application",
+      "external_id": "AML.T0049",
+      "name": "Exploit Public-Facing Application",
+      "short_name": "Exploit Public-Facing Application",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0004"
+      ],
+      "referenced": true,
+      "control_count": 5
+    },
+    {
+      "item_locator": "AML.T0050 Command and Scripting Interpreter",
+      "external_id": "AML.T0050",
+      "name": "Command and Scripting Interpreter",
+      "short_name": "Command and Scripting Interpreter",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0005"
+      ],
+      "referenced": true,
+      "control_count": 13
+    },
+    {
+      "item_locator": "AML.T0051 LLM Prompt Injection",
+      "external_id": "AML.T0051",
+      "name": "LLM Prompt Injection",
+      "short_name": "LLM Prompt Injection",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0005"
+      ],
+      "referenced": true,
+      "control_count": 41
+    },
+    {
+      "item_locator": "AML.T0051.000 LLM Prompt Injection: Direct",
+      "external_id": "AML.T0051.000",
+      "name": "LLM Prompt Injection: Direct",
+      "short_name": "Direct",
+      "parent_id": "AML.T0051",
+      "tactic_ids": [
+        "AML.TA0005"
+      ],
+      "referenced": true,
+      "control_count": 12
+    },
+    {
+      "item_locator": "AML.T0051.001 LLM Prompt Injection: Indirect",
+      "external_id": "AML.T0051.001",
+      "name": "LLM Prompt Injection: Indirect",
+      "short_name": "Indirect",
+      "parent_id": "AML.T0051",
+      "tactic_ids": [
+        "AML.TA0005"
+      ],
+      "referenced": true,
+      "control_count": 26
+    },
+    {
+      "item_locator": "AML.T0051.002 LLM Prompt Injection: Triggered",
+      "external_id": "AML.T0051.002",
+      "name": "LLM Prompt Injection: Triggered",
+      "short_name": "Triggered",
+      "parent_id": "AML.T0051",
+      "tactic_ids": [
+        "AML.TA0005"
+      ],
+      "referenced": true,
+      "control_count": 11
+    },
+    {
+      "item_locator": "AML.T0052 Phishing",
+      "external_id": "AML.T0052",
+      "name": "Phishing",
+      "short_name": "Phishing",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0004",
+        "AML.TA0015"
+      ],
+      "referenced": true,
+      "control_count": 1
+    },
+    {
+      "item_locator": "AML.T0052.000 Phishing: Spearphishing via Social Engineering LLM",
+      "external_id": "AML.T0052.000",
+      "name": "Phishing: Spearphishing via Social Engineering LLM",
+      "short_name": "Spearphishing via Social Engineering LLM",
+      "parent_id": "AML.T0052",
+      "tactic_ids": [
+        "AML.TA0004",
+        "AML.TA0015"
+      ],
+      "referenced": true,
+      "control_count": 1
+    },
+    {
+      "item_locator": "AML.T0052.001 Phishing: Deepfake-Assisted Phishing",
+      "external_id": "AML.T0052.001",
+      "name": "Phishing: Deepfake-Assisted Phishing",
+      "short_name": "Deepfake-Assisted Phishing",
+      "parent_id": "AML.T0052",
+      "tactic_ids": [
+        "AML.TA0004",
+        "AML.TA0015"
+      ],
+      "referenced": true,
+      "control_count": 6
+    },
+    {
+      "item_locator": "AML.T0053 AI Agent Tool Invocation",
+      "external_id": "AML.T0053",
+      "name": "AI Agent Tool Invocation",
+      "short_name": "AI Agent Tool Invocation",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0005",
+        "AML.TA0012",
+        "AML.TA0015"
+      ],
+      "referenced": true,
+      "control_count": 40
+    },
+    {
+      "item_locator": "AML.T0054 LLM Jailbreak",
+      "external_id": "AML.T0054",
+      "name": "LLM Jailbreak",
+      "short_name": "LLM Jailbreak",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0012",
+        "AML.TA0007"
+      ],
+      "referenced": true,
+      "control_count": 24
+    },
+    {
+      "item_locator": "AML.T0055 Unsecured Credentials",
+      "external_id": "AML.T0055",
+      "name": "Unsecured Credentials",
+      "short_name": "Unsecured Credentials",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0013"
+      ],
+      "referenced": true,
+      "control_count": 5
+    },
+    {
+      "item_locator": "AML.T0056 Extract LLM System Prompt",
+      "external_id": "AML.T0056",
+      "name": "Extract LLM System Prompt",
+      "short_name": "Extract LLM System Prompt",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0010"
+      ],
+      "referenced": true,
+      "control_count": 3
+    },
+    {
+      "item_locator": "AML.T0057 LLM Data Leakage",
+      "external_id": "AML.T0057",
+      "name": "LLM Data Leakage",
+      "short_name": "LLM Data Leakage",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0010"
+      ],
+      "referenced": true,
+      "control_count": 16
+    },
+    {
+      "item_locator": "AML.T0059 Erode Dataset Integrity",
+      "external_id": "AML.T0059",
+      "name": "Erode Dataset Integrity",
+      "short_name": "Erode Dataset Integrity",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0011"
+      ],
+      "referenced": true,
+      "control_count": 16
+    },
+    {
+      "item_locator": "AML.T0060 Publish Hallucinated Entities",
+      "external_id": "AML.T0060",
+      "name": "Publish Hallucinated Entities",
+      "short_name": "Publish Hallucinated Entities",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": true,
+      "control_count": 7
+    },
+    {
+      "item_locator": "AML.T0061 LLM Prompt Self-Replication",
+      "external_id": "AML.T0061",
+      "name": "LLM Prompt Self-Replication",
+      "short_name": "LLM Prompt Self-Replication",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0006"
+      ],
+      "referenced": true,
+      "control_count": 3
+    },
+    {
+      "item_locator": "AML.T0062 Discover LLM Hallucinations",
+      "external_id": "AML.T0062",
+      "name": "Discover LLM Hallucinations",
+      "short_name": "Discover LLM Hallucinations",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0008"
+      ],
+      "referenced": true,
+      "control_count": 2
+    },
+    {
+      "item_locator": "AML.T0063 Discover AI Model Outputs",
+      "external_id": "AML.T0063",
+      "name": "Discover AI Model Outputs",
+      "short_name": "Discover AI Model Outputs",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0008"
+      ],
+      "referenced": true,
+      "control_count": 2
+    },
+    {
+      "item_locator": "AML.T0064 Gather RAG-Indexed Targets",
+      "external_id": "AML.T0064",
+      "name": "Gather RAG-Indexed Targets",
+      "short_name": "Gather RAG-Indexed Targets",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0002"
+      ],
+      "referenced": true,
+      "control_count": 1
+    },
+    {
+      "item_locator": "AML.T0065 LLM Prompt Crafting",
+      "external_id": "AML.T0065",
+      "name": "LLM Prompt Crafting",
+      "short_name": "LLM Prompt Crafting",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0001"
+      ],
+      "referenced": true,
+      "control_count": 6
+    },
+    {
+      "item_locator": "AML.T0066 Retrieval Content Crafting",
+      "external_id": "AML.T0066",
+      "name": "Retrieval Content Crafting",
+      "short_name": "Retrieval Content Crafting",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0001"
+      ],
+      "referenced": true,
+      "control_count": 8
+    },
+    {
+      "item_locator": "AML.T0067 LLM Trusted Output Components Manipulation",
+      "external_id": "AML.T0067",
+      "name": "LLM Trusted Output Components Manipulation",
+      "short_name": "LLM Trusted Output Components Manipulation",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0007"
+      ],
+      "referenced": true,
+      "control_count": 4
+    },
+    {
+      "item_locator": "AML.T0067.000 LLM Trusted Output Components Manipulation: Citations",
+      "external_id": "AML.T0067.000",
+      "name": "LLM Trusted Output Components Manipulation: Citations",
+      "short_name": "Citations",
+      "parent_id": "AML.T0067",
+      "tactic_ids": [
+        "AML.TA0007"
+      ],
+      "referenced": true,
+      "control_count": 1
+    },
+    {
+      "item_locator": "AML.T0068 LLM Prompt Obfuscation",
+      "external_id": "AML.T0068",
+      "name": "LLM Prompt Obfuscation",
+      "short_name": "LLM Prompt Obfuscation",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0007"
+      ],
+      "referenced": true,
+      "control_count": 9
+    },
+    {
+      "item_locator": "AML.T0069 Discover LLM System Information",
+      "external_id": "AML.T0069",
+      "name": "Discover LLM System Information",
+      "short_name": "Discover LLM System Information",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0008"
+      ],
+      "referenced": true,
+      "control_count": 1
+    },
+    {
+      "item_locator": "AML.T0069.000 Discover LLM System Information: Special Character Sets",
+      "external_id": "AML.T0069.000",
+      "name": "Discover LLM System Information: Special Character Sets",
+      "short_name": "Special Character Sets",
+      "parent_id": "AML.T0069",
+      "tactic_ids": [
+        "AML.TA0008"
+      ],
+      "referenced": true,
+      "control_count": 1
+    },
+    {
+      "item_locator": "AML.T0069.001 Discover LLM System Information: System Instruction Keywords",
+      "external_id": "AML.T0069.001",
+      "name": "Discover LLM System Information: System Instruction Keywords",
+      "short_name": "System Instruction Keywords",
+      "parent_id": "AML.T0069",
+      "tactic_ids": [
+        "AML.TA0008"
+      ],
+      "referenced": true,
+      "control_count": 1
+    },
+    {
+      "item_locator": "AML.T0069.002 Discover LLM System Information: System Prompt",
+      "external_id": "AML.T0069.002",
+      "name": "Discover LLM System Information: System Prompt",
+      "short_name": "System Prompt",
+      "parent_id": "AML.T0069",
+      "tactic_ids": [
+        "AML.TA0008"
+      ],
+      "referenced": true,
+      "control_count": 2
+    },
+    {
+      "item_locator": "AML.T0070 RAG Poisoning",
+      "external_id": "AML.T0070",
+      "name": "RAG Poisoning",
+      "short_name": "RAG Poisoning",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0006"
+      ],
+      "referenced": true,
+      "control_count": 16
+    },
+    {
+      "item_locator": "AML.T0071 False RAG Entry Injection",
+      "external_id": "AML.T0071",
+      "name": "False RAG Entry Injection",
+      "short_name": "False RAG Entry Injection",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0007"
+      ],
+      "referenced": true,
+      "control_count": 13
+    },
+    {
+      "item_locator": "AML.T0072 Cyber Communication Channel",
+      "external_id": "AML.T0072",
+      "name": "Cyber Communication Channel",
+      "short_name": "Cyber Communication Channel",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0014"
+      ],
+      "referenced": true,
+      "control_count": 17
+    },
+    {
+      "item_locator": "AML.T0073 Impersonation",
+      "external_id": "AML.T0073",
+      "name": "Impersonation",
+      "short_name": "Impersonation",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0007"
+      ],
+      "referenced": true,
+      "control_count": 13
+    },
+    {
+      "item_locator": "AML.T0074 Masquerading",
+      "external_id": "AML.T0074",
+      "name": "Masquerading",
+      "short_name": "Masquerading",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0007"
+      ],
+      "referenced": true,
+      "control_count": 22
+    },
+    {
+      "item_locator": "AML.T0075 Enterprise Resource Discovery",
+      "external_id": "AML.T0075",
+      "name": "Enterprise Resource Discovery",
+      "short_name": "Enterprise Resource Discovery",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0008"
+      ],
+      "referenced": true,
+      "control_count": 5
+    },
+    {
+      "item_locator": "AML.T0076 Corrupt AI Model",
+      "external_id": "AML.T0076",
+      "name": "Corrupt AI Model",
+      "short_name": "Corrupt AI Model",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0007"
+      ],
+      "referenced": true,
+      "control_count": 11
+    },
+    {
+      "item_locator": "AML.T0077 LLM Response Rendering",
+      "external_id": "AML.T0077",
+      "name": "LLM Response Rendering",
+      "short_name": "LLM Response Rendering",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0010"
+      ],
+      "referenced": true,
+      "control_count": 5
+    },
+    {
+      "item_locator": "AML.T0078 Drive-by Compromise",
+      "external_id": "AML.T0078",
+      "name": "Drive-by Compromise",
+      "short_name": "Drive-by Compromise",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0004"
+      ],
+      "referenced": true,
+      "control_count": 4
+    },
+    {
+      "item_locator": "AML.T0079 Stage Capabilities",
+      "external_id": "AML.T0079",
+      "name": "Stage Capabilities",
+      "short_name": "Stage Capabilities",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0080 AI Agent Context Poisoning",
+      "external_id": "AML.T0080",
+      "name": "AI Agent Context Poisoning",
+      "short_name": "AI Agent Context Poisoning",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0006"
+      ],
+      "referenced": true,
+      "control_count": 21
+    },
+    {
+      "item_locator": "AML.T0080.000 AI Agent Context Poisoning: Memory",
+      "external_id": "AML.T0080.000",
+      "name": "AI Agent Context Poisoning: Memory",
+      "short_name": "Memory",
+      "parent_id": "AML.T0080",
+      "tactic_ids": [
+        "AML.TA0006"
+      ],
+      "referenced": true,
+      "control_count": 20
+    },
+    {
+      "item_locator": "AML.T0080.001 AI Agent Context Poisoning: Thread",
+      "external_id": "AML.T0080.001",
+      "name": "AI Agent Context Poisoning: Thread",
+      "short_name": "Thread",
+      "parent_id": "AML.T0080",
+      "tactic_ids": [
+        "AML.TA0006"
+      ],
+      "referenced": true,
+      "control_count": 11
+    },
+    {
+      "item_locator": "AML.T0081 Modify AI Agent Configuration",
+      "external_id": "AML.T0081",
+      "name": "Modify AI Agent Configuration",
+      "short_name": "Modify AI Agent Configuration",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0006",
+        "AML.TA0007"
+      ],
+      "referenced": true,
+      "control_count": 15
+    },
+    {
+      "item_locator": "AML.T0082 RAG Credential Harvesting",
+      "external_id": "AML.T0082",
+      "name": "RAG Credential Harvesting",
+      "short_name": "RAG Credential Harvesting",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0013"
+      ],
+      "referenced": true,
+      "control_count": 2
+    },
+    {
+      "item_locator": "AML.T0083 Credentials from AI Agent Configuration",
+      "external_id": "AML.T0083",
+      "name": "Credentials from AI Agent Configuration",
+      "short_name": "Credentials from AI Agent Configuration",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0013"
+      ],
+      "referenced": true,
+      "control_count": 4
+    },
+    {
+      "item_locator": "AML.T0084 Discover AI Agent Configuration",
+      "external_id": "AML.T0084",
+      "name": "Discover AI Agent Configuration",
+      "short_name": "Discover AI Agent Configuration",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0008"
+      ],
+      "referenced": true,
+      "control_count": 5
+    },
+    {
+      "item_locator": "AML.T0084.000 Discover AI Agent Configuration: Embedded Knowledge",
+      "external_id": "AML.T0084.000",
+      "name": "Discover AI Agent Configuration: Embedded Knowledge",
+      "short_name": "Embedded Knowledge",
+      "parent_id": "AML.T0084",
+      "tactic_ids": [
+        "AML.TA0008"
+      ],
+      "referenced": true,
+      "control_count": 2
+    },
+    {
+      "item_locator": "AML.T0084.001 Discover AI Agent Configuration: Tool Definitions",
+      "external_id": "AML.T0084.001",
+      "name": "Discover AI Agent Configuration: Tool Definitions",
+      "short_name": "Tool Definitions",
+      "parent_id": "AML.T0084",
+      "tactic_ids": [
+        "AML.TA0008"
+      ],
+      "referenced": true,
+      "control_count": 2
+    },
+    {
+      "item_locator": "AML.T0084.002 Discover AI Agent Configuration: Activation Triggers",
+      "external_id": "AML.T0084.002",
+      "name": "Discover AI Agent Configuration: Activation Triggers",
+      "short_name": "Activation Triggers",
+      "parent_id": "AML.T0084",
+      "tactic_ids": [
+        "AML.TA0008"
+      ],
+      "referenced": true,
+      "control_count": 1
+    },
+    {
+      "item_locator": "AML.T0084.003 Discover AI Agent Configuration: Call Chains",
+      "external_id": "AML.T0084.003",
+      "name": "Discover AI Agent Configuration: Call Chains",
+      "short_name": "Call Chains",
+      "parent_id": "AML.T0084",
+      "tactic_ids": [
+        "AML.TA0008"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0085 Data from AI Services",
+      "external_id": "AML.T0085",
+      "name": "Data from AI Services",
+      "short_name": "Data from AI Services",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0009"
+      ],
+      "referenced": true,
+      "control_count": 8
+    },
+    {
+      "item_locator": "AML.T0085.000 Data from AI Services: RAG Databases",
+      "external_id": "AML.T0085.000",
+      "name": "Data from AI Services: RAG Databases",
+      "short_name": "RAG Databases",
+      "parent_id": "AML.T0085",
+      "tactic_ids": [
+        "AML.TA0009"
+      ],
+      "referenced": true,
+      "control_count": 1
+    },
+    {
+      "item_locator": "AML.T0085.001 Data from AI Services: AI Agent Tools",
+      "external_id": "AML.T0085.001",
+      "name": "Data from AI Services: AI Agent Tools",
+      "short_name": "AI Agent Tools",
+      "parent_id": "AML.T0085",
+      "tactic_ids": [
+        "AML.TA0009"
+      ],
+      "referenced": true,
+      "control_count": 6
+    },
+    {
+      "item_locator": "AML.T0086 Exfiltration via AI Agent Tool Invocation",
+      "external_id": "AML.T0086",
+      "name": "Exfiltration via AI Agent Tool Invocation",
+      "short_name": "Exfiltration via AI Agent Tool Invocation",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0010"
+      ],
+      "referenced": true,
+      "control_count": 23
+    },
+    {
+      "item_locator": "AML.T0087 Gather Victim Identity Information",
+      "external_id": "AML.T0087",
+      "name": "Gather Victim Identity Information",
+      "short_name": "Gather Victim Identity Information",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0002"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0088 Generate Deepfakes",
+      "external_id": "AML.T0088",
+      "name": "Generate Deepfakes",
+      "short_name": "Generate Deepfakes",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0001"
+      ],
+      "referenced": true,
+      "control_count": 1
+    },
+    {
+      "item_locator": "AML.T0089 Enterprise Environment Discovery",
+      "external_id": "AML.T0089",
+      "name": "Enterprise Environment Discovery",
+      "short_name": "Enterprise Environment Discovery",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0008"
+      ],
+      "referenced": true,
+      "control_count": 9
+    },
+    {
+      "item_locator": "AML.T0090 OS Credential Dumping",
+      "external_id": "AML.T0090",
+      "name": "OS Credential Dumping",
+      "short_name": "OS Credential Dumping",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0013"
+      ],
+      "referenced": true,
+      "control_count": 2
+    },
+    {
+      "item_locator": "AML.T0091 Use Alternate Authentication Material",
+      "external_id": "AML.T0091",
+      "name": "Use Alternate Authentication Material",
+      "short_name": "Use Alternate Authentication Material",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0015"
+      ],
+      "referenced": true,
+      "control_count": 4
+    },
+    {
+      "item_locator": "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
+      "external_id": "AML.T0091.000",
+      "name": "Use Alternate Authentication Material: Application Access Token",
+      "short_name": "Application Access Token",
+      "parent_id": "AML.T0091",
+      "tactic_ids": [
+        "AML.TA0015"
+      ],
+      "referenced": true,
+      "control_count": 2
+    },
+    {
+      "item_locator": "AML.T0091.001 Use Alternate Authentication Material: Web Session Cookie",
+      "external_id": "AML.T0091.001",
+      "name": "Use Alternate Authentication Material: Web Session Cookie",
+      "short_name": "Web Session Cookie",
+      "parent_id": "AML.T0091",
+      "tactic_ids": [
+        "AML.TA0015"
+      ],
+      "referenced": true,
+      "control_count": 6
+    },
+    {
+      "item_locator": "AML.T0092 Manipulate User LLM Chat History",
+      "external_id": "AML.T0092",
+      "name": "Manipulate User LLM Chat History",
+      "short_name": "Manipulate User LLM Chat History",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0007"
+      ],
+      "referenced": true,
+      "control_count": 7
+    },
+    {
+      "item_locator": "AML.T0093 Prompt Infiltration via Public-Facing Application",
+      "external_id": "AML.T0093",
+      "name": "Prompt Infiltration via Public-Facing Application",
+      "short_name": "Prompt Infiltration via Public-Facing Application",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0004",
+        "AML.TA0006"
+      ],
+      "referenced": true,
+      "control_count": 1
+    },
+    {
+      "item_locator": "AML.T0094 Delay Execution of LLM Instructions",
+      "external_id": "AML.T0094",
+      "name": "Delay Execution of LLM Instructions",
+      "short_name": "Delay Execution of LLM Instructions",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0007"
+      ],
+      "referenced": true,
+      "control_count": 2
+    },
+    {
+      "item_locator": "AML.T0095 Search Open Websites/Domains",
+      "external_id": "AML.T0095",
+      "name": "Search Open Websites/Domains",
+      "short_name": "Search Open Websites/Domains",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0002"
+      ],
+      "referenced": false,
+      "control_count": 0
+    },
+    {
+      "item_locator": "AML.T0095.000 Search Open Websites/Domains: Code Repositories",
+      "external_id": "AML.T0095.000",
+      "name": "Search Open Websites/Domains: Code Repositories",
+      "short_name": "Code Repositories",
+      "parent_id": "AML.T0095",
+      "tactic_ids": [
+        "AML.TA0002"
+      ],
+      "referenced": true,
+      "control_count": 3
+    },
+    {
+      "item_locator": "AML.T0096 AI Service API",
+      "external_id": "AML.T0096",
+      "name": "AI Service API",
+      "short_name": "AI Service API",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0014"
+      ],
+      "referenced": true,
+      "control_count": 4
+    },
+    {
+      "item_locator": "AML.T0097 Virtualization/Sandbox Evasion",
+      "external_id": "AML.T0097",
+      "name": "Virtualization/Sandbox Evasion",
+      "short_name": "Virtualization/Sandbox Evasion",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0007"
+      ],
+      "referenced": true,
+      "control_count": 1
+    },
+    {
+      "item_locator": "AML.T0098 AI Agent Tool Credential Harvesting",
+      "external_id": "AML.T0098",
+      "name": "AI Agent Tool Credential Harvesting",
+      "short_name": "AI Agent Tool Credential Harvesting",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0013"
+      ],
+      "referenced": true,
+      "control_count": 10
+    },
+    {
+      "item_locator": "AML.T0099 AI Agent Tool Data Poisoning",
+      "external_id": "AML.T0099",
+      "name": "AI Agent Tool Data Poisoning",
+      "short_name": "AI Agent Tool Data Poisoning",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0006"
+      ],
+      "referenced": true,
+      "control_count": 13
+    },
+    {
+      "item_locator": "AML.T0100 AI Agent Clickbait",
+      "external_id": "AML.T0100",
+      "name": "AI Agent Clickbait",
+      "short_name": "AI Agent Clickbait",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0005"
+      ],
+      "referenced": true,
+      "control_count": 5
+    },
+    {
+      "item_locator": "AML.T0101 Data Destruction via AI Agent Tool Invocation",
+      "external_id": "AML.T0101",
+      "name": "Data Destruction via AI Agent Tool Invocation",
+      "short_name": "Data Destruction via AI Agent Tool Invocation",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0011"
+      ],
+      "referenced": true,
+      "control_count": 12
+    },
+    {
+      "item_locator": "AML.T0102 Generate Malicious Commands",
+      "external_id": "AML.T0102",
+      "name": "Generate Malicious Commands",
+      "short_name": "Generate Malicious Commands",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0001"
+      ],
+      "referenced": true,
+      "control_count": 4
+    },
+    {
+      "item_locator": "AML.T0103 Deploy AI Agent",
+      "external_id": "AML.T0103",
+      "name": "Deploy AI Agent",
+      "short_name": "Deploy AI Agent",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0005"
+      ],
+      "referenced": true,
+      "control_count": 3
+    },
+    {
+      "item_locator": "AML.T0105 Escape to Host",
+      "external_id": "AML.T0105",
+      "name": "Escape to Host",
+      "short_name": "Escape to Host",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0012"
+      ],
+      "referenced": true,
+      "control_count": 8
+    },
+    {
+      "item_locator": "AML.T0106 Exploitation for Credential Access",
+      "external_id": "AML.T0106",
+      "name": "Exploitation for Credential Access",
+      "short_name": "Exploitation for Credential Access",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0013"
+      ],
+      "referenced": true,
+      "control_count": 2
+    },
+    {
+      "item_locator": "AML.T0107 Exploitation for Defense Evasion",
+      "external_id": "AML.T0107",
+      "name": "Exploitation for Defense Evasion",
+      "short_name": "Exploitation for Defense Evasion",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0007"
+      ],
+      "referenced": true,
+      "control_count": 4
+    },
+    {
+      "item_locator": "AML.T0108 AI Agent",
+      "external_id": "AML.T0108",
+      "name": "AI Agent",
+      "short_name": "AI Agent",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0014"
+      ],
+      "referenced": true,
+      "control_count": 15
+    },
+    {
+      "item_locator": "AML.T0109 AI Supply Chain Rug Pull",
+      "external_id": "AML.T0109",
+      "name": "AI Supply Chain Rug Pull",
+      "short_name": "AI Supply Chain Rug Pull",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0007"
+      ],
+      "referenced": true,
+      "control_count": 10
+    },
+    {
+      "item_locator": "AML.T0110 AI Agent Tool Poisoning",
+      "external_id": "AML.T0110",
+      "name": "AI Agent Tool Poisoning",
+      "short_name": "AI Agent Tool Poisoning",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0006"
+      ],
+      "referenced": true,
+      "control_count": 17
+    },
+    {
+      "item_locator": "AML.T0110.000 AI Agent Tool Poisoning: Definition and Instructions",
+      "external_id": "AML.T0110.000",
+      "name": "AI Agent Tool Poisoning: Definition and Instructions",
+      "short_name": "Definition and Instructions",
+      "parent_id": "AML.T0110",
+      "tactic_ids": [
+        "AML.TA0006"
+      ],
+      "referenced": true,
+      "control_count": 7
+    },
+    {
+      "item_locator": "AML.T0110.001 AI Agent Tool Poisoning: Implementation",
+      "external_id": "AML.T0110.001",
+      "name": "AI Agent Tool Poisoning: Implementation",
+      "short_name": "Implementation",
+      "parent_id": "AML.T0110",
+      "tactic_ids": [
+        "AML.TA0006"
+      ],
+      "referenced": true,
+      "control_count": 7
+    },
+    {
+      "item_locator": "AML.T0110.002 AI Agent Tool Poisoning: Runtime Response",
+      "external_id": "AML.T0110.002",
+      "name": "AI Agent Tool Poisoning: Runtime Response",
+      "short_name": "Runtime Response",
+      "parent_id": "AML.T0110",
+      "tactic_ids": [
+        "AML.TA0006"
+      ],
+      "referenced": true,
+      "control_count": 5
+    },
+    {
+      "item_locator": "AML.T0111 AI Supply Chain Reputation Inflation",
+      "external_id": "AML.T0111",
+      "name": "AI Supply Chain Reputation Inflation",
+      "short_name": "AI Supply Chain Reputation Inflation",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0007"
+      ],
+      "referenced": true,
+      "control_count": 2
+    },
+    {
+      "item_locator": "AML.T0112 Machine Compromise",
+      "external_id": "AML.T0112",
+      "name": "Machine Compromise",
+      "short_name": "Machine Compromise",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0011"
+      ],
+      "referenced": true,
+      "control_count": 3
+    },
+    {
+      "item_locator": "AML.T0112.000 Machine Compromise: Local AI Agent",
+      "external_id": "AML.T0112.000",
+      "name": "Machine Compromise: Local AI Agent",
+      "short_name": "Local AI Agent",
+      "parent_id": "AML.T0112",
+      "tactic_ids": [
+        "AML.TA0011"
+      ],
+      "referenced": true,
+      "control_count": 2
+    },
+    {
+      "item_locator": "AML.T0112.001 Machine Compromise: AI Artifacts",
+      "external_id": "AML.T0112.001",
+      "name": "Machine Compromise: AI Artifacts",
+      "short_name": "AI Artifacts",
+      "parent_id": "AML.T0112",
+      "tactic_ids": [
+        "AML.TA0011"
+      ],
+      "referenced": true,
+      "control_count": 6
+    },
+    {
+      "item_locator": "AML.T0113 Steal Web Session Cookie",
+      "external_id": "AML.T0113",
+      "name": "Steal Web Session Cookie",
+      "short_name": "Steal Web Session Cookie",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0013"
+      ],
+      "referenced": true,
+      "control_count": 7
+    },
+    {
+      "item_locator": "AML.T0114 AI Service Web Interface",
+      "external_id": "AML.T0114",
+      "name": "AI Service Web Interface",
+      "short_name": "AI Service Web Interface",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0014"
+      ],
+      "referenced": true,
+      "control_count": 7
+    },
+    {
+      "item_locator": "AML.T0115 Publish Poisoned AI Artifacts",
+      "external_id": "AML.T0115",
+      "name": "Publish Poisoned AI Artifacts",
+      "short_name": "Publish Poisoned AI Artifacts",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": true,
+      "control_count": 30
+    },
+    {
+      "item_locator": "AML.T0115.000 Publish Poisoned AI Artifacts: Datasets",
+      "external_id": "AML.T0115.000",
+      "name": "Publish Poisoned AI Artifacts: Datasets",
+      "short_name": "Datasets",
+      "parent_id": "AML.T0115",
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": true,
+      "control_count": 5
+    },
+    {
+      "item_locator": "AML.T0115.001 Publish Poisoned AI Artifacts: Models",
+      "external_id": "AML.T0115.001",
+      "name": "Publish Poisoned AI Artifacts: Models",
+      "short_name": "Models",
+      "parent_id": "AML.T0115",
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": true,
+      "control_count": 10
+    },
+    {
+      "item_locator": "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools",
+      "external_id": "AML.T0115.002",
+      "name": "Publish Poisoned AI Artifacts: AI Agent Tools",
+      "short_name": "AI Agent Tools",
+      "parent_id": "AML.T0115",
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": true,
+      "control_count": 16
+    },
+    {
+      "item_locator": "AML.T0116 Autonomous Reconnaissance",
+      "external_id": "AML.T0116",
+      "name": "Autonomous Reconnaissance",
+      "short_name": "Autonomous Reconnaissance",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0002"
+      ],
+      "referenced": true,
+      "control_count": 3
+    },
+    {
+      "item_locator": "AML.T0117 Autonomous Attack-Path Adaptation",
+      "external_id": "AML.T0117",
+      "name": "Autonomous Attack-Path Adaptation",
+      "short_name": "Autonomous Attack-Path Adaptation",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0001"
+      ],
+      "referenced": true,
+      "control_count": 7
+    },
+    {
+      "item_locator": "AML.T0118 Autonomous AI Agent Communication",
+      "external_id": "AML.T0118",
+      "name": "Autonomous AI Agent Communication",
+      "short_name": "Autonomous AI Agent Communication",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0001"
+      ],
+      "referenced": true,
+      "control_count": 10
+    },
+    {
+      "item_locator": "AML.T0118.000 Autonomous AI Agent Communication: Communication via Shared Artifacts",
+      "external_id": "AML.T0118.000",
+      "name": "Autonomous AI Agent Communication: Communication via Shared Artifacts",
+      "short_name": "Communication via Shared Artifacts",
+      "parent_id": "AML.T0118",
+      "tactic_ids": [
+        "AML.TA0001"
+      ],
+      "referenced": true,
+      "control_count": 5
+    },
+    {
+      "item_locator": "AML.T0118.001 Autonomous AI Agent Communication: Direct Agent Communication",
+      "external_id": "AML.T0118.001",
+      "name": "Autonomous AI Agent Communication: Direct Agent Communication",
+      "short_name": "Direct Agent Communication",
+      "parent_id": "AML.T0118",
+      "tactic_ids": [
+        "AML.TA0001"
+      ],
+      "referenced": true,
+      "control_count": 5
+    },
+    {
+      "item_locator": "AML.T0119 Exploit Automated Artifact Processing Pipeline",
+      "external_id": "AML.T0119",
+      "name": "Exploit Automated Artifact Processing Pipeline",
+      "short_name": "Exploit Automated Artifact Processing Pipeline",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0004"
+      ],
+      "referenced": true,
+      "control_count": 6
+    },
+    {
+      "item_locator": "AML.T0120 AI Artifact Repository",
+      "external_id": "AML.T0120",
+      "name": "AI Artifact Repository",
+      "short_name": "AI Artifact Repository",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0014"
+      ],
+      "referenced": true,
+      "control_count": 5
+    },
+    {
+      "item_locator": "AML.T0121 AI Agent Environment Reconstruction",
+      "external_id": "AML.T0121",
+      "name": "AI Agent Environment Reconstruction",
+      "short_name": "AI Agent Environment Reconstruction",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0006"
+      ],
+      "referenced": true,
+      "control_count": 10
+    },
+    {
+      "item_locator": "AML.T0122 Exploitation of Remote Services",
+      "external_id": "AML.T0122",
+      "name": "Exploitation of Remote Services",
+      "short_name": "Exploitation of Remote Services",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0015"
+      ],
+      "referenced": true,
+      "control_count": 10
+    },
+    {
+      "item_locator": "AML.T0123 Obfuscated Files or Information",
+      "external_id": "AML.T0123",
+      "name": "Obfuscated Files or Information",
+      "short_name": "Obfuscated Files or Information",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0007"
+      ],
+      "referenced": true,
+      "control_count": 9
+    },
+    {
+      "item_locator": "AML.T0124 Autonomous Attack Orchestration",
+      "external_id": "AML.T0124",
+      "name": "Autonomous Attack Orchestration",
+      "short_name": "Autonomous Attack Orchestration",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0001"
+      ],
+      "referenced": true,
+      "control_count": 5
+    },
+    {
+      "item_locator": "AML.T0125 Create Account",
+      "external_id": "AML.T0125",
+      "name": "Create Account",
+      "short_name": "Create Account",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0006"
+      ],
+      "referenced": true,
+      "control_count": 6
+    },
+    {
+      "item_locator": "AML.T0126 Automated Collection",
+      "external_id": "AML.T0126",
+      "name": "Automated Collection",
+      "short_name": "Automated Collection",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0009"
+      ],
+      "referenced": true,
+      "control_count": 8
+    },
+    {
+      "item_locator": "AML.T0127 Data Staged",
+      "external_id": "AML.T0127",
+      "name": "Data Staged",
+      "short_name": "Data Staged",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0009"
+      ],
+      "referenced": true,
+      "control_count": 2
+    },
+    {
+      "item_locator": "AML.T0128 Compromise Infrastructure",
+      "external_id": "AML.T0128",
+      "name": "Compromise Infrastructure",
+      "short_name": "Compromise Infrastructure",
+      "parent_id": null,
+      "tactic_ids": [
+        "AML.TA0003"
+      ],
+      "referenced": false,
+      "control_count": 0
+    }
+  ]
+}

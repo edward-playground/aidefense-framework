@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "aidefend_version": "1.20260925",
+  "framework_key": "owasp-agentic-top-10-2026",
+  "source_framework_label": "OWASP Top 10 for Agentic Applications 2026",
+  "display_name": "OWASP Top 10 for Agentic Applications 2026",
+  "upstream": "OWASP Foundation / OWASP GenAI Security Project",
+  "upstream_version": "2026",
+  "upstream_url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/",
+  "source_artifact": {
+    "url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/",
+    "edition": "2026",
+    "published": "2025-12"
+  },
+  "license_notice": "OWASP Top 10 for Agentic Applications 2026, OWASP Foundation / OWASP GenAI Security Project, licensed under the Creative Commons Attribution-ShareAlike 4.0 International license (https://creativecommons.org/licenses/by-sa/4.0/) per the project site license statement. Identifiers, ranks and names only; no source prose is reproduced. See THIRD_PARTY_NOTICES.md.",
+  "item_locator_rule": "item_locator is \"<external_id> <name>\". Match identity on external_id; never on the raw AIDEFEND string.",
+  "counts": {
+    "items": 10,
+    "referenced_items": 10
+  },
+  "items": [
+    {
+      "item_locator": "ASI01:2026 Agent Goal Hijack",
+      "external_id": "ASI01:2026",
+      "rank": 1,
+      "name": "Agent Goal Hijack",
+      "referenced": true,
+      "control_count": 50
+    },
+    {
+      "item_locator": "ASI02:2026 Tool Misuse and Exploitation",
+      "external_id": "ASI02:2026",
+      "rank": 2,
+      "name": "Tool Misuse and Exploitation",
+      "referenced": true,
+      "control_count": 61
+    },
+    {
+      "item_locator": "ASI03:2026 Identity and Privilege Abuse",
+      "external_id": "ASI03:2026",
+      "rank": 3,
+      "name": "Identity and Privilege Abuse",
+      "referenced": true,
+      "control_count": 61
+    },
+    {
+      "item_locator": "ASI04:2026 Agentic Supply Chain Vulnerabilities",
+      "external_id": "ASI04:2026",
+      "rank": 4,
+      "name": "Agentic Supply Chain Vulnerabilities",
+      "referenced": true,
+      "control_count": 60
+    },
+    {
+      "item_locator": "ASI05:2026 Unexpected Code Execution (RCE)",
+      "external_id": "ASI05:2026",
+      "rank": 5,
+      "name": "Unexpected Code Execution (RCE)",
+      "referenced": true,
+      "control_count": 38
+    },
+    {
+      "item_locator": "ASI06:2026 Memory & Context Poisoning",
+      "external_id": "ASI06:2026",
+      "rank": 6,
+      "name": "Memory & Context Poisoning",
+      "referenced": true,
+      "control_count": 39
+    },
+    {
+      "item_locator": "ASI07:2026 Insecure Inter-Agent Communication",
+      "external_id": "ASI07:2026",
+      "rank": 7,
+      "name": "Insecure Inter-Agent Communication",
+      "referenced": true,
+      "control_count": 11
+    },
+    {
+      "item_locator": "ASI08:2026 Cascading Failures",
+      "external_id": "ASI08:2026",
+      "rank": 8,
+      "name": "Cascading Failures",
+      "referenced": true,
+      "control_count": 31
+    },
+    {
+      "item_locator": "ASI09:2026 Human-Agent Trust Exploitation",
+      "external_id": "ASI09:2026",
+      "rank": 9,
+      "name": "Human-Agent Trust Exploitation",
+      "referenced": true,
+      "control_count": 9
+    },
+    {
+      "item_locator": "ASI10:2026 Rogue Agents",
+      "external_id": "ASI10:2026",
+      "rank": 10,
+      "name": "Rogue Agents",
+      "referenced": true,
+      "control_count": 36
+    }
+  ]
+}

@@ -1,0 +1,104 @@
+{
+  "schema_version": 1,
+  "aidefend_version": "1.20260925",
+  "framework_key": "owasp-llm-top-10-2026",
+  "source_framework_label": "OWASP LLM Top 10 2026",
+  "display_name": "OWASP LLM Top 10 2026",
+  "upstream": "OWASP Foundation / OWASP GenAI Security Project",
+  "upstream_version": "2026 v1.0",
+  "upstream_url": "https://genai.owasp.org/resource/owasp-genai-llm-top-10-2026/",
+  "source_artifact": {
+    "url": "https://genai.owasp.org/download/56857/",
+    "release": "v1.0",
+    "file_name": "OWASP-GenAI-LLM-Top-10-2026-v1.0.pdf",
+    "sha256": "EF87993A4E50AE9D83B41FF7A3D3E6320A82DFA8D4EC6BF98D0CE264B2E6108E"
+  },
+  "license_notice": "OWASP Top 10 for LLM Applications 2026, OWASP Foundation / OWASP GenAI Security Project, licensed under CC-BY-SA-4.0 (https://creativecommons.org/licenses/by-sa/4.0/legalcode). Identifiers, ranks and names only; no source prose is reproduced. See THIRD_PARTY_NOTICES.md.",
+  "item_locator_rule": "item_locator is \"<external_id> <name>\". Match identity on external_id; never on the raw AIDEFEND string.",
+  "counts": {
+    "items": 10,
+    "referenced_items": 10
+  },
+  "items": [
+    {
+      "item_locator": "LLM01:2026 Prompt Injection",
+      "external_id": "LLM01:2026",
+      "rank": 1,
+      "name": "Prompt Injection",
+      "referenced": true,
+      "control_count": 69
+    },
+    {
+      "item_locator": "LLM02:2026 Sensitive Information Disclosure",
+      "external_id": "LLM02:2026",
+      "rank": 2,
+      "name": "Sensitive Information Disclosure",
+      "referenced": true,
+      "control_count": 76
+    },
+    {
+      "item_locator": "LLM03:2026 Excessive Agency",
+      "external_id": "LLM03:2026",
+      "rank": 3,
+      "name": "Excessive Agency",
+      "referenced": true,
+      "control_count": 63
+    },
+    {
+      "item_locator": "LLM04:2026 Supply Chain",
+      "external_id": "LLM04:2026",
+      "rank": 4,
+      "name": "Supply Chain",
+      "referenced": true,
+      "control_count": 48
+    },
+    {
+      "item_locator": "LLM05:2026 Data and Model Poisoning",
+      "external_id": "LLM05:2026",
+      "rank": 5,
+      "name": "Data and Model Poisoning",
+      "referenced": true,
+      "control_count": 59
+    },
+    {
+      "item_locator": "LLM06:2026 Unbounded Consumption",
+      "external_id": "LLM06:2026",
+      "rank": 6,
+      "name": "Unbounded Consumption",
+      "referenced": true,
+      "control_count": 31
+    },
+    {
+      "item_locator": "LLM07:2026 Misinformation",
+      "external_id": "LLM07:2026",
+      "rank": 7,
+      "name": "Misinformation",
+      "referenced": true,
+      "control_count": 17
+    },
+    {
+      "item_locator": "LLM08:2026 Hidden Context Exposure",
+      "external_id": "LLM08:2026",
+      "rank": 8,
+      "name": "Hidden Context Exposure",
+      "referenced": true,
+      "control_count": 9
+    },
+    {
+      "item_locator": "LLM09:2026 Vector and Embedding Weaknesses",
+      "external_id": "LLM09:2026",
+      "rank": 9,
+      "name": "Vector and Embedding Weaknesses",
+      "referenced": true,
+      "control_count": 8
+    },
+    {
+      "item_locator": "LLM10:2026 Improper Output Handling",
+      "external_id": "LLM10:2026",
+      "rank": 10,
+      "name": "Improper Output Handling",
+      "referenced": true,
+      "control_count": 26
+    }
+  ]
+}
