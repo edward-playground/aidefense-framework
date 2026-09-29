@@ -2166,3 +2166,25 @@ body.modal-open {
     .column-nav-btn.up { bottom: 5rem; }
     .column-nav-btn.down { bottom: 2rem; }
 }
+
+/* Static content is a complete, usable fallback when JavaScript is unavailable. */
+.reader-content { box-sizing: border-box; width: 100%; min-width: 0; max-width: 960px; margin: 2rem auto; padding: 1.5rem; color: var(--text-color, #ddd); overflow-wrap: anywhere; }
+.reader-content h1 { font-size: 1.8rem; font-weight: 700; margin: 1rem 0; }
+.reader-content h2 { font-size: 1.35rem; font-weight: 650; margin: 2rem 0 1rem; }
+.reader-content h3, .reader-content h5 { font-size: 1.05rem; font-weight: 650; margin: 1.25rem 0 .5rem; }
+.reader-content p { margin: .8rem 0; line-height: 1.65; }
+.reader-content a { color: var(--link-color, #38bdf8); text-decoration: underline; }
+.reader-content ul, .reader-content ol { padding-left: 1.5rem; margin: .7rem 0; }
+.reader-content ul { list-style: disc; }
+.reader-content ol { list-style: decimal; }
+.reader-content pre { overflow: auto; padding: 1rem; border: 1px solid #64748b; border-radius: .5rem; white-space: pre; margin: 1rem 0; }
+.reader-content table { display: block; overflow-x: auto; border-collapse: collapse; }
+.reader-content th, .reader-content td { padding: .5rem; border: 1px solid #64748b; }
+.reader-content section { scroll-margin-top: 1rem; }
+.reader-content .reader-meta { font-size: .9rem; opacity: .8; }
+.reader-loading { display: none; }
+html:not(.reader-ready) body.reader-page #page-container,
+html:not(.reader-ready) body.reader-page .column-nav-btn { display: none; }
+html.reader-booting .reader-content, html.reader-ready .reader-content { display: none; }
+html.reader-booting .reader-loading { display: block; max-width: 800px; margin: 12vh auto; padding: 2rem; }
+html.reader-ready .reader-loading { display: none; }

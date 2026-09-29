@@ -72,9 +72,13 @@ window.APRIL_FOOLS = {
       const techId = params.get('t');
 
       if (techId && window.APRIL_FOOLS.isActive()) {
-        const fake = window.APRIL_FOOLS.techniques[decodeURIComponent(techId)];
+        // URLSearchParams already decoded the ID; a second decode can throw
+        // for malformed links such as #t=%25.
+        const fake = Object.hasOwn(window.APRIL_FOOLS.techniques, techId)
+          ? window.APRIL_FOOLS.techniques[techId]
+          : null;
         if (fake) {
-          window.APRIL_FOOLS.show(fake, decodeURIComponent(techId));
+          window.APRIL_FOOLS.show(fake, techId);
         }
       }
     };

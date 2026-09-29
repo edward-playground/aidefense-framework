@@ -2,28 +2,28 @@
 
 This repository redistributes, or its pages optionally load, the following third-party software and data. These components are not relicensed as original AIDEFEND work.
 
-## DOMPurify 3.4.11
+## DOMPurify 3.4.16
 
 Files:
 
 - `js/purify.min.js`
 - `kids/purify.min.js`
 
-Source: https://github.com/cure53/DOMPurify/tree/3.4.11
+Source: https://github.com/cure53/DOMPurify/tree/3.4.16
 
-Package: `dompurify@3.4.11`
+Package: `dompurify@3.4.16`
 
 Package integrity:
 
 ```text
-sha512-zhlUV12GsaRzMsf9q5M254YhA4+VuF0fG+QFqu6aYpoGlKtz+w8//jBcGVYBgQkR5GHjUomejY84AV+/uPbWdw==
+sha512-sqo+pNp3qRhCIpbgRi1y8Tgk27Bo2Ry7w0dC1NBeNTdZChWjz9Xb/KOoZbRP/R6pQZ80Qw8YhXw13hWWBbMRnQ==
 ```
 
 Vendored file SHA-256:
 
 ```text
-45262DA1C9875F6DF7AE861DD8666C63D476BBD44F8C0C4CC52F05208EFBEC0D  js/purify.min.js
-45262DA1C9875F6DF7AE861DD8666C63D476BBD44F8C0C4CC52F05208EFBEC0D  kids/purify.min.js
+2C90A9B46D6463F26038A29B686E82BC91DE01FDAC9D5229E7CFE3B360134EA2  js/purify.min.js
+2C90A9B46D6463F26038A29B686E82BC91DE01FDAC9D5229E7CFE3B360134EA2  kids/purify.min.js
 ```
 
 Copyright Cure53 and other contributors. DOMPurify is offered under `(MPL-2.0 OR Apache-2.0)`; this distribution uses the Apache-2.0 option. The Apache-2.0 license text is available in [`LICENSE`](LICENSE).

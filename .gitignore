@@ -3,6 +3,7 @@ AGENTS.md
 data-schema.md
 
 node_modules/
+_site/
 package-lock.json
 LOCAL_AUDIT_README.md
 *.log

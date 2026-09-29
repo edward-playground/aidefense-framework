@@ -239,6 +239,7 @@
     <script type="module">
         import { frameworkMigrations } from './framework-migrations.js';
         import { ciscoFramework } from './cisco-framework.js';
+        import { readSiteRoute, techniquePath, protectCodeBlocks } from './js/technique-page.js';
 
         // Two-phase rendering: load lightweight index first, then full data in background
         let aidefendData = null;
@@ -1845,6 +1846,21 @@
                 applyTheme(next);
             }
             // --- Deep linking helpers ---
+            const siteBase = document.querySelector('meta[name="aidefend-site-base"]')?.content ||
+                window.location.pathname.replace(/[^/]*$/, '');
+            let restoringRoute = false;
+            function techniqueUrl(id, guidanceId = null) {
+                return window.location.origin + techniquePath(id, guidanceId, siteBase);
+            }
+            function updateTechniqueAddress(id, guidanceId = null) {
+                if (restoringRoute) return;
+                const current = readSiteRoute(window.location);
+                if (!guidanceId && current.techniqueId === id) guidanceId = current.guidanceId;
+                const target = techniquePath(id, guidanceId, siteBase);
+                if (window.location.pathname + window.location.hash !== target) {
+                    history.pushState({ aidefend: true }, '', target);
+                }
+            }
             function findTechniqueById(id) {
                 const requestedId = String(id || '').trim().toUpperCase();
                 for (const tactic of aidefendData.tactics) {
@@ -1857,26 +1873,31 @@
                 }
                 return null;
             }
-            function restoreFromHash() {
-                const hash = window.location.hash;
-                if (!hash || hash.length < 3) return;
-                const params = new URLSearchParams(hash.substring(1));
-                const techId = params.get('t');
-                const guidanceId = params.get('g');
-                if (techId) {
-                    const found = findTechniqueById(techId);
-                    if (found) {
-                        showTechniqueModal(found.technique, found.groupName);
-                        if (guidanceId) expandGuidanceById(guidanceId);
+            function restoreFromRoute() {
+                const { techniqueId: techId, guidanceId, atlasId } = readSiteRoute(window.location);
+                restoringRoute = true;
+                try {
+                    if (techId) {
+                        const found = findTechniqueById(techId);
+                        if (found) {
+                            showTechniqueModal(found.technique, found.groupName);
+                            if (guidanceId) expandGuidanceById(guidanceId);
+                        }
                     }
-                }
-                const atlasId = params.get('atlas');
-                if (atlasId) {
-                    currentView = 'framework';
-                    currentFramework = 'atlas-matrix';
-                    renderMainGrid();
-                    showAtlasDefenseModal(decodeURIComponent(atlasId));
-                }
+                    if (atlasId && Object.hasOwn(atlasTechNames, atlasId)) {
+                        currentView = 'framework';
+                        currentFramework = 'atlas-matrix';
+                        renderMainGrid();
+                        showAtlasDefenseModal(atlasId);
+                    }
+                    if (!techId && !(atlasId && Object.hasOwn(atlasTechNames, atlasId)) && elements.modal.classList.contains('active')) {
+                        elements.modal.classList.remove('active');
+                        document.body.classList.remove('modal-open');
+                        clearElement(elements.modalBody);
+                        clearElement(elements.modalActions);
+                        document.title = 'AIDEFEND Framework — AI Security Defense Knowledge Base';
+                    }
+                } finally { restoringRoute = false; }
             }
 
             // --- Copy / Share icon SVGs ---
@@ -1903,7 +1924,7 @@
             // with original indentation preserved and HTML entities decoded (so code stays runnable).
             function guidanceHowToToText(howToHtml) {
                 const root = document.createElement('div');
-                root.innerHTML = DOMPurify.sanitize(howToHtml || '');
+                root.innerHTML = DOMPurify.sanitize(protectCodeBlocks(howToHtml));
                 const cleanProse = (s) => String(s || '')
                     .replace(/\s*\[\[[^\]\r\n]{1,120}\]\]/g, '')
                     .replace(/\s+/g, ' ')
@@ -2012,13 +2033,10 @@
                 return id + (found ? ': ' + found.technique.name : '');
             }
             function createScopeBoundaryDeepLink(id) {
-                const directUrl = new URL(window.location.href);
-                directUrl.search = '';
-                directUrl.hash = 't=' + encodeURIComponent(id);
                 const techniqueLabel = scopeBoundaryRelatedTechniqueLabel(id);
                 const link = createElement('a', {
                     className: 'scope-boundary-deep-link',
-                    href: directUrl.href,
+                    href: techniqueUrl(id),
                     target: '_blank',
                     rel: 'noopener noreferrer',
                     title: 'Open ' + id + ' in a new tab'
@@ -2046,7 +2064,7 @@
                 btn.innerHTML = LINK_SVG;
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    const linkUrl = window.location.origin + window.location.pathname + '#t=' + encodeURIComponent(technique.id);
+                    const linkUrl = techniqueUrl(technique.id);
                     copyToClipboard(linkUrl, btn, 'URL Copied!', LINK_SVG);
                 });
                 return btn;
@@ -2059,8 +2077,7 @@
                 btn.addEventListener('click', (e) => {
                     e.stopPropagation();
                     const techId = guidanceId.replace(/-G\d+$/, '');
-                    const linkUrl = window.location.origin + window.location.pathname +
-                        '#t=' + encodeURIComponent(techId) + '&g=' + encodeURIComponent(guidanceId);
+                    const linkUrl = techniqueUrl(techId, guidanceId);
                     copyToClipboard(linkUrl, btn, 'Guidance Link Copied!', LINK_SVG);
                 });
                 return btn;
@@ -2847,20 +2864,20 @@
                 atlasLinkBtn.innerHTML = LINK_SVG;
                 atlasLinkBtn.addEventListener('click', (e) => {
                     e.stopPropagation();
-                    copyToClipboard(window.location.origin + window.location.pathname + '#atlas=' + encodeURIComponent(atlasId),
+                    copyToClipboard(window.location.origin + siteBase + '#atlas=' + encodeURIComponent(atlasId),
                         atlasLinkBtn, 'URL Copied!', LINK_SVG);
                 });
                 elements.modalActions.appendChild(atlasLinkBtn);
 
                 // Deep link: update URL hash and page title
-                history.replaceState(null, '', '#atlas=' + encodeURIComponent(atlasId));
+                if (!restoringRoute) history.pushState({ aidefend: true }, '', siteBase + '#atlas=' + encodeURIComponent(atlasId));
                 document.title = atlasId + ' ' + techName + ' | AIDEFEND Framework';
 
                 // Helper: render a single defense card (technique-item style)
                 function buildDefenseCard(tech) {
                     const li = createElement('li', { className: 'technique-container' });
                     const card = createElement('a', { className: 'technique-item no-sub elevation-2' });
-                    const directUrl = window.location.origin + window.location.pathname + '#t=' + encodeURIComponent(tech.id);
+                    const directUrl = techniqueUrl(tech.id);
                     card.setAttribute('href', directUrl);
                     card.setAttribute('target', '_blank');
                     card.setAttribute('rel', 'noopener');
@@ -3337,9 +3354,9 @@
                 document.body.classList.remove('modal-open');
                 clearElement(elements.modalBody);
                 clearElement(elements.modalActions);
-                // Clear technique deep link hash and restore default title
-                if (window.location.hash) {
-                    history.replaceState(null, '', window.location.pathname + window.location.search);
+                // Closing a permalink returns to the framework, including after reload.
+                if (window.location.hash || window.location.pathname !== siteBase) {
+                    history.pushState({ aidefend: true }, '', siteBase);
                 }
                 document.title = 'AIDEFEND Framework \u2014 AI Security Defense Knowledge Base';
             }
@@ -3411,9 +3428,9 @@
                 });
                 item.classList.add('guidance-deeplink-flash');
                 setTimeout(() => item.classList.remove('guidance-deeplink-flash'), 2000);
-                // Keep the full guidance deep link in the address bar (showTechniqueModal reset it to #t=only).
+                // Preserve the selected guidance as a native section fragment.
                 const techId = guidanceId.replace(/-G\d+$/, '');
-                history.replaceState(null, '', '#t=' + encodeURIComponent(techId) + '&g=' + encodeURIComponent(guidanceId));
+                updateTechniqueAddress(techId, guidanceId);
             }
             function showIntroductionModal() {
                 clearElement(elements.modalBody);
@@ -3635,6 +3652,25 @@
                 descEl.innerHTML = DOMPurify.sanitize(technique.description || 'No description available.');
                 elements.modalBody.appendChild(descEl);
                 renderScopeBoundarySection(technique);
+                if (isTechniqueFamily) {
+                    const children = createElement('section', { className: 'mt-4' });
+                    children.appendChild(createElement('h3', { textContent: 'Sub-techniques' }));
+                    const list = createElement('ul');
+                    technique.subTechniques.forEach(child => {
+                        const row = createElement('li');
+                        const link = createElement('a', { textContent: `${child.id}: ${child.name}` });
+                        link.href = techniqueUrl(child.id);
+                        link.addEventListener('click', event => {
+                            if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
+                            event.preventDefault();
+                            navigateTechniqueModal(child, groupName, 'slide-in-left');
+                        });
+                        row.appendChild(link);
+                        list.appendChild(row);
+                    });
+                    children.appendChild(list);
+                    elements.modalBody.appendChild(children);
+                }
                 if (technique.warning) {
                     const warningDiv = createElement('div', { className: 'warning-note' });
                     const warningP = createElement('p');
@@ -3647,10 +3683,25 @@
                 renderDetailSection('Potential Tools - Source Available / Open Weight', technique.toolsSourceAvailable);
                 renderDetailSection('Potential Tools - Commercial / Hosted', technique.toolsCommercial);
                 renderDefendsAgainstSection(technique.defendsAgainst);
-                // Deep link: update URL hash and page title
-                history.replaceState(null, '', '#t=' + encodeURIComponent(technique.id));
+                // Real paths are readable without JavaScript; guidance uses an anchor.
+                updateTechniqueAddress(technique.id);
                 document.title = technique.id + ': ' + technique.name + ' | AIDEFEND Framework';
                 showModal();
+            }
+            function navigateTechniqueModal(technique, groupName, animationClass) {
+                const content = elements.modal.querySelector('.modal-content');
+                if (content) {
+                    content.getAnimations().forEach(animation => animation.cancel());
+                    content.classList.remove('slide-in-left', 'slide-in-right', 'crossfade');
+                }
+                showTechniqueModal(technique, groupName);
+                if (!content) return;
+                content.scrollTop = 0;
+                void content.offsetWidth;
+                content.classList.add(animationClass);
+                content.addEventListener('animationend', () => {
+                    content.classList.remove(animationClass);
+                }, { once: true });
             }
             function renderDetailSection(title, items) {
                 if (!items || items.length === 0) return;
@@ -3700,7 +3751,7 @@
                         }
                         if (guidance.howTo) {
                             const howToBlock = createElement('div');
-                            howToBlock.innerHTML = DOMPurify.sanitize(guidance.howTo);
+                            howToBlock.innerHTML = DOMPurify.sanitize(protectCodeBlocks(guidance.howTo));
                             contentInner.appendChild(howToBlock);
                         }
                         injectCodeCopyButtons(contentInner);
@@ -3836,55 +3887,10 @@
                         hideModal();
                     }
                 });
-                // Deep link: handle browser back/forward
-                window.addEventListener('popstate', () => {
-                    const hash = window.location.hash;
-                    if (hash && hash.includes('t=')) {
-                        const params = new URLSearchParams(hash.substring(1));
-                        const techId = params.get('t');
-                        if (techId) {
-                            const found = findTechniqueById(decodeURIComponent(techId));
-                            if (found) {
-                                showTechniqueModal(found.technique, found.groupName);
-                                const guidanceId = params.get('g');
-                                if (guidanceId) expandGuidanceById(decodeURIComponent(guidanceId));
-                                return;
-                            }
-                        }
-                    }
-                    if (hash && hash.includes('atlas=')) {
-                        const params = new URLSearchParams(hash.substring(1));
-                        const atlasId = params.get('atlas');
-                        if (atlasId) {
-                            currentView = 'framework';
-                            currentFramework = 'atlas-matrix';
-                            renderMainGrid();
-                            showAtlasDefenseModal(decodeURIComponent(atlasId));
-                            return;
-                        }
-                    }
-                    // No valid hash — close modal if open
-                    if (elements.modal.classList.contains('active')) {
-                        elements.modal.classList.remove('active');
-                        document.body.classList.remove('modal-open');
-                        clearElement(elements.modalBody);
-                        clearElement(elements.modalActions);
-                    }
-                });
-                // Deep link: same-tab hash navigation (address-bar edit or anchor click)
-                window.addEventListener('hashchange', () => {
-                    if (!_fullDataReady) return;
-                    const hash = window.location.hash;
-                    if (!hash || !hash.includes('t=')) return;
-                    const params = new URLSearchParams(hash.substring(1));
-                    const techId = params.get('t');
-                    if (!techId) return;
-                    const found = findTechniqueById(decodeURIComponent(techId));
-                    if (!found) return;
-                    showTechniqueModal(found.technique, found.groupName);
-                    const guidanceId = params.get('g');
-                    if (guidanceId) expandGuidanceById(decodeURIComponent(guidanceId));
-                });
+                // Restore both real paths and legacy hashes without adding history.
+                const onRouteChange = () => { if (_fullDataReady) restoreFromRoute(); };
+                window.addEventListener('popstate', onRouteChange);
+                window.addEventListener('hashchange', onRouteChange);
             }
             // ─── Placeholder rotation for narrow screens ───
             (function initPlaceholderRotation() {
@@ -4096,24 +4102,12 @@
                     const next = sibIdx + dir;
                     if (next < 0 || next >= siblings.length) return;
                     sibIdx = next;
-                    const content = document.querySelector('.modal-content');
-                    if (!content) { showTechniqueModal(siblings[next], sibGroupName); return; }
-                    // Cancel any in-progress animation
-                    content.getAnimations().forEach(a => a.cancel());
-                    content.classList.remove('slide-in-left', 'slide-in-right', 'crossfade');
-                    // Load content
-                    showTechniqueModal(siblings[next], sibGroupName);
-                    content.scrollTop = 0;
                     // Choose animation: full slide for single press, gentle crossfade for rapid/held key
                     const now = Date.now();
                     const isRapid = (now - lastNavTime) < 300;
                     lastNavTime = now;
                     const animClass = isRapid ? 'crossfade' : (dir > 0 ? 'slide-in-left' : 'slide-in-right');
-                    void content.offsetWidth; // force reflow before adding class
-                    content.classList.add(animClass);
-                    content.addEventListener('animationend', () => {
-                        content.classList.remove(animClass);
-                    }, { once: true });
+                    navigateTechniqueModal(siblings[next], sibGroupName, animClass);
                 }
 
                 // Keyboard: left/right arrows
@@ -4563,8 +4557,10 @@
                         }
                     }
                     _skeletonData = null;
-                    // Deep link: restore technique from URL hash
-                    restoreFromHash();
+                    // Restore a technique path, guidance fragment, or legacy hash
+                    restoreFromRoute();
+                    document.documentElement.classList.add('reader-ready');
+                    document.documentElement.classList.remove('reader-booting');
                 } catch(e) {
                     // Full data load failed — show error but keep skeleton visible
                     console.error('Failed to load full AIDEFEND data:', e);
