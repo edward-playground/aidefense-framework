@@ -1,6 +1,6 @@
 {
   "name": "aidefense-framework",
-  "version": "1.20260925",
+  "version": "1.20260930",
   "private": true,
   "type": "module",
   "description": "AIDEFEND AI defense framework, website, and generated public dataset",

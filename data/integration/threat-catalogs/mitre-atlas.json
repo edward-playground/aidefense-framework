@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20260925",
+  "aidefend_version": "1.20260930",
   "framework_key": "mitre-atlas",
   "source_framework_label": "MITRE ATLAS",
   "display_name": "MITRE ATLAS",

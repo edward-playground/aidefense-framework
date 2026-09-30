@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20260925",
+  "aidefend_version": "1.20260930",
   "framework_key": "owasp-agentic-top-10-2026",
   "source_framework_label": "OWASP Top 10 for Agentic Applications 2026",
   "display_name": "OWASP Top 10 for Agentic Applications 2026",
