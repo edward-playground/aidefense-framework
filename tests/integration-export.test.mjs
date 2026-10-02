@@ -99,9 +99,9 @@ test('controls.json carries every actionable control once, with derived URLs and
   assert.equal(controlIds.size, controlsFile.controls.length, 'control IDs are unique');
   assert.deepEqual([...controlIds].sort(), [...actionableIds].sort(), 'exactly the actionable controls of data.json');
   assert.deepEqual(controlsFile.families.map(family => family.id).sort(), [...familyIds].sort());
-  assert.equal(controlsFile.counts.actionable_controls, 307);
+  assert.equal(controlsFile.counts.actionable_controls, 309);
   assert.equal(controlsFile.counts.families, 58);
-  assert.equal(controlsFile.counts.standalone_techniques + controlsFile.counts.leaf_subtechniques, 307);
+  assert.equal(controlsFile.counts.standalone_techniques + controlsFile.counts.leaf_subtechniques, 309);
 
   const families = new Map(controlsFile.families.map(family => [family.id, family]));
   const knownIds = new Set([...controlIds, ...families.keys()]);
@@ -212,7 +212,8 @@ test('threat catalogs are slug-keyed, structurally complete and carry no upstrea
   }
 
   const atlas = catalogFiles.get('mitre-atlas');
-  assert.equal(atlas.items.length, 197);
+  assert.equal(atlas.items.length, 208);
+  assert.equal(atlas.upstream_version, '2026.09');
   assert.equal(atlas.tactics.length, 16);
   const atlasIds = new Set(atlas.items.map(item => item.external_id));
   const atlasTactics = new Set(atlas.tactics.map(tactic => tactic.id));

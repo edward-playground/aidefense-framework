@@ -6,7 +6,7 @@
  * formats without parsing AIDEFEND's authoring conventions:
  *
  *   manifest.json                     version lock, checksums, counts, attribution
- *   controls.json                     307 actionable controls + 58 navigation-only families
+ *   controls.json                     309 actionable controls + 58 navigation-only families
  *   threat-control-joins.json         defendsAgainst inverted: one record per (framework, item)
  *   threat-catalogs/<framework>.json  upstream identifiers/names/structure, no descriptions
  *

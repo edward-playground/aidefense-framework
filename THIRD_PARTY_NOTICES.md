@@ -86,15 +86,15 @@ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLI
 
 ## MITRE ATLAS data
 
-The Frameworks View contains metadata derived from MITRE ATLAS data version 2026.08.
+The Frameworks View contains metadata derived from MITRE ATLAS data version 2026.09.
 
 `integration-catalogs.js` and the generated `data/integration/threat-catalogs/mitre-atlas.json` and `data/integration/threat-control-joins.json` contain ATLAS technique identifiers, names, tactic membership and parent/sub-technique relationships from the same data version. Technique descriptions are not reproduced in those files.
 
-Source artifact: https://github.com/mitre-atlas/atlas-data/blob/41d4f5ca4112f0e492ffaa3ebff07dc80a75afa5/dist/v6/ATLAS-2026.08.yaml
+Source artifact: https://github.com/mitre-atlas/atlas-data/blob/3259f388d19cbcca11bacf12a0ef97f4198f711b/dist/v6/ATLAS-2026.09.yaml
 
-Source revision: `41d4f5ca4112f0e492ffaa3ebff07dc80a75afa5`
+Source revision: `3259f388d19cbcca11bacf12a0ef97f4198f711b`
 
-Source artifact SHA-256: `a8d32f676854cc57721c217ec5b39f07db518076dee4a6c1335df0a7bc8271a2`
+Source artifact SHA-256: `935efa93e28294432d3e2f537eb94991ef8d1f8c58341cd360ea3321ddb66688`
 
 Copyright 2021-2026 MITRE. MITRE ATLAS data is licensed under the Apache License, Version 2.0. The Apache-2.0 license text is available in [`LICENSE`](LICENSE).
 

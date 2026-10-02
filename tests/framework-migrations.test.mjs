@@ -304,7 +304,7 @@ test('WebMCP query planning preserves generic lookup and prioritizes canonical m
 
 test('every active framework entity uses only canonical OWASP LLM 2026 items', () => {
     const entities = allEntities();
-    assert.equal(entities.length, 365);
+    assert.equal(entities.length, 367);
 
     for (const entity of entities) {
         const current = entity.defendsAgainst.filter(
@@ -340,7 +340,9 @@ test('2026-08-28 practical-control migration preserves the frozen control bounda
     const entities = allEntities();
 
     assert.equal(entities.some(item => item.id === 'AID-H-002.010'), false);
-    assert.equal(entities.some(item => item.id === 'AID-H-004.006'), false);
+    // This ID was unused by the August migration. Its October assignment is
+    // hosted publication, not a duplicate of message-integrity enforcement.
+    assert.equal(entityById('AID-H-004.006').name, 'Hosted Agent Publication & Exposure Controls');
 
     for (const [id, count] of expectedGuidance) {
         const entity = entityById(id);

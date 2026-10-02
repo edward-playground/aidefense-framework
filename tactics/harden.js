@@ -148,7 +148,7 @@ export const hardenTactic = {
                 {
                     "id": "AID-H-001-G005",
                     "implementation": "Apply a signed Transformer attention-regularization profile and independently gate the artifact on replayed robustness and task-quality evidence.",
-                    "howTo": "<h5>Transformer attention-regularization variant</h5><p>This is one architecture-specific method under <code>AID-H-001</code>, not a separate control objective. <code>AID-H-007.004</code> owns the integrity and independence of generic evaluation artifacts; this guidance owns the Transformer-specific robustness metric and pass criteria.</p><h5>Runnable training regularizer</h5><pre><code># File: training/attention_entropy_regularization.py\r\nfrom __future__ import annotations\r\n\r\nimport math\r\nimport torch\r\n\r\n\r\ndef regularized_loss(\r\n    main_loss: torch.Tensor,\r\n    attention_weights: torch.Tensor,\r\n    coefficient: float,\r\n) -> tuple[torch.Tensor, dict]:\r\n    if main_loss.ndim != 0 or not torch.isfinite(main_loss):\r\n        raise ValueError(\"main_loss must be one finite scalar\")\r\n    if (\r\n        not attention_weights.is_floating_point()\r\n        or attention_weights.ndim < 3\r\n        or not torch.isfinite(attention_weights).all()\r\n        or (attention_weights < 0).any()\r\n    ):\r\n        raise ValueError(\"attention weights must be finite, non-negative floating values\")\r\n    if isinstance(coefficient, bool) or not math.isfinite(float(coefficient)) or coefficient <= 0:\r\n        raise ValueError(\"coefficient must be a finite positive signed-profile value\")\r\n    probabilities = attention_weights.clamp_min(\r\n        torch.finfo(attention_weights.dtype).tiny\r\n    )\r\n    row_sums = attention_weights.sum(dim=-1)\r\n    if not torch.allclose(\r\n        row_sums, torch.ones_like(row_sums), atol=1e-5, rtol=1e-5\r\n    ):\r\n        raise ValueError(\"attention rows must be normalized\")\r\n    entropy = -(probabilities * probabilities.log()).sum(dim=-1).mean()\r\n    total = main_loss - float(coefficient) * entropy\r\n    if not torch.isfinite(total):\r\n        raise RuntimeError(\"regularized loss is not finite\")\r\n    return total, {\r\n        \"main_loss\": float(main_loss.detach().cpu()),\r\n        \"attention_entropy\": float(entropy.detach().cpu()),\r\n        \"coefficient\": float(coefficient),\r\n    }\r\n</code></pre><p>The training workflow verifies the detached signature and exact schema of the versioned regularization profile before constructing <code>coefficient</code>, records the profile digest with every run, and treats unsupported attention tensors as not applicable rather than silently coercing them.</p><h5>Independent release gate</h5><pre><code># File: evaluation/gate_attention_robustness.py\r\nfrom __future__ import annotations\r\n\r\nimport hashlib\r\nimport hmac\r\nimport json\r\nimport math\r\nimport os\r\nimport subprocess\r\nimport tempfile\r\nfrom collections import Counter\r\nfrom pathlib import Path\r\n\r\ndef _required_positive_seconds(name: str) -&gt; float:\r\n    value = float(os.environ[name])\r\n    if not math.isfinite(value) or value &lt;= 0:\r\n        raise RuntimeError(f\"{name} must be a finite positive number of seconds\")\r\n    return value\r\n\r\nATTENTION_ARTIFACT_VERIFY_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H001_ATTENTION_ARTIFACT_VERIFY_TIMEOUT_SECONDS\")\r\nATTENTION_VERDICT_SIGN_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H001_ATTENTION_VERDICT_SIGN_TIMEOUT_SECONDS\")\r\nATTENTION_VERDICT_VERIFY_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H001_ATTENTION_VERDICT_VERIFY_TIMEOUT_SECONDS\")\r\n\r\n\r\n\r\nPOLICY_IDENTITY = Path(\"/opt/aidefend/trust/attention-policy.identity\").read_text(encoding=\"utf-8\").strip()\r\nEVALUATOR_IDENTITY = Path(\"/opt/aidefend/trust/attention-evaluator.identity\").read_text(encoding=\"utf-8\").strip()\r\nOIDC_ISSUER = Path(\"/opt/aidefend/trust/github-actions.issuer\").read_text(encoding=\"utf-8\").strip()\r\nVERDICT_VERIFY_KEY = Path(\"/opt/aidefend/trust/attention-release-gate.pub\")\r\nPOLICY_FIELDS = {\r\n    \"schema_version\", \"policy_version\", \"required_threat_contexts\",\r\n    \"minimum_cases_per_context\", \"minimum_robustness_improvement\",\r\n    \"task_quality_minimums\", \"maximum_task_quality_drop\",\r\n    \"metric_definition_sha256\", \"baseline_profile_sha256\",\r\n    \"candidate_profile_sha256\", \"evaluation_corpus_sha256\",\r\n    \"attack_implementation_sha256\", \"seed_policy_sha256\",\r\n}\r\nMETRIC_FIELDS = {\r\n    \"schema_version\", \"definition_id\", \"robustness_formula\",\r\n    \"attack_success_field\", \"task_metrics\",\r\n}\r\nREPORT_FIELDS = {\r\n    \"schema_version\", \"model_sha256\", \"regularization_profile_sha256\",\r\n    \"evaluation_corpus_sha256\", \"attack_implementation_sha256\",\r\n    \"seed_policy_sha256\", \"metric_definition_sha256\", \"observations\",\r\n}\r\nOBSERVATION_FIELDS = {\r\n    \"case_id\", \"threat_context\", \"attack_success\", \"task_quality\",\r\n}\r\n\r\n\r\nclass InsufficientData(RuntimeError):\r\n    pass\r\n\r\n\r\ndef sha256_file(path: Path) -&gt; str:\r\n    digest = hashlib.sha256()\r\n    with path.open(\"rb\") as handle:\r\n        for chunk in iter(lambda: handle.read(1024 * 1024), b\"\"):\r\n            digest.update(chunk)\r\n    return digest.hexdigest()\r\n\r\n\r\ndef verified_blob_bytes(\r\n    path: Path, bundle: Path, identity: str,\r\n) -&gt; tuple[bytes, bytes]:\r\n    artifact_bytes = path.read_bytes()\r\n    bundle_bytes = bundle.read_bytes()\r\n    if not artifact_bytes or not bundle_bytes:\r\n        raise ValueError(\"signed artifact or bundle is empty\")\r\n    with tempfile.TemporaryDirectory(prefix=\"aidefend-attention-verify-\") as directory:\r\n        root = Path(directory)\r\n        os.chmod(root, 0o700)\r\n        artifact_snapshot = root / \"artifact\"\r\n        bundle_snapshot = root / \"bundle.json\"\r\n        artifact_snapshot.write_bytes(artifact_bytes)\r\n        bundle_snapshot.write_bytes(bundle_bytes)\r\n        os.chmod(artifact_snapshot, 0o400)\r\n        os.chmod(bundle_snapshot, 0o400)\r\n        subprocess.run([\r\n            \"cosign\", \"verify-blob\", \"--bundle\", str(bundle_snapshot),\r\n            \"--certificate-identity\", identity,\r\n            \"--certificate-oidc-issuer\", OIDC_ISSUER, str(artifact_snapshot),\r\n        ], check=True, capture_output=True, text=True, timeout=ATTENTION_ARTIFACT_VERIFY_TIMEOUT_SECONDS)\r\n        if (\r\n            not hmac.compare_digest(artifact_snapshot.read_bytes(), artifact_bytes)\r\n            or not hmac.compare_digest(bundle_snapshot.read_bytes(), bundle_bytes)\r\n        ):\r\n            raise ValueError(\"verification snapshot changed\")\r\n    return artifact_bytes, bundle_bytes\r\n\r\n\r\ndef strict_json(raw: bytes, label: str) -&gt; dict:\r\n    def reject_duplicates(pairs: list[tuple[str, object]]) -&gt; dict:\r\n        result = {}\r\n        for key, value in pairs:\r\n            if key in result:\r\n                raise ValueError(f\"duplicate JSON key: {key}\")\r\n            result[key] = value\r\n        return result\r\n\r\n    try:\r\n        value = json.loads(\r\n            raw.decode(\"utf-8\", errors=\"strict\"),\r\n            object_pairs_hook=reject_duplicates,\r\n            parse_constant=lambda value: (_ for _ in ()).throw(\r\n                ValueError(f\"non-finite JSON number: {value}\")\r\n            ),\r\n        )\r\n    except (UnicodeDecodeError, json.JSONDecodeError) as exc:\r\n        raise ValueError(f\"{label} is not strict UTF-8 JSON\") from exc\r\n    if not isinstance(value, dict):\r\n        raise ValueError(f\"{label} must be an object\")\r\n    return value\r\n\r\n\r\ndef finite(value: object, field: str) -&gt; float:\r\n    if isinstance(value, bool):\r\n        raise ValueError(f\"{field} must be numeric\")\r\n    number = float(value)\r\n    if not math.isfinite(number):\r\n        raise ValueError(f\"{field} must be finite\")\r\n    return number\r\n\r\n\r\ndef load_policy(path: Path, bundle: Path) -&gt; tuple[dict, str, str]:\r\n    raw, verified_bundle_bytes = verified_blob_bytes(\r\n        path, bundle, POLICY_IDENTITY\r\n    )\r\n    policy = strict_json(raw, \"attention policy\")\r\n    if set(policy) != POLICY_FIELDS:\r\n        raise ValueError(\"attention policy schema differs\")\r\n    if policy[\"schema_version\"] != \"aidefend.attention-robustness-policy.v2\":\r\n        raise ValueError(\"attention policy version is unsupported\")\r\n    if not isinstance(policy[\"policy_version\"], str) or not policy[\"policy_version\"]:\r\n        raise ValueError(\"policy_version is required\")\r\n    contexts = policy[\"required_threat_contexts\"]\r\n    if not isinstance(contexts, list) or not contexts or len(contexts) != len(set(contexts)):\r\n        raise ValueError(\"required_threat_contexts must be unique and non-empty\")\r\n    minimum_cases = policy[\"minimum_cases_per_context\"]\r\n    if isinstance(minimum_cases, bool) or not isinstance(minimum_cases, int) or minimum_cases &lt;= 0:\r\n        raise ValueError(\"minimum_cases_per_context must be a positive integer\")\r\n    improvement = finite(\r\n        policy[\"minimum_robustness_improvement\"],\r\n        \"minimum_robustness_improvement\",\r\n    )\r\n    if not 0.0 &lt;= improvement &lt;= 1.0:\r\n        raise ValueError(\"minimum_robustness_improvement must be in [0, 1]\")\r\n    for field in (\r\n        \"metric_definition_sha256\", \"baseline_profile_sha256\",\r\n        \"candidate_profile_sha256\", \"evaluation_corpus_sha256\",\r\n        \"attack_implementation_sha256\", \"seed_policy_sha256\",\r\n    ):\r\n        value = policy[field]\r\n        if not isinstance(value, str) or len(value) != 64:\r\n            raise ValueError(f\"{field} is not a SHA-256 value\")\r\n        int(value, 16)\r\n    return (\r\n        policy,\r\n        hashlib.sha256(raw).hexdigest(),\r\n        hashlib.sha256(verified_bundle_bytes).hexdigest(),\r\n    )\r\n\r\n\r\ndef load_metric_definition(\r\n    path: Path,\r\n    bundle: Path,\r\n    policy: dict,\r\n) -&gt; tuple[dict, str, str]:\r\n    raw, verified_bundle_bytes = verified_blob_bytes(\r\n        path, bundle, POLICY_IDENTITY\r\n    )\r\n    raw_sha256 = hashlib.sha256(raw).hexdigest()\r\n    if raw_sha256 != policy[\"metric_definition_sha256\"]:\r\n        raise ValueError(\"metric definition digest differs from signed policy\")\r\n    metric = strict_json(raw, \"attention metric definition\")\r\n    if set(metric) != METRIC_FIELDS:\r\n        raise ValueError(\"metric definition schema differs\")\r\n    if (\r\n        metric[\"schema_version\"] != \"aidefend.attention-metric-definition.v1\"\r\n        or metric[\"robustness_formula\"] != \"one_minus_attack_success_rate\"\r\n        or metric[\"attack_success_field\"] != \"attack_success\"\r\n    ):\r\n        raise ValueError(\"metric definition is unsupported\")\r\n    task_metrics = metric[\"task_metrics\"]\r\n    if not isinstance(task_metrics, dict) or not task_metrics:\r\n        raise ValueError(\"task metric definitions are required\")\r\n    for name, spec in task_metrics.items():\r\n        if (\r\n            not isinstance(name, str)\r\n            or not name\r\n            or not isinstance(spec, dict)\r\n            or set(spec) != {\"aggregation\", \"value_min\", \"value_max\"}\r\n        ):\r\n            raise ValueError(\"task metric definition differs\")\r\n        if spec[\"aggregation\"] != \"mean\":\r\n            raise ValueError(\"only declared mean aggregation is implemented\")\r\n        low = finite(spec[\"value_min\"], f\"{name}.value_min\")\r\n        high = finite(spec[\"value_max\"], f\"{name}.value_max\")\r\n        if not low &lt; high:\r\n            raise ValueError(f\"{name} range is invalid\")\r\n    if set(policy[\"task_quality_minimums\"]) != set(task_metrics):\r\n        raise ValueError(\"task-quality minimum keys differ from metric definition\")\r\n    if set(policy[\"maximum_task_quality_drop\"]) != set(task_metrics):\r\n        raise ValueError(\"task-quality drop keys differ from metric definition\")\r\n    for name, spec in task_metrics.items():\r\n        low = finite(spec[\"value_min\"], f\"{name}.value_min\")\r\n        high = finite(spec[\"value_max\"], f\"{name}.value_max\")\r\n        minimum = finite(policy[\"task_quality_minimums\"][name], f\"{name}.minimum\")\r\n        maximum_drop = finite(\r\n            policy[\"maximum_task_quality_drop\"][name], f\"{name}.maximum_drop\"\r\n        )\r\n        if not low &lt;= minimum &lt;= high or not 0.0 &lt;= maximum_drop &lt;= high - low:\r\n            raise ValueError(f\"{name} policy limit is outside its signed range\")\r\n    return (\r\n        metric,\r\n        raw_sha256,\r\n        hashlib.sha256(verified_bundle_bytes).hexdigest(),\r\n    )\r\n\r\ndef load_report(\r\n    path: Path,\r\n    bundle: Path,\r\n    expected_model_sha256: str,\r\n    expected_profile_sha256: str,\r\n    policy: dict,\r\n    metric: dict,\r\n) -&gt; tuple[dict, str, str]:\r\n    raw, verified_bundle_bytes = verified_blob_bytes(\r\n        path, bundle, EVALUATOR_IDENTITY\r\n    )\r\n    report = strict_json(raw, \"attention raw observations\")\r\n    if set(report) != REPORT_FIELDS:\r\n        raise InsufficientData(\"raw evaluation report schema differs\")\r\n    if report[\"schema_version\"] != \"aidefend.attention-raw-observations.v1\":\r\n        raise InsufficientData(\"raw evaluation report version is unsupported\")\r\n    if report[\"model_sha256\"] != expected_model_sha256:\r\n        raise InsufficientData(\"raw report is not bound to actual model bytes\")\r\n    if report[\"regularization_profile_sha256\"] != expected_profile_sha256:\r\n        raise InsufficientData(\"regularization profile binding differs\")\r\n    if report[\"metric_definition_sha256\"] != policy[\"metric_definition_sha256\"]:\r\n        raise InsufficientData(\"metric definition binding differs\")\r\n    for field in (\r\n        \"evaluation_corpus_sha256\",\r\n        \"attack_implementation_sha256\",\r\n        \"seed_policy_sha256\",\r\n    ):\r\n        if report[field] != policy[field]:\r\n            raise InsufficientData(\r\n                f\"raw report {field} differs from the signed policy\"\r\n            )\r\n    observations = report[\"observations\"]\r\n    if not isinstance(observations, list) or not observations:\r\n        raise InsufficientData(\"raw observations are missing\")\r\n    case_ids = []\r\n    for row in observations:\r\n        if not isinstance(row, dict) or set(row) != OBSERVATION_FIELDS:\r\n            raise InsufficientData(\"raw observation schema differs\")\r\n        if not isinstance(row[\"case_id\"], str) or not row[\"case_id\"]:\r\n            raise InsufficientData(\"case_id is missing\")\r\n        if row[\"threat_context\"] not in policy[\"required_threat_contexts\"]:\r\n            raise InsufficientData(\"undeclared threat context is present\")\r\n        if not isinstance(row[\"attack_success\"], bool):\r\n            raise InsufficientData(\"attack_success must be a raw boolean\")\r\n        if (\r\n            not isinstance(row[\"task_quality\"], dict)\r\n            or set(row[\"task_quality\"]) != set(metric[\"task_metrics\"])\r\n        ):\r\n            raise InsufficientData(\"task-quality observation schema differs\")\r\n        for name, value in row[\"task_quality\"].items():\r\n            number = finite(value, f\"{name}.observation\")\r\n            spec = metric[\"task_metrics\"][name]\r\n            if not finite(spec[\"value_min\"], name) &lt;= number &lt;= finite(\r\n                spec[\"value_max\"], name\r\n            ):\r\n                raise InsufficientData(\r\n                    f\"{name} observation is outside its metric range\"\r\n                )\r\n        case_ids.append(row[\"case_id\"])\r\n    if len(case_ids) != len(set(case_ids)):\r\n        raise InsufficientData(\"case IDs are duplicated\")\r\n    counts = Counter(row[\"threat_context\"] for row in observations)\r\n    expected_contexts = set(policy[\"required_threat_contexts\"])\r\n    if set(counts) != expected_contexts:\r\n        raise InsufficientData(\"required threat-context coverage differs\")\r\n    if any(\r\n        counts[name] &lt; policy[\"minimum_cases_per_context\"]\r\n        for name in expected_contexts\r\n    ):\r\n        raise InsufficientData(\"threat-context case coverage is insufficient\")\r\n    return (\r\n        report,\r\n        hashlib.sha256(raw).hexdigest(),\r\n        hashlib.sha256(verified_bundle_bytes).hexdigest(),\r\n    )\r\n\r\ndef summarize(report: dict, metric: dict) -&gt; tuple[float, dict[str, float]]:\r\n    rows = report[\"observations\"]\r\n    robustness = 1.0 - sum(row[\"attack_success\"] for row in rows) / len(rows)\r\n    task_quality = {\r\n        name: sum(float(row[\"task_quality\"][name]) for row in rows) / len(rows)\r\n        for name in metric[\"task_metrics\"]\r\n    }\r\n    return robustness, task_quality\r\n\r\n\r\ndef gate(\r\n    policy_path: Path,\r\n    policy_bundle: Path,\r\n    metric_path: Path,\r\n    metric_bundle: Path,\r\n    baseline_report_path: Path,\r\n    baseline_report_bundle: Path,\r\n    candidate_report_path: Path,\r\n    candidate_report_bundle: Path,\r\n    baseline_model_path: Path,\r\n    candidate_model_path: Path,\r\n) -&gt; dict:\r\n    baseline_model_bytes = baseline_model_path.read_bytes()\r\n    candidate_model_bytes = candidate_model_path.read_bytes()\r\n    if not baseline_model_bytes or not candidate_model_bytes:\r\n        raise InsufficientData(\"baseline or candidate model artifact is empty\")\r\n    baseline_model_sha256 = hashlib.sha256(baseline_model_bytes).hexdigest()\r\n    candidate_model_sha256 = hashlib.sha256(candidate_model_bytes).hexdigest()\r\n\r\n    (\r\n        policy,\r\n        policy_sha256,\r\n        policy_bundle_sha256,\r\n    ) = load_policy(policy_path, policy_bundle)\r\n    (\r\n        metric,\r\n        metric_sha256,\r\n        metric_bundle_sha256,\r\n    ) = load_metric_definition(metric_path, metric_bundle, policy)\r\n    (\r\n        baseline,\r\n        baseline_report_sha256,\r\n        baseline_report_bundle_sha256,\r\n    ) = load_report(\r\n        baseline_report_path,\r\n        baseline_report_bundle,\r\n        baseline_model_sha256,\r\n        policy[\"baseline_profile_sha256\"],\r\n        policy,\r\n        metric,\r\n    )\r\n    (\r\n        candidate,\r\n        candidate_report_sha256,\r\n        candidate_report_bundle_sha256,\r\n    ) = load_report(\r\n        candidate_report_path,\r\n        candidate_report_bundle,\r\n        candidate_model_sha256,\r\n        policy[\"candidate_profile_sha256\"],\r\n        policy,\r\n        metric,\r\n    )\r\n    bindings = (\r\n        \"evaluation_corpus_sha256\", \"attack_implementation_sha256\",\r\n        \"seed_policy_sha256\", \"metric_definition_sha256\",\r\n    )\r\n    if any(baseline[field] != candidate[field] for field in bindings):\r\n        raise InsufficientData(\"baseline and candidate evaluation bindings differ\")\r\n    baseline_population = [\r\n        (row[\"case_id\"], row[\"threat_context\"]) for row in baseline[\"observations\"]\r\n    ]\r\n    candidate_population = [\r\n        (row[\"case_id\"], row[\"threat_context\"]) for row in candidate[\"observations\"]\r\n    ]\r\n    if baseline_population != candidate_population:\r\n        raise InsufficientData(\"baseline and candidate case/context populations differ\")\r\n\r\n    baseline_robustness, baseline_quality = summarize(baseline, metric)\r\n    candidate_robustness, candidate_quality = summarize(candidate, metric)\r\n    improvement = candidate_robustness - baseline_robustness\r\n    failures = []\r\n    if improvement &lt; float(policy[\"minimum_robustness_improvement\"]):\r\n        failures.append(\"robustness_improvement\")\r\n    for name in metric[\"task_metrics\"]:\r\n        if candidate_quality[name] &lt; float(policy[\"task_quality_minimums\"][name]):\r\n            failures.append(f\"task_quality_minimum:{name}\")\r\n        if baseline_quality[name] - candidate_quality[name] &gt; float(\r\n            policy[\"maximum_task_quality_drop\"][name]\r\n        ):\r\n            failures.append(f\"task_quality_drop:{name}\")\r\n\r\n    return {\r\n        \"schema_version\": \"aidefend.attention-robustness-evaluation.v2\",\r\n        \"status\": \"fail\" if failures else \"pass\",\r\n        \"failures\": failures,\r\n        \"policy_version\": policy[\"policy_version\"],\r\n        \"policy_sha256\": policy_sha256,\r\n        \"policy_bundle_sha256\": policy_bundle_sha256,\r\n        \"metric_definition_sha256\": metric_sha256,\r\n        \"metric_definition_bundle_sha256\": metric_bundle_sha256,\r\n        \"baseline_model_sha256\": baseline_model_sha256,\r\n        \"candidate_model_sha256\": candidate_model_sha256,\r\n        \"baseline_report_sha256\": baseline_report_sha256,\r\n        \"baseline_report_bundle_sha256\": baseline_report_bundle_sha256,\r\n        \"candidate_report_sha256\": candidate_report_sha256,\r\n        \"candidate_report_bundle_sha256\": candidate_report_bundle_sha256,\r\n        \"bindings\": {field: candidate[field] for field in bindings},\r\n        \"baseline_robustness\": baseline_robustness,\r\n        \"candidate_robustness\": candidate_robustness,\r\n        \"robustness_improvement\": improvement,\r\n        \"baseline_task_quality\": baseline_quality,\r\n        \"candidate_task_quality\": candidate_quality,\r\n    }\r\n\r\n\r\ndef canonical(value: dict) -&gt; bytes:\r\n    return json.dumps(\r\n        value, sort_keys=True, separators=(\",\", \":\"), allow_nan=False\r\n    ).encode()\r\n\r\n\r\ndef gate_with_status(**kwargs) -&gt; dict:\r\n    try:\r\n        outcome = gate(**kwargs)\r\n        outcome[\"input_evidence_state\"] = \"verified\"\r\n        return outcome\r\n    except InsufficientData as exc:\r\n        return {\r\n            \"schema_version\": \"aidefend.attention-robustness-evaluation.v2\",\r\n            \"status\": \"insufficient_data\",\r\n            \"failures\": [],\r\n            \"reason\": str(exc),\r\n            \"input_evidence_state\": \"unverified\",\r\n            \"verified_input_digests\": None,\r\n        }\r\n    except Exception as exc:\r\n        return {\r\n            \"schema_version\": \"aidefend.attention-robustness-evaluation.v2\",\r\n            \"status\": \"error\",\r\n            \"failures\": [],\r\n            \"reason\": \"attention gate input or dependency verification failed\",\r\n            \"error_class\": type(exc).__name__,\r\n            \"input_evidence_state\": \"unverified\",\r\n            \"verified_input_digests\": None,\r\n        }\r\n\r\n\r\ndef write_exclusive(path: Path, payload: bytes) -&gt; None:\r\n    with path.open(\"xb\") as handle:\r\n        handle.write(payload)\r\n        handle.flush()\r\n        os.fsync(handle.fileno())\r\n\r\n\r\ndef gate_and_sign(\r\n    *, verdict_path: Path, verdict_signature_path: Path, **gate_inputs,\r\n) -&gt; dict:\r\n    if verdict_path.exists() or verdict_signature_path.exists():\r\n        raise FileExistsError(\"verdict publish path already exists\")\r\n    outcome = gate_with_status(**gate_inputs)\r\n    payload = canonical(outcome) + b\"\\n\"\r\n    expected_digest = hashlib.sha256(payload).hexdigest()\r\n\r\n    with tempfile.TemporaryDirectory(\r\n        prefix=\"aidefend-attention-verdict-\"\r\n    ) as directory:\r\n        root = Path(directory)\r\n        os.chmod(root, 0o700)\r\n        payload_snapshot = root / \"verdict.json\"\r\n        signature_snapshot = root / \"verdict.sig\"\r\n        write_exclusive(payload_snapshot, payload)\r\n        os.chmod(payload_snapshot, 0o400)\r\n        if sha256_file(payload_snapshot) != expected_digest:\r\n            raise RuntimeError(\"private canonical verdict snapshot differs\")\r\n        subprocess.run([\r\n            \"cosign\", \"sign-blob\", \"--yes\",\r\n            \"--key\", \"env://ATTENTION_GATE_SIGNING_KEY\",\r\n            \"--bundle\", str(signature_snapshot),\r\n            str(payload_snapshot),\r\n        ], check=True, capture_output=True, text=True, timeout=ATTENTION_VERDICT_SIGN_TIMEOUT_SECONDS)\r\n        signature_bytes = signature_snapshot.read_bytes()\r\n        if not signature_bytes or sha256_file(payload_snapshot) != expected_digest:\r\n            raise RuntimeError(\"private verdict changed during signing\")\r\n        subprocess.run([\r\n            \"cosign\", \"verify-blob\", \"--key\", str(VERDICT_VERIFY_KEY),\r\n            \"--bundle\", str(signature_snapshot), str(payload_snapshot),\r\n        ], check=True, capture_output=True, text=True, timeout=ATTENTION_VERDICT_VERIFY_TIMEOUT_SECONDS)\r\n        if (\r\n            sha256_file(payload_snapshot) != expected_digest\r\n            or not hmac.compare_digest(\r\n                signature_snapshot.read_bytes(), signature_bytes\r\n            )\r\n        ):\r\n            raise RuntimeError(\"private verdict or signature changed during verification\")\r\n        write_exclusive(verdict_signature_path, signature_bytes)\r\n        write_exclusive(verdict_path, payload)\r\n    if (\r\n        sha256_file(verdict_path) != expected_digest\r\n        or not hmac.compare_digest(\r\n            verdict_signature_path.read_bytes(), signature_bytes\r\n        )\r\n    ):\r\n        raise RuntimeError(\"published verdict pair differs from verified snapshots\")\r\n    return outcome\r\n</code></pre><p><strong>Evidence:</strong> The gate captures policy, metric definition, and raw reports into private read-only snapshots, verifies signatures over those snapshots, and parses only the verified snapshot bytes; hashes the actual baseline and candidate model bytes; rejects non-finite values; and derives robustness from signed per-case observations rather than trusting a report-supplied score. Both models must cover the exact same case/context population and all policy-required contexts. The signed policy?not either report?pins the exact evaluation-corpus, attack-implementation, and seed-policy digests; equality between two reports is never sufficient by itself.</p><p><strong>Action:</strong> Release automation must call <code>gate_and_sign</code>, not the pure gate, so <code>pass</code>, <code>fail</code>, <code>insufficient_data</code>, and <code>error</code> all become canonical verdicts signed under an identity separate from training. Missing signatures, artifacts, cases, contexts, metrics, or digest bindings produces a signed negative verdict and blocks promotion. The presence of entropy regularization, noisy attention, RoPE, or an architecture label is never evidence by itself.</p>"
+                    "howTo": "<h5>Transformer attention-regularization variant</h5><p>This is one architecture-specific method under <code>AID-H-001</code>, not a separate control objective. <code>AID-H-007.004</code> owns the integrity and independence of generic evaluation artifacts; this guidance owns the Transformer-specific robustness metric and pass criteria.</p><h5>Runnable training regularizer</h5><pre><code># File: training/attention_entropy_regularization.py\r\nfrom __future__ import annotations\r\n\r\nimport math\r\nimport torch\r\n\r\n\r\ndef regularized_loss(\r\n    main_loss: torch.Tensor,\r\n    attention_weights: torch.Tensor,\r\n    coefficient: float,\r\n) -> tuple[torch.Tensor, dict]:\r\n    if main_loss.ndim != 0 or not torch.isfinite(main_loss):\r\n        raise ValueError(\"main_loss must be one finite scalar\")\r\n    if (\r\n        not attention_weights.is_floating_point()\r\n        or attention_weights.ndim < 3\r\n        or not torch.isfinite(attention_weights).all()\r\n        or (attention_weights < 0).any()\r\n    ):\r\n        raise ValueError(\"attention weights must be finite, non-negative floating values\")\r\n    if isinstance(coefficient, bool) or not math.isfinite(float(coefficient)) or coefficient <= 0:\r\n        raise ValueError(\"coefficient must be a finite positive signed-profile value\")\r\n    probabilities = attention_weights.clamp_min(\r\n        torch.finfo(attention_weights.dtype).tiny\r\n    )\r\n    row_sums = attention_weights.sum(dim=-1)\r\n    if not torch.allclose(\r\n        row_sums, torch.ones_like(row_sums), atol=1e-5, rtol=1e-5\r\n    ):\r\n        raise ValueError(\"attention rows must be normalized\")\r\n    entropy = -(probabilities * probabilities.log()).sum(dim=-1).mean()\r\n    total = main_loss - float(coefficient) * entropy\r\n    if not torch.isfinite(total):\r\n        raise RuntimeError(\"regularized loss is not finite\")\r\n    return total, {\r\n        \"main_loss\": float(main_loss.detach().cpu()),\r\n        \"attention_entropy\": float(entropy.detach().cpu()),\r\n        \"coefficient\": float(coefficient),\r\n    }\r\n</code></pre><p>The training workflow verifies the detached signature and exact schema of the versioned regularization profile before constructing <code>coefficient</code>, records the profile digest with every run, and treats unsupported attention tensors as not applicable rather than silently coercing them.</p><h5>Independent release gate</h5><pre><code># File: evaluation/gate_attention_robustness.py\r\nfrom __future__ import annotations\r\n\r\nimport hashlib\r\nimport hmac\r\nimport json\r\nimport math\r\nimport os\r\nimport subprocess\r\nimport tempfile\r\nfrom collections import Counter\r\nfrom pathlib import Path\r\n\r\ndef _required_positive_seconds(name: str) -&gt; float:\r\n    value = float(os.environ[name])\r\n    if not math.isfinite(value) or value &lt;= 0:\r\n        raise RuntimeError(f\"{name} must be a finite positive number of seconds\")\r\n    return value\r\n\r\nATTENTION_ARTIFACT_VERIFY_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H001_ATTENTION_ARTIFACT_VERIFY_TIMEOUT_SECONDS\")\r\nATTENTION_VERDICT_SIGN_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H001_ATTENTION_VERDICT_SIGN_TIMEOUT_SECONDS\")\r\nATTENTION_VERDICT_VERIFY_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H001_ATTENTION_VERDICT_VERIFY_TIMEOUT_SECONDS\")\r\n\r\n\r\n\r\nPOLICY_IDENTITY = Path(\"/opt/aidefend/trust/attention-policy.identity\").read_text(encoding=\"utf-8\").strip()\r\nEVALUATOR_IDENTITY = Path(\"/opt/aidefend/trust/attention-evaluator.identity\").read_text(encoding=\"utf-8\").strip()\r\nOIDC_ISSUER = Path(\"/opt/aidefend/trust/github-actions.issuer\").read_text(encoding=\"utf-8\").strip()\r\nVERDICT_VERIFY_KEY = Path(\"/opt/aidefend/trust/attention-release-gate.pub\")\r\nPOLICY_FIELDS = {\r\n    \"schema_version\", \"policy_version\", \"required_threat_contexts\",\r\n    \"minimum_cases_per_context\", \"minimum_robustness_improvement\",\r\n    \"task_quality_minimums\", \"maximum_task_quality_drop\",\r\n    \"metric_definition_sha256\", \"baseline_profile_sha256\",\r\n    \"candidate_profile_sha256\", \"evaluation_corpus_sha256\",\r\n    \"attack_implementation_sha256\", \"seed_policy_sha256\",\r\n}\r\nMETRIC_FIELDS = {\r\n    \"schema_version\", \"definition_id\", \"robustness_formula\",\r\n    \"attack_success_field\", \"task_metrics\",\r\n}\r\nREPORT_FIELDS = {\r\n    \"schema_version\", \"model_sha256\", \"regularization_profile_sha256\",\r\n    \"evaluation_corpus_sha256\", \"attack_implementation_sha256\",\r\n    \"seed_policy_sha256\", \"metric_definition_sha256\", \"observations\",\r\n}\r\nOBSERVATION_FIELDS = {\r\n    \"case_id\", \"threat_context\", \"attack_success\", \"task_quality\",\r\n}\r\n\r\n\r\nclass InsufficientData(RuntimeError):\r\n    pass\r\n\r\n\r\ndef sha256_file(path: Path) -&gt; str:\r\n    digest = hashlib.sha256()\r\n    with path.open(\"rb\") as handle:\r\n        for chunk in iter(lambda: handle.read(1024 * 1024), b\"\"):\r\n            digest.update(chunk)\r\n    return digest.hexdigest()\r\n\r\n\r\ndef verified_blob_bytes(\r\n    path: Path, bundle: Path, identity: str,\r\n) -&gt; tuple[bytes, bytes]:\r\n    artifact_bytes = path.read_bytes()\r\n    bundle_bytes = bundle.read_bytes()\r\n    if not artifact_bytes or not bundle_bytes:\r\n        raise ValueError(\"signed artifact or bundle is empty\")\r\n    with tempfile.TemporaryDirectory(prefix=\"aidefend-attention-verify-\") as directory:\r\n        root = Path(directory)\r\n        os.chmod(root, 0o700)\r\n        artifact_snapshot = root / \"artifact\"\r\n        bundle_snapshot = root / \"bundle.json\"\r\n        artifact_snapshot.write_bytes(artifact_bytes)\r\n        bundle_snapshot.write_bytes(bundle_bytes)\r\n        os.chmod(artifact_snapshot, 0o400)\r\n        os.chmod(bundle_snapshot, 0o400)\r\n        subprocess.run([\r\n            \"cosign\", \"verify-blob\", \"--bundle\", str(bundle_snapshot),\r\n            \"--certificate-identity\", identity,\r\n            \"--certificate-oidc-issuer\", OIDC_ISSUER, str(artifact_snapshot),\r\n        ], check=True, capture_output=True, text=True, timeout=ATTENTION_ARTIFACT_VERIFY_TIMEOUT_SECONDS)\r\n        if (\r\n            not hmac.compare_digest(artifact_snapshot.read_bytes(), artifact_bytes)\r\n            or not hmac.compare_digest(bundle_snapshot.read_bytes(), bundle_bytes)\r\n        ):\r\n            raise ValueError(\"verification snapshot changed\")\r\n    return artifact_bytes, bundle_bytes\r\n\r\n\r\ndef strict_json(raw: bytes, label: str) -&gt; dict:\r\n    def reject_duplicates(pairs: list[tuple[str, object]]) -&gt; dict:\r\n        result = {}\r\n        for key, value in pairs:\r\n            if key in result:\r\n                raise ValueError(f\"duplicate JSON key: {key}\")\r\n            result[key] = value\r\n        return result\r\n\r\n    try:\r\n        value = json.loads(\r\n            raw.decode(\"utf-8\", errors=\"strict\"),\r\n            object_pairs_hook=reject_duplicates,\r\n            parse_constant=lambda value: (_ for _ in ()).throw(\r\n                ValueError(f\"non-finite JSON number: {value}\")\r\n            ),\r\n        )\r\n    except (UnicodeDecodeError, json.JSONDecodeError) as exc:\r\n        raise ValueError(f\"{label} is not strict UTF-8 JSON\") from exc\r\n    if not isinstance(value, dict):\r\n        raise ValueError(f\"{label} must be an object\")\r\n    return value\r\n\r\n\r\ndef finite(value: object, field: str) -&gt; float:\r\n    if isinstance(value, bool):\r\n        raise ValueError(f\"{field} must be numeric\")\r\n    number = float(value)\r\n    if not math.isfinite(number):\r\n        raise ValueError(f\"{field} must be finite\")\r\n    return number\r\n\r\n\r\ndef load_policy(path: Path, bundle: Path) -&gt; tuple[dict, str, str]:\r\n    raw, verified_bundle_bytes = verified_blob_bytes(\r\n        path, bundle, POLICY_IDENTITY\r\n    )\r\n    policy = strict_json(raw, \"attention policy\")\r\n    if set(policy) != POLICY_FIELDS:\r\n        raise ValueError(\"attention policy schema differs\")\r\n    if policy[\"schema_version\"] != \"aidefend.attention-robustness-policy.v2\":\r\n        raise ValueError(\"attention policy version is unsupported\")\r\n    if not isinstance(policy[\"policy_version\"], str) or not policy[\"policy_version\"]:\r\n        raise ValueError(\"policy_version is required\")\r\n    contexts = policy[\"required_threat_contexts\"]\r\n    if not isinstance(contexts, list) or not contexts or len(contexts) != len(set(contexts)):\r\n        raise ValueError(\"required_threat_contexts must be unique and non-empty\")\r\n    minimum_cases = policy[\"minimum_cases_per_context\"]\r\n    if isinstance(minimum_cases, bool) or not isinstance(minimum_cases, int) or minimum_cases &lt;= 0:\r\n        raise ValueError(\"minimum_cases_per_context must be a positive integer\")\r\n    improvement = finite(\r\n        policy[\"minimum_robustness_improvement\"],\r\n        \"minimum_robustness_improvement\",\r\n    )\r\n    if not 0.0 &lt;= improvement &lt;= 1.0:\r\n        raise ValueError(\"minimum_robustness_improvement must be in [0, 1]\")\r\n    for field in (\r\n        \"metric_definition_sha256\", \"baseline_profile_sha256\",\r\n        \"candidate_profile_sha256\", \"evaluation_corpus_sha256\",\r\n        \"attack_implementation_sha256\", \"seed_policy_sha256\",\r\n    ):\r\n        value = policy[field]\r\n        if not isinstance(value, str) or len(value) != 64:\r\n            raise ValueError(f\"{field} is not a SHA-256 value\")\r\n        int(value, 16)\r\n    return (\r\n        policy,\r\n        hashlib.sha256(raw).hexdigest(),\r\n        hashlib.sha256(verified_bundle_bytes).hexdigest(),\r\n    )\r\n\r\n\r\ndef load_metric_definition(\r\n    path: Path,\r\n    bundle: Path,\r\n    policy: dict,\r\n) -&gt; tuple[dict, str, str]:\r\n    raw, verified_bundle_bytes = verified_blob_bytes(\r\n        path, bundle, POLICY_IDENTITY\r\n    )\r\n    raw_sha256 = hashlib.sha256(raw).hexdigest()\r\n    if raw_sha256 != policy[\"metric_definition_sha256\"]:\r\n        raise ValueError(\"metric definition digest differs from signed policy\")\r\n    metric = strict_json(raw, \"attention metric definition\")\r\n    if set(metric) != METRIC_FIELDS:\r\n        raise ValueError(\"metric definition schema differs\")\r\n    if (\r\n        metric[\"schema_version\"] != \"aidefend.attention-metric-definition.v1\"\r\n        or metric[\"robustness_formula\"] != \"one_minus_attack_success_rate\"\r\n        or metric[\"attack_success_field\"] != \"attack_success\"\r\n    ):\r\n        raise ValueError(\"metric definition is unsupported\")\r\n    task_metrics = metric[\"task_metrics\"]\r\n    if not isinstance(task_metrics, dict) or not task_metrics:\r\n        raise ValueError(\"task metric definitions are required\")\r\n    for name, spec in task_metrics.items():\r\n        if (\r\n            not isinstance(name, str)\r\n            or not name\r\n            or not isinstance(spec, dict)\r\n            or set(spec) != {\"aggregation\", \"value_min\", \"value_max\"}\r\n        ):\r\n            raise ValueError(\"task metric definition differs\")\r\n        if spec[\"aggregation\"] != \"mean\":\r\n            raise ValueError(\"only declared mean aggregation is implemented\")\r\n        low = finite(spec[\"value_min\"], f\"{name}.value_min\")\r\n        high = finite(spec[\"value_max\"], f\"{name}.value_max\")\r\n        if not low &lt; high:\r\n            raise ValueError(f\"{name} range is invalid\")\r\n    if set(policy[\"task_quality_minimums\"]) != set(task_metrics):\r\n        raise ValueError(\"task-quality minimum keys differ from metric definition\")\r\n    if set(policy[\"maximum_task_quality_drop\"]) != set(task_metrics):\r\n        raise ValueError(\"task-quality drop keys differ from metric definition\")\r\n    for name, spec in task_metrics.items():\r\n        low = finite(spec[\"value_min\"], f\"{name}.value_min\")\r\n        high = finite(spec[\"value_max\"], f\"{name}.value_max\")\r\n        minimum = finite(policy[\"task_quality_minimums\"][name], f\"{name}.minimum\")\r\n        maximum_drop = finite(\r\n            policy[\"maximum_task_quality_drop\"][name], f\"{name}.maximum_drop\"\r\n        )\r\n        if not low &lt;= minimum &lt;= high or not 0.0 &lt;= maximum_drop &lt;= high - low:\r\n            raise ValueError(f\"{name} policy limit is outside its signed range\")\r\n    return (\r\n        metric,\r\n        raw_sha256,\r\n        hashlib.sha256(verified_bundle_bytes).hexdigest(),\r\n    )\r\n\r\ndef load_report(\r\n    path: Path,\r\n    bundle: Path,\r\n    expected_model_sha256: str,\r\n    expected_profile_sha256: str,\r\n    policy: dict,\r\n    metric: dict,\r\n) -&gt; tuple[dict, str, str]:\r\n    raw, verified_bundle_bytes = verified_blob_bytes(\r\n        path, bundle, EVALUATOR_IDENTITY\r\n    )\r\n    report = strict_json(raw, \"attention raw observations\")\r\n    if set(report) != REPORT_FIELDS:\r\n        raise InsufficientData(\"raw evaluation report schema differs\")\r\n    if report[\"schema_version\"] != \"aidefend.attention-raw-observations.v1\":\r\n        raise InsufficientData(\"raw evaluation report version is unsupported\")\r\n    if report[\"model_sha256\"] != expected_model_sha256:\r\n        raise InsufficientData(\"raw report is not bound to actual model bytes\")\r\n    if report[\"regularization_profile_sha256\"] != expected_profile_sha256:\r\n        raise InsufficientData(\"regularization profile binding differs\")\r\n    if report[\"metric_definition_sha256\"] != policy[\"metric_definition_sha256\"]:\r\n        raise InsufficientData(\"metric definition binding differs\")\r\n    for field in (\r\n        \"evaluation_corpus_sha256\",\r\n        \"attack_implementation_sha256\",\r\n        \"seed_policy_sha256\",\r\n    ):\r\n        if report[field] != policy[field]:\r\n            raise InsufficientData(\r\n                f\"raw report {field} differs from the signed policy\"\r\n            )\r\n    observations = report[\"observations\"]\r\n    if not isinstance(observations, list) or not observations:\r\n        raise InsufficientData(\"raw observations are missing\")\r\n    case_ids = []\r\n    for row in observations:\r\n        if not isinstance(row, dict) or set(row) != OBSERVATION_FIELDS:\r\n            raise InsufficientData(\"raw observation schema differs\")\r\n        if not isinstance(row[\"case_id\"], str) or not row[\"case_id\"]:\r\n            raise InsufficientData(\"case_id is missing\")\r\n        if row[\"threat_context\"] not in policy[\"required_threat_contexts\"]:\r\n            raise InsufficientData(\"undeclared threat context is present\")\r\n        if not isinstance(row[\"attack_success\"], bool):\r\n            raise InsufficientData(\"attack_success must be a raw boolean\")\r\n        if (\r\n            not isinstance(row[\"task_quality\"], dict)\r\n            or set(row[\"task_quality\"]) != set(metric[\"task_metrics\"])\r\n        ):\r\n            raise InsufficientData(\"task-quality observation schema differs\")\r\n        for name, value in row[\"task_quality\"].items():\r\n            number = finite(value, f\"{name}.observation\")\r\n            spec = metric[\"task_metrics\"][name]\r\n            if not finite(spec[\"value_min\"], name) &lt;= number &lt;= finite(\r\n                spec[\"value_max\"], name\r\n            ):\r\n                raise InsufficientData(\r\n                    f\"{name} observation is outside its metric range\"\r\n                )\r\n        case_ids.append(row[\"case_id\"])\r\n    if len(case_ids) != len(set(case_ids)):\r\n        raise InsufficientData(\"case IDs are duplicated\")\r\n    counts = Counter(row[\"threat_context\"] for row in observations)\r\n    expected_contexts = set(policy[\"required_threat_contexts\"])\r\n    if set(counts) != expected_contexts:\r\n        raise InsufficientData(\"required threat-context coverage differs\")\r\n    if any(\r\n        counts[name] &lt; policy[\"minimum_cases_per_context\"]\r\n        for name in expected_contexts\r\n    ):\r\n        raise InsufficientData(\"threat-context case coverage is insufficient\")\r\n    return (\r\n        report,\r\n        hashlib.sha256(raw).hexdigest(),\r\n        hashlib.sha256(verified_bundle_bytes).hexdigest(),\r\n    )\r\n\r\ndef summarize(report: dict, metric: dict) -&gt; tuple[float, dict[str, float]]:\r\n    rows = report[\"observations\"]\r\n    robustness = 1.0 - sum(row[\"attack_success\"] for row in rows) / len(rows)\r\n    task_quality = {\r\n        name: sum(float(row[\"task_quality\"][name]) for row in rows) / len(rows)\r\n        for name in metric[\"task_metrics\"]\r\n    }\r\n    return robustness, task_quality\r\n\r\n\r\ndef gate(\r\n    policy_path: Path,\r\n    policy_bundle: Path,\r\n    metric_path: Path,\r\n    metric_bundle: Path,\r\n    baseline_report_path: Path,\r\n    baseline_report_bundle: Path,\r\n    candidate_report_path: Path,\r\n    candidate_report_bundle: Path,\r\n    baseline_model_path: Path,\r\n    candidate_model_path: Path,\r\n) -&gt; dict:\r\n    baseline_model_bytes = baseline_model_path.read_bytes()\r\n    candidate_model_bytes = candidate_model_path.read_bytes()\r\n    if not baseline_model_bytes or not candidate_model_bytes:\r\n        raise InsufficientData(\"baseline or candidate model artifact is empty\")\r\n    baseline_model_sha256 = hashlib.sha256(baseline_model_bytes).hexdigest()\r\n    candidate_model_sha256 = hashlib.sha256(candidate_model_bytes).hexdigest()\r\n\r\n    (\r\n        policy,\r\n        policy_sha256,\r\n        policy_bundle_sha256,\r\n    ) = load_policy(policy_path, policy_bundle)\r\n    (\r\n        metric,\r\n        metric_sha256,\r\n        metric_bundle_sha256,\r\n    ) = load_metric_definition(metric_path, metric_bundle, policy)\r\n    (\r\n        baseline,\r\n        baseline_report_sha256,\r\n        baseline_report_bundle_sha256,\r\n    ) = load_report(\r\n        baseline_report_path,\r\n        baseline_report_bundle,\r\n        baseline_model_sha256,\r\n        policy[\"baseline_profile_sha256\"],\r\n        policy,\r\n        metric,\r\n    )\r\n    (\r\n        candidate,\r\n        candidate_report_sha256,\r\n        candidate_report_bundle_sha256,\r\n    ) = load_report(\r\n        candidate_report_path,\r\n        candidate_report_bundle,\r\n        candidate_model_sha256,\r\n        policy[\"candidate_profile_sha256\"],\r\n        policy,\r\n        metric,\r\n    )\r\n    bindings = (\r\n        \"evaluation_corpus_sha256\", \"attack_implementation_sha256\",\r\n        \"seed_policy_sha256\", \"metric_definition_sha256\",\r\n    )\r\n    if any(baseline[field] != candidate[field] for field in bindings):\r\n        raise InsufficientData(\"baseline and candidate evaluation bindings differ\")\r\n    baseline_population = [\r\n        (row[\"case_id\"], row[\"threat_context\"]) for row in baseline[\"observations\"]\r\n    ]\r\n    candidate_population = [\r\n        (row[\"case_id\"], row[\"threat_context\"]) for row in candidate[\"observations\"]\r\n    ]\r\n    if baseline_population != candidate_population:\r\n        raise InsufficientData(\"baseline and candidate case/context populations differ\")\r\n\r\n    baseline_robustness, baseline_quality = summarize(baseline, metric)\r\n    candidate_robustness, candidate_quality = summarize(candidate, metric)\r\n    improvement = candidate_robustness - baseline_robustness\r\n    failures = []\r\n    if improvement &lt; float(policy[\"minimum_robustness_improvement\"]):\r\n        failures.append(\"robustness_improvement\")\r\n    for name in metric[\"task_metrics\"]:\r\n        if candidate_quality[name] &lt; float(policy[\"task_quality_minimums\"][name]):\r\n            failures.append(f\"task_quality_minimum:{name}\")\r\n        if baseline_quality[name] - candidate_quality[name] &gt; float(\r\n            policy[\"maximum_task_quality_drop\"][name]\r\n        ):\r\n            failures.append(f\"task_quality_drop:{name}\")\r\n\r\n    return {\r\n        \"schema_version\": \"aidefend.attention-robustness-evaluation.v2\",\r\n        \"status\": \"fail\" if failures else \"pass\",\r\n        \"failures\": failures,\r\n        \"policy_version\": policy[\"policy_version\"],\r\n        \"policy_sha256\": policy_sha256,\r\n        \"policy_bundle_sha256\": policy_bundle_sha256,\r\n        \"metric_definition_sha256\": metric_sha256,\r\n        \"metric_definition_bundle_sha256\": metric_bundle_sha256,\r\n        \"baseline_model_sha256\": baseline_model_sha256,\r\n        \"candidate_model_sha256\": candidate_model_sha256,\r\n        \"baseline_report_sha256\": baseline_report_sha256,\r\n        \"baseline_report_bundle_sha256\": baseline_report_bundle_sha256,\r\n        \"candidate_report_sha256\": candidate_report_sha256,\r\n        \"candidate_report_bundle_sha256\": candidate_report_bundle_sha256,\r\n        \"bindings\": {field: candidate[field] for field in bindings},\r\n        \"baseline_robustness\": baseline_robustness,\r\n        \"candidate_robustness\": candidate_robustness,\r\n        \"robustness_improvement\": improvement,\r\n        \"baseline_task_quality\": baseline_quality,\r\n        \"candidate_task_quality\": candidate_quality,\r\n    }\r\n\r\n\r\ndef canonical(value: dict) -&gt; bytes:\r\n    return json.dumps(\r\n        value, sort_keys=True, separators=(\",\", \":\"), allow_nan=False\r\n    ).encode()\r\n\r\n\r\ndef gate_with_status(**kwargs) -&gt; dict:\r\n    try:\r\n        outcome = gate(**kwargs)\r\n        outcome[\"input_evidence_state\"] = \"verified\"\r\n        return outcome\r\n    except InsufficientData as exc:\r\n        return {\r\n            \"schema_version\": \"aidefend.attention-robustness-evaluation.v2\",\r\n            \"status\": \"insufficient_data\",\r\n            \"failures\": [],\r\n            \"reason\": str(exc),\r\n            \"input_evidence_state\": \"unverified\",\r\n            \"verified_input_digests\": None,\r\n        }\r\n    except Exception as exc:\r\n        return {\r\n            \"schema_version\": \"aidefend.attention-robustness-evaluation.v2\",\r\n            \"status\": \"error\",\r\n            \"failures\": [],\r\n            \"reason\": \"attention gate input or dependency verification failed\",\r\n            \"error_class\": type(exc).__name__,\r\n            \"input_evidence_state\": \"unverified\",\r\n            \"verified_input_digests\": None,\r\n        }\r\n\r\n\r\ndef write_exclusive(path: Path, payload: bytes) -&gt; None:\r\n    with path.open(\"xb\") as handle:\r\n        handle.write(payload)\r\n        handle.flush()\r\n        os.fsync(handle.fileno())\r\n\r\n\r\ndef gate_and_sign(\r\n    *, verdict_path: Path, verdict_signature_path: Path, **gate_inputs,\r\n) -&gt; dict:\r\n    if verdict_path.exists() or verdict_signature_path.exists():\r\n        raise FileExistsError(\"verdict publish path already exists\")\r\n    outcome = gate_with_status(**gate_inputs)\r\n    payload = canonical(outcome) + b\"\\n\"\r\n    expected_digest = hashlib.sha256(payload).hexdigest()\r\n\r\n    with tempfile.TemporaryDirectory(\r\n        prefix=\"aidefend-attention-verdict-\"\r\n    ) as directory:\r\n        root = Path(directory)\r\n        os.chmod(root, 0o700)\r\n        payload_snapshot = root / \"verdict.json\"\r\n        signature_snapshot = root / \"verdict.sig\"\r\n        write_exclusive(payload_snapshot, payload)\r\n        os.chmod(payload_snapshot, 0o400)\r\n        if sha256_file(payload_snapshot) != expected_digest:\r\n            raise RuntimeError(\"private canonical verdict snapshot differs\")\r\n        subprocess.run([\r\n            \"cosign\", \"sign-blob\", \"--yes\",\r\n            \"--key\", \"env://ATTENTION_GATE_SIGNING_KEY\",\r\n            \"--bundle\", str(signature_snapshot),\r\n            str(payload_snapshot),\r\n        ], check=True, capture_output=True, text=True, timeout=ATTENTION_VERDICT_SIGN_TIMEOUT_SECONDS)\r\n        signature_bytes = signature_snapshot.read_bytes()\r\n        if not signature_bytes or sha256_file(payload_snapshot) != expected_digest:\r\n            raise RuntimeError(\"private verdict changed during signing\")\r\n        subprocess.run([\r\n            \"cosign\", \"verify-blob\", \"--key\", str(VERDICT_VERIFY_KEY),\r\n            \"--bundle\", str(signature_snapshot), str(payload_snapshot),\r\n        ], check=True, capture_output=True, text=True, timeout=ATTENTION_VERDICT_VERIFY_TIMEOUT_SECONDS)\r\n        if (\r\n            sha256_file(payload_snapshot) != expected_digest\r\n            or not hmac.compare_digest(\r\n                signature_snapshot.read_bytes(), signature_bytes\r\n            )\r\n        ):\r\n            raise RuntimeError(\"private verdict or signature changed during verification\")\r\n        write_exclusive(verdict_signature_path, signature_bytes)\r\n        write_exclusive(verdict_path, payload)\r\n    if (\r\n        sha256_file(verdict_path) != expected_digest\r\n        or not hmac.compare_digest(\r\n            verdict_signature_path.read_bytes(), signature_bytes\r\n        )\r\n    ):\r\n        raise RuntimeError(\"published verdict pair differs from verified snapshots\")\r\n    return outcome\r\n</code></pre><p><strong>Evidence:</strong> The gate captures policy, metric definition, and raw reports into private read-only snapshots, verifies signatures over those snapshots, and parses only the verified snapshot bytes; hashes the actual baseline and candidate model bytes; rejects non-finite values; and derives robustness from signed per-case observations rather than trusting a report-supplied score. Both models must cover the exact same case/context population and all policy-required contexts. The signed policy, rather than either report, pins the exact evaluation-corpus, attack-implementation, and seed-policy digests; equality between two reports is never sufficient by itself.</p><p><strong>Action:</strong> Release automation must call <code>gate_and_sign</code>, not the pure gate, so <code>pass</code>, <code>fail</code>, <code>insufficient_data</code>, and <code>error</code> all become canonical verdicts signed under an identity separate from training. Missing signatures, artifacts, cases, contexts, metrics, or digest bindings produces a signed negative verdict and blocks promotion. The presence of entropy regularization, noisy attention, RoPE, or an architecture label is never evidence by itself.</p>"
                 }
             ]
         },
@@ -194,7 +194,11 @@ export const hardenTactic = {
                         "AML.T0115 Publish Poisoned AI Artifacts",
                         "AML.T0115.000 Publish Poisoned AI Artifacts: Datasets",
                         "AML.T0119 Exploit Automated Artifact Processing Pipeline",
-                        "AML.T0123 Obfuscated Files or Information"
+                        "AML.T0123 Obfuscated Files or Information",
+                        "AML.T0129 Triggers in Multimodal Inputs",
+                        "AML.T0130 AI Agent Response Biasing",
+                        "AML.T0131 Crafted AI Assistant Links",
+                        "AML.T0134 AI Targeted Cloaking"
                     ]
                 },
                 {
@@ -484,4566 +488,7 @@ export const hardenTactic = {
                         {
                             "id": "AID-H-002.001-G003",
                             "implementation": "Fit reference-bound generic and multimodal anomaly detectors, then quarantine anomalous records or paired/grouped fusion evidence before training.",
-                            "howTo": `<h5>Before you begin</h5><p>Apply <code>AID-H-002.001-G003</code> when a training, fine-tuning, or evaluation snapshot contains paired or grouped modalities that a fusion model, joint-embedding model, or modality adapter will combine. An evaluation snapshot is in scope because a convergence payload hidden in a benchmark or holdout pair can suppress the very failure the evaluation is meant to surface. Keep the generic per-record anomaly path for ordinary tabular or modality-specific outliers, but require group-level evidence whenever individually benign components could converge into a payload. Fit only on an approved reference snapshot; the candidate must never choose its own features, score direction, or thresholds.</p><h5>Publish and verify a signed multimodal admission manifest</h5><p>The signed manifest binds applicability, the complete artifact population, each record's modality and digest, pair/group membership, exact fusion-model and adapter bytes, immutable reference and candidate feature files, detector features and thresholds, admission and extractor runtime digests, and deployment-specific file, byte, row, group, feature, estimator, and runtime limits. It also pins a separately signed feature-build receipt. That receipt must be <code>PASS</code> and bind the raw-artifact population root, complete record/group populations, exact model and adapter digests, extractor image/code/dependency digests, and every input/output feature-file digest; a feature file without this independently verified provenance is not admissible evidence. Store the raw artifact root separately from model and evidence directories so it can be enumerated without accidentally admitting undeclared files. The numeric values below are illustrative signed-policy values, not universal AIDEFEND defaults.</p><pre><code class="language-json">{
-  "schema_version": "aidefend.multimodal-admission.v1",
-  "policy_version": "multimodal-admission-2026.07",
-  "snapshot_id": "train-candidate-0042",
-  "suite_kind": "candidate",
-  "applicability": {
-    "state": "APPLICABLE",
-    "reason": null
-  },
-  "runtime": {
-    "admission_image_ref": "registry.example.com/aidefend/multimodal-admission@sha256:89abcdef0123456789abcdef0123456789abcdef0123456789abcdef01234567",
-    "admission_image_digest": "sha256:89abcdef0123456789abcdef0123456789abcdef0123456789abcdef01234567",
-    "admission_image_config_digest": "sha256:789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456",
-    "admission_entrypoint": ["/opt/aidefend/bin/admit-multimodal"],
-    "admission_command": [],
-    "admission_user": "65532:65532",
-    "admission_working_dir": "/work",
-    "admission_environment_sha256": "689abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456",
-    "admission_code_sha256": "89abcdef0123456789abcdef0123456789abcdef0123456789abcdef01234567",
-    "admission_dependency_lock_sha256": "9abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678",
-    "extractor_image_digest": "sha256:abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789",
-    "extractor_code_sha256": "bcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789a",
-    "extractor_dependency_lock_sha256": "cdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789ab",
-    "watchdog_image_ref": "registry.example.com/aidefend/multimodal-watchdog@sha256:def0123456789abcdef0123456789abcdef0123456789abcdef0123456789abc",
-    "watchdog_image_digest": "sha256:def0123456789abcdef0123456789abcdef0123456789abcdef0123456789abc",
-    "watchdog_image_config_digest": "sha256:ef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcd",
-    "watchdog_entrypoint": ["/opt/aidefend/bin/watch-multimodal-admission"],
-    "watchdog_command": [],
-    "watchdog_user": "65532:65532",
-    "watchdog_working_dir": "/work",
-    "watchdog_environment_sha256": "f0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcde",
-    "watchdog_code_sha256": "ef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcd",
-    "watchdog_dependency_lock_sha256": "f0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcde",
-    "sandbox_contract_sha256": "0abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678",
-    "watchdog_auxiliary_timeout_seconds": 30.0,
-    "manifest_verify_key_sha256": "1abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678",
-    "feature_receipt_verify_key_sha256": "2abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678",
-    "sandbox_receipt_verify_key_sha256": "3abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678",
-    "admission_receipt_verify_key_sha256": "4abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345678"
-  },
-  "limits": {
-    "max_artifact_files": 500000,
-    "max_artifact_bytes_each": 536870912,
-    "max_total_artifact_bytes": 1099511627776,
-    "max_feature_file_bytes": 1073741824,
-    "max_model_bytes": 2147483648,
-    "max_adapter_bytes": 536870912,
-    "max_total_capture_bytes": 8589934592,
-    "max_receipt_bytes": 1048576,
-    "max_evidence_bytes": 268435456,
-    "max_output_manifest_bytes": 268435456,
-    "max_records": 500000,
-    "max_groups": 250000,
-    "max_members_per_group": 16,
-    "max_features_per_family": 4096,
-    "max_reference_rows": 1000000,
-    "max_candidate_rows": 500000,
-    "max_estimators": 1000,
-    "max_runtime_seconds": 3600,
-    "max_parquet_row_groups_each": 2048,
-    "max_parquet_batches_each": 4096,
-    "max_parquet_batch_rows": 8192,
-    "max_parquet_uncompressed_bytes_each": 4294967296,
-    "max_total_parquet_uncompressed_bytes": 8589934592,
-    "max_cgroup_memory_bytes": 17179869184,
-    "cgroup_cpu_quota_us": 200000,
-    "cgroup_cpu_period_us": 100000,
-    "max_pids": 256,
-    "max_open_files": 1024,
-    "max_temp_disk_bytes": 10737418240,
-    "max_artifact_directories": 100000,
-    "max_artifact_depth": 32,
-    "max_artifact_descriptors": 600000,
-    "max_artifact_entries_per_directory": 100000
-  },
-  "artifact_root": "candidate/train-candidate-0042",
-  "modality_extensions": {
-    "image": [".png", ".jpg"],
-    "text": [".txt"]
-  },
-  "model": {
-    "path": "models/fusion-model.safetensors",
-    "sha256": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
-  },
-  "adapter": {
-    "path": "models/multimodal-adapter.safetensors",
-    "sha256": "123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0"
-  },
-  "feature_build_receipt": {
-    "path": "features/train-candidate-0042.build-receipt.json",
-    "sha256": "def0123456789abcdef0123456789abcdef0123456789abcdef0123456789abc"
-  },
-  "feature_build_receipt_bundle": {
-    "path": "features/train-candidate-0042.build-receipt.sigstore.json",
-    "sha256": "ef0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcd"
-  },
-  "feature_job_manifest": {
-    "path": "features/train-candidate-0042.feature-job.json",
-    "sha256": "f0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcde"
-  },
-  "reference_member_features": {
-    "path": "features/reference-members.parquet",
-    "sha256": "23456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef01"
-  },
-  "candidate_member_features": {
-    "path": "features/candidate-members.parquet",
-    "sha256": "3456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012"
-  },
-  "reference_group_features": {
-    "path": "features/reference-groups.parquet",
-    "sha256": "456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123"
-  },
-  "candidate_group_features": {
-    "path": "features/candidate-groups.parquet",
-    "sha256": "56789abcdef0123456789abcdef0123456789abcdef0123456789abcdef01234"
-  },
-  "generic_features": ["byte_length", "entropy", "decoder_warning_count"],
-  "joint_embedding_features": ["joint_000", "joint_001", "joint_002"],
-  "fusion_features": ["cross_modal_alignment", "attention_concentration"],
-  "generic_score_minimum": -0.08,
-  "joint_score_minimum": -0.06,
-  "fusion_robust_z_maximum": 6.0,
-  "isolation_forest_estimators": 300,
-  "seed": 1701,
-  "groups": [{
-    "group_id": "pair-0001",
-    "members": [
-      {
-        "record_id": "image-0001",
-        "modality": "image",
-        "path": "candidate/train-candidate-0042/image-0001.png",
-        "sha256": "6789abcdef0123456789abcdef0123456789abcdef0123456789abcdef012345"
-      },
-      {
-        "record_id": "text-0001",
-        "modality": "text",
-        "path": "candidate/train-candidate-0042/text-0001.txt",
-        "sha256": "789abcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456"
-      }
-    ]
-  }]
-}</code></pre><h5>Run complete-population generic and convergence-payload admission</h5><p>A separately verified bootstrap profile supplies the signature deadlines, input-size ceilings, verification keys, and observed admission image/code/dependency digests; callers cannot assert these values. This example captures every bounded regular input once through a no-follow descriptor, verifies signatures and digests against those exact captured bytes, and reads Parquet features only from immutable in-memory captures, eliminating verify-then-reopen races. It requires the separately signed feature-build <code>PASS</code> receipt, enumerates every raw file, reconciles complete record/group populations, enforces the signed hard deadline and resource ceilings, and then scores the captured feature bytes. A group is quarantined if any member is generically anomalous or if its joint embedding or fusion-layer statistics are anomalous. Install <code>pandas</code>, <code>pyarrow</code>, <code>numpy</code>, and <code>scikit-learn</code> in the manifest-bound admission image.</p><pre><code class="language-python"># File: data_pipeline/admit_multimodal_snapshot.py
-from __future__ import annotations
-
-import hashlib
-import io
-import json
-import math
-import os
-import re
-import resource
-import shutil
-import signal
-import stat
-import subprocess
-import sys
-import tempfile
-import time
-from datetime import datetime, timezone
-from pathlib import Path, PurePosixPath
-
-import numpy as np
-import pandas as pd
-import pyarrow as pa
-import pyarrow.parquet as pq
-from sklearn.ensemble import IsolationForest
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import RobustScaler
-
-
-def bootstrap_positive_seconds(name: str) -&gt; float:
-    raw = os.environ.get(name)
-    if (
-        raw is None
-        or re.fullmatch(r"(?:0|[1-9][0-9]*)(?:[.][0-9]+)?", raw) is None
-    ):
-        raise RuntimeError(name + " must be a strict positive decimal")
-    value = float(raw)
-    if not math.isfinite(value) or value &lt;= 0:
-        raise RuntimeError(name + " must be finite and positive")
-    return value
-
-
-DATA_ROOT = Path(os.environ["AIDEFEND_H002_DATA_ROOT"])
-MANIFEST_PATH = Path(os.environ["AIDEFEND_H002_MANIFEST_PATH"])
-MANIFEST_BUNDLE = Path(os.environ["AIDEFEND_H002_MANIFEST_BUNDLE"])
-MANIFEST_KEY = Path(os.environ["AIDEFEND_H002_MANIFEST_VERIFY_KEY"])
-FEATURE_RECEIPT_KEY = Path(
-    os.environ["AIDEFEND_H002_FEATURE_RECEIPT_VERIFY_KEY"]
-)
-SANDBOX_RECEIPT_PATH = Path(
-    os.environ["VERIFIED_H002_SANDBOX_RECEIPT_PATH"]
-)
-SANDBOX_RECEIPT_BUNDLE = Path(
-    os.environ["VERIFIED_H002_SANDBOX_RECEIPT_BUNDLE"]
-)
-SANDBOX_RECEIPT_KEY = Path(
-    os.environ["VERIFIED_H002_SANDBOX_RECEIPT_VERIFY_KEY"]
-)
-ADMISSION_RECEIPT_SIGNING_KEY = Path(
-    os.environ["VERIFIED_H002_ADMISSION_RECEIPT_SIGNING_KEY"]
-)
-TEMP_ROOT = Path(os.environ["VERIFIED_H002_TEMP_ROOT"])
-OUTPUT_ROOT = Path(os.environ["AIDEFEND_H002_OUTPUT_ROOT"]).resolve(strict=True)
-STARTED_AT = time.monotonic()
-VERIFY_TIMEOUT_SECONDS = float(
-    os.environ["VERIFIED_H002_MANIFEST_VERIFY_TIMEOUT_SECONDS"]
-)
-BOOTSTRAP_MAX_MANIFEST_BYTES = int(
-    os.environ["VERIFIED_H002_MAX_MANIFEST_BYTES"]
-)
-BOOTSTRAP_MAX_BUNDLE_BYTES = int(
-    os.environ["VERIFIED_H002_MAX_SIGNATURE_BUNDLE_BYTES"]
-)
-BOOTSTRAP_MAX_KEY_BYTES = int(
-    os.environ["VERIFIED_H002_MAX_VERIFICATION_KEY_BYTES"]
-)
-EXPECTED_MANIFEST_KEY_SHA256 = os.environ[
-    "VERIFIED_H002_MANIFEST_VERIFY_KEY_SHA256"
-]
-EXPECTED_FEATURE_RECEIPT_KEY_SHA256 = os.environ[
-    "VERIFIED_H002_FEATURE_RECEIPT_VERIFY_KEY_SHA256"
-]
-EXPECTED_SANDBOX_RECEIPT_KEY_SHA256 = os.environ[
-    "VERIFIED_H002_SANDBOX_RECEIPT_VERIFY_KEY_SHA256"
-]
-EXPECTED_ADMISSION_RECEIPT_KEY_SHA256 = os.environ[
-    "VERIFIED_H002_ADMISSION_RECEIPT_VERIFY_KEY_SHA256"
-]
-OBSERVED_ADMISSION_IMAGE_DIGEST = os.environ[
-    "VERIFIED_H002_ADMISSION_IMAGE_DIGEST"
-]
-OBSERVED_ADMISSION_CODE_SHA256 = os.environ[
-    "VERIFIED_H002_ADMISSION_CODE_SHA256"
-]
-OBSERVED_ADMISSION_LOCK_SHA256 = os.environ[
-    "VERIFIED_H002_ADMISSION_DEPENDENCY_LOCK_SHA256"
-]
-OBSERVED_WATCHDOG_IMAGE_DIGEST = os.environ[
-    "VERIFIED_H002_WATCHDOG_IMAGE_DIGEST"
-]
-OBSERVED_WATCHDOG_CODE_SHA256 = os.environ[
-    "VERIFIED_H002_WATCHDOG_CODE_SHA256"
-]
-OBSERVED_WATCHDOG_LOCK_SHA256 = os.environ[
-    "VERIFIED_H002_WATCHDOG_DEPENDENCY_LOCK_SHA256"
-]
-OBSERVED_WATCHDOG_AUXILIARY_TIMEOUT_SECONDS = bootstrap_positive_seconds(
-    "VERIFIED_H002_WATCHDOG_AUXILIARY_TIMEOUT_SECONDS"
-)
-BOOTSTRAP_VALID = not (
-    not math.isfinite(VERIFY_TIMEOUT_SECONDS)
-    or VERIFY_TIMEOUT_SECONDS &lt;= 0
-    or min(
-        BOOTSTRAP_MAX_MANIFEST_BYTES,
-        BOOTSTRAP_MAX_BUNDLE_BYTES,
-        BOOTSTRAP_MAX_KEY_BYTES,
-    )
-    &lt;= 0
-)
-
-MANIFEST_FIELDS = {
-    "schema_version", "policy_version", "snapshot_id", "suite_kind",
-    "applicability", "runtime", "limits", "artifact_root",
-    "modality_extensions", "model", "adapter",
-    "feature_build_receipt", "feature_build_receipt_bundle",
-    "feature_job_manifest",
-    "reference_member_features", "candidate_member_features",
-    "reference_group_features", "candidate_group_features",
-    "generic_features", "joint_embedding_features", "fusion_features",
-    "generic_score_minimum", "joint_score_minimum",
-    "fusion_robust_z_maximum", "isolation_forest_estimators", "seed",
-    "groups",
-}
-PIN_FIELDS = {"path", "sha256"}
-MEMBER_FIELDS = {"record_id", "group_id", "modality"}
-APPLICABILITY_FIELDS = {"state", "reason"}
-RUNTIME_FIELDS = {
-    "admission_image_ref", "admission_image_digest",
-    "admission_image_config_digest", "admission_entrypoint",
-    "admission_command", "admission_user", "admission_working_dir",
-    "admission_environment_sha256", "admission_code_sha256",
-    "admission_dependency_lock_sha256", "extractor_image_digest",
-    "extractor_code_sha256", "extractor_dependency_lock_sha256",
-    "watchdog_image_ref", "watchdog_image_digest",
-    "watchdog_image_config_digest", "watchdog_entrypoint",
-    "watchdog_command", "watchdog_user", "watchdog_working_dir",
-    "watchdog_environment_sha256", "watchdog_code_sha256",
-    "watchdog_dependency_lock_sha256", "sandbox_contract_sha256",
-    "watchdog_auxiliary_timeout_seconds",
-    "manifest_verify_key_sha256", "feature_receipt_verify_key_sha256",
-    "sandbox_receipt_verify_key_sha256",
-    "admission_receipt_verify_key_sha256",
-}
-LIMIT_FIELDS = {
-    "max_artifact_files", "max_artifact_bytes_each",
-    "max_total_artifact_bytes", "max_feature_file_bytes",
-    "max_model_bytes", "max_adapter_bytes", "max_total_capture_bytes",
-    "max_receipt_bytes",
-    "max_evidence_bytes", "max_output_manifest_bytes",
-    "max_records", "max_groups", "max_members_per_group",
-    "max_features_per_family", "max_reference_rows",
-    "max_candidate_rows", "max_estimators", "max_runtime_seconds",
-    "max_parquet_row_groups_each", "max_parquet_batches_each",
-    "max_parquet_batch_rows", "max_parquet_uncompressed_bytes_each",
-    "max_total_parquet_uncompressed_bytes",
-    "max_cgroup_memory_bytes", "cgroup_cpu_quota_us",
-    "cgroup_cpu_period_us", "max_pids", "max_open_files",
-    "max_temp_disk_bytes", "max_artifact_directories",
-    "max_artifact_depth", "max_artifact_descriptors",
-    "max_artifact_entries_per_directory",
-}
-FEATURE_RECEIPT_FIELDS = {
-    "schema_version", "outcome", "policy_version", "snapshot_id",
-    "feature_job_manifest_sha256",
-    "raw_artifact_population_sha256", "record_population_sha256",
-    "group_population_sha256", "record_count", "group_count",
-    "reference_raw_artifact_population_sha256",
-    "reference_record_population_sha256",
-    "reference_group_population_sha256",
-    "reference_record_count", "reference_group_count",
-    "model_sha256", "adapter_sha256", "extractor_image_digest",
-    "extractor_code_sha256", "extractor_dependency_lock_sha256",
-    "reference_member_features_sha256",
-    "candidate_member_features_sha256",
-    "reference_group_features_sha256",
-    "candidate_group_features_sha256",
-    "output_row_counts", "output_population_sha256",
-}
-SHA256 = re.compile(r"[0-9a-f]{64}")
-IMAGE_DIGEST = re.compile(r"sha256:[0-9a-f]{64}")
-IMAGE_REF = re.compile(r"[a-z0-9][a-z0-9._:/-]*@sha256:[0-9a-f]{64}")
-SAFE_ID = re.compile(r"[A-Za-z0-9._-]{1,128}")
-CONTAINER_ID = re.compile(r"[0-9a-f]{64}")
-SANDBOX_RECEIPT_FIELDS = {
-    "schema_version", "outcome", "manifest_sha256", "snapshot_id",
-    "attempt_id", "container_id", "issued_at", "expires_at",
-    "admission_image_ref", "admission_image_digest",
-    "admission_image_config_digest", "watchdog_image_digest",
-    "watchdog_code_sha256", "watchdog_dependency_lock_sha256",
-    "sandbox_contract_sha256", "engine_readback_sha256",
-    "watchdog_auxiliary_timeout_seconds",
-    "manifest_verify_key_sha256", "feature_receipt_verify_key_sha256",
-    "sandbox_receipt_verify_key_sha256",
-    "admission_receipt_verify_key_sha256",
-}
-TERMINAL_RECEIPT_FIELDS = {
-    "schema_version", "status", "reason", "error_class", "attempt_id",
-    "container_id", "launch_receipt_sha256", "manifest_sha256",
-    "snapshot_id", "policy_version", "issued_at", "completed_at",
-    "detailed_receipt_sha256",
-}
-
-
-def unique_object(pairs: list[tuple[str, object]]) -&gt; dict:
-    value: dict = {}
-    for key, item in pairs:
-        if key in value:
-            raise ValueError("duplicate JSON key: " + key)
-        value[key] = item
-    return value
-
-
-def strict_json(raw: bytes) -&gt; object:
-    return json.loads(
-        raw.decode("utf-8", errors="strict"),
-        object_pairs_hook=unique_object,
-        parse_constant=lambda value: (_ for _ in ()).throw(
-            ValueError("non-finite JSON number: " + value)
-        ),
-    )
-
-
-def read_stable_descriptor(
-    descriptor: int, maximum_bytes: int, label: str
-) -&gt; bytes:
-    if maximum_bytes &lt;= 0:
-        raise ValueError(label + ": maximum byte count must be positive")
-    before = os.fstat(descriptor)
-    if (
-        not stat.S_ISREG(before.st_mode)
-        or before.st_size &lt;= 0
-        or before.st_size &gt; maximum_bytes
-    ):
-        raise ValueError(label + ": input type or size is outside policy")
-    os.lseek(descriptor, 0, os.SEEK_SET)
-    chunks: list[bytes] = []
-    total = 0
-    while True:
-        chunk = os.read(
-            descriptor, min(1024 * 1024, maximum_bytes + 1 - total)
-        )
-        if not chunk:
-            break
-        chunks.append(chunk)
-        total += len(chunk)
-        if total &gt; maximum_bytes:
-            raise ValueError(label + ": input exceeds policy byte limit")
-    after = os.fstat(descriptor)
-    identity = lambda item: (
-        item.st_dev, item.st_ino, item.st_size,
-        item.st_mtime_ns, item.st_ctime_ns,
-    )
-    raw = b"".join(chunks)
-    if identity(before) != identity(after) or len(raw) != before.st_size:
-        raise RuntimeError(label + ": input changed during immutable capture")
-    return raw
-
-
-def read_stable_path(path: Path, maximum_bytes: int, label: str) -&gt; bytes:
-    flags = os.O_RDONLY | getattr(os, "O_CLOEXEC", 0)
-    nofollow = getattr(os, "O_NOFOLLOW", None)
-    if nofollow is None:
-        raise RuntimeError("O_NOFOLLOW is required for admission inputs")
-    descriptor = os.open(path, flags | nofollow)
-    try:
-        return read_stable_descriptor(descriptor, maximum_bytes, label)
-    finally:
-        os.close(descriptor)
-
-
-def read_absolute_stable(
-    path: Path, maximum_bytes: int, label: str
-) -&gt; bytes:
-    value = str(path)
-    parsed = PurePosixPath(value)
-    if (
-        not parsed.is_absolute()
-        or parsed.as_posix() != value
-        or len(parsed.parts) &lt; 2
-    ):
-        raise ValueError(label + ": path must be a canonical absolute")
-    current = os.open(
-        "/",
-        os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_CLOEXEC", 0),
-    )
-    try:
-        for index, component in enumerate(parsed.parts[1:]):
-            final = index == len(parsed.parts[1:]) - 1
-            flags = (
-                os.O_RDONLY
-                | getattr(os, "O_CLOEXEC", 0)
-                | getattr(os, "O_NOFOLLOW", 0)
-            )
-            if not final:
-                flags |= os.O_DIRECTORY
-            following = os.open(component, flags, dir_fd=current)
-            os.close(current)
-            current = following
-        return read_stable_descriptor(current, maximum_bytes, label)
-    finally:
-        os.close(current)
-
-
-def sha256_bytes(raw: bytes) -&gt; str:
-    return hashlib.sha256(raw).hexdigest()
-
-
-def canonical_bytes(value: object) -&gt; bytes:
-    return json.dumps(
-        value, sort_keys=True, separators=(",", ":"), allow_nan=False
-    ).encode("utf-8")
-
-
-def utc_timestamp() -&gt; str:
-    return datetime.now(timezone.utc).isoformat(
-        timespec="microseconds"
-    ).replace("+00:00", "Z")
-
-
-def parse_utc_timestamp(value: object, label: str) -&gt; datetime:
-    if not isinstance(value, str) or not value.endswith("Z"):
-        raise ValueError(label + ": UTC timestamp must end in Z")
-    try:
-        parsed = datetime.fromisoformat(value[:-1] + "+00:00")
-    except ValueError as exc:
-        raise ValueError(label + ": timestamp is invalid") from exc
-    if parsed.tzinfo != timezone.utc:
-        raise ValueError(label + ": timestamp is not UTC")
-    return parsed
-
-
-DATA_ROOT_FD = -1
-
-
-def relative_path(value: object) -&gt; PurePosixPath:
-    if (
-        not isinstance(value, str)
-        or not value
-        or "\\\\" in value
-        or value.startswith("/")
-    ):
-        raise ValueError("manifest path must be a POSIX relative path")
-    path = PurePosixPath(value)
-    if any(part in {"", ".", ".."} for part in path.parts):
-        raise ValueError("manifest path contains an unsafe component")
-    if path.as_posix() != value:
-        raise ValueError("manifest path is not canonical")
-    return path
-
-
-def open_beneath(value: object, *, directory: bool = False) -&gt; tuple[int, PurePosixPath]:
-    if DATA_ROOT_FD &lt; 0:
-        raise RuntimeError("data-root descriptor is not initialized")
-    path = relative_path(value)
-    current = os.dup(DATA_ROOT_FD)
-    try:
-        for index, component in enumerate(path.parts):
-            final = index == len(path.parts) - 1
-            flags = (
-                os.O_RDONLY
-                | getattr(os, "O_CLOEXEC", 0)
-                | getattr(os, "O_NOFOLLOW", 0)
-            )
-            if not final or directory:
-                flags |= os.O_DIRECTORY
-            following = os.open(component, flags, dir_fd=current)
-            os.close(current)
-            current = following
-        metadata = os.fstat(current)
-        expected = stat.S_ISDIR(metadata.st_mode) if directory else stat.S_ISREG(metadata.st_mode)
-        if not expected:
-            raise ValueError("manifest path has the wrong object type")
-        return current, path
-    except Exception:
-        os.close(current)
-        raise
-
-
-captured_input_bytes = 0
-
-
-def capture_pin(
-    pin: object, *, maximum_bytes: int, label: str
-) -&gt; tuple[bytes, str, Path]:
-    global captured_input_bytes
-    if not isinstance(pin, dict) or set(pin) != PIN_FIELDS:
-        raise ValueError("pinned-file schema differs")
-    expected = pin["sha256"]
-    if not isinstance(expected, str) or SHA256.fullmatch(expected) is None:
-        raise ValueError("pinned-file digest is invalid")
-    descriptor, path = open_beneath(pin["path"])
-    try:
-        raw = read_stable_descriptor(descriptor, maximum_bytes, label)
-    finally:
-        os.close(descriptor)
-    captured_input_bytes += len(raw)
-    if captured_input_bytes &gt; limits["max_total_capture_bytes"]:
-        raise ValueError("total immutable capture exceeds signed memory limit")
-    if sha256_bytes(raw) != expected:
-        raise PermissionError("pinned-file digest mismatch: " + str(pin["path"]))
-    return raw, expected, path
-
-
-def write_private(path: Path, raw: bytes) -&gt; None:
-    flags = (
-        os.O_WRONLY | os.O_CREAT | os.O_EXCL
-        | getattr(os, "O_CLOEXEC", 0)
-        | getattr(os, "O_NOFOLLOW", 0)
-    )
-    descriptor = os.open(path, flags, 0o400)
-    try:
-        view = memoryview(raw)
-        while view:
-            written = os.write(descriptor, view)
-            if written &lt;= 0:
-                raise OSError("short private snapshot write")
-            view = view[written:]
-        os.fsync(descriptor)
-    finally:
-        os.close(descriptor)
-
-
-def verify_blob_bytes(
-    payload: bytes,
-    bundle: bytes,
-    key: bytes,
-    *,
-    label: str,
-) -&gt; None:
-    with tempfile.TemporaryDirectory(prefix="aidefend-h002-verify-") as directory:
-        root = Path(directory)
-        os.chmod(root, 0o700)
-        payload_path = root / "payload"
-        bundle_path = root / "payload.sigstore.json"
-        key_path = root / "verify.pub"
-        write_private(payload_path, payload)
-        write_private(bundle_path, bundle)
-        write_private(key_path, key)
-        subprocess.run(
-            [
-                "cosign", "verify-blob", "--key", str(key_path),
-                "--bundle", str(bundle_path), str(payload_path),
-            ],
-            check=True,
-            capture_output=True,
-            text=True,
-            timeout=VERIFY_TIMEOUT_SECONDS,
-        )
-        if (
-            read_stable_path(payload_path, len(payload), label + " payload")
-            != payload
-            or read_stable_path(bundle_path, len(bundle), label + " bundle")
-            != bundle
-            or read_stable_path(key_path, len(key), label + " key")
-            != key
-        ):
-            raise RuntimeError(label + ": verification snapshot changed")
-
-
-def mount_entry(path: Path) -&gt; dict:
-    expected = os.path.normpath(str(path))
-    matches = []
-    for line in Path("/proc/self/mountinfo").read_text(
-        encoding="utf-8", errors="strict"
-    ).splitlines():
-        before, separator, after = line.partition(" - ")
-        if not separator:
-            raise RuntimeError("Linux mountinfo record is malformed")
-        fields = before.split()
-        filesystem = after.split()
-        if len(fields) &lt; 6 or len(filesystem) &lt; 3:
-            raise RuntimeError("Linux mountinfo fields are incomplete")
-        mountpoint = (
-            fields[4].replace("\\\\040", " ").replace("\\\\011", "\\t")
-            .replace("\\\\012", "\\n").replace("\\\\134", "\\\\")
-        )
-        if mountpoint == expected:
-            matches.append(
-                {
-                    "mount_id": fields[0],
-                    "mountpoint": mountpoint,
-                    "options": set(fields[5].split(",")),
-                    "filesystem": filesystem[0],
-                    "super_options": set(filesystem[2].split(",")),
-                }
-            )
-    if len(matches) != 1:
-        raise RuntimeError(expected + ": expected one direct Linux mount")
-    return matches[0]
-
-
-def positive_cgroup_integer(path: Path, label: str) -&gt; int:
-    value = path.read_text(encoding="ascii", errors="strict").strip()
-    if value == "max" or not value.isdecimal() or int(value) &lt;= 0:
-        raise RuntimeError(label + ": finite cgroup limit is required")
-    return int(value)
-
-
-def verify_sandbox_contract(
-    manifest_raw: bytes, runtime: dict, limits: dict
-) -&gt; tuple[int, str, dict]:
-    if sys.platform != "linux":
-        raise RuntimeError("Linux cgroup v2 sandbox is required")
-    if any(
-        not path.is_absolute()
-        or str(path) != os.path.normpath(str(path))
-        for path in (DATA_ROOT, TEMP_ROOT, OUTPUT_ROOT)
-    ):
-        raise RuntimeError("sandbox mount paths must be normalized absolutes")
-    receipt_raw = read_stable_path(
-        SANDBOX_RECEIPT_PATH,
-        limits["max_receipt_bytes"],
-        "sandbox launch receipt",
-    )
-    bundle_raw = read_stable_path(
-        SANDBOX_RECEIPT_BUNDLE,
-        BOOTSTRAP_MAX_BUNDLE_BYTES,
-        "sandbox launch receipt bundle",
-    )
-    key_raw = read_absolute_stable(
-        SANDBOX_RECEIPT_KEY,
-        BOOTSTRAP_MAX_KEY_BYTES,
-        "sandbox launch receipt key",
-    )
-    if (
-        sha256_bytes(key_raw) != EXPECTED_SANDBOX_RECEIPT_KEY_SHA256
-        or sha256_bytes(key_raw) != runtime["sandbox_receipt_verify_key_sha256"]
-    ):
-        raise PermissionError("sandbox receipt verification key digest differs")
-    verify_blob_bytes(
-        receipt_raw, bundle_raw, key_raw, label="sandbox launch receipt"
-    )
-    receipt = strict_json(receipt_raw)
-    if (
-        not isinstance(receipt, dict)
-        or set(receipt) != SANDBOX_RECEIPT_FIELDS
-        or receipt["schema_version"]
-        != "aidefend.multimodal-sandbox-launch.v1"
-        or receipt["outcome"] != "PASS"
-        or receipt["manifest_sha256"] != sha256_bytes(manifest_raw)
-        or receipt["snapshot_id"] != manifest["snapshot_id"]
-        or not isinstance(receipt["attempt_id"], str)
-        or SAFE_ID.fullmatch(receipt["attempt_id"]) is None
-        or not isinstance(receipt["container_id"], str)
-        or CONTAINER_ID.fullmatch(receipt["container_id"]) is None
-        or receipt["admission_image_ref"]
-        != runtime["admission_image_ref"]
-        or receipt["admission_image_digest"]
-        != runtime["admission_image_digest"]
-        or receipt["admission_image_config_digest"]
-        != runtime["admission_image_config_digest"]
-        or receipt["watchdog_image_digest"]
-        != runtime["watchdog_image_digest"]
-        or receipt["watchdog_code_sha256"] != runtime["watchdog_code_sha256"]
-        or receipt["watchdog_dependency_lock_sha256"]
-        != runtime["watchdog_dependency_lock_sha256"]
-        or receipt["sandbox_contract_sha256"]
-        != runtime["sandbox_contract_sha256"]
-        or receipt["watchdog_auxiliary_timeout_seconds"]
-        != runtime["watchdog_auxiliary_timeout_seconds"]
-        or any(
-            receipt[name] != runtime[name]
-            for name in (
-                "manifest_verify_key_sha256",
-                "feature_receipt_verify_key_sha256",
-                "sandbox_receipt_verify_key_sha256",
-                "admission_receipt_verify_key_sha256",
-            )
-        )
-        or any(
-            not isinstance(receipt[name], str)
-            or SHA256.fullmatch(receipt[name]) is None
-            for name in (
-                "watchdog_code_sha256",
-                "watchdog_dependency_lock_sha256",
-                "sandbox_contract_sha256",
-                "engine_readback_sha256",
-                "manifest_verify_key_sha256",
-                "feature_receipt_verify_key_sha256",
-                "sandbox_receipt_verify_key_sha256",
-                "admission_receipt_verify_key_sha256",
-            )
-        )
-    ):
-        raise PermissionError("external sandbox launch receipt is misbound")
-    issued_at = parse_utc_timestamp(receipt["issued_at"], "sandbox launch issued_at")
-    expires_at = parse_utc_timestamp(
-        receipt["expires_at"], "sandbox launch expires_at"
-    )
-    observed_at = datetime.now(timezone.utc)
-    if issued_at &gt; observed_at or expires_at &lt;= issued_at or observed_at &gt; expires_at:
-        raise PermissionError("sandbox launch receipt is stale or future-dated")
-
-    data_mount = mount_entry(DATA_ROOT)
-    temp_mount = mount_entry(TEMP_ROOT)
-    if (
-        "ro" not in data_mount["options"]
-        or temp_mount["filesystem"] != "tmpfs"
-        or "rw" not in temp_mount["options"]
-    ):
-        raise PermissionError("required read-only data or bounded tmpfs mount is absent")
-    temp_stats = os.statvfs(TEMP_ROOT)
-    if temp_stats.f_blocks * temp_stats.f_frsize &gt; limits["max_temp_disk_bytes"]:
-        raise PermissionError("tmpfs capacity exceeds signed sandbox policy")
-
-    cgroup_lines = Path("/proc/self/cgroup").read_text(
-        encoding="ascii", errors="strict"
-    ).splitlines()
-    unified = [line[3:] for line in cgroup_lines if line.startswith("0::")]
-    if len(unified) != 1 or ".." in PurePosixPath(unified[0]).parts:
-        raise RuntimeError("unique cgroup v2 membership is required")
-    cgroup_root = Path("/sys/fs/cgroup")
-    cgroup_path = cgroup_root.joinpath(unified[0].lstrip("/"))
-    memory_max = positive_cgroup_integer(cgroup_path / "memory.max", "memory")
-    pids_max = positive_cgroup_integer(cgroup_path / "pids.max", "pids")
-    cpu_parts = (cgroup_path / "cpu.max").read_text(
-        encoding="ascii", errors="strict"
-    ).split()
-    if (
-        len(cpu_parts) != 2
-        or not all(part.isdecimal() and int(part) &gt; 0 for part in cpu_parts)
-        or memory_max &gt; limits["max_cgroup_memory_bytes"]
-        or int(cpu_parts[0]) &gt; limits["cgroup_cpu_quota_us"]
-        or int(cpu_parts[1]) != limits["cgroup_cpu_period_us"]
-        or pids_max &gt; limits["max_pids"]
-    ):
-        raise PermissionError("live cgroup readback exceeds signed sandbox policy")
-    nofile_soft, nofile_hard = resource.getrlimit(resource.RLIMIT_NOFILE)
-    if (
-        nofile_soft == resource.RLIM_INFINITY
-        or nofile_hard == resource.RLIM_INFINITY
-        or nofile_soft &gt; limits["max_open_files"]
-        or nofile_hard &gt; limits["max_open_files"]
-    ):
-        raise PermissionError("live file-descriptor limit exceeds signed policy")
-    flags = (
-        os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_CLOEXEC", 0)
-        | getattr(os, "O_NOFOLLOW", 0)
-    )
-    return os.open(DATA_ROOT, flags), sha256_bytes(receipt_raw), receipt
-
-
-class InsufficientData(RuntimeError):
-    pass
-
-
-class ControlFinding(RuntimeError):
-    pass
-
-
-manifest_bytes_for_error = b""
-verified_snapshot_id: str | None = None
-verified_policy_version: str | None = None
-verified_launch_receipt: dict | None = None
-verified_launch_receipt_sha256: str | None = None
-terminal_result_published = False
-
-
-def sign_blob_path(path: Path, bundle_path: Path) -&gt; None:
-    subprocess.run(
-        [
-            "cosign", "sign-blob", "--yes",
-            "--key", str(ADMISSION_RECEIPT_SIGNING_KEY),
-            "--bundle", str(bundle_path), str(path),
-        ],
-        check=True,
-        capture_output=True,
-        text=True,
-        timeout=VERIFY_TIMEOUT_SECONDS,
-    )
-    bundle_raw = read_stable_path(
-        bundle_path,
-        BOOTSTRAP_MAX_BUNDLE_BYTES,
-        "admission terminal signature bundle",
-    )
-    if not bundle_raw:
-        raise RuntimeError("admission terminal signature bundle is empty")
-
-
-def terminal_receipt_value(
-    status: str,
-    reason: str,
-    *,
-    error_class: str | None,
-    detailed_receipt_sha256: str | None,
-) -&gt; dict:
-    if status not in {
-        "PASS", "FAIL", "INSUFFICIENT_DATA", "NOT_APPLICABLE", "ERROR"
-    }:
-        raise ValueError("unsupported terminal status")
-    if not isinstance(reason, str) or not reason.strip():
-        raise ValueError("terminal reason must be a non-empty string")
-    if (
-        detailed_receipt_sha256 is not None
-        and SHA256.fullmatch(detailed_receipt_sha256) is None
-    ):
-        raise ValueError("detailed receipt digest is invalid")
-    launch = verified_launch_receipt or {}
-    issued_at = utc_timestamp()
-    completed_at = utc_timestamp()
-    if launch:
-        launch_issued = parse_utc_timestamp(
-            launch["issued_at"], "sandbox launch issued_at"
-        )
-        launch_expires = parse_utc_timestamp(
-            launch["expires_at"], "sandbox launch expires_at"
-        )
-        terminal_issued = parse_utc_timestamp(issued_at, "terminal issued_at")
-        terminal_completed = parse_utc_timestamp(
-            completed_at, "terminal completed_at"
-        )
-        if not (
-            launch_issued
-            &lt;= terminal_issued
-            &lt;= terminal_completed
-            &lt;= launch_expires
-        ):
-            raise TimeoutError("terminal receipt is outside the current attempt")
-    return {
-        "schema_version": "aidefend.multimodal-admission-terminal.v2",
-        "status": status,
-        "reason": reason[:256],
-        "error_class": error_class,
-        "attempt_id": launch.get("attempt_id"),
-        "container_id": launch.get("container_id"),
-        "launch_receipt_sha256": verified_launch_receipt_sha256,
-        "manifest_sha256": (
-            sha256_bytes(manifest_bytes_for_error)
-            if manifest_bytes_for_error else None
-        ),
-        "snapshot_id": verified_snapshot_id,
-        "policy_version": verified_policy_version,
-        "issued_at": issued_at,
-        "completed_at": completed_at,
-        "detailed_receipt_sha256": detailed_receipt_sha256,
-    }
-
-
-def publish_terminal_result(
-    status: str,
-    reason: str,
-    *,
-    error_class: str | None = None,
-) -&gt; Path:
-    global terminal_result_published
-    if OUTPUT_ROOT == DATA_ROOT or DATA_ROOT in OUTPUT_ROOT.parents:
-        raise RuntimeError("terminal output must be outside the data root")
-    result = terminal_receipt_value(
-        status,
-        reason,
-        error_class=error_class,
-        detailed_receipt_sha256=None,
-    )
-    raw = canonical_bytes(result)
-    attempt_id = (
-        result["attempt_id"]
-        or result["manifest_sha256"]
-        or sha256_bytes(str(MANIFEST_PATH).encode())
-    )
-    target = OUTPUT_ROOT / (
-        attempt_id + "." + status.lower() + "."
-        + sha256_bytes(raw) + ".terminal.json"
-    )
-    try:
-        write_private(target, raw)
-    except FileExistsError:
-        existing = read_stable_path(target, len(raw), "terminal result")
-        if existing != raw:
-            raise RuntimeError("terminal result path contains different bytes")
-    sign_blob_path(target, Path(str(target) + ".sigstore.json"))
-    terminal_result_published = True
-    return target
-
-
-def terminal_exception_hook(error_type, error, traceback) -&gt; None:
-    domain_status = None
-    if issubclass(error_type, InsufficientData):
-        domain_status = "INSUFFICIENT_DATA"
-    elif issubclass(error_type, ControlFinding):
-        domain_status = "FAIL"
-    if not terminal_result_published:
-        try:
-            publish_terminal_result(
-                domain_status or "ERROR",
-                str(error)[:256] or (domain_status or "ERROR").lower(),
-                error_class=error_type.__name__,
-            )
-        except Exception:
-            sys.__excepthook__(error_type, error, traceback)
-            return
-    if domain_status is not None:
-        # This is the outermost interpreter boundary.  The signed terminal is
-        # durable before exit, and a domain outcome is a completed evaluation,
-        # not an executor/runtime failure.  os._exit avoids Python restoring
-        # the original uncaught-exception status after sys.excepthook returns.
-        os._exit(0)
-    sys.__excepthook__(error_type, error, traceback)
-
-
-sys.excepthook = terminal_exception_hook
-if not BOOTSTRAP_VALID:
-    raise RuntimeError("verified signature bootstrap bounds are invalid")
-
-
-def finite_number(value: object, name: str) -&gt; float:
-    if isinstance(value, bool) or not isinstance(value, (int, float)):
-        raise ValueError(name + " must be numeric")
-    result = float(value)
-    if not math.isfinite(result):
-        raise ValueError(name + " must be finite")
-    return result
-
-
-def feature_names(value: object, name: str) -&gt; list[str]:
-    if (
-        not isinstance(value, list)
-        or not value
-        or len(value) != len(set(value))
-        or any(not isinstance(item, str) or not item for item in value)
-    ):
-        raise ValueError(name + " must be a unique non-empty string list")
-    return value
-
-
-manifest_bytes = read_stable_path(
-    MANIFEST_PATH, BOOTSTRAP_MAX_MANIFEST_BYTES, "admission manifest"
-)
-manifest_bytes_for_error = manifest_bytes
-manifest_bundle_bytes = read_stable_path(
-    MANIFEST_BUNDLE, BOOTSTRAP_MAX_BUNDLE_BYTES, "admission manifest bundle"
-)
-manifest_key_bytes = read_absolute_stable(
-    MANIFEST_KEY, BOOTSTRAP_MAX_KEY_BYTES, "admission manifest key"
-)
-manifest_key_sha256 = sha256_bytes(manifest_key_bytes)
-if (
-    SHA256.fullmatch(EXPECTED_MANIFEST_KEY_SHA256) is None
-    or manifest_key_sha256 != EXPECTED_MANIFEST_KEY_SHA256
-):
-    raise PermissionError("admission manifest verification key digest differs")
-verify_blob_bytes(
-    manifest_bytes,
-    manifest_bundle_bytes,
-    manifest_key_bytes,
-    label="admission manifest",
-)
-
-manifest = strict_json(manifest_bytes)
-if not isinstance(manifest, dict) or set(manifest) != MANIFEST_FIELDS:
-    raise ValueError("multimodal admission manifest schema differs")
-if (
-    manifest["schema_version"] != "aidefend.multimodal-admission.v1"
-    or not isinstance(manifest["policy_version"], str)
-    or not manifest["policy_version"]
-    or manifest["suite_kind"] not in {"candidate", "fixture"}
-    or not isinstance(manifest["snapshot_id"], str)
-    or SAFE_ID.fullmatch(manifest["snapshot_id"]) is None
-):
-    raise ValueError("manifest identity or version fields are invalid")
-
-verified_snapshot_id = manifest["snapshot_id"]
-verified_policy_version = manifest["policy_version"]
-applicability = manifest["applicability"]
-if (
-    not isinstance(applicability, dict)
-    or set(applicability) != APPLICABILITY_FIELDS
-    or applicability["state"] not in {"APPLICABLE", "NOT_APPLICABLE"}
-):
-    raise ValueError("signed applicability contract is invalid")
-if applicability["state"] == "NOT_APPLICABLE":
-    if (
-        not isinstance(applicability["reason"], str)
-        or not applicability["reason"].strip()
-    ):
-        raise ValueError("NOT_APPLICABLE requires a signed reason")
-elif applicability["reason"] is not None:
-    raise ValueError("APPLICABLE must use a null non-applicability reason")
-
-runtime = manifest["runtime"]
-if not isinstance(runtime, dict) or set(runtime) != RUNTIME_FIELDS:
-    raise ValueError("signed runtime binding schema differs")
-if (
-    IMAGE_REF.fullmatch(runtime["admission_image_ref"]) is None
-    or runtime["admission_image_ref"].rsplit("@", 1)[1]
-    != runtime["admission_image_digest"]
-    or IMAGE_DIGEST.fullmatch(runtime["admission_image_digest"]) is None
-    or IMAGE_DIGEST.fullmatch(runtime["admission_image_config_digest"]) is None
-    or IMAGE_REF.fullmatch(runtime["watchdog_image_ref"]) is None
-    or runtime["watchdog_image_ref"].rsplit("@", 1)[1]
-    != runtime["watchdog_image_digest"]
-    or IMAGE_DIGEST.fullmatch(runtime["watchdog_image_digest"]) is None
-    or IMAGE_DIGEST.fullmatch(runtime["watchdog_image_config_digest"]) is None
-    or IMAGE_DIGEST.fullmatch(runtime["extractor_image_digest"]) is None
-    or any(
-        not isinstance(runtime[name], str)
-        or SHA256.fullmatch(runtime[name]) is None
-        for name in (
-            "admission_code_sha256",
-            "admission_environment_sha256",
-            "admission_dependency_lock_sha256",
-            "extractor_code_sha256",
-            "extractor_dependency_lock_sha256",
-            "watchdog_code_sha256",
-            "watchdog_environment_sha256",
-            "watchdog_dependency_lock_sha256",
-            "sandbox_contract_sha256",
-            "manifest_verify_key_sha256",
-            "feature_receipt_verify_key_sha256",
-            "sandbox_receipt_verify_key_sha256",
-            "admission_receipt_verify_key_sha256",
-        )
-    )
-    or not isinstance(runtime["admission_entrypoint"], list)
-    or not runtime["admission_entrypoint"]
-    or any(
-        not isinstance(item, str) or not item
-        for item in runtime["admission_entrypoint"]
-    )
-    or not runtime["admission_entrypoint"][0].startswith("/")
-    or not isinstance(runtime["admission_command"], list)
-    or any(
-        not isinstance(item, str) or not item
-        for item in runtime["admission_command"]
-    )
-    or re.fullmatch(r"[1-9][0-9]*:[1-9][0-9]*", runtime["admission_user"])
-    is None
-    or not isinstance(runtime["admission_working_dir"], str)
-    or not runtime["admission_working_dir"].startswith("/")
-    or os.path.normpath(runtime["admission_working_dir"])
-    != runtime["admission_working_dir"]
-    or not isinstance(runtime["watchdog_entrypoint"], list)
-    or not runtime["watchdog_entrypoint"]
-    or any(
-        not isinstance(item, str) or not item
-        for item in runtime["watchdog_entrypoint"]
-    )
-    or not runtime["watchdog_entrypoint"][0].startswith("/")
-    or not isinstance(runtime["watchdog_command"], list)
-    or any(
-        not isinstance(item, str) or not item
-        for item in runtime["watchdog_command"]
-    )
-    or re.fullmatch(r"[1-9][0-9]*:[1-9][0-9]*", runtime["watchdog_user"])
-    is None
-    or not isinstance(runtime["watchdog_working_dir"], str)
-    or not runtime["watchdog_working_dir"].startswith("/")
-    or os.path.normpath(runtime["watchdog_working_dir"])
-    != runtime["watchdog_working_dir"]
-    or runtime["admission_image_digest"] != OBSERVED_ADMISSION_IMAGE_DIGEST
-    or runtime["admission_code_sha256"] != OBSERVED_ADMISSION_CODE_SHA256
-    or runtime["admission_dependency_lock_sha256"] != OBSERVED_ADMISSION_LOCK_SHA256
-    or runtime["watchdog_image_digest"] != OBSERVED_WATCHDOG_IMAGE_DIGEST
-    or runtime["watchdog_code_sha256"] != OBSERVED_WATCHDOG_CODE_SHA256
-    or runtime["watchdog_dependency_lock_sha256"]
-    != OBSERVED_WATCHDOG_LOCK_SHA256
-    or runtime["manifest_verify_key_sha256"] != EXPECTED_MANIFEST_KEY_SHA256
-    or runtime["manifest_verify_key_sha256"] != manifest_key_sha256
-    or runtime["feature_receipt_verify_key_sha256"]
-    != EXPECTED_FEATURE_RECEIPT_KEY_SHA256
-    or runtime["sandbox_receipt_verify_key_sha256"]
-    != EXPECTED_SANDBOX_RECEIPT_KEY_SHA256
-    or runtime["admission_receipt_verify_key_sha256"]
-    != EXPECTED_ADMISSION_RECEIPT_KEY_SHA256
-    or isinstance(runtime["watchdog_auxiliary_timeout_seconds"], bool)
-    or not isinstance(
-        runtime["watchdog_auxiliary_timeout_seconds"], (int, float)
-    )
-    or not math.isfinite(
-        float(runtime["watchdog_auxiliary_timeout_seconds"])
-    )
-    or runtime["watchdog_auxiliary_timeout_seconds"] &lt;= 0
-    or float(runtime["watchdog_auxiliary_timeout_seconds"])
-    != OBSERVED_WATCHDOG_AUXILIARY_TIMEOUT_SECONDS
-):
-    raise PermissionError("deployed admission runtime differs from signed policy")
-
-limits = manifest["limits"]
-if (
-    not isinstance(limits, dict)
-    or set(limits) != LIMIT_FIELDS
-    or any(
-        isinstance(value, bool) or not isinstance(value, int) or value &lt;= 0
-        for value in limits.values()
-    )
-    or limits["max_groups"] &gt; limits["max_records"]
-    or limits["max_members_per_group"] &gt; limits["max_records"]
-    or limits["max_candidate_rows"] &lt; limits["max_records"]
-    or limits["max_parquet_batch_rows"] &gt; limits["max_candidate_rows"]
-    or limits["max_parquet_uncompressed_bytes_each"]
-    &gt; limits["max_total_parquet_uncompressed_bytes"]
-):
-    raise ValueError("signed resource-limit policy is invalid")
-deadline = STARTED_AT + float(limits["max_runtime_seconds"])
-
-
-def hard_deadline(_signal_number, _frame) -&gt; None:
-    raise TimeoutError("signed runtime deadline exceeded")
-
-
-if not hasattr(signal, "setitimer"):
-    raise RuntimeError("a hard process deadline is unavailable")
-signal.signal(signal.SIGALRM, hard_deadline)
-remaining_runtime_seconds = deadline - time.monotonic()
-if remaining_runtime_seconds &lt;= 0:
-    raise TimeoutError("signed runtime deadline expired during bootstrap")
-signal.setitimer(signal.ITIMER_REAL, remaining_runtime_seconds)
-(
-    DATA_ROOT_FD,
-    sandbox_launch_receipt_sha256,
-    verified_launch_receipt,
-) = verify_sandbox_contract(
-    manifest_bytes, runtime, limits
-)
-verified_launch_receipt_sha256 = sandbox_launch_receipt_sha256
-if applicability["state"] == "NOT_APPLICABLE":
-    publish_terminal_result("NOT_APPLICABLE", applicability["reason"])
-    raise SystemExit(0)
-
-
-def check_deadline(label: str) -&gt; None:
-    if time.monotonic() &gt; deadline:
-        raise TimeoutError(label + ": signed runtime deadline exceeded")
-
-check_deadline("manifest validation")
-
-extensions = manifest["modality_extensions"]
-if (
-    not isinstance(extensions, dict)
-    or len(extensions) &lt; 2
-    or any(
-        not isinstance(modality, str)
-        or not modality
-        or not isinstance(suffixes, list)
-        or not suffixes
-        or len(suffixes) != len(set(suffixes))
-        or any(
-            not isinstance(suffix, str)
-            or not suffix.startswith(".")
-            or suffix != suffix.lower()
-            for suffix in suffixes
-        )
-        for modality, suffixes in extensions.items()
-    )
-):
-    raise ValueError("signed modality and extension policy is invalid")
-
-generic_features = feature_names(manifest["generic_features"], "generic_features")
-joint_features = feature_names(
-    manifest["joint_embedding_features"], "joint_embedding_features"
-)
-fusion_features = feature_names(manifest["fusion_features"], "fusion_features")
-if any(
-    len(names) &gt; limits["max_features_per_family"]
-    for names in (generic_features, joint_features, fusion_features)
-):
-    raise ValueError("feature population exceeds signed resource limits")
-if set(generic_features) &amp; (set(joint_features) | set(fusion_features)):
-    raise ValueError("generic and convergence feature populations overlap")
-
-generic_minimum = finite_number(
-    manifest["generic_score_minimum"], "generic_score_minimum"
-)
-joint_minimum = finite_number(
-    manifest["joint_score_minimum"], "joint_score_minimum"
-)
-fusion_z_maximum = finite_number(
-    manifest["fusion_robust_z_maximum"], "fusion_robust_z_maximum"
-)
-estimators = manifest["isolation_forest_estimators"]
-seed = manifest["seed"]
-if (
-    fusion_z_maximum &lt;= 0
-    or isinstance(estimators, bool)
-    or not isinstance(estimators, int)
-    or estimators &lt; 100
-    or estimators &gt; limits["max_estimators"]
-    or isinstance(seed, bool)
-    or not isinstance(seed, int)
-):
-    raise ValueError("signed detector runtime profile is invalid")
-
-model_bytes, model_sha256, _model_source = capture_pin(
-    manifest["model"],
-    maximum_bytes=limits["max_model_bytes"],
-    label="fusion model",
-)
-adapter_bytes, adapter_sha256, _adapter_source = capture_pin(
-    manifest["adapter"],
-    maximum_bytes=limits["max_adapter_bytes"],
-    label="multimodal adapter",
-)
-feature_build_receipt_bytes, feature_build_receipt_sha256, _receipt_source = (
-    capture_pin(
-        manifest["feature_build_receipt"],
-        maximum_bytes=limits["max_receipt_bytes"],
-        label="feature-build receipt",
-    )
-)
-feature_build_bundle_bytes, _feature_build_bundle_sha256, _bundle_source = (
-    capture_pin(
-        manifest["feature_build_receipt_bundle"],
-        maximum_bytes=BOOTSTRAP_MAX_BUNDLE_BYTES,
-        label="feature-build receipt bundle",
-    )
-)
-feature_job_manifest_bytes, feature_job_manifest_sha256, _job_source = (
-    capture_pin(
-        manifest["feature_job_manifest"],
-        maximum_bytes=limits["max_receipt_bytes"],
-        label="feature job manifest",
-    )
-)
-feature_receipt_key_bytes = read_absolute_stable(
-    FEATURE_RECEIPT_KEY,
-    BOOTSTRAP_MAX_KEY_BYTES,
-    "feature-build receipt verification key",
-)
-if (
-    sha256_bytes(feature_receipt_key_bytes)
-    != EXPECTED_FEATURE_RECEIPT_KEY_SHA256
-    or sha256_bytes(feature_receipt_key_bytes)
-    != runtime["feature_receipt_verify_key_sha256"]
-):
-    raise PermissionError("feature-build receipt verification key digest differs")
-verify_blob_bytes(
-    feature_build_receipt_bytes,
-    feature_build_bundle_bytes,
-    feature_receipt_key_bytes,
-    label="feature-build receipt",
-)
-feature_build_receipt = strict_json(feature_build_receipt_bytes)
-if (
-    not isinstance(feature_build_receipt, dict)
-    or set(feature_build_receipt) != FEATURE_RECEIPT_FIELDS
-    or feature_build_receipt["schema_version"]
-    != "aidefend.multimodal-feature-build-receipt.v1"
-    or feature_build_receipt["outcome"] != "PASS"
-    or feature_build_receipt["policy_version"] != manifest["policy_version"]
-    or feature_build_receipt["snapshot_id"] != manifest["snapshot_id"]
-    or feature_build_receipt["feature_job_manifest_sha256"]
-    != feature_job_manifest_sha256
-    or feature_build_receipt["model_sha256"] != sha256_bytes(model_bytes)
-    or feature_build_receipt["adapter_sha256"] != sha256_bytes(adapter_bytes)
-    or feature_build_receipt["model_sha256"] != model_sha256
-    or feature_build_receipt["adapter_sha256"] != adapter_sha256
-    or feature_build_receipt["extractor_image_digest"]
-    != runtime["extractor_image_digest"]
-    or feature_build_receipt["extractor_code_sha256"]
-    != runtime["extractor_code_sha256"]
-    or feature_build_receipt["extractor_dependency_lock_sha256"]
-    != runtime["extractor_dependency_lock_sha256"]
-    or any(
-        not isinstance(feature_build_receipt[name], str)
-        or SHA256.fullmatch(feature_build_receipt[name]) is None
-        for name in (
-            "raw_artifact_population_sha256",
-            "record_population_sha256",
-            "group_population_sha256",
-            "feature_job_manifest_sha256",
-            "reference_raw_artifact_population_sha256",
-            "reference_record_population_sha256",
-            "reference_group_population_sha256",
-            "model_sha256",
-            "adapter_sha256",
-            "extractor_code_sha256",
-            "extractor_dependency_lock_sha256",
-            "reference_member_features_sha256",
-            "candidate_member_features_sha256",
-            "reference_group_features_sha256",
-            "candidate_group_features_sha256",
-            "output_population_sha256",
-        )
-    )
-    or IMAGE_DIGEST.fullmatch(
-        feature_build_receipt["extractor_image_digest"]
-    )
-    is None
-    or any(
-        isinstance(feature_build_receipt[name], bool)
-        or not isinstance(feature_build_receipt[name], int)
-        or feature_build_receipt[name] &lt; 0
-        for name in (
-            "record_count", "group_count",
-            "reference_record_count", "reference_group_count",
-        )
-    )
-    or not isinstance(feature_build_receipt["output_row_counts"], dict)
-    or set(feature_build_receipt["output_row_counts"]) != {
-        "reference-members.parquet", "candidate-members.parquet",
-        "reference-groups.parquet", "candidate-groups.parquet",
-    }
-    or any(
-        isinstance(value, bool) or not isinstance(value, int) or value &lt;= 0
-        for value in feature_build_receipt["output_row_counts"].values()
-    )
-    or feature_build_receipt["output_row_counts"]
-    != {
-        "reference-members.parquet":
-            feature_build_receipt["reference_record_count"],
-        "candidate-members.parquet": feature_build_receipt["record_count"],
-        "reference-groups.parquet":
-            feature_build_receipt["reference_group_count"],
-        "candidate-groups.parquet": feature_build_receipt["group_count"],
-    }
-):
-    raise PermissionError(
-        "trusted feature-build receipt is absent, non-PASS, or misbound"
-    )
-
-reference_member_bytes, reference_member_sha256, _ = capture_pin(
-    manifest["reference_member_features"],
-    maximum_bytes=limits["max_feature_file_bytes"],
-    label="reference member features",
-)
-candidate_member_bytes, candidate_member_sha256, _ = capture_pin(
-    manifest["candidate_member_features"],
-    maximum_bytes=limits["max_feature_file_bytes"],
-    label="candidate member features",
-)
-reference_group_bytes, reference_group_sha256, _ = capture_pin(
-    manifest["reference_group_features"],
-    maximum_bytes=limits["max_feature_file_bytes"],
-    label="reference group features",
-)
-candidate_group_bytes, candidate_group_sha256, _ = capture_pin(
-    manifest["candidate_group_features"],
-    maximum_bytes=limits["max_feature_file_bytes"],
-    label="candidate group features",
-)
-if (
-    feature_build_receipt["reference_member_features_sha256"]
-    != reference_member_sha256
-    or feature_build_receipt["candidate_member_features_sha256"]
-    != candidate_member_sha256
-    or feature_build_receipt["reference_group_features_sha256"]
-    != reference_group_sha256
-    or feature_build_receipt["candidate_group_features_sha256"]
-    != candidate_group_sha256
-):
-    raise PermissionError(
-        "captured feature bytes differ from the trusted build receipt"
-    )
-claimed_output_population = {
-    "reference-members.parquet": {
-        "rows": feature_build_receipt["output_row_counts"][
-            "reference-members.parquet"
-        ],
-        "sha256": reference_member_sha256,
-    },
-    "candidate-members.parquet": {
-        "rows": feature_build_receipt["output_row_counts"][
-            "candidate-members.parquet"
-        ],
-        "sha256": candidate_member_sha256,
-    },
-    "reference-groups.parquet": {
-        "rows": feature_build_receipt["output_row_counts"][
-            "reference-groups.parquet"
-        ],
-        "sha256": reference_group_sha256,
-    },
-    "candidate-groups.parquet": {
-        "rows": feature_build_receipt["output_row_counts"][
-            "candidate-groups.parquet"
-        ],
-        "sha256": candidate_group_sha256,
-    },
-}
-if (
-    sha256_bytes(canonical_bytes(claimed_output_population))
-    != feature_build_receipt["output_population_sha256"]
-):
-    raise PermissionError("feature output population root differs")
-check_deadline("trusted feature-build receipt verification")
-
-groups = manifest["groups"]
-if not isinstance(groups, list) or not groups:
-    raise InsufficientData("signed group population is empty")
-if len(groups) &gt; limits["max_groups"]:
-    raise ValueError("signed group population exceeds policy")
-group_ids: set[str] = set()
-record_ids: set[str] = set()
-declared_members: set[tuple[str, str, str]] = set()
-declared_artifact_paths: set[str] = set()
-artifact_bytes_by_record: dict[str, bytes] = {}
-record_population: list[dict] = []
-group_by_id: dict[str, dict] = {}
-total_artifact_bytes = 0
-fixture_contract = {
-    "positive": "QUARANTINE",
-    "negative": "ADMIT",
-    "partial_payload": "QUARANTINE",
-}
-fixture_classes: set[str] = set()
-
-for group in groups:
-    expected_group_fields = (
-        {"group_id", "members"}
-        if manifest["suite_kind"] == "candidate"
-        else {"group_id", "members", "fixture_class", "expected_outcome"}
-    )
-    if not isinstance(group, dict) or set(group) != expected_group_fields:
-        raise ValueError("group schema differs")
-    group_id = group["group_id"]
-    if (
-        not isinstance(group_id, str)
-        or SAFE_ID.fullmatch(group_id) is None
-        or group_id in group_ids
-    ):
-        raise ValueError("missing or duplicate group ID")
-    group_ids.add(group_id)
-    group_by_id[group_id] = group
-    members = group["members"]
-    if (
-        not isinstance(members, list)
-        or len(members) &lt; 2
-        or len(members) &gt; limits["max_members_per_group"]
-    ):
-        raise ValueError(group_id + ": multimodal group needs at least two members")
-    group_modalities: set[str] = set()
-    for member in members:
-        if not isinstance(member, dict) or set(member) != {
-            "record_id", "modality", "path", "sha256"
-        }:
-            raise ValueError(group_id + ": member schema differs")
-        record_id = member["record_id"]
-        modality = member["modality"]
-        if (
-            not isinstance(record_id, str)
-            or SAFE_ID.fullmatch(record_id) is None
-            or record_id in record_ids
-            or modality not in extensions
-            or len(record_ids) &gt;= limits["max_records"]
-            or len(record_ids) &gt;= limits["max_artifact_files"]
-        ):
-            raise ValueError(group_id + ": record ID or modality is invalid")
-        artifact_bytes, artifact_sha256, path = capture_pin(
-            {"path": member["path"], "sha256": member["sha256"]},
-            maximum_bytes=limits["max_artifact_bytes_each"],
-            label=record_id + " raw artifact",
-        )
-        if path.suffix.lower() not in extensions[modality]:
-            raise ValueError(record_id + ": file extension contradicts modality")
-        total_artifact_bytes += len(artifact_bytes)
-        if total_artifact_bytes &gt; limits["max_total_artifact_bytes"]:
-            raise ValueError("raw artifact population exceeds policy byte limit")
-        record_ids.add(record_id)
-        group_modalities.add(modality)
-        declared_members.add((record_id, group_id, modality))
-        declared_artifact_paths.add(Path(member["path"]).as_posix())
-        artifact_bytes_by_record[record_id] = artifact_bytes
-        record_population.append(
-            {
-                "record_id": record_id,
-                "group_id": group_id,
-                "modality": modality,
-                "path": Path(member["path"]).as_posix(),
-                "sha256": artifact_sha256,
-                "byte_length": len(artifact_bytes),
-            }
-        )
-    if len(group_modalities) &lt; 2:
-        raise ValueError(group_id + ": group does not span at least two modalities")
-    if manifest["suite_kind"] == "fixture":
-        fixture_class = group["fixture_class"]
-        if (
-            fixture_class not in fixture_contract
-            or group["expected_outcome"] != fixture_contract[fixture_class]
-        ):
-            raise ValueError(group_id + ": fixture contract is invalid")
-        fixture_classes.add(fixture_class)
-    check_deadline("raw artifact capture")
-
-artifact_root_fd, artifact_root_path = open_beneath(
-    manifest["artifact_root"], directory=True
-)
-actual_artifact_paths: set[str] = set()
-artifact_walk = {"directories": 1, "descriptors": 1}
-
-
-def enumerate_artifacts(directory_fd: int, prefix: PurePosixPath) -&gt; None:
-    if len(prefix.parts) &gt; limits["max_artifact_depth"]:
-        raise ValueError("artifact directory depth exceeds signed limit")
-    fanout = 0
-    with os.scandir(directory_fd) as entries:
-        for entry in entries:
-            fanout += 1
-            if fanout &gt; limits["max_artifact_entries_per_directory"]:
-                raise ValueError("artifact directory fanout exceeds signed limit")
-            artifact_walk["descriptors"] += 1
-            if artifact_walk["descriptors"] &gt; limits["max_artifact_descriptors"]:
-                raise ValueError("artifact descriptor population exceeds signed limit")
-            name = entry.name
-            if name in {"", ".", ".."} or "/" in name:
-                raise ValueError("candidate artifact name is unsafe")
-            descriptor = os.open(
-                name,
-                os.O_RDONLY
-                | getattr(os, "O_CLOEXEC", 0)
-                | getattr(os, "O_NOFOLLOW", 0),
-                dir_fd=directory_fd,
-            )
-            try:
-                metadata = os.fstat(descriptor)
-                relative = artifact_root_path.joinpath(prefix, name)
-                if stat.S_ISREG(metadata.st_mode):
-                    if len(actual_artifact_paths) &gt;= limits["max_artifact_files"]:
-                        raise ValueError(
-                            "artifact file population exceeds signed limit"
-                        )
-                    actual_artifact_paths.add(relative.as_posix())
-                elif stat.S_ISDIR(metadata.st_mode):
-                    artifact_walk["directories"] += 1
-                    if (
-                        artifact_walk["directories"]
-                        &gt; limits["max_artifact_directories"]
-                    ):
-                        raise ValueError(
-                            "artifact directory population exceeds signed limit"
-                        )
-                    if len(prefix.parts) + 1 &gt; limits["max_artifact_depth"]:
-                        raise ValueError(
-                            "artifact directory depth exceeds signed limit"
-                        )
-                    enumerate_artifacts(descriptor, prefix / name)
-                else:
-                    raise ValueError(
-                        "candidate artifact tree contains an unsupported object"
-                    )
-            finally:
-                os.close(descriptor)
-
-
-try:
-    enumerate_artifacts(artifact_root_fd, PurePosixPath())
-finally:
-    os.close(artifact_root_fd)
-if actual_artifact_paths != declared_artifact_paths:
-    raise ValueError(
-        json.dumps(
-            {
-                "undeclared_artifacts": sorted(
-                    actual_artifact_paths - declared_artifact_paths
-                ),
-                "missing_artifacts": sorted(
-                    declared_artifact_paths - actual_artifact_paths
-                ),
-            },
-            sort_keys=True,
-        )
-    )
-
-record_population = sorted(
-    record_population, key=lambda item: item["record_id"]
-)
-group_population = sorted(
-    [
-        {
-            "group_id": group_id,
-            "record_ids": sorted(
-                member["record_id"] for member in group_by_id[group_id]["members"]
-            ),
-        }
-        for group_id in group_ids
-    ],
-    key=lambda item: item["group_id"],
-)
-raw_artifact_population_sha256 = sha256_bytes(
-    canonical_bytes(
-        {
-            "artifact_root": manifest["artifact_root"],
-            "records": record_population,
-        }
-    )
-)
-record_population_sha256 = sha256_bytes(
-    canonical_bytes(
-        [
-            {
-                "record_id": item["record_id"],
-                "group_id": item["group_id"],
-                "modality": item["modality"],
-                "sha256": item["sha256"],
-            }
-            for item in record_population
-        ]
-    )
-)
-group_population_sha256 = sha256_bytes(canonical_bytes(group_population))
-if (
-    feature_build_receipt["raw_artifact_population_sha256"]
-    != raw_artifact_population_sha256
-    or feature_build_receipt["record_population_sha256"]
-    != record_population_sha256
-    or feature_build_receipt["group_population_sha256"]
-    != group_population_sha256
-    or feature_build_receipt["record_count"] != len(record_ids)
-    or feature_build_receipt["group_count"] != len(group_ids)
-):
-    raise PermissionError(
-        "feature-build receipt does not cover the complete raw population"
-    )
-check_deadline("raw population reconciliation")
-
-total_parquet_uncompressed_bytes = 0
-
-
-def load_parquet_capture(
-    raw: bytes,
-    columns: list[str],
-    *,
-    maximum_rows: int,
-    label: str,
-) -&gt; pd.DataFrame:
-    global total_parquet_uncompressed_bytes
-    parquet = pq.ParquetFile(io.BytesIO(raw))
-    metadata = parquet.metadata
-    if (
-        metadata is None
-        or metadata.num_rows &lt;= 0
-        or metadata.num_rows &gt; maximum_rows
-        or metadata.num_row_groups &lt;= 0
-        or metadata.num_row_groups &gt; limits["max_parquet_row_groups_each"]
-        or parquet.schema_arrow.names != columns
-        or len(columns) != len(set(columns))
-    ):
-        raise InsufficientData(label + ": Parquet footer or schema is outside policy")
-    uncompressed = 0
-    for row_group_index in range(metadata.num_row_groups):
-        row_group = metadata.row_group(row_group_index)
-        if row_group.num_rows &lt;= 0:
-            raise InsufficientData(label + ": empty Parquet row group")
-        for column_index in range(row_group.num_columns):
-            size = row_group.column(column_index).total_uncompressed_size
-            if not isinstance(size, int) or size &lt; 0:
-                raise InsufficientData(label + ": invalid uncompressed byte metadata")
-            uncompressed += size
-            if uncompressed &gt; limits["max_parquet_uncompressed_bytes_each"]:
-                raise ValueError(label + ": uncompressed Parquet bytes exceed policy")
-    total_parquet_uncompressed_bytes += uncompressed
-    if (
-        total_parquet_uncompressed_bytes
-        &gt; limits["max_total_parquet_uncompressed_bytes"]
-    ):
-        raise ValueError("total uncompressed Parquet bytes exceed policy")
-
-    batches: list[pa.RecordBatch] = []
-    rows = 0
-    for batch in parquet.iter_batches(
-        batch_size=limits["max_parquet_batch_rows"],
-        columns=columns,
-        use_threads=False,
-    ):
-        if batch.schema.names != columns:
-            raise InsufficientData(label + ": selected batch schema differs")
-        batches.append(batch)
-        rows += batch.num_rows
-        if (
-            len(batches) &gt; limits["max_parquet_batches_each"]
-            or rows &gt; maximum_rows
-        ):
-            raise ValueError(label + ": selected Parquet batches exceed policy")
-    if rows != metadata.num_rows:
-        raise InsufficientData(label + ": selected Parquet rows did not reconcile")
-    return pa.Table.from_batches(batches).to_pandas(
-        split_blocks=True, self_destruct=True
-    )
-
-
-reference_members = load_parquet_capture(
-    reference_member_bytes,
-    ["reference_id", "modality", *generic_features],
-    maximum_rows=limits["max_reference_rows"],
-    label="reference member features",
-)
-candidate_members = load_parquet_capture(
-    candidate_member_bytes,
-    ["record_id", "group_id", "modality", *generic_features],
-    maximum_rows=limits["max_candidate_rows"],
-    label="candidate member features",
-)
-reference_groups = load_parquet_capture(
-    reference_group_bytes,
-    ["reference_group_id", *joint_features, *fusion_features],
-    maximum_rows=limits["max_reference_rows"],
-    label="reference group features",
-)
-candidate_groups = load_parquet_capture(
-    candidate_group_bytes,
-    ["group_id", *joint_features, *fusion_features],
-    maximum_rows=limits["max_candidate_rows"],
-    label="candidate group features",
-)
-if any(
-    frame.empty
-    for frame in (
-        reference_members, candidate_members, reference_groups, candidate_groups
-    )
-):
-    raise InsufficientData("reference or candidate feature measurement is empty")
-if (
-    len(reference_members) &gt; limits["max_reference_rows"]
-    or len(reference_groups) &gt; limits["max_reference_rows"]
-    or len(candidate_members) &gt; limits["max_candidate_rows"]
-    or len(candidate_groups) &gt; limits["max_candidate_rows"]
-    or len(reference_members)
-    != feature_build_receipt["reference_record_count"]
-    or len(reference_groups)
-    != feature_build_receipt["reference_group_count"]
-    or len(candidate_members) != feature_build_receipt["record_count"]
-    or len(candidate_groups) != feature_build_receipt["group_count"]
-):
-    raise ValueError(
-        "feature row population exceeds limits or differs from signed counts"
-    )
-if (
-    set(reference_members.columns)
-    != {"reference_id", "modality", *generic_features}
-    or set(candidate_members.columns)
-    != { *MEMBER_FIELDS, *generic_features }
-    or set(reference_groups.columns)
-    != {"reference_group_id", *joint_features, *fusion_features}
-    or set(candidate_groups.columns)
-    != {"group_id", *joint_features, *fusion_features}
-):
-    raise InsufficientData("required reference or candidate features are missing")
-if (
-    reference_members["reference_id"].duplicated().any()
-    or candidate_members["record_id"].duplicated().any()
-    or reference_groups["reference_group_id"].duplicated().any()
-    or candidate_groups["group_id"].duplicated().any()
-):
-    raise ValueError("reference or candidate feature identifiers are duplicated")
-if set(reference_members["modality"]) != set(extensions):
-    raise InsufficientData("reference features do not cover every signed modality")
-
-observed_members = set(
-    candidate_members[["record_id", "group_id", "modality"]]
-    .itertuples(index=False, name=None)
-)
-if observed_members != declared_members:
-    raise InsufficientData("manifest and candidate member populations differ")
-if set(candidate_groups["group_id"]) != group_ids:
-    raise InsufficientData("manifest and candidate group populations differ")
-check_deadline("feature population reconciliation")
-
-
-def numeric_matrix(frame: pd.DataFrame, names: list[str], label: str) -&gt; np.ndarray:
-    try:
-        matrix = frame[names].apply(pd.to_numeric, errors="raise").to_numpy(
-            dtype=np.float64
-        )
-    except (TypeError, ValueError) as exc:
-        raise InsufficientData(label + " contains non-numeric features") from exc
-    if matrix.ndim != 2 or not np.isfinite(matrix).all():
-        raise InsufficientData(label + " contains missing or non-finite features")
-    return matrix
-
-
-def isolation_scores(
-    reference: pd.DataFrame, candidate: pd.DataFrame, names: list[str]
-) -&gt; np.ndarray:
-    check_deadline("anomaly detector start")
-    detector = make_pipeline(
-        RobustScaler(),
-        IsolationForest(
-            n_estimators=estimators,
-            contamination="auto",
-            random_state=seed,
-            n_jobs=1,
-        ),
-    )
-    detector.fit(numeric_matrix(reference, names, "reference"))
-    scores = detector.decision_function(
-        numeric_matrix(candidate, names, "candidate")
-    )
-    check_deadline("anomaly detector completion")
-    return scores
-
-
-member_scores: dict[str, float] = {}
-for modality in sorted(extensions):
-    reference_slice = reference_members.loc[
-        reference_members["modality"] == modality
-    ]
-    candidate_slice = candidate_members.loc[
-        candidate_members["modality"] == modality
-    ]
-    if reference_slice.empty or candidate_slice.empty:
-        raise InsufficientData(
-            modality + ": reference or candidate population is empty"
-        )
-    scores = isolation_scores(reference_slice, candidate_slice, generic_features)
-    member_scores.update(
-        zip(candidate_slice["record_id"].astype(str), map(float, scores))
-    )
-if set(member_scores) != record_ids:
-    raise RuntimeError("generic anomaly score population is incomplete")
-
-candidate_groups = candidate_groups.set_index("group_id", drop=False)
-joint_scores = isolation_scores(reference_groups, candidate_groups, joint_features)
-reference_fusion = numeric_matrix(
-    reference_groups, fusion_features, "reference fusion"
-)
-candidate_fusion = numeric_matrix(
-    candidate_groups, fusion_features, "candidate fusion"
-)
-fusion_median = np.median(reference_fusion, axis=0)
-fusion_mad = np.median(np.abs(reference_fusion - fusion_median), axis=0)
-if np.any(fusion_mad &lt;= 0):
-    raise InsufficientData(
-        "signed fusion features include a zero-variance dimension"
-    )
-fusion_z = np.max(
-    np.abs(candidate_fusion - fusion_median) / (1.4826 * fusion_mad),
-    axis=1,
-)
-
-evidence: list[dict] = []
-admitted: list[dict] = []
-quarantined: list[dict] = []
-for position, group_id in enumerate(candidate_groups.index.astype(str)):
-    group = group_by_id[group_id]
-    group_record_ids = [member["record_id"] for member in group["members"]]
-    minimum_generic_score = min(member_scores[item] for item in group_record_ids)
-    reasons: list[str] = []
-    if minimum_generic_score &lt; generic_minimum:
-        reasons.append("generic_record_anomaly")
-    if float(joint_scores[position]) &lt; joint_minimum:
-        reasons.append("joint_embedding_anomaly")
-    if float(fusion_z[position]) &gt; fusion_z_maximum:
-        reasons.append("fusion_layer_anomaly")
-    outcome = "QUARANTINE" if reasons else "ADMIT"
-    result = {
-        "group_id": group_id,
-        "record_ids": group_record_ids,
-        "member_generic_scores": {
-            record_id: member_scores[record_id]
-            for record_id in sorted(group_record_ids)
-        },
-        "minimum_generic_score": minimum_generic_score,
-        "joint_embedding_score": float(joint_scores[position]),
-        "maximum_fusion_robust_z": float(fusion_z[position]),
-        "reasons": reasons,
-        "outcome": outcome,
-    }
-    evidence.append(result)
-    (quarantined if reasons else admitted).append(group)
-
-if len(evidence) != len(group_ids) or len(admitted) + len(quarantined) != len(groups):
-    raise RuntimeError("candidate group outcome population did not reconcile")
-
-if manifest["suite_kind"] == "fixture":
-    if fixture_classes != set(fixture_contract):
-        raise InsufficientData(
-            "fixture suite must include positive, negative, and partial-payload cases"
-        )
-    evidence_by_id = {item["group_id"]: item for item in evidence}
-    for group_id, group in group_by_id.items():
-        observed = evidence_by_id[group_id]
-        if observed["outcome"] != group["expected_outcome"]:
-            raise ControlFinding(group_id + ": fixture outcome differs")
-        if (
-            group["fixture_class"] in {"positive", "partial_payload"}
-            and not {
-                "joint_embedding_anomaly", "fusion_layer_anomaly"
-            }.intersection(observed["reasons"])
-        ):
-            raise ControlFinding(
-                group_id + ": convergence fixture triggered only a generic detector"
-            )
-        if (
-            group["fixture_class"] == "partial_payload"
-            and (
-                observed["minimum_generic_score"] &lt; generic_minimum
-                or "generic_record_anomaly" in observed["reasons"]
-            )
-        ):
-            raise InsufficientData(
-                group_id
-                + ": partial-payload members were not individually benign"
-            )
-
-if OUTPUT_ROOT == DATA_ROOT or DATA_ROOT in OUTPUT_ROOT.parents:
-    raise RuntimeError("evidence and quarantine output must be outside the data root")
-
-snapshot_id = manifest["snapshot_id"]
-final_root = OUTPUT_ROOT / snapshot_id
-if final_root.exists():
-    raise FileExistsError("snapshot admission output already exists")
-staging_root = Path(
-    tempfile.mkdtemp(prefix="." + snapshot_id + ".", dir=OUTPUT_ROOT)
-)
-
-
-def write_staged_bytes(
-    name: str, raw: bytes, *, maximum_bytes: int
-) -&gt; tuple[str, str]:
-    if not raw or len(raw) &gt; maximum_bytes:
-        raise ValueError(name + ": staged output exceeds signed byte limit")
-    path = staging_root / name
-    path.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
-    try:
-        write_private(path, raw)
-    except FileExistsError:
-        existing = read_stable_path(path, maximum_bytes, name)
-        if existing != raw:
-            raise RuntimeError(name + ": content-addressed path collision")
-    readback = read_stable_path(path, maximum_bytes, name)
-    if readback != raw:
-        raise RuntimeError(name + ": staged output readback differs")
-    return str(Path(snapshot_id) / name), sha256_bytes(readback)
-
-
-def write_staged_json(
-    name: str, value: object, *, maximum_bytes: int
-) -&gt; tuple[str, str]:
-    return write_staged_bytes(
-        name, canonical_bytes(value), maximum_bytes=maximum_bytes
-    )
-
-
-def admitted_group(group: dict) -&gt; tuple[dict, list[dict]]:
-    members = []
-    inventory = []
-    for member in group["members"]:
-        record_id = member["record_id"]
-        raw = artifact_bytes_by_record[record_id]
-        digest = sha256_bytes(raw)
-        if digest != member["sha256"]:
-            raise RuntimeError(record_id + ": captured raw bytes changed")
-        blob_name = "blobs/sha256/" + digest
-        content_path, content_sha256 = write_staged_bytes(
-            blob_name,
-            raw,
-            maximum_bytes=limits["max_artifact_bytes_each"],
-        )
-        if content_sha256 != digest:
-            raise RuntimeError(record_id + ": published blob digest differs")
-        members.append(
-            {
-                "record_id": record_id,
-                "modality": member["modality"],
-                "sha256": digest,
-                "byte_length": len(raw),
-                "content_path": content_path,
-            }
-        )
-        inventory.append(
-            {
-                "sha256": digest,
-                "byte_length": len(raw),
-                "content_path": content_path,
-            }
-        )
-    return {"group_id": group["group_id"], "members": members}, inventory
-
-
-try:
-    check_deadline("result publication")
-    evidence_path, evidence_sha256 = write_staged_json(
-        "evidence.json",
-        evidence,
-        maximum_bytes=limits["max_evidence_bytes"],
-    )
-    admitted_path = None
-    admitted_sha256 = None
-    admitted_content_root_sha256 = None
-    quarantine_path = None
-    quarantine_sha256 = None
-    terminal_status = "PASS"
-    if manifest["suite_kind"] == "candidate":
-        published_groups = []
-        blob_inventory_by_digest: dict[str, dict] = {}
-        for group in admitted:
-            published_group, inventory = admitted_group(group)
-            published_groups.append(published_group)
-            for item in inventory:
-                prior = blob_inventory_by_digest.setdefault(item["sha256"], item)
-                if prior != item:
-                    raise RuntimeError("content-addressed blob inventory differs")
-        admitted_snapshot_core = {
-            "schema_version": "aidefend.admitted-multimodal-snapshot.v1",
-            "snapshot_id": snapshot_id,
-            "source_manifest_sha256": sha256_bytes(manifest_bytes),
-            "raw_artifact_population_sha256": raw_artifact_population_sha256,
-            "groups": sorted(
-                published_groups, key=lambda item: item["group_id"]
-            ),
-            "blobs": sorted(
-                blob_inventory_by_digest.values(),
-                key=lambda item: item["sha256"],
-            ),
-        }
-        admitted_content_root_sha256 = sha256_bytes(
-            canonical_bytes(admitted_snapshot_core)
-        )
-        admitted_snapshot = {
-            **admitted_snapshot_core,
-            "content_root_sha256": admitted_content_root_sha256,
-        }
-        admitted_path, admitted_sha256 = write_staged_json(
-            "admitted.json",
-            admitted_snapshot,
-            maximum_bytes=limits["max_output_manifest_bytes"],
-        )
-        quarantine_findings = [
-            item for item in evidence if item["outcome"] == "QUARANTINE"
-        ]
-        quarantine_path, quarantine_sha256 = write_staged_json(
-            "quarantine-findings.json",
-            quarantine_findings,
-            maximum_bytes=limits["max_output_manifest_bytes"],
-        )
-        terminal_status = "FAIL" if quarantine_findings else "PASS"
-
-    receipt = {
-        "schema_version": "aidefend.multimodal-admission-receipt.v1",
-        "status": terminal_status,
-        "reason": (
-            "quarantine findings exist"
-            if terminal_status == "FAIL"
-            else "complete population met signed admission policy"
-        ),
-        "policy_version": manifest["policy_version"],
-        "snapshot_id": snapshot_id,
-        "attempt_id": verified_launch_receipt["attempt_id"],
-        "container_id": verified_launch_receipt["container_id"],
-        "launch_receipt_sha256": sandbox_launch_receipt_sha256,
-        "launch_issued_at": verified_launch_receipt["issued_at"],
-        "launch_expires_at": verified_launch_receipt["expires_at"],
-        "suite_kind": manifest["suite_kind"],
-        "manifest_sha256": sha256_bytes(manifest_bytes),
-        "feature_build_receipt_sha256": feature_build_receipt_sha256,
-        "feature_job_manifest_sha256": feature_job_manifest_sha256,
-        "raw_artifact_population_sha256": raw_artifact_population_sha256,
-        "reference_raw_artifact_population_sha256":
-            feature_build_receipt["reference_raw_artifact_population_sha256"],
-        "record_population_sha256": record_population_sha256,
-        "group_population_sha256": group_population_sha256,
-        "admission_image_ref": runtime["admission_image_ref"],
-        "admission_image_digest": runtime["admission_image_digest"],
-        "admission_image_config_digest":
-            runtime["admission_image_config_digest"],
-        "admission_code_sha256": runtime["admission_code_sha256"],
-        "admission_dependency_lock_sha256":
-            runtime["admission_dependency_lock_sha256"],
-        "watchdog_image_digest": runtime["watchdog_image_digest"],
-        "watchdog_code_sha256": runtime["watchdog_code_sha256"],
-        "watchdog_dependency_lock_sha256":
-            runtime["watchdog_dependency_lock_sha256"],
-        "watchdog_auxiliary_timeout_seconds":
-            runtime["watchdog_auxiliary_timeout_seconds"],
-        "sandbox_contract_sha256": runtime["sandbox_contract_sha256"],
-        "sandbox_launch_receipt_sha256": sandbox_launch_receipt_sha256,
-        "manifest_verify_key_sha256":
-            runtime["manifest_verify_key_sha256"],
-        "feature_receipt_verify_key_sha256":
-            runtime["feature_receipt_verify_key_sha256"],
-        "sandbox_receipt_verify_key_sha256":
-            runtime["sandbox_receipt_verify_key_sha256"],
-        "admission_receipt_verify_key_sha256":
-            runtime["admission_receipt_verify_key_sha256"],
-        "extractor_image_digest": runtime["extractor_image_digest"],
-        "extractor_code_sha256": runtime["extractor_code_sha256"],
-        "extractor_dependency_lock_sha256":
-            runtime["extractor_dependency_lock_sha256"],
-        "resource_limits_sha256": sha256_bytes(canonical_bytes(limits)),
-        "parquet_uncompressed_bytes": total_parquet_uncompressed_bytes,
-        "model_sha256": model_sha256,
-        "adapter_sha256": adapter_sha256,
-        "reference_member_features_sha256": reference_member_sha256,
-        "candidate_member_features_sha256": candidate_member_sha256,
-        "reference_group_features_sha256": reference_group_sha256,
-        "candidate_group_features_sha256": candidate_group_sha256,
-        "population_records": len(record_ids),
-        "evaluated_records": len(member_scores),
-        "population_groups": len(group_ids),
-        "evaluated_groups": len(evidence),
-        "admitted_groups": len(admitted),
-        "quarantined_groups": len(quarantined),
-        "finding_count": (
-            len(quarantined) if manifest["suite_kind"] == "candidate" else 0
-        ),
-        "evidence_path": evidence_path,
-        "evidence_sha256": evidence_sha256,
-        "admitted_path": admitted_path,
-        "admitted_sha256": admitted_sha256,
-        "admitted_content_root_sha256": admitted_content_root_sha256,
-        "quarantine_path": quarantine_path,
-        "quarantine_sha256": quarantine_sha256,
-        "elapsed_seconds": time.monotonic() - STARTED_AT,
-    }
-    _receipt_path, detailed_receipt_sha256 = write_staged_json(
-        "receipt.json", receipt, maximum_bytes=limits["max_receipt_bytes"]
-    )
-    terminal_reason = (
-        "quarantine findings exist"
-        if terminal_status == "FAIL"
-        else "complete population met signed admission policy"
-    )
-    terminal_receipt = terminal_receipt_value(
-        terminal_status,
-        terminal_reason,
-        error_class=None,
-        detailed_receipt_sha256=detailed_receipt_sha256,
-    )
-    if set(terminal_receipt) != TERMINAL_RECEIPT_FIELDS:
-        raise RuntimeError("admission terminal receipt schema differs")
-    write_staged_json(
-        "terminal.json",
-        terminal_receipt,
-        maximum_bytes=limits["max_receipt_bytes"],
-    )
-    terminal_bundle_path = staging_root / "terminal.json.sigstore.json"
-    sign_blob_path(staging_root / "terminal.json", terminal_bundle_path)
-    os.chmod(terminal_bundle_path, 0o400)
-    for directory in sorted(
-        (path for path in staging_root.rglob("*") if path.is_dir()),
-        key=lambda path: len(path.parts),
-        reverse=True,
-    ):
-        os.chmod(directory, 0o500)
-    os.chmod(staging_root, 0o500)
-    os.replace(staging_root, final_root)
-    signal.setitimer(signal.ITIMER_REAL, 0)
-    terminal_result_published = True
-except Exception:
-    shutil.rmtree(staging_root, ignore_errors=True)
-    raise
-</code></pre><h5>Run the model-specific feature producer</h5><p>The producer is a separate digest-pinned OCI stage, not a generic extractor invented by this guidance. Its signed job manifest names the exact project adapter contract, complete reference and candidate populations, model and adapter digests, four output schemas, and extractor runtime. The reference adapter below invokes the reviewed <code>project-dual-encoder-v1</code> binary shipped in that OCI image; the binary owns model-specific decoding, tokenization, embeddings, fusion activations, and attention statistics. The wrapper owns population reconciliation, deterministic Parquet serialization, and the canonical signed receipt consumed above.</p><pre><code class="language-python"># File: data_pipeline/project_dual_encoder_producer.py
-from __future__ import annotations
-
-import hashlib
-import fcntl
-import json
-import math
-import os
-import stat
-import subprocess
-import tempfile
-from pathlib import Path, PurePosixPath
-
-import pyarrow as pa
-import pyarrow.parquet as pq
-
-
-JOB = Path(os.environ["VERIFIED_H002_FEATURE_JOB"])
-JOB_BUNDLE = Path(os.environ["VERIFIED_H002_FEATURE_JOB_BUNDLE"])
-JOB_VERIFY_KEY = Path(os.environ["VERIFIED_H002_FEATURE_JOB_VERIFY_KEY"])
-OUTPUT = Path(os.environ["VERIFIED_H002_FEATURE_OUTPUT"])
-ADAPTER_BIN = Path("/opt/aidefend/bin/project-dual-encoder-v1")
-SIGNING_KEY = Path(os.environ["VERIFIED_H002_FEATURE_RECEIPT_SIGNING_KEY"])
-EXPECTED_RUNTIME = {
-    "extractor_image_digest": os.environ["VERIFIED_H002_EXTRACTOR_IMAGE_DIGEST"],
-    "extractor_code_sha256": os.environ["VERIFIED_H002_EXTRACTOR_CODE_SHA256"],
-    "extractor_dependency_lock_sha256":
-        os.environ["VERIFIED_H002_EXTRACTOR_DEPENDENCY_LOCK_SHA256"],
-}
-VERIFY_TIMEOUT = int(os.environ["VERIFIED_H002_FEATURE_JOB_VERIFY_TIMEOUT_SECONDS"])
-MAX_JOB_BYTES = int(os.environ["VERIFIED_H002_FEATURE_JOB_MAX_BYTES"])
-MAX_BUNDLE_BYTES = int(os.environ["VERIFIED_H002_FEATURE_JOB_BUNDLE_MAX_BYTES"])
-MAX_KEY_BYTES = int(os.environ["VERIFIED_H002_FEATURE_JOB_KEY_MAX_BYTES"])
-EXPECTED_JOB_KEY_SHA256 = os.environ[
-    "VERIFIED_H002_FEATURE_JOB_VERIFY_KEY_SHA256"
-]
-OUTPUT_NAMES = (
-    "reference-members.parquet", "candidate-members.parquet",
-    "reference-groups.parquet", "candidate-groups.parquet",
-)
-
-
-def canonical(value: object) -&gt; bytes:
-    return json.dumps(
-        value, sort_keys=True, separators=(",", ":"), allow_nan=False
-    ).encode("utf-8")
-
-
-def digest(raw: bytes) -&gt; str:
-    return hashlib.sha256(raw).hexdigest()
-
-
-def unique_object(pairs: list[tuple[str, object]]) -&gt; dict:
-    value = {}
-    for key, item in pairs:
-        if key in value:
-            raise ValueError("duplicate JSON key: " + key)
-        value[key] = item
-    return value
-
-
-def strict_json(raw: bytes) -&gt; object:
-    return json.loads(
-        raw.decode("utf-8", errors="strict"),
-        object_pairs_hook=unique_object,
-        parse_constant=lambda value: (_ for _ in ()).throw(
-            ValueError("non-finite JSON number: " + value)
-        ),
-    )
-
-
-def exact_feature_names(contract: object) -&gt; tuple[list[str], list[str]]:
-    required = {
-        "generic_features", "joint_embedding_features", "fusion_features"
-    }
-    if not isinstance(contract, dict) or set(contract) != required:
-        raise ValueError("producer feature contract schema differs")
-    families = []
-    for name in (
-        "generic_features", "joint_embedding_features", "fusion_features"
-    ):
-        values = contract[name]
-        if (
-            not isinstance(values, list)
-            or not values
-            or len(values) != len(set(values))
-            or any(not isinstance(item, str) or not item for item in values)
-        ):
-            raise ValueError(name + ": feature names must be unique and non-empty")
-        families.append(values)
-    generic, joint, fusion = families
-    if (
-        set(generic) &amp; set(joint)
-        or set(generic) &amp; set(fusion)
-        or set(joint) &amp; set(fusion)
-    ):
-        raise ValueError("producer feature families overlap")
-    return generic, [*joint, *fusion]
-
-
-def finite_feature_map(
-    value: object, expected_names: list[str], label: str
-) -&gt; dict[str, float]:
-    if not isinstance(value, dict) or set(value) != set(expected_names):
-        raise RuntimeError(label + ": exact feature schema differs")
-    result = {}
-    for name in expected_names:
-        number = value[name]
-        if (
-            isinstance(number, bool)
-            or not isinstance(number, (int, float))
-            or not math.isfinite(float(number))
-        ):
-            raise RuntimeError(label + ": feature is not finite numeric")
-        result[name] = float(number)
-    return result
-
-
-def reconcile_adapter_response(
-    response: object,
-    request: dict,
-    generic_names: list[str],
-    group_names: list[str],
-) -&gt; tuple[list[dict], dict[str, float]]:
-    if (
-        not isinstance(response, dict)
-        or set(response) != {
-            "schema_version", "group_id", "member_features", "group_features"
-        }
-        or response["schema_version"] != "project-dual-encoder-response.v1"
-        or response["group_id"] != request["group_id"]
-        or not isinstance(response["member_features"], list)
-    ):
-        raise RuntimeError("model-specific adapter response is misbound")
-    expected = {
-        (item["record_id"], item["modality"]): item
-        for item in request["members"]
-    }
-    if len(expected) != len(request["members"]):
-        raise ValueError("adapter request member population is duplicated")
-    observed = {}
-    for item in response["member_features"]:
-        if (
-            not isinstance(item, dict)
-            or set(item) != {"record_id", "modality", "features"}
-            or not isinstance(item["record_id"], str)
-            or not isinstance(item["modality"], str)
-        ):
-            raise RuntimeError("adapter member response schema differs")
-        identity = (item["record_id"], item["modality"])
-        if identity not in expected or identity in observed:
-            raise RuntimeError("adapter member population has an extra or duplicate")
-        observed[identity] = {
-            "record_id": item["record_id"],
-            "modality": item["modality"],
-            "features": finite_feature_map(
-                item["features"], generic_names, item["record_id"]
-            ),
-        }
-    if set(observed) != set(expected):
-        raise RuntimeError("adapter member population is incomplete")
-    ordered = [
-        observed[(item["record_id"], item["modality"])]
-        for item in request["members"]
-    ]
-    group_features = finite_feature_map(
-        response["group_features"], group_names, request["group_id"]
-    )
-    return ordered, group_features
-
-
-def stable_descriptor(descriptor: int, maximum: int, label: str) -&gt; bytes:
-    before = os.fstat(descriptor)
-    if (
-        not stat.S_ISREG(before.st_mode)
-        or before.st_size &lt;= 0
-        or before.st_size &gt; maximum
-    ):
-        raise ValueError(label + ": input type or size is outside policy")
-    os.lseek(descriptor, 0, os.SEEK_SET)
-    chunks = []
-    total = 0
-    while True:
-        chunk = os.read(descriptor, min(1024 * 1024, maximum + 1 - total))
-        if not chunk:
-            break
-        chunks.append(chunk)
-        total += len(chunk)
-        if total &gt; maximum:
-            raise ValueError(label + ": input exceeds policy")
-    after = os.fstat(descriptor)
-    identity = lambda value: (
-        value.st_dev, value.st_ino, value.st_size,
-        value.st_mtime_ns, value.st_ctime_ns,
-    )
-    raw = b"".join(chunks)
-    if identity(before) != identity(after) or len(raw) != before.st_size:
-        raise RuntimeError(label + ": input changed during capture")
-    return raw
-
-
-def stable_path(path: Path, maximum: int, label: str) -&gt; bytes:
-    value = str(path)
-    parsed = PurePosixPath(value)
-    if not parsed.is_absolute() or parsed.as_posix() != value:
-        raise ValueError(label + ": path must be a canonical absolute")
-    current = os.open(
-        "/",
-        os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_CLOEXEC", 0),
-    )
-    try:
-        for index, component in enumerate(parsed.parts[1:]):
-            final = index == len(parsed.parts[1:]) - 1
-            flags = (
-                os.O_RDONLY
-                | getattr(os, "O_CLOEXEC", 0)
-                | getattr(os, "O_NOFOLLOW", 0)
-            )
-            if not final:
-                flags |= os.O_DIRECTORY
-            following = os.open(component, flags, dir_fd=current)
-            os.close(current)
-            current = following
-        return stable_descriptor(current, maximum, label)
-    finally:
-        os.close(current)
-
-
-def open_absolute_directory(path: Path, label: str) -&gt; int:
-    value = str(path)
-    parsed = PurePosixPath(value)
-    if not parsed.is_absolute() or parsed.as_posix() != value:
-        raise ValueError(label + ": path must be a canonical absolute")
-    current = os.open(
-        "/",
-        os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_CLOEXEC", 0),
-    )
-    try:
-        for component in parsed.parts[1:]:
-            following = os.open(
-                component,
-                os.O_RDONLY
-                | os.O_DIRECTORY
-                | getattr(os, "O_CLOEXEC", 0)
-                | getattr(os, "O_NOFOLLOW", 0),
-                dir_fd=current,
-            )
-            os.close(current)
-            current = following
-        return current
-    except Exception:
-        os.close(current)
-        raise
-
-
-def verified_job_bytes() -&gt; bytes:
-    raw = stable_path(JOB, MAX_JOB_BYTES, "feature job")
-    bundle = stable_path(
-        JOB_BUNDLE, MAX_BUNDLE_BYTES, "feature job signature bundle"
-    )
-    key = stable_path(JOB_VERIFY_KEY, MAX_KEY_BYTES, "feature job verify key")
-    if not raw or not bundle or not key:
-        raise PermissionError("signed feature job inputs are incomplete")
-    if digest(key) != EXPECTED_JOB_KEY_SHA256:
-        raise PermissionError("feature job verification key digest differs")
-    with tempfile.TemporaryDirectory(prefix="aidefend-feature-job-") as directory:
-        root = Path(directory)
-        job_copy = root / "job.json"
-        bundle_copy = root / "job.sigstore.json"
-        key_copy = root / "verify.pub"
-        job_copy.write_bytes(raw)
-        bundle_copy.write_bytes(bundle)
-        key_copy.write_bytes(key)
-        for path in (job_copy, bundle_copy, key_copy):
-            os.chmod(path, 0o400)
-        subprocess.run(
-            [
-                "cosign", "verify-blob", "--key", str(key_copy),
-                "--bundle", str(bundle_copy), str(job_copy),
-            ],
-            check=True,
-            timeout=VERIFY_TIMEOUT,
-            capture_output=True,
-        )
-        if job_copy.read_bytes() != raw:
-            raise RuntimeError("verified feature job snapshot changed")
-    return raw
-
-
-def relative_path(value: object) -&gt; PurePosixPath:
-    if (
-        not isinstance(value, str)
-        or not value
-        or "\\\\" in value
-        or value.startswith("/")
-    ):
-        raise ValueError("producer pin path is unsafe")
-    path = PurePosixPath(value)
-    if (
-        any(part in {"", ".", ".."} for part in path.parts)
-        or path.as_posix() != value
-    ):
-        raise ValueError("producer pin path is not canonical")
-    return path
-
-
-def open_beneath(
-    root_descriptor: int, value: object, *, directory: bool = False
-) -&gt; tuple[int, PurePosixPath]:
-    path = relative_path(value)
-    current = os.dup(root_descriptor)
-    try:
-        for index, component in enumerate(path.parts):
-            final = index == len(path.parts) - 1
-            flags = (
-                os.O_RDONLY
-                | getattr(os, "O_CLOEXEC", 0)
-                | getattr(os, "O_NOFOLLOW", 0)
-            )
-            if not final or directory:
-                flags |= os.O_DIRECTORY
-            following = os.open(component, flags, dir_fd=current)
-            os.close(current)
-            current = following
-        metadata = os.fstat(current)
-        if directory != stat.S_ISDIR(metadata.st_mode):
-            raise ValueError("producer input object type differs")
-        if not directory and not stat.S_ISREG(metadata.st_mode):
-            raise ValueError("producer input is not a regular file")
-        return current, path
-    except Exception:
-        os.close(current)
-        raise
-
-
-def pinned_bytes(
-    root_descriptor: int, pin: dict, maximum: int, label: str
-) -&gt; bytes:
-    relative = pin["path"]
-    descriptor, _path = open_beneath(root_descriptor, relative)
-    try:
-        raw = stable_descriptor(descriptor, maximum, label)
-    finally:
-        os.close(descriptor)
-    if digest(raw) != pin["sha256"]:
-        raise PermissionError(relative + ": producer input digest differs")
-    return raw
-
-
-def sealed_memfd(label: str, raw: bytes) -&gt; int:
-    descriptor = os.memfd_create(
-        label,
-        getattr(os, "MFD_CLOEXEC", 0)
-        | getattr(os, "MFD_ALLOW_SEALING", 0),
-    )
-    view = memoryview(raw)
-    while view:
-        written = os.write(descriptor, view)
-        if written &lt;= 0:
-            raise OSError(label + ": short memfd write")
-        view = view[written:]
-    seals = (
-        fcntl.F_SEAL_SEAL | fcntl.F_SEAL_SHRINK
-        | fcntl.F_SEAL_GROW | fcntl.F_SEAL_WRITE
-    )
-    fcntl.fcntl(descriptor, fcntl.F_ADD_SEALS, seals)
-    os.lseek(descriptor, 0, os.SEEK_SET)
-    if os.read(descriptor, len(raw) + 1) != raw:
-        raise RuntimeError(label + ": sealed snapshot readback differs")
-    os.lseek(descriptor, 0, os.SEEK_SET)
-    return descriptor
-
-
-def direct_readonly_mount(path: Path) -&gt; bool:
-    normalized = os.path.normpath(str(path))
-    matches = []
-    for line in Path("/proc/self/mountinfo").read_text(
-        encoding="utf-8", errors="strict"
-    ).splitlines():
-        before, separator, _after = line.partition(" - ")
-        if not separator:
-            raise RuntimeError("producer mountinfo record is malformed")
-        fields = before.split()
-        if len(fields) &lt; 6:
-            raise RuntimeError("producer mountinfo fields are incomplete")
-        if fields[4] == normalized:
-            matches.append(set(fields[5].split(",")))
-    return len(matches) == 1 and "ro" in matches[0]
-
-
-def enumerate_files(
-    root_descriptor: int, value: object, limits: dict
-) -&gt; set[str]:
-    directory_fd, root_path = open_beneath(
-        root_descriptor, value, directory=True
-    )
-    paths: set[str] = set()
-    walk = {"directories": 1, "descriptors": 1}
-
-    def visit(current_fd: int, prefix: PurePosixPath) -&gt; None:
-        if len(prefix.parts) &gt; limits["max_artifact_depth"]:
-            raise ValueError("producer artifact depth exceeds policy")
-        fanout = 0
-        with os.scandir(current_fd) as entries:
-            for entry in entries:
-                fanout += 1
-                if fanout &gt; limits["max_artifact_entries_per_directory"]:
-                    raise ValueError("producer directory fanout exceeds policy")
-                walk["descriptors"] += 1
-                if walk["descriptors"] &gt; limits["max_artifact_descriptors"]:
-                    raise ValueError("producer descriptor population exceeds policy")
-                name = entry.name
-                if name in {"", ".", ".."} or "/" in name:
-                    raise ValueError("producer artifact name is unsafe")
-                descriptor = os.open(
-                    name,
-                    os.O_RDONLY
-                    | getattr(os, "O_CLOEXEC", 0)
-                    | getattr(os, "O_NOFOLLOW", 0),
-                    dir_fd=current_fd,
-                )
-                try:
-                    metadata = os.fstat(descriptor)
-                    relative = root_path.joinpath(prefix, name)
-                    if stat.S_ISREG(metadata.st_mode):
-                        if len(paths) &gt;= limits["max_artifact_files"]:
-                            raise ValueError(
-                                "producer artifact population exceeds policy"
-                            )
-                        paths.add(relative.as_posix())
-                    elif stat.S_ISDIR(metadata.st_mode):
-                        walk["directories"] += 1
-                        if (
-                            walk["directories"]
-                            &gt; limits["max_artifact_directories"]
-                        ):
-                            raise ValueError(
-                                "producer directory population exceeds policy"
-                            )
-                        if len(prefix.parts) + 1 &gt; limits["max_artifact_depth"]:
-                            raise ValueError(
-                                "producer artifact depth exceeds policy"
-                            )
-                        visit(descriptor, prefix / name)
-                    else:
-                        raise ValueError(
-                            "producer artifact tree has an unsafe object"
-                        )
-                finally:
-                    os.close(descriptor)
-
-    try:
-        visit(directory_fd, PurePosixPath())
-    finally:
-        os.close(directory_fd)
-    return paths
-
-
-job_raw = verified_job_bytes()
-job = strict_json(job_raw)
-if (
-    not isinstance(job, dict)
-    or job["schema_version"] != "aidefend.project-dual-encoder-job.v1"
-    or job["producer_adapter"] != "project-dual-encoder-v1"
-    or job["runtime"] != EXPECTED_RUNTIME
-    or not ADAPTER_BIN.is_file()
-):
-    raise PermissionError("model-specific producer contract differs")
-generic_feature_names, group_feature_names = exact_feature_names(
-    job["feature_contract"]
-)
-root = Path(job["readonly_input_root"])
-if not root.is_mount() or not direct_readonly_mount(root):
-    raise PermissionError("producer input must be a direct read-only mount")
-ROOT_FD = open_absolute_directory(root, "producer data root")
-model = pinned_bytes(
-    ROOT_FD, job["model"], job["limits"]["max_model_bytes"], "fusion model"
-)
-adapter = pinned_bytes(
-    ROOT_FD, job["adapter"], job["limits"]["max_adapter_bytes"], "adapter"
-)
-model_fd = sealed_memfd("fusion-model", model)
-adapter_fd = sealed_memfd("multimodal-adapter", adapter)
-populations = job["populations"]
-if set(populations) != {"reference", "candidate"}:
-    raise ValueError("reference and candidate populations are both required")
-
-rows = {
-    "reference_members": [], "candidate_members": [],
-    "reference_groups": [], "candidate_groups": [],
-}
-population_receipts = {}
-for population_name in ("reference", "candidate"):
-    population = populations[population_name]
-    declared_paths = set()
-    canonical_groups = []
-    canonical_records = []
-    declared_group_ids = set()
-    declared_record_ids = set()
-    for group in population["groups"]:
-        if (
-            not isinstance(group, dict)
-            or set(group) != {"group_id", "members"}
-            or not isinstance(group["group_id"], str)
-            or not group["group_id"]
-            or group["group_id"] in declared_group_ids
-            or not isinstance(group["members"], list)
-            or not group["members"]
-        ):
-            raise ValueError(population_name + ": group population is invalid")
-        declared_group_ids.add(group["group_id"])
-        request_members = []
-        for member in group["members"]:
-            if (
-                not isinstance(member, dict)
-                or set(member) != {
-                    "record_id", "modality", "path", "sha256"
-                }
-                or not isinstance(member["record_id"], str)
-                or not member["record_id"]
-                or member["record_id"] in declared_record_ids
-                or not isinstance(member["modality"], str)
-                or not member["modality"]
-                or not isinstance(member["path"], str)
-                or not member["path"]
-                or not isinstance(member["sha256"], str)
-                or len(member["sha256"]) != 64
-                or member["path"] in declared_paths
-            ):
-                raise ValueError(population_name + ": member population is invalid")
-            declared_record_ids.add(member["record_id"])
-            raw = pinned_bytes(
-                ROOT_FD,
-                member,
-                job["limits"]["max_artifact_bytes_each"],
-                member["record_id"],
-            )
-            declared_paths.add(member["path"])
-            canonical_records.append(
-                {
-                    "record_id": member["record_id"],
-                    "group_id": group["group_id"],
-                    "modality": member["modality"],
-                    "path": member["path"],
-                    "sha256": digest(raw),
-                    "byte_length": len(raw),
-                }
-            )
-            request_members.append(
-                {
-                    "record_id": member["record_id"],
-                    "modality": member["modality"],
-                    "sha256": digest(raw),
-                    "content_hex": raw.hex(),
-                }
-            )
-        request = {
-            "schema_version": "project-dual-encoder-request.v1",
-            "group_id": group["group_id"],
-            "model_sha256": digest(model),
-            "adapter_sha256": digest(adapter),
-            "model_path": "/proc/self/fd/" + str(model_fd),
-            "adapter_path": "/proc/self/fd/" + str(adapter_fd),
-            "members": request_members,
-            "feature_contract": job["feature_contract"],
-        }
-        completed = subprocess.run(
-            [str(ADAPTER_BIN)],
-            input=canonical(request),
-            capture_output=True,
-            pass_fds=(model_fd, adapter_fd),
-            timeout=job["limits"]["adapter_timeout_seconds"],
-            check=True,
-        )
-        response = strict_json(completed.stdout)
-        member_features, group_features = reconcile_adapter_response(
-            response,
-            request,
-            generic_feature_names,
-            group_feature_names,
-        )
-        member_prefix = (
-            "reference_id" if population_name == "reference" else "record_id"
-        )
-        for item in member_features:
-            rows[population_name + "_members"].append(
-                {
-                    member_prefix: item["record_id"],
-                    **({"group_id": group["group_id"]}
-                       if population_name == "candidate" else {}),
-                    "modality": item["modality"],
-                    **item["features"],
-                }
-            )
-        group_prefix = (
-            "reference_group_id"
-            if population_name == "reference" else "group_id"
-        )
-        rows[population_name + "_groups"].append(
-            {group_prefix: group["group_id"], **group_features}
-        )
-        canonical_groups.append(
-            {
-                "group_id": group["group_id"],
-                "members": sorted(
-                    [
-                        {
-                            "record_id": item["record_id"],
-                            "modality": item["modality"],
-                            "sha256": item["sha256"],
-                        }
-                        for item in request_members
-                    ],
-                    key=lambda item: item["record_id"],
-                ),
-            }
-        )
-    actual_paths = enumerate_files(
-        ROOT_FD,
-        population["artifact_root"],
-        job["limits"],
-    )
-    if actual_paths != declared_paths:
-        raise RuntimeError(population_name + ": raw population is incomplete")
-    if (
-        len(rows[population_name + "_members"]) != len(canonical_records)
-        or len(rows[population_name + "_groups"]) != len(canonical_groups)
-        or len(canonical_records) != len(declared_record_ids)
-        or len(canonical_groups) != len(declared_group_ids)
-    ):
-        raise RuntimeError(
-            population_name + ": adapter output population did not reconcile"
-        )
-    population_receipts[population_name] = {
-        "artifact_root": population["artifact_root"],
-        "records": sorted(
-            canonical_records, key=lambda item: item["record_id"]
-        ),
-        "groups": sorted(canonical_groups, key=lambda item: item["group_id"]),
-        "record_count": sum(len(item["members"]) for item in canonical_groups),
-        "group_count": len(canonical_groups),
-    }
-
-OUTPUT.mkdir(mode=0o700)
-tables = {
-    OUTPUT_NAMES[0]: rows["reference_members"],
-    OUTPUT_NAMES[1]: rows["candidate_members"],
-    OUTPUT_NAMES[2]: rows["reference_groups"],
-    OUTPUT_NAMES[3]: rows["candidate_groups"],
-}
-output_digests = {}
-output_row_counts = {}
-expected_output_rows = {
-    OUTPUT_NAMES[0]: population_receipts["reference"]["record_count"],
-    OUTPUT_NAMES[1]: population_receipts["candidate"]["record_count"],
-    OUTPUT_NAMES[2]: population_receipts["reference"]["group_count"],
-    OUTPUT_NAMES[3]: population_receipts["candidate"]["group_count"],
-}
-for name, values in tables.items():
-    table = pa.Table.from_pylist(values)
-    expected_columns = job["output_columns"][name]
-    if (
-        table.column_names != expected_columns
-        or table.num_rows != expected_output_rows[name]
-        or table.num_rows == 0
-    ):
-        raise RuntimeError(name + ": producer schema or population differs")
-    path = OUTPUT / name
-    pq.write_table(
-        table, path, compression="zstd", use_dictionary=False,
-        write_statistics=True, data_page_version="2.0",
-    )
-    output_raw = path.read_bytes()
-    readback = pq.ParquetFile(pa.BufferReader(output_raw))
-    if (
-        readback.schema_arrow.names != expected_columns
-        or readback.metadata is None
-        or readback.metadata.num_rows != expected_output_rows[name]
-    ):
-        raise RuntimeError(name + ": serialized output readback differs")
-    output_digests[name] = digest(output_raw)
-    output_row_counts[name] = readback.metadata.num_rows
-
-if output_row_counts != expected_output_rows:
-    raise RuntimeError("producer output row counts did not reconcile")
-output_population = {
-    name: {"rows": output_row_counts[name], "sha256": output_digests[name]}
-    for name in OUTPUT_NAMES
-}
-output_population_sha256 = digest(canonical(output_population))
-
-
-def population_hashes(population: dict) -&gt; tuple[str, str, str]:
-    raw_root = digest(
-        canonical(
-            {
-                "artifact_root": population["artifact_root"],
-                "records": population["records"],
-            }
-        )
-    )
-    records = digest(
-        canonical(
-            [
-                {
-                    "record_id": item["record_id"],
-                    "group_id": item["group_id"],
-                    "modality": item["modality"],
-                    "sha256": item["sha256"],
-                }
-                for item in population["records"]
-            ]
-        )
-    )
-    groups = digest(
-        canonical(
-            [
-                {
-                    "group_id": item["group_id"],
-                    "record_ids": sorted(
-                        member["record_id"] for member in item["members"]
-                    ),
-                }
-                for item in population["groups"]
-            ]
-        )
-    )
-    return raw_root, records, groups
-
-
-candidate_hashes = population_hashes(population_receipts["candidate"])
-reference_hashes = population_hashes(population_receipts["reference"])
-receipt = {
-    "schema_version": "aidefend.multimodal-feature-build-receipt.v1",
-    "outcome": "PASS",
-    "policy_version": job["policy_version"],
-    "snapshot_id": job["snapshot_id"],
-    "feature_job_manifest_sha256": digest(job_raw),
-    "raw_artifact_population_sha256": candidate_hashes[0],
-    "record_population_sha256": candidate_hashes[1],
-    "group_population_sha256": candidate_hashes[2],
-    "record_count": population_receipts["candidate"]["record_count"],
-    "group_count": population_receipts["candidate"]["group_count"],
-    "reference_raw_artifact_population_sha256": reference_hashes[0],
-    "reference_record_population_sha256": reference_hashes[1],
-    "reference_group_population_sha256": reference_hashes[2],
-    "reference_record_count": population_receipts["reference"]["record_count"],
-    "reference_group_count": population_receipts["reference"]["group_count"],
-    "model_sha256": digest(model),
-    "adapter_sha256": digest(adapter),
-    **EXPECTED_RUNTIME,
-    "reference_member_features_sha256": output_digests[OUTPUT_NAMES[0]],
-    "candidate_member_features_sha256": output_digests[OUTPUT_NAMES[1]],
-    "reference_group_features_sha256": output_digests[OUTPUT_NAMES[2]],
-    "candidate_group_features_sha256": output_digests[OUTPUT_NAMES[3]],
-    "output_row_counts": output_row_counts,
-    "output_population_sha256": output_population_sha256,
-}
-receipt_path = OUTPUT / "feature-build-receipt.json"
-receipt_path.write_bytes(canonical(receipt))
-subprocess.run(
-    [
-        "cosign", "sign-blob", "--yes", "--key", str(SIGNING_KEY),
-        "--bundle", str(OUTPUT / "feature-build-receipt.sigstore.json"),
-        str(receipt_path),
-    ],
-    check=True,
-    timeout=job["limits"]["signing_timeout_seconds"],
-)
-for descriptor in (model_fd, adapter_fd, ROOT_FD):
-    os.close(descriptor)
-</code></pre><h5>Enforce the external sandbox and watchdog</h5><p>Run the admission image only through a separately digest-pinned watchdog image. The signed runtime names the canonical admission image reference, registry-manifest digest, Docker config-image digest, entrypoint, command, non-root user, working directory, and exact environment digest. Before exposing any mounted signing key or starting the admission code, the watchdog verifies the local image's exact RepoDigest and config ID, resolves the configured container name once, then uses the immutable full container ID for every start, wait, kill, and removal operation. It rejects any later name drift or image/config change. Its closed engine readback rejects extra mounts, binds, devices, capabilities, host namespaces, ports, privileged mode, unconfined security profiles, executable tmpfs options, process/config drift, and unsigned key or launch-receipt mounts; the launch receipt binds a canonical digest of the complete observed Docker config. The consumer verifies that receipt and its own live cgroup, mount, FD, and tmpfs state. After the hard deadline or process exit, the watchdog treats a missing final or terminal receipt as <code>ERROR</code> and signs an external error receipt; an absent receipt can never become <code>PASS</code>.</p><pre><code class="language-python"># File: admission/watchdog_terminal_check.py
-from __future__ import annotations
-
-from datetime import datetime, timedelta, timezone
-import hashlib
-import json
-import math
-import os
-import re
-import secrets
-import stat
-import subprocess
-import tempfile
-from pathlib import Path, PurePosixPath
-
-
-def verified_positive_seconds(name: str) -&gt; float:
-    raw = os.environ.get(name)
-    if (
-        raw is None
-        or re.fullmatch(r"(?:0|[1-9][0-9]*)(?:[.][0-9]+)?", raw) is None
-    ):
-        raise RuntimeError(name + " must be a strict positive decimal")
-    value = float(raw)
-    if not math.isfinite(value) or value &lt;= 0:
-        raise RuntimeError(name + " must be finite and positive")
-    return value
-
-
-def canonical(value: object) -&gt; bytes:
-    return json.dumps(
-        value, sort_keys=True, separators=(",", ":"), allow_nan=False
-    ).encode("utf-8")
-
-
-def digest(raw: bytes) -&gt; str:
-    return hashlib.sha256(raw).hexdigest()
-
-
-def unique_object(pairs: list[tuple[str, object]]) -&gt; dict:
-    value = {}
-    for key, item in pairs:
-        if key in value:
-            raise ValueError("duplicate JSON key: " + key)
-        value[key] = item
-    return value
-
-
-def strict_json(raw: bytes) -&gt; object:
-    return json.loads(
-        raw.decode("utf-8", errors="strict"),
-        object_pairs_hook=unique_object,
-        parse_constant=lambda value: (_ for _ in ()).throw(
-            ValueError("non-finite JSON number: " + value)
-        ),
-    )
-
-
-def stable_descriptor(descriptor: int, maximum: int, label: str) -&gt; bytes:
-    before = os.fstat(descriptor)
-    if (
-        maximum &lt;= 0
-        or not stat.S_ISREG(before.st_mode)
-        or before.st_size &lt;= 0
-        or before.st_size &gt; maximum
-    ):
-        raise ValueError(label + ": type or size is outside policy")
-    os.lseek(descriptor, 0, os.SEEK_SET)
-    chunks = []
-    total = 0
-    while True:
-        chunk = os.read(descriptor, min(1024 * 1024, maximum + 1 - total))
-        if not chunk:
-            break
-        chunks.append(chunk)
-        total += len(chunk)
-        if total &gt; maximum:
-            raise ValueError(label + ": byte limit exceeded")
-    after = os.fstat(descriptor)
-    identity = lambda value: (
-        value.st_dev, value.st_ino, value.st_size,
-        value.st_mtime_ns, value.st_ctime_ns,
-    )
-    raw = b"".join(chunks)
-    if identity(before) != identity(after) or len(raw) != before.st_size:
-        raise RuntimeError(label + ": input changed during capture")
-    return raw
-
-
-def stable_path(path: Path, maximum: int, label: str) -&gt; bytes:
-    value = str(path)
-    parsed = PurePosixPath(value)
-    if (
-        not parsed.is_absolute()
-        or parsed.as_posix() != value
-        or len(parsed.parts) &lt; 2
-    ):
-        raise ValueError(label + ": path must be a canonical absolute")
-    current = os.open(
-        "/",
-        os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_CLOEXEC", 0),
-    )
-    try:
-        for index, component in enumerate(parsed.parts[1:]):
-            final = index == len(parsed.parts[1:]) - 1
-            flags = (
-                os.O_RDONLY
-                | getattr(os, "O_CLOEXEC", 0)
-                | getattr(os, "O_NOFOLLOW", 0)
-            )
-            if not final:
-                flags |= os.O_DIRECTORY
-            following = os.open(component, flags, dir_fd=current)
-            os.close(current)
-            current = following
-        return stable_descriptor(current, maximum, label)
-    finally:
-        os.close(current)
-
-
-def open_absolute_directory(path: Path, label: str) -&gt; int:
-    value = str(path)
-    parsed = PurePosixPath(value)
-    if (
-        not parsed.is_absolute()
-        or parsed.as_posix() != value
-        or len(parsed.parts) &lt; 2
-    ):
-        raise ValueError(label + ": path must be a canonical absolute")
-    current = os.open(
-        "/",
-        os.O_RDONLY | os.O_DIRECTORY | getattr(os, "O_CLOEXEC", 0),
-    )
-    try:
-        for component in parsed.parts[1:]:
-            following = os.open(
-                component,
-                os.O_RDONLY | os.O_DIRECTORY
-                | getattr(os, "O_CLOEXEC", 0)
-                | getattr(os, "O_NOFOLLOW", 0),
-                dir_fd=current,
-            )
-            os.close(current)
-            current = following
-        return current
-    except Exception:
-        os.close(current)
-        raise
-
-
-OUTPUT_FD = -1
-
-
-def output_relative(value: object) -&gt; PurePosixPath:
-    if (
-        not isinstance(value, str)
-        or not value
-        or value.startswith("/")
-        or "\\\\" in value
-    ):
-        raise ValueError("output path must be a POSIX relative path")
-    path = PurePosixPath(value)
-    if (
-        path.as_posix() != value
-        or any(part in {"", ".", ".."} for part in path.parts)
-    ):
-        raise ValueError("output path is not canonical")
-    return path
-
-
-def open_output(value: object, *, directory: bool = False) -&gt; int:
-    if OUTPUT_FD &lt; 0:
-        raise RuntimeError("trusted output descriptor is unavailable")
-    path = output_relative(value)
-    current = os.dup(OUTPUT_FD)
-    try:
-        for index, component in enumerate(path.parts):
-            final = index == len(path.parts) - 1
-            flags = (
-                os.O_RDONLY
-                | getattr(os, "O_CLOEXEC", 0)
-                | getattr(os, "O_NOFOLLOW", 0)
-            )
-            if not final or directory:
-                flags |= os.O_DIRECTORY
-            following = os.open(component, flags, dir_fd=current)
-            os.close(current)
-            current = following
-        metadata = os.fstat(current)
-        if directory != stat.S_ISDIR(metadata.st_mode):
-            raise ValueError("output object type differs")
-        if not directory and not stat.S_ISREG(metadata.st_mode):
-            raise ValueError("output object is not a regular file")
-        return current
-    except Exception:
-        os.close(current)
-        raise
-
-
-def read_output(value: object, maximum: int, label: str) -&gt; bytes:
-    descriptor = open_output(value)
-    try:
-        return stable_descriptor(descriptor, maximum, label)
-    finally:
-        os.close(descriptor)
-
-
-def output_exists(value: object) -&gt; bool:
-    try:
-        descriptor = open_output(value)
-    except FileNotFoundError:
-        return False
-    else:
-        os.close(descriptor)
-        return True
-
-
-def output_directory_population(
-    value: object, maximum_entries: int, label: str
-) -&gt; dict[str, str]:
-    try:
-        descriptor = open_output(value, directory=True)
-    except FileNotFoundError:
-        return {}
-    population = {}
-    count = 0
-    try:
-        with os.scandir(descriptor) as entries:
-            for entry in entries:
-                count += 1
-                if count &gt; maximum_entries:
-                    raise ValueError(label + ": directory population exceeds policy")
-                name = entry.name
-                if name in {"", ".", ".."} or "/" in name or name in population:
-                    raise ValueError(label + ": unsafe or duplicate directory entry")
-                child = os.open(
-                    name,
-                    os.O_RDONLY | getattr(os, "O_CLOEXEC", 0)
-                    | getattr(os, "O_NOFOLLOW", 0),
-                    dir_fd=descriptor,
-                )
-                try:
-                    metadata = os.fstat(child)
-                    if stat.S_ISREG(metadata.st_mode):
-                        kind = "file"
-                    elif stat.S_ISDIR(metadata.st_mode):
-                        kind = "directory"
-                    else:
-                        raise ValueError(label + ": unsupported output object")
-                    population[name] = kind
-                finally:
-                    os.close(child)
-    finally:
-        os.close(descriptor)
-    return population
-
-
-def write_private(path: Path, raw: bytes) -&gt; None:
-    descriptor = os.open(
-        path,
-        os.O_WRONLY | os.O_CREAT | os.O_EXCL
-        | getattr(os, "O_CLOEXEC", 0) | getattr(os, "O_NOFOLLOW", 0),
-        0o400,
-    )
-    try:
-        view = memoryview(raw)
-        while view:
-            written = os.write(descriptor, view)
-            if written &lt;= 0:
-                raise OSError("short watchdog receipt write")
-            view = view[written:]
-        os.fsync(descriptor)
-    finally:
-        os.close(descriptor)
-
-
-def verify_blob_bytes(
-    payload: bytes, bundle: bytes, key: bytes, label: str
-) -&gt; None:
-    with tempfile.TemporaryDirectory(prefix="aidefend-watchdog-verify-") as directory:
-        root = Path(directory)
-        payload_path = root / "terminal.json"
-        bundle_path = root / "terminal.sigstore.json"
-        key_path = root / "admission.pub"
-        write_private(payload_path, payload)
-        write_private(bundle_path, bundle)
-        write_private(key_path, key)
-        subprocess.run(
-            [
-                "cosign", "verify-blob", "--key", str(key_path),
-                "--bundle", str(bundle_path), str(payload_path),
-            ],
-            check=True,
-            capture_output=True,
-            text=True,
-            timeout=AUXILIARY_TIMEOUT_SECONDS,
-        )
-        if stable_path(payload_path, len(payload), label) != payload:
-            raise RuntimeError(label + ": verified terminal snapshot changed")
-
-
-def utc_timestamp() -&gt; str:
-    return datetime.now(timezone.utc).isoformat(
-        timespec="microseconds"
-    ).replace("+00:00", "Z")
-
-
-def parse_utc(value: object, label: str) -&gt; datetime:
-    if not isinstance(value, str) or not value.endswith("Z"):
-        raise ValueError(label + ": UTC timestamp must end in Z")
-    try:
-        parsed = datetime.fromisoformat(value[:-1] + "+00:00")
-    except ValueError as exc:
-        raise ValueError(label + ": timestamp is invalid") from exc
-    if parsed.tzinfo != timezone.utc:
-        raise ValueError(label + ": timestamp is not UTC")
-    return parsed
-
-
-SHA256 = re.compile(r"[0-9a-f]{64}")
-IMAGE_DIGEST = re.compile(r"sha256:[0-9a-f]{64}")
-IMAGE_REF = re.compile(r"[a-z0-9][a-z0-9._:/-]*@sha256:[0-9a-f]{64}")
-CONTAINER_ID = re.compile(r"[0-9a-f]{64}")
-TERMINAL_FIELDS = {
-    "schema_version", "status", "reason", "error_class", "attempt_id",
-    "container_id", "launch_receipt_sha256", "manifest_sha256",
-    "snapshot_id", "policy_version", "issued_at", "completed_at",
-    "detailed_receipt_sha256",
-}
-DETAILED_FIELDS = {
-    "schema_version", "status", "reason", "policy_version", "snapshot_id",
-    "attempt_id", "container_id", "launch_receipt_sha256",
-    "launch_issued_at", "launch_expires_at", "suite_kind",
-    "manifest_sha256", "feature_build_receipt_sha256",
-    "feature_job_manifest_sha256", "raw_artifact_population_sha256",
-    "reference_raw_artifact_population_sha256",
-    "record_population_sha256", "group_population_sha256",
-    "admission_image_ref", "admission_image_digest",
-    "admission_image_config_digest", "admission_code_sha256",
-    "admission_dependency_lock_sha256", "watchdog_image_digest",
-    "watchdog_code_sha256", "watchdog_dependency_lock_sha256",
-    "watchdog_auxiliary_timeout_seconds", "sandbox_contract_sha256",
-    "sandbox_launch_receipt_sha256", "manifest_verify_key_sha256",
-    "feature_receipt_verify_key_sha256",
-    "sandbox_receipt_verify_key_sha256",
-    "admission_receipt_verify_key_sha256", "extractor_image_digest",
-    "extractor_code_sha256", "extractor_dependency_lock_sha256",
-    "resource_limits_sha256", "parquet_uncompressed_bytes",
-    "model_sha256", "adapter_sha256",
-    "reference_member_features_sha256",
-    "candidate_member_features_sha256",
-    "reference_group_features_sha256",
-    "candidate_group_features_sha256", "population_records",
-    "evaluated_records", "population_groups", "evaluated_groups",
-    "admitted_groups", "quarantined_groups", "finding_count",
-    "evidence_path", "evidence_sha256", "admitted_path",
-    "admitted_sha256", "admitted_content_root_sha256",
-    "quarantine_path", "quarantine_sha256", "elapsed_seconds",
-}
-EVIDENCE_FIELDS = {
-    "group_id", "record_ids", "member_generic_scores",
-    "minimum_generic_score", "joint_embedding_score",
-    "maximum_fusion_robust_z", "reasons", "outcome",
-}
-ADMITTED_FIELDS = {
-    "schema_version", "snapshot_id", "source_manifest_sha256",
-    "raw_artifact_population_sha256", "groups", "blobs",
-    "content_root_sha256",
-}
-ADMITTED_GROUP_FIELDS = {"group_id", "members"}
-ADMITTED_MEMBER_FIELDS = {
-    "record_id", "modality", "sha256", "byte_length", "content_path",
-}
-BLOB_FIELDS = {"sha256", "byte_length", "content_path"}
-ANOMALY_REASONS = {
-    "generic_record_anomaly", "joint_embedding_anomaly",
-    "fusion_layer_anomaly",
-}
-MANIFEST = Path(os.environ["WATCHDOG_MANIFEST"])
-MANIFEST_BUNDLE = Path(os.environ["WATCHDOG_MANIFEST_BUNDLE"])
-MANIFEST_VERIFY_KEY = Path(os.environ["WATCHDOG_MANIFEST_VERIFY_KEY"])
-OUTPUT = Path(os.environ["WATCHDOG_OUTPUT"])
-CONTAINER = os.environ["WATCHDOG_CONTAINER_NAME"]
-SIGNING_KEY = Path(os.environ["WATCHDOG_SIGNING_KEY"])
-LAUNCH_RECEIPT = Path(os.environ["WATCHDOG_LAUNCH_RECEIPT"])
-LAUNCH_BUNDLE = Path(os.environ["WATCHDOG_LAUNCH_RECEIPT_BUNDLE"])
-ADMISSION_RECEIPT_VERIFY_KEY = Path(
-    os.environ["VERIFIED_H002_ADMISSION_RECEIPT_VERIFY_KEY"]
-)
-EXPECTED_ADMISSION_RECEIPT_KEY_SHA256 = os.environ[
-    "VERIFIED_H002_ADMISSION_RECEIPT_VERIFY_KEY_SHA256"
-]
-EXPECTED_MANIFEST_KEY_SHA256 = os.environ[
-    "VERIFIED_H002_MANIFEST_VERIFY_KEY_SHA256"
-]
-TIMEOUT = int(os.environ["WATCHDOG_MAX_RUNTIME_SECONDS"])
-AUXILIARY_TIMEOUT_SECONDS = verified_positive_seconds(
-    "VERIFIED_H002_WATCHDOG_AUXILIARY_TIMEOUT_SECONDS"
-)
-MAX_MANIFEST_BYTES = int(os.environ["VERIFIED_H002_MAX_MANIFEST_BYTES"])
-MAX_BUNDLE_BYTES = int(
-    os.environ["VERIFIED_H002_MAX_SIGNATURE_BUNDLE_BYTES"]
-)
-MAX_KEY_BYTES = int(os.environ["VERIFIED_H002_MAX_VERIFICATION_KEY_BYTES"])
-manifest_raw = stable_path(MANIFEST, MAX_MANIFEST_BYTES, "watchdog manifest")
-manifest_bundle = stable_path(
-    MANIFEST_BUNDLE, MAX_BUNDLE_BYTES, "watchdog manifest bundle"
-)
-manifest_key = stable_path(
-    MANIFEST_VERIFY_KEY, MAX_KEY_BYTES, "watchdog manifest verification key"
-)
-if (
-    SHA256.fullmatch(EXPECTED_MANIFEST_KEY_SHA256) is None
-    or digest(manifest_key) != EXPECTED_MANIFEST_KEY_SHA256
-):
-    raise PermissionError("watchdog manifest verification key differs")
-verify_blob_bytes(
-    manifest_raw, manifest_bundle, manifest_key, "watchdog manifest"
-)
-manifest = strict_json(manifest_raw)
-if not isinstance(manifest, dict):
-    raise ValueError("watchdog manifest must be an object")
-manifest_sha256 = digest(manifest_raw)
-admission_receipt_key = stable_path(
-    ADMISSION_RECEIPT_VERIFY_KEY,
-    MAX_KEY_BYTES,
-    "admission receipt verification key",
-)
-OUTPUT_FD = open_absolute_directory(OUTPUT, "watchdog output root")
-output_metadata = os.fstat(OUTPUT_FD)
-if (
-    not stat.S_ISDIR(output_metadata.st_mode)
-    or output_metadata.st_uid != os.geteuid()
-    or output_metadata.st_mode &amp; stat.S_IWOTH
-):
-    raise PermissionError(
-        "watchdog output root must be owner-controlled and not world-writable"
-    )
-
-
-limits = manifest["limits"]
-runtime = manifest["runtime"]
-if (
-    TIMEOUT &lt;= 0
-    or TIMEOUT != limits["max_runtime_seconds"]
-    or SHA256.fullmatch(EXPECTED_ADMISSION_RECEIPT_KEY_SHA256) is None
-    or digest(admission_receipt_key)
-    != EXPECTED_ADMISSION_RECEIPT_KEY_SHA256
-    or runtime["admission_receipt_verify_key_sha256"]
-    != EXPECTED_ADMISSION_RECEIPT_KEY_SHA256
-    or runtime["manifest_verify_key_sha256"] != EXPECTED_MANIFEST_KEY_SHA256
-    or IMAGE_REF.fullmatch(runtime["admission_image_ref"]) is None
-    or runtime["admission_image_ref"].rsplit("@", 1)[1]
-    != runtime["admission_image_digest"]
-    or IMAGE_DIGEST.fullmatch(runtime["admission_image_digest"]) is None
-    or IMAGE_DIGEST.fullmatch(runtime["admission_image_config_digest"]) is None
-    or IMAGE_REF.fullmatch(runtime["watchdog_image_ref"]) is None
-    or runtime["watchdog_image_ref"].rsplit("@", 1)[1]
-    != runtime["watchdog_image_digest"]
-    or IMAGE_DIGEST.fullmatch(runtime["watchdog_image_digest"]) is None
-    or IMAGE_DIGEST.fullmatch(runtime["watchdog_image_config_digest"]) is None
-    or not isinstance(runtime["admission_entrypoint"], list)
-    or not runtime["admission_entrypoint"]
-    or any(
-        not isinstance(item, str) or not item
-        for item in runtime["admission_entrypoint"]
-    )
-    or not runtime["admission_entrypoint"][0].startswith("/")
-    or not isinstance(runtime["admission_command"], list)
-    or any(
-        not isinstance(item, str) or not item
-        for item in runtime["admission_command"]
-    )
-    or re.fullmatch(r"[1-9][0-9]*:[1-9][0-9]*", runtime["admission_user"])
-    is None
-    or not isinstance(runtime["admission_working_dir"], str)
-    or not runtime["admission_working_dir"].startswith("/")
-    or os.path.normpath(runtime["admission_working_dir"])
-    != runtime["admission_working_dir"]
-    or any(
-        not isinstance(runtime[name], str)
-        or SHA256.fullmatch(runtime[name]) is None
-        for name in (
-            "manifest_verify_key_sha256",
-            "feature_receipt_verify_key_sha256",
-            "sandbox_receipt_verify_key_sha256",
-            "admission_receipt_verify_key_sha256",
-            "admission_environment_sha256",
-            "watchdog_environment_sha256",
-        )
-    )
-    or not isinstance(runtime["watchdog_entrypoint"], list)
-    or not runtime["watchdog_entrypoint"]
-    or any(
-        not isinstance(item, str) or not item
-        for item in runtime["watchdog_entrypoint"]
-    )
-    or not runtime["watchdog_entrypoint"][0].startswith("/")
-    or not isinstance(runtime["watchdog_command"], list)
-    or any(
-        not isinstance(item, str) or not item
-        for item in runtime["watchdog_command"]
-    )
-    or re.fullmatch(r"[1-9][0-9]*:[1-9][0-9]*", runtime["watchdog_user"])
-    is None
-    or not isinstance(runtime["watchdog_working_dir"], str)
-    or not runtime["watchdog_working_dir"].startswith("/")
-    or os.path.normpath(runtime["watchdog_working_dir"])
-    != runtime["watchdog_working_dir"]
-    or isinstance(runtime["watchdog_auxiliary_timeout_seconds"], bool)
-    or not isinstance(
-        runtime["watchdog_auxiliary_timeout_seconds"], (int, float)
-    )
-    or not math.isfinite(
-        float(runtime["watchdog_auxiliary_timeout_seconds"])
-    )
-    or runtime["watchdog_auxiliary_timeout_seconds"] &lt;= 0
-    or float(runtime["watchdog_auxiliary_timeout_seconds"])
-    != AUXILIARY_TIMEOUT_SECONDS
-):
-    raise PermissionError("verified watchdog auxiliary timeout differs")
-
-
-def canonical_absolute(value: object, label: str) -&gt; str:
-    if not isinstance(value, str) or not value.startswith("/"):
-        raise ValueError(label + ": canonical absolute path is required")
-    parsed = PurePosixPath(value)
-    if (
-        parsed.as_posix() != value
-        or any(part in {"", ".", ".."} for part in parsed.parts[1:])
-    ):
-        raise ValueError(label + ": path is not canonical")
-    return value
-
-
-def docker_object(arguments: list[str], label: str) -&gt; dict:
-    values = strict_json(
-        subprocess.run(
-            ["docker", *arguments],
-            check=True,
-            capture_output=True,
-            timeout=AUXILIARY_TIMEOUT_SECONDS,
-        ).stdout
-    )
-    if (
-        not isinstance(values, list)
-        or len(values) != 1
-        or not isinstance(values[0], dict)
-    ):
-        raise RuntimeError(label + ": Docker returned an unexpected population")
-    return values[0]
-
-
-SECRET_MOUNT_FIELDS = {"purpose", "source", "destination"}
-REQUIRED_SECRET_PURPOSES = {
-    "manifest", "manifest_bundle", "manifest_verify_key",
-    "sandbox_launch_receipt", "sandbox_launch_bundle",
-    "sandbox_receipt_verify_key", "admission_receipt_signing_key",
-}
-secret_mounts = strict_json(
-    os.environ["WATCHDOG_SECRET_MOUNTS_JSON"].encode("utf-8")
-)
-if not isinstance(secret_mounts, list):
-    raise ValueError("signed secret mount policy must be a list")
-secret_mount_by_purpose = {}
-for item in secret_mounts:
-    if (
-        not isinstance(item, dict)
-        or set(item) != SECRET_MOUNT_FIELDS
-        or item["purpose"] in secret_mount_by_purpose
-    ):
-        raise ValueError("signed secret mount policy schema differs")
-    secret_mount_by_purpose[item["purpose"]] = {
-        "type": "bind",
-        "source": canonical_absolute(
-            item["source"], item["purpose"] + " source"
-        ),
-        "destination": canonical_absolute(
-            item["destination"], item["purpose"] + " destination"
-        ),
-        "read_write": False,
-        "propagation": "rprivate",
-    }
-if set(secret_mount_by_purpose) != REQUIRED_SECRET_PURPOSES:
-    raise ValueError("signed secret mount purpose population differs")
-
-data_source = canonical_absolute(
-    os.environ["WATCHDOG_DATA_SOURCE"], "watchdog data source"
-)
-data_mount = canonical_absolute(
-    os.environ["WATCHDOG_DATA_MOUNT"], "watchdog data mount"
-)
-output_mount = canonical_absolute(
-    os.environ["WATCHDOG_OUTPUT_MOUNT"], "watchdog output mount"
-)
-temp_mount = canonical_absolute(
-    os.environ["WATCHDOG_TEMP_MOUNT"], "watchdog temp mount"
-)
-if canonical_absolute(str(OUTPUT), "watchdog output source") == data_source:
-    raise ValueError("data and output sources must be distinct")
-security_opt = strict_json(
-    os.environ["WATCHDOG_SECURITY_OPTIONS_JSON"].encode("utf-8")
-)
-masked_paths = strict_json(
-    os.environ["WATCHDOG_MASKED_PATHS_JSON"].encode("utf-8")
-)
-readonly_paths = strict_json(
-    os.environ["WATCHDOG_READONLY_PATHS_JSON"].encode("utf-8")
-)
-if (
-    not isinstance(security_opt, list)
-    or sorted(security_opt) != security_opt
-    or len(security_opt) != len(set(security_opt))
-    or not any(item.startswith("no-new-privileges") for item in security_opt)
-    or not any(
-        item.startswith("seccomp=") and not item.endswith("unconfined")
-        for item in security_opt
-    )
-    or not any(
-        item.startswith("apparmor=") and not item.endswith("unconfined")
-        for item in security_opt
-    )
-    or any("unconfined" in item for item in security_opt)
-):
-    raise ValueError("signed security options are not a closed hardened set")
-for label, paths in (
-    ("masked", masked_paths), ("read-only", readonly_paths)
-):
-    if (
-        not isinstance(paths, list)
-        or not paths
-        or sorted(paths) != paths
-        or len(paths) != len(set(paths))
-    ):
-        raise ValueError(label + " path population differs")
-    for path in paths:
-        canonical_absolute(path, label + " path")
-
-expected_mounts = [
-    {
-        "type": "bind", "source": data_source,
-        "destination": data_mount, "read_write": False,
-        "propagation": "rprivate",
-    },
-    {
-        "type": "bind", "source": str(OUTPUT),
-        "destination": output_mount, "read_write": True,
-        "propagation": "rprivate",
-    },
-    *secret_mount_by_purpose.values(),
-    {
-        "type": "tmpfs", "source": "", "destination": temp_mount,
-        "read_write": True, "propagation": "",
-    },
-]
-if len({item["destination"] for item in expected_mounts}) != len(expected_mounts):
-    raise ValueError("signed mount destinations are duplicated")
-contract = {
-    "memory_bytes": limits["max_cgroup_memory_bytes"],
-    "cpu_quota_us": limits["cgroup_cpu_quota_us"],
-    "cpu_period_us": limits["cgroup_cpu_period_us"],
-    "pids": limits["max_pids"],
-    "open_files": limits["max_open_files"],
-    "temp_disk_bytes": limits["max_temp_disk_bytes"],
-    "mounts": sorted(expected_mounts, key=lambda item: item["destination"]),
-    "binds": sorted(
-        item["source"] + ":" + item["destination"]
-        + (":rw" if item["read_write"] else ":ro")
-        for item in expected_mounts if item["type"] == "bind"
-    ),
-    "tmpfs": {
-        temp_mount: sorted([
-            "nodev", "noexec", "nosuid", "rw",
-            "size=" + str(limits["max_temp_disk_bytes"]),
-        ])
-    },
-    "network": "none", "pid_mode": "", "ipc_mode": "private",
-    "uts_mode": "", "userns_mode": "", "cgroupns_mode": "private",
-    "read_only_root": True,
-    "privileged": False, "cap_add": [], "cap_drop": ["ALL"],
-    "devices": [], "device_cgroup_rules": [], "device_requests": [],
-    "security_opt": security_opt, "masked_paths": masked_paths,
-    "readonly_paths": readonly_paths, "port_bindings": {},
-    "publish_all_ports": False, "exposed_ports": {},
-    "entrypoint": runtime["admission_entrypoint"],
-    "command": runtime["admission_command"],
-    "user": runtime["admission_user"],
-    "working_dir": runtime["admission_working_dir"],
-    "environment_sha256": runtime["admission_environment_sha256"],
-    "tty": False, "open_stdin": False, "stdin_once": False,
-    "healthcheck": None, "volumes": {},
-    "runtime": os.environ["WATCHDOG_OCI_RUNTIME"],
-    "cgroup_parent": "", "isolation": "",
-    "restart_policy": {"Name": "no", "MaximumRetryCount": 0},
-    "auto_remove": False, "log_config": {"Type": "none", "Config": {}},
-}
-if hashlib.sha256(canonical(contract)).hexdigest() != runtime[
-    "sandbox_contract_sha256"
-]:
-    raise PermissionError("signed sandbox contract digest differs")
-
-image = docker_object(
-    ["image", "inspect", runtime["admission_image_ref"]],
-    "admission image inspection",
-)
-repo_digests = image.get("RepoDigests") or []
-if (
-    runtime["admission_image_ref"] not in repo_digests
-    or image.get("Id") != runtime["admission_image_config_digest"]
-):
-    raise PermissionError("engine-observed admission image identity differs")
-
-
-def normalized_mount(item: dict) -&gt; dict:
-    return {
-        "type": item.get("Type"), "source": item.get("Source"),
-        "destination": item.get("Destination"),
-        "read_write": item.get("RW"),
-        "propagation": item.get("Propagation") or "",
-    }
-
-
-def validated_container(
-    inspection: dict, *, allowed_states: set[str]
-) -&gt; tuple[str, str]:
-    container_id = inspection.get("Id")
-    state = inspection.get("State") or {}
-    host = inspection.get("HostConfig") or {}
-    config = inspection.get("Config") or {}
-    environment = config.get("Env") or []
-    environment_keys = [
-        item.split("=", 1)[0] for item in environment
-        if isinstance(item, str) and "=" in item
-    ]
-    if (
-        not isinstance(container_id, str)
-        or CONTAINER_ID.fullmatch(container_id) is None
-        or state.get("Status") not in allowed_states
-        or inspection.get("Image") != runtime["admission_image_config_digest"]
-        or config.get("Image") != runtime["admission_image_ref"]
-        or config.get("Entrypoint") != runtime["admission_entrypoint"]
-        or (config.get("Cmd") or []) != runtime["admission_command"]
-        or config.get("User") != runtime["admission_user"]
-        or config.get("WorkingDir") != runtime["admission_working_dir"]
-        or len(environment_keys) != len(environment)
-        or len(environment_keys) != len(set(environment_keys))
-        or digest(canonical(sorted(environment)))
-        != runtime["admission_environment_sha256"]
-    ):
-        raise PermissionError("container image, process, or environment differs")
-    ulimits = {
-        item["Name"]: [item["Soft"], item["Hard"]]
-        for item in (host.get("Ulimits") or [])
-    }
-    tmpfs = {}
-    for destination, options in (host.get("Tmpfs") or {}).items():
-        tmpfs[destination] = sorted(options.split(","))
-    observed = {
-        "memory_bytes": host.get("Memory"),
-        "cpu_quota_us": host.get("CpuQuota"),
-        "cpu_period_us": host.get("CpuPeriod"),
-        "pids": host.get("PidsLimit"),
-        "open_files": (
-            ulimits.get("nofile", [None, None])[0]
-            if ulimits.get("nofile", [None, None])[0]
-            == ulimits.get("nofile", [None, None])[1] else None
-        ),
-        "temp_disk_bytes": limits["max_temp_disk_bytes"],
-        "mounts": sorted(
-            [normalized_mount(item) for item in (inspection.get("Mounts") or [])],
-            key=lambda item: item["destination"] or "",
-        ),
-        "binds": sorted(host.get("Binds") or []),
-        "tmpfs": tmpfs,
-        "network": host.get("NetworkMode"),
-        "pid_mode": host.get("PidMode") or "",
-        "ipc_mode": host.get("IpcMode") or "",
-        "uts_mode": host.get("UTSMode") or "",
-        "userns_mode": host.get("UsernsMode") or "",
-        "cgroupns_mode": host.get("CgroupnsMode") or "",
-        "read_only_root": host.get("ReadonlyRootfs"),
-        "privileged": host.get("Privileged"),
-        "cap_add": sorted(host.get("CapAdd") or []),
-        "cap_drop": sorted(host.get("CapDrop") or []),
-        "devices": host.get("Devices") or [],
-        "device_cgroup_rules": host.get("DeviceCgroupRules") or [],
-        "device_requests": host.get("DeviceRequests") or [],
-        "security_opt": sorted(host.get("SecurityOpt") or []),
-        "masked_paths": sorted(host.get("MaskedPaths") or []),
-        "readonly_paths": sorted(host.get("ReadonlyPaths") or []),
-        "port_bindings": host.get("PortBindings") or {},
-        "publish_all_ports": host.get("PublishAllPorts"),
-        "exposed_ports": config.get("ExposedPorts") or {},
-        "entrypoint": config.get("Entrypoint"),
-        "command": config.get("Cmd") or [],
-        "user": config.get("User"),
-        "working_dir": config.get("WorkingDir"),
-        "environment_sha256": digest(canonical(sorted(environment))),
-        "tty": config.get("Tty"),
-        "open_stdin": config.get("OpenStdin"),
-        "stdin_once": config.get("StdinOnce"),
-        "healthcheck": config.get("Healthcheck"),
-        "volumes": config.get("Volumes") or {},
-        "runtime": host.get("Runtime"),
-        "cgroup_parent": host.get("CgroupParent") or "",
-        "isolation": host.get("Isolation") or "",
-        "restart_policy": host.get("RestartPolicy"),
-        "auto_remove": host.get("AutoRemove"),
-        "log_config": host.get("LogConfig"),
-    }
-    if (
-        host.get("MemorySwap") != contract["memory_bytes"]
-        or set(ulimits) != {"nofile"}
-        or observed != contract
-        or host.get("Dns")
-        or host.get("DnsOptions")
-        or host.get("DnsSearch")
-        or host.get("ExtraHosts")
-        or host.get("GroupAdd")
-        or host.get("Links")
-        or host.get("VolumesFrom")
-        or host.get("Sysctls")
-        or host.get("StorageOpt")
-    ):
-        raise PermissionError("closed container-engine sandbox readback differs")
-    full_readback = {
-        "container_id": container_id,
-        "image_ref": config["Image"],
-        "image_manifest_digest": runtime["admission_image_digest"],
-        "image_config_digest": inspection["Image"],
-        "config": config, "host_config": host,
-        "mounts": inspection.get("Mounts") or [],
-        "network_ports": (inspection.get("NetworkSettings") or {}).get("Ports"),
-        "output_source_identity": {
-            "device": output_metadata.st_dev, "inode": output_metadata.st_ino,
-            "uid": output_metadata.st_uid, "gid": output_metadata.st_gid,
-        },
-    }
-    return container_id, digest(canonical(full_readback))
-
-
-inspection = docker_object(["inspect", CONTAINER], "container name lookup")
-container_id, engine_readback_sha256 = validated_container(
-    inspection, allowed_states={"created"}
-)
-attempt_id = secrets.token_hex(32)
-launch_issued = datetime.now(timezone.utc)
-launch_expires = launch_issued + timedelta(
-    seconds=TIMEOUT + AUXILIARY_TIMEOUT_SECONDS
-)
-launch_receipt = {
-    "schema_version": "aidefend.multimodal-sandbox-launch.v1",
-    "outcome": "PASS",
-    "manifest_sha256": manifest_sha256,
-    "snapshot_id": manifest["snapshot_id"],
-    "attempt_id": attempt_id,
-    "container_id": container_id,
-    "issued_at": launch_issued.isoformat(
-        timespec="microseconds"
-    ).replace("+00:00", "Z"),
-    "expires_at": launch_expires.isoformat(
-        timespec="microseconds"
-    ).replace("+00:00", "Z"),
-    "admission_image_ref": runtime["admission_image_ref"],
-    "admission_image_digest": runtime["admission_image_digest"],
-    "admission_image_config_digest":
-        runtime["admission_image_config_digest"],
-    "watchdog_image_digest": runtime["watchdog_image_digest"],
-    "watchdog_code_sha256": runtime["watchdog_code_sha256"],
-    "watchdog_dependency_lock_sha256":
-        runtime["watchdog_dependency_lock_sha256"],
-    "sandbox_contract_sha256": runtime["sandbox_contract_sha256"],
-    "watchdog_auxiliary_timeout_seconds":
-        runtime["watchdog_auxiliary_timeout_seconds"],
-    "manifest_verify_key_sha256": runtime["manifest_verify_key_sha256"],
-    "feature_receipt_verify_key_sha256":
-        runtime["feature_receipt_verify_key_sha256"],
-    "sandbox_receipt_verify_key_sha256":
-        runtime["sandbox_receipt_verify_key_sha256"],
-    "admission_receipt_verify_key_sha256":
-        runtime["admission_receipt_verify_key_sha256"],
-    "engine_readback_sha256": engine_readback_sha256,
-}
-launch_raw = canonical(launch_receipt)
-write_private(LAUNCH_RECEIPT, launch_raw)
-subprocess.run(
-    [
-        "cosign", "sign-blob", "--yes", "--key", str(SIGNING_KEY),
-        "--bundle", str(LAUNCH_BUNDLE), str(LAUNCH_RECEIPT),
-    ],
-    check=True,
-    timeout=AUXILIARY_TIMEOUT_SECONDS,
-)
-if stable_path(LAUNCH_RECEIPT, limits["max_receipt_bytes"], "launch receipt") != launch_raw:
-    raise RuntimeError("signed launch receipt readback differs")
-stable_path(LAUNCH_BUNDLE, MAX_BUNDLE_BYTES, "launch receipt bundle")
-launch_receipt_sha256 = digest(launch_raw)
-
-
-timed_out = False
-exit_code = None
-try:
-    before_start_by_id = docker_object(
-        ["inspect", container_id], "pre-start container ID lookup"
-    )
-    before_start_id, before_start_digest = validated_container(
-        before_start_by_id, allowed_states={"created"}
-    )
-    before_start_by_name = docker_object(
-        ["inspect", CONTAINER], "pre-start container name lookup"
-    )
-    if (
-        before_start_id != container_id
-        or before_start_by_name.get("Id") != container_id
-        or before_start_digest != engine_readback_sha256
-    ):
-        raise PermissionError("container name or config changed before start")
-    subprocess.run(
-        ["docker", "start", container_id],
-        check=True,
-        capture_output=True,
-        timeout=AUXILIARY_TIMEOUT_SECONDS,
-    )
-    after_start = docker_object(
-        ["inspect", container_id], "post-start container ID lookup"
-    )
-    after_start_id, after_start_digest = validated_container(
-        after_start, allowed_states={"running", "exited"}
-    )
-    after_start_by_name = docker_object(
-        ["inspect", CONTAINER], "post-start container name lookup"
-    )
-    if (
-        after_start_id != container_id
-        or after_start_by_name.get("Id") != container_id
-        or after_start_digest != engine_readback_sha256
-    ):
-        raise PermissionError("container name or config changed after start")
-    completed = subprocess.run(
-        ["docker", "wait", container_id],
-        check=True,
-        capture_output=True,
-        timeout=TIMEOUT,
-    )
-    raw_exit = completed.stdout.decode("ascii", errors="strict").strip()
-    if re.fullmatch(r"[0-9]{1,3}", raw_exit) is None:
-        raise RuntimeError("container wait returned an invalid exit status")
-    exit_code = int(raw_exit)
-    after_wait = docker_object(
-        ["inspect", container_id], "post-wait container ID lookup"
-    )
-    after_wait_id, after_wait_digest = validated_container(
-        after_wait, allowed_states={"exited"}
-    )
-    after_wait_by_name = docker_object(
-        ["inspect", CONTAINER], "post-wait container name lookup"
-    )
-    if (
-        after_wait_id != container_id
-        or after_wait_by_name.get("Id") != container_id
-        or after_wait_digest != engine_readback_sha256
-        or after_wait["State"].get("ExitCode") != exit_code
-    ):
-        raise PermissionError("post-execution container readback differs")
-except subprocess.TimeoutExpired:
-    timed_out = True
-    subprocess.run(
-        ["docker", "kill", container_id],
-        check=False,
-        timeout=AUXILIARY_TIMEOUT_SECONDS,
-    )
-finally:
-    subprocess.run(
-        ["docker", "rm", "--force", container_id],
-        check=False,
-        timeout=AUXILIARY_TIMEOUT_SECONDS,
-    )
-
-attempt_completed = datetime.now(timezone.utc)
-final_terminal = PurePosixPath(manifest["snapshot_id"]) / "terminal.json"
-terminal_candidates = {final_terminal}
-terminal_scan_count = 0
-with os.scandir(OUTPUT_FD) as terminal_entries:
-    for entry in terminal_entries:
-        terminal_scan_count += 1
-        if (
-            terminal_scan_count
-            &gt; limits["max_artifact_entries_per_directory"]
-        ):
-            raise ValueError("output-root fanout exceeds signed policy")
-        name = entry.name
-        if (
-            name.startswith(attempt_id + ".")
-            and name.endswith(".terminal.json")
-            and "/" not in name
-        ):
-            descriptor = os.open(
-                name,
-                os.O_RDONLY | getattr(os, "O_CLOEXEC", 0)
-                | getattr(os, "O_NOFOLLOW", 0),
-                dir_fd=OUTPUT_FD,
-            )
-            try:
-                if not stat.S_ISREG(os.fstat(descriptor).st_mode):
-                    raise ValueError("terminal candidate is not a regular file")
-            finally:
-                os.close(descriptor)
-            terminal_candidates.add(PurePosixPath(name))
-
-
-expected_group_records = {}
-expected_records = {}
-record_population = []
-group_population = []
-for group in manifest["groups"]:
-    group_id = group["group_id"]
-    if group_id in expected_group_records:
-        raise ValueError("manifest group population is duplicated")
-    group_record_ids = []
-    for member in group["members"]:
-        record_id = member["record_id"]
-        if record_id in expected_records:
-            raise ValueError("manifest record population is duplicated")
-        expected_records[record_id] = {
-            "group_id": group_id,
-            "modality": member["modality"],
-            "sha256": member["sha256"],
-        }
-        group_record_ids.append(record_id)
-        record_population.append(
-            {
-                "record_id": record_id,
-                "group_id": group_id,
-                "modality": member["modality"],
-                "sha256": member["sha256"],
-            }
-        )
-    expected_group_records[group_id] = set(group_record_ids)
-    group_population.append(
-        {"group_id": group_id, "record_ids": sorted(group_record_ids)}
-    )
-record_population.sort(key=lambda item: item["record_id"])
-group_population.sort(key=lambda item: item["group_id"])
-expected_record_population_sha256 = digest(canonical(record_population))
-expected_group_population_sha256 = digest(canonical(group_population))
-
-
-def finite_number(value: object) -&gt; bool:
-    return (
-        not isinstance(value, bool)
-        and isinstance(value, (int, float))
-        and math.isfinite(float(value))
-    )
-
-
-def validate_evidence(value: object) -&gt; tuple[dict[str, dict], list[dict]]:
-    if not isinstance(value, list) or len(value) != len(expected_group_records):
-        raise ValueError("evidence group population differs")
-    by_group = {}
-    for item in value:
-        if not isinstance(item, dict) or set(item) != EVIDENCE_FIELDS:
-            raise ValueError("evidence schema differs")
-        group_id = item["group_id"]
-        record_ids = item["record_ids"]
-        scores = item["member_generic_scores"]
-        reasons = item["reasons"]
-        if (
-            not isinstance(group_id, str)
-            or group_id not in expected_group_records
-            or group_id in by_group
-            or not isinstance(record_ids, list)
-            or len(record_ids) != len(set(record_ids))
-            or set(record_ids) != expected_group_records[group_id]
-            or not isinstance(scores, dict)
-            or set(scores) != expected_group_records[group_id]
-            or any(not finite_number(score) for score in scores.values())
-            or not finite_number(item["minimum_generic_score"])
-            or item["minimum_generic_score"] != min(scores.values())
-            or not finite_number(item["joint_embedding_score"])
-            or not finite_number(item["maximum_fusion_robust_z"])
-            or not isinstance(reasons, list)
-            or len(reasons) != len(set(reasons))
-            or not set(reasons).issubset(ANOMALY_REASONS)
-            or item["outcome"] not in {"ADMIT", "QUARANTINE"}
-            or (item["outcome"] == "ADMIT") != (not reasons)
-        ):
-            raise ValueError("evidence value or population differs")
-        by_group[group_id] = item
-    if set(by_group) != set(expected_group_records):
-        raise ValueError("evidence omitted a manifest group")
-    return by_group, value
-
-
-def validate_detailed_receipt(
-    detailed: object, terminal: dict, terminal_path: PurePosixPath
-) -&gt; None:
-    if (
-        terminal_path != final_terminal
-        or not isinstance(detailed, dict)
-        or set(detailed) != DETAILED_FIELDS
-        or detailed["schema_version"]
-        != "aidefend.multimodal-admission-receipt.v1"
-        or detailed["status"] not in {"PASS", "FAIL"}
-        or detailed["status"] != terminal["status"]
-        or detailed["reason"] != (
-            "quarantine findings exist"
-            if detailed["status"] == "FAIL"
-            else "complete population met signed admission policy"
-        )
-        or detailed["reason"] != terminal["reason"]
-        or detailed["policy_version"] != manifest["policy_version"]
-        or detailed["snapshot_id"] != manifest["snapshot_id"]
-        or detailed["attempt_id"] != attempt_id
-        or detailed["container_id"] != container_id
-        or detailed["launch_receipt_sha256"] != launch_receipt_sha256
-        or detailed["launch_issued_at"] != launch_receipt["issued_at"]
-        or detailed["launch_expires_at"] != launch_receipt["expires_at"]
-        or detailed["suite_kind"] != manifest["suite_kind"]
-        or detailed["manifest_sha256"] != manifest_sha256
-        or detailed["sandbox_launch_receipt_sha256"]
-        != launch_receipt_sha256
-        or detailed["resource_limits_sha256"] != digest(canonical(limits))
-        or detailed["record_population_sha256"]
-        != expected_record_population_sha256
-        or detailed["group_population_sha256"]
-        != expected_group_population_sha256
-        or detailed["feature_build_receipt_sha256"]
-        != manifest["feature_build_receipt"]["sha256"]
-        or detailed["feature_job_manifest_sha256"]
-        != manifest["feature_job_manifest"]["sha256"]
-        or detailed["model_sha256"] != manifest["model"]["sha256"]
-        or detailed["adapter_sha256"] != manifest["adapter"]["sha256"]
-        or detailed["reference_member_features_sha256"]
-        != manifest["reference_member_features"]["sha256"]
-        or detailed["candidate_member_features_sha256"]
-        != manifest["candidate_member_features"]["sha256"]
-        or detailed["reference_group_features_sha256"]
-        != manifest["reference_group_features"]["sha256"]
-        or detailed["candidate_group_features_sha256"]
-        != manifest["candidate_group_features"]["sha256"]
-    ):
-        raise ValueError("detailed receipt identity or digest binding differs")
-    runtime_bindings = {
-        "admission_image_ref": "admission_image_ref",
-        "admission_image_digest": "admission_image_digest",
-        "admission_image_config_digest": "admission_image_config_digest",
-        "admission_code_sha256": "admission_code_sha256",
-        "admission_dependency_lock_sha256":
-            "admission_dependency_lock_sha256",
-        "watchdog_image_digest": "watchdog_image_digest",
-        "watchdog_code_sha256": "watchdog_code_sha256",
-        "watchdog_dependency_lock_sha256":
-            "watchdog_dependency_lock_sha256",
-        "watchdog_auxiliary_timeout_seconds":
-            "watchdog_auxiliary_timeout_seconds",
-        "sandbox_contract_sha256": "sandbox_contract_sha256",
-        "manifest_verify_key_sha256": "manifest_verify_key_sha256",
-        "feature_receipt_verify_key_sha256":
-            "feature_receipt_verify_key_sha256",
-        "sandbox_receipt_verify_key_sha256":
-            "sandbox_receipt_verify_key_sha256",
-        "admission_receipt_verify_key_sha256":
-            "admission_receipt_verify_key_sha256",
-        "extractor_image_digest": "extractor_image_digest",
-        "extractor_code_sha256": "extractor_code_sha256",
-        "extractor_dependency_lock_sha256":
-            "extractor_dependency_lock_sha256",
-    }
-    if any(
-        detailed[field] != runtime[runtime_field]
-        for field, runtime_field in runtime_bindings.items()
-    ):
-        raise ValueError("detailed receipt runtime binding differs")
-    digest_fields = {
-        "feature_build_receipt_sha256", "feature_job_manifest_sha256",
-        "raw_artifact_population_sha256",
-        "reference_raw_artifact_population_sha256",
-        "record_population_sha256", "group_population_sha256",
-        "admission_code_sha256", "admission_dependency_lock_sha256",
-        "watchdog_code_sha256", "watchdog_dependency_lock_sha256",
-        "sandbox_contract_sha256", "sandbox_launch_receipt_sha256",
-        "manifest_verify_key_sha256", "feature_receipt_verify_key_sha256",
-        "sandbox_receipt_verify_key_sha256",
-        "admission_receipt_verify_key_sha256",
-        "extractor_code_sha256", "extractor_dependency_lock_sha256",
-        "resource_limits_sha256", "model_sha256", "adapter_sha256",
-        "reference_member_features_sha256",
-        "candidate_member_features_sha256",
-        "reference_group_features_sha256",
-        "candidate_group_features_sha256", "evidence_sha256",
-    }
-    if (
-        any(
-            not isinstance(detailed[field], str)
-            or SHA256.fullmatch(detailed[field]) is None
-            for field in digest_fields
-        )
-        or any(
-            not isinstance(detailed[field], str)
-            or IMAGE_DIGEST.fullmatch(detailed[field]) is None
-            for field in (
-                "admission_image_digest", "admission_image_config_digest",
-                "watchdog_image_digest",
-                "extractor_image_digest",
-            )
-        )
-        or not isinstance(detailed["admission_image_ref"], str)
-        or IMAGE_REF.fullmatch(detailed["admission_image_ref"]) is None
-        or not finite_number(detailed["elapsed_seconds"])
-        or detailed["elapsed_seconds"] &lt; 0
-        or isinstance(detailed["parquet_uncompressed_bytes"], bool)
-        or not isinstance(detailed["parquet_uncompressed_bytes"], int)
-        or not (
-            0 &lt; detailed["parquet_uncompressed_bytes"]
-            &lt;= limits["max_total_parquet_uncompressed_bytes"]
-        )
-    ):
-        raise ValueError("detailed receipt type or digest format differs")
-    count_fields = (
-        "population_records", "evaluated_records", "population_groups",
-        "evaluated_groups", "admitted_groups", "quarantined_groups",
-        "finding_count",
-    )
-    if (
-        any(
-            isinstance(detailed[field], bool)
-            or not isinstance(detailed[field], int)
-            or detailed[field] &lt; 0
-            for field in count_fields
-        )
-        or detailed["population_records"] != len(expected_records)
-        or detailed["evaluated_records"] != len(expected_records)
-        or detailed["population_groups"] != len(expected_group_records)
-        or detailed["evaluated_groups"] != len(expected_group_records)
-        or detailed["admitted_groups"] + detailed["quarantined_groups"]
-        != len(expected_group_records)
-    ):
-        raise ValueError("detailed receipt population counts differ")
-
-    prefix = manifest["snapshot_id"]
-    expected_evidence_path = prefix + "/evidence.json"
-    if detailed["evidence_path"] != expected_evidence_path:
-        raise ValueError("detailed evidence path differs")
-    evidence_raw = read_output(
-        expected_evidence_path,
-        limits["max_evidence_bytes"],
-        "final admission evidence",
-    )
-    if digest(evidence_raw) != detailed["evidence_sha256"]:
-        raise ValueError("final evidence digest differs")
-    evidence_by_group, evidence = validate_evidence(strict_json(evidence_raw))
-    admitted_group_ids = {
-        group_id for group_id, item in evidence_by_group.items()
-        if item["outcome"] == "ADMIT"
-    }
-    quarantined_group_ids = set(evidence_by_group) - admitted_group_ids
-    if (
-        detailed["admitted_groups"] != len(admitted_group_ids)
-        or detailed["quarantined_groups"] != len(quarantined_group_ids)
-    ):
-        raise ValueError("evidence and detailed outcome counts differ")
-
-    if manifest["suite_kind"] == "fixture":
-        if (
-            detailed["status"] != "PASS"
-            or detailed["finding_count"] != 0
-            or any(
-                detailed[field] is not None
-                for field in (
-                    "admitted_path", "admitted_sha256",
-                    "admitted_content_root_sha256",
-                    "quarantine_path", "quarantine_sha256",
-                )
-            )
-        ):
-            raise ValueError("fixture detailed outcome contract differs")
-        expected_root = {
-            "evidence.json": "file", "receipt.json": "file",
-            "terminal.json": "file",
-            "terminal.json.sigstore.json": "file",
-        }
-        if (
-            output_directory_population(
-                prefix,
-                limits["max_artifact_entries_per_directory"],
-                "fixture final root",
-            )
-            != expected_root
-        ):
-            raise ValueError("fixture final artifact population differs")
-        return
-
-    expected_admitted_path = prefix + "/admitted.json"
-    expected_quarantine_path = prefix + "/quarantine-findings.json"
-    if (
-        detailed["admitted_path"] != expected_admitted_path
-        or detailed["quarantine_path"] != expected_quarantine_path
-        or any(
-            not isinstance(detailed[field], str)
-            or SHA256.fullmatch(detailed[field]) is None
-            for field in (
-                "admitted_sha256", "admitted_content_root_sha256",
-                "quarantine_sha256",
-            )
-        )
-        or detailed["finding_count"] != len(quarantined_group_ids)
-        or (detailed["status"] == "PASS") != (not quarantined_group_ids)
-    ):
-        raise ValueError("candidate detailed outcome contract differs")
-    quarantine_raw = read_output(
-        expected_quarantine_path,
-        limits["max_output_manifest_bytes"],
-        "final quarantine findings",
-    )
-    quarantine = strict_json(quarantine_raw)
-    expected_quarantine = [
-        item for item in evidence if item["outcome"] == "QUARANTINE"
-    ]
-    if (
-        digest(quarantine_raw) != detailed["quarantine_sha256"]
-        or quarantine != expected_quarantine
-    ):
-        raise ValueError("quarantine artifact population differs")
-
-    admitted_raw = read_output(
-        expected_admitted_path,
-        limits["max_output_manifest_bytes"],
-        "final admitted snapshot",
-    )
-    admitted = strict_json(admitted_raw)
-    if (
-        digest(admitted_raw) != detailed["admitted_sha256"]
-        or not isinstance(admitted, dict)
-        or set(admitted) != ADMITTED_FIELDS
-        or admitted["schema_version"]
-        != "aidefend.admitted-multimodal-snapshot.v1"
-        or admitted["snapshot_id"] != manifest["snapshot_id"]
-        or admitted["source_manifest_sha256"] != manifest_sha256
-        or admitted["raw_artifact_population_sha256"]
-        != detailed["raw_artifact_population_sha256"]
-        or admitted["content_root_sha256"]
-        != detailed["admitted_content_root_sha256"]
-        or not isinstance(admitted["groups"], list)
-        or not isinstance(admitted["blobs"], list)
-    ):
-        raise ValueError("admitted snapshot contract differs")
-    admitted_core = {
-        key: admitted[key] for key in (
-            "schema_version", "snapshot_id", "source_manifest_sha256",
-            "raw_artifact_population_sha256", "groups", "blobs",
-        )
-    }
-    if digest(canonical(admitted_core)) != admitted["content_root_sha256"]:
-        raise ValueError("admitted content root differs")
-
-    observed_admitted_groups = {}
-    referenced_blobs = {}
-    for group in admitted["groups"]:
-        if (
-            not isinstance(group, dict)
-            or set(group) != ADMITTED_GROUP_FIELDS
-            or not isinstance(group["group_id"], str)
-            or group["group_id"] in observed_admitted_groups
-            or group["group_id"] not in admitted_group_ids
-            or not isinstance(group["members"], list)
-        ):
-            raise ValueError("admitted group schema or identity differs")
-        member_ids = set()
-        for member in group["members"]:
-            if (
-                not isinstance(member, dict)
-                or set(member) != ADMITTED_MEMBER_FIELDS
-                or not isinstance(member["record_id"], str)
-                or member["record_id"] in member_ids
-                or member["record_id"]
-                not in expected_group_records[group["group_id"]]
-                or not isinstance(member["byte_length"], int)
-                or isinstance(member["byte_length"], bool)
-                or not (
-                    0 &lt; member["byte_length"]
-                    &lt;= limits["max_artifact_bytes_each"]
-                )
-            ):
-                raise ValueError("admitted member schema or population differs")
-            expected = expected_records[member["record_id"]]
-            expected_content_path = (
-                prefix + "/blobs/sha256/" + expected["sha256"]
-            )
-            if (
-                member["modality"] != expected["modality"]
-                or member["sha256"] != expected["sha256"]
-                or member["content_path"] != expected_content_path
-            ):
-                raise ValueError("admitted member digest or path differs")
-            member_ids.add(member["record_id"])
-            metadata = {
-                "sha256": member["sha256"],
-                "byte_length": member["byte_length"],
-                "content_path": member["content_path"],
-            }
-            prior = referenced_blobs.setdefault(member["sha256"], metadata)
-            if prior != metadata:
-                raise ValueError("admitted blob metadata is inconsistent")
-        if member_ids != expected_group_records[group["group_id"]]:
-            raise ValueError("admitted group member population differs")
-        observed_admitted_groups[group["group_id"]] = group
-    if set(observed_admitted_groups) != admitted_group_ids:
-        raise ValueError("admitted group population differs from evidence")
-
-    blob_inventory = {}
-    total_blob_bytes = 0
-    for blob in admitted["blobs"]:
-        if (
-            not isinstance(blob, dict)
-            or set(blob) != BLOB_FIELDS
-            or not isinstance(blob["sha256"], str)
-            or SHA256.fullmatch(blob["sha256"]) is None
-            or blob["sha256"] in blob_inventory
-            or not isinstance(blob["byte_length"], int)
-            or isinstance(blob["byte_length"], bool)
-            or not (
-                0 &lt; blob["byte_length"]
-                &lt;= limits["max_artifact_bytes_each"]
-            )
-            or blob["content_path"]
-            != prefix + "/blobs/sha256/" + blob["sha256"]
-        ):
-            raise ValueError("admitted blob inventory schema differs")
-        blob_inventory[blob["sha256"]] = blob
-        total_blob_bytes += blob["byte_length"]
-        if total_blob_bytes &gt; limits["max_total_artifact_bytes"]:
-            raise ValueError("admitted blob bytes exceed signed policy")
-        blob_raw = read_output(
-            blob["content_path"],
-            limits["max_artifact_bytes_each"],
-            "admitted content-addressed blob",
-        )
-        if len(blob_raw) != blob["byte_length"] or digest(blob_raw) != blob["sha256"]:
-            raise ValueError("admitted blob readback differs")
-    if blob_inventory != referenced_blobs:
-        raise ValueError("admitted blob inventory differs from members")
-    blob_population = output_directory_population(
-        prefix + "/blobs/sha256",
-        limits["max_artifact_entries_per_directory"],
-        "admitted blob root",
-    )
-    if blob_population != {name: "file" for name in blob_inventory}:
-        raise ValueError("admitted blob directory population differs")
-    if blob_inventory and (
-        output_directory_population(
-            prefix + "/blobs",
-            limits["max_artifact_entries_per_directory"],
-            "admitted blob namespace",
-        )
-        != {"sha256": "directory"}
-    ):
-        raise ValueError("admitted blob namespace population differs")
-    expected_root = {
-        "evidence.json": "file", "admitted.json": "file",
-        "quarantine-findings.json": "file", "receipt.json": "file",
-        "terminal.json": "file", "terminal.json.sigstore.json": "file",
-    }
-    if blob_inventory:
-        expected_root["blobs"] = "directory"
-    if (
-        output_directory_population(
-            prefix,
-            limits["max_artifact_entries_per_directory"],
-            "candidate final root",
-        )
-        != expected_root
-    ):
-        raise ValueError("candidate final artifact population differs")
-
-
-def bound_receipt(path: PurePosixPath) -&gt; dict | None:
-    try:
-        receipt_raw = read_output(
-            path.as_posix(),
-            limits["max_receipt_bytes"],
-            "admission terminal receipt",
-        )
-        bundle_raw = read_output(
-            path.as_posix() + ".sigstore.json",
-            MAX_BUNDLE_BYTES,
-            "admission terminal receipt bundle",
-        )
-        verify_blob_bytes(
-            receipt_raw,
-            bundle_raw,
-            admission_receipt_key,
-            "admission terminal receipt",
-        )
-        value = strict_json(receipt_raw)
-        if (
-            not isinstance(value, dict)
-            or set(value) != TERMINAL_FIELDS
-            or value["schema_version"]
-            != "aidefend.multimodal-admission-terminal.v2"
-            or value["status"] not in {
-                "PASS", "FAIL", "INSUFFICIENT_DATA",
-                "NOT_APPLICABLE", "ERROR",
-            }
-            or not isinstance(value["reason"], str)
-            or not value["reason"]
-            or len(value["reason"]) &gt; 256
-            or (
-                value["error_class"] is not None
-                and (
-                    not isinstance(value["error_class"], str)
-                    or not value["error_class"]
-                )
-            )
-            or value["attempt_id"] != attempt_id
-            or value["container_id"] != container_id
-            or value["launch_receipt_sha256"] != launch_receipt_sha256
-            or value["manifest_sha256"] != manifest_sha256
-            or value["snapshot_id"] != manifest["snapshot_id"]
-            or value["policy_version"] != manifest["policy_version"]
-        ):
-            return None
-        issued = parse_utc(value["issued_at"], "terminal issued_at")
-        completed = parse_utc(value["completed_at"], "terminal completed_at")
-        if not (
-            launch_issued
-            &lt;= issued
-            &lt;= completed
-            &lt;= min(launch_expires, attempt_completed)
-        ):
-            return None
-        detailed_sha256 = value["detailed_receipt_sha256"]
-        if detailed_sha256 is None:
-            if value["status"] == "PASS" or path == final_terminal:
-                return None
-        else:
-            if (
-                not isinstance(detailed_sha256, str)
-                or SHA256.fullmatch(detailed_sha256) is None
-            ):
-                return None
-            detailed_raw = read_output(
-                (path.parent / "receipt.json").as_posix(),
-                limits["max_receipt_bytes"],
-                "detailed admission receipt",
-            )
-            detailed = strict_json(detailed_raw)
-            if (
-                digest(detailed_raw) != detailed_sha256
-            ):
-                return None
-            validate_detailed_receipt(detailed, value, path)
-        return value
-    except (
-        OSError, ValueError, TypeError, KeyError,
-        RuntimeError, subprocess.SubprocessError,
-    ):
-        return None
-
-
-valid_terminals = []
-if not timed_out and exit_code == 0:
-    valid_terminals = [
-        value
-        for path in sorted(terminal_candidates)
-        if (value := bound_receipt(path)) is not None
-    ]
-if timed_out or exit_code != 0 or len(valid_terminals) != 1:
-    if timed_out:
-        reason = "external watchdog deadline exceeded"
-    elif exit_code != 0:
-        reason = "admission container exited nonzero"
-    elif not valid_terminals:
-        reason = "no valid signed terminal receipt for current attempt"
-    else:
-        reason = "multiple valid terminal receipts for current attempt"
-    issued_at = utc_timestamp()
-    error = {
-        "schema_version": "aidefend.multimodal-watchdog-terminal.v2",
-        "status": "ERROR",
-        "reason": reason,
-        "attempt_id": attempt_id,
-        "container_id": container_id,
-        "launch_receipt_sha256": launch_receipt_sha256,
-        "manifest_sha256": manifest_sha256,
-        "snapshot_id": manifest["snapshot_id"],
-        "policy_version": manifest["policy_version"],
-        "issued_at": issued_at,
-        "completed_at": utc_timestamp(),
-        "timed_out": timed_out,
-        "container_exit_code": exit_code,
-        "valid_terminal_count": len(valid_terminals),
-    }
-    OUTPUT.mkdir(parents=True, exist_ok=True)
-    raw = canonical(error)
-    path = OUTPUT / (
-        attempt_id + ".error." + digest(raw) + ".terminal.json"
-    )
-    write_private(path, raw)
-    subprocess.run(
-        [
-            "cosign", "sign-blob", "--yes", "--key", str(SIGNING_KEY),
-            "--bundle", str(path) + ".sigstore.json", str(path),
-        ],
-        check=True,
-        timeout=AUXILIARY_TIMEOUT_SECONDS,
-    )
-</code></pre><h5>Production acceptance gate: live product-repository E2E only</h5><p>This framework guidance does not provide a second conformance product and does not certify its own examples. Production acceptance must run in the product repository's Linux CI against the actual signed feature-producer OCI image, admission image, watchdog control-plane process, real Docker engine, deployment trust roots, production path layout, and complete retained artifacts. Mocks, hand-authored result files, synthetic executor verdicts, or schema-only checks cannot satisfy this gate.</p><p>The live suite must independently read back and match the signed image reference, manifest digest, image-config digest, entrypoint, command, non-root identity, working directory, environment digest, code and dependency-lock digests, verification/signing-key digests, sandbox contract, immutable container ID, and pre-start, running, and terminal engine state. It must execute the real producer to generate all four bounded Parquet feature files and its signed receipt from reviewed raw fixtures, then verify signatures, complete record/group populations, immutable input and output digests, and an independent rebuild.</p><p>Run the real admission and watchdog paths end to end with reviewed positive, benign-negative, and partial convergence-payload fixtures plus unsigned, stale, wrong-attempt, nonzero-exit, timeout, incomplete-population, wrong-modality, duplicate, extra-member, non-finite, key-swap, image/config-swap, sandbox-drift, and final-readback failures. Derive clean <code>PASS</code> and finding-bearing <code>FAIL</code> results from signed terminal and detailed receipts, real process exits, and the exact final file/blob population; exercise watchdog failures through the deployed control-plane path and a real engine, not by invoking an admission image in its place.</p><p>Separately prove that incomplete live measurements produce <code>INSUFFICIENT_DATA</code>, a signed absent prerequisite produces <code>NOT_APPLICABLE</code>, and integrity, dependency, runtime, sandbox, timeout, or publication faults produce <code>ERROR</code> without releasing an admitted snapshot.</p><p>Retain CI provenance, exact commands, immutable image and source revisions, fixture and trust-root digests, engine readbacks, stdout/stderr, signed receipts and bundles, Parquet files, admitted blobs, quarantine findings, and complete population manifests. If any required live execution or independently readable evidence is missing, stale, incomplete, or not bound to the deployed artifacts, report <code>INSUFFICIENT_DATA</code>, block release, and do not describe the implementation as production validated.</p><h5>Independent verification and result handling</h5><p>A separately credentialed verifier re-verifies the manifest, sandbox-launch, and feature-build receipts, captures and re-hashes the complete raw populations and exact model/adapter bytes, invokes the receipt-bound <code>project-dual-encoder-v1</code> interface in the pinned extractor image, and recomputes every score under the signed limits.</p><p>Candidate quarantine findings are <code>FAIL</code>, not a false <code>PASS</code>; a fixture detection miss is also <code>FAIL</code>. Only a complete finding-free candidate is <code>PASS</code>.</p><p>Missing or incomplete measurements and an incomplete fixture suite are <code>INSUFFICIENT_DATA</code>. A signed manifest proving the fusion prerequisite is absent from both the training and evaluation paths is <code>NOT_APPLICABLE</code>.</p><p>Integrity, signature, dependency, runtime, sandbox, timeout, or publication faults emit an <code>ERROR</code> terminal receipt and release no admitted snapshot.</p><p>For an applicable candidate, copy each admitted record's captured bytes into a digest-named <code>blobs/sha256/</code> object, verify readback, and publish a read-only directory atomically. The admitted manifest points only to those actual content-addressed bytes and binds their content root; it never points back to mutable source paths. Independently read back the final receipt, admitted manifest, every blob, and the quarantine findings. The training or evaluation job must require a verified <code>PASS</code> receipt before mounting the admitted manifest and blobs; a <code>FAIL</code> directory is review evidence, not a releasable snapshot. Quarantine remains outside admitted training and evaluation namespaces; disposition requires a new signed manifest, feature-build receipt, and complete replay.</p>`
-                        },
+                            "howTo": "<h5>Prepare a trusted feature bundle</h5><p>Use the AID-I-001 broker for bounded artifact capture, admitted parser execution, secretless feature extraction, network restrictions, execution deadlines and teardown. Consume its signed run receipt; this content control does not reimplement or re-score sandbox isolation. AID-H-002.009 owns hostile dataset-format parsing. The feature producer uses a digest-pinned approved model/extractor release and signs the complete input bundle. Candidate records cannot select feature names, reference data, detector parameters or thresholds.</p><p>The example below accepts captured JSON tables rather than running a Parquet/media parser in the admission process. The producer exports schema_version aidefend.anomaly-input-bundle.v2, snapshot_id, policy_sha256, dataset_sha256, extractor_release_sha256, groups, reference_members, candidate_members, reference_groups and candidate_groups. Each group has group_id and members with record_id, modality and original-record sha256. Member tables bind record/reference ID, group ID where applicable, modality and policy-named numeric features; group tables bind group/reference-group ID and joint/fusion features. The signed dataset manifest supplies the complete expected record/group population. The trusted capture adapter compares it before signing the bundle; omission cannot shrink the measured denominator.</p><h5>Calibrate the policy before candidate admission</h5><p>The signed policy supplies version, paired, modalities, generic_features, joint_features, fusion_features, extractor_release_sha256, seed, estimators, minimum_reference_rows, maximum_reference_rows, maximum_records, maximum_members_per_group, maximum_features, generic_minimum, joint_minimum and fusion_z_maximum. Fit only on a retained clean reference. Choose thresholds using an independent benign/attack suite with an acceptable false-positive budget. paired=false disables only the convergence-specific method; generic record screening still applies. A paired profile requires every declared modality per group.</p><h5>Score complete groups and publish an allowlist</h5><pre><code># File: sanitization/dataset_anomalies.py\nfrom __future__ import annotations\nimport argparse\nimport hashlib\nimport json\nimport math\nimport subprocess\nimport tempfile\nfrom pathlib import Path\n\nimport numpy as np\nfrom sklearn.ensemble import IsolationForest\nfrom sklearn.pipeline import make_pipeline\nfrom sklearn.preprocessing import RobustScaler\n\nclass InsufficientData(ValueError):\n    pass\n\ndef canonical(value):\n    return json.dumps(value, sort_keys=True, separators=(\",\", \":\"),\n                      allow_nan=False).encode()\n\ndef sha(value):\n    return hashlib.sha256(value).hexdigest()\n\ndef matrix(rows, names, minimum, maximum):\n    if (not isinstance(rows, list) or not minimum &lt;= len(rows) &lt;= maximum\n            or not names or len(set(names)) != len(names)):\n        raise InsufficientData(\"feature population is empty, insufficient or unbounded\")\n    values = []\n    for row in rows:\n        vector = [row.get(name) for name in names]\n        if any(type(x) not in (int, float) or not math.isfinite(x) for x in vector):\n            raise InsufficientData(\"missing or nonfinite feature\")\n        values.append(vector)\n    return np.asarray(values, dtype=np.float64)\n\ndef isolation_scores(reference, candidate, names, policy):\n    ref = matrix(reference, names, policy[\"minimum_reference_rows\"], policy[\"maximum_reference_rows\"])\n    cand = matrix(candidate, names, 1, policy[\"maximum_records\"])\n    detector = make_pipeline(RobustScaler(), IsolationForest(\n        n_estimators=policy[\"estimators\"], random_state=policy[\"seed\"],\n        contamination=\"auto\", n_jobs=1))\n    detector.fit(ref)\n    scores = detector.decision_function(cand)\n    if not np.isfinite(scores).all():\n        raise InsufficientData(\"nonfinite anomaly score\")\n    return scores\n\ndef exact_ids(rows, field):\n    ids = [row[field] for row in rows]\n    if any(not isinstance(x, str) or not x for x in ids) or len(ids) != len(set(ids)):\n        raise InsufficientData(\"duplicate or invalid feature identity\")\n    return set(ids)\n\ndef score_bundle(bundle, policy):\n    \"\"\"Inputs are already captured, signed and version-bound by the launcher.\n\n    The content scorer consumes shared isolation receipts; it does not launch\n    Docker, change cgroups or attest isolation. Features are produced from the\n    admitted model/extractor release, not supplied by candidate record authors.\n    \"\"\"\n    for key in (\"minimum_reference_rows\", \"maximum_reference_rows\", \"maximum_records\",\n                \"maximum_members_per_group\", \"maximum_features\", \"estimators\"):\n        if type(policy[key]) is not int or policy[key] &lt; 1:\n            raise ValueError(\"invalid positive policy bound\")\n    if type(policy[\"seed\"]) is not int or policy[\"minimum_reference_rows\"] &gt; policy[\"maximum_reference_rows\"]:\n        raise ValueError(\"invalid seed/reference policy\")\n    for key in (\"generic_minimum\", \"joint_minimum\", \"fusion_z_maximum\"):\n        if type(policy[key]) not in (int, float) or not math.isfinite(policy[key]):\n            raise ValueError(\"invalid calibrated threshold\")\n    if policy[\"fusion_z_maximum\"] &lt;= 0:\n        raise ValueError(\"fusion threshold must be positive\")\n    for key in (\"generic_features\", \"joint_features\", \"fusion_features\"):\n        names = policy[key]\n        if (not isinstance(names, list) or not 1 &lt;= len(names) &lt;= policy[\"maximum_features\"]\n                or any(not isinstance(x, str) or not x for x in names) or len(names) != len(set(names))):\n            raise ValueError(\"feature names must come from the approved profile\")\n    if type(policy[\"paired\"]) is not bool or not policy[\"modalities\"]:\n        raise ValueError(\"explicit architecture/modality profile required\")\n    if bundle[\"schema_version\"] != \"aidefend.anomaly-input-bundle.v2\":\n        raise ValueError(\"unsupported bundle schema\")\n    groups = bundle[\"groups\"]\n    if not isinstance(groups, list) or not 1 &lt;= len(groups) &lt;= policy[\"maximum_records\"]:\n        raise InsufficientData(\"candidate group population bound\")\n    group_ids = exact_ids(groups, \"group_id\")\n    expected, record_hashes = {}, {}\n    for group in groups:\n        members = group[\"members\"]\n        if not 1 &lt;= len(members) &lt;= policy[\"maximum_members_per_group\"]:\n            raise InsufficientData(\"invalid group membership\")\n        modalities = set()\n        for member in members:\n            rid, modality, content_digest = member[\"record_id\"], member[\"modality\"], member[\"sha256\"]\n            if (not isinstance(rid, str) or not rid or rid in expected\n                    or modality not in policy[\"modalities\"]\n                    or not isinstance(content_digest, str) or len(content_digest) != 64\n                    or set(content_digest) - set(\"0123456789abcdef\")):\n                raise InsufficientData(\"record identity/digest or modality mismatch\")\n            expected[rid] = (group[\"group_id\"], modality)\n            record_hashes[rid] = content_digest\n            modalities.add(modality)\n        if policy[\"paired\"] and modalities != set(policy[\"modalities\"]):\n            raise InsufficientData(\"paired/grouped modality population is incomplete\")\n    if len(expected) &gt; policy[\"maximum_records\"]:\n        raise InsufficientData(\"record population exceeds policy\")\n    candidates, references = bundle[\"candidate_members\"], bundle[\"reference_members\"]\n    if exact_ids(candidates, \"record_id\") != set(expected):\n        raise InsufficientData(\"candidate features omit or add dataset records\")\n    if any(expected[row[\"record_id\"]] != (row[\"group_id\"], row[\"modality\"]) for row in candidates):\n        raise InsufficientData(\"candidate group/modality binding differs\")\n    exact_ids(references, \"reference_id\")\n    if set(row[\"modality\"] for row in references) != set(policy[\"modalities\"]):\n        raise InsufficientData(\"clean reference modality population differs\")\n    scores = {}\n    for modality in sorted(set(policy[\"modalities\"])):\n        ref = [row for row in references if row[\"modality\"] == modality]\n        cand = [row for row in candidates if row[\"modality\"] == modality]\n        if not cand:\n            continue\n        measured = isolation_scores(ref, cand, policy[\"generic_features\"], policy)\n        scores.update(zip([row[\"record_id\"] for row in cand], map(float, measured)))\n    joint, fusion = {}, {}\n    if policy[\"paired\"]:\n        ref, cand = bundle[\"reference_groups\"], bundle[\"candidate_groups\"]\n        exact_ids(ref, \"reference_group_id\")\n        if exact_ids(cand, \"group_id\") != group_ids:\n            raise InsufficientData(\"joint/fusion feature group population differs\")\n        joint = dict(zip([row[\"group_id\"] for row in cand], map(float,\n            isolation_scores(ref, cand, policy[\"joint_features\"], policy))))\n        rf = matrix(ref, policy[\"fusion_features\"], policy[\"minimum_reference_rows\"], policy[\"maximum_reference_rows\"])\n        cf = matrix(cand, policy[\"fusion_features\"], 1, policy[\"maximum_records\"])\n        median = np.median(rf, axis=0)\n        mad = np.median(np.abs(rf - median), axis=0)\n        if np.any(mad &lt;= 0):\n            raise InsufficientData(\"zero-variance fusion feature requires recalibration\")\n        z = np.max(np.abs(cf - median)/(1.4826 * mad), axis=1)\n        fusion = dict(zip([row[\"group_id\"] for row in cand], map(float, z)))\n    evidence, admitted, quarantine = [], {}, {}\n    for group in groups:\n        gid = group[\"group_id\"]\n        ids = sorted(member[\"record_id\"] for member in group[\"members\"])\n        minimum = min(scores[rid] for rid in ids)\n        reasons = []\n        if minimum &lt; policy[\"generic_minimum\"]:\n            reasons.append(\"generic_record_anomaly\")\n        if policy[\"paired\"]:\n            if joint[gid] &lt; policy[\"joint_minimum\"]:\n                reasons.append(\"joint_embedding_anomaly\")\n            if fusion[gid] &gt; policy[\"fusion_z_maximum\"]:\n                reasons.append(\"fusion_layer_anomaly\")\n        evidence.append({\"group_id\": gid, \"record_ids\": ids,\n                         \"member_scores\": {rid: scores[rid] for rid in ids},\n                         \"joint_score\": joint.get(gid), \"fusion_z\": fusion.get(gid),\n                         \"reasons\": reasons, \"decision\": \"QUARANTINE\" if reasons else \"ADMIT\"})\n        target = quarantine if reasons else admitted\n        target.update({rid: record_hashes[rid] for rid in ids})\n    return {\"schema_version\": \"aidefend.dataset-admission.v2\", \"snapshot_id\": bundle[\"snapshot_id\"],\n            \"policy_version\": policy[\"version\"], \"policy_sha256\": bundle[\"policy_sha256\"],\n            \"dataset_sha256\": bundle[\"dataset_sha256\"], \"input_bundle_sha256\": sha(canonical(bundle)),\n            \"outcome\": \"PASS\", \"record_count\": len(expected), \"group_count\": len(groups),\n            \"convergence_method\": \"MEASURED\" if policy[\"paired\"] else \"NOT_APPLICABLE\",\n            \"admitted\": admitted, \"quarantined\": quarantine, \"evidence\": evidence}\n\ndef verify_captured(path, bundle_path, key, maximum, timeout):\n    # The shared broker has already exported these bounded regular files.\n    raw, proof = path.read_bytes(), bundle_path.read_bytes()\n    if not raw or not proof or max(len(raw), len(proof)) &gt; maximum:\n        raise ValueError(\"broker export exceeds the admitted byte bound\")\n    with tempfile.TemporaryDirectory() as directory:\n        payload, signature = Path(directory)/\"payload\", Path(directory)/\"proof\"\n        payload.write_bytes(raw)\n        signature.write_bytes(proof)\n        subprocess.run([\"cosign\", \"verify-blob\", \"--key\", key, \"--bundle\", str(signature),\n                        str(payload)], check=True, capture_output=True, timeout=timeout)\n    def unique(pairs):\n        value = {}\n        for key, item in pairs:\n            if key in value:\n                raise ValueError(\"duplicate signed JSON key\")\n            value[key] = item\n        return value\n    return raw, json.loads(raw, object_pairs_hook=unique,\n        parse_constant=lambda x: (_ for _ in ()).throw(ValueError(\"nonfinite JSON\")))\n\ndef main():\n    parser = argparse.ArgumentParser()\n    for name in (\"policy\", \"input\", \"receipt\", \"output\"):\n        parser.add_argument(\"--\"+name, type=Path, required=True)\n    for name in (\"policy-sha256\", \"dataset-sha256\", \"run-id\", \"policy-key\", \"extractor-key\", \"isolation-key\"):\n        parser.add_argument(\"--\"+name, required=True)\n    parser.add_argument(\"--maximum-bytes\", type=int, required=True)\n    parser.add_argument(\"--timeout-seconds\", type=float, required=True)\n    args = parser.parse_args()\n    if args.maximum_bytes &lt; 1 or not math.isfinite(args.timeout_seconds) or args.timeout_seconds &lt;= 0:\n        raise ValueError(\"verified bootstrap bounds required\")\n    try:\n        loaded = []\n        for path, key in [(args.policy, args.policy_key), (args.input, args.extractor_key), (args.receipt, args.isolation_key)]:\n            loaded.append(verify_captured(path, Path(str(path)+\".sigstore.json\"), key,\n                                         args.maximum_bytes, args.timeout_seconds))\n        (policy_raw, policy), (input_raw, bundle), (_, receipt) = loaded\n        if (sha(policy_raw) != args.policy_sha256 or bundle[\"policy_sha256\"] != args.policy_sha256\n                or bundle[\"dataset_sha256\"] != args.dataset_sha256\n                or bundle[\"extractor_release_sha256\"] != policy[\"extractor_release_sha256\"]\n                or receipt[\"schema_version\"] != \"aidefend.sandbox-consumption.v1\"\n                or receipt[\"owner_control\"] != \"AID-I-001\"\n                or receipt[\"outcome\"] != \"PASS\" or receipt[\"run_id\"] != args.run_id\n                or receipt[\"input_bundle_sha256\"] != sha(input_raw)\n                or receipt[\"policy_sha256\"] != args.policy_sha256\n                or receipt[\"dataset_sha256\"] != args.dataset_sha256\n                or receipt[\"extractor_release_sha256\"] != policy[\"extractor_release_sha256\"]):\n            raise ValueError(\"content, extractor or shared isolation receipt binding differs\")\n        result = score_bundle(bundle, policy)\n        result[\"captured_input_sha256\"] = sha(input_raw)\n        result[\"isolation_run_id\"] = args.run_id\n    except Exception as error:\n        result = {\"schema_version\": \"aidefend.dataset-admission.v2\",\n                  \"outcome\": \"INSUFFICIENT_DATA\" if isinstance(error, InsufficientData) else \"ERROR\",\n                  \"reason_code\": type(error).__name__, \"admitted\": {}, \"quarantined\": {}}\n    args.output.write_bytes(canonical(result)+b\"\\n\")\n    if result[\"outcome\"] != \"PASS\":\n        raise SystemExit(1)\n\nif __name__ == \"__main__\":\n    main()</code></pre><h5>Consume shared isolation evidence and enforce admission</h5><p>The site-owned broker adapter exports aidefend.sandbox-consumption.v1 with owner_control AID-I-001, outcome, run_id, policy_sha256, dataset_sha256, extractor_release_sha256 and input_bundle_sha256 after verifying its native isolation evidence. This is an adapter contract, not a new vendor API or a second sandbox implementation. Its signer is independent of the dataset author. The trusted launcher supplies --policy-sha256, --dataset-sha256 and --run-id from the admitted snapshot plus the three pinned authority keys and policy-derived size/deadline bounds. It cannot choose those values from the input bundle. Execute the scorer under the same broker resource/deadline profile; a killed or incomplete run cannot publish admission.</p><p>Write the result to a new immutable staging object, sign it with the dataset-admission authority and independently verify its signature/readback before publishing. The training/evaluation loader must fetch only record IDs and exact digests in the verified admitted map, never a raw candidate-directory glob. Quarantine removes the entire affected group from that allowlist and retains original immutable record references for investigation; it does not delete source evidence. Compare the signed allowlist to the exact loader population before the first training step. Source pointers or mutable tags cannot substitute for record digests.</p><h5>Replay the core defense independently</h5><p>Replay a benign group, a complete joint trigger, and a partial-payload group whose individual generic scores remain benign but whose combined joint/fusion evidence is anomalous. Both trigger fixtures must quarantine the entire group for a convergence reason. Check missing/extra/duplicate records and groups, wrong modality, feature/extractor/profile drift, changed input bytes, forged or wrong-run receipts, zero-MAD fusion features, nonfinite values and broker timeout. Missing features/reference coverage produces INSUFFICIENT_DATA; signature, binding or execution errors produce ERROR and no loader publication. PASS means the complete candidate population received an admission/quarantine decision, not that all data is benign or poisoning is impossible. Preserve calibrated thresholds, model/extractor versions, dataset digests, raw features, scores and loader readback for independent replay.</p>"},
                         {
                             "id": "AID-H-002.001-G004",
                             "implementation": "Scan and anonymize PII or sensitive data before training, fine-tuning, or evaluation.",
@@ -5126,7 +571,10 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                                 "AML.T0051.000 LLM Prompt Injection: Direct",
                                 "AML.T0051.001 LLM Prompt Injection: Indirect",
                                 "AML.T0051.002 LLM Prompt Injection: Triggered (input validation blocks triggered prompt injection)",
-                                "AML.T0123 Obfuscated Files or Information (normalization and encoding checks reject text or structured content that would decode or assemble differently downstream)"
+                                "AML.T0123 Obfuscated Files or Information (normalization and encoding checks reject text or structured content that would decode or assemble differently downstream)",
+                                "AML.T0131 Crafted AI Assistant Links (external-link ingress disables automatic execution and preserves origin through exact-text confirmation)",
+                                "AML.T0130 AI Agent Response Biasing (input gating and link-origin separation constrain injected source-trust and recommendation instructions)",
+                                "AML.T0134 AI Targeted Cloaking (ingestion scans the exact fetched bytes instead of verifying one response and consuming a refetch)"
                             ]
                         },
                         {
@@ -5237,6 +685,11 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                             "id": "AID-H-002.002-G008",
                             "implementation": "Validate, safely fetch, and sanitize external/RAG sources before embedding or retrieval.",
                             "howTo": "<h5>Concept:</h5><p>Treat every external or RAG source as untrusted. Consume the exact bytes and signed receipt from the canonical <code>AID-H-019.001</code> safe-fetch boundary; never perform a verifier-then-refetch sequence in the ingestion workload.</p><h5>Step 1: Consume the canonical safe-fetch response and sanitize its returned bytes</h5><pre><code># File: rag_guards/source_fetch.py\r\nfrom __future__ import annotations\r\n\r\nfrom dataclasses import dataclass\r\nimport hashlib\r\nimport math\r\nimport ipaddress\r\nimport json\r\nimport os\r\nimport re\r\nimport ssl\r\nimport uuid\r\nfrom urllib.parse import quote, urlsplit\r\n\r\nimport httpx\r\nimport nh3\r\n\r\ndef _required_positive_int(name: str) -&gt; int:\r\n    value = int(os.environ[name])\r\n    if value &lt;= 0:\r\n        raise RuntimeError(f\"{name} must be a positive integer\")\r\n    return value\r\n\r\nRAG_VERDICT_RESPONSE_MAX_BYTES = _required_positive_int(\"VERIFIED_H002_RAG_VERDICT_RESPONSE_MAX_BYTES\")\r\nRAG_RECEIPT_RESPONSE_MAX_BYTES = _required_positive_int(\"VERIFIED_H002_RAG_RECEIPT_RESPONSE_MAX_BYTES\")\r\n\r\n\r\ndef _required_positive_seconds(name: str) -&gt; float:\r\n    value = float(os.environ[name])\r\n    if not math.isfinite(value) or value &lt;= 0:\r\n        raise RuntimeError(f\"{name} must be a finite positive number of seconds\")\r\n    return value\r\n\r\nAUDIT_INGEST_TOTAL_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H002_RAG_AUDIT_INGEST_TOTAL_TIMEOUT_SECONDS\")\r\nAUDIT_INGEST_CONNECT_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H002_RAG_AUDIT_INGEST_CONNECT_TIMEOUT_SECONDS\")\r\nRECEIPT_READ_TOTAL_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H002_RAG_RECEIPT_READ_TOTAL_TIMEOUT_SECONDS\")\r\nRECEIPT_READ_CONNECT_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H002_RAG_RECEIPT_READ_CONNECT_TIMEOUT_SECONDS\")\r\nSAFE_FETCH_TOTAL_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H002_RAG_SAFE_FETCH_TOTAL_TIMEOUT_SECONDS\")\r\nSAFE_FETCH_CONNECT_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H002_RAG_SAFE_FETCH_CONNECT_TIMEOUT_SECONDS\")\r\n\r\n\r\n\r\nALLOWED_TAGS = {\"p\", \"pre\", \"code\", \"ul\", \"ol\", \"li\", \"blockquote\", \"strong\", \"em\", \"a\"}\r\nALLOWED_ATTRS = {\"a\": {\"href\", \"title\", \"rel\"}}\r\nRESPONSE_FIELDS = {\r\n    \"schema_version\", \"request_id\", \"outcome\", \"reason_code\",\r\n    \"raw_url_sha256\", \"canonical_initial_url_sha256\", \"final_url_sha256\",\r\n    \"connected_ip\", \"redirect_count\", \"media_type\", \"body_size\",\r\n    \"body_sha256\", \"body_hex\", \"fetch_policy_version\",\r\n    \"fetch_policy_sha256\", \"service_image_digest\", \"signed_receipt_id\",\r\n}\r\nDECISION_FIELDS = (RESPONSE_FIELDS - {\"body_hex\", \"signed_receipt_id\"}) | {\"caller_id\"}\r\nREADBACK_FIELDS = {\r\n    \"schema_version\", \"signed_receipt_id\", \"signature_verified\",\r\n    \"signer_key_id\", \"decision_sha256\", \"decision\",\r\n}\r\nHEX64_RE = re.compile(r\"[0-9a-f]{64}\")\r\nHEX_BYTES_RE = re.compile(r\"(?:[0-9a-f]{2})*\")\r\nRECEIPT_ID_RE = re.compile(r\"[A-Za-z0-9._:-]{16,256}\")\r\nREASON_RE = re.compile(r\"[a-z0-9_.:-]{1,128}\")\r\n\r\ndef require_https_endpoint(raw: str, label: str) -&gt; str:\r\n    if not isinstance(raw, str) or not raw or raw != raw.strip():\r\n        raise RuntimeError(f\"{label} endpoint is empty or non-canonical\")\r\n    parsed = urlsplit(raw)\r\n    if (\r\n        parsed.scheme != \"https\"\r\n        or not parsed.hostname\r\n        or parsed.username is not None\r\n        or parsed.password is not None\r\n        or parsed.query\r\n        or parsed.fragment\r\n    ):\r\n        raise RuntimeError(f\"{label} endpoint must be canonical HTTPS\")\r\n    return raw\r\n\r\n\r\nSAFE_FETCH_URL = require_https_endpoint(\r\n    os.environ[\"SAFE_FETCH_URL\"], \"safe-fetch\"\r\n)\r\nAUDIT_RECEIPT_BASE_URL = require_https_endpoint(\r\n    os.environ[\"FETCH_AUDIT_RECEIPT_BASE_URL\"], \"receipt-readback\"\r\n)\r\nif AUDIT_RECEIPT_BASE_URL.endswith(\"/\"):\r\n    raise RuntimeError(\"receipt-readback base URL must not end with a slash\")\r\nINGEST_AUDIT_URL = require_https_endpoint(\r\n    os.environ[\"RAG_INGEST_AUDIT_WRITER_URL\"], \"ingest-audit\"\r\n)\r\nEXPECTED_CALLER_ID = os.environ[\"SAFE_FETCH_CALLER_ID\"]\r\nEXPECTED_POLICY_VERSION = os.environ[\"SAFE_FETCH_POLICY_VERSION\"]\r\nEXPECTED_POLICY_SHA256 = os.environ[\"SAFE_FETCH_POLICY_SHA256\"]\r\nEXPECTED_SERVICE_IMAGE = os.environ[\"SAFE_FETCH_IMAGE_DIGEST\"]\r\nEXPECTED_MAX_REDIRECTS = int(os.environ[\"SAFE_FETCH_MAX_REDIRECTS\"])\r\nEXPECTED_MAX_BODY_BYTES = int(os.environ[\"SAFE_FETCH_MAX_BODY_BYTES\"])\r\nEXPECTED_MEDIA_TYPES = {\r\n    value.strip().lower()\r\n    for value in os.environ[\"SAFE_FETCH_ALLOWED_MEDIA_TYPES\"].split(\",\")\r\n    if value.strip()\r\n}\r\nEXPECTED_AUDIT_SIGNER_KEY_IDS = {\r\n    value.strip()\r\n    for value in os.environ[\"FETCH_AUDIT_SIGNER_KEY_IDS\"].split(\",\")\r\n    if value.strip()\r\n}\r\nif (\r\n    HEX64_RE.fullmatch(EXPECTED_POLICY_SHA256) is None\r\n    or re.fullmatch(r\"sha256:[0-9a-f]{64}\", EXPECTED_SERVICE_IMAGE) is None\r\n    or not EXPECTED_POLICY_VERSION\r\n    or not EXPECTED_CALLER_ID\r\n    or EXPECTED_MAX_REDIRECTS &lt; 0\r\n    or EXPECTED_MAX_BODY_BYTES &lt; 1\r\n    or not EXPECTED_MEDIA_TYPES\r\n    or not EXPECTED_AUDIT_SIGNER_KEY_IDS\r\n):\r\n    raise RuntimeError(\"safe-fetch client policy environment is invalid\")\r\n\r\n\r\ndef mtls_context(ca_env: str, cert_env: str, key_env: str) -&gt; ssl.SSLContext:\r\n    context = ssl.create_default_context(cafile=os.environ[ca_env])\r\n    context.load_cert_chain(os.environ[cert_env], os.environ[key_env])\r\n    return context\r\n\r\n\r\nSAFE_FETCH_TLS = mtls_context(\r\n    \"SAFE_FETCH_CA_BUNDLE\", \"SAFE_FETCH_MTLS_CERT\", \"SAFE_FETCH_MTLS_KEY\"\r\n)\r\nRECEIPT_READ_TLS = mtls_context(\r\n    \"FETCH_AUDIT_CA_BUNDLE\",\r\n    \"FETCH_AUDIT_READ_MTLS_CERT\",\r\n    \"FETCH_AUDIT_READ_MTLS_KEY\",\r\n)\r\nINGEST_AUDIT_TLS = mtls_context(\r\n    \"RAG_INGEST_AUDIT_CA_BUNDLE\",\r\n    \"RAG_INGEST_AUDIT_MTLS_CERT\",\r\n    \"RAG_INGEST_AUDIT_MTLS_KEY\",\r\n)\r\n\r\n\r\nclass SafeFetchRejected(RuntimeError):\r\n    pass\r\n\r\n\r\ndef is_int(value: object) -&gt; bool:\r\n    return type(value) is int\r\n\r\n\r\ndef require_sha256(value: object, field: str, *, nullable: bool = False) -&gt; None:\r\n    if value is None and nullable:\r\n        return\r\n    if not isinstance(value, str) or HEX64_RE.fullmatch(value) is None:\r\n        raise RuntimeError(f\"safe_fetch_{field}_invalid\")\r\n\r\n\r\ndef strict_json_body(payload: bytes, *, max_bytes: int) -&gt; object:\r\n    if len(payload) &gt; max_bytes:\r\n        raise RuntimeError(\"json_envelope_too_large\")\r\n\r\n    def unique_object(pairs: list[tuple[str, object]]) -&gt; dict:\r\n        result: dict = {}\r\n        for key, value in pairs:\r\n            if key in result:\r\n                raise RuntimeError(\"duplicate_json_key\")\r\n            result[key] = value\r\n        return result\r\n\r\n    try:\r\n        return json.loads(\r\n            payload.decode(\"utf-8\", errors=\"strict\"),\r\n            object_pairs_hook=unique_object,\r\n            parse_constant=lambda value: (_ for _ in ()).throw(\r\n                RuntimeError(f\"invalid_json_constant:{value}\")\r\n            ),\r\n        )\r\n    except (UnicodeDecodeError, json.JSONDecodeError) as exc:\r\n        raise RuntimeError(\"json_envelope_invalid\") from exc\r\n\r\n@dataclass(frozen=True)\r\nclass BoundedResponse:\r\n    status_code: int\r\n    headers: dict[str, str]\r\n    content: bytes\r\n\r\n\r\ndef read_limited_response(\r\n    response: httpx.Response, *, max_bytes: int\r\n) -&gt; bytes:\r\n    parts: list[bytes] = []\r\n    total = 0\r\n    for chunk in response.iter_bytes():\r\n        room = max_bytes + 1 - total\r\n        parts.append(chunk[: max(room, 0)])\r\n        total += min(len(chunk), max(room, 0))\r\n        if len(chunk) &gt; room or total &gt; max_bytes:\r\n            raise RuntimeError(\"authenticated_response_too_large\")\r\n    return b\"\".join(parts)\r\n\r\n\r\ndef bounded_request(\r\n    client: httpx.Client,\r\n    method: str,\r\n    url: str,\r\n    *,\r\n    max_bytes: int,\r\n    **kwargs,\r\n) -&gt; BoundedResponse:\r\n    headers = dict(kwargs.pop(\"headers\", {}))\r\n    headers.setdefault(\"Accept\", \"application/json\")\r\n    headers.setdefault(\"Accept-Encoding\", \"identity\")\r\n    with client.stream(method, url, headers=headers, **kwargs) as response:\r\n        body = read_limited_response(response, max_bytes=max_bytes)\r\n        return BoundedResponse(\r\n            status_code=response.status_code,\r\n            headers=dict(response.headers),\r\n            content=body,\r\n        )\r\n\r\n\r\ndef retain_consumer_event(event: dict) -&gt; str:\r\n    # This profile is intentionally versioned; the independent writer signs the\r\n    # exact UTF-8 bytes and echoes their digest before ingestion may continue.\r\n    canonical = json.dumps(\r\n        event, ensure_ascii=False, sort_keys=True, separators=(\",\", \":\")\r\n    ).encode(\"utf-8\")\r\n    event_sha256 = hashlib.sha256(canonical).hexdigest()\r\n    try:\r\n        with httpx.Client(\r\n            verify=INGEST_AUDIT_TLS,\r\n            timeout=httpx.Timeout(\r\n                AUDIT_INGEST_TOTAL_TIMEOUT_SECONDS,\r\n                connect=AUDIT_INGEST_CONNECT_TIMEOUT_SECONDS,\r\n            ),\r\n            follow_redirects=False,\r\n        ) as client:\r\n            response = bounded_request(\r\n                client,\r\n                \"POST\",\r\n                INGEST_AUDIT_URL,\r\n                max_bytes=RAG_VERDICT_RESPONSE_MAX_BYTES,\r\n                content=canonical,\r\n                headers={\"Content-Type\": \"application/json\"},\r\n            )\r\n        body = strict_json_body(\r\n            response.content, max_bytes=RAG_VERDICT_RESPONSE_MAX_BYTES\r\n        )\r\n    except (httpx.HTTPError, RuntimeError) as exc:\r\n        raise RuntimeError(\"consumer_evidence_unavailable\") from exc\r\n    if (\r\n        response.status_code != 201\r\n        or not isinstance(body, dict)\r\n        or set(body) != {\r\n            \"schema_version\", \"signed_receipt_id\", \"event_sha256\"\r\n        }\r\n        or body[\"schema_version\"] != \"aidefend.rag-ingest-receipt.v1\"\r\n        or body[\"event_sha256\"] != event_sha256\r\n        or not isinstance(body[\"signed_receipt_id\"], str)\r\n        or RECEIPT_ID_RE.fullmatch(body[\"signed_receipt_id\"]) is None\r\n    ):\r\n        raise RuntimeError(\"consumer_evidence_receipt_invalid\")\r\n    return body[\"signed_receipt_id\"]\r\n\r\n\r\ndef consumer_event(\r\n    *,\r\n    request_id: str,\r\n    raw_url_sha256: str,\r\n    outcome: str,\r\n    reason_code: str,\r\n    http_status: int | None,\r\n    envelope: dict | None = None,\r\n    receipt_decision_sha256: str | None = None,\r\n    sanitized_content_sha256: str | None = None,\r\n) -&gt; dict:\r\n    return {\r\n        \"schema_version\": \"aidefend.rag-ingest-event.v1\",\r\n        \"request_id\": request_id,\r\n        \"raw_url_sha256\": raw_url_sha256,\r\n        \"outcome\": outcome,\r\n        \"reason_code\": reason_code,\r\n        \"http_status\": http_status,\r\n        \"safe_fetch_outcome\": None if envelope is None else envelope[\"outcome\"],\r\n        \"safe_fetch_receipt_id\": None if envelope is None else envelope[\"signed_receipt_id\"],\r\n        \"safe_fetch_decision_sha256\": receipt_decision_sha256,\r\n        \"source_body_sha256\": None if envelope is None else envelope[\"body_sha256\"],\r\n        \"sanitized_content_sha256\": sanitized_content_sha256,\r\n        \"fetch_policy_version\": None if envelope is None else envelope[\"fetch_policy_version\"],\r\n        \"fetch_policy_sha256\": None if envelope is None else envelope[\"fetch_policy_sha256\"],\r\n        \"service_image_digest\": None if envelope is None else envelope[\"service_image_digest\"],\r\n    }\r\n\r\n\r\ndef validate_envelope(\r\n    envelope: object,\r\n    *,\r\n    status_code: int,\r\n    request_id: str,\r\n    raw_url_sha256: str,\r\n) -&gt; bytes | None:\r\n    if not isinstance(envelope, dict) or set(envelope) != RESPONSE_FIELDS:\r\n        raise RuntimeError(\"safe_fetch_response_schema_mismatch\")\r\n    for field in (\r\n        \"schema_version\", \"request_id\", \"outcome\", \"reason_code\",\r\n        \"fetch_policy_version\", \"fetch_policy_sha256\",\r\n        \"service_image_digest\", \"signed_receipt_id\",\r\n    ):\r\n        if not isinstance(envelope[field], str):\r\n            raise RuntimeError(f\"safe_fetch_{field}_type_invalid\")\r\n    if (\r\n        envelope[\"schema_version\"] != \"aidefend.safe-fetch-response.v2\"\r\n        or envelope[\"request_id\"] != request_id\r\n        or envelope[\"outcome\"] not in {\"PASS\", \"FAIL\", \"ERROR\"}\r\n        or REASON_RE.fullmatch(envelope[\"reason_code\"]) is None\r\n        or envelope[\"fetch_policy_version\"] != EXPECTED_POLICY_VERSION\r\n        or envelope[\"fetch_policy_sha256\"] != EXPECTED_POLICY_SHA256\r\n        or envelope[\"service_image_digest\"] != EXPECTED_SERVICE_IMAGE\r\n        or RECEIPT_ID_RE.fullmatch(envelope[\"signed_receipt_id\"]) is None\r\n    ):\r\n        raise RuntimeError(\"safe_fetch_response_binding_failed\")\r\n    expected_status = {\"PASS\": 200, \"FAIL\": 403, \"ERROR\": 502}[envelope[\"outcome\"]]\r\n    if status_code != expected_status:\r\n        raise RuntimeError(\"safe_fetch_status_outcome_mismatch\")\r\n    require_sha256(envelope[\"raw_url_sha256\"], \"raw_url_sha256\")\r\n    require_sha256(\r\n        envelope[\"canonical_initial_url_sha256\"],\r\n        \"canonical_initial_url_sha256\",\r\n        nullable=True,\r\n    )\r\n    require_sha256(envelope[\"final_url_sha256\"], \"final_url_sha256\", nullable=True)\r\n    require_sha256(envelope[\"body_sha256\"], \"body_sha256\", nullable=True)\r\n    if envelope[\"raw_url_sha256\"] != raw_url_sha256:\r\n        raise RuntimeError(\"safe_fetch_raw_url_digest_mismatch\")\r\n    if (\r\n        not is_int(envelope[\"redirect_count\"])\r\n        or not 0 &lt;= envelope[\"redirect_count\"] &lt;= EXPECTED_MAX_REDIRECTS\r\n        or not is_int(envelope[\"body_size\"])\r\n        or not 0 &lt;= envelope[\"body_size\"] &lt;= EXPECTED_MAX_BODY_BYTES\r\n    ):\r\n        raise RuntimeError(\"safe_fetch_bounds_invalid\")\r\n\r\n    if envelope[\"outcome\"] != \"PASS\":\r\n        if any(\r\n            envelope[field] is not None\r\n            for field in (\"final_url_sha256\", \"connected_ip\", \"media_type\", \"body_sha256\", \"body_hex\")\r\n        ) or envelope[\"body_size\"] != 0:\r\n            raise RuntimeError(\"safe_fetch_nonpass_body_fields_present\")\r\n        return None\r\n\r\n    if (\r\n        envelope[\"canonical_initial_url_sha256\"] is None\r\n        or envelope[\"final_url_sha256\"] is None\r\n        or envelope[\"body_sha256\"] is None\r\n        or not isinstance(envelope[\"connected_ip\"], str)\r\n        or not isinstance(envelope[\"media_type\"], str)\r\n        or envelope[\"media_type\"] not in EXPECTED_MEDIA_TYPES\r\n        or not isinstance(envelope[\"body_hex\"], str)\r\n        or HEX_BYTES_RE.fullmatch(envelope[\"body_hex\"]) is None\r\n    ):\r\n        raise RuntimeError(\"safe_fetch_pass_fields_invalid\")\r\n    try:\r\n        connected_ip = ipaddress.ip_address(envelope[\"connected_ip\"])\r\n        body = bytes.fromhex(envelope[\"body_hex\"])\r\n    except ValueError as exc:\r\n        raise RuntimeError(\"safe_fetch_pass_encoding_invalid\") from exc\r\n    if not connected_ip.is_global:\r\n        raise RuntimeError(\"safe_fetch_connected_ip_not_public\")\r\n    if (\r\n        len(body) != envelope[\"body_size\"]\r\n        or hashlib.sha256(body).hexdigest() != envelope[\"body_sha256\"]\r\n    ):\r\n        raise RuntimeError(\"safe_fetch_body_binding_invalid\")\r\n    return body\r\n\r\n\r\ndef read_and_verify_receipt(envelope: dict) -&gt; str:\r\n    receipt_id = envelope[\"signed_receipt_id\"]\r\n    try:\r\n        with httpx.Client(\r\n            verify=RECEIPT_READ_TLS,\r\n            timeout=httpx.Timeout(\r\n                RECEIPT_READ_TOTAL_TIMEOUT_SECONDS,\r\n                connect=RECEIPT_READ_CONNECT_TIMEOUT_SECONDS,\r\n            ),\r\n            follow_redirects=False,\r\n        ) as client:\r\n            response = bounded_request(\r\n                client,\r\n                \"GET\",\r\n                f\"{AUDIT_RECEIPT_BASE_URL}/{quote(receipt_id, safe='')}\",\r\n                max_bytes=RAG_RECEIPT_RESPONSE_MAX_BYTES,\r\n            )\r\n        readback = strict_json_body(\r\n            response.content, max_bytes=RAG_RECEIPT_RESPONSE_MAX_BYTES\r\n        )\r\n    except (httpx.HTTPError, RuntimeError) as exc:\r\n        raise RuntimeError(\"safe_fetch_receipt_readback_unavailable\") from exc\r\n    if (\r\n        response.status_code != 200\r\n        or not isinstance(readback, dict)\r\n        or set(readback) != READBACK_FIELDS\r\n        or readback[\"schema_version\"] != \"aidefend.safe-fetch-audit-readback.v2\"\r\n        or readback[\"signed_receipt_id\"] != receipt_id\r\n        or readback[\"signature_verified\"] is not True\r\n        or not isinstance(readback[\"signer_key_id\"], str)\r\n        or readback[\"signer_key_id\"] not in EXPECTED_AUDIT_SIGNER_KEY_IDS\r\n    ):\r\n        raise RuntimeError(\"safe_fetch_receipt_readback_invalid\")\r\n    require_sha256(readback[\"decision_sha256\"], \"receipt_decision_sha256\")\r\n    decision = readback[\"decision\"]\r\n    if not isinstance(decision, dict) or set(decision) != DECISION_FIELDS:\r\n        raise RuntimeError(\"safe_fetch_receipt_decision_schema_invalid\")\r\n    if (\r\n        decision[\"schema_version\"] != \"aidefend.safe-fetch-decision.v2\"\r\n        or decision[\"caller_id\"] != EXPECTED_CALLER_ID\r\n    ):\r\n        raise RuntimeError(\"safe_fetch_receipt_identity_invalid\")\r\n    for field in RESPONSE_FIELDS - {\"schema_version\", \"body_hex\", \"signed_receipt_id\"}:\r\n        if decision[field] != envelope[field]:\r\n            raise RuntimeError(f\"safe_fetch_receipt_{field}_mismatch\")\r\n    return readback[\"decision_sha256\"]\r\n\r\n\r\ndef fetch_and_sanitize_html(raw_url: str) -&gt; dict:\r\n    if not isinstance(raw_url, str) or not raw_url or len(raw_url) &gt; 8192:\r\n        raise ValueError(\"raw_url_invalid\")\r\n    request_id = str(uuid.uuid4())\r\n    raw_url_sha256 = hashlib.sha256(raw_url.encode(\"utf-8\")).hexdigest()\r\n    try:\r\n        with httpx.Client(\r\n            verify=SAFE_FETCH_TLS,\r\n            timeout=httpx.Timeout(\r\n                SAFE_FETCH_TOTAL_TIMEOUT_SECONDS,\r\n                connect=SAFE_FETCH_CONNECT_TIMEOUT_SECONDS,\r\n            ),\r\n            follow_redirects=False,\r\n        ) as client:\r\n            response = bounded_request(\r\n                client,\r\n                \"POST\",\r\n                SAFE_FETCH_URL,\r\n                max_bytes=(EXPECTED_MAX_BODY_BYTES * 2) + 65_536,\r\n                json={\"request_id\": request_id, \"url\": raw_url},\r\n            )\r\n    except (httpx.HTTPError, RuntimeError) as exc:\r\n        retain_consumer_event(\r\n            consumer_event(\r\n                request_id=request_id,\r\n                raw_url_sha256=raw_url_sha256,\r\n                outcome=\"ERROR\",\r\n                reason_code=\"safe_fetch_transport_error\",\r\n                http_status=None,\r\n            )\r\n        )\r\n        raise RuntimeError(\"safe_fetch_transport_error\") from exc\r\n\r\n    if response.status_code == 503 and response.content == b\"\":\r\n        retain_consumer_event(\r\n            consumer_event(\r\n                request_id=request_id,\r\n                raw_url_sha256=raw_url_sha256,\r\n                outcome=\"ERROR\",\r\n                reason_code=\"safe_fetch_audit_unavailable\",\r\n                http_status=503,\r\n            )\r\n        )\r\n        raise RuntimeError(\"safe_fetch_audit_unavailable\")\r\n    if response.status_code not in {200, 403, 502}:\r\n        retain_consumer_event(\r\n            consumer_event(\r\n                request_id=request_id,\r\n                raw_url_sha256=raw_url_sha256,\r\n                outcome=\"ERROR\",\r\n                reason_code=\"safe_fetch_unexpected_status\",\r\n                http_status=response.status_code,\r\n            )\r\n        )\r\n        raise RuntimeError(\"safe_fetch_unexpected_status\")\r\n    response_media_type = response.headers.get(\"content-type\", \"\").split(\";\", 1)[0].lower()\r\n    if response_media_type != \"application/json\":\r\n        retain_consumer_event(\r\n            consumer_event(\r\n                request_id=request_id,\r\n                raw_url_sha256=raw_url_sha256,\r\n                outcome=\"ERROR\",\r\n                reason_code=\"safe_fetch_content_type_invalid\",\r\n                http_status=response.status_code,\r\n            )\r\n        )\r\n        raise RuntimeError(\"safe_fetch_content_type_invalid\")\r\n    try:\r\n        envelope = strict_json_body(\r\n            response.content,\r\n            max_bytes=(EXPECTED_MAX_BODY_BYTES * 2) + 65_536,\r\n        )\r\n        body = validate_envelope(\r\n            envelope,\r\n            status_code=response.status_code,\r\n            request_id=request_id,\r\n            raw_url_sha256=raw_url_sha256,\r\n        )\r\n        receipt_decision_sha256 = read_and_verify_receipt(envelope)\r\n    except (RuntimeError, ValueError) as exc:\r\n        retain_consumer_event(\r\n            consumer_event(\r\n                request_id=request_id,\r\n                raw_url_sha256=raw_url_sha256,\r\n                outcome=\"ERROR\",\r\n                reason_code=\"safe_fetch_envelope_or_receipt_invalid\",\r\n                http_status=response.status_code,\r\n            )\r\n        )\r\n        raise RuntimeError(\"safe_fetch_envelope_or_receipt_invalid\") from exc\r\n\r\n    if envelope[\"outcome\"] != \"PASS\":\r\n        retain_consumer_event(\r\n            consumer_event(\r\n                request_id=request_id,\r\n                raw_url_sha256=raw_url_sha256,\r\n                outcome=envelope[\"outcome\"],\r\n                reason_code=envelope[\"reason_code\"],\r\n                http_status=response.status_code,\r\n                envelope=envelope,\r\n                receipt_decision_sha256=receipt_decision_sha256,\r\n            )\r\n        )\r\n        raise SafeFetchRejected(envelope[\"reason_code\"])\r\n\r\n    assert body is not None\r\n    try:\r\n        raw_body = body.decode(\"utf-8\", errors=\"strict\")\r\n        clean_html = nh3.clean(\r\n            raw_body, tags=ALLOWED_TAGS, attributes=ALLOWED_ATTRS\r\n        )\r\n    except Exception as exc:\r\n        retain_consumer_event(\r\n            consumer_event(\r\n                request_id=request_id,\r\n                raw_url_sha256=raw_url_sha256,\r\n                outcome=\"ERROR\",\r\n                reason_code=\"sanitize_error\",\r\n                http_status=response.status_code,\r\n                envelope=envelope,\r\n                receipt_decision_sha256=receipt_decision_sha256,\r\n            )\r\n        )\r\n        raise RuntimeError(\"sanitize_error\") from exc\r\n    clean_sha256 = hashlib.sha256(clean_html.encode(\"utf-8\")).hexdigest()\r\n    consumer_receipt_id = retain_consumer_event(\r\n        consumer_event(\r\n            request_id=request_id,\r\n            raw_url_sha256=raw_url_sha256,\r\n            outcome=\"PASS\",\r\n            reason_code=\"sanitized\",\r\n            http_status=response.status_code,\r\n            envelope=envelope,\r\n            receipt_decision_sha256=receipt_decision_sha256,\r\n            sanitized_content_sha256=clean_sha256,\r\n        )\r\n    )\r\n    return {\r\n        \"request_id\": request_id,\r\n        \"media_type\": envelope[\"media_type\"],\r\n        \"raw_url_sha256\": envelope[\"raw_url_sha256\"],\r\n        \"canonical_initial_url_sha256\": envelope[\"canonical_initial_url_sha256\"],\r\n        \"final_url_sha256\": envelope[\"final_url_sha256\"],\r\n        \"source_body_sha256\": envelope[\"body_sha256\"],\r\n        \"fetch_policy_version\": envelope[\"fetch_policy_version\"],\r\n        \"fetch_policy_sha256\": envelope[\"fetch_policy_sha256\"],\r\n        \"service_image_digest\": envelope[\"service_image_digest\"],\r\n        \"fetch_receipt_id\": envelope[\"signed_receipt_id\"],\r\n        \"fetch_decision_sha256\": receipt_decision_sha256,\r\n        \"consumer_receipt_id\": consumer_receipt_id,\r\n        \"sanitized_content_sha256\": clean_sha256,\r\n        \"clean_html\": clean_html,\r\n    }</code></pre><h5>Step 2: Bind exact safe-fetch and sanitizer outputs to the ingestion record</h5><p>Persist the raw/canonical/final URL digests, exact returned-body digest, exact sanitized UTF-8 output digest, policy and service-image identity, and both signed receipt IDs. Chunking and embedding are downstream operations and must retain their own input/output evidence.</p><pre><code># File: rag_ingest/pipeline.py\r\nfrom rag_guards.source_fetch import fetch_and_sanitize_html\r\n\r\n\r\ndef build_rag_document(raw_url: str) -&gt; dict:\r\n    fetched = fetch_and_sanitize_html(raw_url)\r\n    return {\r\n        \"document_id\": fetched[\"sanitized_content_sha256\"],\r\n        \"body_html\": fetched[\"clean_html\"],\r\n        \"provenance\": {\r\n            \"request_id\": fetched[\"request_id\"],\r\n            \"raw_url_sha256\": fetched[\"raw_url_sha256\"],\r\n            \"canonical_initial_url_sha256\": fetched[\"canonical_initial_url_sha256\"],\r\n            \"source_body_sha256\": fetched[\"source_body_sha256\"],\r\n            \"sanitized_content_sha256\": fetched[\"sanitized_content_sha256\"],\r\n            \"final_url_sha256\": fetched[\"final_url_sha256\"],\r\n            \"fetch_policy_version\": fetched[\"fetch_policy_version\"],\r\n            \"fetch_policy_sha256\": fetched[\"fetch_policy_sha256\"],\r\n            \"service_image_digest\": fetched[\"service_image_digest\"],\r\n            \"fetch_receipt_id\": fetched[\"fetch_receipt_id\"],\r\n            \"fetch_decision_sha256\": fetched[\"fetch_decision_sha256\"],\r\n            \"consumer_receipt_id\": fetched[\"consumer_receipt_id\"],\r\n        },\r\n    }</code></pre><h5>Verification, outcomes, and complete-population evidence</h5><p>The client validates each policy-supplied endpoint as canonical HTTPS, denies redirects, uses an SSL context with its client certificate loaded, and streams at most the signed envelope cap plus one decoded byte before parsing. It accepts only exact v2 fields and types, lowercase SHA-256 values, the configured policy version/digest and immutable service-image digest, bounded redirect/body counts, the expected HTTP-status/outcome pair, and outcome-specific nullability. It never calls <code>raise_for_status()</code> before parsing a structured <code>FAIL</code>/<code>ERROR</code>. Before any bytes are decoded, it reads the receipt back through a separately authenticated audit endpoint, requires a verified signature, exact caller identity, exact decision schema, and field-for-field equality with the envelope. Every <code>PASS</code>, <code>FAIL</code>, and <code>ERROR</code> attempt also receives a signed consumer-event receipt; safe-fetch transport failure or an empty audit-outage <code>503</code> is recorded as consumer <code>ERROR</code> and releases no body.</p><p><strong>Action:</strong> Give the ingestion workload network access only to the canonical H-019 service and the two authenticated audit endpoints. Preserve the digest of the exact bytes returned by safe fetch and the digest of the exact sanitized UTF-8 output actually produced. Do not claim that chunking or embedding occurred until those downstream stages retain and independently verify their own evidence.</p>"
+                        },
+                        {
+                            "id": "AID-H-002.002-G009",
+                            "implementation": "Treat URL-prefilled prompts as external input and require a bound user action before submission without granting tool or memory authority.",
+                            "howTo": "<h5>Step 1: Separate navigation, drafting, and execution</h5><p>Route assistant deep links such as <code>?q=</code> and <code>?prompt=</code> through a controlled prefill endpoint. GET/HEAD navigation, link previews, browser prefetch, and redirects must never invoke the model or a tool. Render the original decoded text as text content in an editable draft labeled as externally supplied. Disable automatic submission at the application default; a <code>submit=false</code> parameter that the link author can remove is not an enforcement control. Some deployed assistants support URL-triggered submission, as documented for <a href=\"https://docs.openwebui.com/features/chat-conversations/chat-features/url-params/\" target=\"_blank\" rel=\"noopener noreferrer\">Open WebUI URL parameters</a>. Keep code-point visibility and field-specific normalization from AID-H-002.002-G002; do not delete phrases such as “remember” to manufacture a safe prompt.</p><h5>Step 2: Derive origin at the trusted boundary</h5><p>Use distinct server routes for external drafts and intentional user submissions. Ignore caller-supplied <code>prompt_origin</code>, role, trust, tool, and memory-permission fields. The server stores the draft under the authenticated tenant/user, and returns an opaque draft ID. The browser shows the exact stored bytes before an explicit submit action. Same-origin/CSRF checks and Fetch Metadata rejection of cross-site automatic submissions are defense in depth; missing <code>Sec-Fetch-Site</code> is not evidence of human authorship. If the application cannot distinguish a route's source, classify it as unknown/external, not <code>human_input</code>. A pasted prompt is not cryptographic proof of authorship either.</p><pre><code>// link-prefill.mjs -- Node.js 22+, controlled ingress adapter\nimport { createHash, randomUUID, timingSafeEqual } from 'node:crypto';\nconst digest = text =&gt; createHash('sha256').update(text, 'utf8').digest('hex');\nconst equal = (a,b) =&gt; typeof a === 'string' &amp;&amp; typeof b === 'string'\n  &amp;&amp; Buffer.byteLength(a) === Buffer.byteLength(b)\n  &amp;&amp; timingSafeEqual(Buffer.from(a), Buffer.from(b));\n\nexport function createLinkDraft(requestUrl, session, policy, now = Date.now()) {\n  const url = new URL(requestUrl, policy.assistant_origin);\n  if (url.origin !== policy.assistant_origin || url.pathname !== '/link-prefill')\n    throw new Error('invalid ingress route');\n  const values = [...url.searchParams.getAll('q'), ...url.searchParams.getAll('prompt')];\n  if (values.length !== 1 || Buffer.byteLength(values[0], 'utf8') &gt; policy.max_prompt_bytes)\n    throw new Error('missing, duplicate, or oversized prompt');\n  // URLSearchParams decodes once. Never recursively unquote into a new command.\n  return Object.freeze({id: randomUUID(), tenant_id: session.tenant_id,\n    user_id: session.user_id, text: values[0], text_sha256: digest(values[0]),\n    prompt_origin: 'link_prefill', policy_version: policy.version,\n    created_at: now, expires_at: now + policy.draft_ttl_ms});\n}\n\nexport function confirmLinkDraft(draft, request, session, policy, now = Date.now()) {\n  // request.csrf is validated against the authenticated server-side session.\n  // The route accepts only draft_id and csrf: text/origin/scope are not editable here.\n  if (request.method !== 'POST' || request.origin !== policy.assistant_origin\n      || !equal(request.csrf, session.csrf)\n      || request.draft_id !== draft.id\n      || session.tenant_id !== draft.tenant_id || session.user_id !== draft.user_id\n      || draft.policy_version !== policy.version || now &gt;= draft.expires_at\n      || now &lt; draft.created_at || digest(draft.text) !== draft.text_sha256)\n    throw new Error('confirmation binding failed');\n  return Object.freeze({draft_id: draft.id, tenant_id: draft.tenant_id,\n    user_id: draft.user_id, text_sha256: draft.text_sha256,\n    prompt_origin: 'link_prefill', confirmation_kind: 'submit_prompt',\n    policy_version: policy.version, confirmed_at: now});\n}</code></pre><h5>Step 3: Commit a narrow confirmation</h5><p>The HTTP receiver obtains the session from authenticated middleware, validates a strict body schema containing only <code>draft_id</code> and <code>csrf</code>, and loads the draft from a server-only store. Persist confirmation and consume the draft atomically with run creation; concurrent confirmations must not create duplicate runs. Editing the text creates a new stored revision/digest requiring redisplay. Sign or immutably reference the resulting receipt before downstream use. Configure an exact trusted assistant origin and positive byte/TTL limits in the versioned deployment policy. The sample functions are ingress transforms, not a substitute for session authentication, the durable transaction, or the existing prompt gate.</p><p>Keep <code>link_prefill</code> in ancestry after confirmation. Confirming “send this prompt” grants neither memory writes nor sensitive reads, exports, or other tool calls. AID-H-029.002 mediates memory changes and AID-H-018.004 issues capabilities for an independently authorized task. AID-H-018.003 still owns high-impact action approval. Keep these constraints until the relevant authority is obtained, across turns and relays; do not relax them just because the first turn has ended.</p><h5>Step 4: Exercise the real UI and backend</h5><p>Test an external link containing a memory directive, a mailbox-read request, encoded control characters, duplicate query parameters, and a tool-enable parameter. Opening or previewing it must cause zero inference, memory, and tool calls. Test direct POST bypass, another user's draft, altered text, expired confirmation, and two concurrent submits. Legitimate displayed-and-confirmed text must enter the ordinary input gate unchanged. Log IDs and digests rather than raw URL prompts.</p>"
                         }
                     ]
                 },
@@ -5290,12 +743,15 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         {
                             "id": "AID-H-002.003-G003",
                             "implementation": "Re-encode audio to standardized lossy or PCM format to remove hidden commands.",
-                            "howTo": "<h5>Production implementation: bounded audio decode and canonical re-encode</h5><p>Run FFprobe and FFmpeg in a non-root, network-disabled worker with a read-only input mount, seccomp/AppArmor profile, CPU and memory limits, and an ephemeral-volume quota no larger than the signed output limit. Do not decode attacker-controlled bytes in the API process.</p><pre><code class=\"language-python\"># File: multimodal_guards/audio_sanitizer.py\nfrom __future__ import annotations\nimport os\n\nimport hashlib\nimport json\nimport math\nimport subprocess\nimport wave\nfrom dataclasses import dataclass\nfrom pathlib import Path\n\ndef _required_positive_seconds(name: str) -&gt; float:\n    value = float(os.environ[name])\n    if not math.isfinite(value) or value &lt;= 0:\n        raise RuntimeError(f\"{name} must be a finite positive number of seconds\")\n    return value\n\nAUDIO_PROBE_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H002_AUDIO_PROBE_TIMEOUT_SECONDS\")\n\n\n\n@dataclass(frozen=True)\nclass AudioPolicy:\n    policy_version: str\n    allowed_demuxers: frozenset[str]\n    maximum_input_bytes: int\n    maximum_output_bytes: int\n    maximum_duration_seconds: float\n    sample_rate_hz: int\n    channels: int\n    transcode_minimum_timeout_seconds: int\n    transcode_duration_multiplier: float\n\n\ndef run(command: list[str], timeout: int) -&gt; subprocess.CompletedProcess[str]:\n    return subprocess.run(\n        command, check=True, capture_output=True, text=True, timeout=timeout\n    )\n\n\ndef sanitize_audio(source: Path, destination: Path, policy: AudioPolicy) -&gt; dict:\n    if source.is_symlink() or not source.is_file():\n        raise ValueError(\"audio input must be a regular non-symlink file\")\n    if destination.exists():\n        raise FileExistsError(\"destination must not exist\")\n    input_size = source.stat().st_size\n    if input_size &lt; 1 or input_size &gt; policy.maximum_input_bytes:\n        raise PermissionError(\"audio input size is outside signed policy\")\n\n    probe = run([\n        \"ffprobe\", \"-v\", \"error\",\n        \"-show_entries\", \"format=format_name,duration\",\n        \"-of\", \"json\", str(source),\n    ], timeout=AUDIO_PROBE_TIMEOUT_SECONDS)\n    metadata = json.loads(probe.stdout)\n    fmt = metadata.get(\"format\", {})\n    demuxers = set(str(fmt.get(\"format_name\", \"\")).split(\",\"))\n    duration = float(fmt.get(\"duration\", \"nan\"))\n    if (\n        not demuxers.intersection(policy.allowed_demuxers)\n        or not math.isfinite(duration)\n        or duration &lt;= 0\n        or duration &gt; policy.maximum_duration_seconds\n    ):\n        raise PermissionError(\"audio format or duration is outside signed policy\")\n\n    run([\n        \"ffmpeg\", \"-nostdin\", \"-hide_banner\", \"-loglevel\", \"error\", \"-xerror\",\n        \"-n\", \"-i\", str(source), \"-map\", \"0:a:0\", \"-vn\", \"-sn\", \"-dn\",\n        \"-ac\", str(policy.channels), \"-ar\", str(policy.sample_rate_hz),\n        \"-sample_fmt\", \"s16\", \"-f\", \"wav\", str(destination),\n    ], timeout=max(policy.transcode_minimum_timeout_seconds, math.ceil(duration * policy.transcode_duration_multiplier)))\n    if not destination.is_file() or destination.stat().st_size &gt; policy.maximum_output_bytes:\n        destination.unlink(missing_ok=True)\n        raise PermissionError(\"canonical audio output exceeded signed policy\")\n\n    with wave.open(str(destination), \"rb\") as decoded:\n        if (\n            decoded.getnchannels() != policy.channels\n            or decoded.getframerate() != policy.sample_rate_hz\n            or decoded.getsampwidth() != 2\n            or decoded.getnframes() &lt; 1\n        ):\n            destination.unlink(missing_ok=True)\n            raise RuntimeError(\"independent canonical WAV readback failed\")\n\n    return {\n        \"schema_version\": \"aidefend.audio-sanitization.v1\",\n        \"policy_version\": policy.policy_version,\n        \"input_sha256\": hashlib.sha256(source.read_bytes()).hexdigest(),\n        \"output_sha256\": hashlib.sha256(destination.read_bytes()).hexdigest(),\n        \"input_bytes\": input_size,\n        \"output_bytes\": destination.stat().st_size,\n        \"duration_seconds\": duration,\n        \"sample_rate_hz\": policy.sample_rate_hz,\n        \"channels\": policy.channels,\n    }\n</code></pre><p><strong>Action:</strong> Sign the returned receipt, persist it with the exact FFmpeg/FFprobe image digest, and expose only the new WAV object. Decoder timeout, malformed metadata, multiple/absent audio streams, quota exhaustion, readback failure, or digest drift denies the upload.</p><h5>Before you begin</h5><p>Apply <code>AID-H-002.003-G003</code> only when an image, audio, video, document, archive, or other multimodal upload can reach a decoder, OCR/ASR component, embedding pipeline, model, or tool.</p><h5>Keep the action safely bounded</h5><p>release only the newly generated sanitized artifact and deny the original on ambiguity, decoder failure, resource exhaustion, or policy mismatch.</p>"
-                        },
+                            "howTo": "<h5>Production implementation: bounded audio decode and canonical re-encode</h5><p>Run FFprobe and FFmpeg in a non-root, network-disabled worker with a read-only input mount, seccomp/AppArmor profile, CPU and memory limits, and an ephemeral-volume quota no larger than the signed output limit. Do not decode attacker-controlled bytes in the API process.</p><pre><code class=\"language-python\"># File: multimodal_guards/audio_sanitizer.py\nfrom __future__ import annotations\nimport os\n\nimport hashlib\nimport json\nimport math\nimport subprocess\nimport wave\nfrom dataclasses import dataclass\nfrom pathlib import Path\n\ndef _required_positive_seconds(name: str) -&gt; float:\n    value = float(os.environ[name])\n    if not math.isfinite(value) or value &lt;= 0:\n        raise RuntimeError(f\"{name} must be a finite positive number of seconds\")\n    return value\n\nAUDIO_PROBE_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H002_AUDIO_PROBE_TIMEOUT_SECONDS\")\n\n\n\n@dataclass(frozen=True)\nclass AudioPolicy:\n    policy_version: str\n    allowed_demuxers: frozenset[str]\n    maximum_input_bytes: int\n    maximum_output_bytes: int\n    maximum_duration_seconds: float\n    sample_rate_hz: int\n    channels: int\n    transcode_minimum_timeout_seconds: int\n    transcode_duration_multiplier: float\n\n\ndef run(command: list[str], timeout: int) -&gt; subprocess.CompletedProcess[str]:\n    return subprocess.run(\n        command, check=True, capture_output=True, text=True, timeout=timeout\n    )\n\n\ndef sanitize_audio(source: Path, destination: Path, policy: AudioPolicy) -&gt; dict:\n    if source.is_symlink() or not source.is_file():\n        raise ValueError(\"audio input must be a regular non-symlink file\")\n    if destination.exists():\n        raise FileExistsError(\"destination must not exist\")\n    input_size = source.stat().st_size\n    if input_size &lt; 1 or input_size &gt; policy.maximum_input_bytes:\n        raise PermissionError(\"audio input size is outside signed policy\")\n\n    probe = run([\n        \"ffprobe\", \"-v\", \"error\",\n        \"-show_entries\", \"format=format_name,duration\",\n        \"-of\", \"json\", str(source),\n    ], timeout=AUDIO_PROBE_TIMEOUT_SECONDS)\n    metadata = json.loads(probe.stdout)\n    fmt = metadata.get(\"format\", {})\n    demuxers = set(str(fmt.get(\"format_name\", \"\")).split(\",\"))\n    duration = float(fmt.get(\"duration\", \"nan\"))\n    if (\n        not demuxers.intersection(policy.allowed_demuxers)\n        or not math.isfinite(duration)\n        or duration &lt;= 0\n        or duration &gt; policy.maximum_duration_seconds\n    ):\n        raise PermissionError(\"audio format or duration is outside signed policy\")\n\n    run([\n        \"ffmpeg\", \"-nostdin\", \"-hide_banner\", \"-loglevel\", \"error\", \"-xerror\",\n        \"-n\", \"-i\", str(source), \"-map\", \"0:a:0\", \"-vn\", \"-sn\", \"-dn\",\n        \"-map_metadata\", \"-1\", \"-map_chapters\", \"-1\",\n        \"-ac\", str(policy.channels), \"-ar\", str(policy.sample_rate_hz),\n        \"-sample_fmt\", \"s16\", \"-f\", \"wav\", str(destination),\n    ], timeout=max(policy.transcode_minimum_timeout_seconds, math.ceil(duration * policy.transcode_duration_multiplier)))\n    if not destination.is_file() or destination.stat().st_size &gt; policy.maximum_output_bytes:\n        destination.unlink(missing_ok=True)\n        raise PermissionError(\"canonical audio output exceeded signed policy\")\n\n    with wave.open(str(destination), \"rb\") as decoded:\n        if (\n            decoded.getnchannels() != policy.channels\n            or decoded.getframerate() != policy.sample_rate_hz\n            or decoded.getsampwidth() != 2\n            or decoded.getnframes() &lt; 1\n        ):\n            destination.unlink(missing_ok=True)\n            raise RuntimeError(\"independent canonical WAV readback failed\")\n\n    return {\n        \"schema_version\": \"aidefend.audio-sanitization.v1\",\n        \"policy_version\": policy.policy_version,\n        \"input_sha256\": hashlib.sha256(source.read_bytes()).hexdigest(),\n        \"output_sha256\": hashlib.sha256(destination.read_bytes()).hexdigest(),\n        \"input_bytes\": input_size,\n        \"output_bytes\": destination.stat().st_size,\n        \"duration_seconds\": duration,\n        \"sample_rate_hz\": policy.sample_rate_hz,\n        \"channels\": policy.channels,\n    }\n</code></pre><p><strong>Action:</strong> Sign the returned receipt, persist it with the exact FFmpeg/FFprobe image digest, and expose only the new WAV object. Decoder timeout, malformed metadata, multiple/absent audio streams, quota exhaustion, readback failure, or digest drift denies the upload.</p><h5>Before you begin</h5><p>Apply <code>AID-H-002.003-G003</code> only when an image, audio, video, document, archive, or other multimodal upload can reach a decoder, OCR/ASR component, embedding pipeline, model, or tool.</p><h5>Keep the action safely bounded</h5><p>release only the newly generated sanitized artifact and deny the original on ambiguity, decoder failure, resource exhaustion, or policy mismatch.</p><p>The transcode disables copying source metadata and chapters. It does not prove removal of spoken instructions in the waveform. Keep downstream processing limited to the canonical decoded PCM samples; if later code exposes output-container tags to a model, independently enumerate and allowlist those tags (the encoder may create new metadata).</p>"},
                         {
                             "id": "AID-H-002.003-G004",
                             "implementation": "File-type and content safety gates for all uploads.",
-                            "howTo": "<h5>Concept:</h5><p>Put a deterministic file gate on the raw upload bytes before any decoder, OCR pipeline, or model runtime touches the content. A production gate verifies the sniffed media type, checks that the extension matches policy, rejects container formats the workflow does not need, and enforces image/audio limits before sanitization runs.</p><h5>Step 1: Inspect the raw upload bytes with type-specific checks</h5><pre><code># File: multimodal_guards/file_gates.py\nfrom __future__ import annotations\nimport os\n\nimport io\nfrom dataclasses import dataclass\nfrom pathlib import Path\n\nimport magic\nfrom PIL import Image, UnidentifiedImageError\nfrom pydub import AudioSegment\n\ndef _required_positive_int(name: str) -&gt; int:\n    value = int(os.environ[name])\n    if value &lt;= 0:\n        raise RuntimeError(f\"{name} must be a positive integer\")\n    return value\n\nMAX_BYTES = _required_positive_int(\"VERIFIED_H002_UPLOAD_GATE_MAX_BYTES\")\nMAX_IMAGE_PIXELS = _required_positive_int(\"VERIFIED_H002_UPLOAD_GATE_MAX_IMAGE_PIXELS\")\nMAX_AUDIO_MS = _required_positive_int(\"VERIFIED_H002_UPLOAD_GATE_MAX_AUDIO_MILLISECONDS\")\n\n\n\nALLOWED_MIME = {\n    \"image/jpeg\": {\".jpg\", \".jpeg\"},\n    \"image/png\": {\".png\"},\n    \"audio/wav\": {\".wav\"},\n    \"audio/mpeg\": {\".mp3\"},\n}\nDENY_MIME = {\"application/x-dosexec\", \"application/zip\", \"application/x-tar\"}\n\n\n@dataclass(frozen=True)\nclass UploadFacts:\n    mime: str\n    size_bytes: int\n    width: int | None = None\n    height: int | None = None\n    duration_ms: int | None = None\n\n\ndef _sniff_mime(blob: bytes) -&gt; str:\n    return magic.from_buffer(blob, mime=True)\n\n\ndef _extension_matches(filename: str, mime: str) -&gt; bool:\n    return Path(filename).suffix.lower() in ALLOWED_MIME.get(mime, set())\n\n\ndef inspect_upload(filename: str, blob: bytes) -&gt; UploadFacts:\n    if not blob:\n        raise ValueError(\"empty_upload\")\n    if len(blob) &gt; MAX_BYTES:\n        raise ValueError(\"file_too_large\")\n\n    mime = _sniff_mime(blob)\n    if mime in DENY_MIME or mime not in ALLOWED_MIME:\n        raise ValueError(\"mime_not_allowed\")\n    if not _extension_matches(filename, mime):\n        raise ValueError(\"extension_mime_mismatch\")\n\n    if mime.startswith(\"image/\"):\n        try:\n            image = Image.open(io.BytesIO(blob))\n            image.verify()\n            image = Image.open(io.BytesIO(blob))\n        except (UnidentifiedImageError, OSError) as exc:\n            raise ValueError(\"invalid_image\") from exc\n\n        pixels = image.width * image.height\n        if pixels &gt; MAX_IMAGE_PIXELS:\n            raise ValueError(\"image_dimensions_too_large\")\n        return UploadFacts(\n            mime=mime,\n            size_bytes=len(blob),\n            width=image.width,\n            height=image.height,\n        )\n\n    audio = AudioSegment.from_file(io.BytesIO(blob), format=\"mp3\" if mime == \"audio/mpeg\" else \"wav\")\n    if len(audio) &gt; MAX_AUDIO_MS:\n        raise ValueError(\"audio_duration_too_long\")\n    if audio.channels &gt; 2:\n        raise ValueError(\"audio_channel_count_not_allowed\")\n\n    return UploadFacts(mime=mime, size_bytes=len(blob), duration_ms=len(audio))</code></pre><h5>Step 2: Put the gate in front of the sanitizers and model path</h5><pre><code># File: multimodal_guards/upload_entrypoint.py\nfrom pathlib import Path\nfrom tempfile import TemporaryDirectory\n\nfrom multimodal_guards.audio_sanitizer import AudioPolicy, sanitize_audio\nfrom multimodal_guards.file_gates import inspect_upload\nfrom multimodal_guards.image_sanitizer import sanitize_image_upload\n\n\ndef prepare_upload(\n    filename: str, blob: bytes, *, audio_policy: AudioPolicy\n) -&gt; tuple[bytes, dict]:\n    facts = inspect_upload(filename, blob)\n\n    if facts.mime.startswith(\"image/\"):\n        sanitized = sanitize_image_upload(filename, blob).sanitized_bytes\n        receipt = None\n    else:\n        # The sanitizer accepts bounded file paths and a signed AudioPolicy; write\n        # the already-inspected bytes into an ephemeral directory and expose only\n        # the canonical WAV bytes returned by that sanitizer.\n        with TemporaryDirectory(prefix=\"upload-audio-\") as directory:\n            root = Path(directory)\n            source_path = root / \"input.bin\"\n            destination_path = root / \"sanitized.wav\"\n            source_path.write_bytes(blob)\n            receipt = sanitize_audio(source_path, destination_path, audio_policy)\n            sanitized = destination_path.read_bytes()\n\n    return sanitized, {\n        \"mime\": facts.mime,\n        \"size_bytes\": facts.size_bytes,\n        \"width\": facts.width,\n        \"height\": facts.height,\n        \"duration_ms\": facts.duration_ms,\n        \"sanitization_receipt\": receipt,\n    }</code></pre><h5>Operational notes</h5><ul><li>Inspect bytes, not just on-disk paths, so the decision applies to the exact artifact the model will receive.</li><li>Deny archives, office documents, and any other container formats your multimodal flow does not explicitly need.</li><li>Fail closed on parser errors and emit a structured reject code such as <code>mime_not_allowed</code> or <code>extension_mime_mismatch</code>.</li></ul><p><strong>Action:</strong> Run the file gate before any decode, OCR, transcription, or model call. If the gate cannot positively identify an allowed media type and enforce its size or dimension limits, reject the upload.</p><h5>Before you begin</h5><p>Apply <code>AID-H-002.003-G004</code> only when an image, audio, video, document, archive, or other multimodal upload can reach a decoder, OCR/ASR component, embedding pipeline, model, or tool.</p>"
+                            "howTo": "<h5>Concept:</h5><p>Put a deterministic file gate on the raw upload bytes before any decoder, OCR pipeline, or model runtime touches the content. A production gate verifies the sniffed media type, checks that the extension matches policy, rejects container formats the workflow does not need, and enforces image/audio limits before sanitization runs.</p><h5>Step 1: Inspect the raw upload bytes with type-specific checks</h5><pre><code># File: multimodal_guards/file_gates.py\nfrom __future__ import annotations\nimport os\n\nimport io\nfrom dataclasses import dataclass\nfrom pathlib import Path\n\nimport magic\nfrom PIL import Image, UnidentifiedImageError\nfrom pydub import AudioSegment\n\ndef _required_positive_int(name: str) -&gt; int:\n    value = int(os.environ[name])\n    if value &lt;= 0:\n        raise RuntimeError(f\"{name} must be a positive integer\")\n    return value\n\nMAX_BYTES = _required_positive_int(\"VERIFIED_H002_UPLOAD_GATE_MAX_BYTES\")\nMAX_IMAGE_PIXELS = _required_positive_int(\"VERIFIED_H002_UPLOAD_GATE_MAX_IMAGE_PIXELS\")\nMAX_AUDIO_MS = _required_positive_int(\"VERIFIED_H002_UPLOAD_GATE_MAX_AUDIO_MILLISECONDS\")\n\n\n\nALLOWED_MIME = {\n    \"image/jpeg\": {\".jpg\", \".jpeg\"},\n    \"image/png\": {\".png\"},\n    \"audio/wav\": {\".wav\"},\n    \"audio/mpeg\": {\".mp3\"},\n}\nDENY_MIME = {\"application/x-dosexec\", \"application/zip\", \"application/x-tar\"}\n\n\n@dataclass(frozen=True)\nclass UploadFacts:\n    mime: str\n    size_bytes: int\n    width: int | None = None\n    height: int | None = None\n    duration_ms: int | None = None\n\n\ndef _sniff_mime(blob: bytes) -&gt; str:\n    return magic.from_buffer(blob, mime=True)\n\n\ndef _extension_matches(filename: str, mime: str) -&gt; bool:\n    return Path(filename).suffix.lower() in ALLOWED_MIME.get(mime, set())\n\n\ndef inspect_upload(filename: str, blob: bytes) -&gt; UploadFacts:\n    if not blob:\n        raise ValueError(\"empty_upload\")\n    if len(blob) &gt; MAX_BYTES:\n        raise ValueError(\"file_too_large\")\n\n    mime = _sniff_mime(blob)\n    if mime in DENY_MIME or mime not in ALLOWED_MIME:\n        raise ValueError(\"mime_not_allowed\")\n    if not _extension_matches(filename, mime):\n        raise ValueError(\"extension_mime_mismatch\")\n\n    if mime.startswith(\"image/\"):\n        try:\n            image = Image.open(io.BytesIO(blob))\n            image.verify()\n            image = Image.open(io.BytesIO(blob))\n        except (UnidentifiedImageError, OSError) as exc:\n            raise ValueError(\"invalid_image\") from exc\n\n        pixels = image.width * image.height\n        if pixels &gt; MAX_IMAGE_PIXELS:\n            raise ValueError(\"image_dimensions_too_large\")\n        return UploadFacts(\n            mime=mime,\n            size_bytes=len(blob),\n            width=image.width,\n            height=image.height,\n        )\n\n    audio = AudioSegment.from_file(io.BytesIO(blob), format=\"mp3\" if mime == \"audio/mpeg\" else \"wav\")\n    if len(audio) &gt; MAX_AUDIO_MS:\n        raise ValueError(\"audio_duration_too_long\")\n    if audio.channels &gt; 2:\n        raise ValueError(\"audio_channel_count_not_allowed\")\n\n    return UploadFacts(mime=mime, size_bytes=len(blob), duration_ms=len(audio))</code></pre><h5>Step 2: Put the gate in front of the sanitizers and model path</h5><pre><code># File: multimodal_guards/upload_entrypoint.py\nfrom pathlib import Path\nfrom tempfile import TemporaryDirectory\n\nfrom multimodal_guards.audio_sanitizer import AudioPolicy, sanitize_audio\nfrom multimodal_guards.file_gates import inspect_upload\nfrom multimodal_guards.image_sanitizer import sanitize_image_upload\n\n\ndef prepare_upload(\n    filename: str, blob: bytes, *, audio_policy: AudioPolicy\n) -&gt; tuple[bytes, dict]:\n    facts = inspect_upload(filename, blob)\n\n    if facts.mime.startswith(\"image/\"):\n        sanitized = sanitize_image_upload(filename, blob).sanitized_bytes\n        receipt = None\n    else:\n        # The sanitizer accepts bounded file paths and a signed AudioPolicy; write\n        # the already-inspected bytes into an ephemeral directory and expose only\n        # the canonical WAV bytes returned by that sanitizer.\n        with TemporaryDirectory(prefix=\"upload-audio-\") as directory:\n            root = Path(directory)\n            source_path = root / \"input.bin\"\n            destination_path = root / \"sanitized.wav\"\n            source_path.write_bytes(blob)\n            receipt = sanitize_audio(source_path, destination_path, audio_policy)\n            sanitized = destination_path.read_bytes()\n\n    return sanitized, {\n        \"mime\": facts.mime,\n        \"size_bytes\": facts.size_bytes,\n        \"width\": facts.width,\n        \"height\": facts.height,\n        \"duration_ms\": facts.duration_ms,\n        \"sanitization_receipt\": receipt,\n    }</code></pre><h5>Operational notes</h5><ul><li>Inspect bytes, not just on-disk paths, so the decision applies to the exact artifact the model will receive.</li><li>Deny archives, office documents, and any other container formats your multimodal flow does not explicitly need.</li><li>Fail closed on parser errors and emit a structured reject code such as <code>mime_not_allowed</code> or <code>extension_mime_mismatch</code>.</li></ul><p><strong>Action:</strong> Run the file gate before any decode, OCR, transcription, or model call. If the gate cannot positively identify an allowed media type and enforce its size or dimension limits, reject the upload.</p><h5>Before you begin</h5><p>Apply <code>AID-H-002.003-G004</code> only when an image, audio, video, document, archive, or other multimodal upload can reach a decoder, OCR/ASR component, embedding pipeline, model, or tool.</p>" + "<p>PDF/DOCX support is an explicit alternative path in AID-H-002.003-G005. Keep this media gate unchanged for image/audio routes; route required documents through the bounded document worker and its projection gate, rather than allowing raw containers to bypass sanitization.</p>"},
+                        {
+                            "id": "AID-H-002.003-G005",
+                            "implementation": "Build a bounded PDF/OOXML text projection and gate the exact bytes used for model context or embeddings, including hidden-text candidates.",
+                            "howTo": "<h5>Step 1: Enable a distinct document path</h5><p>Use this method when the application ingests PDF or DOCX documents, including RAG over shared enterprise files. Keep the image/audio-only allowlist in AID-H-002.003-G004 for those routes. Add a separate document route with content sniffing, exact extension/type policy, compressed/uncompressed size limits, and a network-disabled parser sandbox; do not simply add Office MIME types to the image/audio decoder. Verify original provenance through AID-H-002.007 before altering metadata. Pin the parser image/dependencies and enforce CPU, memory, wall-clock and output-volume quotas outside the parser process.</p><h5>Step 2: Define exactly what the model can receive</h5><p>The example below implements a deliberately bounded <em>text-only</em> PDF/DOCX path using <a href=\"https://pymupdf.readthedocs.io/en/latest/functions.html#Page.get_texttrace\" target=\"_blank\" rel=\"noopener noreferrer\">PyMuPDF text extraction</a> and defusedxml. It preserves hidden text in the analysis/model projection so that a visual-only review cannot silently skip model-visible instructions. PDF Info/XMP and OOXML docProps are excluded by construction. The raw container, omitted metadata, images, and attachments must not subsequently reach the model or an embedding service through a second decoder. This path does not claim complete visual-document understanding; route scanned pages, forms, revisions, or required omitted content to a separately tested adapter or review. Do not silently drop required business content.</p><pre><code># document_projection.py -- run only inside the bounded, network-disabled worker\nimport hashlib, io, json, zipfile\nfrom importlib.metadata import version\nfrom defusedxml import ElementTree as ET\nimport pymupdf\n\nW = \"{http://schemas.openxmlformats.org/wordprocessingml/2006/main}\"\nOFF = {\"0\", \"false\", \"off\"}\n\ndef project_document(raw: bytes, media_type: str, policy: dict) -&gt; dict:\n    if not raw or len(raw) &gt; policy[\"max_input_bytes\"]:\n        raise ValueError(\"input_size\")\n    features, parts = [], []\n    if media_type == \"application/pdf\":\n        if not raw.startswith(b\"%PDF-\"):\n            raise ValueError(\"pdf_signature\")\n        with pymupdf.open(stream=raw, filetype=\"pdf\") as doc:\n            if doc.needs_pass or not 0 &lt; len(doc) &lt;= policy[\"max_pages\"]:\n                raise ValueError(\"encrypted_or_page_limit\")\n            if doc.get_ocgs():\n                features.append(\"optional_content_layers\")\n            if doc.embfile_count():\n                features.append(\"embedded_files_excluded\")\n            for page in doc:\n                text = page.get_text(\"text\", sort=True)\n                if not text.strip():\n                    raise ValueError(\"ocr_or_nontext_adapter_required\")\n                parts.append(text)\n                for span in page.get_texttrace():\n                    if span.get(\"type\") == 3 or span.get(\"opacity\", 1) == 0:\n                        features.append(\"nonpainting_pdf_text\")\n                    if span.get(\"size\", 0) &lt; policy[\"small_font_points\"]:\n                        features.append(\"small_pdf_text\")\n                if next(page.widgets() or iter(()), None) is not None:\n                    raise ValueError(\"form_adapter_required\")\n            # Info/XMP, attachments, annotation bodies, and object names are not\n            # concatenated into model text. The raw PDF is not released downstream.\n        parser = \"PyMuPDF/\" + version(\"PyMuPDF\")\n    elif media_type == \"application/vnd.openxmlformats-officedocument.wordprocessingml.document\":\n        with zipfile.ZipFile(io.BytesIO(raw)) as archive:\n            infos = archive.infolist()\n            names = [entry.filename for entry in infos]\n            if len(names) != len(set(names)) or len(infos) &gt; policy[\"max_zip_members\"]:\n                raise ValueError(\"duplicate_or_excess_members\")\n            if any(e.flag_bits &amp; 1 or e.file_size &gt; policy[\"max_part_bytes\"] for e in infos):\n                raise ValueError(\"encrypted_or_oversize_part\")\n            if sum(e.file_size for e in infos) &gt; policy[\"max_unpacked_bytes\"]:\n                raise ValueError(\"unpacked_size\")\n            if \"word/document.xml\" not in names or \"[Content_Types].xml\" not in names:\n                raise ValueError(\"not_docx\")\n            if any(n.endswith(\"vbaProject.bin\") or n.startswith(\"word/embeddings/\") for n in names):\n                raise ValueError(\"active_or_embedded_content\")\n            main = ET.fromstring(archive.read(\"word/document.xml\"))\n            # Narrow text projection: paragraph text, including tables and hidden\n            # runs. Never use python-docx Font.hidden == False as a coverage test:\n            # None means inheritance, not visible text.\n            unsupported = {W+\"altChunk\", W+\"subDoc\", W+\"ins\", W+\"del\", W+\"fldSimple\", W+\"instrText\"}\n            if any(node.tag in unsupported for node in main.iter()):\n                raise ValueError(\"alternate_content_or_revision_adapter_required\")\n            for paragraph in main.iter(W+\"p\"):\n                # Text boxes nested inside a paragraph require another adapter;\n                # do not silently double-count or misorder their text.\n                if any(n is not paragraph and n.tag == W+\"p\" for n in paragraph.iter()):\n                    raise ValueError(\"nested_paragraph_adapter_required\")\n                text = []\n                for n in paragraph.iter():\n                    if n.tag == W+\"t\": text.append(n.text or \"\")\n                    elif n.tag == W+\"tab\": text.append(\"\\t\")\n                    elif n.tag in {W+\"br\", W+\"cr\"}: text.append(\"\\n\")\n                parts.append(\"\".join(text))\n            inspect = [main]\n            if \"word/styles.xml\" in names:\n                inspect.append(ET.fromstring(archive.read(\"word/styles.xml\")))\n            for root in inspect:\n                for n in root.iter():\n                    if n.tag in {W+\"vanish\", W+\"webHidden\", W+\"specVanish\"} and n.get(W+\"val\", \"true\") not in OFF:\n                        features.append(\"hidden_run_or_style_declaration\")\n                    if n.tag == W+\"color\" and n.get(W+\"val\", \"\").upper() == \"FFFFFF\":\n                        features.append(\"white_font_declaration\")\n                    if n.tag == W+\"sz\":\n                        try:\n                            if int(n.get(W+\"val\", \"\"))/2 &lt; policy[\"small_font_points\"]:\n                                features.append(\"small_word_font\")\n                        except ValueError:\n                            raise ValueError(\"invalid_font_size\") from None\n            # Deliberately excluded: docProps, comments, headers, footers, notes,\n            # drawings/OCR, field instructions, relationships, and external targets.\n            # If a workflow needs these, use a tested adapter before enabling it.\n            features.append(\"body_text_projection_only\")\n        parser = \"OOXML-body-v1/defusedxml-\" + version(\"defusedxml\")\n    else:\n        raise ValueError(\"document_type_not_allowed\")\n    text = \"\\n\".join(parts)\n    encoded = text.encode(\"utf-8\")\n    if not text.strip() or len(encoded) &gt; policy[\"max_text_bytes\"]:\n        raise ValueError(\"empty_or_oversize_projection\")\n    return {\"source_sha256\": hashlib.sha256(raw).hexdigest(),\n            \"projection_sha256\": hashlib.sha256(encoded).hexdigest(),\n            \"parser\": parser, \"policy_version\": policy[\"version\"],\n            \"features\": sorted(set(features)), \"text\": text}</code></pre><h5>Step 3: Bind admission, detection, and indexing to one projection</h5><p>Validate the signed policy's positive integer limits and permitted parser versions at worker startup. Run the projection through AID-H-002.002 and send carrier features to AID-D-007.001-G002. Keep metadata in a bounded forensic record if needed, never append it later to the model prompt. The input gate's receipt must cover the exact UTF-8 projection digest, policy and parser revision. Only that admitted text may be chunked, embedded, or inserted into context; retain the source/projection/chunk lineage with AID-H-020. Re-extraction by a different parser, enabling OCR, or switching to raw-file multimodal input invalidates the receipt and requires a new gate over every model-visible representation.</p><p>A font color of white alone does not establish hidden text: white-on-dark documents are legitimate. Style declarations can be unused, and OCR layers can be legitimate nonpainting text. The feature list is candidate evidence, not a maliciousness verdict. Use calibrated policy and semantic inspection of the actual extracted instructions; quarantine unresolved high-risk findings without claiming that all hidden text is malicious or that extraction proves safety. If humans approve a document, show model-visible hidden-text candidates and excluded-part notices alongside the rendered view.</p><h5>Step 4: Verify the boundary with real fixtures</h5><p>Include PDF nonpainting text, white-on-white and white-on-dark text, a legitimate OCR layer, metadata-only instructions, DOCX direct and inherited w:vanish, tiny text, document properties, tables, tracked revisions, malformed XML, oversized ZIP members, and duplicated ZIP entries. Assert that any released text is the exact scanned projection, excluded fields never reappear downstream, and unsupported inputs do not become a pass. Keep visible-plaintext injection cases too: hidden-text checks do not address ordinary malicious prose.</p>"
                         }
                     ],
                     "toolsOpenSource": [
@@ -5321,7 +777,11 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                                 "AML.T0043 Craft Adversarial Data",
                                 "AML.T0015 Evade AI Model",
                                 "AML.T0119 Exploit Automated Artifact Processing Pipeline (safe decoding and canonical re-encoding of uploaded media before automated processing)",
-                                "AML.T0123 Obfuscated Files or Information (canonical re-encoding strips payloads hidden inside media containers)"
+                                "AML.T0123 Obfuscated Files or Information (canonical re-encoding strips payloads hidden inside media containers)",
+                                "AML.T0129 Triggers in Multimodal Inputs (metadata exclusion and a gated text projection close uninspected document and media channels)",
+                                "AML.T0068 LLM Prompt Obfuscation (hidden document text remains in the exact projection subjected to input admission)",
+                                "AML.T0051 LLM Prompt Injection (document admission binds the inspected projection to model-facing text)",
+                                "AML.T0051.001 LLM Prompt Injection: Indirect (external documents cannot bypass admission through omitted metadata or a second raw-file decoder)"
                             ]
                         },
                         {
@@ -5347,13 +807,15 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         {
                             "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
-                                "N/A"
+                                "ASI01:2026 Agent Goal Hijack (document projection prevents uninspected hidden content from reaching agent context)"
                             ]
                         },
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
-                                "NISTAML.022 Evasion"
+                                "NISTAML.022 Evasion",
+                                "NISTAML.015 Indirect Prompt Injection (gates external document text and excludes uninspected metadata)",
+                                "NISTAML.018 Prompt Injection (binds inspected document text to the admitted model projection)"
                             ]
                         },
                         {
@@ -5369,17 +831,18 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         {
                             "framework": "Google Secure AI Framework 2.0 - Risks",
                             "items": [
-                                "MEV: Model Evasion"
+                                "MEV: Model Evasion",
+                                "PIJ: Prompt Injection (external document projection and metadata boundaries prevent uninspected instruction channels)"
                             ]
                         },
                         {
                             "framework": "Databricks AI Security Framework 3.0",
                             "items": [
-                                "Model Serving - Inference requests 9.9: Input Resource Control"
+                                "Model Serving - Inference requests 9.9: Input Resource Control",
+                                "Model Serving - Inference requests 9.1: Prompt inject (document projection is gated before model context)"
                             ]
                         }
-                    ]
-                },
+                    ]},
                 {
                     "id": "AID-H-002.004",
                     "name": "Feature Pipeline Integrity & Transformation Audit",
@@ -5954,7 +1417,8 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                                 "AML.T0051.001 LLM Prompt Injection: Indirect (live external media can inject instructions through transcript or OCR paths)",
                                 "AML.T0043 Craft Adversarial Data (adversarial audio or visual stream content can manipulate recognition or downstream intent)",
                                 "AML.T0015 Evade AI Model (audio/video perturbations can evade transcription, OCR, or moderation controls)",
-                                "AML.T0052.001 Phishing: Deepfake-Assisted Phishing (realtime stream gates can downgrade suspected cloned, manipulated, or spoofed media before agent action)"
+                                "AML.T0052.001 Phishing: Deepfake-Assisted Phishing (realtime stream gates can downgrade suspected cloned, manipulated, or spoofed media before agent action)",
+                                "AML.T0129 Triggers in Multimodal Inputs (live transcript and OCR admission gates inspect modality-derived instructions before fusion)"
                             ]
                         },
                         {
@@ -6024,13 +1488,11 @@ if timed_out or exit_code != 0 or len(valid_terminals) != 1:
                         {
                             "id": "AID-H-002.008-G001",
                             "implementation": "Normalize live audio to one canonical PCM profile, segment speech turns with bounded voice activity detection, and reject segments that exceed duration, confidence, or transcript-control-token policy.",
-                            "howTo": "<h5>Concept:</h5><p>Audio is one realtime multimodal stream, not a special taxonomy category. Treat microphone and voice-mode input as an incremental stream that must be normalized, segmented, and gated before the transcript can become model instructions, tool parameters, or memory. The same admission contract should be used alongside camera, video, or screen-share gates in this sub-technique.</p><h5>Step 1: Normalize and segment audio before transcription</h5><pre><code># File: realtime_input/audio_gate.py\nfrom __future__ import annotations\nimport os\n\nimport io\nimport re\nfrom dataclasses import dataclass\n\nimport webrtcvad\nfrom pydub import AudioSegment\n\ndef _required_positive_int(name: str) -&gt; int:\n    value = int(os.environ[name])\n    if value &lt;= 0:\n        raise RuntimeError(f\"{name} must be a positive integer\")\n    return value\n\nSAMPLE_RATE = _required_positive_int(\"VERIFIED_H002_REALTIME_AUDIO_SAMPLE_RATE_HZ\")\nFRAME_MS = _required_positive_int(\"VERIFIED_H002_REALTIME_AUDIO_FRAME_MILLISECONDS\")\nMAX_SEGMENT_MS = _required_positive_int(\"VERIFIED_H002_REALTIME_AUDIO_MAX_SEGMENT_MILLISECONDS\")\nMAX_STREAM_MS = _required_positive_int(\"VERIFIED_H002_REALTIME_AUDIO_MAX_STREAM_MILLISECONDS\")\nVAD_MODE = _required_positive_int(\"VERIFIED_H002_REALTIME_AUDIO_VAD_MODE\")\n\n\n\n# WebRTC VAD supports only these named PCM protocol profiles.\nif SAMPLE_RATE not in {8000, 16000, 32000, 48000} or FRAME_MS not in {10, 20, 30} or VAD_MODE not in {0, 1, 2, 3}:\n    raise RuntimeError(\"verified realtime audio profile is unsupported by WebRTC VAD\")\n\nCONTROL_TOKEN_RE = re.compile(r\"(&lt;\\|/?(?:system|developer|assistant|tool).*?\\|&gt;|\\b(system|developer)\\s*:)\", re.I)\n\n\n@dataclass(frozen=True)\nclass VoiceSegment:\n    pcm16le: bytes\n    start_ms: int\n    end_ms: int\n\n\ndef normalize_audio(blob: bytes, input_format: str) -&gt; AudioSegment:\n    if not blob:\n        raise ValueError(\"empty_audio_stream\")\n    source = AudioSegment.from_file(io.BytesIO(blob), format=input_format)\n    if len(source) &gt; MAX_STREAM_MS:\n        raise ValueError(\"audio_stream_too_long\")\n    return source.set_frame_rate(SAMPLE_RATE).set_channels(1).set_sample_width(2)\n\n\ndef split_speech_segments(blob: bytes, input_format: str) -&gt; list[VoiceSegment]:\n    audio = normalize_audio(blob, input_format)\n    vad = webrtcvad.Vad(VAD_MODE)\n    frame_bytes = int(SAMPLE_RATE * FRAME_MS / 1000) * 2\n    pcm = audio.raw_data\n\n    segments: list[VoiceSegment] = []\n    current = bytearray()\n    current_start_ms: int | None = None\n\n    for offset in range(0, len(pcm) - frame_bytes + 1, frame_bytes):\n        frame = pcm[offset:offset + frame_bytes]\n        frame_start_ms = int(offset / 2 / SAMPLE_RATE * 1000)\n        speech = vad.is_speech(frame, SAMPLE_RATE)\n\n        if speech:\n            if current_start_ms is None:\n                current_start_ms = frame_start_ms\n            current.extend(frame)\n            if (frame_start_ms - current_start_ms) &gt; MAX_SEGMENT_MS:\n                raise ValueError(\"voice_segment_too_long\")\n        elif current_start_ms is not None:\n            segments.append(VoiceSegment(bytes(current), current_start_ms, frame_start_ms))\n            current.clear()\n            current_start_ms = None\n\n    if current_start_ms is not None:\n        end_ms = int(len(pcm) / 2 / SAMPLE_RATE * 1000)\n        segments.append(VoiceSegment(bytes(current), current_start_ms, end_ms))\n\n    if not segments:\n        raise ValueError(\"no_speech_detected\")\n    return segments\n</code></pre><h5>Step 2: Gate the ASR transcript before model fusion</h5><pre><code># File: realtime_input/transcript_gate.py\nfrom __future__ import annotations\nimport os\n\nfrom realtime_input.audio_gate import CONTROL_TOKEN_RE\n\ndef _required_positive_int(name: str) -&gt; int:\n    value = int(os.environ[name])\n    if value &lt;= 0:\n        raise RuntimeError(f\"{name} must be a positive integer\")\n    return value\n\nMAX_TRANSCRIPT_CHARS = _required_positive_int(\"VERIFIED_H002_REALTIME_TRANSCRIPT_MAX_CHARS\")\n\n\n\n\n\ndef admit_voice_transcript(\n    transcript: str,\n    workflow_risk: str,\n    expected_session_id: str,\n    expected_turn_index: int,\n    d007_finding: dict,\n) -&gt; dict:\n    cleaned = transcript.replace(\"\\x00\", \"\").strip()\n    reasons: list[str] = []\n\n    if not cleaned:\n        reasons.append(\"empty_transcript\")\n    if len(cleaned) &gt; MAX_TRANSCRIPT_CHARS:\n        reasons.append(\"transcript_too_long\")\n    if CONTROL_TOKEN_RE.search(cleaned):\n        reasons.append(\"control_token_or_role_marker\")\n    expected_finding_fields = {\n        \"schema_version\", \"control\", \"status\", \"severity\",\n        \"session_id\", \"turn_index\", \"policy_version\", \"evidence_sha256\",\n        \"findings\",\n    }\n    if not isinstance(d007_finding, dict) or set(d007_finding) != expected_finding_fields:\n        reasons.append(\"d007_finding_schema_invalid\")\n    elif (\n        d007_finding[\"schema_version\"] != \"aidefend.d007-audio-finding.v1\"\n        or d007_finding[\"control\"] != \"AID-D-007.002\"\n        or d007_finding[\"session_id\"] != expected_session_id\n        or d007_finding[\"turn_index\"] != expected_turn_index\n    ):\n        reasons.append(\"d007_finding_identity_invalid\")\n    elif d007_finding[\"status\"] in {\"ERROR\", \"INSUFFICIENT_DATA\"}:\n        reasons.append(\"d007_finding_unavailable\")\n    elif d007_finding[\"status\"] == \"FINDING\" and d007_finding[\"severity\"] in {\"high\", \"critical\"}:\n        reasons.append(\"d007_high_risk_stream_finding\")\n    elif d007_finding[\"status\"] not in {\"NO_FINDING\", \"FINDING\"}:\n        reasons.append(\"d007_finding_status_invalid\")\n\n    decision = \"allow\" if not reasons else \"block\"\n    return {\n        \"decision\": decision,\n        \"reasons\": reasons,\n        \"normalized_transcript\": cleaned if decision == \"allow\" else \"\",\n    }\n</code></pre><h5>Operational notes</h5><ul><li>Do not use speaker, liveness, or ASR confidence as proof of identity. D-007 may use those values as calibrated risk signals; this gate consumes its structured finding.</li><li>Run the final gate after D-007 scores the normalized observation and before the transcript is merged with system prompts, retrieved context, tool parameters, or agent memory.</li><li>Keep rejected segment metadata, finding/evidence digests, and the admission decision; retain raw audio only when signed privacy and retention policy permits it.</li></ul><p><strong>Action:</strong> Normalize and bound each speech turn, pass the normalized observation to <code>AID-D-007.002</code>, then require a valid finding plus deterministic transcript checks before admitting speech as instructions.</p>"
-                        },
+                            "howTo": "<h5>Concept:</h5><p>Audio is one realtime multimodal stream, not a special taxonomy category. Treat microphone and voice-mode input as an incremental stream that must be normalized, segmented, and gated before the transcript can become model instructions, tool parameters, or memory. The same admission contract should be used alongside camera, video, or screen-share gates in this sub-technique.</p><h5>Step 1: Normalize and segment audio before transcription</h5><pre><code># File: realtime_input/audio_gate.py\nfrom __future__ import annotations\nimport os\n\nimport io\nimport re\nfrom dataclasses import dataclass\n\nimport webrtcvad\nfrom pydub import AudioSegment\n\ndef _required_positive_int(name: str) -&gt; int:\n    value = int(os.environ[name])\n    if value &lt;= 0:\n        raise RuntimeError(f\"{name} must be a positive integer\")\n    return value\n\nSAMPLE_RATE = _required_positive_int(\"VERIFIED_H002_REALTIME_AUDIO_SAMPLE_RATE_HZ\")\nFRAME_MS = _required_positive_int(\"VERIFIED_H002_REALTIME_AUDIO_FRAME_MILLISECONDS\")\nMAX_SEGMENT_MS = _required_positive_int(\"VERIFIED_H002_REALTIME_AUDIO_MAX_SEGMENT_MILLISECONDS\")\nMAX_STREAM_MS = _required_positive_int(\"VERIFIED_H002_REALTIME_AUDIO_MAX_STREAM_MILLISECONDS\")\nVAD_MODE = _required_positive_int(\"VERIFIED_H002_REALTIME_AUDIO_VAD_MODE\")\n\n\n\n# WebRTC VAD supports only these named PCM protocol profiles.\nif SAMPLE_RATE not in {8000, 16000, 32000, 48000} or FRAME_MS not in {10, 20, 30} or VAD_MODE not in {0, 1, 2, 3}:\n    raise RuntimeError(\"verified realtime audio profile is unsupported by WebRTC VAD\")\n\nCONTROL_TOKEN_RE = re.compile(r\"(&lt;\\|/?(?:system|developer|assistant|tool).*?\\|&gt;|\\b(system|developer)\\s*:)\", re.I)\n\n\n@dataclass(frozen=True)\nclass VoiceSegment:\n    pcm16le: bytes\n    start_ms: int\n    end_ms: int\n\n\ndef normalize_audio(blob: bytes, input_format: str) -&gt; AudioSegment:\n    if not blob:\n        raise ValueError(\"empty_audio_stream\")\n    source = AudioSegment.from_file(io.BytesIO(blob), format=input_format)\n    if len(source) &gt; MAX_STREAM_MS:\n        raise ValueError(\"audio_stream_too_long\")\n    return source.set_frame_rate(SAMPLE_RATE).set_channels(1).set_sample_width(2)\n\n\ndef split_speech_segments(blob: bytes, input_format: str) -&gt; list[VoiceSegment]:\n    audio = normalize_audio(blob, input_format)\n    vad = webrtcvad.Vad(VAD_MODE)\n    frame_bytes = int(SAMPLE_RATE * FRAME_MS / 1000) * 2\n    pcm = audio.raw_data\n\n    segments: list[VoiceSegment] = []\n    current = bytearray()\n    current_start_ms: int | None = None\n\n    for offset in range(0, len(pcm) - frame_bytes + 1, frame_bytes):\n        frame = pcm[offset:offset + frame_bytes]\n        frame_start_ms = int(offset / 2 / SAMPLE_RATE * 1000)\n        speech = vad.is_speech(frame, SAMPLE_RATE)\n\n        if speech:\n            if current_start_ms is None:\n                current_start_ms = frame_start_ms\n            current.extend(frame)\n            if (frame_start_ms - current_start_ms) &gt; MAX_SEGMENT_MS:\n                raise ValueError(\"voice_segment_too_long\")\n        elif current_start_ms is not None:\n            segments.append(VoiceSegment(bytes(current), current_start_ms, frame_start_ms))\n            current.clear()\n            current_start_ms = None\n\n    if current_start_ms is not None:\n        end_ms = int(len(pcm) / 2 / SAMPLE_RATE * 1000)\n        segments.append(VoiceSegment(bytes(current), current_start_ms, end_ms))\n\n    if not segments:\n        raise ValueError(\"no_speech_detected\")\n    return segments\n</code></pre><h5>Step 2: Gate the ASR transcript before model fusion</h5><pre><code># File: realtime_input/transcript_gate.py\nfrom __future__ import annotations\nimport os\n\nfrom realtime_input.audio_gate import CONTROL_TOKEN_RE\nfrom multimodal.stream_findings import admission_reasons\n\ndef _required_positive_int(name: str) -&gt; int:\n    value = int(os.environ[name])\n    if value &lt;= 0:\n        raise RuntimeError(f\"{name} must be a positive integer\")\n    return value\n\nMAX_TRANSCRIPT_CHARS = _required_positive_int(\"VERIFIED_H002_REALTIME_TRANSCRIPT_MAX_CHARS\")\n\n\n\n\n\ndef admit_voice_transcript(\n    transcript: str,\n    workflow_risk: str,\n    expected_session_id: str,\n    expected_turn_index: int,\n    d007_finding: dict,\n    expected_policy_version: str,\n    expected_policy_sha256: str,\n) -&gt; dict:\n    cleaned = transcript.replace(\"\\x00\", \"\").strip()\n    reasons: list[str] = []\n\n    if not cleaned:\n        reasons.append(\"empty_transcript\")\n    if len(cleaned) &gt; MAX_TRANSCRIPT_CHARS:\n        reasons.append(\"transcript_too_long\")\n    if CONTROL_TOKEN_RE.search(cleaned):\n        reasons.append(\"control_token_or_role_marker\")\n    reasons.extend(admission_reasons(\n        d007_finding, observation={\"transcript\": transcript},\n        observation_id=f\"audio:{expected_turn_index}\", modality=\"audio\",\n        session_id=expected_session_id, policy_version=expected_policy_version,\n        policy_sha256=expected_policy_sha256))\n\n    decision = \"allow\" if not reasons else \"block\"\n    return {\n        \"decision\": decision,\n        \"reasons\": reasons,\n        \"normalized_transcript\": cleaned if decision == \"allow\" else \"\",\n    }</code></pre><h5>Operational notes</h5><ul><li>Do not use speaker, liveness, or ASR confidence as proof of identity. D-007 may use those values as calibrated risk signals; this gate consumes its structured finding.</li><li>Run the final gate after D-007 scores the normalized observation and before the transcript is merged with system prompts, retrieved context, tool parameters, or agent memory.</li><li>Keep rejected segment metadata, finding/evidence digests, and the admission decision; retain raw audio only when signed privacy and retention policy permits it.</li></ul><p><strong>Action:</strong> Normalize and bound each speech turn, pass the normalized observation to <code>AID-D-007.002</code>, then require a valid finding plus deterministic transcript checks before admitting speech as instructions.</p><p>Consume the signed aidefend.stream-admission-finding.v1 record produced by AID-D-007.002-G003. The trusted receiver verifies the detector identity, signature and freshness; it supplies the expected policy from current server configuration. Audio binds the original transcript object; visual binds the complete VisualStreamFrame object before normalization. Never accept the finding or policy from a client request.</p>"},
                         {
                             "id": "AID-H-002.008-G002",
                             "implementation": "Gate realtime video and screen-share frames with bounded frame sampling, OCR normalization, context allowlists, and high-risk action downgrade before visual stream content enters prompt or tool context.",
-                            "howTo": "<h5>Concept:</h5><p>Realtime camera, live video, and screen-share streams are not ordinary uploaded images. The system sees them incrementally, and the dangerous text may appear for only a few frames before a tool action is proposed. Sample frames at a bounded rate, extract OCR text only when needed, and fail closed when visual context changes during high-impact actions.</p><h5>Step 1: Normalize frame observations into an admission record</h5><pre><code># File: realtime_input/visual_stream_gate.py\nfrom __future__ import annotations\nimport os\n\nimport re\nfrom dataclasses import dataclass\n\ndef _required_positive_int(name: str) -&gt; int:\n    value = int(os.environ[name])\n    if value &lt;= 0:\n        raise RuntimeError(f\"{name} must be a positive integer\")\n    return value\n\nMAX_FRAME_PIXELS = _required_positive_int(\"VERIFIED_H002_REALTIME_FRAME_MAX_PIXELS\")\nMAX_OCR_CHARS = _required_positive_int(\"VERIFIED_H002_REALTIME_OCR_MAX_CHARS\")\n\n\n\nCONTROL_TOKEN_RE = re.compile(r\"(&lt;\\|/?(?:system|developer|assistant|tool).*?\\|&gt;|\\b(system|developer)\\s*:)\", re.I)\nALLOWED_STREAM_TYPES = {\"camera\", \"live_video\", \"screen_share\"}\n\n\n@dataclass(frozen=True)\nclass VisualStreamFrame:\n    session_id: str\n    frame_index: int\n    stream_type: str\n    width: int\n    height: int\n    ocr_text: str\n    visual_confidence: float\n    context_label: str\n    workflow_risk: str\n\n\ndef admit_visual_frame(\n    frame: VisualStreamFrame,\n    allowed_context_labels: set[str],\n    d007_finding: dict,\n) -&gt; dict:\n    reasons: list[str] = []\n    normalized_ocr = re.sub(r\"\\s+\", \" \", frame.ocr_text).strip()\n\n    if frame.stream_type not in ALLOWED_STREAM_TYPES:\n        reasons.append(\"stream_type_not_allowed\")\n    if frame.width * frame.height &gt; MAX_FRAME_PIXELS:\n        reasons.append(\"frame_too_large\")\n    if len(normalized_ocr) &gt; MAX_OCR_CHARS:\n        reasons.append(\"ocr_text_too_long\")\n    if CONTROL_TOKEN_RE.search(normalized_ocr):\n        reasons.append(\"control_token_or_role_marker\")\n    if frame.context_label not in allowed_context_labels:\n        reasons.append(\"visual_context_not_allowed\")\n    required_finding = {\n        \"schema_version\", \"control\", \"status\", \"severity\",\n        \"session_id\", \"frame_index\", \"policy_version\", \"evidence_sha256\",\n        \"findings\",\n    }\n    if not isinstance(d007_finding, dict) or set(d007_finding) != required_finding:\n        reasons.append(\"d007_finding_schema_invalid\")\n    elif (\n        d007_finding[\"schema_version\"] != \"aidefend.d007-visual-finding.v1\"\n        or d007_finding[\"control\"] != \"AID-D-007.002\"\n        or d007_finding[\"session_id\"] != frame.session_id\n        or d007_finding[\"frame_index\"] != frame.frame_index\n    ):\n        reasons.append(\"d007_finding_binding_invalid\")\n    elif d007_finding[\"status\"] in {\"ERROR\", \"INSUFFICIENT_DATA\"}:\n        reasons.append(\"d007_finding_unavailable\")\n    elif d007_finding[\"status\"] == \"FINDING\" and d007_finding[\"severity\"] in {\"high\", \"critical\"}:\n        reasons.append(\"d007_high_risk_stream_finding\")\n    elif d007_finding[\"status\"] not in {\"NO_FINDING\", \"FINDING\"}:\n        reasons.append(\"d007_finding_status_invalid\")\n\n    decision = \"allow\" if not reasons else \"block\"\n    return {\n        \"decision\": decision,\n        \"reasons\": reasons,\n        \"session_id\": frame.session_id,\n        \"frame_index\": frame.frame_index,\n        \"normalized_ocr\": normalized_ocr if decision == \"allow\" else \"\",\n        \"context_label\": frame.context_label,\n    }\n</code></pre><h5>Step 2: Bind stream findings and gates to action timing</h5><p>Send each normalized frame observation to <code>AID-D-007.002</code>. If a tool call, payment, message send, file export, or identity action is proposed after a visual context switch, require a fresh D-007 finding bound to the same session/frame and a fresh allowed admission decision before passing visual text into the action planner. Never reuse a result from an earlier screen, camera angle, tab, or participant.</p><p><strong>Verification:</strong> Replay the complete sampled-frame population, signed admission policy, D-007 visual finding, OCR normalization output, and final decision; confirm the assembled context excludes every denied frame.</p><p><strong>Action:</strong> Treat realtime visual content as per-frame preprocessing facts, D-007 findings, and H-002.008 admission records. Bound OCR and frame dimensions locally, consume the semantic detector finding, and force high-impact actions to use only fresh, exactly bound allow decisions.</p>"
-                        }
+                            "howTo": "<h5>Concept:</h5><p>Realtime camera, live video, and screen-share streams are not ordinary uploaded images. The system sees them incrementally, and the dangerous text may appear for only a few frames before a tool action is proposed. Sample frames at a bounded rate, extract OCR text only when needed, and fail closed when visual context changes during high-impact actions.</p><h5>Step 1: Normalize frame observations into an admission record</h5><pre><code># File: realtime_input/visual_stream_gate.py\nfrom __future__ import annotations\nimport os\n\nimport re\nfrom dataclasses import dataclass, asdict\nfrom multimodal.stream_findings import admission_reasons\n\ndef _required_positive_int(name: str) -&gt; int:\n    value = int(os.environ[name])\n    if value &lt;= 0:\n        raise RuntimeError(f\"{name} must be a positive integer\")\n    return value\n\nMAX_FRAME_PIXELS = _required_positive_int(\"VERIFIED_H002_REALTIME_FRAME_MAX_PIXELS\")\nMAX_OCR_CHARS = _required_positive_int(\"VERIFIED_H002_REALTIME_OCR_MAX_CHARS\")\n\n\n\nCONTROL_TOKEN_RE = re.compile(r\"(&lt;\\|/?(?:system|developer|assistant|tool).*?\\|&gt;|\\b(system|developer)\\s*:)\", re.I)\nALLOWED_STREAM_TYPES = {\"camera\", \"live_video\", \"screen_share\"}\n\n\n@dataclass(frozen=True)\nclass VisualStreamFrame:\n    session_id: str\n    frame_index: int\n    stream_type: str\n    width: int\n    height: int\n    ocr_text: str\n    visual_confidence: float\n    context_label: str\n    workflow_risk: str\n\n\ndef admit_visual_frame(\n    frame: VisualStreamFrame,\n    allowed_context_labels: set[str],\n    d007_finding: dict,\n    expected_policy_version: str,\n    expected_policy_sha256: str,\n) -&gt; dict:\n    reasons: list[str] = []\n    normalized_ocr = re.sub(r\"\\s+\", \" \", frame.ocr_text).strip()\n\n    if frame.stream_type not in ALLOWED_STREAM_TYPES:\n        reasons.append(\"stream_type_not_allowed\")\n    if frame.width * frame.height &gt; MAX_FRAME_PIXELS:\n        reasons.append(\"frame_too_large\")\n    if len(normalized_ocr) &gt; MAX_OCR_CHARS:\n        reasons.append(\"ocr_text_too_long\")\n    if CONTROL_TOKEN_RE.search(normalized_ocr):\n        reasons.append(\"control_token_or_role_marker\")\n    if frame.context_label not in allowed_context_labels:\n        reasons.append(\"visual_context_not_allowed\")\n    reasons.extend(admission_reasons(\n        d007_finding, observation=asdict(frame),\n        observation_id=f\"visual:{frame.frame_index}\", modality=\"visual\",\n        session_id=frame.session_id, policy_version=expected_policy_version,\n        policy_sha256=expected_policy_sha256))\n\n    decision = \"allow\" if not reasons else \"block\"\n    return {\n        \"decision\": decision,\n        \"reasons\": reasons,\n        \"session_id\": frame.session_id,\n        \"frame_index\": frame.frame_index,\n        \"normalized_ocr\": normalized_ocr if decision == \"allow\" else \"\",\n        \"context_label\": frame.context_label,\n    }</code></pre><h5>Step 2: Bind stream findings and gates to action timing</h5><p>Send each normalized frame observation to <code>AID-D-007.002</code>. If a tool call, payment, message send, file export, or identity action is proposed after a visual context switch, require a fresh D-007 finding bound to the same session/frame and a fresh allowed admission decision before passing visual text into the action planner. Never reuse a result from an earlier screen, camera angle, tab, or participant.</p><p><strong>Verification:</strong> Replay the complete sampled-frame population, signed admission policy, D-007 visual finding, OCR normalization output, and final decision; confirm the assembled context excludes every denied frame.</p><p><strong>Action:</strong> Treat realtime visual content as per-frame preprocessing facts, D-007 findings, and H-002.008 admission records. Bound OCR and frame dimensions locally, consume the semantic detector finding, and force high-impact actions to use only fresh, exactly bound allow decisions.</p><p>Consume the signed aidefend.stream-admission-finding.v1 record produced by AID-D-007.002-G003. The trusted receiver verifies the detector identity, signature and freshness; it supplies the expected policy from current server configuration. Audio binds the original transcript object; visual binds the complete VisualStreamFrame object before normalization. Never accept the finding or policy from a client request.</p>"}
                     ]
                 },
                 {
@@ -8165,6 +3627,9 @@ if __name__ == "__main__":
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
+                        "AML.T0006 Active Scanning",
+                        "AML.T0006.000 Active Scanning: Enumerate Hosted AI Resources",
+                        "AML.T0006.003 Active Scanning: Probe AI Agent Trigger Channels",
                         "AML.T0012 Valid Accounts",
                         "AML.T0021 Establish Accounts",
                         "AML.T0036 Data from Information Repositories",
@@ -8181,7 +3646,8 @@ if __name__ == "__main__":
                         "AML.T0118.001 Autonomous AI Agent Communication: Direct Agent Communication",
                         "AML.T0122 Exploitation of Remote Services",
                         "AML.T0124 Autonomous Attack Orchestration",
-                        "AML.T0125 Create Account"
+                        "AML.T0125 Create Account",
+                        "AML.T0132 Misconfigured or Publicly Exposed AI Services"
                     ]
                 },
                 {
@@ -8199,7 +3665,7 @@ if __name__ == "__main__":
                 {
                     "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "N/A"
+                        "LLM03:2026 Excessive Agency"
                     ]
                 },
                 {
@@ -8456,7 +3922,8 @@ if __name__ == "__main__":
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0040 AI Model Inference API Access",
-                                "AML.T0122 Exploitation of Remote Services (unauthenticated workloads cannot reach AI API or data-store handlers)"
+                                "AML.T0122 Exploitation of Remote Services (unauthenticated workloads cannot reach AI API or data-store handlers)",
+                                "AML.T0132 Misconfigured or Publicly Exposed AI Services (service authentication rejects unauthenticated access across enabled runtime routes)"
                             ]
                         },
                         {
@@ -8517,8 +3984,7 @@ if __name__ == "__main__":
                         {
                             "id": "AID-H-004.002-G001",
                             "implementation": "Use OAuth 2.0 client credentials flow for service-to-service authentication.",
-                            "howTo": "<h5>Client credentials with bounded transport behavior</h5><p>Register one confidential client per calling workload, grant only the API scope it needs, and keep the credential in a workload secret store. Before startup, a bootstrap identity signature-verifies and exports the exact token/JWKS endpoints, trust bundle, positive deadlines and decoded response/token caps, allowed JWT algorithms, issuer, and audience used below.</p><pre><code class=\"language-python\"># File: client_service/auth.py\r\nfrom __future__ import annotations\r\n\r\nimport json\r\nimport math\r\nimport os\r\nimport ssl\r\nfrom urllib.parse import urlsplit, urlunsplit\r\n\r\nimport httpx\r\n\r\n\r\ndef positive_seconds(name: str) -&gt; float:\r\n    value = float(os.environ[name])\r\n    if not math.isfinite(value) or value &lt;= 0:\r\n        raise RuntimeError(f\"{name} must be finite and positive\")\r\n    return value\r\n\r\n\r\ndef positive_int(name: str) -&gt; int:\r\n    value = int(os.environ[name])\r\n    if value &lt;= 0:\r\n        raise RuntimeError(f\"{name} must be positive\")\r\n    return value\r\n\r\n\r\ndef canonical_https(value: str) -&gt; str:\r\n    parsed = urlsplit(value)\r\n    if (\r\n        parsed.scheme != \"https\" or not parsed.hostname\r\n        or parsed.username is not None or parsed.password is not None\r\n        or parsed.query or parsed.fragment or not parsed.path.startswith(\"/\")\r\n        or value != urlunsplit((\"https\", parsed.netloc.lower(), parsed.path, \"\", \"\"))\r\n    ):\r\n        raise RuntimeError(\"token URL must be the exact canonical HTTPS endpoint\")\r\n    return value\r\n\r\n\r\ndef no_duplicates(pairs: list[tuple[str, object]]) -&gt; dict:\r\n    result = {}\r\n    for key, value in pairs:\r\n        if key in result:\r\n            raise ValueError(f\"duplicate JSON key: {key}\")\r\n        result[key] = value\r\n    return result\r\n\r\n\r\nTOKEN_URL = canonical_https(os.environ[\"IDP_TOKEN_URL\"])\r\nCLIENT_ID = os.environ[\"MY_APP_CLIENT_ID\"]\r\nCLIENT_SECRET = os.environ[\"MY_APP_CLIENT_SECRET\"]\r\nREQUESTED_SCOPE = os.environ[\"VERIFIED_H004_REQUESTED_SCOPE\"]\r\nTIMEOUT = positive_seconds(\"VERIFIED_H004_TOKEN_TIMEOUT_SECONDS\")\r\nMAX_BYTES = positive_int(\"VERIFIED_H004_TOKEN_RESPONSE_MAX_BYTES\")\r\n\r\n\r\ndef get_access_token() -&gt; str:\r\n    context = ssl.create_default_context(cafile=os.environ[\"VERIFIED_H004_IDP_CA_BUNDLE\"])\r\n    with httpx.Client(verify=context, timeout=TIMEOUT, follow_redirects=False) as client:\r\n        with client.stream(\r\n            \"POST\", TOKEN_URL,\r\n            data={\"grant_type\": \"client_credentials\", \"scope\": REQUESTED_SCOPE},\r\n            auth=httpx.BasicAuth(CLIENT_ID, CLIENT_SECRET),\r\n            headers={\"Accept\": \"application/json\"},\r\n        ) as response:\r\n            if response.status_code != 200:\r\n                raise RuntimeError(f\"identity provider returned HTTP {response.status_code}\")\r\n            if response.headers.get(\"Content-Type\", \"\").split(\";\", 1)[0].strip().lower() != \"application/json\":\r\n                raise RuntimeError(\"identity provider returned an unexpected media type\")\r\n            raw = bytearray()\r\n            for chunk in response.iter_bytes():\r\n                raw.extend(chunk)\r\n                if len(raw) &gt; MAX_BYTES:\r\n                    raise RuntimeError(\"token response exceeds the signed decoded-byte cap\")\r\n    payload = json.loads(bytes(raw), object_pairs_hook=no_duplicates, parse_constant=lambda value: (_ for _ in ()).throw(ValueError(f\"non-finite JSON number: {value}\")))\r\n    allowed = {\"access_token\", \"token_type\", \"expires_in\", \"scope\"}\r\n    if not isinstance(payload, dict) or not {\"access_token\", \"token_type\", \"expires_in\"}.issubset(payload) or not set(payload).issubset(allowed):\r\n        raise RuntimeError(\"token response schema differs\")\r\n    token = payload[\"access_token\"]\r\n    if not isinstance(token, str) or not token or payload[\"token_type\"].lower() != \"bearer\":\r\n        raise RuntimeError(\"identity provider returned an invalid bearer token\")\r\n    if isinstance(payload[\"expires_in\"], bool) or not isinstance(payload[\"expires_in\"], int) or payload[\"expires_in\"] &lt;= 0:\r\n        raise RuntimeError(\"identity provider returned an invalid lifetime\")\r\n    token.encode(\"ascii\")\r\n    return token</code></pre><h5>Verify JWT signature, issuer, audience, lifetime, and scope</h5><pre><code class=\"language-python\"># File: model_service/app.py\r\nfrom __future__ import annotations\r\n\r\nimport json\r\nimport math\r\nimport os\r\nimport ssl\r\nfrom urllib.parse import urlsplit, urlunsplit\r\n\r\nimport httpx\r\nimport jwt\r\nfrom fastapi import Depends, FastAPI, HTTPException\r\nfrom fastapi.security import HTTPAuthorizationCredentials, HTTPBearer\r\n\r\n\r\napp = FastAPI()\r\nbearer = HTTPBearer(auto_error=False)\r\nISSUER = os.environ[\"OIDC_ISSUER\"]\r\nAUDIENCE = os.environ[\"OIDC_AUDIENCE\"]\r\nJWKS_URL = os.environ[\"OIDC_JWKS_URL\"]\r\nALGORITHMS = [item for item in os.environ[\"VERIFIED_H004_OIDC_JWT_ALGORITHMS\"].split(\",\") if item]\r\nSAFE_ALGORITHMS = {\"RS256\", \"RS384\", \"RS512\", \"PS256\", \"PS384\", \"PS512\", \"ES256\", \"ES384\", \"ES512\", \"EdDSA\"}\r\nTIMEOUT = float(os.environ[\"VERIFIED_H004_JWKS_TIMEOUT_SECONDS\"])\r\nMAX_BYTES = int(os.environ[\"VERIFIED_H004_JWKS_RESPONSE_MAX_BYTES\"])\r\nTOKEN_MAX_BYTES = int(os.environ[\"VERIFIED_H004_ACCESS_TOKEN_MAX_BYTES\"])\r\nif not math.isfinite(TIMEOUT) or TIMEOUT &lt;= 0 or MAX_BYTES &lt;= 0 or TOKEN_MAX_BYTES &lt;= 0 or not ALGORITHMS or not set(ALGORITHMS).issubset(SAFE_ALGORITHMS):\r\n    raise RuntimeError(\"verified OIDC transport or algorithm policy is invalid\")\r\n\r\n\r\ndef canonical_https(value: str) -&gt; str:\r\n    parsed = urlsplit(value)\r\n    if (\r\n        parsed.scheme != \"https\" or not parsed.hostname\r\n        or parsed.username is not None or parsed.password is not None\r\n        or parsed.query or parsed.fragment or not parsed.path.startswith(\"/\")\r\n        or value != urlunsplit((\"https\", parsed.netloc.lower(), parsed.path, \"\", \"\"))\r\n    ):\r\n        raise RuntimeError(\"JWKS URL must be the exact canonical HTTPS endpoint\")\r\n    return value\r\n\r\n\r\ndef no_duplicates(pairs: list[tuple[str, object]]) -&gt; dict:\r\n    result = {}\r\n    for key, value in pairs:\r\n        if key in result:\r\n            raise ValueError(f\"duplicate JSON key: {key}\")\r\n        result[key] = value\r\n    return result\r\n\r\n\r\ndef load_jwks() -&gt; jwt.PyJWKSet:\r\n    context = ssl.create_default_context(cafile=os.environ[\"VERIFIED_H004_IDP_CA_BUNDLE\"])\r\n    with httpx.Client(verify=context, timeout=TIMEOUT, follow_redirects=False) as client:\r\n        with client.stream(\"GET\", canonical_https(JWKS_URL), headers={\"Accept\": \"application/jwk-set+json, application/json\"}) as response:\r\n            if response.status_code != 200:\r\n                raise RuntimeError(f\"JWKS endpoint returned HTTP {response.status_code}\")\r\n            media = response.headers.get(\"Content-Type\", \"\").split(\";\", 1)[0].strip().lower()\r\n            if media not in {\"application/json\", \"application/jwk-set+json\"}:\r\n                raise RuntimeError(\"JWKS endpoint returned an unexpected media type\")\r\n            raw = bytearray()\r\n            for chunk in response.iter_bytes():\r\n                raw.extend(chunk)\r\n                if len(raw) &gt; MAX_BYTES:\r\n                    raise RuntimeError(\"JWKS response exceeds the signed decoded-byte cap\")\r\n    value = json.loads(bytes(raw), object_pairs_hook=no_duplicates, parse_constant=lambda value: (_ for _ in ()).throw(ValueError(f\"non-finite JSON number: {value}\")))\r\n    if not isinstance(value, dict):\r\n        raise RuntimeError(\"JWKS root must be an object\")\r\n    return jwt.PyJWKSet.from_dict(value)\r\n\r\n\r\ndef validate_token(credentials: HTTPAuthorizationCredentials | None = Depends(bearer)) -&gt; dict:\r\n    if credentials is None or credentials.scheme.lower() != \"bearer\":\r\n        raise HTTPException(status_code=401, detail=\"bearer token required\")\r\n    token = credentials.credentials\r\n    if not isinstance(token, str) or len(token.encode(\"utf-8\")) &gt; TOKEN_MAX_BYTES:\r\n        raise HTTPException(status_code=401, detail=\"invalid access token\")\r\n    try:\r\n        header = jwt.get_unverified_header(token)\r\n        if header.get(\"alg\") not in ALGORITHMS or not isinstance(header.get(\"kid\"), str):\r\n            raise jwt.InvalidTokenError(\"unapproved header\")\r\n        keys = [key for key in load_jwks().keys if key.key_id == header[\"kid\"]]\r\n        if len(keys) != 1:\r\n            raise jwt.InvalidTokenError(\"signing key is ambiguous or missing\")\r\n        claims = jwt.decode(\r\n            token, keys[0].key, algorithms=ALGORITHMS,\r\n            audience=AUDIENCE, issuer=ISSUER,\r\n            options={\"require\": [\"exp\", \"iat\", \"sub\", \"jti\"]},\r\n        )\r\n    except httpx.HTTPError as exc:\r\n        raise HTTPException(status_code=503, detail=\"identity verification unavailable\") from exc\r\n    except (jwt.PyJWTError, ValueError, RuntimeError) as exc:\r\n        raise HTTPException(status_code=401, detail=\"invalid access token\") from exc\r\n    scopes = set(str(claims.get(\"scope\", \"\")).split())\r\n    if os.environ[\"VERIFIED_H004_REQUIRED_SCOPE\"] not in scopes:\r\n        raise HTTPException(status_code=403, detail=\"required scope missing\")\r\n    return claims\r\n\r\n\r\n@app.get(\"/authz-check\")\r\ndef authz_check(claims: dict = Depends(validate_token)) -&gt; dict:\r\n    return {\"status\": \"authorized\", \"subject\": claims[\"sub\"], \"audience\": AUDIENCE}</code></pre><h5>Verification and evidence</h5><p>Replay a valid client, wrong audience, wrong issuer, expired token, unknown signing key, missing scope, revoked client, and unavailable JWKS endpoint. Require fail-closed behavior and no model-handler invocation for every negative case. Preserve client/workload identity, grant and scope policy versions, token <code>jti</code> or a non-reversible token fingerprint, signing <code>kid</code>, issuer/audience readback, decision, trace ID, and explicit <code>PASS</code>/<code>FAIL</code>/<code>ERROR</code> verdict. Never log the token or client secret.</p>"
-                        },
+                            "howTo": "<h5>Client credentials with bounded transport behavior</h5><p>Register one confidential client per calling workload, grant only the API scope it needs, and keep the credential in a workload secret store. Before startup, a bootstrap identity signature-verifies and exports the exact token/JWKS endpoints, trust bundle, positive deadlines and decoded response/token caps, allowed JWT algorithms, issuer, and audience used below.</p><pre><code class=\"language-python\"># File: client_service/auth.py\r\nfrom __future__ import annotations\r\n\r\nimport json\r\nimport math\r\nimport os\r\nimport ssl\r\nfrom urllib.parse import urlsplit, urlunsplit\r\n\r\nimport httpx\r\n\r\n\r\ndef positive_seconds(name: str) -&gt; float:\r\n    value = float(os.environ[name])\r\n    if not math.isfinite(value) or value &lt;= 0:\r\n        raise RuntimeError(f\"{name} must be finite and positive\")\r\n    return value\r\n\r\n\r\ndef positive_int(name: str) -&gt; int:\r\n    value = int(os.environ[name])\r\n    if value &lt;= 0:\r\n        raise RuntimeError(f\"{name} must be positive\")\r\n    return value\r\n\r\n\r\ndef canonical_https(value: str) -&gt; str:\r\n    parsed = urlsplit(value)\r\n    if (\r\n        parsed.scheme != \"https\" or not parsed.hostname\r\n        or parsed.username is not None or parsed.password is not None\r\n        or parsed.query or parsed.fragment or not parsed.path.startswith(\"/\")\r\n        or value != urlunsplit((\"https\", parsed.netloc.lower(), parsed.path, \"\", \"\"))\r\n    ):\r\n        raise RuntimeError(\"token URL must be the exact canonical HTTPS endpoint\")\r\n    return value\r\n\r\n\r\ndef no_duplicates(pairs: list[tuple[str, object]]) -&gt; dict:\r\n    result = {}\r\n    for key, value in pairs:\r\n        if key in result:\r\n            raise ValueError(f\"duplicate JSON key: {key}\")\r\n        result[key] = value\r\n    return result\r\n\r\n\r\nTOKEN_URL = canonical_https(os.environ[\"IDP_TOKEN_URL\"])\r\nCLIENT_ID = os.environ[\"MY_APP_CLIENT_ID\"]\r\nCLIENT_SECRET = os.environ[\"MY_APP_CLIENT_SECRET\"]\r\nREQUESTED_SCOPE = os.environ[\"VERIFIED_H004_REQUESTED_SCOPE\"]\r\nTIMEOUT = positive_seconds(\"VERIFIED_H004_TOKEN_TIMEOUT_SECONDS\")\r\nMAX_BYTES = positive_int(\"VERIFIED_H004_TOKEN_RESPONSE_MAX_BYTES\")\r\n\r\n\r\ndef get_access_token() -&gt; str:\r\n    context = ssl.create_default_context(cafile=os.environ[\"VERIFIED_H004_IDP_CA_BUNDLE\"])\r\n    with httpx.Client(verify=context, timeout=TIMEOUT, follow_redirects=False) as client:\r\n        with client.stream(\r\n            \"POST\", TOKEN_URL,\r\n            data={\"grant_type\": \"client_credentials\", \"scope\": REQUESTED_SCOPE},\r\n            auth=httpx.BasicAuth(CLIENT_ID, CLIENT_SECRET),\r\n            headers={\"Accept\": \"application/json\"},\r\n        ) as response:\r\n            if response.status_code != 200:\r\n                raise RuntimeError(f\"identity provider returned HTTP {response.status_code}\")\r\n            if response.headers.get(\"Content-Type\", \"\").split(\";\", 1)[0].strip().lower() != \"application/json\":\r\n                raise RuntimeError(\"identity provider returned an unexpected media type\")\r\n            raw = bytearray()\r\n            for chunk in response.iter_bytes():\r\n                raw.extend(chunk)\r\n                if len(raw) &gt; MAX_BYTES:\r\n                    raise RuntimeError(\"token response exceeds the signed decoded-byte cap\")\r\n    payload = json.loads(bytes(raw), object_pairs_hook=no_duplicates, parse_constant=lambda value: (_ for _ in ()).throw(ValueError(f\"non-finite JSON number: {value}\")))\r\n    allowed = {\"access_token\", \"token_type\", \"expires_in\", \"scope\"}\r\n    if not isinstance(payload, dict) or not {\"access_token\", \"token_type\", \"expires_in\"}.issubset(payload) or not set(payload).issubset(allowed):\r\n        raise RuntimeError(\"token response schema differs\")\r\n    token = payload[\"access_token\"]\r\n    if not isinstance(token, str) or not token or payload[\"token_type\"].lower() != \"bearer\":\r\n        raise RuntimeError(\"identity provider returned an invalid bearer token\")\r\n    if isinstance(payload[\"expires_in\"], bool) or not isinstance(payload[\"expires_in\"], int) or payload[\"expires_in\"] &lt;= 0:\r\n        raise RuntimeError(\"identity provider returned an invalid lifetime\")\r\n    token.encode(\"ascii\")\r\n    return token</code></pre><h5>Verify JWT signature, issuer, audience, lifetime, and scope</h5><pre><code class=\"language-python\"># File: model_service/app.py\r\nfrom __future__ import annotations\r\n\r\nimport json\r\nimport math\r\nimport os\r\nimport ssl\r\nfrom urllib.parse import urlsplit, urlunsplit\r\n\r\nimport httpx\r\nimport jwt\r\nfrom fastapi import Depends, FastAPI, HTTPException\r\nfrom fastapi.security import HTTPAuthorizationCredentials, HTTPBearer\r\n\r\n\r\napp = FastAPI()\r\nbearer = HTTPBearer(auto_error=False)\r\nISSUER = os.environ[\"OIDC_ISSUER\"]\r\nAUDIENCE = os.environ[\"OIDC_AUDIENCE\"]\r\nJWKS_URL = os.environ[\"OIDC_JWKS_URL\"]\r\nALGORITHMS = [item for item in os.environ[\"VERIFIED_H004_OIDC_JWT_ALGORITHMS\"].split(\",\") if item]\r\nSAFE_ALGORITHMS = {\"RS256\", \"RS384\", \"RS512\", \"PS256\", \"PS384\", \"PS512\", \"ES256\", \"ES384\", \"ES512\", \"EdDSA\"}\r\nTIMEOUT = float(os.environ[\"VERIFIED_H004_JWKS_TIMEOUT_SECONDS\"])\r\nMAX_BYTES = int(os.environ[\"VERIFIED_H004_JWKS_RESPONSE_MAX_BYTES\"])\r\nTOKEN_MAX_BYTES = int(os.environ[\"VERIFIED_H004_ACCESS_TOKEN_MAX_BYTES\"])\r\nif not math.isfinite(TIMEOUT) or TIMEOUT &lt;= 0 or MAX_BYTES &lt;= 0 or TOKEN_MAX_BYTES &lt;= 0 or not ALGORITHMS or not set(ALGORITHMS).issubset(SAFE_ALGORITHMS):\r\n    raise RuntimeError(\"verified OIDC transport or algorithm policy is invalid\")\r\n\r\n\r\ndef canonical_https(value: str) -&gt; str:\r\n    parsed = urlsplit(value)\r\n    if (\r\n        parsed.scheme != \"https\" or not parsed.hostname\r\n        or parsed.username is not None or parsed.password is not None\r\n        or parsed.query or parsed.fragment or not parsed.path.startswith(\"/\")\r\n        or value != urlunsplit((\"https\", parsed.netloc.lower(), parsed.path, \"\", \"\"))\r\n    ):\r\n        raise RuntimeError(\"JWKS URL must be the exact canonical HTTPS endpoint\")\r\n    return value\r\n\r\n\r\ndef no_duplicates(pairs: list[tuple[str, object]]) -&gt; dict:\r\n    result = {}\r\n    for key, value in pairs:\r\n        if key in result:\r\n            raise ValueError(f\"duplicate JSON key: {key}\")\r\n        result[key] = value\r\n    return result\r\n\r\n\r\ndef load_jwks() -&gt; jwt.PyJWKSet:\r\n    context = ssl.create_default_context(cafile=os.environ[\"VERIFIED_H004_IDP_CA_BUNDLE\"])\r\n    with httpx.Client(verify=context, timeout=TIMEOUT, follow_redirects=False) as client:\r\n        with client.stream(\"GET\", canonical_https(JWKS_URL), headers={\"Accept\": \"application/jwk-set+json, application/json\"}) as response:\r\n            if response.status_code != 200:\r\n                raise RuntimeError(f\"JWKS endpoint returned HTTP {response.status_code}\")\r\n            media = response.headers.get(\"Content-Type\", \"\").split(\";\", 1)[0].strip().lower()\r\n            if media not in {\"application/json\", \"application/jwk-set+json\"}:\r\n                raise RuntimeError(\"JWKS endpoint returned an unexpected media type\")\r\n            raw = bytearray()\r\n            for chunk in response.iter_bytes():\r\n                raw.extend(chunk)\r\n                if len(raw) &gt; MAX_BYTES:\r\n                    raise RuntimeError(\"JWKS response exceeds the signed decoded-byte cap\")\r\n    value = json.loads(bytes(raw), object_pairs_hook=no_duplicates, parse_constant=lambda value: (_ for _ in ()).throw(ValueError(f\"non-finite JSON number: {value}\")))\r\n    if not isinstance(value, dict):\r\n        raise RuntimeError(\"JWKS root must be an object\")\r\n    return jwt.PyJWKSet.from_dict(value)\r\n\r\n\r\ndef validate_token(credentials: HTTPAuthorizationCredentials | None = Depends(bearer)) -&gt; dict:\r\n    if credentials is None or credentials.scheme.lower() != \"bearer\":\r\n        raise HTTPException(status_code=401, detail=\"bearer token required\")\r\n    token = credentials.credentials\r\n    if not isinstance(token, str) or len(token.encode(\"utf-8\")) &gt; TOKEN_MAX_BYTES:\r\n        raise HTTPException(status_code=401, detail=\"invalid access token\")\r\n    try:\r\n        header = jwt.get_unverified_header(token)\r\n        if header.get(\"alg\") not in ALGORITHMS or not isinstance(header.get(\"kid\"), str):\r\n            raise jwt.InvalidTokenError(\"unapproved header\")\r\n        keys = [key for key in load_jwks().keys if key.key_id == header[\"kid\"]]\r\n        if len(keys) != 1:\r\n            raise jwt.InvalidTokenError(\"signing key is ambiguous or missing\")\r\n        claims = jwt.decode(\r\n            token, keys[0].key, algorithms=ALGORITHMS,\r\n            audience=AUDIENCE, issuer=ISSUER,\r\n            options={\"require\": [\"exp\", \"iat\", \"sub\", \"jti\"]},\r\n        )\r\n    except httpx.HTTPError as exc:\r\n        raise HTTPException(status_code=503, detail=\"identity verification unavailable\") from exc\r\n    except (jwt.PyJWTError, ValueError, RuntimeError) as exc:\r\n        raise HTTPException(status_code=401, detail=\"invalid access token\") from exc\r\n    scopes = set(str(claims.get(\"scope\", \"\")).split())\r\n    if os.environ[\"VERIFIED_H004_REQUIRED_SCOPE\"] not in scopes:\r\n        raise HTTPException(status_code=403, detail=\"required scope missing\")\r\n    return claims\r\n\r\n\r\n@app.get(\"/authz-check\")\r\ndef authz_check(claims: dict = Depends(validate_token)) -&gt; dict:\r\n    return {\"status\": \"authorized\", \"subject\": claims[\"sub\"], \"audience\": AUDIENCE}</code></pre><h5>Verification and evidence</h5><p>Replay a valid client, wrong audience, wrong issuer, expired token, unknown signing key, missing scope, revoked client, and unavailable JWKS endpoint. Require fail-closed behavior and no model-handler invocation for every negative case. Preserve client/workload identity, grant and scope policy versions, token <code>jti</code> or a non-reversible token fingerprint, signing <code>kid</code>, issuer/audience readback, decision, trace ID, and explicit <code>PASS</code>/<code>FAIL</code>/<code>ERROR</code> verdict. Never log the token or client secret.</p>" + "<p>Inference-runtime authentication must cover all enabled inference and management routes, including alternate endpoints outside a product's built-in API-key prefixes. Use the complete method/path registry and no-credential handler-invocation regressions in AID-H-038.002; checking only <code>/v1</code> is insufficient.</p>"},
                         {
                             "id": "AID-H-004.002-G002",
                             "implementation": "Implement short-lived, securely managed API keys for external service access.",
@@ -8969,8 +4435,246 @@ if __name__ == "__main__":
                         {
                             "id": "AID-H-004.005-G003",
                             "implementation": "Inventory every AI message path and require the end-to-end profile only where topology, delivery, trust, or security-critical semantics make transport protection insufficient.",
-                            "howTo": "<h5>Evaluate applicability from actual topology</h5><p>Build a signed inventory for agent, MCP, model-serving, webhook, event, queue, callback, administrative, and kill-switch paths. Record producer and final consumer, every TLS termination, gateway, proxy, broker, store-and-forward stage, retry source, 0-RTT setting, tenant or administrative boundary, and whether the message triggers a security-critical state change.</p><h5>Fail-closed applicability evaluator</h5><pre><code class=\"language-python\"># File: messaging/evaluate_paths.py\nfrom __future__ import annotations\nimport json\nimport sys\nfrom pathlib import Path\n\nFIELDS = {\n    \"path_id\", \"producer\", \"final_consumer\", \"tls_terminations\",\n    \"store_and_forward\", \"asynchronous_delivery\", \"zero_rtt\",\n    \"crosses_trust_boundary\", \"security_critical_command\", \"retry_sources\",\n    \"topology_readback_sha256\"\n}\n\ndocument = json.loads(Path(sys.argv[1]).read_text(encoding=\"utf-8\"))\nif (not isinstance(document, dict) or document.get(\"schema_version\") !=\n        \"aidefend.message-path-inventory.v1\" or\n        not isinstance(document.get(\"paths\"), list) or not document[\"paths\"]):\n    raise ValueError(\"complete message-path inventory is required\")\n\nresults = []\nseen = set()\nfor path in document[\"paths\"]:\n    if not isinstance(path, dict) or set(path) != FIELDS:\n        raise ValueError(\"message-path schema differs\")\n    if path[\"path_id\"] in seen or not path[\"topology_readback_sha256\"]:\n        raise ValueError(\"path identity or topology readback is invalid\")\n    seen.add(path[\"path_id\"])\n    requires = (\n        path[\"tls_terminations\"] &gt; 1 or path[\"store_and_forward\"] or\n        path[\"asynchronous_delivery\"] or path[\"zero_rtt\"] or\n        path[\"crosses_trust_boundary\"] or path[\"security_critical_command\"] or\n        bool(path[\"retry_sources\"])\n    )\n    results.append({\"path_id\": path[\"path_id\"],\n                    \"outcome\": \"APPLICABLE\" if requires else \"NOT_APPLICABLE\"})\nprint(json.dumps({\"results\": results}, sort_keys=True))</code></pre><p><strong>Action:</strong> Treat an incomplete inventory, stale topology export, unknown TLS terminator, undocumented queue, or unverified 0-RTT and retry configuration as <code>INSUFFICIENT_DATA</code>. A path may be NOT_APPLICABLE only when the final consumer receives one authenticated channel directly, no applicability condition exists, and independent configuration readback proves that claim. The mere presence of mTLS is not an exemption.</p><h5>Release and runtime verification</h5><p>For every applicable path, test a changed body, wrong audience, wrong method or target, stale and future envelope, duplicate concurrent delivery, broker redelivery, restarted consumer, rotated key, unavailable replay store, and 0-RTT replay. Bind the inventory, topology export, signed profile, negative results, and complete path population to the release. Re-evaluate after any gateway, mesh, queue, callback, trust-boundary, or retry change.</p>"
+                            "howTo": "<h5>Evaluate applicability from actual topology</h5><p>Build a signed inventory for agent, MCP, model-serving, webhook, event, queue, callback, administrative, and kill-switch paths. Record producer and final consumer, every TLS termination, gateway, proxy, broker, store-and-forward stage, retry source, 0-RTT setting, tenant or administrative boundary, and whether the message triggers a security-critical state change.</p><h5>Fail-closed applicability evaluator</h5><pre><code class=\"language-python\"># File: messaging/evaluate_paths.py\nfrom __future__ import annotations\nimport json\nimport sys\nfrom pathlib import Path\n\nFIELDS = {\n    \"path_id\", \"producer\", \"final_consumer\", \"tls_terminations\",\n    \"store_and_forward\", \"asynchronous_delivery\", \"zero_rtt\",\n    \"crosses_trust_boundary\", \"security_critical_command\", \"retry_sources\",\n    \"topology_readback_sha256\"\n}\n\ndocument = json.loads(Path(sys.argv[1]).read_text(encoding=\"utf-8\"))\nif (not isinstance(document, dict) or document.get(\"schema_version\") !=\n        \"aidefend.message-path-inventory.v1\" or\n        not isinstance(document.get(\"paths\"), list) or not document[\"paths\"]):\n    raise ValueError(\"complete message-path inventory is required\")\n\nresults = []\nseen = set()\nfor path in document[\"paths\"]:\n    if not isinstance(path, dict) or set(path) != FIELDS:\n        raise ValueError(\"message-path schema differs\")\n    if path[\"path_id\"] in seen or not path[\"topology_readback_sha256\"]:\n        raise ValueError(\"path identity or topology readback is invalid\")\n    seen.add(path[\"path_id\"])\n    requires = (\n        path[\"tls_terminations\"] &gt; 1 or path[\"store_and_forward\"] or\n        path[\"asynchronous_delivery\"] or path[\"zero_rtt\"] or\n        path[\"crosses_trust_boundary\"] or path[\"security_critical_command\"] or\n        bool(path[\"retry_sources\"])\n    )\n    results.append({\"path_id\": path[\"path_id\"],\n                    \"outcome\": \"APPLICABLE\" if requires else \"NOT_APPLICABLE\"})\nprint(json.dumps({\"results\": results}, sort_keys=True))</code></pre><p><strong>Action:</strong> Treat an incomplete inventory, stale topology export, unknown TLS terminator, undocumented queue, or unverified 0-RTT and retry configuration as <code>INSUFFICIENT_DATA</code>. A path may be NOT_APPLICABLE only when the final consumer receives one authenticated channel directly, no applicability condition exists, and independent configuration readback proves that claim. The mere presence of mTLS is not an exemption.</p><h5>Release and runtime verification</h5><p>For every applicable path, test a changed body, wrong audience, wrong method or target, stale and future envelope, duplicate concurrent delivery, broker redelivery, restarted consumer, rotated key, unavailable replay store, and 0-RTT replay. Bind the inventory, topology export, signed profile, negative results, and complete path population to the release. Re-evaluate after any gateway, mesh, queue, callback, trust-boundary, or retry change.</p>" + "<p>For external email, webhook, and messaging triggers, consume this integrity/replay primitive in AID-H-004.007. A provider-authenticated delivery still requires initiator/resource authorization and binding to a permitted workflow before it can create an agent run.</p>"}
+                    ]
+                },
+                {
+                    "id": "AID-H-004.006",
+                    "name": "Hosted Agent Publication & Exposure Controls",
+                    "toolsOpenSource": ["power-pwn (Copilot Studio Hunter; scoped exposure testing of authorized tenant agents)"],
+                "toolsCommercial": ["Microsoft Power Platform admin center (tenant data policies, channels, and agent administration)", "Microsoft Defender XDR Advanced Hunting (AgentsInfo inventory and configuration readback; supported licensing and telemetry required)"],
+                "pillar": [
+                        "app",
+                        "infra"
+                    ],
+                    "phase": [
+                        "building",
+                        "validation",
+                        "operation"
+                    ],
+                    "description": "Prevent unintended access to agents published through vendor-hosted and low-code platforms. The tenant platform administrator and agent release owner enforce approved audiences, channels, sharing boundaries, and connector execution identities before publication and after configuration changes.<br><br>Applies to organizations publishing agents on shared provider infrastructure, including provider-owned hostnames; merely consuming a vendor assistant is outside this control. Shipping tenant data policies, channel restrictions, and agent administration interfaces provide the implementation path. Public agents are allowed only through a versioned exception whose reachable knowledge, tools, and identities are appropriate for anonymous users.<br><br>Evidence combines effective tenant and agent configuration, complete published-agent inventory, denied publication attempts, and independent access probes against the published version. No applicable hosted agents means NOT_APPLICABLE; incomplete inventory or unavailable effective permissions means INSUFFICIENT_DATA, collection failure means ERROR, and reachable unauthorized capabilities mean FAIL. PASS requires both preventive settings and successful negative access tests for the applicable population. This publication gate also covers the release of provider-native event-trigger configurations. Where the hosted platform has no tenant-controlled pre-run admission point, verify the native trigger filters, approved event resources and dedicated execution identity here; a configured maker connection does not prove per-event initiator authorization. Missing supplier evidence remains INSUFFICIENT_DATA, and an unenforceable required restriction prevents release.",
+                    "scopeBoundary": {
+                        "responsibility": "Owns the technical release and configuration-drift gate for hosted agents: who can reach each published agent and which channels, shared connections, and knowledge sources that audience can exercise.",
+                        "relatedTechniques": [
+                            {
+                                "id": "AID-M-001.005",
+                                "comparison": "Discovery supplies the hosted-tenant population and exposure findings; this control configures and verifies the publication restrictions."
+                            },
+                            {
+                                "id": "AID-H-004.002",
+                                "comparison": "Reuse workload authentication; a service identity alone does not establish the audience of a published SaaS agent."
+                            },
+                            {
+                                "id": "AID-H-004.007",
+                                "comparison": "Event-to-run authority is checked at trigger admission; publication approval does not authorize each external event."
+                            },
+                            {
+                                "id": "AID-H-018.002",
+                                "comparison": "Runtime per-action authorization remains independent of the publication gate."
+                            },
+                            {
+                                "id": "AID-I-003",
+                                "comparison": "Containment owns disabling access after a finding; this control owns release denial and exposure configuration."
+                            }
+                        ]
+                    },
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0132 Misconfigured or Publicly Exposed AI Services",
+                                "AML.T0006 Active Scanning (restricts unauthenticated access to hosted agents discovered through enumeration)",
+                                "AML.T0006.000 Active Scanning: Enumerate Hosted AI Resources (approved audiences and channel restrictions prevent discovery from granting access)"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Agent Identity Attack (L7)",
+                                "Integration Risks (L7)",
+                                "Privilege Escalation (Cross-Layer) (publication checks reject maker connections broader than the published audience)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2026",
+                            "items": [
+                                "LLM03:2026 Excessive Agency (publication rejects shared connector identities and capabilities exceeding the intended audience)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "N/A"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
+                            "items": [
+                                "ASI03:2026 Identity and Privilege Abuse"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "N/A"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-2.1 Excessive Agency",
+                                "AITech-14.2 Abuse of Delegated Authority",
+                                "AISubtech-14.1.2 Insufficient Access Controls",
+                                "AISubtech-14.2.1 Permission Escalation via Delegation"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "IIC: Insecure Integrated Component"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Agents - Core 13.3: Privilege Compromise"
+                            ]
                         }
+                    ],
+                    "implementationGuidance": [
+                        {
+                            "id": "AID-H-004.006-G001",
+                            "implementation": "Enforce tenant and environment publication restrictions, with bounded exceptions for intentionally public agents.",
+                            "howTo": "<h5>Step 1: Establish the release boundary</h5><p>Use the tenant administration plane, not a prompt instruction, to control who can create environments, publish agents, change authentication, share with the entire tenant, and enable channels. Separate public-agent environments from internal-agent environments. Bind an approved release record to tenant ID, environment ID, agent ID, published version, channel set, audience, knowledge-source IDs, connector operation IDs, connection identities, and policy version. Store it in an administrator-controlled repository; a maker cannot approve their own exception by setting a field on the agent.</p><h5>Step 2: Configure a concrete hosted-platform path</h5><p>In Microsoft Power Platform admin center, apply data policies to every relevant environment, including newly created environments. For internal agents, block the connector <code>Chat without Microsoft Entra ID authentication in Copilot Studio</code>. Restrict unneeded channel connectors, including Direct Line where custom websites, the demo website, or mobile channels are not approved. In Copilot Studio, verify the published agent authentication and sharing settings. The default authentication choice is not proof that makers cannot change it. Restrict environment creation and maker/security roles through the platform administration settings, then attempt publication with a disallowed channel and with authentication disabled using a test maker account. Both must fail. Follow the <a href=\"https://learn.microsoft.com/en-us/microsoft-copilot-studio/admin-data-loss-prevention\" target=\"_blank\" rel=\"noopener noreferrer\">platform data-policy instructions</a> and record the applied policy IDs and effective environment coverage.</p><p>For a deliberately public FAQ, use a separate, approved environment with public-only knowledge and narrowly scoped operations. An exception must expire under release policy and match the exact deployed agent/version; it is not a tenant-wide permission to publish anonymously. Retest access after sharing, connector, channel, or knowledge changes. If a platform cannot enforce the required restriction, keep the affected release blocked or move that workload to an enforceable deployment path.</p>"
+                        },
+                        {
+                            "id": "AID-H-004.006-G002",
+                            "implementation": "Verify effective connector and trigger identities before exposing a hosted agent to its approved audience.",
+                            "howTo": "<h5>Step 1: Resolve the identity actually used</h5><p>For every reachable connector, action, knowledge source, and event trigger, read back the effective connection provider and account from the published configuration. Compare the account's actual resource permissions with the audience and task boundary. A maker-owned connection may authorize more than the caller. Do not infer least privilege from a friendly connection name, consent checkbox, or the maker's ownership of the agent. Verify sensitive reads as well as writes with separate authorized and unauthorized test resources.</p><h5>Step 2: Select a deployable authentication mode</h5><p>Use end-user credentials for interactive operations where caller-specific access is required. <a href=\"https://learn.microsoft.com/en-us/microsoft-copilot-studio/configure-no-maker-authentication\" target=\"_blank\" rel=\"noopener noreferrer\">Copilot Studio environment settings</a> can restrict maker-provided credentials. Do not apply that restriction blindly to autonomous workflows: <a href=\"https://learn.microsoft.com/en-us/microsoft-copilot-studio/authoring-triggers-about\" target=\"_blank\" rel=\"noopener noreferrer\">event triggers</a> can run with maker connections. Such a workflow needs a dedicated least-privilege connection account, fixed permitted resources, and the external-event admission control in AID-H-004.007. If the platform cannot preserve the required caller/trigger authority, do not publish that operation to that audience.</p><h5>Step 3: Test the published surface</h5><p>Use clean browser sessions and independent network vantage points to test anonymous access, an authenticated but unapproved user, an approved user, and a user from another tenant where relevant. Check every enabled channel, including direct links that bypass the usual website. Use synthetic private records and reversible test actions; verify downstream audit logs show the expected identity and denied resource access. A login page or HTTP 200 alone proves neither protection nor a leak. Retain version-bound results and exclude raw credentials or private records from evidence.</p><p>Apply AID-H-004.007 when a tenant-controlled receiver or a verifiable platform pre-run adapter can bind the event initiator and resource before creating a run. For provider-native triggers without that integration point, this publication gate owns native trigger configuration and execution-identity restrictions. Do not count a maker credential or publication approval as event-by-event authorization; restrict the workflow to approved event resources and effects, and deny release when the required authority cannot be constrained.</p>"},
+                        {
+                            "id": "AID-H-004.006-G003",
+                            "implementation": "Reconcile publication state and handle drift with explicit coverage and containment handoff.",
+                            "howTo": "<h5>Step 1: Reconcile the complete published population</h5><p>Consume AID-M-001.005 hosted-tenant inventory and compare exact agent, environment, channel, audience, version, and connection identities against the approved release records. Include unpublished-to-published transitions and platform-generated demo endpoints. Check each applicable setting individually: missing authentication metadata must not become <code>false</code> or a compliant default. Classic bots, inventory truncation, stale snapshots, and unsupported regions remain explicit coverage gaps until resolved through an administrative readback or another supported adapter.</p><h5>Step 2: Block drift and verify containment</h5><p>Block promotion on unexplained public access, excess sharing, new channels, expanded knowledge, or broader connector identities. For an already published violation, hand the exact tenant/environment/agent/version and observed channel list to AID-I-003 containment. Where supported, <a href=\"https://learn.microsoft.com/en-us/microsoft-copilot-studio/admin-api-quarantine\" target=\"_blank\" rel=\"noopener noreferrer\">Copilot Studio quarantine</a> blocks published end-user access, but does not disable maker testing and does not support every bot type. Its documented authorization uses a delegated administrator token; do not invent an app-only fleet-remediation capability. Read back the administrative state and repeat channel probes after containment. Permanent removal belongs to Evict; do not award a second isolation outcome for this handoff.</p>"
+                        }
+                    ]
+                },
+                {
+                    "id": "AID-H-004.007",
+                    "name": "External Event-to-Agent Admission & Authority Binding",
+                    "toolsOpenSource": ["Slack Bolt for Python (HTTP request signature and timestamp verification; initiator authorization and durable replay admission remain deployment-owned)"],
+                "pillar": [
+                        "app",
+                        "infra"
+                    ],
+                    "phase": [
+                        "building",
+                        "validation",
+                        "operation"
+                    ],
+                    "description": "Authorize externally delivered email, webhook, or messaging events before they create an agent run. The integration receiver and workflow owner distinguish authenticated delivery from the initiating actor's authority, select an approved workflow and execution identity from trusted configuration, and preserve that binding through queues and workers.<br><br>This applies when externally controlled events can initiate agent activity; an agent with no such triggers is NOT_APPLICABLE. Shipping event-driven agent platforms and demonstrated probing of agent trigger channels anchor this control. Provider signatures or aligned email domains alone do not authorize use of the agent maker's privileges.<br><br>Verify rejected-source, wrong-workspace, unauthorized-actor, replay, and altered-routing events against the actual receiver and worker. PASS requires correct run admission and unchanged authority across the applicable trigger population; an unauthorized run is FAIL, missing provider/actor evidence is INSUFFICIENT_DATA, and verification or policy-service failure is ERROR with admission denied. Applies to tenant-controlled event receivers/workflows, or platform-supported pre-run admission adapters that expose verifiable initiator/resource binding. A provider-native trigger with no such tenant integration point is NOT_APPLICABLE to this receiver control; AID-H-004.006 owns its hosted publication and native-trigger restrictions. If the admission architecture exists but its evidence or required adapter is missing, report INSUFFICIENT_DATA or ERROR rather than NOT_APPLICABLE.",
+                    "scopeBoundary": {
+                        "responsibility": "Owns the external-event-to-agent-run boundary: authorized initiator, event resource, workflow, execution identity, and bounded task authority before scheduling.",
+                        "relatedTechniques": [
+                            {
+                                "id": "AID-H-004.005",
+                                "comparison": "Reuse provider-native integrity, freshness, and durable replay protection; a valid delivery signature is not initiator authorization."
+                            },
+                            {
+                                "id": "AID-M-009.003",
+                                "comparison": "Consume registered workload identities and delegation context; registration does not authorize an external event to start a run."
+                            },
+                            {
+                                "id": "AID-H-018.004",
+                                "comparison": "The admitted task bounds downstream capabilities; runtime scoping can only narrow the admitted authority."
+                            },
+                            {
+                                "id": "AID-H-018.002",
+                                "comparison": "Per-tool/service action authorization remains a later gate and does not substitute for event admission."
+                            },
+                            {
+                                "id": "AID-H-018.008",
+                                "comparison": "Effect idempotency is separate from deduplicating event delivery and run creation."
+                            },
+                            {
+                                "id": "AID-H-004.006",
+                                "comparison": "Hosted publication owns native trigger configuration when the provider exposes no tenant-controlled pre-run admission point. This receiver gate does not independently score the same hosted configuration or treat maker credentials as initiator authority."
+                            }
+                        ]
+                    },
+                    "defendsAgainst": [
+                        {
+                            "framework": "MITRE ATLAS",
+                            "items": [
+                                "AML.T0006 Active Scanning (rejects unauthorized trigger probes before agent run creation)",
+                                "AML.T0006.003 Active Scanning: Probe AI Agent Trigger Channels",
+                                "AML.T0132 Misconfigured or Publicly Exposed AI Services (gates externally reachable agent triggers and binds their execution authority)"
+                            ]
+                        },
+                        {
+                            "framework": "MAESTRO",
+                            "items": [
+                                "Agent Identity Attack (L7)",
+                                "Integration Risks (L7)",
+                                "Privilege Escalation (Cross-Layer) (external events cannot select a more privileged workflow identity)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP LLM Top 10 2026",
+                            "items": [
+                                "LLM03:2026 Excessive Agency (event-initiated runs retain bounded initiating authority instead of inheriting unrestricted maker credentials)"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP ML Top 10 2023",
+                            "items": [
+                                "N/A"
+                            ]
+                        },
+                        {
+                            "framework": "OWASP Top 10 for Agentic Applications 2026",
+                            "items": [
+                                "ASI03:2026 Identity and Privilege Abuse"
+                            ]
+                        },
+                        {
+                            "framework": "NIST Adversarial Machine Learning 2025",
+                            "items": [
+                                "N/A"
+                            ]
+                        },
+                        {
+                            "framework": "Cisco Integrated AI Security and Safety Framework",
+                            "items": [
+                                "AITech-2.1 Excessive Agency",
+                                "AITech-14.2 Abuse of Delegated Authority",
+                                "AISubtech-2.1.2 Capability and Permission Overreach",
+                                "AISubtech-14.1.2 Insufficient Access Controls",
+                                "AISubtech-14.2.1 Permission Escalation via Delegation"
+                            ]
+                        },
+                        {
+                            "framework": "Google Secure AI Framework 2.0 - Risks",
+                            "items": [
+                                "IIC: Insecure Integrated Component"
+                            ]
+                        },
+                        {
+                            "framework": "Databricks AI Security Framework 3.0",
+                            "items": [
+                                "Agents - Core 13.3: Privilege Compromise"
+                            ]
+                        }
+                    ],
+                    "implementationGuidance": [
+                        {
+                            "id": "AID-H-004.007-G001",
+                            "implementation": "Verify native delivery evidence, then authorize the initiator and resource before choosing the agent workflow.",
+                            "howTo": "<h5>Step 1: Separate delivery authentication from authority</h5><p>Register a distinct receiver route and provider credential for each integration. Verify the provider's signature over the raw body before parsing or transforming it, using AID-H-004.005 for freshness and replay handling. Then check the authenticated app, tenant/workspace, event type, actor, and resource against a versioned admission policy. A signed event from an attacker-owned workspace is still unauthorized. A public support inbox can allow unknown customers into a limited triage workflow; it must not grant them internal mailbox search or maker-level actions.</p><p>For email, obtain SPF/DKIM/DMARC results from the trusted receiving mail service, not an <code>Authentication-Results</code> header supplied by the sender. DMARC alignment authenticates a domain relationship, not a particular person or business authorization, and forwarding can change authentication results. Apply the supported forwarding/authentication policy and actor/resource rules; do not treat every aligned domain as an allowed sender. Route uncertain mail to inert review or restricted triage without privileged tools.</p><h5>Step 2: Implement a provider-specific adapter</h5><p>The following Slack adapter accepts only an approved app-mention workflow. Use the <a href=\"https://docs.slack.dev/authentication/verifying-requests-from-slack/\" target=\"_blank\" rel=\"noopener noreferrer\">documented Slack signing profile</a>. Load the signing secret from the receiver's secret store and the policy from the release registry; callers cannot provide either. Set request-body, clock-skew, and run-TTL limits in that policy (Slack recommends rejecting requests more than five minutes old). This adapter produces a candidate envelope; durable replay consumption and queue admission in the next step are required before running the agent. Handle subscription verification and non-run events in separate routes without invoking the model.</p><pre><code># event_admission.py -- Python 3.11+, standard library\n# policy is loaded from a verified, immutable release artifact by the receiver.\nimport hashlib, hmac, json, time\n\nclass RejectedEvent(ValueError):\n    pass\n\ndef admit_slack(raw: bytes, timestamp: str, signature: str,\n                signing_secret: bytes, policy: dict, now: int | None = None):\n    now = int(time.time()) if now is None else now\n    if len(raw) &gt; policy[\"max_body_bytes\"]:\n        raise RejectedEvent(\"body_limit\")\n    try:\n        issued = int(timestamp)\n    except (ValueError, TypeError):\n        raise RejectedEvent(\"timestamp\") from None\n    if abs(now - issued) &gt; policy[\"max_clock_skew_seconds\"]:\n        raise RejectedEvent(\"stale_or_future\")\n    base = b\"v0:\" + timestamp.encode(\"ascii\") + b\":\" + raw\n    expected = \"v0=\" + hmac.new(signing_secret, base, hashlib.sha256).hexdigest()\n    if not hmac.compare_digest(expected, signature):\n        raise RejectedEvent(\"signature\")\n    body = json.loads(raw)  # only after verification of exact raw bytes\n    if not isinstance(body, dict):\n        raise RejectedEvent(\"shape\")\n    if body.get(\"type\") != \"event_callback\":\n        raise RejectedEvent(\"not_a_run_event\")\n    event = body.get(\"event\")\n    if not isinstance(event, dict) or event.get(\"type\") != \"app_mention\":\n        raise RejectedEvent(\"event_type\")\n    if event.get(\"bot_id\") or event.get(\"subtype\"):\n        raise RejectedEvent(\"bot_or_unsupported_subtype\")\n    actor, channel = event.get(\"user\"), event.get(\"channel\")\n    if body.get(\"api_app_id\") != policy[\"app_id\"] or body.get(\"team_id\") != policy[\"team_id\"]:\n        raise RejectedEvent(\"wrong_app_or_workspace\")\n    if actor not in policy[\"actors\"] or channel not in policy[\"channels\"]:\n        raise RejectedEvent(\"initiator_not_authorized\")\n    if not isinstance(body.get(\"event_id\"), str) or not body[\"event_id\"]:\n        raise RejectedEvent(\"missing_event_id\")\n    if not isinstance(event.get(\"text\"), str):\n        raise RejectedEvent(\"missing_text\")\n    # No execution authority is copied from text or caller-supplied fields.\n    return {\n        \"provider\": \"slack\", \"workspace\": policy[\"team_id\"],\n        \"event_id\": body[\"event_id\"], \"actor\": actor, \"channel\": channel,\n        \"raw_sha256\": hashlib.sha256(raw).hexdigest(),\n        \"policy_version\": policy[\"version\"], \"workflow_id\": policy[\"workflow_id\"],\n        \"execution_identity\": policy[\"execution_identity\"],\n        \"scope_ref\": policy[\"scope_ref\"], \"expires_at\": now + policy[\"run_ttl_seconds\"],\n        \"untrusted_text\": event[\"text\"],\n    }</code></pre><p>Example policy keys are <code>version, app_id, team_id, actors, channels, workflow_id, execution_identity, scope_ref, max_body_bytes, max_clock_skew_seconds, run_ttl_seconds</code>. Validate their types and nonempty values on receiver startup. Resolve actor IDs and channel IDs administratively; do not authorize on display names or message text. For GitHub, use its own raw-body HMAC and delivery-ID profile instead of pretending it supplies Slack timestamps. Each provider adapter must explicitly handle its retry and key-rotation behavior.</p>"
+                        },
+                        {
+                            "id": "AID-H-004.007-G002",
+                            "implementation": "Bind the admitted event to one durable run and preserve its restricted authority across asynchronous execution.",
+                            "howTo": "<h5>Step 1: Commit admission and scheduling atomically</h5><p>Use the durable replay store in AID-H-004.005 with a unique key over provider, integration/workspace, and event ID. In one database transaction, store the verified body digest, policy/version, actor/resource, workflow, execution identity, scope reference and expiry, and insert a transactional outbox row for the run. A duplicate with the same digest returns the existing receipt without a second run; a different digest under the same event ID is rejected and investigated. Do not consume an ID and then attempt an unrelated queue publish: a crash between the two would lose a legitimate event. Acknowledge provider retries after durable admission, not after agent completion.</p><h5>Step 2: Consume the trusted envelope</h5><p>The outbox worker signs the envelope using AID-H-004.005 or passes only its immutable database reference over an authenticated queue. Queue delivery is at least once: the executor atomically claims or resumes the existing durable run ID and rejects conflicting content, rather than creating a new run on redelivery. Use a durable lease/checkpoint protocol so a crashed worker can resume safely. The executor verifies the reference/signature, audience, expiry, and current revocation state, then resolves the workflow, identity, and scope from the server registry. It must not reload them from event text, URL query fields, model output, or a mutable queue attribute. Authorize sensitive reads and writes through AID-H-018.002 and narrow capabilities through AID-H-018.004. An automatic trigger is authorized only for the predetermined workflow; a model cannot turn an accepted support event into an unrelated finance task.</p><h5>Step 3: Verify failure paths</h5><p>Replay a valid delivery concurrently at two receiver replicas; observe exactly one durable run. Try wrong app/workspace, a legitimate but unauthorized actor, edited body bytes, a forged execution identity in the payload, a modified queued envelope, and a revoked workflow. Confirm no protected run reaches the executor. Simulate a crash after transaction commit and before queue delivery: recovery must deliver the same logical run ID; retrying delivery must not create another logical run. Inject a second crash after publishing but before marking the outbox row delivered to verify this duplicate-delivery path. Side-effect idempotency remains independently owned by AID-H-018.008. Retain admission and worker receipts tied to the same digest. An accepted delivery with no trustworthy actor identity may enter only an explicitly approved unprivileged workflow, never the default privileged workflow.</p>"}
                     ]
                 }
             ]
@@ -9854,7 +5558,6 @@ if __name__ == "__main__":
                             "framework": "MITRE ATLAS",
                             "items": [
                                 "AML.T0050 Command and Scripting Interpreter",
-                                "AML.T0077 LLM Response Rendering (structured output constrains response format)",
                                 "AML.T0067 LLM Trusted Output Components Manipulation (structured schemas prevent format manipulation)",
                                 "AML.T0063 Discover AI Model Outputs (structured schemas prevent discovery of non-required output fields)"
                             ]
@@ -10776,9 +6479,8 @@ if __name__ == "__main__":
                 },
                 {
                   "id": "AID-H-007.003-G003",
-                  "implementation": "Version control the training environment using a uniquely tagged container image.",
-                  "howTo": "<h5>Delivery level: production CI image handoff</h5><p>A Git-derived tag is useful for discovery but is mutable and is not the training-environment identity. Build and push once, capture BuildKit's registry digest, verify the signature against that digest, and pass only the digest-qualified reference to the training scheduler.</p><h5>Build, push, and capture the OCI digest</h5><pre><code class=\"language-bash\"># File: ci/publish-training-image.sh\n#!/usr/bin/env bash\nset -euo pipefail\numask 077\n\n: \"${IMAGE_REPOSITORY:?set the approved registry/repository}\"\n: \"${GIT_COMMIT:?set the full expected source commit}\"\n: \"${IMAGE_SIGNING_KEY_URI:?set the CI KMS signing-key URI}\"\n: \"${IMAGE_VERIFY_KEY:?set the read-only image verification key}\"\n\ntest \"$(git rev-parse HEAD)\" = \"$GIT_COMMIT\"\ntest -z \"$(git status --porcelain --untracked-files=normal)\"\nif [[ ! \"$GIT_COMMIT\" =~ ^[0-9a-f]{40}$ ]]; then\n  echo \"GIT_COMMIT must be a full lowercase SHA-1 commit\" &gt;&amp;2\n  exit 2\nfi\n\nevidence_dir=\"evidence/training-image/$GIT_COMMIT\"\nmkdir -p \"$evidence_dir\"\nmetadata=\"$evidence_dir/build-metadata.json\"\n\ndocker buildx build   --pull   --provenance=mode=max   --tag \"$IMAGE_REPOSITORY:$GIT_COMMIT\"   --metadata-file \"$metadata\"   --push   .\n\ndigest=\"$(python - \"$metadata\" &lt;&lt;'PY'\nimport json, re, sys\nfrom pathlib import Path\nvalue = json.loads(Path(sys.argv[1]).read_text(encoding=\"utf-8\"))\ndigest = value.get(\"containerimage.digest\")\nif not isinstance(digest, str) or re.fullmatch(r\"sha256:[0-9a-f]{64}\", digest) is None:\n    raise SystemExit(\"BuildKit metadata has no valid containerimage.digest\")\nprint(digest)\nPY\n)\"\nreadonly digest\nimage_ref=\"$IMAGE_REPOSITORY@$digest\"\nreadonly image_ref\n\ncosign sign --yes --key \"$IMAGE_SIGNING_KEY_URI\" \"$image_ref\"\ncosign verify --key \"$IMAGE_VERIFY_KEY\" \"$image_ref\"   &gt; \"$evidence_dir/cosign-verification.json\"\ndocker buildx imagetools inspect \"$image_ref\"   &gt; \"$evidence_dir/registry-readback.txt\"\n\npython - \"$evidence_dir/release.json\" \"$GIT_COMMIT\" \"$image_ref\" \"$metadata\" &lt;&lt;'PY'\nimport hashlib, json, sys\nfrom pathlib import Path\noutput, commit, image_ref, metadata = sys.argv[1:]\nmetadata_bytes = Path(metadata).read_bytes()\nPath(output).write_text(json.dumps({\n    \"schema_version\": \"aidefend.training-image-release.v1\",\n    \"source_commit\": commit,\n    \"image_reference\": image_ref,\n    \"build_metadata_sha256\": hashlib.sha256(metadata_bytes).hexdigest(),\n}, indent=2, sort_keys=True) + \"\\n\", encoding=\"utf-8\")\nPY\n\nprintf '%s\\n' \"$image_ref\"</code></pre><h5>Use only the digest-qualified reference</h5><p>The final output has the form <code>registry.example/repository@sha256:...</code>. Bind that exact reference, source commit, build metadata, signature verification, platform selection, and scheduler receipt to the training run. The deployment admission identity should repeat <code>cosign verify</code> and registry readback immediately before scheduling. A tag-only reference, dirty or mismatched commit, missing digest, signature failure, registry readback failure, or digest drift blocks training; the tag is never accepted as immutable evidence.</p>"
-                }
+                  "implementation": "Capture a signed digest-qualified training environment and independently replay the version-bound training run.",
+                  "howTo": "<h5>Delivery level: production CI image handoff</h5><p>A Git-derived tag is useful for discovery but is mutable and is not the training-environment identity. Build and push once, capture BuildKit's registry digest, verify the signature against that digest, and pass only the digest-qualified reference to the training scheduler.</p><h5>Build, push, and capture the OCI digest</h5><pre><code class=\"language-bash\"># File: ci/publish-training-image.sh\n#!/usr/bin/env bash\nset -euo pipefail\numask 077\n\n: \"${IMAGE_REPOSITORY:?set the approved registry/repository}\"\n: \"${GIT_COMMIT:?set the full expected source commit}\"\n: \"${IMAGE_SIGNING_KEY_URI:?set the CI KMS signing-key URI}\"\n: \"${IMAGE_VERIFY_KEY:?set the read-only image verification key}\"\n\ntest \"$(git rev-parse HEAD)\" = \"$GIT_COMMIT\"\ntest -z \"$(git status --porcelain --untracked-files=normal)\"\nif [[ ! \"$GIT_COMMIT\" =~ ^[0-9a-f]{40}$ ]]; then\n  echo \"GIT_COMMIT must be a full lowercase SHA-1 commit\" &gt;&amp;2\n  exit 2\nfi\n\nevidence_dir=\"evidence/training-image/$GIT_COMMIT\"\nmkdir -p \"$evidence_dir\"\nmetadata=\"$evidence_dir/build-metadata.json\"\n\ndocker buildx build   --pull   --provenance=mode=max   --tag \"$IMAGE_REPOSITORY:$GIT_COMMIT\"   --metadata-file \"$metadata\"   --push   .\n\ndigest=\"$(python - \"$metadata\" &lt;&lt;'PY'\nimport json, re, sys\nfrom pathlib import Path\nvalue = json.loads(Path(sys.argv[1]).read_text(encoding=\"utf-8\"))\ndigest = value.get(\"containerimage.digest\")\nif not isinstance(digest, str) or re.fullmatch(r\"sha256:[0-9a-f]{64}\", digest) is None:\n    raise SystemExit(\"BuildKit metadata has no valid containerimage.digest\")\nprint(digest)\nPY\n)\"\nreadonly digest\nimage_ref=\"$IMAGE_REPOSITORY@$digest\"\nreadonly image_ref\n\ncosign sign --yes --key \"$IMAGE_SIGNING_KEY_URI\" \"$image_ref\"\ncosign verify --key \"$IMAGE_VERIFY_KEY\" \"$image_ref\"   &gt; \"$evidence_dir/cosign-verification.json\"\ndocker buildx imagetools inspect \"$image_ref\"   &gt; \"$evidence_dir/registry-readback.txt\"\n\npython - \"$evidence_dir/release.json\" \"$GIT_COMMIT\" \"$image_ref\" \"$metadata\" &lt;&lt;'PY'\nimport hashlib, json, sys\nfrom pathlib import Path\noutput, commit, image_ref, metadata = sys.argv[1:]\nmetadata_bytes = Path(metadata).read_bytes()\nPath(output).write_text(json.dumps({\n    \"schema_version\": \"aidefend.training-image-release.v1\",\n    \"source_commit\": commit,\n    \"image_reference\": image_ref,\n    \"build_metadata_sha256\": hashlib.sha256(metadata_bytes).hexdigest(),\n}, indent=2, sort_keys=True) + \"\\n\", encoding=\"utf-8\")\nPY\n\nprintf '%s\\n' \"$image_ref\"</code></pre><h5>Use only the digest-qualified reference</h5><p>The final output has the form <code>registry.example/repository@sha256:...</code>. Bind that exact reference, source commit, build metadata, signature verification, platform selection, and scheduler receipt to the training run. The deployment admission identity should repeat <code>cosign verify</code> and registry readback immediately before scheduling. A tag-only reference, dirty or mismatched commit, missing digest, signature failure, registry readback failure, or digest drift blocks training; the tag is never accepted as immutable evidence.</p><h5>Replay the retained run independently</h5><p>The prior steps capture inputs; they do not establish reproducibility until the training job actually runs again. Store one signed original-run manifest with image_reference, source_commit, platform, hardware_profile_sha256, exact dataset_files digests, dependency lock digest, seed, training command argv and original metrics. Use an independently provisioned replay worker that obtains the immutable dataset snapshot and verifies the manifest/signature/current replay policy before this module runs. The approved training program must consume TRAINING_SEED, seed every relevant framework RNG and write /output/metrics.json. This CPU container example is NOT_APPLICABLE as an execution method when the job needs a GPU/distributed runtime; use that runtime's admitted replay adapter with the same evidence bindings, not a false CPU replay.</p><pre><code># File: ci/replay_training.py\nimport hashlib\nimport json\nimport math\nimport re\nimport subprocess\nimport sys\nimport uuid\nfrom pathlib import Path\n\ndef replay(manifest, policy, dataset_root, output_root):\n    # Inputs are captured from verified original-run and replay-policy artifacts.\n    image = manifest[\"image_reference\"]\n    if not re.fullmatch(r\"[^\\s]+@sha256:[a-f0-9]{64}\", image):\n        raise ValueError(\"immutable training image required\")\n    if manifest[\"platform\"] != policy[\"platform\"] or manifest[\"hardware_profile_sha256\"] != policy[\"hardware_profile_sha256\"]:\n        raise ValueError(\"replay runtime differs from approved comparison profile\")\n    deadline = policy[\"timeout_seconds\"]\n    if not math.isfinite(deadline) or deadline &lt;= 0 or type(manifest[\"seed\"]) is not int:\n        raise ValueError(\"invalid governed replay bounds\")\n    # Inspect the actual current worker hardware outside this process before\n    # passing policy; a matching string copied from the manifest is not evidence.\n    subprocess.run([\"cosign\", \"verify\", \"--key\", policy[\"image_verify_key\"], image],\n                   check=True, capture_output=True, timeout=deadline)\n    subprocess.run([\"docker\", \"pull\", \"--platform\", manifest[\"platform\"], image],\n                   check=True, capture_output=True, timeout=deadline)\n    root = Path(dataset_root).resolve(strict=True)\n    files = list(root.rglob(\"*\"))\n    if any(path.is_symlink() for path in files):\n        raise ValueError(\"replay dataset contains links\")\n    actual = {path.relative_to(root).as_posix() for path in files if path.is_file()}\n    if actual != set(manifest[\"dataset_files\"]):\n        raise ValueError(\"replay dataset population differs\")\n    for name, expected in manifest[\"dataset_files\"].items():\n        digest = hashlib.sha256()\n        with (root / name).open(\"rb\") as source:\n            for chunk in iter(lambda: source.read(1024 * 1024), b\"\"):\n                digest.update(chunk)\n        if digest.hexdigest() != expected:\n            raise ValueError(\"replay dataset bytes differ: \" + name)\n    command = manifest[\"command\"]\n    if not isinstance(command, list) or not command or any(not isinstance(x, str) or not x for x in command):\n        raise ValueError(\"approved training argv required\")\n    output = Path(output_root).resolve()\n    output.mkdir(exist_ok=False, parents=True)\n    container_name = \"training-replay-\" + uuid.uuid4().hex\n    argv = [\"docker\", \"run\", \"--rm\", \"--name\", container_name,\n            \"--platform\", manifest[\"platform\"], \"--network\", \"none\",\n            \"--read-only\", \"--cap-drop\", \"ALL\", \"--security-opt\", \"no-new-privileges\",\n            \"--user\", policy[\"uid_gid\"], \"--cpus\", str(policy[\"cpus\"]),\n            \"--memory\", policy[\"memory\"], \"--pids-limit\", str(policy[\"pids_limit\"]),\n            \"--tmpfs\", policy[\"tmpfs\"],\n            \"--mount\", \"type=bind,src=\" + str(root) + \",dst=/data,readonly\",\n            \"--mount\", \"type=bind,src=\" + str(output) + \",dst=/output\",\n            \"--env\", \"TRAINING_SEED=\" + str(manifest[\"seed\"]),\n            \"--entrypoint\", command[0], image, *command[1:]]\n    try:\n        subprocess.run(argv, check=True, timeout=deadline)\n    finally:\n        # Stop the container as well as the client on timeout; the shared I001\n        # scheduler additionally owns process/resource readback and teardown.\n        subprocess.run([\"docker\", \"rm\", \"--force\", container_name],\n                       check=False, capture_output=True, timeout=policy[\"cleanup_timeout_seconds\"])\n    result = json.loads((output / \"metrics.json\").read_bytes())\n    comparisons = {}\n    for name, baseline in manifest[\"metrics\"].items():\n        value, tolerance = result[name], policy[\"absolute_tolerances\"][name]\n        if any(type(x) not in (int, float) or not math.isfinite(x) for x in (value, baseline, tolerance)) or tolerance &lt; 0:\n            raise ValueError(\"invalid replay metric/comparator\")\n        comparisons[name] = {\"baseline\": baseline, \"replayed\": value,\n                             \"absolute_tolerance\": tolerance, \"matched\": abs(value-baseline) &lt;= tolerance}\n    if not comparisons:\n        raise ValueError(\"empty comparison population\")\n    return {\"status\": \"PASS\" if all(x[\"matched\"] for x in comparisons.values()) else \"FAIL\",\n            \"image_reference\": image, \"source_commit\": manifest[\"source_commit\"],\n            \"seed\": manifest[\"seed\"], \"comparisons\": comparisons}\n\n# The project training argv inside the admitted image must initialize every\n# framework RNG from TRAINING_SEED and write its metrics.json to /output.\n# Store source/data/dependency/image/seed/command/hardware and original metrics\n# in the signed original-run manifest. Invoke replay(...) from an independently\n# credentialed worker with verified captured inputs, then sign/read back its\n# result. Never treat publishing an image or recording a seed as replay PASS.</code></pre><p>Validate the observed worker hardware/driver profile against the signed policy before replay. AID-I-001 owns resource/isolation assurance and teardown readback; the Docker flags are bounded execution configuration, not an additional isolation PASS. Retain actual scheduler/container exit evidence and compare the complete declared metric population using policy-derived absolute tolerances. For deterministic builds additionally compare model artifact digests; for stochastic training retain the preregistered repeated-seed population and statistical comparator rather than demanding universal byte equality. Missing inputs, unsupported runtime, timeout, absent metrics or failed signature verification cannot be PASS. A metric mismatch is FAIL and remains visible even when task quality is acceptable.</p>"}
               ],
               "toolsOpenSource": [
                 "Git",
@@ -14380,7 +10082,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "AML.T0065 LLM Prompt Crafting",
                         "AML.T0068 LLM Prompt Obfuscation",
                         "AML.T0110 AI Agent Tool Poisoning",
-                        "AML.T0110.002 AI Agent Tool Poisoning: Runtime Response"
+                        "AML.T0110.002 AI Agent Tool Poisoning: Runtime Response",
+                        "AML.T0130 AI Agent Response Biasing",
+                        "AML.T0131 Crafted AI Assistant Links"
                     ]
                 },
                 {
@@ -14500,7 +10204,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                                 "AML.T0054 LLM Jailbreak",
                                 "AML.T0065 LLM Prompt Crafting",
                                 "AML.T0068 LLM Prompt Obfuscation",
-                                "AML.T0051.002 LLM Prompt Injection: Triggered (system prompt hardening prevents time/event-triggered payload execution)"
+                                "AML.T0051.002 LLM Prompt Injection: Triggered (system prompt hardening prevents time/event-triggered payload execution)",
+                                "AML.T0131 Crafted AI Assistant Links (externally prefilled text retains the untrusted instruction/data boundary after user submission)",
+                                "AML.T0130 AI Agent Response Biasing (external source-ranking instructions cannot acquire system or developer authority)"
                             ]
                         },
                         {
@@ -14568,8 +10274,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "id": "AID-H-016.001-G001",
                             "implementation": "Render all prompt fields through a structural serializer so untrusted user and tool content cannot break namespace boundaries.",
-                            "howTo": "<pre><code class=\"language-python\"># File: prompt/prompt_builder.py\nfrom __future__ import annotations\n\nimport hashlib\nimport xml.etree.ElementTree as ET\nfrom dataclasses import dataclass\nfrom typing import Mapping\n\n\n@dataclass(frozen=True)\nclass PromptContext:\n    policy_version: str\n    policy_rules: tuple[str, ...]\n    system_text: str\n    developer_text: str\n    user_text: str\n    tool_outputs: Mapping[str, str]\n\n\ndef render_prompt(ctx: PromptContext) -> tuple[str, dict]:\n    if not ctx.policy_version or not ctx.policy_rules:\n        raise ValueError(\"verified policy version and rules are required\")\n    root = ET.Element(\"prompt\")\n    policy = ET.SubElement(root, \"policy\", {\"version\": ctx.policy_version})\n    rules = ET.SubElement(policy, \"rules\")\n    for value in ctx.policy_rules:\n        ET.SubElement(rules, \"rule\").text = str(value)\n\n    ET.SubElement(root, \"system\").text = str(ctx.system_text)\n    ET.SubElement(root, \"developer\").text = str(ctx.developer_text)\n    context = ET.SubElement(root, \"context\")\n    ET.SubElement(context, \"user_data\", {\"treat_as\": \"data_only\"}).text = str(ctx.user_text)\n    for name, body in sorted(ctx.tool_outputs.items()):\n        ET.SubElement(\n            context,\n            \"tool_output\",\n            {\"name\": str(name), \"treat_as\": \"data_only\"},\n        ).text = str(body)\n    ET.SubElement(root, \"precedence\").text = (\n        \"policy > system > developer > user_data > tool_output\"\n    )\n\n    rendered = ET.tostring(root, encoding=\"unicode\", short_empty_elements=False)\n    evidence = {\n        \"schema_version\": \"aidefend.prompt-render-receipt.v1\",\n        \"policy_version\": ctx.policy_version,\n        \"rendered_prompt_sha256\": hashlib.sha256(rendered.encode()).hexdigest(),\n        \"untrusted_user_sha256\": hashlib.sha256(ctx.user_text.encode()).hexdigest(),\n        \"tool_output_count\": len(ctx.tool_outputs),\n    }\n    return rendered, evidence\n</code></pre><h5>Keep the action safely bounded</h5><p>Reconcile the complete population of all untrusted prompt segments and trusted instruction fields in each eligible request; reject expired, revoked, or stale policy and asset bindings under the policy-defined freshness window.</p><h5>Verify safely</h5><p>A separately credentialed verifier independently replays canonical serialization and delimiter-breaking, entity, Unicode, empty-field, and nested-content fixtures from the same request bytes, reads back effective state from the enforcement system, exercises positive, negative, boundary, stale-evidence, and dependency-failure fixtures, and reconciles every eligible item.</p>"
-                        },
+                            "howTo": "<pre><code class=\"language-python\"># File: prompt/prompt_builder.py\nfrom __future__ import annotations\n\nimport hashlib\nimport xml.etree.ElementTree as ET\nfrom dataclasses import dataclass\nfrom typing import Mapping\n\n\n@dataclass(frozen=True)\nclass PromptContext:\n    policy_version: str\n    policy_rules: tuple[str, ...]\n    system_text: str\n    developer_text: str\n    user_text: str\n    user_prompt_origin: str\n    tool_outputs: Mapping[str, str]\n\n\ndef render_prompt(ctx: PromptContext) -> tuple[str, dict]:\n    if not ctx.policy_version or not ctx.policy_rules:\n        raise ValueError(\"verified policy version and rules are required\")\n    # The server resolves this from the authenticated ingress record, never\n    # from request JSON, model output, or labels embedded in the user text.\n    if ctx.user_prompt_origin not in {\"human_input\", \"link_prefill\", \"external_content\", \"agent_generated\", \"unknown\"}:\n        raise ValueError(\"trusted prompt-origin classification is required\")\n    root = ET.Element(\"prompt\")\n    policy = ET.SubElement(root, \"policy\", {\"version\": ctx.policy_version})\n    rules = ET.SubElement(policy, \"rules\")\n    for value in ctx.policy_rules:\n        ET.SubElement(rules, \"rule\").text = str(value)\n\n    ET.SubElement(root, \"system\").text = str(ctx.system_text)\n    ET.SubElement(root, \"developer\").text = str(ctx.developer_text)\n    context = ET.SubElement(root, \"context\")\n    ET.SubElement(context, \"user_data\", {\"treat_as\": \"data_only\", \"origin\": ctx.user_prompt_origin}).text = str(ctx.user_text)\n    for name, body in sorted(ctx.tool_outputs.items()):\n        ET.SubElement(\n            context,\n            \"tool_output\",\n            {\"name\": str(name), \"treat_as\": \"data_only\"},\n        ).text = str(body)\n    ET.SubElement(root, \"precedence\").text = (\n        \"policy > system > developer > user_data > tool_output\"\n    )\n\n    rendered = ET.tostring(root, encoding=\"unicode\", short_empty_elements=False)\n    evidence = {\n        \"schema_version\": \"aidefend.prompt-render-receipt.v2\",\n        \"policy_version\": ctx.policy_version,\n        \"rendered_prompt_sha256\": hashlib.sha256(rendered.encode()).hexdigest(),\n        \"untrusted_user_sha256\": hashlib.sha256(ctx.user_text.encode()).hexdigest(),\n        \"tool_output_count\": len(ctx.tool_outputs),\n        \"user_prompt_origin\": ctx.user_prompt_origin,\n    }\n    return rendered, evidence\n</code></pre><h5>Keep the action safely bounded</h5><p>Reconcile the complete population of all untrusted prompt segments and trusted instruction fields in each eligible request; reject expired, revoked, or stale policy and asset bindings under the policy-defined freshness window.</p><h5>Verify safely</h5><p>A separately credentialed verifier independently replays canonical serialization and delimiter-breaking, entity, Unicode, empty-field, and nested-content fixtures from the same request bytes, reads back effective state from the enforcement system, exercises positive, negative, boundary, stale-evidence, and dependency-failure fixtures, and reconciles every eligible item.</p><p>URL-prefilled prompts retain external authorship even when submitted through the human chat UI. Construct <code>PromptContext</code> on the server from the authenticated ingress record in AID-H-002.002-G009. Its <code>prompt_origin</code> supplies <code>user_prompt_origin</code>; preserve that classification in the serialized data element and render receipt, preserve the original text, and keep submission confirmation separate from authority to change memory or invoke sensitive tools.</p>"},
                         {
                             "id": "AID-H-016.001-G002",
                             "implementation": "Preserve untrusted prompt text by default, apply only contract-permitted normalization, and enforce signed byte budgets.",
@@ -14752,7 +10457,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "AML.T0118.000 Autonomous AI Agent Communication: Communication via Shared Artifacts",
                         "AML.T0118.001 Autonomous AI Agent Communication: Direct Agent Communication",
                         "AML.T0121 AI Agent Environment Reconstruction",
-                        "AML.T0124 Autonomous Attack Orchestration"
+                        "AML.T0124 Autonomous Attack Orchestration",
+                        "AML.T0130 AI Agent Response Biasing",
+                        "AML.T0133 Discover AI Agent Runtime Capabilities"
                     ]
                 },
                 {
@@ -14993,8 +10700,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "id": "AID-H-017.001-G001",
                             "implementation": "Implement a step-wise agent executor that yields control for external validation.",
-                            "howTo": "<h5>Concept:</h5><p>A monolithic agent that runs its entire control loop in a single, opaque function call is difficult to secure or monitor. A secure architecture breaks the control loop into discrete, observable steps. This allows an external system to inspect the agent plan before execution and potentially interrupt or require approval for high-risk steps.</p><h5>Implement a step-wise agent executor</h5><p>Instead of a single <code>run()</code> method, design the executor as a generator or state machine that yields after each plan or tool action. The orchestrator can then insert human approval, policy checks, or risk scoring between steps.</p><pre><code class=\"language-python\"># File: agent_arch/interruptible_agent.py\nclass InterruptibleAgentExecutor:\n    def __init__(self, agent, tools):\n        self.agent = agent\n        self.tools = tools\n\n    def run_step(self, inputs):\n        next_action = self.agent.plan(inputs)\n        yield {\"type\": \"plan\", \"action\": next_action}\n\n        observation = self.tools.execute(next_action)\n        yield {\"type\": \"observation\", \"result\": observation}\n\n\n# --- Orchestrator example ---\n# executor = InterruptibleAgentExecutor(agent, tools)\n# stepper = executor.run_step(inputs)\n# plan_step = next(stepper)\n# if plan_step[\"action\"].is_high_risk and not hitl.approve(plan_step):\n#     raise RuntimeError(\"High-risk step rejected by operator\")\n# observation_step = next(stepper)</code></pre><p><strong>Action:</strong> Build the main loop as an interruptible execution primitive rather than a monolithic black box. This becomes the control point that all later breaker, policy, and approval checks depend on.</p><h5>Keep the action safely bounded</h5><p>Reconcile the complete population of every proposed step and resulting dispatch attempt in each eligible task; reject expired, revoked, or stale policy and asset bindings under the policy-defined freshness window.</p><p>Persist a canonical proposal and digest, yield control, require a fresh independently issued decision bound to that exact proposal, and execute only after atomic decision consumption; never let generator resumption imply approval.</p><h5>Verify safely</h5><p>A separately credentialed verifier independently replays proposal-to-decision binding, denial, replay, mutation, expiry, crash/restart, and dispatch fixtures from the durable step ledger, reads back effective state from the enforcement system, exercises positive, negative, boundary, stale-evidence, and dependency-failure fixtures, and reconciles every eligible item.</p>"
-                        },
+                            "howTo": "<h5>Concept:</h5><p>A monolithic agent that runs its entire control loop in a single, opaque function call is difficult to secure or monitor. A secure architecture breaks the control loop into discrete, observable steps. This allows an external system to inspect the agent plan before execution and potentially interrupt or require approval for high-risk steps.</p><h5>Implement a step-wise agent executor</h5><p>Instead of a single <code>run()</code> method, design the executor as a generator or state machine that yields after each plan or tool action. The orchestrator can then insert human approval, policy checks, or risk scoring between steps.</p><pre><code># File: agent_arch/interruptible_agent.py\nimport hashlib\nimport json\n\ndef action_bytes(action):\n    return json.dumps(action, sort_keys=True, separators=(\",\", \":\"),\n                      allow_nan=False).encode(\"utf-8\")\n\nclass InterruptibleAgentExecutor:\n    def __init__(self, agent, execution_broker):\n        self.agent = agent\n        self.execution_broker = execution_broker\n\n    def run_step(self, inputs):\n        # Freeze the exact plan; the broker retrieves its own verified receipt.\n        frozen = action_bytes(self.agent.plan(inputs))\n        digest = hashlib.sha256(frozen).hexdigest()\n        receipt_id = yield {\"type\": \"plan\", \"action\": json.loads(frozen),\n                            \"action_sha256\": digest}\n        if not isinstance(receipt_id, str) or not receipt_id.strip():\n            raise PermissionError(\"an execution authorization receipt is required\")\n        observation = self.execution_broker.execute_approved(\n            receipt_id=receipt_id, expected_action_sha256=digest)\n        yield {\"type\": \"observation\", \"result\": observation}\n\n# The orchestrator sends a receipt ID with stepper.send(receipt_id).\n# Plain next(stepper) cannot execute the plan. The H-018 broker independently\n# verifies its stored receipt, current authorization, scope, expiry, one-use\n# claim and action digest, then executes the stored action, never this plan.\n# Routine actions may receive a policy authorization; high-impact actions\n# require H-018.003 approval. A bare human \"yes\" is not a broker receipt.</code></pre><p><strong>Action:</strong> Build the main loop as an interruptible execution primitive rather than a monolithic black box. This becomes the control point that all later breaker, policy, and approval checks depend on.</p><h5>Keep the action safely bounded</h5><p>Reconcile the complete population of every proposed step and resulting dispatch attempt in each eligible task; reject expired, revoked, or stale policy and asset bindings under the policy-defined freshness window.</p><p>Persist a canonical proposal and digest, yield control, require a fresh independently issued decision bound to that exact proposal, and execute only after atomic decision consumption; never let generator resumption imply approval.</p><h5>Verify safely</h5><p>A separately credentialed verifier independently replays proposal-to-decision binding, denial, replay, mutation, expiry, crash/restart, and dispatch fixtures from the durable step ledger, reads back effective state from the enforcement system, exercises positive, negative, boundary, stale-evidence, and dependency-failure fixtures, and reconciles every eligible item.</p><p>Deploy the existing H-018 execution broker as the executor dependency; its execute_approved adapter must retrieve and verify the action-bound receipt and perform execution-time authorization. This interruption mechanism neither issues approvals nor re-scores the broker. Test ordinary resume, denied approval, wrong-action and expired receipts: all must produce zero tool effects.</p>"},
                         {
                             "id": "AID-H-017.001-G002",
                             "implementation": "Implement circuit breakers in the agent control loop that detect runaway execution patterns and force the agent into a fail-closed state.",
@@ -15057,7 +10763,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                                 "AML.T0108 AI Agent",
                                 "AML.T0072 Cyber Communication Channel (denying unrestricted HTTP and shell tools removes the agent's ability to open arbitrary outbound channels)",
                                 "AML.T0089 Enterprise Environment Discovery (without generic shell or broad filesystem tools an injected agent cannot enumerate host processes, configuration, or users)",
-                                "AML.T0075 Enterprise Resource Discovery (no generic shell, SQL, or broad filesystem tools to enumerate accounts, files, or services)"
+                                "AML.T0075 Enterprise Resource Discovery (no generic shell, SQL, or broad filesystem tools to enumerate accounts, files, or services)",
+                                "AML.T0133 Discover AI Agent Runtime Capabilities (a narrow published tool schema and backend grants limit the capabilities revealed through runtime probing)"
                             ]
                         },
                         {
@@ -15316,7 +11023,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                                 "AML.T0092 Manipulate User LLM Chat History (ephemeral state prevents persistent chat history manipulation across sessions)",
                                 "AML.T0118 Autonomous AI Agent Communication",
                                 "AML.T0118.000 Autonomous AI Agent Communication: Communication via Shared Artifacts (request-local state leaves no shared persistent artifacts for agents to coordinate through)",
-                                "AML.T0121 AI Agent Environment Reconstruction (state is rebuilt only from the signed mission source, not from recovered working artifacts)"
+                                "AML.T0121 AI Agent Environment Reconstruction (state is rebuilt only from the signed mission source, not from recovered working artifacts)",
+                                "AML.T0130 AI Agent Response Biasing (task-local state and disabled persistent memory limit cross-session recommendation poisoning)"
                             ]
                         },
                         {
@@ -15802,7 +11510,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools",
                         "AML.T0117 Autonomous Attack-Path Adaptation",
                         "AML.T0126 Automated Collection",
-                        "AML.T0127 Data Staged"
+                        "AML.T0127 Data Staged",
+                        "AML.T0131 Crafted AI Assistant Links"
                     ]
                 },
                 {
@@ -16413,7 +12122,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                                 "AML.T0085.001 Data from AI Services: AI Agent Tools (per-request scoping limits which agent tools can retrieve data)",
                                 "AML.T0108 AI Agent",
                                 "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption",
-                                "AML.T0117 Autonomous Attack-Path Adaptation (capabilities are bound to the authenticated initial intent, so replanning cannot acquire tools outside the grant)"
+                                "AML.T0117 Autonomous Attack-Path Adaptation (capabilities are bound to the authenticated initial intent, so replanning cannot acquire tools outside the grant)",
+                                "AML.T0131 Crafted AI Assistant Links (a prefill submission cannot authorize private reads or expand task capabilities)"
                             ]
                         },
                         {
@@ -16501,8 +12211,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "id": "AID-H-018.004-G002",
                             "implementation": "Load grants and registry bindings from a pinned signed snapshot and require a verified external audit receipt before the dispatcher invokes any scoped tool.",
-                            "howTo": "<h5>Mandatory production trust boundary</h5><p>The intersection code above is accepted only behind this wrapper. Authenticated subject and workload identities come from middleware; durable grants come from an exact-schema registry snapshot verified under a key pinned in the issuer and dispatcher images. Request intent may narrow those grants but cannot supply registry versions or ceilings. The dispatcher re-reads the same registry and obtains a separately signed audit receipt before returning an executable allow decision.</p><pre><code class=\"language-python\"># File: trusted_capability_dispatch.py\r\nfrom __future__ import annotations\r\n\r\nimport hashlib\r\nimport json\r\nimport math\r\nimport os\r\nimport subprocess\r\nimport tempfile\r\nfrom pathlib import Path\r\nfrom typing import Any\r\n\r\nimport jwt\r\nimport requests\r\n\r\nfrom capability_scope import (\r\n    GrantEvidence, RedisAtomicBudget, enforce_tool_call, mint_scope,\r\n)\r\n\r\n\r\nAUDIT_TIMEOUT_SECONDS = float(os.environ[\"VERIFIED_H018_CAPABILITY_AUDIT_TIMEOUT_SECONDS\"])\r\nREGISTRY_VERIFY_TIMEOUT_SECONDS = float(os.environ[\"VERIFIED_H018_CAPABILITY_REGISTRY_VERIFY_TIMEOUT_SECONDS\"])\r\nAUDIT_RESPONSE_MAX_BYTES = int(os.environ[\"VERIFIED_H018_CAPABILITY_AUDIT_RESPONSE_MAX_BYTES\"])\r\nif (\r\n    not math.isfinite(AUDIT_TIMEOUT_SECONDS) or AUDIT_TIMEOUT_SECONDS <= 0\r\n    or not math.isfinite(REGISTRY_VERIFY_TIMEOUT_SECONDS)\r\n    or REGISTRY_VERIFY_TIMEOUT_SECONDS <= 0\r\n    or AUDIT_RESPONSE_MAX_BYTES <= 0\r\n):\r\n    raise RuntimeError(\"verified capability timeouts must be finite and positive\")\r\n\r\nREGISTRY_PATH = Path(\"/etc/aidefend/capabilities/registry.json\")\r\nREGISTRY_SIGNATURE = Path(\"/etc/aidefend/capabilities/registry.sig\")\r\nREGISTRY_TRUST_KEY = Path(\"/opt/aidefend/trust/capability-registry-authority.pub\")\r\nAUDIT_RECEIPT_KEY = Path(\"/opt/aidefend/trust/capability-audit-receipt.pub\").read_text()\r\nAUDIT_URL = \"https://capability-audit.internal.example/v1/decisions\"\r\nAUDIT_CA = \"/opt/aidefend/trust/capability-audit-ca.pem\"\r\nAUDIT_CLIENT_CERT = \"/var/run/secrets/capability-audit/client.crt\"\r\nAUDIT_CLIENT_KEY = \"/var/run/secrets/capability-audit/client.key\"\r\nREGISTRY_FIELDS = {\r\n    \"schema_version\", \"registry_id\", \"registry_version\",\r\n    \"role_policy_version\", \"subjects\", \"workloads\",\r\n}\r\nGRANT_FIELDS = {\"tools\", \"max_actions\", \"max_ttl_seconds\", \"grant_version\"}\r\nINTENT_FIELDS = {\r\n    \"intent_policy_version\", \"requested_tools\",\r\n    \"requested_max_actions\", \"requested_ttl_seconds\",\r\n}\r\n\r\n\r\ndef strict_json_object(raw: bytes) -&gt; dict:\r\n    def unique_pairs(pairs):\r\n        value = {}\r\n        for key, item in pairs:\r\n            if key in value:\r\n                raise ValueError(f\"duplicate signed-JSON key: {key}\")\r\n            value[key] = item\r\n        return value\r\n\r\n    def reject_constant(value):\r\n        raise ValueError(f\"non-finite signed-JSON number: {value}\")\r\n\r\n    document = json.loads(\r\n        raw.decode(\"utf-8\", errors=\"strict\"),\r\n        object_pairs_hook=unique_pairs, parse_constant=reject_constant,\r\n    )\r\n    if not isinstance(document, dict):\r\n        raise ValueError(\"signed JSON root must be an object\")\r\n    return document\r\n\r\n\r\ndef load_registry() -&gt; tuple[dict[str, Any], str]:\r\n    raw = REGISTRY_PATH.read_bytes()\r\n    snapshot: Path | None = None\r\n    try:\r\n        with tempfile.NamedTemporaryFile(\r\n            prefix=\"h018-registry-\", suffix=\".json\", delete=False\r\n        ) as handle:\r\n            handle.write(raw)\r\n            handle.flush()\r\n            os.fsync(handle.fileno())\r\n            snapshot = Path(handle.name)\r\n        subprocess.run([\r\n            \"cosign\", \"verify-blob\", \"--key\", str(REGISTRY_TRUST_KEY),\r\n            \"--bundle\", str(REGISTRY_SIGNATURE), str(snapshot),\r\n        ], check=True, capture_output=True, text=True, timeout=REGISTRY_VERIFY_TIMEOUT_SECONDS)\r\n    finally:\r\n        if snapshot is not None:\r\n            snapshot.unlink(missing_ok=True)\r\n    registry = strict_json_object(raw)\r\n    if not isinstance(registry, dict) or set(registry) != REGISTRY_FIELDS:\r\n        raise PermissionError(\"capability_registry_schema_mismatch\")\r\n    if registry[\"schema_version\"] != \"aidefend.capability-registry.v1\":\r\n        raise PermissionError(\"capability_registry_version_unsupported\")\r\n    for field in (\"registry_id\", \"registry_version\", \"role_policy_version\"):\r\n        if not isinstance(registry[field], str) or not registry[field]:\r\n            raise PermissionError(\"capability_registry_binding_missing\")\r\n    if not isinstance(registry[\"subjects\"], dict) or not isinstance(registry[\"workloads\"], dict):\r\n        raise PermissionError(\"capability_registry_grants_missing\")\r\n    return registry, hashlib.sha256(raw).hexdigest()\r\n\r\n\r\ndef validated_grant(grant: object, kind: str) -&gt; dict:\r\n    if not isinstance(grant, dict) or set(grant) != GRANT_FIELDS:\r\n        raise PermissionError(f\"{kind}_grant_schema_mismatch\")\r\n    tools = grant[\"tools\"]\r\n    if (\r\n        not isinstance(tools, list) or not tools or tools != sorted(set(tools))\r\n        or any(not isinstance(tool, str) or not tool for tool in tools)\r\n    ):\r\n        raise PermissionError(f\"{kind}_tool_grant_invalid\")\r\n    for field in (\"max_actions\", \"max_ttl_seconds\"):\r\n        value = grant[field]\r\n        if isinstance(value, bool) or not isinstance(value, int) or value &lt; 1:\r\n            raise PermissionError(f\"{kind}_{field}_invalid\")\r\n    if not isinstance(grant[\"grant_version\"], str) or not grant[\"grant_version\"]:\r\n        raise PermissionError(f\"{kind}_grant_version_missing\")\r\n    return grant\r\n\r\n\r\ndef trusted_grant_evidence(\r\n    authenticated_subject: str,\r\n    authenticated_workload: str,\r\n    intent: dict[str, Any],\r\n) -&gt; tuple[GrantEvidence, dict, str]:\r\n    if not isinstance(intent, dict) or set(intent) != INTENT_FIELDS:\r\n        raise PermissionError(\"intent_scope_schema_mismatch\")\r\n    registry, registry_sha256 = load_registry()\r\n    try:\r\n        subject = validated_grant(\r\n            registry[\"subjects\"][authenticated_subject], \"subject\"\r\n        )\r\n        workload = validated_grant(\r\n            registry[\"workloads\"][authenticated_workload], \"workload\"\r\n        )\r\n    except KeyError as exc:\r\n        raise PermissionError(\"authenticated_identity_has_no_registry_grant\") from exc\r\n    requested_tools = intent[\"requested_tools\"]\r\n    if (\r\n        not isinstance(requested_tools, list) or not requested_tools\r\n        or requested_tools != sorted(set(requested_tools))\r\n    ):\r\n        raise PermissionError(\"requested_tool_scope_invalid\")\r\n    for field in (\"requested_max_actions\", \"requested_ttl_seconds\"):\r\n        value = intent[field]\r\n        if isinstance(value, bool) or not isinstance(value, int) or value &lt; 1:\r\n            raise PermissionError(\"requested_ceiling_invalid\")\r\n    evidence = GrantEvidence(\r\n        subject_id=authenticated_subject,\r\n        workload_identity=authenticated_workload,\r\n        subject_registry_id=registry[\"registry_id\"],\r\n        subject_registry_version=registry[\"registry_version\"],\r\n        role_policy_version=registry[\"role_policy_version\"],\r\n        workload_grant_version=workload[\"grant_version\"],\r\n        intent_policy_version=intent[\"intent_policy_version\"],\r\n        role_tools=frozenset(subject[\"tools\"]),\r\n        workload_tools=frozenset(workload[\"tools\"]),\r\n        requested_tools=frozenset(requested_tools),\r\n        role_max_actions=subject[\"max_actions\"],\r\n        workload_max_actions=workload[\"max_actions\"],\r\n        requested_max_actions=intent[\"requested_max_actions\"],\r\n        role_max_ttl_seconds=subject[\"max_ttl_seconds\"],\r\n        workload_max_ttl_seconds=workload[\"max_ttl_seconds\"],\r\n        requested_ttl_seconds=intent[\"requested_ttl_seconds\"],\r\n    )\r\n    return evidence, registry, registry_sha256\r\n\r\n\r\ndef canonical_digest(value: dict) -&gt; str:\r\n    return hashlib.sha256(json.dumps(\r\n        value, sort_keys=True, separators=(\",\", \":\"), allow_nan=False\r\n    ).encode()).hexdigest()\r\n\r\n\r\ndef write_and_verify_audit_receipt(decision: dict) -&gt; tuple[str, str]:\r\n    digest = canonical_digest(decision)\r\n    with requests.post(\r\n        AUDIT_URL,\r\n        json={\"decision\": decision, \"decision_sha256\": digest},\r\n        cert=(AUDIT_CLIENT_CERT, AUDIT_CLIENT_KEY),\r\n        verify=AUDIT_CA,\r\n        timeout=AUDIT_TIMEOUT_SECONDS,\r\n        allow_redirects=False,\r\n        stream=True,\r\n    ) as response:\r\n        response.raise_for_status()\r\n        raw = bytearray()\r\n        for chunk in response.iter_content(chunk_size=min(65536, AUDIT_RESPONSE_MAX_BYTES + 1)):\r\n            if chunk:\r\n                raw.extend(chunk)\r\n            if len(raw) &gt; AUDIT_RESPONSE_MAX_BYTES:\r\n                raise PermissionError(\"audit response exceeds the signed decoded-byte cap\")\r\n    body = json.loads(bytes(raw))\r\n    if not isinstance(body, dict) or set(body) != {\"receipt_jws\"}:\r\n        raise PermissionError(\"audit receipt response schema differs\")\r\n    token = body[\"receipt_jws\"]\r\n    if not isinstance(token, str) or not token:\r\n        raise PermissionError(\"audit receipt is missing\")\r\n    claims = jwt.decode(\r\n        token,\r\n        AUDIT_RECEIPT_KEY,\r\n        algorithms=[\"EdDSA\"],\r\n        issuer=\"aidefend-capability-audit\",\r\n        audience=\"aidefend-tool-dispatcher\",\r\n        options={\"require\": [\r\n            \"iss\", \"aud\", \"iat\", \"nbf\", \"exp\", \"jti\",\r\n            \"decision_sha256\", \"scope_id\", \"tool_name\", \"action_count\",\r\n        ]},\r\n    )\r\n    expected = {\r\n        \"decision_sha256\": digest,\r\n        \"scope_id\": decision[\"scope_id\"],\r\n        \"tool_name\": decision[\"tool_name\"],\r\n        \"action_count\": decision[\"action_count\"],\r\n    }\r\n    if any(claims.get(field) != value for field, value in expected.items()):\r\n        raise PermissionError(\"audit_receipt_binding_mismatch\")\r\n    return claims[\"jti\"], hashlib.sha256(token.encode()).hexdigest()\r\n\r\n\r\ndef mint_from_trusted_registry(\r\n    authenticated_subject: str,\r\n    authenticated_workload: str,\r\n    session_id: str,\r\n    intent: dict[str, Any],\r\n) -&gt; str:\r\n    evidence, _, _ = trusted_grant_evidence(\r\n        authenticated_subject, authenticated_workload, intent\r\n    )\r\n    return mint_scope(session_id, evidence)\r\n\r\n\r\ndef authorize_before_tool(\r\n    *, token: str, authenticated_subject: str, authenticated_workload: str,\r\n    session_id: str, tool_name: str, budget: RedisAtomicBudget,\r\n) -&gt; dict:\r\n    registry, registry_sha256 = load_registry()\r\n    # Re-read and validate both live grants immediately before dispatch.\r\n    validated_grant(registry[\"subjects\"].get(authenticated_subject), \"subject\")\r\n    validated_grant(registry[\"workloads\"].get(authenticated_workload), \"workload\")\r\n    decision = enforce_tool_call(\r\n        token=token,\r\n        expected_session_id=session_id,\r\n        expected_subject_id=authenticated_subject,\r\n        expected_workload_identity=authenticated_workload,\r\n        expected_registry_id=registry[\"registry_id\"],\r\n        expected_registry_version=registry[\"registry_version\"],\r\n        tool_name=tool_name,\r\n        budget=budget,\r\n    )\r\n    decision[\"registry_sha256\"] = registry_sha256\r\n    receipt_id, receipt_sha256 = write_and_verify_audit_receipt(decision)\r\n    decision[\"audit_receipt_id\"] = receipt_id\r\n    decision[\"audit_receipt_jws_sha256\"] = receipt_sha256\r\n    return decision\r\n</code></pre><p><strong>Fail semantics:</strong> registry signature/schema failure, absent live grant, registry drift, invalid scope, budget-store failure, audit-service failure, or receipt mismatch denies execution. The dispatcher invokes the tool only after <code>authorize_before_tool</code> returns a verified receipt-bound decision. Persist the registry/signature, scope digest, budget event, decision, and receipt in the external append-only audit store; independently replay the intersection and receipt verification.</p><h5>Keep the action safely bounded</h5><p>Reconcile the complete population of every eligible grant use and all active dispatcher instances; reject expired, revoked, or stale policy and asset bindings under the policy-defined freshness window.</p>"
-                        }
+                            "howTo": "<h5>Mandatory production trust boundary</h5><p>The intersection code above is accepted only behind this wrapper. Authenticated subject and workload identities come from middleware; durable grants come from an exact-schema registry snapshot verified under a key pinned in the issuer and dispatcher images. Request intent may narrow those grants but cannot supply registry versions or ceilings. The dispatcher re-reads the same registry and obtains a separately signed audit receipt before returning an executable allow decision.</p><pre><code class=\"language-python\"># File: trusted_capability_dispatch.py\r\nfrom __future__ import annotations\r\n\r\nimport hashlib\r\nimport json\r\nimport math\r\nimport os\r\nimport subprocess\r\nimport tempfile\r\nfrom pathlib import Path\r\nfrom typing import Any\r\n\r\nimport jwt\r\nimport requests\r\n\r\nfrom capability_scope import (\r\n    GrantEvidence, RedisAtomicBudget, enforce_tool_call, mint_scope,\r\n)\r\n\r\n\r\nAUDIT_TIMEOUT_SECONDS = float(os.environ[\"VERIFIED_H018_CAPABILITY_AUDIT_TIMEOUT_SECONDS\"])\r\nREGISTRY_VERIFY_TIMEOUT_SECONDS = float(os.environ[\"VERIFIED_H018_CAPABILITY_REGISTRY_VERIFY_TIMEOUT_SECONDS\"])\r\nAUDIT_RESPONSE_MAX_BYTES = int(os.environ[\"VERIFIED_H018_CAPABILITY_AUDIT_RESPONSE_MAX_BYTES\"])\r\nif (\r\n    not math.isfinite(AUDIT_TIMEOUT_SECONDS) or AUDIT_TIMEOUT_SECONDS <= 0\r\n    or not math.isfinite(REGISTRY_VERIFY_TIMEOUT_SECONDS)\r\n    or REGISTRY_VERIFY_TIMEOUT_SECONDS <= 0\r\n    or AUDIT_RESPONSE_MAX_BYTES <= 0\r\n):\r\n    raise RuntimeError(\"verified capability timeouts must be finite and positive\")\r\n\r\nREGISTRY_PATH = Path(\"/etc/aidefend/capabilities/registry.json\")\r\nREGISTRY_SIGNATURE = Path(\"/etc/aidefend/capabilities/registry.sig\")\r\nREGISTRY_TRUST_KEY = Path(\"/opt/aidefend/trust/capability-registry-authority.pub\")\r\nAUDIT_RECEIPT_KEY = Path(\"/opt/aidefend/trust/capability-audit-receipt.pub\").read_text()\r\nAUDIT_URL = \"https://capability-audit.internal.example/v1/decisions\"\r\nAUDIT_CA = \"/opt/aidefend/trust/capability-audit-ca.pem\"\r\nAUDIT_CLIENT_CERT = \"/var/run/secrets/capability-audit/client.crt\"\r\nAUDIT_CLIENT_KEY = \"/var/run/secrets/capability-audit/client.key\"\r\nREGISTRY_FIELDS = {\r\n    \"schema_version\", \"registry_id\", \"registry_version\",\r\n    \"role_policy_version\", \"subjects\", \"workloads\",\r\n}\r\nGRANT_FIELDS = {\"tools\", \"max_actions\", \"max_ttl_seconds\", \"grant_version\"}\r\nINTENT_FIELDS = {\r\n    \"intent_policy_version\", \"requested_tools\",\r\n    \"requested_max_actions\", \"requested_ttl_seconds\",\r\n}\r\n\r\n\r\ndef strict_json_object(raw: bytes) -&gt; dict:\r\n    def unique_pairs(pairs):\r\n        value = {}\r\n        for key, item in pairs:\r\n            if key in value:\r\n                raise ValueError(f\"duplicate signed-JSON key: {key}\")\r\n            value[key] = item\r\n        return value\r\n\r\n    def reject_constant(value):\r\n        raise ValueError(f\"non-finite signed-JSON number: {value}\")\r\n\r\n    document = json.loads(\r\n        raw.decode(\"utf-8\", errors=\"strict\"),\r\n        object_pairs_hook=unique_pairs, parse_constant=reject_constant,\r\n    )\r\n    if not isinstance(document, dict):\r\n        raise ValueError(\"signed JSON root must be an object\")\r\n    return document\r\n\r\n\r\ndef load_registry() -&gt; tuple[dict[str, Any], str]:\r\n    raw = REGISTRY_PATH.read_bytes()\r\n    snapshot: Path | None = None\r\n    try:\r\n        with tempfile.NamedTemporaryFile(\r\n            prefix=\"h018-registry-\", suffix=\".json\", delete=False\r\n        ) as handle:\r\n            handle.write(raw)\r\n            handle.flush()\r\n            os.fsync(handle.fileno())\r\n            snapshot = Path(handle.name)\r\n        subprocess.run([\r\n            \"cosign\", \"verify-blob\", \"--key\", str(REGISTRY_TRUST_KEY),\r\n            \"--bundle\", str(REGISTRY_SIGNATURE), str(snapshot),\r\n        ], check=True, capture_output=True, text=True, timeout=REGISTRY_VERIFY_TIMEOUT_SECONDS)\r\n    finally:\r\n        if snapshot is not None:\r\n            snapshot.unlink(missing_ok=True)\r\n    registry = strict_json_object(raw)\r\n    if not isinstance(registry, dict) or set(registry) != REGISTRY_FIELDS:\r\n        raise PermissionError(\"capability_registry_schema_mismatch\")\r\n    if registry[\"schema_version\"] != \"aidefend.capability-registry.v1\":\r\n        raise PermissionError(\"capability_registry_version_unsupported\")\r\n    for field in (\"registry_id\", \"registry_version\", \"role_policy_version\"):\r\n        if not isinstance(registry[field], str) or not registry[field]:\r\n            raise PermissionError(\"capability_registry_binding_missing\")\r\n    if not isinstance(registry[\"subjects\"], dict) or not isinstance(registry[\"workloads\"], dict):\r\n        raise PermissionError(\"capability_registry_grants_missing\")\r\n    return registry, hashlib.sha256(raw).hexdigest()\r\n\r\n\r\ndef validated_grant(grant: object, kind: str) -&gt; dict:\r\n    if not isinstance(grant, dict) or set(grant) != GRANT_FIELDS:\r\n        raise PermissionError(f\"{kind}_grant_schema_mismatch\")\r\n    tools = grant[\"tools\"]\r\n    if (\r\n        not isinstance(tools, list) or not tools or tools != sorted(set(tools))\r\n        or any(not isinstance(tool, str) or not tool for tool in tools)\r\n    ):\r\n        raise PermissionError(f\"{kind}_tool_grant_invalid\")\r\n    for field in (\"max_actions\", \"max_ttl_seconds\"):\r\n        value = grant[field]\r\n        if isinstance(value, bool) or not isinstance(value, int) or value &lt; 1:\r\n            raise PermissionError(f\"{kind}_{field}_invalid\")\r\n    if not isinstance(grant[\"grant_version\"], str) or not grant[\"grant_version\"]:\r\n        raise PermissionError(f\"{kind}_grant_version_missing\")\r\n    return grant\r\n\r\n\r\ndef trusted_grant_evidence(\r\n    authenticated_subject: str,\r\n    authenticated_workload: str,\r\n    intent: dict[str, Any],\r\n) -&gt; tuple[GrantEvidence, dict, str]:\r\n    if not isinstance(intent, dict) or set(intent) != INTENT_FIELDS:\r\n        raise PermissionError(\"intent_scope_schema_mismatch\")\r\n    registry, registry_sha256 = load_registry()\r\n    try:\r\n        subject = validated_grant(\r\n            registry[\"subjects\"][authenticated_subject], \"subject\"\r\n        )\r\n        workload = validated_grant(\r\n            registry[\"workloads\"][authenticated_workload], \"workload\"\r\n        )\r\n    except KeyError as exc:\r\n        raise PermissionError(\"authenticated_identity_has_no_registry_grant\") from exc\r\n    requested_tools = intent[\"requested_tools\"]\r\n    if (\r\n        not isinstance(requested_tools, list) or not requested_tools\r\n        or requested_tools != sorted(set(requested_tools))\r\n    ):\r\n        raise PermissionError(\"requested_tool_scope_invalid\")\r\n    for field in (\"requested_max_actions\", \"requested_ttl_seconds\"):\r\n        value = intent[field]\r\n        if isinstance(value, bool) or not isinstance(value, int) or value &lt; 1:\r\n            raise PermissionError(\"requested_ceiling_invalid\")\r\n    evidence = GrantEvidence(\r\n        subject_id=authenticated_subject,\r\n        workload_identity=authenticated_workload,\r\n        subject_registry_id=registry[\"registry_id\"],\r\n        subject_registry_version=registry[\"registry_version\"],\r\n        role_policy_version=registry[\"role_policy_version\"],\r\n        workload_grant_version=workload[\"grant_version\"],\r\n        intent_policy_version=intent[\"intent_policy_version\"],\r\n        role_tools=frozenset(subject[\"tools\"]),\r\n        workload_tools=frozenset(workload[\"tools\"]),\r\n        requested_tools=frozenset(requested_tools),\r\n        role_max_actions=subject[\"max_actions\"],\r\n        workload_max_actions=workload[\"max_actions\"],\r\n        requested_max_actions=intent[\"requested_max_actions\"],\r\n        role_max_ttl_seconds=subject[\"max_ttl_seconds\"],\r\n        workload_max_ttl_seconds=workload[\"max_ttl_seconds\"],\r\n        requested_ttl_seconds=intent[\"requested_ttl_seconds\"],\r\n    )\r\n    return evidence, registry, registry_sha256\r\n\r\n\r\ndef canonical_digest(value: dict) -&gt; str:\r\n    return hashlib.sha256(json.dumps(\r\n        value, sort_keys=True, separators=(\",\", \":\"), allow_nan=False\r\n    ).encode()).hexdigest()\r\n\r\n\r\ndef write_and_verify_audit_receipt(decision: dict) -&gt; tuple[str, str]:\r\n    digest = canonical_digest(decision)\r\n    with requests.post(\r\n        AUDIT_URL,\r\n        json={\"decision\": decision, \"decision_sha256\": digest},\r\n        cert=(AUDIT_CLIENT_CERT, AUDIT_CLIENT_KEY),\r\n        verify=AUDIT_CA,\r\n        timeout=AUDIT_TIMEOUT_SECONDS,\r\n        allow_redirects=False,\r\n        stream=True,\r\n    ) as response:\r\n        response.raise_for_status()\r\n        raw = bytearray()\r\n        for chunk in response.iter_content(chunk_size=min(65536, AUDIT_RESPONSE_MAX_BYTES + 1)):\r\n            if chunk:\r\n                raw.extend(chunk)\r\n            if len(raw) &gt; AUDIT_RESPONSE_MAX_BYTES:\r\n                raise PermissionError(\"audit response exceeds the signed decoded-byte cap\")\r\n    body = json.loads(bytes(raw))\r\n    if not isinstance(body, dict) or set(body) != {\"receipt_jws\"}:\r\n        raise PermissionError(\"audit receipt response schema differs\")\r\n    token = body[\"receipt_jws\"]\r\n    if not isinstance(token, str) or not token:\r\n        raise PermissionError(\"audit receipt is missing\")\r\n    claims = jwt.decode(\r\n        token,\r\n        AUDIT_RECEIPT_KEY,\r\n        algorithms=[\"EdDSA\"],\r\n        issuer=\"aidefend-capability-audit\",\r\n        audience=\"aidefend-tool-dispatcher\",\r\n        options={\"require\": [\r\n            \"iss\", \"aud\", \"iat\", \"nbf\", \"exp\", \"jti\",\r\n            \"decision_sha256\", \"scope_id\", \"tool_name\", \"action_count\",\r\n        ]},\r\n    )\r\n    expected = {\r\n        \"decision_sha256\": digest,\r\n        \"scope_id\": decision[\"scope_id\"],\r\n        \"tool_name\": decision[\"tool_name\"],\r\n        \"action_count\": decision[\"action_count\"],\r\n    }\r\n    if any(claims.get(field) != value for field, value in expected.items()):\r\n        raise PermissionError(\"audit_receipt_binding_mismatch\")\r\n    return claims[\"jti\"], hashlib.sha256(token.encode()).hexdigest()\r\n\r\n\r\ndef mint_from_trusted_registry(\r\n    authenticated_subject: str,\r\n    authenticated_workload: str,\r\n    session_id: str,\r\n    intent: dict[str, Any],\r\n) -&gt; str:\r\n    evidence, _, _ = trusted_grant_evidence(\r\n        authenticated_subject, authenticated_workload, intent\r\n    )\r\n    return mint_scope(session_id, evidence)\r\n\r\n\r\ndef authorize_before_tool(\r\n    *, token: str, authenticated_subject: str, authenticated_workload: str,\r\n    session_id: str, tool_name: str, budget: RedisAtomicBudget,\r\n) -&gt; dict:\r\n    registry, registry_sha256 = load_registry()\r\n    # Re-read and validate both live grants immediately before dispatch.\r\n    validated_grant(registry[\"subjects\"].get(authenticated_subject), \"subject\")\r\n    validated_grant(registry[\"workloads\"].get(authenticated_workload), \"workload\")\r\n    decision = enforce_tool_call(\r\n        token=token,\r\n        expected_session_id=session_id,\r\n        expected_subject_id=authenticated_subject,\r\n        expected_workload_identity=authenticated_workload,\r\n        expected_registry_id=registry[\"registry_id\"],\r\n        expected_registry_version=registry[\"registry_version\"],\r\n        tool_name=tool_name,\r\n        budget=budget,\r\n    )\r\n    decision[\"registry_sha256\"] = registry_sha256\r\n    receipt_id, receipt_sha256 = write_and_verify_audit_receipt(decision)\r\n    decision[\"audit_receipt_id\"] = receipt_id\r\n    decision[\"audit_receipt_jws_sha256\"] = receipt_sha256\r\n    return decision\r\n</code></pre><p><strong>Fail semantics:</strong> registry signature/schema failure, absent live grant, registry drift, invalid scope, budget-store failure, audit-service failure, or receipt mismatch denies execution. The dispatcher invokes the tool only after <code>authorize_before_tool</code> returns a verified receipt-bound decision. Persist the registry/signature, scope digest, budget event, decision, and receipt in the external append-only audit store; independently replay the intersection and receipt verification.</p><h5>Keep the action safely bounded</h5><p>Reconcile the complete population of every eligible grant use and all active dispatcher instances; reject expired, revoked, or stale policy and asset bindings under the policy-defined freshness window.</p>" + "<h5>Scope externally initiated tasks without laundering their origin</h5><p>When the initiating context includes a link-prefill or external-event origin, resolve the corresponding ingress/event receipt from the trusted registry. Preserve that ancestry across turns and sub-agents. The receipt may prove submission or event admission; it does not itself authorize private reads, memory writes, exports, or arbitrary tools. Intersect capabilities with a separately authorized task scope and the caller/workflow's current entitlements. Sensitive read tools such as mailbox and internal-document search need the same task binding as writes. A natural-language instruction to “trust this source” cannot widen the capability set. Reconfirmation must bind the specific requested expansion; later turns cannot silently remove the restriction. Test a link-derived private read, a follow-up write, and a sub-agent relay against the same task scope.</p>"}
                     ]
                 },
                 {
@@ -16966,8 +12675,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "id": "AID-H-018.007-G003",
                             "implementation": "Issue per-skill scoped credentials with short TTLs; prohibit shared agent-global API keys.",
-                            "howTo": "<h5>Concept</h5><p>Each approved skill needs its own non-human identity and short-lived credentials whose scope mirrors the approved manifest. This prevents one compromised skill from inheriting the full authority of the agent host and gives responders a concrete token accessor or workload identity to revoke.</p><h5>Step 1: Derive credential scope from the approved manifest</h5><p>Resolve the current approved manifest through a trusted registry into policy objects dedicated to that exact skill and manifest digest. Generic category-wide policy names or token metadata alone do not enforce per-skill isolation.</p><pre><code class=\"language-python\"># File: identity/skill_token_issuer.py\nfrom __future__ import annotations\n\nimport os\nfrom dataclasses import dataclass\nimport re\nfrom typing import Protocol\n\nimport hvac\n\n\nVAULT_ADDR = os.environ[\"VAULT_ADDR\"]\nVAULT_TOKEN = os.environ[\"VAULT_TOKEN\"]\n\n\n@dataclass(frozen=True)\nclass SkillIdentityRequest:\n    skill_id: str\n    manifest_hash: str\n    approved_scope: dict\n\n\nclass VerifiedSkillPolicyRegistry(Protocol):\n    def resolve_current(\n        self, *, skill_id: str, manifest_hash: str, approved_scope: dict\n    ) -&gt; tuple[str, tuple[str, ...]]:\n        \"\"\"Return a current revision and policies dedicated to this skill.\"\"\"\n        raise RuntimeError(\"protocol-only method\")\n\n\ndef issue_skill_token(\n    req: SkillIdentityRequest, registry: VerifiedSkillPolicyRegistry\n) -&gt; dict:\n    client = hvac.Client(url=VAULT_ADDR, token=VAULT_TOKEN)\n    if not client.is_authenticated():\n        raise RuntimeError(\"Vault authentication failed\")\n\n    if (\n        not isinstance(req.skill_id, str)\n        or not req.skill_id\n        or not re.fullmatch(r\"[a-f0-9]{64}\", req.manifest_hash)\n        or not isinstance(req.approved_scope, dict)\n    ):\n        raise ValueError(\"skill identity request is malformed\")\n    policy_revision, policies = registry.resolve_current(\n        skill_id=req.skill_id,\n        manifest_hash=req.manifest_hash,\n        approved_scope=req.approved_scope,\n    )\n    if (\n        not isinstance(policy_revision, str)\n        or not policy_revision\n        or not policies\n        or len(policies) != len(set(policies))\n        or any(not isinstance(name, str) or not name for name in policies)\n        or any(req.skill_id not in name for name in policies)\n    ):\n        raise RuntimeError(\"registry did not return skill-dedicated policies\")\n\n    response = client.auth.token.create(\n        policies=list(policies),\n        ttl=\"30m\",\n        explicit_max_ttl=\"30m\",\n        renewable=False,\n        display_name=f\"skill-{req.skill_id}\",\n        num_uses=500,\n        metadata={\n            \"skill_id\": req.skill_id,\n            \"manifest_hash\": req.manifest_hash,\n            \"policy_revision\": policy_revision,\n        },\n    )\n    return {\n        \"client_token\": response[\"auth\"][\"client_token\"],\n        \"accessor\": response[\"auth\"][\"accessor\"],\n        \"lease_duration\": response[\"auth\"][\"lease_duration\"],\n        \"policy_revision\": policy_revision,\n        \"policy_names\": list(policies),\n    }\n</code></pre><h5>Step 2: Hand the skill only its own short-lived token</h5><p>Inject the token into the isolated skill runtime, never into a shared global environment. Persist the token accessor and manifest hash with the skill inventory record so you can revoke or investigate the skill independently.</p><pre><code class=\"language-python\"># File: identity/runtime_injection.py\nfrom identity.skill_token_issuer import SkillIdentityRequest, issue_skill_token\n\n\ndef provision_skill_runtime(\n    skill_id: str, manifest_hash: str, approved_scope: dict, runtime, policy_registry\n):\n    token_bundle = issue_skill_token(\n        SkillIdentityRequest(\n            skill_id=skill_id,\n            manifest_hash=manifest_hash,\n            approved_scope=approved_scope,\n        ),\n        policy_registry,\n    )\n    runtime.set_env(\"VAULT_TOKEN\", token_bundle[\"client_token\"])\n    runtime.set_metadata(\"vault_accessor\", token_bundle[\"accessor\"])\n    runtime.set_metadata(\"manifest_hash\", manifest_hash)\n    runtime.set_metadata(\"policy_revision\", token_bundle[\"policy_revision\"])\n    runtime.set_metadata(\"policy_names\", token_bundle[\"policy_names\"])\n</code></pre><h5>Step 3: Verify revocation works</h5><p>In staging, revoke the issued accessor and confirm the skill can no longer reach protected backends while sibling skills continue to work.</p><pre><code class=\"language-bash\">test -n \"$VAULT_ACCESSOR\"\nvault token revoke -accessor \"$VAULT_ACCESSOR\"\n</code></pre><p><strong>Action:</strong> Replace shared agent-global secrets with Vault-issued per-skill tokens or an equivalent workload identity system. Keep TTLs short, record the token accessor with the skill approval record, and prove you can revoke one skill without rotating every other credential in the environment.</p><h5>Keep the action safely bounded</h5><p>Reconcile the complete population of every credential issuance, renewal, use, expiry, and revocation for each skill instance; reject expired, revoked, or stale policy and asset bindings under the policy-defined freshness window.</p>"
-                        }
+                            "howTo": "<h5>Concept</h5><p>Each approved skill needs its own non-human identity and short-lived credentials whose scope mirrors the approved manifest. This prevents one compromised skill from inheriting the full authority of the agent host and gives responders a concrete token accessor or workload identity to revoke.</p><h5>Step 1: Derive credential scope from the approved manifest</h5><p>Resolve the current approved manifest through a trusted registry into policy objects dedicated to that exact skill and manifest digest. Generic category-wide policy names or token metadata alone do not enforce per-skill isolation.</p><pre><code class=\"language-python\"># File: identity/skill_token_issuer.py\nfrom __future__ import annotations\n\nimport os\nfrom dataclasses import dataclass\nimport re\nfrom typing import Protocol\n\nimport hvac\n\n\nVAULT_ADDR = os.environ[\"VAULT_ADDR\"]\nVAULT_TOKEN = os.environ[\"VAULT_TOKEN\"]\n\n\n@dataclass(frozen=True)\nclass SkillIdentityRequest:\n    skill_id: str\n    manifest_hash: str\n    approved_scope: dict\n\n\nclass VerifiedSkillPolicyRegistry(Protocol):\n    def resolve_current(\n        self, *, skill_id: str, manifest_hash: str, approved_scope: dict\n    ) -&gt; tuple[str, tuple[str, ...]]:\n        \"\"\"Return a current revision and policies dedicated to this skill.\"\"\"\n        raise RuntimeError(\"protocol-only method\")\n\n\ndef issue_skill_token(\n    req: SkillIdentityRequest, registry: VerifiedSkillPolicyRegistry\n) -&gt; dict:\n    client = hvac.Client(url=VAULT_ADDR, token=VAULT_TOKEN)\n    if not client.is_authenticated():\n        raise RuntimeError(\"Vault authentication failed\")\n\n    if (\n        not isinstance(req.skill_id, str)\n        or not req.skill_id\n        or not re.fullmatch(r\"[a-f0-9]{64}\", req.manifest_hash)\n        or not isinstance(req.approved_scope, dict)\n    ):\n        raise ValueError(\"skill identity request is malformed\")\n    policy_revision, policies = registry.resolve_current(\n        skill_id=req.skill_id,\n        manifest_hash=req.manifest_hash,\n        approved_scope=req.approved_scope,\n    )\n    if (\n        not isinstance(policy_revision, str)\n        or not policy_revision\n        or not policies\n        or len(policies) != len(set(policies))\n        or any(not isinstance(name, str) or not name for name in policies)\n        or any(req.skill_id not in name for name in policies)\n    ):\n        raise RuntimeError(\"registry did not return skill-dedicated policies\")\n\n    response = client.auth.token.create(\n        policies=list(policies),\n        ttl=\"30m\",\n        explicit_max_ttl=\"30m\",\n        renewable=False,\n        display_name=f\"skill-{req.skill_id}\",\n        num_uses=500,\n        meta={\n            \"skill_id\": req.skill_id,\n            \"manifest_hash\": req.manifest_hash,\n            \"policy_revision\": policy_revision,\n        },\n    )\n    return {\n        \"client_token\": response[\"auth\"][\"client_token\"],\n        \"accessor\": response[\"auth\"][\"accessor\"],\n        \"lease_duration\": response[\"auth\"][\"lease_duration\"],\n        \"policy_revision\": policy_revision,\n        \"policy_names\": list(policies),\n    }\n</code></pre><h5>Step 2: Hand the skill only its own short-lived token</h5><p>Inject the token into the isolated skill runtime, never into a shared global environment. Persist the token accessor and manifest hash with the skill inventory record so you can revoke or investigate the skill independently.</p><pre><code class=\"language-python\"># File: identity/runtime_injection.py\nfrom identity.skill_token_issuer import SkillIdentityRequest, issue_skill_token\n\n\ndef provision_skill_runtime(\n    skill_id: str, manifest_hash: str, approved_scope: dict, runtime, policy_registry\n):\n    token_bundle = issue_skill_token(\n        SkillIdentityRequest(\n            skill_id=skill_id,\n            manifest_hash=manifest_hash,\n            approved_scope=approved_scope,\n        ),\n        policy_registry,\n    )\n    runtime.set_env(\"VAULT_TOKEN\", token_bundle[\"client_token\"])\n    runtime.set_metadata(\"vault_accessor\", token_bundle[\"accessor\"])\n    runtime.set_metadata(\"manifest_hash\", manifest_hash)\n    runtime.set_metadata(\"policy_revision\", token_bundle[\"policy_revision\"])\n    runtime.set_metadata(\"policy_names\", token_bundle[\"policy_names\"])\n</code></pre><h5>Step 3: Verify revocation works</h5><p>In staging, revoke the issued accessor and confirm the skill can no longer reach protected backends while sibling skills continue to work.</p><pre><code class=\"language-bash\">test -n \"$VAULT_ACCESSOR\"\nvault token revoke -accessor \"$VAULT_ACCESSOR\"\n</code></pre><p><strong>Action:</strong> Replace shared agent-global secrets with Vault-issued per-skill tokens or an equivalent workload identity system. Keep TTLs short, record the token accessor with the skill approval record, and prove you can revoke one skill without rotating every other credential in the environment.</p><h5>Keep the action safely bounded</h5><p>Reconcile the complete population of every credential issuance, renewal, use, expiry, and revocation for each skill instance; reject expired, revoked, or stale policy and asset bindings under the policy-defined freshness window.</p>"}
                     ]
                 },
                 {
@@ -17771,7 +13479,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "AML.T0085.001 Data from AI Services: AI Agent Tools",
                         "AML.T0086 Exfiltration via AI Agent Tool Invocation",
                         "AML.T0099 AI Agent Tool Data Poisoning",
-                        "AML.T0126 Automated Collection"
+                        "AML.T0126 Automated Collection",
+                        "AML.T0130 AI Agent Response Biasing"
                     ]
                 },
                 {
@@ -18001,7 +13710,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                                 "AML.T0099 AI Agent Tool Data Poisoning",
                                 "AML.T0070 RAG Poisoning",
                                 "AML.T0066 Retrieval Content Crafting",
-                                "AML.T0071 False RAG Entry Injection"
+                                "AML.T0071 False RAG Entry Injection",
+                                "AML.T0130 AI Agent Response Biasing (retrieval reputation comes from authenticated lineage and signed policy rather than document-supplied trust claims)"
                             ]
                         },
                         {
@@ -18733,8 +14443,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         {
                             "id": "AID-H-021.002-G005",
                             "implementation": "Verify agent tool and plugin files against a signed hash manifest before startup or hot-reload.",
-                            "howTo": "<h5>Concept</h5>\n<p>Configuration integrity alone is not enough if the runtime also loads executable tool or plugin files from disk. Treat those startup-loaded artifacts as part of the runtime trust boundary: build a signed manifest in CI/CD, verify every listed file before the service starts, and fail closed on any mismatch or unexpected file.</p>\n<h5>Step 1: Generate a signed tool manifest during the trusted build</h5>\n<pre><code class=\"language-bash\"># File: ci/build_tool_manifest.sh\nset -euo pipefail\n\nfind agent/tools -type f -name '*.py' -print0   | sort -z   | xargs -0 -r sha256sum --zero > tool_manifest.sha256\n\ncosign sign-blob --yes   --key \"$CONFIG_SIGNING_KMS_URI\"   --bundle tool_manifest.sha256.sig   tool_manifest.sha256</code></pre>\n<h5>Step 2: Verify the signed manifest and every startup-loaded file</h5>\n<pre><code class=\"language-python\"># File: agent/verify_tools.py\nfrom __future__ import annotations\n\nimport hashlib\nimport json\nimport math\nimport os\nimport stat\nimport subprocess\nimport tempfile\nfrom pathlib import Path\n\n\nclass IntegrityError(RuntimeError):\n    pass\n\n\nMAX_MANIFEST_BYTES = int(os.environ[\"VERIFIED_H021_TOOL_MANIFEST_MAX_BYTES\"])\nMAX_SIGNATURE_BYTES = int(os.environ[\"VERIFIED_H021_TOOL_SIGNATURE_MAX_BYTES\"])\nMAX_TOOL_BYTES = int(os.environ[\"VERIFIED_H021_TOOL_FILE_MAX_BYTES\"])\nCOSIGN_TIMEOUT_SECONDS = float(os.environ[\"VERIFIED_H021_TOOL_COSIGN_TIMEOUT_SECONDS\"])\nif (\n    min(MAX_MANIFEST_BYTES, MAX_SIGNATURE_BYTES, MAX_TOOL_BYTES) < 1\n    or not math.isfinite(COSIGN_TIMEOUT_SECONDS)\n    or COSIGN_TIMEOUT_SECONDS <= 0\n):\n    raise RuntimeError(\"verified tool-integrity bounds are invalid\")\n\n\ndef stable_bytes(path: Path, maximum_bytes: int) -&gt; bytes:\n    if maximum_bytes < 1 or not hasattr(os, \"O_NOFOLLOW\") or not hasattr(os, \"O_CLOEXEC\"):\n        raise RuntimeError(\"secure bounded tool-file read is unavailable\")\n    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)\n    try:\n        before = os.fstat(fd)\n        if not stat.S_ISREG(before.st_mode) or before.st_size < 1 or before.st_size > maximum_bytes:\n            raise IntegrityError(\"tool-integrity input is not a bounded regular file\")\n        chunks = []\n        remaining = maximum_bytes + 1\n        while remaining:\n            chunk = os.read(fd, min(remaining, 1024 * 1024))\n            if not chunk:\n                break\n            chunks.append(chunk)\n            remaining -= len(chunk)\n        payload = b\"\".join(chunks)\n        after = os.fstat(fd)\n        if (\n            len(payload) != before.st_size\n            or len(payload) > maximum_bytes\n            or (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns)\n            != (after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns)\n        ):\n            raise IntegrityError(\"tool-integrity input changed during read\")\n        return payload\n    finally:\n        os.close(fd)\n\n\ndef sha256_file(path: Path) -&gt; str:\n    return hashlib.sha256(stable_bytes(path, MAX_TOOL_BYTES)).hexdigest()\n\n\ndef load_manifest(path: Path, signature: Path, trust_key: Path) -> dict[str, str]:\n    raw = stable_bytes(path, MAX_MANIFEST_BYTES)\n    sig = stable_bytes(signature, MAX_SIGNATURE_BYTES)\n    with tempfile.TemporaryDirectory(prefix=\"aidefend-tools-\") as directory:\n        root = Path(directory)\n        manifest_copy = root / \"manifest\"\n        signature_copy = root / \"manifest.sig\"\n        manifest_copy.write_bytes(raw)\n        signature_copy.write_bytes(sig)\n        subprocess.run(\n            [\n                \"cosign\", \"verify-blob\", \"--key\", str(trust_key),\n                \"--bundle\", str(signature_copy), str(manifest_copy),\n            ],\n            check=True, capture_output=True, text=True, timeout=COSIGN_TIMEOUT_SECONDS,\n        )\n    expected: dict[str, str] = {}\n    for record in raw.split(b\"\\0\"):\n        if not record:\n            continue\n        file_hash, separator, rel_path = record.partition(b\"  \")\n        if separator != b\"  \" or len(file_hash) != 64:\n            raise IntegrityError(\"signed tool manifest record is malformed\")\n        decoded_path = rel_path.decode(\"utf-8\", \"strict\")\n        if decoded_path in expected:\n            raise IntegrityError(\"signed tool manifest contains a duplicate path\")\n        bytes.fromhex(file_hash.decode(\"ascii\"))\n        expected[decoded_path] = file_hash.decode(\"ascii\")\n    if not expected:\n        raise IntegrityError(\"signed tool manifest is empty\")\n    return expected\n\n\ndef verify_tool_tree(\n    tool_root: Path, manifest_path: Path, signature: Path, trust_key: Path\n) -> dict:\n    expected = load_manifest(manifest_path, signature, trust_key)\n\n    discovered = sorted(\n        str(path.relative_to(tool_root.parent)).replace(\"\\\\\", \"/\")\n        for path in tool_root.rglob(\"*.py\") if path.is_file() and not path.is_symlink()\n    )\n\n    if sorted(expected.keys()) != discovered:\n        raise IntegrityError(\"Tool inventory mismatch between runtime tree and signed manifest\")\n\n    for rel_path, expected_hash in expected.items():\n        actual_hash = sha256_file(tool_root.parent / rel_path)\n        if actual_hash != expected_hash:\n            raise IntegrityError(f\"Tool hash mismatch for {rel_path}\")\n    return {\n        \"schema_version\": \"aidefend.agent-tool-integrity.v1\",\n        \"status\": \"PASS\",\n        \"manifest_sha256\": hashlib.sha256(\n            stable_bytes(manifest_path, MAX_MANIFEST_BYTES)\n        ).hexdigest(),\n        \"tool_count\": len(expected),\n    }\n</code></pre>\n<h5>Step 3: Refuse startup on integrity failure and emit a security event</h5>\n<p>If manifest signature verification fails, if the runtime tree differs from the approved manifest, or if any file hash mismatches, the agent must not start. Emit a structured integrity event to SIEM with the manifest version, failing file, and workload identity.</p>\n<p><strong>Action:</strong> Treat tool and plugin file verification as a startup gate, not a best-effort scan. If the runtime cannot prove that every executable helper matches the signed manifest, block launch and escalate.</p>"
-                        },
+                            "howTo": "<h5>Concept</h5>\n<p>Configuration integrity alone is not enough if the runtime also loads executable tool or plugin files from disk. Treat those startup-loaded artifacts as part of the runtime trust boundary: build a signed manifest in CI/CD, verify every listed file before the service starts, and fail closed on any mismatch or unexpected file.</p>\n<h5>Step 1: Generate a signed tool manifest during the trusted build</h5>\n<pre><code># File: ci/build_tool_manifest.sh\nset -euo pipefail\n\n# Manifest paths are relative to the tool root in both producer and verifier.\n(cd agent/tools &amp;&amp; find . -type f -name '*.py' -print0 | sort -z | xargs -0 -r sha256sum --zero) &gt; tool_manifest.sha256\n\ncosign sign-blob --yes   --key \"$CONFIG_SIGNING_KMS_URI\"   --bundle tool_manifest.sha256.sig   tool_manifest.sha256</code></pre>\n<h5>Step 2: Verify the signed manifest and every startup-loaded file</h5>\n<pre><code># File: agent/verify_tools.py\nfrom __future__ import annotations\n\nimport hashlib\nimport json\nimport math\nimport os\nimport stat\nimport subprocess\nimport tempfile\nfrom pathlib import Path\n\n\nclass IntegrityError(RuntimeError):\n    pass\n\n\nMAX_MANIFEST_BYTES = int(os.environ[\"VERIFIED_H021_TOOL_MANIFEST_MAX_BYTES\"])\nMAX_SIGNATURE_BYTES = int(os.environ[\"VERIFIED_H021_TOOL_SIGNATURE_MAX_BYTES\"])\nMAX_TOOL_BYTES = int(os.environ[\"VERIFIED_H021_TOOL_FILE_MAX_BYTES\"])\nCOSIGN_TIMEOUT_SECONDS = float(os.environ[\"VERIFIED_H021_TOOL_COSIGN_TIMEOUT_SECONDS\"])\nif (\n    min(MAX_MANIFEST_BYTES, MAX_SIGNATURE_BYTES, MAX_TOOL_BYTES) &lt; 1\n    or not math.isfinite(COSIGN_TIMEOUT_SECONDS)\n    or COSIGN_TIMEOUT_SECONDS &lt;= 0\n):\n    raise RuntimeError(\"verified tool-integrity bounds are invalid\")\n\n\ndef stable_bytes(path: Path, maximum_bytes: int) -&gt; bytes:\n    if maximum_bytes &lt; 1 or not hasattr(os, \"O_NOFOLLOW\") or not hasattr(os, \"O_CLOEXEC\"):\n        raise RuntimeError(\"secure bounded tool-file read is unavailable\")\n    fd = os.open(path, os.O_RDONLY | os.O_NOFOLLOW | os.O_CLOEXEC)\n    try:\n        before = os.fstat(fd)\n        if not stat.S_ISREG(before.st_mode) or before.st_size &lt; 1 or before.st_size &gt; maximum_bytes:\n            raise IntegrityError(\"tool-integrity input is not a bounded regular file\")\n        chunks = []\n        remaining = maximum_bytes + 1\n        while remaining:\n            chunk = os.read(fd, min(remaining, 1024 * 1024))\n            if not chunk:\n                break\n            chunks.append(chunk)\n            remaining -= len(chunk)\n        payload = b\"\".join(chunks)\n        after = os.fstat(fd)\n        if (\n            len(payload) != before.st_size\n            or len(payload) &gt; maximum_bytes\n            or (before.st_dev, before.st_ino, before.st_size, before.st_mtime_ns)\n            != (after.st_dev, after.st_ino, after.st_size, after.st_mtime_ns)\n        ):\n            raise IntegrityError(\"tool-integrity input changed during read\")\n        return payload\n    finally:\n        os.close(fd)\n\n\ndef sha256_file(path: Path) -&gt; str:\n    return hashlib.sha256(stable_bytes(path, MAX_TOOL_BYTES)).hexdigest()\n\n\ndef load_manifest(path: Path, signature: Path, trust_key: Path) -&gt; dict[str, str]:\n    raw = stable_bytes(path, MAX_MANIFEST_BYTES)\n    sig = stable_bytes(signature, MAX_SIGNATURE_BYTES)\n    with tempfile.TemporaryDirectory(prefix=\"aidefend-tools-\") as directory:\n        root = Path(directory)\n        manifest_copy = root / \"manifest\"\n        signature_copy = root / \"manifest.sig\"\n        manifest_copy.write_bytes(raw)\n        signature_copy.write_bytes(sig)\n        subprocess.run(\n            [\n                \"cosign\", \"verify-blob\", \"--key\", str(trust_key),\n                \"--bundle\", str(signature_copy), str(manifest_copy),\n            ],\n            check=True, capture_output=True, text=True, timeout=COSIGN_TIMEOUT_SECONDS,\n        )\n    expected: dict[str, str] = {}\n    for record in raw.split(b\"\\0\"):\n        if not record:\n            continue\n        file_hash, separator, rel_path = record.partition(b\"  \")\n        if separator != b\"  \" or len(file_hash) != 64:\n            raise IntegrityError(\"signed tool manifest record is malformed\")\n        decoded_path = rel_path.decode(\"utf-8\", \"strict\")\n        if decoded_path.startswith(\"./\"):\n            decoded_path = decoded_path[2:]\n        if (not decoded_path or \"\\\\\" in decoded_path or decoded_path.startswith(\"/\")\n                or any(part in {\"\", \".\", \"..\"} for part in decoded_path.split(\"/\"))):\n            raise IntegrityError(\"tool manifest path is not canonical and root-relative\")\n        if decoded_path in expected:\n            raise IntegrityError(\"signed tool manifest contains a duplicate path\")\n        bytes.fromhex(file_hash.decode(\"ascii\"))\n        expected[decoded_path] = file_hash.decode(\"ascii\")\n    if not expected:\n        raise IntegrityError(\"signed tool manifest is empty\")\n    return expected\n\n\ndef verify_tool_tree(\n    tool_root: Path, manifest_path: Path, signature: Path, trust_key: Path\n) -&gt; dict:\n    expected = load_manifest(manifest_path, signature, trust_key)\n\n    discovered = sorted(\n        str(path.relative_to(tool_root)).replace(\"\\\\\", \"/\")\n        for path in tool_root.rglob(\"*.py\") if path.is_file() and not path.is_symlink()\n    )\n\n    if sorted(expected.keys()) != discovered:\n        raise IntegrityError(\"Tool inventory mismatch between runtime tree and signed manifest\")\n\n    for rel_path, expected_hash in expected.items():\n        actual_hash = sha256_file(tool_root / rel_path)\n        if actual_hash != expected_hash:\n            raise IntegrityError(f\"Tool hash mismatch for {rel_path}\")\n    return {\n        \"schema_version\": \"aidefend.agent-tool-integrity.v1\",\n        \"status\": \"PASS\",\n        \"manifest_sha256\": hashlib.sha256(\n            stable_bytes(manifest_path, MAX_MANIFEST_BYTES)\n        ).hexdigest(),\n        \"tool_count\": len(expected),\n    }</code></pre>\n<h5>Step 3: Refuse startup on integrity failure and emit a security event</h5>\n<p>If manifest signature verification fails, if the runtime tree differs from the approved manifest, or if any file hash mismatches, the agent must not start. Emit a structured integrity event to SIEM with the manifest version, failing file, and workload identity.</p>\n<p><strong>Action:</strong> Treat tool and plugin file verification as a startup gate, not a best-effort scan. If the runtime cannot prove that every executable helper matches the signed manifest, block launch and escalate.</p>"},
                         {
                             "id": "AID-H-021.002-G006",
                             "implementation": "Continuously reconcile running configuration to the signed desired state and automatically restore approved values when drift is detected.",
@@ -23233,7 +18942,11 @@ if __name__ == "__main__":
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0057 LLM Data Leakage"
+                        "AML.T0057 LLM Data Leakage",
+                        "AML.T0080 AI Agent Context Poisoning",
+                        "AML.T0080.000 AI Agent Context Poisoning: Memory",
+                        "AML.T0130 AI Agent Response Biasing",
+                        "AML.T0131 Crafted AI Assistant Links"
                     ]
                 },
                 {
@@ -23246,7 +18959,8 @@ if __name__ == "__main__":
                 {
                     "framework": "OWASP LLM Top 10 2026",
                     "items": [
-                        "LLM02:2026 Sensitive Information Disclosure"
+                        "LLM02:2026 Sensitive Information Disclosure",
+                        "LLM05:2026 Data and Model Poisoning"
                     ]
                 },
                 {
@@ -23258,7 +18972,7 @@ if __name__ == "__main__":
                 {
                     "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
-                        "N/A"
+                        "ASI06:2026 Memory & Context Poisoning"
                     ]
                 },
                 {
@@ -23273,6 +18987,7 @@ if __name__ == "__main__":
                         "AITech-8.2 Data Exfiltration / Exposure",
                         "AITech-8.3 Information Disclosure",
                         "AITech-16.1 Eavesdropping",
+                        "AISubtech-6.1.1 Knowledge Base Poisoning",
                         "AISubtech-8.3.3 Personally Identifiable Information Exposure",
                         "AISubtech-14.1.2 Insufficient Access Controls",
                         "AISubtech-16.1.1 Logging Sensitive Conversations"
@@ -23294,7 +19009,8 @@ if __name__ == "__main__":
                         "Raw Data 1.8: Legality of data",
                         "Governance 4.1: Lack of traceability and transparency of model assets",
                         "Model Serving - Inference requests 9.10: Accidental exposure of unauthorized data to models",
-                        "Platform 12.6: Lack of compliance"
+                        "Platform 12.6: Lack of compliance",
+                        "Agents - Core 13.1: Memory Poisoning"
                     ]
                 }
             ],
@@ -23432,9 +19148,9 @@ if __name__ == "__main__":
                     "building",
                     "operation"
                   ],
-                  "description": "Implement a fail-closed authorization gate at each AI lifecycle-stage boundary. Before any data asset is consumed by training, fine-tuning, evaluation, RAG indexing, inference context assembly, logging, memory write, or retraining, the gate evaluates the asset's data-use tags against the requested stage and context. Data lacking valid authorization for the target stage is denied and logged as a policy event.",
+                  "description": "Implement a fail-closed authorization gate at each AI lifecycle-stage boundary. Before any data asset is consumed by training, fine-tuning, evaluation, RAG indexing, inference context assembly, logging, memory write, or retraining, the gate evaluates the asset's data-use tags against the requested stage and context. Data lacking valid authorization for the target stage is denied and logged as a policy event. At the memory-write boundary, require a purpose-bound grant for the exact candidate in addition to eligibility evidence and stage authorization, and reject source-trust, behavioral-policy, or tool-permission changes through ordinary memory APIs, directing them to a separately authorized policy/configuration release process.",
                   "scopeBoundary": {
-                    "responsibility": "Owns the fail-closed allow or deny decision immediately before data crosses into training, fine-tuning, evaluation, indexing, inference context, logging, memory, or retraining. It consumes authoritative tags and eligibility evidence rather than creating them.",
+                    "responsibility": "Owns the fail-closed allow or deny decision immediately before data crosses into training, fine-tuning, evaluation, indexing, inference context, logging, memory, or retraining, including enforcement of a purpose-bound, candidate-bound memory-write grant. It consumes authoritative tags, eligibility evidence, and write grants rather than creating them.",
                     "relatedTechniques": [
                       {
                         "id": "AID-H-029.001",
@@ -23466,7 +19182,10 @@ if __name__ == "__main__":
                       {
                           "framework": "MITRE ATLAS",
                           "items": [
-                              "N/A"
+                              "AML.T0080 AI Agent Context Poisoning (memory writes require exact candidate authority separate from provenance eligibility)",
+                              "AML.T0080.000 AI Agent Context Poisoning: Memory (unauthorized memory candidates and generic-memory policy mutations are denied)",
+                              "AML.T0131 Crafted AI Assistant Links (prompt-submission receipts cannot substitute for memory-write grants)",
+                              "AML.T0130 AI Agent Response Biasing (ordinary memory cannot mutate trusted-source or behavioral policy)"
                           ]
                       },
                       {
@@ -23479,7 +19198,8 @@ if __name__ == "__main__":
                       {
                           "framework": "OWASP LLM Top 10 2026",
                           "items": [
-                              "LLM02:2026 Sensitive Information Disclosure"
+                              "LLM02:2026 Sensitive Information Disclosure",
+                              "LLM05:2026 Data and Model Poisoning (stage authorization denies unauthorized durable memory writes)"
                           ]
                       },
                       {
@@ -23491,7 +19211,7 @@ if __name__ == "__main__":
                       {
                           "framework": "OWASP Top 10 for Agentic Applications 2026",
                           "items": [
-                              "N/A"
+                              "ASI06:2026 Memory & Context Poisoning"
                           ]
                       },
                       {
@@ -23507,7 +19227,8 @@ if __name__ == "__main__":
                               "AISubtech-16.1.1 Logging Sensitive Conversations (denies unauthorized data at the logging-stage ingress)",
                               "AITech-16.1 Eavesdropping (denies unauthorized data at the logging-stage ingress)",
                               "AITech-8.2 Data Exfiltration / Exposure",
-                              "AITech-8.3 Information Disclosure"
+                              "AITech-8.3 Information Disclosure",
+                              "AISubtech-6.1.1 Knowledge Base Poisoning (denies unauthorized persistent memory writes)"
                           ]
                       },
                       {
@@ -23521,7 +19242,8 @@ if __name__ == "__main__":
                           "framework": "Databricks AI Security Framework 3.0",
                           "items": [
                               "Platform 12.6: Lack of compliance",
-                              "Model Serving - Inference requests 9.10: Accidental exposure of unauthorized data to models"
+                              "Model Serving - Inference requests 9.10: Accidental exposure of unauthorized data to models",
+                              "Agents - Core 13.1: Memory Poisoning"
                           ]
                       }
                   ],
@@ -23535,7 +19257,12 @@ if __name__ == "__main__":
                       "id": "AID-H-029.002-G002",
                       "implementation": "Emit structured audit events for both allow and deny decisions so stage-boundary enforcement becomes explainable and reviewable.",
                       "howTo": "<h5>Concept:</h5><p>Every decision should become an auditable event that says which asset, which stage, which policy version, and which rule path produced the result.</p><h5>Example audit event</h5><pre><code>{\n  \"timestamp\": \"2026-03-17T12:00:00Z\",\n  \"asset_id\": \"asset-123\",\n  \"target_stage\": \"training\",\n  \"decision\": \"deny\",\n  \"policy_version\": \"2026-03-17.1\",\n  \"requester_id\": \"svc-train-pipeline\",\n  \"reason\": \"asset not authorized for training\"\n}\n</code></pre><p><strong>Operational notes:</strong> Send deny events to the SIEM immediately. Keep allow events too, because they are the evidence that a stage admitted data for a legitimate reason.</p><h5>Production implementation</h5><p>At the PDP/enforcement adapter before returning the decision, emit a closed redacted event binding actor, asset/version, source/destination stage, tag/policy digest, decision and reason; write it under an external audit identity and fail closed when the required record cannot be persisted and read back.</p><h5>Independent verification</h5><p>A separately credentialed verifier independently reads back or replays decision-to-event one-to-one reconciliation, signature, sink sequence and redaction with allow, deny, PDP error, duplicate, missing-event and sink-outage fixtures, runs positive, negative, boundary, stale-policy, partial-population and dependency-failure fixtures, and reconciles the complete eligible population without trusting a component-supplied verdict.</p>"
-                    }
+                    },
+                      {
+                          "id": "AID-H-029.002-G003",
+                          "implementation": "Require a purpose-bound memory-write grant and keep ordinary facts or preferences from modifying behavioral and source-trust policy.",
+                          "howTo": "<h5>Step 1: Distinguish evidence eligibility from write authority</h5><p>At the <code>memory_write</code> stage, AND the existing data-use stage decision with the M-002.004 eligibility result, normal subject/object access checks, and a grant for this exact candidate. Derive the operation class from the storage route and schema. Facts and typed preferences use bounded data namespaces; instructions that alter source ranking, trust status, future behavior, or tool permissions must not be admitted through the generic memory API. Route such changes to the separately authorized policy/configuration release process. A writer cannot choose “fact” in a request to bypass this boundary.</p><h5>Step 2: Enforce the separate authority check</h5><p>Resolve provenance and grants from authenticated immutable stores and verify signatures/version binding before calling this predicate. A client may provide only their record references. Use positive policy-bound expiry limits, current revocation readback, and the existing atomic consume/write transaction so replays cannot reuse a one-time grant. Missing records deny. The record types and number fields must pass strict schema validation; an unavailable registry is an error, never a default allow.</p><pre><code># memory_authority.py -- called with server-resolved records, never request verdicts\nimport hashlib\n\ndef memory_write_allowed(payload: bytes, candidate: dict, provenance: dict,\n                         grant: dict, policy: dict, now: int) -&gt; bool:\n    try:\n        digest = hashlib.sha256(payload).hexdigest()\n        # operation_class is chosen by the storage route and schema, not the LLM.\n        kind = candidate[\"operation_class\"]\n        if kind not in {\"fact\", \"preference\"}:\n            return False  # trust/behavior/tool-policy changes use an admin release path\n        if candidate[\"namespace\"] != policy[\"memory_namespaces\"][kind]:\n            return False\n        if grant[\"stage\"] != \"memory_write\" or grant[\"operation_class\"] != kind:\n            return False\n        if grant[\"candidate_sha256\"] != digest or provenance[\"candidate_sha256\"] != digest:\n            return False\n        for key in (\"tenant_id\", \"subject_id\", \"task_id\"):\n            if not candidate[key] or candidate[key] != grant[key] or candidate[key] != provenance[key]:\n                return False\n        if grant[\"policy_version\"] != policy[\"version\"] or grant[\"revoked\"] is not False:\n            return False\n        if not grant[\"issued_at\"] &lt;= now &lt; grant[\"expires_at\"]:\n            return False\n        if grant[\"purpose\"] != policy[\"memory_purposes\"][kind]:\n            return False\n        if grant[\"grant_kind\"] not in {\"explicit_memory_confirmation\", \"approved_memory_workflow\"}:\n            return False\n        # A link-prefill submit receipt cannot be substituted for this grant.\n        return grant[\"namespace\"] == candidate[\"namespace\"]\n    except (KeyError, TypeError, ValueError):\n        return False</code></pre><h5>Step 3: Preserve the boundary during retrieval</h5><p>Store free-text facts as untrusted data with origin and eligibility tags, not as system/developer instructions. Prefer explicit typed preference keys (for example an allowed language enum), and never interpret a remembered domain name as a trusted-source rule. Apply the input gate and instruction/data separation when loading memory; string matching alone cannot reliably classify hidden behavioral instructions. A legitimate “remember my preferred language” action can receive a narrowly bound user confirmation or an approved workflow grant. Clicking an assistant link or confirming its prompt supplies neither. Test the exact same bytes under fact, preference, and trust-policy routes, and prove the latter cannot be written by the generic agent credential. Also test cross-user candidates, stale/revoked grants, and replacement of the candidate after approval.</p>"
+                      }
                   ]
                 },
                 {
@@ -27323,7 +23050,8 @@ if __name__ == "__main__":
                         "AML.T0110.002 AI Agent Tool Poisoning: Runtime Response",
                         "AML.T0115 Publish Poisoned AI Artifacts",
                         "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools",
-                        "AML.T0122 Exploitation of Remote Services"
+                        "AML.T0122 Exploitation of Remote Services",
+                        "AML.T0132 Misconfigured or Publicly Exposed AI Services"
                     ]
                 },
                 {
@@ -27512,7 +23240,8 @@ if __name__ == "__main__":
                                 "AML.T0105 Escape to Host",
                                 "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption",
                                 "AML.T0072 Cyber Communication Channel (default-deny server egress denies callback channels from a compromised MCP server)",
-                                "AML.T0122 Exploitation of Remote Services (local binding, Origin validation, and mutual TLS shrink the reachable MCP server surface)"
+                                "AML.T0122 Exploitation of Remote Services (local binding, Origin validation, and mutual TLS shrink the reachable MCP server surface)",
+                                "AML.T0132 Misconfigured or Publicly Exposed AI Services (MCP deployment gates reject unsafe public binds and unauthenticated remote exposure)"
                             ]
                         },
                         {
@@ -28066,8 +23795,7 @@ if __name__ == "__main__":
                         {
                             "id": "AID-H-034.004-G003",
                             "implementation": "Govern dynamic tool, resource, prompt, capability, and cache-policy changes as approved releases; publish deterministic results and auditable change notifications.",
-                            "howTo": "<h5>Concept:</h5><p>The ability to change the published tool list at runtime is powerful. Treat list_changed events as security-relevant changes, especially if a client or model may automatically discover and use newly exposed capabilities.</p><h5>Example change gate</h5><pre><code class=\"language-javascript\">// File: src/publication/changeGate.js\nimport crypto from \"node:crypto\";\nimport { execFileSync } from \"node:child_process\";\nimport fs from \"node:fs\";\nimport os from \"node:os\";\nimport path from \"node:path\";\n\nfunction positiveInteger(name) {\n  const value = Number(process.env[name]);\n  if (!Number.isSafeInteger(value) || value &lt;= 0) throw new Error(name + \" must come from the verified release profile\");\n  return value;\n}\n\nfunction requiredProfileString(name) {\n  const value = process.env[name];\n  if (typeof value !== \"string\" || value.length === 0 || value !== value.trim()) {\n    throw new Error(name + \" must be a non-empty exact value from the verified release profile\");\n  }\n  return value;\n}\n\nconst COMMAND_TIMEOUT_MS = positiveInteger(\"VERIFIED_MCP_RELEASE_COMMAND_TIMEOUT_MS\");\nconst COMMAND_MAX_BUFFER_BYTES = positiveInteger(\"VERIFIED_MCP_RELEASE_COMMAND_MAX_BUFFER_BYTES\");\nconst APPROVAL_MAX_AGE_MS = positiveInteger(\"VERIFIED_MCP_APPROVAL_MAX_AGE_MS\");\nconst VERIFIED_MCP_CONTRACT_SIGNER_IDENTITY = requiredProfileString(\n  \"VERIFIED_MCP_CONTRACT_SIGNER_IDENTITY\"\n);\nconst APPROVAL_PUBLIC_KEY = crypto.createPublicKey(\n  fs.readFileSync(process.env.MCP_APPROVAL_PUBLIC_KEY_PATH)\n);\nlet activeContractHash = null;\n\nfunction canonicalize(value) {\n  if (Array.isArray(value)) return value.map(canonicalize);\n  if (value &amp;&amp; typeof value === \"object\") {\n    return Object.fromEntries(Object.keys(value).sort().map(function mapKey(key) {\n      return [key, canonicalize(value[key])];\n    }));\n  }\n  return value;\n}\n\nfunction canonicalBytes(value) {\n  return Buffer.from(JSON.stringify(canonicalize(value)) + \"\\n\");\n}\n\nfunction sha256(value) {\n  return crypto.createHash(\"sha256\").update(value).digest(\"hex\");\n}\n\nfunction run(file, args, input) {\n  execFileSync(file, args, {\n    stdio: [input === undefined ? \"ignore\" : \"pipe\", \"pipe\", \"pipe\"],\n\n    input,\n    timeout: COMMAND_TIMEOUT_MS,\n    maxBuffer: COMMAND_MAX_BUFFER_BYTES,\n    windowsHide: true\n  });\n}\n\nfunction verifyApprovalReceipt(receipt, contractHash, nowMs) {\n  if (!receipt || Object.keys(receipt).sort().join(\",\") !== \"payload,signature_b64\") {\n    throw new Error(\"approval_receipt_schema_mismatch\");\n  }\n  const payload = receipt.payload;\n  const expected = [\n    \"approval_id\", \"approver_subject\", \"contract_sha256\", \"decision\",\n    \"expires_at\", \"issued_at\"\n  ];\n  if (!payload || Object.keys(payload).sort().join(\",\") !== expected.sort().join(\",\")) {\n    throw new Error(\"approval_payload_schema_mismatch\");\n  }\n  const signature = Buffer.from(receipt.signature_b64, \"base64\");\n  if (!signature.length || !crypto.verify(null, canonicalBytes(payload), APPROVAL_PUBLIC_KEY, signature)) {\n    throw new Error(\"approval_signature_invalid\");\n  }\n  const issuedAt = Date.parse(payload.issued_at);\n  const expiresAt = Date.parse(payload.expires_at);\n  if (payload.decision !== \"approve\" || payload.contract_sha256 !== contractHash ||\n      typeof payload.approval_id !== \"string\" || !payload.approval_id ||\n      typeof payload.approver_subject !== \"string\" || !payload.approver_subject ||\n      !Number.isFinite(issuedAt) || !Number.isFinite(expiresAt) || issuedAt &gt; nowMs ||\n      expiresAt &lt;= nowMs || nowMs - issuedAt &gt; APPROVAL_MAX_AGE_MS) {\n    throw new Error(\"approval_not_current_or_not_bound\");\n  }\n  return { approvalId: payload.approval_id, subject: payload.approver_subject };\n}\n\nexport function verifyContractArtifact({ manifestPath, bundlePath, hashPath }) {\n  const manifestBytes = fs.readFileSync(manifestPath);\n  const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), \"mcp-contract-\"));\n  const snapshotPath = path.join(temporaryRoot, \"contract.json\");\n  try {\n    fs.writeFileSync(snapshotPath, manifestBytes, { flag: \"wx\", mode: 0o600 });\n    run(\"node\", [\"scripts/check-mcp-descriptors.mjs\", \"-\"], manifestBytes);\n    run(\"node\", [\"scripts/hash-mcp-contract.mjs\", snapshotPath, \"--check\", hashPath]);\n    run(\"cosign\", [\n      \"verify-blob\", \"--bundle\", bundlePath,\n      \"--certificate-identity\", VERIFIED_MCP_CONTRACT_SIGNER_IDENTITY,\n      \"--certificate-oidc-issuer\", \"https://token.actions.githubusercontent.com\",\n      snapshotPath\n    ]);\n    const contract = JSON.parse(manifestBytes.toString(\"utf8\"));\n    if (!contract || typeof contract !== \"object\" || Array.isArray(contract) ||\n        typeof contract.contract_version !== \"string\" || !Array.isArray(contract.tools)) {\n      throw new Error(\"verified_contract_schema_mismatch\");\n    }\n    return { contract: Object.freeze(contract), contractHash: sha256(manifestBytes) };\n  } finally {\n    fs.rmSync(temporaryRoot, { recursive: true, force: true });\n  }\n}\n\nexport function activateContract({\n  approvalReceipts, logger, manifestPath, bundlePath, hashPath\n}) {\n  const verified = verifyContractArtifact({ manifestPath, bundlePath, hashPath });\n  if (!Array.isArray(approvalReceipts) || approvalReceipts.length &lt; 2) {\n    throw new Error(\"MCP contract activation requires two authenticated approvals\");\n  }\n  const nowMs = Date.now();\n  const approvals = approvalReceipts.map(function verifyReceipt(receipt) {\n    return verifyApprovalReceipt(receipt, verified.contractHash, nowMs);\n  });\n  if (new Set(approvals.map(item =&gt; item.subject)).size &lt; 2 ||\n      new Set(approvals.map(item =&gt; item.approvalId)).size !== approvals.length) {\n    throw new Error(\"MCP contract approvals must be distinct\");\n  }\n\n  activeContractHash = verified.contractHash;\n  logger.info({\n    event_type: \"mcp_contract_activated\",\n    contract_version: verified.contract.contract_version,\n    contract_hash: verified.contractHash,\n    approver_subject_hashes: approvals.map(item =&gt; sha256(item.subject)),\n    tool_count: verified.contract.tools.length\n  });\n  return verified.contractHash;\n}\n\nexport function getActiveContractHash() {\n  return activeContractHash;\n}</code></pre><p><strong>Operational notes:</strong> Do not let individual tool handlers mutate the server's public contract as a side effect of user input. Dynamic discovery should still be backed by an approved manifest, feature flag, or release artifact. Before emitting <code>notifications/tools/list_changed</code>, rerun descriptor scanning, compare every tool's contract hash against the approved contract, verify the manifest signature over the immutable bytes that will be activated, validate two distinct approval-service signatures bound to that exact artifact hash, and emit the new contract hash in telemetry. The command limits, maximum approval age, and exact signer identity must come from the signed, versioned release profile exported as the <code>VERIFIED_MCP_*</code> values. The signed profile must pin the complete expected GitHub Actions workflow/ref identity; a repository-prefix pattern is not sufficient.</p><h5>Verify safely</h5><p>A separately credentialed verifier recomputes the semantic diff, repeats list/discover calls for determinism, tests supported <code>2026-07-28</code> client-capability combinations, cursor/cache invalidation, duplicate/out-of-order/missed notifications, partial rollout, restart and rollback across every instance.</p>"
-                        },
+                            "howTo": "<h5>Concept:</h5><p>The ability to change the published tool list at runtime is powerful. Treat list_changed events as security-relevant changes, especially if a client or model may automatically discover and use newly exposed capabilities.</p><h5>Example change gate</h5><pre><code>// File: src/publication/changeGate.js\nimport crypto from \"node:crypto\";\nimport { execFileSync } from \"node:child_process\";\nimport fs from \"node:fs\";\nimport os from \"node:os\";\nimport path from \"node:path\";\n\nfunction positiveInteger(name) {\n  const value = Number(process.env[name]);\n  if (!Number.isSafeInteger(value) || value &lt;= 0) throw new Error(name + \" must come from the verified release profile\");\n  return value;\n}\n\nfunction requiredProfileString(name) {\n  const value = process.env[name];\n  if (typeof value !== \"string\" || value.length === 0 || value !== value.trim()) {\n    throw new Error(name + \" must be a non-empty exact value from the verified release profile\");\n  }\n  return value;\n}\n\nconst COMMAND_TIMEOUT_MS = positiveInteger(\"VERIFIED_MCP_RELEASE_COMMAND_TIMEOUT_MS\");\nconst COMMAND_MAX_BUFFER_BYTES = positiveInteger(\"VERIFIED_MCP_RELEASE_COMMAND_MAX_BUFFER_BYTES\");\nconst APPROVAL_MAX_AGE_MS = positiveInteger(\"VERIFIED_MCP_APPROVAL_MAX_AGE_MS\");\nconst VERIFIED_MCP_CONTRACT_SIGNER_IDENTITY = requiredProfileString(\n  \"VERIFIED_MCP_CONTRACT_SIGNER_IDENTITY\"\n);\nconst APPROVAL_PUBLIC_KEY = crypto.createPublicKey(\n  fs.readFileSync(process.env.MCP_APPROVAL_PUBLIC_KEY_PATH)\n);\nlet activeContractHash = null;\n\nfunction canonicalize(value) {\n  if (Array.isArray(value)) return value.map(canonicalize);\n  if (value &amp;&amp; typeof value === \"object\") {\n    return Object.fromEntries(Object.keys(value).sort().map(function mapKey(key) {\n      return [key, canonicalize(value[key])];\n    }));\n  }\n  return value;\n}\n\nfunction canonicalBytes(value) {\n  return Buffer.from(JSON.stringify(canonicalize(value)) + \"\\n\");\n}\n\nfunction sha256(value) {\n  return crypto.createHash(\"sha256\").update(value).digest(\"hex\");\n}\n\nfunction run(file, args, input) {\n  execFileSync(file, args, {\n    stdio: [input === undefined ? \"ignore\" : \"pipe\", \"pipe\", \"pipe\"],\n\n    input,\n    timeout: COMMAND_TIMEOUT_MS,\n    maxBuffer: COMMAND_MAX_BUFFER_BYTES,\n    windowsHide: true\n  });\n}\n\nfunction verifyApprovalReceipt(receipt, contractHash, nowMs) {\n  if (!receipt || Object.keys(receipt).sort().join(\",\") !== \"payload,signature_b64\") {\n    throw new Error(\"approval_receipt_schema_mismatch\");\n  }\n  const payload = receipt.payload;\n  const expected = [\n    \"approval_id\", \"approver_subject\", \"contract_sha256\", \"decision\",\n    \"expires_at\", \"issued_at\"\n  ];\n  if (!payload || Object.keys(payload).sort().join(\",\") !== expected.sort().join(\",\")) {\n    throw new Error(\"approval_payload_schema_mismatch\");\n  }\n  const signature = Buffer.from(receipt.signature_b64, \"base64\");\n  if (!signature.length || !crypto.verify(null, canonicalBytes(payload), APPROVAL_PUBLIC_KEY, signature)) {\n    throw new Error(\"approval_signature_invalid\");\n  }\n  const issuedAt = Date.parse(payload.issued_at);\n  const expiresAt = Date.parse(payload.expires_at);\n  if (payload.decision !== \"approve\" || payload.contract_sha256 !== contractHash ||\n      typeof payload.approval_id !== \"string\" || !payload.approval_id ||\n      typeof payload.approver_subject !== \"string\" || !payload.approver_subject ||\n      !Number.isFinite(issuedAt) || !Number.isFinite(expiresAt) || issuedAt &gt; nowMs ||\n      expiresAt &lt;= nowMs || nowMs - issuedAt &gt; APPROVAL_MAX_AGE_MS) {\n    throw new Error(\"approval_not_current_or_not_bound\");\n  }\n  return { approvalId: payload.approval_id, subject: payload.approver_subject };\n}\n\nexport function verifyContractArtifact({ manifestPath, bundlePath, hashPath }) {\n  const manifestBytes = fs.readFileSync(manifestPath);\n  const temporaryRoot = fs.mkdtempSync(path.join(os.tmpdir(), \"mcp-contract-\"));\n  const snapshotPath = path.join(temporaryRoot, \"contract.json\");\n  try {\n    fs.writeFileSync(snapshotPath, manifestBytes, { flag: \"wx\", mode: 0o600 });\n    run(\"node\", [\"scripts/check-mcp-descriptors.mjs\", \"-\"], manifestBytes);\n    run(\"node\", [\"scripts/build-mcp-contract.mjs\", \"--check\", snapshotPath]);\n    const expectedHash = fs.readFileSync(hashPath, \"utf8\").trim();\n    if (!/^[a-f0-9]{64}$/.test(expectedHash) || expectedHash !== sha256(manifestBytes)) {\n      throw new Error(\"contract_release_digest_mismatch\");\n    }\n    run(\"cosign\", [\n      \"verify-blob\", \"--bundle\", bundlePath,\n      \"--certificate-identity\", VERIFIED_MCP_CONTRACT_SIGNER_IDENTITY,\n      \"--certificate-oidc-issuer\", \"https://token.actions.githubusercontent.com\",\n      snapshotPath\n    ]);\n    const contract = JSON.parse(manifestBytes.toString(\"utf8\"));\n    if (!contract || typeof contract !== \"object\" || Array.isArray(contract) ||\n        typeof contract.contract_version !== \"string\" || !Array.isArray(contract.tools)) {\n      throw new Error(\"verified_contract_schema_mismatch\");\n    }\n    return { contract: Object.freeze(contract), contractHash: sha256(manifestBytes) };\n  } finally {\n    fs.rmSync(temporaryRoot, { recursive: true, force: true });\n  }\n}\n\nexport function activateContract({\n  approvalReceipts, logger, manifestPath, bundlePath, hashPath\n}) {\n  const verified = verifyContractArtifact({ manifestPath, bundlePath, hashPath });\n  if (!Array.isArray(approvalReceipts) || approvalReceipts.length &lt; 2) {\n    throw new Error(\"MCP contract activation requires two authenticated approvals\");\n  }\n  const nowMs = Date.now();\n  const approvals = approvalReceipts.map(function verifyReceipt(receipt) {\n    return verifyApprovalReceipt(receipt, verified.contractHash, nowMs);\n  });\n  if (new Set(approvals.map(item =&gt; item.subject)).size &lt; 2 ||\n      new Set(approvals.map(item =&gt; item.approvalId)).size !== approvals.length) {\n    throw new Error(\"MCP contract approvals must be distinct\");\n  }\n\n  activeContractHash = verified.contractHash;\n  logger.info({\n    event_type: \"mcp_contract_activated\",\n    contract_version: verified.contract.contract_version,\n    contract_hash: verified.contractHash,\n    approver_subject_hashes: approvals.map(item =&gt; sha256(item.subject)),\n    tool_count: verified.contract.tools.length\n  });\n  return verified.contractHash;\n}\n\nexport function getActiveContractHash() {\n  return activeContractHash;\n}</code></pre><p><strong>Operational notes:</strong> Do not let individual tool handlers mutate the server's public contract as a side effect of user input. Dynamic discovery should still be backed by an approved manifest, feature flag, or release artifact. Before emitting <code>notifications/tools/list_changed</code>, rerun descriptor scanning, compare every tool's contract hash against the approved contract, verify the manifest signature over the immutable bytes that will be activated, validate two distinct approval-service signatures bound to that exact artifact hash, and emit the new contract hash in telemetry. The command limits, maximum approval age, and exact signer identity must come from the signed, versioned release profile exported as the <code>VERIFIED_MCP_*</code> values. The signed profile must pin the complete expected GitHub Actions workflow/ref identity; a repository-prefix pattern is not sufficient.</p><h5>Verify safely</h5><p>A separately credentialed verifier recomputes the semantic diff, repeats list/discover calls for determinism, tests supported <code>2026-07-28</code> client-capability combinations, cursor/cache invalidation, duplicate/out-of-order/missed notifications, partial rollout, restart and rollback across every instance.</p>"},
                         {
                             "id": "AID-H-034.004-G004",
                             "implementation": "Return deterministic cacheable server/discover, list, and resource results with policy-derived ttlMs and cacheScope values.",
@@ -29477,13 +25205,16 @@ if __name__ == "__main__":
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
+                        "AML.T0006 Active Scanning",
+                        "AML.T0006.002 Active Scanning: Scan for Exposed AI Infrastructure",
                         "AML.T0018 Manipulate AI Model",
                         "AML.T0018.000 Manipulate AI Model: Poison AI Model",
                         "AML.T0029 Denial of AI Service",
                         "AML.T0040 AI Model Inference API Access",
                         "AML.T0049 Exploit Public-Facing Application",
                         "AML.T0120 AI Artifact Repository",
-                        "AML.T0122 Exploitation of Remote Services"
+                        "AML.T0122 Exploitation of Remote Services",
+                        "AML.T0132 Misconfigured or Publicly Exposed AI Services"
                     ]
                 },
                 {
@@ -29608,7 +25339,10 @@ if __name__ == "__main__":
                             "items": [
                                 "AML.T0040 AI Model Inference API Access",
                                 "AML.T0049 Exploit Public-Facing Application",
-                                "AML.T0122 Exploitation of Remote Services (unapproved inference-runtime listeners and control transports are disabled)"
+                                "AML.T0122 Exploitation of Remote Services (unapproved inference-runtime listeners and control transports are disabled)",
+                                "AML.T0132 Misconfigured or Publicly Exposed AI Services (listener readback blocks deployment of unknown or unexpectedly broad inference endpoints)",
+                                "AML.T0006 Active Scanning (approved listener profiles remove unintended runtime scan targets)",
+                                "AML.T0006.002 Active Scanning: Scan for Exposed AI Infrastructure (unapproved public inference listeners fail the serving release gate)"
                             ]
                         },
                         {
@@ -29714,7 +25448,8 @@ if __name__ == "__main__":
                                 "AML.T0018.000 Manipulate AI Model: Poison AI Model",
                                 "AML.T0029 Denial of AI Service",
                                 "AML.T0120 AI Artifact Repository (repository pull and push operations on the serving runtime require explicit per-operation authorization)",
-                                "AML.T0122 Exploitation of Remote Services (privileged runtime operations require explicit authorization even from a reachable client)"
+                                "AML.T0122 Exploitation of Remote Services (privileged runtime operations require explicit authorization even from a reachable client)",
+                                "AML.T0132 Misconfigured or Publicly Exposed AI Services (complete route classification and scoped authorization deny exposed management capabilities)"
                             ]
                         },
                         {
@@ -29780,8 +25515,7 @@ if __name__ == "__main__":
                         {
                             "id": "AID-H-038.002-G001",
                             "implementation": "Classify every runtime route, disable unused privileged capabilities, and place an authenticated default-deny operation gate in the same process path as every enabled management action.",
-                            "howTo": "<h5>Build a complete route registry</h5><p>Inventory routes after all runtime and endpoint plugins load. Classify each exact method/path or gRPC method as <code>inference</code>, <code>health</code>, <code>privileged</code>, or <code>disabled</code>. Privileged entries name required identity scopes and a state-readback method. Unknown or shadowed routes fail startup. Keep backend listeners on loopback or a Unix socket and prove that constraint with <code>AID-H-038.001</code>.</p><pre><code class=\"language-python\"># File: serving_security/privileged_gate.py\nfrom __future__ import annotations\n\nfrom dataclasses import dataclass\nfrom typing import Iterable\nfrom starlette.authentication import AuthCredentials\n\n@dataclass(frozen=True)\nclass Operation:\n    name: str\n    method: str\n    path: str\n    classification: str\n    required_scopes: frozenset[str]\n\n\ndef compile_registry(raw: list[dict], actual_routes: Iterable[tuple[str, str]]) -&gt; dict[tuple[str, str], Operation]:\n    allowed_classes = {\"inference\", \"health\", \"privileged\", \"disabled\"}\n    result = {}\n    names = set()\n    for item in raw:\n        if not isinstance(item, dict) or set(item) != {\"name\", \"method\", \"path\", \"classification\", \"required_scopes\"}:\n            raise ValueError(\"operation registry schema differs\")\n        name, method_raw, path = item[\"name\"], item[\"method\"], item[\"path\"]\n        if (not isinstance(name, str) or not name or len(name) &gt; 128\n                or not isinstance(method_raw, str) or not method_raw.isalpha()\n                or not isinstance(path, str) or not path.startswith(\"/\")\n                or len(path) &gt; 2048 or \"{\" in path or \"}\" in path):\n            raise ValueError(\"operation name, method, or exact path is invalid\")\n        method = method_raw.upper()\n        scopes = item[\"required_scopes\"]\n        if (item[\"classification\"] not in allowed_classes\n                or not isinstance(scopes, list) or len(scopes) != len(set(scopes))\n                or any(not isinstance(scope, str) or not scope for scope in scopes)):\n            raise ValueError(\"operation registry entry is invalid\")\n        if item[\"classification\"] == \"privileged\" and not scopes:\n            raise ValueError(\"privileged operation requires scopes\")\n        if item[\"classification\"] != \"privileged\" and scopes:\n            raise ValueError(\"only privileged operations may declare scopes\")\n        key = (method, path)\n        if key in result or name in names:\n            raise ValueError(\"operation name or route is duplicated\")\n        names.add(name)\n        result[key] = Operation(name, method, path, item[\"classification\"], frozenset(scopes))\n    actual = list(actual_routes)\n    if any(not isinstance(item, tuple) or len(item) != 2\n           or not all(isinstance(value, str) and value for value in item)\n           or \"{\" in item[1] or \"}\" in item[1] for item in actual):\n        raise RuntimeError(\"runtime route inventory is malformed or parameterized\")\n    normalized = [(method.upper(), path) for method, path in actual]\n    if len(normalized) != len(set(normalized)):\n        raise RuntimeError(\"duplicate or shadowed runtime route exists\")\n    observed = set(normalized)\n    enabled = {key for key, operation in result.items() if operation.classification != \"disabled\"}\n    disabled_present = {key for key, operation in result.items()\n                        if operation.classification == \"disabled\" and key in observed}\n    if observed != enabled or disabled_present:\n        raise RuntimeError(\"actual runtime routes differ from the complete signed registry\")\n    return result\n\n\nclass PrivilegedOperationGate:\n    def __init__(self, app, registry: dict[tuple[str, str], Operation]):\n        self.app, self.registry = app, registry\n\n    async def __call__(self, scope, receive, send):\n        if scope[\"type\"] == \"lifespan\":\n            await self.app(scope, receive, send)\n            return\n        if scope[\"type\"] == \"websocket\":\n            await send({\"type\": \"websocket.close\", \"code\": 1008})\n            return\n        if scope[\"type\"] != \"http\":\n            raise RuntimeError(\"unregistered ASGI protocol reached operation gate\")\n        key = (scope[\"method\"].upper(), scope[\"path\"])\n        operation = self.registry.get(key)\n        if operation is None or operation.classification == \"disabled\":\n            await self._deny(send, 404, \"route_not_enabled\")\n            return\n        if operation.classification == \"privileged\":\n            credentials = scope.get(\"auth\")\n            scopes = set(credentials.scopes) if isinstance(credentials, AuthCredentials) else set()\n            if not operation.required_scopes.issubset(scopes):\n                await self._deny(send, 403, \"operation_not_authorized\")\n                return\n        await self.app(scope, receive, send)\n\n    @staticmethod\n    async def _deny(send, status: int, reason: str):\n        body = (\"{\\\"error\\\":\\\"\" + reason + \"\\\"}\").encode(\"ascii\")\n        await send({\"type\":\"http.response.start\", \"status\":status,\n                    \"headers\":[(b\"content-type\", b\"application/json\"),\n                               (b\"content-length\", str(len(body)).encode(\"ascii\"))]})\n        await send({\"type\":\"http.response.body\", \"body\":body})</code></pre><p>Wrap this gate inside the service's already verified authentication middleware so <code>scope.auth</code> comes only from <code>AID-H-004.002</code>, not from caller headers. For example, use <code>AuthenticationMiddleware(PrivilegedOperationGate(runtime_app, registry), backend=verified_backend)</code>. Enumerate Starlette/FastAPI routes after plugins load, expand each method, and pass that complete set to <code>compile_registry</code>. This exact-path example deliberately rejects parameterized and shadowed management routes; move resource identifiers into a schema-validated request body or implement a separately tested canonical route-template matcher. It denies WebSocket access. For gRPC, apply the same registry and scope decision in a server interceptor and default-deny unknown methods.</p><h5>Verify effect, not only HTTP status</h5><p>For every privileged operation, test the authorized scope, no credential, ordinary inference credential, wrong tenant, stale credential, alternate method/path, direct backend port, plugin shadow route, and disabled capability. After an allowed operation, independently read the authoritative model, adapter, repository, pause, scale, or weight state and bind it to the request, identity, approved release receipt, policy digest, before/after state, and audit event. After every denied test, prove state did not change. Missing route inventory, missing readback, authentication or policy failure, or an untestable direct path is not PASS.</p><p><strong>Action:</strong> Default-deny every unregistered or insufficiently scoped operation and block promotion until authorized and denied tests confirm the expected authoritative state.</p>"
-                        }
+                            "howTo": "<h5>Build a complete route registry</h5><p>Inventory routes after all runtime and endpoint plugins load. Classify each exact method/path or gRPC method as <code>inference</code>, <code>health</code>, <code>privileged</code>, or <code>disabled</code>. Privileged entries name required identity scopes and a state-readback method. Unknown or shadowed routes fail startup. Keep backend listeners on loopback or a Unix socket and prove that constraint with <code>AID-H-038.001</code>.</p><pre><code class=\"language-python\"># File: serving_security/privileged_gate.py\nfrom __future__ import annotations\n\nfrom dataclasses import dataclass\nfrom typing import Iterable\nfrom starlette.authentication import AuthCredentials\n\n@dataclass(frozen=True)\nclass Operation:\n    name: str\n    method: str\n    path: str\n    classification: str\n    required_scopes: frozenset[str]\n\n\ndef compile_registry(raw: list[dict], actual_routes: Iterable[tuple[str, str]]) -&gt; dict[tuple[str, str], Operation]:\n    allowed_classes = {\"inference\", \"health\", \"privileged\", \"disabled\"}\n    result = {}\n    names = set()\n    for item in raw:\n        if not isinstance(item, dict) or set(item) != {\"name\", \"method\", \"path\", \"classification\", \"required_scopes\"}:\n            raise ValueError(\"operation registry schema differs\")\n        name, method_raw, path = item[\"name\"], item[\"method\"], item[\"path\"]\n        if (not isinstance(name, str) or not name or len(name) &gt; 128\n                or not isinstance(method_raw, str) or not method_raw.isalpha()\n                or not isinstance(path, str) or not path.startswith(\"/\")\n                or len(path) &gt; 2048 or \"{\" in path or \"}\" in path):\n            raise ValueError(\"operation name, method, or exact path is invalid\")\n        method = method_raw.upper()\n        scopes = item[\"required_scopes\"]\n        if (item[\"classification\"] not in allowed_classes\n                or not isinstance(scopes, list) or len(scopes) != len(set(scopes))\n                or any(not isinstance(scope, str) or not scope for scope in scopes)):\n            raise ValueError(\"operation registry entry is invalid\")\n        if item[\"classification\"] == \"privileged\" and not scopes:\n            raise ValueError(\"privileged operation requires scopes\")\n        if item[\"classification\"] != \"privileged\" and scopes:\n            raise ValueError(\"only privileged operations may declare scopes\")\n        key = (method, path)\n        if key in result or name in names:\n            raise ValueError(\"operation name or route is duplicated\")\n        names.add(name)\n        result[key] = Operation(name, method, path, item[\"classification\"], frozenset(scopes))\n    actual = list(actual_routes)\n    if any(not isinstance(item, tuple) or len(item) != 2\n           or not all(isinstance(value, str) and value for value in item)\n           or \"{\" in item[1] or \"}\" in item[1] for item in actual):\n        raise RuntimeError(\"runtime route inventory is malformed or parameterized\")\n    normalized = [(method.upper(), path) for method, path in actual]\n    if len(normalized) != len(set(normalized)):\n        raise RuntimeError(\"duplicate or shadowed runtime route exists\")\n    observed = set(normalized)\n    enabled = {key for key, operation in result.items() if operation.classification != \"disabled\"}\n    disabled_present = {key for key, operation in result.items()\n                        if operation.classification == \"disabled\" and key in observed}\n    if observed != enabled or disabled_present:\n        raise RuntimeError(\"actual runtime routes differ from the complete signed registry\")\n    return result\n\n\nclass PrivilegedOperationGate:\n    def __init__(self, app, registry: dict[tuple[str, str], Operation]):\n        self.app, self.registry = app, registry\n\n    async def __call__(self, scope, receive, send):\n        if scope[\"type\"] == \"lifespan\":\n            await self.app(scope, receive, send)\n            return\n        if scope[\"type\"] == \"websocket\":\n            await send({\"type\": \"websocket.close\", \"code\": 1008})\n            return\n        if scope[\"type\"] != \"http\":\n            raise RuntimeError(\"unregistered ASGI protocol reached operation gate\")\n        key = (scope[\"method\"].upper(), scope[\"path\"])\n        operation = self.registry.get(key)\n        if operation is None or operation.classification == \"disabled\":\n            await self._deny(send, 404, \"route_not_enabled\")\n            return\n        credentials = scope.get(\"auth\")\n        scopes = set(credentials.scopes) if isinstance(credentials, AuthCredentials) else set()\n        user = scope.get(\"user\")\n        if operation.classification != \"health\":\n            if \"authenticated\" not in scopes or getattr(user, \"is_authenticated\", False) is not True:\n                await self._deny(send, 401, \"authentication_required\")\n                return\n        if operation.classification == \"privileged\":\n            if not operation.required_scopes.issubset(scopes):\n                await self._deny(send, 403, \"operation_not_authorized\")\n                return\n        await self.app(scope, receive, send)\n\n    @staticmethod\n    async def _deny(send, status: int, reason: str):\n        body = (\"{\\\"error\\\":\\\"\" + reason + \"\\\"}\").encode(\"ascii\")\n        await send({\"type\":\"http.response.start\", \"status\":status,\n                    \"headers\":[(b\"content-type\", b\"application/json\"),\n                               (b\"content-length\", str(len(body)).encode(\"ascii\"))]})\n        await send({\"type\":\"http.response.body\", \"body\":body})</code></pre><p>Wrap this gate inside the service's already verified authentication middleware so <code>scope.auth</code> comes only from <code>AID-H-004.002</code>, not from caller headers. For example, use <code>AuthenticationMiddleware(PrivilegedOperationGate(runtime_app, registry), backend=verified_backend)</code>. The verified backend must emit an authenticated user and the <code>authenticated</code> scope only after credential, audience, tenant, expiry, and revocation checks; the operation gate rejects anonymous inference as well as anonymous management. A health-class route is an explicitly approved unauthenticated minimal liveness endpoint. Enumerate Starlette/FastAPI routes after plugins load, expand each method, and pass that complete set to <code>compile_registry</code>. This exact-path example deliberately rejects parameterized and shadowed management routes; move resource identifiers into a schema-validated request body or implement a separately tested canonical route-template matcher. It denies WebSocket access. For gRPC, apply the same registry and scope decision in a server interceptor and default-deny unknown methods.</p><h5>Verify effect, not only HTTP status</h5><p>For every privileged operation, test the authorized scope, no credential, ordinary inference credential, wrong tenant, stale credential, alternate method/path, direct backend port, plugin shadow route, and disabled capability. After an allowed operation, independently read the authoritative model, adapter, repository, pause, scale, or weight state and bind it to the request, identity, approved release receipt, policy digest, before/after state, and audit event. After every denied test, prove state did not change. Missing route inventory, missing readback, authentication or policy failure, or an untestable direct path is not PASS.</p><p><strong>Action:</strong> Default-deny every unregistered or insufficiently scoped operation and block promotion until authorized and denied tests confirm the expected authoritative state.</p><h5>Regression case: alternate inference routes and fetch operations</h5><p>The <a href=\"https://docs.vllm.ai/en/latest/usage/security/\" target=\"_blank\" rel=\"noopener noreferrer\">vLLM security guidance</a> warns that its built-in <code>--api-key</code> protection does not cover every endpoint. Depending on the installed version, routes such as <code>/invocations</code>, <code>/pooling</code>, <code>/score</code>, and <code>/classify</code> can sit outside protected prefixes. Include every registered method/path after plugins load; authenticate ordinary inference routes through AID-H-004.002 as well as authorizing privileged routes here. A middleware that merely populates an anonymous user object without rejecting it is not an authentication gate. Disabled routes must remain inaccessible through direct backend listeners and alternate protocols.</p><p>For each enabled inference route, exercise missing, malformed, expired, wrong-tenant and ordinary valid credentials through both the ingress and direct-port test harness; assert the model handler is never invoked on denial. An intentionally public health route must reveal only its approved minimal status, not model/configuration metadata. Use ephemeral instrumented runtimes and synthetic prompts, not production inference load.</p><p>For operations that fetch external artifacts, such as Ollama <code>/api/pull</code>, apply I-002.002 destination policy and I-001.004 network isolation to the runtime process itself. Reuse their DNS/IP, redirect, private-address, and egress controls; an authenticated management request does not make an arbitrary registry URL safe. A sandbox test should attempt a disallowed registry and confirm no connection reaches a controlled forbidden-destination canary. This egress outcome belongs to the network controls, not a second runtime authorization score.</p>"}
                     ]
                 }
             ]

@@ -8,12 +8,12 @@ export const integrationCatalogs = {
     "source_framework_label": "MITRE ATLAS",
     "display_name": "MITRE ATLAS",
     "upstream": "The MITRE Corporation",
-    "upstream_version": "2026.08",
+    "upstream_version": "2026.09",
     "upstream_url": "https://atlas.mitre.org/",
     "source_artifact": {
-      "url": "https://github.com/mitre-atlas/atlas-data/blob/41d4f5ca4112f0e492ffaa3ebff07dc80a75afa5/dist/v6/ATLAS-2026.08.yaml",
-      "git_revision": "41d4f5ca4112f0e492ffaa3ebff07dc80a75afa5",
-      "sha256": "a8d32f676854cc57721c217ec5b39f07db518076dee4a6c1335df0a7bc8271a2",
+      "url": "https://raw.githubusercontent.com/mitre-atlas/atlas-data/3259f388d19cbcca11bacf12a0ef97f4198f711b/dist/v6/ATLAS-2026.09.yaml",
+      "git_revision": "3259f388d19cbcca11bacf12a0ef97f4198f711b",
+      "sha256": "935efa93e28294432d3e2f537eb94991ef8d1f8c58341cd360ea3321ddb66688",
       "data_format_version": "6.0.0"
     },
     "license_notice": "MITRE ATLAS data, Copyright 2021-2026 The MITRE Corporation, licensed under the Apache License, Version 2.0. MITRE and MITRE ATLAS are trademarks of The MITRE Corporation; use of this material does not imply endorsement. Identifiers, names and structure only; technique descriptions are not reproduced. See THIRD_PARTY_NOTICES.md.",
@@ -138,6 +138,15 @@ export const integrationCatalogs = {
         ]
       },
       {
+        "external_id": "AML.T0000.003",
+        "name": "Search Open Technical Databases: Scan Databases",
+        "short_name": "Scan Databases",
+        "parent_id": "AML.T0000",
+        "tactic_ids": [
+          "AML.TA0002"
+        ]
+      },
+      {
         "external_id": "AML.T0001",
         "name": "Search Open AI Vulnerability Analysis",
         "short_name": "Search Open AI Vulnerability Analysis",
@@ -241,6 +250,42 @@ export const integrationCatalogs = {
         "name": "Active Scanning",
         "short_name": "Active Scanning",
         "parent_id": null,
+        "tactic_ids": [
+          "AML.TA0002"
+        ]
+      },
+      {
+        "external_id": "AML.T0006.000",
+        "name": "Active Scanning: Enumerate Hosted AI Resources",
+        "short_name": "Enumerate Hosted AI Resources",
+        "parent_id": "AML.T0006",
+        "tactic_ids": [
+          "AML.TA0002"
+        ]
+      },
+      {
+        "external_id": "AML.T0006.001",
+        "name": "Active Scanning: Query Platform Metadata APIs",
+        "short_name": "Query Platform Metadata APIs",
+        "parent_id": "AML.T0006",
+        "tactic_ids": [
+          "AML.TA0002"
+        ]
+      },
+      {
+        "external_id": "AML.T0006.002",
+        "name": "Active Scanning: Scan for Exposed AI Infrastructure",
+        "short_name": "Scan for Exposed AI Infrastructure",
+        "parent_id": "AML.T0006",
+        "tactic_ids": [
+          "AML.TA0002"
+        ]
+      },
+      {
+        "external_id": "AML.T0006.003",
+        "name": "Active Scanning: Probe AI Agent Trigger Channels",
+        "short_name": "Probe AI Agent Trigger Channels",
+        "parent_id": "AML.T0006",
         "tactic_ids": [
           "AML.TA0002"
         ]
@@ -1889,6 +1934,60 @@ export const integrationCatalogs = {
         "parent_id": null,
         "tactic_ids": [
           "AML.TA0003"
+        ]
+      },
+      {
+        "external_id": "AML.T0129",
+        "name": "Triggers in Multimodal Inputs",
+        "short_name": "Triggers in Multimodal Inputs",
+        "parent_id": null,
+        "tactic_ids": [
+          "AML.TA0007"
+        ]
+      },
+      {
+        "external_id": "AML.T0130",
+        "name": "AI Agent Response Biasing",
+        "short_name": "AI Agent Response Biasing",
+        "parent_id": null,
+        "tactic_ids": [
+          "AML.TA0011"
+        ]
+      },
+      {
+        "external_id": "AML.T0131",
+        "name": "Crafted AI Assistant Links",
+        "short_name": "Crafted AI Assistant Links",
+        "parent_id": null,
+        "tactic_ids": [
+          "AML.TA0004"
+        ]
+      },
+      {
+        "external_id": "AML.T0132",
+        "name": "Misconfigured or Publicly Exposed AI Services",
+        "short_name": "Misconfigured or Publicly Exposed AI Services",
+        "parent_id": null,
+        "tactic_ids": [
+          "AML.TA0004"
+        ]
+      },
+      {
+        "external_id": "AML.T0133",
+        "name": "Discover AI Agent Runtime Capabilities",
+        "short_name": "Discover AI Agent Runtime Capabilities",
+        "parent_id": null,
+        "tactic_ids": [
+          "AML.TA0008"
+        ]
+      },
+      {
+        "external_id": "AML.T0134",
+        "name": "AI Targeted Cloaking",
+        "short_name": "AI Targeted Cloaking",
+        "parent_id": null,
+        "tactic_ids": [
+          "AML.TA0007"
         ]
       }
     ]

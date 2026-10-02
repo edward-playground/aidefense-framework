@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20260930",
+  "aidefend_version": "1.20261002",
   "framework_key": "owasp-llm-top-10-2026",
   "source_framework_label": "OWASP LLM Top 10 2026",
   "display_name": "OWASP LLM Top 10 2026",
@@ -26,7 +26,7 @@
       "rank": 1,
       "name": "Prompt Injection",
       "referenced": true,
-      "control_count": 69
+      "control_count": 70
     },
     {
       "item_locator": "LLM02:2026 Sensitive Information Disclosure",
@@ -42,7 +42,7 @@
       "rank": 3,
       "name": "Excessive Agency",
       "referenced": true,
-      "control_count": 63
+      "control_count": 65
     },
     {
       "item_locator": "LLM04:2026 Supply Chain",
@@ -50,7 +50,7 @@
       "rank": 4,
       "name": "Supply Chain",
       "referenced": true,
-      "control_count": 48
+      "control_count": 47
     },
     {
       "item_locator": "LLM05:2026 Data and Model Poisoning",
@@ -58,7 +58,7 @@
       "rank": 5,
       "name": "Data and Model Poisoning",
       "referenced": true,
-      "control_count": 59
+      "control_count": 60
     },
     {
       "item_locator": "LLM06:2026 Unbounded Consumption",

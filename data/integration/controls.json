@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20260930",
-  "data_version": "2026.09.30",
+  "aidefend_version": "1.20261002",
+  "data_version": "2026.10.02",
   "unit_rule": "Every entry in controls is an independently selectable control unit. Entries in families are navigation only and must not be treated as countermeasures.",
   "counts": {
-    "actionable_controls": 307,
+    "actionable_controls": 309,
     "standalone_techniques": 35,
-    "leaf_subtechniques": 272,
+    "leaf_subtechniques": 274,
     "families": 58
   },
   "controls": [
@@ -153,7 +153,7 @@
         "operation",
         "improvement"
       ],
-      "description_text": "Continuously discover and validate organization-owned, Internet-reachable AI attack surface from an external vantage point: model inference APIs, MCP servers, A2A or Agent Card endpoints, public model or artifact stores, notebooks, Gradio/Streamlit applications, debug or administrative routes, and orphaned test deployments. Classify candidate AI-service evidence before reconciliation, then map confirmed candidates to an owner, environment, approved exposure intent, authentication requirement, optional approved response fingerprint, exception state, severity, and retirement state; unknown or orphaned high-risk services must be brought under management or removed.\n\nOfficial implementation references: CISA Internet Exposure Reduction guidance at https://www.cisa.gov/resources-tools/resources/exposure-reduction and the OWASP Secure AI Model Ops Cheat Sheet at https://cheatsheetseries.owasp.org/cheatsheets/Secure_AI_Model_Ops_Cheat_Sheet.html.",
+      "description_text": "Continuously discover and validate organization-owned, Internet-reachable AI attack surface from an external vantage point: model inference APIs, MCP servers, A2A or Agent Card endpoints, public model or artifact stores, notebooks, Gradio/Streamlit applications, debug or administrative routes, and orphaned test deployments. Classify candidate AI-service evidence before reconciliation, then map confirmed candidates to an owner, environment, approved exposure intent, authentication requirement, optional approved response fingerprint, exception state, severity, and retirement state; unknown or orphaned high-risk services must be brought under management or removed.\n\nOfficial implementation references: CISA Internet Exposure Reduction guidance at https://www.cisa.gov/resources-tools/resources/exposure-reduction and the OWASP Secure AI Model Ops Cheat Sheet at https://cheatsheetseries.owasp.org/cheatsheets/Secure_AI_Model_Ops_Cheat_Sheet.html. For organization-published hosted/low-code agents, include provider-owned hostnames and tenant/environment inventories, with explicit coverage limits and independent channel probes. Required nonstandard runtime ports and paths are part of the authorized target population.",
       "scope_boundary": {
         "responsibility": "Owns authorized, credential-free, outside-in discovery and validation of organization-owned Internet-reachable AI endpoints and agent services, followed by ownership, exposure-intent, authentication, exception, and retirement reconciliation.",
         "related_techniques": [
@@ -2184,6 +2184,100 @@
         ]
       },
       "url": "https://aidefend.net/#t=AID-H-004.005"
+    },
+    {
+      "id": "AID-H-004.006",
+      "name": "Hosted Agent Publication & Exposure Controls",
+      "actionable": true,
+      "kind": "sub-technique",
+      "tactic": "Harden",
+      "tactic_id": "harden",
+      "family_id": "AID-H-004",
+      "pillar": [
+        "app",
+        "infra"
+      ],
+      "phase": [
+        "building",
+        "validation",
+        "operation"
+      ],
+      "description_text": "Prevent unintended access to agents published through vendor-hosted and low-code platforms. The tenant platform administrator and agent release owner enforce approved audiences, channels, sharing boundaries, and connector execution identities before publication and after configuration changes.\n\nApplies to organizations publishing agents on shared provider infrastructure, including provider-owned hostnames; merely consuming a vendor assistant is outside this control. Shipping tenant data policies, channel restrictions, and agent administration interfaces provide the implementation path. Public agents are allowed only through a versioned exception whose reachable knowledge, tools, and identities are appropriate for anonymous users.\n\nEvidence combines effective tenant and agent configuration, complete published-agent inventory, denied publication attempts, and independent access probes against the published version. No applicable hosted agents means NOT_APPLICABLE; incomplete inventory or unavailable effective permissions means INSUFFICIENT_DATA, collection failure means ERROR, and reachable unauthorized capabilities mean FAIL. PASS requires both preventive settings and successful negative access tests for the applicable population. This publication gate also covers the release of provider-native event-trigger configurations. Where the hosted platform has no tenant-controlled pre-run admission point, verify the native trigger filters, approved event resources and dedicated execution identity here; a configured maker connection does not prove per-event initiator authorization. Missing supplier evidence remains INSUFFICIENT_DATA, and an unenforceable required restriction prevents release.",
+      "scope_boundary": {
+        "responsibility": "Owns the technical release and configuration-drift gate for hosted agents: who can reach each published agent and which channels, shared connections, and knowledge sources that audience can exercise.",
+        "related_techniques": [
+          {
+            "id": "AID-M-001.005",
+            "comparison": "Discovery supplies the hosted-tenant population and exposure findings; this control configures and verifies the publication restrictions."
+          },
+          {
+            "id": "AID-H-004.002",
+            "comparison": "Reuse workload authentication; a service identity alone does not establish the audience of a published SaaS agent."
+          },
+          {
+            "id": "AID-H-004.007",
+            "comparison": "Event-to-run authority is checked at trigger admission; publication approval does not authorize each external event."
+          },
+          {
+            "id": "AID-H-018.002",
+            "comparison": "Runtime per-action authorization remains independent of the publication gate."
+          },
+          {
+            "id": "AID-I-003",
+            "comparison": "Containment owns disabling access after a finding; this control owns release denial and exposure configuration."
+          }
+        ]
+      },
+      "url": "https://aidefend.net/#t=AID-H-004.006"
+    },
+    {
+      "id": "AID-H-004.007",
+      "name": "External Event-to-Agent Admission & Authority Binding",
+      "actionable": true,
+      "kind": "sub-technique",
+      "tactic": "Harden",
+      "tactic_id": "harden",
+      "family_id": "AID-H-004",
+      "pillar": [
+        "app",
+        "infra"
+      ],
+      "phase": [
+        "building",
+        "validation",
+        "operation"
+      ],
+      "description_text": "Authorize externally delivered email, webhook, or messaging events before they create an agent run. The integration receiver and workflow owner distinguish authenticated delivery from the initiating actor's authority, select an approved workflow and execution identity from trusted configuration, and preserve that binding through queues and workers.\n\nThis applies when externally controlled events can initiate agent activity; an agent with no such triggers is NOT_APPLICABLE. Shipping event-driven agent platforms and demonstrated probing of agent trigger channels anchor this control. Provider signatures or aligned email domains alone do not authorize use of the agent maker's privileges.\n\nVerify rejected-source, wrong-workspace, unauthorized-actor, replay, and altered-routing events against the actual receiver and worker. PASS requires correct run admission and unchanged authority across the applicable trigger population; an unauthorized run is FAIL, missing provider/actor evidence is INSUFFICIENT_DATA, and verification or policy-service failure is ERROR with admission denied. Applies to tenant-controlled event receivers/workflows, or platform-supported pre-run admission adapters that expose verifiable initiator/resource binding. A provider-native trigger with no such tenant integration point is NOT_APPLICABLE to this receiver control; AID-H-004.006 owns its hosted publication and native-trigger restrictions. If the admission architecture exists but its evidence or required adapter is missing, report INSUFFICIENT_DATA or ERROR rather than NOT_APPLICABLE.",
+      "scope_boundary": {
+        "responsibility": "Owns the external-event-to-agent-run boundary: authorized initiator, event resource, workflow, execution identity, and bounded task authority before scheduling.",
+        "related_techniques": [
+          {
+            "id": "AID-H-004.005",
+            "comparison": "Reuse provider-native integrity, freshness, and durable replay protection; a valid delivery signature is not initiator authorization."
+          },
+          {
+            "id": "AID-M-009.003",
+            "comparison": "Consume registered workload identities and delegation context; registration does not authorize an external event to start a run."
+          },
+          {
+            "id": "AID-H-018.004",
+            "comparison": "The admitted task bounds downstream capabilities; runtime scoping can only narrow the admitted authority."
+          },
+          {
+            "id": "AID-H-018.002",
+            "comparison": "Per-tool/service action authorization remains a later gate and does not substitute for event admission."
+          },
+          {
+            "id": "AID-H-018.008",
+            "comparison": "Effect idempotency is separate from deduplicating event delivery and run creation."
+          },
+          {
+            "id": "AID-H-004.006",
+            "comparison": "Hosted publication owns native trigger configuration when the provider exposes no tenant-controlled pre-run admission point. This receiver gate does not independently score the same hosted configuration or treat maker credentials as initiator authority."
+          }
+        ]
+      },
+      "url": "https://aidefend.net/#t=AID-H-004.007"
     },
     {
       "id": "AID-H-005.001",
@@ -5234,9 +5328,9 @@
         "building",
         "operation"
       ],
-      "description_text": "Implement a fail-closed authorization gate at each AI lifecycle-stage boundary. Before any data asset is consumed by training, fine-tuning, evaluation, RAG indexing, inference context assembly, logging, memory write, or retraining, the gate evaluates the asset's data-use tags against the requested stage and context. Data lacking valid authorization for the target stage is denied and logged as a policy event.",
+      "description_text": "Implement a fail-closed authorization gate at each AI lifecycle-stage boundary. Before any data asset is consumed by training, fine-tuning, evaluation, RAG indexing, inference context assembly, logging, memory write, or retraining, the gate evaluates the asset's data-use tags against the requested stage and context. Data lacking valid authorization for the target stage is denied and logged as a policy event. At the memory-write boundary, require a purpose-bound grant for the exact candidate in addition to eligibility evidence and stage authorization, and reject source-trust, behavioral-policy, or tool-permission changes through ordinary memory APIs, directing them to a separately authorized policy/configuration release process.",
       "scope_boundary": {
-        "responsibility": "Owns the fail-closed allow or deny decision immediately before data crosses into training, fine-tuning, evaluation, indexing, inference context, logging, memory, or retraining. It consumes authoritative tags and eligibility evidence rather than creating them.",
+        "responsibility": "Owns the fail-closed allow or deny decision immediately before data crosses into training, fine-tuning, evaluation, indexing, inference context, logging, memory, or retraining, including enforcement of a purpose-bound, candidate-bound memory-write grant. It consumes authoritative tags, eligibility evidence, and write grants rather than creating them.",
         "related_techniques": [
           {
             "id": "AID-H-029.001",
@@ -7452,7 +7546,7 @@
       "phase": [
         "operation"
       ],
-      "description_text": "This technique covers the proactive, hypothesis-driven search through AI system logs and telemetry for subtle, unknown, or 'low-and-slow' attacks that do not trigger predefined alerts. Threat hunting assumes an attacker may already be present and evading standard detections. It focuses on identifying novel attack patterns, reconnaissance activities, and anomalous behaviors by using exploratory data analysis, complex queries, and machine learning on historical data.",
+      "description_text": "This technique covers the proactive, hypothesis-driven search through AI system logs and telemetry for subtle, unknown, or 'low-and-slow' attacks that do not trigger predefined alerts. Threat hunting assumes an attacker may already be present and evading standard detections. It focuses on identifying novel attack patterns, reconnaissance activities, and anomalous behaviors by using exploratory data analysis, complex queries, and machine learning on historical data. The shipped methods cover systematic model-extraction query campaigns, retrieval-to-completion exfiltration signals and instruction-bearing assistant-link hunts. Unsupervised session clustering is triage support, not evidence of training poisoning, model backdoors, supply-chain compromise or membership inference; those require their dedicated detectors and hunt hypotheses.",
       "scope_boundary": {
         "responsibility": "Owns human-led, hypothesis-driven investigation of historical AI telemetry for novel, subtle, low-and-slow, or evasive activity that predefined alerts may miss.",
         "related_techniques": [
@@ -8800,6 +8894,10 @@
           {
             "id": "AID-I-003.002",
             "comparison": "AID-I-003.004 decides the disposition of one high-risk proposed action; AID-I-003.002 throttles request volume for a caller or session.\nA low-rate action can still require containment because of its effect, while a high-rate request stream may be throttled without any individual action being high impact."
+          },
+          {
+            "id": "AID-H-018.003",
+            "comparison": "Containment can require fresh high-impact approval and consumes the canonical H-018.003 receipt; it does not implement another approval authority or count that approval twice. Containment owns the separate risk-triggered disposition and dispatcher fence."
           }
         ]
       },
@@ -10573,7 +10671,9 @@
         "AID-H-004.002",
         "AID-H-004.003",
         "AID-H-004.004",
-        "AID-H-004.005"
+        "AID-H-004.005",
+        "AID-H-004.006",
+        "AID-H-004.007"
       ],
       "url": "https://aidefend.net/#t=AID-H-004"
     },

@@ -53,7 +53,8 @@ export const deceiveTactic = {
                         "AML.T0054 LLM Jailbreak (honeypot captures jailbreak techniques)",
                         "AML.T0005 Create Proxy AI Model (honeypot attracts adversaries attempting model replication via API queries)",
                         "AML.T0005.001 Create Proxy AI Model: Train Proxy via Replication (decoy API captures replication queries)",
-                        "AML.T0116 Autonomous Reconnaissance (honeypot AI services absorb and record autonomous agent probing)"
+                        "AML.T0116 Autonomous Reconnaissance (honeypot AI services absorb and record autonomous agent probing)",
+                        "AML.T0006.002 Active Scanning: Scan for Exposed AI Infrastructure (synthetic inference routes and bounded ingress capture absorb and record AI-service fingerprint probes)"
                     ]
                 },
                 {
@@ -2389,7 +2390,8 @@ export const deceiveTactic = {
                         "AML.T0054 LLM Jailbreak (jailbreak leads agent to invoke canary tools)",
                         "AML.T0080 AI Agent Context Poisoning (canary goals and tools expose poisoned context that redirects agent behavior)",
                         "AML.T0080.000 AI Agent Context Poisoning: Memory (poisoned memory leads agent to decoy goal)",
-                        "AML.T0053 AI Agent Tool Invocation (decoy tools detect unauthorized tool invocations)"
+                        "AML.T0053 AI Agent Tool Invocation (decoy tools detect unauthorized tool invocations)",
+                        "AML.T0133 Discover AI Agent Runtime Capabilities (canary tool-description markers in agent-visible output expose capability-discovery attempts; canary invocation is a separate trigger)"
                     ]
                 },
                 {
@@ -3394,20 +3396,21 @@ export const deceiveTactic = {
             {
               "framework": "MITRE ATLAS",
               "items": [
-                "AML.T0007 Discover AI Artifacts (synthetic reconnaissance routes expose probing without revealing production artifacts)",
-                "AML.T0069 Discover LLM System Information (decoy routes return synthetic metadata and record the probe)",
-                "AML.T0013 Discover AI Model Ontology (synthetic ontology details misdirect and expose reconnaissance)",
-                "AML.T0014 Discover AI Model Family (synthetic model-family details misdirect and expose reconnaissance)",
-                "AML.T0006 Active Scanning (honeypot endpoints attract and log scanning)",
-                "AML.T0069.001 Discover LLM System Information: System Instruction Keywords (synthetic keyword metadata exposes targeted probing)",
-                "AML.T0069.002 Discover LLM System Information: System Prompt (synthetic prompt details expose targeted probing)",
-                "AML.T0084 Discover AI Agent Configuration (synthetic configuration metadata exposes agent reconnaissance)",
-                "AML.T0084.000 Discover AI Agent Configuration: Embedded Knowledge (synthetic knowledge-source metadata exposes reconnaissance)",
-                "AML.T0084.001 Discover AI Agent Configuration: Tool Definitions (synthetic tool definitions expose reconnaissance)",
-                "AML.T0089 Enterprise Environment Discovery (decoy routes return synthetic topology and environment metadata to reconnaissance probes)",
-                "AML.T0075 Enterprise Resource Discovery (synthetic topology and service metadata misdirect resource enumeration)",
-                "AML.T0116 Autonomous Reconnaissance (decoy routes feed synthetic environment metadata to recursive autonomous probing)"
-              ]
+                        "AML.T0007 Discover AI Artifacts (synthetic reconnaissance routes expose probing without revealing production artifacts)",
+                        "AML.T0069 Discover LLM System Information (decoy routes return synthetic metadata and record the probe)",
+                        "AML.T0013 Discover AI Model Ontology (synthetic ontology details misdirect and expose reconnaissance)",
+                        "AML.T0014 Discover AI Model Family (synthetic model-family details misdirect and expose reconnaissance)",
+                        "AML.T0006 Active Scanning (honeypot endpoints attract and log scanning)",
+                        "AML.T0069.001 Discover LLM System Information: System Instruction Keywords (synthetic keyword metadata exposes targeted probing)",
+                        "AML.T0069.002 Discover LLM System Information: System Prompt (synthetic prompt details expose targeted probing)",
+                        "AML.T0084 Discover AI Agent Configuration (synthetic configuration metadata exposes agent reconnaissance)",
+                        "AML.T0084.000 Discover AI Agent Configuration: Embedded Knowledge (synthetic knowledge-source metadata exposes reconnaissance)",
+                        "AML.T0084.001 Discover AI Agent Configuration: Tool Definitions (synthetic tool definitions expose reconnaissance)",
+                        "AML.T0089 Enterprise Environment Discovery (decoy routes return synthetic topology and environment metadata to reconnaissance probes)",
+                        "AML.T0075 Enterprise Resource Discovery (synthetic topology and service metadata misdirect resource enumeration)",
+                        "AML.T0116 Autonomous Reconnaissance (decoy routes feed synthetic environment metadata to recursive autonomous probing)",
+                        "AML.T0006.002 Active Scanning: Scan for Exposed AI Infrastructure (synthetic system-information routes record service fingerprint probes without exposing production configuration)"
+                    ]
             },
             {
               "framework": "MAESTRO",

@@ -1852,17 +1852,21 @@ export const isolateTactic = {
                     ],
                     "description": "Contain high-risk agent actions at the dispatcher or orchestration boundary before irreversible side effects occur.",
                     "scopeBoundary": {
-                      "responsibility": "Owns incident-time or elevated-risk disposition of one proposed agent action through block, defer, safer re-plan, approved routing, or required human approval before side effects. It consumes upstream authorization, trust-state, goal-integrity, or anomaly signals and does not define preventive capability authorization.",
-                      "relatedTechniques": [
-                        {
-                          "id": "AID-H-018",
-                          "comparison": "AID-I-003.004 contains an action after live risk signals require a response; AID-H-018 defines and enforces the preventive runtime authorization and capability boundary.\nAn action can be authorized under normal policy yet contained because incident-time risk changed, and containment does not replace the baseline authorization decision."
-                        },
-                        {
-                          "id": "AID-I-003.002",
-                          "comparison": "AID-I-003.004 decides the disposition of one high-risk proposed action; AID-I-003.002 throttles request volume for a caller or session.\nA low-rate action can still require containment because of its effect, while a high-rate request stream may be throttled without any individual action being high impact."
-                        }
-                      ]
+                        "responsibility": "Owns incident-time or elevated-risk disposition of one proposed agent action through block, defer, safer re-plan, approved routing, or required human approval before side effects. It consumes upstream authorization, trust-state, goal-integrity, or anomaly signals and does not define preventive capability authorization.",
+                        "relatedTechniques": [
+                            {
+                                "id": "AID-H-018",
+                                "comparison": "AID-I-003.004 contains an action after live risk signals require a response; AID-H-018 defines and enforces the preventive runtime authorization and capability boundary.\nAn action can be authorized under normal policy yet contained because incident-time risk changed, and containment does not replace the baseline authorization decision."
+                            },
+                            {
+                                "id": "AID-I-003.002",
+                                "comparison": "AID-I-003.004 decides the disposition of one high-risk proposed action; AID-I-003.002 throttles request volume for a caller or session.\nA low-rate action can still require containment because of its effect, while a high-rate request stream may be throttled without any individual action being high impact."
+                            },
+                            {
+                                "id": "AID-H-018.003",
+                                "comparison": "Containment can require fresh high-impact approval and consumes the canonical H-018.003 receipt; it does not implement another approval authority or count that approval twice. Containment owns the separate risk-triggered disposition and dispatcher fence."
+                            }
+                        ]
                     },
                     "toolsOpenSource": [
                         "Open Policy Agent (OPA)",
@@ -1979,7 +1983,8 @@ export const isolateTactic = {
                       "AML.T0118.000 Autonomous AI Agent Communication: Communication via Shared Artifacts",
                       "AML.T0118.001 Autonomous AI Agent Communication: Direct Agent Communication",
                       "AML.T0121 AI Agent Environment Reconstruction",
-                      "AML.T0124 Autonomous Attack Orchestration"
+                      "AML.T0124 Autonomous Attack Orchestration",
+                      "AML.T0130 AI Agent Response Biasing"
                   ]
               },
               {
@@ -2971,7 +2976,8 @@ def test_success_revalidates_every_boundary_and_bounds_timeouts():
                           "AML.T0080.000 AI Agent Context Poisoning: Memory",
                           "AML.T0099 AI Agent Tool Data Poisoning (promotion gates quarantine connected-source records before they become trusted agent context)",
                           "AML.T0118 Autonomous AI Agent Communication",
-                          "AML.T0118.000 Autonomous AI Agent Communication: Communication via Shared Artifacts (quarantined writes cannot influence another agent until independently promoted)"
+                          "AML.T0118.000 Autonomous AI Agent Communication: Communication via Shared Artifacts (quarantined writes cannot influence another agent until independently promoted)",
+                          "AML.T0130 AI Agent Response Biasing (quarantined memory cannot influence recommendations before an exact-content promotion)"
                       ]
                   },
                   {
@@ -6116,8 +6122,7 @@ def load_for_context(
                 {
                     "id": "AID-I-007-G004",
                     "implementation": "Utilize Content Security Policy (CSP) to restrict model data exfiltration and script execution.",
-                    "howTo": "<h5>Concept:</h5><p>Content Security Policy (CSP) lets you define which network endpoints scripts in this page are allowed to talk to (<code>connect-src</code>), which scripts can run (<code>script-src</code>), and more. A strict CSP makes it much harder for a compromised in-browser model to exfiltrate sensitive data to an attacker-controlled domain, or to inject arbitrary remote scripts. Vendor and checksum-verify the AI runtime in the build; do not add a public CDN to the runtime trust boundary.</p><h5>Example CSP header</h5><p><strong>Header format:</strong> Send this as one HTTP header field value. Do not copy folded or multiline formatting into the actual response.</p><pre><code class=\"language-http\">Content-Security-Policy: default-src 'none'; script-src 'sha256-BASE64_BUILD_SCRIPT_DIGEST'; style-src 'sha256-BASE64_BUILD_STYLE_DIGEST'; worker-src blob:; connect-src https://api.my-trusted-domain.com; img-src data:; frame-src 'none'; child-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; navigate-to 'none';\n</code></pre><p>This policy says:\n<ul>\n<li>Run only the build-generated script/style hashes; workers may use only the digest-verified blob URL created by AID-I-007-G001.</li>\n<li>Allow outbound fetch/WebSocket/XHR only to the exact trusted API origin; same-origin egress is not granted implicitly.</li>\n<li>Disallow being iframed elsewhere (<code>frame-ancestors 'none'</code>), which helps protect your privileged parent app from clickjacking or hostile embedding.</li>\n</ul><h5>Meta tag fallback (if you cannot set headers)</h5><p>Prefer the HTTP header when possible. A meta-delivered policy cannot enforce directives such as <code>frame-ancestors</code>, so do not treat it as equivalent for clickjacking protection.</p><pre><code class=\"language-html\">&lt;head&gt;\n  &lt;meta http-equiv=\"Content-Security-Policy\"\n        content=\"default-src 'none'; connect-src https://api.my-trusted-domain.com; script-src 'sha256-BASE64_BUILD_SCRIPT_DIGEST'; worker-src blob:; object-src 'none'; base-uri 'none'; form-action 'none';\"&gt;\n&lt;/head&gt;\n</code></pre><p><strong>Detection tip:</strong> CSP can also emit violation reports (via <code>report-to</code> / <code>report-uri</code>). Treat repeated CSP violations from a given session as a potential sign of a compromised model trying to leak data.</p><p><strong>Deployment verification:</strong> Generate the concrete script/style hashes and exact API origins from the signed build manifest; never ship the placeholders above. Fetch the deployed document through the same edge/CDN route users receive, read back the response header, and run browser probes that attempt unlisted same-origin and cross-origin fetch, script, worker, frame, form, object, base, and navigation paths. Missing response-header authority is an unresolved provider-evidence gap, not PASS; a meta-only policy cannot satisfy the response-header or <code>frame-ancestors</code> claim. Monitor CSP violation reports for attempted exfiltration or unexpected loads.</p>"
-                },
+                    "howTo": "<h5>Concept:</h5><p>Content Security Policy (CSP) lets you define which network endpoints scripts in this page are allowed to talk to (<code>connect-src</code>), which scripts can run (<code>script-src</code>), and more. A strict CSP makes it much harder for a compromised in-browser model to exfiltrate sensitive data to an attacker-controlled domain, or to inject arbitrary remote scripts. Vendor and checksum-verify the AI runtime in the build; do not add a public CDN to the runtime trust boundary.</p><h5>Example CSP header</h5><p><strong>Header format:</strong> Send this as one HTTP header field value. Do not copy folded or multiline formatting into the actual response.</p><pre><code class=\"language-http\">Content-Security-Policy: default-src 'none'; script-src 'sha256-BASE64_BUILD_SCRIPT_DIGEST'; style-src 'sha256-BASE64_BUILD_STYLE_DIGEST'; worker-src blob:; connect-src https://api.my-trusted-domain.com; img-src data:; frame-src 'none'; child-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; \n</code></pre><p>This policy says:\n<ul>\n<li>Run only the build-generated script/style hashes; workers may use only the digest-verified blob URL created by AID-I-007-G001.</li>\n<li>Allow outbound fetch/WebSocket/XHR only to the exact trusted API origin; same-origin egress is not granted implicitly.</li>\n<li>Disallow being iframed elsewhere (<code>frame-ancestors 'none'</code>), which helps protect your privileged parent app from clickjacking or hostile embedding.</li>\n</ul><h5>Meta tag fallback (if you cannot set headers)</h5><p>Prefer the HTTP header when possible. A meta-delivered policy cannot enforce directives such as <code>frame-ancestors</code>, so do not treat it as equivalent for clickjacking protection.</p><pre><code class=\"language-html\">&lt;head&gt;\n  &lt;meta http-equiv=\"Content-Security-Policy\"\n        content=\"default-src 'none'; connect-src https://api.my-trusted-domain.com; script-src 'sha256-BASE64_BUILD_SCRIPT_DIGEST'; worker-src blob:; object-src 'none'; base-uri 'none'; form-action 'none';\"&gt;\n&lt;/head&gt;\n</code></pre><p><strong>Detection tip:</strong> CSP can also emit violation reports (via <code>report-to</code> / <code>report-uri</code>). Treat repeated CSP violations from a given session as a potential sign of a compromised model trying to leak data.</p><p><strong>Deployment verification:</strong> Generate the concrete script/style hashes and exact API origins from the signed build manifest; never ship the placeholders above. Fetch the deployed document through the same edge/CDN route users receive, read back the response header, and run browser probes that attempt unlisted same-origin and cross-origin fetch, script, worker, frame, form, object, base, and navigation paths. Missing response-header authority is an unresolved provider-evidence gap, not PASS; a meta-only policy cannot satisfy the response-header or <code>frame-ancestors</code> claim. Monitor CSP violation reports for attempted exfiltration or unexpected loads.</p><p>CSP does not provide a supported navigate-to directive. Keep model code in the DOM-less worker, and render untrusted output through AID-H-006.002. If a preview uses an iframe, omit allow-top-navigation, allow-popups and allow-forms from its sandbox; only the trusted parent navigation broker may open an approved destination. Verify blocked top-level navigation, popup and form submission through the actual worker/iframe boundary separately from CSP resource-fetch tests.</p>"},
                 {
                     "id": "AID-I-007-G005",
                     "implementation": "Enforce a minimal, allowlisted native bridge between the AI runtime and device/system capabilities (mobile, Electron, hybrid apps).",
@@ -6551,8 +6556,9 @@ def load_for_context(
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0086 Exfiltration via AI Agent Tool Invocation (clipboard export quarantine blocks tool-mediated exfiltration)"
-                            ]
+                        "AML.T0086 Exfiltration via AI Agent Tool Invocation (clipboard export quarantine blocks tool-mediated exfiltration)",
+                        "AML.T0100 AI Agent Clickbait (download and clipboard quarantine interrupts lures that induce code copying or file execution; general click and URL admission remain outside scope)"
+                    ]
                         },
                         {
                             "framework": "MAESTRO",

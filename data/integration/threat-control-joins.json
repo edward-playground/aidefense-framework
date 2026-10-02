@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20260930",
-  "data_version": "2026.09.30",
+  "aidefend_version": "1.20261002",
+  "data_version": "2026.10.02",
   "identity_rule": "Resolve each record against threat-catalogs/<framework_key>.json by external_id. item_raw is the exact AIDEFEND source string, kept for traceability only. rationale is AIDEFEND-authored context for that pair, or null.",
   "frameworks": [
     "mitre-atlas",
@@ -10,10 +10,36 @@
     "owasp-agentic-top-10-2026"
   ],
   "counts": {
-    "records": 192,
-    "control_pairs": 2356
+    "records": 203,
+    "control_pairs": 2403
   },
   "joins": [
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0000",
+      "item_locator": "AML.T0000 Search Open Technical Databases",
+      "name": "Search Open Technical Databases",
+      "controls": [
+        {
+          "id": "AID-M-001.005",
+          "rationale": "reconciles public scan-service observations to identify unapproved AI exposure",
+          "item_raw": "AML.T0000 Search Open Technical Databases (reconciles public scan-service observations to identify unapproved AI exposure)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0000.003",
+      "item_locator": "AML.T0000.003 Search Open Technical Databases: Scan Databases",
+      "name": "Search Open Technical Databases: Scan Databases",
+      "controls": [
+        {
+          "id": "AID-M-001.005",
+          "rationale": "reconciles third-party scan records with live probes and the approved AI exposure register",
+          "item_raw": "AML.T0000.003 Search Open Technical Databases: Scan Databases (reconciles third-party scan records with live probes and the approved AI exposure register)"
+        }
+      ]
+    },
     {
       "framework_key": "mitre-atlas",
       "external_id": "AML.T0002.002",
@@ -108,6 +134,21 @@
           "item_raw": "AML.T0006 Active Scanning (authorized internal discovery identifies privately reachable AI services before an adversary with network access performs the same scan)"
         },
         {
+          "id": "AID-H-004.006",
+          "rationale": "restricts unauthenticated access to hosted agents discovered through enumeration",
+          "item_raw": "AML.T0006 Active Scanning (restricts unauthenticated access to hosted agents discovered through enumeration)"
+        },
+        {
+          "id": "AID-H-004.007",
+          "rationale": "rejects unauthorized trigger probes before agent run creation",
+          "item_raw": "AML.T0006 Active Scanning (rejects unauthorized trigger probes before agent run creation)"
+        },
+        {
+          "id": "AID-H-038.001",
+          "rationale": "approved listener profiles remove unintended runtime scan targets",
+          "item_raw": "AML.T0006 Active Scanning (approved listener profiles remove unintended runtime scan targets)"
+        },
+        {
           "id": "AID-DV-001",
           "rationale": "honeypot attracts and logs scanning activity",
           "item_raw": "AML.T0006 Active Scanning (honeypot attracts and logs scanning activity)"
@@ -116,6 +157,65 @@
           "id": "AID-DV-006",
           "rationale": "honeypot endpoints attract and log scanning",
           "item_raw": "AML.T0006 Active Scanning (honeypot endpoints attract and log scanning)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0006.000",
+      "item_locator": "AML.T0006.000 Active Scanning: Enumerate Hosted AI Resources",
+      "name": "Active Scanning: Enumerate Hosted AI Resources",
+      "controls": [
+        {
+          "id": "AID-M-001.005",
+          "rationale": "tenant inventory and authorized channel probes identify unintentionally reachable hosted agents",
+          "item_raw": "AML.T0006.000 Active Scanning: Enumerate Hosted AI Resources (tenant inventory and authorized channel probes identify unintentionally reachable hosted agents)"
+        },
+        {
+          "id": "AID-H-004.006",
+          "rationale": "approved audiences and channel restrictions prevent discovery from granting access",
+          "item_raw": "AML.T0006.000 Active Scanning: Enumerate Hosted AI Resources (approved audiences and channel restrictions prevent discovery from granting access)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0006.002",
+      "item_locator": "AML.T0006.002 Active Scanning: Scan for Exposed AI Infrastructure",
+      "name": "Active Scanning: Scan for Exposed AI Infrastructure",
+      "controls": [
+        {
+          "id": "AID-M-001.005",
+          "rationale": "authorized port and route fingerprints identify exposed AI runtimes",
+          "item_raw": "AML.T0006.002 Active Scanning: Scan for Exposed AI Infrastructure (authorized port and route fingerprints identify exposed AI runtimes)"
+        },
+        {
+          "id": "AID-H-038.001",
+          "rationale": "unapproved public inference listeners fail the serving release gate",
+          "item_raw": "AML.T0006.002 Active Scanning: Scan for Exposed AI Infrastructure (unapproved public inference listeners fail the serving release gate)"
+        },
+        {
+          "id": "AID-DV-001",
+          "rationale": "synthetic inference routes and bounded ingress capture absorb and record AI-service fingerprint probes",
+          "item_raw": "AML.T0006.002 Active Scanning: Scan for Exposed AI Infrastructure (synthetic inference routes and bounded ingress capture absorb and record AI-service fingerprint probes)"
+        },
+        {
+          "id": "AID-DV-006",
+          "rationale": "synthetic system-information routes record service fingerprint probes without exposing production configuration",
+          "item_raw": "AML.T0006.002 Active Scanning: Scan for Exposed AI Infrastructure (synthetic system-information routes record service fingerprint probes without exposing production configuration)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0006.003",
+      "item_locator": "AML.T0006.003 Active Scanning: Probe AI Agent Trigger Channels",
+      "name": "Active Scanning: Probe AI Agent Trigger Channels",
+      "controls": [
+        {
+          "id": "AID-H-004.007",
+          "rationale": null,
+          "item_raw": "AML.T0006.003 Active Scanning: Probe AI Agent Trigger Channels"
         }
       ]
     },
@@ -397,11 +497,6 @@
           "id": "AID-D-004.008",
           "rationale": null,
           "item_raw": "AML.T0010 AI Supply Chain Compromise"
-        },
-        {
-          "id": "AID-D-005.003",
-          "rationale": "hunting for supply chain compromise indicators",
-          "item_raw": "AML.T0010 AI Supply Chain Compromise (hunting for supply chain compromise indicators)"
         },
         {
           "id": "AID-E-003.001",
@@ -1529,11 +1624,6 @@
           "item_raw": "AML.T0015 Evade AI Model"
         },
         {
-          "id": "AID-D-005.003",
-          "rationale": "hunting for novel evasion patterns",
-          "item_raw": "AML.T0015 Evade AI Model (hunting for novel evasion patterns)"
-        },
-        {
           "id": "AID-D-006",
           "rationale": "XAI manipulation enables defense evasion",
           "item_raw": "AML.T0015 Evade AI Model (XAI manipulation enables defense evasion)"
@@ -1622,11 +1712,6 @@
           "item_raw": "AML.T0018 Manipulate AI Model"
         },
         {
-          "id": "AID-D-005.003",
-          "rationale": "threat hunting searches for model manipulation indicators",
-          "item_raw": "AML.T0018 Manipulate AI Model (threat hunting searches for model manipulation indicators)"
-        },
-        {
           "id": "AID-D-012.001",
           "rationale": null,
           "item_raw": "AML.T0018 Manipulate AI Model"
@@ -1708,11 +1793,6 @@
           "id": "AID-D-004.001",
           "rationale": null,
           "item_raw": "AML.T0018.000 Manipulate AI Model: Poison AI Model"
-        },
-        {
-          "id": "AID-D-005.003",
-          "rationale": "hunting for poisoned model artifacts",
-          "item_raw": "AML.T0018.000 Manipulate AI Model: Poison AI Model (hunting for poisoned model artifacts)"
         },
         {
           "id": "AID-D-012.001",
@@ -2676,11 +2756,6 @@
           "id": "AID-H-006.003",
           "rationale": "obfuscation reduces fidelity of attacker feedback loops",
           "item_raw": "AML.T0042 Verify Attack (obfuscation reduces fidelity of attacker feedback loops)"
-        },
-        {
-          "id": "AID-D-005.003",
-          "rationale": "hunting for attacker feedback loop activity",
-          "item_raw": "AML.T0042 Verify Attack (hunting for attacker feedback loop activity)"
         }
       ]
     },
@@ -2879,11 +2954,6 @@
           "id": "AID-D-002.003",
           "rationale": null,
           "item_raw": "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger"
-        },
-        {
-          "id": "AID-D-005.003",
-          "rationale": "hunting for backdoor triggers",
-          "item_raw": "AML.T0043.004 Craft Adversarial Data: Insert Backdoor Trigger (hunting for backdoor triggers)"
         },
         {
           "id": "AID-D-012.001",
@@ -3264,6 +3334,11 @@
           "item_raw": "AML.T0051 LLM Prompt Injection"
         },
         {
+          "id": "AID-H-002.003",
+          "rationale": "document admission binds the inspected projection to model-facing text",
+          "item_raw": "AML.T0051 LLM Prompt Injection (document admission binds the inspected projection to model-facing text)"
+        },
+        {
           "id": "AID-H-002.008",
           "rationale": "realtime audio, video, or screen-share streams can carry prompt-injection payloads",
           "item_raw": "AML.T0051 LLM Prompt Injection (realtime audio, video, or screen-share streams can carry prompt-injection payloads)"
@@ -3535,9 +3610,19 @@
       "name": "LLM Prompt Injection: Indirect",
       "controls": [
         {
+          "id": "AID-M-008",
+          "rationale": "release-bound tool, retrieved-content, and browser injection cases measure resistance through independent action observations",
+          "item_raw": "AML.T0051.001 LLM Prompt Injection: Indirect (release-bound tool, retrieved-content, and browser injection cases measure resistance through independent action observations)"
+        },
+        {
           "id": "AID-H-002.002",
           "rationale": null,
           "item_raw": "AML.T0051.001 LLM Prompt Injection: Indirect"
+        },
+        {
+          "id": "AID-H-002.003",
+          "rationale": "external documents cannot bypass admission through omitted metadata or a second raw-file decoder",
+          "item_raw": "AML.T0051.001 LLM Prompt Injection: Indirect (external documents cannot bypass admission through omitted metadata or a second raw-file decoder)"
         },
         {
           "id": "AID-H-002.008",
@@ -3928,11 +4013,6 @@
           "id": "AID-D-003.005",
           "rationale": "session tracking detects tool abuse across turns",
           "item_raw": "AML.T0053 AI Agent Tool Invocation (session tracking detects tool abuse across turns)"
-        },
-        {
-          "id": "AID-D-005.003",
-          "rationale": "threat hunting searches for anomalous tool invocation patterns",
-          "item_raw": "AML.T0053 AI Agent Tool Invocation (threat hunting searches for anomalous tool invocation patterns)"
         },
         {
           "id": "AID-D-005.004",
@@ -4509,8 +4589,8 @@
         },
         {
           "id": "AID-D-003.005",
-          "rationale": "drift detection catches iterative prompt refinement",
-          "item_raw": "AML.T0065 LLM Prompt Crafting (drift detection catches iterative prompt refinement)"
+          "rationale": "cross-turn drift warns of iterative prompt pivots; it does not attribute every refinement to an attacker",
+          "item_raw": "AML.T0065 LLM Prompt Crafting (cross-turn drift warns of iterative prompt pivots; it does not attribute every refinement to an attacker)"
         }
       ]
     },
@@ -4615,6 +4695,11 @@
           "item_raw": "AML.T0068 LLM Prompt Obfuscation"
         },
         {
+          "id": "AID-H-002.003",
+          "rationale": "hidden document text remains in the exact projection subjected to input admission",
+          "item_raw": "AML.T0068 LLM Prompt Obfuscation (hidden document text remains in the exact projection subjected to input admission)"
+        },
+        {
           "id": "AID-H-016.001",
           "rationale": null,
           "item_raw": "AML.T0068 LLM Prompt Obfuscation"
@@ -4653,6 +4738,11 @@
           "id": "AID-D-001.006",
           "rationale": null,
           "item_raw": "AML.T0068 LLM Prompt Obfuscation"
+        },
+        {
+          "id": "AID-D-007.001",
+          "rationale": "document carrier features and semantic inspection expose hidden-text instruction candidates",
+          "item_raw": "AML.T0068 LLM Prompt Obfuscation (document carrier features and semantic inspection expose hidden-text instruction candidates)"
         }
       ]
     },
@@ -5261,22 +5351,12 @@
       "name": "LLM Response Rendering",
       "controls": [
         {
-          "id": "AID-H-006.001",
-          "rationale": "structured output constrains response format",
-          "item_raw": "AML.T0077 LLM Response Rendering (structured output constrains response format)"
-        },
-        {
           "id": "AID-H-006.002",
           "rationale": "sanitization neutralizes rendering exploits",
           "item_raw": "AML.T0077 LLM Response Rendering (sanitization neutralizes rendering exploits)"
         },
         {
           "id": "AID-H-028.004",
-          "rationale": null,
-          "item_raw": "AML.T0077 LLM Response Rendering"
-        },
-        {
-          "id": "AID-D-003.008",
           "rationale": null,
           "item_raw": "AML.T0077 LLM Response Rendering"
         },
@@ -5327,6 +5407,11 @@
           "item_raw": "AML.T0080 AI Agent Context Poisoning"
         },
         {
+          "id": "AID-M-008",
+          "rationale": "the applicable stateful and memory-poisoning case families require exact case coverage and independent side-effect replay",
+          "item_raw": "AML.T0080 AI Agent Context Poisoning (the applicable stateful and memory-poisoning case families require exact case coverage and independent side-effect replay)"
+        },
+        {
           "id": "AID-H-004.003",
           "rationale": null,
           "item_raw": "AML.T0080 AI Agent Context Poisoning"
@@ -5335,6 +5420,11 @@
           "id": "AID-H-017.004",
           "rationale": null,
           "item_raw": "AML.T0080 AI Agent Context Poisoning"
+        },
+        {
+          "id": "AID-H-029.002",
+          "rationale": "memory writes require exact candidate authority separate from provenance eligibility",
+          "item_raw": "AML.T0080 AI Agent Context Poisoning (memory writes require exact candidate authority separate from provenance eligibility)"
         },
         {
           "id": "AID-D-001.005",
@@ -5440,9 +5530,19 @@
           "item_raw": "AML.T0080.000 AI Agent Context Poisoning: Memory"
         },
         {
+          "id": "AID-M-008",
+          "rationale": "persistent-memory poisoning cases are required when that surface is deployed; an absent surface is not a passing test",
+          "item_raw": "AML.T0080.000 AI Agent Context Poisoning: Memory (persistent-memory poisoning cases are required when that surface is deployed; an absent surface is not a passing test)"
+        },
+        {
           "id": "AID-H-017.004",
           "rationale": null,
           "item_raw": "AML.T0080.000 AI Agent Context Poisoning: Memory"
+        },
+        {
+          "id": "AID-H-029.002",
+          "rationale": "unauthorized memory candidates and generic-memory policy mutations are denied",
+          "item_raw": "AML.T0080.000 AI Agent Context Poisoning: Memory (unauthorized memory candidates and generic-memory policy mutations are denied)"
         },
         {
           "id": "AID-D-001.005",
@@ -6212,11 +6312,6 @@
           "item_raw": "AML.T0092 Manipulate User LLM Chat History (ephemeral state prevents persistent chat history manipulation across sessions)"
         },
         {
-          "id": "AID-D-003.005",
-          "rationale": "session monitoring detects chat-history manipulation",
-          "item_raw": "AML.T0092 Manipulate User LLM Chat History (session monitoring detects chat-history manipulation)"
-        },
-        {
           "id": "AID-D-003.006",
           "rationale": "memory-write telemetry covers chat-history manipulation",
           "item_raw": "AML.T0092 Manipulate User LLM Chat History (memory-write telemetry covers chat-history manipulation)"
@@ -6269,8 +6364,8 @@
         },
         {
           "id": "AID-D-003.005",
-          "rationale": "stateful monitoring detects delayed payload activation",
-          "item_raw": "AML.T0094 Delay Execution of LLM Instructions (stateful monitoring detects delayed payload activation)"
+          "rationale": "persistent task-scope and sensitive-read state exposes deferred out-of-scope actions across later turns; it does not parse or attribute the trigger",
+          "item_raw": "AML.T0094 Delay Execution of LLM Instructions (persistent task-scope and sensitive-read state exposes deferred out-of-scope actions across later turns; it does not parse or attribute the trigger)"
         }
       ]
     },
@@ -6491,6 +6586,11 @@
           "item_raw": "AML.T0100 AI Agent Clickbait"
         },
         {
+          "id": "AID-I-008.003",
+          "rationale": "download and clipboard quarantine interrupts lures that induce code copying or file execution; general click and URL admission remain outside scope",
+          "item_raw": "AML.T0100 AI Agent Clickbait (download and clipboard quarantine interrupts lures that induce code copying or file execution; general click and URL admission remain outside scope)"
+        },
+        {
           "id": "AID-I-008.004",
           "rationale": null,
           "item_raw": "AML.T0100 AI Agent Clickbait"
@@ -6557,6 +6657,11 @@
           "id": "AID-I-008.004",
           "rationale": null,
           "item_raw": "AML.T0101 Data Destruction via AI Agent Tool Invocation"
+        },
+        {
+          "id": "AID-R-002",
+          "rationale": "restores destroyed source datasets and AI data stores from verified pre-incident recovery points; arbitrary user-file recovery is outside scope",
+          "item_raw": "AML.T0101 Data Destruction via AI Agent Tool Invocation (restores destroyed source datasets and AI data stores from verified pre-incident recovery points; arbitrary user-file recovery is outside scope)"
         },
         {
           "id": "AID-R-006",
@@ -8156,6 +8261,209 @@
       ]
     },
     {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0129",
+      "item_locator": "AML.T0129 Triggers in Multimodal Inputs",
+      "name": "Triggers in Multimodal Inputs",
+      "controls": [
+        {
+          "id": "AID-H-002.003",
+          "rationale": "metadata exclusion and a gated text projection close uninspected document and media channels",
+          "item_raw": "AML.T0129 Triggers in Multimodal Inputs (metadata exclusion and a gated text projection close uninspected document and media channels)"
+        },
+        {
+          "id": "AID-H-002.008",
+          "rationale": "live transcript and OCR admission gates inspect modality-derived instructions before fusion",
+          "item_raw": "AML.T0129 Triggers in Multimodal Inputs (live transcript and OCR admission gates inspect modality-derived instructions before fusion)"
+        },
+        {
+          "id": "AID-D-007.001",
+          "rationale": "carrier and modality findings expose instructions outside the primary visible text channel",
+          "item_raw": "AML.T0129 Triggers in Multimodal Inputs (carrier and modality findings expose instructions outside the primary visible text channel)"
+        },
+        {
+          "id": "AID-D-007.002",
+          "rationale": "correlates transient audio and visual instructions with proposed agent actions",
+          "item_raw": "AML.T0129 Triggers in Multimodal Inputs (correlates transient audio and visual instructions with proposed agent actions)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0130",
+      "item_locator": "AML.T0130 AI Agent Response Biasing",
+      "name": "AI Agent Response Biasing",
+      "controls": [
+        {
+          "id": "AID-H-002.002",
+          "rationale": "input gating and link-origin separation constrain injected source-trust and recommendation instructions",
+          "item_raw": "AML.T0130 AI Agent Response Biasing (input gating and link-origin separation constrain injected source-trust and recommendation instructions)"
+        },
+        {
+          "id": "AID-H-016.001",
+          "rationale": "external source-ranking instructions cannot acquire system or developer authority",
+          "item_raw": "AML.T0130 AI Agent Response Biasing (external source-ranking instructions cannot acquire system or developer authority)"
+        },
+        {
+          "id": "AID-H-017.004",
+          "rationale": "task-local state and disabled persistent memory limit cross-session recommendation poisoning",
+          "item_raw": "AML.T0130 AI Agent Response Biasing (task-local state and disabled persistent memory limit cross-session recommendation poisoning)"
+        },
+        {
+          "id": "AID-H-020.002",
+          "rationale": "retrieval reputation comes from authenticated lineage and signed policy rather than document-supplied trust claims",
+          "item_raw": "AML.T0130 AI Agent Response Biasing (retrieval reputation comes from authenticated lineage and signed policy rather than document-supplied trust claims)"
+        },
+        {
+          "id": "AID-H-029.002",
+          "rationale": "ordinary memory cannot mutate trusted-source or behavioral policy",
+          "item_raw": "AML.T0130 AI Agent Response Biasing (ordinary memory cannot mutate trusted-source or behavioral policy)"
+        },
+        {
+          "id": "AID-D-001.005",
+          "rationale": "pinned prompt-safety detectors inspect recalled memory for instruction-bearing bias before reuse",
+          "item_raw": "AML.T0130 AI Agent Response Biasing (pinned prompt-safety detectors inspect recalled memory for instruction-bearing bias before reuse)"
+        },
+        {
+          "id": "AID-D-005.003",
+          "rationale": "assistant-link hunts correlate persistent source-trust and recommendation instructions",
+          "item_raw": "AML.T0130 AI Agent Response Biasing (assistant-link hunts correlate persistent source-trust and recommendation instructions)"
+        },
+        {
+          "id": "AID-D-014.001",
+          "rationale": "retrieved-chunk prompt detectors identify source-preference instructions before context assembly",
+          "item_raw": "AML.T0130 AI Agent Response Biasing (retrieved-chunk prompt detectors identify source-preference instructions before context assembly)"
+        },
+        {
+          "id": "AID-I-004.004",
+          "rationale": "quarantined memory cannot influence recommendations before an exact-content promotion",
+          "item_raw": "AML.T0130 AI Agent Response Biasing (quarantined memory cannot influence recommendations before an exact-content promotion)"
+        },
+        {
+          "id": "AID-E-005",
+          "rationale": "removal of poisoned durable memory prevents persistent recommendation instructions from reloading",
+          "item_raw": "AML.T0130 AI Agent Response Biasing (removal of poisoned durable memory prevents persistent recommendation instructions from reloading)"
+        },
+        {
+          "id": "AID-R-003.002",
+          "rationale": "restores only approved pre-incident conversational state while excluding poisoned recommendation memory",
+          "item_raw": "AML.T0130 AI Agent Response Biasing (restores only approved pre-incident conversational state while excluding poisoned recommendation memory)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0131",
+      "item_locator": "AML.T0131 Crafted AI Assistant Links",
+      "name": "Crafted AI Assistant Links",
+      "controls": [
+        {
+          "id": "AID-M-002.004",
+          "rationale": "link-prefill ancestry cannot count as an independent human evidence root for memory eligibility",
+          "item_raw": "AML.T0131 Crafted AI Assistant Links (link-prefill ancestry cannot count as an independent human evidence root for memory eligibility)"
+        },
+        {
+          "id": "AID-H-002.002",
+          "rationale": "external-link ingress disables automatic execution and preserves origin through exact-text confirmation",
+          "item_raw": "AML.T0131 Crafted AI Assistant Links (external-link ingress disables automatic execution and preserves origin through exact-text confirmation)"
+        },
+        {
+          "id": "AID-H-016.001",
+          "rationale": "externally prefilled text retains the untrusted instruction/data boundary after user submission",
+          "item_raw": "AML.T0131 Crafted AI Assistant Links (externally prefilled text retains the untrusted instruction/data boundary after user submission)"
+        },
+        {
+          "id": "AID-H-018.004",
+          "rationale": "a prefill submission cannot authorize private reads or expand task capabilities",
+          "item_raw": "AML.T0131 Crafted AI Assistant Links (a prefill submission cannot authorize private reads or expand task capabilities)"
+        },
+        {
+          "id": "AID-H-029.002",
+          "rationale": "prompt-submission receipts cannot substitute for memory-write grants",
+          "item_raw": "AML.T0131 Crafted AI Assistant Links (prompt-submission receipts cannot substitute for memory-write grants)"
+        },
+        {
+          "id": "AID-D-005.003",
+          "rationale": "URL and click hunts identify externally supplied assistant prompts for investigation",
+          "item_raw": "AML.T0131 Crafted AI Assistant Links (URL and click hunts identify externally supplied assistant prompts for investigation)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0132",
+      "item_locator": "AML.T0132 Misconfigured or Publicly Exposed AI Services",
+      "name": "Misconfigured or Publicly Exposed AI Services",
+      "controls": [
+        {
+          "id": "AID-M-001.005",
+          "rationale": "independent access probes and inventory reconciliation surface unapproved public AI services",
+          "item_raw": "AML.T0132 Misconfigured or Publicly Exposed AI Services (independent access probes and inventory reconciliation surface unapproved public AI services)"
+        },
+        {
+          "id": "AID-H-004.002",
+          "rationale": "service authentication rejects unauthenticated access across enabled runtime routes",
+          "item_raw": "AML.T0132 Misconfigured or Publicly Exposed AI Services (service authentication rejects unauthenticated access across enabled runtime routes)"
+        },
+        {
+          "id": "AID-H-004.006",
+          "rationale": null,
+          "item_raw": "AML.T0132 Misconfigured or Publicly Exposed AI Services"
+        },
+        {
+          "id": "AID-H-004.007",
+          "rationale": "gates externally reachable agent triggers and binds their execution authority",
+          "item_raw": "AML.T0132 Misconfigured or Publicly Exposed AI Services (gates externally reachable agent triggers and binds their execution authority)"
+        },
+        {
+          "id": "AID-H-034.001",
+          "rationale": "MCP deployment gates reject unsafe public binds and unauthenticated remote exposure",
+          "item_raw": "AML.T0132 Misconfigured or Publicly Exposed AI Services (MCP deployment gates reject unsafe public binds and unauthenticated remote exposure)"
+        },
+        {
+          "id": "AID-H-038.001",
+          "rationale": "listener readback blocks deployment of unknown or unexpectedly broad inference endpoints",
+          "item_raw": "AML.T0132 Misconfigured or Publicly Exposed AI Services (listener readback blocks deployment of unknown or unexpectedly broad inference endpoints)"
+        },
+        {
+          "id": "AID-H-038.002",
+          "rationale": "complete route classification and scoped authorization deny exposed management capabilities",
+          "item_raw": "AML.T0132 Misconfigured or Publicly Exposed AI Services (complete route classification and scoped authorization deny exposed management capabilities)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0133",
+      "item_locator": "AML.T0133 Discover AI Agent Runtime Capabilities",
+      "name": "Discover AI Agent Runtime Capabilities",
+      "controls": [
+        {
+          "id": "AID-H-017.002",
+          "rationale": "a narrow published tool schema and backend grants limit the capabilities revealed through runtime probing",
+          "item_raw": "AML.T0133 Discover AI Agent Runtime Capabilities (a narrow published tool schema and backend grants limit the capabilities revealed through runtime probing)"
+        },
+        {
+          "id": "AID-DV-005",
+          "rationale": "canary tool-description markers in agent-visible output expose capability-discovery attempts; canary invocation is a separate trigger",
+          "item_raw": "AML.T0133 Discover AI Agent Runtime Capabilities (canary tool-description markers in agent-visible output expose capability-discovery attempts; canary invocation is a separate trigger)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0134",
+      "item_locator": "AML.T0134 AI Targeted Cloaking",
+      "name": "AI Targeted Cloaking",
+      "controls": [
+        {
+          "id": "AID-H-002.002",
+          "rationale": "ingestion scans the exact fetched bytes instead of verifying one response and consuming a refetch",
+          "item_raw": "AML.T0134 AI Targeted Cloaking (ingestion scans the exact fetched bytes instead of verifying one response and consuming a refetch)"
+        }
+      ]
+    },
+    {
       "framework_key": "owasp-llm-top-10-2026",
       "external_id": "LLM01:2026",
       "item_locator": "LLM01:2026 Prompt Injection",
@@ -8390,6 +8698,11 @@
           "id": "AID-D-003.005",
           "rationale": null,
           "item_raw": "LLM01:2026 Prompt Injection"
+        },
+        {
+          "id": "AID-D-005.003",
+          "rationale": "hunts assistant links carrying externally supplied instructions",
+          "item_raw": "LLM01:2026 Prompt Injection (hunts assistant links carrying externally supplied instructions)"
         },
         {
           "id": "AID-D-007.001",
@@ -8928,6 +9241,16 @@
           "item_raw": "LLM03:2026 Excessive Agency"
         },
         {
+          "id": "AID-H-004.006",
+          "rationale": "publication rejects shared connector identities and capabilities exceeding the intended audience",
+          "item_raw": "LLM03:2026 Excessive Agency (publication rejects shared connector identities and capabilities exceeding the intended audience)"
+        },
+        {
+          "id": "AID-H-004.007",
+          "rationale": "event-initiated runs retain bounded initiating authority instead of inheriting unrestricted maker credentials",
+          "item_raw": "LLM03:2026 Excessive Agency (event-initiated runs retain bounded initiating authority instead of inheriting unrestricted maker credentials)"
+        },
+        {
           "id": "AID-H-007.005",
           "rationale": "tool-policy regression tests block releases with expanded behavior, while runtime authority remains separately enforced",
           "item_raw": "LLM03:2026 Excessive Agency (tool-policy regression tests block releases with expanded behavior, while runtime authority remains separately enforced)"
@@ -9411,11 +9734,6 @@
           "item_raw": "LLM04:2026 Supply Chain"
         },
         {
-          "id": "AID-D-005.003",
-          "rationale": "hypothesis-led hunts identify supply-chain compromise indicators",
-          "item_raw": "LLM04:2026 Supply Chain (hypothesis-led hunts identify supply-chain compromise indicators)"
-        },
-        {
           "id": "AID-D-011.003",
           "rationale": "image-lineage drift reveals an unapproved registered-agent build",
           "item_raw": "LLM04:2026 Supply Chain (image-lineage drift reveals an unapproved registered-agent build)"
@@ -9614,6 +9932,11 @@
           "item_raw": "LLM05:2026 Data and Model Poisoning (signed source governance supplies trusted context-release evidence to retrieval enforcement but does not itself admit each retrieved chunk)"
         },
         {
+          "id": "AID-H-029.002",
+          "rationale": "stage authorization denies unauthorized durable memory writes",
+          "item_raw": "LLM05:2026 Data and Model Poisoning (stage authorization denies unauthorized durable memory writes)"
+        },
+        {
           "id": "AID-H-035",
           "rationale": "validated response evidence reduces poisoned security-data influence on containment decisions, while source-data admission remains separately enforced",
           "item_raw": "LLM05:2026 Data and Model Poisoning (validated response evidence reduces poisoned security-data influence on containment decisions, while source-data admission remains separately enforced)"
@@ -9660,8 +9983,8 @@
         },
         {
           "id": "AID-D-005.003",
-          "rationale": "hypothesis-led hunts identify poisoning indicators",
-          "item_raw": "LLM05:2026 Data and Model Poisoning (hypothesis-led hunts identify poisoning indicators)"
+          "rationale": "G004 hunts link-delivered attempts to corrupt persistent memory; it does not detect training-data or model-weight poisoning",
+          "item_raw": "LLM05:2026 Data and Model Poisoning (G004 hunts link-delivered attempts to corrupt persistent memory; it does not detect training-data or model-weight poisoning)"
         },
         {
           "id": "AID-D-006",
@@ -10377,11 +10700,6 @@
           "item_raw": "ML01:2023 Input Manipulation Attack"
         },
         {
-          "id": "AID-D-003.005",
-          "rationale": "multi-turn input manipulation is visible as intent drift",
-          "item_raw": "ML01:2023 Input Manipulation Attack (multi-turn input manipulation is visible as intent drift)"
-        },
-        {
           "id": "AID-D-004.005",
           "rationale": "turn-chain verification detects byte-level or sequence-level input tampering",
           "item_raw": "ML01:2023 Input Manipulation Attack (turn-chain verification detects byte-level or sequence-level input tampering)"
@@ -10594,11 +10912,6 @@
           "id": "AID-H-008.001",
           "rationale": null,
           "item_raw": "ML04:2023 Membership Inference Attack"
-        },
-        {
-          "id": "AID-D-005.003",
-          "rationale": "detecting probing patterns",
-          "item_raw": "ML04:2023 Membership Inference Attack (detecting probing patterns)"
         }
       ]
     },
@@ -11297,6 +11610,11 @@
           "item_raw": "ASI01:2026 Agent Goal Hijack (input validation blocks prompt-based goal manipulation)"
         },
         {
+          "id": "AID-H-002.003",
+          "rationale": "document projection prevents uninspected hidden content from reaching agent context",
+          "item_raw": "ASI01:2026 Agent Goal Hijack (document projection prevents uninspected hidden content from reaching agent context)"
+        },
+        {
           "id": "AID-H-002.008",
           "rationale": null,
           "item_raw": "ASI01:2026 Agent Goal Hijack"
@@ -11423,8 +11741,8 @@
         },
         {
           "id": "AID-D-005.003",
-          "rationale": "hunting for goal drift evidence",
-          "item_raw": "ASI01:2026 Agent Goal Hijack (hunting for goal drift evidence)"
+          "rationale": "G004 hunts externally supplied assistant instructions; a click is triage evidence, not proof of successful hijack",
+          "item_raw": "ASI01:2026 Agent Goal Hijack (G004 hunts externally supplied assistant instructions; a click is triage evidence, not proof of successful hijack)"
         },
         {
           "id": "AID-D-005.004",
@@ -11888,6 +12206,16 @@
           "item_raw": "ASI03:2026 Identity and Privilege Abuse"
         },
         {
+          "id": "AID-H-004.006",
+          "rationale": null,
+          "item_raw": "ASI03:2026 Identity and Privilege Abuse"
+        },
+        {
+          "id": "AID-H-004.007",
+          "rationale": null,
+          "item_raw": "ASI03:2026 Identity and Privilege Abuse"
+        },
+        {
           "id": "AID-H-017.002",
           "rationale": null,
           "item_raw": "ASI03:2026 Identity and Privilege Abuse"
@@ -12011,11 +12339,6 @@
           "id": "AID-D-003.004",
           "rationale": "tool sequence anomalies detect privilege abuse",
           "item_raw": "ASI03:2026 Identity and Privilege Abuse (tool sequence anomalies detect privilege abuse)"
-        },
-        {
-          "id": "AID-D-003.005",
-          "rationale": "session monitoring detects gradual privilege escalation",
-          "item_raw": "ASI03:2026 Identity and Privilege Abuse (session monitoring detects gradual privilege escalation)"
         },
         {
           "id": "AID-D-004.003",
@@ -12722,6 +13045,11 @@
           "item_raw": "ASI06:2026 Memory & Context Poisoning"
         },
         {
+          "id": "AID-H-029.002",
+          "rationale": null,
+          "item_raw": "ASI06:2026 Memory & Context Poisoning"
+        },
+        {
           "id": "AID-H-032.002",
           "rationale": "cross-tenant serving-state reuse can contaminate or expose context",
           "item_raw": "ASI06:2026 Memory & Context Poisoning (cross-tenant serving-state reuse can contaminate or expose context)"
@@ -12753,8 +13081,8 @@
         },
         {
           "id": "AID-D-005.003",
-          "rationale": "hunting for poisoned context patterns",
-          "item_raw": "ASI06:2026 Memory & Context Poisoning (hunting for poisoned context patterns)"
+          "rationale": "G004 hunts assistant links requesting persistent memory changes; it does not detect poisoned model weights",
+          "item_raw": "ASI06:2026 Memory & Context Poisoning (G004 hunts assistant links requesting persistent memory changes; it does not detect poisoned model weights)"
         },
         {
           "id": "AID-D-005.004",
@@ -13200,8 +13528,8 @@
         },
         {
           "id": "AID-D-003.005",
-          "rationale": "stateful tracking detects rogue behavior patterns",
-          "item_raw": "ASI10:2026 Rogue Agents (stateful tracking detects rogue behavior patterns)"
+          "rationale": "approved-task tool and destination violations plus cross-turn sensitive-read correlations expose behavioral divergence; this does not classify agent motive or every rogue behavior",
+          "item_raw": "ASI10:2026 Rogue Agents (approved-task tool and destination violations plus cross-turn sensitive-read correlations expose behavioral divergence; this does not classify agent motive or every rogue behavior)"
         },
         {
           "id": "AID-D-003.006",
@@ -13212,11 +13540,6 @@
           "id": "AID-D-004.003",
           "rationale": "config changes can enable rogue agent behavior",
           "item_raw": "ASI10:2026 Rogue Agents (config changes can enable rogue agent behavior)"
-        },
-        {
-          "id": "AID-D-005.003",
-          "rationale": "hunting for subtle rogue agent indicators",
-          "item_raw": "ASI10:2026 Rogue Agents (hunting for subtle rogue agent indicators)"
         },
         {
           "id": "AID-D-005.004",

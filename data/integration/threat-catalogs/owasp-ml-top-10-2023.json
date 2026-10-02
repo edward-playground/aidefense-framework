@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20260930",
+  "aidefend_version": "1.20261002",
   "framework_key": "owasp-ml-top-10-2023",
   "source_framework_label": "OWASP ML Top 10 2023",
   "display_name": "OWASP ML Top 10 2023",
@@ -24,7 +24,7 @@
       "rank": 1,
       "name": "Input Manipulation Attack",
       "referenced": true,
-      "control_count": 29
+      "control_count": 28
     },
     {
       "item_locator": "ML02:2023 Data Poisoning Attack",
@@ -48,7 +48,7 @@
       "rank": 4,
       "name": "Membership Inference Attack",
       "referenced": true,
-      "control_count": 7
+      "control_count": 6
     },
     {
       "item_locator": "ML05:2023 Model Theft",

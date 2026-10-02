@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20260930",
-  "data_version": "2026.09.30",
-  "git_tag": "v1.20260930",
-  "generated_at": "2026-09-30T02:07:24.343Z",
-  "source_data_json_sha256": "sha256:6f3d23146954ab78979dd07d7782847359e206aca1b0e2023009f830a99faaba",
+  "aidefend_version": "1.20261002",
+  "data_version": "2026.10.02",
+  "git_tag": "v1.20261002",
+  "generated_at": "2026-10-02T00:39:13.628Z",
+  "source_data_json_sha256": "sha256:971317b28483fe874f668ab96df30b9aab2a526ffd8173c6debd1702bba62661",
   "first_consumer": "precogly",
   "layout": {
     "controls": "controls.json",
@@ -14,19 +14,19 @@
   "counts": {
     "tactics": 7,
     "parent_families": 58,
-    "actionable_controls": 307,
+    "actionable_controls": 309,
     "standalone_techniques": 35,
-    "leaf_subtechniques": 272,
-    "threat_join_records": 192,
-    "threat_control_pairs": 2356
+    "leaf_subtechniques": 274,
+    "threat_join_records": 203,
+    "threat_control_pairs": 2403
   },
   "frameworks_published": [
     {
       "framework_key": "mitre-atlas",
       "source_framework_label": "MITRE ATLAS",
       "catalog_path": "threat-catalogs/mitre-atlas.json",
-      "items": 197,
-      "referenced_items": 162
+      "items": 208,
+      "referenced_items": 173
     },
     {
       "framework_key": "owasp-llm-top-10-2026",
@@ -80,32 +80,32 @@
   "files": [
     {
       "path": "controls.json",
-      "sha256": "sha256:ea2c1b1a8ca6e490c1e02a896fd99e4a3b5a3bbd1da7253f0d8b425ab939d45e",
-      "bytes": 796022
+      "sha256": "sha256:c43380a1d3a947214befbd9bf5ebb8dfa3eba72898d8d4a019ce2a8b43815f85",
+      "bytes": 804647
     },
     {
       "path": "threat-control-joins.json",
-      "sha256": "sha256:0eb7f42ebb31ba419d3345f622bf3c41c23a0788b63601d57b8629dc3e7476ce",
-      "bytes": 519888
+      "sha256": "sha256:788bac2d90115b8dbba5af768156918d85c980754a43b316668612d6297eb96a",
+      "bytes": 539825
     },
     {
       "path": "threat-catalogs/mitre-atlas.json",
-      "sha256": "sha256:b6b362fa1a855b7a3f51311dc816439f9b56373b0fd1c0ef378b6775697b2008",
-      "bytes": 71478
+      "sha256": "sha256:456ecd40cabb54ea6f28d1e37208945f4c856bb4ca40852ea7c881e88241bd31",
+      "bytes": 75507
     },
     {
       "path": "threat-catalogs/owasp-llm-top-10-2026.json",
-      "sha256": "sha256:bc4f7e9fa712fd136a1a6d3eded6fb8aea1cb11e44d7cd3f09b225d9a78093ed",
+      "sha256": "sha256:6f8bb61e257545b30848b02699dbf3f53454a5154b2c1d91fce2b07d6cef12ef",
       "bytes": 3280
     },
     {
       "path": "threat-catalogs/owasp-ml-top-10-2023.json",
-      "sha256": "sha256:6f2ae6362e155672cb7e3034465514c9d299152b3b92b423688886aa8bf7575e",
+      "sha256": "sha256:733e50598c1ec90965071550e08d62405ee93b3a6c4e2616d5915b6c527161be",
       "bytes": 3094
     },
     {
       "path": "threat-catalogs/owasp-agentic-top-10-2026.json",
-      "sha256": "sha256:f2fc6d6d3570af42e0a142b52e857a991d88b5ec2e953a11035a2807506b0d90",
+      "sha256": "sha256:909c6b40d7e4ccce2b4908c9f5fb44f09438c55d488c054ba43cbed49c986287",
       "bytes": 3456
     }
   ],

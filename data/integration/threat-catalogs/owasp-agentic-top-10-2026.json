@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20260930",
+  "aidefend_version": "1.20261002",
   "framework_key": "owasp-agentic-top-10-2026",
   "source_framework_label": "OWASP Top 10 for Agentic Applications 2026",
   "display_name": "OWASP Top 10 for Agentic Applications 2026",
@@ -25,7 +25,7 @@
       "rank": 1,
       "name": "Agent Goal Hijack",
       "referenced": true,
-      "control_count": 50
+      "control_count": 51
     },
     {
       "item_locator": "ASI02:2026 Tool Misuse and Exploitation",
@@ -41,7 +41,7 @@
       "rank": 3,
       "name": "Identity and Privilege Abuse",
       "referenced": true,
-      "control_count": 61
+      "control_count": 62
     },
     {
       "item_locator": "ASI04:2026 Agentic Supply Chain Vulnerabilities",
@@ -65,7 +65,7 @@
       "rank": 6,
       "name": "Memory & Context Poisoning",
       "referenced": true,
-      "control_count": 39
+      "control_count": 40
     },
     {
       "item_locator": "ASI07:2026 Insecure Inter-Agent Communication",
@@ -97,7 +97,7 @@
       "rank": 10,
       "name": "Rogue Agents",
       "referenced": true,
-      "control_count": 36
+      "control_count": 35
     }
   ]
 }

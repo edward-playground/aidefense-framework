@@ -2,7 +2,7 @@
 
 [![Code License: Apache-2.0](https://img.shields.io/badge/code-Apache--2.0-blue.svg?style=for-the-badge)](LICENSE)
 [![Content License: CC BY 4.0](https://img.shields.io/badge/content-CC_BY_4.0-lightgrey.svg?style=for-the-badge)](LICENSE-CONTENT)
-[![Version](https://img.shields.io/badge/version-1.20260911-0ea5e9.svg?style=for-the-badge)](aidefend-intro.js)
+[![Version](https://img.shields.io/badge/version-1.20261002-0ea5e9.svg?style=for-the-badge)](aidefend-intro.js)
 [![Live Demo](https://img.shields.io/badge/live-aidefend.net-brightgreen.svg?style=for-the-badge)](https://aidefend.net)
 
 AIDEFEND is an open, implementation-oriented knowledge base of defensive controls for AI, machine-learning, LLM, multimodal, RAG, and agentic systems. It organizes defenses by security function, protected component, lifecycle phase, and the external security references they address.
@@ -12,9 +12,9 @@ AIDEFEND is an open, implementation-oriented knowledge base of defensive control
 
 ## Current source version
 
-Version `1.20260925` provides:
+Version `1.20261002` provides:
 
-- **307 actionable defensive controls**: 35 standalone techniques and 272 leaf sub-techniques
+- **309 actionable defensive controls**: 35 standalone techniques and 274 leaf sub-techniques
 - implementation guidance, production-oriented examples, verification guidance, and explicit scope boundaries
 - assessment against nine external AI security frameworks and risk catalogs
 - four exploration views: Tactics, Pillars, Phases, and Frameworks
@@ -56,7 +56,7 @@ Mapping relevance is reviewed at the actionable standalone-technique or leaf-sub
 
 The generated dataset is available at [`data/data.json`](data/data.json). A compact navigation index is available at [`data/tactics-index.json`](data/tactics-index.json). The additive [`data/framework-migrations.json`](data/framework-migrations.json) registry identifies the current framework edition and semantic successors for superseded identifiers; it does not carry AIDEFEND mappings forward without a target-edition review.
 
-The tool-neutral integration export in [`data/integration/`](data/integration/) repackages the same release for downstream converters (first consumer: the Precogly AI security library pack). `manifest.json` locks the AIDEFEND version, release tag, `data.json` checksum and per-file checksums; `controls.json` lists the 307 actionable controls with plain-text descriptions, scope boundaries and site links, plus the 58 navigation-only families flagged `actionable: false`; `threat-control-joins.json` inverts `defendsAgainst` into one record per external threat item with the AIDEFEND controls and per-pair rationales; and `threat-catalogs/<framework_key>.json` carries upstream identifiers, names and structure only, never third-party descriptions. This release exports MITRE ATLAS, OWASP LLM Top 10 2026, OWASP ML Top 10 2023 and OWASP Top 10 for Agentic Applications 2026; the other five mapped frameworks are listed as deferred in the manifest. Every file carries `schema_version` and `aidefend_version`, the layout only gains fields within a schema version, and the folder is regenerated and verified with every release. A threat-to-control mapping says a control is relevant to a threat; it does not say the threat is mitigated, that a system is secure, or that any standard is satisfied.
+The tool-neutral integration export in [`data/integration/`](data/integration/) repackages the same release for downstream converters (first consumer: the Precogly AI security library pack). `manifest.json` locks the AIDEFEND version, release tag, `data.json` checksum and per-file checksums; `controls.json` lists the 309 actionable controls with plain-text descriptions, scope boundaries and site links, plus the 58 navigation-only families flagged `actionable: false`; `threat-control-joins.json` inverts `defendsAgainst` into one record per external threat item with the AIDEFEND controls and per-pair rationales; and `threat-catalogs/<framework_key>.json` carries upstream identifiers, names and structure only, never third-party descriptions. This release exports MITRE ATLAS, OWASP LLM Top 10 2026, OWASP ML Top 10 2023 and OWASP Top 10 for Agentic Applications 2026; the other five mapped frameworks are listed as deferred in the manifest. Every file carries `schema_version` and `aidefend_version`, the layout only gains fields within a schema version, and the folder is regenerated and verified with every release. A threat-to-control mapping says a control is relevant to a threat; it does not say the threat is mitigated, that a system is secure, or that any standard is satisfied.
 
 The source of truth for AIDEFEND-authored framework content is `tactics/*.js`. Do not edit generated JSON files directly.
 
@@ -96,6 +96,8 @@ npm run generate -- --check
 ```
 
 `npm run generate` regenerates the public dataset from the tracked tactic source and validates the public keyword lock and technique hierarchy. `npm run generate -- --check` performs the same validation without rewriting tracked outputs. These public commands do not run the maintainer-only source-freshness, mapping, semantic-boundary, or external-reference review workflow.
+
+Run `npm test` with Node.js and Python 3 available. The public regression tests use the Python standard library and do not require third-party Python packages.
 
 ## Repository structure
 
