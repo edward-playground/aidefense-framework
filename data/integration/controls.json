@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20261007",
-  "data_version": "2026.10.07",
+  "aidefend_version": "1.20261008",
+  "data_version": "2026.10.08",
   "unit_rule": "Every entry in controls is an independently selectable control unit. Entries in families are navigation only and must not be treated as countermeasures.",
   "counts": {
     "actionable_controls": 309,

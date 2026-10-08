@@ -338,22 +338,22 @@
     ]
   },
   "AID-M-003.005": {
-    "contentHash": "9950c87c14bcaa3e",
+    "contentHash": "5c5eca990930f677",
     "keywords": [
-      "generative inversion pre-screening",
       "reconstruction error baselining",
-      "latent anomaly detection",
-      "model inversion risk indicators",
-      "outlier prompt prefiltering",
-      "representation-space anomaly scoring",
-      "pre-ingestion threat triage",
-      "synthetic abuse signal detection",
-      "inversion-driven risk gates",
-      "baseline drift for inversion metrics",
-      "high-risk sample quarantine",
-      "model abuse early warning",
-      "inversion telemetry monitoring",
-      "pre-screen incident escalation"
+      "clean holdout evaluation",
+      "autoencoder reference generation",
+      "media domain calibration",
+      "model artifact binding",
+      "preprocessing contract verification",
+      "signed reference validation",
+      "reference validity renewal",
+      "independent baseline replay",
+      "controlled recalibration",
+      "atomic reference promotion",
+      "complete release rollback",
+      "reconstruction population coverage",
+      "runtime baseline compatibility"
     ]
   },
   "AID-M-003.006": {
@@ -4172,7 +4172,7 @@
     ]
   },
   "AID-D-001.002": {
-    "contentHash": "1f00d9f666f6b755",
+    "contentHash": "1a4bfe8c369ffb1d",
     "keywords": [
       "deepfake detection",
       "synthetic media forensics",
@@ -4187,7 +4187,8 @@
       "facial landmark analysis",
       "acoustic artifact detection",
       "media authenticity triage",
-      "multimodal forensics"
+      "multimodal forensics",
+      "reconstruction anomaly scoring"
     ]
   },
   "AID-D-001.003": {

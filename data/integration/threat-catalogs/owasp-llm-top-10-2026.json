@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20261007",
+  "aidefend_version": "1.20261008",
   "framework_key": "owasp-llm-top-10-2026",
   "source_framework_label": "OWASP LLM Top 10 2026",
   "display_name": "OWASP LLM Top 10 2026",

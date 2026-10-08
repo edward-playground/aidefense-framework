@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20261007",
-  "data_version": "2026.10.07",
+  "aidefend_version": "1.20261008",
+  "data_version": "2026.10.08",
   "identity_rule": "Resolve each record against threat-catalogs/<framework_key>.json by external_id. item_raw is the exact AIDEFEND source string, kept for traceability only. rationale is AIDEFEND-authored context for that pair, or null.",
   "frameworks": [
     "mitre-atlas",

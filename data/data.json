@@ -1,8 +1,8 @@
 {
 "version": {
 "schemaVersion": "2.3",
-"dataVersion": "2026.10.07",
-"generatedAt": "2026-10-07T17:34:22.402Z",
+"dataVersion": "2026.10.08",
+"generatedAt": "2026-10-08T13:57:45.788Z",
 "source": "bundled",
 "keywordStructure": "flat"
 },
@@ -2509,8 +2509,8 @@
 "operation"
 ],
 "implementationGuidance": [
-"Generate and independently replay a signed reconstruction-error reference bound to the exact model, policy, and governed clean holdout population.",
-"Recalibrate the reconstruction-error reference only after an approved model or clean-domain population change, then require byte-identical independent replay before promotion."
+"Generate and independently replay an expiring signed reconstruction-error reference bound to the exact reconstruction pipeline, model, preprocessing, policy, and governed clean holdout population.",
+"Recalibrate only after an approved reconstruction or clean-domain change; renew validity separately, and independently replay, promote, and roll back the model, preprocessing, and reference as one complete release unit."
 ],
 "implementationGuidanceIds": [
 "AID-M-003.005-G001",
@@ -2593,22 +2593,22 @@
 ]
 }
 ],
-"contentHash": "9950c87c14bcaa3e",
+"contentHash": "5c5eca990930f677",
 "keywords": [
-"generative inversion pre-screening",
 "reconstruction error baselining",
-"latent anomaly detection",
-"model inversion risk indicators",
-"outlier prompt prefiltering",
-"representation-space anomaly scoring",
-"pre-ingestion threat triage",
-"synthetic abuse signal detection",
-"inversion-driven risk gates",
-"baseline drift for inversion metrics",
-"high-risk sample quarantine",
-"model abuse early warning",
-"inversion telemetry monitoring",
-"pre-screen incident escalation"
+"clean holdout evaluation",
+"autoencoder reference generation",
+"media domain calibration",
+"model artifact binding",
+"preprocessing contract verification",
+"signed reference validation",
+"reference validity renewal",
+"independent baseline replay",
+"controlled recalibration",
+"atomic reference promotion",
+"complete release rollback",
+"reconstruction population coverage",
+"runtime baseline compatibility"
 ]
 },
 {
@@ -32496,7 +32496,7 @@
 "Analyze for anomalous visual liveness signals in video.",
 "Analyze speech biometrics and acoustic artifacts to detect synthetic or cloned audio.",
 "Detect audio-visual synchronization anomalies to identify lip-sync deepfakes.",
-"Score media inputs against a trusted reconstruction-error baseline at API ingress and emit anomaly findings when inversion error exceeds the approved threshold.",
+"Score media against the currently valid signed reference using the same measured reconstruction pipeline and preprocessing, and emit anomaly findings above the approved threshold.",
 "Cluster recent reconstruction-anomaly signals to identify coordinated bursts of suspicious synthetic media."
 ],
 "implementationGuidanceIds": [
@@ -32596,7 +32596,7 @@
 ]
 }
 ],
-"contentHash": "1f00d9f666f6b755",
+"contentHash": "1a4bfe8c369ffb1d",
 "keywords": [
 "deepfake detection",
 "synthetic media forensics",
@@ -32611,7 +32611,8 @@
 "facial landmark analysis",
 "acoustic artifact detection",
 "media authenticity triage",
-"multimodal forensics"
+"multimodal forensics",
+"reconstruction anomaly scoring"
 ]
 },
 {

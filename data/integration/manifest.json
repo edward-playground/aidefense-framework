@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20261007",
-  "data_version": "2026.10.07",
-  "git_tag": "v1.20261007",
-  "generated_at": "2026-10-07T17:34:22.402Z",
-  "source_data_json_sha256": "sha256:1adaa07f8a62efbf5381903c3a2ef61be6c1fd5295caa7f75fa34f3189abecf9",
+  "aidefend_version": "1.20261008",
+  "data_version": "2026.10.08",
+  "git_tag": "v1.20261008",
+  "generated_at": "2026-10-08T13:57:45.788Z",
+  "source_data_json_sha256": "sha256:f3f16c1728e78525f44b9105b02c25d7f4f080f34c94a2a82914d56a1e7600c4",
   "first_consumer": "precogly",
   "layout": {
     "controls": "controls.json",
@@ -80,32 +80,32 @@
   "files": [
     {
       "path": "controls.json",
-      "sha256": "sha256:1ed3e9efdca62656409b7d9d472cadf44c76d1ed4ab465ecdad0088ad611eff3",
+      "sha256": "sha256:49f7d2eb83ad98fcc65f55a7b9ca3a27853fd8b89af28574006d50cb38e33435",
       "bytes": 804647
     },
     {
       "path": "threat-control-joins.json",
-      "sha256": "sha256:1b24cfab62ac2e407f7681946801de740fc6166e21e5579e3b9630623cfa41c8",
+      "sha256": "sha256:0c76bd47ba962b7a0e1282297b4fa6ded2d5919f5a51a839b9666cccce89a34a",
       "bytes": 539825
     },
     {
       "path": "threat-catalogs/mitre-atlas.json",
-      "sha256": "sha256:f0857e66b4e5bd5b192d085061061c47b101cad40b4a39bbdb15eda13c975001",
+      "sha256": "sha256:1588177d8d12ba7343f6d8d7ba1a2e67662bf72fd485c5971f09db39da4bfc52",
       "bytes": 75507
     },
     {
       "path": "threat-catalogs/owasp-llm-top-10-2026.json",
-      "sha256": "sha256:de5ece23766d6329ca8c238fefff379c581385e3ad3b8eaf1564719a0a1e936a",
+      "sha256": "sha256:711edda383c6baed6f63dba7f22c87e235e6ac524e3e97ed1c014d9619c23ff3",
       "bytes": 3280
     },
     {
       "path": "threat-catalogs/owasp-ml-top-10-2023.json",
-      "sha256": "sha256:dd9f613069c2e59c7aa2de6fb923dc59099201d63c6299a0a85ec8565ffc232e",
+      "sha256": "sha256:01683b93117974ac23bb357cd0d37c544ebbcec5228da4c760ee77faf62b6f3d",
       "bytes": 3094
     },
     {
       "path": "threat-catalogs/owasp-agentic-top-10-2026.json",
-      "sha256": "sha256:ccc50d79b8d8867e1cb8a955fe25d2ecf70a562b8701323f45dfea71e0c49d84",
+      "sha256": "sha256:a541af688d6673dcb31ad0b969c74f8920253e4262eae5542b9447b0eb730993",
       "bytes": 3456
     }
   ],
