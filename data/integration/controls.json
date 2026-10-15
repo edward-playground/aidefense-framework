@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20261008",
-  "data_version": "2026.10.08",
+  "aidefend_version": "1.20261015",
+  "data_version": "2026.10.15",
   "unit_rule": "Every entry in controls is an independently selectable control unit. Entries in families are navigation only and must not be treated as countermeasures.",
   "counts": {
     "actionable_controls": 309,
@@ -268,6 +268,10 @@
           {
             "id": "AID-D-004.001",
             "comparison": "AID-M-002.002 owns the authoritative whole-artifact digest and signature verification used at ingestion, transfer, load, or admission; AID-D-004.001 independently replays those checks over a declared candidate or deployed snapshot and emits integrity-drift findings.\nThe same promotion-time verification cannot earn a second PASS under Detect, and a later detector result does not replace artifact admission."
+          },
+          {
+            "id": "AID-H-003.002",
+            "comparison": "AID-M-002.002 supplies whole-artifact and signed-member integrity evidence; AID-H-003.002 owns the final model promotion, deployment, load and reload decision.\nA successful digest or signer verification cannot authorize a loader or earn duplicate admission credit."
           }
         ]
       },
@@ -467,7 +471,7 @@
     },
     {
       "id": "AID-M-003.004",
-      "name": "Agent Goal & Mission Baselining",
+      "name": "Agent Goal & Mission Baseline Integrity",
       "actionable": true,
       "kind": "sub-technique",
       "tactic": "Model",
@@ -481,13 +485,25 @@
         "validation",
         "operation"
       ],
-      "description_text": "Specifically for autonomous or agentic AI, this technique involves formally defining, documenting, and cryptographically signing the agent's initial core mission, objectives, operational constraints, and goal hierarchy. This signed 'mission directive' serves as the trusted baseline that runtime monitoring systems can compare against.",
+      "description_text": "Define the intended mission, objective hierarchy, operational constraints, and authority binding of an agent as a canonical, signed goal manifest. Establish the initial baseline and independently verify that the currently effective manifest, for every subsequent valid version, matches the signed active head and exact deployed agent release. This provides a trustworthy approved-goal input for monitoring and authorization.",
       "scope_boundary": {
-        "responsibility": "Owns creation, signing, verification, and publication of an agent's initial mission, objective hierarchy, and operational-constraint baseline.",
+        "responsibility": "Owns the semantics, canonical representation, authenticity, exact agent/release/authority binding, and effective-state reconciliation of the approved goal baseline across valid versions. Initial creation and later consumption use the same artifact and verifier.",
         "related_techniques": [
           {
             "id": "AID-M-009.005",
-            "comparison": "AID-M-003.004 establishes the initial approved mission baseline; AID-M-009.005 governs later goal-manifest changes, approval quorum, provenance, promotion, and rollback.\nCreating version one of the mission and authorizing a production mission change are separate lifecycle decisions."
+            "comparison": "AID-M-003.004 proves which approved mission is currently effective and supplies its trustworthy meaning and digest; AID-M-009.005 proves that a transition from that state was authorized, retained, promoted, and can be recovered safely.\nOne canonical manifest, signature, and replica readback may support both claims but receive no duplicate integrity or risk-reduction credit."
+          },
+          {
+            "id": "AID-M-009.002",
+            "comparison": "AID-M-003.004 records intended mission and binds its authority-envelope digest; AID-M-009.002 defines concrete authority limits and action-risk facts.\nMission text never expands the signed authority envelope."
+          },
+          {
+            "id": "AID-H-021.002",
+            "comparison": "AID-M-003.004 verifies goal semantics and release-bound effective baseline; AID-H-021.002 owns generic fail-closed startup and reload admission of signed runtime artifacts.\nThe goal-specific verifier is reused at that admission point; do not score the same signature rejection twice."
+          },
+          {
+            "id": "AID-D-010",
+            "comparison": "AID-M-003.004 supplies the current verified goal and canonical digest; AID-D-010 detects semantic deviation of plans and actions.\nValid goal provenance does not prove aligned behavior."
           }
         ]
       },
@@ -1060,13 +1076,17 @@
         "operation",
         "response"
       ],
-      "description_text": "Govern how an agent's approved mission changes over time after the initial baseline has been established by AID-M-003.004. This sub-technique treats each goal-state change as a signed, versioned artifact with approver quorum, immutable provenance, and rollback checkpoints.\nKey question: who changed what the agent is allowed to do, who approved it, and how do we revert safely? This prevents production behavior from being silently redefined through ad hoc prompt edits or undocumented releases.\nExample: changing support-agent-v3 so it may send customer emails or issue credits should require a newly signed goal manifest, explicit product and security approval, and a rollback path to the previous approved digest.",
+      "description_text": "Authorize and preserve transitions between approved agent goal states, including initial activation, subsequent mission changes, and controlled rollback. Consume the canonical baseline and signed active head from AID-M-003.004, independently classify the complete candidate delta, verify policy-selected approval quorum, retain immutable provenance, and promote with an exact predecessor compare-and-swap. Recovery restores an approved predecessor mission through a newly authorized forward transition, without resetting active-head history.",
       "scope_boundary": {
-        "responsibility": "Owns governance of changes made after the initial approved agent mission, including signed goal-manifest versions, approver quorum, immutable provenance, promotion, checkpoints, and rollback.",
+        "responsibility": "Owns authorized goal-state transitions, policy-selected approver quorum, immutable change provenance, atomic promotion, and verified rollback readiness. It consumes the shared canonical goal artifact and baseline verifier; it does not earn a second signature or baseline-integrity score.",
         "related_techniques": [
           {
             "id": "AID-M-003.004",
-            "comparison": "AID-M-009.005 governs later changes to the approved mission and their rollback; AID-M-003.004 creates and signs the initial mission baseline.\nThe initial baseline is the starting state, while every production redefinition requires separate change governance."
+            "comparison": "AID-M-009.005 proves authorization, complete provenance and safe execution/recovery of a goal transition; AID-M-003.004 defines and reconciles the trusted effective mission baseline.\nThey share the canonical manifest and verifier; identical signature or replica readback evidence is not counted as two defensive outcomes."
+          },
+          {
+            "id": "AID-H-021.002",
+            "comparison": "AID-M-009.005 authorizes and atomically publishes the goal-state transition; AID-H-021.002 enforces generic signed-artifact admission at agent startup or reload.\nA transition approval never bypasses runtime artifact admission."
           }
         ]
       },
@@ -1628,6 +1648,10 @@
           {
             "id": "AID-H-003.010",
             "comparison": "AID-H-003.001 admits the exact package and build-tool population before build or deployment; AID-H-003.010 continuously manages vulnerabilities after AI application and platform software is deployed.\nA successful admission decision ages and must not be treated as continuing evidence that the deployed fleet remains remediated."
+          },
+          {
+            "id": "AID-H-023",
+            "comparison": "AID-H-003.001 verifies the exact third-party packages consumed by build or deployment; AID-H-023 secures the producer’s publication and reads back its own released bytes.\nPublisher provenance is one required admission signal when policy specifies it, never proof of benign package code or a second authorization to consume it."
           }
         ]
       },
@@ -1647,11 +1671,12 @@
       ],
       "phase": [
         "building",
-        "validation"
+        "validation",
+        "operation"
       ],
       "description_text": "Apply mandatory automated acceptance criteria before promoting a model or deployment-bound model package. Verify origin, integrity, provenance, and the exact model-interface files and selectors that ship with the release. Production trusts only immutable, attested bytes from an internal mirror; a signed weight file does not authorize a different tokenizer, chat template, generation configuration, or parser.",
       "scope_boundary": {
-        "responsibility": "Owns final automated promotion criteria, exact release-package verification, signing, immutable internal mirroring, and secure distribution so production consumes only approved attested model and interface bytes.",
+        "responsibility": "Owns the final automated promotion, mirror-refresh, transfer, deployment, load, and reload decision and its enforcement. It independently consumes composition, integrity, source-tombstone, format, loader, and other policy-required evidence, signs and distributes approved immutable releases, and releases only the actual opened verified bytes to runtime.",
         "related_techniques": [
           {
             "id": "AID-H-003.001",
@@ -1659,7 +1684,7 @@
           },
           {
             "id": "AID-H-003.006",
-            "comparison": "AID-H-003.002 makes the final promotion and distribution decision; AID-H-003.006 creates the model SBOM and provenance attestation bound to the artifact digest.\nThe attestation is gate evidence, while the release gate independently verifies and enforces it."
+            "comparison": "AID-H-003.002 makes and enforces the final release and runtime-load decision; AID-H-003.006 produces and independently verifies exact model composition, provenance, source-status, and loader evidence.\nEvidence helpers cannot create another promotion authority, and their successful results cannot replace the complete release policy or earn duplicate enforcement credit."
           },
           {
             "id": "AID-M-002.002",
@@ -1784,9 +1809,9 @@
         "validation",
         "operation"
       ],
-      "description_text": "Produce a model-centric SBOM that inventories model weights, tokenizer and special-token files, chat template, generation configuration, tool/reasoning parser configuration, model format, and loader code commit; bind every item to the exact release digest through signed in-toto/SLSA provenance.\n\nInteroperability: keep one internal canonical manifest for enforcement, then export standards-compatible AI-BOM formats such as CycloneDX ML-BOM 1.7 and SPDX 3 AI Profile for procurement, regulator, partner exchange, and technical documentation.\n\nAdmission control: verify the attestation and digest binding before promotion, and re-verify the same bytes at runtime before loading. This creates a tamper-evident content contract for the complete model interface, not only the weights.",
+      "description_text": "Produce a model-centric SBOM that inventories model weights, tokenizer and special-token files, chat template, generation configuration, tool/reasoning parser configuration, model format, and loader code commit; bind every item to the exact release digest through signed in-toto/SLSA provenance.\n\nInteroperability: keep one internal canonical manifest for enforcement, then export standards-compatible AI-BOM formats such as CycloneDX ML-BOM 1.7 and SPDX 3 AI Profile for procurement, regulator, partner exchange, and technical documentation.\n\nVerified composition: independently verify the artifact-bound attestation and signed composition, including source status, model format, and loader claims. Supply those results to the canonical release or runtime gate, which decides whether the exact verified bytes may be promoted or loaded. This creates a tamper-evident content contract for the complete model interface, not only the weights.",
       "scope_boundary": {
-        "responsibility": "Owns a signed model SBOM and provenance attestation bound to the exact model release, including weights, tokenizer, special tokens, templates, generation and parser configuration, training inputs, code, frameworks, adapters, build identity, and lineage needed by release admission.",
+        "responsibility": "Owns complete artifact-bound model composition and provenance production, publication, and cryptographic verification evidence. It supplies exact-byte, source-tombstone, format, and loader-policy verification results to the canonical release or load gate; it neither promotes a release nor grants a runtime loader access.",
         "related_techniques": [
           {
             "id": "AID-M-001.002",
@@ -1794,7 +1819,7 @@
           },
           {
             "id": "AID-H-003.002",
-            "comparison": "AID-H-003.006 produces the signed composition and provenance evidence; AID-H-003.002 verifies that evidence and decides whether the release may be promoted and distributed.\nAttestation authorship must remain distinguishable from gate enforcement."
+            "comparison": "AID-H-003.006 produces and verifies model composition and provenance evidence; AID-H-003.002 makes and enforces the final promotion, mirror-refresh, deployment, load, and reload decision.\nA composition, tombstone, or loader-policy verification result is a necessary input where policy requires it, not a second authorization or duplicate admission credit."
           },
           {
             "id": "AID-H-003.007",
@@ -3696,10 +3721,22 @@
         "building",
         "operation"
       ],
-      "description_text": "Codify an agent's intended capabilities, tool and data scopes, network destinations, risk classes, approval requirements, and contract validity into a signed, machine-readable behavior contract. Bind the contract to the exact agent identity, release, policy version, issuer, and expiry, then publish it as a verified input to runtime authorization.",
+      "description_text": "Materialize and publish an agent-wide signed behavior contract from approved authority and mission facts when the runtime authorization architecture consumes that contract. Bind its capabilities, tool/data/network scopes, critical operations and validity to the exact agent, release, policy and upstream digests; independently verify delivery to every expected authorization gate.",
       "scope_boundary": {
-        "responsibility": "Owns definition, review, signing, publication, rotation, revocation metadata, and delivery evidence for an agent behavior contract bound to exact identity, release, capabilities, data and tool scopes, destinations, risk classes, approvals, policy, and expiry. The contract is not an allow decision.",
+        "responsibility": "Owns materialization, exact agent/release/authority/goal binding, signing or reuse of an already suitable signed artifact, publication, rotation/revocation metadata and complete gate-delivery verification for the agent-wide behavior contract. It does not independently redefine authority, prove semantic policy safety, admit arbitrary runtime configuration, or authorize actions.",
         "related_techniques": [
+          {
+            "id": "AID-M-009.002",
+            "comparison": "AID-H-017.005 consumes approved authority facts and binds the deployable contract; AID-M-009.002 defines concrete authority limits and action-risk classification.\nNo capability can be added by the contract materializer."
+          },
+          {
+            "id": "AID-M-003.004",
+            "comparison": "AID-H-017.005 binds the contract to the verified effective mission digest; AID-M-003.004 owns the trusted goal baseline and its meaning.\nThe contract handoff does not approve a new mission."
+          },
+          {
+            "id": "AID-H-021.002",
+            "comparison": "AID-H-017.005 verifies agent-wide contract binding and delivery to the complete gate population; AID-H-021.002 owns generic fail-closed startup and runtime artifact admission.\nReuse its signing and verification infrastructure; the same signature or loaded-artifact fact receives no duplicate integrity credit."
+          },
           {
             "id": "AID-H-018.002",
             "comparison": "AID-H-017.005 publishes the signed agent-wide behavior contract; AID-H-018.002 evaluates the current action against active policy and verified context.\nThe contract supplies authority facts but never pre-authorizes every request."
@@ -4717,7 +4754,7 @@
       ],
       "description_text": "A critical supply chain defense that ensures software packages (e.g., NPM, PyPI) are published only from a secure, auditable, and authorized source. This technique reduces credential-only publishing attacks where a stolen developer credential is used to publish a malicious version of a legitimate package. It achieves this by prohibiting publications from local developer machines and mandating that all releases originate from a hardened CI/CD pipeline that authenticates using short-lived, identity-based tokens and generates verifiable provenance attestations.",
       "scope_boundary": {
-        "responsibility": "Owns publisher identity, registry namespace, protected release workflow, trusted CI origin, short-lived publication authority, and provenance for released packages. It does not establish that the proposed change or exact resolved package population is safe.",
+        "responsibility": "Owns authorized publisher identity, registry namespace, protected CI publication, short-lived publication authority, and independent post-publication readback of the exact producer release bytes and provenance. It does not admit third-party dependency populations or authorize their use.",
         "related_techniques": [
           {
             "id": "AID-H-022",
@@ -4936,7 +4973,7 @@
       ],
       "description_text": "Systematically collect detector errors, especially false negatives on malicious prompts and false positives on benign prompts, and use them as governed hard samples for periodic retraining of the prompt injection detector. The purpose is to harden the detector against the exact decision boundaries it currently fails on. Candidate detector versions must be benchmarked against a fixed out-of-loop evaluation set and explicit promotion criteria before replacing the production detector.",
       "scope_boundary": {
-        "responsibility": "Owns governed collection of observed false positives and false negatives, construction of hard-sample training sets, controlled detector retraining, and candidate-versus-production comparison on an independent holdout.",
+        "responsibility": "Owns governed detector-error collection, hard-sample training, candidate production, the final promotion decision over independently authenticated benchmark and utility evidence, deployment mutation, and complete effective-version readback. It consumes taxonomy evaluation evidence and does not claim a second category-analysis result.",
         "related_techniques": [
           {
             "id": "AID-H-026.002",
@@ -4944,7 +4981,7 @@
           },
           {
             "id": "AID-H-026.003",
-            "comparison": "AID-H-026.001 produces and evaluates candidate detector versions; AID-H-026.003 measures category-level coverage gaps that prioritize the next hard-sample cycle.\nAggregate retraining gains do not close an unmeasured taxonomy segment."
+            "comparison": "AID-H-026.001 trains candidates and owns the final promotion and deployed-version decision; AID-H-026.003 independently measures sealed taxonomy coverage and supplies ELIGIBLE or HOLD evidence.\nCoverage eligibility is a necessary input where required, not permission to deploy; raw predictions, complete case identities and policy bindings are independently checked again by the final gate."
           }
         ]
       },
@@ -4998,13 +5035,13 @@
         "validation",
         "improvement"
       ],
-      "description_text": "Measure detector performance by attack-technique category rather than relying solely on aggregate metrics. Break down results by a defined prompt-attack taxonomy such as role play, objective manipulation, obfuscation, indirect injection, encoding, multi-turn Crescendo-style escalation, many-shot pressure, policy-puppetry role or policy shifts, context saturation, or other organization-specific classes. The purpose is to expose category-level blind spots, prioritize the next hard-mining or fuzzing cycle, and prevent detector promotion based on misleading aggregate scores.",
+      "description_text": "Measure detector performance by attack-technique category rather than relying solely on aggregate metrics. Break down results by a defined prompt-attack taxonomy such as role play, objective manipulation, obfuscation, indirect injection, encoding, multi-turn Crescendo-style escalation, many-shot pressure, policy-puppetry role or policy shifts, context saturation, or other organization-specific classes. The purpose is to expose category-level blind spots, prioritize the next hard-mining or fuzzing cycle, and supply independently measured coverage eligibility or a veto to the final detector-promotion authority. Category eligibility alone does not authorize a detector release.",
       "scope_boundary": {
-        "responsibility": "Owns category-level measurement of prompt-attack detector coverage and identification of blind spots under a declared taxonomy. It reports and prioritizes gaps but does not generate corpus items or retrain the detector.",
+        "responsibility": "Owns independently sealed taxonomy evaluation, complete raw category observations, coverage eligibility or veto findings, and hardening backlog priorities. It neither retrains the detector nor makes, signs, or executes the final release promotion decision.",
         "related_techniques": [
           {
             "id": "AID-H-026.001",
-            "comparison": "AID-H-026.003 identifies weak attack categories; AID-H-026.001 changes the detector using governed hard samples and validates the candidate.\nCoverage analysis supplies priorities rather than training updates."
+            "comparison": "AID-H-026.003 authenticates the sealed evaluation population and measures category coverage; AID-H-026.001 produces candidates and owns final promotion, utility gates and deployment readback.\nELIGIBLE states only that the measured coverage facet meets its profile; HOLD supplies a veto. Neither is a release authorization or duplicate deployment assurance."
           },
           {
             "id": "AID-H-026.002",
@@ -5826,13 +5863,17 @@
       "phase": [
         "operation"
       ],
-      "description_text": "Record and verify the difference between the model the caller requested and the model the gateway actually routed to. This sub-technique makes route substitutions, alias expansion, provider translation, and model-family fallback explicit by emitting structured route-decision records for every request, including the route policy version that justified the effective destination.",
+      "description_text": "Preserve authoritative requested-versus-effective route provenance for AI gateways that translate caller model aliases, route headers, retries, provider accounts, or fallback paths. Protect against caller-induced substitutions becoming untraceable through best-effort logging, overwritten attempts, or unbound provider identities. Require a protected durable intent acknowledgment before dispatch, retain immutable intake/decision/attempt/terminal history under the declared storage failure model, and reconcile the complete independently enumerated ingress population with actual egress/provider observations. Requested or planned routes never stand in for observed routing. Local protected WAL/outbox acknowledgment with asynchronous remote export is valid only when the versioned deployment policy explicitly accepts that local-storage survival model.",
       "scope_boundary": {
-        "responsibility": "Owns authoritative gateway-side emission and retention of requested-versus-effective model and route records after alias expansion, provider translation, and fallback, including the policy version that justified the destination. It does not analyze or alert on drift.",
+        "responsibility": "Owns protected, complete, durable and independently verifiable requested-versus-effective route provenance across every invocation and attempt, including recorder role custody, atomic intent/outbox acknowledgment, immutable terminal or unknown history, and independently enumerated coverage. The dispatch prerequisite prevents unrecorded sends; it does not authorize the selected route, decide fallback eligibility, detect malicious route drift, or claim exactly-once provider execution.",
         "related_techniques": [
           {
+            "id": "AID-H-033.005",
+            "comparison": "AID-H-033.001 owns protected provenance and durable intent acknowledgment; AID-H-033.005 locally verifies the signed contract, resolves the final route, and owns route allow/deny immediately before transport. A recorded decision cannot authorize a route, and an eligible route cannot dispatch without the declared durable acknowledgment. Shared decision evidence does not earn duplicate provenance or enforcement credit."
+          },
+          {
             "id": "AID-D-004.006",
-            "comparison": "AID-H-033.001 emits the authoritative route-decision record at the gateway; AID-D-004.006 reconciles record completeness, compares the observed route, and emits drift findings.\nThe producer of route evidence must not mark its own population complete."
+            "comparison": "AID-H-033.001 establishes complete protected route history and canonical v2 producer bindings; AID-D-004.006 independently compares authorized decisions with actual routing, emits drift/visibility signals, and verifies detection/alert effect. The detector can reuse provenance but cannot earn provenance credit by replaying it; the producer cannot mark its own independent population complete."
           },
           {
             "id": "AID-D-004.004",
@@ -5962,10 +6003,14 @@
       "phase": [
         "operation"
       ],
-      "description_text": "This control owns only effective route identity resolution and dispatch enforcement. It does not clamp model invocation parameters such as temperature, top_p, logprobs, output limits, or provider safety profiles. At the last trusted AI gateway or model router, derive the effective route after all caller aliases, gateway defaults, route headers, retries, provider translations, and fallback selection, then deny dispatch unless the resolved provider, provider account, model, deployment, endpoint, region, route, and fallback exactly match a verified signed route contract.",
+      "description_text": "At the last trusted AI gateway or model router, derive the effective route after all caller aliases, gateway defaults, route headers, retries, provider translations, and fallback selection, then deny dispatch unless the resolved provider, provider account, model, deployment, endpoint, region, route, and fallback exactly match a verified signed route contract. Route eligibility is decided locally for each dispatch attempt; H-033.001 separately supplies protected durable intent acknowledgment and canonical attempt evidence. Approved alias expansion and fallback are allowed only when the final resolved route remains exactly bound to the active verified contract.",
       "scope_boundary": {
         "responsibility": "Owns final resolution and fail-closed enforcement of provider, account, model, deployment, endpoint, region, route, and fallback identity immediately before dispatch. It does not resolve sampling or other invocation parameters.",
         "related_techniques": [
+          {
+            "id": "AID-H-033.001",
+            "comparison": "AID-H-033.005 owns final route eligibility resolution and allow/deny; AID-H-033.001 owns protected immutable provenance and the declared durable acknowledgment prerequisite. This gate locally verifies signed policy and trusted final input; it never accepts eligibility from the recorder. Shared decision evidence cannot earn duplicate route enforcement and provenance credit."
+          },
           {
             "id": "AID-H-033.006",
             "comparison": "AID-H-033.005 enforces where and to which model the request is dispatched; AID-H-033.006 enforces the effective sampling, output, log-probability, and provider safety settings.\nRoute identity and invocation configuration must be resolved independently after all translations."
@@ -6689,13 +6734,13 @@
       "phase": [
         "operation"
       ],
-      "description_text": "Embed each input admitted to the detector's declared technical scope with a pinned model and compare it with a versioned, representative baseline of approved input embeddings. Emit an anomaly finding when the configured distance, density, or cluster score breaches the signed policy threshold.\n\nBind the result to the input digest, embedding model and revision, baseline digest, scoring method, threshold policy, and complete admitted population. The declared scope must distinguish unsupported modalities or languages from supported inputs that were omitted, could not be embedded, or could not be scored; those coverage and processing conditions must remain visible rather than being reported as clean traffic.",
+      "description_text": "Detect anomalous text inputs at a declared, bounded AI application ingress by measuring their distance from a trusted, versioned embedding baseline. A concrete deployment is a narrow task assistant where an attacker submits instructions to replace the assigned task or elicit a prohibited response. Use statistical novelty as an investigative signal only when an independent replay on that application demonstrates useful detection of those attacks, including adaptive prompts near normal clusters, within policy limits for benign alerts and latency.\n\nBind each finding to the exact input, application surface, embedding model, baseline and policy generation, and reconcile the complete independently observed ingress population by ID. A normal-distance prompt can still be malicious; a novel legitimate task can be an outlier. An absent text-ingress architecture is NOT_APPLICABLE. Missing attack evaluation or omitted applicable traffic is INSUFFICIENT_DATA; a measured breached detection or utility requirement is FAIL, and processing errors remain ERROR. A successful arithmetic or clustering run alone cannot establish PASS.",
       "scope_boundary": {
-        "responsibility": "Owns runtime anomaly findings derived from distance, density, or cluster scores against a signed embedding baseline for the detector's declared modalities and languages. Unsupported and unprocessed inputs remain explicit coverage states.",
+        "responsibility": "Owns profile-qualified vector novelty findings at the declared AI text ingress, using independently authenticated attack/benign/adaptive replay and complete runtime population reconciliation. It reports findings for investigation; it does not identify attack intent, authorize an action, block a request, or claim protection for unevaluated surfaces. Benign traffic cannot be inferred from the largest current cluster. Broader languages, modalities, retrieval sources and threat families require their own measured profile.",
         "related_techniques": [
           {
             "id": "AID-D-001.001",
-            "comparison": "AID-D-001.003 detects statistical novelty in a governed vector space; AID-D-001.001 detects content, intent, injection, jailbreak, and obfuscation signals in the prompt and recovered views.\nA vector outlier need not be malicious, and a malicious prompt may remain near a normal embedding cluster."
+            "comparison": "AID-D-001.003 detects statistical novelty in a governed vector space; AID-D-001.001 detects content, intent, injection, jailbreak, and obfuscation signals in the prompt and recovered views.\nA vector outlier need not be malicious, and a malicious prompt may remain near a normal embedding cluster.\nThe vector profile must demonstrate its own useful attack triage without relying on findings from the content detector; combined evidence must not earn the same detection credit twice."
           }
         ]
       },
@@ -7381,13 +7426,17 @@
       "phase": [
         "operation"
       ],
-      "description_text": "Detect mismatches and unexplained changes between each signed route decision and the route actually selected after alias expansion, defaults, provider translation, retry, and fallback. Reconcile the complete route-decision population with gateway egress and independent provider or network readback. Emit a route-mismatch finding, or a coverage-gap finding when the effective route cannot be observed.",
+      "description_text": "Detect unauthorized effective-route changes, denied or unbound downstream sends, and missing route visibility by independently comparing each signed authorized decision with actual gateway egress and provider/network readback after alias expansion, defaults, provider translation, retry, and fallback. Reconcile the independent ingress population and all attempt chains. Emit bound drift or coverage signals and verify their delivered effect with adversarial and benign cases; an approved requested-model alias expansion is not itself drift and a clean replay window is not proof of detector effectiveness.",
       "scope_boundary": {
-        "responsibility": "Owns detection and complete-population reconciliation of differences between signed route decisions and the route actually used after alias expansion, defaults, provider translation, retries, and failover. It reports route drift but does not resolve or block the route.",
+        "responsibility": "Owns independent runtime route-drift/visibility detection, complete measured population reconciliation, and verified signal/alert effectiveness. It compares the authorized decision for each attempt to actual observed routing; it does not authorize/block routes or earn protected provenance custody credit. Window observations remain distinct from assurance of the configured detector.",
         "related_techniques": [
           {
+            "id": "AID-H-033.001",
+            "comparison": "AID-D-004.006 consumes the canonical v3 decision projection, re-derived from the separately verified signed v2 ledger export and independently enumerated ingress; AID-H-033.001 owns immutable complete history, custody, and durable intent acknowledgment. Replaying the ledger does not earn duplicate provenance credit or establish that the detector produces and delivers required signals."
+          },
+          {
             "id": "AID-H-033.005",
-            "comparison": "AID-D-004.006 detects requested-versus-effective route mismatch and missing route observability; AID-H-033.005 resolves the effective route and blocks disallowed destinations.\nThe detector independently observes the route outcome without becoming the routing enforcement point."
+            "comparison": "AID-D-004.006 detects authorized-decision versus actual-route drift and missing visibility; AID-H-033.005 owns local final-route eligibility and blocking. Approved requested-versus-effective substitutions are benign when the actual route matches its authorized decision. A confirmed drift observation can invalidate enforcement coverage while correctly demonstrating detector behavior."
           },
           {
             "id": "AID-D-004.003",
@@ -9426,9 +9475,9 @@
         "building",
         "operation"
       ],
-      "description_text": "Run desktop GUI / OS-level computer-use agents inside disposable, task-scoped workspaces with logged-out defaults, screenshot redaction, independently reviewed screenshot-injection signals, OS automation allowlists, action-bound confirmation, post-action effect readback, and watch-mode kill switches. This prevents a model-controlled cursor or screen reader from silently acting on hidden UI instructions, stale logged-in sessions, local files, clipboard residue, password managers, device APIs, or enterprise applications outside the approved task scope.",
+      "description_text": "Run desktop GUI / OS-level computer-use agents inside disposable, task-scoped workspaces with logged-out defaults, screenshot redaction, independently reviewed screenshot-injection signals, OS automation allowlists, action-bound confirmation, post-action effect readback, and watch-mode kill switches. This prevents a model-controlled cursor or screen reader from silently acting on hidden UI instructions, stale logged-in sessions, local files, clipboard residue, password managers, device APIs, or enterprise applications outside the approved task scope.\n\nDeploy this as one complete desktop computer-use defense: create and independently read back the disposable workspace with AID-I-008.004-G002, attach the peer-bound observer with AID-I-008.004-G001, verify a current signed watch-mode sample through AID-I-008.004-G005 before each model observation or action, with independently supervised watch-mode and cleanup covering idle periods, apply AID-I-008.004-G003 to the declared screenshot-risk population, and execute exact approved actions through AID-I-008.004-G004. Workspace isolation alone or action confirmation alone provides only the corresponding facet of this control; full assurance requires every applicable desktop boundary and action property.",
       "scope_boundary": {
-        "responsibility": "Owns containment of desktop GUI and OS-level computer-use agents in disposable logged-out workspaces, privileged UI observation, screenshot-risk handling, OS automation allowlists, stable accessibility invocation, action-bound confirmation consumption, signed UI or API effect readback, watch-mode halt, and deterministic cleanup.",
+        "responsibility": "Owns containment of desktop GUI and OS-level computer-use agents in disposable logged-out workspaces, privileged UI observation, screenshot-risk handling, OS automation allowlists, stable accessibility invocation, action-bound confirmation consumption, signed UI or API effect readback, watch-mode halt, and deterministic cleanup. Workspace/platform and agent-harness components implement one desktop containment outcome through the signed launch, observation, approval and cleanup interfaces. Verification covers the whole applicable workspace/action population and current supervision evidence.",
         "related_techniques": [
           {
             "id": "AID-I-008.001",
@@ -11306,9 +11355,9 @@
       "kind": "family",
       "tactic": "Harden",
       "tactic_id": "harden",
-      "description_text": "Treat the AI gateway or model router as a security control plane, not merely a latency or cost optimization layer. This technique governs how requests are bound to approved models, providers, regions, remote MCP/A2A endpoints, and fallback paths so that routing changes do not silently weaken safety, compliance, data residency, retention, or approval constraints.\n\nCoverage includes:\n\n- Binding each request to an approved requested-vs-effective model record.\n- Preventing silent failover to unapproved or less-safe models.\n- Constraining routing by region, data zone, residency, and retention policy.\n- Versioning, approving, canarying, and rolling back route policy bundles as security artifacts.\n- Resolving and enforcing the final provider route immediately before dispatch.\n- Resolving and enforcing effective sampling, output, log-probability, and provider safety-profile settings immediately before provider serialization.",
+      "description_text": "Treat the AI gateway or model router as a security control plane, not merely a latency or cost optimization layer. This technique governs how requests are bound to approved models, providers, regions, remote MCP/A2A endpoints, and fallback paths so that routing changes do not silently weaken safety, compliance, data residency, retention, or approval constraints.\n\nCoverage includes:\n\n- Preserving protected, durably acknowledged requested-versus-effective route provenance across every dispatch attempt and observed terminal state.\n- Preventing silent failover to unapproved or less-safe models.\n- Constraining routing by region, data zone, residency, and retention policy.\n- Versioning, approving, canarying, and rolling back route policy bundles as security artifacts.\n- Resolving and enforcing the final provider route immediately before dispatch.\n- Resolving and enforcing effective sampling, output, log-probability, and provider safety-profile settings immediately before provider serialization.",
       "scope_boundary": {
-        "responsibility": "Owns the AI gateway or model router decision plane that resolves and enforces the effective model, provider, account, endpoint, region, approved fallback, route policy, and invocation configuration. It does not resolve tools or authorize their effects.",
+        "responsibility": "Owns the AI gateway or model router decision plane: protected route provenance, policy-preserving fallback, routing policy lifecycle, final route eligibility enforcement, and invocation configuration. Its children separate durable record custody from route allow/deny; independent drift detection is owned by AID-D-004.006. It does not resolve tools or authorize their effects.",
         "related_techniques": [
           {
             "id": "AID-H-024",

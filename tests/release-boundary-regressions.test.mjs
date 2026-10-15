@@ -80,7 +80,7 @@ function assertJavaScriptParses(source, label) {
   }
 }
 
-test('supply-chain examples use installable delivery claims and current schemas', () => {
+test('supply-chain examples use installable delivery claims and consumer-bound provenance verification', () => {
   const workspace = control('AID-H-021.005').toolsOpenSource.find(
     item => item.includes('Workspace Guard'),
   );
@@ -89,14 +89,40 @@ test('supply-chain examples use installable delivery claims and current schemas'
   assert.doesNotMatch(workspace, /^Workspace Guard workspace-guard-scan CLI/);
 
   const howTo = guidance('AID-H-003.001', 'AID-H-003.001-G003').howTo;
-  assert.match(
-    howTo,
-    /sigstore\/cosign-installer@6f9f17788090df1f26f669e9d70d6ae9567deba6 # v4\.1\.2/,
-  );
-  assert.doesNotMatch(howTo, /f713795cb21599bc4e5c4b58cbad1da852d7eeb9/);
-  assert.match(howTo, /verifyImages:\n\s+- imageReferences:\n\s+- "my-registry\/my-ml-app:\*"/);
-  assert.match(howTo, /attestors:\n\s+- entries:\n\s+- keyless:/);
-  assert.doesNotMatch(howTo, /verifyImages:\n\s+- image:/);
+  // G003 now consumes third-party provenance; it no longer publishes or signs
+  // the consumer's own release. The live handoff fixture verifies actual bytes.
+  const bash = codeBlocks(howTo, 'bash').join('\n');
+  assert.match(bash, /cosign verify --certificate-identity/);
+  assert.match(bash, /cosign verify-attestation --type slsaprovenance/);
+  assert.match(bash, /\/opt\/aidefend\/trust\/dependency-producer\.identity/);
+  assert.match(bash, /\/opt\/aidefend\/trust\/dependency-producer\.issuer/);
+  assert.match(bash, /"\$APPROVED_DEPENDENCY_REF"/);
+  assert.match(bash, /audit signatures --json --include-attestations/);
+  assert.match(bash, /install --ignore-scripts --save-exact/);
+  assert.doesNotMatch(bash, /\bcosign\s+(?:sign|attest)\b/);
+  const python = codeBlocks(howTo, 'python').join('\n');
+  assert.match(python, /if repository != expected_repository or workflow != expected_workflow/);
+  assert.match(python, /get\("attestationBundles"\)/);
+  assert.doesNotMatch(python, /attestations\.get\("bundles"\)/);
+  assert.match(python, /required provenance missing/);
+
+  // Producer workflows retain immutable action references under their owner.
+  const producer = guidance('AID-H-023', 'AID-H-023-G001').howTo;
+  const workflows = [...producer.matchAll(/<pre><code(?:\s[^>]*)?>([\s\S]*?)<\/code><\/pre>/g)]
+    .map(match => match[1].replaceAll('&lt;', '<').replaceAll('&gt;', '>').replaceAll('&amp;', '&'))
+    .filter(source => /^# File: \.github\/workflows\/[^\n]+\.ya?ml\n/.test(source));
+  assert.ok(workflows.length > 0, 'publisher guidance must contain concrete CI workflows');
+  for (const workflow of workflows) {
+    const actions = [...workflow.matchAll(/\buses:\s*(\S+)/g)].map(match => match[1]);
+    assert.ok(actions.length > 0, 'publisher workflow is missing action references');
+    for (const action of actions) assert.match(action, /^[^@\s]+@[a-f0-9]{40}$/);
+  }
+  const supplyExamples = [...controls.values()]
+    .filter(entry => entry.id.startsWith('AID-H-003') || entry.id === 'AID-H-023')
+    .flatMap(entry => entry.implementationGuidance || [])
+    .map(entry => entry.howTo).join('\n');
+  assert.doesNotMatch(supplyExamples, /f713795cb21599bc4e5c4b58cbad1da852d7eeb9/);
+  assert.doesNotMatch(supplyExamples, /verifyImages:\n\s+- image:/);
 });
 
 test('working-state architecture and runtime context-store enforcement have one TTL owner', () => {

@@ -74,8 +74,12 @@ test('reviewed deadline and retry fixes remain bound to verified profiles', () =
     assert.match(skillDecision, /runtime_profile_sha256/);
 
     const missionBoot = guidanceById(modelTactic, 'AID-M-003.004-G004').howTo;
-    assert.match(missionBoot, /sqlite_busy_timeout_seconds: float/);
-    assert.match(missionBoot, /timeout=profile\.sqlite_busy_timeout_seconds/);
+    assert.match(missionBoot, /deadlines and byte limits from verified deployment policy/);
+    assert.match(missionBoot, /not 0 &lt; busy_timeout_seconds &lt; float\("inf"\)/);
+    assert.match(missionBoot, /open_goal_store\(database, expected_store_id=expected_store_id/);
+    assert.match(missionBoot, /busy_timeout_seconds=busy_timeout_seconds\)/);
+    assert.match(missionBoot, /sqlite3\.connect\(path\.as_uri\(\) \+ "\?mode=rw", uri=True,/);
+    assert.match(missionBoot, /timeout=busy_timeout_seconds\)/);
 
     const providerRecovery = guidanceById(restoreTactic, 'AID-R-001.001-G002').howTo;
     assert.match(providerRecovery, /"maximum_retry_attempts": 3/);

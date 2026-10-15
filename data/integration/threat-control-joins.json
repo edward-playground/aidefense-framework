@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20261008",
-  "data_version": "2026.10.08",
+  "aidefend_version": "1.20261015",
+  "data_version": "2026.10.15",
   "identity_rule": "Resolve each record against threat-catalogs/<framework_key>.json by external_id. item_raw is the exact AIDEFEND source string, kept for traceability only. rationale is AIDEFEND-authored context for that pair, or null.",
   "frameworks": [
     "mitre-atlas",
@@ -11,7 +11,7 @@
   ],
   "counts": {
     "records": 203,
-    "control_pairs": 2403
+    "control_pairs": 2407
   },
   "joins": [
     {
@@ -3424,6 +3424,11 @@
           "item_raw": "AML.T0051 LLM Prompt Injection"
         },
         {
+          "id": "AID-D-001.003",
+          "rationale": "profile-qualified anomaly triage of direct instruction overrides",
+          "item_raw": "AML.T0051 LLM Prompt Injection (profile-qualified anomaly triage of direct instruction overrides)"
+        },
+        {
           "id": "AID-D-001.004",
           "rationale": null,
           "item_raw": "AML.T0051 LLM Prompt Injection"
@@ -3565,6 +3570,11 @@
           "id": "AID-D-001.001",
           "rationale": null,
           "item_raw": "AML.T0051.000 LLM Prompt Injection: Direct"
+        },
+        {
+          "id": "AID-D-001.003",
+          "rationale": "profile-qualified anomaly triage of direct instruction overrides",
+          "item_raw": "AML.T0051.000 LLM Prompt Injection: Direct (profile-qualified anomaly triage of direct instruction overrides)"
         },
         {
           "id": "AID-D-001.004",
@@ -5719,6 +5729,11 @@
           "id": "AID-M-009.005",
           "rationale": null,
           "item_raw": "AML.T0081 Modify AI Agent Configuration"
+        },
+        {
+          "id": "AID-H-017.005",
+          "rationale": "detect tampered behavior-contract content or substitution during signed agent/release-bound delivery to authorization gates; does not prove safe policy semantics or action authorization",
+          "item_raw": "AML.T0081 Modify AI Agent Configuration (detect tampered behavior-contract content or substitution during signed agent/release-bound delivery to authorization gates; does not prove safe policy semantics or action authorization)"
         },
         {
           "id": "AID-H-018.007",
@@ -8673,6 +8688,11 @@
           "id": "AID-D-001.001",
           "rationale": null,
           "item_raw": "LLM01:2026 Prompt Injection"
+        },
+        {
+          "id": "AID-D-001.003",
+          "rationale": "profile-qualified anomaly triage of direct instruction overrides",
+          "item_raw": "LLM01:2026 Prompt Injection (profile-qualified anomaly triage of direct instruction overrides)"
         },
         {
           "id": "AID-D-001.004",

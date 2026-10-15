@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20261008",
+  "aidefend_version": "1.20261015",
   "framework_key": "owasp-llm-top-10-2026",
   "source_framework_label": "OWASP LLM Top 10 2026",
   "display_name": "OWASP LLM Top 10 2026",
@@ -26,7 +26,7 @@
       "rank": 1,
       "name": "Prompt Injection",
       "referenced": true,
-      "control_count": 70
+      "control_count": 71
     },
     {
       "item_locator": "LLM02:2026 Sensitive Information Disclosure",

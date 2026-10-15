@@ -171,7 +171,7 @@
     ]
   },
   "AID-M-002.002": {
-    "contentHash": "8da6c45492dfbbb2",
+    "contentHash": "51877e0db871e769",
     "keywords": [
       "cryptographic integrity verification",
       "whole-artifact hashing",
@@ -185,8 +185,9 @@
       "detached signature bundle",
       "tamper-evident chain of custody",
       "artifact signer identity",
-      "deployment-time verification",
-      "manifest member verification"
+      "integrity evidence handoff",
+      "manifest member verification",
+      "canonical load gate"
     ]
   },
   "AID-M-002.003": {
@@ -245,7 +246,7 @@
     ]
   },
   "AID-M-003": {
-    "contentHash": "a89d1c30b4413907",
+    "contentHash": "e0843b798d5c0aea",
     "keywords": [
       "model behavior baseline",
       "model cards",
@@ -319,22 +320,20 @@
     ]
   },
   "AID-M-003.004": {
-    "contentHash": "7e6c6bd1ccb3756d",
+    "contentHash": "d49a0fe1084b6f22",
     "keywords": [
-      "agent goal baselining",
-      "signed mission directive",
-      "cryptographic goal signing",
-      "machine-readable mission",
-      "goal hierarchy documentation",
-      "mission baseline verification",
-      "tamper-evident goal artifact",
-      "kms goal signing",
-      "agent card metadata",
-      "goal integrity check",
-      "signed operational constraints",
-      "runtime mission verification",
-      "gpg goal signing",
-      "mission manifest"
+      "trusted active mission",
+      "signed goal manifest",
+      "current goal baseline",
+      "agent release binding",
+      "authority digest binding",
+      "canonical goal schema",
+      "verified active head",
+      "baseline readback",
+      "mission integrity",
+      "complete replica population",
+      "goal monitor projection",
+      "goal version freshness"
     ]
   },
   "AID-M-003.005": {
@@ -357,7 +356,7 @@
     ]
   },
   "AID-M-003.006": {
-    "contentHash": "7bcc6c258008005a",
+    "contentHash": "243884c31cfea115",
     "keywords": [
       "graph structured model baseline",
       "graph snapshot digest",
@@ -731,22 +730,20 @@
     ]
   },
   "AID-M-009.005": {
-    "contentHash": "1469abd40192ac4e",
+    "contentHash": "badb21fe063cd887",
     "keywords": [
-      "goal manifest version control",
-      "signed manifest promotion",
-      "quorum approval workflow",
-      "immutable change provenance",
-      "mission change authorization",
-      "release digest attestation",
-      "rollback checkpoint registry",
-      "last known good rollback",
-      "two-person integrity control",
-      "change ticket linkage",
-      "manifest drift detection",
-      "safe mission reversion",
-      "cosign manifest signing",
-      "provenance event immutability"
+      "authorized goal transition",
+      "predecessor digest chain",
+      "typed genesis",
+      "signed active head",
+      "quorum approval",
+      "compare and swap",
+      "forward revision rollback",
+      "goal transition provenance",
+      "release authority binding",
+      "persistent replay protection",
+      "complete transition readback",
+      "canonical goal manifest"
     ]
   },
   "AID-M-009.006": {
@@ -1053,42 +1050,37 @@
     ]
   },
   "AID-H-003.001": {
-    "contentHash": "056da609142cb60a",
+    "contentHash": "7b68722fdc2c80f2",
     "keywords": [
-      "software composition analysis",
-      "dependency scanning",
-      "version pinning",
-      "lockfile hashing",
-      "sigstore cosign",
-      "in-toto attestation",
-      "cve scanning",
-      "package signing",
-      "trivy",
-      "grype",
-      "syft",
-      "typosquat detection",
-      "sbom generation",
-      "pip-audit"
+      "third-party dependency admission",
+      "exact package digest",
+      "native package provenance",
+      "publisher workflow verification",
+      "complete dependency population",
+      "lockfile resolution",
+      "producer signature verification",
+      "software source validation",
+      "yanked package rejection",
+      "build tool admission",
+      "vulnerability evidence",
+      "immutable dependency bytes"
     ]
   },
   "AID-H-003.002": {
-    "contentHash": "5f7fbe5646c5e95b",
+    "contentHash": "36dd81ab1dd36adc",
     "keywords": [
-      "model signing",
-      "release gating",
-      "artifact digest pinning",
-      "admission policy",
-      "rekor transparency log",
-      "internal model registry",
-      "cosign verification",
-      "safetensors",
-      "in-toto attestation",
-      "opa policy",
-      "kyverno",
-      "model promotion gate",
-      "safe deserialization",
-      "model interface package",
-      "runtime interface verification"
+      "final release admission",
+      "opened artifact descriptor",
+      "private immutable snapshot",
+      "signed release policy",
+      "composition evidence verification",
+      "source tombstone verification",
+      "loader policy validation",
+      "artifact digest binding",
+      "runtime load gate",
+      "release promotion",
+      "model distribution",
+      "load time integrity"
     ]
   },
   "AID-H-003.003": {
@@ -1149,22 +1141,21 @@
     ]
   },
   "AID-H-003.006": {
-    "contentHash": "52daebb3b20ea45a",
+    "contentHash": "90baff9fad13653a",
     "keywords": [
-      "model sbom attestation",
-      "cyclonedx ml-bom export",
-      "spdx ai profile mapping",
-      "model artifact digest binding",
-      "sigstore provenance",
-      "in-toto slsa attestation",
-      "unsafe deserialization ban",
-      "model loader policy",
-      "technical documentation evidence",
-      "canonical model manifest",
-      "ai-bom interoperability",
-      "runtime sbom verification",
-      "reasoning parser provenance",
-      "generation config inventory"
+      "model software bill of materials",
+      "signed model composition",
+      "artifact digest binding",
+      "archive member integrity",
+      "signed package interface policy",
+      "safe weight format verification",
+      "complete model interface",
+      "tokenizer and template binding",
+      "source tombstone evidence",
+      "loader format and policy binding",
+      "signed model fingerprint manifest",
+      "canonical tensor state reference",
+      "evidence-only handoff"
     ]
   },
   "AID-H-003.007": {
@@ -2250,7 +2241,7 @@
     ]
   },
   "AID-H-017": {
-    "contentHash": "ed341d94ab435780",
+    "contentHash": "1037065673ef9b95",
     "keywords": [
       "secure agent architecture",
       "agent hardening",
@@ -2345,21 +2336,20 @@
     ]
   },
   "AID-H-017.005": {
-    "contentHash": "961c54d3942e77f1",
+    "contentHash": "6cd1a84d2c147832",
     "keywords": [
       "agent behavior contract",
-      "signed capability manifest",
-      "contract definition governance",
-      "canonical contract signing",
+      "authority profile binding",
+      "mission digest binding",
       "agent release binding",
-      "contract validity window",
-      "signer key governance",
-      "contract rotation metadata",
-      "contract revocation metadata",
-      "runtime gate artifact handoff",
-      "exact digest readback",
-      "deployment population verification",
-      "behavior contract evidence"
+      "canonical contract signing",
+      "complete gate handoff",
+      "per-instance readback keys",
+      "explicit signer role authorization",
+      "signed gate readback",
+      "fresh challenge nonce",
+      "persistent replay protection",
+      "contract revocation state"
     ]
   },
   "AID-H-017.006": {
@@ -2896,20 +2886,20 @@
     ]
   },
   "AID-H-023": {
-    "contentHash": "e2370ea712a6d76b",
+    "contentHash": "715c35ff10a93e94",
     "keywords": [
-      "trusted package publishing",
-      "oidc publishing workflow",
-      "npm provenance verification",
-      "pypi trusted publishing",
-      "publisher identity attestation",
-      "ci only release",
-      "protected release environment",
-      "package provenance admission",
-      "workflow identity verification",
-      "pypi publish attestation",
-      "supply chain provenance",
-      "release artifact evidence"
+      "protected publisher identity",
+      "registry namespace security",
+      "short-lived publication authority",
+      "trusted publishing workflow",
+      "exact release readback",
+      "publisher provenance verification",
+      "native registry signatures",
+      "artifact digest binding",
+      "release workflow identity",
+      "oidc publication",
+      "publisher credential protection",
+      "post-publication verification"
     ]
   },
   "AID-H-024": {
@@ -3085,22 +3075,20 @@
     ]
   },
   "AID-H-026.001": {
-    "contentHash": "be3858bf60334aab",
+    "contentHash": "eb3f1cb99469e4cf",
     "keywords": [
-      "hard-sample mining",
-      "false negative collection",
-      "false positive collection",
-      "governed retraining",
-      "promotion criteria gate",
-      "controlled detector replacement",
-      "hard sample repository",
-      "periodic retraining loop",
-      "decision boundary hardening",
-      "out-of-loop benchmark",
-      "candidate detector benchmarking",
-      "mlflow tracking",
-      "prompt injection defense",
-      "detector error sampling"
+      "detector error mining",
+      "hard sample training",
+      "final detector promotion",
+      "signed benchmark consumption",
+      "complete case reconciliation",
+      "latency request binding",
+      "benign utility gate",
+      "candidate byte measurement",
+      "category regression gate",
+      "effective replica readback",
+      "signed promotion decision",
+      "deployment rollback"
     ]
   },
   "AID-H-026.002": {
@@ -3121,20 +3109,20 @@
     ]
   },
   "AID-H-026.003": {
-    "contentHash": "e008e47cf3edc585",
+    "contentHash": "75a61183f6254d30",
     "keywords": [
-      "taxonomy-stratified detector evaluation",
-      "prompt attack taxonomy",
-      "crescendo coverage gap",
-      "many-shot jailbreak coverage",
-      "policy puppetry coverage",
-      "context saturation detection gap",
-      "category-level recall",
-      "weak category backlog",
-      "detector promotion gate",
-      "out-of-loop holdout",
-      "stratified prompt injection metrics",
-      "jailbreak taxonomy reporting"
+      "sealed taxonomy holdout",
+      "independent benchmark evidence",
+      "attack category coverage",
+      "raw prediction replay",
+      "complete case population",
+      "taxonomy blind spot analysis",
+      "category detection recall",
+      "benign false positive measurement",
+      "coverage eligibility",
+      "promotion veto evidence",
+      "hardening backlog priorities",
+      "signed evaluation policy"
     ]
   },
   "AID-H-027": {
@@ -3709,7 +3697,7 @@
     ]
   },
   "AID-H-033": {
-    "contentHash": "080536ef3097fe78",
+    "contentHash": "684eab5bc53a5e1f",
     "keywords": [
       "ai gateway routing integrity",
       "policy-preserving failover",
@@ -3729,22 +3717,20 @@
     ]
   },
   "AID-H-033.001": {
-    "contentHash": "9e29befd7b237465",
+    "contentHash": "ad2205a4d996c37d",
     "keywords": [
-      "requested vs effective model binding",
-      "route decision record",
-      "structured binding audit",
-      "route substitution logging",
-      "alias expansion audit",
-      "provider translation audit",
-      "policy version tagging",
-      "litellm routing audit",
-      "envoy gateway logging",
-      "portkey audit",
-      "cloudflare ai gateway",
-      "route evidence retention",
-      "gateway-side telemetry",
-      "routing decision trace"
+      "trusted route provenance",
+      "protected local recorder",
+      "durable dispatch intent",
+      "append-only route ledger",
+      "write-ahead log",
+      "transactional outbox",
+      "independent ingress reconciliation",
+      "attempt lineage",
+      "terminal state evidence",
+      "unknown execution state",
+      "signed ledger window",
+      "route schema binding"
     ]
   },
   "AID-H-033.002": {
@@ -3805,24 +3791,24 @@
     ]
   },
   "AID-H-033.005": {
-    "contentHash": "3872acafdb41bf86",
+    "contentHash": "db242ed823738e9d",
     "keywords": [
-      "effective route enforcement",
-      "last trusted gateway",
-      "alias expansion verification",
-      "fallback route validation",
-      "resolved provider binding",
+      "effective route identity",
+      "signed route contract",
       "provider account binding",
       "model deployment binding",
-      "region and endpoint binding",
-      "signed route contract",
-      "pre-dispatch route denial",
-      "retry route validation",
-      "effective route receipt"
+      "endpoint region validation",
+      "fallback decision binding",
+      "fail closed dispatch",
+      "route policy enforcement",
+      "last trusted gateway",
+      "durable dispatch precondition",
+      "canonical route projection",
+      "route eligibility decision"
     ]
   },
   "AID-H-033.006": {
-    "contentHash": "62b767fdc445cde3",
+    "contentHash": "a37813a2ec6f4ec5",
     "keywords": [
       "effective invocation configuration",
       "last trusted gateway",
@@ -4192,22 +4178,23 @@
     ]
   },
   "AID-D-001.003": {
-    "contentHash": "98ca0a49987ce120",
+    "contentHash": "929c6f119cce2dc0",
     "keywords": [
-      "vector space anomaly detection",
-      "embedding outlier detection",
-      "semantic anomaly detection",
-      "nearest centroid distance",
-      "embedding clustering",
-      "nearest neighbor search",
-      "dbscan clustering",
-      "faiss similarity search",
-      "multi-cluster embedding baseline",
-      "novel prompt detection",
-      "embedding drift",
-      "vector database anomaly",
-      "pca outlier analysis",
-      "semantic outlier scoring"
+      "task-specific embedding baseline",
+      "vector distance scoring",
+      "trusted centroid comparison",
+      "profile-qualified attack triage",
+      "held-out security replay",
+      "adaptive prompt evaluation",
+      "benign alert rate",
+      "latency utility verification",
+      "complete input population",
+      "campaign cluster detection",
+      "noise scoring handoff",
+      "embedding model binding",
+      "pinned language identification",
+      "unsupported language exclusion",
+      "baseline holdout disjointness"
     ]
   },
   "AID-D-001.004": {
@@ -4648,20 +4635,21 @@
     ]
   },
   "AID-D-004.006": {
-    "contentHash": "0c88c57795728d62",
+    "contentHash": "67bac8a3edee0d63",
     "keywords": [
-      "effective route drift detection",
-      "signed route decision comparison",
-      "actual egress reconciliation",
-      "fallback drift detection",
-      "alias resolution mismatch",
-      "provider route mismatch",
-      "gateway egress readback",
-      "complete route population",
-      "unobservable route finding",
-      "route decision correlation",
-      "unexpected provider selection",
-      "route-drift evidence"
+      "effective route monitoring",
+      "independent route observation",
+      "complete ingress population",
+      "signed route window",
+      "canonical attempt projection",
+      "provider account drift",
+      "model deployment drift",
+      "endpoint region drift",
+      "fallback decision drift",
+      "missing route evidence",
+      "policy generation binding",
+      "observed execution reconciliation",
+      "independent ledger projection replay"
     ]
   },
   "AID-D-004.007": {
@@ -6063,23 +6051,20 @@
     ]
   },
   "AID-I-008.004": {
-    "contentHash": "8bd1fff94d3a14f1",
+    "contentHash": "f92f2b827532eaf2",
     "keywords": [
-      "desktop computer use isolation",
-      "privileged ui observation",
-      "signed h018 approval receipt",
-      "exact action plan binding",
-      "accessibility element invocation",
-      "foreground window binding",
-      "signed ui readback",
-      "signed api readback",
-      "invariant effect verification",
-      "one time approval consumption",
-      "trusted observer service",
-      "action population reconciliation",
-      "workspace lease revocation",
-      "terminal destruction receipt",
-      "computer use audit evidence"
+      "disposable desktop workspace",
+      "logged-out task profile",
+      "privileged accessibility observer",
+      "signed workspace launch",
+      "desktop screenshot gate",
+      "exact action binding",
+      "canonical approval receipt",
+      "post-action effect readback",
+      "os automation allowlist",
+      "watch mode halt",
+      "deterministic workspace cleanup",
+      "complete desktop containment"
     ]
   },
   "AID-I-008.005": {

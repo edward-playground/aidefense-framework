@@ -97,7 +97,7 @@ npm run generate -- --check
 
 `npm run generate` regenerates the public dataset from the tracked tactic source and validates the public keyword lock and technique hierarchy. `npm run generate -- --check` performs the same validation without rewriting tracked outputs. These public commands do not run the maintainer-only source-freshness, mapping, semantic-boundary, or external-reference review workflow.
 
-Run `npm test` with Node.js and Python 3 available. The public regression tests use the Python standard library and do not require third-party Python packages.
+Run `npm test` with Node.js and Python 3 available. The core public regression tests use the Python standard library. The optional reconstruction numerical test runs when Torch, NumPy and Pillow are installed; otherwise that case is explicitly skipped.
 
 ## Repository structure
 

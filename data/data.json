@@ -1,8 +1,8 @@
 {
 "version": {
 "schemaVersion": "2.3",
-"dataVersion": "2026.10.08",
-"generatedAt": "2026-10-08T13:57:45.788Z",
+"dataVersion": "2026.10.15",
+"generatedAt": "2026-10-15T02:17:37.296Z",
 "source": "bundled",
 "keywordStructure": "flat"
 },
@@ -1274,6 +1274,10 @@
 {
 "id": "AID-D-004.001",
 "comparison": "AID-M-002.002 owns the authoritative whole-artifact digest and signature verification used at ingestion, transfer, load, or admission; AID-D-004.001 independently replays those checks over a declared candidate or deployed snapshot and emits integrity-drift findings.\nThe same promotion-time verification cannot earn a second PASS under Detect, and a later detector result does not replace artifact admission."
+},
+{
+"id": "AID-H-003.002",
+"comparison": "AID-M-002.002 supplies whole-artifact and signed-member integrity evidence; AID-H-003.002 owns the final model promotion, deployment, load and reload decision.\nA successful digest or signer verification cannot authorize a loader or earn duplicate admission credit."
 }
 ]
 },
@@ -1289,7 +1293,7 @@
 ],
 "implementationGuidance": [
 "Generate and verify whole-artifact checksums (e.g., SHA-256) for datasets, models, and container images at critical pipeline stages.",
-"Sign single-file artifacts with a pinned signer identity and sign multi-file model bundles with an OpenSSF Model Signing manifest; verify the signer and every signed member before promotion or load."
+"Sign single-file artifacts or complete model bundles under a pinned identity, verify their exact byte/member integrity, and supply evidence to the canonical model release/load gate."
 ],
 "implementationGuidanceIds": [
 "AID-M-002.002-G001",
@@ -1387,7 +1391,7 @@
 ]
 }
 ],
-"contentHash": "8da6c45492dfbbb2",
+"contentHash": "51877e0db871e769",
 "keywords": [
 "cryptographic integrity verification",
 "whole-artifact hashing",
@@ -1401,8 +1405,9 @@
 "detached signature bundle",
 "tamper-evident chain of custody",
 "artifact signer identity",
-"deployment-time verification",
-"manifest member verification"
+"integrity evidence handoff",
+"manifest member verification",
+"canonical load gate"
 ]
 },
 {
@@ -1919,8 +1924,7 @@
 "Algorithms 5.1: Lack of tracking and reproducibility of experiments",
 "Evaluation 6.2: Insufficient evaluation data",
 "Evaluation 6.3: Lack of Interpretability and Explainability",
-"Agents - Core 13.6: Intent Breaking & Goal Manipulation",
-"Agents - Core 13.8: Repudiation & Untraceability"
+"Agents - Core 13.6: Intent Breaking & Goal Manipulation"
 ]
 }
 ],
@@ -1929,7 +1933,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "a89d1c30b4413907",
+"contentHash": "e0843b798d5c0aea",
 "keywords": [
 "model behavior baseline",
 "model cards",
@@ -2355,14 +2359,26 @@
 },
 {
 "id": "AID-M-003.004",
-"name": "Agent Goal & Mission Baselining",
-"description": "Specifically for autonomous or agentic AI, this technique involves formally defining, documenting, and cryptographically signing the agent's initial core mission, objectives, operational constraints, and goal hierarchy. This signed 'mission directive' serves as the trusted baseline that runtime monitoring systems can compare against. ",
+"name": "Agent Goal & Mission Baseline Integrity",
+"description": "Define the intended mission, objective hierarchy, operational constraints, and authority binding of an agent as a canonical, signed goal manifest. Establish the initial baseline and independently verify that the currently effective manifest, for every subsequent valid version, matches the signed active head and exact deployed agent release. This provides a trustworthy approved-goal input for monitoring and authorization.",
 "scopeBoundary": {
-"responsibility": "Owns creation, signing, verification, and publication of an agent's initial mission, objective hierarchy, and operational-constraint baseline.",
+"responsibility": "Owns the semantics, canonical representation, authenticity, exact agent/release/authority binding, and effective-state reconciliation of the approved goal baseline across valid versions. Initial creation and later consumption use the same artifact and verifier.",
 "relatedTechniques": [
 {
 "id": "AID-M-009.005",
-"comparison": "AID-M-003.004 establishes the initial approved mission baseline; AID-M-009.005 governs later goal-manifest changes, approval quorum, provenance, promotion, and rollback.\nCreating version one of the mission and authorizing a production mission change are separate lifecycle decisions."
+"comparison": "AID-M-003.004 proves which approved mission is currently effective and supplies its trustworthy meaning and digest; AID-M-009.005 proves that a transition from that state was authorized, retained, promoted, and can be recovered safely.\nOne canonical manifest, signature, and replica readback may support both claims but receive no duplicate integrity or risk-reduction credit."
+},
+{
+"id": "AID-M-009.002",
+"comparison": "AID-M-003.004 records intended mission and binds its authority-envelope digest; AID-M-009.002 defines concrete authority limits and action-risk facts.\nMission text never expands the signed authority envelope."
+},
+{
+"id": "AID-H-021.002",
+"comparison": "AID-M-003.004 verifies goal semantics and release-bound effective baseline; AID-H-021.002 owns generic fail-closed startup and reload admission of signed runtime artifacts.\nThe goal-specific verifier is reused at that admission point; do not score the same signature rejection twice."
+},
+{
+"id": "AID-D-010",
+"comparison": "AID-M-003.004 supplies the current verified goal and canonical digest; AID-D-010 detects semantic deviation of plans and actions.\nValid goal provenance does not prove aligned behavior."
 }
 ]
 },
@@ -2375,10 +2391,10 @@
 "operation"
 ],
 "implementationGuidance": [
-"Define the agent's mission, goals, and constraints in a structured, machine-readable format.",
-"Cryptographically sign the goal document to create a tamper-evident, verifiable baseline.",
-"Embed mission metadata into the model/agent card so reviewers see the intended purpose.",
-"Implement a secure mechanism for the agent and monitoring systems to fetch and verify the signed goal at runtime."
+"Define the mission and constraint baseline using one canonical goal-manifest schema with typed genesis and predecessor binding.",
+"Sign and independently verify the exact canonical goal artifact with an authorized protected release identity.",
+"Attach the verified current mission semantics and exact goal digest to the agent or model card.",
+"Verify the signed active goal, prevent active-head replay, and reconcile its exact digest across the complete deployed replica population."
 ],
 "implementationGuidanceIds": [
 "AID-M-003.004-G001",
@@ -2387,14 +2403,8 @@
 "AID-M-003.004-G004"
 ],
 "toolsOpenSource": [
-"GnuPG",
 "pyca/cryptography",
-"OpenBao",
-"LangChain",
-"Microsoft Agent Framework",
-"CrewAI",
-"MkDocs",
-"Sphinx"
+"rfc8785 (Python canonical JSON implementation)"
 ],
 "toolsSourceAvailable": [],
 "toolsCommercial": [
@@ -2402,10 +2412,7 @@
 "Azure Key Vault",
 "Google Cloud Key Management Service",
 "DigiCert Software Trust Manager",
-"GlobalSign Code Signing",
-"Lasso Security",
-"Palo Alto Networks Prisma AIRS",
-"F5 AI Guardrails"
+"GlobalSign Code Signing"
 ],
 "defendsAgainst": [
 {
@@ -2417,8 +2424,7 @@
 {
 "framework": "MAESTRO",
 "items": [
-"Agent Goal Manipulation (L7)",
-"Inaccurate Agent Capability Description (L7)"
+"Agent Goal Manipulation (L7)"
 ]
 },
 {
@@ -2461,27 +2467,24 @@
 {
 "framework": "Databricks AI Security Framework 3.0",
 "items": [
-"Agents - Core 13.6: Intent Breaking & Goal Manipulation",
-"Agents - Core 13.8: Repudiation & Untraceability"
+"Agents - Core 13.6: Intent Breaking & Goal Manipulation"
 ]
 }
 ],
-"contentHash": "7e6c6bd1ccb3756d",
+"contentHash": "d49a0fe1084b6f22",
 "keywords": [
-"agent goal baselining",
-"signed mission directive",
-"cryptographic goal signing",
-"machine-readable mission",
-"goal hierarchy documentation",
-"mission baseline verification",
-"tamper-evident goal artifact",
-"kms goal signing",
-"agent card metadata",
-"goal integrity check",
-"signed operational constraints",
-"runtime mission verification",
-"gpg goal signing",
-"mission manifest"
+"trusted active mission",
+"signed goal manifest",
+"current goal baseline",
+"agent release binding",
+"authority digest binding",
+"canonical goal schema",
+"verified active head",
+"baseline readback",
+"mission integrity",
+"complete replica population",
+"goal monitor projection",
+"goal version freshness"
 ]
 },
 {
@@ -2642,7 +2645,7 @@
 "implementationGuidance": [
 "Create and verify signed, expiring, version-bound GNN probe-node output baseline bundles using safe tensor serialization.",
 "Create signed graph-structure metric baselines that bind graph snapshots, node order, schema, and selected structural fingerprints.",
-"Validate graph structural metrics and probe outputs against bounded perturbation experiments before promoting them into Detect-side monitoring."
+"Validate graph structural metrics against paired, bounded perturbation experiments with actual frozen-model inference before using those metrics in Detect-side monitoring; probe-output baselines are defined separately."
 ],
 "implementationGuidanceIds": [
 "AID-M-003.006-G001",
@@ -2724,7 +2727,7 @@
 ]
 }
 ],
-"contentHash": "7bcc6c258008005a",
+"contentHash": "243884c31cfea115",
 "keywords": [
 "graph structured model baseline",
 "graph snapshot digest",
@@ -5218,13 +5221,17 @@
 {
 "id": "AID-M-009.005",
 "name": "Goal Manifest Change Governance, Provenance & Rollback",
-"description": "Govern how an agent's approved mission changes over time after the initial baseline has been established by <code>AID-M-003.004</code>. This sub-technique treats each goal-state change as a signed, versioned artifact with approver quorum, immutable provenance, and rollback checkpoints.<br/><strong>Key question:</strong> <em>who changed what the agent is allowed to do, who approved it, and how do we revert safely?</em> This prevents production behavior from being silently redefined through ad hoc prompt edits or undocumented releases.<br/><strong>Example:</strong> changing <code>support-agent-v3</code> so it may send customer emails or issue credits should require a newly signed goal manifest, explicit product and security approval, and a rollback path to the previous approved digest.",
+"description": "Authorize and preserve transitions between approved agent goal states, including initial activation, subsequent mission changes, and controlled rollback. Consume the canonical baseline and signed active head from AID-M-003.004, independently classify the complete candidate delta, verify policy-selected approval quorum, retain immutable provenance, and promote with an exact predecessor compare-and-swap. Recovery restores an approved predecessor mission through a newly authorized forward transition, without resetting active-head history.",
 "scopeBoundary": {
-"responsibility": "Owns governance of changes made after the initial approved agent mission, including signed goal-manifest versions, approver quorum, immutable provenance, promotion, checkpoints, and rollback.",
+"responsibility": "Owns authorized goal-state transitions, policy-selected approver quorum, immutable change provenance, atomic promotion, and verified rollback readiness. It consumes the shared canonical goal artifact and baseline verifier; it does not earn a second signature or baseline-integrity score.",
 "relatedTechniques": [
 {
 "id": "AID-M-003.004",
-"comparison": "AID-M-009.005 governs later changes to the approved mission and their rollback; AID-M-003.004 creates and signs the initial mission baseline.\nThe initial baseline is the starting state, while every production redefinition requires separate change governance."
+"comparison": "AID-M-009.005 proves authorization, complete provenance and safe execution/recovery of a goal transition; AID-M-003.004 defines and reconciles the trusted effective mission baseline.\nThey share the canonical manifest and verifier; identical signature or replica readback evidence is not counted as two defensive outcomes."
+},
+{
+"id": "AID-H-021.002",
+"comparison": "AID-M-009.005 authorizes and atomically publishes the goal-state transition; AID-H-021.002 enforces generic signed-artifact admission at agent startup or reload.\nA transition approval never bypasses runtime artifact admission."
 }
 ]
 },
@@ -5238,10 +5245,10 @@
 "response"
 ],
 "implementationGuidance": [
-"Store every approved goal manifest as a signed, versioned artifact before it is allowed into production.",
-"Require quorum approval for high-impact goal changes before promoting a new goal artifact.",
-"Checkpoint approved goal state and keep a rollback record so operators can restore the last known-good goal package.",
-"Emit immutable provenance events for every goal change, including who proposed it, who approved it, and which signed artifact was promoted."
+"Promote the shared signed goal artifact with typed genesis, exact predecessor and active-head compare-and-swap binding.",
+"Independently classify the complete goal delta and verify policy-selected distinct approvers against an authoritative signed directory.",
+"Verify a predecessor rollback target and restore its mission through a new authorized forward transition.",
+"Preserve and independently reconcile the complete goal-transition provenance with externally signed append-only retention receipts."
 ],
 "implementationGuidanceIds": [
 "AID-M-009.005-G001",
@@ -5250,10 +5257,8 @@
 "AID-M-009.005-G004"
 ],
 "toolsOpenSource": [
-"Git",
-"Cosign",
-"in-toto",
-"Argo CD"
+"pyca/cryptography",
+"rfc8785 (Python canonical JSON implementation)"
 ],
 "toolsSourceAvailable": [],
 "toolsCommercial": [
@@ -5318,27 +5323,24 @@
 {
 "framework": "Databricks AI Security Framework 3.0",
 "items": [
-"Agents - Core 13.6: Intent Breaking & Goal Manipulation",
-"Agents - Core 13.8: Repudiation & Untraceability"
+"Agents - Core 13.6: Intent Breaking & Goal Manipulation"
 ]
 }
 ],
-"contentHash": "1469abd40192ac4e",
+"contentHash": "badb21fe063cd887",
 "keywords": [
-"goal manifest version control",
-"signed manifest promotion",
-"quorum approval workflow",
-"immutable change provenance",
-"mission change authorization",
-"release digest attestation",
-"rollback checkpoint registry",
-"last known good rollback",
-"two-person integrity control",
-"change ticket linkage",
-"manifest drift detection",
-"safe mission reversion",
-"cosign manifest signing",
-"provenance event immutability"
+"authorized goal transition",
+"predecessor digest chain",
+"typed genesis",
+"signed active head",
+"quorum approval",
+"compare and swap",
+"forward revision rollback",
+"goal transition provenance",
+"release authority binding",
+"persistent replay protection",
+"complete transition readback",
+"canonical goal manifest"
 ]
 },
 {
@@ -7968,6 +7970,10 @@
 {
 "id": "AID-H-003.010",
 "comparison": "AID-H-003.001 admits the exact package and build-tool population before build or deployment; AID-H-003.010 continuously manages vulnerabilities after AI application and platform software is deployed.\nA successful admission decision ages and must not be treated as continuing evidence that the deployed fleet remains remediated."
+},
+{
+"id": "AID-H-023",
+"comparison": "AID-H-003.001 verifies the exact third-party packages consumed by build or deployment; AID-H-023 secures the producer’s publication and reads back its own released bytes.\nPublisher provenance is one required admission signal when policy specifies it, never proof of benign package code or a second authorization to consume it."
 }
 ]
 },
@@ -7980,7 +7986,7 @@
 "implementationGuidance": [
 "Run SCA scanners (Syft/Grype, Trivy) on every build pipeline.",
 "Pin exact versions & hashes in requirements/lock files; block implicit upgrades.",
-"Sign artifacts with Sigstore cosign + in-toto link metadata.",
+"Verify producer signatures and provenance on the exact third-party package or image bytes before dependency admission.",
 "Fail the build if a dependency is yanked or contains critical CVEs."
 ],
 "implementationGuidanceIds": [
@@ -7998,7 +8004,9 @@
 "OWASP Dependency-Check",
 "pip-audit",
 "OSV-Scanner",
-"OWASP Dependency-Track"
+"OWASP Dependency-Track",
+"npm CLI (native registry signature and provenance verification)",
+"pypi-attestations (pinned PEP 740 verifier; CLI interface is experimental)"
 ],
 "toolsSourceAvailable": [],
 "toolsCommercial": [
@@ -8083,22 +8091,20 @@
 ]
 }
 ],
-"contentHash": "056da609142cb60a",
+"contentHash": "7b68722fdc2c80f2",
 "keywords": [
-"software composition analysis",
-"dependency scanning",
-"version pinning",
-"lockfile hashing",
-"sigstore cosign",
-"in-toto attestation",
-"cve scanning",
-"package signing",
-"trivy",
-"grype",
-"syft",
-"typosquat detection",
-"sbom generation",
-"pip-audit"
+"third-party dependency admission",
+"exact package digest",
+"native package provenance",
+"publisher workflow verification",
+"complete dependency population",
+"lockfile resolution",
+"producer signature verification",
+"software source validation",
+"yanked package rejection",
+"build tool admission",
+"vulnerability evidence",
+"immutable dependency bytes"
 ]
 },
 {
@@ -8106,7 +8112,7 @@
 "name": "CI/CD Release Gating, Model Artifact Signing & Secure Distribution",
 "description": "Apply mandatory automated acceptance criteria before promoting a model or deployment-bound model package. Verify origin, integrity, provenance, and the exact model-interface files and selectors that ship with the release. Production trusts only immutable, attested bytes from an internal mirror; a signed weight file does not authorize a different tokenizer, chat template, generation configuration, or parser.",
 "scopeBoundary": {
-"responsibility": "Owns final automated promotion criteria, exact release-package verification, signing, immutable internal mirroring, and secure distribution so production consumes only approved attested model and interface bytes.",
+"responsibility": "Owns the final automated promotion, mirror-refresh, transfer, deployment, load, and reload decision and its enforcement. It independently consumes composition, integrity, source-tombstone, format, loader, and other policy-required evidence, signs and distributes approved immutable releases, and releases only the actual opened verified bytes to runtime.",
 "relatedTechniques": [
 {
 "id": "AID-H-003.001",
@@ -8114,7 +8120,7 @@
 },
 {
 "id": "AID-H-003.006",
-"comparison": "AID-H-003.002 makes the final promotion and distribution decision; AID-H-003.006 creates the model SBOM and provenance attestation bound to the artifact digest.\nThe attestation is gate evidence, while the release gate independently verifies and enforces it."
+"comparison": "AID-H-003.002 makes and enforces the final release and runtime-load decision; AID-H-003.006 produces and independently verifies exact model composition, provenance, source-status, and loader evidence.\nEvidence helpers cannot create another promotion authority, and their successful results cannot replace the complete release policy or earn duplicate enforcement credit."
 },
 {
 "id": "AID-M-002.002",
@@ -8136,12 +8142,13 @@
 ],
 "phase": [
 "building",
-"validation"
+"validation",
+"operation"
 ],
 "implementationGuidance": [
 "Store in internal registry; require signatures and digest pinning for promotion.",
 "Use reproducible, safe packaging and verify on deploy.",
-"Pin and verify the served model artifact digest at the inference layer before load or reload.",
+"Enforce the final load decision over one captured immutable artifact and its verified complete interface, record ALLOW or DENY independently, and expose only that same snapshot/tree to the installed loader.",
 "Enforce a mandatory acceptance criteria checklist for production promotion."
 ],
 "implementationGuidanceIds": [
@@ -8246,23 +8253,20 @@
 ]
 }
 ],
-"contentHash": "5f7fbe5646c5e95b",
+"contentHash": "36dd81ab1dd36adc",
 "keywords": [
-"model signing",
-"release gating",
-"artifact digest pinning",
-"admission policy",
-"rekor transparency log",
-"internal model registry",
-"cosign verification",
-"safetensors",
-"in-toto attestation",
-"opa policy",
-"kyverno",
-"model promotion gate",
-"safe deserialization",
-"model interface package",
-"runtime interface verification"
+"final release admission",
+"opened artifact descriptor",
+"private immutable snapshot",
+"signed release policy",
+"composition evidence verification",
+"source tombstone verification",
+"loader policy validation",
+"artifact digest binding",
+"runtime load gate",
+"release promotion",
+"model distribution",
+"load time integrity"
 ]
 },
 {
@@ -8655,9 +8659,9 @@
 {
 "id": "AID-H-003.006",
 "name": "Model SBOM & Provenance Attestation",
-"description": "Produce a model-centric SBOM that inventories model weights, tokenizer and special-token files, chat template, generation configuration, tool/reasoning parser configuration, model format, and loader code commit; bind every item to the exact release digest through signed in-toto/SLSA provenance.<br/><br/><strong>Interoperability:</strong> keep one internal canonical manifest for enforcement, then export standards-compatible AI-BOM formats such as CycloneDX ML-BOM 1.7 and SPDX 3 AI Profile for procurement, regulator, partner exchange, and technical documentation.<br/><br/><strong>Admission control:</strong> verify the attestation and digest binding before promotion, and re-verify the same bytes at runtime before loading. This creates a tamper-evident content contract for the complete model interface, not only the weights.",
+"description": "Produce a model-centric SBOM that inventories model weights, tokenizer and special-token files, chat template, generation configuration, tool/reasoning parser configuration, model format, and loader code commit; bind every item to the exact release digest through signed in-toto/SLSA provenance.<br/><br/><strong>Interoperability:</strong> keep one internal canonical manifest for enforcement, then export standards-compatible AI-BOM formats such as CycloneDX ML-BOM 1.7 and SPDX 3 AI Profile for procurement, regulator, partner exchange, and technical documentation.<br/><br/><strong>Verified composition:</strong> independently verify the artifact-bound attestation and signed composition, including source status, model format, and loader claims. Supply those results to the canonical release or runtime gate, which decides whether the exact verified bytes may be promoted or loaded. This creates a tamper-evident content contract for the complete model interface, not only the weights.",
 "scopeBoundary": {
-"responsibility": "Owns a signed model SBOM and provenance attestation bound to the exact model release, including weights, tokenizer, special tokens, templates, generation and parser configuration, training inputs, code, frameworks, adapters, build identity, and lineage needed by release admission.",
+"responsibility": "Owns complete artifact-bound model composition and provenance production, publication, and cryptographic verification evidence. It supplies exact-byte, source-tombstone, format, and loader-policy verification results to the canonical release or load gate; it neither promotes a release nor grants a runtime loader access.",
 "relatedTechniques": [
 {
 "id": "AID-M-001.002",
@@ -8665,7 +8669,7 @@
 },
 {
 "id": "AID-H-003.002",
-"comparison": "AID-H-003.006 produces the signed composition and provenance evidence; AID-H-003.002 verifies that evidence and decides whether the release may be promoted and distributed.\nAttestation authorship must remain distinguishable from gate enforcement."
+"comparison": "AID-H-003.006 produces and verifies model composition and provenance evidence; AID-H-003.002 makes and enforces the final promotion, mirror-refresh, deployment, load, and reload decision.\nA composition, tombstone, or loader-policy verification result is a necessary input where policy requires it, not a second authorization or duplicate admission credit."
 },
 {
 "id": "AID-H-003.007",
@@ -8683,15 +8687,15 @@
 "operation"
 ],
 "implementationGuidance": [
-"Create deterministic model package and compute digest",
-"Generate Model SBOM (JSON) describing bytes and critical metadata",
+"Create a deterministic, bounded model package by streaming all required interface members under the same signed population policy used by transfer preflight and the load gate.",
+"Build the canonical model SBOM from captured bytes, distinguish container and weight formats, and export a signed tree/tensor fingerprint manifest for supported safetensors interfaces.",
 "Export AI-BOM evidence in interoperable formats such as CycloneDX ML-BOM 1.7 and SPDX 3 AI Profile while keeping the enforcement manifest canonical.",
 "Sign the artifact-bound SBOM attestation and the canonical SBOM under one pinned Sigstore release identity.",
 "Publish as OCI artifact with digest addressing (optional but recommended)",
-"Admit only an immutable model artifact whose SBOM signature, attestation predicate, signer identity, and actual digest all verify.",
-"Re-verify both Sigstore bundles and the actual model digest immediately before every model load or hot reload.",
-"Deny model refresh, transfer, promotion, deployment, or reload when a verified upstream namespace/owner tombstone applies.",
-"Enforce a signed model-format and loader policy; verify exception verdict signatures and recompute the actual artifact digest."
+"Cryptographically verify one gate-owned immutable artifact and every signed package member; return composition evidence without authorizing a release or load.",
+"Verify current composition and the independently signed v4 composition receipt over the canonical gate-owned artifact and reconstructed model interface.",
+"Verify the signed current tombstone policy for the exact source URI and artifact digest, returning source-status evidence to the canonical gate.",
+"Verify the signed weight format and complete loader options over the gate-owned single-file artifact or its verified package members, including bounded signed sandbox exceptions."
 ],
 "implementationGuidanceIds": [
 "AID-H-003.006-G001",
@@ -8771,23 +8775,23 @@
 {
 "framework": "NIST Adversarial Machine Learning 2025",
 "items": [
-"NISTAML.051 Model Poisoning (Supply Chain) (SBOM and attestation prevent supply chain model poisoning)",
+"NISTAML.051 Model Poisoning (Supply Chain) (signed composition verification exposes unauthorized model-byte or producer changes)",
 "NISTAML.026 Model Poisoning (Integrity) (provenance attestation and digest verification detect integrity-violating model modifications)"
 ]
 },
 {
 "framework": "Cisco Integrated AI Security and Safety Framework",
 "items": [
-"AISubtech-9.3.1 Malicious Package / Tool Injection (Applies to external model-source admission and upstream refresh)",
-"AISubtech-9.3.3 Dependency Replacement / Rug Pull (Applies to external model-source admission and upstream refresh)",
-"AITech-9.3 Dependency / Plugin Compromise (Applies to external model-source admission and upstream refresh)"
+"AISubtech-9.3.1 Malicious Package / Tool Injection (verified model composition exposes source or byte substitution; H-003.002 owns final release enforcement)",
+"AISubtech-9.3.3 Dependency Replacement / Rug Pull (verified model composition exposes source or byte substitution; H-003.002 owns final release enforcement)",
+"AITech-9.3 Dependency / Plugin Compromise (verified model composition exposes source or byte substitution; H-003.002 owns final release enforcement)"
 ]
 },
 {
 "framework": "Google Secure AI Framework 2.0 - Risks",
 "items": [
 "MST: Model Source Tampering (SBOM and attestation detect tampered model source)",
-"MDT: Model Deployment Tampering (provenance attestation prevents deployment of tampered models)"
+"MDT: Model Deployment Tampering (composition verification exposes deployment-byte substitution before the final gate)"
 ]
 },
 {
@@ -8799,22 +8803,21 @@
 ]
 }
 ],
-"contentHash": "52daebb3b20ea45a",
+"contentHash": "90baff9fad13653a",
 "keywords": [
-"model sbom attestation",
-"cyclonedx ml-bom export",
-"spdx ai profile mapping",
-"model artifact digest binding",
-"sigstore provenance",
-"in-toto slsa attestation",
-"unsafe deserialization ban",
-"model loader policy",
-"technical documentation evidence",
-"canonical model manifest",
-"ai-bom interoperability",
-"runtime sbom verification",
-"reasoning parser provenance",
-"generation config inventory"
+"model software bill of materials",
+"signed model composition",
+"artifact digest binding",
+"archive member integrity",
+"signed package interface policy",
+"safe weight format verification",
+"complete model interface",
+"tokenizer and template binding",
+"source tombstone evidence",
+"loader format and policy binding",
+"signed model fingerprint manifest",
+"canonical tensor state reference",
+"evidence-only handoff"
 ]
 },
 {
@@ -17148,6 +17151,7 @@
 "AML.T0075 Enterprise Resource Discovery",
 "AML.T0080 AI Agent Context Poisoning",
 "AML.T0080.000 AI Agent Context Poisoning: Memory",
+"AML.T0081 Modify AI Agent Configuration",
 "AML.T0086 Exfiltration via AI Agent Tool Invocation",
 "AML.T0089 Enterprise Environment Discovery",
 "AML.T0092 Manipulate User LLM Chat History",
@@ -17291,7 +17295,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "ed341d94ab435780",
+"contentHash": "1037065673ef9b95",
 "keywords": [
 "secure agent architecture",
 "agent hardening",
@@ -17883,10 +17887,22 @@
 {
 "id": "AID-H-017.005",
 "name": "Agent Behavior Contract Definition & Signing",
-"description": "Codify an agent's intended capabilities, tool and data scopes, network destinations, risk classes, approval requirements, and contract validity into a signed, machine-readable behavior contract. Bind the contract to the exact agent identity, release, policy version, issuer, and expiry, then publish it as a verified input to runtime authorization.",
+"description": "Materialize and publish an agent-wide signed behavior contract from approved authority and mission facts when the runtime authorization architecture consumes that contract. Bind its capabilities, tool/data/network scopes, critical operations and validity to the exact agent, release, policy and upstream digests; independently verify delivery to every expected authorization gate.",
 "scopeBoundary": {
-"responsibility": "Owns definition, review, signing, publication, rotation, revocation metadata, and delivery evidence for an agent behavior contract bound to exact identity, release, capabilities, data and tool scopes, destinations, risk classes, approvals, policy, and expiry. The contract is not an allow decision.",
+"responsibility": "Owns materialization, exact agent/release/authority/goal binding, signing or reuse of an already suitable signed artifact, publication, rotation/revocation metadata and complete gate-delivery verification for the agent-wide behavior contract. It does not independently redefine authority, prove semantic policy safety, admit arbitrary runtime configuration, or authorize actions.",
 "relatedTechniques": [
+{
+"id": "AID-M-009.002",
+"comparison": "AID-H-017.005 consumes approved authority facts and binds the deployable contract; AID-M-009.002 defines concrete authority limits and action-risk classification.\nNo capability can be added by the contract materializer."
+},
+{
+"id": "AID-M-003.004",
+"comparison": "AID-H-017.005 binds the contract to the verified effective mission digest; AID-M-003.004 owns the trusted goal baseline and its meaning.\nThe contract handoff does not approve a new mission."
+},
+{
+"id": "AID-H-021.002",
+"comparison": "AID-H-017.005 verifies agent-wide contract binding and delivery to the complete gate population; AID-H-021.002 owns generic fail-closed startup and runtime artifact admission.\nReuse its signing and verification infrastructure; the same signature or loaded-artifact fact receives no duplicate integrity credit."
+},
 {
 "id": "AID-H-018.002",
 "comparison": "AID-H-017.005 publishes the signed agent-wide behavior contract; AID-H-018.002 evaluates the current action against active policy and verified context.\nThe contract supplies authority facts but never pre-authorizes every request."
@@ -17905,21 +17921,17 @@
 "operation"
 ],
 "implementationGuidance": [
-"Define agent capabilities in a structured, signed manifest (Behavior Certificate).",
-"Verify that every in-scope AID-H-018 runtime gate loaded the exact signed behavior contract published for the agent release, without duplicating AID-H-018 action enforcement."
+"Materialize a release-bound behavior contract from approved capability and mission inputs without redefining upstream authority.",
+"Independently verify exact contract delivery to every expected gate using per-instance authorized readback signers and a fresh replay-protected challenge."
 ],
 "implementationGuidanceIds": [
 "AID-H-017.005-G001",
 "AID-H-017.005-G002"
 ],
 "toolsOpenSource": [
-"GnuPG",
 "pyca/cryptography",
-"Cosign",
-"Open Policy Agent (OPA)",
-"python-jsonschema",
-"Pydantic",
-"in-toto (signed behavior-contract attestation envelope)"
+"PyJWT",
+"rfc8785 (Python canonical JSON implementation)"
 ],
 "toolsSourceAvailable": [],
 "toolsCommercial": [
@@ -17933,7 +17945,7 @@
 {
 "framework": "MITRE ATLAS",
 "items": [
-"N/A"
+"AML.T0081 Modify AI Agent Configuration (detect tampered behavior-contract content or substitution during signed agent/release-bound delivery to authorization gates; does not prove safe policy semantics or action authorization)"
 ]
 },
 {
@@ -17985,21 +17997,20 @@
 ]
 }
 ],
-"contentHash": "961c54d3942e77f1",
+"contentHash": "6cd1a84d2c147832",
 "keywords": [
 "agent behavior contract",
-"signed capability manifest",
-"contract definition governance",
-"canonical contract signing",
+"authority profile binding",
+"mission digest binding",
 "agent release binding",
-"contract validity window",
-"signer key governance",
-"contract rotation metadata",
-"contract revocation metadata",
-"runtime gate artifact handoff",
-"exact digest readback",
-"deployment population verification",
-"behavior contract evidence"
+"canonical contract signing",
+"complete gate handoff",
+"per-instance readback keys",
+"explicit signer role authorization",
+"signed gate readback",
+"fresh challenge nonce",
+"persistent replay protection",
+"contract revocation state"
 ]
 },
 {
@@ -22534,7 +22545,7 @@
 "name": "Publisher Integrity & Workflow Hardening",
 "description": "A critical supply chain defense that ensures software packages (e.g., NPM, PyPI) are published only from a secure, auditable, and authorized source. This technique reduces credential-only publishing attacks where a stolen developer credential is used to publish a malicious version of a legitimate package. It achieves this by prohibiting publications from local developer machines and mandating that all releases originate from a hardened CI/CD pipeline that authenticates using short-lived, identity-based tokens and generates verifiable provenance attestations.",
 "scopeBoundary": {
-"responsibility": "Owns publisher identity, registry namespace, protected release workflow, trusted CI origin, short-lived publication authority, and provenance for released packages. It does not establish that the proposed change or exact resolved package population is safe.",
+"responsibility": "Owns authorized publisher identity, registry namespace, protected CI publication, short-lived publication authority, and independent post-publication readback of the exact producer release bytes and provenance. It does not admit third-party dependency populations or authorize their use.",
 "relatedTechniques": [
 {
 "id": "AID-H-022",
@@ -22602,9 +22613,9 @@
 {
 "framework": "Cisco Integrated AI Security and Safety Framework",
 "items": [
-"AISubtech-9.3.1 Malicious Package / Tool Injection (Verifies externally published npm/PyPI packages before dependency mirror or promotion)",
-"AISubtech-9.3.3 Dependency Replacement / Rug Pull (Verifies externally published npm/PyPI packages before dependency mirror or promotion)",
-"AITech-9.3 Dependency / Plugin Compromise (Verifies externally published npm/PyPI packages before dependency mirror or promotion)"
+"AISubtech-9.3.1 Malicious Package / Tool Injection (protected AI-package publishing and exact release readback expose unauthorized producer or workflow substitution)",
+"AISubtech-9.3.3 Dependency Replacement / Rug Pull (protected AI-package publishing and exact release readback expose unauthorized producer or workflow substitution)",
+"AITech-9.3 Dependency / Plugin Compromise (protected AI-package publishing and exact release readback expose unauthorized producer or workflow substitution)"
 ]
 },
 {
@@ -22628,7 +22639,7 @@
 "implementationGuidance": [
 "Mandate CI/CD-only publishing using OIDC trusted publishing for npm and PyPI.",
 "Harden the CI/CD workflow definition to prevent tampering and enforce least privilege.",
-"Reject packages that lack valid provenance attestation from an approved publisher identity and CI workflow."
+"Independently read back the publisher’s own exact registry release and verify its bytes, native provenance, and trusted CI publisher binding."
 ],
 "implementationGuidanceIds": [
 "AID-H-023-G001",
@@ -22637,14 +22648,14 @@
 ],
 "toolsOpenSource": [
 "GitLab Community Edition CI/CD (with OIDC support)",
-"Cosign",
 "Open Policy Agent (OPA)",
 "Conftest",
 "npm CLI",
 "PyPA build",
 "twine",
 "pypa/gh-action-pypi-publish",
-"slsa-github-generator"
+"slsa-github-generator",
+"pypi-attestations (pinned PEP 740 verifier; CLI interface is experimental)"
 ],
 "toolsSourceAvailable": [],
 "toolsCommercial": [
@@ -22654,20 +22665,20 @@
 "CircleCI",
 "CloudBees CI"
 ],
-"contentHash": "e2370ea712a6d76b",
+"contentHash": "715c35ff10a93e94",
 "keywords": [
-"trusted package publishing",
-"oidc publishing workflow",
-"npm provenance verification",
-"pypi trusted publishing",
-"publisher identity attestation",
-"ci only release",
-"protected release environment",
-"package provenance admission",
-"workflow identity verification",
-"pypi publish attestation",
-"supply chain provenance",
-"release artifact evidence"
+"protected publisher identity",
+"registry namespace security",
+"short-lived publication authority",
+"trusted publishing workflow",
+"exact release readback",
+"publisher provenance verification",
+"native registry signatures",
+"artifact digest binding",
+"release workflow identity",
+"oidc publication",
+"publisher credential protection",
+"post-publication verification"
 ],
 "subTechniques": [],
 "url": "https://aidefend.net"
@@ -23885,7 +23896,7 @@
 "name": "Hard-Sample Mining & Controlled Detector Retraining",
 "description": "Systematically collect detector errors, especially false negatives on malicious prompts and false positives on benign prompts, and use them as governed hard samples for periodic retraining of the prompt injection detector. The purpose is to harden the detector against the exact decision boundaries it currently fails on. Candidate detector versions must be benchmarked against a fixed out-of-loop evaluation set and explicit promotion criteria before replacing the production detector.",
 "scopeBoundary": {
-"responsibility": "Owns governed collection of observed false positives and false negatives, construction of hard-sample training sets, controlled detector retraining, and candidate-versus-production comparison on an independent holdout.",
+"responsibility": "Owns governed detector-error collection, hard-sample training, candidate production, the final promotion decision over independently authenticated benchmark and utility evidence, deployment mutation, and complete effective-version readback. It consumes taxonomy evaluation evidence and does not claim a second category-analysis result.",
 "relatedTechniques": [
 {
 "id": "AID-H-026.002",
@@ -23893,7 +23904,7 @@
 },
 {
 "id": "AID-H-026.003",
-"comparison": "AID-H-026.001 produces and evaluates candidate detector versions; AID-H-026.003 measures category-level coverage gaps that prioritize the next hard-sample cycle.\nAggregate retraining gains do not close an unmeasured taxonomy segment."
+"comparison": "AID-H-026.001 trains candidates and owns the final promotion and deployed-version decision; AID-H-026.003 independently measures sealed taxonomy coverage and supplies ELIGIBLE or HOLD evidence.\nCoverage eligibility is a necessary input where required, not permission to deploy; raw predictions, complete case identities and policy bindings are independently checked again by the final gate."
 }
 ]
 },
@@ -23908,7 +23919,7 @@
 ],
 "implementationGuidance": [
 "Maintain a governed hard-sample repository and periodic retraining loop.",
-"Use explicit promotion gates instead of blindly replacing the production detector."
+"Make and enforce the final detector-promotion decision from authenticated complete holdout, prediction, baseline, latency, and actual candidate-byte evidence."
 ],
 "implementationGuidanceIds": [
 "AID-H-026.001-G001",
@@ -24004,22 +24015,20 @@
 ]
 }
 ],
-"contentHash": "be3858bf60334aab",
+"contentHash": "eb3f1cb99469e4cf",
 "keywords": [
-"hard-sample mining",
-"false negative collection",
-"false positive collection",
-"governed retraining",
-"promotion criteria gate",
-"controlled detector replacement",
-"hard sample repository",
-"periodic retraining loop",
-"decision boundary hardening",
-"out-of-loop benchmark",
-"candidate detector benchmarking",
-"mlflow tracking",
-"prompt injection defense",
-"detector error sampling"
+"detector error mining",
+"hard sample training",
+"final detector promotion",
+"signed benchmark consumption",
+"complete case reconciliation",
+"latency request binding",
+"benign utility gate",
+"candidate byte measurement",
+"category regression gate",
+"effective replica readback",
+"signed promotion decision",
+"deployment rollback"
 ]
 },
 {
@@ -24160,13 +24169,13 @@
 {
 "id": "AID-H-026.003",
 "name": "Taxonomy-Stratified Coverage Gap Analysis",
-"description": "Measure detector performance by attack-technique category rather than relying solely on aggregate metrics. Break down results by a defined prompt-attack taxonomy such as role play, objective manipulation, obfuscation, indirect injection, encoding, multi-turn Crescendo-style escalation, many-shot pressure, policy-puppetry role or policy shifts, context saturation, or other organization-specific classes. The purpose is to expose category-level blind spots, prioritize the next hard-mining or fuzzing cycle, and prevent detector promotion based on misleading aggregate scores.",
+"description": "Measure detector performance by attack-technique category rather than relying solely on aggregate metrics. Break down results by a defined prompt-attack taxonomy such as role play, objective manipulation, obfuscation, indirect injection, encoding, multi-turn Crescendo-style escalation, many-shot pressure, policy-puppetry role or policy shifts, context saturation, or other organization-specific classes. The purpose is to expose category-level blind spots, prioritize the next hard-mining or fuzzing cycle, and supply independently measured coverage eligibility or a veto to the final detector-promotion authority. Category eligibility alone does not authorize a detector release.",
 "scopeBoundary": {
-"responsibility": "Owns category-level measurement of prompt-attack detector coverage and identification of blind spots under a declared taxonomy. It reports and prioritizes gaps but does not generate corpus items or retrain the detector.",
+"responsibility": "Owns independently sealed taxonomy evaluation, complete raw category observations, coverage eligibility or veto findings, and hardening backlog priorities. It neither retrains the detector nor makes, signs, or executes the final release promotion decision.",
 "relatedTechniques": [
 {
 "id": "AID-H-026.001",
-"comparison": "AID-H-026.003 identifies weak attack categories; AID-H-026.001 changes the detector using governed hard samples and validates the candidate.\nCoverage analysis supplies priorities rather than training updates."
+"comparison": "AID-H-026.003 authenticates the sealed evaluation population and measures category coverage; AID-H-026.001 produces candidates and owns final promotion, utility gates and deployment readback.\nELIGIBLE states only that the measured coverage facet meets its profile; HOLD supplies a veto. Neither is a release authorization or duplicate deployment assurance."
 },
 {
 "id": "AID-H-026.002",
@@ -24184,7 +24193,7 @@
 ],
 "implementationGuidance": [
 "Compute taxonomy-stratified metrics and convert weak categories into the next retraining backlog.",
-"Maintain an immutable out-of-loop evaluation set and require it for detector promotion.",
+"Authenticate and evaluate the immutable out-of-loop population, then publish independently signed ELIGIBLE or HOLD coverage evidence for the final promotion gate.",
 "Use attribution methods to debug representative detector misses and guide the next hardening cycle."
 ],
 "implementationGuidanceIds": [
@@ -24257,12 +24266,12 @@
 {
 "framework": "Cisco Integrated AI Security and Safety Framework",
 "items": [
-"AISubtech-1.1.1 Instruction Manipulation (blocks detector promotion on independently measured category failures)",
-"AISubtech-1.1.2 Obfuscation (blocks detector promotion on independently measured category failures)",
-"AISubtech-1.1.5 Context Manipulation (blocks detector promotion on independently measured category failures)",
-"AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation) (blocks detector promotion on independently measured category failures)",
-"AITech-1.2 Indirect Prompt Injection (blocks detector promotion on independently measured category failures)",
-"AITech-9.2 Detection Evasion (blocks detector promotion on independently measured category failures)"
+"AISubtech-1.1.1 Instruction Manipulation (independently measured category failures provide a coverage veto; H-026.001 enforces final promotion)",
+"AISubtech-1.1.2 Obfuscation (independently measured category failures provide a coverage veto; H-026.001 enforces final promotion)",
+"AISubtech-1.1.5 Context Manipulation (independently measured category failures provide a coverage veto; H-026.001 enforces final promotion)",
+"AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation) (independently measured category failures provide a coverage veto; H-026.001 enforces final promotion)",
+"AITech-1.2 Indirect Prompt Injection (independently measured category failures provide a coverage veto; H-026.001 enforces final promotion)",
+"AITech-9.2 Detection Evasion (independently measured category failures provide a coverage veto; H-026.001 enforces final promotion)"
 ]
 },
 {
@@ -24281,20 +24290,20 @@
 ]
 }
 ],
-"contentHash": "e008e47cf3edc585",
+"contentHash": "75a61183f6254d30",
 "keywords": [
-"taxonomy-stratified detector evaluation",
-"prompt attack taxonomy",
-"crescendo coverage gap",
-"many-shot jailbreak coverage",
-"policy puppetry coverage",
-"context saturation detection gap",
-"category-level recall",
-"weak category backlog",
-"detector promotion gate",
-"out-of-loop holdout",
-"stratified prompt injection metrics",
-"jailbreak taxonomy reporting"
+"sealed taxonomy holdout",
+"independent benchmark evidence",
+"attack category coverage",
+"raw prediction replay",
+"complete case population",
+"taxonomy blind spot analysis",
+"category detection recall",
+"benign false positive measurement",
+"coverage eligibility",
+"promotion veto evidence",
+"hardening backlog priorities",
+"signed evaluation policy"
 ]
 }
 ],
@@ -28451,9 +28460,9 @@
 {
 "id": "AID-H-033",
 "name": "AI Gateway Routing Integrity & Policy-Preserving Failover",
-"description": "Treat the AI gateway or model router as a security control plane, not merely a latency or cost optimization layer. This technique governs how requests are bound to approved models, providers, regions, remote MCP/A2A endpoints, and fallback paths so that routing changes do not silently weaken safety, compliance, data residency, retention, or approval constraints.<br/><br/><strong>Coverage includes:</strong><ul><li>Binding each request to an approved requested-vs-effective model record.</li><li>Preventing silent failover to unapproved or less-safe models.</li><li>Constraining routing by region, data zone, residency, and retention policy.</li><li>Versioning, approving, canarying, and rolling back route policy bundles as security artifacts.</li><li>Resolving and enforcing the final provider route immediately before dispatch.</li><li>Resolving and enforcing effective sampling, output, log-probability, and provider safety-profile settings immediately before provider serialization.</li></ul>",
+"description": "Treat the AI gateway or model router as a security control plane, not merely a latency or cost optimization layer. This technique governs how requests are bound to approved models, providers, regions, remote MCP/A2A endpoints, and fallback paths so that routing changes do not silently weaken safety, compliance, data residency, retention, or approval constraints.<br/><br/><strong>Coverage includes:</strong><ul><li>Preserving protected, durably acknowledged requested-versus-effective route provenance across every dispatch attempt and observed terminal state.</li><li>Preventing silent failover to unapproved or less-safe models.</li><li>Constraining routing by region, data zone, residency, and retention policy.</li><li>Versioning, approving, canarying, and rolling back route policy bundles as security artifacts.</li><li>Resolving and enforcing the final provider route immediately before dispatch.</li><li>Resolving and enforcing effective sampling, output, log-probability, and provider safety-profile settings immediately before provider serialization.</li></ul>",
 "scopeBoundary": {
-"responsibility": "Owns the AI gateway or model router decision plane that resolves and enforces the effective model, provider, account, endpoint, region, approved fallback, route policy, and invocation configuration. It does not resolve tools or authorize their effects.",
+"responsibility": "Owns the AI gateway or model router decision plane: protected route provenance, policy-preserving fallback, routing policy lifecycle, final route eligibility enforcement, and invocation configuration. Its children separate durable record custody from route allow/deny; independent drift detection is owned by AID-D-004.006. It does not resolve tools or authorize their effects.",
 "relatedTechniques": [
 {
 "id": "AID-H-024",
@@ -28564,7 +28573,7 @@
 "toolsOpenSource": [],
 "toolsSourceAvailable": [],
 "toolsCommercial": [],
-"contentHash": "080536ef3097fe78",
+"contentHash": "684eab5bc53a5e1f",
 "keywords": [
 "ai gateway routing integrity",
 "policy-preserving failover",
@@ -28586,13 +28595,17 @@
 {
 "id": "AID-H-033.001",
 "name": "Requested-vs-Effective Model Binding Records",
-"description": "Record and verify the difference between the model the caller requested and the model the gateway actually routed to. This sub-technique makes route substitutions, alias expansion, provider translation, and model-family fallback explicit by emitting structured route-decision records for every request, including the route policy version that justified the effective destination.",
+"description": "Preserve authoritative requested-versus-effective route provenance for AI gateways that translate caller model aliases, route headers, retries, provider accounts, or fallback paths. Protect against caller-induced substitutions becoming untraceable through best-effort logging, overwritten attempts, or unbound provider identities. Require a protected durable intent acknowledgment before dispatch, retain immutable intake/decision/attempt/terminal history under the declared storage failure model, and reconcile the complete independently enumerated ingress population with actual egress/provider observations. Requested or planned routes never stand in for observed routing. Local protected WAL/outbox acknowledgment with asynchronous remote export is valid only when the versioned deployment policy explicitly accepts that local-storage survival model.",
 "scopeBoundary": {
-"responsibility": "Owns authoritative gateway-side emission and retention of requested-versus-effective model and route records after alias expansion, provider translation, and fallback, including the policy version that justified the destination. It does not analyze or alert on drift.",
+"responsibility": "Owns protected, complete, durable and independently verifiable requested-versus-effective route provenance across every invocation and attempt, including recorder role custody, atomic intent/outbox acknowledgment, immutable terminal or unknown history, and independently enumerated coverage. The dispatch prerequisite prevents unrecorded sends; it does not authorize the selected route, decide fallback eligibility, detect malicious route drift, or claim exactly-once provider execution.",
 "relatedTechniques": [
 {
+"id": "AID-H-033.005",
+"comparison": "AID-H-033.001 owns protected provenance and durable intent acknowledgment; AID-H-033.005 locally verifies the signed contract, resolves the final route, and owns route allow/deny immediately before transport. A recorded decision cannot authorize a route, and an eligible route cannot dispatch without the declared durable acknowledgment. Shared decision evidence does not earn duplicate provenance or enforcement credit."
+},
+{
 "id": "AID-D-004.006",
-"comparison": "AID-H-033.001 emits the authoritative route-decision record at the gateway; AID-D-004.006 reconciles record completeness, compares the observed route, and emits drift findings.\nThe producer of route evidence must not mark its own population complete."
+"comparison": "AID-H-033.001 establishes complete protected route history and canonical v2 producer bindings; AID-D-004.006 independently compares authorized decisions with actual routing, emits drift/visibility signals, and verifies detection/alert effect. The detector can reuse provenance but cannot earn provenance credit by replaying it; the producer cannot mark its own independent population complete."
 },
 {
 "id": "AID-D-004.004",
@@ -28608,22 +28621,22 @@
 "operation"
 ],
 "implementationGuidance": [
-"Emit and persist a structured requested-vs-effective route-decision record for every gateway request, including the route bundle version that justified the destination."
+"Preserve protected, durably acknowledged requested-versus-effective route history across every attempt, bind actual observations and independent ingress coverage, and export within an explicit storage failure model."
 ],
 "implementationGuidanceIds": [
 "AID-H-033.001-G001"
 ],
 "toolsOpenSource": [
-"LiteLLM",
-"OpenTelemetry",
-"Envoy",
-"Helicone (requested-versus-routed model telemetry)"
+"LiteLLM (trusted final-dispatch adapter; custom recorder integration required)",
+"Envoy (actual upstream observation and gateway integration; protected recorder required)",
+"OpenTelemetry (secondary telemetry export; not the durable acknowledgment or complete population authority)",
+"Cosign (signed policy and exported snapshot verification)"
 ],
 "toolsSourceAvailable": [],
 "toolsCommercial": [
-"Cloudflare AI Gateway",
-"Portkey",
-"Kong Konnect AI Gateway"
+"Cloudflare AI Gateway (secondary route telemetry; protected recorder and independent readback required)",
+"Prisma AIRS AI Gateway (formerly Portkey; gateway integration and secondary route telemetry; protected recorder required)",
+"Kong Konnect AI Gateway (gateway integration; protected recorder and independent readback required)"
 ],
 "defendsAgainst": [
 {
@@ -28677,26 +28690,24 @@
 {
 "framework": "Databricks AI Security Framework 3.0",
 "items": [
-"Governance 4.1: Lack of traceability and transparency of model assets"
+"Governance 4.1: Lack of traceability and transparency of model assets (technical protected requested-versus-effective model-route provenance across attempts; does not enforce route eligibility)"
 ]
 }
 ],
-"contentHash": "9e29befd7b237465",
+"contentHash": "ad2205a4d996c37d",
 "keywords": [
-"requested vs effective model binding",
-"route decision record",
-"structured binding audit",
-"route substitution logging",
-"alias expansion audit",
-"provider translation audit",
-"policy version tagging",
-"litellm routing audit",
-"envoy gateway logging",
-"portkey audit",
-"cloudflare ai gateway",
-"route evidence retention",
-"gateway-side telemetry",
-"routing decision trace"
+"trusted route provenance",
+"protected local recorder",
+"durable dispatch intent",
+"append-only route ledger",
+"write-ahead log",
+"transactional outbox",
+"independent ingress reconciliation",
+"attempt lineage",
+"terminal state evidence",
+"unknown execution state",
+"signed ledger window",
+"route schema binding"
 ]
 },
 {
@@ -29070,10 +29081,14 @@
 {
 "id": "AID-H-033.005",
 "name": "Effective Route Resolution & Enforcement",
-"description": "This control owns only effective route identity resolution and dispatch enforcement. It does not clamp model invocation parameters such as temperature, top_p, logprobs, output limits, or provider safety profiles. At the last trusted AI gateway or model router, derive the effective route after all caller aliases, gateway defaults, route headers, retries, provider translations, and fallback selection, then deny dispatch unless the resolved provider, provider account, model, deployment, endpoint, region, route, and fallback exactly match a verified signed route contract.",
+"description": "At the last trusted AI gateway or model router, derive the effective route after all caller aliases, gateway defaults, route headers, retries, provider translations, and fallback selection, then deny dispatch unless the resolved provider, provider account, model, deployment, endpoint, region, route, and fallback exactly match a verified signed route contract. Route eligibility is decided locally for each dispatch attempt; H-033.001 separately supplies protected durable intent acknowledgment and canonical attempt evidence. Approved alias expansion and fallback are allowed only when the final resolved route remains exactly bound to the active verified contract.",
 "scopeBoundary": {
 "responsibility": "Owns final resolution and fail-closed enforcement of provider, account, model, deployment, endpoint, region, route, and fallback identity immediately before dispatch. It does not resolve sampling or other invocation parameters.",
 "relatedTechniques": [
+{
+"id": "AID-H-033.001",
+"comparison": "AID-H-033.005 owns final route eligibility resolution and allow/deny; AID-H-033.001 owns protected immutable provenance and the declared durable acknowledgment prerequisite. This gate locally verifies signed policy and trusted final input; it never accepts eligibility from the recorder. Shared decision evidence cannot earn duplicate route enforcement and provenance credit."
+},
 {
 "id": "AID-H-033.006",
 "comparison": "AID-H-033.005 enforces where and to which model the request is dispatched; AID-H-033.006 enforces the effective sampling, output, log-probability, and provider safety settings.\nRoute identity and invocation configuration must be resolved independently after all translations."
@@ -29098,7 +29113,7 @@
 "implementationGuidance": [
 "Normalize the trusted gateway's final provider route after every alias, default, header override, retry, translation, and fallback step, and load only a verified route contract.",
 "Deny provider dispatch unless every route-owned field exactly matches one entry in the verified contract.",
-"Reconcile every allow or deny decision with gateway egress and independent provider or network readback before accepting enforcement coverage."
+"Verify complete per-attempt route eligibility enforcement against independent egress/provider evidence and replay bypass/failure cases without double-scoring durable provenance or detector results."
 ],
 "implementationGuidanceIds": [
 "AID-H-033.005-G001",
@@ -29115,7 +29130,7 @@
 "toolsSourceAvailable": [],
 "toolsCommercial": [
 "Cloudflare AI Gateway",
-"Portkey",
+"Prisma AIRS AI Gateway (formerly Portkey; managed gateway integration)",
 "Azure API Management"
 ],
 "defendsAgainst": [
@@ -29181,20 +29196,20 @@
 ]
 }
 ],
-"contentHash": "3872acafdb41bf86",
+"contentHash": "db242ed823738e9d",
 "keywords": [
-"effective route enforcement",
-"last trusted gateway",
-"alias expansion verification",
-"fallback route validation",
-"resolved provider binding",
+"effective route identity",
+"signed route contract",
 "provider account binding",
 "model deployment binding",
-"region and endpoint binding",
-"signed route contract",
-"pre-dispatch route denial",
-"retry route validation",
-"effective route receipt"
+"endpoint region validation",
+"fallback decision binding",
+"fail closed dispatch",
+"route policy enforcement",
+"last trusted gateway",
+"durable dispatch precondition",
+"canonical route projection",
+"route eligibility decision"
 ]
 },
 {
@@ -29244,7 +29259,7 @@
 ],
 "toolsSourceAvailable": [],
 "toolsCommercial": [
-"Portkey AI Gateway (managed service; request-parameter guardrails)",
+"Prisma AIRS AI Gateway (formerly Portkey; managed request-parameter guardrails)",
 "Azure API Management (managed API gateway; request-body validation and transformation policies)",
 "Kong Konnect AI Gateway"
 ],
@@ -29312,7 +29327,7 @@
 ]
 }
 ],
-"contentHash": "62b767fdc445cde3",
+"contentHash": "a37813a2ec6f4ec5",
 "keywords": [
 "effective invocation configuration",
 "last trusted gateway",
@@ -32618,13 +32633,13 @@
 {
 "id": "AID-D-001.003",
 "name": "Vector-Space Anomaly Detection",
-"description": "Embed each input admitted to the detector's declared technical scope with a pinned model and compare it with a versioned, representative baseline of approved input embeddings. Emit an anomaly finding when the configured distance, density, or cluster score breaches the signed policy threshold.<br/><br/>Bind the result to the input digest, embedding model and revision, baseline digest, scoring method, threshold policy, and complete admitted population. The declared scope must distinguish unsupported modalities or languages from supported inputs that were omitted, could not be embedded, or could not be scored; those coverage and processing conditions must remain visible rather than being reported as clean traffic.",
+"description": "Detect anomalous text inputs at a declared, bounded AI application ingress by measuring their distance from a trusted, versioned embedding baseline. A concrete deployment is a narrow task assistant where an attacker submits instructions to replace the assigned task or elicit a prohibited response. Use statistical novelty as an investigative signal only when an independent replay on that application demonstrates useful detection of those attacks, including adaptive prompts near normal clusters, within policy limits for benign alerts and latency.<br/><br/>Bind each finding to the exact input, application surface, embedding model, baseline and policy generation, and reconcile the complete independently observed ingress population by ID. A normal-distance prompt can still be malicious; a novel legitimate task can be an outlier. An absent text-ingress architecture is NOT_APPLICABLE. Missing attack evaluation or omitted applicable traffic is INSUFFICIENT_DATA; a measured breached detection or utility requirement is FAIL, and processing errors remain ERROR. A successful arithmetic or clustering run alone cannot establish PASS.",
 "scopeBoundary": {
-"responsibility": "Owns runtime anomaly findings derived from distance, density, or cluster scores against a signed embedding baseline for the detector's declared modalities and languages. Unsupported and unprocessed inputs remain explicit coverage states.",
+"responsibility": "Owns profile-qualified vector novelty findings at the declared AI text ingress, using independently authenticated attack/benign/adaptive replay and complete runtime population reconciliation. It reports findings for investigation; it does not identify attack intent, authorize an action, block a request, or claim protection for unevaluated surfaces. Benign traffic cannot be inferred from the largest current cluster. Broader languages, modalities, retrieval sources and threat families require their own measured profile.",
 "relatedTechniques": [
 {
 "id": "AID-D-001.001",
-"comparison": "AID-D-001.003 detects statistical novelty in a governed vector space; AID-D-001.001 detects content, intent, injection, jailbreak, and obfuscation signals in the prompt and recovered views.\nA vector outlier need not be malicious, and a malicious prompt may remain near a normal embedding cluster."
+"comparison": "AID-D-001.003 detects statistical novelty in a governed vector space; AID-D-001.001 detects content, intent, injection, jailbreak, and obfuscation signals in the prompt and recovered views.\nA vector outlier need not be malicious, and a malicious prompt may remain near a normal embedding cluster.\nThe vector profile must demonstrate its own useful attack triage without relying on findings from the content detector; combined evidence must not earn the same detection credit twice."
 }
 ]
 },
@@ -32636,8 +32651,8 @@
 "operation"
 ],
 "implementationGuidance": [
-"Build a trusted multi-cluster prompt-embedding baseline and score runtime prompts by distance from the nearest validated normal-intent centroid.",
-"Use clustering algorithms in near real-time to detect anomalous groups of prompts."
+"Fit and independently replay a trusted task-specific embedding baseline, qualify attack/benign/adaptive detection against signed policy, and score every applicable runtime prompt against the same generation.",
+"Detect separated prompt campaigns against the trusted baseline rather than the largest current traffic cluster, preserving exact window coverage and individual noise scoring."
 ],
 "implementationGuidanceIds": [
 "AID-D-001.003-G001",
@@ -32651,7 +32666,9 @@
 "Weaviate",
 "Milvus",
 "Qdrant",
-"PyOD"
+"PyOD",
+"Lingua (lingua-language-detector)",
+"Cosign (signed baseline and replay evidence verification)"
 ],
 "toolsSourceAvailable": [],
 "toolsCommercial": [
@@ -32666,7 +32683,8 @@
 {
 "framework": "MITRE ATLAS",
 "items": [
-"N/A"
+"AML.T0051 LLM Prompt Injection (profile-qualified anomaly triage of direct instruction overrides)",
+"AML.T0051.000 LLM Prompt Injection: Direct (profile-qualified anomaly triage of direct instruction overrides)"
 ]
 },
 {
@@ -32678,7 +32696,7 @@
 {
 "framework": "OWASP LLM Top 10 2026",
 "items": [
-"N/A"
+"LLM01:2026 Prompt Injection (profile-qualified anomaly triage of direct instruction overrides)"
 ]
 },
 {
@@ -32696,44 +32714,46 @@
 {
 "framework": "NIST Adversarial Machine Learning 2025",
 "items": [
-"N/A"
+"NISTAML.018 Prompt Injection (profile-qualified anomaly triage of direct instruction overrides)"
 ]
 },
 {
 "framework": "Cisco Integrated AI Security and Safety Framework",
 "items": [
-"N/A"
+"AITech-1.1 Direct Prompt Injection and Jailbreak (Prompt-based Manipulation) (profile-qualified anomaly triage of direct instruction overrides)",
+"AISubtech-1.1.1 Instruction Manipulation (profile-qualified anomaly triage of direct instruction overrides)"
 ]
 },
 {
 "framework": "Google Secure AI Framework 2.0 - Risks",
 "items": [
-"N/A"
+"PIJ: Prompt Injection (profile-qualified anomaly triage of direct instruction overrides)"
 ]
 },
 {
 "framework": "Databricks AI Security Framework 3.0",
 "items": [
-"N/A"
+"Model Serving - Inference requests 9.1: Prompt inject (profile-qualified anomaly triage of direct instruction overrides)"
 ]
 }
 ],
-"contentHash": "98ca0a49987ce120",
+"contentHash": "929c6f119cce2dc0",
 "keywords": [
-"vector space anomaly detection",
-"embedding outlier detection",
-"semantic anomaly detection",
-"nearest centroid distance",
-"embedding clustering",
-"nearest neighbor search",
-"dbscan clustering",
-"faiss similarity search",
-"multi-cluster embedding baseline",
-"novel prompt detection",
-"embedding drift",
-"vector database anomaly",
-"pca outlier analysis",
-"semantic outlier scoring"
+"task-specific embedding baseline",
+"vector distance scoring",
+"trusted centroid comparison",
+"profile-qualified attack triage",
+"held-out security replay",
+"adaptive prompt evaluation",
+"benign alert rate",
+"latency utility verification",
+"complete input population",
+"campaign cluster detection",
+"noise scoring handoff",
+"embedding model binding",
+"pinned language identification",
+"unsupported language exclusion",
+"baseline holdout disjointness"
 ]
 },
 {
@@ -36284,13 +36304,17 @@
 {
 "id": "AID-D-004.006",
 "name": "Effective Route & Failover Drift Detection",
-"description": "Detect mismatches and unexplained changes between each signed route decision and the route actually selected after alias expansion, defaults, provider translation, retry, and fallback. Reconcile the complete route-decision population with gateway egress and independent provider or network readback. Emit a route-mismatch finding, or a coverage-gap finding when the effective route cannot be observed.",
+"description": "Detect unauthorized effective-route changes, denied or unbound downstream sends, and missing route visibility by independently comparing each signed authorized decision with actual gateway egress and provider/network readback after alias expansion, defaults, provider translation, retry, and fallback. Reconcile the independent ingress population and all attempt chains. Emit bound drift or coverage signals and verify their delivered effect with adversarial and benign cases; an approved requested-model alias expansion is not itself drift and a clean replay window is not proof of detector effectiveness.",
 "scopeBoundary": {
-"responsibility": "Owns detection and complete-population reconciliation of differences between signed route decisions and the route actually used after alias expansion, defaults, provider translation, retries, and failover. It reports route drift but does not resolve or block the route.",
+"responsibility": "Owns independent runtime route-drift/visibility detection, complete measured population reconciliation, and verified signal/alert effectiveness. It compares the authorized decision for each attempt to actual observed routing; it does not authorize/block routes or earn protected provenance custody credit. Window observations remain distinct from assurance of the configured detector.",
 "relatedTechniques": [
 {
+"id": "AID-H-033.001",
+"comparison": "AID-D-004.006 consumes the canonical v3 decision projection, re-derived from the separately verified signed v2 ledger export and independently enumerated ingress; AID-H-033.001 owns immutable complete history, custody, and durable intent acknowledgment. Replaying the ledger does not earn duplicate provenance credit or establish that the detector produces and delivers required signals."
+},
+{
 "id": "AID-H-033.005",
-"comparison": "AID-D-004.006 detects requested-versus-effective route mismatch and missing route observability; AID-H-033.005 resolves the effective route and blocks disallowed destinations.\nThe detector independently observes the route outcome without becoming the routing enforcement point."
+"comparison": "AID-D-004.006 detects authorized-decision versus actual-route drift and missing visibility; AID-H-033.005 owns local final-route eligibility and blocking. Approved requested-versus-effective substitutions are benign when the actual route matches its authorized decision. A confirmed drift observation can invalidate enforcement coverage while correctly demonstrating detector behavior."
 },
 {
 "id": "AID-D-004.003",
@@ -36306,26 +36330,26 @@
 "operation"
 ],
 "implementationGuidance": [
-"Emit one normalized effective-route observation for every route decision and reconcile ingress, decision, egress, and provider-readback populations without silent sampling.",
-"Compare the signed decision with gateway and downstream readback, alert on field drift or missing coverage, and replay route or failover negative fixtures."
+"Collect independent ingress, per-attempt authorized decisions, actual gateway routing and provider/network readback; close and bind exact independently authenticated source populations without silent sampling.",
+"Verify signed per-attempt route observations, emit drift or visibility signals, and prove configured detection and delivered-alert effects with adversarial and benign cases."
 ],
 "implementationGuidanceIds": [
 "AID-D-004.006-G001",
 "AID-D-004.006-G002"
 ],
 "toolsOpenSource": [
-"OpenTelemetry",
-"Envoy",
-"OpenSearch",
-"Cosign"
+"OpenTelemetry (independent source acquisition and signal export)",
+"Envoy (actual gateway upstream observation)",
+"OpenSearch (route drift search and alerting)",
+"Cosign (exact signed snapshot verification)"
 ],
 "toolsSourceAvailable": [],
 "toolsCommercial": [
-"Cloudflare AI Gateway",
-"Portkey Enterprise Gateway",
-"Splunk Enterprise Security",
-"Microsoft Sentinel",
-"Google Security Operations"
+"Cloudflare AI Gateway (route telemetry input; independent provider/network readback required)",
+"Prisma AIRS AI Gateway (formerly Portkey; route telemetry input; independent provider/network readback required)",
+"Splunk Enterprise Security (signal correlation and alert delivery)",
+"Microsoft Sentinel (signal correlation and alert delivery)",
+"Google Security Operations (signal correlation and alert delivery)"
 ],
 "defendsAgainst": [
 {
@@ -36385,24 +36409,25 @@
 "framework": "Databricks AI Security Framework 3.0",
 "items": [
 "Model Serving - Inference requests 9.10: Accidental exposure of unauthorized data to models (detects sensitive requests routed to an unapproved model or provider)",
-"Operations 11.1: Lack of MLOps - repeatable enforced standards (detects requested-versus-effective route drift)"
+"Operations 11.1: Lack of MLOps - repeatable enforced standards (detects authorized-decision versus actual-route drift)"
 ]
 }
 ],
-"contentHash": "0c88c57795728d62",
+"contentHash": "67bac8a3edee0d63",
 "keywords": [
-"effective route drift detection",
-"signed route decision comparison",
-"actual egress reconciliation",
-"fallback drift detection",
-"alias resolution mismatch",
-"provider route mismatch",
-"gateway egress readback",
-"complete route population",
-"unobservable route finding",
-"route decision correlation",
-"unexpected provider selection",
-"route-drift evidence"
+"effective route monitoring",
+"independent route observation",
+"complete ingress population",
+"signed route window",
+"canonical attempt projection",
+"provider account drift",
+"model deployment drift",
+"endpoint region drift",
+"fallback decision drift",
+"missing route evidence",
+"policy generation binding",
+"observed execution reconciliation",
+"independent ledger projection replay"
 ]
 },
 {
@@ -47016,9 +47041,9 @@
 {
 "id": "AID-I-008.004",
 "name": "Desktop Computer-Use Workspace Isolation & Action Confirmation",
-"description": "Run desktop GUI / OS-level computer-use agents inside disposable, task-scoped workspaces with logged-out defaults, screenshot redaction, independently reviewed screenshot-injection signals, OS automation allowlists, action-bound confirmation, post-action effect readback, and watch-mode kill switches. This prevents a model-controlled cursor or screen reader from silently acting on hidden UI instructions, stale logged-in sessions, local files, clipboard residue, password managers, device APIs, or enterprise applications outside the approved task scope.",
+"description": "Run desktop GUI / OS-level computer-use agents inside disposable, task-scoped workspaces with logged-out defaults, screenshot redaction, independently reviewed screenshot-injection signals, OS automation allowlists, action-bound confirmation, post-action effect readback, and watch-mode kill switches. This prevents a model-controlled cursor or screen reader from silently acting on hidden UI instructions, stale logged-in sessions, local files, clipboard residue, password managers, device APIs, or enterprise applications outside the approved task scope.<br/><br/>Deploy this as one complete desktop computer-use defense: create and independently read back the disposable workspace with AID-I-008.004-G002, attach the peer-bound observer with AID-I-008.004-G001, verify a current signed watch-mode sample through AID-I-008.004-G005 before each model observation or action, with independently supervised watch-mode and cleanup covering idle periods, apply AID-I-008.004-G003 to the declared screenshot-risk population, and execute exact approved actions through AID-I-008.004-G004. Workspace isolation alone or action confirmation alone provides only the corresponding facet of this control; full assurance requires every applicable desktop boundary and action property.",
 "scopeBoundary": {
-"responsibility": "Owns containment of desktop GUI and OS-level computer-use agents in disposable logged-out workspaces, privileged UI observation, screenshot-risk handling, OS automation allowlists, stable accessibility invocation, action-bound confirmation consumption, signed UI or API effect readback, watch-mode halt, and deterministic cleanup.",
+"responsibility": "Owns containment of desktop GUI and OS-level computer-use agents in disposable logged-out workspaces, privileged UI observation, screenshot-risk handling, OS automation allowlists, stable accessibility invocation, action-bound confirmation consumption, signed UI or API effect readback, watch-mode halt, and deterministic cleanup. Workspace/platform and agent-harness components implement one desktop containment outcome through the signed launch, observation, approval and cleanup interfaces. Verification covers the whole applicable workspace/action population and current supervision evidence.",
 "relatedTechniques": [
 {
 "id": "AID-I-008.001",
@@ -47194,23 +47219,20 @@
 ]
 }
 ],
-"contentHash": "8bd1fff94d3a14f1",
+"contentHash": "f92f2b827532eaf2",
 "keywords": [
-"desktop computer use isolation",
-"privileged ui observation",
-"signed h018 approval receipt",
-"exact action plan binding",
-"accessibility element invocation",
-"foreground window binding",
-"signed ui readback",
-"signed api readback",
-"invariant effect verification",
-"one time approval consumption",
-"trusted observer service",
-"action population reconciliation",
-"workspace lease revocation",
-"terminal destruction receipt",
-"computer use audit evidence"
+"disposable desktop workspace",
+"logged-out task profile",
+"privileged accessibility observer",
+"signed workspace launch",
+"desktop screenshot gate",
+"exact action binding",
+"canonical approval receipt",
+"post-action effect readback",
+"os automation allowlist",
+"watch mode halt",
+"deterministic workspace cleanup",
+"complete desktop containment"
 ]
 },
 {

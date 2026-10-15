@@ -71,9 +71,16 @@ test('Cisco mapping boundaries reject reused meanings and unsupported attack inf
     }
     assert.ok(idsFor('AID-D-009.001').includes('AISubtech-15.1.5'), 'Fact verification follows the official disinformation definition');
     assert.ok(idsFor('AID-D-012.001').includes('AISubtech-9.2.2'), 'Backdoor testing maps independently of the misleading numeric parent');
-    for (const control of ['AID-D-001.003', 'AID-D-011.001']) {
+    for (const control of ['AID-D-011.001']) {
         assert.deepEqual(idsFor(control), ['N/A'], `${control}: generic anomaly scores do not establish a Cisco attack`);
     }
+    const vectorControl = entities.find(e => e.id === 'AID-D-001.003');
+    assert.deepEqual(idsFor(vectorControl.id), ['AITech-1.1', 'AISubtech-1.1.1'],
+        'qualified vector triage is limited to the measured direct instruction-override surface');
+    assert.match(vectorControl.description, /independent replay/);
+    assert.match(vectorControl.description, /adaptive prompts near normal clusters/);
+    assert.match(vectorControl.implementationGuidance[0].howTo, /QUALIFICATION = require_verified_security_replay/,
+        'a generic distance computation cannot replace generation-bound security qualification');
     for (const [control, admitted] of [
         ['AID-D-009.001', 'AISubtech-15.1.19'],
         ['AID-D-009.002', 'AISubtech-15.1.19'],

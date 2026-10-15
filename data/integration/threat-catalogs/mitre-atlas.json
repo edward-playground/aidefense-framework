@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20261008",
+  "aidefend_version": "1.20261015",
   "framework_key": "mitre-atlas",
   "source_framework_label": "MITRE ATLAS",
   "display_name": "MITRE ATLAS",
@@ -1274,7 +1274,7 @@
         "AML.TA0005"
       ],
       "referenced": true,
-      "control_count": 42
+      "control_count": 43
     },
     {
       "item_locator": "AML.T0051.000 LLM Prompt Injection: Direct",
@@ -1286,7 +1286,7 @@
         "AML.TA0005"
       ],
       "referenced": true,
-      "control_count": 12
+      "control_count": 13
     },
     {
       "item_locator": "AML.T0051.001 LLM Prompt Injection: Indirect",
@@ -1761,7 +1761,7 @@
         "AML.TA0007"
       ],
       "referenced": true,
-      "control_count": 15
+      "control_count": 16
     },
     {
       "item_locator": "AML.T0082 RAG Credential Harvesting",

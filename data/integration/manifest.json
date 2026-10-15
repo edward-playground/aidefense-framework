@@ -1,10 +1,10 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20261008",
-  "data_version": "2026.10.08",
-  "git_tag": "v1.20261008",
-  "generated_at": "2026-10-08T13:57:45.788Z",
-  "source_data_json_sha256": "sha256:f3f16c1728e78525f44b9105b02c25d7f4f080f34c94a2a82914d56a1e7600c4",
+  "aidefend_version": "1.20261015",
+  "data_version": "2026.10.15",
+  "git_tag": "v1.20261015",
+  "generated_at": "2026-10-15T02:17:37.296Z",
+  "source_data_json_sha256": "sha256:80bbb425e3d97bd249f8054aa7d4cce5bae2ffad7c411861346548fb7f528662",
   "first_consumer": "precogly",
   "layout": {
     "controls": "controls.json",
@@ -18,7 +18,7 @@
     "standalone_techniques": 35,
     "leaf_subtechniques": 274,
     "threat_join_records": 203,
-    "threat_control_pairs": 2403
+    "threat_control_pairs": 2407
   },
   "frameworks_published": [
     {
@@ -80,32 +80,32 @@
   "files": [
     {
       "path": "controls.json",
-      "sha256": "sha256:49f7d2eb83ad98fcc65f55a7b9ca3a27853fd8b89af28574006d50cb38e33435",
-      "bytes": 804647
+      "sha256": "sha256:cb38e2bdb9adf0fd9ffee02460d951f2c13f852c4b7f09c6de87c6ae10ebb69d",
+      "bytes": 814107
     },
     {
       "path": "threat-control-joins.json",
-      "sha256": "sha256:0c76bd47ba962b7a0e1282297b4fa6ded2d5919f5a51a839b9666cccce89a34a",
-      "bytes": 539825
+      "sha256": "sha256:0e0c6c541ea7712ca36f5ccbff540f9e66b30ff9119136321ef2c4c8909bf4e1",
+      "bytes": 541153
     },
     {
       "path": "threat-catalogs/mitre-atlas.json",
-      "sha256": "sha256:1588177d8d12ba7343f6d8d7ba1a2e67662bf72fd485c5971f09db39da4bfc52",
+      "sha256": "sha256:d8f6c066f79e0daf9e7abf46a4a85443de71695eb601929224224b928164c371",
       "bytes": 75507
     },
     {
       "path": "threat-catalogs/owasp-llm-top-10-2026.json",
-      "sha256": "sha256:711edda383c6baed6f63dba7f22c87e235e6ac524e3e97ed1c014d9619c23ff3",
+      "sha256": "sha256:c59358bbadd5b660f9209f3c516d22bbf8ab2c8f7ac6b001b06a0d91999f6d0a",
       "bytes": 3280
     },
     {
       "path": "threat-catalogs/owasp-ml-top-10-2023.json",
-      "sha256": "sha256:01683b93117974ac23bb357cd0d37c544ebbcec5228da4c760ee77faf62b6f3d",
+      "sha256": "sha256:7fc548941c35bf1d8410abbad74ae3f85614f150ceba90d5949f93bab225ee5c",
       "bytes": 3094
     },
     {
       "path": "threat-catalogs/owasp-agentic-top-10-2026.json",
-      "sha256": "sha256:a541af688d6673dcb31ad0b969c74f8920253e4262eae5542b9447b0eb730993",
+      "sha256": "sha256:b3da7e04a3e004b9006f47eda6dde0a0bce20b1039e60c338fc4945fd4e8f812",
       "bytes": 3456
     }
   ],
