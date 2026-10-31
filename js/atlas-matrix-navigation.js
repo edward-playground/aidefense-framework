@@ -39,6 +39,13 @@ export function buildAtlasTechniqueUrl(atlasId) {
     return 'https://atlas.mitre.org/techniques/' + normalizedId;
 }
 
+export function atlasDescriptionText(description) {
+    return String(description || '').replace(
+        /\[([^\]\r\n]+)\]\(\s*(?:\/(?:techniques|tactics)\/AML\.(?:T\d{4}(?:\.\d{3})?|TA\d{4})|https:\/\/[^\s()]+)\s*\)/g,
+        '$1'
+    );
+}
+
 /**
  * Classify a result against the actual two-dimensional visible region.
  * Any partial intersection counts as visible on that axis.

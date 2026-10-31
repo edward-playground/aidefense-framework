@@ -1081,6 +1081,13 @@ function sha256(content) {
   return createHash('sha256').update(content).digest('hex').substring(0, 16);
 }
 
+// Use the Asia/Taipei release calendar while retaining an unambiguous ISO instant.
+function generatedAtTaipei(now = new Date()) {
+  const taipeiOffsetMilliseconds = 8 * 60 * 60 * 1000;
+  return new Date(now.getTime() + taipeiOffsetMilliseconds)
+    .toISOString().replace(/Z$/, '+08:00');
+}
+
 function readCheckTimestamp() {
   const dataPath = path.join(OUTPUT_DIR, 'data.json');
   const indexPath = path.join(OUTPUT_DIR, 'tactics-index.json');
@@ -1250,7 +1257,7 @@ async function main() {
   }
 
   // Create dataset
-  const now = checkOnly ? readCheckTimestamp() : new Date().toISOString();
+  const now = checkOnly ? readCheckTimestamp() : generatedAtTaipei();
   const versionMatch = /^1\.(\d{4})(\d{2})(\d{2})$/.exec(aidefendVersion);
   if (!versionMatch) {
     throw new Error(`Invalid AIDEFEND release version: ${aidefendVersion}`);

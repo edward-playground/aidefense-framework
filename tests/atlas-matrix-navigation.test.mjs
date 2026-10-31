@@ -2,6 +2,7 @@ import assert from 'node:assert/strict';
 import test from 'node:test';
 
 import {
+    atlasDescriptionText,
     calculateAtlasRevealTargets,
     buildAtlasTechniqueUrl,
     classifyAtlasMatchDirection,
@@ -13,6 +14,16 @@ import {
 } from '../js/atlas-matrix-navigation.js';
 
 const visible = { left: 100, right: 500, top: 200, bottom: 700 };
+
+test('ATLAS descriptions expose readable link labels as plain text', () => {
+    assert.equal(atlasDescriptionText(
+        'Compare [Infer Membership](/techniques/AML.T0137.000) with [Collection](/tactics/AML.TA0009).'
+    ), 'Compare Infer Membership with Collection.');
+    assert.equal(atlasDescriptionText('[Jailbreak]( /techniques/AML.T0054)'), 'Jailbreak');
+    assert.equal(atlasDescriptionText('[Source](https://example.org/research)'), 'Source');
+    assert.equal(atlasDescriptionText('Keep ordinary [brackets] and (parentheses).'), 'Keep ordinary [brackets] and (parentheses).');
+    assert.equal(atlasDescriptionText('[untrusted](javascript:alert(1))'), '[untrusted](javascript:alert(1))');
+});
 
 test('normalizes every supported ATLAS ID search form without accepting substrings', () => {
     assert.equal(normalizeAtlasSearchId('0115'), 'AML.T0115');

@@ -1,12 +1,12 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20261015",
-  "data_version": "2026.10.15",
+  "aidefend_version": "1.20261101",
+  "data_version": "2026.11.01",
   "unit_rule": "Every entry in controls is an independently selectable control unit. Entries in families are navigation only and must not be treated as countermeasures.",
   "counts": {
-    "actionable_controls": 309,
+    "actionable_controls": 311,
     "standalone_techniques": 35,
-    "leaf_subtechniques": 274,
+    "leaf_subtechniques": 276,
     "families": 58
   },
   "controls": [
@@ -911,7 +911,7 @@
         "validation",
         "improvement"
       ],
-      "description_text": "Integrate standardized security benchmark suites (such as AgentHarm, ToolEmu, R-Judge, AgentDojo, InjecAgent, CyberSecEval, garak, PyRIT, promptfoo, or browser-agent regression harnesses) into the CI/CD pipeline to quantitatively measure an AI agent's resistance to adversarial attacks, safety policy compliance, and tool misuse risks.\n\nCoverage includes:\n\n- General agentic benchmarks for prompt injection, jailbreaks, unsafe outputs, and unauthorized tool use.\n- Agent-injection benchmarks such as AgentDojo and InjecAgent that exercise tool-augmented workflows rather than static prompt strings alone.\n- Cybersecurity-focused model and agent probes such as CyberSecEval and PyRIT campaign runs.\n- Production-trace-derived grading and replay of de-identified real agent sessions, near-misses, incidents, red-team findings, and externally reported bypasses.\n- Browser-agent-specific prompt injection regression and fuzz testing for hidden DOM/CSS instructions, OCR/PDF-mediated injections, cross-origin read-then-act flows, download and clipboard abuse, and magic-link or session confusion.\n- Release gates that compare benchmark results across builds so prompt, model, tool, and browsing changes cannot silently weaken the agent's security posture.",
+      "description_text": "Integrate standardized security benchmark suites (such as AgentHarm, ToolEmu, R-Judge, AgentDojo, InjecAgent, CyberSecEval, garak, PyRIT, promptfoo, or browser-agent regression harnesses) into the CI/CD pipeline to quantitatively measure an AI agent's resistance to adversarial attacks, safety policy compliance, and tool misuse risks.\n\nCoverage includes:\n\n- General agentic benchmarks for prompt injection, jailbreaks, unsafe outputs, and unauthorized tool use.\n- Agent-injection benchmarks such as AgentDojo and InjecAgent that exercise tool-augmented workflows rather than static prompt strings alone.\n- Cybersecurity-focused model and agent probes such as CyberSecEval and PyRIT campaign runs.\n- Production-trace-derived grading and replay of de-identified real agent sessions, near-misses, incidents, red-team findings, and externally reported bypasses.\n- Browser-agent-specific prompt injection regression and fuzz testing for hidden DOM/CSS instructions, OCR/PDF-mediated injections, cross-origin read-then-act flows, download and clipboard abuse, and magic-link or session confusion.\n- Release gates that compare benchmark results across builds so prompt, model, tool, and browsing changes cannot silently weaken the agent's security posture.\n\n A benchmark harness with Internet-capable or offensive-agent tools must first satisfy the cyber-evaluation control profile in AID-M-009.006; measuring the agent does not establish that the harness is safely contained.",
       "scope_boundary": {
         "responsibility": "Owns repeatable, release-bound adversarial security benchmarking of models and agents across static, adaptive, stateful, tool-using, browser, and production-trace-derived scenarios. It measures security regression but does not define the safety boundary, publish model cards, own forensic logging, or prove universal robustness.",
         "related_techniques": [
@@ -1274,7 +1274,7 @@
         "building",
         "validation"
       ],
-      "description_text": "Detect and remove malicious, anomalous, privacy-sensitive, or policy-prohibited records before a dataset is admitted to model training, fine-tuning, or evaluation. Apply content inspection, normalization, quarantine, and redaction over the complete candidate snapshot.",
+      "description_text": "Detect and remove malicious, anomalous, privacy-sensitive, or policy-prohibited records before a dataset is admitted to model training, fine-tuning, or evaluation. Apply content inspection, normalization, quarantine, and redaction over the complete candidate snapshot. Include agent interaction trajectories whose tool, web, memory or peer observations are promoted into training, alignment, evaluation or synthetic datasets; runtime memory writes keep their separate admission owner.",
       "scope_boundary": {
         "responsibility": "Owns content-level sanitization of the complete candidate training, fine-tuning, or evaluation dataset before admission. Evaluation-data preparation also applies when using an existing model without training or fine-tuning it; each method retains its own data and runtime prerequisites. It does not establish supplier provenance, cryptographic artifact integrity, feature-pipeline integrity, label integrity, or split isolation.",
         "related_techniques": [
@@ -2319,7 +2319,7 @@
       "phase": [
         "building"
       ],
-      "description_text": "Implements differential privacy mechanisms to add calibrated noise to model training, outputs, or data queries, ensuring that individual data points cannot be identified while maintaining overall utility.",
+      "description_text": "Apply an explicitly accounted differential-privacy mechanism to an AI training run, output release or data query under a declared adjacency definition and privacy unit. Bind clipping, noise, sampling, composition and the resulting epsilon/delta budget to the exact mechanism and release, and measure utility. Differential privacy bounds the additional disclosure attributable to the protected individual contribution; it does not make identification impossible, hide aggregate training-population properties, or establish encrypted computation. An unaccounted noise flag is not a privacy guarantee.",
       "scope_boundary": {
         "responsibility": "Owns quantified differential-privacy mechanisms, clipping and noise calibration, privacy-budget composition, and utility validation for training, outputs, queries, or local collection.",
         "related_techniques": [
@@ -2518,6 +2518,10 @@
           {
             "id": "AID-H-018.009",
             "comparison": "AID-H-006.002 owns sink-specific release of generated text, markup, structured payloads, URLs, and token streams; AID-H-018.009 confines the local filesystem object that an applicable model-callable handler actually opens or mutates.\nA path-broker receipt can be an input to release, but it neither sanitizes returned content nor earns a second sink-safety PASS."
+          },
+          {
+            "id": "AID-D-003.009",
+            "comparison": "AID-D-003.009 emits exact-content findings; AID-H-006.002 consumes them before release and owns the actual blocking or controlled-review result."
           }
         ]
       },
@@ -2540,7 +2544,7 @@
         "validation",
         "operation"
       ],
-      "description_text": "Expose only the numeric prediction detail required by an explicit API contract through one versioned response profile. For a minimization transform, gate release on a model-family query suite showing reduced extraction signal within utility and API-contract budgets. If calibrated probabilities are required, explicitly bind the permitted fields and precision to that contract, retain calibration and extraction-risk review, and enforce compensating access and query-abuse controls. Keeping required precision is not evidence that extraction risk was reduced.\n\nApplicability: use only for APIs that expose classifier confidence or continuous predictions. If the API already returns no numeric model signal, this control does not apply. A configured bin, rounding rule, or noise flag alone is insufficient. This control makes no differential-privacy claim and rejects raw logits and probability fields outside the approved response contract.",
+      "description_text": "Expose only the numeric prediction detail required by an explicit API contract through one versioned response profile. For a minimization transform, gate release on a model-family query suite showing reduced extraction signal within utility and API-contract budgets. If calibrated probabilities are required, explicitly bind the permitted fields and precision to that contract, retain calibration and extraction-risk review, and enforce compensating access and query-abuse controls. Keeping required precision is not evidence that extraction risk was reduced.\n\nApplicability: use only for APIs that expose classifier confidence or continuous predictions. If the API already returns no numeric model signal, this control does not apply. A configured bin, rounding rule, or noise flag alone is insufficient. This control makes no differential-privacy claim and rejects raw logits and probability fields outside the approved response contract. Generative token-probability and logit-bias request exposure belongs to AID-H-033.006; this control retains classifier-confidence and continuous-prediction response minimization.",
       "scope_boundary": {
         "responsibility": "Owns contract-bounded response detail for numeric prediction APIs, including explicit calibrated-probability release decisions, and independent validation that rounding, binning, range reduction, or approved noise lowers extraction signal within utility and API-contract budgets. It makes no differential-privacy claim.",
         "related_techniques": [
@@ -3814,6 +3818,50 @@
       "url": "https://aidefend.net/#t=AID-H-017.007"
     },
     {
+      "id": "AID-H-017.008",
+      "name": "Agent-Run External Resource Lifecycle Enforcement",
+      "actionable": true,
+      "kind": "sub-technique",
+      "tactic": "Harden",
+      "tactic_id": "harden",
+      "family_id": "AID-H-017",
+      "pillar": [
+        "infra",
+        "app"
+      ],
+      "phase": [
+        "building",
+        "operation"
+      ],
+      "description_text": "Bind every external resource created or acquired by a managed AI agent to an authorized run, owner, purpose, scope and expiry before provisioning. A broker outside the agent enforces registration and run-generation fencing; an independent janitor retires unneeded resources after completion, cancellation, crash or lease expiry and reconciles residual resources against provider inventories. This closes the cross-run persistence path described by MITRE ATLAS AI Agent External Resource Lifecycle Management: externally hosted resources can survive destruction of an ephemeral agent workspace.\n\nApply when agents can create external infrastructure, hosted artifacts, accounts, integrations or access mechanisms; otherwise NOT_APPLICABLE. Retention or ownership transfer requires an attributable decision for the exact resources and a new lifecycle owner. Unknown creation effects, incomplete provider populations, unsupported adapters and unverified cleanup remain INSUFFICIENT_DATA or ERROR. A resource still usable after its authorized need ends is a finding, even if the original agent or its credentials are gone. PASS requires independently reconciled resource removal or an exact approved retention disposition for the complete applicable population.",
+      "scope_boundary": {
+        "responsibility": "Owns run-bound registration, authorized lifetime, provisioning-path fencing and independent cleanup/reconciliation for external resources created or acquired by a managed AI agent. It does not equate agent shutdown or credential revocation with resource removal.",
+        "related_techniques": [
+          {
+            "id": "AID-I-001.003",
+            "comparison": "AID-I-001.003 destroys the per-invocation execution sandbox; AID-H-017.008 governs external resources that can survive that sandbox and may span several tool calls. Local teardown is not external-resource absence."
+          },
+          {
+            "id": "AID-H-018.008",
+            "comparison": "AID-H-018.008 binds an external operation to its idempotency and transaction outcome; AID-H-017.008 consumes that operation identity to govern the created resource lifetime. Retrying one business operation safely does not retire its resources."
+          },
+          {
+            "id": "AID-E-005",
+            "comparison": "AID-E-005 tears down incident-scoped compromised durable application state and registrations; AID-H-017.008 enforces normal authorized run lifetimes even without an incident. Route a confirmed compromised registration to its incident owner without double-counting the same deletion."
+          },
+          {
+            "id": "AID-R-007",
+            "comparison": "AID-R-007 reconciles and compensates incident-time external business effects; AID-H-017.008 expires or reassigns run-owned external resources. A compensation receipt is not proof that every resource was removed."
+          },
+          {
+            "id": "AID-E-001",
+            "comparison": "AID-E-001 owns incident-time credential, token, principal and grant eviction. AID-H-017.008 requests the appropriate access-lifecycle action and separately verifies external resource disposition; one result never substitutes for the other."
+          }
+        ]
+      },
+      "url": "https://aidefend.net/#t=AID-H-017.008"
+    },
+    {
       "id": "AID-H-018.001",
       "name": "Tool Parameter Constraint & Schema Validation",
       "actionable": true,
@@ -4026,6 +4074,10 @@
           {
             "id": "AID-H-029",
             "comparison": "AID-H-018.005 enforces value flows at agent action and sink boundaries; AID-H-029 governs purpose, consent, retention, lifecycle stage, and authorized use of data across the broader AI lifecycle.\nThe sink gate consumes data-use policy but does not define the complete lifecycle authorization contract."
+          },
+          {
+            "id": "AID-D-003.009",
+            "comparison": "AID-H-018.005 enforces value provenance, recipient and destination policy at dispatch; AID-D-003.009 classifies instruction-bearing content inside that exact proposal. An authorized destination does not make its content benign."
           }
         ]
       },
@@ -4161,6 +4213,10 @@
           {
             "id": "AID-H-004.005",
             "comparison": "AID-H-018.008 suppresses duplicate business effects and reconciles uncertain provider outcomes; AID-H-004.005 rejects duplicate, stale, altered, or context-misbound messages before receiver processing.\nAn accepted message can still produce an ambiguous external effect, so replay protection does not replace the action ledger."
+          },
+          {
+            "id": "AID-H-017.008",
+            "comparison": "AID-H-018.008 binds an external operation to its idempotency and transaction outcome; AID-H-017.008 consumes that operation identity to govern the created resource lifetime. Retrying one business operation safely does not retire its resources."
           }
         ]
       },
@@ -4752,7 +4808,7 @@
         "building",
         "validation"
       ],
-      "description_text": "A critical supply chain defense that ensures software packages (e.g., NPM, PyPI) are published only from a secure, auditable, and authorized source. This technique reduces credential-only publishing attacks where a stolen developer credential is used to publish a malicious version of a legitimate package. It achieves this by prohibiting publications from local developer machines and mandating that all releases originate from a hardened CI/CD pipeline that authenticates using short-lived, identity-based tokens and generates verifiable provenance attestations.",
+      "description_text": "A critical supply chain defense that ensures software packages (e.g., npm, PyPI) and model/dataset artifacts published through AI hubs are published only from a secure, auditable, and authorized source. This technique reduces credential-only publishing attacks where a stolen developer credential is used to publish a malicious version of a legitimate package. It achieves this by prohibiting publications from local developer machines and mandating that all releases originate from a hardened CI/CD pipeline that authenticates using short-lived, identity-based tokens and generates verifiable provenance attestations.",
       "scope_boundary": {
         "responsibility": "Owns authorized publisher identity, registry namespace, protected CI publication, short-lived publication authority, and independent post-publication readback of the exact producer release bytes and provenance. It does not admit third-party dependency populations or authorize their use.",
         "related_techniques": [
@@ -6042,7 +6098,7 @@
       "phase": [
         "operation"
       ],
-      "description_text": "Resolve and enforce the effective model-invocation configuration at the last trusted AI gateway after caller values, SDK aliases, gateway defaults, retry policy, and provider-specific translation have been applied. Clamp only fields whose signed policy explicitly permits clamping; otherwise deny. The control covers sampling parameters, output-token limits, log-probability exposure, and provider safety-profile selection, and requires exact post-translation readback before dispatch is permitted.",
+      "description_text": "Resolve and enforce the effective model-invocation configuration at the last trusted AI gateway after caller values, SDK aliases, gateway defaults, retry policy, and provider-specific translation have been applied. Clamp only fields whose signed policy explicitly permits clamping; otherwise deny. The control covers sampling parameters, output-token limits, log-probability exposure, and provider safety-profile selection, and requires exact post-translation readback before dispatch is permitted. On public generative routes, explicitly constrain model-probing fields such as logprobs, top_logprobs, logit_bias, prompt_logprobs and echo, and verify that the released response respects the effective exposure policy. Classifier/regression response minimization remains AID-H-006.003.",
       "scope_boundary": {
         "responsibility": "Owns final resolution, policy clamping or denial, provider translation, and readback of effective sampling parameters, output-token limits, log-probability exposure, and provider safety-profile settings immediately before serialization.",
         "related_techniques": [
@@ -7013,6 +7069,10 @@
           {
             "id": "AID-D-002.005",
             "comparison": "AID-D-003.001 monitors text intended for a user or downstream application; AID-D-002.005 monitors a separately identified, operator-visible emitted reasoning field for attack and evasion signals.\nIf the same field is deliberately exposed as ordinary output, assign one primary measured population and do not score it twice."
+          },
+          {
+            "id": "AID-D-003.009",
+            "comparison": "AID-D-003.001 detects disallowed language in model output; AID-D-003.009 detects instructions carried into another consumption context. A propagation payload can be ordinary-looking language without a harmful-language classification."
           }
         ]
       },
@@ -7170,6 +7230,10 @@
           {
             "id": "AID-I-004.003",
             "comparison": "AID-D-003.006 alerts on read-verification failures and suspicious memory activity; AID-I-004.003 performs cryptographic signed-write and verified-read enforcement.\nMonitoring a verification failure does not reject the record, while enforcement does not replace trend and campaign detection."
+          },
+          {
+            "id": "AID-D-003.009",
+            "comparison": "AID-D-003.006 detects memory-write abuse and longitudinal drift; AID-D-003.009 inspects the content of an outbound write or send before dispatch, including non-memory destinations. The same observation does not earn two independent prevention claims."
           }
         ]
       },
@@ -7245,6 +7309,45 @@
         ]
       },
       "url": "https://aidefend.net/#t=AID-D-003.008"
+    },
+    {
+      "id": "AID-D-003.009",
+      "name": "Outbound Instruction Payload & Prompt-Propagation Detection",
+      "actionable": true,
+      "kind": "sub-technique",
+      "tactic": "Detect",
+      "tactic_id": "detect",
+      "family_id": "AID-D-003",
+      "pillar": [
+        "app",
+        "data"
+      ],
+      "phase": [
+        "operation"
+      ],
+      "description_text": "Observe the complete model-generated or agent-generated content immediately before a tool writes or sends it to shared documents, repositories, messages, tickets, retrieval stores or peer agents. Detect instruction-bearing payloads that could propagate an injection to another execution context, including copies of source spans already identified as malicious. Bind each finding to the exact action, destination, source population and pinned detector policy. Ordinary benign quotation is not itself a finding.\n\nApply when AI-generated content can reach a sink that another person, model or agent may consume; otherwise NOT_APPLICABLE. Missing source evidence, unsupported content, truncation or detector failure remains INSUFFICIENT_DATA or ERROR. The output is a finding for the release owner, not an allow/deny decision or proof that downstream execution occurred.",
+      "scope_boundary": {
+        "responsibility": "Owns pre-dispatch content detection of outbound instruction payloads and replication of already-flagged malicious source spans into propagation-capable sinks. It never authorizes, sanitizes, releases, blocks or deletes the content.",
+        "related_techniques": [
+          {
+            "id": "AID-D-003.001",
+            "comparison": "AID-D-003.001 detects disallowed language in model output; AID-D-003.009 detects instructions carried into another consumption context. A propagation payload can be ordinary-looking language without a harmful-language classification."
+          },
+          {
+            "id": "AID-D-003.006",
+            "comparison": "AID-D-003.006 detects memory-write abuse and longitudinal drift; AID-D-003.009 inspects the content of an outbound write or send before dispatch, including non-memory destinations. The same observation does not earn two independent prevention claims."
+          },
+          {
+            "id": "AID-H-006.002",
+            "comparison": "AID-D-003.009 emits exact-content findings; AID-H-006.002 consumes them before release and owns the actual blocking or controlled-review result."
+          },
+          {
+            "id": "AID-H-018.005",
+            "comparison": "AID-H-018.005 enforces value provenance, recipient and destination policy at dispatch; AID-D-003.009 classifies instruction-bearing content inside that exact proposal. An authorized destination does not make its content benign."
+          }
+        ]
+      },
+      "url": "https://aidefend.net/#t=AID-D-003.009"
     },
     {
       "id": "AID-D-004.001",
@@ -7595,7 +7698,7 @@
       "phase": [
         "operation"
       ],
-      "description_text": "This technique covers the proactive, hypothesis-driven search through AI system logs and telemetry for subtle, unknown, or 'low-and-slow' attacks that do not trigger predefined alerts. Threat hunting assumes an attacker may already be present and evading standard detections. It focuses on identifying novel attack patterns, reconnaissance activities, and anomalous behaviors by using exploratory data analysis, complex queries, and machine learning on historical data. The shipped methods cover systematic model-extraction query campaigns, retrieval-to-completion exfiltration signals and instruction-bearing assistant-link hunts. Unsupervised session clustering is triage support, not evidence of training poisoning, model backdoors, supply-chain compromise or membership inference; those require their dedicated detectors and hunt hypotheses.",
+      "description_text": "This technique covers the proactive, hypothesis-driven search through AI system logs and telemetry for subtle, unknown, or 'low-and-slow' attacks that do not trigger predefined alerts. Threat hunting assumes an attacker may already be present and evading standard detections. It focuses on identifying novel attack patterns, reconnaissance activities, and anomalous behaviors by using exploratory data analysis, complex queries, and machine learning on historical data. The shipped methods cover systematic model-extraction query campaigns, retrieval-to-completion exfiltration signals, instruction-bearing assistant-link hunts, and candidate-first cross-account output-collection hunts with subsequent independent corroboration. Unsupervised session clustering is triage support, not evidence of training poisoning, model backdoors, supply-chain compromise or membership inference; those require their dedicated detectors and hunt hypotheses.",
       "scope_boundary": {
         "responsibility": "Owns human-led, hypothesis-driven investigation of historical AI telemetry for novel, subtle, low-and-slow, or evasive activity that predefined alerts may miss.",
         "related_techniques": [
@@ -8696,6 +8799,10 @@
           {
             "id": "AID-I-001.005",
             "comparison": "AID-I-001.003 provides one-shot execution and teardown for a tool invocation; AID-I-001.005 detonates an artifact across a declared case population and emits attested raw behavioral observations.\nDetonation consumes sandbox lifecycle evidence but has a separate artifact-analysis population and output; ordinary ephemeral tool execution is not a behavioral-analysis result."
+          },
+          {
+            "id": "AID-H-017.008",
+            "comparison": "AID-I-001.003 destroys the per-invocation execution sandbox; AID-H-017.008 governs external resources that can survive that sandbox and may span several tool calls. Local teardown is not external-resource absence."
           }
         ]
       },
@@ -10148,6 +10255,10 @@
           {
             "id": "AID-R-003.002",
             "comparison": "AID-E-005 removes compromised durable conversational and agent state; AID-R-003.002 restores an authority-selected clean snapshot into a new isolated namespace.\nTeardown is an eviction result, while restoration must separately prove that it excludes tainted, cross-tenant, post-cutoff, secret-bearing, and credential-bearing state."
+          },
+          {
+            "id": "AID-H-017.008",
+            "comparison": "AID-E-005 tears down incident-scoped compromised durable application state and registrations; AID-H-017.008 enforces normal authorized run lifetimes even without an incident. Route a confirmed compromised registration to its incident owner without double-counting the same deletion."
           }
         ]
       },
@@ -10417,7 +10528,7 @@
       ],
       "description_text": "Orchestrate clean-room recovery of a multi-component AI system by validating an authority-signed recovery dependency manifest, executing digest-pinned workflow templates in dependency order, and reading live component state and external readiness through separate read-only paths before cutover. The manifest binds the exact component population, immutable recovery artifact for each component, trusted workflow-template digest, prerequisite control-result digest, dependency DAG, and cutover prerequisites.\n\nUse when: recovery contains multiple components or prerequisite results whose ordering matters.",
       "scope_boundary": {
-        "responsibility": "Owns verification of referenced prerequisite-result signatures and digests, dependency ordering, trusted recovery-workflow execution, assembled live-state readback, and cutover authorization for a multi-component recovery. Each component control retains ownership of its bounded technical result. This orchestrator does not reinterpret or replace another control's result. Missing components, unknown dependencies, cycles, mutable artifacts or workflows, unverifiable prerequisites, incomplete live populations, failed external probes, or unmet signed RTO/RPO objectives block cutover.",
+        "responsibility": "Owns verification of referenced prerequisite-result signatures and digests, dependency ordering, trusted recovery-workflow execution, assembled live-state readback, and cutover authorization for a multi-component recovery. Each component control retains ownership of its bounded technical result. This orchestrator does not reinterpret or replace another control's result. Missing components, unknown dependencies, cycles, mutable artifacts or workflows, unverifiable prerequisites, incomplete live populations, failed external probes, or unmet signed RPO requirements block cutover. A missed RTO is recorded and escalated under the signed incident policy; lateness alone is not a permanent cutover veto and never becomes a met objective.",
         "related_techniques": [
           {
             "id": "AID-R-004",
@@ -10462,6 +10573,10 @@
           {
             "id": "AID-R-004",
             "comparison": "AID-R-007 resolves existing incident-scoped external effects; AID-R-004 propagates the technical fix that prevents recurrence.\nInstitutionalizing the fix does not reverse actions already issued, while compensating those actions does not prove the weakness was removed from the fleet."
+          },
+          {
+            "id": "AID-H-017.008",
+            "comparison": "AID-R-007 reconciles and compensates incident-time external business effects; AID-H-017.008 expires or reassigns run-owned external resources. A compensation receipt is not proof that every resource was removed."
           }
         ]
       },
@@ -10943,9 +11058,9 @@
       "kind": "family",
       "tactic": "Harden",
       "tactic_id": "harden",
-      "description_text": "This technique covers the secure-by-design architectural principles for building autonomous AI agents. It focuses on proactively designing the agent's core components-such as its structured control loop, tool-use mechanism, state management, and action dispatchers-to be inherently more robust, auditable, and resistant to manipulation. This is distinct from monitoring agent behavior; it is about building the agent securely from the ground up.",
+      "description_text": "This technique covers the secure-by-design architectural principles for building autonomous AI agents. It focuses on proactively designing the agent's core components-such as its structured control loop, tool-use mechanism, state management, and action dispatchers-to be inherently more robust, auditable, and resistant to manipulation. This is distinct from monitoring agent behavior; it is about building the agent securely from the ground up. The architecture also brokers and expires external resources that survive the local agent workspace.",
       "scope_boundary": {
-        "responsibility": "Owns secure-by-design agent architecture for interruptible control loops, least-privilege tool surfaces, decoupled planning and execution, task-scoped state, signed behavior contracts, delegation bounds, and raw-content isolation. Auditability means structured state and outcomes, not raw hidden reasoning.",
+        "responsibility": "Owns secure-by-design agent architecture for interruptible control loops, least-privilege tool surfaces, decoupled planning and execution, task-scoped state, signed behavior contracts, delegation bounds, raw-content isolation, and run-bound external-resource lifecycle enforcement. Auditability means structured state and outcomes, not raw hidden reasoning.",
         "related_techniques": [
           {
             "id": "AID-H-018",
@@ -10964,7 +11079,8 @@
         "AID-H-017.004",
         "AID-H-017.005",
         "AID-H-017.006",
-        "AID-H-017.007"
+        "AID-H-017.007",
+        "AID-H-017.008"
       ],
       "url": "https://aidefend.net/#t=AID-H-017"
     },
@@ -11553,7 +11669,8 @@
         "AID-D-003.005",
         "AID-D-003.006",
         "AID-D-003.007",
-        "AID-D-003.008"
+        "AID-D-003.008",
+        "AID-D-003.009"
       ],
       "url": "https://aidefend.net/#t=AID-D-003"
     },
@@ -11929,6 +12046,10 @@
           {
             "id": "AID-I-003",
             "comparison": "AID-E-001 authoritatively and durably revokes compromised credentials, sessions, principals, issuance paths, and delegated grants; AID-I-003 applies reversible quarantine, safe-mode downgrade, throttling, or action containment while investigation or recovery proceeds.\nContainment does not prove identity-plane eviction, and revocation does not replace immediate bounded control of the affected workload, session, or action."
+          },
+          {
+            "id": "AID-H-017.008",
+            "comparison": "AID-E-001 owns incident-time credential, token, principal and grant eviction. AID-H-017.008 requests the appropriate access-lifecycle action and separately verifies external resource disposition; one result never substitutes for the other."
           }
         ]
       },

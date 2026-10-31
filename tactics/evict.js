@@ -7,25 +7,29 @@ export const evictTactic = {
           "name": "Compromised Credential, Session, Principal & Grant Eviction",
             "description": "Evict compromised authentication and authorization objects from effective use after a verified incident by applying authoritative revocation to four non-overlapping populations: root or long-lived credential objects; already-issued tokens, authentication sessions, and leases; AI-agent or workload principals and their ability to obtain new credentials; and delegated grants or connected-app authorizations. Each child owns one object population and authoritative control plane, and evidence for one population does not prove eviction of another.",
             "scopeBoundary": {
-              "responsibility": "Owns authoritative incident-time eviction of four authentication and authorization object populations: root or long-lived credential objects, already-issued tokens and authentication sessions, AI-agent or workload principals and issuance paths, and delegated grants or connected-app authorizations. Evidence for one population does not prove eviction of another.",
-              "relatedTechniques": [
-                {
-                  "id": "AID-E-002",
-                  "comparison": "AID-E-001 revokes authentication and authorization objects; AID-E-002 terminates active processes, agent runs, execution leases, supervisor jobs, pods, and containers.\nCredential or session revocation does not prove that compromised code stopped executing, and process termination does not revoke the identities or artifacts that could start new execution."
-                },
-                {
-                  "id": "AID-E-005",
-                  "comparison": "AID-E-001 evicts identity-plane credentials, sessions, principals, and grants; AID-E-005 removes durable application and agent state.\nApplication session records, conversational memory, webhook or tool registrations, queues, and schedules require separate teardown even after authentication objects are revoked."
-                },
-                {
-                  "id": "AID-R-003.001",
-                  "comparison": "AID-E-001 invalidates compromised or prior authentication and authorization state; AID-R-003.001 creates a new trusted interactive session after eviction.\nSuccessful reauthentication does not prove that the old credential, token, grant, or session population was revoked, and eviction does not itself establish a recovered session."
-                },
-                {
-                  "id": "AID-I-003",
-                  "comparison": "AID-E-001 authoritatively and durably revokes compromised credentials, sessions, principals, issuance paths, and delegated grants; AID-I-003 applies reversible quarantine, safe-mode downgrade, throttling, or action containment while investigation or recovery proceeds.\nContainment does not prove identity-plane eviction, and revocation does not replace immediate bounded control of the affected workload, session, or action."
-                }
-              ]
+                "responsibility": "Owns authoritative incident-time eviction of four authentication and authorization object populations: root or long-lived credential objects, already-issued tokens and authentication sessions, AI-agent or workload principals and issuance paths, and delegated grants or connected-app authorizations. Evidence for one population does not prove eviction of another.",
+                "relatedTechniques": [
+                    {
+                        "id": "AID-E-002",
+                        "comparison": "AID-E-001 revokes authentication and authorization objects; AID-E-002 terminates active processes, agent runs, execution leases, supervisor jobs, pods, and containers.\nCredential or session revocation does not prove that compromised code stopped executing, and process termination does not revoke the identities or artifacts that could start new execution."
+                    },
+                    {
+                        "id": "AID-E-005",
+                        "comparison": "AID-E-001 evicts identity-plane credentials, sessions, principals, and grants; AID-E-005 removes durable application and agent state.\nApplication session records, conversational memory, webhook or tool registrations, queues, and schedules require separate teardown even after authentication objects are revoked."
+                    },
+                    {
+                        "id": "AID-R-003.001",
+                        "comparison": "AID-E-001 invalidates compromised or prior authentication and authorization state; AID-R-003.001 creates a new trusted interactive session after eviction.\nSuccessful reauthentication does not prove that the old credential, token, grant, or session population was revoked, and eviction does not itself establish a recovered session."
+                    },
+                    {
+                        "id": "AID-I-003",
+                        "comparison": "AID-E-001 authoritatively and durably revokes compromised credentials, sessions, principals, issuance paths, and delegated grants; AID-I-003 applies reversible quarantine, safe-mode downgrade, throttling, or action containment while investigation or recovery proceeds.\nContainment does not prove identity-plane eviction, and revocation does not replace immediate bounded control of the affected workload, session, or action."
+                    },
+                    {
+                        "id": "AID-H-017.008",
+                        "comparison": "AID-E-001 owns incident-time credential, token, principal and grant eviction. AID-H-017.008 requests the appropriate access-lifecycle action and separately verifies external resource disposition; one result never substitutes for the other."
+                    }
+                ]
             },
           "defendsAgainst": [
               {
@@ -38,7 +42,8 @@ export const evictTactic = {
                       "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
                       "AML.T0091.001 Use Alternate Authentication Material: Web Session Cookie",
                       "AML.T0121 AI Agent Environment Reconstruction",
-                      "AML.T0125 Create Account"
+                      "AML.T0125 Create Account",
+                      "AML.T0139 Compromise Accounts"
                   ]
               },
               {
@@ -180,7 +185,8 @@ export const evictTactic = {
                                 "AML.T0121 AI Agent Environment Reconstruction (revoked incident-scoped long-lived credentials remain unusable when an agent attempts to recover them during reconstruction)",
                                 "AML.T0055 Unsecured Credentials (rotation or disablement neutralizes exposed passwords, keys, and long-lived certificates)",
                                 "AML.T0091 Use Alternate Authentication Material (revoking long-lived hashes, tickets, keys, or certificates stops their continued use; issued tokens and sessions remain AID-E-001.002)",
-                                "AML.T0090 OS Credential Dumping (rotation or disablement neutralizes dumped passwords, hashes, keys, and long-lived credentials)"
+                                "AML.T0090 OS Credential Dumping (rotation or disablement neutralizes dumped passwords, hashes, keys, and long-lived credentials)",
+                                "AML.T0139 Compromise Accounts (confirmed compromised long-lived credentials are removed and independently probed)"
                   ]
                 },
                 {
@@ -336,7 +342,8 @@ export const evictTactic = {
                     "AML.T0090 OS Credential Dumping (revoking dumped access tokens and session material stops their continued use)",
                     "AML.T0091 Use Alternate Authentication Material (immediately revoking stolen access and refresh tokens)",
                     "AML.T0091.000 Use Alternate Authentication Material: Application Access Token (real-time JWT/API token revocation)",
-                    "AML.T0091.001 Use Alternate Authentication Material: Web Session Cookie (real-time session invalidation terminates stolen-cookie access)"
+                    "AML.T0091.001 Use Alternate Authentication Material: Web Session Cookie (real-time session invalidation terminates stolen-cookie access)",
+                    "AML.T0139 Compromise Accounts (issued sessions and tokens for a compromised AI account are revoked and read back)"
                   ]
                 },
                 {
@@ -463,7 +470,8 @@ export const evictTactic = {
                             "items": [
                                 "AML.T0012 Valid Accounts (authoritative principal disablement blocks fresh authentication and issuance for the compromised AI-agent or workload identity)",
                                 "AML.T0121 AI Agent Environment Reconstruction (disabled principals cannot re-obtain credentials to rebuild their access after eviction)",
-                                "AML.T0125 Create Account (rogue agent or workload principals are disabled at every authoritative control plane)"
+                                "AML.T0125 Create Account (rogue agent or workload principals are disabled at every authoritative control plane)",
+                                "AML.T0139 Compromise Accounts (compromised workload principals and new issuance are disabled)"
                   ]
                 },
                 {
@@ -889,12 +897,12 @@ export const evictTactic = {
               {
                   "framework": "MITRE ATLAS",
                   "items": [
-                      "AML.T0010 AI Supply Chain Compromise",
-                      "AML.T0010.001 AI Supply Chain Compromise: AI Software",
-                      "AML.T0010.002 AI Supply Chain Compromise: Data",
-                      "AML.T0010.003 AI Supply Chain Compromise: Model",
-                      "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
-                      "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+                      "AML.T0010 Supply Chain Compromise",
+                      "AML.T0010.001 Supply Chain Compromise: Software",
+                      "AML.T0010.002 Supply Chain Compromise: Data Repository",
+                      "AML.T0010.003 Supply Chain Compromise: Model Repository",
+                      "AML.T0010.004 Supply Chain Compromise: Container Registry",
+                      "AML.T0010.005 Supply Chain Compromise: AI Agent Tool",
                       "AML.T0011 User Execution",
                       "AML.T0011.000 User Execution: Unsafe AI Artifacts",
                       "AML.T0011.001 User Execution: Malicious Package",
@@ -916,7 +924,8 @@ export const evictTactic = {
                       "AML.T0115 Publish Poisoned AI Artifacts",
                       "AML.T0115.001 Publish Poisoned AI Artifacts: Models",
                       "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools",
-                      "AML.T0121 AI Agent Environment Reconstruction"
+                      "AML.T0121 AI Agent Environment Reconstruction",
+                      "AML.T0142 Event Triggered Execution"
                   ]
               },
               {
@@ -1054,8 +1063,8 @@ export const evictTactic = {
                                 "AML.T0011 User Execution",
                                 "AML.T0011.000 User Execution: Unsafe AI Artifacts",
                                 "AML.T0018.003 Manipulate AI Model: Modify Prompt Construction Logic",
-                                "AML.T0010 AI Supply Chain Compromise (quarantine removes a confirmed compromised model artifact from serving eligibility)",
-                                "AML.T0010.003 AI Supply Chain Compromise: Model (quarantine makes the exact compromised supply-chain model digest ineligible for serving)",
+                                "AML.T0010 Supply Chain Compromise (quarantine removes a confirmed compromised model artifact from serving eligibility)",
+                                "AML.T0010.003 Supply Chain Compromise: Model Repository (quarantine makes the exact compromised supply-chain model digest ineligible for serving)",
                                 "AML.T0018 Manipulate AI Model",
                                 "AML.T0018.000 Manipulate AI Model: Poison AI Model",
                                 "AML.T0076 Corrupt AI Model",
@@ -1166,12 +1175,12 @@ export const evictTactic = {
                 {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0010 AI Supply Chain Compromise (exact source-record or graph eviction removes the signed compromised data population)",
+                                "AML.T0010 Supply Chain Compromise (exact source-record or graph eviction removes the signed compromised data population)",
                                 "AML.T0020 Training Data Poisoning",
                                 "AML.T0059 Erode Dataset Integrity",
                                 "AML.T0070 RAG Poisoning",
                                 "AML.T0071 False RAG Entry Injection (manifest-bound graph eviction removes the exact injected false entry before governed index rebuild)",
-                                "AML.T0010.002 AI Supply Chain Compromise: Data"
+                                "AML.T0010.002 Supply Chain Compromise: Data Repository"
                   ]
                 },
                 {
@@ -1303,16 +1312,17 @@ export const evictTactic = {
                                 "AML.T0115 Publish Poisoned AI Artifacts",
                                 "AML.T0110.001 AI Agent Tool Poisoning: Implementation",
                                 "AML.T0110.000 AI Agent Tool Poisoning: Definition and Instructions",
-                                "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
+                                "AML.T0010.005 Supply Chain Compromise: AI Agent Tool",
                                 "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
-                                "AML.T0010 AI Supply Chain Compromise (eviction removes confirmed malicious code, dependency, tool, or deployment artifacts)",
-                                "AML.T0010.001 AI Supply Chain Compromise: AI Software (manifest-bound eviction removes the confirmed malicious framework or dependency artifact)",
-                                "AML.T0010.004 AI Supply Chain Compromise: Container Registry (manifest-bound eviction removes the confirmed malicious image and tombstones the affected registry reference)",
+                                "AML.T0010 Supply Chain Compromise (eviction removes confirmed malicious code, dependency, tool, or deployment artifacts)",
+                                "AML.T0010.001 Supply Chain Compromise: Software (manifest-bound eviction removes the confirmed malicious framework or dependency artifact)",
+                                "AML.T0010.004 Supply Chain Compromise: Container Registry (manifest-bound eviction removes the confirmed malicious image and tombstones the affected registry reference)",
                                 "AML.T0011.001 User Execution: Malicious Package",
                                 "AML.T0115.002 Publish Poisoned AI Artifacts: AI Agent Tools (cleanup removes poisoned agent tools)",
                                 "AML.T0081 Modify AI Agent Configuration",
                                 "AML.T0110 AI Agent Tool Poisoning",
-                                "AML.T0121 AI Agent Environment Reconstruction (removes file-backed persistence and startup code an agent would use to rebuild its environment)"
+                                "AML.T0121 AI Agent Environment Reconstruction (removes file-backed persistence and startup code an agent would use to rebuild its environment)",
+                                "AML.T0142 Event Triggered Execution (the signed eviction manifest removes confirmed malicious startup hooks and verifies subsequent interpreter starts)"
                   ]
                 },
                 {
@@ -1380,8 +1390,7 @@ export const evictTactic = {
                 {
                   "id": "AID-E-003.003-G001",
                   "implementation": "Evict confirmed malicious deployable configuration and file-backed startup persistence objects from every authoritative source and loaded runtime.",
-                  "howTo": "<h5>When this method applies</h5><p>Use this path for signed incident-manifest entries that are deployable configuration or file-backed startup persistence: application or runtime configuration, service-unit or init definitions, startup scripts, admission or launch manifests, and equivalent file-backed objects that cause malicious code to load. Durable application schedules, queue rows, webhook registrations, and tool registrations are not file-backed persistence for this control and belong to <code>AID-E-005</code>.</p><h5>Evict from authoritative and loaded populations</h5><p>A version-pinned adapter selected from trusted configuration exports the exact object and every referenced executable or configuration byte to write-once forensic storage, then re-reads immutable identity, version, path, owner, and digest. It removes or replaces only the signed object in the authoritative source, records a deny for the malicious digest where promotion or admission supports one, rebuilds and signs the clean deployable artifact, and conditionally reconciles every declared target. Host-file changes use no-follow descriptors, locked inode checks, and atomic replacement; deployment changes use immutable image, UID, and resource-version preconditions. Never execute incident-supplied command text or treat deletion from one mutable runtime as eviction.</p><h5>Independent readback</h5><p>A separately credentialed verifier enumerates the complete signed source, artifact, deployment, replica, and runtime-loaded population. It requires the malicious configuration or startup digest to be absent, the approved replacement digest and effective values to match, no equivalent startup path to have appeared, and declared clean controls to remain loadable. Missing targets, unavailable runtime introspection, digest drift, or a still-running malicious process does not pass; active runtime termination is handed to <code>AID-E-002</code>.</p>"
-                },
+                  "howTo": "<h5>When this method applies</h5><p>Use this path for signed incident-manifest entries that are deployable configuration or file-backed startup persistence: application or runtime configuration, service-unit or init definitions, startup scripts, admission or launch manifests, and equivalent file-backed objects that cause malicious code to load. Durable application schedules, queue rows, webhook registrations, and tool registrations are not file-backed persistence for this control and belong to <code>AID-E-005</code>.</p><h5>Evict from authoritative and loaded populations</h5><p>A version-pinned adapter selected from trusted configuration exports the exact object and every referenced executable or configuration byte to write-once forensic storage, then re-reads immutable identity, version, path, owner, and digest. It removes or replaces only the signed object in the authoritative source, records a deny for the malicious digest where promotion or admission supports one, rebuilds and signs the clean deployable artifact, and conditionally reconciles every declared target. Host-file changes use no-follow descriptors, locked inode checks, and atomic replacement; deployment changes use immutable image, UID, and resource-version preconditions. Never execute incident-supplied command text or treat deletion from one mutable runtime as eviction.</p><h5>Independent readback</h5><p>A separately credentialed verifier enumerates the complete signed source, artifact, deployment, replica, and runtime-loaded population. It requires the malicious configuration or startup digest to be absent, the approved replacement digest and effective values to match, no equivalent startup path to have appeared, and declared clean controls to remain loadable. Missing targets, unavailable runtime introspection, digest drift, or a still-running malicious process does not pass; active runtime termination is handed to <code>AID-E-002</code>.</p><h5>Remove event-triggered startup persistence without executing it</h5><p>For confirmed malicious persistence in an AI training, evaluation, inference or tool environment, include interpreter startup roots and execution hooks in the signed exact-object eviction manifest: executable .pth lines, sitecustomize.py, usercustomize.py, and .start entry points on CPython 3.15 and later (PEP 829), plus application hooks and the actual launcher's environment/configuration. PYTHONSTARTUP is an interactive-startup surface; it is not run by every non-interactive script invocation. Inventory target paths from the signed deployment and interpreter configuration before touching them; never discover them by starting the suspect interpreter with normal site initialization. Use the existing no-follow/digest-conditional eviction path and rebuild the trusted environment rather than deleting every .pth file.</p><pre><code>python -I -S -c \"import json, sys, sysconfig; print(json.dumps({'version': sys.version, 'no_site': sys.flags.no_site, 'paths': sysconfig.get_paths()}, sort_keys=True))\"</code></pre><p>Run that diagnostic only with an independently verified interpreter and standard library in the controlled recovery environment. -I alone still permits system site processing. In an ordinary configuration -S suppresses automatic site initialization, but Windows embeddable path overrides can explicitly enable import site; verify the effective interpreter configuration rather than treating flags as a security boundary. After eviction, the independent verifier starts each declared interpreter/application path in a disposable, credentialless, network-denied replica with ordinary production startup semantics, exercises the actual trigger and checks that the malicious effect and loaded digest are absent while approved startup hooks still work. A scan using -S cannot prove that normal startup is clean. Retain source/image/package and replica readbacks; running-process termination remains AID-E-002 and removal of durable application registrations remains AID-E-005. See <a href=\"https://docs.python.org/3/library/site.html\" target=\"_blank\" rel=\"noopener noreferrer\">Python site startup behavior</a> and <a href=\"https://docs.python.org/3/using/cmdline.html#envvar-PYTHONSTARTUP\" target=\"_blank\" rel=\"noopener noreferrer\">interactive startup semantics</a>.</p><h5>Windows embeddable path configuration</h5><p>Include python._pth and versioned DLL-based files such as python315._pth in the exact-object manifest when present. These files override module search paths and can opt into site processing with the permitted import site line; they are not arbitrary-code .pth files. The DLL-based path file takes precedence over the executable-based file. Independently compare both file bytes and all listed module roots with the approved package, then verify normal startup in the disposable replica. Do not remove an approved path override merely because it exists. <a href=\"https://docs.python.org/3/library/sys_path_init.html#pth-files\" target=\"_blank\" rel=\"noopener noreferrer\">Python path override semantics</a>; <a href=\"https://peps.python.org/pep-0829/\" target=\"_blank\" rel=\"noopener noreferrer\">PEP 829 startup entry points</a>.</p>"},
                 {
                   "id": "AID-E-003.003-G002",
                   "implementation": "Evict confirmed malicious code, package, image, and file artifacts from authoritative deployable sources and verify that no runtime can load their digests.",
@@ -1444,8 +1453,8 @@ export const evictTactic = {
                                 "AML.T0018 Manipulate AI Model",
                                 "AML.T0018.002 Manipulate AI Model: Embed Malware",
                                 "AML.T0115.001 Publish Poisoned AI Artifacts: Models",
-                                "AML.T0010 AI Supply Chain Compromise",
-                                "AML.T0010.003 AI Supply Chain Compromise: Model (adapter quarantine removes the compromised model component from registries and serving)"
+                                "AML.T0010 Supply Chain Compromise",
+                                "AML.T0010.003 Supply Chain Compromise: Model Repository (adapter quarantine removes the compromised model component from registries and serving)"
                   ]
                 },
                 {
@@ -1564,15 +1573,15 @@ export const evictTactic = {
                       "framework": "MITRE ATLAS",
                       "items": [
                         "AML.T0011 User Execution",
-                        "AML.T0010 AI Supply Chain Compromise (independent readback and exploit replay prove the signed supply-chain fix is effective across the affected release population)",
-                        "AML.T0010.001 AI Supply Chain Compromise: AI Software (the verifier proves the approved AI-software fix is deployed and the exact exploit no longer succeeds)",
+                        "AML.T0010 Supply Chain Compromise (independent readback and exploit replay prove the signed supply-chain fix is effective across the affected release population)",
+                        "AML.T0010.001 Supply Chain Compromise: Software (the verifier proves the approved AI-software fix is deployed and the exact exploit no longer succeeds)",
                         "AML.T0011.001 User Execution: Malicious Package (the verifier proves the package removal, deny, or admission fix blocks the exact malicious-package path)",
                         "AML.T0072 Cyber Communication Channel (independent replay proves the fixed path can no longer establish the incident's command-and-control channel)",
                         "AML.T0031 Erode AI Model Integrity (adversarial replay proves the repaired input path no longer reaches the integrity-eroding model effect)",
                         "AML.T0105 Escape to Host (independent boundary replay proves the approved isolation fix prevents the exact host-escape path)",
                         "AML.T0106 Exploitation for Credential Access (version readback and exact exploit replay prove the credential-access vulnerability is closed)",
                         "AML.T0107 Exploitation for Defense Evasion (effective control readback and bypass replay prove the defense-evasion vulnerability is closed)",
-                        "AML.T0010.004 AI Supply Chain Compromise: Container Registry (effective-registry readback and replay prove the overwritten-image path is closed)",
+                        "AML.T0010.004 Supply Chain Compromise: Container Registry (effective-registry readback and replay prove the overwritten-image path is closed)",
                         "AML.T0081 Modify AI Agent Configuration (effective configuration readback and tamper replay prove the exploited write path is closed)"
                     ]
                 },
@@ -1692,21 +1701,25 @@ export const evictTactic = {
             ],
             "description": "When compromised durable application state is identified, remove its explicitly scoped records after active runtime containment when that containment is applicable. This control remains independently applicable when no runtime execution exists.<br/><br/><strong>Eviction actions</strong><ul><li>Delete scoped application session records without claiming bearer-token, authorization-server, or gateway-session revocation</li><li>Purge tainted durable conversational and agent memory</li><li>Remove unauthorized webhook and tool registrations</li><li>Cancel unauthorized queued jobs and schedule registrations</li></ul>",
             "scopeBoundary": {
-              "responsibility": "Owns teardown of explicitly scoped durable application sessions, conversational or agent memory, webhook and tool registrations, nonterminal queue records, and schedule registrations after compromise. It remains applicable when no active runtime exists and never claims identity-plane revocation or active worker termination.",
-              "relatedTechniques": [
-                {
-                  "id": "AID-E-001",
-                  "comparison": "AID-E-005 deletes durable application and agent state; AID-E-001 revokes credentials, authentication sessions, principals, and delegated grants.\nApplication teardown does not prove identity-plane eviction, and revoked identity objects do not remove durable state that could reload or reschedule compromised behavior."
-                },
-                {
-                  "id": "AID-E-002",
-                  "comparison": "AID-E-005 removes durable queue, schedule, session, memory, and registration records; AID-E-002 terminates active processes, runs, execution leases, jobs, pods, and containers.\nDeleting a durable job record does not terminate a worker that already acquired it, while runtime termination does not remove the record that can launch replacement work."
-                },
-                {
-                  "id": "AID-R-003.002",
-                  "comparison": "AID-E-005 removes compromised durable conversational and agent state; AID-R-003.002 restores an authority-selected clean snapshot into a new isolated namespace.\nTeardown is an eviction result, while restoration must separately prove that it excludes tainted, cross-tenant, post-cutoff, secret-bearing, and credential-bearing state."
-                }
-              ]
+                "responsibility": "Owns teardown of explicitly scoped durable application sessions, conversational or agent memory, webhook and tool registrations, nonterminal queue records, and schedule registrations after compromise. It remains applicable when no active runtime exists and never claims identity-plane revocation or active worker termination.",
+                "relatedTechniques": [
+                    {
+                        "id": "AID-E-001",
+                        "comparison": "AID-E-005 deletes durable application and agent state; AID-E-001 revokes credentials, authentication sessions, principals, and delegated grants.\nApplication teardown does not prove identity-plane eviction, and revoked identity objects do not remove durable state that could reload or reschedule compromised behavior."
+                    },
+                    {
+                        "id": "AID-E-002",
+                        "comparison": "AID-E-005 removes durable queue, schedule, session, memory, and registration records; AID-E-002 terminates active processes, runs, execution leases, jobs, pods, and containers.\nDeleting a durable job record does not terminate a worker that already acquired it, while runtime termination does not remove the record that can launch replacement work."
+                    },
+                    {
+                        "id": "AID-R-003.002",
+                        "comparison": "AID-E-005 removes compromised durable conversational and agent state; AID-R-003.002 restores an authority-selected clean snapshot into a new isolated namespace.\nTeardown is an eviction result, while restoration must separately prove that it excludes tainted, cross-tenant, post-cutoff, secret-bearing, and credential-bearing state."
+                    },
+                    {
+                        "id": "AID-H-017.008",
+                        "comparison": "AID-E-005 tears down incident-scoped compromised durable application state and registrations; AID-H-017.008 enforces normal authorized run lifetimes even without an incident. Route a confirmed compromised registration to its incident owner without double-counting the same deletion."
+                    }
+                ]
             },
             "phase": [
                 "response"

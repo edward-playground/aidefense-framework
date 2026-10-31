@@ -33,7 +33,7 @@ function entityById(id) {
 }
 
 test('OWASP LLM registry has one complete current catalog and a one-to-one legacy migration', () => {
-    assert.equal(frameworkMigrations.registryVersion, '2026-09-11');
+    assert.equal(frameworkMigrations.registryVersion, '2026-10-30');
     assert.equal(catalog.activeEdition, '2026');
     assert.equal(catalog.activeLabel, 'OWASP LLM Top 10 2026');
     assert.equal(catalog.sourceArtifact.fileName, 'OWASP-GenAI-LLM-Top-10-2026-v1.0.pdf');
@@ -283,8 +283,11 @@ test('WebMCP query planning preserves generic lookup and prioritizes canonical m
     assert.equal(unknownOwasp.canonicalThreat, null);
 
     const nonOwasp = buildThreatQueryPlan('AML.T0051');
-    assert.equal(nonOwasp.resolution, null);
+    assert.equal(nonOwasp.resolution.status, 'canonical');
     assert.deepEqual(nonOwasp.queries, ['AML.T0051']);
+    const generic = buildThreatQueryPlan('generic unstructured threat');
+    assert.equal(generic.resolution, null);
+    assert.deepEqual(generic.queries, ['generic unstructured threat']);
 
     const merged = mergeThreatHits(
         [
@@ -304,7 +307,7 @@ test('WebMCP query planning preserves generic lookup and prioritizes canonical m
 
 test('every active framework entity uses only canonical OWASP LLM 2026 items', () => {
     const entities = allEntities();
-    assert.equal(entities.length, 367);
+    assert.equal(entities.length, 369);
 
     for (const entity of entities) {
         const current = entity.defendsAgainst.filter(
@@ -449,7 +452,7 @@ test('reviewed hardening corrections preserve their enforcement contracts', () =
         mapping => mapping.framework === 'MITRE ATLAS'
     );
     assert.ok(atlas.items.some(item => item.startsWith(
-        'AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool'
+        'AML.T0010.005 Supply Chain Compromise: AI Agent Tool'
     )));
     const broker = workspaceGate.implementationGuidance
         .find(item => item.id === 'AID-H-021.005-G002').howTo;

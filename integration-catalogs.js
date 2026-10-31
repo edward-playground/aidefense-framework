@@ -8,13 +8,13 @@ export const integrationCatalogs = {
     "source_framework_label": "MITRE ATLAS",
     "display_name": "MITRE ATLAS",
     "upstream": "The MITRE Corporation",
-    "upstream_version": "2026.09",
+    "upstream_version": "2026.10",
     "upstream_url": "https://atlas.mitre.org/",
     "source_artifact": {
-      "url": "https://raw.githubusercontent.com/mitre-atlas/atlas-data/3259f388d19cbcca11bacf12a0ef97f4198f711b/dist/v6/ATLAS-2026.09.yaml",
-      "git_revision": "3259f388d19cbcca11bacf12a0ef97f4198f711b",
-      "sha256": "935efa93e28294432d3e2f537eb94991ef8d1f8c58341cd360ea3321ddb66688",
-      "data_format_version": "6.0.0"
+      "url": "https://raw.githubusercontent.com/mitre-atlas/atlas-data/f56c1468731d6428e5bf875263b4643b46d67437/dist/v6/ATLAS-2026.10.yaml",
+      "git_revision": "f56c1468731d6428e5bf875263b4643b46d67437",
+      "sha256": "ac41ee9f99a47084ba5fdfc77ae83a28687e12390240fffeb37df7914ffe142d",
+      "data_format_version": "6.1.0"
     },
     "license_notice": "MITRE ATLAS data, Copyright 2021-2026 The MITRE Corporation, licensed under the Apache License, Version 2.0. MITRE and MITRE ATLAS are trademarks of The MITRE Corporation; use of this material does not imply endorsement. Identifiers, names and structure only; technique descriptions are not reproduced. See THIRD_PARTY_NOTICES.md.",
     "item_name_rule": "Sub-technique names are \"<parent name>: <sub-technique name>\", matching the AIDEFEND source strings.",
@@ -211,37 +211,41 @@ export const integrationCatalogs = {
       },
       {
         "external_id": "AML.T0005",
-        "name": "Create Proxy AI Model",
-        "short_name": "Create Proxy AI Model",
+        "name": "Replicate AI Model Behavior",
+        "short_name": "Replicate AI Model Behavior",
         "parent_id": null,
         "tactic_ids": [
+          "AML.TA0003",
           "AML.TA0001"
         ]
       },
       {
         "external_id": "AML.T0005.000",
-        "name": "Create Proxy AI Model: Train Proxy via Gathered AI Artifacts",
-        "short_name": "Train Proxy via Gathered AI Artifacts",
+        "name": "Replicate AI Model Behavior: Replicate Behavior from Gathered AI Artifacts",
+        "short_name": "Replicate Behavior from Gathered AI Artifacts",
         "parent_id": "AML.T0005",
         "tactic_ids": [
+          "AML.TA0003",
           "AML.TA0001"
         ]
       },
       {
         "external_id": "AML.T0005.001",
-        "name": "Create Proxy AI Model: Train Proxy via Replication",
-        "short_name": "Train Proxy via Replication",
+        "name": "Replicate AI Model Behavior: Replicate Behavior from Model Outputs",
+        "short_name": "Replicate Behavior from Model Outputs",
         "parent_id": "AML.T0005",
         "tactic_ids": [
+          "AML.TA0003",
           "AML.TA0001"
         ]
       },
       {
         "external_id": "AML.T0005.002",
-        "name": "Create Proxy AI Model: Use Pre-Trained Model",
-        "short_name": "Use Pre-Trained Model",
+        "name": "Replicate AI Model Behavior: Adapt Existing Model to Replicate Behavior",
+        "short_name": "Adapt Existing Model to Replicate Behavior",
         "parent_id": "AML.T0005",
         "tactic_ids": [
+          "AML.TA0003",
           "AML.TA0001"
         ]
       },
@@ -364,8 +368,8 @@ export const integrationCatalogs = {
       },
       {
         "external_id": "AML.T0010",
-        "name": "AI Supply Chain Compromise",
-        "short_name": "AI Supply Chain Compromise",
+        "name": "Supply Chain Compromise",
+        "short_name": "Supply Chain Compromise",
         "parent_id": null,
         "tactic_ids": [
           "AML.TA0004"
@@ -373,7 +377,7 @@ export const integrationCatalogs = {
       },
       {
         "external_id": "AML.T0010.000",
-        "name": "AI Supply Chain Compromise: Hardware",
+        "name": "Supply Chain Compromise: Hardware",
         "short_name": "Hardware",
         "parent_id": "AML.T0010",
         "tactic_ids": [
@@ -382,8 +386,8 @@ export const integrationCatalogs = {
       },
       {
         "external_id": "AML.T0010.001",
-        "name": "AI Supply Chain Compromise: AI Software",
-        "short_name": "AI Software",
+        "name": "Supply Chain Compromise: Software",
+        "short_name": "Software",
         "parent_id": "AML.T0010",
         "tactic_ids": [
           "AML.TA0004"
@@ -391,8 +395,8 @@ export const integrationCatalogs = {
       },
       {
         "external_id": "AML.T0010.002",
-        "name": "AI Supply Chain Compromise: Data",
-        "short_name": "Data",
+        "name": "Supply Chain Compromise: Data Repository",
+        "short_name": "Data Repository",
         "parent_id": "AML.T0010",
         "tactic_ids": [
           "AML.TA0004"
@@ -400,8 +404,8 @@ export const integrationCatalogs = {
       },
       {
         "external_id": "AML.T0010.003",
-        "name": "AI Supply Chain Compromise: Model",
-        "short_name": "Model",
+        "name": "Supply Chain Compromise: Model Repository",
+        "short_name": "Model Repository",
         "parent_id": "AML.T0010",
         "tactic_ids": [
           "AML.TA0004"
@@ -409,7 +413,7 @@ export const integrationCatalogs = {
       },
       {
         "external_id": "AML.T0010.004",
-        "name": "AI Supply Chain Compromise: Container Registry",
+        "name": "Supply Chain Compromise: Container Registry",
         "short_name": "Container Registry",
         "parent_id": "AML.T0010",
         "tactic_ids": [
@@ -418,7 +422,7 @@ export const integrationCatalogs = {
       },
       {
         "external_id": "AML.T0010.005",
-        "name": "AI Supply Chain Compromise: AI Agent Tool",
+        "name": "Supply Chain Compromise: AI Agent Tool",
         "short_name": "AI Agent Tool",
         "parent_id": "AML.T0010",
         "tactic_ids": [
@@ -601,6 +605,15 @@ export const integrationCatalogs = {
         ]
       },
       {
+        "external_id": "AML.T0017.003",
+        "name": "Develop Capabilities: Malware",
+        "short_name": "Malware",
+        "parent_id": "AML.T0017",
+        "tactic_ids": [
+          "AML.TA0003"
+        ]
+      },
+      {
         "external_id": "AML.T0018",
         "name": "Manipulate AI Model",
         "short_name": "Manipulate AI Model",
@@ -673,33 +686,6 @@ export const integrationCatalogs = {
         "name": "Exfiltration via AI Inference API",
         "short_name": "Exfiltration via AI Inference API",
         "parent_id": null,
-        "tactic_ids": [
-          "AML.TA0010"
-        ]
-      },
-      {
-        "external_id": "AML.T0024.000",
-        "name": "Exfiltration via AI Inference API: Infer Training Data Membership",
-        "short_name": "Infer Training Data Membership",
-        "parent_id": "AML.T0024",
-        "tactic_ids": [
-          "AML.TA0010"
-        ]
-      },
-      {
-        "external_id": "AML.T0024.001",
-        "name": "Exfiltration via AI Inference API: Invert AI Model",
-        "short_name": "Invert AI Model",
-        "parent_id": "AML.T0024",
-        "tactic_ids": [
-          "AML.TA0010"
-        ]
-      },
-      {
-        "external_id": "AML.T0024.002",
-        "name": "Exfiltration via AI Inference API: Extract AI Model",
-        "short_name": "Extract AI Model",
-        "parent_id": "AML.T0024",
         "tactic_ids": [
           "AML.TA0010"
         ]
@@ -1071,24 +1057,6 @@ export const integrationCatalogs = {
         ]
       },
       {
-        "external_id": "AML.T0056",
-        "name": "Extract LLM System Prompt",
-        "short_name": "Extract LLM System Prompt",
-        "parent_id": null,
-        "tactic_ids": [
-          "AML.TA0010"
-        ]
-      },
-      {
-        "external_id": "AML.T0057",
-        "name": "LLM Data Leakage",
-        "short_name": "LLM Data Leakage",
-        "parent_id": null,
-        "tactic_ids": [
-          "AML.TA0010"
-        ]
-      },
-      {
         "external_id": "AML.T0059",
         "name": "Erode Dataset Integrity",
         "short_name": "Erode Dataset Integrity",
@@ -1435,6 +1403,24 @@ export const integrationCatalogs = {
         "external_id": "AML.T0085.001",
         "name": "Data from AI Services: AI Agent Tools",
         "short_name": "AI Agent Tools",
+        "parent_id": "AML.T0085",
+        "tactic_ids": [
+          "AML.TA0009"
+        ]
+      },
+      {
+        "external_id": "AML.T0085.002",
+        "name": "Data from AI Services: Conversation Context and Memory",
+        "short_name": "Conversation Context and Memory",
+        "parent_id": "AML.T0085",
+        "tactic_ids": [
+          "AML.TA0009"
+        ]
+      },
+      {
+        "external_id": "AML.T0085.003",
+        "name": "Data from AI Services: System Instructions",
+        "short_name": "System Instructions",
         "parent_id": "AML.T0085",
         "tactic_ids": [
           "AML.TA0009"
@@ -1988,6 +1974,142 @@ export const integrationCatalogs = {
         "parent_id": null,
         "tactic_ids": [
           "AML.TA0007"
+        ]
+      },
+      {
+        "external_id": "AML.T0135",
+        "name": "Outputs from AI Models",
+        "short_name": "Outputs from AI Models",
+        "parent_id": null,
+        "tactic_ids": [
+          "AML.TA0009"
+        ]
+      },
+      {
+        "external_id": "AML.T0136",
+        "name": "Exfiltration via AI User Interface",
+        "short_name": "Exfiltration via AI User Interface",
+        "parent_id": null,
+        "tactic_ids": [
+          "AML.TA0010"
+        ]
+      },
+      {
+        "external_id": "AML.T0137",
+        "name": "Training Data Information from AI Models",
+        "short_name": "Training Data Information from AI Models",
+        "parent_id": null,
+        "tactic_ids": [
+          "AML.TA0009"
+        ]
+      },
+      {
+        "external_id": "AML.T0137.000",
+        "name": "Training Data Information from AI Models: Infer Membership",
+        "short_name": "Infer Membership",
+        "parent_id": "AML.T0137",
+        "tactic_ids": [
+          "AML.TA0009"
+        ]
+      },
+      {
+        "external_id": "AML.T0137.001",
+        "name": "Training Data Information from AI Models: Infer Properties",
+        "short_name": "Infer Properties",
+        "parent_id": "AML.T0137",
+        "tactic_ids": [
+          "AML.TA0009"
+        ]
+      },
+      {
+        "external_id": "AML.T0137.002",
+        "name": "Training Data Information from AI Models: Invert AI Model",
+        "short_name": "Invert AI Model",
+        "parent_id": "AML.T0137",
+        "tactic_ids": [
+          "AML.TA0009"
+        ]
+      },
+      {
+        "external_id": "AML.T0137.003",
+        "name": "Training Data Information from AI Models: Extract Memorized Data",
+        "short_name": "Extract Memorized Data",
+        "parent_id": "AML.T0137",
+        "tactic_ids": [
+          "AML.TA0009"
+        ]
+      },
+      {
+        "external_id": "AML.T0138",
+        "name": "Indicator Removal",
+        "short_name": "Indicator Removal",
+        "parent_id": null,
+        "tactic_ids": [
+          "AML.TA0007"
+        ]
+      },
+      {
+        "external_id": "AML.T0139",
+        "name": "Compromise Accounts",
+        "short_name": "Compromise Accounts",
+        "parent_id": null,
+        "tactic_ids": [
+          "AML.TA0003"
+        ]
+      },
+      {
+        "external_id": "AML.T0140",
+        "name": "Centralized AI Service Request Routing",
+        "short_name": "Centralized AI Service Request Routing",
+        "parent_id": null,
+        "tactic_ids": [
+          "AML.TA0007"
+        ]
+      },
+      {
+        "external_id": "AML.T0141",
+        "name": "AI Service Request Metadata Sanitization",
+        "short_name": "AI Service Request Metadata Sanitization",
+        "parent_id": null,
+        "tactic_ids": [
+          "AML.TA0007"
+        ]
+      },
+      {
+        "external_id": "AML.T0142",
+        "name": "Event Triggered Execution",
+        "short_name": "Event Triggered Execution",
+        "parent_id": null,
+        "tactic_ids": [
+          "AML.TA0006"
+        ]
+      },
+      {
+        "external_id": "AML.T0143",
+        "name": "LLM Prompt Propagation",
+        "short_name": "LLM Prompt Propagation",
+        "parent_id": null,
+        "tactic_ids": [
+          "AML.TA0015"
+        ]
+      },
+      {
+        "external_id": "AML.T0144",
+        "name": "Recover AI Model Internals",
+        "short_name": "Recover AI Model Internals",
+        "parent_id": null,
+        "tactic_ids": [
+          "AML.TA0008",
+          "AML.TA0009"
+        ]
+      },
+      {
+        "external_id": "AML.T0145",
+        "name": "Poison AI Agent Learning Environment",
+        "short_name": "Poison AI Agent Learning Environment",
+        "parent_id": null,
+        "tactic_ids": [
+          "AML.TA0006"
         ]
       }
     ]

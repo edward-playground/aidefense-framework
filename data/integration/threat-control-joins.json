@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20261015",
-  "data_version": "2026.10.15",
+  "aidefend_version": "1.20261101",
+  "data_version": "2026.11.01",
   "identity_rule": "Resolve each record against threat-catalogs/<framework_key>.json by external_id. item_raw is the exact AIDEFEND source string, kept for traceability only. rationale is AIDEFEND-authored context for that pair, or null.",
   "frameworks": [
     "mitre-atlas",
@@ -10,8 +10,8 @@
     "owasp-agentic-top-10-2026"
   ],
   "counts": {
-    "records": 203,
-    "control_pairs": 2407
+    "records": 216,
+    "control_pairs": 2484
   },
   "joins": [
     {
@@ -56,64 +56,104 @@
     {
       "framework_key": "mitre-atlas",
       "external_id": "AML.T0005",
-      "item_locator": "AML.T0005 Create Proxy AI Model",
-      "name": "Create Proxy AI Model",
+      "item_locator": "AML.T0005 Replicate AI Model Behavior",
+      "name": "Replicate AI Model Behavior",
       "controls": [
+        {
+          "id": "AID-H-006.003",
+          "rationale": null,
+          "item_raw": "AML.T0005 Replicate AI Model Behavior"
+        },
+        {
+          "id": "AID-H-013.003",
+          "rationale": null,
+          "item_raw": "AML.T0005 Replicate AI Model Behavior"
+        },
+        {
+          "id": "AID-D-005.003",
+          "rationale": null,
+          "item_raw": "AML.T0005 Replicate AI Model Behavior"
+        },
+        {
+          "id": "AID-I-003.002",
+          "rationale": null,
+          "item_raw": "AML.T0005 Replicate AI Model Behavior"
+        },
         {
           "id": "AID-DV-001",
           "rationale": "honeypot attracts adversaries attempting model replication via API queries",
-          "item_raw": "AML.T0005 Create Proxy AI Model (honeypot attracts adversaries attempting model replication via API queries)"
+          "item_raw": "AML.T0005 Replicate AI Model Behavior (honeypot attracts adversaries attempting model replication via API queries)"
         },
         {
           "id": "AID-DV-002",
           "rationale": "decoy data and model artifacts reveal gathering for proxy training",
-          "item_raw": "AML.T0005 Create Proxy AI Model (decoy data and model artifacts reveal gathering for proxy training)"
+          "item_raw": "AML.T0005 Replicate AI Model Behavior (decoy data and model artifacts reveal gathering for proxy training)"
         },
         {
           "id": "AID-DV-003",
           "rationale": "deceptive inference responses reduce the utility of a replicated proxy",
-          "item_raw": "AML.T0005 Create Proxy AI Model (deceptive inference responses reduce the utility of a replicated proxy)"
+          "item_raw": "AML.T0005 Replicate AI Model Behavior (deceptive inference responses reduce the utility of a replicated proxy)"
         },
         {
           "id": "AID-DV-004",
           "rationale": "trap markers reveal replicated model behavior",
-          "item_raw": "AML.T0005 Create Proxy AI Model (trap markers reveal replicated model behavior)"
+          "item_raw": "AML.T0005 Replicate AI Model Behavior (trap markers reveal replicated model behavior)"
         }
       ]
     },
     {
       "framework_key": "mitre-atlas",
       "external_id": "AML.T0005.000",
-      "item_locator": "AML.T0005.000 Create Proxy AI Model: Train Proxy via Gathered AI Artifacts",
-      "name": "Create Proxy AI Model: Train Proxy via Gathered AI Artifacts",
+      "item_locator": "AML.T0005.000 Replicate AI Model Behavior: Replicate Behavior from Gathered AI Artifacts",
+      "name": "Replicate AI Model Behavior: Replicate Behavior from Gathered AI Artifacts",
       "controls": [
         {
           "id": "AID-DV-002",
           "rationale": "canaries in artifact stores detect gathering for proxy training",
-          "item_raw": "AML.T0005.000 Create Proxy AI Model: Train Proxy via Gathered AI Artifacts (canaries in artifact stores detect gathering for proxy training)"
+          "item_raw": "AML.T0005.000 Replicate AI Model Behavior: Replicate Behavior from Gathered AI Artifacts (canaries in artifact stores detect gathering for proxy training)"
         }
       ]
     },
     {
       "framework_key": "mitre-atlas",
       "external_id": "AML.T0005.001",
-      "item_locator": "AML.T0005.001 Create Proxy AI Model: Train Proxy via Replication",
-      "name": "Create Proxy AI Model: Train Proxy via Replication",
+      "item_locator": "AML.T0005.001 Replicate AI Model Behavior: Replicate Behavior from Model Outputs",
+      "name": "Replicate AI Model Behavior: Replicate Behavior from Model Outputs",
       "controls": [
         {
+          "id": "AID-H-006.003",
+          "rationale": null,
+          "item_raw": "AML.T0005.001 Replicate AI Model Behavior: Replicate Behavior from Model Outputs"
+        },
+        {
+          "id": "AID-H-013.003",
+          "rationale": null,
+          "item_raw": "AML.T0005.001 Replicate AI Model Behavior: Replicate Behavior from Model Outputs"
+        },
+        {
+          "id": "AID-D-005.003",
+          "rationale": "finding probing patterns",
+          "item_raw": "AML.T0005.001 Replicate AI Model Behavior: Replicate Behavior from Model Outputs (finding probing patterns)"
+        },
+        {
+          "id": "AID-I-003.002",
+          "rationale": "rate limiting slows extraction",
+          "item_raw": "AML.T0005.001 Replicate AI Model Behavior: Replicate Behavior from Model Outputs (rate limiting slows extraction)"
+        },
+        {
           "id": "AID-DV-001",
-          "rationale": "decoy API captures replication queries",
-          "item_raw": "AML.T0005.001 Create Proxy AI Model: Train Proxy via Replication (decoy API captures replication queries)"
+          "rationale": null,
+          "item_raw": "AML.T0005.001 Replicate AI Model Behavior: Replicate Behavior from Model Outputs"
         },
         {
           "id": "AID-DV-003",
-          "rationale": "deceptive labels frustrate replication training",
-          "item_raw": "AML.T0005.001 Create Proxy AI Model: Train Proxy via Replication (deceptive labels frustrate replication training)"
+          "rationale": "deceptive outputs degrade extraction quality",
+          "item_raw": "AML.T0005.001 Replicate AI Model Behavior: Replicate Behavior from Model Outputs (deceptive outputs degrade extraction quality)"
         },
         {
           "id": "AID-DV-004",
-          "rationale": "trap markers reveal proxy models trained on captured inference outputs",
-          "item_raw": "AML.T0005.001 Create Proxy AI Model: Train Proxy via Replication (trap markers reveal proxy models trained on captured inference outputs)"
+          "rationale": "trap markers reveal copied or replayed model outputs",
+          "item_raw": "AML.T0005.001 Replicate AI Model Behavior: Replicate Behavior from Model Outputs (trap markers reveal copied or replayed model outputs)"
         }
       ]
     },
@@ -244,677 +284,700 @@
     },
     {
       "framework_key": "mitre-atlas",
+      "external_id": "AML.T0008",
+      "item_locator": "AML.T0008 Acquire Infrastructure",
+      "name": "Acquire Infrastructure",
+      "controls": [
+        {
+          "id": "AID-H-017.008",
+          "rationale": "brokered expiry retires agent-created infrastructure after its authorized run",
+          "item_raw": "AML.T0008 Acquire Infrastructure (brokered expiry retires agent-created infrastructure after its authorized run)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
       "external_id": "AML.T0010",
-      "item_locator": "AML.T0010 AI Supply Chain Compromise",
-      "name": "AI Supply Chain Compromise",
+      "item_locator": "AML.T0010 Supply Chain Compromise",
+      "name": "Supply Chain Compromise",
       "controls": [
         {
           "id": "AID-M-001.002",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-M-001.003",
           "rationale": "skill inventory enables tracking of supply-chain origin and publisher for every installed skill",
-          "item_raw": "AML.T0010 AI Supply Chain Compromise (skill inventory enables tracking of supply-chain origin and publisher for every installed skill)"
+          "item_raw": "AML.T0010 Supply Chain Compromise (skill inventory enables tracking of supply-chain origin and publisher for every installed skill)"
         },
         {
           "id": "AID-M-002.002",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-M-002.003",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-M-002.005",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-M-005.002",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-M-010.002",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-002.009",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-003.001",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-003.002",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-003.003",
           "rationale": "dataset supply chain is part of broader AI supply chain",
-          "item_raw": "AML.T0010 AI Supply Chain Compromise (dataset supply chain is part of broader AI supply chain)"
+          "item_raw": "AML.T0010 Supply Chain Compromise (dataset supply chain is part of broader AI supply chain)"
         },
         {
           "id": "AID-H-003.004",
           "rationale": "hardware is part of the broader AI supply chain",
-          "item_raw": "AML.T0010 AI Supply Chain Compromise (hardware is part of the broader AI supply chain)"
+          "item_raw": "AML.T0010 Supply Chain Compromise (hardware is part of the broader AI supply chain)"
         },
         {
           "id": "AID-H-003.005",
           "rationale": "IaC misconfigurations can compromise AI deployment infrastructure",
-          "item_raw": "AML.T0010 AI Supply Chain Compromise (IaC misconfigurations can compromise AI deployment infrastructure)"
+          "item_raw": "AML.T0010 Supply Chain Compromise (IaC misconfigurations can compromise AI deployment infrastructure)"
         },
         {
           "id": "AID-H-003.006",
           "rationale": "SBOM and attestation protect the broader model supply chain",
-          "item_raw": "AML.T0010 AI Supply Chain Compromise (SBOM and attestation protect the broader model supply chain)"
+          "item_raw": "AML.T0010 Supply Chain Compromise (SBOM and attestation protect the broader model supply chain)"
         },
         {
           "id": "AID-H-003.007",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-003.008",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-003.009",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-003.010",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-007.004",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-007.006",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-007.007",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-009.001",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-009.003",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-021.002",
           "rationale": "signed configs detect supply chain-compromised config files",
-          "item_raw": "AML.T0010 AI Supply Chain Compromise (signed configs detect supply chain-compromised config files)"
+          "item_raw": "AML.T0010 Supply Chain Compromise (signed configs detect supply chain-compromised config files)"
         },
         {
           "id": "AID-H-022.001",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-022.002",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-023",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-024.001",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-024.002",
           "rationale": "descriptor hash detects compromised tool metadata",
-          "item_raw": "AML.T0010 AI Supply Chain Compromise (descriptor hash detects compromised tool metadata)"
+          "item_raw": "AML.T0010 Supply Chain Compromise (descriptor hash detects compromised tool metadata)"
         },
         {
           "id": "AID-H-024.003",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-024.004",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-028.001",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-028.006",
           "rationale": "tampered client binary, plugin, or updater",
-          "item_raw": "AML.T0010 AI Supply Chain Compromise (tampered client binary, plugin, or updater)"
+          "item_raw": "AML.T0010 Supply Chain Compromise (tampered client binary, plugin, or updater)"
         },
         {
           "id": "AID-H-030.001",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-030.002",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-030.003",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-030.004",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-030.005",
           "rationale": "continuous re-scan detects newly risky skill artifacts already present in the environment",
-          "item_raw": "AML.T0010 AI Supply Chain Compromise (continuous re-scan detects newly risky skill artifacts already present in the environment)"
+          "item_raw": "AML.T0010 Supply Chain Compromise (continuous re-scan detects newly risky skill artifacts already present in the environment)"
         },
         {
           "id": "AID-H-031.002",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-031.003",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-031.004",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-H-033.004",
           "rationale": "tampered route bundles can select an unapproved model or provider dependency",
-          "item_raw": "AML.T0010 AI Supply Chain Compromise (tampered route bundles can select an unapproved model or provider dependency)"
+          "item_raw": "AML.T0010 Supply Chain Compromise (tampered route bundles can select an unapproved model or provider dependency)"
         },
         {
           "id": "AID-H-033.005",
           "rationale": "blocks dispatch when the resolved route is outside the verified signed route contract",
-          "item_raw": "AML.T0010 AI Supply Chain Compromise (blocks dispatch when the resolved route is outside the verified signed route contract)"
+          "item_raw": "AML.T0010 Supply Chain Compromise (blocks dispatch when the resolved route is outside the verified signed route contract)"
         },
         {
           "id": "AID-H-034.004",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-D-004.001",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-D-004.002",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-D-004.003",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-D-004.004",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-D-004.006",
           "rationale": "detects an unapproved effective provider, model, endpoint, or fallback",
-          "item_raw": "AML.T0010 AI Supply Chain Compromise (detects an unapproved effective provider, model, endpoint, or fallback)"
+          "item_raw": "AML.T0010 Supply Chain Compromise (detects an unapproved effective provider, model, endpoint, or fallback)"
         },
         {
           "id": "AID-D-004.008",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-E-003.001",
           "rationale": "quarantine removes a confirmed compromised model artifact from serving eligibility",
-          "item_raw": "AML.T0010 AI Supply Chain Compromise (quarantine removes a confirmed compromised model artifact from serving eligibility)"
+          "item_raw": "AML.T0010 Supply Chain Compromise (quarantine removes a confirmed compromised model artifact from serving eligibility)"
         },
         {
           "id": "AID-E-003.002",
           "rationale": "exact source-record or graph eviction removes the signed compromised data population",
-          "item_raw": "AML.T0010 AI Supply Chain Compromise (exact source-record or graph eviction removes the signed compromised data population)"
+          "item_raw": "AML.T0010 Supply Chain Compromise (exact source-record or graph eviction removes the signed compromised data population)"
         },
         {
           "id": "AID-E-003.003",
           "rationale": "eviction removes confirmed malicious code, dependency, tool, or deployment artifacts",
-          "item_raw": "AML.T0010 AI Supply Chain Compromise (eviction removes confirmed malicious code, dependency, tool, or deployment artifacts)"
+          "item_raw": "AML.T0010 Supply Chain Compromise (eviction removes confirmed malicious code, dependency, tool, or deployment artifacts)"
         },
         {
           "id": "AID-E-003.005",
           "rationale": null,
-          "item_raw": "AML.T0010 AI Supply Chain Compromise"
+          "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
           "id": "AID-E-004",
           "rationale": "independent readback and exploit replay prove the signed supply-chain fix is effective across the affected release population",
-          "item_raw": "AML.T0010 AI Supply Chain Compromise (independent readback and exploit replay prove the signed supply-chain fix is effective across the affected release population)"
+          "item_raw": "AML.T0010 Supply Chain Compromise (independent readback and exploit replay prove the signed supply-chain fix is effective across the affected release population)"
         },
         {
           "id": "AID-R-006",
           "rationale": "signed whole-system redeployment restores verified components after supply-chain compromise",
-          "item_raw": "AML.T0010 AI Supply Chain Compromise (signed whole-system redeployment restores verified components after supply-chain compromise)"
+          "item_raw": "AML.T0010 Supply Chain Compromise (signed whole-system redeployment restores verified components after supply-chain compromise)"
         }
       ]
     },
     {
       "framework_key": "mitre-atlas",
       "external_id": "AML.T0010.000",
-      "item_locator": "AML.T0010.000 AI Supply Chain Compromise: Hardware",
-      "name": "AI Supply Chain Compromise: Hardware",
+      "item_locator": "AML.T0010.000 Supply Chain Compromise: Hardware",
+      "name": "Supply Chain Compromise: Hardware",
       "controls": [
         {
           "id": "AID-H-003.004",
           "rationale": null,
-          "item_raw": "AML.T0010.000 AI Supply Chain Compromise: Hardware"
+          "item_raw": "AML.T0010.000 Supply Chain Compromise: Hardware"
         },
         {
           "id": "AID-H-009.001",
           "rationale": null,
-          "item_raw": "AML.T0010.000 AI Supply Chain Compromise: Hardware"
+          "item_raw": "AML.T0010.000 Supply Chain Compromise: Hardware"
         },
         {
           "id": "AID-H-009.003",
           "rationale": null,
-          "item_raw": "AML.T0010.000 AI Supply Chain Compromise: Hardware"
+          "item_raw": "AML.T0010.000 Supply Chain Compromise: Hardware"
         }
       ]
     },
     {
       "framework_key": "mitre-atlas",
       "external_id": "AML.T0010.001",
-      "item_locator": "AML.T0010.001 AI Supply Chain Compromise: AI Software",
-      "name": "AI Supply Chain Compromise: AI Software",
+      "item_locator": "AML.T0010.001 Supply Chain Compromise: Software",
+      "name": "Supply Chain Compromise: Software",
       "controls": [
         {
           "id": "AID-M-001.002",
           "rationale": null,
-          "item_raw": "AML.T0010.001 AI Supply Chain Compromise: AI Software"
+          "item_raw": "AML.T0010.001 Supply Chain Compromise: Software"
         },
         {
           "id": "AID-M-005.002",
           "rationale": null,
-          "item_raw": "AML.T0010.001 AI Supply Chain Compromise: AI Software"
+          "item_raw": "AML.T0010.001 Supply Chain Compromise: Software"
         },
         {
           "id": "AID-H-003.001",
           "rationale": null,
-          "item_raw": "AML.T0010.001 AI Supply Chain Compromise: AI Software"
+          "item_raw": "AML.T0010.001 Supply Chain Compromise: Software"
         },
         {
           "id": "AID-H-003.010",
           "rationale": null,
-          "item_raw": "AML.T0010.001 AI Supply Chain Compromise: AI Software"
+          "item_raw": "AML.T0010.001 Supply Chain Compromise: Software"
         },
         {
           "id": "AID-H-007.004",
           "rationale": "compromised evaluation harness or benchmark software",
-          "item_raw": "AML.T0010.001 AI Supply Chain Compromise: AI Software (compromised evaluation harness or benchmark software)"
+          "item_raw": "AML.T0010.001 Supply Chain Compromise: Software (compromised evaluation harness or benchmark software)"
         },
         {
           "id": "AID-H-007.007",
           "rationale": null,
-          "item_raw": "AML.T0010.001 AI Supply Chain Compromise: AI Software"
+          "item_raw": "AML.T0010.001 Supply Chain Compromise: Software"
         },
         {
           "id": "AID-H-022.001",
           "rationale": null,
-          "item_raw": "AML.T0010.001 AI Supply Chain Compromise: AI Software"
+          "item_raw": "AML.T0010.001 Supply Chain Compromise: Software"
         },
         {
           "id": "AID-H-023",
           "rationale": null,
-          "item_raw": "AML.T0010.001 AI Supply Chain Compromise: AI Software"
+          "item_raw": "AML.T0010.001 Supply Chain Compromise: Software"
         },
         {
           "id": "AID-H-024.001",
           "rationale": null,
-          "item_raw": "AML.T0010.001 AI Supply Chain Compromise: AI Software"
+          "item_raw": "AML.T0010.001 Supply Chain Compromise: Software"
         },
         {
           "id": "AID-H-024.004",
           "rationale": null,
-          "item_raw": "AML.T0010.001 AI Supply Chain Compromise: AI Software"
+          "item_raw": "AML.T0010.001 Supply Chain Compromise: Software"
         },
         {
           "id": "AID-H-028.006",
           "rationale": "malicious client SDK or dependency",
-          "item_raw": "AML.T0010.001 AI Supply Chain Compromise: AI Software (malicious client SDK or dependency)"
+          "item_raw": "AML.T0010.001 Supply Chain Compromise: Software (malicious client SDK or dependency)"
         },
         {
           "id": "AID-H-031.002",
           "rationale": null,
-          "item_raw": "AML.T0010.001 AI Supply Chain Compromise: AI Software"
+          "item_raw": "AML.T0010.001 Supply Chain Compromise: Software"
         },
         {
           "id": "AID-H-031.003",
           "rationale": null,
-          "item_raw": "AML.T0010.001 AI Supply Chain Compromise: AI Software"
+          "item_raw": "AML.T0010.001 Supply Chain Compromise: Software"
         },
         {
           "id": "AID-D-004.001",
           "rationale": null,
-          "item_raw": "AML.T0010.001 AI Supply Chain Compromise: AI Software"
+          "item_raw": "AML.T0010.001 Supply Chain Compromise: Software"
         },
         {
           "id": "AID-D-004.002",
           "rationale": null,
-          "item_raw": "AML.T0010.001 AI Supply Chain Compromise: AI Software"
+          "item_raw": "AML.T0010.001 Supply Chain Compromise: Software"
         },
         {
           "id": "AID-D-004.003",
           "rationale": "drift can expose unapproved dependency or source configuration",
-          "item_raw": "AML.T0010.001 AI Supply Chain Compromise: AI Software (drift can expose unapproved dependency or source configuration)"
+          "item_raw": "AML.T0010.001 Supply Chain Compromise: Software (drift can expose unapproved dependency or source configuration)"
         },
         {
           "id": "AID-D-004.008",
           "rationale": null,
-          "item_raw": "AML.T0010.001 AI Supply Chain Compromise: AI Software"
+          "item_raw": "AML.T0010.001 Supply Chain Compromise: Software"
         },
         {
           "id": "AID-E-003.003",
           "rationale": "manifest-bound eviction removes the confirmed malicious framework or dependency artifact",
-          "item_raw": "AML.T0010.001 AI Supply Chain Compromise: AI Software (manifest-bound eviction removes the confirmed malicious framework or dependency artifact)"
+          "item_raw": "AML.T0010.001 Supply Chain Compromise: Software (manifest-bound eviction removes the confirmed malicious framework or dependency artifact)"
         },
         {
           "id": "AID-E-004",
           "rationale": "the verifier proves the approved AI-software fix is deployed and the exact exploit no longer succeeds",
-          "item_raw": "AML.T0010.001 AI Supply Chain Compromise: AI Software (the verifier proves the approved AI-software fix is deployed and the exact exploit no longer succeeds)"
+          "item_raw": "AML.T0010.001 Supply Chain Compromise: Software (the verifier proves the approved AI-software fix is deployed and the exact exploit no longer succeeds)"
         }
       ]
     },
     {
       "framework_key": "mitre-atlas",
       "external_id": "AML.T0010.002",
-      "item_locator": "AML.T0010.002 AI Supply Chain Compromise: Data",
-      "name": "AI Supply Chain Compromise: Data",
+      "item_locator": "AML.T0010.002 Supply Chain Compromise: Data Repository",
+      "name": "Supply Chain Compromise: Data Repository",
       "controls": [
         {
           "id": "AID-M-002.002",
           "rationale": null,
-          "item_raw": "AML.T0010.002 AI Supply Chain Compromise: Data"
+          "item_raw": "AML.T0010.002 Supply Chain Compromise: Data Repository"
         },
         {
           "id": "AID-M-002.003",
           "rationale": null,
-          "item_raw": "AML.T0010.002 AI Supply Chain Compromise: Data"
+          "item_raw": "AML.T0010.002 Supply Chain Compromise: Data Repository"
         },
         {
           "id": "AID-M-002.005",
           "rationale": null,
-          "item_raw": "AML.T0010.002 AI Supply Chain Compromise: Data"
+          "item_raw": "AML.T0010.002 Supply Chain Compromise: Data Repository"
         },
         {
           "id": "AID-H-002.009",
           "rationale": null,
-          "item_raw": "AML.T0010.002 AI Supply Chain Compromise: Data"
+          "item_raw": "AML.T0010.002 Supply Chain Compromise: Data Repository"
         },
         {
           "id": "AID-H-003.003",
           "rationale": null,
-          "item_raw": "AML.T0010.002 AI Supply Chain Compromise: Data"
+          "item_raw": "AML.T0010.002 Supply Chain Compromise: Data Repository"
         },
         {
           "id": "AID-H-007.004",
           "rationale": "compromised evaluation datasets or benchmarks",
-          "item_raw": "AML.T0010.002 AI Supply Chain Compromise: Data (compromised evaluation datasets or benchmarks)"
+          "item_raw": "AML.T0010.002 Supply Chain Compromise: Data Repository (compromised evaluation datasets or benchmarks)"
+        },
+        {
+          "id": "AID-H-023",
+          "rationale": "trusted CI identity and namespace controls protect the publisher-owned dataset repository",
+          "item_raw": "AML.T0010.002 Supply Chain Compromise: Data Repository (trusted CI identity and namespace controls protect the publisher-owned dataset repository)"
         },
         {
           "id": "AID-D-004.001",
           "rationale": null,
-          "item_raw": "AML.T0010.002 AI Supply Chain Compromise: Data"
+          "item_raw": "AML.T0010.002 Supply Chain Compromise: Data Repository"
         },
         {
           "id": "AID-E-003.002",
           "rationale": null,
-          "item_raw": "AML.T0010.002 AI Supply Chain Compromise: Data"
+          "item_raw": "AML.T0010.002 Supply Chain Compromise: Data Repository"
         }
       ]
     },
     {
       "framework_key": "mitre-atlas",
       "external_id": "AML.T0010.003",
-      "item_locator": "AML.T0010.003 AI Supply Chain Compromise: Model",
-      "name": "AI Supply Chain Compromise: Model",
+      "item_locator": "AML.T0010.003 Supply Chain Compromise: Model Repository",
+      "name": "Supply Chain Compromise: Model Repository",
       "controls": [
         {
           "id": "AID-M-002.002",
           "rationale": null,
-          "item_raw": "AML.T0010.003 AI Supply Chain Compromise: Model"
+          "item_raw": "AML.T0010.003 Supply Chain Compromise: Model Repository"
         },
         {
           "id": "AID-M-002.005",
           "rationale": null,
-          "item_raw": "AML.T0010.003 AI Supply Chain Compromise: Model"
+          "item_raw": "AML.T0010.003 Supply Chain Compromise: Model Repository"
         },
         {
           "id": "AID-H-003.002",
           "rationale": null,
-          "item_raw": "AML.T0010.003 AI Supply Chain Compromise: Model"
+          "item_raw": "AML.T0010.003 Supply Chain Compromise: Model Repository"
         },
         {
           "id": "AID-H-003.006",
           "rationale": null,
-          "item_raw": "AML.T0010.003 AI Supply Chain Compromise: Model"
+          "item_raw": "AML.T0010.003 Supply Chain Compromise: Model Repository"
         },
         {
           "id": "AID-H-003.007",
           "rationale": null,
-          "item_raw": "AML.T0010.003 AI Supply Chain Compromise: Model"
+          "item_raw": "AML.T0010.003 Supply Chain Compromise: Model Repository"
         },
         {
           "id": "AID-H-003.008",
           "rationale": null,
-          "item_raw": "AML.T0010.003 AI Supply Chain Compromise: Model"
+          "item_raw": "AML.T0010.003 Supply Chain Compromise: Model Repository"
         },
         {
           "id": "AID-H-003.009",
           "rationale": null,
-          "item_raw": "AML.T0010.003 AI Supply Chain Compromise: Model"
+          "item_raw": "AML.T0010.003 Supply Chain Compromise: Model Repository"
         },
         {
           "id": "AID-H-007.006",
           "rationale": null,
-          "item_raw": "AML.T0010.003 AI Supply Chain Compromise: Model"
+          "item_raw": "AML.T0010.003 Supply Chain Compromise: Model Repository"
+        },
+        {
+          "id": "AID-H-023",
+          "rationale": "trusted CI identity and namespace controls protect the publisher-owned model repository",
+          "item_raw": "AML.T0010.003 Supply Chain Compromise: Model Repository (trusted CI identity and namespace controls protect the publisher-owned model repository)"
         },
         {
           "id": "AID-D-004.001",
           "rationale": null,
-          "item_raw": "AML.T0010.003 AI Supply Chain Compromise: Model"
+          "item_raw": "AML.T0010.003 Supply Chain Compromise: Model Repository"
         },
         {
           "id": "AID-D-004.004",
           "rationale": null,
-          "item_raw": "AML.T0010.003 AI Supply Chain Compromise: Model"
+          "item_raw": "AML.T0010.003 Supply Chain Compromise: Model Repository"
         },
         {
           "id": "AID-E-003.001",
           "rationale": "quarantine makes the exact compromised supply-chain model digest ineligible for serving",
-          "item_raw": "AML.T0010.003 AI Supply Chain Compromise: Model (quarantine makes the exact compromised supply-chain model digest ineligible for serving)"
+          "item_raw": "AML.T0010.003 Supply Chain Compromise: Model Repository (quarantine makes the exact compromised supply-chain model digest ineligible for serving)"
         },
         {
           "id": "AID-E-003.005",
           "rationale": "adapter quarantine removes the compromised model component from registries and serving",
-          "item_raw": "AML.T0010.003 AI Supply Chain Compromise: Model (adapter quarantine removes the compromised model component from registries and serving)"
+          "item_raw": "AML.T0010.003 Supply Chain Compromise: Model Repository (adapter quarantine removes the compromised model component from registries and serving)"
         }
       ]
     },
     {
       "framework_key": "mitre-atlas",
       "external_id": "AML.T0010.004",
-      "item_locator": "AML.T0010.004 AI Supply Chain Compromise: Container Registry",
-      "name": "AI Supply Chain Compromise: Container Registry",
+      "item_locator": "AML.T0010.004 Supply Chain Compromise: Container Registry",
+      "name": "Supply Chain Compromise: Container Registry",
       "controls": [
         {
           "id": "AID-M-001.002",
           "rationale": null,
-          "item_raw": "AML.T0010.004 AI Supply Chain Compromise: Container Registry"
+          "item_raw": "AML.T0010.004 Supply Chain Compromise: Container Registry"
         },
         {
           "id": "AID-M-002.002",
           "rationale": null,
-          "item_raw": "AML.T0010.004 AI Supply Chain Compromise: Container Registry"
+          "item_raw": "AML.T0010.004 Supply Chain Compromise: Container Registry"
         },
         {
           "id": "AID-M-002.005",
           "rationale": null,
-          "item_raw": "AML.T0010.004 AI Supply Chain Compromise: Container Registry"
+          "item_raw": "AML.T0010.004 Supply Chain Compromise: Container Registry"
         },
         {
           "id": "AID-M-005.002",
           "rationale": null,
-          "item_raw": "AML.T0010.004 AI Supply Chain Compromise: Container Registry"
+          "item_raw": "AML.T0010.004 Supply Chain Compromise: Container Registry"
         },
         {
           "id": "AID-H-003.001",
           "rationale": null,
-          "item_raw": "AML.T0010.004 AI Supply Chain Compromise: Container Registry"
+          "item_raw": "AML.T0010.004 Supply Chain Compromise: Container Registry"
         },
         {
           "id": "AID-H-003.002",
           "rationale": null,
-          "item_raw": "AML.T0010.004 AI Supply Chain Compromise: Container Registry"
+          "item_raw": "AML.T0010.004 Supply Chain Compromise: Container Registry"
         },
         {
           "id": "AID-H-003.008",
           "rationale": null,
-          "item_raw": "AML.T0010.004 AI Supply Chain Compromise: Container Registry"
+          "item_raw": "AML.T0010.004 Supply Chain Compromise: Container Registry"
         },
         {
           "id": "AID-D-004.001",
           "rationale": null,
-          "item_raw": "AML.T0010.004 AI Supply Chain Compromise: Container Registry"
+          "item_raw": "AML.T0010.004 Supply Chain Compromise: Container Registry"
         },
         {
           "id": "AID-E-003.003",
           "rationale": "manifest-bound eviction removes the confirmed malicious image and tombstones the affected registry reference",
-          "item_raw": "AML.T0010.004 AI Supply Chain Compromise: Container Registry (manifest-bound eviction removes the confirmed malicious image and tombstones the affected registry reference)"
+          "item_raw": "AML.T0010.004 Supply Chain Compromise: Container Registry (manifest-bound eviction removes the confirmed malicious image and tombstones the affected registry reference)"
         },
         {
           "id": "AID-E-004",
           "rationale": "effective-registry readback and replay prove the overwritten-image path is closed",
-          "item_raw": "AML.T0010.004 AI Supply Chain Compromise: Container Registry (effective-registry readback and replay prove the overwritten-image path is closed)"
+          "item_raw": "AML.T0010.004 Supply Chain Compromise: Container Registry (effective-registry readback and replay prove the overwritten-image path is closed)"
         }
       ]
     },
     {
       "framework_key": "mitre-atlas",
       "external_id": "AML.T0010.005",
-      "item_locator": "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool",
-      "name": "AI Supply Chain Compromise: AI Agent Tool",
+      "item_locator": "AML.T0010.005 Supply Chain Compromise: AI Agent Tool",
+      "name": "Supply Chain Compromise: AI Agent Tool",
       "controls": [
         {
           "id": "AID-M-001.003",
           "rationale": null,
-          "item_raw": "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
+          "item_raw": "AML.T0010.005 Supply Chain Compromise: AI Agent Tool"
         },
         {
           "id": "AID-H-021.005",
           "rationale": "manifest-bound admission prevents a repository-supplied tool or MCP server from silently joining the active workspace toolchain",
-          "item_raw": "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool (manifest-bound admission prevents a repository-supplied tool or MCP server from silently joining the active workspace toolchain)"
+          "item_raw": "AML.T0010.005 Supply Chain Compromise: AI Agent Tool (manifest-bound admission prevents a repository-supplied tool or MCP server from silently joining the active workspace toolchain)"
         },
         {
           "id": "AID-H-022.002",
           "rationale": null,
-          "item_raw": "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
+          "item_raw": "AML.T0010.005 Supply Chain Compromise: AI Agent Tool"
         },
         {
           "id": "AID-H-023",
           "rationale": null,
-          "item_raw": "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
+          "item_raw": "AML.T0010.005 Supply Chain Compromise: AI Agent Tool"
         },
         {
           "id": "AID-H-024.001",
           "rationale": null,
-          "item_raw": "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
+          "item_raw": "AML.T0010.005 Supply Chain Compromise: AI Agent Tool"
         },
         {
           "id": "AID-H-024.002",
           "rationale": null,
-          "item_raw": "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
+          "item_raw": "AML.T0010.005 Supply Chain Compromise: AI Agent Tool"
         },
         {
           "id": "AID-H-024.003",
           "rationale": null,
-          "item_raw": "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
+          "item_raw": "AML.T0010.005 Supply Chain Compromise: AI Agent Tool"
         },
         {
           "id": "AID-H-024.004",
           "rationale": null,
-          "item_raw": "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
+          "item_raw": "AML.T0010.005 Supply Chain Compromise: AI Agent Tool"
         },
         {
           "id": "AID-H-028.001",
           "rationale": null,
-          "item_raw": "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
+          "item_raw": "AML.T0010.005 Supply Chain Compromise: AI Agent Tool"
         },
         {
           "id": "AID-H-030.001",
           "rationale": null,
-          "item_raw": "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
+          "item_raw": "AML.T0010.005 Supply Chain Compromise: AI Agent Tool"
         },
         {
           "id": "AID-H-030.002",
           "rationale": null,
-          "item_raw": "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
+          "item_raw": "AML.T0010.005 Supply Chain Compromise: AI Agent Tool"
         },
         {
           "id": "AID-H-030.003",
           "rationale": null,
-          "item_raw": "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
+          "item_raw": "AML.T0010.005 Supply Chain Compromise: AI Agent Tool"
         },
         {
           "id": "AID-H-030.004",
           "rationale": null,
-          "item_raw": "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
+          "item_raw": "AML.T0010.005 Supply Chain Compromise: AI Agent Tool"
         },
         {
           "id": "AID-H-030.005",
           "rationale": null,
-          "item_raw": "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
+          "item_raw": "AML.T0010.005 Supply Chain Compromise: AI Agent Tool"
         },
         {
           "id": "AID-H-034.004",
           "rationale": null,
-          "item_raw": "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
+          "item_raw": "AML.T0010.005 Supply Chain Compromise: AI Agent Tool"
         },
         {
           "id": "AID-E-003.003",
           "rationale": null,
-          "item_raw": "AML.T0010.005 AI Supply Chain Compromise: AI Agent Tool"
+          "item_raw": "AML.T0010.005 Supply Chain Compromise: AI Agent Tool"
         }
       ]
     },
@@ -2078,21 +2141,6 @@
       "name": "Exfiltration via AI Inference API",
       "controls": [
         {
-          "id": "AID-H-005.001",
-          "rationale": null,
-          "item_raw": "AML.T0024 Exfiltration via AI Inference API"
-        },
-        {
-          "id": "AID-H-005.003",
-          "rationale": null,
-          "item_raw": "AML.T0024 Exfiltration via AI Inference API"
-        },
-        {
-          "id": "AID-H-005.004",
-          "rationale": "dedup reduces what inference-based attacks can extract",
-          "item_raw": "AML.T0024 Exfiltration via AI Inference API (dedup reduces what inference-based attacks can extract)"
-        },
-        {
           "id": "AID-H-006.003",
           "rationale": null,
           "item_raw": "AML.T0024 Exfiltration via AI Inference API"
@@ -2106,110 +2154,6 @@
           "id": "AID-D-003.007",
           "rationale": "sensitive attribute disclosure via model output",
           "item_raw": "AML.T0024 Exfiltration via AI Inference API (sensitive attribute disclosure via model output)"
-        }
-      ]
-    },
-    {
-      "framework_key": "mitre-atlas",
-      "external_id": "AML.T0024.000",
-      "item_locator": "AML.T0024.000 Exfiltration via AI Inference API: Infer Training Data Membership",
-      "name": "Exfiltration via AI Inference API: Infer Training Data Membership",
-      "controls": [
-        {
-          "id": "AID-H-005.001",
-          "rationale": null,
-          "item_raw": "AML.T0024.000 Exfiltration via AI Inference API: Infer Training Data Membership"
-        },
-        {
-          "id": "AID-H-005.003",
-          "rationale": null,
-          "item_raw": "AML.T0024.000 Exfiltration via AI Inference API: Infer Training Data Membership"
-        },
-        {
-          "id": "AID-H-005.005",
-          "rationale": null,
-          "item_raw": "AML.T0024.000 Exfiltration via AI Inference API: Infer Training Data Membership"
-        },
-        {
-          "id": "AID-H-006.003",
-          "rationale": null,
-          "item_raw": "AML.T0024.000 Exfiltration via AI Inference API: Infer Training Data Membership"
-        }
-      ]
-    },
-    {
-      "framework_key": "mitre-atlas",
-      "external_id": "AML.T0024.001",
-      "item_locator": "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model",
-      "name": "Exfiltration via AI Inference API: Invert AI Model",
-      "controls": [
-        {
-          "id": "AID-H-005.001",
-          "rationale": "noise makes inversion less effective",
-          "item_raw": "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model (noise makes inversion less effective)"
-        },
-        {
-          "id": "AID-H-005.005",
-          "rationale": null,
-          "item_raw": "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model"
-        },
-        {
-          "id": "AID-H-006.003",
-          "rationale": null,
-          "item_raw": "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model"
-        },
-        {
-          "id": "AID-D-003.007",
-          "rationale": "model responses can be probed to derive sensitive attributes",
-          "item_raw": "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model (model responses can be probed to derive sensitive attributes)"
-        },
-        {
-          "id": "AID-DV-001",
-          "rationale": null,
-          "item_raw": "AML.T0024.001 Exfiltration via AI Inference API: Invert AI Model"
-        }
-      ]
-    },
-    {
-      "framework_key": "mitre-atlas",
-      "external_id": "AML.T0024.002",
-      "item_locator": "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model",
-      "name": "Exfiltration via AI Inference API: Extract AI Model",
-      "controls": [
-        {
-          "id": "AID-H-006.003",
-          "rationale": null,
-          "item_raw": "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model"
-        },
-        {
-          "id": "AID-H-013.003",
-          "rationale": null,
-          "item_raw": "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model"
-        },
-        {
-          "id": "AID-D-005.003",
-          "rationale": "finding probing patterns",
-          "item_raw": "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (finding probing patterns)"
-        },
-        {
-          "id": "AID-I-003.002",
-          "rationale": "rate limiting slows extraction",
-          "item_raw": "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (rate limiting slows extraction)"
-        },
-        {
-          "id": "AID-DV-001",
-          "rationale": null,
-          "item_raw": "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model"
-        },
-        {
-          "id": "AID-DV-003",
-          "rationale": "deceptive outputs degrade extraction quality",
-          "item_raw": "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (deceptive outputs degrade extraction quality)"
-        },
-        {
-          "id": "AID-DV-004",
-          "rationale": "trap markers reveal copied or replayed model outputs",
-          "item_raw": "AML.T0024.002 Exfiltration via AI Inference API: Extract AI Model (trap markers reveal copied or replayed model outputs)"
         }
       ]
     },
@@ -4254,117 +4198,6 @@
     },
     {
       "framework_key": "mitre-atlas",
-      "external_id": "AML.T0056",
-      "item_locator": "AML.T0056 Extract LLM System Prompt",
-      "name": "Extract LLM System Prompt",
-      "controls": [
-        {
-          "id": "AID-H-037.001",
-          "rationale": null,
-          "item_raw": "AML.T0056 Extract LLM System Prompt"
-        },
-        {
-          "id": "AID-D-001.004",
-          "rationale": "a leaked challenge value is a system-prompt disclosure signal",
-          "item_raw": "AML.T0056 Extract LLM System Prompt (a leaked challenge value is a system-prompt disclosure signal)"
-        },
-        {
-          "id": "AID-D-003.002",
-          "rationale": "findings identify system-prompt content in outputs",
-          "item_raw": "AML.T0056 Extract LLM System Prompt (findings identify system-prompt content in outputs)"
-        }
-      ]
-    },
-    {
-      "framework_key": "mitre-atlas",
-      "external_id": "AML.T0057",
-      "item_locator": "AML.T0057 LLM Data Leakage",
-      "name": "LLM Data Leakage",
-      "controls": [
-        {
-          "id": "AID-H-002.001",
-          "rationale": "removing PII from training data prevents leakage",
-          "item_raw": "AML.T0057 LLM Data Leakage (removing PII from training data prevents leakage)"
-        },
-        {
-          "id": "AID-H-005.001",
-          "rationale": "DP training reduces memorization of training data",
-          "item_raw": "AML.T0057 LLM Data Leakage (DP training reduces memorization of training data)"
-        },
-        {
-          "id": "AID-H-005.004",
-          "rationale": null,
-          "item_raw": "AML.T0057 LLM Data Leakage"
-        },
-        {
-          "id": "AID-H-005.005",
-          "rationale": null,
-          "item_raw": "AML.T0057 LLM Data Leakage"
-        },
-        {
-          "id": "AID-H-006.002",
-          "rationale": "sanitization can redact leaked data",
-          "item_raw": "AML.T0057 LLM Data Leakage (sanitization can redact leaked data)"
-        },
-        {
-          "id": "AID-H-027",
-          "rationale": "context-bound cache keys prevent other users' cached outputs from crossing identity boundaries",
-          "item_raw": "AML.T0057 LLM Data Leakage (context-bound cache keys prevent other users' cached outputs from crossing identity boundaries)"
-        },
-        {
-          "id": "AID-H-028.003",
-          "rationale": "responses retained locally in clear text",
-          "item_raw": "AML.T0057 LLM Data Leakage (responses retained locally in clear text)"
-        },
-        {
-          "id": "AID-H-029.003",
-          "rationale": "withdrawn or expired-consent data remains exposable",
-          "item_raw": "AML.T0057 LLM Data Leakage (withdrawn or expired-consent data remains exposable)"
-        },
-        {
-          "id": "AID-H-037.001",
-          "rationale": null,
-          "item_raw": "AML.T0057 LLM Data Leakage"
-        },
-        {
-          "id": "AID-D-002.004",
-          "rationale": "reasoning-trace telemetry detects unexpected hidden-trace disclosure",
-          "item_raw": "AML.T0057 LLM Data Leakage (reasoning-trace telemetry detects unexpected hidden-trace disclosure)"
-        },
-        {
-          "id": "AID-D-003.002",
-          "rationale": null,
-          "item_raw": "AML.T0057 LLM Data Leakage"
-        },
-        {
-          "id": "AID-D-003.007",
-          "rationale": "inference-derived sensitive disclosures through generated output",
-          "item_raw": "AML.T0057 LLM Data Leakage (inference-derived sensitive disclosures through generated output)"
-        },
-        {
-          "id": "AID-D-005.003",
-          "rationale": "finding low-and-slow exfiltration",
-          "item_raw": "AML.T0057 LLM Data Leakage (finding low-and-slow exfiltration)"
-        },
-        {
-          "id": "AID-DV-002",
-          "rationale": "honey records and trackable URLs reveal disclosure from connected data stores",
-          "item_raw": "AML.T0057 LLM Data Leakage (honey records and trackable URLs reveal disclosure from connected data stores)"
-        },
-        {
-          "id": "AID-DV-004",
-          "rationale": "external marker hits reveal leaked outputs",
-          "item_raw": "AML.T0057 LLM Data Leakage (external marker hits reveal leaked outputs)"
-        },
-        {
-          "id": "AID-DV-007",
-          "rationale": "preregistered canary recall measures memorized training-data disclosure",
-          "item_raw": "AML.T0057 LLM Data Leakage (preregistered canary recall measures memorized training-data disclosure)"
-        }
-      ]
-    },
-    {
-      "framework_key": "mitre-atlas",
       "external_id": "AML.T0059",
       "item_locator": "AML.T0059 Erode Dataset Integrity",
       "name": "Erode Dataset Integrity",
@@ -4506,6 +4339,11 @@
           "item_raw": "AML.T0061 LLM Prompt Self-Replication (repeated write fingerprints reveal self-replicating prompts)"
         },
         {
+          "id": "AID-D-003.009",
+          "rationale": "content-bound evidence identifies copies of previously flagged malicious source spans",
+          "item_raw": "AML.T0061 LLM Prompt Self-Replication (content-bound evidence identifies copies of previously flagged malicious source spans)"
+        },
+        {
           "id": "AID-I-004.001",
           "rationale": null,
           "item_raw": "AML.T0061 LLM Prompt Self-Replication"
@@ -4550,6 +4388,11 @@
           "id": "AID-H-006.003",
           "rationale": "the response boundary withholds raw logits and probability vectors",
           "item_raw": "AML.T0063 Discover AI Model Outputs (the response boundary withholds raw logits and probability vectors)"
+        },
+        {
+          "id": "AID-H-033.006",
+          "rationale": "effective invocation policy and response readback restrict probability information exposed through generative requests",
+          "item_raw": "AML.T0063 Discover AI Model Outputs (effective invocation policy and response readback restrict probability information exposed through generative requests)"
         }
       ]
     },
@@ -4986,6 +4829,11 @@
           "item_raw": "AML.T0072 Cyber Communication Channel (denying unrestricted HTTP and shell tools removes the agent's ability to open arbitrary outbound channels)"
         },
         {
+          "id": "AID-H-017.008",
+          "rationale": "run closure retires broker-owned public tunnels and DNS routes with independent provider and external readbacks",
+          "item_raw": "AML.T0072 Cyber Communication Channel (run closure retires broker-owned public tunnels and DNS routes with independent provider and external readbacks)"
+        },
+        {
           "id": "AID-H-018.007",
           "rationale": "runtime enforcement of declared network destinations denies undeclared skill callbacks",
           "item_raw": "AML.T0072 Cyber Communication Channel (runtime enforcement of declared network destinations denies undeclared skill callbacks)"
@@ -5402,6 +5250,19 @@
           "id": "AID-H-028.004",
           "rationale": "malicious server response used as delivery mechanism",
           "item_raw": "AML.T0078 Drive-by Compromise (malicious server response used as delivery mechanism)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0079",
+      "item_locator": "AML.T0079 Stage Capabilities",
+      "name": "Stage Capabilities",
+      "controls": [
+        {
+          "id": "AID-H-017.008",
+          "rationale": "run closure removes hosted capabilities that could survive the agent workspace",
+          "item_raw": "AML.T0079 Stage Capabilities (run closure removes hosted capabilities that could survive the agent workspace)"
         }
       ]
     },
@@ -5932,6 +5793,16 @@
       "name": "Data from AI Services",
       "controls": [
         {
+          "id": "AID-H-005.005",
+          "rationale": null,
+          "item_raw": "AML.T0085 Data from AI Services"
+        },
+        {
+          "id": "AID-H-006.002",
+          "rationale": null,
+          "item_raw": "AML.T0085 Data from AI Services"
+        },
+        {
           "id": "AID-H-018.004",
           "rationale": "dynamic scoping restricts tools available for data collection",
           "item_raw": "AML.T0085 Data from AI Services (dynamic scoping restricts tools available for data collection)"
@@ -5947,9 +5818,34 @@
           "item_raw": "AML.T0085 Data from AI Services (retrieval authorization limits data returned by AI services)"
         },
         {
+          "id": "AID-H-027",
+          "rationale": null,
+          "item_raw": "AML.T0085 Data from AI Services"
+        },
+        {
           "id": "AID-H-028.003",
           "rationale": "AI service data exposed through local artifacts",
           "item_raw": "AML.T0085 Data from AI Services (AI service data exposed through local artifacts)"
+        },
+        {
+          "id": "AID-H-029.003",
+          "rationale": null,
+          "item_raw": "AML.T0085 Data from AI Services"
+        },
+        {
+          "id": "AID-H-037.001",
+          "rationale": null,
+          "item_raw": "AML.T0085 Data from AI Services"
+        },
+        {
+          "id": "AID-D-001.004",
+          "rationale": null,
+          "item_raw": "AML.T0085 Data from AI Services"
+        },
+        {
+          "id": "AID-D-002.004",
+          "rationale": null,
+          "item_raw": "AML.T0085 Data from AI Services"
         },
         {
           "id": "AID-D-003.002",
@@ -5967,7 +5863,17 @@
           "item_raw": "AML.T0085 Data from AI Services (tool-mediated data collection combined to derive sensitive attributes)"
         },
         {
+          "id": "AID-D-005.003",
+          "rationale": null,
+          "item_raw": "AML.T0085 Data from AI Services"
+        },
+        {
           "id": "AID-D-005.009",
+          "rationale": null,
+          "item_raw": "AML.T0085 Data from AI Services"
+        },
+        {
+          "id": "AID-DV-002",
           "rationale": null,
           "item_raw": "AML.T0085 Data from AI Services"
         }
@@ -5980,9 +5886,29 @@
       "name": "Data from AI Services: RAG Databases",
       "controls": [
         {
+          "id": "AID-H-005.005",
+          "rationale": "denied raw-vector export and protected vector backups limit retrieval-store disclosure",
+          "item_raw": "AML.T0085.000 Data from AI Services: RAG Databases (denied raw-vector export and protected vector backups limit retrieval-store disclosure)"
+        },
+        {
+          "id": "AID-H-029.003",
+          "rationale": "withdrawal removes reachable retrieval derivatives",
+          "item_raw": "AML.T0085.000 Data from AI Services: RAG Databases (withdrawal removes reachable retrieval derivatives)"
+        },
+        {
           "id": "AID-D-003.002",
           "rationale": "findings identify sensitive RAG content in responses",
           "item_raw": "AML.T0085.000 Data from AI Services: RAG Databases (findings identify sensitive RAG content in responses)"
+        },
+        {
+          "id": "AID-D-005.003",
+          "rationale": "retrieval-to-completion hunts identify low-and-slow disclosure of retrieved records",
+          "item_raw": "AML.T0085.000 Data from AI Services: RAG Databases (retrieval-to-completion hunts identify low-and-slow disclosure of retrieved records)"
+        },
+        {
+          "id": "AID-DV-002",
+          "rationale": "honey records expose unauthorized collection from retrieval stores",
+          "item_raw": "AML.T0085.000 Data from AI Services: RAG Databases (honey records expose unauthorized collection from retrieval stores)"
         }
       ]
     },
@@ -6021,6 +5947,77 @@
           "id": "AID-D-005.009",
           "rationale": null,
           "item_raw": "AML.T0085.001 Data from AI Services: AI Agent Tools"
+        },
+        {
+          "id": "AID-DV-002",
+          "rationale": "canaries in agent-accessible stores expose tool-mediated collection",
+          "item_raw": "AML.T0085.001 Data from AI Services: AI Agent Tools (canaries in agent-accessible stores expose tool-mediated collection)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0085.002",
+      "item_locator": "AML.T0085.002 Data from AI Services: Conversation Context and Memory",
+      "name": "Data from AI Services: Conversation Context and Memory",
+      "controls": [
+        {
+          "id": "AID-H-006.002",
+          "rationale": "the release gate redacts protected conversation content before delivery",
+          "item_raw": "AML.T0085.002 Data from AI Services: Conversation Context and Memory (the release gate redacts protected conversation content before delivery)"
+        },
+        {
+          "id": "AID-H-027",
+          "rationale": "identity-bound cache reuse prevents another user receiving retained responses",
+          "item_raw": "AML.T0085.002 Data from AI Services: Conversation Context and Memory (identity-bound cache reuse prevents another user receiving retained responses)"
+        },
+        {
+          "id": "AID-H-028.003",
+          "rationale": "redaction and expiry limit disclosure through client-retained interaction artifacts",
+          "item_raw": "AML.T0085.002 Data from AI Services: Conversation Context and Memory (redaction and expiry limit disclosure through client-retained interaction artifacts)"
+        },
+        {
+          "id": "AID-H-029.003",
+          "rationale": "withdrawal purges reachable memory and cached contexts",
+          "item_raw": "AML.T0085.002 Data from AI Services: Conversation Context and Memory (withdrawal purges reachable memory and cached contexts)"
+        },
+        {
+          "id": "AID-H-037.001",
+          "rationale": "raw scratchpads and retained reasoning stay outside ordinary display and logging",
+          "item_raw": "AML.T0085.002 Data from AI Services: Conversation Context and Memory (raw scratchpads and retained reasoning stay outside ordinary display and logging)"
+        },
+        {
+          "id": "AID-D-002.004",
+          "rationale": "reasoning-shape telemetry flags unexpected disclosure of hidden interaction state",
+          "item_raw": "AML.T0085.002 Data from AI Services: Conversation Context and Memory (reasoning-shape telemetry flags unexpected disclosure of hidden interaction state)"
+        },
+        {
+          "id": "AID-D-003.002",
+          "rationale": "output findings identify sensitive conversation content",
+          "item_raw": "AML.T0085.002 Data from AI Services: Conversation Context and Memory (output findings identify sensitive conversation content)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0085.003",
+      "item_locator": "AML.T0085.003 Data from AI Services: System Instructions",
+      "name": "Data from AI Services: System Instructions",
+      "controls": [
+        {
+          "id": "AID-H-037.001",
+          "rationale": "restricts hidden reasoning fields that can carry non-public instructions",
+          "item_raw": "AML.T0085.003 Data from AI Services: System Instructions (restricts hidden reasoning fields that can carry non-public instructions)"
+        },
+        {
+          "id": "AID-D-001.004",
+          "rationale": "a leaked challenge value is a system-prompt disclosure signal",
+          "item_raw": "AML.T0085.003 Data from AI Services: System Instructions (a leaked challenge value is a system-prompt disclosure signal)"
+        },
+        {
+          "id": "AID-D-003.002",
+          "rationale": "findings identify system-prompt content in outputs",
+          "item_raw": "AML.T0085.003 Data from AI Services: System Instructions (findings identify system-prompt content in outputs)"
         }
       ]
     },
@@ -6265,6 +6262,11 @@
       "item_locator": "AML.T0091.000 Use Alternate Authentication Material: Application Access Token",
       "name": "Use Alternate Authentication Material: Application Access Token",
       "controls": [
+        {
+          "id": "AID-H-017.008",
+          "rationale": "the broker fences further issuance and revokes run-issued application tokens separately from resource deletion",
+          "item_raw": "AML.T0091.000 Use Alternate Authentication Material: Application Access Token (the broker fences further issuance and revokes run-issued application tokens separately from resource deletion)"
+        },
         {
           "id": "AID-E-001.002",
           "rationale": "real-time JWT/API token revocation",
@@ -7844,6 +7846,11 @@
           "item_raw": "AML.T0118.000 Autonomous AI Agent Communication: Communication via Shared Artifacts (request-local state leaves no shared persistent artifacts for agents to coordinate through)"
         },
         {
+          "id": "AID-H-017.008",
+          "rationale": "independent cleanup removes unauthorized cross-run coordination resources",
+          "item_raw": "AML.T0118.000 Autonomous AI Agent Communication: Communication via Shared Artifacts (independent cleanup removes unauthorized cross-run coordination resources)"
+        },
+        {
           "id": "AID-D-003.006",
           "rationale": "cross-namespace and repeated-fingerprint writes reveal shared memory used as a coordination channel",
           "item_raw": "AML.T0118.000 Autonomous AI Agent Communication: Communication via Shared Artifacts (cross-namespace and repeated-fingerprint writes reveal shared memory used as a coordination channel)"
@@ -7979,6 +7986,11 @@
           "id": "AID-H-017.004",
           "rationale": "state is rebuilt only from the signed mission source, not from recovered working artifacts",
           "item_raw": "AML.T0121 AI Agent Environment Reconstruction (state is rebuilt only from the signed mission source, not from recovered working artifacts)"
+        },
+        {
+          "id": "AID-H-017.008",
+          "rationale": "closure removes external state otherwise available to resume an expired run",
+          "item_raw": "AML.T0121 AI Agent Environment Reconstruction (closure removes external state otherwise available to resume an expired run)"
         },
         {
           "id": "AID-H-021.002",
@@ -8264,6 +8276,11 @@
       "name": "Data Staged",
       "controls": [
         {
+          "id": "AID-H-017.008",
+          "rationale": "expired staging resources are removed and independently probed",
+          "item_raw": "AML.T0127 Data Staged (expired staging resources are removed and independently probed)"
+        },
+        {
           "id": "AID-H-018.005",
           "rationale": "sensitivity-tagged values cannot be written into unapproved storage sinks",
           "item_raw": "AML.T0127 Data Staged (sensitivity-tagged values cannot be written into unapproved storage sinks)"
@@ -8475,6 +8492,443 @@
           "id": "AID-H-002.002",
           "rationale": "ingestion scans the exact fetched bytes instead of verifying one response and consuming a refetch",
           "item_raw": "AML.T0134 AI Targeted Cloaking (ingestion scans the exact fetched bytes instead of verifying one response and consuming a refetch)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0135",
+      "item_locator": "AML.T0135 Outputs from AI Models",
+      "name": "Outputs from AI Models",
+      "controls": [
+        {
+          "id": "AID-H-006.003",
+          "rationale": "the numeric response contract withholds unnecessary scores and logits used as an extraction corpus",
+          "item_raw": "AML.T0135 Outputs from AI Models (the numeric response contract withholds unnecessary scores and logits used as an extraction corpus)"
+        },
+        {
+          "id": "AID-D-005.003",
+          "rationale": "cross-account query and response-signature hunts identify coordinated collection of model outputs",
+          "item_raw": "AML.T0135 Outputs from AI Models (cross-account query and response-signature hunts identify coordinated collection of model outputs)"
+        },
+        {
+          "id": "AID-I-003.002",
+          "rationale": "identity-bound admission limits and supported shared abuse counters constrain collection throughput",
+          "item_raw": "AML.T0135 Outputs from AI Models (identity-bound admission limits and supported shared abuse counters constrain collection throughput)"
+        },
+        {
+          "id": "AID-DV-001",
+          "rationale": "isolated synthetic endpoints absorb and record model-output collection",
+          "item_raw": "AML.T0135 Outputs from AI Models (isolated synthetic endpoints absorb and record model-output collection)"
+        },
+        {
+          "id": "AID-DV-003",
+          "rationale": "verified malicious requests receive bounded lower-utility responses instead of useful replication data",
+          "item_raw": "AML.T0135 Outputs from AI Models (verified malicious requests receive bounded lower-utility responses instead of useful replication data)"
+        },
+        {
+          "id": "AID-DV-004",
+          "rationale": "activation-linked external markers expose copied model or trap outputs",
+          "item_raw": "AML.T0135 Outputs from AI Models (activation-linked external markers expose copied model or trap outputs)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0136",
+      "item_locator": "AML.T0136 Exfiltration via AI User Interface",
+      "name": "Exfiltration via AI User Interface",
+      "controls": [
+        {
+          "id": "AID-H-006.002",
+          "rationale": "pre-delivery holdback and redaction prevent sensitive text reaching the user interface",
+          "item_raw": "AML.T0136 Exfiltration via AI User Interface (pre-delivery holdback and redaction prevent sensitive text reaching the user interface)"
+        },
+        {
+          "id": "AID-H-037.001",
+          "rationale": "the gateway excludes hidden reasoning from ordinary user display",
+          "item_raw": "AML.T0136 Exfiltration via AI User Interface (the gateway excludes hidden reasoning from ordinary user display)"
+        },
+        {
+          "id": "AID-D-003.002",
+          "rationale": "pre-delivery and streaming DLP findings expose sensitive content headed for a user interface",
+          "item_raw": "AML.T0136 Exfiltration via AI User Interface (pre-delivery and streaming DLP findings expose sensitive content headed for a user interface)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0137",
+      "item_locator": "AML.T0137 Training Data Information from AI Models",
+      "name": "Training Data Information from AI Models",
+      "controls": [
+        {
+          "id": "AID-M-003.007",
+          "rationale": null,
+          "item_raw": "AML.T0137 Training Data Information from AI Models"
+        },
+        {
+          "id": "AID-H-002.001",
+          "rationale": "the mapped record-level privacy mechanism limits the stated training-data disclosure path",
+          "item_raw": "AML.T0137 Training Data Information from AI Models (the mapped record-level privacy mechanism limits the stated training-data disclosure path)"
+        },
+        {
+          "id": "AID-H-005.001",
+          "rationale": "the mapped record-level privacy mechanism limits the stated training-data disclosure path",
+          "item_raw": "AML.T0137 Training Data Information from AI Models (the mapped record-level privacy mechanism limits the stated training-data disclosure path)"
+        },
+        {
+          "id": "AID-H-005.003",
+          "rationale": "the mapped record-level privacy mechanism limits the stated training-data disclosure path",
+          "item_raw": "AML.T0137 Training Data Information from AI Models (the mapped record-level privacy mechanism limits the stated training-data disclosure path)"
+        },
+        {
+          "id": "AID-H-005.004",
+          "rationale": "the mapped record-level privacy mechanism limits the stated training-data disclosure path",
+          "item_raw": "AML.T0137 Training Data Information from AI Models (the mapped record-level privacy mechanism limits the stated training-data disclosure path)"
+        },
+        {
+          "id": "AID-H-006.002",
+          "rationale": "the mapped record-level privacy mechanism limits the stated training-data disclosure path",
+          "item_raw": "AML.T0137 Training Data Information from AI Models (the mapped record-level privacy mechanism limits the stated training-data disclosure path)"
+        },
+        {
+          "id": "AID-H-006.003",
+          "rationale": "the mapped record-level privacy mechanism limits the stated training-data disclosure path",
+          "item_raw": "AML.T0137 Training Data Information from AI Models (the mapped record-level privacy mechanism limits the stated training-data disclosure path)"
+        },
+        {
+          "id": "AID-H-033.006",
+          "rationale": null,
+          "item_raw": "AML.T0137 Training Data Information from AI Models"
+        },
+        {
+          "id": "AID-D-003.002",
+          "rationale": "the mapped record-level privacy mechanism limits the stated training-data disclosure path",
+          "item_raw": "AML.T0137 Training Data Information from AI Models (the mapped record-level privacy mechanism limits the stated training-data disclosure path)"
+        },
+        {
+          "id": "AID-DV-001",
+          "rationale": "the mapped record-level privacy mechanism limits the stated training-data disclosure path",
+          "item_raw": "AML.T0137 Training Data Information from AI Models (the mapped record-level privacy mechanism limits the stated training-data disclosure path)"
+        },
+        {
+          "id": "AID-DV-007",
+          "rationale": "the mapped record-level privacy mechanism limits the stated training-data disclosure path",
+          "item_raw": "AML.T0137 Training Data Information from AI Models (the mapped record-level privacy mechanism limits the stated training-data disclosure path)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0137.000",
+      "item_locator": "AML.T0137.000 Training Data Information from AI Models: Infer Membership",
+      "name": "Training Data Information from AI Models: Infer Membership",
+      "controls": [
+        {
+          "id": "AID-H-005.001",
+          "rationale": null,
+          "item_raw": "AML.T0137.000 Training Data Information from AI Models: Infer Membership"
+        },
+        {
+          "id": "AID-H-005.003",
+          "rationale": null,
+          "item_raw": "AML.T0137.000 Training Data Information from AI Models: Infer Membership"
+        },
+        {
+          "id": "AID-H-006.003",
+          "rationale": null,
+          "item_raw": "AML.T0137.000 Training Data Information from AI Models: Infer Membership"
+        },
+        {
+          "id": "AID-H-033.006",
+          "rationale": "denying token-probability query surfaces removes that information source for score-based membership attacks",
+          "item_raw": "AML.T0137.000 Training Data Information from AI Models: Infer Membership (denying token-probability query surfaces removes that information source for score-based membership attacks)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0137.002",
+      "item_locator": "AML.T0137.002 Training Data Information from AI Models: Invert AI Model",
+      "name": "Training Data Information from AI Models: Invert AI Model",
+      "controls": [
+        {
+          "id": "AID-H-005.001",
+          "rationale": "noise makes inversion less effective",
+          "item_raw": "AML.T0137.002 Training Data Information from AI Models: Invert AI Model (noise makes inversion less effective)"
+        },
+        {
+          "id": "AID-H-006.003",
+          "rationale": null,
+          "item_raw": "AML.T0137.002 Training Data Information from AI Models: Invert AI Model"
+        },
+        {
+          "id": "AID-DV-001",
+          "rationale": null,
+          "item_raw": "AML.T0137.002 Training Data Information from AI Models: Invert AI Model"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0137.003",
+      "item_locator": "AML.T0137.003 Training Data Information from AI Models: Extract Memorized Data",
+      "name": "Training Data Information from AI Models: Extract Memorized Data",
+      "controls": [
+        {
+          "id": "AID-M-003.007",
+          "rationale": "release-bound known-reference probes detect discoverable protected-text regurgitation independently of the training mitigation",
+          "item_raw": "AML.T0137.003 Training Data Information from AI Models: Extract Memorized Data (release-bound known-reference probes detect discoverable protected-text regurgitation independently of the training mitigation)"
+        },
+        {
+          "id": "AID-H-002.001",
+          "rationale": "sensitive-record removal before training reduces memorized-content disclosure",
+          "item_raw": "AML.T0137.003 Training Data Information from AI Models: Extract Memorized Data (sensitive-record removal before training reduces memorized-content disclosure)"
+        },
+        {
+          "id": "AID-H-005.001",
+          "rationale": "accounted training privacy bounds individual-record memorization exposure",
+          "item_raw": "AML.T0137.003 Training Data Information from AI Models: Extract Memorized Data (accounted training privacy bounds individual-record memorization exposure)"
+        },
+        {
+          "id": "AID-H-005.004",
+          "rationale": "deduplication and canary recall checks reduce repeated training-text regurgitation",
+          "item_raw": "AML.T0137.003 Training Data Information from AI Models: Extract Memorized Data (deduplication and canary recall checks reduce repeated training-text regurgitation)"
+        },
+        {
+          "id": "AID-H-006.002",
+          "rationale": "the release gate withholds detected memorized sensitive text",
+          "item_raw": "AML.T0137.003 Training Data Information from AI Models: Extract Memorized Data (the release gate withholds detected memorized sensitive text)"
+        },
+        {
+          "id": "AID-D-003.002",
+          "rationale": "the signed-source memorization detector identifies regurgitated training passages",
+          "item_raw": "AML.T0137.003 Training Data Information from AI Models: Extract Memorized Data (the signed-source memorization detector identifies regurgitated training passages)"
+        },
+        {
+          "id": "AID-DV-007",
+          "rationale": "preregistered canary recall measures memorized training-data disclosure",
+          "item_raw": "AML.T0137.003 Training Data Information from AI Models: Extract Memorized Data (preregistered canary recall measures memorized training-data disclosure)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0138",
+      "item_locator": "AML.T0138 Indicator Removal",
+      "name": "Indicator Removal",
+      "controls": [
+        {
+          "id": "AID-M-006.003",
+          "rationale": "independent lifecycle reconciliation and external locked retention reveal missing or altered HITL events",
+          "item_raw": "AML.T0138 Indicator Removal (independent lifecycle reconciliation and external locked retention reveal missing or altered HITL events)"
+        },
+        {
+          "id": "AID-H-007.007",
+          "rationale": "the evaluated identity cannot modify signed harness mechanisms or independent evidence writers",
+          "item_raw": "AML.T0138 Indicator Removal (the evaluated identity cannot modify signed harness mechanisms or independent evidence writers)"
+        },
+        {
+          "id": "AID-H-021.004",
+          "rationale": "agent identities cannot alter their own audit or oversight surfaces",
+          "item_raw": "AML.T0138 Indicator Removal (agent identities cannot alter their own audit or oversight surfaces)"
+        },
+        {
+          "id": "AID-D-005.001",
+          "rationale": "separate retention-locked log versions prevent silent deletion of collected security evidence",
+          "item_raw": "AML.T0138 Indicator Removal (separate retention-locked log versions prevent silent deletion of collected security evidence)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0139",
+      "item_locator": "AML.T0139 Compromise Accounts",
+      "name": "Compromise Accounts",
+      "controls": [
+        {
+          "id": "AID-H-004.001",
+          "rationale": "human account authentication and privileged access lifecycle limit compromised AI-service user accounts; machine credentials belong to H-004.002",
+          "item_raw": "AML.T0139 Compromise Accounts (human account authentication and privileged access lifecycle limit compromised AI-service user accounts; machine credentials belong to H-004.002)"
+        },
+        {
+          "id": "AID-H-004.002",
+          "rationale": "provider-native workload authentication and entry-point binding restrict compromised AI-service credential use outside its approved route",
+          "item_raw": "AML.T0139 Compromise Accounts (provider-native workload authentication and entry-point binding restrict compromised AI-service credential use outside its approved route)"
+        },
+        {
+          "id": "AID-H-028.002",
+          "rationale": "protected client credentials and expiry propagation limit stolen AI-service account access",
+          "item_raw": "AML.T0139 Compromise Accounts (protected client credentials and expiry propagation limit stolen AI-service account access)"
+        },
+        {
+          "id": "AID-D-011.004",
+          "rationale": "provider invocation and issuance correlation detects valid service credentials used for unauthorized model access",
+          "item_raw": "AML.T0139 Compromise Accounts (provider invocation and issuance correlation detects valid service credentials used for unauthorized model access)"
+        },
+        {
+          "id": "AID-E-001.001",
+          "rationale": "confirmed compromised long-lived credentials are removed and independently probed",
+          "item_raw": "AML.T0139 Compromise Accounts (confirmed compromised long-lived credentials are removed and independently probed)"
+        },
+        {
+          "id": "AID-E-001.002",
+          "rationale": "issued sessions and tokens for a compromised AI account are revoked and read back",
+          "item_raw": "AML.T0139 Compromise Accounts (issued sessions and tokens for a compromised AI account are revoked and read back)"
+        },
+        {
+          "id": "AID-E-001.003",
+          "rationale": "compromised workload principals and new issuance are disabled",
+          "item_raw": "AML.T0139 Compromise Accounts (compromised workload principals and new issuance are disabled)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0140",
+      "item_locator": "AML.T0140 Centralized AI Service Request Routing",
+      "name": "Centralized AI Service Request Routing",
+      "controls": [
+        {
+          "id": "AID-D-005.003",
+          "rationale": "cross-identity campaign hunts correlate coordinated prompt families and route changes inside the observed service scope",
+          "item_raw": "AML.T0140 Centralized AI Service Request Routing (cross-identity campaign hunts correlate coordinated prompt families and route changes inside the observed service scope)"
+        },
+        {
+          "id": "AID-I-003.002",
+          "rationale": "supported shared abuse counters restrict correlated rotating sources without resetting base identity quotas",
+          "item_raw": "AML.T0140 Centralized AI Service Request Routing (supported shared abuse counters restrict correlated rotating sources without resetting base identity quotas)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0141",
+      "item_locator": "AML.T0141 AI Service Request Metadata Sanitization",
+      "name": "AI Service Request Metadata Sanitization",
+      "controls": [
+        {
+          "id": "AID-D-005.003",
+          "rationale": "metadata-disappearance findings retain authenticated joins and independently observed campaign signals",
+          "item_raw": "AML.T0141 AI Service Request Metadata Sanitization (metadata-disappearance findings retain authenticated joins and independently observed campaign signals)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0142",
+      "item_locator": "AML.T0142 Event Triggered Execution",
+      "name": "Event Triggered Execution",
+      "controls": [
+        {
+          "id": "AID-H-021.005",
+          "rationale": "workspace lifecycle hooks cannot activate without a current exact-manifest trust decision",
+          "item_raw": "AML.T0142 Event Triggered Execution (workspace lifecycle hooks cannot activate without a current exact-manifest trust decision)"
+        },
+        {
+          "id": "AID-D-004.001",
+          "rationale": "complete signed startup-root inventories detect changed or newly added interpreter hooks and path configuration",
+          "item_raw": "AML.T0142 Event Triggered Execution (complete signed startup-root inventories detect changed or newly added interpreter hooks and path configuration)"
+        },
+        {
+          "id": "AID-E-003.003",
+          "rationale": "the signed eviction manifest removes confirmed malicious startup hooks and verifies subsequent interpreter starts",
+          "item_raw": "AML.T0142 Event Triggered Execution (the signed eviction manifest removes confirmed malicious startup hooks and verifies subsequent interpreter starts)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0143",
+      "item_locator": "AML.T0143 LLM Prompt Propagation",
+      "name": "LLM Prompt Propagation",
+      "controls": [
+        {
+          "id": "AID-H-002.002",
+          "rationale": "ingress validation keeps propagated instructions from becoming active trusted commands",
+          "item_raw": "AML.T0143 LLM Prompt Propagation (ingress validation keeps propagated instructions from becoming active trusted commands)"
+        },
+        {
+          "id": "AID-H-006.002",
+          "rationale": "the full-action release gate consumes outbound instruction findings before shared-store writes or sends",
+          "item_raw": "AML.T0143 LLM Prompt Propagation (the full-action release gate consumes outbound instruction findings before shared-store writes or sends)"
+        },
+        {
+          "id": "AID-H-018.005",
+          "rationale": "the dispatcher requires a content-bound release decision for the exact propagation-capable sink and recipient",
+          "item_raw": "AML.T0143 LLM Prompt Propagation (the dispatcher requires a content-bound release decision for the exact propagation-capable sink and recipient)"
+        },
+        {
+          "id": "AID-D-003.006",
+          "rationale": "memory-write fingerprints and provenance monitoring identify repeated malicious instructions persisted to agent memory",
+          "item_raw": "AML.T0143 LLM Prompt Propagation (memory-write fingerprints and provenance monitoring identify repeated malicious instructions persisted to agent memory)"
+        },
+        {
+          "id": "AID-D-003.009",
+          "rationale": "pre-dispatch content scanning detects instruction payloads written into another agent consumption context",
+          "item_raw": "AML.T0143 LLM Prompt Propagation (pre-dispatch content scanning detects instruction payloads written into another agent consumption context)"
+        },
+        {
+          "id": "AID-I-004.004",
+          "rationale": "untrusted memory candidates cannot enter trusted persistent context without transactional promotion",
+          "item_raw": "AML.T0143 LLM Prompt Propagation (untrusted memory candidates cannot enter trusted persistent context without transactional promotion)"
+        },
+        {
+          "id": "AID-I-004.009",
+          "rationale": "peer-agent content remains quarantined and is promoted only as bounded untrusted data",
+          "item_raw": "AML.T0143 LLM Prompt Propagation (peer-agent content remains quarantined and is promoted only as bounded untrusted data)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0144",
+      "item_locator": "AML.T0144 Recover AI Model Internals",
+      "name": "Recover AI Model Internals",
+      "controls": [
+        {
+          "id": "AID-H-006.003",
+          "rationale": "the numeric API rejects raw logits and unauthorized probability vectors used to reconstruct internal parameters",
+          "item_raw": "AML.T0144 Recover AI Model Internals (the numeric API rejects raw logits and unauthorized probability vectors used to reconstruct internal parameters)"
+        },
+        {
+          "id": "AID-H-033.006",
+          "rationale": "closed invocation policy rejects untrusted token-probability and logit-bias probing fields before provider dispatch",
+          "item_raw": "AML.T0144 Recover AI Model Internals (closed invocation policy rejects untrusted token-probability and logit-bias probing fields before provider dispatch)"
+        }
+      ]
+    },
+    {
+      "framework_key": "mitre-atlas",
+      "external_id": "AML.T0145",
+      "item_locator": "AML.T0145 Poison AI Agent Learning Environment",
+      "name": "Poison AI Agent Learning Environment",
+      "controls": [
+        {
+          "id": "AID-H-002.001",
+          "rationale": "complete candidate-snapshot sanitization applies before interaction-derived data is admitted to training",
+          "item_raw": "AML.T0145 Poison AI Agent Learning Environment (complete candidate-snapshot sanitization applies before interaction-derived data is admitted to training)"
+        },
+        {
+          "id": "AID-H-012.003",
+          "rationale": "independent behavioral promotion replay challenges policies learned from manipulated environments",
+          "item_raw": "AML.T0145 Poison AI Agent Learning Environment (independent behavioral promotion replay challenges policies learned from manipulated environments)"
+        },
+        {
+          "id": "AID-H-012.005",
+          "rationale": "optimizer separation and held-out independent evaluation challenge contaminated reward and verifier experience",
+          "item_raw": "AML.T0145 Poison AI Agent Learning Environment (optimizer separation and held-out independent evaluation challenge contaminated reward and verifier experience)"
+        },
+        {
+          "id": "AID-H-029.002",
+          "rationale": "stage and memory-write gates require authorized provenance before agent interactions enter persistent learning paths",
+          "item_raw": "AML.T0145 Poison AI Agent Learning Environment (stage and memory-write gates require authorized provenance before agent interactions enter persistent learning paths)"
+        },
+        {
+          "id": "AID-D-013",
+          "rationale": "independent reward and trajectory comparisons reveal manipulated learning feedback and resulting policy behavior",
+          "item_raw": "AML.T0145 Poison AI Agent Learning Environment (independent reward and trajectory comparisons reveal manipulated learning feedback and resulting policy behavior)"
         }
       ]
     },
@@ -8718,6 +9172,11 @@
           "id": "AID-D-003.005",
           "rationale": null,
           "item_raw": "LLM01:2026 Prompt Injection"
+        },
+        {
+          "id": "AID-D-003.009",
+          "rationale": "detects outbound payloads that become indirect instructions for a downstream model",
+          "item_raw": "LLM01:2026 Prompt Injection (detects outbound payloads that become indirect instructions for a downstream model)"
         },
         {
           "id": "AID-D-005.003",
@@ -9299,6 +9758,11 @@
           "id": "AID-H-017.006",
           "rationale": null,
           "item_raw": "LLM03:2026 Excessive Agency"
+        },
+        {
+          "id": "AID-H-017.008",
+          "rationale": "run-bound brokering and expiry prevent tool-created resources from retaining authority beyond the authorized task",
+          "item_raw": "LLM03:2026 Excessive Agency (run-bound brokering and expiry prevent tool-created resources from retaining authority beyond the authorized task)"
         },
         {
           "id": "AID-H-018.001",
@@ -10562,6 +11026,11 @@
           "item_raw": "LLM10:2026 Improper Output Handling"
         },
         {
+          "id": "AID-D-003.009",
+          "rationale": "findings identify instruction-bearing output before a downstream write or send",
+          "item_raw": "LLM10:2026 Improper Output Handling (findings identify instruction-bearing output before a downstream write or send)"
+        },
+        {
           "id": "AID-I-001.002",
           "rationale": "low-level sandboxing contains generated code after unsafe model output reaches execution",
           "item_raw": "LLM10:2026 Improper Output Handling (low-level sandboxing contains generated code after unsafe model output reaches execution)"
@@ -11760,6 +12229,11 @@
           "item_raw": "ASI01:2026 Agent Goal Hijack (memory poisoning enables persistent goal hijacking)"
         },
         {
+          "id": "AID-D-003.009",
+          "rationale": "detects instruction payloads forwarded to another agent",
+          "item_raw": "ASI01:2026 Agent Goal Hijack (detects instruction payloads forwarded to another agent)"
+        },
+        {
           "id": "AID-D-005.003",
           "rationale": "G004 hunts externally supplied assistant instructions; a click is triage evidence, not proof of successful hijack",
           "item_raw": "ASI01:2026 Agent Goal Hijack (G004 hunts externally supplied assistant instructions; a click is triage evidence, not proof of successful hijack)"
@@ -11916,6 +12390,11 @@
           "id": "AID-H-017.007",
           "rationale": null,
           "item_raw": "ASI02:2026 Tool Misuse and Exploitation"
+        },
+        {
+          "id": "AID-H-017.008",
+          "rationale": "brokered run expiry prevents continued use of tool-created resources",
+          "item_raw": "ASI02:2026 Tool Misuse and Exploitation (brokered run expiry prevents continued use of tool-created resources)"
         },
         {
           "id": "AID-H-018.001",
@@ -13090,6 +13569,11 @@
           "item_raw": "ASI06:2026 Memory & Context Poisoning"
         },
         {
+          "id": "AID-D-003.009",
+          "rationale": "detects malicious instruction copies sent to shared context stores",
+          "item_raw": "ASI06:2026 Memory & Context Poisoning (detects malicious instruction copies sent to shared context stores)"
+        },
+        {
           "id": "AID-D-004.005",
           "rationale": null,
           "item_raw": "ASI06:2026 Memory & Context Poisoning"
@@ -13510,6 +13994,11 @@
           "id": "AID-H-017.001",
           "rationale": null,
           "item_raw": "ASI10:2026 Rogue Agents"
+        },
+        {
+          "id": "AID-H-017.008",
+          "rationale": "independent lifecycle enforcement removes resources that sustain unauthorized cross-run activity",
+          "item_raw": "ASI10:2026 Rogue Agents (independent lifecycle enforcement removes resources that sustain unauthorized cross-run activity)"
         },
         {
           "id": "AID-H-018.002",

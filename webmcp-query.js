@@ -1,7 +1,7 @@
-import { resolveOwaspLlmReference, resolveCiscoReference } from './framework-migrations.js';
+import { resolveOwaspLlmReference, resolveCiscoReference, resolveAtlasReference } from './framework-migrations.js';
 
 /**
- * Resolve edition-aware Cisco and OWASP LLM references before lookup.
+ * Resolve edition-aware ATLAS, Cisco and OWASP LLM references before lookup.
  * Cisco queries use only the resolved current canonical ID; obsolete, conflicting
  * or malformed references cannot fall through to descriptive keyword matches.
  * OWASP retains its existing canonical migration sequence. Other framework input
@@ -10,7 +10,9 @@ import { resolveOwaspLlmReference, resolveCiscoReference } from './framework-mig
 export function buildThreatQueryPlan(rawThreat) {
     const threat = String(rawThreat || '').trim();
     const ciscoResolution = resolveCiscoReference(threat);
-    const resolution = ciscoResolution || resolveOwaspLlmReference(threat);
+    const techniqueIntent = /\bAML\.T(?!A)\S*|\bATLAS\s+(?:(?:v|version\s+|edition\s+)?20\d{2}\.\d{2}\s+)?T\d/i.test(threat);
+    const atlasResolution = techniqueIntent ? resolveAtlasReference(threat) : null;
+    const resolution = atlasResolution || ciscoResolution || resolveOwaspLlmReference(threat);
     if (resolution?.status === 'invalid' || resolution?.status === 'ambiguous') {
         return {
             threat,
@@ -22,8 +24,9 @@ export function buildThreatQueryPlan(rawThreat) {
     }
     const canonicalThreatId = resolution?.canonical?.id || null;
     const canonicalThreat = resolution?.canonical?.label || null;
-    const queries = ciscoResolution ? [] : [threat];
-    if (canonicalThreatId && (ciscoResolution || canonicalThreatId.toLowerCase() !== threat.toLowerCase())) {
+    const strictReference = Boolean(ciscoResolution || atlasResolution);
+    const queries = strictReference ? [] : [threat];
+    if (canonicalThreatId && (strictReference || canonicalThreatId.toLowerCase() !== threat.toLowerCase())) {
         queries.push(canonicalThreatId);
     }
     return {

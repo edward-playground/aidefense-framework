@@ -1,4 +1,22 @@
 import { ciscoFramework } from './cisco-framework.js';
+import { integrationCatalogs } from './integration-catalogs.js';
+
+const atlasCatalog = integrationCatalogs['mitre-atlas'];
+const atlasRetirements = [
+    { from: { id: 'AML.T0024.000', name: 'Infer Training Data Membership' },
+        successors: ['AML.T0137.000', 'AML.T0137.001'],
+        reason: 'The former definition included both individual membership and dataset-level properties. Select the actual inference objective.' },
+    { from: { id: 'AML.T0024.001', name: 'Invert AI Model' },
+        successors: ['AML.T0137.002'], reason: 'The model inversion concept has a current inference identifier.' },
+    { from: { id: 'AML.T0024.002', name: 'Extract AI Model' },
+        successors: ['AML.T0005.001'], reason: 'The former definition trained a behavioral replica from outputs; it did not recover internal parameters.' },
+    { from: { id: 'AML.T0056', name: 'Extract LLM System Prompt' },
+        successors: ['AML.T0085.003'], reason: 'Select the system-instructions disclosure source.' },
+    { from: { id: 'AML.T0057', name: 'LLM Data Leakage' },
+        successors: ['AML.T0137.003', 'AML.T0085.000', 'AML.T0085.001', 'AML.T0085.002'],
+        reason: 'The former definition combined memorized training data and multiple connected or conversational sources. Select the actual source.' }
+].map(item => ({ ...item, from: { edition: '2026.09', ...item.from },
+    mappingCarryForward: 'requires-semantic-review' }));
 
 /**
  * Public framework edition and semantic migration registry.
@@ -8,9 +26,24 @@ import { ciscoFramework } from './cisco-framework.js';
  */
 export const frameworkMigrations = {
     schemaVersion: "1.0",
-    registryVersion: "2026-09-11",
+    registryVersion: "2026-10-30",
     contract: "AIDEFEND framework edition and semantic migration registry",
     frameworks: {
+        atlas: {
+            stableKey: 'atlas',
+            activeEdition: atlasCatalog.upstream_version,
+            activeLabel: atlasCatalog.source_framework_label,
+            sourceUrl: atlasCatalog.upstream_url,
+            sourceArtifact: { ...atlasCatalog.source_artifact },
+            sourceLicense: { attribution: atlasCatalog.license_notice },
+            resolutionPolicy: {
+                bareId: 'resolve only against the current catalog',
+                retiredId: 'return reviewed semantic successors; split concepts require explicit selection',
+                mappingCarryForward: 'never automatic; requires target-edition semantic review'
+            },
+            activeItems: atlasCatalog.items.map(item => ({ id: item.external_id, name: item.name })),
+            migrations: atlasRetirements
+        },
         cisco: {
             stableKey: "cisco",
             activeEdition: ciscoFramework.version,
@@ -838,6 +871,60 @@ export function resolveCiscoReference(rawReference) {
     return { status: 'canonical', ...base, canonical: canonical(current),
         reason: 'The identifier resolves against Cisco v2.0.0 only; v1 meanings and mappings are not carried forward.',
         ...(catalog.historicalItems.some(item => item.id === id) ? { reusedIdentifier: true } : {}) };
+}
+
+/** Resolve current ATLAS identifiers and reviewed retired concepts, never old mappings. */
+export function resolveAtlasReference(rawReference) {
+    const input = String(rawReference || '').trim();
+    if (!/\b(?:ATLAS|AML\.T)/i.test(input)) return null;
+    const catalog = frameworkMigrations.frameworks.atlas;
+    const base = { input, frameworkKey: catalog.stableKey, activeEdition: catalog.activeEdition };
+    const invalid = (reasonCode, reason) => ({ status: 'invalid', ...base, reasonCode, reason });
+    if (/\b(?:LLM\d|ASI\d|AI(?:Subtech|Tech)-|NISTAML\.)/i.test(input)) {
+        return invalid('mixed_frameworks', 'Submit one framework reference per query.');
+    }
+    const tokens = [...input.matchAll(/\b(?:AML\.)?T\d[^\s,;()[\]{}&/?]*/ig)];
+    if (!tokens.length) return invalid('unrecognized_reference', 'Use one exact ATLAS technique or sub-technique identifier.');
+    const ids = [];
+    for (const token of tokens) {
+        if (!/^(?:AML\.)?T\d{4}(?:\.\d{3})?$/i.test(token[0])) {
+            return invalid('malformed_identifier', 'Use AML.TNNNN or AML.TNNNN.NNN.');
+        }
+        ids.push('AML.' + token[0].toUpperCase().replace(/^AML\./, ''));
+    }
+    const unique = [...new Set(ids)];
+    const byId = new Map(catalog.activeItems.map(item => [item.id, item]));
+    const canonical = item => ({ frameworkKey: catalog.stableKey, framework: catalog.activeLabel,
+        edition: catalog.activeEdition, id: item.id, name: item.name, label: `${item.id} ${item.name}` });
+    if (unique.length !== 1) return { status: 'ambiguous', ...base, reasonCode: 'multiple_identifiers',
+        candidates: unique.filter(id => byId.has(id)).map(id => canonical(byId.get(id))),
+        reason: 'Select one ATLAS concept per lookup.' };
+    let remainder = input.replace(/\b(?:AML\.)?T\d[^\s,;()[\]{}&/?]*/ig, ' ');
+    const editions = [...remainder.matchAll(/\b(?:v|version\s+|edition\s+)?(20\d{2}\.\d{2})\b/ig)].map(m => m[1]);
+    remainder = remainder.replace(/\b(?:v|version\s+|edition\s+)?20\d{2}\.\d{2}\b/ig, ' ')
+        .replace(/\b(?:MITRE\s+)?ATLAS\b/ig, ' ').replace(/^[\s:;,()[\]{}-]+|[\s:;,()[\]{}-]+$/g, '').trim();
+    const id = unique[0];
+    const migration = catalog.migrations.find(item => item.from.id === id);
+    if (editions.some(edition => edition !== catalog.activeEdition && !(migration && edition === migration.from.edition))) {
+        return invalid('unsupported_edition', 'Current definitions are served; a different edition is not inferred for an active identifier.');
+    }
+    const item = byId.get(id);
+    if (item) {
+        if (remainder && normalizeConceptName(remainder) !== normalizeConceptName(item.name)) {
+            return invalid('id_name_conflict', 'The supplied name does not match this current identifier.');
+        }
+        return { status: 'canonical', ...base, canonical: canonical(item), reason: 'Resolved against the current ATLAS catalog.' };
+    }
+    if (!migration) return invalid('unknown_identifier', 'This identifier is not active and has no reviewed successor.');
+    if (remainder && normalizeConceptName(remainder) !== normalizeConceptName(migration.from.name)) {
+        return invalid('id_name_conflict', 'The supplied name does not match the retired reference.');
+    }
+    const candidates = migration.successors.map(successor => canonical(byId.get(successor)));
+    if (candidates.length !== 1) return { status: 'ambiguous', ...base, reasonCode: 'split_concept',
+        migratedFrom: migration.from, mappingCarryForward: migration.mappingCarryForward,
+        candidates, reason: migration.reason };
+    return { status: 'migrated', ...base, migratedFrom: migration.from,
+        canonical: candidates[0], mappingCarryForward: migration.mappingCarryForward, reason: migration.reason };
 }
 
 export default frameworkMigrations;
