@@ -2,12 +2,16 @@ const TECHNIQUE = /^AID-(?:M|H|D|I|DV|E|R)-\d{3}(?:\.\d{3})?$/;
 const GUIDANCE = /^AID-(?:M|H|D|I|DV|E|R)-\d{3}(?:\.\d{3})?-G\d{3}$/;
 const ATLAS = /^AML\.T\d{4}(?:\.\d{3})?$/;
 
-export function techniquePath(id, guidanceId = null, base = '/') {
+export function techniquePath(id, guidanceId = null, base = '/', { staticPages = true } = {}) {
     if (!TECHNIQUE.test(id)) throw new Error('Invalid technique ID');
     if (guidanceId && (!GUIDANCE.test(guidanceId) || !guidanceId.startsWith(id + '-G'))) {
         throw new Error('Guidance does not belong to this technique');
     }
-    return base.replace(/\/?$/, '/') + 'techniques/' + id + '/' + (guidanceId ? '#' + guidanceId : '');
+    const root = base.replace(/\/?$/, '/');
+    // Source previews have no generated /techniques/ documents. Their links
+    // must load the application at its real root, including in a new tab.
+    if (!staticPages) return root + '#t=' + id + (guidanceId ? '&g=' + guidanceId : '');
+    return root + 'techniques/' + id + '/' + (guidanceId ? '#' + guidanceId : '');
 }
 
 // Legacy hash links continue to work. A native fragment selects a guidance

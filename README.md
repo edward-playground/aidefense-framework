@@ -80,6 +80,17 @@ python -m http.server 8080
 
 Then open `http://localhost:8080`.
 
+Source previews use `#t=...` links so controls also open in new tabs and survive
+reloads. To build complete, directly addressable technique pages, run
+`node scripts/build-site.mjs` and serve `_site` instead.
+
+For GitHub Pages, set **Settings > Pages > Build and deployment > Source** to
+**GitHub Actions**. The existing `Build and deploy readable website` workflow
+publishes `_site`, including `/techniques/<ID>/` pages. Publishing the repository
+from a branch runs a second deployment that can overwrite those generated pages.
+The workflow checks the publishing source before deployment and checks a technique
+page and the application module after deployment.
+
 The core framework data, DOMPurify, and Tailwind browser bundle are stored locally. The pages request Google Fonts, the main page also requests Google Analytics, and the optional WebMCP module loads its exact-version, integrity-pinned runtime from `unpkg.com`. Blocking those third-party origins does not remove the local framework data, but it can disable WebMCP, analytics, or hosted fonts.
 
 ## Public dataset generation

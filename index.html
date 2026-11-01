@@ -1953,17 +1953,19 @@
                 applyTheme(next);
             }
             // --- Deep linking helpers ---
-            const siteBase = document.querySelector('meta[name="aidefend-site-base"]')?.content ||
+            const siteBaseMeta = document.querySelector('meta[name="aidefend-site-base"]');
+            const siteBase = siteBaseMeta?.content ||
                 window.location.pathname.replace(/[^/]*$/, '');
+            const techniqueRoutes = { staticPages: siteBaseMeta !== null };
             let restoringRoute = false;
             function techniqueUrl(id, guidanceId = null) {
-                return window.location.origin + techniquePath(id, guidanceId, siteBase);
+                return window.location.origin + techniquePath(id, guidanceId, siteBase, techniqueRoutes);
             }
             function updateTechniqueAddress(id, guidanceId = null) {
                 if (restoringRoute) return;
                 const current = readSiteRoute(window.location);
                 if (!guidanceId && current.techniqueId === id) guidanceId = current.guidanceId;
-                const target = techniquePath(id, guidanceId, siteBase);
+                const target = techniquePath(id, guidanceId, siteBase, techniqueRoutes);
                 if (window.location.pathname + window.location.hash !== target) {
                     history.pushState({ aidefend: true }, '', target);
                 }
