@@ -129,7 +129,8 @@ To publish a new Framework version:
 
 1. Set the same `1.YYYYMMDD` version in `package.json` and `aidefend-intro.js`.
 2. Run `npm run generate`, review the content and generated changes, and commit them together.
-3. Push or merge to `main`. The release workflow runs the repository tests, verifies generated outputs, and creates the annotated `v1.YYYYMMDD` tag on the exact validated commit.
+3. Push or merge to `main`. The release workflow runs the repository tests, verifies generated outputs, and creates the annotated `v1.YYYYMMDD` tag on the exact validated commit, then
+   publishes the matching GitHub Release page.
 
 Each version is published once. Later commits with the same version preserve its
 original tag; a content release needs a new version. The current date format
@@ -140,12 +141,35 @@ the workflow. If validation fails, fix the issue and retry the workflow on
 without publishing, run `node scripts/release-tag.mjs` in a complete checkout
 with the remote tags fetched.
 
+Every published tag gets a GitHub Release page built by
+`scripts/release-notes.mjs` from the tagged commits only (never from the
+working tree), so integrators can see what changed without reading commits:
+
+- the data version, citation format (`AID-X-NNN[.MMM]` plus data version) and
+  the claim boundary;
+- controls added, retired, moved to a new id, renamed, or changed in place
+  since the previous `v1.YYYYMMDD` tag, with the facet that changed
+  (description, scope boundary, pillar or phase, guidance, tools, mappings)
+  and threat-mapping-only changes listed separately;
+- external framework edition changes read from `framework-migrations.json`;
+- the integration-export checksums from `data/integration/manifest.json`;
+- attached files: `data.json`, `tactics-index.json`,
+  `framework-migrations.json`, `aidefend-integration-<tag>.zip`,
+  `release-changes.json` (the complete machine-readable diff) and
+  `SHA256SUMS.txt`.
+
+On an ordinary push the workflow creates the Release page only when the tag
+has none yet and never rewrites an existing one. To rebuild the page of an
+older tag, run the workflow manually with the `release_tag` input set to that
+tag. To preview the notes locally, run
+`node scripts/release-notes.mjs --tag v1.YYYYMMDD --out-dir <empty dir>`.
+
 Pull requests run validation with read-only permissions. Only the subsequent
 main-branch publication job receives `contents: write`, using GitHub's temporary
 token without an additional repository secret. Automated tag pushes do not
 trigger another GitHub Actions workflow through `GITHUB_TOKEN`; future tag-based
 deployment workflows must be connected explicitly. The website continues to
-deploy from `main`. This automation creates Git tags, not GitHub Release pages,
+deploy from `main`. This automation creates Git tags and their GitHub Release pages, not
 npm packages, Engine promotions, or semantic-review approvals.
 
 ## Security and implementation notice

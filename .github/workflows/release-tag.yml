@@ -5,6 +5,14 @@ on:
     branches: [main]
   pull_request:
   workflow_dispatch:
+    inputs:
+      release_tag:
+        description: >-
+          Optional existing v1.YYYYMMDD tag whose GitHub Release page should be
+          rebuilt from that tag's content (notes, checksums and attached files).
+          Leave empty for the normal validate-and-tag run.
+        required: false
+        default: ''
 
 permissions:
   contents: read
@@ -15,6 +23,7 @@ jobs:
     timeout-minutes: 10
     outputs:
       tag_status: ${{ steps.plan.outputs.status }}
+      tag: ${{ steps.plan.outputs.tag }}
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
         with:
@@ -36,14 +45,19 @@ jobs:
         id: plan
         run: node scripts/release-tag.mjs
 
-  tag:
+  # Publishes the tag for a new version and keeps the GitHub Release page of
+  # every published tag in step with it. On an ordinary push the Release is
+  # created only when the tag has none yet; an existing page is never rewritten
+  # unless a maintainer asks for it through the release_tag input.
+  release:
     needs: validate
     if: >-
       github.ref == 'refs/heads/main' &&
       (github.event_name == 'push' || github.event_name == 'workflow_dispatch') &&
-      needs.validate.outputs.tag_status == 'create_tag'
+      (needs.validate.outputs.tag_status == 'create_tag' ||
+       needs.validate.outputs.tag_status == 'already_tagged')
     runs-on: ubuntu-24.04
-    timeout-minutes: 5
+    timeout-minutes: 10
     permissions:
       contents: write
     steps:
@@ -51,9 +65,90 @@ jobs:
         with:
           ref: ${{ github.sha }}
           fetch-depth: 0
+          fetch-tags: true
       - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version: '24'
           package-manager-cache: false
       - name: Publish the tested commit's tag without replacement
+        id: publish
+        if: needs.validate.outputs.tag_status == 'create_tag' && github.event.inputs.release_tag == ''
         run: node scripts/release-tag.mjs --publish
+      - name: Select the tag whose Release page is built
+        id: select
+        env:
+          REQUESTED: ${{ github.event.inputs.release_tag }}
+          PUBLISHED: ${{ steps.publish.outputs.tag }}
+          PLANNED: ${{ needs.validate.outputs.tag }}
+          STATUS: ${{ needs.validate.outputs.tag_status }}
+        run: |
+          set -euo pipefail
+          if [ -n "$REQUESTED" ]; then
+            [[ "$REQUESTED" =~ ^v1\.[0-9]{8}$ ]] || { echo "release_tag must look like v1.YYYYMMDD"; exit 1; }
+            git ls-remote --exit-code --tags origin "refs/tags/$REQUESTED" >/dev/null
+            git rev-parse --verify --quiet "refs/tags/$REQUESTED^{commit}" >/dev/null
+            echo "tag=$REQUESTED" >> "$GITHUB_OUTPUT"
+            echo "mode=rebuild" >> "$GITHUB_OUTPUT"
+          elif [ "$STATUS" = "create_tag" ]; then
+            [ -n "$PUBLISHED" ] || { echo "tag publication did not report a tag"; exit 1; }
+            echo "tag=$PUBLISHED" >> "$GITHUB_OUTPUT"
+            echo "mode=new" >> "$GITHUB_OUTPUT"
+          else
+            echo "tag=$PLANNED" >> "$GITHUB_OUTPUT"
+            echo "mode=missing-only" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Decide whether the Release page needs work
+        id: need
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.select.outputs.tag }}
+          MODE: ${{ steps.select.outputs.mode }}
+        run: |
+          set -euo pipefail
+          if gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json tagName >/dev/null 2>&1; then exists=true; else exists=false; fi
+          if [ "$MODE" = "missing-only" ] && [ "$exists" = true ]; then
+            echo "Release page for $TAG already exists; nothing to do."
+            echo "action=skip" >> "$GITHUB_OUTPUT"
+          elif [ "$exists" = true ]; then
+            echo "action=update" >> "$GITHUB_OUTPUT"
+          else
+            echo "action=create" >> "$GITHUB_OUTPUT"
+          fi
+      - name: Stage release assets from the tagged commit
+        if: steps.need.outputs.action != 'skip'
+        env:
+          TAG: ${{ steps.select.outputs.tag }}
+        run: |
+          set -euo pipefail
+          mkdir -p release-assets
+          for file in data/data.json data/tactics-index.json data/framework-migrations.json; do
+            if git cat-file -e "refs/tags/$TAG:$file" 2>/dev/null; then
+              git show "refs/tags/$TAG:$file" > "release-assets/$(basename "$file")"
+            fi
+          done
+          if git cat-file -e "refs/tags/$TAG:data/integration/manifest.json" 2>/dev/null; then
+            git archive --format=zip --prefix="aidefend-integration-$TAG/" \
+              --output "release-assets/aidefend-integration-$TAG.zip" "refs/tags/$TAG" data/integration
+          fi
+          node scripts/release-notes.mjs --tag "$TAG" --out-dir release-assets
+      - name: Create or update the GitHub Release
+        if: steps.need.outputs.action != 'skip'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.select.outputs.tag }}
+          ACTION: ${{ steps.need.outputs.action }}
+        run: |
+          set -euo pipefail
+          latest=$(git tag --list 'v1.*' | grep -E '^v1\.[0-9]{8}$' | sort | tail -n 1)
+          if [ "$TAG" = "$latest" ]; then latest_flag=--latest; else latest_flag=--latest=false; fi
+          mapfile -t files < <(find release-assets -maxdepth 1 -type f ! -name release-notes.md | sort)
+          if [ "$ACTION" = "create" ]; then
+            gh release create "$TAG" "${files[@]}" --repo "$GITHUB_REPOSITORY" --verify-tag \
+              --title "AIDEFEND $TAG" --notes-file release-assets/release-notes.md "$latest_flag"
+          else
+            gh release edit "$TAG" --repo "$GITHUB_REPOSITORY" --verify-tag \
+              --title "AIDEFEND $TAG" --notes-file release-assets/release-notes.md "$latest_flag"
+            gh release upload "$TAG" "${files[@]}" --repo "$GITHUB_REPOSITORY" --clobber
+          fi
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json tagName,isDraft,isLatest,assets \
+            --jq '{tag: .tagName, draft: .isDraft, latest: .isLatest, assets: [.assets[].name]}'
