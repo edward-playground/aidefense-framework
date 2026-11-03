@@ -150,5 +150,10 @@ jobs:
               --title "AIDEFEND $TAG" --notes-file release-assets/release-notes.md "$latest_flag"
             gh release upload "$TAG" "${files[@]}" --repo "$GITHUB_REPOSITORY" --clobber
           fi
-          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json tagName,isDraft,isLatest,assets \
-            --jq '{tag: .tagName, draft: .isDraft, latest: .isLatest, assets: [.assets[].name]}'
+      - name: Inspect the published GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.select.outputs.tag }}
+        run: |
+          gh release view "$TAG" --repo "$GITHUB_REPOSITORY" --json tagName,isDraft,assets \
+            --jq '{tag: .tagName, draft: .isDraft, assets: [.assets[].name]}'
