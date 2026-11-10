@@ -3606,6 +3606,13 @@
                 elements.modalBody.innerHTML = `<h2>${DOMPurify.sanitize(item.name)}</h2><p class="mb-4 leading-relaxed text-sm">${DOMPurify.sanitize(item.focus || 'No description available.')}</p>`;
                 showModal();
             }
+            function scopeBoundaryResponsibilitySentence(technique, responsibility) {
+                // Lead with the control's own ID so the sentence names its owner.
+                const rest = responsibility.trim()
+                    .replace(/^This (?:family technique|sub-technique|technique)\s+/i, '')
+                    .replace(/^([A-Z])(?=[a-z])/, letter => letter.toLowerCase());
+                return 'This technique (' + technique.id + ') ' + rest;
+            }
             function renderScopeBoundarySection(technique) {
                 const boundary = technique && technique.scopeBoundary;
                 if (!boundary || typeof boundary.responsibility !== 'string' ||
@@ -3613,98 +3620,74 @@
                     return;
                 }
 
+                // The control's own responsibility stays visible as a quiet note under the
+                // description; comparisons with related controls open on demand.
                 const section = createElement('section', { className: 'scope-boundary-section' });
                 section.appendChild(createElement('h3', {
                     className: 'scope-boundary-title',
                     textContent: 'Scope Boundary'
                 }));
-
-                const tableWrap = createElement('div', { className: 'scope-boundary-table-wrap' });
-                const table = createElement('table', { className: 'scope-boundary-table' });
-                table.setAttribute('aria-label', 'Scope boundary for ' + technique.id);
-                const colgroup = document.createElement('colgroup');
-                colgroup.appendChild(createElement('col', {
-                    className: 'scope-boundary-label-column'
+                section.appendChild(createElement('p', {
+                    className: 'scope-boundary-responsibility',
+                    textContent: scopeBoundaryResponsibilitySentence(technique, boundary.responsibility)
                 }));
-                colgroup.appendChild(createElement('col', {
-                    className: 'scope-boundary-description-column'
-                }));
-                table.appendChild(colgroup);
-                const tbody = document.createElement('tbody');
 
-                const appendRow = (label, description, className, relatedId) => {
-                    const row = createElement('tr', { className: className || '' });
-                    const header = createElement('th', { scope: 'row' });
-                    const labelWrap = createElement('div', {
-                        className: 'scope-boundary-label'
-                    });
-                    if (relatedId) {
-                        labelWrap.appendChild(createElement('span', {
+                const relatedTechniques = (Array.isArray(boundary.relatedTechniques) ? boundary.relatedTechniques : [])
+                    .filter(related => related && related.id && related.comparison);
+                if (relatedTechniques.length) {
+                    const details = createElement('details', { className: 'scope-boundary-comparisons' });
+                    const summary = createElement('summary');
+                    summary.appendChild(createElement('span', {
+                        className: 'scope-boundary-summary-label',
+                        textContent: 'Compare with related controls'
+                    }));
+                    summary.appendChild(createElement('span', {
+                        className: 'scope-boundary-count',
+                        textContent: String(relatedTechniques.length)
+                    }));
+                    const cue = createElement('span', { className: 'scope-boundary-expand-cue' });
+                    cue.setAttribute('aria-hidden', 'true');
+                    cue.innerHTML = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5"><path d="m6 8 4 4 4-4"/></svg>';
+                    summary.appendChild(cue);
+                    details.appendChild(summary);
+
+                    const list = createElement('ul', { className: 'scope-boundary-related-list' });
+                    list.id = 'scope-related-' + technique.id;
+                    summary.setAttribute('aria-controls', list.id);
+                    relatedTechniques.forEach(related => {
+                        const item = createElement('li', { className: 'scope-boundary-related-item' });
+                        const label = createElement('p', { className: 'scope-boundary-label' });
+                        label.appendChild(createElement('span', {
                             className: 'scope-boundary-related-id',
-                            textContent: 'vs ' + relatedId + ':'
+                            textContent: 'vs ' + related.id + ':'
                         }));
-                        labelWrap.appendChild(document.createElement('br'));
-                        const found = findTechniqueById(relatedId);
-                        const relatedName = found ? found.technique.name : relatedId;
-                        const relatedLabel = createElement('span', {
+                        const found = findTechniqueById(related.id);
+                        const relatedName = createElement('span', {
                             className: 'scope-boundary-related-technique'
                         });
-                        relatedLabel.appendChild(document.createTextNode(relatedName));
-                        relatedLabel.appendChild(document.createTextNode('\u00a0'));
-                        relatedLabel.appendChild(createScopeBoundaryDeepLink(relatedId));
-                        labelWrap.appendChild(relatedLabel);
-                    } else {
-                        labelWrap.appendChild(createElement('span', {
-                            className: 'scope-boundary-current-id',
-                            textContent: technique.id
-                        }));
-                        labelWrap.appendChild(document.createElement('br'));
-                        labelWrap.appendChild(createElement('span', {
-                            className: 'scope-boundary-current-type',
-                            textContent: '(' + scopeBoundaryCurrentQualifier(technique) + ')'
-                        }));
-                    }
-                    header.appendChild(labelWrap);
-                    row.appendChild(header);
-                    const descriptionCell = document.createElement('td');
-                    const descriptionParts = relatedId
-                        ? description.trim().split(/\n+/)
-                        : [description];
-                    if (relatedId && descriptionParts.length > 1) {
-                        descriptionCell.appendChild(createElement('strong', {
+                        relatedName.appendChild(document.createTextNode(
+                            (found ? found.technique.name : related.id) + ' '
+                        ));
+                        relatedName.appendChild(createScopeBoundaryDeepLink(related.id));
+                        label.appendChild(relatedName);
+                        item.appendChild(label);
+
+                        const comparisonParts = related.comparison.trim().split(/\n+/);
+                        item.appendChild(createElement('p', {
                             className: 'scope-boundary-key-difference',
-                            textContent: descriptionParts.shift().trim()
+                            textContent: comparisonParts.shift().trim()
                         }));
-                        descriptionCell.appendChild(createElement('span', {
-                            className: 'scope-boundary-comparison-detail',
-                            textContent: descriptionParts.join(' ').trim()
-                        }));
-                    } else {
-                        descriptionCell.textContent = description;
-                    }
-                    row.appendChild(descriptionCell);
-                    tbody.appendChild(row);
-                };
-
-                appendRow(
-                    scopeBoundaryCurrentLabel(technique),
-                    boundary.responsibility.trim(),
-                    'scope-boundary-current'
-                );
-                (Array.isArray(boundary.relatedTechniques) ? boundary.relatedTechniques : [])
-                    .forEach(related => {
-                        if (!related || !related.id || !related.comparison) return;
-                        appendRow(
-                            scopeBoundaryRelatedLabel(related.id),
-                            related.comparison.trim(),
-                            '',
-                            related.id
-                        );
+                        if (comparisonParts.length) {
+                            item.appendChild(createElement('p', {
+                                className: 'scope-boundary-comparison-detail',
+                                textContent: comparisonParts.join(' ').trim()
+                            }));
+                        }
+                        list.appendChild(item);
                     });
-
-                table.appendChild(tbody);
-                tableWrap.appendChild(table);
-                section.appendChild(tableWrap);
+                    details.appendChild(list);
+                    section.appendChild(details);
+                }
                 elements.modalBody.appendChild(section);
             }
             function showTechniqueModal(technique, groupName) {

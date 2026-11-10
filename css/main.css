@@ -768,83 +768,125 @@ body.modal-open {
     margin-bottom: 1rem;
 }
 
+/* Scope boundary: the control's own responsibility reads as a quiet note under the
+   description; comparisons with related controls open on demand. */
 .modal-content .scope-boundary-section {
-    margin: 0 0 1rem;
+    margin: 1.35rem 0 1.75rem;
+    border-left: 2px solid var(--column-border);
+    padding-left: 1rem;
 }
 
 .modal-content .scope-boundary-title {
-    margin: 0 0 0.55rem;
-    font-size: 1rem;
-    font-weight: 650;
-    color: var(--text-color);
+    margin: 0 0 0.4rem;
+    font-size: 0.78rem;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--text-secondary-color);
 }
 
-.scope-boundary-table-wrap {
-    overflow: hidden;
-    border: 1px solid var(--search-border);
-    border-radius: 0.55rem;
-}
-
-.scope-boundary-table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
+.modal-content .scope-boundary-responsibility {
+    margin: 0;
+    color: var(--text-secondary-color);
     font-size: 0.875rem;
-    line-height: 1.55;
-}
-
-.scope-boundary-table .scope-boundary-label-column {
-    width: 26%;
-}
-
-.scope-boundary-table .scope-boundary-description-column {
-    width: 74%;
-}
-
-.scope-boundary-table tr + tr {
-    border-top: 1px solid var(--search-border);
-}
-
-.scope-boundary-table th,
-.scope-boundary-table td {
-    padding: 0.75rem 0.85rem;
-    text-align: left;
-    vertical-align: top;
-}
-
-.scope-boundary-table th {
-    border-right: 1px solid var(--search-border);
-    background: var(--search-bg);
-    font-size: 0.82rem;
-    font-weight: 650;
-    white-space: normal;
-}
-
-.scope-boundary-label {
-    display: block;
-    font-weight: 400;
-}
-
-.scope-boundary-label-text {
+    line-height: 1.65;
     overflow-wrap: anywhere;
 }
 
-.scope-boundary-current-id,
+.scope-boundary-comparisons {
+    margin-top: 0.6rem;
+}
+
+.scope-boundary-comparisons > summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    width: fit-content;
+    max-width: 100%;
+    min-height: 40px;
+    padding: 0.25rem 0.3rem 0.25rem 0;
+    border-radius: 4px;
+    color: var(--link-color);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.scope-boundary-comparisons > summary::-webkit-details-marker {
+    display: none;
+}
+
+.scope-boundary-comparisons > summary:hover .scope-boundary-summary-label {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.scope-boundary-comparisons > summary:focus-visible {
+    outline: 2px solid var(--search-focus-ring);
+    outline-offset: 4px;
+}
+
+.scope-boundary-count {
+    border: 1px solid var(--column-border);
+    border-radius: 5px;
+    padding: 0 0.35rem;
+    color: var(--text-secondary-color);
+    font-size: 0.72rem;
+    line-height: 1.5;
+    font-variant-numeric: tabular-nums;
+}
+
+.scope-boundary-expand-cue {
+    display: flex;
+}
+
+.scope-boundary-expand-cue svg {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.12s;
+}
+
+.scope-boundary-comparisons[open] .scope-boundary-expand-cue svg {
+    transform: rotate(180deg);
+}
+
+.modal-content .scope-boundary-related-list {
+    margin: 0.25rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.modal-content .scope-boundary-related-item {
+    margin: 0;
+    padding: 0.9rem 0;
+    border-top: 1px solid var(--column-border);
+}
+
+.modal-content .scope-boundary-related-item p {
+    font-size: 0.8125rem;
+    line-height: 1.65;
+    overflow-wrap: anywhere;
+}
+
+.modal-content .scope-boundary-label {
+    margin: 0 0 0.4rem;
+    color: var(--text-color);
+    font-weight: 500;
+}
+
 .scope-boundary-related-id {
-    font-weight: 700;
+    margin-right: 0.35rem;
+    color: var(--text-secondary-color);
+    font-weight: 500;
 }
 
 .scope-boundary-related-technique {
-    overflow-wrap: anywhere;
+    font-weight: 600;
 }
 
-.scope-boundary-deep-link {
+.modal-content .scope-boundary-deep-link {
     display: inline;
-    color: inherit;
-}
-
-.scope-boundary-deep-link:hover,
-.scope-boundary-deep-link:focus-visible {
+    padding: 0.25rem;
     color: var(--link-color);
 }
 
@@ -861,24 +903,30 @@ body.modal-open {
     vertical-align: -0.15em;
 }
 
-.scope-boundary-table td {
+.modal-content .scope-boundary-key-difference {
+    margin: 0;
     color: var(--text-color);
-    overflow-wrap: anywhere;
 }
 
-.scope-boundary-key-difference {
-    display: block;
-    margin-bottom: 0.35rem;
-    color: var(--scope-boundary-emphasis-color);
-    font-weight: 700;
+.modal-content .scope-boundary-comparison-detail {
+    margin: 0.3rem 0 0;
+    color: var(--text-secondary-color);
 }
 
-.scope-boundary-comparison-detail {
-    display: block;
+@media (max-width: 600px) {
+    .modal-content .scope-boundary-section {
+        padding-left: 0.75rem;
+    }
+    .scope-boundary-comparisons > summary {
+        min-height: 44px;
+        font-size: 0.8rem;
+    }
 }
 
-.scope-boundary-table .scope-boundary-current th {
-    color: var(--link-color);
+@media (prefers-reduced-motion: reduce) {
+    .scope-boundary-expand-cue svg {
+        transition: none;
+    }
 }
 
 .modal-content ul {
@@ -1000,22 +1048,6 @@ body.modal-open {
     }
     .modal-subtitle {
         padding-right: 4rem;
-    }
-    .scope-boundary-table {
-        font-size: 0.82rem;
-    }
-    .scope-boundary-table .scope-boundary-label-column {
-        width: 34%;
-    }
-    .scope-boundary-table .scope-boundary-description-column {
-        width: 66%;
-    }
-    .scope-boundary-table th {
-        font-size: 0.74rem;
-    }
-    .scope-boundary-table th,
-    .scope-boundary-table td {
-        padding: 0.55rem;
     }
 }
 
