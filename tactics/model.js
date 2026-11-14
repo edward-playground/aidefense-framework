@@ -160,21 +160,24 @@ export const modelTactic = {
                         "MLflow",
                         "Kubeflow (in-platform pipeline, model, artifact, and deployment-status metadata inventory; authoritative ownership and observed-state reconciliation remain external)",
                         "DVC",
-                        "Great Expectations",
                         "AWS CLI v2",
                         "Azure CLI",
-                        "Snipe-IT"
+                        "Snipe-IT",
+                        "NVIDIA DCGM (Data Center GPU Manager)"
                     ],
                     "toolsCommercial": [
                         "Wiz AI-SPM",
-                        "Microsoft Defender for Cloud",
-                        "Palo Alto Networks Prisma Cloud",
+                        "Microsoft Defender for Cloud (Defender CSPM AI security posture management and AI BOM discovery)",
+                        "Palo Alto Networks Cortex Cloud AI-SPM (formerly Prisma Cloud AI-SPM)",
                         "Amazon SageMaker AI Model Registry",
-                        "Google Vertex AI Model Registry",
+                        "Gemini Enterprise Agent Platform Model Registry (formerly Vertex AI Model Registry)",
                         "Databricks Unity Catalog",
-                        "Alation Data Intelligence Platform",
-                        "Collibra Data Intelligence Platform",
-                        "Google Cloud CLI"
+                        "Alation Data Catalog (Alation Intelligence Operating System)",
+                        "Collibra Platform",
+                        "Google Cloud CLI",
+                        "NVIDIA Fleet Intelligence (NVIDIA GPU, driver and firmware inventory)",
+                        "Google Security Command Center AI Protection (AI asset inventory)",
+                        "ServiceNow AI Control Tower (AI asset inventory and discovery)"
                     ],
                     "defendsAgainst": [
                         {
@@ -1055,12 +1058,15 @@ export const modelTactic = {
                         "OWASP Dependency-Track",
                         "Trivy",
                         "Cosign",
-                        "kubectl"
+                        "kubectl (read back each deployed replica's image digest, container command and mounted configuration)",
+                        "Sigstore model-signing (signed model-file manifests; enforce symlink, ignored-path and legacy-signature safeguards)",
+                        "Cisco AI BOM (cisco-aibom)"
                     ],
                     "toolsCommercial": [
                         "Snyk Open Source",
                         "Mend SCA",
-                        "JFrog Xray"
+                        "JFrog Xray",
+                        "Snyk AI-BOM (snyk aibom)"
                     ],
                     "defendsAgainst": [
                         {
@@ -1163,23 +1169,20 @@ export const modelTactic = {
                       ]
                     },
                     "toolsOpenSource": [
-                        "MLflow",
                         "Snyk Agent Scan (deployed agent, MCP server, and skill discovery)",
-                        "Snipe-IT",
                         "SPIRE",
-                        "OpenTelemetry",
-                        "OpenBao"
+                        "OpenBao",
+                        "StepSecurity Dev Machine Guard"
                     ],
                     "toolsCommercial": [
-                        "Wiz AI-SPM",
-                        "Palo Alto Networks Prisma Cloud",
                         "ServiceNow IT Service Management",
                         "Atlassian Jira Service Management",
                         "HashiCorp Vault Enterprise",
                         "HCP Vault Dedicated",
                         "Splunk Enterprise Security",
                         "Microsoft Sentinel",
-                        "Datadog Cloud SIEM"
+                        "Datadog Cloud SIEM",
+                        "Endor Labs Coding Agent Governance (workstation inventory of agent skills and MCP servers)"
                     ],
                     "defendsAgainst": [
                         {
@@ -1298,14 +1301,15 @@ export const modelTactic = {
                         "pySigma"
                     ],
                     "toolsCommercial": [
-                        "Microsoft Purview",
+                        "Microsoft Purview Data Security Posture Management (AI app and third-party AI site activity with sensitive info types)",
                         "Microsoft Defender for Cloud Apps",
                         "Microsoft Entra Global Secure Access",
-                        "Netskope One AI Security",
+                        "Netskope Skylight AI Security (formerly Netskope One AI Security)",
                         "Zscaler AI Security",
-                        "Palo Alto Networks Prisma Access",
+                        "Palo Alto Networks Prisma Access with AI Access Security",
                         "Palo Alto Networks Enterprise Data Loss Prevention",
-                        "Google Security Operations (YARA-L 2.0 detection rules)"
+                        "Google Security Operations (YARA-L 2.0 detection rules)",
+                        "Cloudflare One (Gateway Shadow IT analytics with AI application filtering and approval status)"
                     ],
                     "defendsAgainst": [
                         {
@@ -1413,14 +1417,17 @@ export const modelTactic = {
                         "OWASP Amass",
                         "ProjectDiscovery httpx",
                         "ProjectDiscovery Nuclei",
-                        "Cosign"
+                        "Cosign (sign and verify exposure-scan evidence; endpoint discovery and reconciliation required)",
+                        "Praetorian Julius (LLM service fingerprinting)",
+                        "Tencent AI-Infra-Guard (AI infrastructure fingerprint scan)"
                     ],
                     "toolsCommercial": [
                         "Shodan Monitor (outside-in exposed-service discovery)",
                         "Censys Attack Surface Management",
                         "Microsoft Defender External Attack Surface Management",
                         "Palo Alto Networks Cortex Xpanse",
-                        "CrowdStrike Falcon Surface"
+                        "CrowdStrike Falcon Exposure Management (EASM)",
+                        "Escape ASM (unauthenticated MCP endpoint discovery)"
                     ],
                     "defendsAgainst": [
                         {
@@ -1527,7 +1534,7 @@ export const modelTactic = {
                         "operation",
                         "improvement"
                     ],
-                    "description": "Continuously discover and reconcile <strong>organization-owned AI endpoints and agent services reachable only through private networks or control planes</strong>, including RFC1918/VPC/VNet services, Kubernetes Services and Ingresses, internal inference APIs, MCP/A2A endpoints, notebooks, model or retrieval gateways, and orphaned development deployments. The eligible population must come from signed IPAM, cloud-organization, Kubernetes-fleet, and asset-inventory exports external to the scanner; scanning arbitrary private address space without explicit authorization is prohibited.",
+                    "description": "Continuously discover and reconcile <strong>organization-owned AI endpoints and agent services reachable only through private networks or control planes</strong>, including RFC1918/VPC/VNet services, Kubernetes Services and Ingresses, internal inference APIs, MCP/A2A endpoints, notebooks, model or retrieval gateways, and orphaned development deployments. The eligible population must come from authorized platform inventory, IPAM, cloud-organization, Kubernetes-fleet and asset-inventory sources maintained outside the scanner; scanning arbitrary private address space without explicit authorization is prohibited.",
                     "scopeBoundary": {
                       "responsibility": "Owns authorized discovery and reconciliation of organization-owned AI endpoints and agent services reachable only through private networks or internal control planes. It reports exact internal exposure facts but does not authenticate, segment, patch, contain, or evict those services.",
                       "relatedTechniques": [
@@ -1550,7 +1557,9 @@ export const modelTactic = {
                         "kubectl",
                         "Steampipe",
                         "Cartography (cloud, Kubernetes, and identity observed-state graph; declared-inventory reconciliation remains external)",
-                        "Cosign"
+                        "Cosign",
+                        "Praetorian Julius (LLM service fingerprinting)",
+                        "Tencent AI-Infra-Guard (AI infrastructure fingerprint scan)"
                     ],
                     "toolsSourceAvailable": [
                         "Nmap (Nmap Public Source License; source-available)"
@@ -1625,681 +1634,8 @@ export const modelTactic = {
                     "implementationGuidance": [
                         {
                             "id": "AID-M-001.006-G001",
-                            "implementation": "Reconcile every authorized private-network and control-plane target through signed scope, scanner, and independent replay evidence.",
-                            "howTo": [
-                                "<h5>Scope and upstream dependencies</h5><p>This method verifies exact private AI endpoint discovery and inventory reconciliation. The scanner does not define its own scope. An asset-authority compiler outside the scanner derives the target population from signed IPAM, cloud-organization, Kubernetes-fleet, and CMDB exports. Missing source coverage, adapters, targets, or replay is <code>INSUFFICIENT_DATA</code>; an empty scan is never a pass by itself.</p>\n",
-                                "<h5>Step 1: Produce a signed, target-level scope outside the scanner</h5><pre><code># File: policy/internal-discovery-policy.json\n",
-                                "{\n",
-                                "  \"schema_version\": \"aidefend.internal_discovery_policy.v1\",\n",
-                                "  \"policy_version\": \"internal-discovery-policy-7\",\n",
-                                "  \"max_scope_age_seconds\": 86400,\n",
-                                "  \"adapters\": {\n",
-                                "    \"nmap-httpx\": \"registry.example.com/aidefend/nmap-httpx@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\",\n",
-                                "    \"kubernetes\": \"registry.example.com/aidefend/kubernetes-discovery@sha256:1123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\",\n",
-                                "    \"aws-config\": \"registry.example.com/aidefend/aws-config-discovery@sha256:2123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\"\n",
-                                "  }\n",
-                                "}</code></pre><pre><code># File: inventory/internal-ai-target-manifest.json\n",
-                                "{\n",
-                                "  \"schema_version\": \"aidefend.internal_ai_target_manifest.v1\",\n",
-                                "  \"scope_id\": \"internal-ai-estate-2026-07-16\",\n",
-                                "  \"issued_at\": \"2026-07-16T00:00:00Z\",\n",
-                                "  \"expires_at\": \"2026-07-17T00:00:00Z\",\n",
-                                "  \"policy_version\": \"internal-discovery-policy-7\",\n",
-                                "  \"policy_sha256\": \"aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\",\n",
-                                "  \"applicability\": \"APPLICABLE\",\n",
-                                "  \"not_applicable_reason\": null,\n",
-                                "  \"authoritative_sources\": [\n",
-                                "    {\n",
-                                "      \"source_id\": \"ipam\",\n",
-                                "      \"path\": \"inventory/ipam-export.json\",\n",
-                                "      \"signature_path\": \"inventory/ipam-export.sig\",\n",
-                                "      \"sha256\": \"bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\",\n",
-                                "      \"eligible_target_count\": 1,\n",
-                                "      \"eligible_member_ids_sha256\": \"1111111111111111111111111111111111111111111111111111111111111111\"\n",
-                                "    },\n",
-                                "    {\n",
-                                "      \"source_id\": \"kubernetes-fleet\",\n",
-                                "      \"path\": \"inventory/kubernetes-fleet.json\",\n",
-                                "      \"signature_path\": \"inventory/kubernetes-fleet.sig\",\n",
-                                "      \"sha256\": \"cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc\",\n",
-                                "      \"eligible_target_count\": 1,\n",
-                                "      \"eligible_member_ids_sha256\": \"2222222222222222222222222222222222222222222222222222222222222222\"\n",
-                                "    },\n",
-                                "    {\n",
-                                "      \"source_id\": \"cloud-org\",\n",
-                                "      \"path\": \"inventory/cloud-org.json\",\n",
-                                "      \"signature_path\": \"inventory/cloud-org.sig\",\n",
-                                "      \"sha256\": \"dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd\",\n",
-                                "      \"eligible_target_count\": 1,\n",
-                                "      \"eligible_member_ids_sha256\": \"3333333333333333333333333333333333333333333333333333333333333333\"\n",
-                                "    }\n",
-                                "  ],\n",
-                                "  \"targets\": [\n",
-                                "    {\n",
-                                "      \"target_id\": \"ip:10.40.1.8:443\",\n",
-                                "      \"segment_id\": \"vpc-prod-us-east-1\",\n",
-                                "      \"adapter\": \"nmap-httpx\",\n",
-                                "      \"locator\": {\"host\": \"10.40.1.8\", \"port\": 443, \"probe_paths\": [\"/v1/models\", \"/mcp\", \"/.well-known/agent.json\"]},\n",
-                                "      \"source_members\": [{\"source_id\":\"ipam\",\"member_id\":\"ipam-10.40.1.8-443\",\"raw_record_sha256\":\"4444444444444444444444444444444444444444444444444444444444444444\",\"authorization_id\":\"scan-auth-prod\"}]\n",
-                                "    },\n",
-                                "    {\n",
-                                "      \"target_id\": \"k8s:eks-prod:ai-platform\",\n",
-                                "      \"segment_id\": \"eks-prod\",\n",
-                                "      \"adapter\": \"kubernetes\",\n",
-                                "      \"locator\": {\"context\": \"eks-prod\", \"namespace\": \"ai-platform\"},\n",
-                                "      \"source_members\": [{\"source_id\":\"kubernetes-fleet\",\"member_id\":\"eks-prod-ai-platform\",\"raw_record_sha256\":\"5555555555555555555555555555555555555555555555555555555555555555\",\"authorization_id\":\"scan-auth-prod\"}]\n",
-                                "    },\n",
-                                "    {\n",
-                                "      \"target_id\": \"aws:111122223333:us-east-1\",\n",
-                                "      \"segment_id\": \"aws-org\",\n",
-                                "      \"adapter\": \"aws-config\",\n",
-                                "      \"locator\": {\"account\": \"111122223333\", \"region\": \"us-east-1\"},\n",
-                                "      \"source_members\": [{\"source_id\":\"cloud-org\",\"member_id\":\"111122223333-us-east-1\",\"raw_record_sha256\":\"6666666666666666666666666666666666666666666666666666666666666666\",\"authorization_id\":\"scan-auth-prod\"}]\n",
-                                "    }\n",
-                                "  ]\n",
-                                "}</code></pre><pre><code># File: inventory/declared-internal-ai-endpoints.json\n",
-                                "{\n",
-                                "  \"schema_version\": \"aidefend.declared_internal_ai_inventory.v1\",\n",
-                                "  \"inventory_version\": \"cmdb-2026-07-16T00:00:00Z\",\n",
-                                "  \"items\": [\n",
-                                "    {\n",
-                                "      \"canonical_url\": \"https://model-gateway.ai-platform.svc/v1/models\",\n",
-                                "      \"resource_id\": \"Service/ai-platform/model-gateway\",\n",
-                                "      \"owner\": \"ai-platform\",\n",
-                                "      \"environment\": \"production\",\n",
-                                "      \"approved\": true\n",
-                                "    }\n",
-                                "  ]\n",
-                                "}</code></pre><pre><code>cosign sign-blob --yes --key env://INTERNAL_DISCOVERY_POLICY_SIGNING_KEY --bundle policy/internal-discovery-policy.sig policy/internal-discovery-policy.json\n",
-                                "cosign sign-blob --yes --key env://ASSET_AUTHORITY_SIGNING_KEY --bundle inventory/internal-ai-target-manifest.sig inventory/internal-ai-target-manifest.json\n",
-                                "cosign sign-blob --yes --key env://CMDB_SIGNING_KEY --bundle inventory/declared-internal-ai-endpoints.sig inventory/declared-internal-ai-endpoints.json</code></pre><p>Each signed source export uses <code>{\"schema_version\":\"aidefend.internal-discovery-source.v1\",\"source_id\":\"...\",\"eligible_members\":[{\"member_id\":\"...\",\"target_id\":\"...\",\"raw_record_path\":\"...\",\"raw_record_sha256\":\"...\",\"authorization_id\":\"...\"}]}</code>. The compiler forms a canonical union by <code>target_id</code>, retaining every contributing source member and authorization; overlapping sources therefore do not inflate target counts or disappear. <code>NOT_APPLICABLE</code> is valid only when every policy-declared authoritative source has a verified empty member population, the target list and declared private-endpoint inventory are empty, and the signed reason is present.</p>\n",
-                                "<h5>Step 2: Execute every target and sign scanner receipts</h5><p>Pin each adapter image to the digest in policy. The runner accepts only verified target-manifest locators, invokes subprocesses without a shell, applies per-target time/output limits, and records the exact argument vector. Network scans use explicit host/port targets; Kubernetes and cloud adapters use read-only identities. Raw output must be non-empty even when no AI endpoint is found.</p><pre><code>nmap -sT -sV --version-light -Pn --open -p 443 10.40.1.8 -oX out/ip-10.40.1.8-443-nmap.xml\n",
-                                "httpx -u https://10.40.1.8:443 -path /v1/models,/mcp,/.well-known/agent.json -json -status-code -hash sha256 -no-fallback -o out/ip-10.40.1.8-443-httpx.jsonl\n",
-                                "kubectl --context eks-prod get services,ingresses,deployments,statefulsets,pods -n ai-platform -o json &gt; out/k8s-eks-prod-ai-platform.json\n",
-                                "aws configservice select-aggregate-resource-config --configuration-aggregator-name organization --expression \"SELECT accountId, awsRegion, resourceType, resourceId, configuration WHERE accountId = '111122223333' AND awsRegion = 'us-east-1'\" --output json &gt; out/aws-111122223333-us-east-1.json</code></pre><pre><code># File: out/k8s-eks-prod-ai-platform-observations.jsonl\n",
-                                "{\"target_id\":\"k8s:eks-prod:ai-platform\",\"segment_id\":\"eks-prod\",\"resource_id\":\"Service/ai-platform/model-gateway\",\"canonical_url\":\"https://model-gateway.ai-platform.svc/v1/models\",\"visibility\":\"private\",\"status_code\":401,\"ai_evidence\":[\"kubernetes_service\",\"ai_specific_path:/v1/models\"],\"body_sha256\":\"eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee\",\"raw_record_sha256\":\"ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff\",\"observed_at\":\"2026-07-16T12:00:00Z\"}</code></pre><pre><code># File: out/internal-ai-scan-receipts.json\n",
-                                "{\n",
-                                "  \"schema_version\": \"aidefend.internal_ai_scan_receipts.v1\",\n",
-                                "  \"scope_id\": \"internal-ai-estate-2026-07-16\",\n",
-                                "  \"target_manifest_sha256\": \"9999999999999999999999999999999999999999999999999999999999999999\",\n",
-                                "  \"scanner_identity\": \"spiffe://company.example/scanner/internal-ai-primary\",\n",
-                                "  \"receipts\": [\n",
-                                "    {\n",
-                                "      \"target_id\": \"ip:10.40.1.8:443\",\n",
-                                "      \"adapter\": \"nmap-httpx\",\n",
-                                "      \"adapter_image_digest\": \"registry.example.com/aidefend/nmap-httpx@sha256:0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\",\n",
-                                "      \"started_at\": \"2026-07-16T11:50:00Z\",\n",
-                                "      \"finished_at\": \"2026-07-16T12:02:00Z\",\n",
-                                "      \"status\": \"COMPLETE\",\n",
-                                "      \"incomplete_reason\": null,\n",
-                                "      \"raw_path\": \"out/ip-10.40.1.8-443-adapter.json\",\n",
-                                "      \"raw_sha256\": \"3333333333333333333333333333333333333333333333333333333333333333\",\n",
-                                "      \"observations_path\": \"out/ip-10.40.1.8-443-observations.jsonl\",\n",
-                                "      \"observations_sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n",
-                                "      \"observation_count\": 0\n",
-                                "    },\n",
-                                "    {\n",
-                                "      \"target_id\": \"k8s:eks-prod:ai-platform\",\n",
-                                "      \"adapter\": \"kubernetes\",\n",
-                                "      \"adapter_image_digest\": \"registry.example.com/aidefend/kubernetes-discovery@sha256:1123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\",\n",
-                                "      \"started_at\": \"2026-07-16T11:55:00Z\",\n",
-                                "      \"finished_at\": \"2026-07-16T12:05:00Z\",\n",
-                                "      \"status\": \"COMPLETE\",\n",
-                                "      \"incomplete_reason\": null,\n",
-                                "      \"raw_path\": \"out/k8s-eks-prod-ai-platform.json\",\n",
-                                "      \"raw_sha256\": \"1111111111111111111111111111111111111111111111111111111111111111\",\n",
-                                "      \"observations_path\": \"out/k8s-eks-prod-ai-platform-observations.jsonl\",\n",
-                                "      \"observations_sha256\": \"2222222222222222222222222222222222222222222222222222222222222222\",\n",
-                                "      \"observation_count\": 1\n",
-                                "    },\n",
-                                "    {\n",
-                                "      \"target_id\": \"aws:111122223333:us-east-1\",\n",
-                                "      \"adapter\": \"aws-config\",\n",
-                                "      \"adapter_image_digest\": \"registry.example.com/aidefend/aws-config-discovery@sha256:2123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef\",\n",
-                                "      \"started_at\": \"2026-07-16T11:52:00Z\",\n",
-                                "      \"finished_at\": \"2026-07-16T12:03:00Z\",\n",
-                                "      \"status\": \"COMPLETE\",\n",
-                                "      \"incomplete_reason\": null,\n",
-                                "      \"raw_path\": \"out/aws-111122223333-us-east-1.json\",\n",
-                                "      \"raw_sha256\": \"4444444444444444444444444444444444444444444444444444444444444444\",\n",
-                                "      \"observations_path\": \"out/aws-111122223333-us-east-1-observations.jsonl\",\n",
-                                "      \"observations_sha256\": \"e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855\",\n",
-                                "      \"observation_count\": 0\n",
-                                "    }\n",
-                                "  ]\n",
-                                "}</code></pre><pre><code>cosign sign-blob --yes --key env://INTERNAL_SCANNER_SIGNING_KEY --bundle out/internal-ai-scan-receipts.sig out/internal-ai-scan-receipts.json\n",
-                                "cosign verify-blob --key keys/internal-scanner.pub --bundle out/internal-ai-scan-receipts.sig out/internal-ai-scan-receipts.json</code></pre><p>Write one receipt for every target, including zero-observation targets. A receipt is <code>COMPLETE</code> only after the adapter attempted the exact locator and retained raw evidence. The signed receipt binds the target manifest, scanner identity, adapter image, timestamps, raw digest, normalized digest, and observation count; it cannot be reconstructed later from normalized findings alone.</p>\n",
-                                "<h5>Step 3: Verify exact coverage and reconcile the signed inventory</h5><pre><code>from __future__ import annotations\n",
-                                "\n",
-                                "import math as _aidefend_math\n",
-                                "import os as _aidefend_os\n",
-                                "\n",
-                                "# Admission injects these required values from one signature-verified, versioned runtime profile.\n",
-                                "def _aidefend_required(name):\n",
-                                "    value = _aidefend_os.environ.get(name)\n",
-                                "    if value is None or not value.strip():\n",
-                                "        raise RuntimeError(f\"required runtime-profile field is absent: {name}\")\n",
-                                "    return value.strip()\n",
-                                "\n",
-                                "\n",
-                                "def _aidefend_positive_float(name):\n",
-                                "    try:\n",
-                                "        value = float(_aidefend_required(name))\n",
-                                "    except ValueError as error:\n",
-                                "        raise RuntimeError(f\"runtime-profile field is not numeric: {name}\") from error\n",
-                                "    if not _aidefend_math.isfinite(value) or value &lt;= 0:\n",
-                                "        raise RuntimeError(f\"runtime-profile field must be finite and positive: {name}\")\n",
-                                "    return value\n",
-                                "\n",
-                                "\n",
-                                "def _aidefend_positive_int(name):\n",
-                                "    try:\n",
-                                "        value = int(_aidefend_required(name))\n",
-                                "    except ValueError as error:\n",
-                                "        raise RuntimeError(f\"runtime-profile field is not an integer: {name}\") from error\n",
-                                "    if value &lt; 1:\n",
-                                "        raise RuntimeError(f\"runtime-profile field must be positive: {name}\")\n",
-                                "    return value\n",
-                                "\n",
-                                "\n",
-                                "def _aidefend_nonnegative_int(name):\n",
-                                "    try:\n",
-                                "        value = int(_aidefend_required(name))\n",
-                                "    except ValueError as error:\n",
-                                "        raise RuntimeError(f\"runtime-profile field is not an integer: {name}\") from error\n",
-                                "    if value &lt; 0:\n",
-                                "        raise RuntimeError(f\"runtime-profile field cannot be negative: {name}\")\n",
-                                "    return value\n",
-                                "\n",
-                                "\n",
-                                "def _aidefend_fraction(name):\n",
-                                "    value = _aidefend_positive_float(name)\n",
-                                "    if value &gt; 1:\n",
-                                "        raise RuntimeError(f\"runtime-profile field must be in (0, 1]: {name}\")\n",
-                                "    return value\n",
-                                "\n",
-                                "\n",
-                                "RUNTIME_PROFILE_VERSION = _aidefend_required(\"AIDEFEND_RUNTIME_PROFILE_VERSION\")\n",
-                                "RUNTIME_PROFILE_SHA256 = _aidefend_required(\"AIDEFEND_RUNTIME_PROFILE_SHA256\").lower()\n",
-                                "if (len(RUNTIME_PROFILE_SHA256) != 64\n",
-                                "        or set(RUNTIME_PROFILE_SHA256) - set(\"0123456789abcdef\")):\n",
-                                "    raise RuntimeError(\"runtime-profile digest must be lowercase SHA-256\")\n",
-                                "RECONCILIATION_COMMAND_TIMEOUT_SECONDS = _aidefend_positive_float(\"M001006_RECONCILIATION_COMMAND_TIMEOUT_SECONDS\")\n",
-                                "\n",
-                                "# File: discovery/reconcile_internal_ai.py\n",
-                                "\n",
-                                "import hashlib\n",
-                                "import json\n",
-                                "import os\n",
-                                "import re\n",
-                                "import stat\n",
-                                "import subprocess\n",
-                                "import tempfile\n",
-                                "from datetime import datetime, timezone\n",
-                                "from pathlib import Path\n",
-                                "from urllib.parse import urlsplit, urlunsplit\n",
-                                "\n",
-                                "POLICY = Path(\"policy/internal-discovery-policy.json\")\n",
-                                "POLICY_SIG = Path(\"policy/internal-discovery-policy.sig\")\n",
-                                "TARGETS = Path(\"inventory/internal-ai-target-manifest.json\")\n",
-                                "TARGETS_SIG = Path(\"inventory/internal-ai-target-manifest.sig\")\n",
-                                "DECLARED = Path(\"inventory/declared-internal-ai-endpoints.json\")\n",
-                                "DECLARED_SIG = Path(\"inventory/declared-internal-ai-endpoints.sig\")\n",
-                                "RECEIPTS = Path(\"out/internal-ai-scan-receipts.json\")\n",
-                                "RECEIPTS_SIG = Path(\"out/internal-ai-scan-receipts.sig\")\n",
-                                "OUTPUT = Path(\"evidence/internal-ai-discovery-reconciliation.json\")\n",
-                                "SHA = re.compile(r\"^[0-9a-f]{64}$\")\n",
-                                "IMAGE = re.compile(r\"^.+@sha256:[0-9a-f]{64}$\")\n",
-                                "\n",
-                                "\n",
-                                "_CAPTURED_BYTES: dict[Path, bytes] = {}\n",
-                                "\n",
-                                "\n",
-                                "def regular_bytes(path: Path, *, allow_empty: bool = False) -&gt; bytes:\n",
-                                "    descriptor = os.open(\n",
-                                "        path,\n",
-                                "        os.O_RDONLY | getattr(os, \"O_BINARY\", 0) | getattr(os, \"O_NOFOLLOW\", 0),\n",
-                                "    )\n",
-                                "    with os.fdopen(descriptor, \"rb\") as handle:\n",
-                                "        status = os.fstat(handle.fileno())\n",
-                                "        if not stat.S_ISREG(status.st_mode):\n",
-                                "            raise ValueError(f\"input is not a regular file: {path}\")\n",
-                                "        value = handle.read()\n",
-                                "    if not allow_empty and not value:\n",
-                                "        raise ValueError(f\"input is empty: {path}\")\n",
-                                "    return value\n",
-                                "\n",
-                                "\n",
-                                "def captured_bytes(path: Path, *, allow_empty: bool = False) -&gt; bytes:\n",
-                                "    if path not in _CAPTURED_BYTES:\n",
-                                "        _CAPTURED_BYTES[path] = regular_bytes(path, allow_empty=allow_empty)\n",
-                                "    value = _CAPTURED_BYTES[path]\n",
-                                "    if not allow_empty and not value:\n",
-                                "        raise ValueError(f\"captured input is empty: {path}\")\n",
-                                "    return value\n",
-                                "\n",
-                                "\n",
-                                "def verify(path: Path, signature: Path, key: Path) -&gt; None:\n",
-                                "    payload = regular_bytes(path)\n",
-                                "    signature_bytes = regular_bytes(signature)\n",
-                                "    with tempfile.TemporaryDirectory(prefix=\"aidefend-internal-discovery-\") as stage_name:\n",
-                                "        stage = Path(stage_name)\n",
-                                "        os.chmod(stage, 0o700)\n",
-                                "        payload_snapshot = stage / \"payload\"\n",
-                                "        signature_snapshot = stage / \"payload.sig\"\n",
-                                "        payload_snapshot.write_bytes(payload)\n",
-                                "        signature_snapshot.write_bytes(signature_bytes)\n",
-                                "        os.chmod(payload_snapshot, 0o400)\n",
-                                "        os.chmod(signature_snapshot, 0o400)\n",
-                                "        subprocess.run(\n",
-                                "            [\n",
-                                "                \"cosign\", \"verify-blob\", \"--key\", str(key),\n",
-                                "                \"--bundle\", str(signature_snapshot), str(payload_snapshot),\n",
-                                "            ],\n",
-                                "            check=True, capture_output=True, text=True,\n",
-                                "            timeout=RECONCILIATION_COMMAND_TIMEOUT_SECONDS,\n",
-                                "        )\n",
-                                "        if (\n",
-                                "            regular_bytes(payload_snapshot) != payload\n",
-                                "            or regular_bytes(signature_snapshot) != signature_bytes\n",
-                                "        ):\n",
-                                "            raise ValueError(\"private signed-input snapshot changed during verification\")\n",
-                                "    _CAPTURED_BYTES[path] = payload\n",
-                                "\n",
-                                "\n",
-                                "def digest(path: Path, *, allow_empty: bool = False) -&gt; str:\n",
-                                "    return hashlib.sha256(\n",
-                                "        captured_bytes(path, allow_empty=allow_empty)\n",
-                                "    ).hexdigest()\n",
-                                "\n",
-                                "\n",
-                                "def unique_object(pairs):\n",
-                                "    value = {}\n",
-                                "    for key, item in pairs:\n",
-                                "        if key in value:\n",
-                                "            raise ValueError(f\"duplicate JSON key: {key}\")\n",
-                                "        value[key] = item\n",
-                                "    return value\n",
-                                "\n",
-                                "\n",
-                                "def reject_nonfinite(value):\n",
-                                "    raise ValueError(f\"non-finite JSON number: {value}\")\n",
-                                "\n",
-                                "\n",
-                                "def load_json(path: Path) -&gt; object:\n",
-                                "    return json.loads(\n",
-                                "        captured_bytes(path).decode(\"utf-8\", errors=\"strict\"),\n",
-                                "        object_pairs_hook=unique_object,\n",
-                                "        parse_constant=reject_nonfinite,\n",
-                                "    )\n",
-                                "\n",
-                                "\n",
-                                "def load_jsonl(path: Path) -&gt; list[object]:\n",
-                                "    rows = []\n",
-                                "    text = captured_bytes(path, allow_empty=True).decode(\"utf-8\", errors=\"strict\")\n",
-                                "    for line_number, line in enumerate(text.splitlines(), start=1):\n",
-                                "        if not line.strip():\n",
-                                "            continue\n",
-                                "        try:\n",
-                                "            rows.append(json.loads(\n",
-                                "                line,\n",
-                                "                object_pairs_hook=unique_object,\n",
-                                "                parse_constant=reject_nonfinite,\n",
-                                "            ))\n",
-                                "        except ValueError as error:\n",
-                                "            raise ValueError(f\"invalid JSONL row {line_number}: {path}\") from error\n",
-                                "    return rows\n",
-                                "\n",
-                                "\n",
-                                "def when(value: str) -&gt; datetime:\n",
-                                "    parsed = datetime.fromisoformat(value.replace(\"Z\", \"+00:00\"))\n",
-                                "    if parsed.tzinfo is None:\n",
-                                "        raise ValueError(\"timestamp lacks timezone\")\n",
-                                "    return parsed.astimezone(timezone.utc)\n",
-                                "\n",
-                                "\n",
-                                "def canonical_url(value: str) -&gt; str:\n",
-                                "    parsed = urlsplit(value.strip())\n",
-                                "    if parsed.scheme not in {\"http\", \"https\"} or not parsed.hostname:\n",
-                                "        raise ValueError(\"invalid endpoint URL\")\n",
-                                "    if parsed.username or parsed.password or parsed.query or parsed.fragment:\n",
-                                "        raise ValueError(\"endpoint URL contains disallowed fields\")\n",
-                                "    host = parsed.hostname.lower().rstrip(\".\")\n",
-                                "    port = parsed.port\n",
-                                "    netloc = host if port is None or (parsed.scheme, port) in {(\"http\", 80), (\"https\", 443)} else f\"{host}:{port}\"\n",
-                                "    return urlunsplit((parsed.scheme, netloc, parsed.path.rstrip(\"/\") or \"/\", \"\", \"\"))\n",
-                                "\n",
-                                "\n",
-                                "now = datetime.now(timezone.utc)\n",
-                                "outcome = \"ERROR\"\n",
-                                "reasons: list[str] = []\n",
-                                "findings: list[dict] = []\n",
-                                "observations: list[dict] = []\n",
-                                "coverage: list[dict] = []\n",
-                                "scope: dict = {}\n",
-                                "verifier_identity = os.environ.get(\"VERIFIER_WORKLOAD_ID\")\n",
-                                "try:\n",
-                                "    if not verifier_identity:\n",
-                                "        raise ValueError(\"VERIFIER_WORKLOAD_ID is required\")\n",
-                                "    verify(POLICY, POLICY_SIG, Path(\"keys/internal-discovery-policy.pub\"))\n",
-                                "    verify(TARGETS, TARGETS_SIG, Path(\"keys/asset-authority.pub\"))\n",
-                                "    verify(DECLARED, DECLARED_SIG, Path(\"keys/cmdb.pub\"))\n",
-                                "\n",
-                                "    policy = load_json(POLICY)\n",
-                                "    scope = load_json(TARGETS)\n",
-                                "    declared_doc = load_json(DECLARED)\n",
-                                "    if policy.get(\"schema_version\") != \"aidefend.internal_discovery_policy.v1\":\n",
-                                "        raise ValueError(\"policy schema differs\")\n",
-                                "    if scope.get(\"schema_version\") != \"aidefend.internal_ai_target_manifest.v1\":\n",
-                                "        raise ValueError(\"target manifest schema differs\")\n",
-                                "    if declared_doc.get(\"schema_version\") != \"aidefend.declared_internal_ai_inventory.v1\":\n",
-                                "        raise ValueError(\"declared inventory schema differs\")\n",
-                                "\n",
-                                "    issued, expires = when(scope[\"issued_at\"]), when(scope[\"expires_at\"])\n",
-                                "    max_age = int(policy.get(\"max_scope_age_seconds\", 0))\n",
-                                "    if max_age &lt;= 0 or not issued &lt;= now &lt; expires:\n",
-                                "        raise ValueError(\"target manifest freshness is invalid\")\n",
-                                "    if (expires - issued).total_seconds() &gt; max_age:\n",
-                                "        raise ValueError(\"target manifest exceeds policy freshness\")\n",
-                                "    if scope.get(\"policy_version\") != policy.get(\"policy_version\"):\n",
-                                "        raise ValueError(\"policy version differs\")\n",
-                                "    if scope.get(\"policy_sha256\") != digest(POLICY):\n",
-                                "        raise ValueError(\"target manifest policy digest differs\")\n",
-                                "\n",
-                                "    adapters = policy.get(\"adapters\")\n",
-                                "    if not isinstance(adapters, dict) or not adapters:\n",
-                                "        raise ValueError(\"adapter policy is empty\")\n",
-                                "    if any(not name or not IMAGE.fullmatch(str(image)) for name, image in adapters.items()):\n",
-                                "        raise ValueError(\"adapter policy contains an unpinned image\")\n",
-                                "\n",
-                                "    sources = scope.get(\"authoritative_sources\")\n",
-                                "    if not isinstance(sources, list) or not sources:\n",
-                                "        raise ValueError(\"authoritative source population is empty\")\n",
-                                "    source_ids = set()\n",
-                                "    eligible_members: dict[tuple[str, str], dict] = {}\n",
-                                "    for source in sources:\n",
-                                "        required = {\n",
-                                "            \"source_id\", \"path\", \"signature_path\", \"sha256\",\n",
-                                "            \"eligible_target_count\", \"eligible_member_ids_sha256\",\n",
-                                "        }\n",
-                                "        if set(source) != required or source[\"source_id\"] in source_ids:\n",
-                                "            raise ValueError(\"authoritative source schema or identity differs\")\n",
-                                "        source_id = source[\"source_id\"]\n",
-                                "        source_ids.add(source_id)\n",
-                                "        path = Path(source[\"path\"])\n",
-                                "        verify(path, Path(source[\"signature_path\"]), Path(\"keys/asset-authority.pub\"))\n",
-                                "        if not SHA.fullmatch(source[\"sha256\"]) or digest(path) != source[\"sha256\"]:\n",
-                                "            raise ValueError(\"authoritative source digest differs\")\n",
-                                "        source_doc = load_json(path)\n",
-                                "        if (\n",
-                                "            not isinstance(source_doc, dict)\n",
-                                "            or set(source_doc) != {\"schema_version\", \"source_id\", \"eligible_members\"}\n",
-                                "            or source_doc[\"schema_version\"] != \"aidefend.internal-discovery-source.v1\"\n",
-                                "            or source_doc[\"source_id\"] != source_id\n",
-                                "            or not isinstance(source_doc[\"eligible_members\"], list)\n",
-                                "        ):\n",
-                                "            raise ValueError(\"authoritative source member schema differs\")\n",
-                                "        member_ids = []\n",
-                                "        for member in source_doc[\"eligible_members\"]:\n",
-                                "            fields = {\n",
-                                "                \"member_id\", \"target_id\", \"raw_record_path\",\n",
-                                "                \"raw_record_sha256\",\n",
-                                "                \"authorization_id\",\n",
-                                "            }\n",
-                                "            key = (source_id, member.get(\"member_id\") if isinstance(member, dict) else None)\n",
-                                "            if (\n",
-                                "                not isinstance(member, dict) or set(member) != fields\n",
-                                "                or any(not isinstance(member[field], str) or not member[field]\n",
-                                "                       for field in fields)\n",
-                                "                or not SHA.fullmatch(member[\"raw_record_sha256\"])\n",
-                                "                or digest(Path(member[\"raw_record_path\"])) != member[\"raw_record_sha256\"]\n",
-                                "                or key in eligible_members\n",
-                                "            ):\n",
-                                "                raise ValueError(\"authoritative source member is invalid or duplicated\")\n",
-                                "            eligible_members[key] = member\n",
-                                "            member_ids.append(member[\"member_id\"])\n",
-                                "        member_ids_sha256 = hashlib.sha256(json.dumps(\n",
-                                "            sorted(member_ids), separators=(\",\", \":\")\n",
-                                "        ).encode(\"utf-8\")).hexdigest()\n",
-                                "        if (\n",
-                                "            isinstance(source[\"eligible_target_count\"], bool)\n",
-                                "            or not isinstance(source[\"eligible_target_count\"], int)\n",
-                                "            or source[\"eligible_target_count\"] != len(member_ids)\n",
-                                "            or not SHA.fullmatch(source[\"eligible_member_ids_sha256\"])\n",
-                                "            or source[\"eligible_member_ids_sha256\"] != member_ids_sha256\n",
-                                "        ):\n",
-                                "            raise ValueError(\"authoritative source member population differs\")\n",
-                                "\n",
-                                "    declared_items = declared_doc.get(\"items\")\n",
-                                "    if not isinstance(declared_items, list):\n",
-                                "        raise ValueError(\"declared inventory items are missing\")\n",
-                                "    declared: dict[str, dict] = {}\n",
-                                "    for item in declared_items:\n",
-                                "        required = {\n",
-                                "            \"canonical_url\", \"resource_id\", \"owner\",\n",
-                                "            \"environment\", \"approved\",\n",
-                                "        }\n",
-                                "        if set(item) != required or not isinstance(item[\"approved\"], bool):\n",
-                                "            raise ValueError(\"declared inventory item schema differs\")\n",
-                                "        key = canonical_url(item[\"canonical_url\"])\n",
-                                "        if key in declared or not item[\"resource_id\"] or not item[\"owner\"]:\n",
-                                "            raise ValueError(\"declared inventory contains an invalid duplicate\")\n",
-                                "        declared[key] = item\n",
-                                "\n",
-                                "    targets = scope.get(\"targets\")\n",
-                                "    if not isinstance(targets, list):\n",
-                                "        raise ValueError(\"target population is missing\")\n",
-                                "    target_by_id: dict[str, dict] = {}\n",
-                                "    claimed_members: dict[tuple[str, str], str] = {}\n",
-                                "    for target in targets:\n",
-                                "        required = {\n",
-                                "            \"target_id\", \"segment_id\", \"adapter\", \"locator\", \"source_members\",\n",
-                                "        }\n",
-                                "        if set(target) != required or not target[\"target_id\"] or not target[\"segment_id\"]:\n",
-                                "            raise ValueError(\"target schema differs\")\n",
-                                "        if target[\"target_id\"] in target_by_id or target[\"adapter\"] not in adapters:\n",
-                                "            raise ValueError(\"target identity or adapter differs\")\n",
-                                "        if (\n",
-                                "            not isinstance(target[\"locator\"], dict) or not target[\"locator\"]\n",
-                                "            or not isinstance(target[\"source_members\"], list)\n",
-                                "            or not target[\"source_members\"]\n",
-                                "        ):\n",
-                                "            raise ValueError(\"target locator or provenance is empty\")\n",
-                                "        for provenance in target[\"source_members\"]:\n",
-                                "            fields = {\n",
-                                "                \"source_id\", \"member_id\", \"raw_record_sha256\",\n",
-                                "                \"authorization_id\",\n",
-                                "            }\n",
-                                "            if not isinstance(provenance, dict) or set(provenance) != fields:\n",
-                                "                raise ValueError(\"target source-member provenance differs\")\n",
-                                "            key = (provenance[\"source_id\"], provenance[\"member_id\"])\n",
-                                "            expected = eligible_members.get(key)\n",
-                                "            if (\n",
-                                "                expected is None or key in claimed_members\n",
-                                "                or expected[\"target_id\"] != target[\"target_id\"]\n",
-                                "                or expected[\"raw_record_sha256\"] != provenance[\"raw_record_sha256\"]\n",
-                                "                or expected[\"authorization_id\"] != provenance[\"authorization_id\"]\n",
-                                "            ):\n",
-                                "                raise ValueError(\"target source-member binding differs\")\n",
-                                "            claimed_members[key] = target[\"target_id\"]\n",
-                                "        target_by_id[target[\"target_id\"]] = target\n",
-                                "\n",
-                                "    applicability = scope.get(\"applicability\")\n",
-                                "    if applicability == \"NOT_APPLICABLE\":\n",
-                                "        if targets or declared or not str(scope.get(\"not_applicable_reason\") or \"\").strip():\n",
-                                "            raise ValueError(\"NOT_APPLICABLE target manifest is inconsistent\")\n",
-                                "        if any(int(source[\"eligible_target_count\"]) != 0 for source in sources):\n",
-                                "            raise ValueError(\"NOT_APPLICABLE source has eligible targets\")\n",
-                                "        outcome = \"NOT_APPLICABLE\"\n",
-                                "    elif applicability != \"APPLICABLE\" or not targets:\n",
-                                "        raise ValueError(\"APPLICABLE target population is empty\")\n",
-                                "    elif set(claimed_members) != set(eligible_members):\n",
-                                "        outcome = \"INSUFFICIENT_DATA\"\n",
-                                "        reasons.append(\"authoritative source-member union differs from target provenance\")\n",
-                                "\n",
-                                "    if outcome != \"NOT_APPLICABLE\":\n",
-                                "        verify(RECEIPTS, RECEIPTS_SIG, Path(\"keys/internal-scanner.pub\"))\n",
-                                "        receipt_doc = load_json(RECEIPTS)\n",
-                                "        if receipt_doc.get(\"schema_version\") != \"aidefend.internal_ai_scan_receipts.v1\":\n",
-                                "            raise ValueError(\"scanner receipt schema differs\")\n",
-                                "        if set(receipt_doc) != {\n",
-                                "            \"schema_version\", \"scope_id\", \"target_manifest_sha256\",\n",
-                                "            \"scanner_identity\", \"receipts\",\n",
-                                "        }:\n",
-                                "            raise ValueError(\"scanner receipt envelope schema differs\")\n",
-                                "        if receipt_doc[\"scope_id\"] != scope[\"scope_id\"]:\n",
-                                "            raise ValueError(\"scanner receipt scope differs\")\n",
-                                "        if receipt_doc[\"target_manifest_sha256\"] != digest(TARGETS):\n",
-                                "            raise ValueError(\"scanner receipt target digest differs\")\n",
-                                "        if not str(receipt_doc[\"scanner_identity\"]).strip():\n",
-                                "            raise ValueError(\"scanner identity is empty\")\n",
-                                "        receipts = receipt_doc[\"receipts\"]\n",
-                                "        if not isinstance(receipts, list):\n",
-                                "            raise ValueError(\"scanner receipt population is missing\")\n",
-                                "        receipt_ids = [item.get(\"target_id\") for item in receipts]\n",
-                                "        if len(receipt_ids) != len(set(receipt_ids)) or set(receipt_ids) != set(target_by_id):\n",
-                                "            outcome = \"INSUFFICIENT_DATA\"\n",
-                                "            reasons.append(\"scanner receipt target population differs\")\n",
-                                "        seen_records: set[tuple[str, str, str]] = set()\n",
-                                "        observed_by_url: dict[str, dict] = {}\n",
-                                "        for receipt in receipts:\n",
-                                "            required = {\n",
-                                "                \"target_id\", \"adapter\", \"adapter_image_digest\",\n",
-                                "                \"started_at\", \"finished_at\", \"status\", \"incomplete_reason\",\n",
-                                "                \"raw_path\", \"raw_sha256\", \"observations_path\",\n",
-                                "                \"observations_sha256\", \"observation_count\",\n",
-                                "            }\n",
-                                "            if set(receipt) != required or receipt[\"target_id\"] not in target_by_id:\n",
-                                "                raise ValueError(\"target receipt schema differs\")\n",
-                                "            target = target_by_id[receipt[\"target_id\"]]\n",
-                                "            if receipt[\"adapter\"] != target[\"adapter\"]:\n",
-                                "                raise ValueError(\"receipt adapter differs from target\")\n",
-                                "            if receipt[\"adapter_image_digest\"] != adapters[receipt[\"adapter\"]]:\n",
-                                "                raise ValueError(\"receipt adapter image differs from policy\")\n",
-                                "            started, finished = when(receipt[\"started_at\"]), when(receipt[\"finished_at\"])\n",
-                                "            if not issued &lt;= started &lt;= finished &lt;= now:\n",
-                                "                raise ValueError(\"receipt timestamp is outside scope\")\n",
-                                "            if receipt[\"status\"] == \"INCOMPLETE\":\n",
-                                "                if not str(receipt[\"incomplete_reason\"] or \"\").strip():\n",
-                                "                    raise ValueError(\"incomplete receipt lacks reason\")\n",
-                                "                outcome = \"INSUFFICIENT_DATA\"\n",
-                                "                reasons.append(\"incomplete target:\" + receipt[\"target_id\"])\n",
-                                "                continue\n",
-                                "            if receipt[\"status\"] != \"COMPLETE\" or receipt[\"incomplete_reason\"] is not None:\n",
-                                "                raise ValueError(\"receipt status is invalid\")\n",
-                                "\n",
-                                "            raw = Path(receipt[\"raw_path\"])\n",
-                                "            normalized = Path(receipt[\"observations_path\"])\n",
-                                "            if not SHA.fullmatch(receipt[\"raw_sha256\"]) or digest(raw) != receipt[\"raw_sha256\"]:\n",
-                                "                raise ValueError(\"raw adapter evidence digest differs\")\n",
-                                "            if not SHA.fullmatch(receipt[\"observations_sha256\"]) or digest(normalized, allow_empty=True) != receipt[\"observations_sha256\"]:\n",
-                                "                raise ValueError(\"normalized observation digest differs\")\n",
-                                "            rows = load_jsonl(normalized)\n",
-                                "            if int(receipt[\"observation_count\"]) != len(rows):\n",
-                                "                raise ValueError(\"observation count differs\")\n",
-                                "            coverage.append({\n",
-                                "                \"target_id\": receipt[\"target_id\"],\n",
-                                "                \"adapter\": receipt[\"adapter\"],\n",
-                                "                \"adapter_image_digest\": receipt[\"adapter_image_digest\"],\n",
-                                "                \"raw_sha256\": receipt[\"raw_sha256\"],\n",
-                                "                \"observations_sha256\": receipt[\"observations_sha256\"],\n",
-                                "                \"observation_count\": len(rows),\n",
-                                "            })\n",
-                                "            for row in rows:\n",
-                                "                required_row = {\n",
-                                "                    \"target_id\", \"segment_id\", \"resource_id\", \"canonical_url\",\n",
-                                "                    \"visibility\", \"status_code\", \"ai_evidence\", \"body_sha256\",\n",
-                                "                    \"raw_record_sha256\", \"observed_at\",\n",
-                                "                }\n",
-                                "                if set(row) != required_row:\n",
-                                "                    raise ValueError(\"normalized observation schema differs\")\n",
-                                "                if row[\"target_id\"] != receipt[\"target_id\"]:\n",
-                                "                    raise ValueError(\"observation target differs\")\n",
-                                "                if row[\"segment_id\"] != target[\"segment_id\"] or row[\"visibility\"] != \"private\":\n",
-                                "                    raise ValueError(\"observation scope differs\")\n",
-                                "                if not started &lt;= when(row[\"observed_at\"]) &lt;= finished:\n",
-                                "                    raise ValueError(\"observation timestamp differs\")\n",
-                                "                if not row[\"resource_id\"] or not row[\"ai_evidence\"]:\n",
-                                "                    raise ValueError(\"observation lacks AI evidence\")\n",
-                                "                if not SHA.fullmatch(row[\"raw_record_sha256\"]):\n",
-                                "                    raise ValueError(\"raw record digest is invalid\")\n",
-                                "                key = canonical_url(row[\"canonical_url\"])\n",
-                                "                record_key = (row[\"target_id\"], row[\"resource_id\"], key)\n",
-                                "                if record_key in seen_records:\n",
-                                "                    raise ValueError(\"duplicate normalized observation\")\n",
-                                "                seen_records.add(record_key)\n",
-                                "                observation = {\n",
-                                "                    \"target_id\": row[\"target_id\"],\n",
-                                "                    \"resource_id\": row[\"resource_id\"],\n",
-                                "                    \"canonical_url\": key,\n",
-                                "                    \"ai_evidence\": row[\"ai_evidence\"],\n",
-                                "                    \"body_sha256\": row[\"body_sha256\"],\n",
-                                "                    \"raw_record_sha256\": row[\"raw_record_sha256\"],\n",
-                                "                }\n",
-                                "                observations.append(observation)\n",
-                                "                prior = observed_by_url.get(key)\n",
-                                "                if prior is not None and prior[\"resource_id\"] != row[\"resource_id\"]:\n",
-                                "                    findings.append({\n",
-                                "                        \"type\": \"conflicting_resource_identity\",\n",
-                                "                        \"canonical_url\": key,\n",
-                                "                    })\n",
-                                "                else:\n",
-                                "                    observed_by_url[key] = observation\n",
-                                "\n",
-                                "        for key, row in observed_by_url.items():\n",
-                                "            expected = declared.get(key)\n",
-                                "            if expected is None:\n",
-                                "                findings.append({\n",
-                                "                    \"type\": \"undeclared_internal_ai_endpoint\",\n",
-                                "                    \"canonical_url\": key,\n",
-                                "                })\n",
-                                "            elif (\n",
-                                "                expected[\"resource_id\"] != row[\"resource_id\"]\n",
-                                "                or not expected[\"approved\"]\n",
-                                "            ):\n",
-                                "                findings.append({\n",
-                                "                    \"type\": \"inventory_identity_or_approval_drift\",\n",
-                                "                    \"canonical_url\": key,\n",
-                                "                })\n",
-                                "        for key in sorted(set(declared) - set(observed_by_url)):\n",
-                                "            findings.append({\n",
-                                "                \"type\": \"declared_endpoint_not_observed\",\n",
-                                "                \"canonical_url\": key,\n",
-                                "            })\n",
-                                "        if outcome != \"INSUFFICIENT_DATA\":\n",
-                                "            outcome = \"FAIL\" if findings else \"PASS\"\n",
-                                "except (OSError, subprocess.SubprocessError, KeyError, TypeError, ValueError, json.JSONDecodeError) as error:\n",
-                                "    outcome = \"ERROR\"\n",
-                                "    reasons.append(str(error))\n",
-                                "\n",
-                                "result = {\n",
-                                "    \"schema_version\": \"aidefend.internal_ai_discovery_reconciliation.v2\",\n",
-                                "    \"control\": \"AID-M-001.006\",\n",
-                                "    \"scope_id\": scope.get(\"scope_id\"),\n",
-                                "    \"target_manifest_sha256\": digest(TARGETS) if TARGETS.is_file() else None,\n",
-                                "    \"declared_inventory_sha256\": digest(DECLARED) if DECLARED.is_file() else None,\n",
-                                "    \"scanner_receipts_sha256\": digest(RECEIPTS) if RECEIPTS.is_file() else None,\n",
-                                "    \"verifier_identity\": verifier_identity,\n",
-                                "    \"eligible_target_count\": len(scope.get(\"targets\", [])),\n",
-                                "    \"measured_target_count\": len(coverage),\n",
-                                "    \"coverage\": coverage,\n",
-                                "    \"observations\": observations,\n",
-                                "    \"findings\": findings,\n",
-                                "    \"outcome\": outcome,\n",
-                                "    \"reasons\": reasons,\n",
-                                "    \"generated_at\": now.isoformat(),\n",
-                                "}\n",
-                                "OUTPUT.parent.mkdir(parents=True, exist_ok=True)\n",
-                                "OUTPUT.write_text(\n",
-                                "    json.dumps(result, sort_keys=True, separators=(\",\", \":\"), allow_nan=False) + \"\\n\",\n",
-                                "    encoding=\"utf-8\",\n",
-                                ")\n",
-                                "if outcome not in {\"PASS\", \"NOT_APPLICABLE\"}:\n",
-                                "    raise SystemExit(f\"internal AI discovery did not pass: {outcome}\")</code></pre><pre><code>python discovery/reconcile_internal_ai.py\n",
-                                "cosign sign-blob --yes --key env://INTERNAL_DISCOVERY_VERIFIER_SIGNING_KEY --bundle evidence/internal-ai-discovery-reconciliation.sig evidence/internal-ai-discovery-reconciliation.json\n",
-                                "cosign verify-blob --key keys/internal-discovery-verifier.pub --bundle evidence/internal-ai-discovery-reconciliation.sig evidence/internal-ai-discovery-reconciliation.json</code></pre>\n",
-                                "<h5>Independent replay and evidence</h5><p>A second scanner identity that cannot alter policy, authoritative exports, target manifest, declared inventory, workloads, or first-run receipts repeats every target with the same pinned adapter images. It signs a separate receipt envelope, reruns this verifier from the retained raw files, and compares the exact target set plus canonical observations. A difference requires a signed environment-change record; unexplained partial replay is <code>INSUFFICIENT_DATA</code>. The promotion gate accepts only fresh signed primary and replay receipts with matching scope and a reproduced <code>PASS</code>.</p>"
-                            ].join("") + "<h5>AI runtime fingerprint coverage</h5><p>Compile custom and common runtime ports from authoritative cloud, IPAM, Kubernetes Services and workload exports into the signed target manifest. Use the versioned read-only profile in AID-M-001.005-G004 for Ollama, LiteLLM, and other installed runtimes, extending it for their actual versions and configured routes. Do not infer a complete internal population from 80/443 alone or use an empty fingerprint result as evidence that no runtime exists. Bind each target's port/route profile to its receipt and independent replay.</p>"}
+                            "implementation": "Scan the complete platform-derived internal target population, reconcile discovered endpoints against declared inventory, and independently spot-check real endpoints; retain unscanned and unresolved scope as unknown.",
+                            "howTo": "<h5>Core: establish the real target population</h5><p>The platform owner exports the authorized accounts, regions, clusters, networks, workloads and endpoints independently of the scanner. Use existing cloud inventory and Kubernetes read-only APIs, then reconcile their coverage against the organization/fleet inventory. <a href=\"https://docs.aws.amazon.com/config/latest/developerguide/how-does-config-work.html\">AWS Config</a> covers configured, supported resource types in recorded regions; it is not a complete catalog of every AI runtime, process or private endpoint. Supplement it with Kubernetes Services/Ingresses, workload configuration, IPAM and managed-model/agent API inventories. Record failed accounts/regions, disabled recorders, unsupported types and inaccessible clusters as coverage gaps.</p><p>Freeze a versioned <code>scope.json</code> before scanning. It contains <code>version</code>, a platform-verified Boolean <code>source_coverage_complete</code>, <code>targets</code> (unique target_id, authorized address and complete installed/custom port list), <code>endpoint_candidates</code> (endpoint_id, target_id, port, read-only route profile_digest), and policy-selected <code>spot_check_endpoint_ids</code>. Retain source IDs, snapshot times, organization scope and authorization with the export. A successful query over one region cannot set organization-wide completeness. Source snapshots, scan results and endpoint probes must belong to the same policy freshness window; refresh after meaningful topology changes.</p><h5>Scan every target and reconcile</h5><p>The following executable network profile runs an explicit-host/port Nmap TCP scan without a shell. For managed services reachable only through a control plane, use the platform's native read-only List/Describe APIs and pass their target_id, COMPLETE/UNKNOWN status and retained native evidence through the same reconcile() function. Native pagination and organization/fleet coverage must be checked before COMPLETE. The Nmap runner is not a cloud/Kubernetes collector; an unsupported target remains UNKNOWN until its platform adapter supplies observations. Set its deadline in <code>policy.json</code>. Run version-pinned read-only runtime/API adapters for every scoped endpoint candidate, using the actual deployed routes and versions. For common runtime profiles use <code>AID-M-001.005-G004</code>. The adapter output <code>endpoints.json</code> contains endpoint_id, target_id, scope_version, profile_digest, state (<code>AI_SERVICE</code>, <code>NOT_AI</code> or <code>UNKNOWN</code>), observer and evidence_ref. Authentication failures, unsupported fingerprints, filtered ports and empty responses are unknown, not evidence of no AI service. Preserve native responses in access-controlled storage and normalize only after checking them. Add newly found open ports/routes to scope and rerun; do not silently discard them.</p><pre><code class=\"language-python\"># File: internal_discovery.py -- Python 3; Nmap installed on the scan worker.\n# Inputs are protected platform exports, not request bodies supplied to this CLI.\nimport hashlib\nimport ipaddress\nimport json\nimport subprocess\nimport sys\nimport xml.etree.ElementTree as ET\nfrom pathlib import Path\n\n\ndef unique(rows, field):\n    result = {}\n    for row in rows:\n        key = row[field]\n        if not isinstance(key, str) or not key or key in result:\n            raise ValueError(\"missing or duplicate identity: \" + field)\n        result[key] = row\n    return result\n\n\ndef scan_target(target, policy):\n    address = str(ipaddress.ip_address(target[\"address\"]))\n    ports = target[\"ports\"]\n    if (not ports or len(ports) != len(set(ports))\n            or any(type(p) is not int or not 1 &lt;= p &lt;= 65535 for p in ports)):\n        raise ValueError(\"explicit authorized port population required\")\n    command = [\"nmap\", \"-sT\", \"-sV\", \"--version-light\", \"-Pn\", \"-n\",\n               \"-p\", \",\".join(map(str, sorted(ports))), \"-oX\", \"-\"]\n    if ipaddress.ip_address(address).version == 6:\n        command.append(\"-6\")\n    command.append(address)\n    run = subprocess.run(command, capture_output=True, check=True,\n                         timeout=policy[\"scan_timeout_seconds\"])\n    root = ET.fromstring(run.stdout)\n    finished = root.find(\"runstats/finished\")\n    hosts = root.findall(\"host\")\n    if (finished is None or finished.get(\"exit\") != \"success\" or len(hosts) != 1\n            or address not in [a.get(\"addr\") for a in hosts[0].findall(\"address\")]):\n        raise ValueError(\"incomplete or mismatched scan\")\n    facts = []\n    for port in hosts[0].findall(\"ports/port\"):\n        number = int(port.get(\"portid\"))\n        if number not in ports or port.get(\"protocol\") != \"tcp\":\n            raise ValueError(\"unexpected port result\")\n        state = port.find(\"state\").get(\"state\")\n        service = port.find(\"service\")\n        facts.append({\"port\": number, \"state\": state,\n                      \"service\": dict(service.attrib) if service is not None else {}})\n    missing = set(ports) - {fact[\"port\"] for fact in facts}\n    grouped = hosts[0].findall(\"ports/extraports\")\n    all_closed = (sum(int(g.get(\"count\")) for g in grouped) == len(missing)\n                  and all(g.get(\"state\") == \"closed\" for g in grouped))\n    for number in sorted(missing):\n        facts.append({\"port\": number, \"state\": \"closed\" if all_closed else \"unknown\",\n                      \"service\": {}})\n    # Keep the native output: fingerprints are leads, not proof that AI is absent.\n    return {\"target_id\": target[\"target_id\"], \"status\": \"COMPLETE\",\n            \"facts\": facts, \"raw_sha256\": hashlib.sha256(run.stdout).hexdigest()}, run.stdout\n\n\ndef reconcile(scope, declared, observations, endpoint_checks, spot_checks):\n    if type(scope[\"source_coverage_complete\"]) is not bool:\n        raise ValueError(\"source coverage must be an independently established Boolean\")\n    targets = unique(scope[\"targets\"], \"target_id\")\n    scans = unique(observations, \"target_id\")\n    endpoints = unique(endpoint_checks, \"endpoint_id\")\n    inventory = unique(declared, \"endpoint_id\")\n    spots = unique(spot_checks, \"endpoint_id\")\n    unknown, findings = [], []\n    if not scope[\"source_coverage_complete\"]:\n        unknown.append(\"platform source coverage incomplete\")\n    if set(scans) - set(targets):\n        raise ValueError(\"scanner returned targets outside authorized scope\")\n    for key in targets:\n        if key not in scans or scans[key][\"status\"] != \"COMPLETE\":\n            unknown.append(\"unscanned target:\" + key)\n    # The read-only runtime/control-plane adapters produce these checks, including\n    # negative and unknown results, for EVERY route in the independently set scope.\n    expected = unique(scope[\"endpoint_candidates\"], \"endpoint_id\")\n    if set(endpoints) - set(expected):\n        raise ValueError(\"new endpoint candidates require a refreshed scope\")\n    discovered = set()\n    for key, candidate in expected.items():\n        row = endpoints.get(key)\n        if (candidate[\"target_id\"] not in targets or not row\n                or row.get(\"scope_version\") != scope[\"version\"]\n                or row.get(\"target_id\") != candidate[\"target_id\"]\n                or row.get(\"profile_digest\") != candidate[\"profile_digest\"]\n                or row.get(\"state\") not in {\"AI_SERVICE\", \"NOT_AI\"}\n                or not row.get(\"evidence_ref\")):\n            unknown.append(\"unresolved endpoint:\" + key)\n            continue\n        if row[\"state\"] == \"AI_SERVICE\":\n            discovered.add(key)\n    # Every open/filtered/unidentified port needs a scoped route/owner check.\n    covered = {(c[\"target_id\"], c[\"port\"]) for c in expected.values()}\n    for key, scan in scans.items():\n        for fact in scan.get(\"facts\", []):\n            if fact[\"state\"] != \"closed\" and (key, fact[\"port\"]) not in covered:\n                unknown.append(f\"unclassified exposure:{key}:{fact['port']}\")\n    for key in sorted(discovered - set(inventory)):\n        findings.append(\"unregistered AI endpoint:\" + key)\n    for key in sorted(set(inventory) - discovered):\n        unknown.append(\"declared endpoint not confirmed:\" + key)\n    # Sample selection is frozen in platform scope before seeing scan results.\n    sample = scope[\"spot_check_endpoint_ids\"]\n    if expected and not sample:\n        unknown.append(\"independent endpoint sample absent\")\n    for key in sample:\n        row, first = spots.get(key), endpoints.get(key)\n        if (key not in expected or not row or not first or not row.get(\"evidence_ref\")\n                or row.get(\"observer\") == first.get(\"observer\")\n                or not row.get(\"observer\") or not first.get(\"observer\")\n                or row.get(\"scope_version\") != scope[\"version\"]):\n            unknown.append(\"independent sample missing:\" + key)\n        elif row.get(\"state\") != first.get(\"state\"):\n            findings.append(\"independent sample disagreement:\" + key)\n    state = \"FAIL\" if findings else \"INSUFFICIENT_DATA\" if unknown else \"PASS\"\n    if not targets and not expected and not inventory and not unknown:\n        state = \"NOT_APPLICABLE\"\n    return {\"scope_version\": scope[\"version\"], \"state\": state,\n            \"expected_targets\": len(targets), \"attempted_targets\": len(scans),\n            \"discovered_endpoints\": sorted(discovered), \"findings\": findings,\n            \"unknown\": unknown, \"sampled_endpoints\": sample}\n\n\nif __name__ == \"__main__\":\n    # Run in a fresh, access-controlled output directory; never overwrite evidence.\n    scope, policy, declared, endpoints, spots = [json.loads(Path(p).read_text())\n                                               for p in sys.argv[1:6]]\n    output = Path(sys.argv[6])\n    output.mkdir(exist_ok=False)\n    if (type(policy[\"scan_timeout_seconds\"]) not in (int, float)\n            or not 0 &lt; policy[\"scan_timeout_seconds\"] &lt; float(\"inf\")):\n        raise ValueError(\"scan deadline must come from the deployment policy\")\n    observations = []\n    for index, target in enumerate(scope[\"targets\"]):\n        try:\n            record, raw = scan_target(target, policy)\n            (output / f\"scan-{index}.xml\").write_bytes(raw)\n        except (OSError, ValueError, subprocess.SubprocessError, ET.ParseError) as error:\n            record = {\"target_id\": target[\"target_id\"], \"status\": \"UNKNOWN\",\n                      \"error\": type(error).__name__}\n        observations.append(record)\n    result = reconcile(scope, declared, observations, endpoints, spots)\n    (output / \"scans.json\").write_text(json.dumps(observations, indent=2))\n    (output / \"result.json\").write_text(json.dumps(result, indent=2))\n    print(json.dumps(result))\n    sys.exit(0 if result[\"state\"] in {\"PASS\", \"NOT_APPLICABLE\"} else 1)\n</code></pre><pre><code class=\"language-bash\">python internal_discovery.py scope.json policy.json declared.json endpoints.json spot-checks.json run-output</code></pre><h5>Independent endpoint spot checks</h5><p>A platform engineer or separate read-only observer checks the policy-selected actual endpoints from a relevant network vantage point, using a direct API query or a second native inventory source. Write endpoint_id, scope_version, observer, state and evidence_ref to <code>spot-checks.json</code>. Select high-risk/new endpoints plus a sample of positive and negative classifications before reviewing the scanner result; use a policy-owned sampling plan. Reconcile the target set, declared inventory, missing scans and sample disagreements. Sampling checks scanner accuracy; it does not establish full independent coverage. Known undeclared services are findings, and every unscanned or unresolved target stays unknown. An empty population is N/A only with independently established complete empty scope.</p><h5>High-assurance variant</h5><p>Where a compromised scanner or disputed inventory is in the threat model, sign the authoritative scope at its trust boundary, pin adapter artifacts, and use a second restricted identity to repeat the full scan and compare retained native evidence. Separately signed primary/replay receipts are optional for that boundary, not a prerequisite for ordinary discovery. Do not grant the second scanner authority to edit scope, workloads or first-run evidence. Both methods satisfy the same discovery objective; a partial second run never becomes full replay credit.</p><h5>Verification</h5><p>Remove one target result, omit a cloud region, expose an unregistered runtime on a custom port, return an authentication error, alter a route profile and disagree in a spot check. Each must remain a finding or unknown rather than reducing the eligible population. Confirm a fully observed benign deployment reconciles successfully. This code establishes scoped reconciliation; native collector coverage and real endpoint checks still need deployment verification.</p>"}
                     ]
                 }
             ]
@@ -2467,14 +1803,16 @@ export const modelTactic = {
                     "toolsOpenSource": [
                         "DVC",
                         "Git LFS",
-                        "lakeFS",
-                        "Pachyderm",
                         "MLflow"
                     ],
+                    "toolsSourceAvailable": [
+                        "lakeFS (BUSL-1.1; source-available)"
+                    ],
                     "toolsCommercial": [
-                        "Databricks Data Intelligence Platform (Delta Lake time travel)",
-                        "Amazon S3 Versioning",
-                        "Azure Blob Storage versioning"
+                        "Databricks Data + AI Platform (Delta Lake time travel and Unity Catalog lineage)",
+                        "Amazon S3 Versioning (version history with restricted version-deletion permissions)",
+                        "Azure Blob Storage versioning",
+                        "Google Cloud Storage Object Versioning (with soft delete)"
                     ],
                     "defendsAgainst": [
                         {
@@ -2590,14 +1928,16 @@ export const modelTactic = {
                         "Notation CLI (OCI artifact signature verification)",
                         "Sigstore model-signing",
                         "pyca/cryptography",
-                        "MLflow"
+                        "Sigstore Policy Controller",
+                        "Kyverno (verifyImages signature verification)"
                     ],
                     "toolsCommercial": [
                         "AWS Key Management Service",
                         "Azure Key Vault",
                         "Google Cloud Key Management Service",
                         "DigiCert Software Trust Manager",
-                        "GlobalSign Code Signing"
+                        "GlobalSign Code Signing",
+                        "Google Cloud Binary Authorization"
                     ],
                     "defendsAgainst": [
                         {
@@ -2729,12 +2069,13 @@ export const modelTactic = {
                     }
                   ],
                     "toolsOpenSource": [
-                        "Microsoft Presidio",
+                        "Presidio (formerly Microsoft Presidio)",
                         "TruffleHog",
                         "Gitleaks",
-                        "ydata-profiling",
-                      "Great Expectations"
-                  ],
+                        "fg-data-profiling (formerly ydata-profiling)",
+                        "Great Expectations",
+                        "cleanlab (Datalab)"
+                    ],
                   "toolsCommercial": [
                       "Google Cloud Sensitive Data Protection",
                       "Amazon Macie",
@@ -2859,14 +2200,14 @@ export const modelTactic = {
                         "Kyverno",
                         "Milvus",
                         "Weaviate",
-                        "Temporal",
+                        "Temporal (durable provenance and write-eligibility workflows; eligibility checks and signed receipts required)",
                         "Cosign"
                     ],
                     "toolsCommercial": [
                         "Pinecone",
                         "Databricks Unity Catalog",
-                        "Temporal Cloud",
-                        "ServiceNow IT Service Management"
+                        "Temporal Cloud (durable provenance and write-eligibility workflows; eligibility checks and signed receipts required)",
+                        "ServiceNow IT Service Management (review and exception records for unresolved provenance; eligibility decisions and signed receipts external)"
                     ],
                     "defendsAgainst": [
                         {
@@ -3132,7 +2473,6 @@ export const modelTactic = {
                         "liboqs (prototype ML-DSA interoperability testing only; not recommended for production)",
                         "Cosign",
                         "in-toto",
-                        "slsa-verifier",
                         "python-tuf"
                     ],
                     "toolsSourceAvailable": [
@@ -3143,8 +2483,8 @@ export const modelTactic = {
                         "DigiCert ONE",
                         "Keyfactor Command",
                         "Amazon S3 Object Lock",
-                        "Amazon S3 Glacier Vault Lock",
-                        "Azure Immutable Blob Storage"
+                        "Azure Immutable Blob Storage",
+                        "Google Cloud Key Management Service (ML-DSA signing keys)"
                     ],
                     "warning": {
                         "level": "Medium on signature size, archival overhead, and verifier interoperability",
@@ -3702,16 +3042,19 @@ export const modelTactic = {
                         "DVC",
                         "MLflow",
                         "huggingface_hub (ModelCard and DatasetCard utilities)",
-                        "Sphinx",
-                      "MkDocs"
-                  ],
+                        "Sphinx (publish versioned model-card and datasheet templates; schema checks and artifact binding required)",
+                        "MkDocs (publish versioned model-card and datasheet templates; schema checks and artifact binding required)",
+                        "Cosign",
+                        "mlcroissant",
+                        "OWASP AIBOM Generator"
+                    ],
                   "toolsCommercial": [
-                      "Google Vertex AI Model Registry",
-                      "Amazon SageMaker AI Model Registry",
+                      "Gemini Enterprise Agent Platform Model Registry (formerly Vertex AI Model Registry)",
+                      "Amazon SageMaker AI Model Registry with SageMaker Model Cards",
                       "Databricks Unity Catalog",
                       "Hugging Face Hub",
-                      "Alation Data Intelligence Platform",
-                      "Collibra Data Intelligence Platform",
+                      "Alation Data Catalog (Alation Intelligence Operating System)",
+                      "Collibra Platform",
                       "Credo AI",
                       "IBM watsonx.governance"
                   ],
@@ -3828,7 +3171,6 @@ export const modelTactic = {
                     ],
                     "toolsOpenSource": [
                         "scikit-learn",
-                        "skops",
                         "MLflow",
                         "DVC",
                         "Evidently",
@@ -3837,7 +3179,10 @@ export const modelTactic = {
                         "Grafana k6",
                         "Apache JMeter",
                         "Prometheus",
-                        "Grafana"
+                        "Grafana (baseline-metric queries and review dashboards; freeze versioned reference artifacts separately)",
+                        "MLPerf Inference LoadGen",
+                        "Triton Performance Analyzer (perf_analyzer)",
+                        "Cosign"
                     ],
                     "toolsSourceAvailable": [
                         "Alibi Detect (Business Source License 1.1; source-available)"
@@ -3847,11 +3192,11 @@ export const modelTactic = {
                         "Fiddler AI Observability",
                         "Evidently Cloud",
                         "NannyML Cloud",
-                        "Amazon SageMaker Model Monitor",
-                        "Google Vertex AI Model Monitoring",
+                        "Gemini Enterprise Agent Platform Model Monitoring (formerly Vertex AI Model Monitoring)",
                         "Azure Machine Learning model monitoring",
                         "Datadog",
-                        "New Relic"
+                        "New Relic",
+                        "Amazon CloudWatch (SageMaker AI endpoint invocation and latency metrics)"
                     ],
                     "defendsAgainst": [
                         {
@@ -3963,8 +3308,9 @@ export const modelTactic = {
                         "TensorFlow",
                         "MLflow",
                         "DVC",
-                        "CycloneDX CLI",
-                        "MkDocs"
+                        "Quantus",
+                        "Xplique",
+                        "Cosign"
                     ],
                     "toolsSourceAvailable": [
                         "Alibi Explain (Business Source License 1.1; source-available)"
@@ -3972,9 +3318,6 @@ export const modelTactic = {
                     "toolsCommercial": [
                         "Fiddler AI Observability",
                         "Arize AX",
-                        "Evidently Cloud",
-                        "NannyML Cloud",
-                        "Amazon SageMaker Clarify",
                         "Azure Machine Learning Responsible AI dashboard",
                         "IBM watsonx.governance"
                     ],
@@ -4091,8 +3434,10 @@ export const modelTactic = {
                         }
                     ],
                     "toolsOpenSource": [
-                      "pyca/cryptography",
-                      "rfc8785 (Python canonical JSON implementation)"
+                        "pyca/cryptography",
+                        "rfc8785 (Python canonical JSON implementation)",
+                        "Cosign",
+                        "python-tuf"
                     ],
                     "toolsCommercial": [
                       "AWS Key Management Service",
@@ -4587,13 +3932,16 @@ export const modelTactic = {
                         "Pillow",
                         "Anomalib",
                         "MLflow",
-                        "Apache Airflow",
+                        "Apache Airflow (schedule controlled baseline recalibration pipelines; calibration and promotion checks required)",
                         "Kubeflow Pipelines",
                         "Cosign"
                     ],
+                    "toolsSourceAvailable": [
+                        "Alibi Detect OutlierAE (Business Source License 1.1; source-available)"
+                    ],
                     "toolsCommercial": [
                         "Amazon SageMaker AI",
-                        "Google Vertex AI",
+                        "Gemini Enterprise Agent Platform (formerly Vertex AI)",
                         "Azure Machine Learning",
                         "Databricks Machine Learning",
                         "Weights & Biases"
@@ -4739,13 +4087,14 @@ export const modelTactic = {
                         "safetensors",
                         "Cosign",
                         "MLflow",
-                        "DVC"
+                        "DVC",
+                        "ONNX Runtime"
                     ],
                     "toolsCommercial": [
                         "Neo4j Enterprise Edition",
                         "TigerGraph Savanna",
                         "Amazon SageMaker AI",
-                        "Google Vertex AI"
+                        "Gemini Enterprise Agent Platform (formerly Vertex AI)"
                     ],
                     "defendsAgainst": [
                         {
@@ -5116,14 +4465,18 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                         "DeepEval",
                         "Ragas",
                         "MLflow",
-                        "DVC"
+                        "DVC",
+                        "Opik",
+                        "Cosign"
                     ],
                     "toolsCommercial": [
                         "LangSmith",
                         "Langfuse Cloud",
                         "Arize AX",
                         "Fiddler AI Observability",
-                        "Datadog LLM Observability"
+                        "Datadog Agent Observability (formerly LLM Observability; Offline Experiments)",
+                        "Braintrust",
+                        "Microsoft Foundry evaluation GitHub Action (public preview; agent regression evaluation)"
                     ],
                     "defendsAgainst": [
                         {
@@ -5272,12 +4625,14 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                 }
             ],
             "toolsOpenSource": [
-                "MITRE ATLAS Navigator",
+                "MITRE ATLAS Navigator (load current ATLAS layers from mitre-atlas/atlas-data release assets)",
                 "OWASP Threat Dragon",
                 "OWASP pytm",
                 "Threat Composer",
                 "Threagile",
-                "PlantUML"
+                "PlantUML",
+                "STRIDE GPT",
+                "Threat Designer (awslabs/threat-designer)"
             ],
             "toolsCommercial": [
                 "Microsoft Threat Modeling Tool",
@@ -5355,20 +4710,15 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0010 Supply Chain Compromise",
-                        "AML.T0010.001 Supply Chain Compromise: Software",
-                        "AML.T0010.004 Supply Chain Compromise: Container Registry",
-                        "AML.T0011 User Execution",
-                        "AML.T0011.001 User Execution: Malicious Package",
                         "AML.T0055 Unsecured Credentials",
                         "AML.T0081 Modify AI Agent Configuration",
-                        "AML.T0083 Credentials from AI Agent Configuration"
+                        "AML.T0083 Credentials from AI Agent Configuration",
+                        "AML.T0132 Misconfigured or Publicly Exposed AI Services"
                     ]
                 },
                 {
                     "framework": "MAESTRO",
                     "items": [
-                        "Compromised Container Images (L4)",
                         "Orchestration Attacks (L4)",
                         "Infrastructure-as-Code (IaC) Manipulation (L4)"
                     ]
@@ -5382,22 +4732,19 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                 {
                     "framework": "OWASP ML Top 10 2023",
                     "items": [
-                        "ML05:2023 Model Theft",
-                        "ML06:2023 AI Supply Chain Attacks"
+                        "ML05:2023 Model Theft"
                     ]
                 },
                 {
                     "framework": "OWASP Top 10 for Agentic Applications 2026",
                     "items": [
-                        "ASI03:2026 Identity and Privilege Abuse",
-                        "ASI04:2026 Agentic Supply Chain Vulnerabilities"
+                        "ASI03:2026 Identity and Privilege Abuse"
                     ]
                 },
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
-                        "NISTAML.039 Compromising connected resources",
-                        "NISTAML.051 Model Poisoning (Supply Chain)"
+                        "NISTAML.039 Compromising connected resources"
                     ]
                 },
                 {
@@ -5410,7 +4757,6 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                 {
                     "framework": "Google Secure AI Framework 2.0 - Risks",
                     "items": [
-                        "MST: Model Source Tampering",
                         "MXF: Model Exfiltration",
                         "MDT: Model Deployment Tampering",
                         "IIC: Insecure Integrated Component"
@@ -5420,9 +4766,6 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                     "framework": "Databricks AI Security Framework 3.0",
                     "items": [
                         "Governance 4.1: Lack of traceability and transparency of model assets",
-                        "Algorithms 5.4: Malicious libraries",
-                        "Model 7.3: ML Supply chain vulnerabilities",
-                        "Model 7.4: Source code control attack",
                         "Operations 11.1: Lack of MLOps - repeatable enforced standards",
                         "Platform 12.1: Lack of vulnerability management",
                         "Platform 12.5: Poor security in the software development lifecycle",
@@ -5479,7 +4822,12 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                         "Docker Engine",
                         "Podman",
                         "OpenSCAP",
-                        "Kyverno"
+                        "Kyverno",
+                        "Checkov",
+                        "hadolint",
+                        "ansible-lint",
+                        "AWS CloudFormation Guard (cfn-guard)",
+                        "Docker Buildx build policies (experimental; pre-build input policy checks)"
                     ],
                     "toolsSourceAvailable": [
                         "TFLint release binaries (MPL-2.0 and Business Source License 1.1; source-available)",
@@ -5594,34 +4942,33 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                         "Open Policy Agent (OPA)",
                         "TruffleHog",
                         "Gitleaks",
-                        "git-secrets"
+                        "git-secrets",
+                        "AWS CloudFormation Guard (cfn-guard)",
+                        "Kyverno (CLI release gate)",
+                        "Cosign (baseline manifest sign-blob / verify-blob)"
                     ],
                     "toolsCommercial": [
                         "Snyk Infrastructure as Code",
-                        "Palo Alto Networks Prisma Cloud Application Security",
+                        "Palo Alto Networks Cortex Cloud Application Security (formerly Prisma Cloud Application Security)",
                         "Wiz Cloud Security Platform",
-                        "Tenable Cloud Security"
+                        "Tenable One Cloud Exposure (formerly Tenable Cloud Security)",
+                        "HCP Terraform / Terraform Enterprise policy enforcement (Sentinel or OPA policy sets)"
                     ],
                     "defendsAgainst": [
                         {
                             "framework": "MITRE ATLAS",
                             "items": [
-                                "AML.T0011 User Execution",
-                                "AML.T0010 Supply Chain Compromise",
-                                "AML.T0010.001 Supply Chain Compromise: Software",
-                                "AML.T0010.004 Supply Chain Compromise: Container Registry",
-                                "AML.T0011.001 User Execution: Malicious Package",
-                                "AML.T0055 Unsecured Credentials",
-                                "AML.T0081 Modify AI Agent Configuration",
-                                "AML.T0083 Credentials from AI Agent Configuration"
+                                "AML.T0132 Misconfigured or Publicly Exposed AI Services (release gate denies public-exposure and permissive-access configuration before deployment)",
+                                "AML.T0055 Unsecured Credentials (release gate blocks configuration and images that embed plaintext credentials)",
+                                "AML.T0081 Modify AI Agent Configuration (release gate rejects agent and MCP configuration that deviates from the signed baseline)",
+                                "AML.T0083 Credentials from AI Agent Configuration (release gate blocks credentials stored in agent configuration files)"
                             ]
                         },
                         {
                             "framework": "MAESTRO",
                             "items": [
                                 "Infrastructure-as-Code (IaC) Manipulation (L4)",
-                                "Orchestration Attacks (L4)",
-                                "Compromised Container Images (L4)"
+                                "Orchestration Attacks (L4)"
                             ]
                         },
                         {
@@ -5633,22 +4980,19 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                         {
                             "framework": "OWASP ML Top 10 2023",
                             "items": [
-                                "ML06:2023 AI Supply Chain Attacks",
                                 "ML05:2023 Model Theft (storage and access-control release gates block insecure model exposure)"
                             ]
                         },
                         {
                             "framework": "OWASP Top 10 for Agentic Applications 2026",
                             "items": [
-                                "ASI04:2026 Agentic Supply Chain Vulnerabilities (policy-as-code release gates reject unapproved component configuration)",
                                 "ASI03:2026 Identity and Privilege Abuse (access-control baselines gate insecure identity configuration)"
                             ]
                         },
                         {
                             "framework": "NIST Adversarial Machine Learning 2025",
                             "items": [
-                                "NISTAML.039 Compromising connected resources",
-                                "NISTAML.051 Model Poisoning (Supply Chain) (signed policy baselines gate unapproved software and deployment configuration)"
+                                "NISTAML.039 Compromising connected resources"
                             ]
                         },
                         {
@@ -5661,18 +5005,14 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                         {
                             "framework": "Google Secure AI Framework 2.0 - Risks",
                             "items": [
-                                "MST: Model Source Tampering (policy-as-code CI gates block tampered/non-compliant IaC before merge)",
                                 "MDT: Model Deployment Tampering (signed baseline manifests and promotion verification prevent deployment-time tampering)",
                                 "MXF: Model Exfiltration (posture SLOs enforce secure storage configurations blocking exfiltration paths)",
-                                "IIC: Insecure Integrated Component (IaC scanners and policy checks catch insecure dependency/integration configs)"
+                                "IIC: Insecure Integrated Component (policy checks catch insecure integration and plugin configuration before release)"
                             ]
                         },
                         {
                             "framework": "Databricks AI Security Framework 3.0",
                             "items": [
-                                "Algorithms 5.4: Malicious libraries",
-                                "Model 7.3: ML Supply chain vulnerabilities",
-                                "Model 7.4: Source code control attack",
                                 "Platform 12.1: Lack of vulnerability management",
                                 "Platform 12.5: Poor security in the software development lifecycle",
                                 "Governance 4.1: Lack of traceability and transparency of model assets",
@@ -5808,8 +5148,10 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                         "check-jsonschema",
                         "Ajv",
                         "CUE",
-                        "MkDocs",
-                        "Camunda Modeler"
+                        "MkDocs (docs-as-code publication of versioned HITL SOPs)",
+                        "Camunda Modeler",
+                        "Open Policy Agent (OPA; HITL trigger compilation and validation)",
+                        "cel-go (CEL trigger compilation)"
                     ],
                     "toolsCommercial": [
                         "PagerDuty Operations Cloud",
@@ -5910,19 +5252,17 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                         }
                     ],
                   "toolsOpenSource": [
-                    "Apache Airflow",
-                        "Prefect",
-                        "Kubeflow Pipelines",
-                        "Grafana",
-                        "Kibana 8.16+ AGPLv3 source build",
-                        "Alerta",
-                        "Prometheus Alertmanager"
-                    ],
+                      "Apache Airflow",
+                      "Prefect",
+                      "Grafana (query drill outcomes and independent effect metrics; qualification decisions external)",
+                      "Kibana 8.16+ AGPLv3 source build (query drill-event and outcome evidence; qualification decisions external)",
+                      "Alerta",
+                      "Prometheus Alertmanager"
+                  ],
                     "toolsCommercial": [
                         "PagerDuty Operations Cloud",
                         "xMatters",
-                        "Immersive Labs",
-                        "RangeForce",
+                        "Immersive One Lab Builder (custom practical labs built on the organization's own tools and environments)",
                         "Palo Alto Networks Cortex XSOAR",
                         "Splunk SOAR"
                     ],
@@ -6033,7 +5373,9 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                         "OpenTelemetry Collector",
                         "Vector",
                         "Sigstore Rekor v2 (signed audit-event digest transparency anchoring)",
-                        "python-jsonschema"
+                        "python-jsonschema",
+                        "Fluent Bit (filesystem buffering)",
+                        "Tessera (transparency-dev; self-hosted tile-based transparency log library)"
                     ],
                     "toolsCommercial": [
                         "PagerDuty Operations Cloud",
@@ -6042,7 +5384,8 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
                         "Google Cloud Bucket Lock",
                         "AWS Key Management Service",
                         "Azure Key Vault",
-                        "Google Cloud Key Management Service"
+                        "Google Cloud Key Management Service",
+                        "Grafana Cloud IRM (escalation chains)"
                     ],
                     "defendsAgainst": [
                         {
@@ -6290,7 +5633,8 @@ cosign verify-blob --key keys/llm-baseline-gate.pub \
               "toolsOpenSource": [
                   "Open Policy Agent (OPA)",
                   "Cosign",
-                  "Conftest"
+                  "Conftest",
+                  "AI Atlas Nexus (IBM; risk ontology and risk-to-evaluation mappings)"
               ],
               "toolsCommercial": [
                   "Credo AI",
@@ -6897,14 +6241,19 @@ cosign sign-blob --yes --key env://SAFETY_POLICY_SIGNING_KEY --bundle safety/con
                         "pytest",
                         "Inspect AI",
                         "DeepEval",
-                        "promptfoo"
+                        "promptfoo",
+                        "Project Moonshot (AI Verify Foundation)",
+                        "MLflow GenAI evaluation (mlflow.genai.evaluate)",
+                        "Evidently (custom safety-case evaluators and per-case reports; independent effect checks and release gate required)"
+                    ],
+                    "toolsSourceAvailable": [
+                        "Arize Phoenix (release-case experiments and custom safety evaluators; promotion gate external) (Elastic License 2.0; source-available)"
                     ],
                     "toolsCommercial": [
                         "IBM watsonx.governance",
-                        "OpenAI Evals API",
                         "Microsoft Foundry Evaluation",
-                        "Vertex AI Gen AI evaluation service",
-                        "Patronus AI Evaluate API"
+                        "Gemini Enterprise Agent Platform Gen AI evaluation service (formerly Vertex AI Gen AI evaluation service)",
+                        "Amazon Bedrock Evaluations"
                     ],
               "implementationGuidance": [
                 {
@@ -7603,12 +6952,13 @@ cosign sign-blob --yes --key env://SAFETY_POLICY_SIGNING_KEY --bundle safety/con
                     "Fairlearn (group-fairness metrics and disparity assessment; policy thresholds remain organization-owned)",
                     "AI Fairness 360 (bias metrics and mitigation algorithms; release enforcement remains pipeline-owned)",
                     "Aequitas (bias audit and disparity metrics; release enforcement remains pipeline-owned)",
-                    "Cosign (signature verification for policy, population, release, and result evidence)"
+                    "Cosign (signature verification for policy, population, release, and result evidence)",
+                    "Holistic AI library (holisticai)"
                 ],
                 "toolsCommercial": [
-                    "Credo AI (fairness assessment and policy-evidence workflows; deployment enforcement remains CI-owned)",
                     "IBM watsonx.governance (fairness evaluation metrics and evidence; organizational policy owns thresholds and promotion)",
-                    "Arthur AI Platform (fairness and bias evaluation or monitoring; release enforcement remains pipeline-owned)"
+                    "Arthur AI Platform (fairness and bias evaluation or monitoring; release enforcement remains pipeline-owned)",
+                    "Azure Machine Learning Responsible AI dashboard and scorecard (Fairlearn-based fairness assessment)"
                 ],
                 "implementationGuidance": [
                     {
@@ -8328,12 +7678,15 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                 "HarmBench (model-layer harmful-behavior and jailbreak evaluation; agent tool/state coverage requires separate harness)",
                 "CyberSecEval 4",
                 "promptfoo",
-                "Playwright"
+                "Playwright",
+                "Inspect Evals (benchmark suite incl. AgentDojo, AgentHarm, b3, StrongREJECT, CyberSecEval)",
+                "DeepTeam"
             ],
             "toolsCommercial": [
                 "Cisco AI Defense",
                 "Check Point AI Red Teaming",
-                "Credo AI"
+                "Microsoft Foundry AI Red Teaming Agent",
+                "Palo Alto Networks Prisma AIRS AI Red Teaming"
             ],
             "defendsAgainst": [
                 {
@@ -9912,10 +9265,12 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                     "toolsOpenSource": [
                         "Open Policy Agent (OPA)",
                         "Cedar",
-                        "Cerbos PDP"
+                        "Cerbos PDP",
+                        "Agentic Radar (SPLX)"
                     ],
                     "toolsCommercial": [
-                        "OneTrust AI Governance"
+                        "OneTrust AI Governance",
+                        "Mend AI (AI agent framework inventory; open beta)"
                     ],
                     "defendsAgainst": [
                         {
@@ -10025,7 +9380,8 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                     "toolsCommercial": [
                         "Cerbos Hub",
                         "Amazon Verified Permissions",
-                        "Permit.io"
+                        "Permit.io",
+                        "Policy in Amazon Bedrock AgentCore (Cedar policies attached to AgentCore Gateway)"
                     ],
                     "defendsAgainst": [
                         {
@@ -10123,7 +9479,9 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                         "SPIRE",
                         "Keycloak",
                         "Cosign",
-                        "PostgreSQL"
+                        "PostgreSQL",
+                        "agentgateway (RFC 8693 token exchange and Entra OBO backend auth)",
+                        "AGNTCY Identity (agent/MCP identity credentials; beta)"
                     ],
                     "toolsCommercial": [
                         "Teleport Machine & Workload Identity",
@@ -10131,7 +9489,9 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                         "HCP Vault Dedicated",
                         "Microsoft Entra Workload ID",
                         "Microsoft Entra Agent ID",
-                        "Amazon Bedrock AgentCore Identity"
+                        "Amazon Bedrock AgentCore Identity",
+                        "Auth0 for AI Agents (On-Behalf-Of Token Exchange)",
+                        "Ping Identity for AI (agent token exchange)"
                     ],
                     "defendsAgainst": [
                         {
@@ -10757,7 +10117,8 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                         "Cosign"
                     ],
                     "toolsCommercial": [
-                        "Cerbos Hub"
+                        "Cerbos Hub",
+                        "Microsoft Entra ID Protection for Agents (agent risk level consumed by Conditional Access)"
                     ],
                     "defendsAgainst": [
                         {
@@ -10855,8 +10216,10 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                         ]
                     },
                     "toolsOpenSource": [
-                      "pyca/cryptography",
-                      "rfc8785 (Python canonical JSON implementation)"
+                        "pyca/cryptography",
+                        "rfc8785 (Python canonical JSON implementation)",
+                        "gittuf (signed Git policy and reference-state verification; beta; use a version with the policy-rollback fix)",
+                        "Sigstore Rekor v2 (transparency-anchored goal-transition provenance)"
                     ],
                     "toolsCommercial": [
                         "GitLab Premium/Ultimate (merge-request approval rules)",
@@ -10977,14 +10340,15 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                         "Open Policy Agent (OPA)",
                         "Conftest",
                         "Git",
-                        "OpenTelemetry"
+                        "Cosign (verify-blob / verify-attestation of required control evidence)",
+                        "ORAS",
+                        "Kyverno (verifyImages attestations / ImageValidatingPolicy)",
+                        "Sigstore Policy Controller"
                     ],
                     "toolsCommercial": [
                         "Cerbos Hub",
                         "GitHub Enterprise Cloud",
                         "GitHub Enterprise Server",
-                        "Splunk Enterprise Security",
-                        "Datadog Cloud SIEM",
                         "ServiceNow IT Service Management"
                     ],
                     "defendsAgainst": [
@@ -11261,7 +10625,8 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
               "toolsOpenSource": [
                   "GNU shred",
                   "nwipe",
-                  "cryptsetup"
+                  "cryptsetup",
+                  "nvme-cli (NVMe Sanitize and Format crypto erase)"
               ],
                     "toolsSourceAvailable": [
                         "hdparm (hdparm License; source-available)",
@@ -11272,7 +10637,8 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                   "Azure Key Vault",
                   "Google Cloud Key Management Service",
                   "Blancco Drive Eraser",
-                  "Active@ KillDisk"
+                  "Active@ KillDisk",
+                  "BitRaser Drive Eraser (Stellar)"
               ],
             },
             {
@@ -11402,13 +10768,15 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                   "GnuPG",
                   "OpenSSL",
                   "sha256sum",
-                  "rsync"
+                  "rsync over SSH (authenticated encrypted asset transfer over SSH; recipient verification and source-access closure required)",
+                  "Sigstore model-signing (signed model-file manifests; enforce symlink, ignored-path and legacy-signature safeguards)"
               ],
               "toolsCommercial": [
                   "Progress MOVEit Transfer",
                   "Fortra GoAnywhere MFT",
                   "Broadcom Symantec Data Loss Prevention",
-                  "Forcepoint DLP"
+                  "Forcepoint DLP (data-at-rest discovery of residual asset copies)",
+                  "AWS IAM Access Analyzer (internal and external access analyzers)"
               ],
             },
             {
@@ -11444,8 +10812,8 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                   {
                       "framework": "MITRE ATLAS",
                       "items": [
-                          "AML.T0025 Exfiltration via Cyber Means (de-publication and zero active resolution of a logically retired digest while retained bytes remain preserved)",
-                          "AML.T0036 Data from Information Repositories (de-publication and zero active resolution of a logically retired digest while retained bytes remain preserved)",
+                          "AML.T0025 Exfiltration via Cyber Means (a retired artifact loses its active routes, aliases and workload grants, though the retained bytes still need storage protection)",
+                          "AML.T0036 Data from Information Repositories (retired datasets and indexes are removed from active repository references and grants, but the retained bytes are not erased)",
                           "AML.T0048.004 External Harms: AI Intellectual Property Theft (retired digest is no longer resolvable while retained bytes remain preserved)"
                       ]
                   },
@@ -11511,13 +10879,14 @@ cosign verify-blob --key keys/fairness-verifier.pub --bundle evidence/fairness-e
                   "kubectl",
                   "Open Policy Agent (OPA)",
                   "Cosign",
-                  "jq",
+                  "jq (registry reference and retirement-state readback checks; authoritative inventory required)",
                   "Argo CD",
-                  "Flux CD"
+                  "Flux CD",
+                  "Kyverno (retired-digest admission deny)"
               ],
               "toolsCommercial": [
                   "Amazon SageMaker AI Model Registry",
-                  "Google Vertex AI Model Registry",
+                  "Gemini Enterprise Agent Platform Model Registry (formerly Vertex AI Model Registry)",
                   "Azure Machine Learning",
                   "Databricks Models in Unity Catalog"
               ],

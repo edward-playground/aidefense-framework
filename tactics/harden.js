@@ -41,21 +41,17 @@ export const hardenTactic = {
                 "PettingZoo",
                 "PyTorch",
                 "TensorFlow",
-                "Albumentations (data augmentation)",
+                "AlbumentationsX (AGPL-3.0-only edition; occlusion augmentation)",
                 "torchvision.transforms (data augmentation)",
-                "MLflow",
+                "MLflow (robustness experiment tracking and baseline/candidate metric gates; attacks and training external)",
                 "RobustBench (AutoAttack evaluation)"
             ],
             "toolsCommercial": [
-                "Cisco AI Defense AI Model & Application Validation",
-                "HiddenLayer AI Attack Simulation",
-                "Prisma AIRS AI Red Teaming",
-                "Adversa AI Red Teaming Platform",
-                "Amazon SageMaker AI",
-                "Google Vertex AI",
-                "Databricks Runtime for Machine Learning",
-                "Azure Machine Learning",
-                "Weights & Biases"
+                "Amazon SageMaker AI (managed jobs for configured adversarial-training and replay code; attack and training libraries required)",
+                "Gemini Enterprise Agent Platform (managed jobs for configured adversarial-training and replay code; attack and training libraries required)",
+                "Databricks Runtime for Machine Learning (run configured adversarial-training and replay code; attack and training libraries required)",
+                "Azure Machine Learning (managed jobs for configured adversarial-training and replay code; attack and training libraries required)",
+                "Weights & Biases (robustness/utility metric comparisons and experiment lineage; attack generation and training external)"
             ],
             "defendsAgainst": [
                 {
@@ -378,20 +374,21 @@ export const hardenTactic = {
                     "toolsOpenSource": [
                         "GX Core (Great Expectations)",
                         "TensorFlow Data Validation (TFDV)",
-                        "ydata-profiling",
-                        "Microsoft Presidio",
+                        "fg-data-profiling (training-data quality profiling and anomaly triage; row admission and PII enforcement external)",
+                        "Presidio",
                         "cleanlab",
                         "NVIDIA NeMo Safe Synthesizer (Apache-2.0)",
-                        "NVIDIA NeMo Curator"
+                        "NVIDIA NeMo Curator",
+                        "Data Prep Kit (PII redactor, HAP filter, blocklist, dedup and malware annotation transforms)"
                     ],
                     "toolsSourceAvailable": [
                         "Alibi Detect for outlier detection (Business Source License 1.1; source-available)"
                     ],
                     "toolsCommercial": [
-                        "Databricks",
-                        "Alation",
-                        "Collibra",
-                        "Tonic Structural"
+                        "Databricks Lakeflow pipelines (Spark Declarative Pipelines on Lakeflow; expectations that drop or quarantine invalid records)",
+                        "Collibra Data Quality & Observability (rule and adaptive checks on candidate tables)",
+                        "Tonic Structural",
+                        "Google Cloud Sensitive Data Protection (de-identification of BigQuery and Cloud Storage data)"
                     ],
                     "defendsAgainst": [
                         {
@@ -538,10 +535,11 @@ export const hardenTactic = {
                     "toolsOpenSource": [
                         "NVIDIA NeMo Guardrails",
                         "Pydantic",
-                        "HTTPX",
+                        "HTTPX (bounded remote-input fetching; application-enforced destination and redirect policy required)",
                         "nh3",
-                        "Cosign",
-                        "Guardrails AI"
+                        "Cosign (verify signed prompt-gate rule and policy bundles; input validation external)",
+                        "Guardrails AI",
+                        "Kong Gateway OSS (AI Prompt Guard, AI Prompt Template and Request Size Limiting plugins)"
                     ],
                     "toolsSourceAvailable": [
                         "Meta Llama Guard 4 (Llama 4 Community License; open-weight)",
@@ -557,8 +555,9 @@ export const hardenTactic = {
                         "Palo Alto Networks Prisma AIRS",
                         "F5 AI Guardrails",
                         "Securiti LLM Firewall",
-                        "Guardrails for Amazon Bedrock",
-                        "Azure AI Content Safety (Prompt Shields)"
+                        "Amazon Bedrock Guardrails",
+                        "Azure AI Content Safety (Prompt Shields)",
+                        "Google Cloud Model Armor"
                     ],
                     "defendsAgainst": [
                         {
@@ -772,7 +771,8 @@ export const hardenTactic = {
                         "FFmpeg",
                         "python-magic",
                         "ExifTool",
-                        "Apache Tika (content detection and extraction; isolate parsers independently)"
+                        "Apache Tika (content detection and extraction; isolate parsers independently)",
+                        "Dangerzone (sandboxed pixel-based reconstruction of untrusted documents and images)"
                     ],
                     "toolsCommercial": [
                         "OPSWAT MetaDefender",
@@ -877,14 +877,16 @@ export const hardenTactic = {
                         "Feast",
                         "Hopsworks",
                         "GX Core (Great Expectations)",
-                        "dbt",
+                        "dbt OSS (formerly dbt Core; data tests and manifest lineage)",
                         "DVC",
                         "Pandera",
                         "Git",
-                        "Apache Airflow",
-                        "Prefect",
+                        "Apache Airflow (OpenLineage provider for transformation lineage)",
+                        "Prefect (asset materialization lineage)",
                         "OpenLineage (feature-pipeline lineage instrumentation)",
-                        "Marquez (OpenLineage metadata collection and inspection)"
+                        "Marquez (OpenLineage metadata collection and inspection)",
+                        "TensorFlow Data Validation (TFDV; DetectFeatureSkew paired training-serving example comparison)",
+                        "TensorFlow Transform (single transform graph exported for training and serving)"
                     ],
                     "toolsCommercial": [
                         "Tecton",
@@ -894,7 +896,8 @@ export const hardenTactic = {
                         "Arize AX",
                         "Fiddler AI Observability Platform",
                         "Evidently Cloud",
-                        "NannyML Cloud"
+                        "NannyML Cloud",
+                        "GitHub rulesets (require signed commits, pull-request review and status checks on transform repositories)"
                     ],
                     "defendsAgainst": [
                         {
@@ -1021,7 +1024,6 @@ export const hardenTactic = {
                         "Labelbox (annotation platform with review workflows)",
                         "Amazon SageMaker Ground Truth",
                         "Appen (managed annotation operations)",
-                        "Surge AI",
                         "Prodigy"
                     ],
                     "defendsAgainst": [
@@ -1144,11 +1146,12 @@ export const hardenTactic = {
                         "GX Core (Great Expectations)",
                         "Pandera",
                         "Python hashlib (content-addressable split hashing)",
-                        "NVIDIA NeMo Curator (duplicate and near-duplicate analysis for cross-partition leakage checks only; split creation, immutability, stratification, and access controls remain external)"
+                        "NVIDIA NeMo Curator (duplicate and near-duplicate analysis for cross-partition leakage checks only; split creation, immutability, stratification, and access controls remain external)",
+                        "Deepchecks (Train-Test Validation suite: Train Test Samples Mix, Index Leakage, Date Train Test Leakage and drift checks)"
                     ],
                     "toolsCommercial": [
                         "Databricks Unity Catalog",
-                        "Amazon SageMaker Processing (managed split jobs with auditability)",
+                        "Amazon SageMaker Processing (managed split-processing jobs with scoped data access; split and leakage-check logic required)",
                         "Weights & Biases Artifacts (versioned split artifacts and lineage)"
                     ],
                     "defendsAgainst": [
@@ -1294,11 +1297,12 @@ export const hardenTactic = {
                     "toolsOpenSource": [
                         "c2pa-rs",
                         "c2patool",
-                        "c2pa-python"
+                        "c2pa-python",
+                        "Credentio (Google C2PA validation library)"
                     ],
                     "toolsCommercial": [
                         "Adobe Content Authenticity Inspect",
-                        "Truepic Vision"
+                        "Truepic Vision (controlled-capture inspections with media verification tests)"
                     ],
                     "defendsAgainst": [
                         {
@@ -1403,7 +1407,9 @@ export const hardenTactic = {
                         "WebRTC VAD (py-webrtcvad)",
                         "OpenCV",
                         "Tesseract OCR",
-                        "Silero VAD (voice-activity segmentation only; stream normalization, control-token checks, and admission remain external)"
+                        "Silero VAD (voice-activity segmentation only; stream normalization, control-token checks, and admission remain external)",
+                        "Pipecat (VAD and turn analyzers with frame-processor pipeline)",
+                        "LiveKit Agents (VAD and turn detector plugins)"
                     ],
                     "toolsSourceAvailable": [
                         "OpenAI Whisper (MIT; open-weight)"
@@ -1416,7 +1422,8 @@ export const hardenTactic = {
                         "AssemblyAI",
                         "Azure AI Content Safety",
                         "Amazon Rekognition",
-                        "Google Cloud Vision API"
+                        "Google Cloud Vision API",
+                        "OpenAI Realtime API VAD (turn segmentation in supported transcription-only sessions; separate content admission required)"
                     ],
                     "defendsAgainst": [
                         {
@@ -1867,17 +1874,19 @@ export const hardenTactic = {
                       ]
                     },
                     "toolsOpenSource": [
-                      "Trivy",
-                      "Syft",
-                      "Grype",
-                      "Cosign",
-                      "in-toto",
-                      "OWASP Dependency-Check",
-                      "pip-audit",
-                      "OSV-Scanner",
-                      "OWASP Dependency-Track",
-                      "npm CLI (native registry signature and provenance verification)",
-                      "pypi-attestations (pinned PEP 740 verifier; CLI interface is experimental)"
+                        "Trivy",
+                        "Syft",
+                        "Grype",
+                        "Cosign",
+                        "in-toto",
+                        "OWASP Dependency-Check",
+                        "pip-audit",
+                        "OSV-Scanner",
+                        "OWASP Dependency-Track",
+                        "npm CLI (native registry signature and provenance verification)",
+                        "pypi-attestations (pinned PEP 740 verifier; CLI interface is experimental)",
+                        "uv (universal lockfile with per-artifact hashes; uv sync --locked)",
+                        "Supply Chain Firewall (Datadog SCFW; blocks known-malicious npm and PyPI packages at install time)"
                     ],
                     "toolsCommercial": [
                         "Snyk Open Source",
@@ -2026,17 +2035,18 @@ export const hardenTactic = {
                         "MLflow Model Registry",
                         "Cosign",
                         "in-toto",
-                        "slsa-verifier",
+                        "GitHub CLI (GitHub artifact-attestation verification)",
                         "safetensors",
                         "Kyverno",
                         "Sigstore Policy Controller",
-                        "Open Policy Agent (OPA)"
+                        "Open Policy Agent (OPA)",
+                        "Sigstore model-signing (signed model-file manifests; enforce symlink, ignored-path and legacy-signature safeguards)"
                     ],
                     "toolsCommercial": [
                         "Prisma AIRS AI Model Security",
                         "Databricks Models in Unity Catalog",
                         "Amazon SageMaker AI Model Registry",
-                        "Google Vertex AI Model Registry",
+                        "Gemini Enterprise Agent Platform Model Registry (formerly Vertex AI Model Registry)",
                         "JFrog Artifactory"
                     ],
                     "defendsAgainst": [
@@ -2165,15 +2175,18 @@ export const hardenTactic = {
                   },
                   "toolsOpenSource": [
                       "DVC",
-                      "lakeFS",
                       "Witness",
                       "in-toto",
-                      "OpenMetadata (dataset provenance evidence source; separate admission gate required)"
+                      "OpenMetadata (catalogued supplier-provenance input; trusted imports and cryptographic admission required)",
+                      "Cosign (verify-blob on a supplier-signed dataset manifest)"
+                  ],
+                  "toolsSourceAvailable": [
+                      "lakeFS (BUSL-1.1; source-available)"
                   ],
                   "toolsCommercial": [
-                    "Databricks Unity Catalog",
-                    "Alation",
-                    "Collibra"
+                      "Databricks Unity Catalog",
+                      "Alation Data Catalog (catalogued supplier-provenance input; trusted imports and cryptographic admission required)",
+                      "Collibra Platform (catalogued supplier-provenance input; trusted imports and cryptographic admission required)"
                   ],
                   "defendsAgainst": [
                       {
@@ -2292,12 +2305,12 @@ export const hardenTactic = {
                       ]
                     },
                     "toolsOpenSource": [
-                        "U-Boot",
-                        "binwalk",
-                        "Intel SGX SDK",
-                        "Open Enclave SDK",
+                        "U-Boot (measured-boot evidence producer for supported embedded AI nodes; independent admission verifier required)",
                         "Keylime (nonce-bound TPM attestation and verifier policy enforcement)",
-                        "tpm2-tools (TPM quote generation and verification only; asset identity, measurement policy, nonce issuance, and cluster admission remain external)"
+                        "tpm2-tools (TPM quote generation and verification only; asset identity, measurement policy, nonce issuance, and cluster admission remain external)",
+                        "NVIDIA Attestation SDK (NVAT; nvattest; GPU and NVSwitch evidence verification)",
+                        "Trustee (Confidential Containers attestation service and key broker)",
+                        "SPIRE (tpm_devid node attestor)"
                     ],
                     "toolsCommercial": [
                         "NVIDIA Confidential Computing",
@@ -2414,9 +2427,10 @@ export const hardenTactic = {
                     ],
                     "toolsCommercial": [
                         "Snyk IaC",
-                        "Palo Alto Networks Prisma Cloud Application Security",
-                        "Wiz",
-                        "Tenable Cloud Security"
+                        "Palo Alto Networks Cortex Cloud Application Security (formerly Prisma Cloud Application Security)",
+                        "Wiz Code (IaC misconfiguration and secret scanning)",
+                        "Tenable One Cloud Exposure (formerly Tenable Cloud Security; IaC template scanning)",
+                        "HCP Terraform policy enforcement (Sentinel or OPA policy sets on plans before apply)"
                     ],
                     "defendsAgainst": [
                         {
@@ -2533,21 +2547,22 @@ export const hardenTactic = {
                     "toolsOpenSource": [
                         "Cosign",
                         "in-toto",
-                        "slsa-verifier",
+                        "GitHub CLI (GitHub artifact-attestation verification)",
                         "ORAS CLI",
-                        "jq",
+                        "jq (construct and validate model-SBOM JSON fields; artifact binding and signature checks required)",
                         "sha256sum",
                         "safetensors",
                         "CycloneDX CLI",
                         "cdxgen",
                         "SPDX Python Tools (spdx/tools-python)",
-                        "OWASP Dependency-Track (CycloneDX ML-BOM monitoring; separate artifact-digest admission gate required)"
+                        "OWASP Dependency-Track (model-SBOM component and policy monitoring; artifact-digest admission gate required)",
+                        "Sigstore model-signing (signed model-file manifests; enforce symlink, ignored-path and legacy-signature safeguards)"
                     ],
                     "toolsCommercial": [
                         "JFrog Artifactory",
                         "Databricks Models in Unity Catalog",
                         "Amazon SageMaker AI Model Registry",
-                        "Google Vertex AI Model Registry"
+                        "Gemini Enterprise Agent Platform Model Registry (formerly Vertex AI Model Registry)"
                     ],
                     "defendsAgainst": [
                       {
@@ -2701,17 +2716,19 @@ export const hardenTactic = {
                     "toolsOpenSource": [
                         "Cosign",
                         "in-toto",
-                        "slsa-verifier",
+                        "GitHub CLI (GitHub artifact-attestation verification)",
                         "safetensors",
                         "Open Policy Agent (OPA)",
                         "Conftest",
                         "Kyverno",
-                        "MLflow Model Registry"
+                        "MLflow Model Registry",
+                        "Sigstore model-signing (signed model-file manifests; enforce symlink, ignored-path and legacy-signature safeguards)",
+                        "EleutherAI lm-evaluation-harness (golden-task regression on base model plus PEFT adapter)",
+                        "vLLM (static --lora-modules; runtime LoRA loading stays off unless VLLM_ALLOW_RUNTIME_LORA_UPDATING is set)"
                     ],
                     "toolsCommercial": [
                         "JFrog Artifactory",
                         "JFrog Xray",
-                        "AWS CodeArtifact",
                         "Amazon ECR",
                         "Azure Machine Learning registries",
                         "W&B Registry",
@@ -2856,18 +2873,19 @@ export const hardenTactic = {
                     "toolsOpenSource": [
                         "Cosign",
                         "in-toto",
-                        "slsa-verifier",
                         "python-tuf",
                         "liboqs (prototype PQC interoperability testing only; not recommended for production)",
                         "Open Quantum Safe provider for OpenSSL (oqs-provider; prototype interoperability testing only; not recommended for production)",
                         "OpenSSL 3.5+ (ML-DSA signing primitives; artifact-envelope integration required)"
                     ],
                     "toolsCommercial": [
-                        "DigiCert Binary Signing",
-                        "CyberArk Code Sign Manager",
-                        "JFrog Artifactory",
+                        "DigiCert Software Trust Manager",
+                        "Palo Alto Networks Code Sign Manager, Self-Hosted (formerly CyberArk Code Sign Manager)",
+                        "JFrog Artifactory (distribute artifacts and signature evidence; hybrid-signature and downgrade checks external)",
                         "Keyfactor Command",
-                        "AWS Key Management Service (ML-DSA signing)"
+                        "AWS Key Management Service (ML-DSA signing)",
+                        "Keyfactor SignServer Enterprise (ML-DSA and SLH-DSA detached CMS code signing)",
+                        "Google Cloud Key Management Service (ML-DSA and SLH-DSA signing keys)"
                     ],
                     "defendsAgainst": [
                         {
@@ -2991,7 +3009,9 @@ export const hardenTactic = {
                         "ModelScan",
                         "Fickling",
                         "picklescan",
-                        "YARA"
+                        "YARA",
+                        "YARA-X",
+                        "ModelAudit (Promptfoo; static scanner for 40+ model formats with SARIF output)"
                     ],
                     "toolsCommercial": [
                         "Prisma AIRS AI Model Security",
@@ -3117,13 +3137,17 @@ export const hardenTactic = {
                         "Grype",
                         "pip-audit",
                         "OSV-Scanner",
-                        "OWASP Dependency-Track"
+                        "OWASP Dependency-Track",
+                        "Trivy Operator (in-cluster continuous vulnerability reports for running workloads)",
+                        "Argo Rollouts (canary rollout with automated analysis and rollback)",
+                        "Renovate (vulnerability-triggered dependency and digest update PRs)"
                     ],
                     "toolsCommercial": [
                         "Snyk Open Source",
                         "Mend SCA",
                         "JFrog Xray",
-                        "Qualys VMDR"
+                        "Qualys VMDR",
+                        "Amazon Inspector (continuous ECR image scanning mapped to running EKS/ECS containers)"
                     ],
                     "defendsAgainst": [
                         {
@@ -3250,8 +3274,7 @@ export const hardenTactic = {
                         "description": "<p>App and device attestation raises the cost of unauthorized download and key replay but cannot guarantee that plaintext weights remain secret after an entitled device receives them. Rooted devices, runtime instrumentation, memory capture, accessibility abuse, and compromised operating systems remain possible. Use this control only when distributing weights is an accepted architecture; otherwise keep sensitive models server-side or use confidential inference. Unsupported attestation is a reason code: deny the release and record evidence rather than inventing a sixth outcome state.</p>"
                     },
                     "toolsOpenSource": [
-                        "Cosign",
-                        "ORAS CLI",
+                        "ORAS CLI (pull encrypted OCI packages by digest; attestation, entitlement and key-release gate required)",
                         "pyca/cryptography",
                         "Google Tink"
                     ],
@@ -3260,7 +3283,8 @@ export const hardenTactic = {
                         "Google Play Integrity API",
                         "AWS Key Management Service",
                         "Azure Key Vault",
-                        "Google Cloud Key Management Service"
+                        "Google Cloud Key Management Service",
+                        "Firebase App Check (app attestation; limited-use replay protection is beta)"
                     ],
                     "defendsAgainst": [
                         {
@@ -3480,20 +3504,22 @@ export const hardenTactic = {
                     "toolsOpenSource": [
                         "Keycloak",
                         "FreeIPA",
-                        "OpenUnison"
+                        "OpenUnison",
+                        "midPoint (access certification campaigns and automated deprovisioning)"
                     ],
                     "toolsCommercial": [
-                        "Okta Workforce Identity Cloud",
+                        "Okta Workforce Identity (Okta Identity Governance and Okta Privileged Access for recertification and JIT access)",
                         "PingOne for Workforce",
                         "Auth0 by Okta",
-                        "CyberArk Privilege Cloud",
+                        "Idira Privileged Access Manager SaaS (formerly CyberArk Privilege Cloud)",
                         "Delinea Secret Server",
                         "BeyondTrust Password Safe",
                         "HCP Boundary",
                         "HashiCorp Boundary Enterprise",
                         "AWS IAM",
                         "Microsoft Entra ID",
-                        "Google Cloud IAM"
+                        "Google Cloud IAM",
+                        "Teleport Enterprise (Just-in-Time Access Requests and Access List reviews)"
                     ],
                     "defendsAgainst": [
                         {
@@ -3625,7 +3651,9 @@ export const hardenTactic = {
                         "SPIRE",
                         "Istio",
                         "Linkerd",
-                        "OpenBao (dynamic workload credentials and PKI)"
+                        "OpenBao (dynamic workload credentials and PKI)",
+                        "Envoy Proxy (jwt_authn filter and downstream mTLS)",
+                        "Keycloak (OAuth 2.0 client credentials with DPoP-bound tokens)"
                     ],
                     "toolsSourceAvailable": [
                         "HashiCorp Vault Community (BUSL-1.1; source-available)"
@@ -3634,9 +3662,13 @@ export const hardenTactic = {
                         "Kong Gateway Enterprise",
                         "Kong Konnect",
                         "Google Cloud Apigee API Management",
-                        "MuleSoft Anypoint Platform",
+                        "MuleSoft Omni Gateway (formerly Flex Gateway)",
                         "AWS Secrets Manager",
-                        "Azure Key Vault"
+                        "Azure Key Vault",
+                        "Microsoft Entra Workload ID (managed identities and workload identity federation)",
+                        "OpenAI API workload identity federation",
+                        "Amazon EKS IAM roles for service accounts (IRSA; short-lived STS credentials from projected service-account tokens)",
+                        "Google Cloud Workload Identity Federation"
                     ],
                     "defendsAgainst": [
                         {
@@ -3773,7 +3805,8 @@ export const hardenTactic = {
                         "jwcrypto",
                         "rfc8785 Python package",
                         "Valkey",
-                        "Redis 8+ (AGPL-3.0)"
+                        "Redis 8+ (AGPL-3.0)",
+                        "agentgateway"
                     ],
                     "toolsCommercial": [
                         "Cloudflare Zero Trust",
@@ -4027,9 +4060,11 @@ export const hardenTactic = {
                         "pyca/cryptography",
                         "jcs Python package",
                         "jwcrypto",
-                        "Requests",
+                        "Requests (authenticated Agent Card retrieval; record signatures, endpoint policy and route binding required)",
                         "step-ca",
-                        "OpenSSL"
+                        "OpenSSL",
+                        "A2A Python SDK (a2a-sdk; Agent Card signature verifier)",
+                        "ANS SDK for Go (reference badge-verified agent client; requires an ANS registry)"
                     ],
                     "toolsCommercial": [
                         "Palo Alto Networks Next-Generation Trust Security (certificate lifecycle management)",
@@ -4084,7 +4119,8 @@ export const hardenTactic = {
                         "jwcrypto",
                         "pyca/cryptography",
                         "PostgreSQL",
-                        "Valkey"
+                        "Valkey",
+                        "http-message-signatures (Python; RFC 9421 HTTP Message Signatures)"
                     ],
                     "defendsAgainst": [
                         {
@@ -4167,7 +4203,12 @@ export const hardenTactic = {
                     "id": "AID-H-004.006",
                     "name": "Hosted Agent Publication & Exposure Controls",
                     "toolsOpenSource": ["power-pwn (Copilot Studio Hunter; scoped exposure testing of authorized tenant agents)"],
-                "toolsCommercial": ["Microsoft Power Platform admin center (tenant data policies, channels, and agent administration)", "Microsoft Defender XDR Advanced Hunting (AgentsInfo inventory and configuration readback; supported licensing and telemetry required)"],
+                "toolsCommercial": [
+                    "Microsoft Power Platform admin center (tenant data policies, channels, and agent administration)",
+                    "Microsoft Defender XDR Advanced Hunting (AgentsInfo inventory and configuration readback; supported licensing and telemetry required)",
+                    "Zenity (AI agent security posture management for Copilot Studio and other agent platforms)",
+                    "ChatGPT Enterprise plugin publication and access controls (role-based sharing/publishing; included-app permissions remain separate)"
+                ],
                 "pillar": [
                         "app",
                         "infra"
@@ -4286,7 +4327,12 @@ export const hardenTactic = {
                 {
                     "id": "AID-H-004.007",
                     "name": "External Event-to-Agent Admission & Authority Binding",
-                    "toolsOpenSource": ["Slack Bolt for Python (HTTP request signature and timestamp verification; initiator authorization and durable replay admission remain deployment-owned)"],
+                    "toolsOpenSource": [
+                        "Slack Bolt for Python (HTTP request signature and timestamp verification; initiator authorization and durable replay admission remain deployment-owned)",
+                        "Standard Webhooks reference libraries (standardwebhooks)",
+                        "Open Policy Agent (OPA; versioned event-admission policy)",
+                        "Temporal (Workflow Id uniqueness for one durable run per admitted event)"
+                    ],
                 "pillar": [
                         "app",
                         "infra"
@@ -4529,12 +4575,15 @@ export const hardenTactic = {
                         "Google DP Library",
                         "OpenDP",
                         "NVIDIA NeMo Safe Synthesizer (Apache-2.0)",
-                        "Diffprivlib (IBM public release; research and education only; contact IBM for production use)"
+                        "Diffprivlib (IBM public release; research and education only; contact IBM for production use)",
+                        "JAX Privacy",
+                        "Tumult Analytics (OpenDP)"
                     ],
                     "toolsCommercial": [
                         "Sarus",
                         "AWS Clean Rooms Differential Privacy",
-                        "BigQuery Differential Privacy"
+                        "BigQuery Differential Privacy",
+                        "Snowflake differential privacy (privacy policies and privacy budgets)"
                     ],
                     "defendsAgainst": [
                         {
@@ -4661,7 +4710,8 @@ export const hardenTactic = {
                         "HElib",
                         "OpenFHE",
                         "TenSEAL",
-                        "Lattigo"
+                        "Lattigo",
+                        "Swift Homomorphic Encryption (Apple; BFV with Private Nearest Neighbor Search)"
                     ],
                     "toolsSourceAvailable": [
                         "Concrete ML (commercial patent license required) (BSD-3-Clause-Clear; source-available)"
@@ -4788,18 +4838,18 @@ export const hardenTactic = {
                     "toolsOpenSource": [
                         "PyTorch",
                         "TensorFlow",
-                        "Albumentations (data augmentation)",
+                        "AlbumentationsX (AGPL-3.0-only edition; data augmentation)",
                         "torchvision.transforms (data augmentation)",
                         "Adversarial Robustness Toolbox (ART)",
-                        "MLflow",
+                        "MLflow (paired baseline/candidate validation thresholds for membership-inference and utility metrics; does not run the attack)",
                         "Privacy Meter (membership-inference auditing for regularization validation; does not implement regularization)",
                         "tensorflow-empirical-privacy (membership-inference auditing for regularization validation; does not implement regularization)"
                     ],
                     "toolsCommercial": [
-                        "Amazon SageMaker AI",
-                        "Google Vertex AI",
-                        "Databricks",
-                        "Azure Machine Learning"
+                        "Amazon SageMaker AI (built-in Image Classification - TensorFlow algorithm; label_smoothing hyperparameter)",
+                        "Gemini Enterprise Agent Platform (run configured privacy-regularized training and validation jobs; privacy algorithms required)",
+                        "Databricks Data + AI Platform (run configured privacy-regularized training and validation jobs; privacy algorithms required)",
+                        "Azure Machine Learning (run configured privacy-regularized training and validation jobs; privacy algorithms required)"
                     ],
                     "defendsAgainst": [
                         {
@@ -4899,16 +4949,18 @@ export const hardenTactic = {
                         "Dask (distributed data processing)",
                         "datasketch",
                         "pandas",
-                        "NumPy",
+                        "NumPy (exact duplicate-key or document-hash array processing; near-duplicate and memorization checks required)",
                         "Hugging Face Datasets library (for data processing features)",
                         "NVIDIA NeMo Curator",
-                        "Dolma"
+                        "Dolma",
+                        "DataTrove (large-scale text deduplication)",
+                        "Data-Juicer (exact and approximate dataset deduplication)"
                     ],
                     "toolsCommercial": [
                         "Databricks Runtime",
                         "Snowflake (for data processing at scale)",
-                        "Qlik Talend Cloud",
-                        "Informatica Intelligent Data Management Cloud"
+                        "Qlik Talend Cloud (exact row/text-key deduplication; corpus normalization, near-duplicate and memorization checks required)",
+                        "Informatica Intelligent Data Management Cloud (exact keyed-record deduplication; corpus normalization, near-duplicate and memorization checks required)"
                     ],
                     "defendsAgainst": [
                         {
@@ -5002,10 +5054,11 @@ export const hardenTactic = {
                       ]
                     },
                     "toolsOpenSource": [
-                        "Microsoft Presidio",
+                        "Presidio",
                         "Qdrant",
                         "Milvus",
-                        "pgvector"
+                        "pgvector",
+                        "IronCore Alloy (AGPL-3.0-or-later SDK; vector encryption with residual distance leakage)"
                     ],
                     "toolsSourceAvailable": [
                         "HashiCorp Vault Community Transit secrets engine (Business Source License 1.1; source-available)"
@@ -5014,10 +5067,11 @@ export const hardenTactic = {
                         "Pinecone",
                         "Weaviate Cloud",
                         "Zilliz Cloud",
-                        "Databricks Vector Search",
+                        "Databricks AI Search (formerly Databricks Vector Search)",
                         "AWS Key Management Service (AWS KMS)",
                         "Azure Key Vault",
-                        "Google Cloud Key Management Service"
+                        "Google Cloud Key Management Service",
+                        "CyborgDB (encrypted vector database)"
                     ],
                     "defendsAgainst": [
                         {
@@ -5267,18 +5321,19 @@ export const hardenTactic = {
                         "Instructor",
                         "Pydantic",
                         "Guardrails AI",
-                        "NVIDIA NeMo Guardrails",
+                        "NVIDIA NeMo Guardrails (output-rail integration for custom schema checks; define the schema validator and fail-closed gate)",
                         "Outlines",
                         "TypeChat",
                         "LangChain",
-                        "Microsoft Semantic Kernel",
+                        "Microsoft Agent Framework (successor to Semantic Kernel; structured outputs)",
                         "XGrammar",
-                        "lm-format-enforcer"
+                        "lm-format-enforcer",
+                        "vLLM (structured outputs and tool-call/reasoning parsers)"
                     ],
                     "toolsCommercial": [
                         "OpenAI API",
-                        "Google Vertex AI",
-                        "Anthropic API (Tool Use)"
+                        "Gemini Enterprise Agent Platform (structured output with response schema; formerly Vertex AI)",
+                        "Claude API (structured outputs and strict tool use)"
                     ],
                     "defendsAgainst": [
                         {
@@ -5437,24 +5492,23 @@ export const hardenTactic = {
                         "Python shlex library",
                         "nh3",
                         "SQLGlot",
-                        "Python `ast` module (for code analysis)",
                         "OWASP Java Encoder Project",
                         "DOMPurify",
-                        "marked (Markdown parser)",
+                        "marked (Markdown parser; does not sanitize, pair with DOMPurify)",
                         "jsdom (server-side DOM parsing)",
-                        "Playwright",
-                        "Requests",
-                        "ModSecurity (open-source WAF)"
+                        "Playwright (browser replay and egress verification of sanitized outputs; release enforcement external)",
+                        "Requests (reputation-service and sink-safety verification requests; URL policy and release enforcement external)",
+                        "ModSecurity (open-source WAF; buffered response-body inspection and blocking in phase 4; non-streaming responses only)",
+                        "harden-react-markdown and rehype-harden (Markdown URL restrictions; raw HTML requires separate sanitization)",
+                        "Presidio"
                     ],
                     "toolsCommercial": [
                         "Google Safe Browsing API v5 (non-commercial use only)",
                         "Google Web Risk",
                         "Azure AI Content Safety",
                         "Google Cloud Sensitive Data Protection (DLP API)",
-                        "AWS WAF",
-                        "Azure Web Application Firewall",
-                        "Cloudflare WAF",
-                        "Akamai App & API Protector"
+                        "Cloudflare AI Gateway (DLP response scanning buffers streamed responses until scanned; Guardrails can block model responses)",
+                        "Amazon Bedrock Guardrails (synchronous stream processing mode; sensitive information filters)"
                     ],
                     "defendsAgainst": [
                         {
@@ -5556,22 +5610,19 @@ export const hardenTactic = {
                         ]
                     },
                     "toolsOpenSource": [
-                        "NumPy",
-                        "SciPy",
-                        "PyTorch",
-                        "TensorFlow",
+                        "NumPy (numeric prediction-response minimization)",
+                        "SciPy (statistical primitives for policy-approved prediction-response noise)",
+                        "PyTorch (prediction-response postprocessing)",
+                        "TensorFlow (prediction-response postprocessing)",
                         "FastAPI",
-                        "Flask",
-                        "Adversarial Robustness Toolbox (model-extraction attack replay)"
+                        "Flask (versioned response filtering through application hooks; serializer/schema checks and extraction replay required)",
+                        "Adversarial Robustness Toolbox (output postprocessor defences and model-extraction attack replay)"
                     ],
                     "toolsCommercial": [
                         "Kong Gateway Enterprise",
                         "Kong Konnect",
                         "Google Cloud Apigee API Management",
-                        "MuleSoft Anypoint Platform",
-                        "Palo Alto Networks Prisma AIRS",
-                        "Check Point AI Guardrails",
-                        "F5 AI Guardrails"
+                        "MuleSoft Omni Gateway (formerly Flex Gateway; DataWeave Body Transformation policy on response bodies)"
                     ],
                     "defendsAgainst": [
                         {
@@ -5711,13 +5762,14 @@ export const hardenTactic = {
                         "python-magic",
                         "ClamAV",
                         "Dangerzone",
-                        "Apache Tika (content detection and extraction; isolate parsers independently)"
+                        "Apache Tika (content detection and extraction; isolate parsers independently)",
+                        "Magika"
                     ],
                     "toolsCommercial": [
                         "OPSWAT MetaDefender",
-                        "Glasswall CDR",
+                        "Glasswall Halo (CDR platform with ICAP integration; Genesis engine)",
                         "Menlo File Security",
-                        "VirusTotal"
+                        "VirusTotal Private Scanning (public uploads are shared with the VirusTotal community)"
                     ],
                     "defendsAgainst": [
                         {
@@ -5960,30 +6012,33 @@ export const hardenTactic = {
                 }
               ],
               "toolsOpenSource": [
-                "OpenTofu (IaC)",
-                "Ansible (IaC)",
-                "Pulumi (IaC)",
-                "Intel SGX SDK",
-                "Open Enclave SDK",
-                        "AWS CLI v2 (Apache-2.0)",
-                        "Azure CLI (MIT)",
+                  "OpenTofu (IaC)",
+                  "Ansible (IaC)",
+                  "Pulumi (IaC)",
+                  "Intel SGX SDK",
+                  "Open Enclave SDK",
+                  "AWS CLI v2 (deploying version-controlled CloudFormation templates for isolated training environments)",
+                  "Azure CLI (deploying version-controlled ARM or Bicep templates for isolated training environments)",
                   "Checkov",
-                  "Trivy"
+                  "Trivy",
+                  "Kyverno"
               ],
               "toolsSourceAvailable": [
                   "HashiCorp Terraform Community (BUSL-1.1; source-available)"
               ],
               "toolsCommercial": [
-                "AWS Nitro Enclaves",
-                "Google Cloud Confidential Computing",
-                "Azure Confidential Computing",
-                "HashiCorp Terraform Enterprise (IaC management)",
-                "AWS CloudFormation (IaC management)",
-                "Red Hat Ansible Automation Platform (IaC management)",
-                        "Wiz Cloud Security Platform",
-                        "Microsoft Defender for Cloud",
-                        "Palo Alto Networks Prisma Cloud",
-                        "Google Cloud CLI (gcloud; proprietary Google Cloud software terms)"
+                  "AWS Nitro Enclaves",
+                  "Google Cloud Confidential Computing",
+                  "Azure Confidential Computing",
+                  "HashiCorp Terraform Enterprise (IaC management)",
+                  "AWS CloudFormation (IaC management)",
+                  "Red Hat Ansible Automation Platform (IaC management)",
+                  "Wiz Cloud Security Platform",
+                  "Microsoft Defender for Cloud",
+                  "Palo Alto Networks Prisma Cloud",
+                  "Google Cloud CLI (applying version-controlled Infrastructure Manager deployments for training environments)",
+                  "Amazon SageMaker AI training jobs (network isolation, VPC configuration and execution-role policy controls)",
+                  "Azure Machine Learning managed virtual network (Allow only approved outbound isolation mode)"
               ],
               "defendsAgainst": [
                   {
@@ -6092,27 +6147,28 @@ export const hardenTactic = {
                 }
               ],
               "toolsOpenSource": [
-                        "MLflow",
-                        "Kubeflow Pipelines",
-                        "ClearML Python SDK (Apache-2.0; ClearML Server backend required)",
-                        "clearml-agent (Apache-2.0; ClearML Server backend required)",
-                        "Prometheus",
-                        "Grafana",
-                        "PyTorch",
-                        "TensorFlow",
-                        "TensorBoard"
-                    ],
+                  "MLflow",
+                  "Kubeflow Pipelines",
+                  "ClearML Python SDK (Apache-2.0; ClearML Server backend required)",
+                  "clearml-agent (Apache-2.0; ClearML Server backend required)",
+                  "Prometheus",
+                  "Grafana (Grafana Alerting threshold rules on exported training metrics)",
+                  "PyTorch",
+                  "TensorFlow",
+                  "TensorBoard (review loss, gradient and training-run metric anomalies; automated rules and response controls external)",
+                  "PyTorch Lightning"
+              ],
                     "toolsSourceAvailable": [
                         "ClearML Server (SSPL-1.0; source-available)",
-                        "Arize Phoenix (Elastic License 2.0; source-available)",
-                        "Sentry self-hosted (FSL-1.1-Apache-2.0; source-available)"
+                        "Sentry self-hosted (training-process exception and performance monitoring) (FSL-1.1-Apache-2.0; source-available)"
                     ],
               "toolsCommercial": [
-                "Amazon SageMaker Experiments",
-                "Vertex AI Experiments",
-                "Databricks Managed MLflow",
-                "Azure Machine Learning",
-                "Weights & Biases"
+                  "Amazon SageMaker AI with MLflow (managed MLflow tracking for training-run lineage)",
+                  "Gemini Enterprise Agent Platform Experiments (formerly Vertex AI Experiments)",
+                  "Databricks Managed MLflow",
+                  "Azure Machine Learning",
+                  "Weights & Biases",
+                  "Amazon S3 Object Lock (compliance-mode WORM retention for training-run audit records)"
               ],
               "defendsAgainst": [
                   {
@@ -6225,31 +6281,35 @@ export const hardenTactic = {
                   "howTo": "<h5>Delivery level: production CI image handoff</h5><p>A Git-derived tag is useful for discovery but is mutable and is not the training-environment identity. Build and push once, capture BuildKit's registry digest, verify the signature against that digest, and pass only the digest-qualified reference to the training scheduler.</p><h5>Build, push, and capture the OCI digest</h5><pre><code class=\"language-bash\"># File: ci/publish-training-image.sh\n#!/usr/bin/env bash\nset -euo pipefail\numask 077\n\n: \"${IMAGE_REPOSITORY:?set the approved registry/repository}\"\n: \"${GIT_COMMIT:?set the full expected source commit}\"\n: \"${IMAGE_SIGNING_KEY_URI:?set the CI KMS signing-key URI}\"\n: \"${IMAGE_VERIFY_KEY:?set the read-only image verification key}\"\n\ntest \"$(git rev-parse HEAD)\" = \"$GIT_COMMIT\"\ntest -z \"$(git status --porcelain --untracked-files=normal)\"\nif [[ ! \"$GIT_COMMIT\" =~ ^[0-9a-f]{40}$ ]]; then\n  echo \"GIT_COMMIT must be a full lowercase SHA-1 commit\" &gt;&amp;2\n  exit 2\nfi\n\nevidence_dir=\"evidence/training-image/$GIT_COMMIT\"\nmkdir -p \"$evidence_dir\"\nmetadata=\"$evidence_dir/build-metadata.json\"\n\ndocker buildx build   --pull   --provenance=mode=max   --tag \"$IMAGE_REPOSITORY:$GIT_COMMIT\"   --metadata-file \"$metadata\"   --push   .\n\ndigest=\"$(python - \"$metadata\" &lt;&lt;'PY'\nimport json, re, sys\nfrom pathlib import Path\nvalue = json.loads(Path(sys.argv[1]).read_text(encoding=\"utf-8\"))\ndigest = value.get(\"containerimage.digest\")\nif not isinstance(digest, str) or re.fullmatch(r\"sha256:[0-9a-f]{64}\", digest) is None:\n    raise SystemExit(\"BuildKit metadata has no valid containerimage.digest\")\nprint(digest)\nPY\n)\"\nreadonly digest\nimage_ref=\"$IMAGE_REPOSITORY@$digest\"\nreadonly image_ref\n\ncosign sign --yes --key \"$IMAGE_SIGNING_KEY_URI\" \"$image_ref\"\ncosign verify --key \"$IMAGE_VERIFY_KEY\" \"$image_ref\"   &gt; \"$evidence_dir/cosign-verification.json\"\ndocker buildx imagetools inspect \"$image_ref\"   &gt; \"$evidence_dir/registry-readback.txt\"\n\npython - \"$evidence_dir/release.json\" \"$GIT_COMMIT\" \"$image_ref\" \"$metadata\" &lt;&lt;'PY'\nimport hashlib, json, sys\nfrom pathlib import Path\noutput, commit, image_ref, metadata = sys.argv[1:]\nmetadata_bytes = Path(metadata).read_bytes()\nPath(output).write_text(json.dumps({\n    \"schema_version\": \"aidefend.training-image-release.v1\",\n    \"source_commit\": commit,\n    \"image_reference\": image_ref,\n    \"build_metadata_sha256\": hashlib.sha256(metadata_bytes).hexdigest(),\n}, indent=2, sort_keys=True) + \"\\n\", encoding=\"utf-8\")\nPY\n\nprintf '%s\\n' \"$image_ref\"</code></pre><h5>Use only the digest-qualified reference</h5><p>The final output has the form <code>registry.example/repository@sha256:...</code>. Bind that exact reference, source commit, build metadata, signature verification, platform selection, and scheduler receipt to the training run. The deployment admission identity should repeat <code>cosign verify</code> and registry readback immediately before scheduling. A tag-only reference, dirty or mismatched commit, missing digest, signature failure, registry readback failure, or digest drift blocks training; the tag is never accepted as immutable evidence.</p><h5>Replay the retained run independently</h5><p>The prior steps capture inputs; they do not establish reproducibility until the training job actually runs again. Store one signed original-run manifest with image_reference, source_commit, platform, hardware_profile_sha256, exact dataset_files digests, dependency lock digest, seed, training command argv and original metrics. Use an independently provisioned replay worker that obtains the immutable dataset snapshot and verifies the manifest/signature/current replay policy before this module runs. The approved training program must consume TRAINING_SEED, seed every relevant framework RNG and write /output/metrics.json. This CPU container example is NOT_APPLICABLE as an execution method when the job needs a GPU/distributed runtime; use that runtime's admitted replay adapter with the same evidence bindings, not a false CPU replay.</p><pre><code># File: ci/replay_training.py\nimport hashlib\nimport json\nimport math\nimport re\nimport subprocess\nimport sys\nimport uuid\nfrom pathlib import Path\n\ndef replay(manifest, policy, dataset_root, output_root):\n    # Inputs are captured from verified original-run and replay-policy artifacts.\n    image = manifest[\"image_reference\"]\n    if not re.fullmatch(r\"[^\\s]+@sha256:[a-f0-9]{64}\", image):\n        raise ValueError(\"immutable training image required\")\n    if manifest[\"platform\"] != policy[\"platform\"] or manifest[\"hardware_profile_sha256\"] != policy[\"hardware_profile_sha256\"]:\n        raise ValueError(\"replay runtime differs from approved comparison profile\")\n    deadline = policy[\"timeout_seconds\"]\n    if not math.isfinite(deadline) or deadline &lt;= 0 or type(manifest[\"seed\"]) is not int:\n        raise ValueError(\"invalid governed replay bounds\")\n    # Inspect the actual current worker hardware outside this process before\n    # passing policy; a matching string copied from the manifest is not evidence.\n    subprocess.run([\"cosign\", \"verify\", \"--key\", policy[\"image_verify_key\"], image],\n                   check=True, capture_output=True, timeout=deadline)\n    subprocess.run([\"docker\", \"pull\", \"--platform\", manifest[\"platform\"], image],\n                   check=True, capture_output=True, timeout=deadline)\n    root = Path(dataset_root).resolve(strict=True)\n    files = list(root.rglob(\"*\"))\n    if any(path.is_symlink() for path in files):\n        raise ValueError(\"replay dataset contains links\")\n    actual = {path.relative_to(root).as_posix() for path in files if path.is_file()}\n    if actual != set(manifest[\"dataset_files\"]):\n        raise ValueError(\"replay dataset population differs\")\n    for name, expected in manifest[\"dataset_files\"].items():\n        digest = hashlib.sha256()\n        with (root / name).open(\"rb\") as source:\n            for chunk in iter(lambda: source.read(1024 * 1024), b\"\"):\n                digest.update(chunk)\n        if digest.hexdigest() != expected:\n            raise ValueError(\"replay dataset bytes differ: \" + name)\n    command = manifest[\"command\"]\n    if not isinstance(command, list) or not command or any(not isinstance(x, str) or not x for x in command):\n        raise ValueError(\"approved training argv required\")\n    output = Path(output_root).resolve()\n    output.mkdir(exist_ok=False, parents=True)\n    container_name = \"training-replay-\" + uuid.uuid4().hex\n    argv = [\"docker\", \"run\", \"--rm\", \"--name\", container_name,\n            \"--platform\", manifest[\"platform\"], \"--network\", \"none\",\n            \"--read-only\", \"--cap-drop\", \"ALL\", \"--security-opt\", \"no-new-privileges\",\n            \"--user\", policy[\"uid_gid\"], \"--cpus\", str(policy[\"cpus\"]),\n            \"--memory\", policy[\"memory\"], \"--pids-limit\", str(policy[\"pids_limit\"]),\n            \"--tmpfs\", policy[\"tmpfs\"],\n            \"--mount\", \"type=bind,src=\" + str(root) + \",dst=/data,readonly\",\n            \"--mount\", \"type=bind,src=\" + str(output) + \",dst=/output\",\n            \"--env\", \"TRAINING_SEED=\" + str(manifest[\"seed\"]),\n            \"--entrypoint\", command[0], image, *command[1:]]\n    try:\n        subprocess.run(argv, check=True, timeout=deadline)\n    finally:\n        # Stop the container as well as the client on timeout; the shared I001\n        # scheduler additionally owns process/resource readback and teardown.\n        subprocess.run([\"docker\", \"rm\", \"--force\", container_name],\n                       check=False, capture_output=True, timeout=policy[\"cleanup_timeout_seconds\"])\n    result = json.loads((output / \"metrics.json\").read_bytes())\n    comparisons = {}\n    for name, baseline in manifest[\"metrics\"].items():\n        value, tolerance = result[name], policy[\"absolute_tolerances\"][name]\n        if any(type(x) not in (int, float) or not math.isfinite(x) for x in (value, baseline, tolerance)) or tolerance &lt; 0:\n            raise ValueError(\"invalid replay metric/comparator\")\n        comparisons[name] = {\"baseline\": baseline, \"replayed\": value,\n                             \"absolute_tolerance\": tolerance, \"matched\": abs(value-baseline) &lt;= tolerance}\n    if not comparisons:\n        raise ValueError(\"empty comparison population\")\n    return {\"status\": \"PASS\" if all(x[\"matched\"] for x in comparisons.values()) else \"FAIL\",\n            \"image_reference\": image, \"source_commit\": manifest[\"source_commit\"],\n            \"seed\": manifest[\"seed\"], \"comparisons\": comparisons}\n\n# The project training argv inside the admitted image must initialize every\n# framework RNG from TRAINING_SEED and write its metrics.json to /output.\n# Store source/data/dependency/image/seed/command/hardware and original metrics\n# in the signed original-run manifest. Invoke replay(...) from an independently\n# credentialed worker with verified captured inputs, then sign/read back its\n# result. Never treat publishing an image or recording a seed as replay PASS.</code></pre><p>Validate the observed worker hardware/driver profile against the signed policy before replay. AID-I-001 owns resource/isolation assurance and teardown readback; the Docker flags are bounded execution configuration, not an additional isolation PASS. Retain actual scheduler/container exit evidence and compare the complete declared metric population using policy-derived absolute tolerances. For deterministic builds additionally compare model artifact digests; for stochastic training retain the preregistered repeated-seed population and statistical comparator rather than demanding universal byte equality. Missing inputs, unsupported runtime, timeout, absent metrics or failed signature verification cannot be PASS. A metric mismatch is FAIL and remains visible even when task quality is acceptable.</p>"}
               ],
               "toolsOpenSource": [
-                "Git",
-                "DVC",
-                "Git LFS",
-                        "Docker Engine",
-                        "Podman",
-                "Harbor (for container registries)",
-                "MLflow",
-                "Kubeflow Pipelines",
-                  "lakeFS",
-                  "Bazel (hermetic training-code builds with pinned toolchains; container-image construction requires separate OCI rules)"
+                  "Git",
+                  "DVC",
+                  "Git LFS",
+                  "Docker Engine",
+                  "Podman",
+                  "Harbor (for container registries)",
+                  "MLflow",
+                  "Kubeflow Pipelines",
+                  "Bazel (hermetic training-code builds with pinned toolchains; container-image construction requires separate OCI rules)",
+                  "Witness (in-toto attestation CLI; signed training-run materials and products)",
+                  "PyTorch (seeded RNG and torch.use_deterministic_algorithms for deterministic replay)"
+              ],
+              "toolsSourceAvailable": [
+                  "lakeFS (BUSL-1.1; source-available)"
               ],
               "toolsCommercial": [
-                "GitHub Enterprise Cloud (source control)",
-                "GitHub Enterprise Server (source control)",
-                "GitLab Premium",
-                "GitLab Ultimate",
-                "Bitbucket Cloud (source control)",
-                "Bitbucket Data Center (source control)",
-                "Amazon ECR",
-                "Google Artifact Registry",
-                "Azure Container Registry",
-                "Databricks",
-                "Amazon SageMaker AI",
-                "Google Vertex AI",
-                "Docker Hub"
+                  "GitHub Enterprise Cloud (source control)",
+                  "GitHub Enterprise Server (source control)",
+                  "GitLab Premium",
+                  "GitLab Ultimate",
+                  "Bitbucket Cloud (source control)",
+                  "Bitbucket Data Center (source control)",
+                  "Amazon ECR",
+                  "Google Artifact Registry",
+                  "Azure Container Registry",
+                  "Databricks Data + AI Platform (MLflow run tracking, Delta table versions and Unity Catalog lineage)",
+                  "Amazon SageMaker AI (training-job records of image, hyperparameters, input channels and output model)",
+                  "Gemini Enterprise Agent Platform ML Metadata (formerly Vertex ML Metadata; training-run lineage)",
+                  "Docker Hub"
               ],
               "defendsAgainst": [
                   {
@@ -6355,30 +6415,27 @@ export const hardenTactic = {
                 "description": "<p><strong>Evaluation integrity is a high-leverage control point in the promotion pipeline.</strong></p><ul><li><strong>Evaluation data poisoning can hide real model weakness:</strong> an attacker can make the evaluation population avoid the weakness without poisoning the full training set.</li><li><strong>Training-evaluation separation often fails accidentally:</strong> shared storage, notebook copying, synthetic-data regeneration, and weak split hygiene can leak evaluation data into training.</li><li><strong>Benchmarks age:</strong> stale suites may no longer cover current attacks, misuse cases, or deployment conditions.</li></ul>"
               },
               "toolsOpenSource": [
-                "DVC",
-                "GX Core (Great Expectations)",
-                "MLflow",
-                "in-toto",
-                "slsa-verifier",
-                "Cosign",
-                        "Inspect AI",
-                "Apache Airflow",
-                "Prefect",
-                "datasketch",
-                "simhash",
+                  "DVC",
+                  "GX Core (Great Expectations)",
+                  "MLflow",
+                  "in-toto",
+                  "GitHub CLI (GitHub artifact-attestation verification)",
+                  "Cosign",
+                  "Inspect AI",
+                  "Apache Airflow (orchestrate evaluation-data validation and promotion checks; validators and signed evidence required)",
+                  "Prefect (orchestrate evaluation-data validation and promotion checks; validators and signed evidence required)",
+                  "datasketch",
+                  "simhash",
                   "Deepchecks",
-                  "EleutherAI lm-evaluation-harness"
+                  "EleutherAI lm-evaluation-harness",
+                  "cleanlab"
               ],
               "toolsCommercial": [
-                "Weights & Biases",
-                        "Databricks Models in Unity Catalog",
-                        "Amazon SageMaker AI Model Registry",
-                "Arize AX",
-                "Fiddler AI Observability Platform",
-                "Evidently Cloud",
-                "NannyML Cloud",
-                "Kolena",
-                "Patronus AI"
+                  "Weights & Biases",
+                  "Databricks Models in Unity Catalog",
+                  "Amazon SageMaker AI Model Registry",
+                  "Arize AX (Dataset Coverage agent: policy-driven coverage and freshness curation of evaluation datasets; Enterprise)",
+                  "Evidently Cloud"
               ],
               "defendsAgainst": [
                   {
@@ -6523,11 +6580,12 @@ export const hardenTactic = {
                   "Meta Llama Guard 4 (Llama 4 Community License; open-weight)"
               ],
               "toolsCommercial": [
-                "Patronus AI",
-                "Weights & Biases",
-                "Databricks Mosaic AI",
-                "Amazon SageMaker AI",
-                "Google Vertex AI"
+                  "Weights & Biases Weave (Evaluations with safety scorers comparing baseline and tuned models)",
+                  "Databricks Data + AI Platform (MLflow 3 evaluation with built-in Safety judges)",
+                  "Amazon SageMaker AI model customization evaluation (StrongREJECT benchmark and LLM-as-a-judge; optional base-model comparison)",
+                  "Gemini Enterprise Agent Platform Gen AI evaluation service (formerly Vertex AI Gen AI evaluation service)",
+                  "Amazon Bedrock Evaluations (LLM-as-a-judge Harmfulness, Refusal and Stereotyping metrics for customized and imported models)",
+                  "Microsoft Foundry risk and safety evaluators (with AI Red Teaming Agent)"
               ],
               "defendsAgainst": [
                   {
@@ -6635,25 +6693,24 @@ export const hardenTactic = {
                 ]
               },
               "toolsOpenSource": [
-                "PyTorch",
-                "Hugging Face Optimum",
-                "ONNX Runtime",
-                "llama.cpp",
-                "mergekit",
-                "MLflow",
-                "Cosign",
-                "Inspect AI",
-                "garak",
-                "promptfoo",
+                  "PyTorch (torch.onnx.verification source-vs-ONNX output comparison)",
+                  "Hugging Face Optimum",
+                  "ONNX Runtime",
+                  "llama.cpp",
+                  "MLflow",
+                  "Cosign",
+                  "Inspect AI",
+                  "garak",
+                  "promptfoo",
                   "Intel Neural Compressor",
-                        "NVIDIA Model Optimizer"
+                  "Polygraphy (NVIDIA; cross-backend output comparison for ONNX and TensorRT conversions)",
+                  "EleutherAI lm-evaluation-harness",
+                  "Sigstore model-signing (signed model-file manifests; enforce symlink, ignored-path and legacy-signature safeguards)"
               ],
               "toolsCommercial": [
-                "NVIDIA TensorRT",
-                "Amazon SageMaker Neo",
-                "Azure Machine Learning",
-                "Google Vertex AI",
-                "Databricks Mosaic AI"
+                  "Azure Machine Learning (model registry job lineage for derived candidates)",
+                  "Gemini Enterprise Agent Platform Gen AI evaluation service (formerly Vertex AI; side-by-side source-vs-candidate model comparison)",
+                  "Databricks Data + AI Platform (MLflow evaluation with baseline thresholds and Unity Catalog model lineage)"
               ],
               "defendsAgainst": [
                   {
@@ -6834,21 +6891,23 @@ export const hardenTactic = {
                   }
               ],
               "toolsOpenSource": [
-                "MLflow",
-                "in-toto",
-                "slsa-verifier",
-                "Cosign",
-                "Inspect AI",
-                "Git",
-                "Kubernetes RBAC",
-                "pytest",
-                  "Open Policy Agent (OPA)"
+                  "MLflow",
+                  "in-toto",
+                  "GitHub CLI (GitHub artifact-attestation verification)",
+                  "Cosign",
+                  "Inspect AI",
+                  "Git",
+                  "Kubernetes RBAC",
+                  "pytest (trusted evaluator regression and tamper-probe tests; isolate test configuration from candidate-controlled paths)",
+                  "Open Policy Agent (OPA)",
+                  "Kyverno",
+                  "Sigstore model-signing (signed model-file manifests; enforce symlink, ignored-path and legacy-signature safeguards)"
               ],
               "toolsCommercial": [
-                "Weights & Biases",
-                "Amazon SageMaker AI Model Registry",
-                "Databricks Models in Unity Catalog",
-                "GitHub Enterprise Cloud"
+                  "Weights & Biases Weave (content-addressed versions of scorers, judge prompts and datasets)",
+                  "Amazon SageMaker AI Model Registry",
+                  "Databricks Models in Unity Catalog",
+                  "GitHub Enterprise Cloud"
               ],
               "implementationGuidance": [
                 {
@@ -7077,13 +7136,13 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                 }
               ],
               "toolsOpenSource": [
-                "Flower (Federated Learning Framework)",
-                "NVIDIA FLARE",
-                "FATE (Federated AI Technology Enabler)",
-                "PySyft (OpenMined)",
-                "Microsoft SEAL",
-                "OpenFHE",
-                        "TenSEAL (encrypted tensor aggregation; federated dropout and collusion controls required)"
+                  "Flower (Federated Learning Framework)",
+                  "NVIDIA FLARE",
+                  "FATE (Federated AI Technology Enabler)",
+                  "Microsoft SEAL",
+                  "OpenFHE",
+                  "TenSEAL (encrypted tensor aggregation; federated dropout and collusion controls required)",
+                  "OpenFL (Open Federated Learning)"
               ],
               "toolsCommercial": [
                 "AWS Nitro Enclaves",
@@ -7198,14 +7257,13 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                 }
               ],
               "toolsOpenSource": [
-                "Flower (Federated Learning Framework)",
-                "NVIDIA FLARE",
-                "FATE (Federated AI Technology Enabler)",
-                "PySyft (OpenMined)",
-                "PyTorch",
-                "TensorFlow",
-                "NumPy",
-                "SciPy"
+                  "Flower (Federated Learning Framework)",
+                  "NVIDIA FLARE",
+                  "PyTorch",
+                  "TensorFlow",
+                  "NumPy",
+                  "SciPy",
+                  "OpenFL (Open Federated Learning)"
               ],
               "defendsAgainst": [
                   {
@@ -7359,15 +7417,14 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                   }
               ],
               "toolsOpenSource": [
-                "Flower (Federated Learning Framework)",
-                "NVIDIA FLARE",
-                "FATE (Federated AI Technology Enabler)",
-                "PySyft (OpenMined)",
-                "SPIRE",
-                "pyca/cryptography",
-                "jwcrypto",
-                        "Valkey",
-                        "Redis 8+ (AGPL-3.0)",
+                  "Flower (Federated Learning Framework)",
+                  "NVIDIA FLARE",
+                  "FATE (Federated AI Technology Enabler)",
+                  "SPIRE",
+                  "pyca/cryptography",
+                  "jwcrypto",
+                  "Valkey",
+                  "Redis 8+ (AGPL-3.0)",
                   "Keylime"
               ],
               "toolsCommercial": [
@@ -7522,7 +7579,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "GRUB2 (Linux Secure Boot)",
                         "shim (Linux Secure Boot)",
                         "tpm2-tools (local TPM measurement and policy inspection)",
-                        "Keylime"
+                        "Keylime",
+                        "CHIPSEC (offline/maintenance firmware-protection checks; platform and privileged-driver prerequisites apply)",
+                        "fwupd Host Security ID (fwupdmgr security)",
+                        "Linux kernel module signature enforcement (CONFIG_MODULE_SIG_FORCE / module.sig_enforce)"
                     ],
                     "toolsCommercial": [
                         "Google Cloud Shielded VM (Secure Boot, vTPM, and integrity monitoring)",
@@ -7639,13 +7699,13 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         }
                     ],
                     "toolsOpenSource": [
-                        "rocm-smi (for AMD ROCm)",
+                        "AMD SMI (amd-smi; AMD GPU firmware and driver version inventory)",
                         "ipmitool (for out-of-band management)",
                         "APT",
-                        "YUM",
                         "DNF",
                         "Greenbone Community Edition (OpenVAS Scanner)",
-                        "fwupd (LVFS-backed firmware update client)"
+                        "fwupd (LVFS-backed firmware update client)",
+                        "NVIDIA GPU Operator (driver upgradePolicy rolling upgrades)"
                     ],
                     "toolsCommercial": [
                         "Tenable Nessus",
@@ -7654,7 +7714,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Microsoft Configuration Manager",
                         "Ivanti Neurons for Patch Management",
                         "Ivanti Security Controls",
-                        "NVIDIA System Management Interface (nvidia-smi; proprietary NVIDIA driver utility)"
+                        "NVIDIA System Management Interface (nvidia-smi; proprietary NVIDIA driver utility)",
+                        "NVIDIA nvfwupd (DGX/HGX firmware inventory and Redfish out-of-band update tool)"
                     ],
                     "defendsAgainst": [
                         {
@@ -7720,7 +7781,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "infra"
                     ],
                     "phase": [
-                        "scoping"
+                        "building",
+                        "operation"
                     ],
                     "description": "Before an accelerator or supporting component is admitted to a build or cluster, verify physical identity, serial or lot record, manufacturer authenticity evidence where available, tamper seals, custody transitions, and receipt inspection against the exact asset. Quarantine any mismatch or unverifiable component.",
                     "scopeBoundary": {
@@ -7744,10 +7806,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         }
                     ],
                     "toolsOpenSource": [
-                        "paccor (TCG Platform Certificate creation and validation)"
+                        "paccor (TCG Platform Certificate creation and validation)",
+                        "NSA HIRS Attestation Certificate Authority (supply chain validation with TCG Platform Certificates)"
                     ],
                     "toolsCommercial": [
-                        "Eclypsium",
+                        "Eclypsium (device onboarding hardware and firmware authenticity and integrity validation)",
                         "Intel Transparent Supply Chain Local Verify Tool",
                         "Dell Secured Component Verification (SCV)"
                     ],
@@ -7911,8 +7974,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "NVIDIA GPU Operator",
                         "NVIDIA k8s-device-plugin",
                         "NVIDIA Data Center GPU Manager (DCGM; allocation and health readback only)",
-                        "vLLM (serving-engine prefix KV-cache reset only; does not prove accelerator-memory zeroization or cross-tenant isolation)",
-                        "Kata Containers (workload VM boundary only; independent accelerator partition and reset evidence required)"
+                        "vLLM (per-tenant prefix-cache isolation via cache_salt and prefix-cache reset; does not prove accelerator-memory zeroization or cross-tenant isolation)",
+                        "Kata Containers (workload VM boundary only; independent accelerator partition and reset evidence required)",
+                        "Slurm Workload Manager (GRES GPU binding with cgroup ConstrainDevices and Epilog cleanup)"
                     ],
                     "toolsCommercial": [
                         "NVIDIA System Management Interface (nvidia-smi)",
@@ -8032,7 +8096,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Google Confidential GKE with GPU where supported",
                         "Google Confidential VM with GPU where supported",
                         "Anjuna Seaglass",
-                        "AWS Nitro Enclaves (CPU inference isolation and attestation)"
+                        "AWS Nitro Enclaves (CPU inference isolation and attestation)",
+                        "Azure Key Vault Secure Key Release (Managed HSM / Premium; attestation-bound key release)",
+                        "Google Cloud Confidential Space (attested workload with Cloud KMS release; single NVIDIA H100 GPU only)"
                     ]
                 }
             ]
@@ -8047,55 +8113,56 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                 "building",
                 "operation"
             ],
-            "description": "A set of techniques focused on hardening the Classifier-Free Guidance (CFG) mechanism in diffusion models.<br/><br/><strong>What CFG does:</strong> CFG is a core component that steers image generation towards a text prompt, but adversaries can exploit high guidance scale values to force the model to generate harmful, unsafe, or out-of-distribution content.<br/><br/><strong>The threat:</strong> High CFG scales can overpower built-in safety conditioning and negative prompts, effectively steering the diffusion model toward disallowed or high-risk generations.<br/><br/><strong>Defense goal:</strong> These hardening techniques aim to control the CFG scale and its influence, preventing its misuse while preserving the model's creative capabilities.",
+            "description": "Enforce model-specific, server-owned bounds and approved configurations for classifier-free guidance (CFG) and related diffusion sampling controls when callers can influence them. Untrusted callers can otherwise select guidance, negative-conditioning, schedule or inference-step settings outside the deployment's evaluated operating range, or request excessive sampling work. Reject unsupported overrides and verify the effective model/pipeline configuration before generation.<br/><br/>Guidance changes prompt adherence and image characteristics; a lower scale, negative prompt or alternative schedule does not inherently prevent harmful output, adversarial evasion or jailbreaks. Adopt a schedule only after evaluation on the exact model/pipeline version, relevant adversarial and benign prompts, utility and compute cost. Keep authoritative content filtering separate. Availability mappings cover the bounded per-request sampling-work path, not aggregate traffic exhaustion.",
             "scopeBoundary": {
-              "responsibility": "Owns server-side policy enforcement and effective readback for Classifier-Free Guidance and related diffusion guider parameters when untrusted callers can influence them. It does not treat CFG, negative prompts, or risk heuristics as authoritative content filters.",
-              "relatedTechniques": [
-                {
-                  "id": "AID-H-002.002",
-                  "comparison": "AID-H-010 enforces diffusion-specific CFG and guider control surfaces at sampling time; AID-H-002.002 validates general inference prompts and request inputs.\nA prompt that passes admission can still request an unsafe guidance configuration."
-                },
-                {
-                  "id": "AID-H-033.006",
-                  "comparison": "AID-H-010 owns CFG-specific diffusion semantics and safety constraints; AID-H-033.006 resolves and enforces the complete effective invocation configuration after gateway defaults, aliases, provider translation, and retries.\nThe gateway must preserve the specialized CFG policy but does not redefine it."
-                }
-              ]
+                "responsibility": "Owns server-side policy enforcement and effective readback for Classifier-Free Guidance and related diffusion guider parameters when untrusted callers can influence them. It does not treat CFG, negative prompts, or risk heuristics as authoritative content filters.",
+                "relatedTechniques": [
+                    {
+                        "id": "AID-H-002.002",
+                        "comparison": "AID-H-010 enforces diffusion-specific CFG and guider control surfaces at sampling time; AID-H-002.002 validates general inference prompts and request inputs.\nA prompt that passes admission can still request an unsafe guidance configuration."
+                    },
+                    {
+                        "id": "AID-H-033.006",
+                        "comparison": "AID-H-010 owns CFG-specific diffusion semantics and evaluated parameter constraints; AID-H-033.006 resolves and enforces the complete effective invocation configuration after gateway defaults, aliases, provider translation, and retries.\nThe gateway must preserve the specialized CFG policy but does not redefine it."
+                    }
+                ]
             },
             "implementationGuidance": [
                 {
                     "id": "AID-H-010-G001",
-                    "implementation": "Implement strict server-side validation and clipping of the guidance scale parameter.",
-                    "howTo": "<p>Apply this control only to a diffusion endpoint whose deployed sampler exposes classifier-free guidance. The serving team owns the enforcement wrapper; the caller may request a scale but cannot select the policy, model binding, or validation result. A signed policy binds the exact model artifact, allowed scale interval, default, inference-step interval, validity window, and policy version. An endpoint without CFG is <code>NOT_APPLICABLE</code>; an unavailable or invalid policy is <code>ERROR</code> and inference remains closed.</p><h5>Verify the release policy and enforce finite bounded values</h5><pre><code class=\"language-python\"># File: serving/cfg_guard.py\r\n# Dependencies: pydantic&gt;=2.8,&lt;3\r\nfrom __future__ import annotations\r\n\r\nimport hashlib\r\nimport json\r\nimport math\r\nimport os\r\nimport subprocess\r\nimport tempfile\r\nfrom datetime import datetime, timezone\r\nfrom pathlib import Path\r\nfrom typing import Any\r\n\r\nfrom pydantic import BaseModel, ConfigDict, Field\r\n\r\n# aidefend.cfg-request.v1 defines an empty prompt as structurally invalid.\r\nCFG_REQUEST_NON_EMPTY_PROMPT_LENGTH = 1\r\n\r\ndef _required_positive_seconds(name: str) -&gt; float:\r\n    value = float(os.environ[name])\r\n    if not math.isfinite(value) or value &lt;= 0:\r\n        raise RuntimeError(f\"{name} must be a finite positive number of seconds\")\r\n    return value\r\n\r\nGUIDANCE_POLICY_VERIFY_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H010_GUIDANCE_POLICY_VERIFY_TIMEOUT_SECONDS\")\r\n\r\n\r\nPOLICY = Path(os.environ[\"CFG_POLICY_PATH\"])\r\nPOLICY_BUNDLE = Path(os.environ[\"CFG_POLICY_BUNDLE_PATH\"])\r\nVERIFY_KEY = os.environ[\"CFG_POLICY_VERIFY_KEY\"]\r\nREQUIRED = {\r\n    \"schema_version\", \"policy_version\", \"model_artifact_sha256\",\r\n    \"minimum_scale\", \"maximum_scale\", \"default_scale\",\r\n    \"minimum_inference_steps\", \"maximum_inference_steps\",\r\n    \"issued_at\", \"expires_at\",\r\n}\r\n\r\n\r\ndef no_duplicate_keys(pairs: list[tuple[str, object]]) -&gt; dict:\r\n    value = {}\r\n    for key, item in pairs:\r\n        if key in value:\r\n            raise ValueError(f\"duplicate policy key: {key}\")\r\n        value[key] = item\r\n    return value\r\n\r\n\r\ndef reject_nonfinite(value: str):\r\n    raise ValueError(f\"non-finite policy number: {value}\")\r\n\r\n\r\ndef strict_json(raw: bytes) -&gt; dict:\r\n    value = json.loads(\r\n        raw.decode(\"utf-8\", errors=\"strict\"),\r\n        object_pairs_hook=no_duplicate_keys,\r\n        parse_constant=reject_nonfinite,\r\n    )\r\n    if not isinstance(value, dict):\r\n        raise ValueError(\"policy root must be an object\")\r\n    return value\r\n\r\n\r\ndef timestamp(value: object) -&gt; datetime:\r\n    if not isinstance(value, str):\r\n        raise ValueError(\"policy timestamp is absent\")\r\n    parsed = datetime.fromisoformat(value.replace(\"Z\", \"+00:00\"))\r\n    if parsed.tzinfo is None:\r\n        raise ValueError(\"policy timestamp lacks timezone\")\r\n    return parsed.astimezone(timezone.utc)\r\n\r\n\r\ndef load_policy(model_artifact_sha256: str) -&gt; tuple[dict, str]:\r\n    raw = POLICY.read_bytes()\r\n    snapshot: Path | None = None\r\n    try:\r\n        with tempfile.NamedTemporaryFile(\r\n            prefix=\"h010-policy-\", suffix=\".json\", delete=False\r\n        ) as handle:\r\n            handle.write(raw)\r\n            handle.flush()\r\n            os.fsync(handle.fileno())\r\n            snapshot = Path(handle.name)\r\n        subprocess.run(\r\n            [\r\n                \"cosign\", \"verify-blob\", \"--key\", VERIFY_KEY,\r\n                \"--bundle\", str(POLICY_BUNDLE), str(snapshot),\r\n            ],\r\n            check=True, capture_output=True, text=True, timeout=GUIDANCE_POLICY_VERIFY_TIMEOUT_SECONDS,\r\n        )\r\n    finally:\r\n        if snapshot is not None:\r\n            snapshot.unlink(missing_ok=True)\r\n    policy = strict_json(raw)\r\n    if (\r\n        not isinstance(policy, dict)\r\n        or set(policy) != REQUIRED\r\n        or policy[\"schema_version\"] != \"aidefend.cfg-policy.v1\"\r\n        or policy[\"model_artifact_sha256\"] != model_artifact_sha256\r\n    ):\r\n        raise ValueError(\"CFG policy schema or model binding differs\")\r\n    for field in (\"minimum_scale\", \"maximum_scale\", \"default_scale\"):\r\n        value = policy[field]\r\n        if isinstance(value, bool) or not isinstance(value, (int, float)):\r\n            raise ValueError(f\"{field} is not numeric\")\r\n        policy[field] = float(value)\r\n        if not math.isfinite(policy[field]):\r\n            raise ValueError(f\"{field} is not finite\")\r\n    if not (\r\n        0.0 &lt; policy[\"minimum_scale\"]\r\n        &lt;= policy[\"default_scale\"]\r\n        &lt;= policy[\"maximum_scale\"]\r\n    ):\r\n        raise ValueError(\"CFG scale interval is invalid\")\r\n    for field in (\"minimum_inference_steps\", \"maximum_inference_steps\"):\r\n        value = policy[field]\r\n        if isinstance(value, bool) or not isinstance(value, int) or value &lt; 1:\r\n            raise ValueError(f\"{field} is invalid\")\r\n    if policy[\"minimum_inference_steps\"] &gt; policy[\"maximum_inference_steps\"]:\r\n        raise ValueError(\"inference-step interval is invalid\")\r\n    now = datetime.now(timezone.utc)\r\n    issued, expires = timestamp(policy[\"issued_at\"]), timestamp(policy[\"expires_at\"])\r\n    if issued &gt; now or expires &lt;= issued or now &gt;= expires:\r\n        raise ValueError(\"CFG policy is not currently valid\")\r\n    if not isinstance(policy[\"policy_version\"], str) or not policy[\"policy_version\"]:\r\n        raise ValueError(\"policy version is absent\")\r\n    return policy, hashlib.sha256(raw).hexdigest()\r\n\r\n\r\nclass GenerateRequest(BaseModel):\r\n    model_config = ConfigDict(extra=\"forbid\", allow_inf_nan=False, strict=True)\r\n    prompt: str = Field(min_length=CFG_REQUEST_NON_EMPTY_PROMPT_LENGTH)\r\n    guidance_scale: float | None = None\r\n    num_inference_steps: int\r\n\r\n\r\ndef guarded_generate(\r\n    pipeline: Any,\r\n    request: GenerateRequest,\r\n    request_id: str,\r\n    model_artifact_sha256: str,\r\n) -&gt; tuple[Any, dict]:\r\n    if not request_id:\r\n        raise ValueError(\"authenticated request ID is absent\")\r\n    policy, policy_sha256 = load_policy(model_artifact_sha256)\r\n    scale = (\r\n        policy[\"default_scale\"]\r\n        if request.guidance_scale is None\r\n        else request.guidance_scale\r\n    )\r\n    if not policy[\"minimum_scale\"] &lt;= scale &lt;= policy[\"maximum_scale\"]:\r\n        raise ValueError(\"guidance scale is outside signed policy\")\r\n    if not (\r\n        policy[\"minimum_inference_steps\"]\r\n        &lt;= request.num_inference_steps\r\n        &lt;= policy[\"maximum_inference_steps\"]\r\n    ):\r\n        raise ValueError(\"inference steps are outside signed policy\")\r\n    image = pipeline(\r\n        prompt=request.prompt,\r\n        guidance_scale=scale,\r\n        num_inference_steps=request.num_inference_steps,\r\n    ).images[0]\r\n    decision = {\r\n        \"schema_version\": \"aidefend.cfg-decision.v1\",\r\n        \"request_id\": request_id,\r\n        \"model_artifact_sha256\": model_artifact_sha256,\r\n        \"policy_version\": policy[\"policy_version\"],\r\n        \"policy_sha256\": policy_sha256,\r\n        \"requested_scale\": request.guidance_scale,\r\n        \"applied_scale\": scale,\r\n        \"inference_steps\": request.num_inference_steps,\r\n        \"decision\": \"ALLOWED\",\r\n        \"decided_at\": datetime.now(timezone.utc).isoformat(),\r\n    }\r\n    return image, decision\r\n</code></pre><h5>Verification, evidence, and outcomes</h5><p>Route every production endpoint through this wrapper and write allow and reject decisions to an append-only store using an identity that the model-serving workload cannot alter. Retain the signed policy and bundle, exact model digest, endpoint inventory, request correlation ID, requested/applied values, decision, and test-run identity. An independent verifier enumerates every in-scope route, re-verifies the policy, and replays below-minimum, above-maximum, boundary, missing, <code>NaN</code>, infinity, Boolean, string, unknown-field, and invalid-step cases against the deployed endpoint.</p><p><strong>Action:</strong> Deploy the guard at the last trusted hop before the sampler, export the exact signed decision population, and block release unless independent replay returns PASS.</p>"
+                    "implementation": "Enforce server-side, model-specific guidance and inference-step bounds before sampling.",
+                    "howTo": "<h5>Bind the parameter to the exact pipeline</h5><p>The example below targets a Stable Diffusion-family adapter where <code>guidance_scale</code> controls classic CFG. On Flux/Qwen-Image pipelines, <code>guidance_scale</code> can mean embedded/distilled guidance and classic CFG can instead use <code>true_cfg_scale</code>. Verify the installed pipeline API and effective configuration; do not treat the names as aliases. For those pipelines, write and evaluate a separate allowlisted adapter, constrain every exposed guidance/negative-conditioning/step option and reject caller flags that disable the chosen branch. A model without the relevant mechanism is outside this path. Bounds must come from that model version's evaluated policy. This implementation rejects out-of-range values; it does not silently clip them.</p><p>Apply this control only to a diffusion endpoint whose deployed sampler exposes classifier-free guidance. The serving team owns the enforcement wrapper; the caller may request a scale but cannot select the policy, model binding, or validation result. A signed policy binds the exact model artifact, allowed scale interval, default, inference-step interval, validity window, and policy version. An endpoint without CFG is <code>NOT_APPLICABLE</code>; an unavailable or invalid policy is <code>ERROR</code> and inference remains closed.</p><h5>Verify the release policy and enforce finite bounded values</h5><pre><code class=\"language-python\"># File: serving/cfg_guard.py\r\n# Dependencies: pydantic&gt;=2.8,&lt;3\r\nfrom __future__ import annotations\r\n\r\nimport hashlib\r\nimport json\r\nimport math\r\nimport os\r\nimport subprocess\r\nimport tempfile\r\nfrom datetime import datetime, timezone\r\nfrom pathlib import Path\r\nfrom typing import Any\r\n\r\nfrom pydantic import BaseModel, ConfigDict, Field\r\n\r\n# aidefend.cfg-request.v1 defines an empty prompt as structurally invalid.\r\nCFG_REQUEST_NON_EMPTY_PROMPT_LENGTH = 1\r\n\r\ndef _required_positive_seconds(name: str) -&gt; float:\r\n    value = float(os.environ[name])\r\n    if not math.isfinite(value) or value &lt;= 0:\r\n        raise RuntimeError(f\"{name} must be a finite positive number of seconds\")\r\n    return value\r\n\r\nGUIDANCE_POLICY_VERIFY_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H010_GUIDANCE_POLICY_VERIFY_TIMEOUT_SECONDS\")\r\n\r\n\r\nPOLICY = Path(os.environ[\"CFG_POLICY_PATH\"])\r\nPOLICY_BUNDLE = Path(os.environ[\"CFG_POLICY_BUNDLE_PATH\"])\r\nVERIFY_KEY = os.environ[\"CFG_POLICY_VERIFY_KEY\"]\r\nREQUIRED = {\r\n    \"schema_version\", \"policy_version\", \"model_artifact_sha256\",\r\n    \"minimum_scale\", \"maximum_scale\", \"default_scale\",\r\n    \"minimum_inference_steps\", \"maximum_inference_steps\",\r\n    \"issued_at\", \"expires_at\",\r\n}\r\n\r\n\r\ndef no_duplicate_keys(pairs: list[tuple[str, object]]) -&gt; dict:\r\n    value = {}\r\n    for key, item in pairs:\r\n        if key in value:\r\n            raise ValueError(f\"duplicate policy key: {key}\")\r\n        value[key] = item\r\n    return value\r\n\r\n\r\ndef reject_nonfinite(value: str):\r\n    raise ValueError(f\"non-finite policy number: {value}\")\r\n\r\n\r\ndef strict_json(raw: bytes) -&gt; dict:\r\n    value = json.loads(\r\n        raw.decode(\"utf-8\", errors=\"strict\"),\r\n        object_pairs_hook=no_duplicate_keys,\r\n        parse_constant=reject_nonfinite,\r\n    )\r\n    if not isinstance(value, dict):\r\n        raise ValueError(\"policy root must be an object\")\r\n    return value\r\n\r\n\r\ndef timestamp(value: object) -&gt; datetime:\r\n    if not isinstance(value, str):\r\n        raise ValueError(\"policy timestamp is absent\")\r\n    parsed = datetime.fromisoformat(value.replace(\"Z\", \"+00:00\"))\r\n    if parsed.tzinfo is None:\r\n        raise ValueError(\"policy timestamp lacks timezone\")\r\n    return parsed.astimezone(timezone.utc)\r\n\r\n\r\ndef load_policy(model_artifact_sha256: str) -&gt; tuple[dict, str]:\r\n    raw = POLICY.read_bytes()\r\n    snapshot: Path | None = None\r\n    try:\r\n        with tempfile.NamedTemporaryFile(\r\n            prefix=\"h010-policy-\", suffix=\".json\", delete=False\r\n        ) as handle:\r\n            handle.write(raw)\r\n            handle.flush()\r\n            os.fsync(handle.fileno())\r\n            snapshot = Path(handle.name)\r\n        subprocess.run(\r\n            [\r\n                \"cosign\", \"verify-blob\", \"--key\", VERIFY_KEY,\r\n                \"--bundle\", str(POLICY_BUNDLE), str(snapshot),\r\n            ],\r\n            check=True, capture_output=True, text=True, timeout=GUIDANCE_POLICY_VERIFY_TIMEOUT_SECONDS,\r\n        )\r\n    finally:\r\n        if snapshot is not None:\r\n            snapshot.unlink(missing_ok=True)\r\n    policy = strict_json(raw)\r\n    if (\r\n        not isinstance(policy, dict)\r\n        or set(policy) != REQUIRED\r\n        or policy[\"schema_version\"] != \"aidefend.cfg-policy.v1\"\r\n        or policy[\"model_artifact_sha256\"] != model_artifact_sha256\r\n    ):\r\n        raise ValueError(\"CFG policy schema or model binding differs\")\r\n    for field in (\"minimum_scale\", \"maximum_scale\", \"default_scale\"):\r\n        value = policy[field]\r\n        if isinstance(value, bool) or not isinstance(value, (int, float)):\r\n            raise ValueError(f\"{field} is not numeric\")\r\n        policy[field] = float(value)\r\n        if not math.isfinite(policy[field]):\r\n            raise ValueError(f\"{field} is not finite\")\r\n    if not (\r\n        0.0 &lt; policy[\"minimum_scale\"]\r\n        &lt;= policy[\"default_scale\"]\r\n        &lt;= policy[\"maximum_scale\"]\r\n    ):\r\n        raise ValueError(\"CFG scale interval is invalid\")\r\n    for field in (\"minimum_inference_steps\", \"maximum_inference_steps\"):\r\n        value = policy[field]\r\n        if isinstance(value, bool) or not isinstance(value, int) or value &lt; 1:\r\n            raise ValueError(f\"{field} is invalid\")\r\n    if policy[\"minimum_inference_steps\"] &gt; policy[\"maximum_inference_steps\"]:\r\n        raise ValueError(\"inference-step interval is invalid\")\r\n    now = datetime.now(timezone.utc)\r\n    issued, expires = timestamp(policy[\"issued_at\"]), timestamp(policy[\"expires_at\"])\r\n    if issued &gt; now or expires &lt;= issued or now &gt;= expires:\r\n        raise ValueError(\"CFG policy is not currently valid\")\r\n    if not isinstance(policy[\"policy_version\"], str) or not policy[\"policy_version\"]:\r\n        raise ValueError(\"policy version is absent\")\r\n    return policy, hashlib.sha256(raw).hexdigest()\r\n\r\n\r\nclass GenerateRequest(BaseModel):\r\n    model_config = ConfigDict(extra=\"forbid\", allow_inf_nan=False, strict=True)\r\n    prompt: str = Field(min_length=CFG_REQUEST_NON_EMPTY_PROMPT_LENGTH)\r\n    guidance_scale: float | None = None\r\n    num_inference_steps: int\r\n\r\n\r\ndef guarded_generate(\r\n    pipeline: Any,\r\n    request: GenerateRequest,\r\n    request_id: str,\r\n    model_artifact_sha256: str,\r\n) -&gt; tuple[Any, dict]:\r\n    if not request_id:\r\n        raise ValueError(\"authenticated request ID is absent\")\r\n    policy, policy_sha256 = load_policy(model_artifact_sha256)\r\n    scale = (\r\n        policy[\"default_scale\"]\r\n        if request.guidance_scale is None\r\n        else request.guidance_scale\r\n    )\r\n    if not policy[\"minimum_scale\"] &lt;= scale &lt;= policy[\"maximum_scale\"]:\r\n        raise ValueError(\"guidance scale is outside signed policy\")\r\n    if not (\r\n        policy[\"minimum_inference_steps\"]\r\n        &lt;= request.num_inference_steps\r\n        &lt;= policy[\"maximum_inference_steps\"]\r\n    ):\r\n        raise ValueError(\"inference steps are outside signed policy\")\r\n    image = pipeline(\r\n        prompt=request.prompt,\r\n        guidance_scale=scale,\r\n        num_inference_steps=request.num_inference_steps,\r\n    ).images[0]\r\n    decision = {\r\n        \"schema_version\": \"aidefend.cfg-decision.v1\",\r\n        \"request_id\": request_id,\r\n        \"model_artifact_sha256\": model_artifact_sha256,\r\n        \"policy_version\": policy[\"policy_version\"],\r\n        \"policy_sha256\": policy_sha256,\r\n        \"requested_scale\": request.guidance_scale,\r\n        \"applied_scale\": scale,\r\n        \"inference_steps\": request.num_inference_steps,\r\n        \"decision\": \"ALLOWED\",\r\n        \"decided_at\": datetime.now(timezone.utc).isoformat(),\r\n    }\r\n    return image, decision\r\n</code></pre><h5>Verification, evidence, and outcomes</h5><p>Route every production endpoint through this wrapper and write allow and reject decisions to an append-only store using an identity that the model-serving workload cannot alter. Retain the signed policy and bundle, exact model digest, endpoint inventory, request correlation ID, requested/applied values, decision, and test-run identity. An independent verifier enumerates every in-scope route, re-verifies the policy, and replays below-minimum, above-maximum, boundary, missing, <code>NaN</code>, infinity, Boolean, string, unknown-field, and invalid-step cases against the deployed endpoint.</p><p><strong>Action:</strong> Deploy the guard at the last trusted hop before the sampler, export the exact signed decision population, and block release unless independent replay returns PASS.</p>"
                 },
                 {
                     "id": "AID-H-010-G002",
                     "implementation": "Apply adaptive or per-prompt guidance scaling based on prompt risk analysis.",
-                    "howTo": "<h5>Applicability, dependency, and scope</h5><p>Use adaptive CFG only when the deployment has an independently operated prompt-risk service and a diffusion endpoint with CFG. This guidance depends on the finite base bounds from <code>AID-H-010-G001</code>; its signed risk policy may only narrow that range. It is defense-in-depth and does not replace input sanitization, output moderation, or model-safety evaluation. If CFG is absent, return <code>NOT_APPLICABLE</code>. If the risk service or its evidence is unavailable, return <code>ERROR</code> and do not sample.</p><p>Before startup, a bootstrap identity must signature-verify a separate versioned transport profile and export the exact risk-service URL, trust bundle, client certificate/key paths, positive HTTP deadlines, and decoded response-byte cap used below. Retain that profile version and digest with each decision; do not take these bounds from an unverified environment or from the policy being verified.</p><h5>Consume a signed, prompt-bound risk receipt</h5><pre><code class=\"language-python\"># File: serving/adaptive_cfg.py\r\n# Dependencies: httpx&gt;=0.27,&lt;1, PyJWT&gt;=2.9,&lt;3, cryptography&gt;=43,&lt;46\r\nfrom __future__ import annotations\r\n\r\nimport hashlib\r\nimport json\r\nimport math\r\nimport os\r\nimport ssl\r\nimport subprocess\r\nimport tempfile\r\nimport time\r\nfrom pathlib import Path\r\nfrom urllib.parse import urlsplit, urlunsplit\r\n\r\nimport httpx\r\nimport jwt\r\n\r\ndef _required_positive_seconds(name: str) -&gt; float:\r\n    value = float(os.environ[name])\r\n    if not math.isfinite(value) or value &lt;= 0:\r\n        raise RuntimeError(f\"{name} must be a finite positive number of seconds\")\r\n    return value\r\n\r\nADAPTIVE_GUIDANCE_POLICY_VERIFY_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H010_ADAPTIVE_GUIDANCE_POLICY_VERIFY_TIMEOUT_SECONDS\")\r\nPROMPT_RISK_TOTAL_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H010_PROMPT_RISK_TOTAL_TIMEOUT_SECONDS\")\r\nPROMPT_RISK_CONNECT_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H010_PROMPT_RISK_CONNECT_TIMEOUT_SECONDS\")\r\n\r\n\r\ndef _required_positive_int(name: str) -&gt; int:\r\n    value = int(os.environ[name])\r\n    if value &lt;= 0:\r\n        raise RuntimeError(f\"{name} must be a positive integer\")\r\n    return value\r\n\r\n\r\nPROMPT_RISK_RESPONSE_MAX_BYTES = _required_positive_int(\r\n    \"VERIFIED_H010_PROMPT_RISK_RESPONSE_MAX_BYTES\"\r\n)\r\n\r\n\r\ndef canonical_https_url(value: str) -&gt; str:\r\n    if not isinstance(value, str) or not value:\r\n        raise RuntimeError(\"risk service URL is empty\")\r\n    parsed = urlsplit(value)\r\n    if (\r\n        parsed.scheme != \"https\"\r\n        or not parsed.hostname\r\n        or parsed.username is not None\r\n        or parsed.password is not None\r\n        or parsed.query\r\n        or parsed.fragment\r\n        or not parsed.path.startswith(\"/\")\r\n    ):\r\n        raise RuntimeError(\"risk service URL must be an exact HTTPS endpoint\")\r\n    canonical = urlunsplit((\"https\", parsed.netloc.lower(), parsed.path, \"\", \"\"))\r\n    if value != canonical:\r\n        raise RuntimeError(\"risk service URL is not canonical\")\r\n    return value\r\n\r\n\r\nPOLICY = Path(os.environ[\"CFG_RISK_POLICY_PATH\"])\r\nPOLICY_BUNDLE = Path(os.environ[\"CFG_RISK_POLICY_BUNDLE_PATH\"])\r\nPOLICY_KEY = os.environ[\"CFG_RISK_POLICY_VERIFY_KEY\"]\r\nRISK_PUBLIC_KEY = Path(os.environ[\"CFG_RISK_RECEIPT_PUBLIC_KEY_PATH\"])\r\nRISK_URL = canonical_https_url(os.environ[\"CFG_RISK_URL\"])\r\nRISK_CA = os.environ[\"CFG_RISK_CA_BUNDLE\"]\r\nRISK_CERT = os.environ[\"CFG_RISK_CLIENT_CERT\"]\r\nRISK_KEY = os.environ[\"CFG_RISK_CLIENT_KEY\"]\r\nTIERS = {\"allow\", \"clamp\", \"block\"}\r\n\r\n\r\ndef sha256_bytes(value: bytes) -&gt; str:\r\n    return hashlib.sha256(value).hexdigest()\r\n\r\n\r\ndef no_duplicates(pairs: list[tuple[str, object]]) -&gt; dict:\r\n    result = {}\r\n    for key, value in pairs:\r\n        if key in result:\r\n            raise ValueError(f\"duplicate JSON key: {key}\")\r\n        result[key] = value\r\n    return result\r\n\r\n\r\ndef strict_json(raw: bytes) -&gt; dict:\r\n    value = json.loads(raw, object_pairs_hook=no_duplicates, parse_constant=lambda value: (_ for _ in ()).throw(ValueError(f\"non-finite JSON number: {value}\")))\r\n    if not isinstance(value, dict):\r\n        raise ValueError(\"JSON root must be an object\")\r\n    return value\r\n\r\n\r\ndef bounded_json_response(response: httpx.Response) -&gt; dict:\r\n    if response.status_code != 200:\r\n        raise RuntimeError(f\"risk service returned HTTP {response.status_code}\")\r\n    media_type = response.headers.get(\"Content-Type\", \"\").split(\";\", 1)[0].strip().lower()\r\n    if media_type != \"application/json\":\r\n        raise RuntimeError(\"risk service did not return application/json\")\r\n    declared = response.headers.get(\"Content-Length\")\r\n    if declared is not None:\r\n        try:\r\n            if int(declared) &gt; PROMPT_RISK_RESPONSE_MAX_BYTES:\r\n                raise RuntimeError(\"risk response exceeds signed byte cap\")\r\n        except ValueError as exc:\r\n            raise RuntimeError(\"risk response Content-Length is invalid\") from exc\r\n    body = bytearray()\r\n    for chunk in response.iter_bytes():\r\n        body.extend(chunk)\r\n        if len(body) &gt; PROMPT_RISK_RESPONSE_MAX_BYTES:\r\n            raise RuntimeError(\"risk response exceeds signed decoded-byte cap\")\r\n    return strict_json(bytes(body))\r\n\r\n\r\ndef load_policy() -&gt; tuple[dict, str]:\r\n    raw = POLICY.read_bytes()\r\n    snapshot: Path | None = None\r\n    try:\r\n        with tempfile.NamedTemporaryFile(\r\n            prefix=\"h010-policy-\", suffix=\".json\", delete=False\r\n        ) as handle:\r\n            handle.write(raw)\r\n            handle.flush()\r\n            os.fsync(handle.fileno())\r\n            snapshot = Path(handle.name)\r\n        subprocess.run(\r\n            [\r\n                \"cosign\", \"verify-blob\", \"--key\", POLICY_KEY,\r\n                \"--bundle\", str(POLICY_BUNDLE), str(snapshot),\r\n            ],\r\n            check=True, capture_output=True, text=True, timeout=ADAPTIVE_GUIDANCE_POLICY_VERIFY_TIMEOUT_SECONDS,\r\n        )\r\n    finally:\r\n        if snapshot is not None:\r\n            snapshot.unlink(missing_ok=True)\r\n    policy = strict_json(raw)\r\n    required = {\r\n        \"schema_version\", \"policy_version\", \"receipt_issuer\",\r\n        \"receipt_audience\", \"receipt_public_key_sha256\",\r\n        \"maximum_receipt_age_seconds\", \"tier_actions\",\r\n    }\r\n    if (\r\n        not isinstance(policy, dict)\r\n        or set(policy) != required\r\n        or policy[\"schema_version\"] != \"aidefend.cfg-risk-policy.v1\"\r\n        or set(policy[\"tier_actions\"]) != TIERS\r\n        or policy[\"receipt_public_key_sha256\"]\r\n        != sha256_bytes(RISK_PUBLIC_KEY.read_bytes())\r\n    ):\r\n        raise ValueError(\"adaptive CFG policy schema or key binding differs\")\r\n    age = policy[\"maximum_receipt_age_seconds\"]\r\n    if isinstance(age, bool) or not isinstance(age, int) or age &lt; 1:\r\n        raise ValueError(\"receipt age policy is invalid\")\r\n    for tier, rule in policy[\"tier_actions\"].items():\r\n        if not isinstance(rule, dict) or set(rule) != {\"action\", \"maximum_scale\"}:\r\n            raise ValueError(f\"{tier} rule schema differs\")\r\n        if tier == \"block\":\r\n            if rule != {\"action\": \"BLOCK\", \"maximum_scale\": None}:\r\n                raise ValueError(\"block tier must deny\")\r\n        else:\r\n            value = rule[\"maximum_scale\"]\r\n            if (\r\n                rule[\"action\"] not in {\"ALLOW\", \"CLAMP\"}\r\n                or isinstance(value, bool)\r\n                or not isinstance(value, (int, float))\r\n                or not math.isfinite(float(value))\r\n                or float(value) &lt;= 0\r\n            ):\r\n                raise ValueError(f\"{tier} scale ceiling is invalid\")\r\n            rule[\"maximum_scale\"] = float(value)\r\n    return policy, sha256_bytes(raw)\r\n\r\n\r\ndef classify(prompt: str, request_id: str, policy: dict) -&gt; tuple[dict, str]:\r\n    prompt_sha256 = sha256_bytes(prompt.encode(\"utf-8\"))\r\n    tls_context = ssl.create_default_context(cafile=RISK_CA)\r\n    tls_context.minimum_version = ssl.TLSVersion.TLSv1_2\r\n    tls_context.load_cert_chain(certfile=RISK_CERT, keyfile=RISK_KEY)\r\n    with httpx.Client(\r\n        verify=tls_context,\r\n        timeout=httpx.Timeout(PROMPT_RISK_TOTAL_TIMEOUT_SECONDS, connect=PROMPT_RISK_CONNECT_TIMEOUT_SECONDS),\r\n        follow_redirects=False,\r\n    ) as client:\r\n        with client.stream(\r\n            \"POST\",\r\n            RISK_URL,\r\n            json={\r\n                \"request_id\": request_id,\r\n                \"prompt\": prompt,\r\n                \"prompt_sha256\": prompt_sha256,\r\n                \"policy_version\": policy[\"policy_version\"],\r\n            },\r\n        ) as response:\r\n            body = bounded_json_response(response)\r\n    if not isinstance(body, dict) or set(body) != {\"receipt\"}:\r\n        raise ValueError(\"risk service response schema differs\")\r\n    token = body[\"receipt\"]\r\n    if not isinstance(token, str) or not token:\r\n        raise ValueError(\"risk receipt must be a non-empty compact JWT\")\r\n    try:\r\n        token.encode(\"ascii\")\r\n    except UnicodeEncodeError as exc:\r\n        raise ValueError(\"risk receipt must be ASCII\") from exc\r\n    claims = jwt.decode(\r\n        token,\r\n        RISK_PUBLIC_KEY.read_bytes(),\r\n        algorithms=[\"EdDSA\"],\r\n        issuer=policy[\"receipt_issuer\"],\r\n        audience=policy[\"receipt_audience\"],\r\n        options={\"require\": [\r\n            \"iss\", \"aud\", \"iat\", \"exp\", \"jti\", \"request_id\",\r\n            \"prompt_sha256\", \"policy_version\", \"tier\",\r\n        ]},\r\n    )\r\n    now = int(time.time())\r\n    if (\r\n        claims[\"request_id\"] != request_id\r\n        or claims[\"prompt_sha256\"] != prompt_sha256\r\n        or claims[\"policy_version\"] != policy[\"policy_version\"]\r\n        or claims[\"tier\"] not in TIERS\r\n        or now - int(claims[\"iat\"]) &gt; policy[\"maximum_receipt_age_seconds\"]\r\n    ):\r\n        raise ValueError(\"risk receipt is stale or misbound\")\r\n    return claims, sha256_bytes(token.encode(\"utf-8\"))\r\n\r\n\r\ndef adaptive_scale(prompt: str, requested_scale: float, request_id: str) -&gt; dict:\r\n    if (\r\n        isinstance(requested_scale, bool)\r\n        or not isinstance(requested_scale, (int, float))\r\n        or not math.isfinite(float(requested_scale))\r\n    ):\r\n        raise ValueError(\"requested scale is invalid\")\r\n    policy, policy_sha256 = load_policy()\r\n    claims, receipt_sha256 = classify(prompt, request_id, policy)\r\n    rule = policy[\"tier_actions\"][claims[\"tier\"]]\r\n    if rule[\"action\"] == \"BLOCK\":\r\n        return {\r\n            \"decision\": \"BLOCK\",\r\n            \"request_id\": request_id,\r\n            \"tier\": claims[\"tier\"],\r\n            \"risk_receipt_jti\": claims[\"jti\"],\r\n            \"risk_receipt_sha256\": receipt_sha256,\r\n            \"policy_version\": policy[\"policy_version\"],\r\n            \"policy_sha256\": policy_sha256,\r\n        }\r\n    applied = min(float(requested_scale), rule[\"maximum_scale\"])\r\n    return {\r\n        \"decision\": \"ALLOW\",\r\n        \"request_id\": request_id,\r\n        \"tier\": claims[\"tier\"],\r\n        \"requested_scale\": float(requested_scale),\r\n        \"applied_scale\": applied,\r\n        \"risk_receipt_jti\": claims[\"jti\"],\r\n        \"risk_receipt_sha256\": receipt_sha256,\r\n        \"policy_version\": policy[\"policy_version\"],\r\n        \"policy_sha256\": policy_sha256,\r\n    }\r\n</code></pre><h5>Enforcement and evidence</h5><p>The trusted sampler wrapper calls <code>adaptive_scale</code> after H-010#1 validation and before denoising. It rejects <code>BLOCK</code>; otherwise it passes only <code>applied_scale</code>, never the caller value. Store the decision, signed receipt, policy and bundle, exact model/config digest, request ID, prompt digest, requested/applied scale, service identity, and timestamp in append-only storage. Do not retain raw prompts in the assurance package unless a separate data-handling policy authorizes it.</p><p><strong>Action:</strong> Make the receipt verifier the only producer of the sampler scale, fail closed on dependency failure, and gate deployment on independent negative replay.</p>"
+                    "howTo": "<h5>Applicability, dependency, and scope</h5><p>Use adaptive CFG only when the deployment has an independently operated prompt-risk service and a diffusion endpoint with CFG. This guidance depends on the finite base bounds from <code>AID-H-010-G001</code>; its signed risk policy may only narrow that range. Lowering guidance in response to a prompt-risk score does not inherently reduce harmful output. Before enabling this path, measure its effect on the exact deployed model/pipeline version against the fixed-policy baseline, using representative adversarial and benign prompts, output-safety outcomes, utility and compute cost. Adopt the adaptation only when that evaluation supports the intended benefit, and reevaluate after model or pipeline changes. It is defense-in-depth and does not replace input sanitization, output moderation, or model-safety evaluation. If CFG is absent, return <code>NOT_APPLICABLE</code>. If the risk service or its evidence is unavailable, return <code>ERROR</code> and do not sample.</p><p>Before startup, a bootstrap identity must signature-verify a separate versioned transport profile and export the exact risk-service URL, trust bundle, client certificate/key paths, positive HTTP deadlines, and decoded response-byte cap used below. Retain that profile version and digest with each decision; do not take these bounds from an unverified environment or from the policy being verified.</p><h5>Consume a signed, prompt-bound risk receipt</h5><pre><code class=\"language-python\"># File: serving/adaptive_cfg.py\r\n# Dependencies: httpx&gt;=0.27,&lt;1, PyJWT&gt;=2.9,&lt;3, cryptography&gt;=43,&lt;46\r\nfrom __future__ import annotations\r\n\r\nimport hashlib\r\nimport json\r\nimport math\r\nimport os\r\nimport ssl\r\nimport subprocess\r\nimport tempfile\r\nimport time\r\nfrom pathlib import Path\r\nfrom urllib.parse import urlsplit, urlunsplit\r\n\r\nimport httpx\r\nimport jwt\r\n\r\ndef _required_positive_seconds(name: str) -&gt; float:\r\n    value = float(os.environ[name])\r\n    if not math.isfinite(value) or value &lt;= 0:\r\n        raise RuntimeError(f\"{name} must be a finite positive number of seconds\")\r\n    return value\r\n\r\nADAPTIVE_GUIDANCE_POLICY_VERIFY_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H010_ADAPTIVE_GUIDANCE_POLICY_VERIFY_TIMEOUT_SECONDS\")\r\nPROMPT_RISK_TOTAL_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H010_PROMPT_RISK_TOTAL_TIMEOUT_SECONDS\")\r\nPROMPT_RISK_CONNECT_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H010_PROMPT_RISK_CONNECT_TIMEOUT_SECONDS\")\r\n\r\n\r\ndef _required_positive_int(name: str) -&gt; int:\r\n    value = int(os.environ[name])\r\n    if value &lt;= 0:\r\n        raise RuntimeError(f\"{name} must be a positive integer\")\r\n    return value\r\n\r\n\r\nPROMPT_RISK_RESPONSE_MAX_BYTES = _required_positive_int(\r\n    \"VERIFIED_H010_PROMPT_RISK_RESPONSE_MAX_BYTES\"\r\n)\r\n\r\n\r\ndef canonical_https_url(value: str) -&gt; str:\r\n    if not isinstance(value, str) or not value:\r\n        raise RuntimeError(\"risk service URL is empty\")\r\n    parsed = urlsplit(value)\r\n    if (\r\n        parsed.scheme != \"https\"\r\n        or not parsed.hostname\r\n        or parsed.username is not None\r\n        or parsed.password is not None\r\n        or parsed.query\r\n        or parsed.fragment\r\n        or not parsed.path.startswith(\"/\")\r\n    ):\r\n        raise RuntimeError(\"risk service URL must be an exact HTTPS endpoint\")\r\n    canonical = urlunsplit((\"https\", parsed.netloc.lower(), parsed.path, \"\", \"\"))\r\n    if value != canonical:\r\n        raise RuntimeError(\"risk service URL is not canonical\")\r\n    return value\r\n\r\n\r\nPOLICY = Path(os.environ[\"CFG_RISK_POLICY_PATH\"])\r\nPOLICY_BUNDLE = Path(os.environ[\"CFG_RISK_POLICY_BUNDLE_PATH\"])\r\nPOLICY_KEY = os.environ[\"CFG_RISK_POLICY_VERIFY_KEY\"]\r\nRISK_PUBLIC_KEY = Path(os.environ[\"CFG_RISK_RECEIPT_PUBLIC_KEY_PATH\"])\r\nRISK_URL = canonical_https_url(os.environ[\"CFG_RISK_URL\"])\r\nRISK_CA = os.environ[\"CFG_RISK_CA_BUNDLE\"]\r\nRISK_CERT = os.environ[\"CFG_RISK_CLIENT_CERT\"]\r\nRISK_KEY = os.environ[\"CFG_RISK_CLIENT_KEY\"]\r\nTIERS = {\"allow\", \"clamp\", \"block\"}\r\n\r\n\r\ndef sha256_bytes(value: bytes) -&gt; str:\r\n    return hashlib.sha256(value).hexdigest()\r\n\r\n\r\ndef no_duplicates(pairs: list[tuple[str, object]]) -&gt; dict:\r\n    result = {}\r\n    for key, value in pairs:\r\n        if key in result:\r\n            raise ValueError(f\"duplicate JSON key: {key}\")\r\n        result[key] = value\r\n    return result\r\n\r\n\r\ndef strict_json(raw: bytes) -&gt; dict:\r\n    value = json.loads(raw, object_pairs_hook=no_duplicates, parse_constant=lambda value: (_ for _ in ()).throw(ValueError(f\"non-finite JSON number: {value}\")))\r\n    if not isinstance(value, dict):\r\n        raise ValueError(\"JSON root must be an object\")\r\n    return value\r\n\r\n\r\ndef bounded_json_response(response: httpx.Response) -&gt; dict:\r\n    if response.status_code != 200:\r\n        raise RuntimeError(f\"risk service returned HTTP {response.status_code}\")\r\n    media_type = response.headers.get(\"Content-Type\", \"\").split(\";\", 1)[0].strip().lower()\r\n    if media_type != \"application/json\":\r\n        raise RuntimeError(\"risk service did not return application/json\")\r\n    declared = response.headers.get(\"Content-Length\")\r\n    if declared is not None:\r\n        try:\r\n            if int(declared) &gt; PROMPT_RISK_RESPONSE_MAX_BYTES:\r\n                raise RuntimeError(\"risk response exceeds signed byte cap\")\r\n        except ValueError as exc:\r\n            raise RuntimeError(\"risk response Content-Length is invalid\") from exc\r\n    body = bytearray()\r\n    for chunk in response.iter_bytes():\r\n        body.extend(chunk)\r\n        if len(body) &gt; PROMPT_RISK_RESPONSE_MAX_BYTES:\r\n            raise RuntimeError(\"risk response exceeds signed decoded-byte cap\")\r\n    return strict_json(bytes(body))\r\n\r\n\r\ndef load_policy() -&gt; tuple[dict, str]:\r\n    raw = POLICY.read_bytes()\r\n    snapshot: Path | None = None\r\n    try:\r\n        with tempfile.NamedTemporaryFile(\r\n            prefix=\"h010-policy-\", suffix=\".json\", delete=False\r\n        ) as handle:\r\n            handle.write(raw)\r\n            handle.flush()\r\n            os.fsync(handle.fileno())\r\n            snapshot = Path(handle.name)\r\n        subprocess.run(\r\n            [\r\n                \"cosign\", \"verify-blob\", \"--key\", POLICY_KEY,\r\n                \"--bundle\", str(POLICY_BUNDLE), str(snapshot),\r\n            ],\r\n            check=True, capture_output=True, text=True, timeout=ADAPTIVE_GUIDANCE_POLICY_VERIFY_TIMEOUT_SECONDS,\r\n        )\r\n    finally:\r\n        if snapshot is not None:\r\n            snapshot.unlink(missing_ok=True)\r\n    policy = strict_json(raw)\r\n    required = {\r\n        \"schema_version\", \"policy_version\", \"receipt_issuer\",\r\n        \"receipt_audience\", \"receipt_public_key_sha256\",\r\n        \"maximum_receipt_age_seconds\", \"tier_actions\",\r\n    }\r\n    if (\r\n        not isinstance(policy, dict)\r\n        or set(policy) != required\r\n        or policy[\"schema_version\"] != \"aidefend.cfg-risk-policy.v1\"\r\n        or set(policy[\"tier_actions\"]) != TIERS\r\n        or policy[\"receipt_public_key_sha256\"]\r\n        != sha256_bytes(RISK_PUBLIC_KEY.read_bytes())\r\n    ):\r\n        raise ValueError(\"adaptive CFG policy schema or key binding differs\")\r\n    age = policy[\"maximum_receipt_age_seconds\"]\r\n    if isinstance(age, bool) or not isinstance(age, int) or age &lt; 1:\r\n        raise ValueError(\"receipt age policy is invalid\")\r\n    for tier, rule in policy[\"tier_actions\"].items():\r\n        if not isinstance(rule, dict) or set(rule) != {\"action\", \"maximum_scale\"}:\r\n            raise ValueError(f\"{tier} rule schema differs\")\r\n        if tier == \"block\":\r\n            if rule != {\"action\": \"BLOCK\", \"maximum_scale\": None}:\r\n                raise ValueError(\"block tier must deny\")\r\n        else:\r\n            value = rule[\"maximum_scale\"]\r\n            if (\r\n                rule[\"action\"] not in {\"ALLOW\", \"CLAMP\"}\r\n                or isinstance(value, bool)\r\n                or not isinstance(value, (int, float))\r\n                or not math.isfinite(float(value))\r\n                or float(value) &lt;= 0\r\n            ):\r\n                raise ValueError(f\"{tier} scale ceiling is invalid\")\r\n            rule[\"maximum_scale\"] = float(value)\r\n    return policy, sha256_bytes(raw)\r\n\r\n\r\ndef classify(prompt: str, request_id: str, policy: dict) -&gt; tuple[dict, str]:\r\n    prompt_sha256 = sha256_bytes(prompt.encode(\"utf-8\"))\r\n    tls_context = ssl.create_default_context(cafile=RISK_CA)\r\n    tls_context.minimum_version = ssl.TLSVersion.TLSv1_2\r\n    tls_context.load_cert_chain(certfile=RISK_CERT, keyfile=RISK_KEY)\r\n    with httpx.Client(\r\n        verify=tls_context,\r\n        timeout=httpx.Timeout(PROMPT_RISK_TOTAL_TIMEOUT_SECONDS, connect=PROMPT_RISK_CONNECT_TIMEOUT_SECONDS),\r\n        follow_redirects=False,\r\n    ) as client:\r\n        with client.stream(\r\n            \"POST\",\r\n            RISK_URL,\r\n            json={\r\n                \"request_id\": request_id,\r\n                \"prompt\": prompt,\r\n                \"prompt_sha256\": prompt_sha256,\r\n                \"policy_version\": policy[\"policy_version\"],\r\n            },\r\n        ) as response:\r\n            body = bounded_json_response(response)\r\n    if not isinstance(body, dict) or set(body) != {\"receipt\"}:\r\n        raise ValueError(\"risk service response schema differs\")\r\n    token = body[\"receipt\"]\r\n    if not isinstance(token, str) or not token:\r\n        raise ValueError(\"risk receipt must be a non-empty compact JWT\")\r\n    try:\r\n        token.encode(\"ascii\")\r\n    except UnicodeEncodeError as exc:\r\n        raise ValueError(\"risk receipt must be ASCII\") from exc\r\n    claims = jwt.decode(\r\n        token,\r\n        RISK_PUBLIC_KEY.read_bytes(),\r\n        algorithms=[\"EdDSA\"],\r\n        issuer=policy[\"receipt_issuer\"],\r\n        audience=policy[\"receipt_audience\"],\r\n        options={\"require\": [\r\n            \"iss\", \"aud\", \"iat\", \"exp\", \"jti\", \"request_id\",\r\n            \"prompt_sha256\", \"policy_version\", \"tier\",\r\n        ]},\r\n    )\r\n    now = int(time.time())\r\n    if (\r\n        claims[\"request_id\"] != request_id\r\n        or claims[\"prompt_sha256\"] != prompt_sha256\r\n        or claims[\"policy_version\"] != policy[\"policy_version\"]\r\n        or claims[\"tier\"] not in TIERS\r\n        or now - int(claims[\"iat\"]) &gt; policy[\"maximum_receipt_age_seconds\"]\r\n    ):\r\n        raise ValueError(\"risk receipt is stale or misbound\")\r\n    return claims, sha256_bytes(token.encode(\"utf-8\"))\r\n\r\n\r\ndef adaptive_scale(prompt: str, requested_scale: float, request_id: str) -&gt; dict:\r\n    if (\r\n        isinstance(requested_scale, bool)\r\n        or not isinstance(requested_scale, (int, float))\r\n        or not math.isfinite(float(requested_scale))\r\n    ):\r\n        raise ValueError(\"requested scale is invalid\")\r\n    policy, policy_sha256 = load_policy()\r\n    claims, receipt_sha256 = classify(prompt, request_id, policy)\r\n    rule = policy[\"tier_actions\"][claims[\"tier\"]]\r\n    if rule[\"action\"] == \"BLOCK\":\r\n        return {\r\n            \"decision\": \"BLOCK\",\r\n            \"request_id\": request_id,\r\n            \"tier\": claims[\"tier\"],\r\n            \"risk_receipt_jti\": claims[\"jti\"],\r\n            \"risk_receipt_sha256\": receipt_sha256,\r\n            \"policy_version\": policy[\"policy_version\"],\r\n            \"policy_sha256\": policy_sha256,\r\n        }\r\n    applied = min(float(requested_scale), rule[\"maximum_scale\"])\r\n    return {\r\n        \"decision\": \"ALLOW\",\r\n        \"request_id\": request_id,\r\n        \"tier\": claims[\"tier\"],\r\n        \"requested_scale\": float(requested_scale),\r\n        \"applied_scale\": applied,\r\n        \"risk_receipt_jti\": claims[\"jti\"],\r\n        \"risk_receipt_sha256\": receipt_sha256,\r\n        \"policy_version\": policy[\"policy_version\"],\r\n        \"policy_sha256\": policy_sha256,\r\n    }\r\n</code></pre><h5>Enforcement and evidence</h5><p>The trusted sampler wrapper calls <code>adaptive_scale</code> after H-010#1 validation and before denoising. It rejects <code>BLOCK</code>; otherwise it passes only <code>applied_scale</code>, never the caller value. Store the decision, signed receipt, policy and bundle, exact model/config digest, request ID, prompt digest, requested/applied scale, service identity, and timestamp in append-only storage. Do not retain raw prompts in the assurance package unless a separate data-handling policy authorizes it.</p><p><strong>Action:</strong> Make the receipt verifier the only producer of the sampler scale, fail closed on dependency failure, and gate deployment on independent negative replay.</p>"
                 },
                 {
                     "id": "AID-H-010-G003",
                     "implementation": "Enforce non-removable safety conditioning / negative prompts in the guidance branch.",
-                    "howTo": "<p>Use this control only when the deployed diffusion pipeline supports a negative-conditioning branch. Negative conditioning is defense-in-depth: it can reduce unsafe generations but is not an authoritative content-safety decision and must not replace input/output policy enforcement. The mandatory terms come from a signed release policy bound to the exact model and tokenizer; callers cannot delete or reorder them. A pipeline without this branch is <code>NOT_APPLICABLE</code>.</p><h5>Verify, compose, and prove the effective conditioning</h5><pre><code class=\"language-python\"># File: serving/negative_conditioning.py\r\nfrom __future__ import annotations\r\nimport math\r\n\r\nimport hashlib\r\nimport json\r\nimport os\r\nimport subprocess\r\nimport tempfile\r\nimport unicodedata\r\nfrom datetime import datetime, timezone\r\nfrom pathlib import Path\r\nfrom typing import Any\r\n\r\ndef _required_positive_seconds(name: str) -&gt; float:\r\n    value = float(os.environ[name])\r\n    if not math.isfinite(value) or value &lt;= 0:\r\n        raise RuntimeError(f\"{name} must be a finite positive number of seconds\")\r\n    return value\r\n\r\nSAFETY_CONDITIONING_POLICY_VERIFY_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H010_SAFETY_CONDITIONING_POLICY_VERIFY_TIMEOUT_SECONDS\")\r\n\r\n\r\nPOLICY = Path(os.environ[\"NEGATIVE_CONDITIONING_POLICY_PATH\"])\r\nBUNDLE = Path(os.environ[\"NEGATIVE_CONDITIONING_POLICY_BUNDLE_PATH\"])\r\nVERIFY_KEY = os.environ[\"NEGATIVE_CONDITIONING_POLICY_VERIFY_KEY\"]\r\nREQUIRED = {\r\n    \"schema_version\", \"policy_version\", \"model_artifact_sha256\",\r\n    \"tokenizer_artifact_sha256\", \"mandatory_negative_terms\",\r\n    \"maximum_user_negative_bytes\", \"issued_at\", \"expires_at\",\r\n}\r\n\r\n\r\ndef no_duplicate_keys(pairs: list[tuple[str, object]]) -&gt; dict:\r\n    value = {}\r\n    for key, item in pairs:\r\n        if key in value:\r\n            raise ValueError(f\"duplicate policy key: {key}\")\r\n        value[key] = item\r\n    return value\r\n\r\n\r\ndef reject_nonfinite(value: str):\r\n    raise ValueError(f\"non-finite policy number: {value}\")\r\n\r\n\r\ndef strict_json(raw: bytes) -&gt; dict:\r\n    value = json.loads(\r\n        raw.decode(\"utf-8\", errors=\"strict\"),\r\n        object_pairs_hook=no_duplicate_keys,\r\n        parse_constant=reject_nonfinite,\r\n    )\r\n    if not isinstance(value, dict):\r\n        raise ValueError(\"policy root must be an object\")\r\n    return value\r\n\r\n\r\ndef timestamp(value: object) -&gt; datetime:\r\n    if not isinstance(value, str):\r\n        raise ValueError(\"policy timestamp is absent\")\r\n    parsed = datetime.fromisoformat(value.replace(\"Z\", \"+00:00\"))\r\n    if parsed.tzinfo is None:\r\n        raise ValueError(\"policy timestamp lacks timezone\")\r\n    return parsed.astimezone(timezone.utc)\r\n\r\n\r\ndef load_policy(model_sha256: str, tokenizer_sha256: str) -&gt; tuple[dict, str]:\r\n    raw = POLICY.read_bytes()\r\n    snapshot: Path | None = None\r\n    try:\r\n        with tempfile.NamedTemporaryFile(\r\n            prefix=\"h010-policy-\", suffix=\".json\", delete=False\r\n        ) as handle:\r\n            handle.write(raw)\r\n            handle.flush()\r\n            os.fsync(handle.fileno())\r\n            snapshot = Path(handle.name)\r\n        subprocess.run(\r\n            [\r\n                \"cosign\", \"verify-blob\", \"--key\", VERIFY_KEY,\r\n                \"--bundle\", str(BUNDLE), str(snapshot),\r\n            ],\r\n            check=True, capture_output=True, text=True, timeout=SAFETY_CONDITIONING_POLICY_VERIFY_TIMEOUT_SECONDS,\r\n        )\r\n    finally:\r\n        if snapshot is not None:\r\n            snapshot.unlink(missing_ok=True)\r\n    policy = strict_json(raw)\r\n    if (\r\n        not isinstance(policy, dict)\r\n        or set(policy) != REQUIRED\r\n        or policy[\"schema_version\"] != \"aidefend.negative-conditioning.v1\"\r\n        or policy[\"model_artifact_sha256\"] != model_sha256\r\n        or policy[\"tokenizer_artifact_sha256\"] != tokenizer_sha256\r\n        or not isinstance(policy[\"policy_version\"], str)\r\n        or not policy[\"policy_version\"]\r\n    ):\r\n        raise ValueError(\"conditioning policy schema or artifact binding differs\")\r\n    terms = policy[\"mandatory_negative_terms\"]\r\n    if (\r\n        not isinstance(terms, list)\r\n        or not terms\r\n        or terms != list(dict.fromkeys(terms))\r\n        or any(not isinstance(term, str) or not term.strip() for term in terms)\r\n    ):\r\n        raise ValueError(\"mandatory terms are empty, duplicated, or invalid\")\r\n    limit = policy[\"maximum_user_negative_bytes\"]\r\n    if isinstance(limit, bool) or not isinstance(limit, int) or limit &lt; 0:\r\n        raise ValueError(\"user-negative byte limit is invalid\")\r\n    now = datetime.now(timezone.utc)\r\n    issued, expires = timestamp(policy[\"issued_at\"]), timestamp(policy[\"expires_at\"])\r\n    if issued &gt; now or expires &lt;= issued or now &gt;= expires:\r\n        raise ValueError(\"conditioning policy is not currently valid\")\r\n    return policy, hashlib.sha256(raw).hexdigest()\r\n\r\n\r\ndef compose_negative_conditioning(\r\n    tokenizer: Any,\r\n    user_negative_prompt: str | None,\r\n    request_id: str,\r\n    model_sha256: str,\r\n    tokenizer_sha256: str,\r\n) -&gt; tuple[str, dict]:\r\n    if not request_id:\r\n        raise ValueError(\"request ID is absent\")\r\n    policy, policy_sha256 = load_policy(model_sha256, tokenizer_sha256)\r\n    user_text = unicodedata.normalize(\"NFKC\", user_negative_prompt or \"\").strip()\r\n    if len(user_text.encode(\"utf-8\")) &gt; policy[\"maximum_user_negative_bytes\"]:\r\n        raise ValueError(\"user negative prompt exceeds signed byte budget\")\r\n    mandatory = \", \".join(\r\n        unicodedata.normalize(\"NFKC\", term).strip()\r\n        for term in policy[\"mandatory_negative_terms\"]\r\n    )\r\n    final_prompt = mandatory if not user_text else mandatory + \", \" + user_text\r\n    encoded = tokenizer(\r\n        final_prompt,\r\n        add_special_tokens=True,\r\n        truncation=False,\r\n        return_attention_mask=False,\r\n    )[\"input_ids\"]\r\n    maximum = getattr(tokenizer, \"model_max_length\", None)\r\n    if isinstance(maximum, bool) or not isinstance(maximum, int) or maximum &lt; 1:\r\n        raise ValueError(\"tokenizer maximum length is unavailable\")\r\n    if len(encoded) &gt; maximum:\r\n        raise ValueError(\"effective negative conditioning would be truncated\")\r\n    receipt = {\r\n        \"schema_version\": \"aidefend.negative-conditioning-receipt.v1\",\r\n        \"request_id\": request_id,\r\n        \"model_artifact_sha256\": model_sha256,\r\n        \"tokenizer_artifact_sha256\": tokenizer_sha256,\r\n        \"policy_version\": policy[\"policy_version\"],\r\n        \"policy_sha256\": policy_sha256,\r\n        \"mandatory_conditioning_sha256\": hashlib.sha256(\r\n            mandatory.encode(\"utf-8\")\r\n        ).hexdigest(),\r\n        \"effective_conditioning_sha256\": hashlib.sha256(\r\n            final_prompt.encode(\"utf-8\")\r\n        ).hexdigest(),\r\n        \"effective_token_count\": len(encoded),\r\n        \"applied_at\": datetime.now(timezone.utc).isoformat(),\r\n    }\r\n    return final_prompt, receipt\r\n</code></pre><h5>Integration, evidence, and outcomes</h5><p>The last trusted sampler wrapper calls this function and passes only the returned string as <code>negative_prompt</code>. Retain the signed policy and bundle, exact model/tokenizer digests, endpoint population, receipt, sampler request correlation, and effective prompt digest in an append-only store; protect raw user text under the applicable data policy. An independent test uses no user prompt, an adversarial user prompt, Unicode variants, the maximum allowed size, an oversize value, wrong artifact bindings, an expired policy, and a token-overflow case, then reads back the sampler arguments.</p><p><strong>Action:</strong> Place the composer immediately before the sampler, keep mandatory conditioning first, and gate the release on independent argument readback rather than a self-reported flag.</p>"
+                    "howTo": "<p>Use this control only when the deployed diffusion pipeline supports a negative-conditioning branch. Negative conditioning is defense-in-depth: its contribution must be measured on the deployed model version and it is not an authoritative content-safety decision and must not replace input/output policy enforcement. The mandatory terms come from a signed release policy bound to the exact model and tokenizer; callers cannot delete or reorder them. A pipeline without this branch is <code>NOT_APPLICABLE</code>.</p><h5>Verify, compose, and prove the effective conditioning</h5><pre><code class=\"language-python\"># File: serving/negative_conditioning.py\r\nfrom __future__ import annotations\r\nimport math\r\n\r\nimport hashlib\r\nimport json\r\nimport os\r\nimport subprocess\r\nimport tempfile\r\nimport unicodedata\r\nfrom datetime import datetime, timezone\r\nfrom pathlib import Path\r\nfrom typing import Any\r\n\r\ndef _required_positive_seconds(name: str) -&gt; float:\r\n    value = float(os.environ[name])\r\n    if not math.isfinite(value) or value &lt;= 0:\r\n        raise RuntimeError(f\"{name} must be a finite positive number of seconds\")\r\n    return value\r\n\r\nSAFETY_CONDITIONING_POLICY_VERIFY_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H010_SAFETY_CONDITIONING_POLICY_VERIFY_TIMEOUT_SECONDS\")\r\n\r\n\r\nPOLICY = Path(os.environ[\"NEGATIVE_CONDITIONING_POLICY_PATH\"])\r\nBUNDLE = Path(os.environ[\"NEGATIVE_CONDITIONING_POLICY_BUNDLE_PATH\"])\r\nVERIFY_KEY = os.environ[\"NEGATIVE_CONDITIONING_POLICY_VERIFY_KEY\"]\r\nREQUIRED = {\r\n    \"schema_version\", \"policy_version\", \"model_artifact_sha256\",\r\n    \"tokenizer_artifact_sha256\", \"mandatory_negative_terms\",\r\n    \"maximum_user_negative_bytes\", \"issued_at\", \"expires_at\",\r\n}\r\n\r\n\r\ndef no_duplicate_keys(pairs: list[tuple[str, object]]) -&gt; dict:\r\n    value = {}\r\n    for key, item in pairs:\r\n        if key in value:\r\n            raise ValueError(f\"duplicate policy key: {key}\")\r\n        value[key] = item\r\n    return value\r\n\r\n\r\ndef reject_nonfinite(value: str):\r\n    raise ValueError(f\"non-finite policy number: {value}\")\r\n\r\n\r\ndef strict_json(raw: bytes) -&gt; dict:\r\n    value = json.loads(\r\n        raw.decode(\"utf-8\", errors=\"strict\"),\r\n        object_pairs_hook=no_duplicate_keys,\r\n        parse_constant=reject_nonfinite,\r\n    )\r\n    if not isinstance(value, dict):\r\n        raise ValueError(\"policy root must be an object\")\r\n    return value\r\n\r\n\r\ndef timestamp(value: object) -&gt; datetime:\r\n    if not isinstance(value, str):\r\n        raise ValueError(\"policy timestamp is absent\")\r\n    parsed = datetime.fromisoformat(value.replace(\"Z\", \"+00:00\"))\r\n    if parsed.tzinfo is None:\r\n        raise ValueError(\"policy timestamp lacks timezone\")\r\n    return parsed.astimezone(timezone.utc)\r\n\r\n\r\ndef load_policy(model_sha256: str, tokenizer_sha256: str) -&gt; tuple[dict, str]:\r\n    raw = POLICY.read_bytes()\r\n    snapshot: Path | None = None\r\n    try:\r\n        with tempfile.NamedTemporaryFile(\r\n            prefix=\"h010-policy-\", suffix=\".json\", delete=False\r\n        ) as handle:\r\n            handle.write(raw)\r\n            handle.flush()\r\n            os.fsync(handle.fileno())\r\n            snapshot = Path(handle.name)\r\n        subprocess.run(\r\n            [\r\n                \"cosign\", \"verify-blob\", \"--key\", VERIFY_KEY,\r\n                \"--bundle\", str(BUNDLE), str(snapshot),\r\n            ],\r\n            check=True, capture_output=True, text=True, timeout=SAFETY_CONDITIONING_POLICY_VERIFY_TIMEOUT_SECONDS,\r\n        )\r\n    finally:\r\n        if snapshot is not None:\r\n            snapshot.unlink(missing_ok=True)\r\n    policy = strict_json(raw)\r\n    if (\r\n        not isinstance(policy, dict)\r\n        or set(policy) != REQUIRED\r\n        or policy[\"schema_version\"] != \"aidefend.negative-conditioning.v1\"\r\n        or policy[\"model_artifact_sha256\"] != model_sha256\r\n        or policy[\"tokenizer_artifact_sha256\"] != tokenizer_sha256\r\n        or not isinstance(policy[\"policy_version\"], str)\r\n        or not policy[\"policy_version\"]\r\n    ):\r\n        raise ValueError(\"conditioning policy schema or artifact binding differs\")\r\n    terms = policy[\"mandatory_negative_terms\"]\r\n    if (\r\n        not isinstance(terms, list)\r\n        or not terms\r\n        or terms != list(dict.fromkeys(terms))\r\n        or any(not isinstance(term, str) or not term.strip() for term in terms)\r\n    ):\r\n        raise ValueError(\"mandatory terms are empty, duplicated, or invalid\")\r\n    limit = policy[\"maximum_user_negative_bytes\"]\r\n    if isinstance(limit, bool) or not isinstance(limit, int) or limit &lt; 0:\r\n        raise ValueError(\"user-negative byte limit is invalid\")\r\n    now = datetime.now(timezone.utc)\r\n    issued, expires = timestamp(policy[\"issued_at\"]), timestamp(policy[\"expires_at\"])\r\n    if issued &gt; now or expires &lt;= issued or now &gt;= expires:\r\n        raise ValueError(\"conditioning policy is not currently valid\")\r\n    return policy, hashlib.sha256(raw).hexdigest()\r\n\r\n\r\ndef compose_negative_conditioning(\r\n    tokenizer: Any,\r\n    user_negative_prompt: str | None,\r\n    request_id: str,\r\n    model_sha256: str,\r\n    tokenizer_sha256: str,\r\n) -&gt; tuple[str, dict]:\r\n    if not request_id:\r\n        raise ValueError(\"request ID is absent\")\r\n    policy, policy_sha256 = load_policy(model_sha256, tokenizer_sha256)\r\n    user_text = unicodedata.normalize(\"NFKC\", user_negative_prompt or \"\").strip()\r\n    if len(user_text.encode(\"utf-8\")) &gt; policy[\"maximum_user_negative_bytes\"]:\r\n        raise ValueError(\"user negative prompt exceeds signed byte budget\")\r\n    mandatory = \", \".join(\r\n        unicodedata.normalize(\"NFKC\", term).strip()\r\n        for term in policy[\"mandatory_negative_terms\"]\r\n    )\r\n    final_prompt = mandatory if not user_text else mandatory + \", \" + user_text\r\n    encoded = tokenizer(\r\n        final_prompt,\r\n        add_special_tokens=True,\r\n        truncation=False,\r\n        return_attention_mask=False,\r\n    )[\"input_ids\"]\r\n    maximum = getattr(tokenizer, \"model_max_length\", None)\r\n    if isinstance(maximum, bool) or not isinstance(maximum, int) or maximum &lt; 1:\r\n        raise ValueError(\"tokenizer maximum length is unavailable\")\r\n    if len(encoded) &gt; maximum:\r\n        raise ValueError(\"effective negative conditioning would be truncated\")\r\n    receipt = {\r\n        \"schema_version\": \"aidefend.negative-conditioning-receipt.v1\",\r\n        \"request_id\": request_id,\r\n        \"model_artifact_sha256\": model_sha256,\r\n        \"tokenizer_artifact_sha256\": tokenizer_sha256,\r\n        \"policy_version\": policy[\"policy_version\"],\r\n        \"policy_sha256\": policy_sha256,\r\n        \"mandatory_conditioning_sha256\": hashlib.sha256(\r\n            mandatory.encode(\"utf-8\")\r\n        ).hexdigest(),\r\n        \"effective_conditioning_sha256\": hashlib.sha256(\r\n            final_prompt.encode(\"utf-8\")\r\n        ).hexdigest(),\r\n        \"effective_token_count\": len(encoded),\r\n        \"applied_at\": datetime.now(timezone.utc).isoformat(),\r\n    }\r\n    return final_prompt, receipt\r\n</code></pre><h5>Integration, evidence, and outcomes</h5><p>The last trusted sampler wrapper calls this function and passes only the returned string as <code>negative_prompt</code>. Retain the signed policy and bundle, exact model/tokenizer digests, endpoint population, receipt, sampler request correlation, and effective prompt digest in an append-only store; protect raw user text under the applicable data policy. An independent test uses no user prompt, an adversarial user prompt, Unicode variants, the maximum allowed size, an oversize value, wrong artifact bindings, an expired policy, and a token-overflow case, then reads back the sampler arguments.</p><p><strong>Action:</strong> Place the composer immediately before the sampler, keep mandatory conditioning first, and gate the release on independent argument readback rather than a self-reported flag.</p>"
                 },
                 {
                     "id": "AID-H-010-G004",
-                    "implementation": "Implement alternative guidance formulations that are inherently more robust (e.g. Dynamic CFG / decaying guidance).",
-                    "howTo": "<p>Use this control for a diffusion release that exposes a documented public guider component. The example uses the public Hugging Face Diffusers <code>ClassifierFreeGuidance</code> interface with policy-owned <code>start</code>, <code>stop</code>, scale, and rescale values; it does not mutate private pipeline attributes. Pin and validate the tested library version. A pipeline with no supported step-bounded guider is <code>NOT_APPLICABLE</code>, not silently patched with an unstable hook.</p><h5>Load a signed guider policy and apply it through the public component API</h5><pre><code class=\"language-python\"># File: serving/configure_cfg_guider.py\r\n# Pin the exact tested Diffusers release in the deployment lock file.\r\nfrom __future__ import annotations\r\n\r\nimport hashlib\r\nimport json\r\nimport math\r\nimport os\r\nimport subprocess\r\nimport tempfile\r\nfrom datetime import datetime, timezone\r\nfrom importlib.metadata import version\r\nfrom pathlib import Path\r\nfrom typing import Any\r\n\r\nfrom diffusers import ClassifierFreeGuidance\r\n\r\ndef _required_positive_seconds(name: str) -&gt; float:\r\n    value = float(os.environ[name])\r\n    if not math.isfinite(value) or value &lt;= 0:\r\n        raise RuntimeError(f\"{name} must be a finite positive number of seconds\")\r\n    return value\r\n\r\nROBUST_GUIDANCE_POLICY_VERIFY_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H010_ROBUST_GUIDANCE_POLICY_VERIFY_TIMEOUT_SECONDS\")\r\n\r\n\r\nPOLICY = Path(os.environ[\"CFG_GUIDER_POLICY_PATH\"])\r\nBUNDLE = Path(os.environ[\"CFG_GUIDER_POLICY_BUNDLE_PATH\"])\r\nVERIFY_KEY = os.environ[\"CFG_GUIDER_POLICY_VERIFY_KEY\"]\r\nREQUIRED = {\r\n    \"schema_version\", \"policy_version\", \"diffusers_version\",\r\n    \"pipeline_config_sha256\", \"model_artifact_sha256\",\r\n    \"guidance_scale\", \"guidance_rescale\", \"start\", \"stop\",\r\n    \"issued_at\", \"expires_at\",\r\n}\r\n\r\n\r\ndef no_duplicate_keys(pairs: list[tuple[str, object]]) -&gt; dict:\r\n    value = {}\r\n    for key, item in pairs:\r\n        if key in value:\r\n            raise ValueError(f\"duplicate policy key: {key}\")\r\n        value[key] = item\r\n    return value\r\n\r\n\r\ndef reject_nonfinite(value: str):\r\n    raise ValueError(f\"non-finite policy number: {value}\")\r\n\r\n\r\ndef strict_json(raw: bytes) -&gt; dict:\r\n    value = json.loads(\r\n        raw.decode(\"utf-8\", errors=\"strict\"),\r\n        object_pairs_hook=no_duplicate_keys,\r\n        parse_constant=reject_nonfinite,\r\n    )\r\n    if not isinstance(value, dict):\r\n        raise ValueError(\"policy root must be an object\")\r\n    return value\r\n\r\n\r\ndef timestamp(value: object) -&gt; datetime:\r\n    if not isinstance(value, str):\r\n        raise ValueError(\"policy timestamp is absent\")\r\n    parsed = datetime.fromisoformat(value.replace(\"Z\", \"+00:00\"))\r\n    if parsed.tzinfo is None:\r\n        raise ValueError(\"policy timestamp lacks timezone\")\r\n    return parsed.astimezone(timezone.utc)\r\n\r\n\r\ndef load_policy(\r\n    pipeline_config_sha256: str,\r\n    model_artifact_sha256: str,\r\n) -&gt; tuple[dict, str]:\r\n    raw = POLICY.read_bytes()\r\n    snapshot: Path | None = None\r\n    try:\r\n        with tempfile.NamedTemporaryFile(\r\n            prefix=\"h010-policy-\", suffix=\".json\", delete=False\r\n        ) as handle:\r\n            handle.write(raw)\r\n            handle.flush()\r\n            os.fsync(handle.fileno())\r\n            snapshot = Path(handle.name)\r\n        subprocess.run(\r\n            [\r\n                \"cosign\", \"verify-blob\", \"--key\", VERIFY_KEY,\r\n                \"--bundle\", str(BUNDLE), str(snapshot),\r\n            ],\r\n            check=True, capture_output=True, text=True, timeout=ROBUST_GUIDANCE_POLICY_VERIFY_TIMEOUT_SECONDS,\r\n        )\r\n    finally:\r\n        if snapshot is not None:\r\n            snapshot.unlink(missing_ok=True)\r\n    policy = strict_json(raw)\r\n    if (\r\n        not isinstance(policy, dict)\r\n        or set(policy) != REQUIRED\r\n        or policy[\"schema_version\"] != \"aidefend.cfg-guider-policy.v1\"\r\n        or policy[\"pipeline_config_sha256\"] != pipeline_config_sha256\r\n        or policy[\"model_artifact_sha256\"] != model_artifact_sha256\r\n        or policy[\"diffusers_version\"] != version(\"diffusers\")\r\n    ):\r\n        raise ValueError(\"guider policy schema, artifact, or library binding differs\")\r\n    for field in (\"guidance_scale\", \"guidance_rescale\", \"start\", \"stop\"):\r\n        value = policy[field]\r\n        if (\r\n            isinstance(value, bool)\r\n            or not isinstance(value, (int, float))\r\n            or not math.isfinite(float(value))\r\n        ):\r\n            raise ValueError(f\"{field} is invalid\")\r\n        policy[field] = float(value)\r\n    if (\r\n        policy[\"guidance_scale\"] &lt;= 0\r\n        or not 0.0 &lt;= policy[\"guidance_rescale\"] &lt;= 1.0\r\n        or not 0.0 &lt;= policy[\"start\"] &lt; policy[\"stop\"] &lt;= 1.0\r\n    ):\r\n        raise ValueError(\"guider interval or scale is invalid\")\r\n    now = datetime.now(timezone.utc)\r\n    issued, expires = timestamp(policy[\"issued_at\"]), timestamp(policy[\"expires_at\"])\r\n    if issued &gt; now or expires &lt;= issued or now &gt;= expires:\r\n        raise ValueError(\"guider policy is not currently valid\")\r\n    if not isinstance(policy[\"policy_version\"], str) or not policy[\"policy_version\"]:\r\n        raise ValueError(\"policy version is absent\")\r\n    return policy, hashlib.sha256(raw).hexdigest()\r\n\r\n\r\nclass UnsupportedGuiderPipelineError(RuntimeError):\r\n    \"\"\"The selected immutable pipeline adapter cannot enforce and read back a guider.\"\"\"\r\n\r\n\r\ndef configure_guider(\r\n    pipeline: Any,\r\n    pipeline_config_sha256: str,\r\n    model_artifact_sha256: str,\r\n) -&gt; dict:\r\n    if not callable(getattr(pipeline, \"update_components\", None)):\r\n        raise UnsupportedGuiderPipelineError(\"pipeline has no supported guider component API\")\r\n    if not callable(getattr(pipeline, \"get_component_spec\", None)):\r\n        raise UnsupportedGuiderPipelineError(\"pipeline has no guider readback API\")\r\n    policy, policy_sha256 = load_policy(\r\n        pipeline_config_sha256, model_artifact_sha256\r\n    )\r\n    guider = ClassifierFreeGuidance(\r\n        guidance_scale=policy[\"guidance_scale\"],\r\n        guidance_rescale=policy[\"guidance_rescale\"],\r\n        start=policy[\"start\"],\r\n        stop=policy[\"stop\"],\r\n    )\r\n    pipeline.update_components(guider=guider)\r\n    spec = pipeline.get_component_spec(\"guider\")\r\n    effective = dict(spec.config)\r\n    expected = {\r\n        field: policy[field]\r\n        for field in (\"guidance_scale\", \"guidance_rescale\", \"start\", \"stop\")\r\n    }\r\n    if any(float(effective.get(field, -1)) != value for field, value in expected.items()):\r\n        raise RuntimeError(\"effective guider differs from signed policy\")\r\n    return {\r\n        \"schema_version\": \"aidefend.cfg-guider-receipt.v1\",\r\n        \"policy_version\": policy[\"policy_version\"],\r\n        \"policy_sha256\": policy_sha256,\r\n        \"diffusers_version\": version(\"diffusers\"),\r\n        \"pipeline_config_sha256\": pipeline_config_sha256,\r\n        \"model_artifact_sha256\": model_artifact_sha256,\r\n        \"guider_class\": type(guider).__name__,\r\n        \"effective_config\": expected,\r\n        \"configured_at\": datetime.now(timezone.utc).isoformat(),\r\n    }\r\n</code></pre><h5>Evaluation dependency, evidence, and outcomes</h5><p>H-010 owns the effective guider configuration and readback. Use the signed scenario population and promotion evidence governed by <code>AID-H-007.004</code> to compare the candidate schedule with the approved baseline for the exact model release; that upstream PASS does not prove this runtime loaded it. Retain the policy/bundle, dependency lock, pipeline/model/config digests, component-spec readback, receipt, scenario manifest, run outputs, and evaluator identity in immutable storage.</p><p><strong>Action:</strong> Configure only the public guider component, pin the tested runtime, and block promotion until independent runtime readback and evaluation both pass.</p>"
+                    "implementation": "Use a policy-fixed guidance schedule only after evaluating it for the deployed model and pipeline version.",
+                    "howTo": "<p>Use this control for a diffusion release that exposes a documented public guider component. The example uses the public Hugging Face Diffusers <code>ClassifierFreeGuidance</code> interface with policy-owned <code>start</code>, <code>stop</code>, scale, and rescale values; it does not mutate private pipeline attributes. Pin and validate the tested library version. A pipeline with no supported step-bounded guider is <code>NOT_APPLICABLE</code>, not silently patched with an unstable hook.</p><h5>Load a signed guider policy and apply it through the public component API</h5><pre><code class=\"language-python\"># File: serving/configure_cfg_guider.py\r\n# Pin the exact tested Diffusers release in the deployment lock file.\r\nfrom __future__ import annotations\r\n\r\nimport hashlib\r\nimport json\r\nimport math\r\nimport os\r\nimport subprocess\r\nimport tempfile\r\nfrom datetime import datetime, timezone\r\nfrom importlib.metadata import version\r\nfrom pathlib import Path\r\nfrom typing import Any\r\n\r\nfrom diffusers import ClassifierFreeGuidance\r\n\r\ndef _required_positive_seconds(name: str) -&gt; float:\r\n    value = float(os.environ[name])\r\n    if not math.isfinite(value) or value &lt;= 0:\r\n        raise RuntimeError(f\"{name} must be a finite positive number of seconds\")\r\n    return value\r\n\r\nEVALUATED_GUIDANCE_POLICY_VERIFY_TIMEOUT_SECONDS = _required_positive_seconds(\"VERIFIED_H010_EVALUATED_GUIDANCE_POLICY_VERIFY_TIMEOUT_SECONDS\")\r\n\r\n\r\nPOLICY = Path(os.environ[\"CFG_GUIDER_POLICY_PATH\"])\r\nBUNDLE = Path(os.environ[\"CFG_GUIDER_POLICY_BUNDLE_PATH\"])\r\nVERIFY_KEY = os.environ[\"CFG_GUIDER_POLICY_VERIFY_KEY\"]\r\nREQUIRED = {\r\n    \"schema_version\", \"policy_version\", \"diffusers_version\",\r\n    \"pipeline_config_sha256\", \"model_artifact_sha256\",\r\n    \"guidance_scale\", \"guidance_rescale\", \"start\", \"stop\",\r\n    \"issued_at\", \"expires_at\",\r\n}\r\n\r\n\r\ndef no_duplicate_keys(pairs: list[tuple[str, object]]) -&gt; dict:\r\n    value = {}\r\n    for key, item in pairs:\r\n        if key in value:\r\n            raise ValueError(f\"duplicate policy key: {key}\")\r\n        value[key] = item\r\n    return value\r\n\r\n\r\ndef reject_nonfinite(value: str):\r\n    raise ValueError(f\"non-finite policy number: {value}\")\r\n\r\n\r\ndef strict_json(raw: bytes) -&gt; dict:\r\n    value = json.loads(\r\n        raw.decode(\"utf-8\", errors=\"strict\"),\r\n        object_pairs_hook=no_duplicate_keys,\r\n        parse_constant=reject_nonfinite,\r\n    )\r\n    if not isinstance(value, dict):\r\n        raise ValueError(\"policy root must be an object\")\r\n    return value\r\n\r\n\r\ndef timestamp(value: object) -&gt; datetime:\r\n    if not isinstance(value, str):\r\n        raise ValueError(\"policy timestamp is absent\")\r\n    parsed = datetime.fromisoformat(value.replace(\"Z\", \"+00:00\"))\r\n    if parsed.tzinfo is None:\r\n        raise ValueError(\"policy timestamp lacks timezone\")\r\n    return parsed.astimezone(timezone.utc)\r\n\r\n\r\ndef load_policy(\r\n    pipeline_config_sha256: str,\r\n    model_artifact_sha256: str,\r\n) -&gt; tuple[dict, str]:\r\n    raw = POLICY.read_bytes()\r\n    snapshot: Path | None = None\r\n    try:\r\n        with tempfile.NamedTemporaryFile(\r\n            prefix=\"h010-policy-\", suffix=\".json\", delete=False\r\n        ) as handle:\r\n            handle.write(raw)\r\n            handle.flush()\r\n            os.fsync(handle.fileno())\r\n            snapshot = Path(handle.name)\r\n        subprocess.run(\r\n            [\r\n                \"cosign\", \"verify-blob\", \"--key\", VERIFY_KEY,\r\n                \"--bundle\", str(BUNDLE), str(snapshot),\r\n            ],\r\n            check=True, capture_output=True, text=True, timeout=EVALUATED_GUIDANCE_POLICY_VERIFY_TIMEOUT_SECONDS,\r\n        )\r\n    finally:\r\n        if snapshot is not None:\r\n            snapshot.unlink(missing_ok=True)\r\n    policy = strict_json(raw)\r\n    if (\r\n        not isinstance(policy, dict)\r\n        or set(policy) != REQUIRED\r\n        or policy[\"schema_version\"] != \"aidefend.cfg-guider-policy.v1\"\r\n        or policy[\"pipeline_config_sha256\"] != pipeline_config_sha256\r\n        or policy[\"model_artifact_sha256\"] != model_artifact_sha256\r\n        or policy[\"diffusers_version\"] != version(\"diffusers\")\r\n    ):\r\n        raise ValueError(\"guider policy schema, artifact, or library binding differs\")\r\n    for field in (\"guidance_scale\", \"guidance_rescale\", \"start\", \"stop\"):\r\n        value = policy[field]\r\n        if (\r\n            isinstance(value, bool)\r\n            or not isinstance(value, (int, float))\r\n            or not math.isfinite(float(value))\r\n        ):\r\n            raise ValueError(f\"{field} is invalid\")\r\n        policy[field] = float(value)\r\n    if (\r\n        policy[\"guidance_scale\"] &lt;= 0\r\n        or not 0.0 &lt;= policy[\"guidance_rescale\"] &lt;= 1.0\r\n        or not 0.0 &lt;= policy[\"start\"] &lt; policy[\"stop\"] &lt;= 1.0\r\n    ):\r\n        raise ValueError(\"guider interval or scale is invalid\")\r\n    now = datetime.now(timezone.utc)\r\n    issued, expires = timestamp(policy[\"issued_at\"]), timestamp(policy[\"expires_at\"])\r\n    if issued &gt; now or expires &lt;= issued or now &gt;= expires:\r\n        raise ValueError(\"guider policy is not currently valid\")\r\n    if not isinstance(policy[\"policy_version\"], str) or not policy[\"policy_version\"]:\r\n        raise ValueError(\"policy version is absent\")\r\n    return policy, hashlib.sha256(raw).hexdigest()\r\n\r\n\r\nclass UnsupportedGuiderPipelineError(RuntimeError):\r\n    \"\"\"The selected immutable pipeline adapter cannot enforce and read back a guider.\"\"\"\r\n\r\n\r\ndef configure_guider(\r\n    pipeline: Any,\r\n    pipeline_config_sha256: str,\r\n    model_artifact_sha256: str,\r\n) -&gt; dict:\r\n    if not callable(getattr(pipeline, \"update_components\", None)):\r\n        raise UnsupportedGuiderPipelineError(\"pipeline has no supported guider component API\")\r\n    if not callable(getattr(pipeline, \"get_component_spec\", None)):\r\n        raise UnsupportedGuiderPipelineError(\"pipeline has no guider readback API\")\r\n    policy, policy_sha256 = load_policy(\r\n        pipeline_config_sha256, model_artifact_sha256\r\n    )\r\n    guider = ClassifierFreeGuidance(\r\n        guidance_scale=policy[\"guidance_scale\"],\r\n        guidance_rescale=policy[\"guidance_rescale\"],\r\n        start=policy[\"start\"],\r\n        stop=policy[\"stop\"],\r\n    )\r\n    pipeline.update_components(guider=guider)\r\n    spec = pipeline.get_component_spec(\"guider\")\r\n    effective = dict(spec.config)\r\n    expected = {\r\n        field: policy[field]\r\n        for field in (\"guidance_scale\", \"guidance_rescale\", \"start\", \"stop\")\r\n    }\r\n    if any(float(effective.get(field, -1)) != value for field, value in expected.items()):\r\n        raise RuntimeError(\"effective guider differs from signed policy\")\r\n    return {\r\n        \"schema_version\": \"aidefend.cfg-guider-receipt.v1\",\r\n        \"policy_version\": policy[\"policy_version\"],\r\n        \"policy_sha256\": policy_sha256,\r\n        \"diffusers_version\": version(\"diffusers\"),\r\n        \"pipeline_config_sha256\": pipeline_config_sha256,\r\n        \"model_artifact_sha256\": model_artifact_sha256,\r\n        \"guider_class\": type(guider).__name__,\r\n        \"effective_config\": expected,\r\n        \"configured_at\": datetime.now(timezone.utc).isoformat(),\r\n    }\r\n</code></pre><h5>Evaluation dependency, evidence, and outcomes</h5><p>H-010 owns the effective guider configuration and readback. Use the signed scenario population and promotion evidence governed by <code>AID-H-007.004</code> to compare the candidate schedule with the approved baseline for the exact model release; that upstream PASS does not prove this runtime loaded it. Retain the policy/bundle, dependency lock, pipeline/model/config digests, component-spec readback, receipt, scenario manifest, run outputs, and evaluator identity in immutable storage.</p><p><strong>Action:</strong> Configure only the public guider component, pin the tested runtime, and block promotion until independent runtime readback and evaluation both pass.</p><p>A changed schedule is a deployment option, not a security guarantee. Compare it against the current configuration on realistic abuse cases, benign image utility and resource use; do not infer safety from prompt adherence or lower guidance alone. See the <a href=\"https://huggingface.co/docs/diffusers/using-diffusers/weighted_prompts\">Diffusers model-specific guidance semantics</a>.</p>"
                 }
             ],
             "toolsOpenSource": [
                 "Hugging Face Diffusers",
                 "Pydantic",
-                "HTTPX",
-                "PyJWT",
-                "Cosign",
-                "pytest"
+                "HTTPX (bounded risk-service lookup for adaptive guidance; sampler-side enforcement required)",
+                "PyJWT (verify signed guidance-risk or policy claims; guidance enforcement remains server-side)",
+                "Cosign (verify signed guidance policies before sampler configuration; guidance enforcement required)",
+                "pytest (guidance-policy and adversarial-generation regression tests; sampler enforcement external)"
             ],
             "defendsAgainst": [
                 {
                     "framework": "MITRE ATLAS",
                     "items": [
-                        "AML.T0015 Evade AI Model"
+                        "AML.T0029 Denial of AI Service",
+                        "AML.T0034.001 Cost Harvesting: Resource-Intensive Queries"
                     ]
                 },
                 {
@@ -8125,8 +8192,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                 {
                     "framework": "NIST Adversarial Machine Learning 2025",
                     "items": [
-                        "NISTAML.022 Evasion (CFG hardening resists adversarial evasion of content filters)",
-                        "NISTAML.027 Misaligned Outputs (CFG hardening prevents misaligned image generation)"
+                        "N/A"
                     ]
                 },
                 {
@@ -8134,22 +8200,19 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "items": [
                         "AISubtech-12.1.1 Parameter Manipulation",
                         "AISubtech-13.1.1 Compute Exhaustion",
-                        "AITech-12.1 Tool Exploitation",
-                        "AITech-13.1 Disruption of Availability",
-                        "AITech-15.1 Harmful Content",
-                        "AITech-9.2 Detection Evasion"
+                        "AITech-13.1 Disruption of Availability"
                     ]
                 },
                 {
                     "framework": "Google Secure AI Framework 2.0 - Risks",
                     "items": [
-                        "MEV: Model Evasion"
+                        "DMS: Denial of ML Service"
                     ]
                 },
                 {
                     "framework": "Databricks AI Security Framework 3.0",
                     "items": [
-                        "Model Serving - Inference requests 9.3: Model breakout (CFG exploitation can force model outside intended behavior)"
+                        "Model Serving - Inference requests 9.7: Denial of Service (DoS) (Server-side inference-step bounds reject excessive per-request sampling work)"
                     ]
                 }
             ]
@@ -8281,9 +8344,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ],
                     "toolsOpenSource": [
                         "Polars",
-                        "PyTorch",
+                        "PyTorch (graph-tensor filtering and provenance-weight processing; anomaly and eligibility rules required)",
                         "PyTorch Geometric",
-                        "Cosign",
+                        "Cosign (verify signed graph-source registries and sanitized snapshot digests)",
                         "DeepRobust",
                         "NetworkX (graph structural validation and repair transformations)"
                     ],
@@ -8403,7 +8466,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "toolsOpenSource": [
                         "PyTorch",
                         "PyTorch Geometric",
-                        "Cosign",
+                        "Cosign (bind robust-GNN candidate and validation evidence; robust training and independent replay required)",
                         "DeepRobust"
                     ],
                     "defendsAgainst": [
@@ -8512,7 +8575,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         }
                     ],
                     "toolsOpenSource": [
-                        "NumPy",
+                        "NumPy (bounded perturbation construction and certification-result analysis; certification algorithm required)",
                         "PyTorch",
                         "PyTorch Geometric",
                         "Cosign"
@@ -8705,7 +8768,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ],
                     "toolsOpenSource": [
                         "Gymnasium",
-                        "NumPy",
+                        "NumPy (reward computation and numerical contract checks; reward design and gaming tests required)",
                         "Stable-Baselines3"
                     ],
                     "defendsAgainst": [
@@ -8798,11 +8861,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ],
                     "toolsOpenSource": [
                         "imitation",
-                        "Gymnasium",
-                        "PyTorch",
-                        "Stable-Baselines3",
-                        "Label Studio",
-                        "Hugging Face TRL (RewardTrainer execution; independent split and calibration gates required)"
+                        "PyTorch (reward-model scoring and calibration computation; data-integrity and holdout checks required)",
+                        "Label Studio (held-out human preference labels for reward calibration; integrity and admission checks required)",
+                        "Hugging Face TRL (RewardTrainer execution; independent split and calibration gates required)",
+                        "RewardBench (allenai/reward-bench; held-out RewardBench 2 sets for classifier reward models and generative judges)",
+                        "cleanlab (multiannotator annotator-quality scoring for preference labels)"
                     ],
                     "defendsAgainst": [
                         {
@@ -9004,7 +9067,6 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Istio",
                         "PyJWT",
                         "pyca/cryptography",
-                        "Cosign",
                         "SPIRE (workload identity issuance; mTLS dataplane required)"
                     ],
                     "defendsAgainst": [
@@ -9110,14 +9172,12 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         }
                     ],
                     "toolsOpenSource": [
-                        "Hugging Face TRL",
-                        "OpenRLHF",
-                        "verl",
                         "EleutherAI lm-evaluation-harness",
                         "Inspect AI",
-                        "python-jsonschema",
-                        "Cosign",
-                        "RewardBench"
+                        "python-jsonschema (reward-contract schema validation; independent scoring and gaming detection required)",
+                        "Cosign (verify signed reward contracts and promotion evidence; independent gaming evaluation required)",
+                        "RewardBench",
+                        "ImpossibleBench (Inspect AI test-gaming probes for coding agents)"
                     ],
                     "defendsAgainst": [
                         {
@@ -9309,11 +9369,12 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Hugging Face Transformers",
                         "c2patool",
                         "c2pa-rs",
-                        "Cosign",
-                        "PyTorch",
-                        "torchvision",
-                        "Pillow",
-                        "TrustMark"
+                        "Cosign (verify signed watermark/provenance policies; watermarking and C2PA credential tooling required)",
+                        "PyTorch (tensor runtime for configured watermark encoders and detectors; watermark algorithm required)",
+                        "torchvision (image-transformation tests of watermark recovery; encoder and detector required)",
+                        "Pillow (image decoding/re-encoding for watermark robustness tests; encoder and detector required)",
+                        "TrustMark",
+                        "c2pa-python (Python SDK for signing and validating C2PA manifests)"
                     ],
                     "toolsSourceAvailable": [
                         "VideoSeal (MIT; open-weight)",
@@ -9321,7 +9382,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ],
                     "toolsCommercial": [
                         "Adobe Firefly Content Credentials",
-                        "Google Vertex AI Imagen SynthID"
+                        "Gemini Enterprise Agent Platform Imagen SynthID watermarking (addWatermark on by default)"
                     ],
                     "defendsAgainst": [
                         {
@@ -9419,7 +9480,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "toolsOpenSource": [
                         "Cosign",
                         "safetensors",
-                        "PyTorch",
+                        "PyTorch (tensor-state extraction for white-box fingerprinting; signed reference verification required)",
                         "Sigstore model-signing (complete model artifact-tree signing and verification)"
                     ],
                     "defendsAgainst": [
@@ -9519,7 +9580,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ],
                     "toolsOpenSource": [
                         "Cosign",
-                        "HTTPX",
+                        "HTTPX (bounded probe requests to deployed models for behavioral ownership checks)",
                         "SciPy"
                     ],
                     "defendsAgainst": [
@@ -9616,11 +9677,12 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
             "toolsOpenSource": [
                 "scikit-learn",
                 "PyTorch",
-                "TensorFlow"
+                "TensorFlow",
+                "Adversarial Robustness Toolbox (adaptive and query-based ensemble robustness replay)"
             ],
             "toolsCommercial": [
                 "Amazon SageMaker Autopilot",
-                "Vertex AI AutoML Tabular",
+                "Gemini Enterprise Agent Platform AutoML Tabular",
                 "DataRobot AutoML",
                 "H2O Driverless AI"
             ],
@@ -9732,11 +9794,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                 "auto_LiRPA",
                 "alpha-beta-CROWN",
                 "Adversarial Robustness Toolbox (ART)",
-                "PyTorch",
+                "PyTorch (model and tensor runtime for configured robustness-certification algorithms)",
                 "Marabou"
             ],
             "toolsCommercial": [
-                "MATLAB Deep Learning Toolbox (verifyNetworkRobustness with alpha-beta-CROWN)"
+                "MATLAB Deep Learning Toolbox (verifyNetworkRobustness; alpha-beta-CROWN through the Deep Learning Toolbox Interface for alpha-beta-CROWN Verifier add-on, R2026a or later)"
             ],
             "defendsAgainst": [
                 {
@@ -9920,22 +9982,23 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "toolsOpenSource": [
                         "Jinja2",
                         "Pydantic",
-                        "Open Policy Agent (OPA)",
-                        "Conftest",
+                        "Open Policy Agent (prompt-assembly policy decisions; serializer enforces instruction/data separation)",
+                        "Conftest (CI checks for prompt-assembly policies and trusted-role configuration)",
                         "LangChain",
                         "LlamaIndex",
                         "promptfoo (prompt-structure and instruction/data-separation regression testing; runtime separation and authority enforcement remain external)"
                     ],
                     "toolsCommercial": [
-                        "AWS AppConfig",
-                        "Azure App Configuration",
-                        "HashiCorp Consul Enterprise",
-                        "HCP Consul Dedicated",
-                        "LaunchDarkly",
-                        "Harness Feature Management & Experimentation (FME)",
-                        "AWS Key Management Service (AWS KMS)",
-                        "Azure Key Vault",
-                        "Google Cloud Key Management Service"
+                        "AWS AppConfig (versioned prompt-assembly configuration; application enforces instruction/data separation)",
+                        "Azure App Configuration (versioned prompt-assembly configuration; application enforces instruction/data separation)",
+                        "HashiCorp Consul Enterprise (versioned prompt-assembly configuration; application enforces instruction/data separation)",
+                        "LaunchDarkly (prompt-mode and approved-template configuration; application enforces separation)",
+                        "Harness Feature Management & Experimentation (prompt-mode and approved-template configuration; application enforces separation)",
+                        "AWS Key Management Service (sign or verify approved prompt-assembly policies; runtime separation external)",
+                        "Azure Key Vault (sign or verify approved prompt-assembly policies; runtime separation external)",
+                        "Google Cloud Key Management Service (sign or verify approved prompt-assembly policies; runtime separation external)",
+                        "Microsoft Foundry Prompt Shields Spotlighting (preview; lower-trust document encoding for supported Chat Completions)",
+                        "Fireworks AI safe tokenization (opt-in safe_tokenization request flag; user text cannot be encoded as chat-template control tokens)"
                     ],
                     "defendsAgainst": [
                         {
@@ -10075,7 +10138,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Hugging Face TRL",
                         "Axolotl (SFT and preference-training execution for hierarchy-aware datasets; injection-resistance data and validation remain control-owned)",
                         "PyTorch",
-                        "Cosign"
+                        "Cosign (verify alignment-training policy, corpus and candidate artifacts; training and attack replay required)",
+                        "OpenAI IH-Challenge (instruction-hierarchy training dataset with runnable Python graders)"
                     ],
                     "defendsAgainst": [
                         {
@@ -10358,21 +10422,23 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "toolsOpenSource": [
                         "LangChain",
                         "LlamaIndex",
-                        "Microsoft AutoGen",
+                        "Microsoft Agent Framework (successor to AutoGen; tool approval_mode always_require pauses before execution and workflow checkpoints persist pending approval requests)",
                         "Temporal",
-                        "RabbitMQ",
+                        "RabbitMQ (durable approval/control-event transport; orchestrator pauses before tool dispatch)",
                         "Valkey",
                         "Redis 8+ (AGPL-3.0)",
-                        "Flagsmith",
-                        "Unleash",
-                        "LangGraph (interrupt and checkpoint substrate; external authorization required)"
+                        "Flagsmith (control-loop pause/continue flags; orchestrator enforces per-action checks)",
+                        "Unleash (control-loop pause/continue flags; orchestrator enforces per-action checks)",
+                        "LangGraph (interrupt and checkpoint substrate; external authorization required)",
+                        "Microsoft Agent Governance Toolkit (public preview; explicit loaded policy required; in-process tool gates and circuit breakers)",
+                        "OpenAI Agents SDK (tool-approval interruptions, serialized run state and turn limits; side-effect idempotency required)"
                     ],
                     "toolsCommercial": [
                         "Temporal Cloud",
-                        "Cortex XSOAR",
-                        "Splunk SOAR",
-                        "LaunchDarkly",
-                        "Harness Feature Management & Experimentation (FME)"
+                        "Cortex XSOAR (human-approval tasks for an agent dispatcher; dispatcher waits before executing the action)",
+                        "Splunk SOAR (human-approval tasks for an agent dispatcher; dispatcher waits before executing the action)",
+                        "LaunchDarkly (control-loop pause/continue flags; orchestrator enforces per-action checks)",
+                        "Harness Feature Management & Experimentation (control-loop pause/continue flags; orchestrator enforces per-action checks)"
                     ],
                     "defendsAgainst": [
                         {
@@ -10491,10 +10557,11 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Pydantic",
                         "python-jsonschema",
                         "FastAPI",
-                        "Flask",
-                        "Microsoft Semantic Kernel",
+                        "Flask (narrow tool endpoints with application-defined validation and allowlists)",
+                        "Microsoft Agent Framework (successor to Semantic Kernel; typed function tools registered per agent)",
                         "Model Context Protocol Python SDK (typed tool registration only; external authorization required)",
-                        "Model Context Protocol TypeScript SDK (typed tool registration only; external authorization required)"
+                        "Model Context Protocol TypeScript SDK (typed tool registration only; external authorization required)",
+                        "Docker MCP Gateway (profile tool allowlists; compatible Docker runtime required)"
                     ],
                     "toolsCommercial": [
                         "Kong Gateway Enterprise",
@@ -10619,11 +10686,12 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     },
                     "toolsOpenSource": [
                         "FastAPI",
-                        "Flask",
+                        "Flask (plan-selector/executor endpoints; typed plan validation and dispatch authorization required)",
                         "Open Policy Agent (OPA)",
                         "Pydantic",
                         "LangChain",
-                        "LangGraph"
+                        "LangGraph",
+                        "Cerbos PDP (open-source policy decision point for per-action allow/deny of planned actions)"
                     ],
                     "toolsCommercial": [
                         "Kong Gateway Enterprise",
@@ -10756,14 +10824,14 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     },
                     "toolsOpenSource": [
                         "LangGraph",
-                        "Valkey",
-                        "Redis 8+ (AGPL-3.0)",
-                        "Memcached"
+                        "Valkey (task-scoped transient state store; application prevents cross-task reuse)",
+                        "Redis Open Source 8+ (AGPL-3.0 option; task-scoped transient state store; application prevents cross-task reuse)",
+                        "Memcached (task-scoped transient state store; application prevents cross-task reuse)"
                     ],
                     "toolsCommercial": [
-                        "Amazon ElastiCache",
-                        "Google Cloud Memorystore",
-                        "Azure Managed Redis"
+                        "Amazon ElastiCache (task-scoped transient state store; application prevents cross-task reuse)",
+                        "Google Cloud Memorystore (task-scoped transient state store; application prevents cross-task reuse)",
+                        "Azure Managed Redis (task-scoped transient state store; application prevents cross-task reuse)"
                     ],
                     "defendsAgainst": [
                         {
@@ -10876,16 +10944,17 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                       ]
                     },
                     "toolsOpenSource": [
-                      "pyca/cryptography",
-                      "PyJWT",
-                      "rfc8785 (Python canonical JSON implementation)"
+                        "pyca/cryptography",
+                        "PyJWT",
+                        "rfc8785 (Python canonical JSON implementation)",
+                        "Open Policy Agent (OPA; signed contract bundles and active-revision status)"
                     ],
                     "toolsCommercial": [
                         "AWS Key Management Service (AWS KMS)",
                         "Azure Key Vault",
                         "Google Cloud Key Management Service",
                         "Cerbos Hub",
-                        "Permit.io"
+                        "Permit.io (behavior-contract policy delivery and decisions; contract signing and bound readback required)"
                     ],
                     "defendsAgainst": [
                       {
@@ -10983,14 +11052,14 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "toolsOpenSource": [
                         "SPIRE",
                         "Open Policy Agent (OPA)",
-                        "gRPC",
+                        "gRPC (delegation-token metadata and verifier interceptors; attenuation policy and validation required)",
                         "Istio",
                         "Linkerd",
-                        "Biscuit"
+                        "Eclipse Biscuit (biscuit-auth attenuable tokens with Datalog checks)"
                     ],
                     "toolsCommercial": [
                         "Tetrate Service Bridge",
-                        "Solo.io Gloo Mesh Enterprise"
+                        "Solo Enterprise for Istio (formerly Gloo Mesh Enterprise)"
                     ],
                     "defendsAgainst": [
                         {
@@ -11120,7 +11189,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Istio",
                         "Linkerd",
                         "LangChain",
-                        "LangGraph"
+                        "LangGraph (planner/quarantined-model orchestration; separate processes, credentials and networks required)"
                     ],
                     "toolsCommercial": [
                         "AWS Key Management Service (AWS KMS)",
@@ -11317,7 +11386,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ],
                     "toolsCommercial": [
                         "AWS CloudFormation",
-                        "Amazon Simple Queue Service (Amazon SQS)",
+                        "Amazon Simple Queue Service (retryable resource-cleanup work queue; janitor and lifecycle-state checks required)",
                         "Amazon Route 53",
                         "GitHub Enterprise Cloud",
                         "Cloudflare Zero Trust"
@@ -11348,7 +11417,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "toolsOpenSource": [
                         "PostgreSQL",
                         "Boto3",
-                        "Cosign"
+                        "Cosign (verify signed cleanup plans and resource-lifecycle evidence; resource management external)",
+                        "Cloud Custodian (tag-filtered inventory reconciliation and delayed delete across AWS, Azure and Google Cloud)"
                     ]
                 }
             ]
@@ -11645,12 +11715,13 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "python-jsonschema",
                         "Instructor",
                         "Microsoft TypeChat",
-                        "Zod"
+                        "Zod",
+                        "Pydantic AI (registered function-tool argument validation; custom-schema paths need their own validators)"
                     ],
                     "toolsCommercial": [
-                        "Kong Gateway Enterprise (custom schema/plugin policy required at agent-tool dispatch)",
-                        "Kong Konnect (custom schema/plugin policy required at agent-tool dispatch)",
-                        "Apigee API Management (custom schema policy/extension required for agent-tool dispatch)"
+                        "Kong Gateway Enterprise (Request Validator or OAS Validation plugin on REST-forwarded tool calls; in-process and MCP dispatch paths need their own validation)",
+                        "Kong Konnect (Request Validator or OAS Validation plugin on REST-forwarded tool calls; in-process and MCP dispatch paths need their own validation)",
+                        "Apigee API Management (OASValidation and RegularExpressionProtection policies on REST-forwarded tool calls; in-process and MCP dispatch paths need their own validation)"
                     ]
                 },
                 {
@@ -11791,12 +11862,14 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Casbin",
                         "Cedar",
                         "Cerbos PDP",
-                        "OpenFGA"
+                        "OpenFGA",
+                        "Microsoft Agent Governance Toolkit (public preview; explicit loaded policy required; in-process pre-dispatch policy gate)"
                     ],
                     "toolsCommercial": [
                         "Cerbos Hub",
                         "Permit.io",
-                        "Amazon Verified Permissions"
+                        "Amazon Verified Permissions",
+                        "Policy in Amazon Bedrock AgentCore (Cedar tool-call authorization at AgentCore Gateway; enforce mode required)"
                     ]
                 },
                 {
@@ -11844,7 +11917,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                       ]
                     },
                     "toolsOpenSource": [
-                        "Cosign",
+                        "Cosign (local verification of signed action policies, identities and approval evidence; gate logic required)",
                         "Valkey",
                         "Redis 8+ (AGPL-3.0)",
                         "OpenBao (approval-receipt signing-key custody only; separate approval and validation channel required)"
@@ -11855,7 +11928,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Cisco Duo (step-up identity signal only; separate approval ledger required)",
                         "AWS Key Management Service (AWS KMS)",
                         "HashiCorp Vault Enterprise",
-                        "HCP Vault Dedicated"
+                        "HCP Vault Dedicated",
+                        "Auth0 for AI Agents Asynchronous Authorization (CIBA with Rich Authorization Requests; agent tool calls wait for out-of-band user approval on a separate device before tokens are issued)"
                     ],
                     "defendsAgainst": [
                         {
@@ -11988,7 +12062,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Envoy Proxy (custom ext_authz/policy required at agent-tool dispatch)",
                         "LangChain (orchestration only; custom authorization interceptor required)",
                         "LangGraph (orchestration only; custom authorization interceptor required)",
-                        "Microsoft Semantic Kernel (orchestration only; custom authorization interceptor required)"
+                        "Microsoft Agent Framework (successor to Semantic Kernel; orchestration only; custom authorization middleware required)",
+                        "agentgateway (verified-claim MCP tool authorization; filters tool lists and rejects unauthorized calls)"
                     ],
                     "toolsCommercial": [
                         "AWS Key Management Service (AWS KMS)",
@@ -12000,7 +12075,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "AWS API Gateway (custom dispatcher authorization integration required)",
                         "Azure API Management (custom dispatcher authorization policy required)",
                         "Tetrate Service Bridge (custom dispatcher authorization policy required)",
-                        "Solo.io Gloo Mesh Enterprise (custom dispatcher authorization policy required)"
+                        "Solo Enterprise for Istio (formerly Gloo Mesh Enterprise; custom dispatcher authorization policy required)",
+                        "Policy in Amazon Bedrock AgentCore (caller/tool policies; temporal budgets require trusted session identifiers)"
                     ],
                     "defendsAgainst": [
                         {
@@ -12143,8 +12219,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Envoy Proxy",
                         "Istio",
                         "Cilium",
-                        "Kubernetes",
-                        "LlamaFirewall (agent-action alignment and custom sink-risk scanning; value provenance, taint propagation, and sink authorization remain external)"
+                        "Kubernetes NetworkPolicy (default-deny egress enforced by a NetworkPolicy-capable CNI)"
                     ],
                     "toolsCommercial": [
                         "Palo Alto Networks Next-Generation Firewall",
@@ -12152,7 +12227,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Zscaler Internet Access",
                         "Cloudflare Gateway",
                         "AWS Network Firewall",
-                        "Azure Firewall"
+                        "Azure Firewall",
+                        "Microsoft Purview DLP for Microsoft 365 Copilot and Cowork (sensitivity-label and external-search restrictions)"
                     ],
                     "defendsAgainst": [
                         {
@@ -12290,7 +12366,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Cosign",
                         "Valkey",
                         "Redis 8+ (AGPL-3.0)",
-                        "HTTPX",
+                        "HTTPX (current resource/authorization readback and conditional dispatch; resource service enforces preconditions)",
                         "OPAL (Open Policy Administration Layer)",
                         "Open Policy Agent (OPA)",
                         "SpiceDB"
@@ -12302,7 +12378,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Permit.io",
                         "AWS Key Management Service (KMS)",
                         "HashiCorp Vault Enterprise",
-                        "HCP Vault Dedicated"
+                        "HCP Vault Dedicated",
+                        "Microsoft Entra Continuous Access Evaluation (current-access checks for supported Microsoft resource APIs)"
                     ],
                     "defendsAgainst": [
                         {
@@ -12447,19 +12524,20 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Open Policy Agent (OPA)",
                         "python-jsonschema",
                         "Pydantic",
-                        "Falco",
+                        "Falco (runtime permission-violation telemetry for manifest verification; preventive enforcer required)",
                         "Cilium Tetragon",
                         "SPIRE",
-                        "OpenBao (open-source short-lived per-skill token issuance)"
+                        "OpenBao (open-source short-lived per-skill token issuance)",
+                        "Extism (Wasm plugin host with explicit HTTP and filesystem capability manifests)"
                     ],
                     "toolsCommercial": [
                         "HashiCorp Vault Enterprise",
                         "HCP Vault Dedicated",
                         "Calico Enterprise",
                         "Isovalent Enterprise Platform",
-                        "Palo Alto Networks Prisma Cloud",
-                        "Aqua Platform (CNAPP)",
-                        "CyberArk Secrets Manager SaaS"
+                        "Palo Alto Networks Prisma Cloud (Runtime Security container rules in prevent mode; successor Cortex Cloud Runtime Security)",
+                        "Aqua Platform (CNAPP runtime policies with drift prevention and executable and network blocking per workload)",
+                        "Idira Secrets Manager SaaS (formerly CyberArk Secrets Manager SaaS)"
                     ],
                     "defendsAgainst": [
                         {
@@ -12619,7 +12697,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Temporal",
                         "Apache Kafka",
                         "Debezium",
-                        "OpenTelemetry"
+                        "Powertools for AWS Lambda Idempotency utility (persistent in-progress reservation and duplicate-result replay)",
+                        "DBOS Transact (durable workflow IDs and step-result checkpoints; external effects need provider idempotency)"
                     ],
                     "toolsCommercial": [
                         "Temporal Cloud",
@@ -12847,7 +12926,8 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "golang.org/x/sys/unix (BSD-3-Clause low-level Linux syscall bindings)",
                         "Go os.Root (Go 1.24+; BSD-3-Clause; traversal-resistant rooted filesystem operations; object-identity receipts, hard-link and mount profiles, no-replace behavior, and durability semantics require additional broker logic)",
                         "libpathrs (MPL-2.0 OR LGPL-3.0-or-later; Linux handle-based rooted path resolution with Rust, C, and Go APIs)",
-                        "cap-std (Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT; capability-oriented rooted filesystem operations for Rust; control-specific receipts and mutation semantics require additional integration)"
+                        "cap-std (Apache-2.0 WITH LLVM-exception OR Apache-2.0 OR MIT; capability-oriented rooted filesystem operations for Rust; control-specific receipts and mutation semantics require additional integration)",
+                        "filepath-securejoin (handle-based rooted access; use OpenInRoot/OpenatInRoot, not string-only SecureJoin)"
                     ],
                     "implementationGuidance": [
                         {
@@ -13094,14 +13174,17 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "ipaddress",
                         "url-normalize",
                         "tldextract",
-                        "PostgreSQL",
-                        "psycopg",
-                        "FastAPI",
+                        "PostgreSQL (trusted destination-policy and allowlist store; safe-fetch enforcer validates connections)",
+                        "psycopg (parameterized destination-policy lookups; URL and connection checks external)",
+                        "FastAPI (validated safe-fetch service endpoints; destination and connection enforcement required)",
                         "Pydantic",
                         "HTTPX",
-                        "Cosign",
-                        "rfc8785 Python package",
-                        "Smokescreen (egress proxy with private-address blocking)"
+                        "Cosign (verify signed safe-fetch policies before use; URL and connection enforcement external)",
+                        "rfc8785 Python package (canonicalize signed safe-fetch policy/evidence payloads; URL and connection checks external)",
+                        "Smokescreen (egress proxy with private-address blocking)",
+                        "Pipelock Community (Apache-2.0; agent egress proxy URL pipeline with scheme and allowlist checks, literal-IP and DNS SSRF blocking with rebinding protection)",
+                        "safeurl (Apache-2.0; Go SSRF-protection wrapper around net/http.Client with scheme, port, host and CIDR allow and block lists plus DNS-rebinding mitigation)",
+                        "request-filtering-agent (MIT; Node.js http(s).Agent that blocks private, link-local and reserved IP addresses after DNS lookup, preventing DNS rebinding)"
                     ],
                     "toolsCommercial": [
                         "Zscaler Internet Access (ZIA; egress URL-policy backstop only)",
@@ -13208,14 +13291,14 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "toolsOpenSource": [
                         "nh3",
                         "BeautifulSoup4",
-                        "html5lib",
+                        "html5lib (HTML5 parsing for sanitization and demotion; deprecated sanitizer filter excluded)",
                         "DOMPurify",
                         "Trafilatura (main-text extraction only; active-content sanitization, byte limits, and trust labeling remain external)"
                     ],
                     "toolsCommercial": [
-                        "Menlo File Security",
-                        "OPSWAT MetaDefender",
-                        "Glasswall CDR"
+                        "Menlo File Security (CDR for HTML files)",
+                        "OPSWAT MetaDefender (Deep CDR for HTML files)",
+                        "Microsoft Foundry Prompt Shields Spotlighting (preview; document trust demotion; separate HTML sanitization required)"
                     ]
                 },
                 {
@@ -13331,13 +13414,13 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ],
                     "toolsOpenSource": [
                         "Playwright",
-                        "Chromium",
-                        "gVisor",
-                        "Kata Containers",
-                        "Firecracker",
-                        "Envoy",
-                        "Cilium",
-                        "mitmproxy",
+                        "Chromium (controlled browser runtime and DOM observations; broker enforces admission and sanitized export)",
+                        "gVisor (outer browser-isolation dependency; broker validates admission and sanitized export)",
+                        "Kata Containers (outer browser-isolation dependency; broker validates admission and sanitized export)",
+                        "Firecracker (outer browser-isolation dependency; broker validates admission and sanitized export)",
+                        "Envoy (browser egress-policy dependency; broker validates admission and sanitized export)",
+                        "Cilium (browser egress-policy dependency; broker validates admission and sanitized export)",
+                        "mitmproxy (browser traffic observation and response filtering; broker admission and sanitized export required)",
                         "Cloudflare Sandbox SDK (Apache-2.0 SDK; requires the managed Cloudflare Workers and Containers runtime; egress and host isolation remain external)"
                     ],
                     "toolsSourceAvailable": [
@@ -13681,8 +13764,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ],
                     "toolsCommercial": [
                         "Cohere Rerank (similarity signal only; custom source-reputation fusion required)",
-                        "Alation Data Intelligence Platform",
-                        "Collibra Platform"
+                        "Alation Data Catalog (source trust/ownership metadata for reputation weighting; chunk-level binding and ranking required)",
+                        "Collibra Platform (source trust/ownership metadata for reputation weighting; chunk-level binding and ranking required)",
+                        "Azure AI Search scoring profiles (magnitude function over a numeric source-reputation field applied in keyword, vector and hybrid queries, optionally after semantic ranking)"
                     ]
                 },
                 {
@@ -13729,12 +13813,13 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ],
                     "toolsCommercial": [
                         "Auth0 Fine-Grained Authorization (FGA)",
-                        "Google Cloud IAM (identity/policy source only; not retrieval enforcement)",
+                        "Google Cloud IAM (principal/resource-policy input for Google Cloud-backed retrieval; document/chunk enforcement required)",
                         "Google Cloud Identity (identity source only; not retrieval enforcement)",
                         "Microsoft Entra ID (identity source only; not retrieval enforcement)",
                         "Pinecone (metadata filtering only; external authorization truth required)",
                         "Weaviate Cloud (metadata filtering only; external authorization truth required)",
-                        "Elastic Cloud (metadata filtering only; external authorization truth required)"
+                        "Elastic Cloud (role-based document-level security; content-connector permission sync for supported sources is beta)",
+                        "Azure AI Search document-level access control (preview; source-specific ACL trimming with coverage/revocation limits)"
                     ],
                     "defendsAgainst": [
                         {
@@ -13858,7 +13943,6 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Cosign",
                         "python-jsonschema",
                         "Open Policy Agent (OPA)",
-                        "OpenTelemetry",
                         "LlamaIndex"
                     ],
                     "defendsAgainst": [
@@ -14156,20 +14240,23 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     ],
                     "toolsOpenSource": [
                         "Git",
-                        "osquery (endpoint telemetry queries for configuration drift detection)",
-                        "Code - OSS (MIT-licensed Extension API implementation)",
+                        "osquery (independent effective-configuration and drift queries; preventive configuration enforcement required)",
                         "Semgrep",
                         "Open Policy Agent (OPA)",
                         "Conftest",
                         "pre-commit",
-                        "Checkov"
+                        "Checkov",
+                        "OpenAI Codex CLI (administrator-enforced managed requirements)"
                     ],
                     "toolsCommercial": [
-                        "CrowdStrike Falcon Insight XDR",
-                        "SentinelOne Singularity Endpoint",
-                        "Microsoft Defender for Endpoint",
+                        "CrowdStrike Falcon Insight XDR (custom process/configuration-change observations and response; managed configuration enforcement required)",
+                        "SentinelOne Singularity Complete (STAR configuration/process-change detection and response; managed configuration enforcement required)",
+                        "Microsoft Defender for Endpoint Plan 2 (configuration/process-change detections and response; managed configuration enforcement required)",
                         "Jamf Pro",
-                        "Microsoft Intune"
+                        "Microsoft Intune",
+                        "Claude Code managed settings (administrator-enforced local/MDM policies and MCP restrictions)",
+                        "Visual Studio Code enterprise AI policies (managed agent/tool approval settings and MCP restrictions)",
+                        "GitHub Enterprise Cloud (repository rulesets requiring signed commits, pull-request approvals and code-owner review on protected configuration branches)"
                     ],
                     "implementationGuidance": [
                         {
@@ -14306,7 +14393,9 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "SPIRE (workload identity only; separate artifact signing required)",
                         "Cosign",
                         "in-toto",
-                        "Notation"
+                        "Notation",
+                        "Flux (Apache-2.0; OCIRepository verification of Cosign or Notation signatures before configuration artifacts are reconciled, with continuous drift reconciliation)",
+                        "Argo CD (Apache-2.0; AppProject source integrity verification of GnuPG-signed Git commits before sync, and automated self-heal back to the verified desired state)"
                     ],
                     "toolsSourceAvailable": [
                         "HashiCorp Vault Community (BUSL-1.1; source-available)"
@@ -14317,7 +14406,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "HCP Vault Dedicated",
                         "AWS Key Management Service (KMS)",
                         "Google Cloud Key Management Service",
-                        "CyberArk Code Sign Manager",
+                        "Palo Alto Networks Code Sign Manager, Self-Hosted (formerly CyberArk Code Sign Manager)",
                         "DigiCert Software Trust Manager"
                     ],
                     "implementationGuidance": [
@@ -14471,7 +14560,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Conftest",
                         "Cosign",
                         "in-toto",
-                        "Semgrep"
+                        "Semgrep (static checks for prohibited instruction/configuration patterns; ownership, freshness and consistency checks required)"
                     ],
                     "toolsCommercial": [
                         "GitHub Enterprise Cloud",
@@ -14481,9 +14570,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Google Cloud Key Management Service",
                         "Azure Key Vault",
                         "HashiCorp Vault Enterprise",
-                        "HCP Vault Dedicated",
-                        "Splunk (governance evidence only; not release enforcement)",
-                        "Datadog (governance evidence only; not release enforcement)"
+                        "HCP Vault Dedicated"
                     ],
                     "implementationGuidance": [
                         {
@@ -14541,9 +14628,7 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                     "toolsOpenSource": [
                         "Open Policy Agent (OPA)",
                         "Kubernetes RBAC",
-                        "SPIRE",
-                        "OpenTelemetry",
-                        "Git"
+                        "SPIRE"
                     ],
                     "toolsCommercial": [
                         "HashiCorp Vault Enterprise",
@@ -14551,8 +14636,10 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "AWS IAM",
                         "Azure RBAC",
                         "Google Cloud IAM",
-                        "Splunk",
-                        "Datadog"
+                        "Splunk (separate administrative roles and restricted ingestion credentials for oversight telemetry)",
+                        "Datadog (separate administrative roles and restricted ingestion credentials for oversight telemetry)",
+                        "AWS Organizations service control policies (organization-level deny guardrails that member-account roles, including agent runtime roles, cannot override)",
+                        "Microsoft Entra Privileged Identity Management (approval-required, time-bound role activation with MFA, justification and activation alerts)"
                     ],
                     "defendsAgainst": [
                         {
@@ -14771,12 +14858,14 @@ subject_access_review false candidate-rubric "$candidate" "$service_account_grou
                         "Code - OSS Workspace Trust (MIT; restricted-mode baseline; complete activation-manifest binding and change-triggered revocation require custom integration)",
                         "Pipelock Community (Apache-2.0; MCP binary and script integrity manifests only; a separate complete workspace activation broker is required)",
                         "Veritas Kanban (MIT; provider-neutral pre-launch workspace inventory, exact inventory-bound trust decisions, revocation, drift fail-closed, and launch-time rescan for supported agent adapters)",
-                        "ToppyMicroServices Workspace Guard / workspace-guard-scan (Apache-2.0; source-built CLI or published VS Code extension for pre-open repository trust-surface inventory and review; not distributed through the npm registry; separate activation enforcement, revocation, and bypass testing required)"
+                        "ToppyMicroServices Workspace Guard / workspace-guard-scan (Apache-2.0; source-built CLI or published VS Code extension for pre-open repository trust-surface inventory and review; not distributed through the npm registry; separate activation enforcement, revocation, and bypass testing required)",
+                        "Gemini CLI Trusted Folders (opt-in project trust gate; managed launches must prevent --skip-trust bypass)"
                     ],
                     "toolsCommercial": [
                         "Parallel Works pw code (content-bound workspace settings, hook, and skill trust baseline; complete activation-surface coverage and immediate filesystem-change revocation require additional enforcement)",
                         "Visual Studio Code Workspace Trust (supported fully patched release; restricted-mode and MCP trust baseline; complete manifest binding and bypass-proof change revocation require custom integration)",
-                        "JetBrains Junie CLI Project Trust (interactive project-configuration gate; non-interactive modes require a separate fail-closed trust gate)"
+                        "JetBrains Junie CLI Project Trust (interactive project-configuration gate; non-interactive modes require a separate fail-closed trust gate)",
+                        "Claude Code workspace trust (interactive repository/MCP trust checks; headless paths require separate policy)"
                     ],
                     "implementationGuidance": [
                         {
@@ -15732,17 +15821,18 @@ if __name__ == "__main__":
                         "pip",
                         "pip-tools",
                         "uv",
-                        "PyPA build",
-                        "twine",
                         "Cosign",
-                        "jq",
+                        "jq (inspect and compare dependency manifests; installation sandbox and hash enforcement required)",
                         "Verdaccio (npm package staging/cache only; immutable promotion, offline export, signature verification, and sandbox enforcement remain external)",
-                        "devpi (Python package staging/cache only; immutable promotion, offline export, signature verification, and sandbox enforcement remain external)"
+                        "devpi (Python package staging with non-volatile indexes and devpi push promotion; signature verification, offline export, and sandbox enforcement remain external)",
+                        "Bun (dependency lifecycle scripts skipped unless listed in trustedDependencies; set an empty trustedDependencies list to deny all)",
+                        "@lavamoat/allow-scripts (denies all npm/Yarn lifecycle scripts, then runs only allowlisted packages' scripts)"
                     ],
                     "toolsCommercial": [
                         "JFrog Artifactory",
                         "JFrog Xray",
-                        "Sonatype Repository Firewall"
+                        "Sonatype Firewall (formerly Sonatype Repository Firewall)",
+                        "JFrog Curation (blocks malicious or policy-violating packages at the Artifactory remote repository before they are cached)"
                     ],
                     "defendsAgainst": [
                         {
@@ -15866,8 +15956,8 @@ if __name__ == "__main__":
                         "OSV-Scanner"
                     ],
                     "toolsCommercial": [
-                        "Snyk Advisor",
-                        "Socket.dev",
+                        "Snyk Security Database package health (successor to Snyk Advisor; maintenance, popularity, community, and security scores per package)",
+                        "Socket for GitHub (pull-request dependency alerts with blocking checks)",
                         "GitHub Advanced Security"
                     ],
                     "defendsAgainst": [
@@ -15982,16 +16072,15 @@ if __name__ == "__main__":
                 "Open Policy Agent (OPA)",
                 "Conftest",
                 "npm CLI",
-                "PyPA build",
                 "twine",
                 "pypa/gh-action-pypi-publish",
                 "slsa-github-generator",
                 "pypi-attestations (pinned PEP 740 verifier; CLI interface is experimental)",
-                "huggingface_hub"
+                "huggingface_hub",
+                "zizmor (static analysis of GitHub Actions workflows: template injection, excessive permissions, unpinned actions, dangerous triggers, cache poisoning)"
             ],
             "toolsCommercial": [
                 "JFrog Artifactory",
-                "Sonatype Nexus Repository",
                 "GitHub Actions",
                 "CircleCI",
                 "CloudBees CI",
@@ -16228,7 +16317,7 @@ if __name__ == "__main__":
                         "node-semver",
                         "python-jsonschema",
                         "Open Policy Agent (OPA)",
-                        "OpenTelemetry"
+                        "Stacklok ToolHive (vMCP workload-scoped tool allowlists; exact-version resolver required)"
                     ],
                     "toolsCommercial": [
                         "Kong Gateway Enterprise (custom fail-closed resolver plugin required)",
@@ -16345,15 +16434,11 @@ if __name__ == "__main__":
                     },
                     "toolsOpenSource": [
                         "Cosign",
-                        "jq",
-                        "python-jsonschema",
-                        "OpenTelemetry",
-                        "Snyk Agent Scan (descriptor-drift and tool-poisoning checks; Snyk verification API required; sandbox untrusted MCP stdio discovery)"
-                    ],
-                    "toolsCommercial": [
-                        "Splunk",
-                        "Datadog",
-                        "Sumo Logic (log analytics)"
+                        "jq (descriptor inspection and normalization; hashing must follow the prescribed canonicalization contract)",
+                        "python-jsonschema (descriptor structure validation before canonical hashing; pin comparison and fail-closed resolution required)",
+                        "Microsoft Agent Governance Toolkit MCP Security Scanner (public preview; description/schema fingerprints; unsigned baseline and external resolver gate)",
+                        "Pipelock (MCP descriptor-drift blocking; TOFU baseline and descriptive-change exceptions require a separate approved pin policy)",
+                        "rfc8785 Python package"
                     ],
                     "defendsAgainst": [
                         {
@@ -16456,11 +16541,9 @@ if __name__ == "__main__":
                     "toolsOpenSource": [
                         "RapidFuzz",
                         "jellyfish (string distance alternatives)",
-                        "OpenTelemetry"
-                    ],
-                    "toolsCommercial": [
-                        "Splunk",
-                        "Datadog"
+                        "Microsoft Agent Governance Toolkit MCP Security Scanner (public preview; cross-server collision and typosquat signals; fail-closed resolver required)",
+                        "Stacklok ToolHive vMCP (manual tool-name conflict resolution refuses unresolved collisions)",
+                        "ICU SpoofChecker (Unicode confusable-name detection; registry-aware blocking required)"
                     ],
                     "defendsAgainst": [
                         {
@@ -16572,15 +16655,12 @@ if __name__ == "__main__":
                         "Ajv",
                         "python-jsonschema",
                         "Cosign",
-                        "OpenTelemetry",
                         "Snyk Agent Scan (Snyk verification API required; sandbox untrusted MCP stdio discovery)"
                     ],
                     "toolsCommercial": [
                         "Kong Gateway Enterprise (custom semantic-invariant plugin required)",
                         "Kong Konnect (custom semantic-invariant plugin required)",
-                        "Apigee API Management (custom semantic-invariant policy/extension required)",
-                        "Datadog (evidence only; not semantic-invariant enforcement)",
-                        "Splunk (evidence only; not semantic-invariant enforcement)"
+                        "Apigee API Management (custom semantic-invariant policy/extension required)"
                     ],
                     "defendsAgainst": [
                         {
@@ -16801,12 +16881,13 @@ if __name__ == "__main__":
                         "eslint-plugin-security",
                         "tree-sitter (multi-language parsing)",
                         "Cosign",
-                        "LlamaFirewall CodeShield (static analysis of LLM-generated code)"
+                        "LlamaFirewall CodeShield (static analysis of LLM-generated code)",
+                        "Python `ast` module (AST admission checks on model-generated Python before execution)"
                     ],
                     "toolsCommercial": [
                         "GitHub Advanced Security",
                         "Snyk Code",
-                        "Veracode",
+                        "Veracode Static Analysis (Pipeline Scan policy gate)",
                         "Checkmarx One",
                         "SonarQube Enterprise"
                     ],
@@ -16933,7 +17014,9 @@ if __name__ == "__main__":
                         "Wasmtime (WASM runtime)",
                         "Wasmer (WASM runtime)",
                         "nsjail (process and seccomp sandbox for untrusted code)",
-                        "Pyodide (WASM Python runtime; independently restrict host capabilities)"
+                        "Pyodide (WASM Python runtime; independently restrict host capabilities)",
+                        "Pydantic Monty (restricted Python interpreter; host functions and mounts explicitly scoped)",
+                        "Deno (JavaScript/TypeScript runtime with deny-by-default permissions; run evaluated code without --allow-* flags)"
                     ],
                     "toolsCommercial": [
                         "Azure Container Apps Dynamic Sessions (code-interpreter or custom-container sessions)",
@@ -17152,15 +17235,16 @@ if __name__ == "__main__":
                         "DVC",
                         "Apache Airflow",
                         "scikit-learn",
-                        "pandas",
-                        "Jupyter",
+                        "pandas (hard-sample selection, cohort balancing and corpus preparation; retraining/promotion controls required)",
+                        "Jupyter (interactive hard-sample analysis and retraining review; execution/promotion controls external)",
                         "Label Studio",
-                        "Argilla"
+                        "Argilla",
+                        "cleanlab (find_label_issues and Datalab flag likely mislabeled and near-duplicate examples in mined hard samples)"
                     ],
                     "toolsCommercial": [
                         "Amazon SageMaker AI",
-                        "Vertex AI",
-                        "Databricks Mosaic AI",
+                        "Gemini Enterprise Agent Platform (formerly Vertex AI; custom training, pipelines and Model Registry)",
+                        "Databricks Data + AI Platform (model training on Databricks compute, MLflow evaluation and Unity Catalog model aliases)",
                         "Weights & Biases"
                     ],
                     "defendsAgainst": [
@@ -17277,8 +17361,9 @@ if __name__ == "__main__":
                         "Hugging Face Datasets",
                         "Hugging Face Transformers",
                         "PyRIT",
-                        "Jinja",
-                        "promptfoo"
+                        "Jinja (template-based adversarial prompt variants; isolated fuzzing harness required)",
+                        "promptfoo",
+                        "spikee (prompt-injection dataset generation from seeds with transformation plugins, built-in multi-turn attacks such as Crescendo and GOAT, and guardrail testing where a bypass counts as success)"
                     ],
                     "toolsCommercial": [
                         "Check Point AI Red Teaming",
@@ -17400,13 +17485,13 @@ if __name__ == "__main__":
                     "toolsOpenSource": [
                         "pandas",
                         "scikit-learn",
-                        "Jupyter",
-                        "Captum",
-                        "Evidently"
+                        "Jupyter (taxonomy-stratified coverage analysis notebooks; metrics and decision logic required)",
+                        "Evidently",
+                        "Fairlearn MetricFrame (disaggregates any metric by a grouping column such as attack category, with counts and bootstrap confidence intervals)"
                     ],
                     "toolsCommercial": [
-                        "Weights & Biases",
-                        "Databricks Mosaic AI",
+                        "Weights & Biases (cohort metric tracking and taxonomy coverage analysis; stratified scoring logic required)",
+                        "Databricks data profiling (Unity Catalog data quality monitoring; inference-profile precision and recall per slicing expression)",
                         "Arize AX",
                         "Fiddler AI Observability Platform"
                     ],
@@ -17531,11 +17616,11 @@ if __name__ == "__main__":
                 "Redis 8+ (AGPL-3.0)",
                 "LangChain",
                 "vLLM",
-                "OpenTelemetry Collector (cache provenance event export)",
-                "Open Policy Agent (OPA)"
+                "Open Policy Agent (cache-reuse authorization decisions; cache-key, packet and invalidation enforcement required)",
+                "RedisVL SemanticCache (filterable_fields and filter_expression scope semantic-cache lookups to tenant, user, and policy-version tags)"
             ],
             "toolsCommercial": [
-                "Redis Enterprise (active-active with ACLs)",
+                "Redis Software (formerly Redis Enterprise Software; per-tenant databases and ACL roles with key patterns)",
                 "Amazon ElastiCache",
                 "Google Cloud Memorystore",
                 "Azure Managed Redis"
@@ -17846,13 +17931,13 @@ if __name__ == "__main__":
                     },
                     "toolsOpenSource": [
                         "OpenSSL",
-                        "BoringSSL",
                         "SPIRE",
-                        "Cert Spotter (open-source certificate-transparency monitor)",
                         "Python ssl (connection-level identity verification)",
                         "Node.js tls (connection-level identity verification)",
                         "Go crypto/tls (connection-level identity verification)",
-                        "step-ca"
+                        "step-ca",
+                        "Pipelock MCP binary integrity (signed interpreter/script manifest; block launch on mismatch)",
+                        "go-spiffe (tlsconfig.MTLSClientConfig with AuthorizeID aborts the TLS handshake unless the server presents the expected SPIFFE ID)"
                     ],
                     "toolsSourceAvailable": [
                         "HashiCorp Vault Community (BUSL-1.1; source-available)"
@@ -17862,7 +17947,7 @@ if __name__ == "__main__":
                         "DigiCert Trust Lifecycle Manager",
                         "AWS Private Certificate Authority",
                         "Google Cloud Certificate Authority Service",
-                        "Azure Key Vault Certificates"
+                        "Claude Code managed MCP policy (administrator server allowlists and exact command restrictions)"
                     ],
                     "defendsAgainst": [
                         {
@@ -17984,7 +18069,8 @@ if __name__ == "__main__":
                         "age (secret-file encryption)",
                         "GnuPG",
                         "pass (GPG-backed password store)",
-                        "Infisical (MIT-licensed core; enterprise features excluded)"
+                        "Infisical (MIT-licensed core; enterprise features excluded)",
+                        "Model Context Protocol Python SDK v2 client (issuer-bound OAuth credentials; secure TokenStorage implementation required)"
                     ],
                     "toolsSourceAvailable": [
                         "HashiCorp Vault Community (BUSL-1.1; source-available)"
@@ -17993,7 +18079,7 @@ if __name__ == "__main__":
                         "HashiCorp Vault Enterprise",
                         "HCP Vault Dedicated",
                         "1Password Secrets Automation",
-                        "CyberArk Secrets Manager SaaS",
+                        "Idira Secrets Manager SaaS (formerly CyberArk Secrets Manager SaaS)",
                         "AWS Secrets Manager",
                         "Azure Key Vault",
                         "Google Secret Manager"
@@ -18100,18 +18186,16 @@ if __name__ == "__main__":
                       "relatedTechniques": []
                     },
                     "toolsOpenSource": [
-                        "Microsoft Presidio",
+                        "Presidio",
                         "structlog (structured logging with redaction hooks)",
                         "Loguru (structured logging with redaction hooks)",
                         "pino (structured logging with redaction hooks)",
                         "SQLCipher (encrypted local SQLite caches where persistent cache is necessary)",
-                        "Vector (log redaction and remap transforms)"
+                        "Vector (log redaction and remap transforms)",
+                        "Sentry SDKs (before_send hook and send_default_pii=False scrub crash and error events inside the client before they are sent)"
                     ],
                     "toolsCommercial": [
-                        "Google Cloud Sensitive Data Protection API (DLP scanning)",
-                        "Microsoft Purview Data Loss Prevention",
-                        "Forcepoint Data Loss Prevention",
-                        "Broadcom Symantec Data Loss Prevention"
+                        "Google Cloud Sensitive Data Protection API (DLP scanning)"
                     ],
                     "defendsAgainst": [
                         {
@@ -18222,12 +18306,13 @@ if __name__ == "__main__":
                         "Zod (strict message-schema validation)",
                         "Pydantic",
                         "Electron",
-                        "@electron/fuses (Electron runtime hardening)",
-                        "nh3"
+                        "@electron/fuses (Electron execution-surface hardening; response validation, sanitization and renderer isolation required)",
+                        "nh3",
+                        "strip-ansi (removes ANSI escape sequences from server-supplied text before terminal output)",
+                        "MCP Apps SDK app-bridge (@modelcontextprotocol/ext-apps; host-side embedding of server-provided ui:// views in sandboxed iframes over postMessage JSON-RPC)"
                     ],
                     "toolsCommercial": [
-                        "Snyk Code (pre-release SAST verification only)",
-                        "Contrast Security (pre-release IAST/RASP verification only)"
+                        "Snyk Code (pre-release SAST verification only)"
                     ],
                     "defendsAgainst": [
                         {
@@ -18357,12 +18442,12 @@ if __name__ == "__main__":
                         "jwcrypto",
                         "oauthlib",
                         "requests-oauthlib",
-                        "OpenTelemetry"
+                        "Model Context Protocol TypeScript SDK v2 client (principal-scoped caches, PKCE/issuer validation and DPoP)",
+                        "Model Context Protocol Python SDK v2 client (principal-scoped caches and issuer-bound OAuth credentials)"
                     ],
                     "toolsCommercial": [
                         "Auth0",
-                        "Okta",
-                        "Datadog"
+                        "Okta"
                     ],
                     "defendsAgainst": [
                         {
@@ -18489,15 +18574,18 @@ if __name__ == "__main__":
                         "Cosign",
                         "python-tuf",
                         "in-toto",
-                        "slsa-verifier",
+                        "GitHub CLI (GitHub artifact-attestation verification)",
                         "GnuPG",
-                        "Notation"
+                        "Notation",
+                        "@electron/fuses (embedded ASAR integrity validation and OnlyLoadAppFromAsar for Electron-based clients)"
                     ],
                     "toolsCommercial": [
                         "Apple Notarization (macOS application notarization and signing checks)",
                         "SignTool (Windows SDK; Authenticode signing and verification)",
                         "JFrog Artifactory",
-                        "Sonatype Nexus Repository"
+                        "Sonatype Nexus Repository",
+                        "Visual Studio Code AllowedExtensions policy (extensions.allowed allowlist by publisher, extension ID, exact version, and platform; blocked installed extensions are disabled)",
+                        "App Control for Business (Windows code integrity policies that allow only signed binaries from approved publishers to run)"
                     ],
                     "defendsAgainst": [
                         {
@@ -18719,15 +18807,9 @@ if __name__ == "__main__":
                     "toolsOpenSource": [
                         "Pydantic",
                         "limits (Python rate limiting with multiple backend strategies)",
-                        "Microsoft Presidio",
                         "Model Context Protocol TypeScript SDK v2 (@modelcontextprotocol/server and @modelcontextprotocol/client)",
-                        "Model Context Protocol Python SDK (mcp)"
-                    ],
-                    "toolsCommercial": [
-                        "Azure AI Content Safety - Prompt Shields (prompt injection detection in server-originated sampling content)",
-                        "Check Point AI Guardrails",
-                        "Amazon Bedrock Guardrails",
-                        "Palo Alto Networks Prisma AIRS"
+                        "Model Context Protocol Python SDK (mcp)",
+                        "LiteLLM Proxy (dedicated sampling-exception keys with budget/token/rate limits; context isolation external)"
                     ],
                     "defendsAgainst": [
                         {
@@ -18963,18 +19045,20 @@ if __name__ == "__main__":
                         "OpenMetadata",
                         "DataHub",
                         "Apache Atlas",
-                        "GX Core (Great Expectations)",
-                        "dbt Core"
+                        "GX Core (validate tabular data-use metadata and required tag values; asset tagging and policy gates external)",
+                        "dbt OSS (formerly dbt Core; model and column meta/tags as data-use metadata)"
                     ],
                     "toolsCommercial": [
                         "Collibra Platform",
-                        "Alation Data Intelligence Platform",
+                        "Alation Data Catalog (Alation Intelligence Operating System)",
                         "OneTrust Data Use Governance",
                         "BigID Data Security Platform",
                         "Immuta Data Security Platform",
                         "Veeam DataAI Command Platform",
                         "Microsoft Purview Data Map (metadata scanning and classification)",
-                        "Microsoft Purview Unified Catalog (policy and classification metadata curation)"
+                        "Microsoft Purview Unified Catalog (policy and classification metadata curation)",
+                        "Snowflake object tagging (ALLOWED_VALUES and automatic tag propagation)",
+                        "Databricks Unity Catalog governed tags (tag policies; propagation/classification features have beta limits)"
                     ],
                     "defendsAgainst": [
                         {
@@ -19083,16 +19167,17 @@ if __name__ == "__main__":
                     ]
                   },
                   "toolsOpenSource": [
-                    "Open Policy Agent (OPA)",
-                    "Cedar",
-                    "FastAPI middleware (enforcement hooks)",
-                    "gRPC interceptors (enforcement hooks)",
-                    "OpenTelemetry"
+                      "Open Policy Agent (OPA)",
+                      "Cedar",
+                      "FastAPI middleware (enforcement hooks)",
+                      "gRPC interceptors (enforcement hooks)",
+                      "Apache Ranger (tag-based policies with deny and EXPIRES_ON conditions)"
                   ],
                   "toolsCommercial": [
-                    "Cerbos Hub",
-                    "Immuta Data Security Platform",
-                    "Privacera Platform"
+                      "Cerbos Hub",
+                      "Immuta Data Security Platform",
+                      "Privacera (PrivaceraCloud or Privacera Self Managed; tag-based data access policies)",
+                      "AWS Lake Formation tag-based access control (LF-TBAC)"
                   ],
                   "defendsAgainst": [
                       {
@@ -19220,10 +19305,10 @@ if __name__ == "__main__":
                     ],
                     "toolsCommercial": [
                         "OneTrust Consent & Preferences",
-                        "BigID Consent & Preferences",
+                        "BigID Universal Consent and Preference Center (consent-state events; downstream AI gates enforce withdrawal)",
                         "Securiti Consent Management Platform",
                         "Collibra Data Lineage (lineage/reporting only; not consent authority)",
-                        "Privacera Platform (downstream policy enforcement only; consent source/events external)"
+                        "Privacera (PrivaceraCloud or Privacera Self Managed; downstream policy enforcement only; consent source/events external)"
                     ],
                     "defendsAgainst": [
                         {
@@ -19474,12 +19559,12 @@ if __name__ == "__main__":
                         "ICU",
                         "confusable-homoglyphs (homoglyph detection for registry names)",
                         "Cisco AI Skill Scanner (Apache-2.0; best-effort scanner, not certification)",
-                        "Snyk Agent Scan (Snyk verification API required; sandbox untrusted MCP stdio discovery)"
+                        "Snyk Agent Scan (skill hidden-Unicode and missing-manifest checks; verification API required; sandbox untrusted discovery)",
+                        "typomania (Rust Foundation typosquatting primitives)"
                     ],
                     "toolsCommercial": [
-                        "Snyk Agent Scan Skill Inspector (vendor-hosted)",
-                        "CertiK Skill Scanner",
-                        "Socket for Skills"
+                        "Snyk Agent Scan Skill Inspector (vendor-hosted; obfuscated and deceptive skill-instruction checks; manual review required)",
+                        "Socket (skills.sh obfuscated-text alerts for skill review; manual confirmation and scan freshness checks required)"
                     ],
                     "defendsAgainst": [
                         {
@@ -19600,7 +19685,6 @@ if __name__ == "__main__":
                         "Snyk Agent Scan (Snyk verification API required; sandbox untrusted MCP stdio discovery)"
                     ],
                     "toolsSourceAvailable": [
-                        "Meta Llama Guard 4 (Llama 4 Community License; open-weight)",
                         "Meta Llama Prompt Guard 2 (Llama 4 Community License; open-weight)"
                     ],
                     "toolsCommercial": [
@@ -19608,7 +19692,8 @@ if __name__ == "__main__":
                         "Check Point AI Guardrails (custom purpose/permission comparison required)",
                         "OpenAI fine-tuning API (enterprise intent-classifier adaptation)",
                         "Azure OpenAI fine-tuning (enterprise intent-classifier adaptation)",
-                        "Snyk Agent Scan Skill Inspector (vendor-hosted)"
+                        "Snyk Agent Scan Skill Inspector (vendor-hosted)",
+                        "Socket (agent skill scanning with LLM intent analysis of skill instructions)"
                     ],
                     "defendsAgainst": [
                         {
@@ -19731,13 +19816,14 @@ if __name__ == "__main__":
                         "strace (system-call tracing)",
                         "sysdig (system-call tracing)",
                         "AIDE (filesystem integrity comparison)",
-                        "Wazuh (filesystem integrity comparison)",
-                        "OSSEC (filesystem integrity comparison)"
+                        "Wazuh (filesystem-difference evidence from a prepared analysis environment; manifest comparison and other sensors required)",
+                        "OSSEC (filesystem-difference evidence from a prepared analysis environment; manifest comparison and other sensors required)"
                     ],
                     "toolsCommercial": [
                         "Joe Sandbox (generic detonation only; custom skill harness required)",
                         "ANY.RUN (generic detonation only; custom skill harness required)",
-                        "CrowdStrike Falcon Sandbox (generic detonation only; custom skill harness required)"
+                        "CrowdStrike Falcon Sandbox (generic detonation only; custom skill harness required)",
+                        "Permiso SandyClaw (dynamic sandbox for AI agent skills)"
                     ],
                     "defendsAgainst": [
                         {
@@ -19859,7 +19945,9 @@ if __name__ == "__main__":
                         "Pydantic",
                         "ruamel.yaml",
                         "gVisor",
-                        "Firecracker"
+                        "Firecracker",
+                        "Cisco AI Skill Scanner (archive handling: path traversal, zip bomb, symlink and size limits)",
+                        "nsjail"
                     ],
                     "defendsAgainst": [
                         {
@@ -19970,15 +20058,16 @@ if __name__ == "__main__":
                     },
                     "toolsOpenSource": [
                         "Open Policy Agent (OPA)",
-                        "OpenTelemetry",
                         "Apache Airflow",
                         "Temporal",
                         "Argo Workflows (scheduled re-scan orchestration)"
                     ],
                     "toolsCommercial": [
-                        "Splunk",
-                        "Microsoft Sentinel",
-                        "Datadog"
+                        "Splunk (correlate revalidation triggers and invoke an external admission controller)",
+                        "Microsoft Sentinel (automation-rule triggers for external admission revalidation)",
+                        "Datadog (security-signal triggers for external admission revalidation)",
+                        "JFrog Agent Skills Registry",
+                        "Claude Code managed settings (strictKnownMarketplaces, strictPluginOnlyCustomization, disableSideloadFlags)"
                     ],
                     "defendsAgainst": [
                         {
@@ -20257,24 +20346,15 @@ if __name__ == "__main__":
                     ],
                     "toolsOpenSource": [
                         "Open Policy Agent (OPA)",
-                        "OpenTelemetry",
                         "Git",
                         "in-toto",
-                        "slsa-verifier",
                         "Cosign",
-                        "Kyverno",
-                        "OPA Gatekeeper (admission control)",
-                        "gitsign (commit-signature integrity when AI provenance metadata is embedded in the signed commit; label generation and validation remain external)"
+                        "gitsign (commit-signature integrity when AI provenance metadata is embedded in the signed commit; label generation and validation remain external)",
+                        "Git AI (AI-edit attribution collection; separately protect and verify provenance)"
                     ],
                     "toolsCommercial": [
                         "GitHub Enterprise Cloud",
-                        "GitHub Advanced Security",
-                        "GitLab Ultimate",
-                        "JFrog Artifactory",
-                        "JFrog Xray",
-                        "Sonatype Nexus Repository",
-                        "Amazon ECR",
-                        "Harness STO"
+                        "GitLab Ultimate"
                     ],
                     "implementationGuidance": [
                         {
@@ -20400,13 +20480,15 @@ if __name__ == "__main__":
                         "Conftest",
                         "Open Policy Agent (OPA)",
                         "Gitleaks",
-                        "Checkov"
+                        "Checkov",
+                        "zizmor (GitHub Actions workflow static analysis)"
                     ],
                     "toolsCommercial": [
                         "GitHub Advanced Security",
                         "Snyk Code",
                         "Veracode",
-                        "Checkmarx One"
+                        "Checkmarx One",
+                        "Socket for GitHub (pull-request dependency scanning: typosquat, malware and install-script alerts)"
                     ],
                     "implementationGuidance": [
                         {
@@ -20519,14 +20601,16 @@ if __name__ == "__main__":
                         "Docker Engine",
                         "Cilium Tetragon",
                         "Falco",
-                        "OpenTelemetry",
-                        "E2B (ephemeral sandbox infrastructure for generated-code validation)"
+                        "E2B (ephemeral sandbox infrastructure for generated-code validation)",
+                        "OpenSSF Package Analysis (install/import/execute dynamic analysis in gVisor)",
+                        "Cosign (attest-blob signing of the dynamic-stage result bound to the artifact digest)"
                     ],
                     "toolsCommercial": [
                         "Wiz Defend (Wiz Runtime Sensor)",
                         "Isovalent Enterprise Platform",
                         "Aqua Platform (CNAPP)",
-                        "Sysdig Secure"
+                        "Sysdig Secure",
+                        "StepSecurity Harden-Runner (Enterprise tier for private repositories and self-hosted runners)"
                     ],
                     "implementationGuidance": [
                         {
@@ -20634,16 +20718,18 @@ if __name__ == "__main__":
                     "toolsOpenSource": [
                         "Cosign",
                         "in-toto",
-                        "slsa-verifier",
+                        "GitHub CLI (GitHub artifact-attestation verification)",
                         "Open Policy Agent (OPA)",
-                        "OpenTelemetry",
-                        "Sigstore Rekor v2 (promotion-evidence digest transparency anchoring; approval and promotion enforcement remain external)"
+                        "Sigstore Rekor v2 (promotion-evidence digest transparency anchoring; approval and promotion enforcement remain external)",
+                        "Kyverno (verifyImages attestation checks at the Kubernetes deploy sink)",
+                        "Sigstore Policy Controller"
                     ],
                     "toolsCommercial": [
                         "GitHub Enterprise Cloud",
                         "GitLab Ultimate",
                         "JFrog Artifactory",
-                        "ServiceNow"
+                        "ServiceNow DevOps Change Velocity (change-approval deployment gate)",
+                        "JFrog AppTrust (evidence-based lifecycle policy gates)"
                     ],
                     "implementationGuidance": [
                         {
@@ -21290,15 +21376,15 @@ def consume_and_deploy(
                     "toolsOpenSource": [
                         "Kubernetes",
                         "KServe",
-                        "vLLM",
                         "Open Policy Agent (OPA)"
                     ],
                     "toolsCommercial": [
                         "Red Hat OpenShift AI",
-                        "NVIDIA DGX Cloud Lepton Reservations (exclusive nodes; disable fallback to unreserved nodes)",
-                        "Amazon Bedrock Provisioned Throughput for custom models (dedicated compute capacity; separate serving-state isolation evidence required)",
+                        "NVIDIA DGX Cloud Lepton Reservations (exclusive reserved nodes; overflow can use unreserved nodes in the node group)",
+                        "Amazon Bedrock Provisioned Throughput (reserved model units; separate serving-state isolation evidence required)",
                         "Microsoft Foundry provisioned throughput (reserved throughput only; does not prove hardware isolation; disable spillover)",
-                        "Vertex AI Provisioned Throughput (reserved throughput only; does not prove hardware isolation; reject pay-as-you-go overages)"
+                        "Gemini Enterprise Agent Platform Provisioned Throughput (reserved throughput; dedicated request routing rejects pay-as-you-go overages; separate isolation evidence required)",
+                        "Google Compute Engine sole-tenant nodes (GPU-capable node templates for self-hosted inference)"
                     ],
                     "defendsAgainst": [
                         {
@@ -21399,7 +21485,8 @@ def consume_and_deploy(
                         "vLLM",
                         "KServe",
                         "Envoy (routing only; use tenant-dedicated upstream pools)",
-                        "Istio (routing only; use tenant-dedicated upstream pools)"
+                        "Istio (routing only; use tenant-dedicated upstream pools)",
+                        "NVIDIA Dynamo (tenant-scoped KV-cache routing; trusted tenant identity and compatible serving backend required)"
                     ],
                     "toolsCommercial": [
                         "F5 Distributed Cloud (routing only; use tenant-dedicated upstream pools)",
@@ -21499,10 +21586,12 @@ def consume_and_deploy(
                       ]
                     },
                     "toolsOpenSource": [
-                        "OpenTelemetry",
-                        "Prometheus",
-                        "Grafana",
-                        "Falco"
+                        "OpenTelemetry Collector (redaction and transform processors scrub prompts, outputs and tool arguments before export)",
+                        "Prometheus (authenticated metrics endpoints for approved low-detail telemetry; service debug restrictions and scrubbing external)",
+                        "Grafana (restricted telemetry dashboards; datasource isolation and raw-content scrubbing required)",
+                        "Falco (diagnostic-access violation telemetry; access prevention and content restrictions external)",
+                        "NVIDIA Triton Inference Server (--http-restricted-api / --grpc-restricted-protocol for trace, logging and model-repository endpoints)",
+                        "vLLM (production hardening: VLLM_SERVER_DEV_MODE off; front non-/v1 endpoints with an authenticated proxy)"
                     ],
                     "toolsCommercial": [
                         "Datadog",
@@ -21639,9 +21728,8 @@ def consume_and_deploy(
                     },
                     "toolsOpenSource": [
                         "Keylime",
-                        "SPIRE",
-                        "Kata Containers",
-                        "Confidential Containers"
+                        "SPIRE (authenticated workload identities for federated inference endpoints; isolation and placement verification required)",
+                        "Confidential Containers (Trustee Attestation Service and KBS for attestation-gated key release)"
                     ],
                     "toolsCommercial": [
                         "NVIDIA Remote Attestation Service (NRAS)",
@@ -21652,7 +21740,9 @@ def consume_and_deploy(
                         "Google Kubernetes Engine (GKE) Confidential Nodes with GPUs",
                         "Google Cloud Confidential VM with GPUs",
                         "Anjuna Seaglass",
-                        "AWS Nitro Enclaves (attestation evidence for enclave-hosted inference only)"
+                        "AWS Nitro Enclaves (attestation evidence for enclave-hosted inference only)",
+                        "Tinfoil (confidential inference API with client-side attestation verification)",
+                        "Privatemode (confidential inference service; privatemode-proxy verifies attestation before sending data)"
                     ],
                     "defendsAgainst": [
                         {
@@ -21856,10 +21946,11 @@ def consume_and_deploy(
                 ]
               },
               "toolsOpenSource": [
-                "LiteLLM (trusted final-dispatch adapter; custom recorder integration required)",
-                "Envoy (actual upstream observation and gateway integration; protected recorder required)",
-                "OpenTelemetry (secondary telemetry export; not the durable acknowledgment or complete population authority)",
-                "Cosign (signed policy and exported snapshot verification)"
+                  "LiteLLM (trusted final-dispatch adapter; custom recorder integration required)",
+                  "Envoy (actual upstream observation and gateway integration; protected recorder required)",
+                  "OpenTelemetry (secondary telemetry export; not the durable acknowledgment or complete population authority)",
+                  "Cosign (signed policy and exported snapshot verification)",
+                  "Agent Router (formerly Envoy AI Gateway; per-request original, override and backend model access-log fields)"
               ],
               "toolsCommercial": [
                 "Cloudflare AI Gateway (secondary route telemetry; protected recorder and independent readback required)",
@@ -21967,7 +22058,8 @@ def consume_and_deploy(
               "toolsCommercial": [
                   "Azure API Management",
                   "Cloudflare AI Gateway",
-                  "Kong Konnect AI Gateway"
+                  "Kong Konnect AI Gateway",
+                  "OpenRouter provider routing (require_parameters, account-wide ZDR enforcement and allowed-provider ceiling, allow_fallbacks)"
               ],
               "defendsAgainst": [
                 {
@@ -22070,14 +22162,16 @@ def consume_and_deploy(
               },
               "toolsOpenSource": [
                   "Open Policy Agent (OPA)",
-                  "OpenTelemetry",
-                  "Envoy Proxy"
+                  "Envoy Proxy",
+                  "LiteLLM Proxy (tag-based eligible routing; enforce trusted required tags and disable fail-open routing)"
               ],
               "toolsCommercial": [
-                "Microsoft Foundry (signed endpoint handling profile remains authoritative)",
-                "Azure API Management (routing only; signed endpoint handling profile required)",
-                "Cloudflare AI Gateway (routing only; signed endpoint handling profile required)",
-                  "Google Cloud Apigee API Management (policy-based regional routing)"
+                  "Microsoft Foundry (signed endpoint handling profile remains authoritative)",
+                  "Azure API Management (routing only; signed endpoint handling profile required)",
+                  "Cloudflare AI Gateway (routing only; signed endpoint handling profile required)",
+                  "Google Cloud Apigee API Management (policy-based regional routing)",
+                  "OpenRouter provider routing (account-wide ZDR enforcement and allowed-provider ceiling; EU and US in-region routing on Business and Enterprise plans)",
+                  "Amazon Bedrock geographic cross-Region inference profiles (with SCP or IAM deny on global inference profiles)"
               ],
               "defendsAgainst": [
                 {
@@ -22176,14 +22270,17 @@ def consume_and_deploy(
                 ]
               },
               "toolsOpenSource": [
-                "Git",
-                "Open Policy Agent (OPA)",
-                "Argo Rollouts"
+                  "Git",
+                  "Open Policy Agent (OPA)",
+                  "Argo Rollouts",
+                  "Argo CD (Source Integrity Verification; GitOps sync and rollback of gateway route-policy manifests)",
+                  "Cosign (sign-blob / verify-blob for route-policy bundle signing and pre-load verification)"
               ],
               "toolsCommercial": [
-                "GitHub Enterprise",
-                "Azure DevOps",
-                "LaunchDarkly"
+                  "GitHub Enterprise",
+                  "Azure DevOps",
+                  "LaunchDarkly",
+                  "Cloudflare AI Gateway (dynamic routes: versioned deploy with instant rollback)"
               ],
               "defendsAgainst": [
                 {
@@ -22347,11 +22444,10 @@ def consume_and_deploy(
                 }
               ],
               "toolsOpenSource": [
-                "LiteLLM",
-                "Envoy",
-                "Open Policy Agent (OPA)",
-                "OpenTelemetry",
-                "Cosign"
+                  "LiteLLM",
+                  "Envoy",
+                  "Open Policy Agent (OPA)",
+                  "Cosign"
               ],
               "toolsCommercial": [
                 "Cloudflare AI Gateway",
@@ -22472,16 +22568,16 @@ def consume_and_deploy(
                     }
                 ],
                 "toolsOpenSource":  [
-                                        "LiteLLM",
-                                        "Envoy Proxy",
-                                        "Open Policy Agent (OPA)",
-                                        "OpenTelemetry",
-                                        "Cosign"
-                                    ],
+                    "LiteLLM",
+                    "Envoy Proxy",
+                    "Open Policy Agent (OPA)",
+                    "Cosign (verify signed invocation-parameter policies before resolution; parameter enforcement external)",
+                    "agentgateway (provider-final parameter overrides; validate effective configuration and failure behavior)"
+                ],
                 "toolsCommercial": [
-                  "Prisma AIRS AI Gateway (formerly Portkey; managed request-parameter guardrails)",
-                  "Azure API Management (managed API gateway; request-body validation and transformation policies)",
-                  "Kong Konnect AI Gateway"
+                    "Prisma AIRS AI Gateway (formerly Portkey; per-target override_params and drop_params)",
+                    "Azure API Management (managed API gateway; request-body validation and transformation policies)",
+                    "Kong Konnect AI Gateway"
                 ],
                 "implementationGuidance":  [
                                                {
@@ -22733,13 +22829,13 @@ def consume_and_deploy(
                         "Envoy",
                         "Open Policy Agent (OPA)",
                         "Kubernetes NetworkPolicy",
-                        "Falco"
+                        "Falco (runtime checks for MCP baseline violations; admission and preventive confinement external)",
+                        "ToolHive (containerized MCP server runtime with network isolation and permission profiles)"
                     ],
                     "toolsCommercial": [
                         "Cloudflare Web Application Firewall (WAF)",
                         "Akamai App & API Protector",
-                        "Kong Konnect",
-                        "Datadog Cloud SIEM"
+                        "Kong Konnect"
                     ],
                     "defendsAgainst": [
                         {
@@ -22890,7 +22986,9 @@ def consume_and_deploy(
                         "SPIRE",
                         "jose (JWT/JWK verification)",
                         "Valkey",
-                        "Redis 8+ (AGPL-3.0)"
+                        "Redis 8+ (AGPL-3.0)",
+                        "Model Context Protocol TypeScript SDK v2 (MCP bearer authentication and protected-resource metadata)",
+                        "FastMCP (OAuthProxy consent and token swap; JWTVerifier)"
                     ],
                     "toolsCommercial": [
                         "Okta",
@@ -23047,8 +23145,10 @@ def consume_and_deploy(
                         "Cedar",
                         "gVisor",
                         "Firecracker",
-                        "Semgrep",
-                        "Zod (TypeScript argument-schema validation only; external object authorization required)"
+                        "Semgrep (static checks for unsafe MCP handler validation and authorization patterns; runtime enforcement external)",
+                        "Zod (TypeScript argument-schema validation only; external object authorization required)",
+                        "OpenFGA (relationship-based tool and object authorization for MCP servers)",
+                        "Smokescreen (SSRF-safe egress proxy for URL-fetching tools)"
                     ],
                     "toolsCommercial": [
                         "Snyk Code (pre-release SAST verification only)",
@@ -23205,9 +23305,11 @@ def consume_and_deploy(
                         "Git",
                         "Cosign",
                         "Open Policy Agent (OPA)",
-                        "Semgrep",
-                        "python-jsonschema",
-                        "Snyk Agent Scan (Snyk verification API required; sandbox untrusted MCP stdio discovery)"
+                        "Semgrep (deterministic checks on publication manifests and descriptions; semantic poisoning analysis and release gates external)",
+                        "python-jsonschema (MCP publication schema and annotation validation; approved-manifest equality and poisoning checks external)",
+                        "Snyk Agent Scan (Snyk verification API required; sandbox untrusted MCP stdio discovery)",
+                        "Cisco MCP Scanner (YARA, LLM and AI Defense analysis of tools, prompts and resources)",
+                        "MCP Registry publisher (mcp-publisher; GitHub, DNS or HTTP namespace verification)"
                     ],
                     "toolsCommercial": [
                         "GitHub Enterprise Cloud",
@@ -23355,9 +23457,10 @@ def consume_and_deploy(
                         "Ajv",
                         "Pydantic",
                         "DOMPurify",
-                        "OpenTelemetry",
                         "detect-secrets",
-                        "Microsoft Presidio"
+                        "Presidio",
+                        "Model Context Protocol TypeScript SDK v2 (server output-schema validation)",
+                        "Model Context Protocol Python SDK v2 (server output-schema validation and sanitized errors)"
                     ],
                     "toolsCommercial": [
                         "GitGuardian Secrets Detection",
@@ -23759,11 +23862,12 @@ def consume_and_deploy(
                       ]
                     },
                     "toolsOpenSource": [
-                        "Open Policy Agent (OPA)",
-                        "OpenMeter"
+                        "Open Policy Agent (operation-budget policy decisions; atomic reservations, leases and settlement ledger required)",
+                        "OpenMeter",
+                        "agentgateway (MCP tool rate-limit descriptors; external shared quota service required)"
                     ],
                     "toolsCommercial": [
-                        "OpenMeter Cloud"
+                        "Kong Konnect Metering & Billing (formerly OpenMeter Cloud)"
                     ],
                     "defendsAgainst": [
                         {
@@ -23836,12 +23940,12 @@ def consume_and_deploy(
                         {
                             "id": "AID-H-034.008-G001",
                             "implementation": "Translate authenticated MCP context into a separate idempotency identity and operation digest, then enforce the AID-I-003.003 authoritative ledger decision before work.",
-                            "howTo": "<h5>Applicability and ownership</h5><p>Use this adapter when the authoritative <code>AID-I-003.003</code> ledger selects an MCP operation for metering. The MCP server supplies authenticated protocol context and enforces the returned decision; it does not define limits, counter scopes, settlement modes, policy generations, or quota storage. The ledger must distinguish fixed consumption, incremental usage, renewable leases, and protected-effect reservations.</p><h5>Reserve with separate idempotency and content bindings</h5><p>Derive the stable idempotency identity from the authenticated scope plus JSON-RPC request ID. Derive the canonical operation digest separately from the method, tool or resource name, arguments, Task or object identity, and server release. The ledger must return a conflict when the same idempotency identity arrives with different operation bytes.</p><pre><code class=\"language-javascript\">// File: src/budget/mcpBudgetAdapter.js\nimport crypto from \"node:crypto\";\nimport fs from \"node:fs\";\nimport https from \"node:https\";\n\nconst ACTIONS = new Set([\n  \"EXECUTE_NEW\",\n  \"DO_NOT_EXECUTE_RECONCILE\",\n  \"RETURN_COMMITTED\",\n  \"RETURN_NO_EFFECT\",\n  \"DENY\"\n]);\n\nconst canonical = value =&gt; {\n  if (\n    value === null || typeof value === \"string\"\n    || typeof value === \"boolean\"\n  ) return JSON.stringify(value);\n  if (Number.isSafeInteger(value)) return String(value);\n  if (Array.isArray(value)) {\n    return \"[\" + value.map(canonical).join(\",\") + \"]\";\n  }\n  if (value &amp;&amp; Object.getPrototypeOf(value) === Object.prototype) {\n    return \"{\" + Object.keys(value).sort().map(\n      key =&gt; JSON.stringify(key) + \":\" + canonical(value[key])\n    ).join(\",\") + \"}\";\n  }\n  throw new Error(\"non_canonical_mcp_operation_value\");\n};\n\nconst exactKeys = (value, expected) =&gt;\n  value &amp;&amp; Object.getPrototypeOf(value) === Object.prototype\n  &amp;&amp; Object.keys(value).sort().join(\",\")\n    === [...expected].sort().join(\",\");\n\nconst decodeBase64 = value =&gt; {\n  if (typeof value !== \"string\" || !/^[A-Za-z0-9+/]+={0,2}$/.test(value)) {\n    throw new Error(\"invalid_ledger_envelope_base64\");\n  }\n  const decoded = Buffer.from(value, \"base64\");\n  if (!decoded.length || decoded.toString(\"base64\") !== value) {\n    throw new Error(\"non_canonical_ledger_envelope_base64\");\n  }\n  return decoded;\n};\n\nfunction positiveMilliseconds(name) {\n  const value = Number(process.env[name]);\n  if (!Number.isSafeInteger(value) || value &lt;= 0) {\n    throw new Error(\"invalid_required_timeout:\" + name);\n  }\n  return value;\n}\n\nfunction loadHexKey(name) {\n  const value = Buffer.from(process.env[name] || \"\", \"hex\");\n  if (value.length &lt; 32) throw new Error(\"invalid_digest_key:\" + name);\n  return value;\n}\n\nfunction postHttps(url, options, body) {\n  return new Promise((resolve, reject) => {\n    const request = https.request(url, {\n      method: \"POST\",\n      agent: options.agent,\n      headers: options.headers,\n      timeout: options.timeoutMs\n    }, response => {\n      const chunks = [];\n      let received = 0;\n      response.on(\"data\", chunk => {\n        received += chunk.length;\n        if (received > options.maxResponseBytes) {\n          request.destroy(new Error(\"budget_ledger_response_too_large\"));\n          return;\n        }\n        chunks.push(chunk);\n      });\n      response.on(\"end\", () => resolve({\n        statusCode: response.statusCode || 0,\n        body: Buffer.concat(chunks)\n      }));\n    });\n    request.on(\"timeout\", () =>\n      request.destroy(new Error(\"budget_ledger_timeout\"))\n    );\n    request.on(\"error\", reject);\n    request.end(body);\n  });\n}\n\n\nfunction verifyLedgerEnvelope(rawEnvelope, publicKey, expected) {\n  const envelope = JSON.parse(rawEnvelope.toString(\"utf8\"));\n  if (!exactKeys(envelope, [\"payload_b64\", \"signature_b64\"])) {\n    throw new Error(\"ledger_envelope_schema_differs\");\n  }\n  const payloadBytes = decodeBase64(envelope.payload_b64);\n  const signature = decodeBase64(envelope.signature_b64);\n  if (!crypto.verify(null, payloadBytes, publicKey, signature)) {\n    throw new Error(\"ledger_response_signature_invalid\");\n  }\n  const payload = JSON.parse(payloadBytes.toString(\"utf8\"));\n  const fields = [\n    \"action\", \"expires_at\", \"idempotency_key\", \"ledger_policy_digest\",\n    \"ledger_policy_generation\", \"operation_digest\", \"required_hooks\",\n    \"reservation_id\", \"schema_version\", \"state\"\n  ];\n  if (\n    !exactKeys(payload, fields)\n    || payload.schema_version !== \"aidefend.budget-reservation.v1\"\n    || payload.idempotency_key !== expected.idempotencyKey\n    || payload.operation_digest !== expected.operationDigest\n    || !ACTIONS.has(payload.action)\n    || !Number.isSafeInteger(payload.ledger_policy_generation)\n    || payload.ledger_policy_generation &lt;= 0\n    || !/^[a-f0-9]{64}$/.test(payload.ledger_policy_digest)\n    || !Array.isArray(payload.required_hooks)\n    || payload.required_hooks.length\n      !== new Set(payload.required_hooks).size\n    || !Number.isFinite(Date.parse(payload.expires_at))\n    || Date.parse(payload.expires_at) &lt;= Date.now()\n  ) {\n    throw new Error(\"ledger_reservation_binding_invalid\");\n  }\n  if (\n    payload.action !== \"DENY\"\n    &amp;&amp; (typeof payload.reservation_id !== \"string\"\n      || !payload.reservation_id)\n  ) {\n    throw new Error(\"ledger_reservation_id_missing\");\n  }\n  return payload;\n}\n\nexport class McpBudgetAdapter {\n  constructor() {\n    this.baseUrl = new URL(process.env.MCP_BUDGET_LEDGER_URL);\n    if (this.baseUrl.protocol !== \"https:\") {\n      throw new Error(\"budget ledger must use HTTPS\");\n    }\n    this.timeoutMs = positiveMilliseconds(\n      \"MCP_BUDGET_LEDGER_TIMEOUT_MS\"\n    );\n    this.digestKey = loadHexKey(\"MCP_BUDGET_CONTEXT_HMAC_KEY_HEX\");\n    this.digestKeyVersion = process.env.MCP_BUDGET_CONTEXT_KEY_VERSION;\n    if (!this.digestKeyVersion) {\n      throw new Error(\"budget context digest-key version is required\");\n    }\n    this.ledgerPublicKey = crypto.createPublicKey(\n      fs.readFileSync(process.env.MCP_BUDGET_LEDGER_VERIFY_KEY)\n    );\n    this.maxResponseBytes = positiveMilliseconds(\n      \"MCP_BUDGET_LEDGER_MAX_RESPONSE_BYTES\"\n    );\n    this.agent = new https.Agent({\n      ca: fs.readFileSync(process.env.MCP_BUDGET_LEDGER_CA_FILE),\n      cert: fs.readFileSync(process.env.MCP_BUDGET_CLIENT_CERT),\n      key: fs.readFileSync(process.env.MCP_BUDGET_CLIENT_KEY),\n      minVersion: \"TLSv1.2\"\n    });\n  }\n\n  hmac(label, value) {\n    return crypto.createHmac(\"sha256\", this.digestKey)\n      .update(label)\n      .update(Buffer.from([0]))\n      .update(canonical(value))\n      .digest(\"hex\");\n  }\n\n  async post(pathname, body, expected) {\n    const url = new URL(pathname, this.baseUrl);\n    if (url.origin !== this.baseUrl.origin) {\n      throw new Error(\"budget ledger origin changed\");\n    }\n    const response = await postHttps(url, {\n      agent: this.agent,\n      headers: {\"content-type\": \"application/json\"},\n      timeoutMs: this.timeoutMs,\n      maxResponseBytes: this.maxResponseBytes\n    }, canonical(body));\n    const raw = response.body;\n    if (response.statusCode === 409) {\n      throw new Error(\"budget_idempotency_content_conflict\");\n    }\n    if (response.statusCode !== 200) {\n      throw new Error(\"budget_ledger_http_\" + response.statusCode);\n    }\n    return verifyLedgerEnvelope(\n      raw, this.ledgerPublicKey, expected\n    );\n  }\n\n  async reserve(input) {\n    const auth = input.auth;\n    const context = input.context;\n    if (\n      !auth?.subject || !auth?.activeTenantId || !context?.clientId\n      || input.requestId === null || input.requestId === undefined\n      || !context.serverRelease || !input.method\n    ) {\n      throw new Error(\"authenticated_mcp_budget_context_missing\");\n    }\n    const operationName = input.method\n      + (input.name ? \":\" + input.name : \"\");\n    const idempotencyKey = this.hmac(\"idempotency\", {\n      tenant: auth.activeTenantId,\n      subject: auth.subject,\n      client_id: context.clientId,\n      request_id: input.requestId,\n      operation: operationName\n    });\n    const operationDigest = this.hmac(\"operation\", {\n      tenant: auth.activeTenantId,\n      subject: auth.subject,\n      client_id: context.clientId,\n      request_id: input.requestId,\n      method: input.method,\n      name: input.name || null,\n      arguments: input.arguments || null,\n      task_id: context.taskId || null,\n      subscription_id: context.subscriptionId || null,\n      object_id: context.objectId || null,\n      server_release: context.serverRelease\n    });\n    const body = {\n      schema_version: \"aidefend.mcp-budget-admission.v1\",\n      context_digest_key_version: this.digestKeyVersion,\n      idempotency_key: idempotencyKey,\n      operation_digest: operationDigest,\n      operation: operationName,\n      tenant_id: auth.activeTenantId,\n      subject_id: auth.subject,\n      client_id: context.clientId,\n      task_id: context.taskId || null,\n      subscription_id: context.subscriptionId || null,\n      object_id: context.objectId || null,\n      server_release: context.serverRelease\n    };\n    const reservation = await this.post(\n      \"/v1/mcp/reservations\",\n      body,\n      {idempotencyKey, operationDigest}\n    );\n    if (reservation.action === \"DENY\") {\n      throw new Error(\"mcp_budget_denied\");\n    }\n    return {\n      ...reservation,\n      idempotencyKey,\n      operationDigest\n    };\n  }\n}\n</code></pre><h5>Enforce retry state before invoking work</h5><pre><code class=\"language-javascript\">// File: src/budget/reservationDecision.js\nexport function reservationDecision(reservation) {\n  switch (reservation.action) {\n    case \"EXECUTE_NEW\":\n      return {execute: true, terminal: null};\n    case \"DO_NOT_EXECUTE_RECONCILE\":\n      return {execute: false, terminal: \"reconcile\"};\n    case \"RETURN_COMMITTED\":\n      return {execute: false, terminal: \"committed\"};\n    case \"RETURN_NO_EFFECT\":\n      return {execute: false, terminal: \"no_effect\"};\n    default:\n      throw new Error(\"unusable_budget_reservation_action\");\n  }\n}\n</code></pre><p><strong>Ledger contract required from AID-I-003.003:</strong> The authoritative service must reject policy-generation rollback, preserve active-window usage across policy rotation, keep reservations at least through the maximum execution and reconciliation horizon, bind the original policy digest, dimension rules, backend identity, and receipt keys to the reservation, and return the prior state for identical retries. Same idempotency identity plus different canonical content is a conflict. An existing, pending, committed, or no-effect attempt is never executed again under the same protocol request ID.</p><h5>Verify safely</h5><p>Exercise all policy-selected MCP methods and tools with identical retries, same request ID with changed arguments, cross-tenant/client/tool reuse, policy rotation and rollback, replica clock skew, ledger failover, stale response signatures, and every returned action. Confirm the MCP handler invokes work only for <code>EXECUTE_NEW</code> and that unknown ledger state blocks selected privileged or state-changing operations.</p>"
+                            "howTo": "<h5>Applicability and ownership</h5><p>Use this adapter when the authoritative <code>AID-I-003.003</code> ledger selects an MCP operation for metering. The MCP server supplies authenticated protocol context and enforces the returned decision; it does not define limits, counter scopes, settlement modes, policy generations, or quota storage. The ledger must distinguish fixed consumption, incremental usage, renewable leases, and protected-effect reservations.</p><h5>Reserve with separate idempotency and content bindings</h5><p>Resolve a logical operation identity inside the authenticated server handler, in this order: a server-issued operation ID retained in integrity-verified <code>requestState</code>; the owned Task ID for that Task's original execution; or the tool's documented idempotency parameter. Populate only the selected trusted context field below. For a multi-round-trip operation, allocate and persist its server operation ID before the first budget reservation, populate requestStateOperationId from that server record, and carry the same ID in the integrity-protected requestState returned to the client. On resume, recover it only from verified state. Generating it after the initial reservation would leave that first admission unrelated to its retry. Verify the state's principal, tenant/client, expiry, originating operation and parameter binding through H-034.005; resolve Task ownership through H-034.007. A Task poll, cancellation, input update or separate business action is not a retry of its original execution. A caller-provided idempotency parameter is acceptable only for a tool that explicitly implements that contract, scoped to the authenticated owner and operation. Invalid supplied identity is rejected, not silently replaced. With none of these identities, create a fresh reservation for each admission. JSON-RPC IDs are correlation values only: completed IDs may be reused, and multi-round-trip retries must use a different ID. Exclude transport IDs and echoed continuation metadata from the content digest; retain every business argument. Reserve an effect only once its business arguments are resolved; a changed intended effect needs a new logical operation.</p><pre><code class=\"language-javascript\">// File: src/budget/mcpBudgetAdapter.js\nimport crypto from \"node:crypto\";\nimport fs from \"node:fs\";\nimport https from \"node:https\";\n\nconst ACTIONS = new Set([\n  \"EXECUTE_NEW\",\n  \"DO_NOT_EXECUTE_RECONCILE\",\n  \"RETURN_COMMITTED\",\n  \"RETURN_NO_EFFECT\",\n  \"DENY\"\n]);\n\nconst canonical = value =&gt; {\n  if (\n    value === null || typeof value === \"string\"\n    || typeof value === \"boolean\"\n  ) return JSON.stringify(value);\n  if (Number.isSafeInteger(value)) return String(value);\n  if (Array.isArray(value)) {\n    return \"[\" + value.map(canonical).join(\",\") + \"]\";\n  }\n  if (value &amp;&amp; Object.getPrototypeOf(value) === Object.prototype) {\n    return \"{\" + Object.keys(value).sort().map(\n      key =&gt; JSON.stringify(key) + \":\" + canonical(value[key])\n    ).join(\",\") + \"}\";\n  }\n  throw new Error(\"non_canonical_mcp_operation_value\");\n};\n\nconst exactKeys = (value, expected) =&gt;\n  value &amp;&amp; Object.getPrototypeOf(value) === Object.prototype\n  &amp;&amp; Object.keys(value).sort().join(\",\")\n    === [...expected].sort().join(\",\");\n\nconst decodeBase64 = value =&gt; {\n  if (typeof value !== \"string\" || !/^[A-Za-z0-9+/]+={0,2}$/.test(value)) {\n    throw new Error(\"invalid_ledger_envelope_base64\");\n  }\n  const decoded = Buffer.from(value, \"base64\");\n  if (!decoded.length || decoded.toString(\"base64\") !== value) {\n    throw new Error(\"non_canonical_ledger_envelope_base64\");\n  }\n  return decoded;\n};\n\nfunction positiveMilliseconds(name) {\n  const value = Number(process.env[name]);\n  if (!Number.isSafeInteger(value) || value &lt;= 0) {\n    throw new Error(\"invalid_required_timeout:\" + name);\n  }\n  return value;\n}\n\nfunction loadHexKey(name) {\n  const value = Buffer.from(process.env[name] || \"\", \"hex\");\n  if (value.length &lt; 32) throw new Error(\"invalid_digest_key:\" + name);\n  return value;\n}\n\nfunction postHttps(url, options, body) {\n  return new Promise((resolve, reject) =&gt; {\n    const request = https.request(url, {\n      method: \"POST\",\n      agent: options.agent,\n      headers: options.headers,\n      timeout: options.timeoutMs\n    }, response =&gt; {\n      const chunks = [];\n      let received = 0;\n      response.on(\"data\", chunk =&gt; {\n        received += chunk.length;\n        if (received &gt; options.maxResponseBytes) {\n          request.destroy(new Error(\"budget_ledger_response_too_large\"));\n          return;\n        }\n        chunks.push(chunk);\n      });\n      response.on(\"end\", () =&gt; resolve({\n        statusCode: response.statusCode || 0,\n        body: Buffer.concat(chunks)\n      }));\n    });\n    request.on(\"timeout\", () =&gt;\n      request.destroy(new Error(\"budget_ledger_timeout\"))\n    );\n    request.on(\"error\", reject);\n    request.end(body);\n  });\n}\n\n\nfunction verifyLedgerEnvelope(rawEnvelope, publicKey, expected) {\n  const envelope = JSON.parse(rawEnvelope.toString(\"utf8\"));\n  if (!exactKeys(envelope, [\"payload_b64\", \"signature_b64\"])) {\n    throw new Error(\"ledger_envelope_schema_differs\");\n  }\n  const payloadBytes = decodeBase64(envelope.payload_b64);\n  const signature = decodeBase64(envelope.signature_b64);\n  if (!crypto.verify(null, payloadBytes, publicKey, signature)) {\n    throw new Error(\"ledger_response_signature_invalid\");\n  }\n  const payload = JSON.parse(payloadBytes.toString(\"utf8\"));\n  const fields = [\n    \"action\", \"expires_at\", \"idempotency_key\", \"ledger_policy_digest\",\n    \"ledger_policy_generation\", \"operation_digest\", \"required_hooks\",\n    \"reservation_id\", \"schema_version\", \"state\"\n  ];\n  if (\n    !exactKeys(payload, fields)\n    || payload.schema_version !== \"aidefend.budget-reservation.v1\"\n    || payload.idempotency_key !== expected.idempotencyKey\n    || payload.operation_digest !== expected.operationDigest\n    || !ACTIONS.has(payload.action)\n    || !Number.isSafeInteger(payload.ledger_policy_generation)\n    || payload.ledger_policy_generation &lt;= 0\n    || !/^[a-f0-9]{64}$/.test(payload.ledger_policy_digest)\n    || !Array.isArray(payload.required_hooks)\n    || payload.required_hooks.length\n      !== new Set(payload.required_hooks).size\n    || !Number.isFinite(Date.parse(payload.expires_at))\n    || Date.parse(payload.expires_at) &lt;= Date.now()\n  ) {\n    throw new Error(\"ledger_reservation_binding_invalid\");\n  }\n  if (\n    payload.action !== \"DENY\"\n    &amp;&amp; (typeof payload.reservation_id !== \"string\"\n      || !payload.reservation_id)\n  ) {\n    throw new Error(\"ledger_reservation_id_missing\");\n  }\n  return payload;\n}\n\nexport function logicalOperationIdentity(context) {\n  // These fields are constructed by the trusted server handler, never spread\n  // from request params. H-034.005 verifies requestState; H-034.007 checks Task ownership.\n  const candidates = [\n    [\"request_state\", context.requestStateOperationId],\n    [\"task_execution\", context.taskExecutionId],\n    [\"tool_parameter\", context.toolIdempotencyKey]\n  ];\n  for (const [kind, id] of candidates) {\n    if (id === undefined || id === null) continue;\n    if (typeof id !== \"string\" || !id) throw new Error(\"invalid_logical_operation_identity\");\n    return {kind, id};\n  }\n  // No retry identity means a NEW admission, even if the RPC ID/arguments repeat.\n  return {kind: \"new_admission\", id: crypto.randomUUID()};\n}\n\nexport class McpBudgetAdapter {\n  constructor() {\n    this.baseUrl = new URL(process.env.MCP_BUDGET_LEDGER_URL);\n    if (this.baseUrl.protocol !== \"https:\") {\n      throw new Error(\"budget ledger must use HTTPS\");\n    }\n    this.timeoutMs = positiveMilliseconds(\n      \"MCP_BUDGET_LEDGER_TIMEOUT_MS\"\n    );\n    this.digestKey = loadHexKey(\"MCP_BUDGET_CONTEXT_HMAC_KEY_HEX\");\n    this.digestKeyVersion = process.env.MCP_BUDGET_CONTEXT_KEY_VERSION;\n    if (!this.digestKeyVersion) {\n      throw new Error(\"budget context digest-key version is required\");\n    }\n    this.ledgerPublicKey = crypto.createPublicKey(\n      fs.readFileSync(process.env.MCP_BUDGET_LEDGER_VERIFY_KEY)\n    );\n    this.maxResponseBytes = positiveMilliseconds(\n      \"MCP_BUDGET_LEDGER_MAX_RESPONSE_BYTES\"\n    );\n    this.agent = new https.Agent({\n      ca: fs.readFileSync(process.env.MCP_BUDGET_LEDGER_CA_FILE),\n      cert: fs.readFileSync(process.env.MCP_BUDGET_CLIENT_CERT),\n      key: fs.readFileSync(process.env.MCP_BUDGET_CLIENT_KEY),\n      minVersion: \"TLSv1.2\"\n    });\n  }\n\n  hmac(label, value) {\n    return crypto.createHmac(\"sha256\", this.digestKey)\n      .update(label)\n      .update(Buffer.from([0]))\n      .update(canonical(value))\n      .digest(\"hex\");\n  }\n\n  async post(pathname, body, expected) {\n    const url = new URL(pathname, this.baseUrl);\n    if (url.origin !== this.baseUrl.origin) {\n      throw new Error(\"budget ledger origin changed\");\n    }\n    const response = await postHttps(url, {\n      agent: this.agent,\n      headers: {\"content-type\": \"application/json\"},\n      timeoutMs: this.timeoutMs,\n      maxResponseBytes: this.maxResponseBytes\n    }, canonical(body));\n    const raw = response.body;\n    if (response.statusCode === 409) {\n      throw new Error(\"budget_idempotency_content_conflict\");\n    }\n    if (response.statusCode !== 200) {\n      throw new Error(\"budget_ledger_http_\" + response.statusCode);\n    }\n    return verifyLedgerEnvelope(\n      raw, this.ledgerPublicKey, expected\n    );\n  }\n\n  async reserve(input) {\n    const auth = input.auth;\n    const context = input.context;\n    if (\n      !auth?.subject || !auth?.activeTenantId || !context?.clientId\n      || input.requestId === null || input.requestId === undefined\n      || !context.serverRelease || !input.method\n    ) {\n      throw new Error(\"authenticated_mcp_budget_context_missing\");\n    }\n    const operationName = input.method\n      + (input.name ? \":\" + input.name : \"\");\n    const logicalIdentity = logicalOperationIdentity(context);\n    const idempotencyKey = this.hmac(\"idempotency\", {\n      tenant: auth.activeTenantId,\n      subject: auth.subject,\n      client_id: context.clientId,\n      logical_identity: logicalIdentity,\n      operation: operationName\n    });\n    const operationDigest = this.hmac(\"operation\", {\n      tenant: auth.activeTenantId,\n      subject: auth.subject,\n      client_id: context.clientId,\n      method: input.method,\n      name: input.name || null,\n      arguments: input.arguments || null,\n      task_id: context.taskId || null,\n      subscription_id: context.subscriptionId || null,\n      object_id: context.objectId || null,\n      server_release: context.serverRelease\n    });\n    const body = {\n      schema_version: \"aidefend.mcp-budget-admission.v1\",\n      context_digest_key_version: this.digestKeyVersion,\n      idempotency_key: idempotencyKey,\n      operation_digest: operationDigest,\n      operation: operationName,\n      tenant_id: auth.activeTenantId,\n      subject_id: auth.subject,\n      client_id: context.clientId,\n      task_id: context.taskId || null,\n      subscription_id: context.subscriptionId || null,\n      object_id: context.objectId || null,\n      server_release: context.serverRelease\n    };\n    const reservation = await this.post(\n      \"/v1/mcp/reservations\",\n      body,\n      {idempotencyKey, operationDigest}\n    );\n    if (reservation.action === \"DENY\") {\n      throw new Error(\"mcp_budget_denied\");\n    }\n    return {\n      ...reservation,\n      correlationRequestId: input.requestId,\n      idempotencyKey,\n      operationDigest\n    };\n  }\n}\n</code></pre><h5>Enforce retry state before invoking work</h5><pre><code class=\"language-javascript\">// File: src/budget/reservationDecision.js\nexport function reservationDecision(reservation) {\n  switch (reservation.action) {\n    case \"EXECUTE_NEW\":\n      return {execute: true, terminal: null};\n    case \"DO_NOT_EXECUTE_RECONCILE\":\n      return {execute: false, terminal: \"reconcile\"};\n    case \"RETURN_COMMITTED\":\n      return {execute: false, terminal: \"committed\"};\n    case \"RETURN_NO_EFFECT\":\n      return {execute: false, terminal: \"no_effect\"};\n    default:\n      throw new Error(\"unusable_budget_reservation_action\");\n  }\n}\n</code></pre><p><strong>Ledger contract required from AID-I-003.003:</strong> The authoritative service must reject policy-generation rollback, preserve active-window usage across policy rotation, keep reservations at least through the maximum execution and reconciliation horizon, bind the original policy digest, dimension rules, backend identity, and receipt keys to the reservation, and return the prior state for identical retries. Same idempotency identity plus different canonical content is a conflict. An existing, pending, committed, or no-effect attempt is not executed again under the same authenticated logical operation identity. This is not an exactly-once guarantee when no logical identity exists; high-impact handlers must supply durable backend idempotency and reconciliation through H-018.008. Retrying the ledger HTTP call itself reuses the already-built admission body, rather than allocating another identity.</p><h5>Verify safely</h5><p>Exercise all policy-selected MCP methods and tools with new requests that reuse a completed JSON-RPC ID (must receive a new reservation), retries with a new JSON-RPC ID and the same logical identity/content (must retain the reservation and prior state), the same logical identity with changed business arguments (must conflict), requests without logical identity (always new admission), forged/expired requestState, unrelated Task lifecycle calls, cross-tenant/client/tool reuse, policy rotation and rollback, replica clock skew, ledger failover, stale response signatures, and every returned action. Confirm the MCP handler invokes work only for <code>EXECUTE_NEW</code> and that unknown ledger state blocks selected privileged or state-changing operations.</p><p>Protocol basis: <a href=\"https://modelcontextprotocol.io/specification/2026-07-28/basic/patterns/mrtr\">MCP multi-round-trip requests</a>. Do not put raw state, tool secrets or arguments into correlation logs.</p>"
                         },
                        {
                            "id": "AID-H-034.008-G002",
                             "implementation": "Meter MCP lifecycle deltas and leases, authorize covered effects, and settle only through the reservation-bound authoritative ledger without re-executing retries.",
-                            "howTo": "<h5>Lifecycle hooks and settlement boundary</h5><p>After admission, honor every lifecycle hook returned by the authoritative ledger. Fixed request consumption is never refunded. Token and byte usage is appended as measured deltas. Concurrency, Task, and stream dimensions use renewable leases. Only a reservation explicitly marked by the ledger as <code>REFUND_ON_SIGNED_NO_EFFECT</code> may be released after the ledger verifies an authoritative backend <code>NO_EFFECT</code> receipt. A timeout, exception, disconnect, missing receipt, or unavailable ledger remains pending reconciliation.</p><h5>Meter, renew, authorize effects, and settle through the same ledger</h5><pre><code class=\"language-javascript\">// File: src/budget/mcpBudgetLifecycle.js\nimport { reservationDecision } from \"./reservationDecision.js\";\n\nconst SUPPORTED_HOOKS = new Set([\n  \"INCREMENTAL_TOKENS\",\n  \"INCREMENTAL_BYTES\",\n  \"LEASE_RENEWAL\",\n  \"PRE_BACKEND_EFFECT\"\n]);\n\nfunction requirePositiveInteger(value, field) {\n  if (!Number.isSafeInteger(value) || value &lt;= 0) {\n    throw new Error(\"invalid_\" + field);\n  }\n  return value;\n}\n\nasync function ledgerTransition(adapter, reservation, path, body) {\n  return adapter.post(\n    path,\n    {\n      schema_version: \"aidefend.mcp-budget-transition.v1\",\n      reservation_id: reservation.reservation_id,\n      idempotency_key: reservation.idempotencyKey,\n      operation_digest: reservation.operationDigest,\n      ...body\n    },\n    {\n      idempotencyKey: reservation.idempotencyKey,\n      operationDigest: reservation.operationDigest\n    }\n  );\n}\n\nexport function createBudgetHooks(adapter, reservation) {\n  const unknown = reservation.required_hooks.filter(\n    hook =&gt; !SUPPORTED_HOOKS.has(hook)\n  );\n  if (unknown.length) {\n    throw new Error(\"unsupported_required_budget_hooks:\" + unknown.join(\",\"));\n  }\n  let usageSequence = 0;\n  return {\n    async recordTokens(units) {\n      if (!reservation.required_hooks.includes(\"INCREMENTAL_TOKENS\")) {\n        throw new Error(\"token_metering_not_selected\");\n      }\n      return ledgerTransition(\n        adapter,\n        reservation,\n        \"/v1/mcp/reservations/usage\",\n        {\n          sequence: ++usageSequence,\n          measurement: \"tokens\",\n          units: requirePositiveInteger(units, \"token_units\")\n        }\n      );\n    },\n    async recordBytes(units) {\n      if (!reservation.required_hooks.includes(\"INCREMENTAL_BYTES\")) {\n        throw new Error(\"byte_metering_not_selected\");\n      }\n      return ledgerTransition(\n        adapter,\n        reservation,\n        \"/v1/mcp/reservations/usage\",\n        {\n          sequence: ++usageSequence,\n          measurement: \"bytes\",\n          units: requirePositiveInteger(units, \"byte_units\")\n        }\n      );\n    },\n    async renewLease(leaseSequence) {\n      if (!reservation.required_hooks.includes(\"LEASE_RENEWAL\")) {\n        throw new Error(\"lease_renewal_not_selected\");\n      }\n      return ledgerTransition(\n        adapter,\n        reservation,\n        \"/v1/mcp/reservations/lease\",\n        {\n          lease_sequence: requirePositiveInteger(\n            leaseSequence, \"lease_sequence\"\n          )\n        }\n      );\n    },\n    async authorizeBackendEffect(effectDigest) {\n      if (!reservation.required_hooks.includes(\"PRE_BACKEND_EFFECT\")) {\n        throw new Error(\"backend_effect_hook_not_selected\");\n      }\n      if (!/^[a-f0-9]{64}$/.test(effectDigest)) {\n        throw new Error(\"backend_effect_digest_invalid\");\n      }\n      return ledgerTransition(\n        adapter,\n        reservation,\n        \"/v1/mcp/reservations/effects\",\n        {effect_digest: effectDigest}\n      );\n    }\n  };\n}\n\nasync function markUnknown(adapter, reservation, reasonClass) {\n  return ledgerTransition(\n    adapter,\n    reservation,\n    \"/v1/mcp/reservations/unknown\",\n    {reason_class: reasonClass}\n  );\n}\n\nasync function settleTerminal(\n  adapter, reservation, rawTerminalEnvelope\n) {\n  if (!Buffer.isBuffer(rawTerminalEnvelope) || !rawTerminalEnvelope.length) {\n    throw new Error(\"authoritative_terminal_receipt_missing\");\n  }\n  return ledgerTransition(\n    adapter,\n    reservation,\n    \"/v1/mcp/reservations/settle\",\n    {\n      backend_terminal_envelope_b64:\n        rawTerminalEnvelope.toString(\"base64\")\n    }\n  );\n}\n\nasync function reconcileExisting(adapter, reservation, input) {\n  let rawTerminalEnvelope;\n  try {\n    rawTerminalEnvelope = await input.readAuthoritativeTerminalReceipt({\n      idempotencyKey: reservation.idempotencyKey,\n      reservationId: reservation.reservation_id\n    });\n  } catch {\n    return markUnknown(\n      adapter, reservation, \"backend_reconciliation_unavailable\"\n    );\n  }\n  if (!Buffer.isBuffer(rawTerminalEnvelope)) {\n    return markUnknown(\n      adapter, reservation, \"backend_terminal_state_unknown\"\n    );\n  }\n  return settleTerminal(adapter, reservation, rawTerminalEnvelope);\n}\n\nexport async function executeWithBudget(adapter, input) {\n  const reservation = await adapter.reserve(input);\n  const decision = reservationDecision(reservation);\n  if (!decision.execute) {\n    if (decision.terminal === \"committed\") {\n      const committed = await input.readCommittedResult({\n        idempotencyKey: reservation.idempotencyKey,\n        reservationId: reservation.reservation_id\n      });\n      if (committed === undefined) {\n        throw new Error(\"committed_result_unavailable_do_not_reexecute\");\n      }\n      return {value: committed, reservation, replayed: true};\n    }\n    if (decision.terminal === \"no_effect\") {\n      return {\n        value: null,\n        reservation,\n        replayed: true,\n        terminalState: \"NO_EFFECT\"\n      };\n    }\n    const reconciliation = await reconcileExisting(\n      adapter, reservation, input\n    );\n    return {\n      value: null,\n      reservation,\n      replayed: true,\n      terminalState: reconciliation.state\n    };\n  }\n\n  const hooks = createBudgetHooks(adapter, reservation);\n  let response;\n  try {\n    response = await input.invokeBackend({\n      idempotencyKey: reservation.idempotencyKey,\n      reservationId: reservation.reservation_id,\n      budgetHooks: hooks\n    });\n  } catch (error) {\n    try {\n      await markUnknown(\n        adapter, reservation, \"backend_invocation_exception\"\n      );\n    } catch {\n      error.budgetSettlementUnknown = true;\n    }\n    throw error;\n  }\n  if (!Buffer.isBuffer(response?.signedTerminalEnvelope)) {\n    await markUnknown(\n      adapter, reservation, \"backend_terminal_receipt_missing\"\n    );\n    throw new Error(\"backend_terminal_receipt_missing\");\n  }\n  const settlement = await settleTerminal(\n    adapter, reservation, response.signedTerminalEnvelope\n  );\n  if (\n    ![\"SETTLED_COMMITTED\", \"SETTLED_NO_EFFECT\"].includes(\n      settlement.state\n    )\n  ) {\n    throw new Error(\"budget_terminal_settlement_not_established\");\n  }\n  return {\n    value: response.value,\n    reservation,\n    settlement,\n    replayed: false\n  };\n}\n</code></pre><p><strong>Authoritative-ledger requirements:</strong> <code>AID-I-003.003</code> must use server time, independent per-scope and per-operation namespaces, atomic multidimensional admission, dimension-specific settlement modes, monotonic policy generations, rotation rules that preserve active usage, renewable fenced leases, incremental usage sequences, and reservation-bound backend/key trust. It must cache or reference terminal results sufficiently to prevent committed retries from re-executing. H-034.008 consumes those guarantees and must not implement a second counter store.</p><h5>Verify safely</h5><p>Exercise fixed request use plus refundable effect reservation, incremental token and byte deltas, concurrency and Task/stream lease expiry, backend commit-before-timeout, timeout-before-commit, signed <code>NO_EFFECT</code>, invalid and wrong-backend receipts, ledger outage during each transition, duplicate usage sequence, identical retry in every terminal state, and process restart. Confirm only the ledger applies refunds, fixed consumption remains charged after <code>NO_EFFECT</code>, a committed or pending attempt never re-executes, and reconciliation cannot create capacity.</p>"
+                            "howTo": "<h5>Lifecycle hooks and settlement boundary</h5><p>After admission, honor every lifecycle hook returned by the authoritative ledger. Fixed request consumption is never refunded. Token and byte usage is appended as measured deltas. Concurrency, Task, and stream dimensions use renewable leases. Only a reservation explicitly marked by the ledger as <code>REFUND_ON_SIGNED_NO_EFFECT</code> may be released after the ledger verifies an authoritative backend <code>NO_EFFECT</code> receipt. A timeout, exception, disconnect, missing receipt, or unavailable ledger remains pending reconciliation.</p><h5>Meter, renew, authorize effects, and settle through the same ledger</h5><pre><code class=\"language-javascript\">// File: src/budget/mcpBudgetLifecycle.js\nimport { reservationDecision } from \"./reservationDecision.js\";\n\nconst SUPPORTED_HOOKS = new Set([\n  \"INCREMENTAL_TOKENS\",\n  \"INCREMENTAL_BYTES\",\n  \"LEASE_RENEWAL\",\n  \"PRE_BACKEND_EFFECT\"\n]);\n\nfunction requirePositiveInteger(value, field) {\n  if (!Number.isSafeInteger(value) || value &lt;= 0) {\n    throw new Error(\"invalid_\" + field);\n  }\n  return value;\n}\n\nasync function ledgerTransition(adapter, reservation, path, body) {\n  return adapter.post(\n    path,\n    {\n      schema_version: \"aidefend.mcp-budget-transition.v1\",\n      reservation_id: reservation.reservation_id,\n      idempotency_key: reservation.idempotencyKey,\n      operation_digest: reservation.operationDigest,\n      ...body\n    },\n    {\n      idempotencyKey: reservation.idempotencyKey,\n      operationDigest: reservation.operationDigest\n    }\n  );\n}\n\nexport function createBudgetHooks(adapter, reservation) {\n  const unknown = reservation.required_hooks.filter(\n    hook =&gt; !SUPPORTED_HOOKS.has(hook)\n  );\n  if (unknown.length) {\n    throw new Error(\"unsupported_required_budget_hooks:\" + unknown.join(\",\"));\n  }\n  let usageSequence = 0;\n  return {\n    async recordTokens(units) {\n      if (!reservation.required_hooks.includes(\"INCREMENTAL_TOKENS\")) {\n        throw new Error(\"token_metering_not_selected\");\n      }\n      return ledgerTransition(\n        adapter,\n        reservation,\n        \"/v1/mcp/reservations/usage\",\n        {\n          sequence: ++usageSequence,\n          measurement: \"tokens\",\n          units: requirePositiveInteger(units, \"token_units\")\n        }\n      );\n    },\n    async recordBytes(units) {\n      if (!reservation.required_hooks.includes(\"INCREMENTAL_BYTES\")) {\n        throw new Error(\"byte_metering_not_selected\");\n      }\n      return ledgerTransition(\n        adapter,\n        reservation,\n        \"/v1/mcp/reservations/usage\",\n        {\n          sequence: ++usageSequence,\n          measurement: \"bytes\",\n          units: requirePositiveInteger(units, \"byte_units\")\n        }\n      );\n    },\n    async renewLease(leaseSequence) {\n      if (!reservation.required_hooks.includes(\"LEASE_RENEWAL\")) {\n        throw new Error(\"lease_renewal_not_selected\");\n      }\n      return ledgerTransition(\n        adapter,\n        reservation,\n        \"/v1/mcp/reservations/lease\",\n        {\n          lease_sequence: requirePositiveInteger(\n            leaseSequence, \"lease_sequence\"\n          )\n        }\n      );\n    },\n    async authorizeBackendEffect(effectDigest) {\n      if (!reservation.required_hooks.includes(\"PRE_BACKEND_EFFECT\")) {\n        throw new Error(\"backend_effect_hook_not_selected\");\n      }\n      if (!/^[a-f0-9]{64}$/.test(effectDigest)) {\n        throw new Error(\"backend_effect_digest_invalid\");\n      }\n      return ledgerTransition(\n        adapter,\n        reservation,\n        \"/v1/mcp/reservations/effects\",\n        {effect_digest: effectDigest}\n      );\n    }\n  };\n}\n\nasync function markUnknown(adapter, reservation, reasonClass) {\n  return ledgerTransition(\n    adapter,\n    reservation,\n    \"/v1/mcp/reservations/unknown\",\n    {reason_class: reasonClass}\n  );\n}\n\nasync function settleTerminal(\n  adapter, reservation, rawTerminalEnvelope\n) {\n  if (!Buffer.isBuffer(rawTerminalEnvelope) || !rawTerminalEnvelope.length) {\n    throw new Error(\"authoritative_terminal_receipt_missing\");\n  }\n  return ledgerTransition(\n    adapter,\n    reservation,\n    \"/v1/mcp/reservations/settle\",\n    {\n      backend_terminal_envelope_b64:\n        rawTerminalEnvelope.toString(\"base64\")\n    }\n  );\n}\n\nasync function reconcileExisting(adapter, reservation, input) {\n  let rawTerminalEnvelope;\n  try {\n    rawTerminalEnvelope = await input.readAuthoritativeTerminalReceipt({\n      idempotencyKey: reservation.idempotencyKey,\n      reservationId: reservation.reservation_id\n    });\n  } catch {\n    return markUnknown(\n      adapter, reservation, \"backend_reconciliation_unavailable\"\n    );\n  }\n  if (!Buffer.isBuffer(rawTerminalEnvelope)) {\n    return markUnknown(\n      adapter, reservation, \"backend_terminal_state_unknown\"\n    );\n  }\n  return settleTerminal(adapter, reservation, rawTerminalEnvelope);\n}\n\nexport async function executeWithBudget(adapter, input) {\n  const reservation = await adapter.reserve(input);\n  const decision = reservationDecision(reservation);\n  if (!decision.execute) {\n    if (decision.terminal === \"committed\") {\n      const committed = await input.readCommittedResult({\n        idempotencyKey: reservation.idempotencyKey,\n        reservationId: reservation.reservation_id\n      });\n      if (committed === undefined) {\n        throw new Error(\"committed_result_unavailable_do_not_reexecute\");\n      }\n      return {value: committed, reservation, replayed: true};\n    }\n    if (decision.terminal === \"no_effect\") {\n      return {\n        value: null,\n        reservation,\n        replayed: true,\n        terminalState: \"NO_EFFECT\"\n      };\n    }\n    const reconciliation = await reconcileExisting(\n      adapter, reservation, input\n    );\n    return {\n      value: null,\n      reservation,\n      replayed: true,\n      terminalState: reconciliation.state\n    };\n  }\n\n  const hooks = createBudgetHooks(adapter, reservation);\n  let response;\n  try {\n    response = await input.invokeBackend({\n      idempotencyKey: reservation.idempotencyKey,\n      reservationId: reservation.reservation_id,\n      budgetHooks: hooks\n    });\n  } catch (error) {\n    try {\n      await markUnknown(\n        adapter, reservation, \"backend_invocation_exception\"\n      );\n    } catch {\n      error.budgetSettlementUnknown = true;\n    }\n    throw error;\n  }\n  if (!Buffer.isBuffer(response?.signedTerminalEnvelope)) {\n    await markUnknown(\n      adapter, reservation, \"backend_terminal_receipt_missing\"\n    );\n    throw new Error(\"backend_terminal_receipt_missing\");\n  }\n  const settlement = await settleTerminal(\n    adapter, reservation, response.signedTerminalEnvelope\n  );\n  if (\n    ![\"SETTLED_COMMITTED\", \"SETTLED_NO_EFFECT\"].includes(\n      settlement.state\n    )\n  ) {\n    throw new Error(\"budget_terminal_settlement_not_established\");\n  }\n  return {\n    value: response.value,\n    reservation,\n    settlement,\n    replayed: false\n  };\n}\n</code></pre><p><strong>Authoritative-ledger requirements:</strong> <code>AID-I-003.003</code> must use server time, independent per-scope and per-operation namespaces, atomic multidimensional admission, dimension-specific settlement modes, monotonic policy generations, rotation rules that preserve active usage, renewable fenced leases, incremental usage sequences, and reservation-bound backend/key trust. It must cache or reference terminal results sufficiently to prevent committed retries from re-executing. H-034.008 consumes those guarantees and must not implement a second counter store.</p><h5>Verify safely</h5><p>Exercise fixed request use plus refundable effect reservation, incremental token and byte deltas, concurrency and Task/stream lease expiry, backend commit-before-timeout, timeout-before-commit, signed <code>NO_EFFECT</code>, invalid and wrong-backend receipts, ledger outage during each transition, duplicate usage sequence, identical retry in every terminal state, and process restart. Confirm only the ledger applies refunds, fixed consumption remains charged after <code>NO_EFFECT</code>, a committed or pending attempt with the same authenticated logical operation identity never re-executes, and reconciliation cannot create capacity.</p>"
                         }
                     ]
                 },
@@ -23954,7 +24058,7 @@ def consume_and_deploy(
                         "Valkey",
                         "Redis 8+ (AGPL-3.0)",
                         "Open Policy Agent (OPA)",
-                        "Model Context Protocol TypeScript SDK v2 (@modelcontextprotocol/server and @modelcontextprotocol/client)"
+                        "Model Context Protocol TypeScript SDK v2 (handler integration for authoritative disable-state and commit-fence checks)"
                     ]
                 }
             ]
@@ -24000,8 +24104,8 @@ def consume_and_deploy(
                 "Kubernetes RBAC",
                 "Cosign",
                 "Kyverno",
-                "OpenTelemetry",
-                "Pydantic",
+                "OpenTelemetry (defensive-agent decision/execution event export; protected audit storage required)",
+                "Pydantic (defensive-agent action/evidence envelope validation; semantic and cryptographic checks required)",
                 "Shuffle (self-hosted security-automation workflow substrate; independent identity and action gates required)"
             ],
             "toolsCommercial": [
@@ -24009,9 +24113,11 @@ def consume_and_deploy(
                 "Splunk SOAR",
                 "ServiceNow Security Operations",
                 "Microsoft Sentinel",
-                        "HashiCorp Vault Enterprise",
-                        "HCP Vault Dedicated",
-                "Datadog"
+                "HashiCorp Vault Enterprise",
+                "HCP Vault Dedicated",
+                "Datadog Log Management (audit sink outside the defensive agent's identity)",
+                "Cortex AgentiX (agent actions limited to assigned actions; sensitive actions require explicit user approval)",
+                "Amazon S3 Object Lock (compliance mode for defensive-action audit records)"
             ],
             "defendsAgainst": [
                 {
@@ -24161,16 +24267,11 @@ def consume_and_deploy(
                 "Inspect AI",
                 "pandas",
                 "scikit-learn",
-                "EleutherAI lm-evaluation-harness (custom locale-stratified task runner)"
+                "EleutherAI lm-evaluation-harness (custom locale-stratified task runner)",
+                "MultiJail"
             ],
             "toolsSourceAvailable": [
-                "Qwen3Guard-Gen (Apache-2.0; open-weight)",
-                "Qwen3Guard-Stream (Apache-2.0; open-weight)"
-            ],
-            "toolsCommercial": [
-                        "OpenAI Moderations API (omni-moderation-latest)",
-                "Azure AI Content Safety",
-                        "Check Point AI Guardrails"
+                "PolyGuardPrompts (CC-BY-4.0; source-available)"
             ],
             "defendsAgainst": [
                 {
@@ -24374,7 +24475,7 @@ def consume_and_deploy(
                       "relatedTechniques": [
                         {
                           "id": "AID-H-037.003",
-                          "comparison": "AID-H-037.001 controls whether and how reasoning content may be displayed or stored; AID-H-037.003 preserves exact provider-authored opaque blocks for continuation.\nA block may require byte-preserving round trip even when its plaintext is never exposed or retained."
+                          "comparison": "AID-H-037.001 controls whether and how reasoning content may be displayed or stored; AID-H-037.003 preserves exact provider-authored opaque blocks for continuation.\nA block may require complete, unmodified field values and preserved sequence order even when its plaintext is never exposed or retained."
                         },
                         {
                           "id": "AID-D-002.004",
@@ -24387,14 +24488,12 @@ def consume_and_deploy(
                       ]
                     },
                     "toolsOpenSource": [
-                        "OpenTelemetry",
-                        "Microsoft Presidio",
+                        "OpenTelemetry Collector (redaction or transform processor drops reasoning content before export)",
                         "Open Policy Agent (OPA)",
                         "LiteLLM"
                     ],
                     "toolsCommercial": [
-                        "Datadog (reasoning-state evidence only; not exposure enforcement)",
-                        "Splunk Enterprise Security (reasoning-state evidence only; not exposure enforcement)"
+                        "Anthropic Claude API (thinking.display omitted)"
                     ],
                     "defendsAgainst": [
                         {
@@ -24506,15 +24605,11 @@ def consume_and_deploy(
                     },
                     "toolsOpenSource": [
                         "LiteLLM",
-                        "OpenTelemetry",
-                        "Prometheus",
-                        "Grafana",
-                        "Envoy (custom reasoning-budget policy required)"
+                        "Envoy (custom reasoning-budget policy required)",
+                        "agentgateway (reasoning/output parameter overrides; validate effective settings and failure behavior)",
+                        "vLLM (thinking-token budgets for supported reasoning models; trusted gateway supplies the cap)"
                     ],
                     "toolsCommercial": [
-                        "Datadog (budget evidence only; not reasoning-budget enforcement)",
-                        "New Relic (budget evidence only; not reasoning-budget enforcement)",
-                        "Splunk Enterprise Security (budget evidence only; not reasoning-budget enforcement)",
                         "Amazon Bedrock Converse API (Claude extended/adaptive thinking)"
                     ],
                     "defendsAgainst": [
@@ -24600,22 +24695,21 @@ def consume_and_deploy(
                         "building",
                         "operation"
                     ],
-                    "description": "When a provider requires signed, encrypted, redacted, or opaque reasoning blocks for continuation, preserve exact provider-authored bytes and metadata in a self-built byte-preserving server envelope and return them only to the same provider route under the same conversation and policy binding. Reject client-supplied, reordered, reserialized, altered, unverifiable, stale, or cross-provider blocks.",
+                    "description": "When a provider requires signed, encrypted, redacted or opaque reasoning blocks for continuation, preserve each complete provider-authored block, its field values and its position in the assistant content sequence. Keep the original in authorized server-side conversation state and return it through that provider's documented SDK/API path. Reject client replacements, altered or reordered blocks, and use under a different conversation or incompatible provider route. JSON whitespace and object-key order are not reasoning-block integrity properties. For providers with prefix binding, preserve the preceding conversation and append new turns without rewriting that prefix.",
                     "scopeBoundary": {
-                      "responsibility": "Owns byte-preserving, provider-route-bound, conversation-bound round-trip integrity for signed, encrypted, redacted, or opaque reasoning blocks required for continuation. It rejects client-supplied, reordered, altered, stale, or cross-provider blocks.",
-                      "relatedTechniques": [
-                        {
-                          "id": "AID-H-037.001",
-                          "comparison": "AID-H-037.003 preserves provider-authored continuation blocks without alteration; AID-H-037.001 governs display, ordinary logging, approved summaries, and raw-trace storage.\nContinuity integrity does not authorize exposing or retaining the block's reasoning content."
-                        },
-                        {
-                          "id": "AID-H-033.005",
-                          "comparison": "AID-H-037.003 binds a continuation block to the same provider route and conversation; AID-H-033.005 resolves and enforces the provider, account, model, deployment, endpoint, and route.\nThe block verifier consumes the effective route decision rather than choosing it."
-                        }
-                      ]
+                        "responsibility": "Owns complete, unmodified provider-block round trips, content-sequence order, authorized server-side custody and provider-specific conversation/route binding. SDK serialization and documented streaming accumulation are valid implementations; raw HTTP byte preservation is optional. Provider validation is distinct from local conversation authorization and integrity checks.",
+                        "relatedTechniques": [
+                            {
+                                "id": "AID-H-037.001",
+                                "comparison": "AID-H-037.003 preserves provider-authored continuation blocks without alteration; AID-H-037.001 governs display, ordinary logging, approved summaries, and raw-trace storage.\nContinuity integrity does not authorize exposing or retaining the block's reasoning content."
+                            },
+                            {
+                                "id": "AID-H-033.005",
+                                "comparison": "AID-H-037.003 binds a continuation block to the same provider route and conversation; AID-H-033.005 resolves and enforces the provider, account, model, deployment, endpoint, and route.\nThe block verifier consumes the effective route decision rather than choosing it."
+                            }
+                        ]
                     },
                     "toolsOpenSource": [
-                        "pyca/cryptography",
                         "OpenAI Python SDK",
                         "Anthropic Python SDK",
                         "Google Gen AI Python SDK"
@@ -24623,7 +24717,7 @@ def consume_and_deploy(
                     "toolsCommercial": [
                         "OpenAI Responses API",
                         "Anthropic Claude API",
-                        "Google Gemini API"
+                        "Google Gemini API (thought-signature continuation; gateway-enforced integrity required)"
                     ],
                     "defendsAgainst": [
                         {
@@ -24686,8 +24780,8 @@ def consume_and_deploy(
                     "implementationGuidance": [
                         {
                             "id": "AID-H-037.003-G001",
-                            "implementation": "Preserve provider-authored reasoning blocks byte-for-byte, verify provider binding where supported, and reject client-supplied or altered blocks before continuation.",
-                            "howTo": "<h5>Use the actual provider continuation contract</h5><p>For Anthropic Messages thinking and redacted-thinking blocks, the signature/data fields are opaque. The client has no published detached-signature key or verification API for those fields. Keep the provider-authenticated original on the server and return it unchanged; the provider validates it on continuation. A signature string or local digest is not proof that local provider-signature verification occurred. Providers that actually expose a documented public verification contract require their real validator as an additional provider-specific adapter.</p><h5>Keep a bounded server-owned original</h5><p>The following single-worker adapter receives a successful response only from the application's own authenticated, certificate-validated provider HTTPS client. Build <code>TurnBinding</code> from authorized server state and the effective route/account/model. The prefix digest covers the unchanged system/tools/messages preceding this assistant turn; at continuation, reconstruct it from that same stored prefix, not from caller claims or newly appended tool results. Bind the exact tenant, conversation and policy generation. The private store is not an HTTP input endpoint.</p><pre><code class=\"language-python\"># File: reasoning_security/round_trip_integrity.py\nfrom __future__ import annotations\n\nimport hashlib\nimport json\nimport math\nimport re\nimport secrets\nimport threading\nimport time\nfrom dataclasses import astuple, dataclass\n\n\ndef unique_object(pairs):\n    result = {}\n    for key, value in pairs:\n        if key in result:\n            raise ValueError(\"duplicate provider JSON key\")\n        result[key] = value\n    return result\n\n\ndef original_content_array(raw):\n    \"\"\"Validate the response but retain the original JSON content-array bytes.\"\"\"\n    source = raw.decode(\"utf-8\", errors=\"strict\")\n    document = json.loads(\n        source, object_pairs_hook=unique_object,\n        parse_constant=lambda _: (_ for _ in ()).throw(ValueError(\"non-finite JSON\")),\n    )\n    if (not isinstance(document, dict) or document.get(\"role\") != \"assistant\"\n            or not isinstance(document.get(\"content\"), list) or not document[\"content\"]):\n        raise ValueError(\"not an assistant Messages response\")\n    reasoning_found = False\n    for block in document[\"content\"]:\n        if not isinstance(block, dict) or not isinstance(block.get(\"type\"), str):\n            raise ValueError(\"malformed provider content block\")\n        if block[\"type\"] == \"thinking\":\n            if (not isinstance(block.get(\"thinking\"), str)\n                    or not isinstance(block.get(\"signature\"), str) or not block[\"signature\"]):\n                raise ValueError(\"incomplete opaque thinking block\")\n            reasoning_found = True\n        elif block[\"type\"] == \"redacted_thinking\":\n            if not isinstance(block.get(\"data\"), str) or not block[\"data\"]:\n                raise ValueError(\"incomplete redacted thinking block\")\n            reasoning_found = True\n    if not reasoning_found:\n        raise ValueError(\"no protected continuation block in this response\")\n    # Walk top-level JSON values to find the lexical span, not a reserialized copy.\n    decoder = json.JSONDecoder()\n    def whitespace(position):\n        while position &lt; len(source) and source[position] in \" \\t\\r\\n\":\n            position += 1\n        return position\n    position = whitespace(0) + 1\n    while True:\n        position = whitespace(position)\n        key, position = decoder.raw_decode(source, position)\n        position = whitespace(position)\n        if source[position] != \":\":\n            raise ValueError(\"invalid provider object\")\n        start = whitespace(position + 1)\n        _, end = decoder.raw_decode(source, start)\n        if key == \"content\":\n            return source[start:end].encode(\"utf-8\"), document\n        position = whitespace(end)\n        if source[position] == \"}\":\n            raise ValueError(\"provider content is missing\")\n        position += 1\n\n\n@dataclass(frozen=True)\nclass TurnBinding:\n    tenant_id: str\n    provider: str\n    route: str\n    provider_account: str\n    model: str\n    conversation_id: str\n    prefix_sha256: str\n    policy_version: str\n\n\n@dataclass(frozen=True)\nclass StoredTurn:\n    binding: TurnBinding\n    content: bytes\n    content_sha256: str\n    expires_at: float\n\n\nclass OpaqueReasoningStore:\n    \"\"\"Private single-worker Messages adapter; handles are not access grants.\"\"\"\n\n    def __init__(self, *, policy_version, maximum_response_bytes,\n                 maximum_pending_turns, lifetime_seconds):\n        if (not isinstance(policy_version, str) or not policy_version\n                or type(maximum_response_bytes) is not int or maximum_response_bytes &lt;= 0\n                or type(maximum_pending_turns) is not int or maximum_pending_turns &lt;= 0\n                or isinstance(lifetime_seconds, bool)\n                or not isinstance(lifetime_seconds, (int, float))\n                or not math.isfinite(lifetime_seconds) or lifetime_seconds &lt;= 0):\n            raise ValueError(\"invalid versioned continuation policy\")\n        self.policy_version = policy_version\n        self.maximum_bytes = maximum_response_bytes\n        self.maximum_turns = maximum_pending_turns\n        self.lifetime = float(lifetime_seconds)\n        self._turns = {}\n        self._lock = threading.RLock()\n\n    def _check_binding(self, binding):\n        if (not isinstance(binding, TurnBinding)\n                or any(not isinstance(v, str) or not v for v in astuple(binding))\n                or binding.provider != \"anthropic-messages\"\n                or binding.policy_version != self.policy_version\n                or re.fullmatch(r\"[0-9a-f]{64}\", binding.prefix_sha256) is None):\n            raise PermissionError(\"unsupported or incomplete continuation binding\")\n\n    def remember_http_response(self, response, binding):\n        # Called only by the server-owned, authenticated provider HTTPS adapter.\n        self._check_binding(binding)\n        if response.status_code != 200:\n            raise PermissionError(\"provider response was not successful\")\n        raw = bytearray()\n        for part in response.iter_bytes():\n            raw.extend(part)\n            if len(raw) &gt; self.maximum_bytes:\n                raise ValueError(\"provider response exceeds continuation storage bound\")\n        content, document = original_content_array(bytes(raw))\n        if document.get(\"model\") != binding.model:\n            raise PermissionError(\"effective provider model differs\")\n        with self._lock:\n            now = time.monotonic()\n            self._turns = {key: value for key, value in self._turns.items()\n                           if value.expires_at &gt; now}\n            if len(self._turns) &gt;= self.maximum_turns:\n                raise RuntimeError(\"continuation store is full\")\n            handle = secrets.token_urlsafe(32)\n            self._turns[handle] = StoredTurn(\n                binding, content, hashlib.sha256(content).hexdigest(), now + self.lifetime)\n            return handle\n\n    def assistant_message(self, handle, current_server_binding):\n        # The handler authorizes the conversation and reconstructs this binding.\n        # Neither original bytes nor a provider key ID is supplied by the client.\n        self._check_binding(current_server_binding)\n        with self._lock:\n            turn = self._turns.get(handle)\n            if turn is None:\n                raise PermissionError(\"unknown continuation handle\")\n            if time.monotonic() &gt;= turn.expires_at:\n                del self._turns[handle]\n                raise PermissionError(\"expired continuation\")\n            if turn.binding != current_server_binding:\n                raise PermissionError(\"continuation route, tenant or conversation differs\")\n            if hashlib.sha256(turn.content).hexdigest() != turn.content_sha256:\n                raise PermissionError(\"stored continuation was altered\")\n            # Preserve all blocks and their order, including redacted thinking.\n            return b'{\"role\":\"assistant\",\"content\":' + turn.content + b'}'\n\n    def forget_conversation(self, tenant_id, conversation_id):\n        with self._lock:\n            self._turns = {key: value for key, value in self._turns.items()\n                           if (value.binding.tenant_id, value.binding.conversation_id)\n                           != (tenant_id, conversation_id)}\n</code></pre><h5>Continue with the original assistant turn</h5><p>With the provider response still inside a bounded HTTP stream, call <code>store.remember_http_response(response, server_binding)</code>. Clients may submit the opaque handle but never replacement thinking blocks, original bytes, key IDs or a verification callback. Authorize the current conversation, reconstruct its binding and call <code>store.assistant_message(handle, current_server_binding)</code>. Insert those returned assistant-message bytes as one JSON message value, without parsing and rebuilding its content array. Preserve the text/tool blocks and reasoning blocks in their original order; do not duplicate a protected turn. The surrounding request, including new tool results, is serialized separately through the provider-specific request adapter.</p><p>Policy supplies positive maximum response bytes, pending-turn count and lifetime. The memory store deliberately loses handles on restart; use this path only with one owning worker or explicit affinity. A multi-worker deployment needs an access-controlled, bounded server store with the same immutable original/binding/expiry contract and the storage protections of H-037.001. A handle is not conversation authorization. Reusing the same current turn for a transport retry does not authorize executing a tool twice; tool idempotency remains H-018.008.</p><h5>Verify the round trip</h5><p>Replay opaque and redacted blocks with no provider public key. Compare outgoing content-array bytes against the provider-authenticated original. Test key-order/whitespace preservation, quoted JSON strings, altered payloads, malformed or duplicate JSON fields, missing signature/data, expired handles, prefix edits, model/account/route changes, wrong tenants and conversations, capacity exhaustion and restarts. Provider rejection remains a failed continuation, never a forged local PASS. On route, prefix, policy or conversation replacement, invalidate the affected originals.</p>"
+                            "implementation": "Return complete, unmodified reasoning blocks through the provider SDK, preserving block order and the required conversation prefix.",
+                            "howTo": "<h5>Core: follow the provider contract</h5><p>For Anthropic Messages, keep thinking signatures and redacted data opaque. The provider validates them; no published detached verification key is available to this adapter. Pass all content blocks from the completed SDK Message back in their original order. The SDK's <code>messages.stream(...).get_final_message()</code> accumulates streaming deltas into the same complete Message shape used by non-streaming responses. Do not concatenate partial signatures or treat an empty thinking string as corrupt when its signature is present.</p><h5>Keep the server-owned turn and prefix</h5><p>The application constructs <code>binding</code> from authorized tenant, conversation, effective provider route/account/model and policy version, and <code>prefix</code> from the exact server-stored system/tools/messages sent for that turn. The authenticated provider client is created by the route owner. Before the first request, resolve a requested model alias once to its official model ID and obtain H-033.005 route approval for that resolved identity. Persist the resulting binding and use its resolved model ID for generation, response checks and every continuation; keep the requested alias only as routing context. Never strip date suffixes, compare model-name prefixes or learn an allowed model from the first generation response. The bounded single-worker store below returns copies, never accepts replacement blocks from clients and does not log the block contents. Storage limits and lifetime come from deployment policy.</p><pre><code class=\"language-python\"># File: reasoning_roundtrip.py\n# Install and pin the supported anthropic SDK in the application's lock file.\nimport copy\nimport hashlib\nimport json\nimport secrets\nimport time\n\n\ndef semantic_digest(value):\n    # JSON object formatting is irrelevant; array/block order is significant.\n    raw = json.dumps(value, sort_keys=True, separators=(\",\", \":\"),\n                     ensure_ascii=False, allow_nan=False).encode(\"utf-8\")\n    return hashlib.sha256(raw).hexdigest()\n\n\ndef resolve_model_binding(client, requested_binding, approved_model_ids):\n    # Run during authorized route construction, once before the first turn.\n    # approved_model_ids comes from the H-033.005 route policy, not the caller.\n    requested = requested_binding[\"model\"]\n    if not isinstance(requested, str) or not requested:\n        raise ValueError(\"requested model is missing\")\n    resolved = client.models.retrieve(requested).id\n    if not isinstance(resolved, str) or not resolved or resolved not in approved_model_ids:\n        raise ValueError(\"resolved model is not approved for this route\")\n    return {**copy.deepcopy(requested_binding), \"requested_model\": requested, \"model\": resolved}\n\n\nclass ReasoningTurns:\n    \"\"\"Single owning worker; all bindings and prefixes come from server state.\"\"\"\n    def __init__(self, *, max_bytes, max_turns, lifetime_seconds):\n        for value in (max_bytes, max_turns, lifetime_seconds):\n            if type(value) is not int or value &lt;= 0:\n                raise ValueError(\"positive integer storage policy required\")\n        self.max_bytes = max_bytes\n        self.max_turns = max_turns\n        self.lifetime = lifetime_seconds\n        self.turns = {}\n\n    def remember(self, message, binding, prefix):\n        # Pass the SDK's completed Message, including after streaming accumulation.\n        # binding[\"model\"] is the resolved ID, never the unresolved request alias.\n        if message.model != binding[\"model\"]:\n            raise ValueError(\"effective response model differs from route binding\")\n        content = [block.model_dump(mode=\"json\", exclude_unset=True)\n                   for block in message.content]\n        for block in content:\n            if block[\"type\"] == \"thinking\":\n                if (not isinstance(block.get(\"thinking\"), str)\n                        or not isinstance(block.get(\"signature\"), str)\n                        or not block[\"signature\"]):\n                    raise ValueError(\"incomplete thinking block\")\n            elif block[\"type\"] == \"redacted_thinking\":\n                if not isinstance(block.get(\"data\"), str) or not block[\"data\"]:\n                    raise ValueError(\"incomplete redacted block\")\n        # No thinking block, or an empty thinking string with a signature, is valid.\n        assistant = {\"role\": \"assistant\", \"content\": content}\n        raw = json.dumps(assistant, ensure_ascii=False, allow_nan=False).encode()\n        if len(raw) &gt; self.max_bytes:\n            raise ValueError(\"turn exceeds storage policy\")\n        now = time.monotonic()\n        self.turns = {k: v for k, v in self.turns.items() if v[0] &gt; now}\n        if len(self.turns) &gt;= self.max_turns:\n            raise RuntimeError(\"pending-turn capacity exhausted\")\n        handle = secrets.token_urlsafe()\n        self.turns[handle] = (now + self.lifetime, copy.deepcopy(binding),\n                              semantic_digest(prefix), copy.deepcopy(assistant))\n        return handle\n\n    def assistant_message(self, handle, binding, original_prefix):\n        expires, saved_binding, prefix_digest, assistant = self.turns[handle]\n        if time.monotonic() &gt;= expires:\n            del self.turns[handle]\n            raise ValueError(\"continuation expired\")\n        if binding != saved_binding or semantic_digest(original_prefix) != prefix_digest:\n            raise ValueError(\"continuation binding or preceding history changed\")\n        return copy.deepcopy(assistant)\n\n\ndef receive_turn(client, store, binding, prefix, generation, *, streaming):\n    # Both mappings are authorized server configuration, never caller kwargs.\n    # Keep system/tools/messages exactly as sent, including provider cache metadata.\n    if set(generation) &amp; {\"model\", \"system\", \"tools\", \"messages\", \"stream\"}:\n        raise ValueError(\"generation settings cannot replace conversation state\")\n    request = copy.deepcopy({**generation, **prefix, \"model\": binding[\"model\"]})\n    if streaming:\n        with client.messages.stream(**request) as stream:\n            message = stream.get_final_message()\n    else:\n        message = client.messages.create(**request)\n    return store.remember(message, binding, prefix)\n</code></pre><p>During route setup call <code>binding = resolve_model_binding(client, requested_binding, approved_model_ids)</code>, then pass that persisted binding to <code>receive_turn</code> and <code>assistant_message</code>. The direct Anthropic <a href=\"https://platform.claude.com/docs/en/api/models/retrieve\">Models API</a> resolves aliases; the allowlist must contain approved concrete IDs. A gateway or another provider with a different resolution contract must supply its own approved canonical model binding through H-033.005. Do not re-resolve a moving alias midway through a stored continuation. A resolution failure or unapproved target blocks the new route.</p><h5>Continue and verify</h5><p>After authorizing the conversation, fetch <code>assistant_message(handle, binding, original_prefix)</code>; append it to the stored messages, then append the corresponding tool results as a user message. Submit that ordinary object through the SDK. Keep the earlier system/tools/messages prefix unchanged; editing, reordering, removing or compacting earlier content can invalidate later prefix-bound blocks. This adapter deliberately retains the original prefix rather than attempting to emulate the provider's normalization rules; object key order/whitespace changes alone are accepted. Use documented provider recovery or start a new compatible turn after a prefix/route change. Never fabricate a new signature or convert provider rejection into a local success. A handle is not authorization, and replaying a turn does not authorize repeating a tool effect.</p><p>Test non-streaming and accumulated streaming responses, complete thinking/redacted/tool blocks in sequence, valid empty thinking text, equivalent JSON serialization, attempts to mutate returned copies, changed preceding turns, an approved alias resolving to a dated model ID, an alias drifting to an unapproved version, a response from a different model, wrong tenant/conversation/model/account, expiry, capacity and worker restart. Confirm provider acceptance in a staging integration before claiming that provider/model combination is supported. Use an access-controlled shared store for multiple workers; this in-memory example intentionally invalidates handles on restart.</p><h5>Optional raw HTTP adapter and other providers</h5><p>A raw HTTP integration may retain original content bytes, but must not require the SDK to preserve network framing or JSON formatting. Keep opaque field contents unchanged even when serializing a new JSON object. OpenAI encrypted reasoning items and other providers require their own documented continuation adapters; this Anthropic example does not establish their model/account/prefix compatibility rules.</p><p>References: <a href=\"https://platform.claude.com/docs/en/build-with-claude/thinking\">Anthropic thinking block preservation</a> and <a href=\"https://platform.claude.com/docs/en/build-with-claude/thinking-troubleshooting\">prefix-binding failures and recovery</a>.</p>"
                         }
                     ]
                 }
@@ -24844,7 +24938,8 @@ def consume_and_deploy(
                         "vLLM",
                         "SGLang",
                         "NVIDIA Triton Inference Server",
-                        "Kubernetes"
+                        "Kubernetes",
+                        "osquery (listening_ports joined with processes)"
                     ],
                     "defendsAgainst": [
                         {
@@ -24951,7 +25046,8 @@ def consume_and_deploy(
                         "Envoy",
                         "vLLM",
                         "NVIDIA Triton Inference Server",
-                        "Kubernetes"
+                        "Kubernetes",
+                        "Istio (AuthorizationPolicy on inference pods)"
                     ],
                     "defendsAgainst": [
                         {

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20261101",
+  "aidefend_version": "1.20261115",
   "framework_key": "owasp-ml-top-10-2023",
   "source_framework_label": "OWASP ML Top 10 2023",
   "display_name": "OWASP ML Top 10 2023",
@@ -64,7 +64,7 @@
       "rank": 6,
       "name": "AI Supply Chain Attacks",
       "referenced": true,
-      "control_count": 54
+      "control_count": 53
     },
     {
       "item_locator": "ML07:2023 Transfer Learning Attack",

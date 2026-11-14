@@ -170,20 +170,22 @@ export const restoreTactic = {
                         "GitLab Community Edition CI/CD",
                         "Jenkins",
                         "sha256sum (GNU Coreutils)",
-                        "GnuPG"
+                        "GnuPG",
+                        "KServe (InferenceService rollback to previous rolled-out revision)"
                     ],
                     "toolsCommercial": [
                         "Databricks Models in Unity Catalog",
                         "Amazon SageMaker AI Model Registry",
-                        "Google Vertex AI Model Registry",
+                        "Gemini Enterprise Agent Platform Model Registry (formerly Vertex AI Model Registry)",
                         "GitHub Actions",
                         "Amazon Bedrock",
                         "Azure OpenAI in Microsoft Foundry",
-                        "Google Vertex AI",
+                        "Gemini Enterprise Agent Platform (formerly Vertex AI)",
                         "JFrog Artifactory",
                         "Veeam Data Platform",
                         "Rubrik Security Cloud",
-                        "Cohesity Data Cloud"
+                        "Cohesity Data Cloud",
+                        "Amazon S3 Object Lock (retention-enforced model version storage)"
                     ],
                     "defendsAgainst": [
                         {
@@ -296,24 +298,26 @@ export const restoreTactic = {
                         "MLflow",
                         "Kubeflow Pipelines",
                         "Ray Train (distributed recovery-retraining execution)",
-                        "cleanlab (training-data issue triage before governed recovery snapshot)",
+                        "cleanlab (candidate training-data issue triage; recovery exclusions require the governed incident manifest)",
                         "DVC",
                         "Flower",
                         "NVIDIA FLARE",
                         "FATE",
-                        "PySyft",
+                        "PySyft (owner-approved remote retraining jobs on private data; not a federated-learning recovery engine)",
                         "PyTorch Geometric",
-                "Deep Graph Library (DGL)",
+                        "Deep Graph Library (DGL)",
                         "GX Core",
                         "pandas",
                         "PyTorch",
-                        "TensorFlow"
+                        "TensorFlow",
+                        "OpenUnlearning (experimental recovery-learning recipes; independent incident and utility gates required)",
+                        "EleutherAI lm-evaluation-harness (clean-utility evaluation of the remediated model)"
                     ],
                     "toolsCommercial": [
-                        "Databricks Data Intelligence Platform",
+                        "Databricks Data + AI Platform",
                         "Amazon SageMaker AI",
-                "Google Vertex AI",
-                "Azure Machine Learning"
+                        "Gemini Enterprise Agent Platform (formerly Vertex AI)",
+                        "Azure Machine Learning"
                     ],
                     "defendsAgainst": [
                         {
@@ -447,14 +451,18 @@ export const restoreTactic = {
                     "toolsOpenSource": [
                         "pg_dump",
                         "mysqldump",
-                        "lakeFS (atomic known-good data-lake commit restoration)",
                         "Delta Lake (versioned table restoration)",
                         "restic (encrypted snapshot restore and verification)",
                         "GX Core",
-                "DataHub",
-                "Marquez",
-                "rsync",
-                "Bacula"
+                        "DataHub",
+                        "Marquez",
+                        "rsync",
+                        "Bacula",
+                        "Apache Iceberg (snapshot branch for isolated restoration)",
+                        "dbt OSS (formerly dbt Core; deterministic SQL repair models and data tests in an isolated candidate schema)"
+                    ],
+            "toolsSourceAvailable": [
+                "lakeFS (atomic known-good commit restoration) (BUSL-1.1; source-available)"
             ],
             "toolsCommercial": [
                 "Amazon S3 Versioning",
@@ -465,8 +473,8 @@ export const restoreTactic = {
                 "Informatica Intelligent Data Management Cloud",
                 "Qlik Talend Cloud",
                 "Microsoft Purview Data Map",
-                "Collibra Data Intelligence Platform",
-                "Alation Data Intelligence Platform",
+                "Collibra Platform",
+                "Microsoft Entra ID (Conditional Access authentication strength and sign-in frequency; applications verify fresh authentication)",
                 "AWS Backup",
                 "Azure Backup"
             ],
@@ -772,11 +780,11 @@ export const restoreTactic = {
                   "authentik"
               ],
             "toolsCommercial": [
-                "Microsoft Entra ID (refresh-token revocation and policy-driven reauthentication; application-issued session revocation remains external)",
+                "Microsoft Entra ID (Conditional Access authentication strength, sign-in frequency and MFA re-registration)",
                 "Okta Workforce Identity",
-                        "Auth0",
-                    "PingOne for Workforce"
-              ],
+                "Auth0",
+                "PingOne for Workforce"
+            ],
               "implementationGuidance": [
                 {
                   "id": "AID-R-003.001-G001",
@@ -878,13 +886,14 @@ export const restoreTactic = {
                   "PostgreSQL",
                   "Valkey",
                   "LangGraph",
-                  "Temporal"
+                  "Temporal",
+                  "Cosign (snapshot manifest signature and signer-identity verification)"
               ],
               "toolsCommercial": [
-                "Mem0 Platform (scoped memory export and import)",
-                "Temporal Cloud",
+                  "Mem0 Platform (scoped memory export and import)",
+                  "Temporal Cloud",
                   "LangSmith Deployments",
-                  "Redis Enterprise"
+                  "Redis Software (formerly Redis Enterprise Software)"
               ],
               "implementationGuidance": [
                 {
@@ -1030,23 +1039,26 @@ export const restoreTactic = {
             ]
           },
           "toolsOpenSource": [
-            "garak",
-            "Microsoft PyRIT",
-            "promptfoo",
-            "GX Core",
-            "Git",
-            "GitLab Community Edition",
-            "Ansible Core (idempotent fleet remediation propagation)",
-            "osquery (independent endpoint OS-state readback for covered tables; application and control-plane state remain external)"
+              "garak",
+              "Microsoft PyRIT",
+              "promptfoo",
+              "GX Core",
+              "Git",
+              "GitLab Community Edition",
+              "Ansible Core (idempotent fleet remediation propagation)",
+              "osquery (independent endpoint OS-state readback for covered tables; application and control-plane state remain external)",
+              "Kyverno (admission gate requiring the institutionalized fix, with scoped PolicyExceptions)",
+              "Argo CD (ApplicationSet fleet propagation across clusters)"
           ],
           "toolsCommercial": [
-            "GitHub Enterprise Server",
-            "GitHub Enterprise Cloud",
-            "AttackIQ",
-            "SafeBreach",
-                "Amazon SageMaker AI Model Registry",
-            "Google Vertex AI Model Registry",
-            "Databricks Unity Catalog"
+              "GitHub Enterprise Server",
+              "GitHub Enterprise Cloud",
+              "AttackIQ",
+              "SafeBreach",
+              "Amazon SageMaker AI Model Registry",
+              "Gemini Enterprise Agent Platform Model Registry (formerly Vertex AI Model Registry)",
+              "Databricks Unity Catalog",
+              "Azure Policy (deny baseline with compliance-state readback and expiring exemptions)"
           ],
           "defendsAgainst": [
             {
@@ -1256,7 +1268,8 @@ export const restoreTactic = {
               "Open Policy Agent (OPA)",
               "Cosign",
               "GnuPG",
-              "sha256sum (GNU Coreutils)"
+              "sha256sum (GNU Coreutils)",
+              "LanceDB (table version restore and tags)"
           ],
           "toolsCommercial": [
             "Pinecone",
@@ -1500,10 +1513,9 @@ export const restoreTactic = {
             }
           ],
           "toolsOpenSource": [
-            "PostgreSQL",
-            "Temporal",
-            "OpenTelemetry",
-            "Cosign"
+              "PostgreSQL",
+              "Temporal",
+              "Cosign"
           ],
           "toolsSourceAvailable": [
             "Camunda 8 Self-Managed (Camunda License 1.0; source-available)"

@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20261101",
+  "aidefend_version": "1.20261115",
   "framework_key": "mitre-atlas",
   "source_framework_label": "MITRE ATLAS",
   "display_name": "MITRE ATLAS",
@@ -465,7 +465,7 @@
         "AML.TA0004"
       ],
       "referenced": true,
-      "control_count": 56
+      "control_count": 55
     },
     {
       "item_locator": "AML.T0010.000 Supply Chain Compromise: Hardware",
@@ -489,7 +489,7 @@
         "AML.TA0004"
       ],
       "referenced": true,
-      "control_count": 19
+      "control_count": 18
     },
     {
       "item_locator": "AML.T0010.002 Supply Chain Compromise: Data Repository",
@@ -525,7 +525,7 @@
         "AML.TA0004"
       ],
       "referenced": true,
-      "control_count": 10
+      "control_count": 9
     },
     {
       "item_locator": "AML.T0010.005 Supply Chain Compromise: AI Agent Tool",
@@ -549,7 +549,7 @@
         "AML.TA0005"
       ],
       "referenced": true,
-      "control_count": 42
+      "control_count": 41
     },
     {
       "item_locator": "AML.T0011.000 User Execution: Unsafe AI Artifacts",
@@ -573,7 +573,7 @@
         "AML.TA0005"
       ],
       "referenced": true,
-      "control_count": 11
+      "control_count": 10
     },
     {
       "item_locator": "AML.T0011.002 User Execution: Poisoned AI Agent Tool",
@@ -649,7 +649,7 @@
         "AML.TA0011"
       ],
       "referenced": true,
-      "control_count": 22
+      "control_count": 21
     },
     {
       "item_locator": "AML.T0016 Obtain Capabilities",
@@ -906,7 +906,7 @@
         "AML.TA0011"
       ],
       "referenced": true,
-      "control_count": 12
+      "control_count": 13
     },
     {
       "item_locator": "AML.T0031 Erode AI Model Integrity",
@@ -954,7 +954,7 @@
         "AML.TA0011"
       ],
       "referenced": true,
-      "control_count": 4
+      "control_count": 5
     },
     {
       "item_locator": "AML.T0034.002 Cost Harvesting: Agentic Resource Consumption",
@@ -2570,7 +2570,7 @@
         "AML.TA0004"
       ],
       "referenced": true,
-      "control_count": 7
+      "control_count": 8
     },
     {
       "item_locator": "AML.T0133 Discover AI Agent Runtime Capabilities",

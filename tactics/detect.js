@@ -213,7 +213,9 @@ export const detectTactic = {
                         "Securiti LLM Firewall",
                         "Google Cloud Model Armor",
                         "Amazon Bedrock Guardrails",
-                        "Azure AI Content Safety - Prompt Shields"
+                        "Azure AI Content Safety - Prompt Shields",
+                        "Nightfall Firewall for AI",
+                        "Cisco AI Defense"
                     ],
                     "defendsAgainst": [
                         {
@@ -445,7 +447,9 @@ export const detectTactic = {
                         "Hive AI-Generated & Deepfake Content Detection APIs",
                         "Reality Defender RealAPI",
                         "Pindrop Pulse",
-                        "Amazon Rekognition Face Liveness"
+                        "Amazon Rekognition Face Liveness",
+                        "Resemble Detect (Resemble AI deepfake detection for audio, video and images)",
+                        "Azure Face liveness detection (Foundry Tools)"
                     ],
                     "defendsAgainst": [
                         {
@@ -564,11 +568,13 @@ export const detectTactic = {
                       "Lingua (lingua-language-detector)",
                       "Cosign (signed baseline and replay evidence verification)"
                     ],
+                    "toolsSourceAvailable": [
+                        "Alibi Detect (Business Source License 1.1; source-available)"
+                    ],
                     "toolsCommercial": [
                         "Arize AX",
                         "Fiddler AI Observability",
                         "Evidently Cloud",
-                        "NannyML Cloud",
                         "Pinecone",
                         "Zilliz Cloud"
                     ],
@@ -774,22 +780,21 @@ export const detectTactic = {
                     "toolsOpenSource": [
                         "Guardrails AI",
                         "NVIDIA NeMo Guardrails",
-                        "OpenSSL"
+                        "OpenSSL (content fingerprints for recalled-memory denylist checks; matching and injection classification external)"
                     ],
                     "toolsSourceAvailable": [
-                        "Meta Llama Guard 4 (Llama 4 Community License; open-weight)",
                         "Granite Guardian 4.1 (Apache-2.0; open-weight)",
                         "Qwen3Guard (Apache-2.0; open-weight)",
                         "gpt-oss-safeguard (Apache-2.0; open-weight)",
-                        "Meta Llama Prompt Guard 2 (Llama 4 Community License; open-weight)",
-                        "Google ShieldGemma (Gemma Terms of Use; open-weight)"
+                        "Meta Llama Prompt Guard 2 (Llama 4 Community License; open-weight)"
                     ],
                     "toolsCommercial": [
                         "Check Point AI Guardrails",
                         "Palo Alto Networks Prisma AIRS",
-                        "OpenAI Moderations API (omni-moderation-latest)",
                         "Redis Cloud",
-                        "Redis Enterprise Software"
+                        "Redis Software (formerly Redis Enterprise Software)",
+                        "Azure AI Content Safety - Prompt Shields",
+                        "Google Cloud Model Armor"
                     ],
                     "defendsAgainst": [
                         {
@@ -919,7 +924,7 @@ export const detectTactic = {
                     "toolsOpenSource": [
                         "Apache Kafka",
                         "Prometheus",
-                        "Grafana",
+                        "Grafana (Grafana Alerting rules over gate-verdict metrics and event stores)",
                         "Valkey",
                         "Redis 8+ AGPLv3 source build",
                         "ClickHouse",
@@ -932,7 +937,8 @@ export const detectTactic = {
                         "Splunk Enterprise Security",
                         "Microsoft Sentinel",
                         "Google Security Operations",
-                        "Datadog Cloud SIEM"
+                        "Datadog Cloud SIEM",
+                        "Microsoft Defender for Cloud threat protection for AI services"
                     ],
                     "defendsAgainst": [
                         {
@@ -1163,8 +1169,8 @@ export const detectTactic = {
                         "Evidently",
                         "NannyML",
                         "SciPy",
-                        "Prometheus",
-                        "Grafana"
+                        "Prometheus (distribution-summary time series and drift alert rules; instrumentation and calibrated comparisons required)",
+                        "Grafana (Alerting rules over drift statistics; validated baseline and input measurements required)"
                     ],
                     "toolsSourceAvailable": [
                         "Alibi Detect (Business Source License 1.1; source-available)"
@@ -1175,9 +1181,9 @@ export const detectTactic = {
                         "Evidently Cloud",
                         "NannyML Cloud",
                         "Snowflake ML Observability",
-                        "Amazon SageMaker Model Monitor",
-                        "Google Vertex AI Model Monitoring",
-                        "Azure Machine Learning model monitoring"
+                        "Gemini Enterprise Agent Platform Model Monitoring (formerly Vertex AI Model Monitoring)",
+                        "Azure Machine Learning model monitoring",
+                        "Databricks data profiling (formerly Lakehouse Monitoring; InferenceLog drift metrics)"
                     ],
                     "defendsAgainst": [
                         {
@@ -1292,15 +1298,18 @@ export const detectTactic = {
                         "MLflow",
                         "pandas",
                         "Polars",
-                        "Prometheus",
-                        "Grafana"
+                        "Prometheus (windowed labeled-performance metrics; label joins and maturity denominators external)",
+                        "Grafana (Alerting rules over labeled-performance cohorts; reference and coverage checks external)",
+                        "Evidently"
                     ],
                     "toolsCommercial": [
-                        "Weights & Biases",
+                        "Weights & Biases Weave (feedback and human annotations attached to production calls by call ID)",
                         "Arize AX",
                         "Fiddler AI Observability",
                         "Evidently Cloud",
-                        "Datadog"
+                        "Datadog Agent Observability (external evaluations joined to production spans by span and trace ID)",
+                        "Databricks data profiling (formerly Lakehouse Monitoring; InferenceLog model quality metrics)",
+                        "Azure Machine Learning model monitoring"
                     ],
                     "defendsAgainst": [
                         {
@@ -1406,12 +1415,9 @@ export const detectTactic = {
                         "TransformerLens",
                         "NumPy",
                         "SciPy",
-                        "Prometheus",
-                        "Grafana"
-                    ],
-                    "toolsCommercial": [
-                        "Arize AX",
-                        "Evidently Cloud"
+                        "Prometheus (internal-signal metric windows and alert rules; model hooks and request-level scoring required)",
+                        "Grafana (Alerting rules over model-internal anomaly metrics; instrumented signal source required)",
+                        "vLLM (configured hidden-state extraction connector for white-box monitoring)"
                     ],
                     "defendsAgainst": [
                         {
@@ -1532,18 +1538,18 @@ export const detectTactic = {
                     "toolsOpenSource": [
                         "OpenTelemetry",
                         "Prometheus",
-                        "Grafana",
+                        "Grafana (Grafana Alerting rules on reasoning-token and hidden-to-visible ratio metrics)",
                         "ClickHouse",
                         "LiteLLM",
                         "Langfuse (provider-reported reasoning-token and trace telemetry; hidden reasoning remains unavailable unless provider-exposed)",
-                        "Cosign"
+                        "Cosign (verify signed reasoning-capability and detection profiles; telemetry extraction and anomaly rules required)"
                     ],
                     "toolsCommercial": [
-                        "Datadog",
+                        "Datadog Agent Observability (formerly LLM Observability; reasoning-token metric with anomaly monitors)",
                         "Splunk Enterprise Security",
-                        "New Relic",
+                        "New Relic (anomaly alerts on custom reasoning-token and hidden/visible-ratio metrics; gateway instrumentation required)",
                         "Cloudflare AI Gateway",
-                        "Amazon Bedrock"
+                        "Amazon Bedrock (extended-thinking response fields and model invocation logging as the reasoning-metadata source)"
                     ],
                     "defendsAgainst": [
     {
@@ -1671,8 +1677,8 @@ export const detectTactic = {
                         "Hugging Face Transformers",
                         "vLLM",
                         "SGLang",
-                        "OpenTelemetry",
-                        "Prometheus"
+                        "OpenTelemetry (export semantic-monitor labels and content digests; exclude raw reasoning from shared telemetry)",
+                        "Prometheus (aggregate semantic-monitor finding counters and alerts; reasoning interpretation external)"
                     ],
                     "toolsSourceAvailable": [
                         "Granite Guardian 4.1 (Apache-2.0; open-weight)",
@@ -1973,9 +1979,9 @@ export const detectTactic = {
                         "Hugging Face Transformers",
                         "Detoxify",
                         "spaCy",
-                  "NLTK",
-                  "NVIDIA NeMo Guardrails"
-              ],
+                        "NLTK (tokenization and custom lexicon/text-classifier detection; policy models and calibration required)",
+                        "NVIDIA NeMo Guardrails"
+                    ],
               "toolsSourceAvailable": [
                   "Granite Guardian 4.1 (Apache-2.0; open-weight)",
                   "Qwen3Guard (Apache-2.0; open-weight)",
@@ -1984,13 +1990,14 @@ export const detectTactic = {
                   "Google ShieldGemma (Gemma Terms of Use; open-weight)"
               ],
               "toolsCommercial": [
-                        "OpenAI Moderations API (omni-moderation-latest)",
-                        "Azure AI Content Safety",
-                  "Clarifai AI Platform",
+                  "OpenAI Moderations API (omni-moderation-latest)",
+                  "Azure AI Content Safety",
                   "Hive Text Moderation API",
                   "Check Point AI Guardrails",
                   "Palo Alto Networks Prisma AIRS",
-                  "Securiti LLM Firewall"
+                  "Securiti LLM Firewall",
+                  "Amazon Bedrock Guardrails",
+                  "Google Cloud Model Armor"
               ],
               "defendsAgainst": [
                   {
@@ -2109,25 +2116,27 @@ export const detectTactic = {
                 ]
               },
               "toolsOpenSource": [
-                  "Microsoft Presidio",
+                  "Presidio",
                   "spaCy",
-                  "NLTK",
+                  "NLTK (named-entity and pattern features for sensitive-data detection; domain recognizers required)",
                   "Hugging Face Transformers",
                   "FlashText",
                   "TruffleHog",
-                        "Gitleaks",
-                        "detect-secrets"
-                    ],
+                  "Gitleaks",
+                  "detect-secrets"
+              ],
                     "toolsCommercial": [
                         "Nightfall Firewall for AI",
                         "Google Cloud Sensitive Data Protection",
-                  "Microsoft Purview Data Loss Prevention",
-                  "Tonic Textual",
-                  "Broadcom Symantec Data Loss Prevention",
-                  "Forcepoint DLP",
-                  "HiddenLayer AI Runtime Security",
-                  "Palo Alto Networks Prisma AIRS"
-              ],
+                        "Microsoft Purview Data Loss Prevention",
+                        "Tonic Textual",
+                        "Broadcom Symantec Data Loss Prevention",
+                        "Forcepoint DLP (AI-response data-transfer inspection through AI Security integration; DLP 10.4.5+ and Cloud API channel required)",
+                        "HiddenLayer AI Runtime Security",
+                        "Palo Alto Networks Prisma AIRS",
+                        "Amazon Bedrock Guardrails",
+                        "Google Cloud Model Armor"
+                    ],
               "defendsAgainst": [
                   {
                       "framework": "MITRE ATLAS",
@@ -2268,21 +2277,23 @@ export const detectTactic = {
               },
               "toolsOpenSource": [
                   "Open Policy Agent (OPA)",
-                  "Pydantic",
+                  "Pydantic (validate observed tool arguments against monitoring contracts; correlation and alerting required)",
                   "LangChain",
                   "Microsoft Agent Framework",
                   "CrewAI",
-                        "Ajv",
-                        "python-jsonschema",
-                        "Langfuse (tool-call trace and policy-outcome telemetry; enforcement remains external)"
+                  "Ajv (validate observed tool arguments against monitoring contracts; correlation and alerting required)",
+                  "python-jsonschema (validate observed tool arguments against monitoring contracts; correlation and alerting required)",
+                  "Langfuse (tool-call trace and policy-outcome telemetry; enforcement remains external)",
+                  "Microsoft Agent Governance Toolkit (public preview; tool-policy events; protect and reconcile the audit stream externally)"
               ],
               "toolsCommercial": [
                   "Check Point AI Guardrails",
                   "Palo Alto Networks Prisma AIRS",
                   "Cerbos Hub",
                   "Permit.io",
-                  "Kong Konnect",
-                  "Google Cloud Apigee API Management"
+                  "Kong Konnect (AI Gateway Enterprise AI MCP Proxy per-tool ACL audit log)",
+                  "Google Cloud Apigee API Management (policy-violation analytics and Advanced API Security abuse detection for tool APIs)",
+                  "Datadog AI Guard"
               ],
               "defendsAgainst": [
                   {
@@ -2411,12 +2422,13 @@ export const detectTactic = {
                         "pandas",
                         "NumPy",
                         "scikit-learn",
-                        "OpenTelemetry (ordered tool-call span capture; anomaly scoring remains detector-owned)"
-              ],
+                        "OpenTelemetry (ordered tool-call span capture; anomaly scoring remains detector-owned)",
+                        "Apache Flink (FlinkCEP keyed sequence patterns for forbidden edges and missing stages)"
+                    ],
               "toolsCommercial": [
                   "Splunk Enterprise Security",
                   "Elastic Security",
-                  "Datadog LLM Observability"
+                  "Datadog Agent Observability (formerly LLM Observability)"
               ],
               "defendsAgainst": [
                   {
@@ -2540,19 +2552,20 @@ export const detectTactic = {
                   "OpenInference",
                   "FAISS",
                   "pgvector",
-                  "Open Policy Agent (OPA)"
+                  "Open Policy Agent (OPA)",
+                  "Apache Flink (FlinkCEP session patterns for read-then-send invariant breaches)"
               ],
               "toolsSourceAvailable": [
-                  "Arize Phoenix (Elastic License 2.0; source-available)"
+                  "Arize Phoenix (session-grouped trace source for stateful monitors; security ledger and invariant checks required) (Elastic License 2.0; source-available)"
               ],
               "toolsCommercial": [
                   "Splunk Enterprise Security",
                   "Microsoft Sentinel",
                   "Google Security Operations",
-                        "Amazon ElastiCache (Valkey or Redis OSS)",
+                  "Amazon ElastiCache (Valkey or Redis OSS)",
                   "Azure Managed Redis",
                   "Datadog",
-                  "New Relic"
+                  "New Relic (session-tagged traces and query alerts; security ledger, intent scoring and invariant checks required)"
               ],
               "defendsAgainst": [
                   {
@@ -2679,12 +2692,13 @@ export const detectTactic = {
               "toolsOpenSource": [
                   "OpenTelemetry",
                   "Prometheus",
-                  "Grafana",
+                  "Grafana (Grafana Alerting rules on memory-write rate and verified-read failure metrics)",
                   "Valkey",
                   "Redis 8+ AGPLv3 source build",
                   "Apache Kafka",
                   "OpenSearch",
-                  "Open Policy Agent (OPA)"
+                  "Open Policy Agent (OPA)",
+                  "OWASP Agent Memory Guard (young Lab project; memory-tamper, repetition and size-anomaly events)"
               ],
               "toolsCommercial": [
                   "Datadog",
@@ -2898,19 +2912,14 @@ clamp_min(
                 "description": "<p><strong>Accurate sensitive-attribute inference can still violate purpose limitation, anti-discrimination, or special-category data rules.</strong></p><ul><li>Multi-turn context can enable a protected inference even when each individual turn appears harmless.</li><li>Calendar, purchase, location, email, and health-adjacent tool results can become highly sensitive when combined, even if each source is individually low sensitivity.</li></ul>"
               },
               "toolsOpenSource": [
-                  "Fairlearn (group-disparity metrics for governed evaluation populations)",
-                  "AI Fairness 360 (pre-deployment bias and group-disparity analysis)",
-                  "Aequitas (group bias audit reporting)",
                   "Guardrails AI (custom output validators for prohibited sensitive-attribute claims)",
-                  "Microsoft Presidio (explicit attribute and custom-pattern detection; not semantic inference by itself)",
+                  "Presidio (explicit attribute and custom-pattern detection; not semantic inference by itself)",
                   "Hugging Face Transformers (fine-tuned classification of sensitive-attribute inference statements)",
-                  "spaCy (rule-based phrase and entity features for deterministic screening)"
+                  "spaCy (rule-based phrase and entity features for deterministic screening)",
+                  "promptfoo (custom policy red-team plugin with multi-turn strategies for protected-attribute inference testing)"
               ],
-              "toolsCommercial": [
-                  "Arthur AI Platform (group bias monitoring for governed populations)",
-                  "Holistic AI Platform (pre-deployment bias and protected-characteristic testing)",
-                  "Fiddler AI Observability (custom fairness metrics and alerts for governed populations)",
-                  "Patronus AI (custom output evaluators for sensitive-attribute inference claims)"
+              "toolsSourceAvailable": [
+                  "gpt-oss-safeguard (Apache-2.0; open-weight)"
               ],
               "defendsAgainst": [
                   {
@@ -3034,11 +3043,16 @@ clamp_min(
                 "operation"
               ],
               "toolsOpenSource": [
-                "FFmpeg",
-                "Apache Tika",
-                "ClamAV",
-                "YARA"
+                  "FFmpeg",
+                  "Apache Tika",
+                  "ClamAV",
+                  "YARA",
+                  "YARA-X",
+                  "Magika (Google deep-learning content-type detection)"
               ],
+                    "toolsSourceAvailable": [
+                        "ShieldGemma 2 (Gemma Terms of Use; open-weight)"
+                    ],
                     "toolsCommercial": [
                         "Azure AI Content Safety",
                         "Hive Visual Moderation API",
@@ -3158,6 +3172,12 @@ clamp_min(
                           }
                       ]
                   },
+                  "toolsCommercial": [
+                      "Azure AI Content Safety - Prompt Shields"
+                  ],
+                  "toolsSourceAvailable": [
+                      "Meta Llama Prompt Guard 2 (Llama 4 Community License; open-weight)"
+                  ],
                   "defendsAgainst": [
                       {
                           "framework": "MITRE ATLAS",
@@ -3218,7 +3238,8 @@ clamp_min(
                       }
                   ],
                   "toolsOpenSource": [
-                      "Hugging Face Transformers"
+                      "Hugging Face Transformers",
+                      "datasketch (MinHash LSH Ensemble containment search against recorded malicious source spans)"
                   ],
                   "implementationGuidance": [
                       {
@@ -3427,18 +3448,18 @@ clamp_min(
                 ]
               },
               "toolsOpenSource": [
-                  "MLflow Model Registry",
                   "DVC",
                   "Notation",
                   "Cosign",
                   "sha256sum",
-                  "AIDE"
+                  "AIDE",
+                  "Sigstore model-signing (signed model-file manifests; enforce symlink, ignored-path and legacy-signature safeguards)",
+                  "Wazuh (File Integrity Monitoring module)"
               ],
               "toolsCommercial": [
-                  "Databricks Models in Unity Catalog",
-                  "Amazon SageMaker AI Model Registry",
-                  "Google Vertex AI Model Registry",
-                  "JFrog Artifactory"
+                  "Amazon SageMaker AI Model Registry (ImageDigest and ModelDataETag records as the re-verification baseline)",
+                  "JFrog Artifactory",
+                  "Microsoft Defender for Cloud File Integrity Monitoring (Defender for Servers Plan 2)"
               ],
               "defendsAgainst": [
                   {
@@ -3580,14 +3601,16 @@ clamp_min(
               "toolsOpenSource": [
                   "Intel SGX SDK",
                   "Open Enclave SDK",
-                        "AWS Nitro Enclaves SDK",
-                        "Keylime",
-                        "Veraison",
-                        "Cosign"
+                  "AWS Nitro Enclaves SDK",
+                  "Keylime",
+                  "Veraison",
+                  "Cosign (signed attestation-policy and reference-measurement verification)",
+                  "Trustee (Confidential Containers attestation verification and reference-policy comparison)",
+                  "NVIDIA Attestation SDK (nvattest GPU/NVSwitch evidence verification; CPU attestation and key release external)"
               ],
               "toolsCommercial": [
                   "Microsoft Azure Attestation",
-                  "Google Cloud Confidential Computing",
+                  "Google Cloud Confidential Computing (Google Cloud Attestation and Confidential Space attestation tokens)",
                   "AWS Nitro Enclaves",
                   "Intel Trust Authority"
               ],
@@ -3693,18 +3716,18 @@ clamp_min(
                   "Ansible Core"
               ],
               "toolsCommercial": [
-                  "Wiz Cloud Security Platform",
-                  "Palo Alto Networks Prisma Cloud",
+                  "Wiz Code (IaC Inventory drift between IaC-declared state and live cloud resources)",
+                  "Palo Alto Networks Cortex Cloud Application Security (IaC drift detection for Terraform and CloudFormation resources; formerly Prisma Cloud Application Security)",
                   "Microsoft Defender for Cloud",
-                  "ServiceNow CMDB",
+                  "ServiceNow CMDB (approved-change records to classify drift as authorized or out-of-process)",
                   "GitHub Enterprise Cloud",
                   "GitHub Enterprise Server",
                   "Bitbucket Cloud",
                   "Bitbucket Data Center",
-                        "AWS CloudFormation",
-                        "AWS Config (AWS resource configuration drift only)",
-                        "GitLab Ultimate",
-                  "Codefresh"
+                  "AWS CloudFormation",
+                  "AWS Config (AWS resource configuration drift only)",
+                  "GitLab Ultimate",
+                  "HCP Terraform (health assessments drift detection)"
               ],
               "defendsAgainst": [
                   {
@@ -3809,20 +3832,23 @@ clamp_min(
                 ]
               },
               "toolsOpenSource": [
-                        "Falco",
-                        "Cilium Tetragon",
-                        "Zeek (DNS, TLS, and HTTP egress evidence for unexpected model-source destinations)",
-                        "OpenSearch",
-                  "curl (CI URL status probe; not continuous monitoring)"
+                  "Falco",
+                  "Cilium Tetragon",
+                  "Zeek (DNS, TLS, and HTTP egress evidence for unexpected model-source destinations)",
+                  "OpenSearch",
+                  "curl (CI URL status probe; not continuous monitoring)",
+                  "Cilium Hubble (L7 DNS visibility for per-pod model-hub lookups)",
+                  "huggingface_hub (HfApi.revision_exists and model_info for pinned-revision and owner checks)"
               ],
               "toolsCommercial": [
                   "Splunk Enterprise Security",
                   "Microsoft Sentinel",
                   "Google Security Operations",
-                  "Amazon VPC Flow Logs",
+                  "Amazon VPC Flow Logs (IP-level egress evidence; correlate with DNS query logs to attribute model-hub destinations)",
                   "CrowdStrike Falcon Insight XDR",
                   "SentinelOne Singularity",
-                  "Microsoft Defender for Endpoint"
+                  "Microsoft Defender for Endpoint",
+                  "Amazon Route 53 Resolver DNS Firewall (Alert rules and VPC Resolver query logging)"
               ],
               "defendsAgainst": [
                   {
@@ -3926,6 +3952,10 @@ clamp_min(
                   {
                     "id": "AID-H-021.002",
                     "comparison": "AID-D-004.005 emits a turn-chain integrity finding before prompt assembly; AID-H-021.002 owns fail-closed admission of signed runtime context and configuration.\nDetection supplies evidence, while Harden decides whether the turn may enter the runtime."
+                  },
+                  {
+                    "id": "AID-H-007.007",
+                    "comparison": "AID-D-004.005 reports deleted, compacted, missing, reordered, or rewritten turns in the recorded chain of an evaluation run; AID-H-007.007 keeps the grader, its logic, and its results out of the evaluated identity's reach.\nA complete turn chain does not show that the grader was isolated, and an isolated grader does not show that the chain it scored was complete."
                   }
                 ]
               },
@@ -3933,19 +3963,12 @@ clamp_min(
                   "pyca/cryptography",
                   "OpenSSL",
                   "SPIRE",
-                  "OpenBao Transit",
-                  "OpenSearch",
-                  "OpenSearch Dashboards"
+                  "OpenBao Transit"
               ],
               "toolsCommercial": [
                   "AWS Key Management Service",
                   "Azure Key Vault",
-                  "Google Cloud Key Management Service",
-                  "Okta Workforce Identity",
-                  "Auth0",
-                  "Splunk Enterprise Security",
-                  "Datadog Cloud SIEM",
-                  "Microsoft Sentinel"
+                  "Google Cloud Key Management Service"
               ],
               "defendsAgainst": [
                 {
@@ -4028,7 +4051,7 @@ clamp_min(
                   "id": "AID-D-004.005-G002",
                   "implementation": "Write turn-chain findings and expected-population manifests to append-only evidence storage controlled outside the conversation producer identities.",
                   "howTo": "<h5>Concept</h5><p>The same identity that can produce a turn must not be able to rewrite the evidence that later proves a gap or signature failure. Store the trusted expected-population manifest and the detector result as separate immutable objects, and bind both to the conversation ID and detector policy version.</p><pre><code class=\"language-python\">from __future__ import annotations\n\n# File: detect/publish_turn_chain_evidence.py\n\nimport base64\nimport hashlib\nimport json\nfrom datetime import datetime, timedelta, timezone\n\n\ndef canonical(value: dict) -&gt; bytes:\n    return json.dumps(value, sort_keys=True, separators=(\",\", \":\")).encode(\"utf-8\")\n\n\ndef publish_immutable(s3, *, bucket: str, key: str, evidence: dict, retention_days: int) -&gt; dict:\n    body = canonical(evidence)\n    digest = hashlib.sha256(body).digest()\n    retain_until = datetime.now(timezone.utc) + timedelta(days=retention_days)\n    response = s3.put_object(\n        Bucket=bucket,\n        Key=key,\n        Body=body,\n        ContentType=\"application/json\",\n        ChecksumSHA256=base64.b64encode(digest).decode(\"ascii\"),\n        ObjectLockMode=\"COMPLIANCE\",\n        ObjectLockRetainUntilDate=retain_until,\n    )\n    return {\n        \"uri\": f\"s3://{bucket}/{key}\",\n        \"version_id\": response[\"VersionId\"],\n        \"sha256\": digest.hex(),\n        \"retained_until\": retain_until.isoformat(),\n    }\n</code></pre><p><strong>Action:</strong> Enable bucket versioning and Object Lock before deployment, use a detector-specific write identity without delete permission, derive retention from versioned organizational policy, and read back the object version and checksum as verification evidence. A write failure is <code>ERROR</code>, not a completed detector run.</p><h5>Verify complete coverage</h5><p>The population is every turn-chain result, finding, manifest, write acknowledgement, readback, retention label, and expected correlation record emitted by the measured conversation population.</p>"
-                  + "<h5>Evaluator and grader tamper cases</h5><p>For evaluation workloads, keep the reference solution and grader internals unreadable to the evaluated identity, and make reference data, grader logic, raw observations, and prior results unwritable by that identity. Bind the evaluator image, reference digest, result-writer identity, and complete expected turn population to the chain. Exercise attempted output or log deletion, context compaction, evaluator-container code injection, adversarial grader output, missing or reordered turns, and rewritten observations. The grader writes a new result only through its dedicated evidence writer; it never edits the raw chain it evaluates.</p>"
+                  + "<h5>Evaluation-run turn chains</h5><p>For evaluation workloads, bind the evaluator image, reference digest, result-writer identity, and complete expected turn population to the chain. Exercise the turn-chain tamper cases this detector must report: attempted output or log deletion, context compaction, missing or reordered turns, and rewritten observations. The grader writes a new result only through its dedicated evidence writer; it never edits the raw chain it evaluates.</p><p>Grader isolation is owned by <code>AID-H-007.007</code>, not by this detector: keeping grader internals unreadable to the evaluated identity, keeping grader logic, raw observations, and prior results unwritable by it, and testing evaluator-container code injection and adversarial grader output. Reference solutions and holdout data are protected by <code>AID-H-007.004</code>. Treat both as prerequisites for trusting an evaluation-run chain; do not re-implement or score them here.</p>"
                 },
                 {
                   "id": "AID-D-004.005-G003",
@@ -4128,17 +4151,20 @@ clamp_min(
                 }
               ],
               "toolsOpenSource": [
-                "OpenTelemetry (independent source acquisition and signal export)",
-                "Envoy (actual gateway upstream observation)",
-                "OpenSearch (route drift search and alerting)",
-                "Cosign (exact signed snapshot verification)"
+                  "OpenTelemetry (independent source acquisition and signal export)",
+                  "Envoy (actual gateway upstream observation)",
+                  "OpenSearch (route drift search and alerting)",
+                  "Cosign (exact signed snapshot verification)",
+                  "agentgateway (requested-versus-served model telemetry input; independent provider/network readback required)",
+                  "LiteLLM Proxy (per-request deployment, API base, retry and fallback headers as route telemetry input)"
               ],
               "toolsCommercial": [
-                "Cloudflare AI Gateway (route telemetry input; independent provider/network readback required)",
-                "Prisma AIRS AI Gateway (formerly Portkey; route telemetry input; independent provider/network readback required)",
-                "Splunk Enterprise Security (signal correlation and alert delivery)",
-                "Microsoft Sentinel (signal correlation and alert delivery)",
-                "Google Security Operations (signal correlation and alert delivery)"
+                  "Cloudflare AI Gateway (route telemetry input; independent provider/network readback required)",
+                  "Prisma AIRS AI Gateway (formerly Portkey; route telemetry input; independent provider/network readback required)",
+                  "Splunk Enterprise Security (signal correlation and alert delivery)",
+                  "Microsoft Sentinel (signal correlation and alert delivery)",
+                  "Google Security Operations (signal correlation and alert delivery)",
+                  "Amazon Bedrock model invocation logging (provider-side record of the model and region actually invoked)"
               ],
               "implementationGuidance": [
                 {
@@ -4243,14 +4269,16 @@ clamp_min(
               ],
               "toolsOpenSource": [
                   "OpenTelemetry",
-                  "Git",
+                  "Git (versioned approved lifecycle-DAG baseline; observed-path reconstruction and drift evaluation required)",
                   "Argo CD",
-                  "Flux CD"
+                  "Flux CD",
+                  "Marquez (OpenLineage event collection and lineage graph API)"
               ],
               "toolsCommercial": [
-                  "Collibra Data Intelligence Platform",
+                  "Collibra Platform (data lineage harvesting as an actual-lineage source)",
                   "ServiceNow CMDB",
-                  "Datadog LLM Observability"
+                  "Amazon SageMaker ML Lineage Tracking",
+                  "Databricks Unity Catalog lineage system tables (system.access.table_lineage and column_lineage)"
               ],
               "implementationGuidance": [
                 {
@@ -4288,10 +4316,12 @@ clamp_min(
                 "operation"
               ],
               "toolsOpenSource": [
-                        "Falco",
-                        "Cilium Tetragon",
-                        "osquery (loaded-module and process inventory readback)",
-                        "Cosign"
+                  "Falco",
+                  "Cilium Tetragon",
+                  "osquery (loaded-module and process inventory readback)",
+                  "Cosign",
+                  "Tracee (shared_object_loaded event from the security_mmap_file LSM hook)",
+                  "Keylime (runtime policy verification of IMA MMAP_CHECK measurements)"
               ],
               "toolsCommercial": [
                   "Microsoft Sysmon",
@@ -4554,7 +4584,7 @@ clamp_min(
                     "phase": [
                         "operation"
                     ],
-                    "description": "This foundational technique covers the instrumentation of AI applications to produce detailed, structured logs for all significant events, and the implementation of a secure pipeline to collect and forward these logs to a central analysis platform. The goal is to create a high-fidelity, auditable record of system activity, which is a prerequisite for all other detection, investigation, and threat hunting capabilities.",
+                    "description": "This foundational technique covers the instrumentation of AI applications to produce detailed, structured logs for all significant events, and the implementation of a secure pipeline to collect and forward these logs to a central analysis platform. Where the system has them, significant events include agent and tool activity, MCP server request, task, and subscription lifecycles, and the evidence fields an investigation relies on: stable identifiers, retention class, legal-hold flags, and chain-of-custody linkage. The goal is to create a high-fidelity, auditable record of system activity, which is a prerequisite for all other detection, investigation, and threat hunting capabilities.",
                     "scopeBoundary": {
                       "responsibility": "Owns foundational structured event instrumentation, secure collection, normalization, timestamping, forwarding, and tamper-evident retention for AI system activity. It creates the event record but does not define every specialized detector or prove an alert fired.",
                       "relatedTechniques": [
@@ -4574,15 +4604,17 @@ clamp_min(
                     },
               "toolsOpenSource": [
                   "Loguru",
-                        "structlog",
-                        "Fluentd",
-                        "Vector",
-                        "Logstash",
-                        "Apache Kafka",
-                        "OpenTelemetry",
-                        "Langfuse",
-                        "OpenInference"
-                    ],
+                  "structlog",
+                  "Fluentd",
+                  "Vector",
+                  "Logstash (Apache-2.0 OSS distribution)",
+                  "Apache Kafka",
+                  "OpenTelemetry",
+                  "Langfuse",
+                  "OpenInference",
+                  "OCSF Toolkit (ocsf-toolkit; Apache-2.0; pre-1.0 Go CLI that validates emitted events against a compiled OCSF 1.9.0 schema and adds enum siblings and observables before shipping)",
+                  "Tenzir Node (BSD-3-Clause edition; OCSF validation/enrichment and SIEM translation pipelines)"
+              ],
                     "toolsSourceAvailable": [
                         "Arize Phoenix (Elastic License 2.0; source-available)",
                         "Sentry self-hosted (FSL-1.1-Apache-2.0; source-available)"
@@ -4598,7 +4630,12 @@ clamp_min(
                         "Azure Monitor Logs",
                         "LangSmith",
                         "Braintrust",
-                        "Datadog LLM Observability"
+                        "Datadog Agent Observability (formerly LLM Observability)",
+                        "Amazon Security Lake (OCSF security data lake; custom-source schema-version limits apply)",
+                        "Cribl Stream (OCSF Post Processor pack and Amazon Security Lake destination; OCSF Parquet schemas)",
+                        "Datadog Cloud SIEM (OCSF out-of-the-box pipelines and OCSF processor for custom log sources)",
+                        "Splunk Edge Processor (supported-source OCSF conversion; CIM mapping requires the OCSF-CIM add-on)",
+                        "Amazon S3 Object Lock (tamper-evident AI security log archive)"
                     ],
                     "defendsAgainst": [
     {
@@ -5038,11 +5075,12 @@ export async function instrumentMcpRequest(input, handler) {
                         "OpenSearch",
                         "Elasticsearch 8.16+ AGPLv3 source build",
                         "Grafana Loki",
-                        "Grafana Alloy",
+                        "Grafana Alloy (PrometheusRule-to-ruler delivery; signed rule admission, fixture replay and effective-rule readback required)",
                         "Wazuh",
                         "Sigma CLI",
                         "pySigma",
-                        "ElastAlert2"
+                        "ElastAlert2",
+                        "Prometheus (promtool test rules fixture replay and /api/v1/rules health readback)"
                     ],
                     "toolsCommercial": [
                         "Splunk Enterprise Security",
@@ -5051,7 +5089,8 @@ export async function instrumentMcpRequest(input, handler) {
                         "IBM QRadar SIEM",
                         "Datadog Cloud SIEM",
                         "Exabeam New-Scale SIEM",
-                        "LogRhythm SIEM"
+                        "LogRhythm SIEM",
+                        "Elastic Security (detection rule monitoring, execution gaps and rule execution logs)"
                     ],
                     "defendsAgainst": [
                       {
@@ -5162,20 +5201,22 @@ export async function instrumentMcpRequest(input, handler) {
                         "JupyterLab",
                         "pandas",
                         "scikit-learn",
-                        "Matplotlib",
+                        "Matplotlib (visual analysis of AI threat-hunting cohorts and timelines; queries and detection logic required)",
                         "OpenSearch Dashboards",
                         "NetworkX",
                         "MISP",
-                        "Apache Spark"
+                        "Apache Spark",
+                        "MSTICPy"
                     ],
                     "toolsCommercial": [
                         "Splunk Enterprise Security",
                         "Elastic Security",
                         "SentinelOne Purple AI",
-                        "Databricks Data Intelligence Platform",
-                        "Hex",
+                        "Databricks Data + AI Platform",
+                        "Hex (SQL/Python notebooks for AI telemetry hunts; curated data and hunt logic required)",
                         "Google Threat Intelligence",
-                        "Recorded Future Intelligence Cloud"
+                        "Recorded Future Intelligence Cloud",
+                        "Microsoft Sentinel (Hunts with hypothesis tracking, hunting queries and bookmarks)"
                     ],
                     "defendsAgainst": [
                         {
@@ -5333,7 +5374,8 @@ export async function instrumentMcpRequest(input, handler) {
                         "OpenTelemetry",
                         "Langfuse",
                         "AgentOps",
-                        "OpenInference"
+                        "OpenInference",
+                        "OpenAI Agents SDK (built-in tracing with agent, function, guardrail and handoff spans)"
                     ],
                     "toolsSourceAvailable": [
                         "Arize Phoenix (Elastic License 2.0; source-available)",
@@ -5342,11 +5384,12 @@ export async function instrumentMcpRequest(input, handler) {
                     "toolsCommercial": [
                         "Arize AX",
                         "Fiddler AI Observability",
-                        "Datadog LLM Observability",
+                        "Datadog Agent Observability (formerly LLM Observability)",
                         "New Relic",
                         "LangSmith",
                         "Braintrust",
-                        "Lasso AI Security Platform"
+                        "Lasso AI Security Platform (policy-decision and interaction audit records; verify configured session/action coverage)",
+                        "Amazon Bedrock AgentCore Observability"
                     ],
                     "defendsAgainst": [
                         {
@@ -5559,12 +5602,14 @@ export async function instrumentMcpRequest(input, handler) {
                         "NVIDIA DCGM Exporter",
                         "AMD Device Metrics Exporter",
                         "Prometheus",
-                        "Grafana"
+                        "Grafana",
+                        "Netdata Agent (NVIDIA GPU collectors with per-metric ML anomaly detection)"
                     ],
                     "toolsCommercial": [
-                        "Datadog",
-                        "New Relic",
-                        "Splunk Observability Cloud"
+                        "Datadog (GPU Monitoring with anomaly monitors)",
+                        "New Relic (NVIDIA GPU integration with anomaly alert conditions)",
+                        "Splunk Observability Cloud",
+                        "Amazon CloudWatch Container Insights (EKS enhanced observability NVIDIA GPU and AWS Neuron metrics with anomaly detection alarms)"
                     ]
                 },
                 {
@@ -5676,15 +5721,15 @@ export async function instrumentMcpRequest(input, handler) {
                         "Prometheus",
                         "Grafana",
                         "OpenSearch",
-                        "OpenSearch Dashboards",
+                        "OpenSearch Dashboards (configure and investigate registry-event monitors backed by OpenSearch Alerting)",
                         "NGINX Open Source",
-                        "Falco"
+                        "ANS (Agent Name Service reference implementation; signed registration lifecycle events in an append-only transparency log)"
                     ],
                     "toolsCommercial": [
                         "Datadog",
                         "Splunk Enterprise",
                         "Dynatrace",
-                        "AWS CloudWatch"
+                        "Amazon CloudWatch"
                     ]
                 },
                 {
@@ -5715,17 +5760,19 @@ export async function instrumentMcpRequest(input, handler) {
                         "OpenTelemetry",
                         "Prometheus",
                         "Grafana",
-                        "Fluent Bit",
-                        "Fluentd",
+                        "Fluent Bit (parse and forward gateway usage/parameter events; baseline and spike detection required)",
+                        "Fluentd (parse and forward gateway usage/parameter events; baseline and spike detection required)",
                         "ClickHouse",
                         "Langfuse (cost, token-volume, user, session, model, and trace telemetry for downstream spike rules)",
-                        "Helicone (LLM request, token, latency, and cost telemetry for downstream spike rules)"
+                        "Helicone (LLM request, token, latency, and cost telemetry for downstream spike rules)",
+                        "LiteLLM Proxy (Prometheus token, spend, latency, failure and fallback metrics)"
                     ],
                     "toolsCommercial": [
                         "Datadog",
                         "Splunk Enterprise Security",
                         "New Relic",
-                        "Elastic Security"
+                        "Elastic Security",
+                        "Amazon CloudWatch (Amazon Bedrock runtime token and invocation metrics with anomaly detection alarms)"
                     ],
                     "defendsAgainst": [
                         {
@@ -5876,7 +5923,7 @@ export async function instrumentMcpRequest(input, handler) {
                         "LangGraph",
                         "LiteLLM",
                         "Pydantic",
-                        "OpenTelemetry"
+                        "OpenTelemetry (read-only triage action traces; tool permissions and independent outcome checks required)"
                     ],
                     "toolsCommercial": [
                         "StrangeBee TheHive",
@@ -5886,7 +5933,8 @@ export async function instrumentMcpRequest(input, handler) {
                         "Palo Alto Networks Cortex XSOAR",
                         "ServiceNow Security Operations",
                         "Datadog Cloud SIEM",
-                        "Dropzone AI (read-only alert investigation; response automation disabled)"
+                        "Dropzone AI (read-only alert investigation; response automation disabled)",
+                        "AWS IAM Access Analyzer custom policy checks (CheckAccessNotGranted for the triage identity)"
                     ],
                     "defendsAgainst": [
                         {
@@ -6023,7 +6071,7 @@ export async function instrumentMcpRequest(input, handler) {
                         "Datadog Cloud SIEM",
                         "Palo Alto Networks Cortex XDR",
                         "Palo Alto Networks Cortex XSIAM",
-                        "Netskope One AI Security",
+                        "Netskope Skylight AI Security (formerly Netskope One AI Security)",
                         "Zscaler AI Security"
                     ],
                     "defendsAgainst": [
@@ -6147,15 +6195,17 @@ export async function instrumentMcpRequest(input, handler) {
                         "Prometheus Alertmanager",
                         "Grafana",
                         "Vector",
-                        "Healthchecks"
+                        "Healthchecks",
+                        "Prometheus Node Exporter (timex collector clock offset and synchronization status)"
                     ],
                     "toolsCommercial": [
                         "Datadog",
                         "Splunk Observability Cloud",
                         "New Relic",
-                        "AWS CloudWatch",
+                        "Amazon CloudWatch",
                         "Google Cloud Monitoring",
-                        "Azure Monitor"
+                        "Azure Monitor",
+                        "Microsoft Sentinel (SentinelHealth data connector health monitoring)"
                     ],
                     "defendsAgainst": [
                         {
@@ -6268,8 +6318,7 @@ export async function instrumentMcpRequest(input, handler) {
                     "toolsCommercial": [
                         "Amazon S3 Object Lock",
                         "Azure Immutable Blob Storage",
-                        "Google Cloud Bucket Lock",
-                        "Splunk Enterprise Security"
+                        "Google Cloud Bucket Lock"
                     ],
                     "defendsAgainst": [
                         {
@@ -6363,10 +6412,11 @@ export async function instrumentMcpRequest(input, handler) {
                 "description": "<p>The multiple-XAI-method approach multiplies latency, and common methods like SHAP or LIME on deep models <strong>can take single-digit seconds, not milliseconds, per prediction.</strong> This cost must be carefully considered by architects."
             },
               "toolsOpenSource": [
-                "SHAP",
-                "LIME",
-                "Captum",
-                "InterpretML"
+                  "SHAP",
+                  "LIME",
+                  "Captum",
+                  "InterpretML",
+                  "Quantus (explanation robustness and randomisation metrics)"
               ],
               "toolsSourceAvailable": [
                 "Alibi Explain (Business Source License 1.1; source-available)"
@@ -6374,7 +6424,8 @@ export async function instrumentMcpRequest(input, handler) {
             "toolsCommercial": [
                 "Fiddler AI Observability",
                 "Arize AX",
-                "IBM watsonx.governance"
+                "IBM watsonx.governance",
+                "Gemini Enterprise Agent Platform Model Monitoring (formerly Vertex AI Model Monitoring; feature attribution skew and drift)"
             ],
             "defendsAgainst": [
                 {
@@ -6596,9 +6647,9 @@ export async function instrumentMcpRequest(input, handler) {
                     "phase": [
                         "operation"
                     ],
-                    "description": "Detect semantic contradictions, hidden payloads, cross-modal attention anomalies, expert disagreement, and out-of-context modalities in complete non-realtime multimodal artifacts such as uploaded images, documents, audio clips, video files, OCR artifacts, and media attachments. This sub-technique produces structured findings for downstream review or enforcement and does not make the sanitize/admit/block decision itself.",
+                    "description": "Detect semantic contradictions, hidden payloads, cross-modal attention anomalies, expert disagreement, and out-of-context modalities in complete non-realtime multimodal artifacts such as uploaded images, documents, audio clips, video files, OCR artifacts, and media attachments. After generation, also score whether the response is faithful to those artifacts or dominated by one compromised modality. This sub-technique produces structured findings for downstream review or enforcement and does not make the sanitize/admit/block decision itself.",
                     "scopeBoundary": {
-                      "responsibility": "Owns cross-modal semantic contradiction, hidden payload, expert disagreement, attention anomaly, and out-of-context modality findings for complete non-realtime files and artifact batches. It does not sanitize or admit the artifact.",
+                      "responsibility": "Owns cross-modal semantic contradiction, hidden payload, expert disagreement, attention anomaly, and out-of-context modality findings for complete non-realtime files and artifact batches, and post-generation faithfulness and modality-dominance findings for responses generated from them. It does not sanitize or admit the artifact.",
                       "relatedTechniques": [
                         {
                           "id": "AID-D-007.002",
@@ -6620,13 +6671,15 @@ export async function instrumentMcpRequest(input, handler) {
                         "ExifTool",
                         "binwalk",
                         "Tesseract OCR",
-                        "spaCy",
+                        "spaCy (text features and instruction cues after artifact extraction; cross-modal comparison and policy logic required)",
                         "Hugging Face Transformers",
                         "librosa",
                         "pyzbar",
-                        "stegano",
+                        "stegano (decode supported LSB/RDH payload schemes for inspection; not general steganalysis)",
                         "Aletheia",
-                        "zsteg"
+                        "zsteg",
+                        "zxing-cpp (QR and barcode decoding; Python binding)",
+                        "Magika (AI-based file content-type detection)"
                     ],
                     "toolsSourceAvailable": [
                         "OpenAI Whisper (MIT; open-weight)"
@@ -6635,7 +6688,7 @@ export async function instrumentMcpRequest(input, handler) {
                         "Azure AI Content Safety",
                         "Amazon Rekognition",
                         "Google Cloud Vision API",
-                        "Sensity AI Deepfake Detection"
+                        "Google Cloud Model Armor (document screening for prompt injection and malicious URLs)"
                     ],
                     "defendsAgainst": [
                         {
@@ -7550,9 +7603,9 @@ if __name__ == "__main__":
                         "Tesseract OCR",
                         "WebRTC VAD",
                         "Silero VAD (speech-activity segmentation for downstream stream-risk correlation)",
-                        "librosa",
+                        "librosa (blockwise audio-feature extraction for stream-risk analysis; online windowing and decisions required)",
                         "OpenTelemetry",
-                        "Prometheus"
+                        "diart (real-time streaming speaker diarization)"
                     ],
                     "toolsSourceAvailable": [
                         "OpenAI Whisper (MIT; open-weight)"
@@ -7860,8 +7913,9 @@ def correlate(
                 "PyTorch",
                 "PyOD",
                 "MLflow",
-                "DVC"
-              ],
+                "DVC",
+                "ONNX Runtime (fusion-model inference without Python pickle; isolate runtime and verify artifacts)"
+            ],
               "toolsSourceAvailable": [
                 "Alibi Detect (Business Source License 1.1; source-available)"
               ],
@@ -8155,11 +8209,10 @@ def correlate(
                         "Ragas (faithfulness scoring against supplied retrieval context)",
                         "DeepEval (faithfulness scoring against supplied retrieval context)",
                         "spaCy",
-                  "sentence-transformers",
-                  "Neo4j Community Edition",
-                  "jsonschema",
-                  "OpenTelemetry"
-              ],
+                        "sentence-transformers",
+                        "Neo4j Community Edition",
+                        "jsonschema (claim-verification envelope and outcome-state validation; source-grounded reasoning required)"
+                    ],
               "toolsSourceAvailable": [
                   "Vectara HHEM-2.1-Open (Apache-2.0; open-weight)",
                   "Patronus Lynx 8B (CC-BY-NC-4.0; open-weight)",
@@ -8174,7 +8227,9 @@ def correlate(
                   "Wolfram|Alpha APIs",
                   "Diffbot Knowledge Graph API",
                   "Neo4j Enterprise Edition",
-                  "Databricks MLflow 3"
+                  "Databricks MLflow 3",
+                  "Amazon Bedrock Guardrails (contextual grounding check; Automated Reasoning checks)",
+                  "Google Cloud Agent Search check grounding API"
               ],
               "implementationGuidance": [
                 {
@@ -8290,16 +8345,16 @@ def correlate(
                   }
               ],
                     "toolsOpenSource": [
-                        "LangChain",
+                        "LangChain (claim-extraction and verification-chain integration; cross-agent graph and propagation analysis required)",
                         "Neo4j Community Edition",
-                        "jsonschema",
+                        "jsonschema (claim-occurrence and verification-state schema checks; identity and propagation checks required)",
                         "OpenTelemetry",
                         "Langfuse (trace substrate for claim-occurrence graph analysis; claim-state binding and cascade detection remain external)"
-              ],
+                    ],
               "toolsCommercial": [
                   "Neo4j Enterprise Edition",
                   "Databricks MLflow 3",
-                  "Datadog LLM Observability"
+                  "Datadog Agent Observability (formerly LLM Observability)"
               ],
               "implementationGuidance": [
                 {
@@ -8347,23 +8402,25 @@ def correlate(
               ]
             },
             "toolsOpenSource": [
-                "Apache Kafka",
-                "OpenTelemetry",
+                "Apache Kafka (Kafka Streams joins/windows over goal, plan and action events; goal-consistency scoring required)",
+                "OpenTelemetry (goal/plan/action trace source; independent goal-consistency scoring and stateful detection required)",
                 "Prometheus",
-                "Grafana",
+                "Grafana (Alerting over goal-consistency scores and trends; trusted scoring and baselines required)",
                 "sentence-transformers",
-                "Valkey",
-                "Redis 8+ AGPLv3 source build"
+                "Valkey (goal-baseline and rolling-score state; scoring and drift decisions external)",
+                "Redis Open Source 8+ (AGPL-3.0 option; goal-baseline and rolling-score state; scoring and drift decisions external)",
+                "LlamaFirewall AlignmentCheck (agent goal-hijack and misalignment auditor)",
+                "DeepEval (plan-adherence regression evaluation; trusted goal binding and stateful scoring required)"
             ],
               "toolsCommercial": [
-                "Splunk Enterprise Security",
-                "Datadog",
-                "IBM QRadar SIEM",
-                "LangSmith (custom online goal and trajectory evaluators)",
-                "Arize AX",
-                "Evidently Cloud",
-                "NannyML Cloud"
-            ],
+                  "Splunk Enterprise Security",
+                  "Datadog",
+                  "IBM QRadar SIEM",
+                  "LangSmith (custom online goal and trajectory evaluators)",
+                  "Arize AX",
+                  "Evidently Cloud",
+                  "Microsoft Foundry Task Adherence (Azure AI Content Safety agentic workflows; preview)"
+              ],
             "defendsAgainst": [
                 {
                     "framework": "MITRE ATLAS",
@@ -8776,27 +8833,27 @@ def test_tampered_fact_is_error():
                     "toolsOpenSource": [
                         "scikit-learn",
                         "PyOD",
-                        "pandas",
-                        "NumPy",
+                        "pandas (behavioral cohort/window feature calculation; anomaly model and calibration required)",
+                        "NumPy (behavior-fingerprint vector statistics and distance calculations; calibrated detector required)",
                         "SciPy",
                         "Evidently",
                         "NannyML",
                         "MLflow",
-                        "TensorBoard",
-                        "JupyterLab"
+                        "TensorBoard (behavior-feature and score diagnostics; fingerprinting and anomaly decisions external)",
+                        "JupyterLab (behavior-feature analysis and detector-calibration notebooks; production monitoring required)"
                     ],
                     "toolsSourceAvailable": [
-                        "Arize Phoenix (Elastic License 2.0; source-available)"
+                        "Arize Phoenix (agent-trace features for behavior baselines; anomaly scoring and drift rules required) (Elastic License 2.0; source-available)"
                     ],
                     "toolsCommercial": [
                         "Arize AX",
                         "Fiddler AI Observability",
                         "NannyML Cloud",
                         "Splunk Enterprise Security",
-                        "Exabeam New-Scale SIEM",
-                        "Securonix Unified Defense SIEM",
+                        "Exabeam New-Scale Analytics (Agent Behavior Analytics)",
+                        "Securonix Unified Defense SIEM (UEBA/AEBA agent and entity behavior analytics)",
                         "Datadog",
-                        "Splunk Machine Learning Toolkit"
+                        "Splunk AI Toolkit (formerly Splunk Machine Learning Toolkit)"
                     ],
                     "defendsAgainst": [
                         {
@@ -8913,9 +8970,9 @@ def test_tampered_fact_is_error():
                         "Apache Kafka (authenticated ordered event transport; contract validation remains monitor-owned)"
                     ],
                     "toolsCommercial": [
-                        "Temporal Cloud",
-                        "TIBCO EMS",
-                        "Confluent Platform"
+                        "Temporal Cloud (durable event-contract monitoring workflows; signature and security-reconciliation logic required)",
+                        "TIBCO EMS (authenticated, access-controlled inter-agent event transport; contract/replay/reconciliation checks required)",
+                        "Confluent Platform (Schema Registry data contracts for event-contract rule validation)"
                     ],
                     "defendsAgainst": [
                       {
@@ -9045,13 +9102,17 @@ def test_tampered_fact_is_error():
                         "OpenTelemetry",
                         "Prometheus",
                         "Falco",
-                        "SPIRE"
+                        "SPIRE",
+                        "Argo CD (OutOfSync drift detection against Git desired state)",
+                        "Flux (helm-controller driftDetection warn mode; kustomize-controller drift detection and correction)",
+                        "kube-state-metrics (replica and running image_id metrics)"
                     ],
                     "toolsCommercial": [
                         "Datadog",
                         "Splunk Enterprise Security",
                         "Wiz Cloud Security Platform",
-                        "Palo Alto Networks Prisma Cloud"
+                        "Palo Alto Networks Prisma Cloud",
+                        "JFrog Runtime (integrity violation detection for running images)"
                     ],
                     "defendsAgainst": [
                         {
@@ -9151,19 +9212,22 @@ def test_tampered_fact_is_error():
                       ]
                     },
                     "toolsOpenSource": [
-                        "OpenTelemetry Collector",
+                        "OpenTelemetry Collector (normalize issuer/gateway/resource audit events for token-abuse correlation; lifecycle joins and rules required)",
                         "Keycloak",
                         "OpenSearch",
                         "Apache Flink",
-                        "Falco"
+                        "Falco",
+                        "Prowler (cloudtrail_threat_detection_llm_jacking check)"
                     ],
                     "toolsCommercial": [
-                        "Microsoft Entra Workload ID",
+                        "Microsoft Entra Workload ID (ID Protection workload identity risk detections)",
                         "Splunk Enterprise Security",
                         "Datadog Cloud SIEM",
                         "Okta System Log",
                         "Amazon GuardDuty AI Protection",
-                        "AWS CloudTrail"
+                        "AWS CloudTrail",
+                        "Microsoft Defender for Cloud Apps app governance (OAuth app threat detections)",
+                        "Google Security Command Center Event Threat Detection (service account and Agent Engine identity anomaly findings)"
                     ],
                     "defendsAgainst": [
                         {
@@ -9404,11 +9468,11 @@ def test_tampered_fact_is_error():
                         "PyTorch Geometric",
                         "Deep Graph Library (DGL)",
                         "DeepRobust (graph perturbation and attack generation for bounded test cases; case definitions and scoring remain external)",
-                        "safetensors",
-                        "NumPy",
-                        "SciPy",
+                        "safetensors (safe test-model tensor loading; behavioral trigger-response tests required)",
+                        "NumPy (graph perturbation construction and trigger-response measurements; calibrated tests required)",
+                        "SciPy (sparse-graph perturbation processing and statistical test measurements; backdoor test logic required)",
                         "pytest",
-                        "Cosign"
+                        "Cosign (verify signed trigger-test contracts, corpus and runner artifacts; behavioral measurements required)"
                     ],
                     "defendsAgainst": [
                         {
@@ -9527,11 +9591,11 @@ def test_tampered_fact_is_error():
                     "toolsOpenSource": [
                         "PyTorch Geometric",
                         "Deep Graph Library (DGL)",
-                        "PyGOD (graph outlier scoring; calibration policy and complete-coverage evidence remain external)",
-                        "safetensors",
-                        "NumPy",
-                        "SciPy",
-                        "Cosign"
+                        "safetensors (safe reference-tensor loading; edge scoring and calibration required)",
+                        "NumPy (per-edge endpoint similarity and threshold calculations; calibrated detector policy required)",
+                        "SciPy (per-edge distance and threshold calibration calculations; calibrated detector policy required)",
+                        "Cosign (verify signed graph references and edge-threshold policies; edge scoring required)",
+                        "DeepRobust (GCNJaccard endpoint feature-similarity edge screening)"
                     ],
                     "defendsAgainst": [
                         {
@@ -9636,10 +9700,11 @@ def test_tampered_fact_is_error():
                     "toolsOpenSource": [
                         "NetworkX",
                         "python-igraph",
-                        "safetensors",
-                        "NumPy",
+                        "safetensors (safe topology-reference tensor loading; graph metrics and anomaly scoring required)",
+                        "NumPy (degree/centrality statistics and robust outlier calculations; graph metric extraction required)",
                         "SciPy",
-                        "Cosign"
+                        "Cosign (verify signed topology references and calibrated policies; graph scoring required)",
+                        "NetworKit (ApproxBetweenness and KadabraBetweenness with additive-error guarantees)"
                     ],
                     "defendsAgainst": [
                         {
@@ -9735,17 +9800,17 @@ def test_tampered_fact_is_error():
                 "OpenRLHF",
                 "verl",
                 "Prometheus",
-                "Grafana",
-                "pandas",
-                "NumPy",
+                "Grafana (Alerting rules over reward/trajectory anomaly metrics; trusted measurements and rules required)",
+                "pandas (reward-stream and trajectory cohort/window analysis; independent verifier and decision rules required)",
+                "NumPy (reward-stream statistics and trajectory measurements; independent verifier and decision rules required)",
                 "SciPy",
                 "Gymnasium",
                 "MuJoCo",
-                "Captum",
                 "PyJWT (signed reward and verifier claims; not anomaly detection)",
                 "Requests (out-of-band verifier transport; not anomaly detection)",
                 "Cosign (artifact and runner attestation; not reward analysis)",
-                "NVIDIA Isaac Sim"
+                "NVIDIA Isaac Sim",
+                "ImpossibleBench (impossible-task honey-state benchmark for coding agents; Inspect AI)"
             ],
             "toolsCommercial": [
                 "Weights & Biases",
@@ -10051,8 +10116,8 @@ def test_tampered_fact_is_error():
                         "Guardrails AI",
                         "NVIDIA NeMo Guardrails",
                         "Hugging Face Transformers",
-                        "NumPy",
-                        "Cosign"
+                        "NumPy (concept-vector similarity calculations; calibrated concepts and injection classifiers required)",
+                        "Cosign (verify signed chunk-scanner models and policies; scanning and concept checks required)"
                     ],
                     "toolsSourceAvailable": [
                         "Granite Guardian 4.1 (Apache-2.0; open-weight)",
@@ -10065,7 +10130,8 @@ def test_tampered_fact_is_error():
                         "Check Point AI Guardrails",
                         "Palo Alto Networks Prisma AIRS",
                         "Amazon Bedrock Guardrails",
-                        "Azure AI Content Safety - Prompt Shields"
+                        "Azure AI Content Safety - Prompt Shields",
+                        "Google Cloud Model Armor (prompt injection and jailbreak filter)"
                     ]
                 },
                 {
@@ -10158,16 +10224,23 @@ def test_tampered_fact_is_error():
                     ],
                     "toolsOpenSource": [
                         "sentence-transformers",
-                        "FAISS",
+                        "FAISS (relevance checks over an independently generated embedding space; do not reuse the retriever's own score)",
                         "Weaviate",
-                        "Cosign"
+                        "Cosign (verify signed independent reranker/model artifacts; relevance evaluation required)"
+                    ],
+                    "toolsSourceAvailable": [
+                        "BAAI bge-reranker-v2-m3 (Apache-2.0; open-weight)",
+                        "Qwen3-Reranker (Apache-2.0; open-weight)"
                     ],
                     "toolsCommercial": [
                         "Pinecone",
                         "Weaviate Cloud",
                         "Cohere Rerank API",
                         "Jina AI Reranker API",
-                        "Voyage AI Rerank API"
+                        "Voyage AI Rerank API",
+                        "Amazon Bedrock Rerank API",
+                        "Google Cloud Agent Search ranking API",
+                        "Azure AI Search semantic ranker"
                     ]
                 },
                 {
@@ -10265,15 +10338,15 @@ def test_tampered_fact_is_error():
                         }
                     ],
                     "toolsOpenSource": [
-                        "pandas",
-                        "Cosign",
+                        "pandas (retrieval provenance joins and source-concentration statistics; authoritative registry and thresholds required)",
+                        "Cosign (verify signed source registries and retrieval policies; provenance and coverage checks required)",
                         "GX Core (custom source-coverage checks)",
                         "Evidently (custom retrieval-diversity checks)"
                     ],
                     "toolsCommercial": [
-                        "Datadog",
-                        "New Relic",
-                        "Splunk Observability Cloud"
+                        "Datadog (custom retrieval-coverage/concentration metrics and alerts; registry joins and measured population required)",
+                        "New Relic (custom retrieval-coverage/concentration metrics and alerts; registry joins and measured population required)",
+                        "Splunk Observability Cloud (custom retrieval-coverage/concentration metrics and alerts; registry joins and measured population required)"
                     ]
                 }
             ]
@@ -10303,14 +10376,14 @@ def test_tampered_fact_is_error():
             },
             "toolsOpenSource": [
                 "Keycloak",
-                "OpenTelemetry",
-                "Apache Kafka",
+                "OpenTelemetry (approval/dispatch/execution event attributes; authoritative digest and issuer correlation required)",
+                "Apache Kafka (Kafka Streams joins of approval and execution events; issuer/action binding and detection logic required)",
                 "Yubico python-fido2",
                 "PyJWT",
                 "Requests (approval-service and issuer readback transport)",
                 "Valkey",
                 "Redis 8+ AGPLv3 source build",
-                "Cosign"
+                "Cosign (verify signed HITL analysis policies and evidence exports; approval tokens require issuer-protocol verification)"
             ],
             "toolsCommercial": [
                 "Okta Workforce Identity",
@@ -10519,9 +10592,9 @@ def test_tampered_fact_is_error():
                     "phase": [
                         "operation"
                     ],
-                    "description": "Discover previously unseen agent identities and new communication edges by comparing authenticated service-mesh and registry observations with a versioned approved agent graph.",
+                    "description": "Discover previously unseen agent identities and new communication edges by comparing authenticated service-mesh and registry observations with a versioned approved agent graph. Where runs share mutable state, also report a new state edge when one run writes state that another run can consume without an approved handoff.",
                     "scopeBoundary": {
-                      "responsibility": "Owns unknown or newly emergent agent identity and communication-edge discovery against a versioned approved graph. It does not score reputation or classify drift within identities already registered.",
+                      "responsibility": "Owns discovery of unknown or newly emergent agent identities, communication edges, and cross-run shared-state edges against a versioned approved graph. It does not score reputation, classify drift within identities already registered, or authorize or deny the state write.",
                       "relatedTechniques": [
                         {
                           "id": "AID-D-011.003",
@@ -10544,7 +10617,8 @@ def test_tampered_fact_is_error():
                         "SPIRE",
                         "OpenTelemetry",
                         "Prometheus",
-                        "Cosign"
+                        "Cosign (verify signed approved agent-graph baselines; observed-edge discovery and comparison required)",
+                        "Cilium Hubble (identity-aware network flow observability)"
                     ],
                     "toolsCommercial": [
                         "Datadog",
@@ -10662,16 +10736,14 @@ def test_tampered_fact_is_error():
                       ]
                     },
                     "toolsOpenSource": [
-                        "OpenTelemetry",
+                        "OpenTelemetry Collector (normalize detector signals for reputation scoring; stateful scoring and escalation required)",
                         "Prometheus",
-                        "Apache Kafka",
-                        "Valkey",
-                        "Redis 8+ AGPLv3 source build",
-                        "Falco",
-                        "Cosign"
+                        "Apache Kafka (Kafka Streams deduplication, windows and state for reputation aggregation; scoring policy required)",
+                        "Valkey (atomic reputation/deduplication state and expiry; decay and escalation logic required)",
+                        "Redis Open Source 8+ (AGPL-3.0 option; atomic reputation/deduplication state and expiry; decay and escalation logic required)",
+                        "Cosign (verify signed reputation-scoring policies; signal mapping and score evaluation required)"
                     ],
                     "toolsCommercial": [
-                        "Palo Alto Networks Prisma Cloud",
                         "Splunk Enterprise Security",
                         "Datadog",
                         "Microsoft Sentinel"
@@ -10786,21 +10858,22 @@ def test_tampered_fact_is_error():
                 "improvement"
             ],
             "toolsOpenSource": [
-                "OpenTelemetry",
-                "Prometheus",
-                "Grafana",
+                "OpenTelemetry (export timestamped alert-lifecycle events; lifecycle joins and SLO calculations required)",
+                "Prometheus (alert-latency histograms and coverage-ratio recording rules; acknowledgement/triage joins external)",
+                "Grafana (alert-lifecycle SLO queries and dashboards; complete lifecycle/event joins required)",
                 "OpenSearch",
-                "ClickHouse",
-                "Apache Kafka",
-                "jsonschema",
-                "Cosign"
+                "ClickHouse (alert-lifecycle event joins and detection-SLO metric queries)",
+                "Apache Kafka (Kafka Streams alert-lifecycle joins and windows; SLO/coverage calculations required)",
+                "jsonschema (alert-lifecycle record schemas and required timestamps/links; semantic joins and SLO logic required)",
+                "Cosign (sign and verify measured SLO/coverage evidence exports; lifecycle calculations required)"
             ],
             "toolsCommercial": [
                 "Splunk Enterprise Security",
                 "Microsoft Sentinel",
                 "Datadog",
                 "Grafana Cloud",
-                "ServiceNow Security Operations"
+                "ServiceNow Security Operations",
+                "PagerDuty Analytics (MTTA and acknowledgement-rate metrics)"
             ],
             "defendsAgainst": [
                 {
@@ -10890,27 +10963,27 @@ def test_tampered_fact_is_error():
         {
             "id": "AID-D-018",
             "name": "Production AI-Security Detection Efficacy & Scenario-Coverage Validation",
-            "description": "Continuously validate the efficacy and scenario coverage of the exact AI-security detectors deployed in production by replaying signed benign and attack scenarios through their real observation paths, measuring segmented recall, precision, false-positive rate, errors, and abstentions, and binding results to detector versions, digests, policies, and a complete eligible inventory.",
+            "description": "Continuously validate the efficacy and scenario coverage of the exact AI-security detectors deployed in production by replaying a versioned, independently fixed benign and attack scenario population through their real observation paths, measuring segmented recall, precision, false-positive rate, errors, and abstentions, and binding results to detector versions, digests, policies, and a complete eligible inventory. Run the same gate for each detector release before it is promoted and in every scheduled production assurance window.",
             "scopeBoundary": {
-              "responsibility": "Owns cross-detector production-path efficacy and fleet-wide scenario coverage by replaying signed benign and attack scenarios through real observation paths and measuring segmented recall, precision, false positives, errors, abstentions, and complete detector-by-scenario coverage.",
-              "relatedTechniques": [
-                {
-                  "id": "AID-D-005.002",
-                  "comparison": "AID-D-018 determines whether deployed detectors identify required scenarios with acceptable efficacy; AID-D-005.002 determines whether rule assets are packaged, deployed, routed, and technically healthy.\nExecution health is not semantic detection efficacy."
-                },
-                {
-                  "id": "AID-D-017",
-                  "comparison": "AID-D-018 measures detector correctness and scenario coverage; AID-D-017 measures detection, acknowledgement, triage latency, and investigation coverage.\nDetector quality and operational response service levels require separate result sets."
-                },
-                {
-                  "id": "AID-M-008",
-                  "comparison": "AID-D-018 validates the production security detectors and their real observation paths; AID-M-008 benchmarks the protected model or agent against adversarial behavior before or alongside release.\nThe detector under test and the protected AI system under test are different assets."
-                },
-                {
-                  "id": "AID-D-008",
-                  "comparison": "AID-D-018 validates scenario efficacy for the production detector fleet; AID-D-008 owns the design, training, calibration, and serving of its fusion detector.\nThe efficacy control may test fusion output but does not retrain or operate the fusion model."
-                }
-              ]
+                "responsibility": "Owns cross-detector production-path efficacy and fleet-wide scenario coverage by replaying an independently fixed benign and attack scenario population through real observation paths and measuring segmented recall, precision, false positives, errors, abstentions, and complete detector-by-scenario coverage. The same replay gates a detector release before promotion; that result is release evidence, not production efficacy.",
+                "relatedTechniques": [
+                    {
+                        "id": "AID-D-005.002",
+                        "comparison": "AID-D-018 determines whether deployed detectors identify required scenarios with acceptable efficacy; AID-D-005.002 determines whether rule assets are packaged, deployed, routed, and technically healthy.\nExecution health is not semantic detection efficacy."
+                    },
+                    {
+                        "id": "AID-D-017",
+                        "comparison": "AID-D-018 measures detector correctness and scenario coverage; AID-D-017 measures detection, acknowledgement, triage latency, and investigation coverage.\nDetector quality and operational response service levels require separate result sets."
+                    },
+                    {
+                        "id": "AID-M-008",
+                        "comparison": "AID-D-018 validates the production security detectors and their real observation paths; AID-M-008 benchmarks the protected model or agent against adversarial behavior before or alongside release.\nThe detector under test and the protected AI system under test are different assets."
+                    },
+                    {
+                        "id": "AID-D-008",
+                        "comparison": "AID-D-018 validates scenario efficacy for the production detector fleet; AID-D-008 owns the design, training, calibration, and serving of its fusion detector.\nThe efficacy control may test fusion output but does not retrain or operate the fusion model."
+                    }
+                ]
             },
             "pillar": [
                 "app",
@@ -10928,7 +11001,7 @@ def test_tampered_fact_is_error():
                 "promptfoo",
                 "pytest",
                 "OpenTelemetry",
-                "Cosign"
+                "Cosign (sign and verify scenario sets and efficacy-result matrices; independent replay and measurement required)"
             ],
             "toolsCommercial": [
                 "Splunk Enterprise Security",
@@ -10996,8 +11069,8 @@ def test_tampered_fact_is_error():
             "implementationGuidance": [
                 {
                     "id": "AID-D-018-G001",
-                    "implementation": "Replay a signed benign-and-attack scenario population through every eligible production detector and observation path, reconcile the complete detector-by-scenario result matrix, calculate policy-owned metrics per detector and segment, and preserve the signed inputs and result matrix for replay.",
-                    "howTo": "<p><strong>Versioned runtime profile:</strong> The evaluator verifies and strictly parses the signed runtime-profile artifact inside <code>main()</code>; the profile supplies the typed command bound, while a separately admitted bootstrap timeout remains available only to verify that profile and sign an ERROR result. Every outcome records the profile version, digest, and verification state; a missing or invalid profile produces signed <code>ERROR</code> evidence without a framework fallback.</p><h5>Signed assurance inputs</h5><p>Sign eight evaluator inputs separately, including the governed production-deployment snapshot with independently authorized Sigstore keys: an expected detector-and-segment deployment manifest; the observed detector inventory; semantic benign/attack scenario JSONL; production-path result JSONL; an exact result-evidence object manifest; a runner/completeness receipt; and the metric policy. The policy binds the expected-manifest digest, exact attack-family and semantic-case population for every detector/segment, detector-specific thresholds, and required source checkpoints; observed inventory and test files cannot redefine that expected population. The independently signed expected manifest binds environment, deployment snapshot, detector ID, version, artifact/config digests, observation point, segments, and named technical prerequisites. The separately signed observed inventory records the exact prerequisite observations, technical scope state, and any technical N/A reason for that same detector identity; deletion of an expected detector, segment, or prerequisite observation is therefore a coverage gap, not a smaller passing population. The signed policy derives each eligible detector's exact semantic scenario set; scenario files cannot self-declare scope, repeat payloads under new IDs, or replace required attack families with easier duplicates. Execute through the deployed ingress, telemetry, and alert path&mdash;not by calling a classifier function directly. The receipt binds every signed input digest, the policy-required exact source-checkpoint population, runner/harness versions, and <code>DEPLOYED_OBSERVATION_PATH</code> mode.</p><h5>Complete-matrix evaluator</h5><pre><code># file: assurance/evaluate_production_detectors.py\nimport errno\nimport fcntl\nimport hashlib\nimport hmac\nimport json\nimport math\nimport os\nimport stat\nimport subprocess\nfrom collections import Counter, defaultdict\nfrom datetime import datetime, timedelta, timezone\nfrom pathlib import Path\n\nDEPLOYMENT_SNAPSHOT = Path(\"assurance/production-deployment-snapshot.json\")\nEXPECTED_DEPLOYMENT = Path(\"assurance/expected-detector-segment-manifest.json\")\nINVENTORY = Path(\"assurance/detector-inventory.json\")\nSCENARIOS = Path(\"assurance/scenarios.jsonl\")\nSCENARIO_PAYLOAD_ROOT = Path(\"assurance/scenario-payloads\")\nRESULTS = Path(\"assurance/production-path-results.jsonl\")\nRESULT_EVIDENCE_MANIFEST = Path(\"assurance/result-evidence-manifest.json\")\nRESULT_EVIDENCE_ROOT = Path(\"assurance/result-evidence\")\nRECEIPT = Path(\"assurance/run-receipt.json\")\nPOLICY = Path(\"policy/detection-efficacy-policy.json\")\nHASH_IO_BUFFER_SIZE = 1024 * 1024  # I/O buffer size; never an acceptance threshold.\nBOOTSTRAP_PROFILE_BYTES_CEILING = 4 * 1024 * 1024\n\n\nclass CoverageGap(RuntimeError):\n    pass\n\n\ndef required_env(name: str) -&gt; str:\n    value = os.environ.get(name)\n    if value is None or not value.strip():\n        raise RuntimeError(f\"required bootstrap field is absent: {name}\")\n    return value.strip()\n\n\ndef positive_float(value: object, field: str) -&gt; float:\n    if isinstance(value, bool) or not isinstance(value, (int, float)):\n        raise ValueError(f\"{field} is not numeric\")\n    number = float(value)\n    if not math.isfinite(number) or number &lt;= 0:\n        raise ValueError(f\"{field} must be finite and positive\")\n    return number\n\n\ndef digest_bytes(payload: bytes) -&gt; str:\n    return hashlib.sha256(payload).hexdigest()\n\n\ndef canonical(value: object) -&gt; bytes:\n    return json.dumps(\n        value,\n        sort_keys=True,\n        separators=(\",\", \":\"),\n        ensure_ascii=False,\n        allow_nan=False,\n    ).encode(\"utf-8\")\n\n\ndef strict_json_loads(raw: bytes | str) -&gt; object:\n    if isinstance(raw, bytes):\n        text = raw.decode(\"utf-8\", errors=\"strict\")\n    elif isinstance(raw, str):\n        text = raw\n    else:\n        raise TypeError(\"JSON input must be bytes or text\")\n\n    def reject_constant(value: str) -&gt; None:\n        raise ValueError(f\"non-finite JSON constant is forbidden: {value}\")\n\n    def reject_duplicate_keys(pairs: list[tuple[str, object]]) -&gt; dict:\n        result = {}\n        for key, value in pairs:\n            if key in result:\n                raise ValueError(f\"duplicate JSON object key: {key}\")\n            result[key] = value\n        return result\n\n    return json.loads(\n        text,\n        parse_constant=reject_constant,\n        object_pairs_hook=reject_duplicate_keys,\n    )\n\n\ndef load_json_bytes(raw: bytes, label: str) -&gt; object:\n    try:\n        return strict_json_loads(raw)\n    except (UnicodeDecodeError, json.JSONDecodeError, ValueError) as error:\n        raise ValueError(f\"{label} is not strict JSON\") from error\n\n\ndef load_jsonl_bytes(raw: bytes, label: str, *, allow_empty: bool = False) -&gt; list[dict]:\n    text = raw.decode(\"utf-8\", errors=\"strict\")\n    lines = text.splitlines()\n    if (not allow_empty and not lines) or any(not line.strip() for line in lines):\n        raise ValueError(f\"{label} has an empty or blank JSONL record\")\n    records = [strict_json_loads(line) for line in lines]\n    if any(not isinstance(record, dict) for record in records):\n        raise ValueError(f\"{label} contains a non-object JSONL record\")\n    return records\n\n\ndef require_sha256(value: object, field: str) -&gt; str:\n    if (not isinstance(value, str) or len(value) != 64\n            or any(character not in \"0123456789abcdef\" for character in value)):\n        raise ValueError(f\"{field} must be a lowercase SHA-256 digest\")\n    return value\n\n\ndef require_text(value: object, field: str) -&gt; str:\n    if not isinstance(value, str) or not value:\n        raise ValueError(f\"{field} must be a non-empty string\")\n    return value\n\n\ndef parse_time(value: object, field: str) -&gt; datetime:\n    if not isinstance(value, str):\n        raise ValueError(f\"{field} is not a timestamp\")\n    parsed = datetime.fromisoformat(value.replace(\"Z\", \"+00:00\"))\n    if parsed.tzinfo is None:\n        raise ValueError(f\"{field} lacks timezone\")\n    return parsed.astimezone(timezone.utc)\n\n\ndef require_sorted_strings(value: object, field: str, *, nonempty: bool) -&gt; list[str]:\n    if (not isinstance(value, list)\n            or (nonempty and not value)\n            or value != sorted(set(value))\n            or any(not isinstance(item, str) or not item for item in value)):\n        raise ValueError(f\"{field} must be a sorted unique string array\")\n    return value\n\n\ndef unit(value: object, field: str) -&gt; float:\n    if isinstance(value, bool) or not isinstance(value, (int, float)):\n        raise ValueError(f\"{field} is not numeric\")\n    number = float(value)\n    if not math.isfinite(number) or not 0 &lt;= number &lt;= 1:\n        raise ValueError(f\"{field} is outside [0,1]\")\n    return number\n\n\ndef _open_directory_no_follow(path: Path) -&gt; int:\n    if (os.open not in os.supports_dir_fd\n            or not hasattr(os, \"O_DIRECTORY\")\n            or not hasattr(os, \"O_NOFOLLOW\")):\n        raise RuntimeError(\"descriptor-relative no-follow reads are unsupported\")\n    path = Path(path)\n    anchor = Path(path.anchor) if path.is_absolute() else Path(\".\")\n    parts = path.parts[1:] if path.is_absolute() else path.parts\n    if any(part in {\"\", \".\", \"..\"} for part in parts):\n        raise ValueError(f\"unsafe path component in {path}\")\n    descriptor = os.open(anchor, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)\n    try:\n        for part in parts:\n            next_descriptor = os.open(\n                part,\n                os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW,\n                dir_fd=descriptor,\n            )\n            os.close(descriptor)\n            descriptor = next_descriptor\n        if not stat.S_ISDIR(os.fstat(descriptor).st_mode):\n            raise ValueError(f\"{path} is not a directory\")\n        return descriptor\n    except Exception:\n        os.close(descriptor)\n        raise\n\n\ndef _open_regular_no_follow(path: Path) -&gt; int:\n    path = Path(path)\n    if not path.name or path.name in {\".\", \"..\"}:\n        raise ValueError(f\"invalid regular-file path: {path}\")\n    parent_descriptor = _open_directory_no_follow(path.parent)\n    try:\n        descriptor = os.open(\n            path.name,\n            os.O_RDONLY | os.O_NOFOLLOW,\n            dir_fd=parent_descriptor,\n        )\n    except OSError as error:\n        if error.errno == errno.ENOENT:\n            raise FileNotFoundError(f\"required file is absent: {path}\") from error\n        raise ValueError(f\"{path} is a symlink or invalid file entry\") from error\n    finally:\n        os.close(parent_descriptor)\n    if not stat.S_ISREG(os.fstat(descriptor).st_mode):\n        os.close(descriptor)\n        raise ValueError(f\"{path} is not a regular file\")\n    return descriptor\n\n\ndef read_regular_no_follow(path: Path, maximum_bytes: int) -&gt; bytes:\n    if isinstance(maximum_bytes, bool) or not isinstance(maximum_bytes, int) or maximum_bytes &lt; 1:\n        raise ValueError(\"read byte bound must be a positive integer\")\n    descriptor = _open_regular_no_follow(path)\n    size = os.fstat(descriptor).st_size\n    if size &gt; maximum_bytes:\n        os.close(descriptor)\n        raise ValueError(f\"input exceeds byte bound: {path.name}\")\n    payload = bytearray()\n    with os.fdopen(descriptor, \"rb\") as handle:\n        while chunk := handle.read(min(HASH_IO_BUFFER_SIZE, maximum_bytes + 1 - len(payload))):\n            payload.extend(chunk)\n            if len(payload) &gt; maximum_bytes:\n                raise ValueError(f\"input exceeds byte bound: {path.name}\")\n    return bytes(payload)\n\n\ndef _require_memfd_sealing() -&gt; None:\n    required = (\n        \"memfd_create\", \"MFD_ALLOW_SEALING\", \"MFD_CLOEXEC\",\n    )\n    seal_constants = (\n        \"F_ADD_SEALS\", \"F_GET_SEALS\", \"F_SEAL_WRITE\", \"F_SEAL_GROW\",\n        \"F_SEAL_SHRINK\", \"F_SEAL_SEAL\",\n    )\n    if (any(not hasattr(os, name) for name in required)\n            or any(not hasattr(fcntl, name) for name in seal_constants)\n            or not Path(\"/proc/self/fd\").is_dir()):\n        raise RuntimeError(\"Linux sealed memfd and /proc/self/fd are required\")\n\n\ndef _memfd_path(descriptor: int) -&gt; str:\n    return f\"/proc/self/fd/{descriptor}\"\n\n\ndef _create_memfd(label: str, open_descriptors: list[int]) -&gt; int:\n    _require_memfd_sealing()\n    descriptor = os.memfd_create(\n        f\"aidefend-d018-{label}\",\n        os.MFD_CLOEXEC | os.MFD_ALLOW_SEALING,\n    )\n    open_descriptors.append(descriptor)\n    return descriptor\n\n\ndef _write_memfd(descriptor: int, payload: bytes) -&gt; None:\n    offset = 0\n    while offset &lt; len(payload):\n        written = os.write(descriptor, payload[offset:])\n        if written &lt;= 0:\n            raise OSError(\"short write to capture memfd\")\n        offset += written\n    os.fsync(descriptor)\n\n\ndef _seal_memfd(descriptor: int) -&gt; None:\n    required_seals = (\n        fcntl.F_SEAL_WRITE\n        | fcntl.F_SEAL_GROW\n        | fcntl.F_SEAL_SHRINK\n        | fcntl.F_SEAL_SEAL\n    )\n    fcntl.fcntl(descriptor, fcntl.F_ADD_SEALS, required_seals)\n    actual_seals = fcntl.fcntl(descriptor, fcntl.F_GET_SEALS)\n    if actual_seals &amp; required_seals != required_seals:\n        raise RuntimeError(\"capture memfd is not fully sealed\")\n    os.lseek(descriptor, 0, os.SEEK_SET)\n\n\ndef _read_memfd(descriptor: int) -&gt; bytes:\n    size = os.fstat(descriptor).st_size\n    payload = bytearray()\n    offset = 0\n    while offset &lt; size:\n        chunk = os.pread(descriptor, min(HASH_IO_BUFFER_SIZE, size - offset), offset)\n        if not chunk:\n            raise OSError(\"short read from capture memfd\")\n        payload.extend(chunk)\n        offset += len(chunk)\n    return bytes(payload)\n\n\ndef capture_bytes_to_sealed_memfd(\n    label: str,\n    payload: bytes,\n    open_descriptors: list[int],\n) -&gt; dict:\n    descriptor = _create_memfd(label, open_descriptors)\n    _write_memfd(descriptor, payload)\n    _seal_memfd(descriptor)\n    return {\n        \"data\": payload,\n        \"fd\": descriptor,\n        \"proc_path\": _memfd_path(descriptor),\n        \"sha256\": digest_bytes(payload),\n    }\n\n\ndef verify_captured(\n    data_capture: dict,\n    bundle_capture: dict,\n    key_env: str,\n    timeout_seconds: float,\n) -&gt; None:\n    subprocess.run(\n        [\n            \"cosign\", \"verify-blob\", \"--key\", required_env(key_env),\n            \"--bundle\", bundle_capture[\"proc_path\"], data_capture[\"proc_path\"],\n        ],\n        check=True,\n        capture_output=True,\n        text=True,\n        timeout=timeout_seconds,\n        pass_fds=(data_capture[\"fd\"], bundle_capture[\"fd\"]),\n    )\n    if (not hmac.compare_digest(_read_memfd(data_capture[\"fd\"]), data_capture[\"data\"])\n            or not hmac.compare_digest(\n                _read_memfd(bundle_capture[\"fd\"]),\n                bundle_capture[\"data\"],\n            )):\n        raise RuntimeError(\"sealed signature-verification capture changed\")\n\n\ndef capture_signed_input(\n    source_path: Path,\n    bundle_source_path: Path,\n    key_env: str,\n    timeout_seconds: float,\n    label: str,\n    maximum_bytes: int,\n    digest_sink: dict[str, str],\n    open_descriptors: list[int],\n) -&gt; dict:\n    if source_path == bundle_source_path:\n        raise ValueError(f\"{label} input and signature bundle paths are identical\")\n    data = read_regular_no_follow(source_path, maximum_bytes)\n    content_sha256 = digest_bytes(data)\n    digest_sink[label] = content_sha256\n    bundle = read_regular_no_follow(bundle_source_path, maximum_bytes)\n    data_capture = capture_bytes_to_sealed_memfd(\n        f\"{label}-data\",\n        data,\n        open_descriptors,\n    )\n    bundle_capture = capture_bytes_to_sealed_memfd(\n        f\"{label}-bundle\",\n        bundle,\n        open_descriptors,\n    )\n    verify_captured(\n        data_capture,\n        bundle_capture,\n        key_env,\n        timeout_seconds,\n    )\n    return {\n        **data_capture,\n        \"sha256\": content_sha256,\n        \"source_path\": str(source_path),\n    }\n\n\ndef load_bootstrap() -&gt; dict:\n    try:\n        timeout = float(required_env(\"D018_BOOTSTRAP_COMMAND_TIMEOUT_SECONDS\"))\n    except ValueError as error:\n        raise RuntimeError(\"bootstrap command timeout is not numeric\") from error\n    timeout = positive_float(timeout, \"bootstrap.command_timeout_seconds\")\n    evidence_path = Path(required_env(\"D018_EVIDENCE_PATH\"))\n    evidence_bundle_path = Path(required_env(\"D018_EVIDENCE_BUNDLE_PATH\"))\n    if evidence_path == evidence_bundle_path:\n        raise RuntimeError(\"evidence and bundle paths must differ\")\n    return {\n        \"command_timeout_seconds\": timeout,\n        \"evidence_path\": evidence_path,\n        \"evidence_bundle_path\": evidence_bundle_path,\n    }\n\n\ndef load_runtime_profile(\n    identity: dict,\n    bootstrap_timeout: float,\n    open_descriptors: list[int],\n) -&gt; dict:\n    profile_path = Path(required_env(\"D018_RUNTIME_PROFILE_PATH\"))\n    profile_bundle = Path(required_env(\"D018_RUNTIME_PROFILE_BUNDLE_PATH\"))\n    captured_digests = {}\n    try:\n        captured = capture_signed_input(\n            profile_path,\n            profile_bundle,\n            \"D018_RUNTIME_PROFILE_VERIFY_KEY\",\n            bootstrap_timeout,\n            \"runtime_profile\",\n            BOOTSTRAP_PROFILE_BYTES_CEILING,\n            captured_digests,\n            open_descriptors,\n        )\n    finally:\n        if \"runtime_profile\" in captured_digests:\n            identity[\"runtime_profile_sha256\"] = captured_digests[\"runtime_profile\"]\n            identity[\"runtime_profile_status\"] = \"PRESENT_UNVERIFIED\"\n    identity[\"runtime_profile_status\"] = \"SIGNATURE_VERIFIED\"\n    profile = load_json_bytes(captured[\"data\"], \"runtime profile\")\n    if isinstance(profile, dict) and isinstance(profile.get(\"profile_version\"), str):\n        identity[\"runtime_profile_version\"] = profile[\"profile_version\"] or None\n    fields = {\n        \"schema_version\", \"profile_version\", \"command_timeout_seconds\",\n        \"maximum_input_bytes\", \"maximum_object_bytes\", \"maximum_records\",\n        \"maximum_matrix_cells\",\n    }\n    if (not isinstance(profile, dict)\n            or set(profile) != fields\n            or profile[\"schema_version\"] != \"aidefend.d018-runtime-profile.v1\"):\n        raise ValueError(\"runtime profile schema differs\")\n    require_text(profile[\"profile_version\"], \"runtime_profile.profile_version\")\n    profile[\"command_timeout_seconds\"] = positive_float(\n        profile[\"command_timeout_seconds\"],\n        \"runtime_profile.command_timeout_seconds\",\n    )\n    for field in (\n        \"maximum_input_bytes\", \"maximum_object_bytes\", \"maximum_records\",\n        \"maximum_matrix_cells\",\n    ):\n        if isinstance(profile[field], bool) or not isinstance(profile[field], int) or profile[field] &lt; 1:\n            raise ValueError(f\"runtime_profile.{field} must be a positive integer\")\n    if profile[\"maximum_object_bytes\"] &gt; profile[\"maximum_input_bytes\"]:\n        raise ValueError(\"runtime object byte bound exceeds top-level input bound\")\n    identity[\"runtime_profile_status\"] = \"VERIFIED\"\n    return profile\n\n\ndef write_exclusive(path: Path, payload: bytes) -&gt; None:\n    path = Path(path)\n    if not path.name or path.name in {\".\", \"..\"}:\n        raise ValueError(f\"invalid output path: {path}\")\n    parent_descriptor = _open_directory_no_follow(path.parent)\n    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL\n    if hasattr(os, \"O_NOFOLLOW\"):\n        flags |= os.O_NOFOLLOW\n    try:\n        descriptor = os.open(path.name, flags, 0o600, dir_fd=parent_descriptor)\n    finally:\n        os.close(parent_descriptor)\n    with os.fdopen(descriptor, \"wb\") as handle:\n        handle.write(payload)\n        handle.flush()\n        os.fsync(handle.fileno())\n\n\ndef publish_once_or_match(path: Path, payload: bytes) -&gt; None:\n    \"\"\"Publish once; make an interrupted two-file publication safely retryable.\"\"\"\n    try:\n        write_exclusive(path, payload)\n    except FileExistsError:\n        existing = read_regular_no_follow(path, max(len(payload), 1))\n        if not hmac.compare_digest(existing, payload):\n            raise RuntimeError(\"existing publication differs from exact signed bytes\")\n\n\ndef sign_evidence_to_sealed_memfds(\n    payload: bytes,\n    timeout_seconds: float,\n    open_descriptors: list[int],\n) -&gt; bytes:\n    data_capture = capture_bytes_to_sealed_memfd(\n        \"final-evidence-data\",\n        payload,\n        open_descriptors,\n    )\n    bundle_descriptor = _create_memfd(\n        \"final-evidence-bundle\",\n        open_descriptors,\n    )\n    subprocess.run(\n        [\n            \"cosign\", \"sign-blob\", \"--yes\",\n            \"--key\", \"env://D018_EVIDENCE_SIGNING_KEY\",\n            \"--bundle\", _memfd_path(bundle_descriptor),\n            data_capture[\"proc_path\"],\n        ],\n        check=True,\n        capture_output=True,\n        text=True,\n        timeout=timeout_seconds,\n        pass_fds=(data_capture[\"fd\"], bundle_descriptor),\n    )\n    _seal_memfd(bundle_descriptor)\n    bundle = _read_memfd(bundle_descriptor)\n    if not bundle:\n        raise RuntimeError(\"cosign produced an empty evidence bundle\")\n    bundle_capture = {\n        \"data\": bundle,\n        \"fd\": bundle_descriptor,\n        \"proc_path\": _memfd_path(bundle_descriptor),\n        \"sha256\": digest_bytes(bundle),\n    }\n    verify_captured(\n        data_capture,\n        bundle_capture,\n        \"D018_EVIDENCE_VERIFY_KEY\",\n        timeout_seconds,\n    )\n    return bundle\n\n\ndef read_named_object_no_follow(\n    root: Path, object_name: object, label: str, maximum_bytes: int,\n) -&gt; bytes:\n    if (not isinstance(object_name, str) or not object_name\n            or object_name in {\".\", \"..\"}\n            or \"/\" in object_name or chr(92) in object_name\n            or Path(object_name).name != object_name):\n        raise ValueError(f\"{label} path must be one basename\")\n    try:\n        return read_regular_no_follow(root / object_name, maximum_bytes)\n    except FileNotFoundError as error:\n        raise CoverageGap(f\"required {label} object is absent\") from error\n\n\ndef validate_expected_deployment(expected: object) -&gt; dict[str, dict]:\n    fields = {\n        \"schema_version\", \"manifest_version\", \"environment_id\",\n        \"deployment_snapshot_sha256\", \"detectors\",\n    }\n    if (not isinstance(expected, dict)\n            or set(expected) != fields\n            or expected[\"schema_version\"] != \"aidefend.d018-expected-deployment.v2\"\n            or not isinstance(expected[\"detectors\"], list)):\n        raise ValueError(\"expected deployment manifest schema differs\")\n    require_text(expected[\"manifest_version\"], \"expected.manifest_version\")\n    require_text(expected[\"environment_id\"], \"expected.environment_id\")\n    require_sha256(\n        expected[\"deployment_snapshot_sha256\"],\n        \"expected.deployment_snapshot_sha256\",\n    )\n    detector_fields = {\n        \"detector_id\", \"detector_type\", \"version\", \"artifact_sha256\",\n        \"config_sha256\", \"observation_point\", \"segments\",\n        \"technical_prerequisites\",\n    }\n    detectors = {}\n    for item in expected[\"detectors\"]:\n        if not isinstance(item, dict) or set(item) != detector_fields:\n            raise ValueError(\"expected detector schema differs\")\n        detector_id = require_text(item[\"detector_id\"], \"expected.detector_id\")\n        if detector_id in detectors:\n            raise ValueError(\"duplicate expected detector ID\")\n        for field in (\"detector_type\", \"version\", \"observation_point\"):\n            require_text(item[field], f\"{detector_id}.{field}\")\n        for field in (\"artifact_sha256\", \"config_sha256\"):\n            require_sha256(item[field], f\"{detector_id}.{field}\")\n        require_sorted_strings(item[\"segments\"], f\"{detector_id}.segments\", nonempty=True)\n        require_sorted_strings(\n            item[\"technical_prerequisites\"],\n            f\"{detector_id}.technical_prerequisites\",\n            nonempty=False,\n        )\n        detectors[detector_id] = item\n    return detectors\n\n\ndef validate_deployment_snapshot(\n    snapshot: object, snapshot_sha256: str, expected: dict,\n) -&gt; None:\n    fields = {\"schema_version\", \"snapshot_id\", \"environment_id\", \"detectors\"}\n    if (\n        not isinstance(snapshot, dict)\n        or set(snapshot) != fields\n        or snapshot[\"schema_version\"] != \"aidefend.production-deployment-snapshot.v1\"\n        or not isinstance(snapshot[\"detectors\"], list)\n    ):\n        raise ValueError(\"production deployment snapshot schema differs\")\n    require_text(snapshot[\"snapshot_id\"], \"deployment_snapshot.snapshot_id\")\n    if (\n        snapshot[\"environment_id\"] != expected[\"environment_id\"]\n        or snapshot[\"detectors\"] != expected[\"detectors\"]\n        or snapshot_sha256 != expected[\"deployment_snapshot_sha256\"]\n    ):\n        raise CoverageGap(\"expected detector population differs from governed deployment snapshot\")\n\n\ndef validate_inventory(inventory: object, expected: dict, expected_by_id: dict) -&gt; dict:\n    fields = {\n        \"schema_version\", \"inventory_version\", \"environment_id\",\n        \"deployment_snapshot_sha256\", \"collection_complete\", \"detectors\",\n    }\n    if (not isinstance(inventory, dict)\n            or set(inventory) != fields\n            or inventory[\"schema_version\"] != \"aidefend.detector-inventory.v2\"\n            or not isinstance(inventory[\"collection_complete\"], bool)\n            or not isinstance(inventory[\"detectors\"], list)):\n        raise ValueError(\"inventory schema differs\")\n    require_text(inventory[\"inventory_version\"], \"inventory.inventory_version\")\n    if (inventory[\"environment_id\"] != expected[\"environment_id\"]\n            or inventory[\"deployment_snapshot_sha256\"]\n               != expected[\"deployment_snapshot_sha256\"]):\n        raise ValueError(\"inventory deployment binding differs\")\n    if inventory[\"collection_complete\"] is not True:\n        raise CoverageGap(\"detector inventory collection is incomplete\")\n    detector_fields = {\n        \"detector_id\", \"detector_type\", \"version\", \"artifact_sha256\",\n        \"config_sha256\", \"observation_point\", \"technical_scope\",\n        \"prerequisite_results\", \"not_applicable_reason\", \"segments\",\n        \"technical_prerequisites\",\n    }\n    actual_by_id = {}\n    for item in inventory[\"detectors\"]:\n        if (not isinstance(item, dict) or set(item) != detector_fields\n                or item[\"technical_scope\"] not in {\"ELIGIBLE\", \"NOT_APPLICABLE\"}):\n            raise ValueError(\"inventory detector schema differs\")\n        detector_id = require_text(item[\"detector_id\"], \"inventory.detector_id\")\n        if detector_id in actual_by_id:\n            raise ValueError(\"duplicate inventory detector ID\")\n        actual_by_id[detector_id] = item\n    missing = sorted(set(expected_by_id) - set(actual_by_id))\n    unexpected = sorted(set(actual_by_id) - set(expected_by_id))\n    if missing:\n        raise CoverageGap(f\"expected detector inventory entries are absent: {missing}\")\n    if unexpected:\n        raise ValueError(f\"inventory has unapproved detector entries: {unexpected}\")\n    for detector_id, item in actual_by_id.items():\n        expected_item = expected_by_id[detector_id]\n        for field in (\n            \"detector_type\", \"version\", \"artifact_sha256\", \"config_sha256\",\n            \"observation_point\", \"technical_prerequisites\",\n        ):\n            if item[field] != expected_item[field]:\n                raise ValueError(f\"{detector_id}.{field} differs from expected deployment\")\n        require_sorted_strings(item[\"segments\"], f\"{detector_id}.segments\", nonempty=True)\n        missing_segments = sorted(set(expected_item[\"segments\"]) - set(item[\"segments\"]))\n        extra_segments = sorted(set(item[\"segments\"]) - set(expected_item[\"segments\"]))\n        if missing_segments:\n            raise CoverageGap(f\"{detector_id} expected segments are absent: {missing_segments}\")\n        if extra_segments:\n            raise ValueError(f\"{detector_id} has unapproved segments: {extra_segments}\")\n        prerequisites = item[\"technical_prerequisites\"]\n        readings = item[\"prerequisite_results\"]\n        if not isinstance(readings, dict):\n            raise ValueError(f\"{detector_id}.prerequisite_results is not an object\")\n        missing_readings = sorted(set(prerequisites) - set(readings))\n        extra_readings = sorted(set(readings) - set(prerequisites))\n        if missing_readings:\n            raise CoverageGap(\n                f\"{detector_id} technical prerequisite observations are absent: \"\n                f\"{missing_readings}\"\n            )\n        if extra_readings or any(not isinstance(value, bool) for value in readings.values()):\n            raise ValueError(f\"{detector_id} technical prerequisite observations differ\")\n        reason = item[\"not_applicable_reason\"]\n        if item[\"technical_scope\"] == \"ELIGIBLE\":\n            if not all(readings.values()) or reason is not None:\n                raise ValueError(f\"{detector_id} eligible technical scope is inconsistent\")\n        elif not prerequisites or all(readings.values()):\n            raise ValueError(f\"{detector_id} N/A requires a failed technical prerequisite\")\n        else:\n            require_text(reason, f\"{detector_id}.not_applicable_reason\")\n    return actual_by_id\n\n\ndef validate_policy(policy: object, expected_sha256: str, expected_by_id: dict) -&gt; tuple[dict, dict]:\n    fields = {\n        \"schema_version\", \"policy_version\", \"expected_deployment_sha256\",\n        \"required_source_checkpoints\", \"required_scenarios_by_detector_segment\",\n        \"thresholds_by_detector\", \"assurance_window\",\n    }\n    if (not isinstance(policy, dict)\n            or set(policy) != fields\n            or policy[\"schema_version\"] != \"aidefend.detection-efficacy-policy.v2\"\n            or policy[\"expected_deployment_sha256\"] != expected_sha256):\n        raise ValueError(\"metric policy schema or expected-deployment binding differs\")\n    require_text(policy[\"policy_version\"], \"policy.policy_version\")\n    window = policy[\"assurance_window\"]\n    window_fields = {\n        \"window_id\", \"window_start\", \"window_end\",\n        \"maximum_future_skew_seconds\", \"maximum_evidence_age_seconds\",\n    }\n    if not isinstance(window, dict) or set(window) != window_fields:\n        raise ValueError(\"assurance window schema differs\")\n    require_text(window[\"window_id\"], \"assurance_window.window_id\")\n    start = parse_time(window[\"window_start\"], \"assurance_window.window_start\")\n    end = parse_time(window[\"window_end\"], \"assurance_window.window_end\")\n    for field in (\"maximum_future_skew_seconds\", \"maximum_evidence_age_seconds\"):\n        if isinstance(window[field], bool) or not isinstance(window[field], int) or window[field] &lt; 0:\n            raise ValueError(f\"assurance_window.{field} is invalid\")\n    now = datetime.now(timezone.utc)\n    if (\n        not start &lt; end\n        or end &gt; now + timedelta(seconds=window[\"maximum_future_skew_seconds\"])\n        or now - end &gt; timedelta(seconds=window[\"maximum_evidence_age_seconds\"])\n    ):\n        raise CoverageGap(\"assurance window is stale, future-dated, or unordered\")\n    require_sorted_strings(\n        policy[\"required_source_checkpoints\"],\n        \"policy.required_source_checkpoints\",\n        nonempty=True,\n    )\n    requirements = policy[\"required_scenarios_by_detector_segment\"]\n    thresholds = policy[\"thresholds_by_detector\"]\n    if (not isinstance(requirements, dict) or set(requirements) != set(expected_by_id)\n            or not isinstance(thresholds, dict) or set(thresholds) != set(expected_by_id)):\n        raise ValueError(\"policy detector population differs from expected deployment\")\n    requirement_fields = {\n        \"semantic_case_id\", \"ground_truth\", \"attack_family\", \"scenario_version\",\n        \"payload_sha256\", \"harness_id\", \"harness_version\",\n        \"harness_artifact_sha256\",\n    }\n    threshold_fields = {\n        \"minimum_attack_cases\", \"minimum_benign_cases\", \"minimum_recall\",\n        \"minimum_precision\", \"maximum_false_positive_rate\",\n    }\n    normalized_requirements = {}\n    catalog_identity = {}\n    for detector_id, expected_detector in expected_by_id.items():\n        required_segments = requirements[detector_id]\n        detector_thresholds = thresholds[detector_id]\n        segments = set(expected_detector[\"segments\"])\n        if (not isinstance(required_segments, dict) or set(required_segments) != segments\n                or not isinstance(detector_thresholds, dict)\n                or set(detector_thresholds) != segments):\n            raise ValueError(f\"{detector_id} policy segment population differs\")\n        for segment in expected_detector[\"segments\"]:\n            cases = required_segments[segment]\n            threshold = detector_thresholds[segment]\n            if not isinstance(cases, list) or not cases:\n                raise ValueError(f\"{detector_id}/{segment} has no required scenarios\")\n            order = []\n            seen_case_ids = set()\n            normalized = []\n            for case in cases:\n                if (not isinstance(case, dict) or set(case) != requirement_fields\n                        or case[\"ground_truth\"] not in {\"ATTACK\", \"BENIGN\"}):\n                    raise ValueError(f\"{detector_id}/{segment} scenario requirement differs\")\n                semantic_case_id = require_text(\n                    case[\"semantic_case_id\"],\n                    f\"{detector_id}/{segment}.semantic_case_id\",\n                )\n                attack_family = require_text(\n                    case[\"attack_family\"],\n                    f\"{detector_id}/{segment}.attack_family\",\n                )\n                scenario_version = require_text(\n                    case[\"scenario_version\"],\n                    f\"{detector_id}/{segment}.scenario_version\",\n                )\n                payload_sha256 = require_sha256(\n                    case[\"payload_sha256\"],\n                    f\"{detector_id}/{segment}.payload_sha256\",\n                )\n                harness_id = require_text(\n                    case[\"harness_id\"],\n                    f\"{detector_id}/{segment}.harness_id\",\n                )\n                harness_version = require_text(\n                    case[\"harness_version\"],\n                    f\"{detector_id}/{segment}.harness_version\",\n                )\n                harness_artifact_sha256 = require_sha256(\n                    case[\"harness_artifact_sha256\"],\n                    f\"{detector_id}/{segment}.harness_artifact_sha256\",\n                )\n                if semantic_case_id in seen_case_ids:\n                    raise ValueError(f\"{detector_id}/{segment} duplicates a semantic case\")\n                seen_case_ids.add(semantic_case_id)\n                identity = (segment, semantic_case_id)\n                classification = (\n                    case[\"ground_truth\"], attack_family, scenario_version,\n                    payload_sha256, harness_id, harness_version,\n                    harness_artifact_sha256,\n                )\n                if identity in catalog_identity and catalog_identity[identity] != classification:\n                    raise ValueError(f\"{segment}/{semantic_case_id} has conflicting exact binding\")\n                catalog_identity[identity] = classification\n                order.append((\n                    semantic_case_id, case[\"ground_truth\"], attack_family,\n                    scenario_version, payload_sha256, harness_id, harness_version,\n                    harness_artifact_sha256,\n                ))\n                normalized.append((\n                    segment, case[\"ground_truth\"], attack_family, semantic_case_id,\n                    scenario_version, payload_sha256, harness_id, harness_version,\n                    harness_artifact_sha256,\n                ))\n            if order != sorted(order):\n                raise ValueError(f\"{detector_id}/{segment} scenarios are not canonical\")\n            if not isinstance(threshold, dict) or set(threshold) != threshold_fields:\n                raise ValueError(f\"{detector_id}/{segment} threshold schema differs\")\n            for field in (\"minimum_attack_cases\", \"minimum_benign_cases\"):\n                if (isinstance(threshold[field], bool)\n                        or not isinstance(threshold[field], int)\n                        or threshold[field] &lt; 1):\n                    raise ValueError(f\"{detector_id}/{segment}.{field} is invalid\")\n            for field in (\n                \"minimum_recall\", \"minimum_precision\", \"maximum_false_positive_rate\",\n            ):\n                unit(threshold[field], f\"{detector_id}/{segment}.{field}\")\n            attack_count = sum(case[1] == \"ATTACK\" for case in normalized)\n            benign_count = sum(case[1] == \"BENIGN\" for case in normalized)\n            if (attack_count &lt; threshold[\"minimum_attack_cases\"]\n                    or benign_count &lt; threshold[\"minimum_benign_cases\"]):\n                raise ValueError(f\"{detector_id}/{segment} policy minimum exceeds exact scenarios\")\n            normalized_requirements[(detector_id, segment)] = set(normalized)\n    required_catalog = {\n        (\n            segment, ground_truth, attack_family, semantic_case_id,\n            scenario_version, payload_sha256, harness_id, harness_version,\n            harness_artifact_sha256,\n        )\n        for cases in normalized_requirements.values()\n        for (\n            segment, ground_truth, attack_family, semantic_case_id,\n            scenario_version, payload_sha256, harness_id, harness_version,\n            harness_artifact_sha256,\n        ) in cases\n    }\n    return normalized_requirements, required_catalog\n\n\ndef validate_scenarios(\n    scenarios: list[dict],\n    required_catalog: set,\n    payload_root: Path,\n    maximum_object_bytes: int,\n) -&gt; dict:\n    fields = {\n        \"schema_version\", \"scenario_id\", \"scenario_version\", \"segment\",\n        \"ground_truth\", \"attack_family\", \"semantic_case_id\", \"payload_sha256\",\n        \"payload_object\", \"harness_id\", \"harness_version\",\n        \"harness_artifact_sha256\",\n    }\n    by_identity = {}\n    scenario_ids = set()\n    payload_digests = set()\n    payload_objects = set()\n    semantic_locators = set()\n    for scenario in scenarios:\n        if (set(scenario) != fields\n                or scenario[\"schema_version\"] != \"aidefend.detection-scenario.v2\"\n                or scenario[\"ground_truth\"] not in {\"ATTACK\", \"BENIGN\"}):\n            raise ValueError(\"scenario schema differs\")\n        for field in (\n            \"scenario_id\", \"scenario_version\", \"segment\", \"attack_family\",\n            \"semantic_case_id\", \"payload_object\", \"harness_id\", \"harness_version\",\n        ):\n            require_text(scenario[field], f\"scenario.{field}\")\n        require_sha256(scenario[\"payload_sha256\"], \"scenario.payload_sha256\")\n        require_sha256(\n            scenario[\"harness_artifact_sha256\"],\n            \"scenario.harness_artifact_sha256\",\n        )\n        identity = (\n            scenario[\"segment\"], scenario[\"ground_truth\"],\n            scenario[\"attack_family\"], scenario[\"semantic_case_id\"],\n            scenario[\"scenario_version\"], scenario[\"payload_sha256\"],\n            scenario[\"harness_id\"], scenario[\"harness_version\"],\n            scenario[\"harness_artifact_sha256\"],\n        )\n        semantic_locator = (scenario[\"segment\"], scenario[\"semantic_case_id\"])\n        if scenario[\"scenario_id\"] in scenario_ids:\n            raise ValueError(\"duplicate scenario ID\")\n        if identity in by_identity or semantic_locator in semantic_locators:\n            raise ValueError(\"duplicate semantic scenario case\")\n        if scenario[\"payload_sha256\"] in payload_digests:\n            raise ValueError(\"duplicate scenario payload digest\")\n        if scenario[\"payload_object\"] in payload_objects:\n            raise ValueError(\"duplicate scenario payload object\")\n        payload = read_named_object_no_follow(\n            payload_root,\n            scenario[\"payload_object\"],\n            \"scenario payload\",\n            maximum_object_bytes,\n        )\n        if not payload:\n            raise ValueError(\"scenario payload object is empty\")\n        if not hmac.compare_digest(digest_bytes(payload), scenario[\"payload_sha256\"]):\n            raise ValueError(\"scenario payload object digest differs\")\n        scenario_ids.add(scenario[\"scenario_id\"])\n        semantic_locators.add(semantic_locator)\n        payload_digests.add(scenario[\"payload_sha256\"])\n        payload_objects.add(scenario[\"payload_object\"])\n        by_identity[identity] = scenario\n    missing = sorted(required_catalog - set(by_identity))\n    unexpected = sorted(set(by_identity) - required_catalog)\n    if missing:\n        raise CoverageGap(f\"required semantic scenarios are absent: {missing}\")\n    if unexpected:\n        raise ValueError(f\"scenario catalog has unapproved cases: {unexpected}\")\n    return by_identity\n\n\ndef validate_results(results: list[dict], policy: dict) -&gt; None:\n    window = policy[\"assurance_window\"]\n    window_start = parse_time(window[\"window_start\"], \"assurance_window.window_start\")\n    window_end = parse_time(window[\"window_end\"], \"assurance_window.window_end\")\n    fields = {\n        \"schema_version\", \"result_id\", \"scenario_id\", \"scenario_version\",\n        \"payload_sha256\", \"harness_id\", \"harness_version\",\n        \"harness_artifact_sha256\", \"detector_id\",\n        \"detector_version\", \"detector_artifact_sha256\", \"detector_config_sha256\",\n        \"observation_point\", \"production_request_id\", \"production_event_id\",\n        \"outcome\", \"alert_event_id\", \"evidence_sha256\", \"observed_at\",\n    }\n    result_ids = set()\n    production_event_ids = set()\n    alert_event_ids = set()\n    for result in results:\n        if (set(result) != fields\n                or result[\"schema_version\"] != \"aidefend.production-detector-result.v2\"\n                or result[\"outcome\"] not in {\"DETECTED\", \"NOT_DETECTED\", \"ERROR\", \"ABSTAIN\"}):\n            raise ValueError(\"production result schema differs\")\n        result_id = require_text(result[\"result_id\"], \"result.result_id\")\n        if result_id in result_ids:\n            raise ValueError(\"duplicate result ID\")\n        result_ids.add(result_id)\n        for field in (\n            \"scenario_id\", \"scenario_version\", \"harness_id\", \"harness_version\",\n            \"detector_id\", \"detector_version\", \"observation_point\",\n            \"production_request_id\", \"production_event_id\",\n        ):\n            require_text(result[field], f\"result.{field}\")\n        observed_at = parse_time(result[\"observed_at\"], \"result.observed_at\")\n        if not window_start &lt;= observed_at &lt; window_end:\n            raise CoverageGap(\"production result falls outside assurance window\")\n        for field in (\n            \"payload_sha256\", \"harness_artifact_sha256\", \"detector_artifact_sha256\",\n            \"detector_config_sha256\", \"evidence_sha256\",\n        ):\n            require_sha256(result[field], f\"result.{field}\")\n        if result[\"production_event_id\"] in production_event_ids:\n            raise ValueError(\"duplicate production observation event ID\")\n        production_event_ids.add(result[\"production_event_id\"])\n        alert_id = result[\"alert_event_id\"]\n        if result[\"outcome\"] == \"DETECTED\":\n            require_text(alert_id, \"result.alert_event_id\")\n            if alert_id in alert_event_ids:\n                raise ValueError(\"duplicate alert event ID\")\n            alert_event_ids.add(alert_id)\n        elif alert_id is not None:\n            raise ValueError(\"non-DETECTED outcomes must have a null alert_event_id\")\n\n\ndef result_replay_binding(result: dict) -&gt; dict:\n    fields = (\n        \"result_id\", \"scenario_id\", \"scenario_version\", \"payload_sha256\",\n        \"harness_id\", \"harness_version\", \"harness_artifact_sha256\",\n        \"detector_id\", \"production_request_id\", \"production_event_id\",\n        \"observed_at\",\n    )\n    return {field: result[field] for field in fields}\n\n\ndef replay_bindings_sha256(results: list[dict]) -&gt; str:\n    bindings = sorted(\n        (result_replay_binding(result) for result in results),\n        key=lambda item: item[\"result_id\"],\n    )\n    return digest_bytes(canonical(bindings))\n\n\ndef validate_result_evidence(\n    manifest: object,\n    results: list[dict],\n    results_sha256: str,\n    maximum_object_bytes: int,\n) -&gt; None:\n    fields = {\"schema_version\", \"results_sha256\", \"objects\"}\n    if (not isinstance(manifest, dict)\n            or set(manifest) != fields\n            or manifest[\"schema_version\"] != \"aidefend.d018-result-evidence-manifest.v2\"\n            or manifest[\"results_sha256\"] != results_sha256\n            or not isinstance(manifest[\"objects\"], list)):\n        raise ValueError(\"result evidence manifest differs\")\n    object_fields = {\"result_id\", \"object_path\", \"evidence_sha256\"}\n    by_result = {}\n    paths = set()\n    for item in manifest[\"objects\"]:\n        if not isinstance(item, dict) or set(item) != object_fields:\n            raise ValueError(\"result evidence object schema differs\")\n        result_id = require_text(item[\"result_id\"], \"result_evidence.result_id\")\n        object_path = require_text(item[\"object_path\"], \"result_evidence.object_path\")\n        require_sha256(item[\"evidence_sha256\"], \"result_evidence.evidence_sha256\")\n        if result_id in by_result or object_path in paths:\n            raise ValueError(\"duplicate result evidence ID or object path\")\n        by_result[result_id] = item\n        paths.add(object_path)\n    result_by_id = {result[\"result_id\"]: result for result in results}\n    missing = sorted(set(result_by_id) - set(by_result))\n    unexpected = sorted(set(by_result) - set(result_by_id))\n    if missing:\n        raise CoverageGap(f\"result evidence manifest entries are absent: {missing}\")\n    if unexpected:\n        raise ValueError(f\"result evidence manifest has unknown results: {unexpected}\")\n    for result_id, result in result_by_id.items():\n        item = by_result[result_id]\n        raw = read_named_object_no_follow(\n            RESULT_EVIDENCE_ROOT,\n            item[\"object_path\"],\n            \"production observation evidence\",\n            maximum_object_bytes,\n        )\n        computed = digest_bytes(raw)\n        if (not hmac.compare_digest(computed, item[\"evidence_sha256\"])\n                or item[\"evidence_sha256\"] != result[\"evidence_sha256\"]):\n            raise ValueError(f\"{result_id} result evidence digest differs\")\n        observation = load_json_bytes(raw, f\"{result_id} production observation\")\n        observation_fields = {\n            \"schema_version\", \"result_id\", \"scenario_id\", \"scenario_version\",\n            \"payload_sha256\", \"harness_id\", \"harness_version\",\n            \"harness_artifact_sha256\", \"detector_id\", \"detector_version\",\n            \"detector_artifact_sha256\", \"detector_config_sha256\",\n            \"observation_point\", \"production_request_id\", \"production_event_id\",\n            \"observed_at\", \"outcome\", \"alert_event_id\",\n        }\n        if (not isinstance(observation, dict)\n                or set(observation) != observation_fields\n                or observation[\"schema_version\"]\n                   != \"aidefend.d018-production-observation.v1\"):\n            raise ValueError(f\"{result_id} production observation schema differs\")\n        expected_observation = {\n            \"schema_version\": \"aidefend.d018-production-observation.v1\",\n            **{\n                field: result[field]\n                for field in observation_fields - {\"schema_version\"}\n            },\n        }\n        if (observation != expected_observation\n                or not hmac.compare_digest(raw, canonical(observation))):\n            raise ValueError(f\"{result_id} replay-path evidence binding differs\")\n\n\ndef validate_receipt(\n    receipt: object,\n    profile_sha256: str,\n    policy: dict,\n    input_digests: dict[str, str],\n    scenarios: list[dict],\n    results: list[dict],\n) -&gt; None:\n    fields = {\n        \"schema_version\", \"execution_mode\", \"deployment_snapshot_sha256\",\n        \"expected_deployment_sha256\", \"inventory_sha256\", \"scenarios_sha256\",\n        \"results_sha256\", \"result_evidence_manifest_sha256\", \"policy_sha256\",\n        \"runtime_profile_sha256\", \"scenario_count\", \"result_count\", \"runner_id\",\n        \"runner_version\", \"runner_artifact_sha256\", \"source_checkpoints\",\n        \"window_id\", \"window_start\", \"window_end\", \"observation_through\",\n        \"replay_bindings_sha256\", \"collection_complete\",\n    }\n    if (not isinstance(receipt, dict)\n            or set(receipt) != fields\n            or receipt[\"schema_version\"] != \"aidefend.d018-run-receipt.v4\"\n            or receipt[\"execution_mode\"] != \"DEPLOYED_OBSERVATION_PATH\"):\n        raise ValueError(\"run receipt schema or mode differs\")\n    expected_digests = {\n        \"deployment_snapshot_sha256\": input_digests[\"deployment_snapshot\"],\n        \"expected_deployment_sha256\": input_digests[\"expected_deployment\"],\n        \"inventory_sha256\": input_digests[\"inventory\"],\n        \"scenarios_sha256\": input_digests[\"scenarios\"],\n        \"results_sha256\": input_digests[\"results\"],\n        \"result_evidence_manifest_sha256\": input_digests[\"result_evidence_manifest\"],\n        \"policy_sha256\": input_digests[\"policy\"],\n        \"runtime_profile_sha256\": profile_sha256,\n    }\n    if any(receipt[field] != expected for field, expected in expected_digests.items()):\n        raise ValueError(\"run receipt input digest differs\")\n    window = policy[\"assurance_window\"]\n    if (\n        receipt[\"window_id\"] != window[\"window_id\"]\n        or receipt[\"window_start\"] != window[\"window_start\"]\n        or receipt[\"window_end\"] != window[\"window_end\"]\n    ):\n        raise ValueError(\"run receipt assurance window differs from policy\")\n    observation_through = parse_time(receipt[\"observation_through\"], \"receipt.observation_through\")\n    window_end = parse_time(receipt[\"window_end\"], \"receipt.window_end\")\n    now = datetime.now(timezone.utc)\n    if (\n        observation_through &lt; window_end\n        or observation_through &gt; now + timedelta(seconds=window[\"maximum_future_skew_seconds\"])\n    ):\n        raise CoverageGap(\"receipt observation horizon is incomplete or future-dated\")\n    for field in (\"scenario_count\", \"result_count\"):\n        if isinstance(receipt[field], bool) or not isinstance(receipt[field], int) or receipt[field] &lt; 0:\n            raise ValueError(f\"receipt.{field} is invalid\")\n    if (receipt[\"scenario_count\"] != len(scenarios)\n            or receipt[\"result_count\"] != len(results)):\n        raise ValueError(\"run receipt population count differs from signed inputs\")\n    for field in (\"runner_id\", \"runner_version\"):\n        require_text(receipt[field], f\"receipt.{field}\")\n    require_sha256(receipt[\"runner_artifact_sha256\"], \"receipt.runner_artifact_sha256\")\n    require_sha256(receipt[\"replay_bindings_sha256\"], \"receipt.replay_bindings_sha256\")\n    if not hmac.compare_digest(\n        receipt[\"replay_bindings_sha256\"],\n        replay_bindings_sha256(results),\n    ):\n        raise ValueError(\"run receipt replay binding population differs\")\n    checkpoints = receipt[\"source_checkpoints\"]\n    if not isinstance(checkpoints, dict):\n        raise ValueError(\"run source checkpoints are not an object\")\n    required = set(policy[\"required_source_checkpoints\"])\n    missing = sorted(required - set(checkpoints))\n    unexpected = sorted(set(checkpoints) - required)\n    if missing:\n        raise CoverageGap(f\"required source checkpoints are absent: {missing}\")\n    if unexpected:\n        raise ValueError(f\"run has unapproved source checkpoints: {unexpected}\")\n    checkpoint_fields = {\n        \"first\", \"last\", \"expected_count\", \"observed_count\", \"gap_free\", \"complete\",\n    }\n    for name, checkpoint in checkpoints.items():\n        if not isinstance(checkpoint, dict) or set(checkpoint) != checkpoint_fields:\n            raise ValueError(f\"{name} checkpoint schema differs\")\n        for field in (\"first\", \"last\", \"expected_count\", \"observed_count\"):\n            if (isinstance(checkpoint[field], bool)\n                    or not isinstance(checkpoint[field], int)\n                    or checkpoint[field] &lt; 0):\n                raise ValueError(f\"{name}.{field} is invalid\")\n        if (checkpoint[\"last\"] &lt; checkpoint[\"first\"]\n                or not isinstance(checkpoint[\"gap_free\"], bool)\n                or not isinstance(checkpoint[\"complete\"], bool)):\n            raise ValueError(f\"{name} checkpoint range or state differs\")\n        if (checkpoint[\"complete\"] is not True\n                or checkpoint[\"gap_free\"] is not True\n                or checkpoint[\"expected_count\"] != checkpoint[\"observed_count\"]):\n            raise CoverageGap(f\"{name} source checkpoint is incomplete\")\n    if not isinstance(receipt[\"collection_complete\"], bool):\n        raise ValueError(\"receipt.collection_complete is not boolean\")\n    if receipt[\"collection_complete\"] is not True:\n        raise CoverageGap(\"runner collection is incomplete\")\n\n\ndef evaluate(\n    profile: dict,\n    profile_sha256: str,\n    open_descriptors: list[int],\n    input_digests: dict[str, str],\n) -&gt; tuple[dict, dict]:\n    timeout = profile[\"command_timeout_seconds\"]\n    signed_inputs = (\n        (\"deployment_snapshot\", DEPLOYMENT_SNAPSHOT, \"D018_DEPLOYMENT_SNAPSHOT_VERIFY_KEY\"),\n        (\"expected_deployment\", EXPECTED_DEPLOYMENT, \"D018_EXPECTED_DEPLOYMENT_VERIFY_KEY\"),\n        (\"inventory\", INVENTORY, \"D018_INVENTORY_VERIFY_KEY\"),\n        (\"scenarios\", SCENARIOS, \"D018_SCENARIO_VERIFY_KEY\"),\n        (\"results\", RESULTS, \"D018_RUNNER_VERIFY_KEY\"),\n        (\n            \"result_evidence_manifest\",\n            RESULT_EVIDENCE_MANIFEST,\n            \"D018_RESULT_EVIDENCE_VERIFY_KEY\",\n        ),\n        (\"receipt\", RECEIPT, \"D018_COMPLETENESS_VERIFY_KEY\"),\n        (\"policy\", POLICY, \"D018_POLICY_VERIFY_KEY\"),\n    )\n    captured = {}\n    for label, path, key_env in signed_inputs:\n        captured[label] = capture_signed_input(\n            path,\n            Path(str(path) + \".sigstore.json\"),\n            key_env,\n            timeout,\n            label,\n            profile[\"maximum_input_bytes\"],\n            input_digests,\n            open_descriptors,\n        )\n    deployment_snapshot = load_json_bytes(\n        captured[\"deployment_snapshot\"][\"data\"],\n        \"production deployment snapshot\",\n    )\n    expected = load_json_bytes(captured[\"expected_deployment\"][\"data\"], \"expected deployment\")\n    inventory = load_json_bytes(captured[\"inventory\"][\"data\"], \"detector inventory\")\n    scenarios = load_jsonl_bytes(\n        captured[\"scenarios\"][\"data\"],\n        \"scenario catalog\",\n        allow_empty=True,\n    )\n    results = load_jsonl_bytes(\n        captured[\"results\"][\"data\"],\n        \"production-path results\",\n        allow_empty=True,\n    )\n    result_evidence = load_json_bytes(\n        captured[\"result_evidence_manifest\"][\"data\"],\n        \"result evidence manifest\",\n    )\n    receipt = load_json_bytes(captured[\"receipt\"][\"data\"], \"run receipt\")\n    policy = load_json_bytes(captured[\"policy\"][\"data\"], \"metric policy\")\n\n    bounded_populations = {\n        \"deployment snapshot detectors\": (\n            deployment_snapshot.get(\"detectors\")\n            if isinstance(deployment_snapshot, dict) else None\n        ),\n        \"expected deployment detectors\": (\n            expected.get(\"detectors\") if isinstance(expected, dict) else None\n        ),\n        \"inventory detectors\": (\n            inventory.get(\"detectors\") if isinstance(inventory, dict) else None\n        ),\n        \"scenario records\": scenarios,\n        \"result records\": results,\n        \"result evidence objects\": (\n            result_evidence.get(\"objects\")\n            if isinstance(result_evidence, dict) else None\n        ),\n    }\n    for label, population in bounded_populations.items():\n        if not isinstance(population, list):\n            raise ValueError(label + \" is not a list\")\n        if len(population) &gt; profile[\"maximum_records\"]:\n            raise ValueError(label + \" exceeds the signed record ceiling\")\n\n    expected_by_id = validate_expected_deployment(expected)\n    validate_deployment_snapshot(\n        deployment_snapshot,\n        captured[\"deployment_snapshot\"][\"sha256\"],\n        expected,\n    )\n    normalized_requirements, required_catalog = validate_policy(\n        policy,\n        captured[\"expected_deployment\"][\"sha256\"],\n        expected_by_id,\n    )\n    inventory_by_id = validate_inventory(inventory, expected, expected_by_id)\n    scenarios_by_identity = validate_scenarios(\n        scenarios,\n        required_catalog,\n        SCENARIO_PAYLOAD_ROOT,\n        profile[\"maximum_object_bytes\"],\n    )\n    validate_results(results, policy)\n    validate_result_evidence(\n        result_evidence,\n        results,\n        captured[\"results\"][\"sha256\"],\n        profile[\"maximum_object_bytes\"],\n    )\n    validate_receipt(\n        receipt,\n        profile_sha256,\n        policy,\n        input_digests,\n        scenarios,\n        results,\n    )\n\n    eligible = {\n        detector_id: detector\n        for detector_id, detector in inventory_by_id.items()\n        if detector[\"technical_scope\"] == \"ELIGIBLE\"\n    }\n    if not eligible:\n        if results:\n            raise ValueError(\"N/A detector population cannot have production results\")\n        return (\n            {\n                \"status\": \"NOT_APPLICABLE\",\n                \"reason\": \"every expected detector lacks one or more declared technical prerequisites\",\n                \"groups\": [],\n                \"expected_cells\": 0,\n                \"observed_cells\": 0,\n            },\n            {\"expected\": expected, \"inventory\": inventory, \"policy\": policy, \"receipt\": receipt},\n        )\n\n    expected_cells = {}\n    for (detector_id, segment), requirements in normalized_requirements.items():\n        if detector_id not in eligible:\n            continue\n        for identity in requirements:\n            scenario = scenarios_by_identity[identity]\n            expected_cells[(scenario[\"scenario_id\"], detector_id)] = scenario\n    if len(expected_cells) &gt; profile[\"maximum_matrix_cells\"]:\n        raise ValueError(\"detector-scenario matrix exceeds the signed cell ceiling\")\n    observed_cells = {}\n    for result in results:\n        cell = (result[\"scenario_id\"], result[\"detector_id\"])\n        if cell in observed_cells:\n            raise ValueError(\"duplicate detector-scenario result cell\")\n        observed_cells[cell] = result\n    missing = sorted(set(expected_cells) - set(observed_cells))\n    unexpected = sorted(set(observed_cells) - set(expected_cells))\n    if missing:\n        raise CoverageGap(f\"required detector-scenario result cells are absent: {missing}\")\n    if unexpected:\n        raise ValueError(f\"results have unapproved detector-scenario cells: {unexpected}\")\n\n    grouped = defaultdict(list)\n    for cell, result in observed_cells.items():\n        scenario = expected_cells[cell]\n        detector = eligible[result[\"detector_id\"]]\n        if (result[\"scenario_version\"] != scenario[\"scenario_version\"]\n                or result[\"payload_sha256\"] != scenario[\"payload_sha256\"]\n                or result[\"harness_id\"] != scenario[\"harness_id\"]\n                or result[\"harness_version\"] != scenario[\"harness_version\"]\n                or result[\"harness_artifact_sha256\"]\n                   != scenario[\"harness_artifact_sha256\"]\n                or result[\"detector_version\"] != detector[\"version\"]\n                or result[\"detector_artifact_sha256\"] != detector[\"artifact_sha256\"]\n                or result[\"detector_config_sha256\"] != detector[\"config_sha256\"]\n                or result[\"observation_point\"] != detector[\"observation_point\"]):\n            raise ValueError(\"result scenario, harness, or detector binding differs\")\n        grouped[(result[\"detector_id\"], scenario[\"segment\"])].append((scenario, result))\n\n    reports = []\n    failures = []\n    for detector_id, detector in sorted(eligible.items()):\n        for segment in expected_by_id[detector_id][\"segments\"]:\n            rows = grouped[(detector_id, segment)]\n            threshold = policy[\"thresholds_by_detector\"][detector_id][segment]\n            counts = Counter()\n            for scenario, result in rows:\n                if scenario[\"ground_truth\"] == \"ATTACK\":\n                    counts[\"tp\" if result[\"outcome\"] == \"DETECTED\" else \"fn\"] += 1\n                else:\n                    counts[\"tn\" if result[\"outcome\"] == \"NOT_DETECTED\" else \"fp\"] += 1\n                if result[\"outcome\"] in {\"ERROR\", \"ABSTAIN\"}:\n                    counts[result[\"outcome\"].lower()] += 1\n            attacks = counts[\"tp\"] + counts[\"fn\"]\n            benign = counts[\"tn\"] + counts[\"fp\"]\n            if (attacks &lt; threshold[\"minimum_attack_cases\"]\n                    or benign &lt; threshold[\"minimum_benign_cases\"]):\n                raise CoverageGap(f\"{detector_id}/{segment} class population is incomplete\")\n            recall = counts[\"tp\"] / attacks\n            false_positive_rate = counts[\"fp\"] / benign\n            precision_denominator = counts[\"tp\"] + counts[\"fp\"]\n            precision = counts[\"tp\"] / precision_denominator if precision_denominator else 0.0\n            passed = (\n                recall &gt;= threshold[\"minimum_recall\"]\n                and precision &gt;= threshold[\"minimum_precision\"]\n                and false_positive_rate &lt;= threshold[\"maximum_false_positive_rate\"]\n                and counts[\"error\"] == 0\n                and counts[\"abstain\"] == 0\n            )\n            report = {\n                \"detector_id\": detector_id,\n                \"version\": detector[\"version\"],\n                \"artifact_sha256\": detector[\"artifact_sha256\"],\n                \"config_sha256\": detector[\"config_sha256\"],\n                \"observation_point\": detector[\"observation_point\"],\n                \"segment\": segment,\n                \"population\": len(rows),\n                \"counts\": dict(counts),\n                \"recall\": recall,\n                \"precision\": precision,\n                \"false_positive_rate\": false_positive_rate,\n                \"passed\": passed,\n            }\n            reports.append(report)\n            if not passed:\n                failures.append({\"detector_id\": detector_id, \"segment\": segment})\n    result = {\n        \"status\": \"FAIL\" if failures else \"PASS\",\n        \"reason\": (\n            \"one or more detector segments missed signed thresholds\"\n            if failures else \"all exact detector/segment scenario populations met signed thresholds\"\n        ),\n        \"groups\": reports,\n        \"failed_groups\": failures,\n        \"expected_cells\": len(expected_cells),\n        \"observed_cells\": len(observed_cells),\n    }\n    return result, {\"expected\": expected, \"inventory\": inventory, \"policy\": policy, \"receipt\": receipt}\n\n\ndef base_evidence(status: str, reason: str, identity: dict, input_digests: dict) -&gt; dict:\n    return {\n        \"schema_version\": \"aidefend.d018-evidence.v2\",\n        \"control\": \"AID-D-018\",\n        \"status\": status,\n        \"reason\": reason,\n        \"runtime_profile_version\": identity[\"runtime_profile_version\"],\n        \"runtime_profile_sha256\": identity[\"runtime_profile_sha256\"],\n        \"runtime_profile_status\": identity[\"runtime_profile_status\"],\n        \"input_digests\": input_digests,\n        \"evaluated_at\": datetime.now(timezone.utc).isoformat(),\n    }\n\n\ndef main() -&gt; None:\n    bootstrap = load_bootstrap()\n    open_descriptors = []\n    identity = {\n        \"runtime_profile_version\": None,\n        \"runtime_profile_sha256\": None,\n        \"runtime_profile_status\": \"ABSENT\",\n    }\n    input_digests = {}\n    profile = None\n    try:\n        profile = load_runtime_profile(\n            identity,\n            bootstrap[\"command_timeout_seconds\"],\n            open_descriptors,\n        )\n        result, context = evaluate(\n            profile,\n            identity[\"runtime_profile_sha256\"],\n            open_descriptors,\n            input_digests,\n        )\n        evidence = base_evidence(result[\"status\"], result[\"reason\"], identity, input_digests)\n        evidence.update(result)\n        evidence.update({\n            \"environment_id\": context[\"expected\"][\"environment_id\"],\n            \"deployment_snapshot_sha256\": context[\"expected\"][\"deployment_snapshot_sha256\"],\n            \"expected_manifest_version\": context[\"expected\"][\"manifest_version\"],\n            \"inventory_version\": context[\"inventory\"][\"inventory_version\"],\n            \"policy_version\": context[\"policy\"][\"policy_version\"],\n            \"runner_id\": context[\"receipt\"][\"runner_id\"],\n            \"runner_version\": context[\"receipt\"][\"runner_version\"],\n            \"runner_artifact_sha256\": context[\"receipt\"][\"runner_artifact_sha256\"],\n        })\n    except CoverageGap:\n        evidence = base_evidence(\n            \"INSUFFICIENT_DATA\",\n            \"coverage or currentness evidence is incomplete\",\n            identity,\n            input_digests,\n        )\n        evidence[\"error_class\"] = \"CoverageGap\"\n    except Exception as error:\n        evidence = base_evidence(\n            \"ERROR\",\n            \"evaluation dependency or input verification failed\",\n            identity,\n            input_digests,\n        )\n        evidence[\"error_class\"] = type(error).__name__\n\n    timeout = (\n        profile[\"command_timeout_seconds\"]\n        if profile is not None else bootstrap[\"command_timeout_seconds\"]\n    )\n    evidence_path = bootstrap[\"evidence_path\"]\n    bundle_path = bootstrap[\"evidence_bundle_path\"]\n    payload = canonical(evidence)\n    signed_bundle = sign_evidence_to_sealed_memfds(\n        payload,\n        timeout,\n        open_descriptors,\n    )\n    publish_once_or_match(bundle_path, signed_bundle)\n    publish_once_or_match(evidence_path, payload)\n    publication_limit = (\n        profile[\"maximum_input_bytes\"]\n        if profile is not None else BOOTSTRAP_PROFILE_BYTES_CEILING\n    )\n    published_digests = {}\n    published = capture_signed_input(\n        evidence_path,\n        bundle_path,\n        \"D018_EVIDENCE_VERIFY_KEY\",\n        timeout,\n        \"published_evidence\",\n        publication_limit,\n        published_digests,\n        open_descriptors,\n    )\n    if not hmac.compare_digest(published[\"data\"], payload):\n        raise RuntimeError(\"published evidence differs from signed private bytes\")\n    strict_json_loads(payload)\n    print(json.dumps(evidence, sort_keys=True, allow_nan=False))\n    exit_codes = {\n        \"PASS\": 0,\n        \"NOT_APPLICABLE\": 0,\n        \"FAIL\": 1,\n        \"INSUFFICIENT_DATA\": 2,\n        \"ERROR\": 3,\n    }\n    for descriptor in reversed(open_descriptors):\n        os.close(descriptor)\n    raise SystemExit(exit_codes[evidence[\"status\"]])\n\n\nif __name__ == \"__main__\":\n    main()</code></pre><h5>Reference evaluator prerequisites</h5><p>The reference evaluator variant requires a Linux kernel that supports <code>memfd_create(MFD_ALLOW_SEALING)</code> and the write/grow/shrink/seal locks, mounted <code>/proc/self/fd</code>, Python 3.10 or newer, and a current supported Sigstore Cosign release. It opens every source component with descriptor-relative no-follow traversal, captures each top-level signed input and its bundle exactly once into separate kernel-sealed memfds, gives Cosign only those inherited descriptors, and strictly parses and hashes the same captured bytes. It never reopens a signed source pathname after signature verification. A platform lacking these prerequisites makes this implementation variant <code>ERROR</code> or requires an equivalently trusted immutable-snapshot runner; it never turns the D-018 control into PASS or NOT_APPLICABLE.</p><p>The policy pins each approved semantic case to its exact scenario version, payload digest, harness ID/version, and harness artifact digest. The evaluator loads each basename-only payload object through no-follow traversal and verifies its bytes. Every result repeats that binding plus immutable detector identity, production request ID, and production observation-event ID; the signed completeness receipt binds the canonical full replay-binding population. Each canonical production-observation object must match the result exactly. <code>alert_event_id</code> is required only for <code>DETECTED</code> and must be null for every other outcome; operational/error correlation belongs in <code>production_event_id</code>.</p><h5>Executable signed-fixture and negative acceptance suite</h5><pre><code class=\"language-python\"># file: tests/test_d018_negative.py\nfrom __future__ import annotations\n\nimport errno\nimport hashlib\nimport importlib.util\nimport json\nimport math\nimport os\nimport shutil\nimport subprocess\nimport sys\nfrom pathlib import Path\nfrom datetime import datetime, timedelta, timezone\nfrom types import SimpleNamespace\n\nimport pytest\n\n\npytestmark = pytest.mark.skipif(\n    sys.platform != \"linux\",\n    reason=\"AID-D-018 requires Linux sealed memfd semantics\",\n)\nEVALUATOR = Path(\n    os.environ.get(\n        \"D018_EVALUATOR_PATH\",\n        \"assurance/evaluate_production_detectors.py\",\n    )\n).resolve()\nSIGNED_INPUTS = {\n    \"deployment_snapshot\": Path(\"assurance/production-deployment-snapshot.json\"),\n    \"expected_deployment\": Path(\"assurance/expected-detector-segment-manifest.json\"),\n    \"inventory\": Path(\"assurance/detector-inventory.json\"),\n    \"scenarios\": Path(\"assurance/scenarios.jsonl\"),\n    \"results\": Path(\"assurance/production-path-results.jsonl\"),\n    \"result_evidence_manifest\": Path(\"assurance/result-evidence-manifest.json\"),\n    \"receipt\": Path(\"assurance/run-receipt.json\"),\n    \"policy\": Path(\"policy/detection-efficacy-policy.json\"),\n}\nVERIFY_ENV_BY_LABEL = {\n    \"deployment_snapshot\": \"D018_DEPLOYMENT_SNAPSHOT_VERIFY_KEY\",\n    \"expected_deployment\": \"D018_EXPECTED_DEPLOYMENT_VERIFY_KEY\",\n    \"inventory\": \"D018_INVENTORY_VERIFY_KEY\",\n    \"scenarios\": \"D018_SCENARIO_VERIFY_KEY\",\n    \"results\": \"D018_RUNNER_VERIFY_KEY\",\n    \"result_evidence_manifest\": \"D018_RESULT_EVIDENCE_VERIFY_KEY\",\n    \"receipt\": \"D018_COMPLETENESS_VERIFY_KEY\",\n    \"policy\": \"D018_POLICY_VERIFY_KEY\",\n}\n\n\ndef required_positive_seconds(name: str) -&gt; float:\n    raw = os.environ.get(name)\n    if raw is None or not raw.strip():\n        raise RuntimeError(\n            f\"{name} must be injected from the signed CI runner profile\"\n        )\n    try:\n        value = float(raw)\n    except ValueError as error:\n        raise RuntimeError(f\"{name} must be numeric\") from error\n    if not math.isfinite(value) or value &lt;= 0:\n        raise RuntimeError(f\"{name} must be finite and positive\")\n    return value\n\n\nTEST_PROCESS_TIMEOUT_SECONDS = required_positive_seconds(\n    \"D018_TEST_PROCESS_TIMEOUT_SECONDS\"\n)\n\n\ndef canonical(value: object) -&gt; bytes:\n    return json.dumps(\n        value,\n        sort_keys=True,\n        separators=(\",\", \":\"),\n        ensure_ascii=False,\n        allow_nan=False,\n    ).encode(\"utf-8\")\n\n\ndef sha256(payload: bytes) -&gt; str:\n    return hashlib.sha256(payload).hexdigest()\n\n\ndef file_sha256(path: Path) -&gt; str:\n    return sha256(path.read_bytes())\n\n\ndef write_json(path: Path, value: object) -&gt; None:\n    path.parent.mkdir(parents=True, exist_ok=True)\n    path.write_bytes(canonical(value))\n\n\ndef read_json(path: Path) -&gt; dict:\n    value = json.loads(path.read_text(encoding=\"utf-8\"))\n    assert isinstance(value, dict)\n    return value\n\n\ndef write_jsonl(path: Path, records: list[dict]) -&gt; None:\n    path.parent.mkdir(parents=True, exist_ok=True)\n    path.write_bytes(b\"\" if not records else b\"\\n\".join(map(canonical, records)) + b\"\\n\")\n\n\ndef read_jsonl(path: Path) -&gt; list[dict]:\n    return [json.loads(line) for line in path.read_text(encoding=\"utf-8\").splitlines()]\n\n\ndef replay_binding_digest(results: list[dict]) -&gt; str:\n    fields = (\n        \"result_id\", \"scenario_id\", \"scenario_version\", \"payload_sha256\",\n        \"harness_id\", \"harness_version\", \"harness_artifact_sha256\",\n        \"detector_id\", \"production_request_id\", \"production_event_id\", \"observed_at\",\n    )\n    bindings = sorted(\n        ({field: result[field] for field in fields} for result in results),\n        key=lambda item: item[\"result_id\"],\n    )\n    return sha256(canonical(bindings))\n\n\n@pytest.fixture(scope=\"session\")\ndef cosign() -&gt; str:\n    executable = shutil.which(\"cosign\")\n    if executable is None:\n        pytest.fail(\"cosign is required; the acceptance suite must not skip signatures\")\n    return executable\n\n\n@pytest.fixture(scope=\"session\")\ndef signing_material(tmp_path_factory: pytest.TempPathFactory, cosign: str) -&gt; dict:\n    root = tmp_path_factory.mktemp(\"d018-cosign\")\n    prefix = root / \"fixture\"\n    public_test_fixture_value = \"not-a-secret-public-cosign-test-fixture\"\n    environment = {**os.environ, \"COSIGN_PASSWORD\": public_test_fixture_value}\n    subprocess.run(\n        [cosign, \"generate-key-pair\", \"--output-key-prefix\", str(prefix)],\n        check=True,\n        capture_output=True,\n        text=True,\n        env=environment,\n        timeout=TEST_PROCESS_TIMEOUT_SECONDS,\n    )\n    return {\n        \"private\": prefix.with_suffix(\".key\"),\n        \"public\": prefix.with_suffix(\".pub\"),\n        \"public_test_fixture_value\": public_test_fixture_value,\n        \"cosign\": cosign,\n    }\n\n\ndef sign(path: Path, material: dict) -&gt; None:\n    bundle = Path(str(path) + \".sigstore.json\")\n    bundle.unlink(missing_ok=True)\n    subprocess.run(\n        [\n            material[\"cosign\"], \"sign-blob\", \"--yes\", \"--use-signing-config=false\",\n            \"--key\", str(material[\"private\"]), \"--bundle\", str(bundle), str(path),\n        ],\n        check=True,\n        capture_output=True,\n        text=True,\n        env={**os.environ, \"COSIGN_PASSWORD\": material[\"public_test_fixture_value\"]},\n        timeout=TEST_PROCESS_TIMEOUT_SECONDS,\n    )\n\n\ndef sign_all(root: Path, material: dict) -&gt; None:\n    for relative in SIGNED_INPUTS.values():\n        sign(root / relative, material)\n    sign(root / \"assurance/runtime-profile.json\", material)\n\n\ndef build_passing_fixture(root: Path, material: dict) -&gt; None:\n    assurance = root / \"assurance\"\n    (assurance / \"scenario-payloads\").mkdir(parents=True)\n    (assurance / \"result-evidence\").mkdir(parents=True)\n    (root / \"policy\").mkdir(parents=True)\n    (root / \"out\").mkdir(parents=True)\n    detector_artifact = sha256(b\"detector-artifact\")\n    detector_config = sha256(b\"detector-config\")\n    # Test-only freshness values; production reads its signed assurance window.\n    test_window_lag_seconds = 1\n    test_window_duration_seconds = 60\n    window_end = datetime.now(timezone.utc) - timedelta(seconds=test_window_lag_seconds)\n    window_start = window_end - timedelta(seconds=test_window_duration_seconds)\n    window = {\n        \"window_id\": \"fixture-window-1\",\n        \"window_start\": window_start.isoformat(),\n        \"window_end\": window_end.isoformat(),\n        \"maximum_future_skew_seconds\": 5,\n        \"maximum_evidence_age_seconds\": 3600,\n    }\n    deployment_snapshot = \"pending-fixture-snapshot\"\n    harness_artifact = sha256(b\"harness-artifact\")\n    expected = {\n        \"schema_version\": \"aidefend.d018-expected-deployment.v2\",\n        \"manifest_version\": \"fixture-1\",\n        \"environment_id\": \"fixture-production\",\n        \"deployment_snapshot_sha256\": deployment_snapshot,\n        \"detectors\": [{\n            \"detector_id\": \"detector-1\",\n            \"detector_type\": \"prompt-safety-classifier\",\n            \"version\": \"1.0.0\",\n            \"artifact_sha256\": detector_artifact,\n            \"config_sha256\": detector_config,\n            \"observation_point\": \"production-gateway\",\n            \"segments\": [\"global\"],\n            \"technical_prerequisites\": [\"production_path_attached\"],\n        }],\n    }\n    snapshot = {\n        \"schema_version\": \"aidefend.production-deployment-snapshot.v1\",\n        \"snapshot_id\": \"fixture-snapshot-1\",\n        \"environment_id\": expected[\"environment_id\"],\n        \"detectors\": expected[\"detectors\"],\n    }\n    write_json(assurance / \"production-deployment-snapshot.json\", snapshot)\n    deployment_snapshot = file_sha256(assurance / \"production-deployment-snapshot.json\")\n    expected[\"deployment_snapshot_sha256\"] = deployment_snapshot\n    write_json(assurance / \"expected-detector-segment-manifest.json\", expected)\n    inventory = {\n        \"schema_version\": \"aidefend.detector-inventory.v2\",\n        \"inventory_version\": \"fixture-1\",\n        \"environment_id\": \"fixture-production\",\n        \"deployment_snapshot_sha256\": deployment_snapshot,\n        \"collection_complete\": True,\n        \"detectors\": [{\n            **expected[\"detectors\"][0],\n            \"technical_scope\": \"ELIGIBLE\",\n            \"prerequisite_results\": {\"production_path_attached\": True},\n            \"not_applicable_reason\": None,\n        }],\n    }\n    write_json(assurance / \"detector-inventory.json\", inventory)\n    payload_specs = (\n        (\"attack-001\", \"ATTACK\", \"prompt-injection\", b\"attack-payload\", \"DETECTED\"),\n        (\"benign-001\", \"BENIGN\", \"benign-control\", b\"benign-payload\", \"NOT_DETECTED\"),\n    )\n    scenarios = []\n    results = []\n    manifest_objects = []\n    for index, (case_id, truth, family, payload, outcome) in enumerate(payload_specs, start=1):\n        payload_object = f\"{case_id}.bin\"\n        (assurance / \"scenario-payloads\" / payload_object).write_bytes(payload)\n        scenario = {\n            \"schema_version\": \"aidefend.detection-scenario.v2\",\n            \"scenario_id\": f\"scenario-{index}\",\n            \"scenario_version\": \"1.0.0\",\n            \"segment\": \"global\",\n            \"ground_truth\": truth,\n            \"attack_family\": family,\n            \"semantic_case_id\": case_id,\n            \"payload_sha256\": sha256(payload),\n            \"payload_object\": payload_object,\n            \"harness_id\": \"production-replay-harness\",\n            \"harness_version\": \"1.0.0\",\n            \"harness_artifact_sha256\": harness_artifact,\n        }\n        scenarios.append(scenario)\n        result = {\n            \"schema_version\": \"aidefend.production-detector-result.v2\",\n            \"result_id\": f\"result-{index}\",\n            \"scenario_id\": scenario[\"scenario_id\"],\n            \"scenario_version\": scenario[\"scenario_version\"],\n            \"payload_sha256\": scenario[\"payload_sha256\"],\n            \"harness_id\": scenario[\"harness_id\"],\n            \"harness_version\": scenario[\"harness_version\"],\n            \"harness_artifact_sha256\": harness_artifact,\n            \"detector_id\": \"detector-1\",\n            \"detector_version\": \"1.0.0\",\n            \"detector_artifact_sha256\": detector_artifact,\n            \"detector_config_sha256\": detector_config,\n            \"observation_point\": \"production-gateway\",\n            \"production_request_id\": f\"request-{index}\",\n            \"production_event_id\": f\"observation-{index}\",\n            \"observed_at\": (window_start + timedelta(seconds=index)).isoformat(),\n            \"outcome\": outcome,\n            \"alert_event_id\": f\"alert-{index}\" if outcome == \"DETECTED\" else None,\n        }\n        observation = {\n            \"schema_version\": \"aidefend.d018-production-observation.v1\",\n            **{key: value for key, value in result.items() if key != \"schema_version\"},\n        }\n        object_path = f\"result-{index}.json\"\n        observation_bytes = canonical(observation)\n        (assurance / \"result-evidence\" / object_path).write_bytes(observation_bytes)\n        result[\"evidence_sha256\"] = sha256(observation_bytes)\n        results.append(result)\n        manifest_objects.append({\n            \"result_id\": result[\"result_id\"],\n            \"object_path\": object_path,\n            \"evidence_sha256\": result[\"evidence_sha256\"],\n        })\n    write_jsonl(assurance / \"scenarios.jsonl\", scenarios)\n    write_jsonl(assurance / \"production-path-results.jsonl\", results)\n    manifest = {\n        \"schema_version\": \"aidefend.d018-result-evidence-manifest.v2\",\n        \"results_sha256\": file_sha256(assurance / \"production-path-results.jsonl\"),\n        \"objects\": manifest_objects,\n    }\n    write_json(assurance / \"result-evidence-manifest.json\", manifest)\n    requirements = []\n    for scenario in scenarios:\n        requirements.append({\n            \"semantic_case_id\": scenario[\"semantic_case_id\"],\n            \"ground_truth\": scenario[\"ground_truth\"],\n            \"attack_family\": scenario[\"attack_family\"],\n            \"scenario_version\": scenario[\"scenario_version\"],\n            \"payload_sha256\": scenario[\"payload_sha256\"],\n            \"harness_id\": scenario[\"harness_id\"],\n            \"harness_version\": scenario[\"harness_version\"],\n            \"harness_artifact_sha256\": scenario[\"harness_artifact_sha256\"],\n        })\n    requirements.sort(\n        key=lambda item: (\n            item[\"semantic_case_id\"], item[\"ground_truth\"], item[\"attack_family\"],\n            item[\"scenario_version\"], item[\"payload_sha256\"], item[\"harness_id\"],\n            item[\"harness_version\"], item[\"harness_artifact_sha256\"],\n        )\n    )\n    policy = {\n        \"schema_version\": \"aidefend.detection-efficacy-policy.v2\",\n        \"policy_version\": \"fixture-1\",\n        \"assurance_window\": window,\n        \"expected_deployment_sha256\": file_sha256(\n            assurance / \"expected-detector-segment-manifest.json\"\n        ),\n        \"required_source_checkpoints\": [\"production-observation-stream\"],\n        \"required_scenarios_by_detector_segment\": {\n            \"detector-1\": {\"global\": requirements},\n        },\n        \"thresholds_by_detector\": {\n            \"detector-1\": {\"global\": {\n                \"minimum_attack_cases\": 1,\n                \"minimum_benign_cases\": 1,\n                \"minimum_recall\": 1.0,\n                \"minimum_precision\": 1.0,\n                \"maximum_false_positive_rate\": 0.0,\n            }},\n        },\n    }\n    write_json(root / \"policy/detection-efficacy-policy.json\", policy)\n    profile = {\n        \"schema_version\": \"aidefend.d018-runtime-profile.v1\",\n        \"profile_version\": \"fixture-1\",\n        \"command_timeout_seconds\": 30,\n        \"maximum_input_bytes\": 1048576,\n        \"maximum_object_bytes\": 262144,\n        \"maximum_records\": 100,\n        \"maximum_matrix_cells\": 100,\n    }\n    write_json(assurance / \"runtime-profile.json\", profile)\n    receipt = {\n        \"schema_version\": \"aidefend.d018-run-receipt.v4\",\n        \"execution_mode\": \"DEPLOYED_OBSERVATION_PATH\",\n        \"deployment_snapshot_sha256\": deployment_snapshot,\n        \"window_id\": window[\"window_id\"],\n        \"window_start\": window[\"window_start\"],\n        \"window_end\": window[\"window_end\"],\n        \"observation_through\": window[\"window_end\"],\n        \"expected_deployment_sha256\": \"\",\n        \"inventory_sha256\": \"\",\n        \"scenarios_sha256\": \"\",\n        \"results_sha256\": \"\",\n        \"result_evidence_manifest_sha256\": \"\",\n        \"policy_sha256\": \"\",\n        \"runtime_profile_sha256\": \"\",\n        \"scenario_count\": 0,\n        \"result_count\": 0,\n        \"runner_id\": \"fixture-production-runner\",\n        \"runner_version\": \"1.0.0\",\n        \"runner_artifact_sha256\": sha256(b\"fixture-runner-artifact\"),\n        \"source_checkpoints\": {\n            \"production-observation-stream\": {\n                \"first\": 1,\n                \"last\": 2,\n                \"expected_count\": 2,\n                \"observed_count\": 2,\n                \"gap_free\": True,\n                \"complete\": True,\n            },\n        },\n        \"replay_bindings_sha256\": \"\",\n        \"collection_complete\": True,\n    }\n    write_json(assurance / \"run-receipt.json\", receipt)\n    refresh_receipt(root)\n    sign_all(root, material)\n\n\ndef refresh_receipt(root: Path) -&gt; None:\n    assurance = root / \"assurance\"\n    path = assurance / \"run-receipt.json\"\n    receipt = read_json(path)\n    scenarios = read_jsonl(assurance / \"scenarios.jsonl\")\n    results = read_jsonl(assurance / \"production-path-results.jsonl\")\n    receipt.update({\n        \"deployment_snapshot_sha256\": file_sha256(assurance / \"production-deployment-snapshot.json\"),\n        \"expected_deployment_sha256\": file_sha256(\n            assurance / \"expected-detector-segment-manifest.json\"\n        ),\n        \"inventory_sha256\": file_sha256(assurance / \"detector-inventory.json\"),\n        \"scenarios_sha256\": file_sha256(assurance / \"scenarios.jsonl\"),\n        \"results_sha256\": file_sha256(assurance / \"production-path-results.jsonl\"),\n        \"result_evidence_manifest_sha256\": file_sha256(\n            assurance / \"result-evidence-manifest.json\"\n        ),\n        \"policy_sha256\": file_sha256(root / \"policy/detection-efficacy-policy.json\"),\n        \"runtime_profile_sha256\": file_sha256(assurance / \"runtime-profile.json\"),\n        \"scenario_count\": len(scenarios),\n        \"result_count\": len(results),\n        \"replay_bindings_sha256\": replay_binding_digest(results),\n    })\n    write_json(path, receipt)\n\n\ndef resign_with_receipt(root: Path, material: dict, labels: list[str]) -&gt; None:\n    refresh_receipt(root)\n    for label in labels:\n        sign(root / SIGNED_INPUTS[label], material)\n    sign(root / SIGNED_INPUTS[\"receipt\"], material)\n\n\n@pytest.fixture(scope=\"session\")\ndef passing_template(\n    tmp_path_factory: pytest.TempPathFactory,\n    signing_material: dict,\n) -&gt; Path:\n    if not EVALUATOR.is_file():\n        pytest.fail(f\"save the evaluator code block first: {EVALUATOR}\")\n    root = tmp_path_factory.mktemp(\"d018-passing\")\n    build_passing_fixture(root, signing_material)\n    return root\n\n\n@pytest.fixture\ndef case(tmp_path: Path, passing_template: Path) -&gt; Path:\n    root = tmp_path / \"case\"\n    shutil.copytree(passing_template, root)\n    return root\n\n\ndef evaluator_environment(root: Path, material: dict) -&gt; dict[str, str]:\n    public_key = str(material[\"public\"])\n    environment = {\n        **os.environ,\n        \"COSIGN_PASSWORD\": material[\"public_test_fixture_value\"],\n        \"D018_BOOTSTRAP_COMMAND_TIMEOUT_SECONDS\": \"30\",\n        \"D018_RUNTIME_PROFILE_PATH\": str(root / \"assurance/runtime-profile.json\"),\n        \"D018_RUNTIME_PROFILE_BUNDLE_PATH\": str(\n            root / \"assurance/runtime-profile.json.sigstore.json\"\n        ),\n        \"D018_RUNTIME_PROFILE_VERIFY_KEY\": public_key,\n        \"D018_EVIDENCE_PATH\": str(root / \"out/evidence.json\"),\n        \"D018_EVIDENCE_BUNDLE_PATH\": str(root / \"out/evidence.sigstore.json\"),\n        \"D018_EVIDENCE_SIGNING_KEY\": material[\"private\"].read_text(encoding=\"utf-8\"),\n        \"D018_EVIDENCE_VERIFY_KEY\": public_key,\n    }\n    for variable in VERIFY_ENV_BY_LABEL.values():\n        environment[variable] = public_key\n    return environment\n\n\ndef run_case(root: Path, material: dict) -&gt; tuple[subprocess.CompletedProcess, dict]:\n    evidence_path = root / \"out/evidence.json\"\n    bundle_path = root / \"out/evidence.sigstore.json\"\n    evidence_path.unlink(missing_ok=True)\n    bundle_path.unlink(missing_ok=True)\n    completed = subprocess.run(\n        [sys.executable, str(EVALUATOR)],\n        cwd=root,\n        env=evaluator_environment(root, material),\n        capture_output=True,\n        text=True,\n        timeout=TEST_PROCESS_TIMEOUT_SECONDS,\n        check=False,\n    )\n    assert evidence_path.is_file(), completed.stderr\n    assert bundle_path.is_file(), completed.stderr\n    subprocess.run(\n        [\n            material[\"cosign\"], \"verify-blob\", \"--key\", str(material[\"public\"]),\n            \"--bundle\", str(bundle_path), str(evidence_path),\n        ],\n        check=True,\n        capture_output=True,\n        text=True,\n        timeout=TEST_PROCESS_TIMEOUT_SECONDS,\n    )\n    evidence = read_json(evidence_path)\n    assert evidence[\"status\"] != \"PASS\" or completed.returncode == 0\n    return completed, evidence\n\n\ndef assert_outcome(\n    root: Path,\n    material: dict,\n    status: str,\n    exit_code: int,\n) -&gt; dict:\n    completed, evidence = run_case(root, material)\n    assert completed.returncode == exit_code, completed.stderr\n    assert evidence[\"status\"] == status, evidence\n    return evidence\n\n\ndef load_evaluator_module():\n    spec = importlib.util.spec_from_file_location(\"d018_evaluator\", EVALUATOR)\n    assert spec is not None and spec.loader is not None\n    module = importlib.util.module_from_spec(spec)\n    spec.loader.exec_module(module)\n    return module\n\n\ndef test_passing_signed_fixture(case: Path, signing_material: dict) -&gt; None:\n    completed, evidence = run_case(case, signing_material)\n    assert completed.returncode == 0, completed.stderr\n    assert evidence[\"status\"] == \"PASS\"\n\n\n@pytest.mark.parametrize(\"label\", sorted(SIGNED_INPUTS))\ndef test_each_signed_input_resists_swap_restore_aba(\n    label: str,\n    case: Path,\n    monkeypatch: pytest.MonkeyPatch,\n) -&gt; None:\n    module = load_evaluator_module()\n    monkeypatch.chdir(case)\n    monkeypatch.setenv(VERIFY_ENV_BY_LABEL[label], \"fixture-public-key\")\n    relative = SIGNED_INPUTS[label]\n    source = case / relative\n    bundle = Path(str(source) + \".sigstore.json\")\n    original = source.read_bytes()\n    original_bundle = bundle.read_bytes()\n    reads = {\"source\": 0, \"bundle\": 0}\n    real_read = module.read_regular_no_follow\n\n    def counted_read(path: Path, maximum_bytes: int) -&gt; bytes:\n        candidate = Path(path)\n        if candidate == relative:\n            reads[\"source\"] += 1\n        if candidate == Path(str(relative) + \".sigstore.json\"):\n            reads[\"bundle\"] += 1\n        return real_read(candidate, maximum_bytes)\n\n    def fake_cosign(arguments: list[str], **kwargs) -&gt; SimpleNamespace:\n        source.write_bytes(b\"attacker replacement\")\n        bundle.write_bytes(b\"attacker bundle replacement\")\n        try:\n            assert Path(arguments[-1]).read_bytes() == original\n            assert Path(arguments[arguments.index(\"--bundle\") + 1]).read_bytes() == original_bundle\n            assert len(kwargs[\"pass_fds\"]) == 2\n        finally:\n            source.write_bytes(original)\n            bundle.write_bytes(original_bundle)\n        return SimpleNamespace(returncode=0, stdout=\"\", stderr=\"\")\n\n    monkeypatch.setattr(module, \"read_regular_no_follow\", counted_read)\n    monkeypatch.setattr(module.subprocess, \"run\", fake_cosign)\n    descriptors = []\n    try:\n        capture = module.capture_signed_input(\n            relative,\n            Path(str(relative) + \".sigstore.json\"),\n            VERIFY_ENV_BY_LABEL[label],\n            30.0,\n            label,\n            1048576,\n            {},\n            descriptors,\n        )\n        assert capture[\"data\"] == original\n        assert reads == {\"source\": 1, \"bundle\": 1}\n        for descriptor in descriptors:\n            with pytest.raises(OSError) as sealed_error:\n                os.write(descriptor, b\"x\")\n            assert sealed_error.value.errno == errno.EPERM\n    finally:\n        for descriptor in reversed(descriptors):\n            os.close(descriptor)\n\n\ndef test_runtime_profile_resists_swap_restore_aba(\n    case: Path,\n    monkeypatch: pytest.MonkeyPatch,\n) -&gt; None:\n    module = load_evaluator_module()\n    monkeypatch.chdir(case)\n    profile = case / \"assurance/runtime-profile.json\"\n    bundle = Path(str(profile) + \".sigstore.json\")\n    original = profile.read_bytes()\n    original_bundle = bundle.read_bytes()\n    monkeypatch.setenv(\"D018_RUNTIME_PROFILE_PATH\", \"assurance/runtime-profile.json\")\n    monkeypatch.setenv(\n        \"D018_RUNTIME_PROFILE_BUNDLE_PATH\",\n        \"assurance/runtime-profile.json.sigstore.json\",\n    )\n    monkeypatch.setenv(\"D018_RUNTIME_PROFILE_VERIFY_KEY\", \"fixture-public-key\")\n\n    def fake_cosign(arguments: list[str], **kwargs) -&gt; SimpleNamespace:\n        profile.write_bytes(b\"{}\")\n        bundle.write_bytes(b\"attacker\")\n        try:\n            assert Path(arguments[-1]).read_bytes() == original\n            assert Path(arguments[arguments.index(\"--bundle\") + 1]).read_bytes() == original_bundle\n        finally:\n            profile.write_bytes(original)\n            bundle.write_bytes(original_bundle)\n        return SimpleNamespace(returncode=0, stdout=\"\", stderr=\"\")\n\n    monkeypatch.setattr(module.subprocess, \"run\", fake_cosign)\n    descriptors = []\n    try:\n        identity = {\n            \"runtime_profile_version\": None,\n            \"runtime_profile_sha256\": None,\n            \"runtime_profile_status\": \"ABSENT\",\n        }\n        loaded = module.load_runtime_profile(identity, 30.0, descriptors)\n        assert loaded[\"profile_version\"] == \"fixture-1\"\n        assert identity[\"runtime_profile_status\"] == \"VERIFIED\"\n    finally:\n        for descriptor in reversed(descriptors):\n            os.close(descriptor)\n\n\ndef test_missing_inventory_entry_is_insufficient(\n    case: Path,\n    signing_material: dict,\n) -&gt; None:\n    inventory_path = case / SIGNED_INPUTS[\"inventory\"]\n    inventory = read_json(inventory_path)\n    inventory[\"detectors\"] = []\n    write_json(inventory_path, inventory)\n    resign_with_receipt(case, signing_material, [\"inventory\"])\n    assert_outcome(case, signing_material, \"INSUFFICIENT_DATA\", 2)\n\n\ndef test_missing_scenario_is_insufficient(case: Path, signing_material: dict) -&gt; None:\n    path = case / SIGNED_INPUTS[\"scenarios\"]\n    write_jsonl(path, read_jsonl(path)[:-1])\n    resign_with_receipt(case, signing_material, [\"scenarios\"])\n    assert_outcome(case, signing_material, \"INSUFFICIENT_DATA\", 2)\n\n\ndef test_missing_result_cell_is_insufficient(case: Path, signing_material: dict) -&gt; None:\n    results_path = case / SIGNED_INPUTS[\"results\"]\n    results = read_jsonl(results_path)[:-1]\n    write_jsonl(results_path, results)\n    manifest_path = case / SIGNED_INPUTS[\"result_evidence_manifest\"]\n    manifest = read_json(manifest_path)\n    manifest[\"results_sha256\"] = file_sha256(results_path)\n    manifest[\"objects\"] = manifest[\"objects\"][:-1]\n    write_json(manifest_path, manifest)\n    resign_with_receipt(\n        case,\n        signing_material,\n        [\"results\", \"result_evidence_manifest\"],\n    )\n    assert_outcome(case, signing_material, \"INSUFFICIENT_DATA\", 2)\n\n\ndef test_missing_prerequisite_observation_is_insufficient(\n    case: Path,\n    signing_material: dict,\n) -&gt; None:\n    path = case / SIGNED_INPUTS[\"inventory\"]\n    inventory = read_json(path)\n    inventory[\"detectors\"][0][\"prerequisite_results\"] = {}\n    write_json(path, inventory)\n    resign_with_receipt(case, signing_material, [\"inventory\"])\n    assert_outcome(case, signing_material, \"INSUFFICIENT_DATA\", 2)\n\n\ndef test_missing_evidence_object_is_insufficient(\n    case: Path,\n    signing_material: dict,\n) -&gt; None:\n    (case / \"assurance/result-evidence/result-2.json\").unlink()\n    assert_outcome(case, signing_material, \"INSUFFICIENT_DATA\", 2)\n\n\ndef test_missing_source_checkpoint_is_insufficient(\n    case: Path,\n    signing_material: dict,\n) -&gt; None:\n    path = case / SIGNED_INPUTS[\"receipt\"]\n    receipt = read_json(path)\n    receipt[\"source_checkpoints\"] = {}\n    write_json(path, receipt)\n    sign(path, signing_material)\n    assert_outcome(case, signing_material, \"INSUFFICIENT_DATA\", 2)\n\n\n@pytest.mark.parametrize(\n    \"malformed\",\n    [\n        b\"{\",\n        b'{\"schema_version\":\"x\",\"schema_version\":\"y\"}',\n        b'{\"schema_version\":NaN}',\n        b'{\"schema_version\":Infinity}',\n    ],\n)\ndef test_malformed_duplicate_and_nonfinite_json_are_error(\n    malformed: bytes,\n    case: Path,\n    signing_material: dict,\n) -&gt; None:\n    path = case / SIGNED_INPUTS[\"policy\"]\n    path.write_bytes(malformed)\n    refresh_receipt(case)\n    sign(path, signing_material)\n    sign(case / SIGNED_INPUTS[\"receipt\"], signing_material)\n    assert_outcome(case, signing_material, \"ERROR\", 3)\n\n\ndef test_bad_signature_is_error(case: Path, signing_material: dict) -&gt; None:\n    path = case / SIGNED_INPUTS[\"inventory\"]\n    path.write_bytes(path.read_bytes() + b\" \")\n    assert_outcome(case, signing_material, \"ERROR\", 3)\n\n\ndef test_signed_digest_substitution_is_error(case: Path, signing_material: dict) -&gt; None:\n    path = case / SIGNED_INPUTS[\"receipt\"]\n    receipt = read_json(path)\n    receipt[\"inventory_sha256\"] = \"0\" * 64\n    write_json(path, receipt)\n    sign(path, signing_material)\n    assert_outcome(case, signing_material, \"ERROR\", 3)\n\n\n@pytest.mark.parametrize(\"duplicate_kind\", [\"scenario_id\", \"semantic_case\", \"payload\"])\ndef test_duplicate_scenario_identity_is_error(\n    duplicate_kind: str,\n    case: Path,\n    signing_material: dict,\n) -&gt; None:\n    path = case / SIGNED_INPUTS[\"scenarios\"]\n    scenarios = read_jsonl(path)\n    duplicate = dict(scenarios[0])\n    if duplicate_kind == \"semantic_case\":\n        duplicate[\"scenario_id\"] = \"scenario-duplicate\"\n    elif duplicate_kind == \"payload\":\n        duplicate[\"scenario_id\"] = \"scenario-duplicate\"\n        duplicate[\"semantic_case_id\"] = \"unique-semantic-case\"\n    scenarios.append(duplicate)\n    write_jsonl(path, scenarios)\n    resign_with_receipt(case, signing_material, [\"scenarios\"])\n    assert_outcome(case, signing_material, \"ERROR\", 3)\n\n\ndef test_nested_parent_symlink_is_error(\n    case: Path,\n    signing_material: dict,\n) -&gt; None:\n    assurance = case / \"assurance\"\n    real_assurance = case / \"assurance-real\"\n    assurance.rename(real_assurance)\n    assurance.symlink_to(real_assurance, target_is_directory=True)\n    assert_outcome(case, signing_material, \"ERROR\", 3)\n\n\ndef test_final_entry_symlink_is_error(case: Path, signing_material: dict) -&gt; None:\n    inventory = case / SIGNED_INPUTS[\"inventory\"]\n    real_inventory = inventory.with_name(\"detector-inventory.real.json\")\n    inventory.rename(real_inventory)\n    inventory.symlink_to(real_inventory.name)\n    assert_outcome(case, signing_material, \"ERROR\", 3)\n\n\n@pytest.mark.parametrize(\"runtime_failure\", [\"missing\", \"invalid_schema\", \"bad_signature\"])\ndef test_runtime_profile_failure_produces_verified_error(\n    runtime_failure: str,\n    case: Path,\n    signing_material: dict,\n) -&gt; None:\n    profile = case / \"assurance/runtime-profile.json\"\n    if runtime_failure == \"missing\":\n        profile.unlink()\n    elif runtime_failure == \"invalid_schema\":\n        write_json(profile, {\"schema_version\": \"wrong\"})\n        sign(profile, signing_material)\n    else:\n        profile.write_bytes(profile.read_bytes() + b\" \")\n    evidence = assert_outcome(case, signing_material, \"ERROR\", 3)\n    assert evidence[\"runtime_profile_status\"] in {\n        \"ABSENT\", \"PRESENT_UNVERIFIED\", \"SIGNATURE_VERIFIED\",\n    }\n\n\ndef test_payload_object_substitution_is_error(case: Path, signing_material: dict) -&gt; None:\n    (case / \"assurance/scenario-payloads/attack-001.bin\").write_bytes(b\"easier payload\")\n    assert_outcome(case, signing_material, \"ERROR\", 3)\n\n\ndef test_replay_observation_binding_substitution_is_error(\n    case: Path,\n    signing_material: dict,\n) -&gt; None:\n    object_path = case / \"assurance/result-evidence/result-1.json\"\n    observation = read_json(object_path)\n    observation[\"production_event_id\"] = \"unbound-event\"\n    write_json(object_path, observation)\n    assert_outcome(case, signing_material, \"ERROR\", 3)\n\n\ndef test_non_detected_alert_identifier_is_error(case: Path, signing_material: dict) -&gt; None:\n    results_path = case / SIGNED_INPUTS[\"results\"]\n    results = read_jsonl(results_path)\n    results[1][\"alert_event_id\"] = \"ambiguous-alert\"\n    write_jsonl(results_path, results)\n    resign_with_receipt(case, signing_material, [\"results\"])\n    assert_outcome(case, signing_material, \"ERROR\", 3)</code></pre><h5>Independently verify results</h5><p>Write the deployment snapshot, all signed inputs, and evidence to WORM storage, read each object back, and verify digests/signatures. An identity independent of detector owners and the first runner replays the same scenarios through the same deployed paths, reconciles the complete matrix, recalculates every segment metric, and compares the canonical evidence digest. Save the included <code>tests/test_d018_negative.py</code> code block beside the evaluator and run its fully signed passing and negative fixtures with <code>pytest -q tests/test_d018_negative.py</code>. It must assert: nested object paths and final-entry symlinks are ERROR and cannot win a path race; duplicate JSON keys and NaN/Infinity are ERROR; an authentically re-signed deletion of an expected inventory entry, technical-prerequisite observation, scenario, result cell, evidence object, or source checkpoint is INSUFFICIENT_DATA with exit code 2; malformed, bad-signature, or digest-substituted inputs are ERROR; duplicate scenario IDs, semantic cases, or payload digests are ERROR; and missing or invalid runtime profiles still produce signature-verified ERROR evidence. The suite must verify every output bundle and fail if any negative fixture produces PASS. Publish a distinct evidence reference for each specialized owner so D-018 does not double-count H-026, H-036, D-008, M-008, or H-007.004 outcomes.</p><p><strong>Action:</strong> Run this gate for every policy-approved detector release and scheduled production assurance window; block promotion or open a remediation finding unless the exact complete signed matrix produces PASS, and retain a distinct evidence reference for this D-018 claim.</p>"
+                    "implementation": "Exercise the fixed detector-by-scenario population through real observation paths, reconcile every expected result, and evaluate policy-owned efficacy metrics; add per-input signatures or sealed evaluation only when the trust boundary requires them.",
+                    "howTo": "<h5>Core: freeze scope and metric policy</h5><p>The detection owner publishes a versioned expected manifest and a metric policy before the run. Sign these two artifacts at the approval/promotion boundary. The expected manifest records environment, run_id, execution mode, every eligible detector's version/artifact/configuration digest and observation point, and the exact detector-by-scenario cells. Each cell binds scenario_id, payload_sha256, attack/benign label and segment. Define applicable attack families, bypasses, benign controls and utility checks from the deployed threat model; reject duplicate/easier payload substitutions during manifest review. Technical exclusions need named absent prerequisites and reasons in that manifest. The observed inventory or result file cannot shrink this population.</p><p>The metric policy binds <code>expected_sha256</code> and a <code>segments</code> list keyed by detector_id/segment, with min_recall, min_precision, max_false_positive_rate, max_error_rate, max_abstention_rate, min_attack_cases and min_benign_cases. Set thresholds, sampling, observation deadlines and freshness from the environment's versioned policy. Select the current run and policy from the protected release/schedule job, not caller-provided file paths or a runner's preferred historical PASS. No framework-wide efficacy percentage is assumed.</p><h5>Exercise the deployed ingress and observe independently</h5><p>The authorized harness submits each benign/attack payload through the actual application ingress, telemetry pipeline, detector and alert delivery path, with a unique run/case correlation. Use isolated test tenants or tagged fixtures to avoid harmful business effects. The harness has no result-writing permission in the detector/collector store. A separately authorized read-only collector queries native ingress, detector and alert records after the policy observation deadline. It exports the deployed inventory and one result per expected cell, including NO_ALERT only when complete telemetry establishes that no matching alert arrived. Silence, a lost collector cursor or an unavailable alert sink is missing evidence. Keep payload hashes, native record references, observation timestamps and source checkpoints for verification.</p><p>Each result binds environment, run_id, mode, detector_id, scenario_id, payload_sha256, detector version/artifact/config_sha256, observation_point, ingress_event_id, observation_event_id, evidence_ref, observation_complete and outcome (ALERT, NO_ALERT, ERROR or ABSTAIN). Set observation_complete only after verifying all required native-source checkpoints and the observation deadline; an incomplete cursor or lost source sets it false. Collector exports reside in a protected job workspace; native IAM, object versioning and audit logs provide custody without eight separate signatures. Verify sampled event references and all reported failures against the native source. <code>RELEASE_OBSERVATION_PATH</code> is pre-promotion evidence only; production claims require <code>DEPLOYED_OBSERVATION_PATH</code>.</p><h5>Evaluate the fixed matrix and sign the result</h5><pre><code class=\"language-python\"># File: detection_matrix.py -- Python 3; cryptography in the deployment lock file.\nimport base64\nimport hashlib\nimport json\nimport math\nimport sys\nfrom pathlib import Path\nfrom cryptography.hazmat.primitives import serialization\nfrom cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PublicKey, Ed25519PrivateKey\n\n\ndef strict_json(raw):\n    def pairs(items):\n        value = {}\n        for key, item in items:\n            if key in value:\n                raise ValueError(\"duplicate JSON key\")\n            value[key] = item\n        return value\n    def invalid(value):\n        raise ValueError(\"non-finite JSON value: \" + value)\n    return json.loads(raw, object_pairs_hook=pairs, parse_constant=invalid)\n\n\ndef signed_json(path, public_key_path):\n    raw = Path(path).read_bytes()\n    key = serialization.load_pem_public_key(Path(public_key_path).read_bytes())\n    if not isinstance(key, Ed25519PublicKey):\n        raise ValueError(\"expected Ed25519 verification key\")\n    signature = base64.b64decode(Path(path + \".sig\").read_bytes(), validate=True)\n    key.verify(signature, raw)\n    return strict_json(raw), hashlib.sha256(raw).hexdigest()\n\n\ndef indexed(rows, fields):\n    out = {}\n    for row in rows:\n        key = tuple(row[field] for field in fields)\n        if any(not isinstance(x, str) or not x for x in key) or key in out:\n            raise ValueError(\"missing or duplicate matrix identity\")\n        out[key] = row\n    return out\n\n\ndef evaluate(expected, policy, inventory, results):\n    if expected[\"mode\"] not in {\"DEPLOYED_OBSERVATION_PATH\", \"RELEASE_OBSERVATION_PATH\"}:\n        raise ValueError(\"a direct classifier call cannot establish path efficacy\")\n    detectors = indexed(expected[\"detectors\"], (\"detector_id\",))\n    deployed = indexed(inventory, (\"detector_id\",))\n    cases = indexed(expected[\"cases\"], (\"detector_id\", \"scenario_id\"))\n    observed = indexed(results, (\"detector_id\", \"scenario_id\"))\n    limits = indexed(policy[\"segments\"], (\"detector_id\", \"segment\"))\n    unknown, findings, metrics = [], [], []\n    if set(deployed) != set(detectors):\n        unknown.append(\"deployment inventory differs from frozen eligible inventory\")\n    for key, detector in detectors.items():\n        actual = deployed.get(key, {})\n        if any(actual.get(f) != detector[f] for f in\n               (\"version\", \"artifact_sha256\", \"config_sha256\", \"observation_point\")):\n            unknown.append(\"detector version/config/path mismatch:\" + key[0])\n    if set(observed) - set(cases):\n        raise ValueError(\"results cannot add cases or redefine the expected matrix\")\n    seen_events = set()\n    for row in results:\n        event = (row[\"detector_id\"], row.get(\"ingress_event_id\"))\n        if event[1] and event in seen_events:\n            raise ValueError(\"one ingress event cannot stand in for multiple test cases\")\n        seen_events.add(event)\n    groups = {}\n    for key, case in cases.items():\n        if (key[0],) not in detectors or case[\"label\"] not in {\"attack\", \"benign\"}:\n            raise ValueError(\"invalid expected case\")\n        group = (key[0], case[\"segment\"])\n        groups.setdefault(group, []).append((key, case))\n    if set(groups) != set(limits):\n        raise ValueError(\"metric policy must cover exactly the expected segments\")\n    for group, population in groups.items():\n        threshold = limits[group]\n        for field in (\"min_recall\", \"min_precision\", \"max_false_positive_rate\",\n                      \"max_error_rate\", \"max_abstention_rate\"):\n            value = threshold[field]\n            if type(value) not in (int, float) or not math.isfinite(value) or not 0 &lt;= value &lt;= 1:\n                raise ValueError(\"invalid metric policy\")\n        for field in (\"min_attack_cases\", \"min_benign_cases\"):\n            if type(threshold[field]) is not int or threshold[field] &lt;= 0:\n                raise ValueError(\"positive policy-owned sample requirement needed\")\n        counts = {k: 0 for k in (\"attack\", \"benign\", \"tp\", \"fp\", \"errors\", \"abstentions\", \"missing\")}\n        for key, case in population:\n            counts[case[\"label\"]] += 1\n            row = observed.get(key)\n            detector = detectors[(key[0],)]\n            binding = {\"environment\": expected[\"environment\"], \"run_id\": expected[\"run_id\"],\n                       \"mode\": expected[\"mode\"], \"payload_sha256\": case[\"payload_sha256\"],\n                       **{f: detector[f] for f in (\"version\", \"artifact_sha256\",\n                                                  \"config_sha256\", \"observation_point\")}}\n            if (not row or any(row.get(f) != value for f, value in binding.items())\n                    or row.get(\"observation_complete\") is not True\n                    or not all(row.get(f) for f in (\"ingress_event_id\", \"observation_event_id\", \"evidence_ref\"))):\n                counts[\"missing\"] += 1\n                unknown.append(\"missing real-path evidence:\" + \"/\".join(key))\n                continue\n            outcome = row[\"outcome\"]\n            if outcome == \"ALERT\":\n                counts[\"tp\" if case[\"label\"] == \"attack\" else \"fp\"] += 1\n            elif outcome == \"ERROR\":\n                counts[\"errors\"] += 1\n            elif outcome == \"ABSTAIN\":\n                counts[\"abstentions\"] += 1\n            elif outcome != \"NO_ALERT\":\n                raise ValueError(\"unknown detector outcome\")\n        total = len(population)\n        def rate(numerator, denominator):\n            return numerator / denominator if denominator else None\n        measured = {\n            \"recall\": rate(counts[\"tp\"], counts[\"attack\"]),\n            \"precision\": rate(counts[\"tp\"], counts[\"tp\"] + counts[\"fp\"]),\n            \"false_positive_rate\": rate(counts[\"fp\"], counts[\"benign\"]),\n            \"error_rate\": rate(counts[\"errors\"], total),\n            \"abstention_rate\": rate(counts[\"abstentions\"], total),\n        }\n        if (counts[\"attack\"] &lt; threshold[\"min_attack_cases\"]\n                or counts[\"benign\"] &lt; threshold[\"min_benign_cases\"]):\n            unknown.append(\"insufficient policy sample:\" + \"/\".join(group))\n        for metric, value in measured.items():\n            if value is None:\n                unknown.append(\"undefined metric:\" + \"/\".join(group) + \"/\" + metric)\n            elif not counts[\"missing\"]:\n                bound = threshold[(\"min_\" if metric in {\"recall\", \"precision\"} else \"max_\") + metric]\n                if ((metric in {\"recall\", \"precision\"} and value &lt; bound)\n                        or (metric not in {\"recall\", \"precision\"} and value &gt; bound)):\n                    findings.append(\"metric outside policy:\" + \"/\".join(group) + \"/\" + metric)\n        metrics.append({\"detector_id\": group[0], \"segment\": group[1],\n                        \"expected_cases\": total, \"complete\": counts[\"missing\"] == 0,\n                        **counts, **measured})\n    if not cases or set(k[0] for k in cases) != set(k[0] for k in detectors):\n        unknown.append(\"expected detector has no required scenario population\")\n    state = \"FAIL\" if findings else \"INSUFFICIENT_DATA\" if unknown else \"PASS\"\n    if not detectors and not cases and not inventory and not results and expected.get(\"absence_reason\"):\n        state, unknown = \"NOT_APPLICABLE\", []\n    return {\"state\": state, \"environment\": expected[\"environment\"], \"run_id\": expected[\"run_id\"],\n            \"mode\": expected[\"mode\"], \"expected_cells\": len(cases), \"reported_cells\": len(observed),\n            \"metrics\": metrics, \"findings\": findings, \"unknown\": unknown}\n\n\nif __name__ == \"__main__\":\n    # Verify keys are pinned by the deployment, never accepted from the test runner.\n    # Inventory/results are exports from the independent protected telemetry collector.\n    manifest_path, policy_path, manifest_key, policy_key, inventory_path, results_path, signing_key, output = sys.argv[1:]\n    digests = {}\n    try:\n        expected, digests[\"expected\"] = signed_json(manifest_path, manifest_key)\n        policy, digests[\"policy\"] = signed_json(policy_path, policy_key)\n        if policy[\"expected_sha256\"] != digests[\"expected\"]:\n            raise ValueError(\"policy bound to a different expected population\")\n        raw_inventory, raw_results = Path(inventory_path).read_bytes(), Path(results_path).read_bytes()\n        digests.update(inventory=hashlib.sha256(raw_inventory).hexdigest(),\n                       results=hashlib.sha256(raw_results).hexdigest())\n        result = evaluate(expected, policy, strict_json(raw_inventory), strict_json(raw_results))\n    except Exception as error:\n        result = {\"state\": \"ERROR\", \"error_type\": type(error).__name__}\n    result[\"input_sha256\"] = digests\n    raw = json.dumps(result, sort_keys=True, separators=(\",\", \":\"), allow_nan=False).encode()\n    key = serialization.load_pem_private_key(Path(signing_key).read_bytes(), password=None)\n    if not isinstance(key, Ed25519PrivateKey):\n        raise ValueError(\"expected protected Ed25519 result signing key\")\n    # Publish both only after both writes complete; incomplete publication is not PASS.\n    with open(output, \"xb\") as handle:\n        handle.write(raw)\n    with open(output + \".sig\", \"xb\") as handle:\n        handle.write(base64.b64encode(key.sign(raw)))\n    print(result[\"state\"])\n    sys.exit(0 if result[\"state\"] in {\"PASS\", \"NOT_APPLICABLE\"} else 1)\n</code></pre><pre><code class=\"language-bash\">python detection_matrix.py expected.json metrics.json expected-public.pem metrics-public.pem inventory.json results.json result-private.pem result.json</code></pre><p>The manifest/policy publishers write detached base64 Ed25519 signatures to <code>artifact.json.sig</code> over the exact file bytes, using their existing protected signing service; provision their public PEM keys independently to the evaluation job. The evaluator's result key is separate from those approval keys and unavailable to the replay harness. Read each artifact once, verify those same bytes, and evaluate the parsed in-memory value. Store the final result and signature together with the referenced native evidence and input digests, then have the release/assurance consumer verify the result signature and current environment/run/policy binding. Failed signing, publication or consumer verification cannot release a deployment. All expected cells remain in denominators, including missing, error and abstention cases; undefined metrics are unknown, never perfect scores. Partial rows retain the full denominator for diagnostic rates but have complete=false; they cannot satisfy a metric gate until missing observations are resolved.</p><h5>High-assurance reference variants</h5><p>If artifacts cross independently controlled organizations, separately sign the observed inventory, scenario payload corpus, result rows, evidence-object manifest, completeness receipt and deployment snapshot as well as the expected manifest and metric policy; bind them by digest in the final result. If a hostile local process can replace a file between verification and an external evaluator reopening it, use a private immutable snapshot or a Linux <code>memfd_create(MFD_ALLOW_SEALING)</code> descriptor with write/grow/shrink/seal locks and pass <code>/proc/self/fd</code> to that evaluator. These are additional custody mechanisms for those trust boundaries. The in-process core above does not reopen verified input and does not require Linux or memfd. A second-identity full rerun is optional when independent replication is warranted, not an ordinary prerequisite.</p><h5>Verification and operational repair</h5><p>Delete an expected detector or result, change a payload or detector configuration, duplicate a case, substitute a direct classifier invocation, replay an older run, lose an alert-source checkpoint and tamper with a signed policy/result. Verify that no case disappears from coverage and none becomes PASS. Include benign cases and realistic bypasses in every required segment, report confidence/utility with the run profile, and route misses to the detector owner. Repeat the real-path run after a rule/model/configuration change and on the scheduled production window. Fixture tests of this evaluator establish calculation and fail-closed behavior, not production detector efficacy.</p>"
                 }
             ]
         }

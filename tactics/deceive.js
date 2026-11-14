@@ -27,7 +27,6 @@ export const deceiveTactic = {
                 "T-Pot (multi-honeypot decoy and telemetry substrate)",
                 "OpenCanary (multi-protocol network-service decoy and alerting substrate; AI API behavior remains custom)",
                 "Beelzebub",
-                "Galah",
                 "MockServer",
                 "WireMock",
                 "Kong Gateway OSS (Apache-2.0)",
@@ -36,8 +35,9 @@ export const deceiveTactic = {
             ],
             "toolsCommercial": [
                 "Commvault Cloud Threatwise (network/service decoy substrate; AI API behavior remains custom)",
-                "Acalvio ShadowPlex (enterprise deception substrate; AI API behavior remains custom)",
-                "Thinkst Canary (network/service decoy substrate; AI API behavior remains custom)"
+                "Acalvio ShadowPlex (enterprise deception; Deception Guardrails adds decoy MCP servers, RAG systems, and AI agents)",
+                "Thinkst Canary (Agent Provocateur and A2A decoy agent-service personalities)",
+                "Zscaler Deception (GenAI decoy service substrate; verify static-response and isolation profile)"
             ],
             "defendsAgainst": [
                 {
@@ -644,7 +644,8 @@ export const deceiveTactic = {
             "toolsCommercial": [
                 "Thinkst Canary",
                 "Acalvio ShadowPlex",
-                "Proofpoint Identity Threat Defense"
+                "Proofpoint Identity Threat Defense (endpoint honey credentials/artifacts reachable by AI agents; AI-corpus/registry placement requires separate tooling)",
+                "GitGuardian Honeytoken"
             ],
             "defendsAgainst": [
                 {
@@ -1445,13 +1446,10 @@ export const deceiveTactic = {
             },
             "toolsOpenSource": [
                 "LangChain",
-                "Microsoft Semantic Kernel",
-                "FastAPI",
-                "Express.js",
+                "Microsoft Agent Framework (successor to Semantic Kernel; function-calling middleware for safe-no-op tool results)",
+                "FastAPI (application middleware for eligible synthetic/no-op responses; qualification and disable controls required)",
+                "Express.js (application middleware for eligible synthetic/no-op responses; qualification and disable controls required)",
                 "NGINX Open Source (BSD-2-Clause)"
-            ],
-            "toolsCommercial": [
-                "Acalvio ShadowPlex (deception engagement substrate; application-side output manipulation remains custom)"
             ],
             "defendsAgainst": [
                 {
@@ -2256,10 +2254,10 @@ export const deceiveTactic = {
             },
             "toolsOpenSource": [
                 "Canarytokens",
-                "FastAPI",
-                "OpenTelemetry",
-                "Beautiful Soup 4",
-                "YARA"
+                "FastAPI (marker registration and response integration; durable registry commit and correlation checks required)",
+                "Beautiful Soup 4 (extract text and link/attribute markers from approved pages; bounded fetching and registry correlation required)",
+                "YARA",
+                "YARA-X"
             ],
             "toolsCommercial": [
                 "Hugging Face Hub (hosted service)",
@@ -2379,9 +2377,13 @@ export const deceiveTactic = {
                 "Microsoft Agent Framework (canary-task orchestration)",
                 "CrewAI (canary-task orchestration)",
                 "Langroid (canary-task orchestration)",
-                "OpenSearch",
-                "Prometheus",
-                "OpenTelemetry Collector"
+                "OpenSearch (durable canary interaction records and exact-marker search; registry/response ordering checks required)",
+                "Prometheus (canary-interaction counters and alerts; attributable durable interaction records required)",
+                "Beelzebub (MCP decoy service exposing bait tools for prompt-injection detection)",
+                "Canarytokens MCP server token (decoy configuration and tool-call alerts; self-hosted MCP endpoint required for OSS delivery)"
+            ],
+            "toolsCommercial": [
+                "Acalvio ShadowPlex Deception Guardrails (MCP/agent decoys; verify static behavior and isolation profile)"
             ],
             "defendsAgainst": [
                 {
@@ -3382,17 +3384,18 @@ export const deceiveTactic = {
             ]
           },
           "toolsOpenSource": [
-                "Kong Gateway OSS (Apache-2.0)",
-                "Tyk Gateway Community Edition (MPL-2.0)",
-                "NGINX Open Source (BSD-2-Clause)",
-            "FastAPI",
-                "Express.js"
+              "Kong Gateway OSS (Apache-2.0)",
+              "Tyk Gateway Community Edition (MPL-2.0)",
+              "NGINX Open Source (BSD-2-Clause)",
+              "FastAPI (explicit synthetic reconnaissance routes; route ordering and no-production-fallback checks required)",
+              "Express.js (explicit synthetic reconnaissance routes; route ordering and no-production-fallback checks required)"
           ],
           "toolsCommercial": [
-                "Acalvio ShadowPlex (decoy-service substrate; route behavior remains gateway-defined)",
-                "Commvault Cloud Threatwise (decoy-service substrate; route behavior remains gateway-defined)",
-            "Akamai EdgeWorkers",
-            "Cloudflare Workers"
+              "Acalvio ShadowPlex (decoy-service backend; gateway enforces synthetic-only routes and no fallback)",
+              "Commvault Cloud Threatwise (decoy-service backend; gateway enforces synthetic-only routes and no fallback)",
+              "Akamai EdgeWorkers",
+              "Cloudflare Workers",
+              "AWS WAF (Block action with custom response body on URI-path match)"
           ],
           "defendsAgainst": [
             {
@@ -3519,9 +3522,10 @@ export const deceiveTactic = {
             "toolsOpenSource": [
                 "DVC",
                 "MLflow",
-                "pandas",
+                "pandas (canary-corpus preparation, provenance joins and blind-test analysis; registration and statistical decisions required)",
                 "SciPy",
-                "statsmodels"
+                "statsmodels",
+                "EleutherAI lm-evaluation-harness (pinned-revision canary recall queries with logged samples)"
             ],
             "toolsCommercial": [
                 "Weights & Biases",

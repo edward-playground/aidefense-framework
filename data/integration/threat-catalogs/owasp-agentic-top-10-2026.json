@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20261101",
+  "aidefend_version": "1.20261115",
   "framework_key": "owasp-agentic-top-10-2026",
   "source_framework_label": "OWASP Top 10 for Agentic Applications 2026",
   "display_name": "OWASP Top 10 for Agentic Applications 2026",
@@ -49,7 +49,7 @@
       "rank": 4,
       "name": "Agentic Supply Chain Vulnerabilities",
       "referenced": true,
-      "control_count": 60
+      "control_count": 59
     },
     {
       "item_locator": "ASI05:2026 Unexpected Code Execution (RCE)",

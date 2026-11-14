@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20261101",
-  "data_version": "2026.11.01",
+  "aidefend_version": "1.20261115",
+  "data_version": "2026.11.15",
   "unit_rule": "Every entry in controls is an independently selectable control unit. Entries in families are navigation only and must not be treated as countermeasures.",
   "counts": {
     "actionable_controls": 311,
@@ -188,7 +188,7 @@
         "operation",
         "improvement"
       ],
-      "description_text": "Continuously discover and reconcile organization-owned AI endpoints and agent services reachable only through private networks or control planes, including RFC1918/VPC/VNet services, Kubernetes Services and Ingresses, internal inference APIs, MCP/A2A endpoints, notebooks, model or retrieval gateways, and orphaned development deployments. The eligible population must come from signed IPAM, cloud-organization, Kubernetes-fleet, and asset-inventory exports external to the scanner; scanning arbitrary private address space without explicit authorization is prohibited.",
+      "description_text": "Continuously discover and reconcile organization-owned AI endpoints and agent services reachable only through private networks or control planes, including RFC1918/VPC/VNet services, Kubernetes Services and Ingresses, internal inference APIs, MCP/A2A endpoints, notebooks, model or retrieval gateways, and orphaned development deployments. The eligible population must come from authorized platform inventory, IPAM, cloud-organization, Kubernetes-fleet and asset-inventory sources maintained outside the scanner; scanning arbitrary private address space without explicit authorization is prohibited.",
       "scope_boundary": {
         "responsibility": "Owns authorized discovery and reconciliation of organization-owned AI endpoints and agent services reachable only through private networks or internal control planes. It reports exact internal exposure facts but does not authenticate, segment, patch, contain, or evict those services.",
         "related_techniques": [
@@ -3003,7 +3003,8 @@
         "infra"
       ],
       "phase": [
-        "scoping"
+        "building",
+        "operation"
       ],
       "description_text": "Before an accelerator or supporting component is admitted to a build or cluster, verify physical identity, serial or lot record, manufacturer authenticity evidence where available, tamper seals, custody transitions, and receipt inspection against the exact asset. Quarantine any mismatch or unverifiable component.",
       "scope_boundary": {
@@ -3097,7 +3098,7 @@
         "building",
         "operation"
       ],
-      "description_text": "A set of techniques focused on hardening the Classifier-Free Guidance (CFG) mechanism in diffusion models.\n\nWhat CFG does: CFG is a core component that steers image generation towards a text prompt, but adversaries can exploit high guidance scale values to force the model to generate harmful, unsafe, or out-of-distribution content.\n\nThe threat: High CFG scales can overpower built-in safety conditioning and negative prompts, effectively steering the diffusion model toward disallowed or high-risk generations.\n\nDefense goal: These hardening techniques aim to control the CFG scale and its influence, preventing its misuse while preserving the model's creative capabilities.",
+      "description_text": "Enforce model-specific, server-owned bounds and approved configurations for classifier-free guidance (CFG) and related diffusion sampling controls when callers can influence them. Untrusted callers can otherwise select guidance, negative-conditioning, schedule or inference-step settings outside the deployment's evaluated operating range, or request excessive sampling work. Reject unsupported overrides and verify the effective model/pipeline configuration before generation.\n\nGuidance changes prompt adherence and image characteristics; a lower scale, negative prompt or alternative schedule does not inherently prevent harmful output, adversarial evasion or jailbreaks. Adopt a schedule only after evaluation on the exact model/pipeline version, relevant adversarial and benign prompts, utility and compute cost. Keep authoritative content filtering separate. Availability mappings cover the bounded per-request sampling-work path, not aggregate traffic exhaustion.",
       "scope_boundary": {
         "responsibility": "Owns server-side policy enforcement and effective readback for Classifier-Free Guidance and related diffusion guider parameters when untrusted callers can influence them. It does not treat CFG, negative prompts, or risk heuristics as authoritative content filters.",
         "related_techniques": [
@@ -3107,7 +3108,7 @@
           },
           {
             "id": "AID-H-033.006",
-            "comparison": "AID-H-010 owns CFG-specific diffusion semantics and safety constraints; AID-H-033.006 resolves and enforces the complete effective invocation configuration after gateway defaults, aliases, provider translation, and retries.\nThe gateway must preserve the specialized CFG policy but does not redefine it."
+            "comparison": "AID-H-010 owns CFG-specific diffusion semantics and evaluated parameter constraints; AID-H-033.006 resolves and enforces the complete effective invocation configuration after gateway defaults, aliases, provider translation, and retries.\nThe gateway must preserve the specialized CFG policy but does not redefine it."
           }
         ]
       },
@@ -6538,7 +6539,7 @@
         "related_techniques": [
           {
             "id": "AID-H-037.003",
-            "comparison": "AID-H-037.001 controls whether and how reasoning content may be displayed or stored; AID-H-037.003 preserves exact provider-authored opaque blocks for continuation.\nA block may require byte-preserving round trip even when its plaintext is never exposed or retained."
+            "comparison": "AID-H-037.001 controls whether and how reasoning content may be displayed or stored; AID-H-037.003 preserves exact provider-authored opaque blocks for continuation.\nA block may require complete, unmodified field values and preserved sequence order even when its plaintext is never exposed or retained."
           },
           {
             "id": "AID-D-002.004",
@@ -6604,9 +6605,9 @@
         "building",
         "operation"
       ],
-      "description_text": "When a provider requires signed, encrypted, redacted, or opaque reasoning blocks for continuation, preserve exact provider-authored bytes and metadata in a self-built byte-preserving server envelope and return them only to the same provider route under the same conversation and policy binding. Reject client-supplied, reordered, reserialized, altered, unverifiable, stale, or cross-provider blocks.",
+      "description_text": "When a provider requires signed, encrypted, redacted or opaque reasoning blocks for continuation, preserve each complete provider-authored block, its field values and its position in the assistant content sequence. Keep the original in authorized server-side conversation state and return it through that provider's documented SDK/API path. Reject client replacements, altered or reordered blocks, and use under a different conversation or incompatible provider route. JSON whitespace and object-key order are not reasoning-block integrity properties. For providers with prefix binding, preserve the preceding conversation and append new turns without rewriting that prefix.",
       "scope_boundary": {
-        "responsibility": "Owns byte-preserving, provider-route-bound, conversation-bound round-trip integrity for signed, encrypted, redacted, or opaque reasoning blocks required for continuation. It rejects client-supplied, reordered, altered, stale, or cross-provider blocks.",
+        "responsibility": "Owns complete, unmodified provider-block round trips, content-sequence order, authorized server-side custody and provider-specific conversation/route binding. SDK serialization and documented streaming accumulation are valid implementations; raw HTTP byte preservation is optional. Provider validation is distinct from local conversation authorization and integrity checks.",
         "related_techniques": [
           {
             "id": "AID-H-037.001",
@@ -7509,6 +7510,10 @@
           {
             "id": "AID-H-021.002",
             "comparison": "AID-D-004.005 emits a turn-chain integrity finding before prompt assembly; AID-H-021.002 owns fail-closed admission of signed runtime context and configuration.\nDetection supplies evidence, while Harden decides whether the turn may enter the runtime."
+          },
+          {
+            "id": "AID-H-007.007",
+            "comparison": "AID-D-004.005 reports deleted, compacted, missing, reordered, or rewritten turns in the recorded chain of an evaluation run; AID-H-007.007 keeps the grader, its logic, and its results out of the evaluated identity's reach.\nA complete turn chain does not show that the grader was isolated, and an isolated grader does not show that the chain it scored was complete."
           }
         ]
       },
@@ -7627,7 +7632,7 @@
       "phase": [
         "operation"
       ],
-      "description_text": "This foundational technique covers the instrumentation of AI applications to produce detailed, structured logs for all significant events, and the implementation of a secure pipeline to collect and forward these logs to a central analysis platform. The goal is to create a high-fidelity, auditable record of system activity, which is a prerequisite for all other detection, investigation, and threat hunting capabilities.",
+      "description_text": "This foundational technique covers the instrumentation of AI applications to produce detailed, structured logs for all significant events, and the implementation of a secure pipeline to collect and forward these logs to a central analysis platform. Where the system has them, significant events include agent and tool activity, MCP server request, task, and subscription lifecycles, and the evidence fields an investigation relies on: stable identifiers, retention class, legal-hold flags, and chain-of-custody linkage. The goal is to create a high-fidelity, auditable record of system activity, which is a prerequisite for all other detection, investigation, and threat hunting capabilities.",
       "scope_boundary": {
         "responsibility": "Owns foundational structured event instrumentation, secure collection, normalization, timestamping, forwarding, and tamper-evident retention for AI system activity. It creates the event record but does not define every specialized detector or prove an alert fired.",
         "related_techniques": [
@@ -8007,9 +8012,9 @@
       "phase": [
         "operation"
       ],
-      "description_text": "Detect semantic contradictions, hidden payloads, cross-modal attention anomalies, expert disagreement, and out-of-context modalities in complete non-realtime multimodal artifacts such as uploaded images, documents, audio clips, video files, OCR artifacts, and media attachments. This sub-technique produces structured findings for downstream review or enforcement and does not make the sanitize/admit/block decision itself.",
+      "description_text": "Detect semantic contradictions, hidden payloads, cross-modal attention anomalies, expert disagreement, and out-of-context modalities in complete non-realtime multimodal artifacts such as uploaded images, documents, audio clips, video files, OCR artifacts, and media attachments. After generation, also score whether the response is faithful to those artifacts or dominated by one compromised modality. This sub-technique produces structured findings for downstream review or enforcement and does not make the sanitize/admit/block decision itself.",
       "scope_boundary": {
-        "responsibility": "Owns cross-modal semantic contradiction, hidden payload, expert disagreement, attention anomaly, and out-of-context modality findings for complete non-realtime files and artifact batches. It does not sanitize or admit the artifact.",
+        "responsibility": "Owns cross-modal semantic contradiction, hidden payload, expert disagreement, attention anomaly, and out-of-context modality findings for complete non-realtime files and artifact batches, and post-generation faithfulness and modality-dominance findings for responses generated from them. It does not sanitize or admit the artifact.",
         "related_techniques": [
           {
             "id": "AID-D-007.002",
@@ -8583,9 +8588,9 @@
       "phase": [
         "operation"
       ],
-      "description_text": "Discover previously unseen agent identities and new communication edges by comparing authenticated service-mesh and registry observations with a versioned approved agent graph.",
+      "description_text": "Discover previously unseen agent identities and new communication edges by comparing authenticated service-mesh and registry observations with a versioned approved agent graph. Where runs share mutable state, also report a new state edge when one run writes state that another run can consume without an approved handoff.",
       "scope_boundary": {
-        "responsibility": "Owns unknown or newly emergent agent identity and communication-edge discovery against a versioned approved graph. It does not score reputation or classify drift within identities already registered.",
+        "responsibility": "Owns discovery of unknown or newly emergent agent identities, communication edges, and cross-run shared-state edges against a versioned approved graph. It does not score reputation, classify drift within identities already registered, or authorize or deny the state write.",
         "related_techniques": [
           {
             "id": "AID-D-011.003",
@@ -8690,9 +8695,9 @@
         "operation",
         "improvement"
       ],
-      "description_text": "Continuously validate the efficacy and scenario coverage of the exact AI-security detectors deployed in production by replaying signed benign and attack scenarios through their real observation paths, measuring segmented recall, precision, false-positive rate, errors, and abstentions, and binding results to detector versions, digests, policies, and a complete eligible inventory.",
+      "description_text": "Continuously validate the efficacy and scenario coverage of the exact AI-security detectors deployed in production by replaying a versioned, independently fixed benign and attack scenario population through their real observation paths, measuring segmented recall, precision, false-positive rate, errors, and abstentions, and binding results to detector versions, digests, policies, and a complete eligible inventory. Run the same gate for each detector release before it is promoted and in every scheduled production assurance window.",
       "scope_boundary": {
-        "responsibility": "Owns cross-detector production-path efficacy and fleet-wide scenario coverage by replaying signed benign and attack scenarios through real observation paths and measuring segmented recall, precision, false positives, errors, abstentions, and complete detector-by-scenario coverage.",
+        "responsibility": "Owns cross-detector production-path efficacy and fleet-wide scenario coverage by replaying an independently fixed benign and attack scenario population through real observation paths and measuring segmented recall, precision, false positives, errors, abstentions, and complete detector-by-scenario coverage. The same replay gates a detector release before promotion; that result is release evidence, not production efficacy.",
         "related_techniques": [
           {
             "id": "AID-D-005.002",
@@ -9582,9 +9587,9 @@
         "building",
         "operation"
       ],
-      "description_text": "Run desktop GUI / OS-level computer-use agents inside disposable, task-scoped workspaces with logged-out defaults, screenshot redaction, independently reviewed screenshot-injection signals, OS automation allowlists, action-bound confirmation, post-action effect readback, and watch-mode kill switches. This prevents a model-controlled cursor or screen reader from silently acting on hidden UI instructions, stale logged-in sessions, local files, clipboard residue, password managers, device APIs, or enterprise applications outside the approved task scope.\n\nDeploy this as one complete desktop computer-use defense: create and independently read back the disposable workspace with AID-I-008.004-G002, attach the peer-bound observer with AID-I-008.004-G001, verify a current signed watch-mode sample through AID-I-008.004-G005 before each model observation or action, with independently supervised watch-mode and cleanup covering idle periods, apply AID-I-008.004-G003 to the declared screenshot-risk population, and execute exact approved actions through AID-I-008.004-G004. Workspace isolation alone or action confirmation alone provides only the corresponding facet of this control; full assurance requires every applicable desktop boundary and action property.",
+      "description_text": "Contain desktop GUI / OS-level computer-use agents in disposable, task-scoped workspaces. Implement one control through two applicability layers.\n\nWorkspace isolation and supervision (G002, G005): every desktop deployment needs logged-out defaults, least-privilege applications/files/network/clipboard, protected screenshot export, an independent stop path and verified cleanup. Native VM/VDI/container controls and their authenticated control-plane readback are valid implementations.\n\nHigh-impact action binding and effect verification (G001, G003, G004): when the deployment permits consequential GUI actions, obtain trusted observations, assess the applicable screenshot-injection risk, consume action-bound approval, recheck the target immediately before invocation and verify the actual effect independently. Choose stable accessibility invocation, a controlled screenshot/coordinate route, or API/human execution when GUI binding or readback is unreliable. Lack of accessibility alone does not invalidate workspace isolation or require blocking all computer use.\n\nKeep one independently assessed control outcome. Verify every property applicable to the declared deployment and action population; do not score guidance completion or award full assurance for isolation alone when high-impact GUI actions remain enabled. Platform and agent-harness owners jointly maintain this boundary.",
       "scope_boundary": {
-        "responsibility": "Owns containment of desktop GUI and OS-level computer-use agents in disposable logged-out workspaces, privileged UI observation, screenshot-risk handling, OS automation allowlists, stable accessibility invocation, action-bound confirmation consumption, signed UI or API effect readback, watch-mode halt, and deterministic cleanup. Workspace/platform and agent-harness components implement one desktop containment outcome through the signed launch, observation, approval and cleanup interfaces. Verification covers the whole applicable workspace/action population and current supervision evidence.",
+        "responsibility": "Owns desktop workspace isolation, protected observation export, independent supervision/stop and cleanup, plus action-specific observation, approval binding, invocation and independent effect readback when consequential GUI actions are enabled. Accessibility and coordinate adapters are alternatives; native platform evidence can satisfy workspace supervision. API/human handoff must disable the unverified GUI action, not declare an enabled surface N/A. The Linux signed-service examples are one implementation profile, not universal prerequisites.",
         "related_techniques": [
           {
             "id": "AID-I-008.001",

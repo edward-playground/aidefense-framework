@@ -149,22 +149,22 @@ export const evictTactic = {
                 ]
               },
               "toolsOpenSource": [
-                "AWS CLI v2 (Apache-2.0)",
-                "Azure CLI (MIT)",
-                "OpenBao",
-                "Keycloak (password credential administration)",
-                "Ansible Core",
-                "OpenVox",
-                "Cinc Client",
-                "cert-manager (certificate and issuer credential lifecycle)"
-            ],
+                  "AWS CLI v2 (Apache-2.0)",
+                  "Azure CLI (MIT)",
+                  "OpenBao",
+                  "Keycloak (password credential administration)",
+                  "Ansible Core (fleet removal of attacker-created local accounts and SSH keys; rotated-secret redistribution)",
+                  "OpenVox (fleet removal of attacker-created local accounts and SSH keys; rotated-secret redistribution)",
+                  "Cinc Client (fleet removal of attacker-created local accounts and SSH keys; rotated-secret redistribution)",
+                  "cert-manager (certificate and issuer credential lifecycle)"
+              ],
               "toolsSourceAvailable": [
                   "HashiCorp Vault Community (BUSL-1.1; source-available)"
               ],
             "toolsCommercial": [
-                "Puppet Enterprise",
-                "Progress Chef Infra Client 19",
-                "CyberArk Privilege Cloud",
+                "Puppet Enterprise (fleet removal of attacker-created local accounts and SSH keys; rotated-secret redistribution)",
+                "Progress Chef Infra Client 19 (fleet removal of attacker-created local accounts and SSH keys; rotated-secret redistribution)",
+                "Idira Privileged Access Manager SaaS (formerly CyberArk Privilege Cloud)",
                 "Delinea Secret Server",
                 "BeyondTrust Password Safe",
                 "Okta Workforce Identity (password credential administration)",
@@ -175,8 +175,13 @@ export const evictTactic = {
                 "Google Cloud Secret Manager",
                 "Google Cloud CLI",
                 "Palo Alto Networks Next-Generation Trust Security (certificate lifecycle management and PKI orchestration)",
-                "DigiCert ONE (certificate and issuer credential lifecycle)"
-              ],
+                "DigiCert ONE (certificate and issuer credential lifecycle)",
+                "Microsoft Entra ID (user password reset and application credential removal)",
+                "OpenAI Admin API (project API key deletion)",
+                "Claude Admin API (organization API key deactivation)",
+                "AWS Private CA (RevokeCertificate with CRL/OCSP publication)",
+                "AWS IAM (access key deactivation and deletion)"
+            ],
               "defendsAgainst": [
                 {
                             "framework": "MITRE ATLAS",
@@ -303,37 +308,42 @@ export const evictTactic = {
               "toolsOpenSource": [
                   "Shuffle SOAR (AGPL-3.0)",
                   "TheHive Project Cortex (AGPL-3.0)",
-                  "Valkey",
-                  "Redis Open Source 8+ (AGPL-3.0 option)",
-                  "Memcached",
+                  "Valkey (shared JTI revocation denylist for gateway and verifier checks)",
+                  "Redis Open Source 8+ (AGPL-3.0 option; shared JTI revocation denylist)",
+                  "Memcached (authoritative server-side session deletion with fail-closed misses; not an evictable token-revocation denylist)",
                   "Keycloak (token and session revocation)",
-                  "HTTPX",
-                  "Cosign",
+                  "HTTPX (post-revocation replay probes against relying parties; issuer revocation and RP rejection external)",
+                  "Cosign (verify signed revocation scope and evidence exports; token/session revocation external)",
                   "Kong Gateway OSS (Apache-2.0)",
                   "Tyk Gateway Community Edition (MPL-2.0)",
                   "Istio (mTLS relying-party denial and connection turnover)",
                   "Linkerd (mTLS relying-party denial and connection turnover)",
-                  "OpenSSL (certificate revocation and mTLS denial verification)"
+                  "OpenSSL (certificate revocation and mTLS denial verification)",
+                  "KrakenD Community Edition (JWT revocation filter; persist/repopulate revocations across all gateways)"
               ],
               "toolsSourceAvailable": [
                   "HashiCorp Vault Community (BUSL-1.1; source-available)"
               ],
             "toolsCommercial": [
-                "StrangeBee TheHive",
-                "AWS Lambda",
-                "Azure Functions",
-                "Google Cloud Run functions",
+                "StrangeBee TheHive (coordinate scoped revocation through Cortex responders or issuer APIs; verify RP rejection separately)",
+                "AWS Lambda (execute scoped issuer/RP revocation adapters; authenticated triggers and replay verification required)",
+                "Azure Functions (execute scoped issuer/RP revocation adapters; authenticated triggers and replay verification required)",
+                "Google Cloud Run functions (execute scoped issuer/RP revocation adapters; authenticated triggers and replay verification required)",
                 "Palo Alto Networks Cortex XSOAR",
                 "Splunk SOAR",
                 "Torq Hyperautomation",
-                "Amazon EventBridge",
-                "Azure Event Grid",
+                "Amazon EventBridge (fan-out and retry revocation events to issuer/RP adapters; completion verification required)",
+                "Azure Event Grid (fan-out and retry revocation events to issuer/RP adapters; completion verification required)",
                 "Okta Workforce Identity (session revocation)",
                 "Auth0 (session revocation)",
                 "PingOne for Workforce (session revocation)",
                 "Tetrate Service Bridge (mesh identity denial and connection enforcement)",
-                "Gloo Mesh (mesh identity denial and connection enforcement)"
-              ],
+                "Solo Enterprise for Istio (formerly Gloo Mesh; mesh identity denial and connection enforcement)",
+                "Microsoft Entra ID (revokeSignInSessions and Continuous Access Evaluation)",
+                "AWS IAM (revoke active role sessions via aws:TokenIssueTime deny policy)",
+                "Google Workspace Admin SDK Directory API (users.signOut)",
+                "Amazon Cognito user pools (AdminUserGlobalSignOut and RevokeToken)"
+            ],
               "defendsAgainst": [
                 {
                   "framework": "MITRE ATLAS",
@@ -459,10 +469,13 @@ export const evictTactic = {
                   "ZITADEL"
               ],
               "toolsCommercial": [
-                "Amazon EKS Pod Identity (workload principal and association disablement)",
-                "Google Cloud Workload Identity Federation (workload principal and provider disablement)",
-                "Microsoft Entra Agent ID (agent principal disablement)",
-                "Amazon Bedrock AgentCore Identity (agent identity and issuance control)"
+                  "Amazon EKS Pod Identity (workload principal and association disablement)",
+                  "Google Cloud Workload Identity Federation (workload principal and provider disablement)",
+                  "Microsoft Entra Agent ID (agent principal disablement)",
+                  "Amazon Bedrock AgentCore Identity (agent identity and issuance control)",
+                  "Okta for AI Agents (agent record, linked app and authorization server deactivation)",
+                  "Microsoft Entra Workload ID (service principal disable and Conditional Access block for workload identities)",
+                  "Google Cloud IAM Agent Identity (deny policies and Principal Access Boundary on agent principals)"
               ],
               "defendsAgainst": [
                 {
@@ -601,20 +614,21 @@ export const evictTactic = {
                 ]
               },
               "toolsOpenSource": [
-                "Microsoft Graph PowerShell SDK",
-                        "GAM7",
-                "Okta Terraform Provider",
-                "jq"
+                  "Microsoft Graph PowerShell SDK",
+                  "GAM7",
+                  "Okta Terraform Provider",
+                  "jq (filter delegated-grant inventories and compare revocation readbacks; issuer actions external)"
               ],
               "toolsCommercial": [
-                "Microsoft Entra ID",
-                "Okta API",
-                "Okta Cross App Access",
-                        "Google Workspace Admin console",
-                        "Google Admin SDK",
-                        "AppOmni SaaS Security Platform",
-                        "CrowdStrike Falcon Shield",
-                        "Obsidian Security"
+                  "Microsoft Entra ID",
+                  "Okta API",
+                  "Okta Cross App Access",
+                  "Google Workspace Admin console",
+                  "Google Admin SDK",
+                  "AppOmni SaaS Security Platform",
+                  "CrowdStrike Falcon Shield",
+                  "Obsidian Security",
+                  "Microsoft Defender for Cloud Apps (OAuth app ban)"
               ],
               "defendsAgainst": [
                 {
@@ -738,9 +752,10 @@ export const evictTactic = {
                 "kubectl (Kubernetes CLI)",
                 "OSSEC",
                 "Wazuh",
-                "Valkey",
-                "Redis Open Source 8+ (AGPL-3.0 option)",
-                "Kubernetes"
+                "Valkey (run-lease store for lease revocation, fencing tokens and tombstones)",
+                "Redis Open Source 8+ (AGPL-3.0 option; run-lease store for lease revocation, fencing tokens and tombstones)",
+                "Kubernetes",
+                "Falco Talon (kubernetes:terminate response actionner)"
             ],
             "toolsCommercial": [
                 "CrowdStrike Falcon Insight XDR",
@@ -752,7 +767,8 @@ export const evictTactic = {
                 "Google Compute Engine API",
                 "Palo Alto Networks Prisma Cloud",
                 "Aqua Platform",
-                "Sysdig Secure"
+                "Sysdig Secure",
+                "Amazon Bedrock AgentCore Runtime (StopRuntimeSession)"
             ],
             "defendsAgainst": [
                 {
@@ -1046,15 +1062,17 @@ export const evictTactic = {
                 "description": "<p>Neural Cleanse, Activation Clustering, and Fine-Pruning were designed primarily for classifier-style trigger backdoors and remain useful for vision or structured classifiers. LLM and sleeper-agent backdoors may not localize cleanly to one class, trigger patch, or small neuron set, and can survive safety fine-tuning or superficial behavior repair. For LLM incidents, treat these methods as triage evidence. Prefer rollback to a signed golden model, removal of malicious adapters, data-layer cleanup followed by retraining, or quarantine when high-assurance removal cannot be proven.</p>"
               },
               "toolsOpenSource": [
-                "MLflow Model Registry",
-                "Kubernetes",
-                "DVC"
+                  "MLflow Model Registry",
+                  "Kubernetes",
+                  "Kyverno (admission deny of workloads referencing a quarantined model or image digest)"
               ],
               "toolsCommercial": [
-                        "Amazon SageMaker AI Model Registry",
-                        "Google Vertex AI Model Registry",
-                        "Databricks Models in Unity Catalog",
-                        "W&B Registry"
+                  "Amazon SageMaker AI Model Registry",
+                  "Gemini Enterprise Agent Platform Model Registry (formerly Vertex AI Model Registry)",
+                  "Databricks Models in Unity Catalog",
+                  "W&B Registry",
+                  "Amazon S3 Object Lock (compliance-mode retention for quarantined model evidence)",
+                  "Cloudsmith (model-package quarantine; confirm model-registry availability for the deployment)"
               ],
               "defendsAgainst": [
                 {
@@ -1162,14 +1180,18 @@ export const evictTactic = {
               },
             "toolsOpenSource": [
                 "DVC",
-                "lakeFS (versioned object-store publication of externally computed manifest set differences)",
                 "Delta Lake (row-level eviction and versioned table publication)",
                 "Apache Spark",
                 "Dask",
-                "NetworkX"
+                "NetworkX",
+                "Apache Iceberg (row-level delete on an audit branch with snapshot tags)",
+                "TerminusDB (versioned graph with commit-level diff)"
+            ],
+              "toolsSourceAvailable": [
+                  "lakeFS (versioned publication of manifest-evicted datasets) (BUSL-1.1; source-available)"
               ],
               "toolsCommercial": [
-                "Databricks Data Intelligence Platform"
+                  "Databricks Data + AI Platform"
               ],
               "defendsAgainst": [
                 {
@@ -1288,13 +1310,15 @@ export const evictTactic = {
                 ]
               },
             "toolsOpenSource": [
-              "Ansible Core",
-              "Velociraptor (fleet persistence remediation artifacts and evidence capture)",
-              "OpenVox",
-                  "Cinc Client",
-                  "Git (for configuration version control)",
-                  "Cosign (signed clean-artifact and manifest verification)"
-              ],
+                "Ansible Core",
+                "Velociraptor (fleet persistence remediation artifacts and evidence capture)",
+                "OpenVox",
+                "Cinc Client",
+                "Git (for configuration version control)",
+                "Cosign (signed clean-artifact and manifest verification)",
+                "Harbor (registry artifact deletion and garbage collection)",
+                "Kyverno (admission deny of known-malicious image digests)"
+            ],
               "toolsCommercial": [
                 "CrowdStrike Falcon Insight XDR",
                 "SentinelOne Singularity",
@@ -1430,17 +1454,18 @@ export const evictTactic = {
                 ]
               },
               "toolsOpenSource": [
-                "Hugging Face PEFT",
-                "safetensors",
-                "MLflow Model Registry",
-                "Kubernetes",
-                "DVC"
+                  "Hugging Face PEFT",
+                  "MLflow Model Registry",
+                  "Kubernetes",
+                  "DVC",
+                  "vLLM (runtime LoRA adapter unloading)"
               ],
               "toolsCommercial": [
-                        "Amazon SageMaker AI Model Registry",
-                        "Google Vertex AI Model Registry",
-                        "Databricks Models in Unity Catalog",
-                        "W&B Registry"
+                  "Amazon SageMaker AI Model Registry",
+                  "Gemini Enterprise Agent Platform Model Registry (formerly Vertex AI Model Registry)",
+                  "Databricks Models in Unity Catalog",
+                  "W&B Registry",
+                  "Amazon SageMaker AI inference component adapters (DeleteInferenceComponent)"
               ],
               "defendsAgainst": [
                 {
@@ -1553,11 +1578,13 @@ export const evictTactic = {
               ]
             },
             "toolsOpenSource": [
-              "Greenbone OpenVAS (authenticated vulnerability re-scan and affected-target verification)",
-              "Nuclei (incident-specific exploit-path replay templates)",
-              "Trivy (deployed artifact, package, SBOM, and configuration readback)",
+                "Greenbone OpenVAS (authenticated vulnerability re-scan and affected-target verification)",
+                "Nuclei (incident-specific exploit-path replay templates)",
+                "Trivy (deployed artifact, package, SBOM, and configuration readback)",
                 "HTTPX (Python client; independent exploit and clean-control replay harness)",
-                "Cosign (signed fix and closure-receipt verification)"
+                "Cosign (signed fix and closure-receipt verification)",
+                "promptfoo (incident prompt-exploit replay with assertions)",
+                "osquery (independent host effective-state readback)"
             ],
             "toolsCommercial": [
                 "Wiz Cloud Security Platform (cloud workload exposure and effective-state verification)",
@@ -1729,13 +1756,16 @@ export const evictTactic = {
                 "Redis Open Source 8+ (AGPL-3.0 option)",
                 "redis-cli",
                 "PostgreSQL (PostgreSQL License; authoritative durable-state store and transactional readback)",
-                "Psycopg 3 (LGPL-3.0-only; PostgreSQL teardown and verification adapter)"
+                "Psycopg 3 (LGPL-3.0-only; PostgreSQL teardown and verification adapter)",
+                "LangGraph (checkpointer delete_thread)",
+                "Mem0 OSS (memory deletion by ID or user scope; Platform-only batch/filter APIs excluded)"
             ],
             "toolsCommercial": [
                 "Splunk SOAR (orchestrates signed durable-state teardown adapters; not an authoritative store)",
                 "Palo Alto Networks Cortex XSOAR (orchestrates signed durable-state teardown adapters; not an authoritative store)",
-                "Redis Enterprise",
-                "Temporal Cloud"
+                "Redis Software (formerly Redis Enterprise Software)",
+                "Temporal Cloud",
+                "Amazon Bedrock AgentCore Memory (DeleteMemoryRecord and BatchDeleteMemoryRecords)"
             ],
             "defendsAgainst": [
                 {

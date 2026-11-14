@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
-  "aidefend_version": "1.20261101",
-  "data_version": "2026.11.01",
+  "aidefend_version": "1.20261115",
+  "data_version": "2026.11.15",
   "identity_rule": "Resolve each record against threat-catalogs/<framework_key>.json by external_id. item_raw is the exact AIDEFEND source string, kept for traceability only. rationale is AIDEFEND-authored context for that pair, or null.",
   "frameworks": [
     "mitre-atlas",
@@ -11,7 +11,7 @@
   ],
   "counts": {
     "records": 216,
-    "control_pairs": 2484
+    "control_pairs": 2479
   },
   "joins": [
     {
@@ -327,11 +327,6 @@
           "item_raw": "AML.T0010 Supply Chain Compromise"
         },
         {
-          "id": "AID-M-005.002",
-          "rationale": null,
-          "item_raw": "AML.T0010 Supply Chain Compromise"
-        },
-        {
           "id": "AID-M-010.002",
           "rationale": null,
           "item_raw": "AML.T0010 Supply Chain Compromise"
@@ -618,11 +613,6 @@
           "item_raw": "AML.T0010.001 Supply Chain Compromise: Software"
         },
         {
-          "id": "AID-M-005.002",
-          "rationale": null,
-          "item_raw": "AML.T0010.001 Supply Chain Compromise: Software"
-        },
-        {
           "id": "AID-H-003.001",
           "rationale": null,
           "item_raw": "AML.T0010.001 Supply Chain Compromise: Software"
@@ -857,11 +847,6 @@
           "item_raw": "AML.T0010.004 Supply Chain Compromise: Container Registry"
         },
         {
-          "id": "AID-M-005.002",
-          "rationale": null,
-          "item_raw": "AML.T0010.004 Supply Chain Compromise: Container Registry"
-        },
-        {
           "id": "AID-H-003.001",
           "rationale": null,
           "item_raw": "AML.T0010.004 Supply Chain Compromise: Container Registry"
@@ -989,11 +974,6 @@
       "controls": [
         {
           "id": "AID-M-001.002",
-          "rationale": null,
-          "item_raw": "AML.T0011 User Execution"
-        },
-        {
-          "id": "AID-M-005.002",
           "rationale": null,
           "item_raw": "AML.T0011 User Execution"
         },
@@ -1295,11 +1275,6 @@
       "controls": [
         {
           "id": "AID-M-001.002",
-          "rationale": null,
-          "item_raw": "AML.T0011.001 User Execution: Malicious Package"
-        },
-        {
-          "id": "AID-M-005.002",
           "rationale": null,
           "item_raw": "AML.T0011.001 User Execution: Malicious Package"
         },
@@ -1615,11 +1590,6 @@
           "id": "AID-H-002.008",
           "rationale": "audio/video perturbations can evade transcription, OCR, or moderation controls",
           "item_raw": "AML.T0015 Evade AI Model (audio/video perturbations can evade transcription, OCR, or moderation controls)"
-        },
-        {
-          "id": "AID-H-010",
-          "rationale": null,
-          "item_raw": "AML.T0015 Evade AI Model"
         },
         {
           "id": "AID-H-011.002",
@@ -2175,8 +2145,8 @@
         },
         {
           "id": "AID-M-010.003",
-          "rationale": "de-publication and zero active resolution of a logically retired digest while retained bytes remain preserved",
-          "item_raw": "AML.T0025 Exfiltration via Cyber Means (de-publication and zero active resolution of a logically retired digest while retained bytes remain preserved)"
+          "rationale": "a retired artifact loses its active routes, aliases and workload grants, though the retained bytes still need storage protection",
+          "item_raw": "AML.T0025 Exfiltration via Cyber Means (a retired artifact loses its active routes, aliases and workload grants, though the retained bytes still need storage protection)"
         },
         {
           "id": "AID-H-002.009",
@@ -2286,6 +2256,11 @@
       "item_locator": "AML.T0029 Denial of AI Service",
       "name": "Denial of AI Service",
       "controls": [
+        {
+          "id": "AID-H-010",
+          "rationale": null,
+          "item_raw": "AML.T0029 Denial of AI Service"
+        },
         {
           "id": "AID-H-017.006",
           "rationale": "hop and loop bounds limit recursive delegation exhaustion",
@@ -2499,6 +2474,11 @@
       "name": "Cost Harvesting: Resource-Intensive Queries",
       "controls": [
         {
+          "id": "AID-H-010",
+          "rationale": null,
+          "item_raw": "AML.T0034.001 Cost Harvesting: Resource-Intensive Queries"
+        },
+        {
           "id": "AID-H-037.002",
           "rationale": null,
           "item_raw": "AML.T0034.001 Cost Harvesting: Resource-Intensive Queries"
@@ -2594,8 +2574,8 @@
         },
         {
           "id": "AID-M-010.003",
-          "rationale": "de-publication and zero active resolution of a logically retired digest while retained bytes remain preserved",
-          "item_raw": "AML.T0036 Data from Information Repositories (de-publication and zero active resolution of a logically retired digest while retained bytes remain preserved)"
+          "rationale": "retired datasets and indexes are removed from active repository references and grants, but the retained bytes are not erased",
+          "item_raw": "AML.T0036 Data from Information Repositories (retired datasets and indexes are removed from active repository references and grants, but the retained bytes are not erased)"
         },
         {
           "id": "AID-H-004.001",
@@ -4171,8 +4151,8 @@
       "controls": [
         {
           "id": "AID-M-005.002",
-          "rationale": null,
-          "item_raw": "AML.T0055 Unsecured Credentials"
+          "rationale": "release gate blocks configuration and images that embed plaintext credentials",
+          "item_raw": "AML.T0055 Unsecured Credentials (release gate blocks configuration and images that embed plaintext credentials)"
         },
         {
           "id": "AID-H-004.001",
@@ -5583,8 +5563,8 @@
         },
         {
           "id": "AID-M-005.002",
-          "rationale": null,
-          "item_raw": "AML.T0081 Modify AI Agent Configuration"
+          "rationale": "release gate rejects agent and MCP configuration that deviates from the signed baseline",
+          "item_raw": "AML.T0081 Modify AI Agent Configuration (release gate rejects agent and MCP configuration that deviates from the signed baseline)"
         },
         {
           "id": "AID-M-009.005",
@@ -5684,8 +5664,8 @@
       "controls": [
         {
           "id": "AID-M-005.002",
-          "rationale": null,
-          "item_raw": "AML.T0083 Credentials from AI Agent Configuration"
+          "rationale": "release gate blocks credentials stored in agent configuration files",
+          "item_raw": "AML.T0083 Credentials from AI Agent Configuration (release gate blocks credentials stored in agent configuration files)"
         },
         {
           "id": "AID-H-021.004",
@@ -8431,6 +8411,11 @@
           "id": "AID-M-001.005",
           "rationale": "independent access probes and inventory reconciliation surface unapproved public AI services",
           "item_raw": "AML.T0132 Misconfigured or Publicly Exposed AI Services (independent access probes and inventory reconciliation surface unapproved public AI services)"
+        },
+        {
+          "id": "AID-M-005.002",
+          "rationale": "release gate denies public-exposure and permissive-access configuration before deployment",
+          "item_raw": "AML.T0132 Misconfigured or Publicly Exposed AI Services (release gate denies public-exposure and permissive-access configuration before deployment)"
         },
         {
           "id": "AID-H-004.002",
@@ -11559,11 +11544,6 @@
           "item_raw": "ML06:2023 AI Supply Chain Attacks"
         },
         {
-          "id": "AID-M-005.002",
-          "rationale": null,
-          "item_raw": "ML06:2023 AI Supply Chain Attacks"
-        },
-        {
           "id": "AID-M-010.002",
           "rationale": null,
           "item_raw": "ML06:2023 AI Supply Chain Attacks"
@@ -13006,11 +12986,6 @@
           "id": "AID-M-002.005",
           "rationale": null,
           "item_raw": "ASI04:2026 Agentic Supply Chain Vulnerabilities"
-        },
-        {
-          "id": "AID-M-005.002",
-          "rationale": "policy-as-code release gates reject unapproved component configuration",
-          "item_raw": "ASI04:2026 Agentic Supply Chain Vulnerabilities (policy-as-code release gates reject unapproved component configuration)"
         },
         {
           "id": "AID-H-002.001",
